@@ -49,7 +49,7 @@
 
 > **三种范式的递进关系**：物理映射（ER）→ 逻辑解耦（DLR）→ 语义图谱（RDF）。
 
-### DLR 缩写对照表
+### DLR（Decoupled Logic Representation）缩写对照表
 
 DLR 范式使用的内部缩写：
 
