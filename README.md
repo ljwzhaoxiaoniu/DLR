@@ -1,8 +1,8 @@
-# DLR Proj — 语义元数据平台 (DigitOnto-Lite)
+# DLR Proj（Decoupled Logic Representation）— 逻辑与物理解耦的语义建模
 
-> 让 Agent 用自然语言查询 mini_dev 数据库 —— 逻辑-物理双层建模、双引擎检索、MCP 集成。
+> 让 Agent 用自然语言查询 mini_dev 数据库 —— 逻辑与物理解耦的语义建模、双引擎检索、MCP 集成。
 
-**DigitOnto-Lite** 是产品代号。项目核心是 **DLR**（Decoupled Logic Representation，解耦逻辑表达）范式，同时支撑与 **ER**（Entity-Relationship，实体-关系）和 **RDF**（Resource Description Framework，资源描述框架）的对比评测。
+**DLR** = **Decoupled Logic Representation**（解耦逻辑表达），即逻辑层与物理层分离的语义建模方法。
 
 ## 架构
 
