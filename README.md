@@ -1,6 +1,8 @@
-# 语义元数据平台 (DigitOnto-Lite)
+# DLR Proj — 语义元数据平台 (DigitOnto-Lite)
 
-> 让 Agent 用自然语言查询 bench 数据库 —— 语义建模、双引擎检索、MCP 集成。
+> 让 Agent 用自然语言查询 mini_dev 数据库 —— 语义建模、双引擎检索、MCP 集成。
+
+**DigitOnto-Lite** 是产品代号，**DLR**（Decoupled Logic Representation，解耦逻辑表达）是核心建模范式。项目以 DLR 范式命名，同时支持 ER 和 RDF 三种范式。
 
 ## 架构
 
@@ -24,8 +26,8 @@
 │                                │                                 │
 │  ┌─────────────────────────────▼─────────────────────────────┐  │
 │  │  解析层：YAML 配置 → Mapper Registry → SemanticModel       │  │
-│  │  ER: ERSemanticMapper  (BizEntity / BizRelation)           │  │
-│  │  DLR: DLRSemanticMapper (LogicalEntity / PE / PAS)         │  │
+│  │  ER:  ERSemanticMapper  (BizEntity / BizRelation)          │  │
+│  │  DLR: DLRSemanticMapper (LE / PE / PAS / ARCS)             │  │
 │  └───────────────────────────────────────────────────────────┘  │
 └─────────────────────┬────────────────────────────────────────────┘
                       │
@@ -35,13 +37,28 @@
 └──────────────────────────────────────────────────────────────────┘
 ```
 
+三种建模范式：**ER**（Entity-Relationship，实体-关系）、**DLR**（Decoupled Logic Representation，解耦逻辑表达）、**RDF**（Resource Description Framework，资源描述框架）。每次评测只启用一种范式，OC Agent 通过 MCP 连接到当前范式。
+
 ### 建模范式
 
-| 范式 | 状态 | 模型 | Kuzu Schema |
-|------|------|------|-------------|
-| **ER** | ✅ 已实现 + 有配置 | BizEntity / BizAttribute / BizRelation / RELATED_TO | 扁平实体+关系 |
-| **DLR** | ✅ 代码已实现，配置待写 | LogicalEntity / PhysicalEntity / PASRelation / ARCS | LE-PE 双层 + INHERITS + PAS |
-| **RDF** | 🔜 未来 | — | — |
+| 范式 | 全称 | 中文 | 状态 | 模型 | Kuzu Schema |
+|------|------|------|------|------|-------------|
+| **ER** | Entity-Relationship | 实体-关系 | ✅ 已实现 + 有配置 | BizEntity / BizAttribute / BizRelation / RELATED_TO | 扁平实体+关系 |
+| **DLR** | Decoupled Logic Representation | 解耦逻辑表达 | ✅ 代码已实现，配置待写 | LE / PE / PAS / ARCS | LE-PE 双层 + INHERITS + PAS |
+| **RDF** | Resource Description Framework | 资源描述框架 | 🔜 未来 | — | — |
+
+> **三种范式的递进关系**：物理映射（ER）→ 逻辑解耦（DLR）→ 语义图谱（RDF）。
+
+### DLR 缩写对照表
+
+DLR 范式使用的内部缩写：
+
+| 缩写 | 全称 | 说明 |
+|------|------|------|
+| **LE** | LogicalEntity | 逻辑实体（业务概念层） |
+| **PE** | PhysicalEntity | 物理实体（具体表/字段层） |
+| **PAS** | Predicate-Attribute-Semantic | LE 间语义路由（三元组：谓词+属性+语义补注） |
+| **ARCS** | Anchor-Row-Column-Semantic | PE 到物理库的锚定（四元组：锚定+行过滤+列映射+语义补注） |
 
 **启动方式**（每次只启动一个范式，不并行）：
 ```bash
@@ -59,8 +76,8 @@ python main.py serve --paradigm DLR     # 启动 DLR 的 API + MCP
 ```
 storage/
 ├── kuzu/
-│   ├── er/        ← ER 专用 Kuzu 图
-│   └── dlr/       ← DLR 专用 Kuzu 图
+│   ├── er/        ← ER (Entity-Relationship) 专用 Kuzu 图
+│   └── dlr/       ← DLR (Decoupled Logic Representation) 专用 Kuzu 图
 ├── vector/
 │   ├── er.pkl     ← ER 专用 FAISS 索引
 │   └── dlr.pkl    ← DLR 专用 FAISS 索引
@@ -116,7 +133,8 @@ DLR Proj/
 │   ├── config.py                   # 全局配置 + 范式存储路径 + extract_entity_id()
 │   ├── mcp_server.py               # MCP Server（范式隔离的工具注册）
 │   ├── models/
-│   │   ├── semantic_models.py      # ER: BizEntity / DLR: LogicalEntity, PE, PAS, ARCS
+│   │   ├── semantic_models.py      # ER: BizEntity / BizRelation
+│   │   │                            # DLR: LE / PE / PAS / ARCS
 │   │   └── physical_models.py      # PhysicalTable / PhysicalColumn
 │   ├── mapping/
 │   │   ├── base.py                 # ScenarioModel / ERScenarioModel / DLRScenarioModel
@@ -135,7 +153,7 @@ DLR Proj/
 │   │   ├── build_service.py        # Kuzu + FAISS 写入
 │   │   └── query_service.py        # 向量召回 → 实体优先 → 图谱扩展
 │   ├── configs/scenarios/
-│   │   ├── ER/                     ← ✅ Bench 数据库配置 (11 个 yaml)
+│   │   ├── ER/                     ← ✅ mini_dev 数据库配置 (11 个 yaml)
 │   │   ├── DLR/                    ← 空目录，配置待写
 │   │   ├── RDF/                    ← 预留
 │   │   └── *.yaml                   ← 范式参考示例 (er/dlr_line_loss 等)
@@ -147,7 +165,7 @@ DLR Proj/
 │   ├── oc_dlr/opencode.json        # MCP 连接: localhost:28765/mcp/sse
 │   └── (oc_er/ oc_rdf/)
 │
-└── mini_dev-main/                   # bench 评测框架 (参考)
+└── MINIDEV_sqlite/                  # mini_dev 评测数据（未入库，需下载）
 ```
 
 ## MCP 工具
@@ -170,17 +188,17 @@ DLR Proj/
 | `find_nearby_transformers` | `tg_id, radius_m=1000` | 半径内邻近变压器 |
 | `summary` | — | 知识库摘要统计 |
 
-### DLR 范式专用工具
+### DLR（Decoupled Logic Representation）范式专用工具
 
 | Tool | 参数 | 语义 |
 |------|------|------|
-| `recall_le` | `question, top_k, threshold` | 召回逻辑实体 |
-| `recall_pe` | `question, top_k, threshold` | 召回物理实体 |
+| `recall_le` | `question, top_k, threshold` | 召回逻辑实体 (LE) |
+| `recall_pe` | `question, top_k, threshold` | 召回物理实体 (PE) |
 | `recall_pas` | `question, top_k, threshold` | 召回 PAS 语义路由 |
-| `list_le` | — | 列出所有逻辑实体 |
+| `list_le` | — | 列出所有逻辑实体 (LE) |
 | `list_pas` | — | 列出所有 PAS 关系 |
-| `get_le` | `le_id` | 逻辑实体详情 |
-| `get_le_attrs` | `le_id` | 逻辑实体属性 |
+| `get_le` | `le_id` | 逻辑实体 (LE) 详情 |
+| `get_le_attrs` | `le_id` | 逻辑实体 (LE) 属性 |
 | `get_le_children` | `le_id` | 获取物理实体 (PE) 列表 |
 | `get_pe_arcs` | `pe_id` | ARCS 锚定 + 数据库 URL |
 | `path_le_le` | `from_id, to_id` | 两 LE 最短 PAS 路径 |
@@ -228,7 +246,7 @@ python main.py build --paradigm DLR
 python main.py serve --paradigm DLR --port 28765
 ```
 
-### 3. 通过 OC Agent 执行 Bench 任务
+### 4. 通过 OC Agent 执行 mini_dev 评测任务
 
 ```bash
 cd OC-based Agent Service
@@ -267,7 +285,7 @@ opencode    # 启动 OpenCode，连接 MCP → 跑 500 个 NL 任务
 
 ```
 版本：mini_dev 0703
-下载地址：https://drive.google.com/file/d/13VLWIwpw5E3d5DUkMvzw7hvHE67a4XkG/view
+下载地址：https://drive.google.com/file/d/13VLWIwpw5E3d5DUkMvzw7hvHE7a4XkG/view
 ```
 
 下载后解压到项目根目录，目录结构为：
