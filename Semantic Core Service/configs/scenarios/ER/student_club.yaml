@@ -1,0 +1,328 @@
+mapping_type: er
+version: '1.0'
+scenario_name: student_club
+description: Auto-generated from dev_tables.json for student_club
+databases:
+  student_club: sqlite:///../MINIDEV_sqlite/dev_databases/student_club/student_club.sqlite
+entities:
+- entity_id: student_club.event
+  biz_name: event
+  description: event
+  physical_table_id: student_club.event
+  attributes:
+  - attr_id: student_club.event.event_id
+    biz_name: event_id
+    description: ''
+    physical_column_id: student_club.event.event_id
+    data_type: text
+  - attr_id: student_club.event.event_name
+    biz_name: event_name
+    description: ''
+    physical_column_id: student_club.event.event_name
+    data_type: text
+  - attr_id: student_club.event.event_date
+    biz_name: event_date
+    description: ''
+    physical_column_id: student_club.event.event_date
+    data_type: text
+  - attr_id: student_club.event.type
+    biz_name: type
+    description: ''
+    physical_column_id: student_club.event.type
+    data_type: text
+  - attr_id: student_club.event.notes
+    biz_name: notes
+    description: ''
+    physical_column_id: student_club.event.notes
+    data_type: text
+  - attr_id: student_club.event.location
+    biz_name: location
+    description: ''
+    physical_column_id: student_club.event.location
+    data_type: text
+  - attr_id: student_club.event.status
+    biz_name: status
+    description: ''
+    physical_column_id: student_club.event.status
+    data_type: text
+- entity_id: student_club.major
+  biz_name: major
+  description: major
+  physical_table_id: student_club.major
+  attributes:
+  - attr_id: student_club.major.major_id
+    biz_name: major_id
+    description: ''
+    physical_column_id: student_club.major.major_id
+    data_type: text
+  - attr_id: student_club.major.major_name
+    biz_name: major_name
+    description: ''
+    physical_column_id: student_club.major.major_name
+    data_type: text
+  - attr_id: student_club.major.department
+    biz_name: department
+    description: ''
+    physical_column_id: student_club.major.department
+    data_type: text
+  - attr_id: student_club.major.college
+    biz_name: college
+    description: ''
+    physical_column_id: student_club.major.college
+    data_type: text
+- entity_id: student_club.zip_code
+  biz_name: zip_code
+  description: zip_code
+  physical_table_id: student_club.zip_code
+  attributes:
+  - attr_id: student_club.zip_code.zip_code
+    biz_name: zip_code
+    description: ''
+    physical_column_id: student_club.zip_code.zip_code
+    data_type: integer
+  - attr_id: student_club.zip_code.type
+    biz_name: type
+    description: ''
+    physical_column_id: student_club.zip_code.type
+    data_type: text
+  - attr_id: student_club.zip_code.city
+    biz_name: city
+    description: ''
+    physical_column_id: student_club.zip_code.city
+    data_type: text
+  - attr_id: student_club.zip_code.county
+    biz_name: county
+    description: ''
+    physical_column_id: student_club.zip_code.county
+    data_type: text
+  - attr_id: student_club.zip_code.state
+    biz_name: state
+    description: ''
+    physical_column_id: student_club.zip_code.state
+    data_type: text
+  - attr_id: student_club.zip_code.short_state
+    biz_name: short_state
+    description: ''
+    physical_column_id: student_club.zip_code.short_state
+    data_type: text
+- entity_id: student_club.attendance
+  biz_name: attendance
+  description: attendance
+  physical_table_id: student_club.attendance
+  attributes:
+  - attr_id: student_club.attendance.link_to_event
+    biz_name: link_to_event
+    description: ''
+    physical_column_id: student_club.attendance.link_to_event
+    data_type: text
+  - attr_id: student_club.attendance.link_to_member
+    biz_name: link_to_member
+    description: ''
+    physical_column_id: student_club.attendance.link_to_member
+    data_type: text
+- entity_id: student_club.budget
+  biz_name: budget
+  description: budget
+  physical_table_id: student_club.budget
+  attributes:
+  - attr_id: student_club.budget.budget_id
+    biz_name: budget_id
+    description: ''
+    physical_column_id: student_club.budget.budget_id
+    data_type: text
+  - attr_id: student_club.budget.category
+    biz_name: category
+    description: ''
+    physical_column_id: student_club.budget.category
+    data_type: text
+  - attr_id: student_club.budget.spent
+    biz_name: spent
+    description: ''
+    physical_column_id: student_club.budget.spent
+    data_type: real
+  - attr_id: student_club.budget.remaining
+    biz_name: remaining
+    description: ''
+    physical_column_id: student_club.budget.remaining
+    data_type: real
+  - attr_id: student_club.budget.amount
+    biz_name: amount
+    description: ''
+    physical_column_id: student_club.budget.amount
+    data_type: integer
+  - attr_id: student_club.budget.event_status
+    biz_name: event_status
+    description: ''
+    physical_column_id: student_club.budget.event_status
+    data_type: text
+  - attr_id: student_club.budget.link_to_event
+    biz_name: link_to_event
+    description: ''
+    physical_column_id: student_club.budget.link_to_event
+    data_type: text
+- entity_id: student_club.expense
+  biz_name: expense
+  description: expense
+  physical_table_id: student_club.expense
+  attributes:
+  - attr_id: student_club.expense.expense_id
+    biz_name: expense_id
+    description: ''
+    physical_column_id: student_club.expense.expense_id
+    data_type: text
+  - attr_id: student_club.expense.expense_description
+    biz_name: expense_description
+    description: ''
+    physical_column_id: student_club.expense.expense_description
+    data_type: text
+  - attr_id: student_club.expense.expense_date
+    biz_name: expense_date
+    description: ''
+    physical_column_id: student_club.expense.expense_date
+    data_type: text
+  - attr_id: student_club.expense.cost
+    biz_name: cost
+    description: ''
+    physical_column_id: student_club.expense.cost
+    data_type: real
+  - attr_id: student_club.expense.approved
+    biz_name: approved
+    description: ''
+    physical_column_id: student_club.expense.approved
+    data_type: text
+  - attr_id: student_club.expense.link_to_member
+    biz_name: link_to_member
+    description: ''
+    physical_column_id: student_club.expense.link_to_member
+    data_type: text
+  - attr_id: student_club.expense.link_to_budget
+    biz_name: link_to_budget
+    description: ''
+    physical_column_id: student_club.expense.link_to_budget
+    data_type: text
+- entity_id: student_club.income
+  biz_name: income
+  description: income
+  physical_table_id: student_club.income
+  attributes:
+  - attr_id: student_club.income.income_id
+    biz_name: income_id
+    description: ''
+    physical_column_id: student_club.income.income_id
+    data_type: text
+  - attr_id: student_club.income.date_received
+    biz_name: date_received
+    description: ''
+    physical_column_id: student_club.income.date_received
+    data_type: text
+  - attr_id: student_club.income.amount
+    biz_name: amount
+    description: ''
+    physical_column_id: student_club.income.amount
+    data_type: integer
+  - attr_id: student_club.income.source
+    biz_name: source
+    description: ''
+    physical_column_id: student_club.income.source
+    data_type: text
+  - attr_id: student_club.income.notes
+    biz_name: notes
+    description: ''
+    physical_column_id: student_club.income.notes
+    data_type: text
+  - attr_id: student_club.income.link_to_member
+    biz_name: link_to_member
+    description: ''
+    physical_column_id: student_club.income.link_to_member
+    data_type: text
+- entity_id: student_club.member
+  biz_name: member
+  description: member
+  physical_table_id: student_club.member
+  attributes:
+  - attr_id: student_club.member.member_id
+    biz_name: member_id
+    description: ''
+    physical_column_id: student_club.member.member_id
+    data_type: text
+  - attr_id: student_club.member.first_name
+    biz_name: first_name
+    description: ''
+    physical_column_id: student_club.member.first_name
+    data_type: text
+  - attr_id: student_club.member.last_name
+    biz_name: last_name
+    description: ''
+    physical_column_id: student_club.member.last_name
+    data_type: text
+  - attr_id: student_club.member.email
+    biz_name: email
+    description: ''
+    physical_column_id: student_club.member.email
+    data_type: text
+  - attr_id: student_club.member.position
+    biz_name: position
+    description: ''
+    physical_column_id: student_club.member.position
+    data_type: text
+  - attr_id: student_club.member.t_shirt_size
+    biz_name: t_shirt_size
+    description: ''
+    physical_column_id: student_club.member.t_shirt_size
+    data_type: text
+  - attr_id: student_club.member.phone
+    biz_name: phone
+    description: ''
+    physical_column_id: student_club.member.phone
+    data_type: text
+  - attr_id: student_club.member.zip
+    biz_name: zip
+    description: ''
+    physical_column_id: student_club.member.zip
+    data_type: integer
+  - attr_id: student_club.member.link_to_major
+    biz_name: link_to_major
+    description: ''
+    physical_column_id: student_club.member.link_to_major
+    data_type: text
+relations:
+- relation_id: student_club.attendance_TO_member
+  biz_name: attendance_to_member
+  from_entity_attr_id: student_club.attendance.link_to_member
+  to_entity_attr_id: student_club.member.member_id
+  description: attendance.link_to_member -> member.member_id
+- relation_id: student_club.attendance_TO_event
+  biz_name: attendance_to_event
+  from_entity_attr_id: student_club.attendance.link_to_event
+  to_entity_attr_id: student_club.event.event_id
+  description: attendance.link_to_event -> event.event_id
+- relation_id: student_club.budget_TO_event
+  biz_name: budget_to_event
+  from_entity_attr_id: student_club.budget.link_to_event
+  to_entity_attr_id: student_club.event.event_id
+  description: budget.link_to_event -> event.event_id
+- relation_id: student_club.expense_TO_member
+  biz_name: expense_to_member
+  from_entity_attr_id: student_club.expense.link_to_member
+  to_entity_attr_id: student_club.member.member_id
+  description: expense.link_to_member -> member.member_id
+- relation_id: student_club.expense_TO_budget
+  biz_name: expense_to_budget
+  from_entity_attr_id: student_club.expense.link_to_budget
+  to_entity_attr_id: student_club.budget.budget_id
+  description: expense.link_to_budget -> budget.budget_id
+- relation_id: student_club.income_TO_member
+  biz_name: income_to_member
+  from_entity_attr_id: student_club.income.link_to_member
+  to_entity_attr_id: student_club.member.member_id
+  description: income.link_to_member -> member.member_id
+- relation_id: student_club.member_TO_zip_code
+  biz_name: member_to_zip_code
+  from_entity_attr_id: student_club.member.zip
+  to_entity_attr_id: student_club.zip_code.zip_code
+  description: member.zip -> zip_code.zip_code
+- relation_id: student_club.member_TO_major
+  biz_name: member_to_major
+  from_entity_attr_id: student_club.member.link_to_major
+  to_entity_attr_id: student_club.major.major_id
+  description: member.link_to_major -> major.major_id

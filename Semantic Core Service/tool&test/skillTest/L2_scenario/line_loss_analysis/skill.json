@@ -1,0 +1,51 @@
+{
+  "name": "L2_Line_Loss_Analysis",
+  "name_zh": "台区线损全链路根因诊断专家",
+  "version": "1.0.0",
+  "description": "针对台区日线损异常，自动穿透档案时效（PMS）与拓扑关系（PWMK），识别管理性损耗与基础数据错位。",
+  "description_zh": "针对台区日线损异常，自动穿透档案时效（PMS）与拓扑关系（PWMK），识别管理性损耗与基础数据错位。",
+  "layer": "L2",
+  "type": "scenario",
+  "inputs": [
+    {
+      "name": "target_tg_id",
+      "description": "目标台区唯一标识符（如 TG_9527）",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "stat_date",
+      "description": "异常发生的统计日期（YYYY-MM-DD）",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "Final_Verdict",
+      "description": "基于归因规则生成的最终根因定性结论",
+      "type": "string"
+    },
+    {
+      "name": "Action_Suggestion",
+      "description": "针对性业务处置建议",
+      "type": "string"
+    },
+    {
+      "name": "SkillLogic_Archive_Result",
+      "description": "档案录入时效维度的详细审计证据",
+      "type": "string"
+    },
+    {
+      "name": "SkillLogic_Topology_Result",
+      "description": "物理与逻辑拓扑对撞的差异明细",
+      "type": "string"
+    }
+  ],
+  "dependencies": {
+    "L3_skills": [
+      "L3_Asset_Reg_Timeliness",
+      "L3_Topology_Consistency"
+    ]
+  }
+}

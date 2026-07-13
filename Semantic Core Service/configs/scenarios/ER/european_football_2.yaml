@@ -1,0 +1,1188 @@
+mapping_type: er
+version: '1.0'
+scenario_name: european_football_2
+description: Auto-generated from dev_tables.json for european_football_2
+databases:
+  european_football_2: sqlite:///../MINIDEV_sqlite/dev_databases/european_football_2/european_football_2.sqlite
+entities:
+- entity_id: european_football_2.Player_Attributes
+  biz_name: Player_Attributes
+  description: 'Player_Attributes: the unique id for players; the id of the player
+    fifa api; the id of the player api'
+  physical_table_id: european_football_2.Player_Attributes
+  attributes:
+  - attr_id: european_football_2.Player_Attributes.id
+    biz_name: id
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.id
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.player_fifa_api_id
+    biz_name: player_fifa_api_id
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.player_fifa_api_id
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.player_api_id
+    biz_name: player_api_id
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.player_api_id
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.date
+    biz_name: date
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.date
+    data_type: text
+  - attr_id: european_football_2.Player_Attributes.overall_rating
+    biz_name: overall_rating
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.overall_rating
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.potential
+    biz_name: potential
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.potential
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.preferred_foot
+    biz_name: preferred_foot
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.preferred_foot
+    data_type: text
+  - attr_id: european_football_2.Player_Attributes.attacking_work_rate
+    biz_name: attacking_work_rate
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.attacking_work_rate
+    data_type: text
+  - attr_id: european_football_2.Player_Attributes.defensive_work_rate
+    biz_name: defensive_work_rate
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.defensive_work_rate
+    data_type: text
+  - attr_id: european_football_2.Player_Attributes.crossing
+    biz_name: crossing
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.crossing
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.finishing
+    biz_name: finishing
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.finishing
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.heading_accuracy
+    biz_name: heading_accuracy
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.heading_accuracy
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.short_passing
+    biz_name: short_passing
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.short_passing
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.volleys
+    biz_name: volleys
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.volleys
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.dribbling
+    biz_name: dribbling
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.dribbling
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.curve
+    biz_name: curve
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.curve
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.free_kick_accuracy
+    biz_name: free_kick_accuracy
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.free_kick_accuracy
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.long_passing
+    biz_name: long_passing
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.long_passing
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.ball_control
+    biz_name: ball_control
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.ball_control
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.acceleration
+    biz_name: acceleration
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.acceleration
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.sprint_speed
+    biz_name: sprint_speed
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.sprint_speed
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.agility
+    biz_name: agility
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.agility
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.reactions
+    biz_name: reactions
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.reactions
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.balance
+    biz_name: balance
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.balance
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.shot_power
+    biz_name: shot_power
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.shot_power
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.jumping
+    biz_name: jumping
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.jumping
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.stamina
+    biz_name: stamina
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.stamina
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.strength
+    biz_name: strength
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.strength
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.long_shots
+    biz_name: long_shots
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.long_shots
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.aggression
+    biz_name: aggression
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.aggression
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.interceptions
+    biz_name: interceptions
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.interceptions
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.positioning
+    biz_name: positioning
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.positioning
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.vision
+    biz_name: vision
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.vision
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.penalties
+    biz_name: penalties
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.penalties
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.marking
+    biz_name: marking
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.marking
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.standing_tackle
+    biz_name: standing_tackle
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.standing_tackle
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.sliding_tackle
+    biz_name: sliding_tackle
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.sliding_tackle
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.gk_diving
+    biz_name: gk_diving
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.gk_diving
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.gk_handling
+    biz_name: gk_handling
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.gk_handling
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.gk_kicking
+    biz_name: gk_kicking
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.gk_kicking
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.gk_positioning
+    biz_name: gk_positioning
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.gk_positioning
+    data_type: integer
+  - attr_id: european_football_2.Player_Attributes.gk_reflexes
+    biz_name: gk_reflexes
+    description: ''
+    physical_column_id: european_football_2.Player_Attributes.gk_reflexes
+    data_type: integer
+- entity_id: european_football_2.Player
+  biz_name: Player
+  description: 'Player: the unique id for players; the id of the player api; player
+    name'
+  physical_table_id: european_football_2.Player
+  attributes:
+  - attr_id: european_football_2.Player.id
+    biz_name: id
+    description: ''
+    physical_column_id: european_football_2.Player.id
+    data_type: integer
+  - attr_id: european_football_2.Player.player_api_id
+    biz_name: player_api_id
+    description: ''
+    physical_column_id: european_football_2.Player.player_api_id
+    data_type: integer
+  - attr_id: european_football_2.Player.player_name
+    biz_name: player_name
+    description: ''
+    physical_column_id: european_football_2.Player.player_name
+    data_type: text
+  - attr_id: european_football_2.Player.player_fifa_api_id
+    biz_name: player_fifa_api_id
+    description: ''
+    physical_column_id: european_football_2.Player.player_fifa_api_id
+    data_type: integer
+  - attr_id: european_football_2.Player.birthday
+    biz_name: birthday
+    description: ''
+    physical_column_id: european_football_2.Player.birthday
+    data_type: text
+  - attr_id: european_football_2.Player.height
+    biz_name: height
+    description: ''
+    physical_column_id: european_football_2.Player.height
+    data_type: integer
+  - attr_id: european_football_2.Player.weight
+    biz_name: weight
+    description: ''
+    physical_column_id: european_football_2.Player.weight
+    data_type: integer
+- entity_id: european_football_2.League
+  biz_name: League
+  description: 'League: the unique id for leagues; the unique id for countries; league
+    name'
+  physical_table_id: european_football_2.League
+  attributes:
+  - attr_id: european_football_2.League.id
+    biz_name: id
+    description: ''
+    physical_column_id: european_football_2.League.id
+    data_type: integer
+  - attr_id: european_football_2.League.country_id
+    biz_name: country_id
+    description: ''
+    physical_column_id: european_football_2.League.country_id
+    data_type: integer
+  - attr_id: european_football_2.League.name
+    biz_name: name
+    description: ''
+    physical_column_id: european_football_2.League.name
+    data_type: text
+- entity_id: european_football_2.Country
+  biz_name: Country
+  description: 'Country: the unique id for countries; country name'
+  physical_table_id: european_football_2.Country
+  attributes:
+  - attr_id: european_football_2.Country.id
+    biz_name: id
+    description: ''
+    physical_column_id: european_football_2.Country.id
+    data_type: integer
+  - attr_id: european_football_2.Country.name
+    biz_name: name
+    description: ''
+    physical_column_id: european_football_2.Country.name
+    data_type: text
+- entity_id: european_football_2.Team
+  biz_name: Team
+  description: 'Team: the unique id for teams; the id of the team api; the id of the
+    team fifa api'
+  physical_table_id: european_football_2.Team
+  attributes:
+  - attr_id: european_football_2.Team.id
+    biz_name: id
+    description: ''
+    physical_column_id: european_football_2.Team.id
+    data_type: integer
+  - attr_id: european_football_2.Team.team_api_id
+    biz_name: team_api_id
+    description: ''
+    physical_column_id: european_football_2.Team.team_api_id
+    data_type: integer
+  - attr_id: european_football_2.Team.team_fifa_api_id
+    biz_name: team_fifa_api_id
+    description: ''
+    physical_column_id: european_football_2.Team.team_fifa_api_id
+    data_type: integer
+  - attr_id: european_football_2.Team.team_long_name
+    biz_name: team_long_name
+    description: ''
+    physical_column_id: european_football_2.Team.team_long_name
+    data_type: text
+  - attr_id: european_football_2.Team.team_short_name
+    biz_name: team_short_name
+    description: ''
+    physical_column_id: european_football_2.Team.team_short_name
+    data_type: text
+- entity_id: european_football_2.Team_Attributes
+  biz_name: Team_Attributes
+  description: 'Team_Attributes: the unique id for teams; the id of the team fifa
+    api; the id of the team api'
+  physical_table_id: european_football_2.Team_Attributes
+  attributes:
+  - attr_id: european_football_2.Team_Attributes.id
+    biz_name: id
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.id
+    data_type: integer
+  - attr_id: european_football_2.Team_Attributes.team_fifa_api_id
+    biz_name: team_fifa_api_id
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.team_fifa_api_id
+    data_type: integer
+  - attr_id: european_football_2.Team_Attributes.team_api_id
+    biz_name: team_api_id
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.team_api_id
+    data_type: integer
+  - attr_id: european_football_2.Team_Attributes.date
+    biz_name: date
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.date
+    data_type: text
+  - attr_id: european_football_2.Team_Attributes.buildUpPlaySpeed
+    biz_name: buildUpPlaySpeed
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.buildUpPlaySpeed
+    data_type: integer
+  - attr_id: european_football_2.Team_Attributes.buildUpPlaySpeedClass
+    biz_name: buildUpPlaySpeedClass
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.buildUpPlaySpeedClass
+    data_type: text
+  - attr_id: european_football_2.Team_Attributes.buildUpPlayDribbling
+    biz_name: buildUpPlayDribbling
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.buildUpPlayDribbling
+    data_type: integer
+  - attr_id: european_football_2.Team_Attributes.buildUpPlayDribblingClass
+    biz_name: buildUpPlayDribblingClass
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.buildUpPlayDribblingClass
+    data_type: text
+  - attr_id: european_football_2.Team_Attributes.buildUpPlayPassing
+    biz_name: buildUpPlayPassing
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.buildUpPlayPassing
+    data_type: integer
+  - attr_id: european_football_2.Team_Attributes.buildUpPlayPassingClass
+    biz_name: buildUpPlayPassingClass
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.buildUpPlayPassingClass
+    data_type: text
+  - attr_id: european_football_2.Team_Attributes.buildUpPlayPositioningClass
+    biz_name: buildUpPlayPositioningClass
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.buildUpPlayPositioningClass
+    data_type: text
+  - attr_id: european_football_2.Team_Attributes.chanceCreationPassing
+    biz_name: chanceCreationPassing
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.chanceCreationPassing
+    data_type: integer
+  - attr_id: european_football_2.Team_Attributes.chanceCreationPassingClass
+    biz_name: chanceCreationPassingClass
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.chanceCreationPassingClass
+    data_type: text
+  - attr_id: european_football_2.Team_Attributes.chanceCreationCrossing
+    biz_name: chanceCreationCrossing
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.chanceCreationCrossing
+    data_type: integer
+  - attr_id: european_football_2.Team_Attributes.chanceCreationCrossingClass
+    biz_name: chanceCreationCrossingClass
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.chanceCreationCrossingClass
+    data_type: text
+  - attr_id: european_football_2.Team_Attributes.chanceCreationShooting
+    biz_name: chanceCreationShooting
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.chanceCreationShooting
+    data_type: integer
+  - attr_id: european_football_2.Team_Attributes.chanceCreationShootingClass
+    biz_name: chanceCreationShootingClass
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.chanceCreationShootingClass
+    data_type: text
+  - attr_id: european_football_2.Team_Attributes.chanceCreationPositioningClass
+    biz_name: chanceCreationPositioningClass
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.chanceCreationPositioningClass
+    data_type: text
+  - attr_id: european_football_2.Team_Attributes.defencePressure
+    biz_name: defencePressure
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.defencePressure
+    data_type: integer
+  - attr_id: european_football_2.Team_Attributes.defencePressureClass
+    biz_name: defencePressureClass
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.defencePressureClass
+    data_type: text
+  - attr_id: european_football_2.Team_Attributes.defenceAggression
+    biz_name: defenceAggression
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.defenceAggression
+    data_type: integer
+  - attr_id: european_football_2.Team_Attributes.defenceAggressionClass
+    biz_name: defenceAggressionClass
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.defenceAggressionClass
+    data_type: text
+  - attr_id: european_football_2.Team_Attributes.defenceTeamWidth
+    biz_name: defenceTeamWidth
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.defenceTeamWidth
+    data_type: integer
+  - attr_id: european_football_2.Team_Attributes.defenceTeamWidthClass
+    biz_name: defenceTeamWidthClass
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.defenceTeamWidthClass
+    data_type: text
+  - attr_id: european_football_2.Team_Attributes.defenceDefenderLineClass
+    biz_name: defenceDefenderLineClass
+    description: ''
+    physical_column_id: european_football_2.Team_Attributes.defenceDefenderLineClass
+    data_type: text
+- entity_id: european_football_2.Match
+  biz_name: Match
+  description: 'Match: the unique id for matches; country id; league id'
+  physical_table_id: european_football_2.Match
+  attributes:
+  - attr_id: european_football_2.Match.id
+    biz_name: id
+    description: ''
+    physical_column_id: european_football_2.Match.id
+    data_type: integer
+  - attr_id: european_football_2.Match.country_id
+    biz_name: country_id
+    description: ''
+    physical_column_id: european_football_2.Match.country_id
+    data_type: integer
+  - attr_id: european_football_2.Match.league_id
+    biz_name: league_id
+    description: ''
+    physical_column_id: european_football_2.Match.league_id
+    data_type: integer
+  - attr_id: european_football_2.Match.season
+    biz_name: season
+    description: ''
+    physical_column_id: european_football_2.Match.season
+    data_type: text
+  - attr_id: european_football_2.Match.stage
+    biz_name: stage
+    description: ''
+    physical_column_id: european_football_2.Match.stage
+    data_type: integer
+  - attr_id: european_football_2.Match.date
+    biz_name: date
+    description: ''
+    physical_column_id: european_football_2.Match.date
+    data_type: text
+  - attr_id: european_football_2.Match.match_api_id
+    biz_name: match_api_id
+    description: ''
+    physical_column_id: european_football_2.Match.match_api_id
+    data_type: integer
+  - attr_id: european_football_2.Match.home_team_api_id
+    biz_name: home_team_api_id
+    description: ''
+    physical_column_id: european_football_2.Match.home_team_api_id
+    data_type: integer
+  - attr_id: european_football_2.Match.away_team_api_id
+    biz_name: away_team_api_id
+    description: ''
+    physical_column_id: european_football_2.Match.away_team_api_id
+    data_type: integer
+  - attr_id: european_football_2.Match.home_team_goal
+    biz_name: home_team_goal
+    description: ''
+    physical_column_id: european_football_2.Match.home_team_goal
+    data_type: integer
+  - attr_id: european_football_2.Match.away_team_goal
+    biz_name: away_team_goal
+    description: ''
+    physical_column_id: european_football_2.Match.away_team_goal
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_X1
+    biz_name: home_player_X1
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_X1
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_X2
+    biz_name: home_player_X2
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_X2
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_X3
+    biz_name: home_player_X3
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_X3
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_X4
+    biz_name: home_player_X4
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_X4
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_X5
+    biz_name: home_player_X5
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_X5
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_X6
+    biz_name: home_player_X6
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_X6
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_X7
+    biz_name: home_player_X7
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_X7
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_X8
+    biz_name: home_player_X8
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_X8
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_X9
+    biz_name: home_player_X9
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_X9
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_X10
+    biz_name: home_player_X10
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_X10
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_X11
+    biz_name: home_player_X11
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_X11
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_X1
+    biz_name: away_player_X1
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_X1
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_X2
+    biz_name: away_player_X2
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_X2
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_X3
+    biz_name: away_player_X3
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_X3
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_X4
+    biz_name: away_player_X4
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_X4
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_X5
+    biz_name: away_player_X5
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_X5
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_X6
+    biz_name: away_player_X6
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_X6
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_X7
+    biz_name: away_player_X7
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_X7
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_X8
+    biz_name: away_player_X8
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_X8
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_X9
+    biz_name: away_player_X9
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_X9
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_X10
+    biz_name: away_player_X10
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_X10
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_X11
+    biz_name: away_player_X11
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_X11
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_Y1
+    biz_name: home_player_Y1
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_Y1
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_Y2
+    biz_name: home_player_Y2
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_Y2
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_Y3
+    biz_name: home_player_Y3
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_Y3
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_Y4
+    biz_name: home_player_Y4
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_Y4
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_Y5
+    biz_name: home_player_Y5
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_Y5
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_Y6
+    biz_name: home_player_Y6
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_Y6
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_Y7
+    biz_name: home_player_Y7
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_Y7
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_Y8
+    biz_name: home_player_Y8
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_Y8
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_Y9
+    biz_name: home_player_Y9
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_Y9
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_Y10
+    biz_name: home_player_Y10
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_Y10
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_Y11
+    biz_name: home_player_Y11
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_Y11
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_Y1
+    biz_name: away_player_Y1
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_Y1
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_Y2
+    biz_name: away_player_Y2
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_Y2
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_Y3
+    biz_name: away_player_Y3
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_Y3
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_Y4
+    biz_name: away_player_Y4
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_Y4
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_Y5
+    biz_name: away_player_Y5
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_Y5
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_Y6
+    biz_name: away_player_Y6
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_Y6
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_Y7
+    biz_name: away_player_Y7
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_Y7
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_Y8
+    biz_name: away_player_Y8
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_Y8
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_Y9
+    biz_name: away_player_Y9
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_Y9
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_Y10
+    biz_name: away_player_Y10
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_Y10
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_Y11
+    biz_name: away_player_Y11
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_Y11
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_1
+    biz_name: home_player_1
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_1
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_2
+    biz_name: home_player_2
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_2
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_3
+    biz_name: home_player_3
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_3
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_4
+    biz_name: home_player_4
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_4
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_5
+    biz_name: home_player_5
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_5
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_6
+    biz_name: home_player_6
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_6
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_7
+    biz_name: home_player_7
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_7
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_8
+    biz_name: home_player_8
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_8
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_9
+    biz_name: home_player_9
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_9
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_10
+    biz_name: home_player_10
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_10
+    data_type: integer
+  - attr_id: european_football_2.Match.home_player_11
+    biz_name: home_player_11
+    description: ''
+    physical_column_id: european_football_2.Match.home_player_11
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_1
+    biz_name: away_player_1
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_1
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_2
+    biz_name: away_player_2
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_2
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_3
+    biz_name: away_player_3
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_3
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_4
+    biz_name: away_player_4
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_4
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_5
+    biz_name: away_player_5
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_5
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_6
+    biz_name: away_player_6
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_6
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_7
+    biz_name: away_player_7
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_7
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_8
+    biz_name: away_player_8
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_8
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_9
+    biz_name: away_player_9
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_9
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_10
+    biz_name: away_player_10
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_10
+    data_type: integer
+  - attr_id: european_football_2.Match.away_player_11
+    biz_name: away_player_11
+    description: ''
+    physical_column_id: european_football_2.Match.away_player_11
+    data_type: integer
+  - attr_id: european_football_2.Match.goal
+    biz_name: goal
+    description: ''
+    physical_column_id: european_football_2.Match.goal
+    data_type: text
+  - attr_id: european_football_2.Match.shoton
+    biz_name: shoton
+    description: ''
+    physical_column_id: european_football_2.Match.shoton
+    data_type: text
+  - attr_id: european_football_2.Match.shotoff
+    biz_name: shotoff
+    description: ''
+    physical_column_id: european_football_2.Match.shotoff
+    data_type: text
+  - attr_id: european_football_2.Match.foulcommit
+    biz_name: foulcommit
+    description: ''
+    physical_column_id: european_football_2.Match.foulcommit
+    data_type: text
+  - attr_id: european_football_2.Match.card
+    biz_name: card
+    description: ''
+    physical_column_id: european_football_2.Match.card
+    data_type: text
+  - attr_id: european_football_2.Match.cross
+    biz_name: cross
+    description: ''
+    physical_column_id: european_football_2.Match.cross
+    data_type: text
+  - attr_id: european_football_2.Match.corner
+    biz_name: corner
+    description: ''
+    physical_column_id: european_football_2.Match.corner
+    data_type: text
+  - attr_id: european_football_2.Match.possession
+    biz_name: possession
+    description: ''
+    physical_column_id: european_football_2.Match.possession
+    data_type: text
+  - attr_id: european_football_2.Match.B365H
+    biz_name: B365H
+    description: ''
+    physical_column_id: european_football_2.Match.B365H
+    data_type: real
+  - attr_id: european_football_2.Match.B365D
+    biz_name: B365D
+    description: ''
+    physical_column_id: european_football_2.Match.B365D
+    data_type: real
+  - attr_id: european_football_2.Match.B365A
+    biz_name: B365A
+    description: ''
+    physical_column_id: european_football_2.Match.B365A
+    data_type: real
+  - attr_id: european_football_2.Match.BWH
+    biz_name: BWH
+    description: ''
+    physical_column_id: european_football_2.Match.BWH
+    data_type: real
+  - attr_id: european_football_2.Match.BWD
+    biz_name: BWD
+    description: ''
+    physical_column_id: european_football_2.Match.BWD
+    data_type: real
+  - attr_id: european_football_2.Match.BWA
+    biz_name: BWA
+    description: ''
+    physical_column_id: european_football_2.Match.BWA
+    data_type: real
+  - attr_id: european_football_2.Match.IWH
+    biz_name: IWH
+    description: ''
+    physical_column_id: european_football_2.Match.IWH
+    data_type: real
+  - attr_id: european_football_2.Match.IWD
+    biz_name: IWD
+    description: ''
+    physical_column_id: european_football_2.Match.IWD
+    data_type: real
+  - attr_id: european_football_2.Match.IWA
+    biz_name: IWA
+    description: ''
+    physical_column_id: european_football_2.Match.IWA
+    data_type: real
+  - attr_id: european_football_2.Match.LBH
+    biz_name: LBH
+    description: ''
+    physical_column_id: european_football_2.Match.LBH
+    data_type: real
+  - attr_id: european_football_2.Match.LBD
+    biz_name: LBD
+    description: ''
+    physical_column_id: european_football_2.Match.LBD
+    data_type: real
+  - attr_id: european_football_2.Match.LBA
+    biz_name: LBA
+    description: ''
+    physical_column_id: european_football_2.Match.LBA
+    data_type: real
+  - attr_id: european_football_2.Match.PSH
+    biz_name: PSH
+    description: ''
+    physical_column_id: european_football_2.Match.PSH
+    data_type: real
+  - attr_id: european_football_2.Match.PSD
+    biz_name: PSD
+    description: ''
+    physical_column_id: european_football_2.Match.PSD
+    data_type: real
+  - attr_id: european_football_2.Match.PSA
+    biz_name: PSA
+    description: ''
+    physical_column_id: european_football_2.Match.PSA
+    data_type: real
+  - attr_id: european_football_2.Match.WHH
+    biz_name: WHH
+    description: ''
+    physical_column_id: european_football_2.Match.WHH
+    data_type: real
+  - attr_id: european_football_2.Match.WHD
+    biz_name: WHD
+    description: ''
+    physical_column_id: european_football_2.Match.WHD
+    data_type: real
+  - attr_id: european_football_2.Match.WHA
+    biz_name: WHA
+    description: ''
+    physical_column_id: european_football_2.Match.WHA
+    data_type: real
+  - attr_id: european_football_2.Match.SJH
+    biz_name: SJH
+    description: ''
+    physical_column_id: european_football_2.Match.SJH
+    data_type: real
+  - attr_id: european_football_2.Match.SJD
+    biz_name: SJD
+    description: ''
+    physical_column_id: european_football_2.Match.SJD
+    data_type: real
+  - attr_id: european_football_2.Match.SJA
+    biz_name: SJA
+    description: ''
+    physical_column_id: european_football_2.Match.SJA
+    data_type: real
+  - attr_id: european_football_2.Match.VCH
+    biz_name: VCH
+    description: ''
+    physical_column_id: european_football_2.Match.VCH
+    data_type: real
+  - attr_id: european_football_2.Match.VCD
+    biz_name: VCD
+    description: ''
+    physical_column_id: european_football_2.Match.VCD
+    data_type: real
+  - attr_id: european_football_2.Match.VCA
+    biz_name: VCA
+    description: ''
+    physical_column_id: european_football_2.Match.VCA
+    data_type: real
+  - attr_id: european_football_2.Match.GBH
+    biz_name: GBH
+    description: ''
+    physical_column_id: european_football_2.Match.GBH
+    data_type: real
+  - attr_id: european_football_2.Match.GBD
+    biz_name: GBD
+    description: ''
+    physical_column_id: european_football_2.Match.GBD
+    data_type: real
+  - attr_id: european_football_2.Match.GBA
+    biz_name: GBA
+    description: ''
+    physical_column_id: european_football_2.Match.GBA
+    data_type: real
+  - attr_id: european_football_2.Match.BSH
+    biz_name: BSH
+    description: ''
+    physical_column_id: european_football_2.Match.BSH
+    data_type: real
+  - attr_id: european_football_2.Match.BSD
+    biz_name: BSD
+    description: ''
+    physical_column_id: european_football_2.Match.BSD
+    data_type: real
+  - attr_id: european_football_2.Match.BSA
+    biz_name: BSA
+    description: ''
+    physical_column_id: european_football_2.Match.BSA
+    data_type: real
+relations:
+- relation_id: european_football_2.Player_Attributes_TO_Player
+  biz_name: Player_Attributes_to_Player
+  from_entity_attr_id: european_football_2.Player_Attributes.player_api_id
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Player_Attributes.player_api_id -> Player.player_api_id
+- relation_id: european_football_2.Player_Attributes_TO_Player
+  biz_name: Player_Attributes_to_Player
+  from_entity_attr_id: european_football_2.Player_Attributes.player_fifa_api_id
+  to_entity_attr_id: european_football_2.Player.player_fifa_api_id
+  description: Player_Attributes.player_fifa_api_id -> Player.player_fifa_api_id
+- relation_id: european_football_2.League_TO_Country
+  biz_name: League_to_Country
+  from_entity_attr_id: european_football_2.League.country_id
+  to_entity_attr_id: european_football_2.Country.id
+  description: League.country_id -> Country.id
+- relation_id: european_football_2.Team_Attributes_TO_Team
+  biz_name: Team_Attributes_to_Team
+  from_entity_attr_id: european_football_2.Team_Attributes.team_api_id
+  to_entity_attr_id: european_football_2.Team.team_api_id
+  description: Team_Attributes.team_api_id -> Team.team_api_id
+- relation_id: european_football_2.Team_Attributes_TO_Team
+  biz_name: Team_Attributes_to_Team
+  from_entity_attr_id: european_football_2.Team_Attributes.team_fifa_api_id
+  to_entity_attr_id: european_football_2.Team.team_fifa_api_id
+  description: Team_Attributes.team_fifa_api_id -> Team.team_fifa_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.away_player_11
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.away_player_11 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.away_player_10
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.away_player_10 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.away_player_9
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.away_player_9 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.away_player_8
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.away_player_8 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.away_player_7
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.away_player_7 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.away_player_6
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.away_player_6 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.away_player_5
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.away_player_5 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.away_player_4
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.away_player_4 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.away_player_3
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.away_player_3 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.away_player_2
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.away_player_2 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.away_player_1
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.away_player_1 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.home_player_11
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.home_player_11 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.home_player_10
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.home_player_10 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.home_player_9
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.home_player_9 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.home_player_8
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.home_player_8 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.home_player_7
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.home_player_7 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.home_player_6
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.home_player_6 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.home_player_5
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.home_player_5 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.home_player_4
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.home_player_4 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.home_player_3
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.home_player_3 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.home_player_2
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.home_player_2 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Player
+  biz_name: Match_to_Player
+  from_entity_attr_id: european_football_2.Match.home_player_1
+  to_entity_attr_id: european_football_2.Player.player_api_id
+  description: Match.home_player_1 -> Player.player_api_id
+- relation_id: european_football_2.Match_TO_Team
+  biz_name: Match_to_Team
+  from_entity_attr_id: european_football_2.Match.away_team_api_id
+  to_entity_attr_id: european_football_2.Team.team_api_id
+  description: Match.away_team_api_id -> Team.team_api_id
+- relation_id: european_football_2.Match_TO_Team
+  biz_name: Match_to_Team
+  from_entity_attr_id: european_football_2.Match.home_team_api_id
+  to_entity_attr_id: european_football_2.Team.team_api_id
+  description: Match.home_team_api_id -> Team.team_api_id

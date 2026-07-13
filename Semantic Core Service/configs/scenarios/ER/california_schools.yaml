@@ -1,0 +1,735 @@
+mapping_type: er
+version: '1.0'
+scenario_name: california_schools
+description: Auto-generated from dev_tables.json for california_schools
+databases:
+  california_schools: sqlite:///../MINIDEV_sqlite/dev_databases/california_schools/california_schools.sqlite
+entities:
+- entity_id: california_schools.frpm
+  biz_name: frpm
+  description: 'frpm: CDSCode; Academic Year; County Code'
+  physical_table_id: california_schools.frpm
+  attributes:
+  - attr_id: california_schools.frpm.CDSCode
+    biz_name: CDSCode
+    description: CDSCode
+    physical_column_id: california_schools.frpm.CDSCode
+    data_type: text
+  - attr_id: california_schools.frpm.Academic Year
+    biz_name: Academic Year
+    description: Academic Year
+    physical_column_id: california_schools.frpm.Academic Year
+    data_type: text
+  - attr_id: california_schools.frpm.County Code
+    biz_name: County Code
+    description: County Code
+    physical_column_id: california_schools.frpm.County Code
+    data_type: text
+  - attr_id: california_schools.frpm.District Code
+    biz_name: District Code
+    description: District Code
+    physical_column_id: california_schools.frpm.District Code
+    data_type: integer
+  - attr_id: california_schools.frpm.School Code
+    biz_name: School Code
+    description: School Code
+    physical_column_id: california_schools.frpm.School Code
+    data_type: text
+  - attr_id: california_schools.frpm.County Name
+    biz_name: County Name
+    description: County Code
+    physical_column_id: california_schools.frpm.County Name
+    data_type: text
+  - attr_id: california_schools.frpm.District Name
+    biz_name: District Name
+    description: District Name
+    physical_column_id: california_schools.frpm.District Name
+    data_type: text
+  - attr_id: california_schools.frpm.School Name
+    biz_name: School Name
+    description: School Name
+    physical_column_id: california_schools.frpm.School Name
+    data_type: text
+  - attr_id: california_schools.frpm.District Type
+    biz_name: District Type
+    description: District Type
+    physical_column_id: california_schools.frpm.District Type
+    data_type: text
+  - attr_id: california_schools.frpm.School Type
+    biz_name: School Type
+    description: School Type
+    physical_column_id: california_schools.frpm.School Type
+    data_type: text
+  - attr_id: california_schools.frpm.Educational Option Type
+    biz_name: Educational Option Type
+    description: Educational Option Type
+    physical_column_id: california_schools.frpm.Educational Option Type
+    data_type: text
+  - attr_id: california_schools.frpm.NSLP Provision Status
+    biz_name: NSLP Provision Status
+    description: NSLP Provision Status
+    physical_column_id: california_schools.frpm.NSLP Provision Status
+    data_type: text
+  - attr_id: california_schools.frpm.Charter School (Y/N)
+    biz_name: Charter School (Y/N)
+    description: 'Charter School (Y/N). 0: N;
+
+      1: Y'
+    physical_column_id: california_schools.frpm.Charter School (Y/N)
+    data_type: integer
+  - attr_id: california_schools.frpm.Charter School Number
+    biz_name: Charter School Number
+    description: Charter School Number
+    physical_column_id: california_schools.frpm.Charter School Number
+    data_type: text
+  - attr_id: california_schools.frpm.Charter Funding Type
+    biz_name: Charter Funding Type
+    description: Charter Funding Type
+    physical_column_id: california_schools.frpm.Charter Funding Type
+    data_type: text
+  - attr_id: california_schools.frpm.IRC
+    biz_name: IRC
+    description: Not useful
+    physical_column_id: california_schools.frpm.IRC
+    data_type: integer
+  - attr_id: california_schools.frpm.Low Grade
+    biz_name: Low Grade
+    description: Low Grade
+    physical_column_id: california_schools.frpm.Low Grade
+    data_type: text
+  - attr_id: california_schools.frpm.High Grade
+    biz_name: High Grade
+    description: High Grade
+    physical_column_id: california_schools.frpm.High Grade
+    data_type: text
+  - attr_id: california_schools.frpm.Enrollment (K-12)
+    biz_name: Enrollment (K-12)
+    description: 'Enrollment (K-12). commonsense evidence:
+
+
+      K-12: 1st grade - 12nd grade'
+    physical_column_id: california_schools.frpm.Enrollment (K-12)
+    data_type: real
+  - attr_id: california_schools.frpm.Free Meal Count (K-12)
+    biz_name: Free Meal Count (K-12)
+    description: 'Free Meal Count (K-12). commonsense evidence:
+
+
+      eligible free rate = Free Meal Count / Enrollment'
+    physical_column_id: california_schools.frpm.Free Meal Count (K-12)
+    data_type: real
+  - attr_id: california_schools.frpm.Percent (%) Eligible Free (K-12)
+    biz_name: Percent (%) Eligible Free (K-12)
+    description: ''
+    physical_column_id: california_schools.frpm.Percent (%) Eligible Free (K-12)
+    data_type: real
+  - attr_id: california_schools.frpm.FRPM Count (K-12)
+    biz_name: FRPM Count (K-12)
+    description: 'Free or Reduced Price Meal Count (K-12). commonsense evidence:
+
+
+      eligible FRPM rate = FRPM / Enrollment'
+    physical_column_id: california_schools.frpm.FRPM Count (K-12)
+    data_type: real
+  - attr_id: california_schools.frpm.Percent (%) Eligible FRPM (K-12)
+    biz_name: Percent (%) Eligible FRPM (K-12)
+    description: ''
+    physical_column_id: california_schools.frpm.Percent (%) Eligible FRPM (K-12)
+    data_type: real
+  - attr_id: california_schools.frpm.Enrollment (Ages 5-17)
+    biz_name: Enrollment (Ages 5-17)
+    description: Enrollment (Ages 5-17)
+    physical_column_id: california_schools.frpm.Enrollment (Ages 5-17)
+    data_type: real
+  - attr_id: california_schools.frpm.Free Meal Count (Ages 5-17)
+    biz_name: Free Meal Count (Ages 5-17)
+    description: 'Free Meal Count (Ages 5-17). commonsense evidence:
+
+
+      eligible free rate = Free Meal Count / Enrollment'
+    physical_column_id: california_schools.frpm.Free Meal Count (Ages 5-17)
+    data_type: real
+  - attr_id: california_schools.frpm.Percent (%) Eligible Free (Ages 5-17)
+    biz_name: Percent (%) Eligible Free (Ages 5-17)
+    description: ''
+    physical_column_id: california_schools.frpm.Percent (%) Eligible Free (Ages 5-17)
+    data_type: real
+  - attr_id: california_schools.frpm.FRPM Count (Ages 5-17)
+    biz_name: FRPM Count (Ages 5-17)
+    description: ''
+    physical_column_id: california_schools.frpm.FRPM Count (Ages 5-17)
+    data_type: real
+  - attr_id: california_schools.frpm.Percent (%) Eligible FRPM (Ages 5-17)
+    biz_name: Percent (%) Eligible FRPM (Ages 5-17)
+    description: ''
+    physical_column_id: california_schools.frpm.Percent (%) Eligible FRPM (Ages 5-17)
+    data_type: real
+  - attr_id: california_schools.frpm.2013-14 CALPADS Fall 1 Certification Status
+    biz_name: 2013-14 CALPADS Fall 1 Certification Status
+    description: 2013-14 CALPADS Fall 1 Certification Status
+    physical_column_id: california_schools.frpm.2013-14 CALPADS Fall 1 Certification
+      Status
+    data_type: integer
+- entity_id: california_schools.satscores
+  biz_name: satscores
+  description: 'satscores: California Department Schools; rtype; school name'
+  physical_table_id: california_schools.satscores
+  attributes:
+  - attr_id: california_schools.satscores.cds
+    biz_name: cds
+    description: California Department Schools
+    physical_column_id: california_schools.satscores.cds
+    data_type: text
+  - attr_id: california_schools.satscores.rtype
+    biz_name: rtype
+    description: rtype. unuseful
+    physical_column_id: california_schools.satscores.rtype
+    data_type: text
+  - attr_id: california_schools.satscores.sname
+    biz_name: school name
+    description: school name
+    physical_column_id: california_schools.satscores.sname
+    data_type: text
+  - attr_id: california_schools.satscores.dname
+    biz_name: district name
+    description: district segment
+    physical_column_id: california_schools.satscores.dname
+    data_type: text
+  - attr_id: california_schools.satscores.cname
+    biz_name: county name
+    description: county name
+    physical_column_id: california_schools.satscores.cname
+    data_type: text
+  - attr_id: california_schools.satscores.enroll12
+    biz_name: enrollment (1st-12nd grade)
+    description: enrollment (1st-12nd grade)
+    physical_column_id: california_schools.satscores.enroll12
+    data_type: integer
+  - attr_id: california_schools.satscores.NumTstTakr
+    biz_name: Number of Test Takers
+    description: Number of Test Takers in this school. number of test takers in each
+      school
+    physical_column_id: california_schools.satscores.NumTstTakr
+    data_type: integer
+  - attr_id: california_schools.satscores.AvgScrRead
+    biz_name: average scores in Reading
+    description: average scores in Reading. average scores in Reading
+    physical_column_id: california_schools.satscores.AvgScrRead
+    data_type: integer
+  - attr_id: california_schools.satscores.AvgScrMath
+    biz_name: average scores in Math
+    description: average scores in Math. average scores in Math
+    physical_column_id: california_schools.satscores.AvgScrMath
+    data_type: integer
+  - attr_id: california_schools.satscores.AvgScrWrite
+    biz_name: average scores in writing
+    description: average scores in writing. average scores in writing
+    physical_column_id: california_schools.satscores.AvgScrWrite
+    data_type: integer
+  - attr_id: california_schools.satscores.NumGE1500
+    biz_name: Number of Test Takers Whose Total SAT Scores Are Greater or Equal to
+      1500
+    description: 'Number of Test Takers Whose Total SAT Scores Are Greater or Equal
+      to 1500. Number of Test Takers Whose Total SAT Scores Are Greater or Equal to
+      1500
+
+
+      commonsense evidence:
+
+
+      Excellence Rate = NumGE1500 / NumTstTakr'
+    physical_column_id: california_schools.satscores.NumGE1500
+    data_type: integer
+- entity_id: california_schools.schools
+  biz_name: schools
+  description: 'schools: CDSCode; This field represents the 7-digit National Center
+    for Educational Statistics (NCES) school district identification number. The first
+    2 digits identify the state and the last 5 digits identify the school district.
+    Combined, they make a unique 7-digit ID for each school district.; This field
+    represents the 5-digit NCES school identification number. The NCESSchool combined
+    with the NCESDist form a unique 12-digit ID for each school.'
+  physical_table_id: california_schools.schools
+  attributes:
+  - attr_id: california_schools.schools.CDSCode
+    biz_name: CDSCode
+    description: CDSCode
+    physical_column_id: california_schools.schools.CDSCode
+    data_type: text
+  - attr_id: california_schools.schools.NCESDist
+    biz_name: National Center for Educational Statistics school district identification
+      number
+    description: This field represents the 7-digit National Center for Educational
+      Statistics (NCES) school district identification number. The first 2 digits
+      identify the state and the last 5 digits identify the school district. Combined,
+      they make a unique 7-digit ID for each school district.
+    physical_column_id: california_schools.schools.NCESDist
+    data_type: text
+  - attr_id: california_schools.schools.NCESSchool
+    biz_name: National Center for Educational Statistics school identification number
+    description: This field represents the 5-digit NCES school identification number.
+      The NCESSchool combined with the NCESDist form a unique 12-digit ID for each
+      school.
+    physical_column_id: california_schools.schools.NCESSchool
+    data_type: text
+  - attr_id: california_schools.schools.StatusType
+    biz_name: StatusType
+    description: 'This field identifies the status of the district.. Definitions of
+      the valid status types are listed below:
+
+      ·       Active: The district is in operation and providing instructional services.
+
+      ·       Closed: The district is not in operation and no longer providing instructional
+      services.
+
+      ·       Merged: The district has combined with another district or districts.
+
+      ·       Pending: The district has not opened for operation and instructional
+      services yet, but plans to open within the next 9–12 months.'
+    physical_column_id: california_schools.schools.StatusType
+    data_type: text
+  - attr_id: california_schools.schools.County
+    biz_name: County
+    description: County name
+    physical_column_id: california_schools.schools.County
+    data_type: text
+  - attr_id: california_schools.schools.District
+    biz_name: District
+    description: District
+    physical_column_id: california_schools.schools.District
+    data_type: text
+  - attr_id: california_schools.schools.School
+    biz_name: School
+    description: School
+    physical_column_id: california_schools.schools.School
+    data_type: text
+  - attr_id: california_schools.schools.Street
+    biz_name: Street
+    description: Street
+    physical_column_id: california_schools.schools.Street
+    data_type: text
+  - attr_id: california_schools.schools.StreetAbr
+    biz_name: street address
+    description: 'The abbreviated street address of the school, district, or administrative
+      authority’s physical location.. The abbreviated street address of the school,
+      district, or administrative authority’s physical location. Note: Some records
+      (primarily records of closed or retired schools) may not have data in this field.'
+    physical_column_id: california_schools.schools.StreetAbr
+    data_type: text
+  - attr_id: california_schools.schools.City
+    biz_name: City
+    description: City
+    physical_column_id: california_schools.schools.City
+    data_type: text
+  - attr_id: california_schools.schools.Zip
+    biz_name: Zip
+    description: Zip
+    physical_column_id: california_schools.schools.Zip
+    data_type: text
+  - attr_id: california_schools.schools.State
+    biz_name: State
+    description: State
+    physical_column_id: california_schools.schools.State
+    data_type: text
+  - attr_id: california_schools.schools.MailStreet
+    biz_name: MailStreet
+    description: 'MailStreet. The unabbreviated mailing address of the school, district,
+      or administrative authority. Note: 1) Some entities (primarily closed or retired
+      schools) may not have data in this field; 2) Many active entities have not provided
+      a mailing street address. For your convenience we have filled the unpopulated
+      MailStreet cells with Street data.'
+    physical_column_id: california_schools.schools.MailStreet
+    data_type: text
+  - attr_id: california_schools.schools.MailStrAbr
+    biz_name: mailing street address
+    description: 'the abbreviated mailing street address of the school, district,
+      or administrative authority.Note: Many active entities have not provided a mailing
+      street address. For your convenience we have filled the unpopulated MailStrAbr
+      cells with StreetAbr data.'
+    physical_column_id: california_schools.schools.MailStrAbr
+    data_type: text
+  - attr_id: california_schools.schools.MailCity
+    biz_name: mailing city
+    description: 'The city associated with the mailing address of the school, district,
+      or administrative authority. Note: Many entities have not provided a mailing
+      address city. For your convenience we have filled the unpopulated MailCity cells
+      with City data.'
+    physical_column_id: california_schools.schools.MailCity
+    data_type: text
+  - attr_id: california_schools.schools.MailZip
+    biz_name: mailing zip
+    description: 'The zip code associated with the mailing address of the school,
+      district, or administrative authority. Note: Many entities have not provided
+      a mailing address zip code. For your convenience we have filled the unpopulated
+      MailZip cells with Zip data.'
+    physical_column_id: california_schools.schools.MailZip
+    data_type: text
+  - attr_id: california_schools.schools.MailState
+    biz_name: mailing state
+    description: The state within the mailing address. For your convenience we have
+      filled the unpopulated MailState cells with State data.
+    physical_column_id: california_schools.schools.MailState
+    data_type: text
+  - attr_id: california_schools.schools.Phone
+    biz_name: Phone
+    description: Phone
+    physical_column_id: california_schools.schools.Phone
+    data_type: text
+  - attr_id: california_schools.schools.Ext
+    biz_name: extension
+    description: The phone number extension of the school, district, or administrative
+      authority.. The phone number extension of the school, district, or administrative
+      authority.
+    physical_column_id: california_schools.schools.Ext
+    data_type: text
+  - attr_id: california_schools.schools.Website
+    biz_name: Website
+    description: The website address of the school, district, or administrative authority..
+      The website address of the school, district, or administrative authority.
+    physical_column_id: california_schools.schools.Website
+    data_type: text
+  - attr_id: california_schools.schools.OpenDate
+    biz_name: OpenDate
+    description: 'The date the school opened.. format: date'
+    physical_column_id: california_schools.schools.OpenDate
+    data_type: date
+  - attr_id: california_schools.schools.ClosedDate
+    biz_name: ClosedDate
+    description: 'The date the school closed.. format: date'
+    physical_column_id: california_schools.schools.ClosedDate
+    data_type: date
+  - attr_id: california_schools.schools.Charter
+    biz_name: Charter
+    description: 'This field identifies a charter school.. The field is coded as follows:
+
+
+      ·       1 = The school is a charter
+
+
+      ·       0 = The school is not a charter'
+    physical_column_id: california_schools.schools.Charter
+    data_type: integer
+  - attr_id: california_schools.schools.CharterNum
+    biz_name: CharterNum
+    description: The charter school number,. 4-digit number assigned to a charter
+      school.
+    physical_column_id: california_schools.schools.CharterNum
+    data_type: text
+  - attr_id: california_schools.schools.FundingType
+    biz_name: FundingType
+    description: 'Indicates the charter school funding type. Values are as follows:
+
+
+      ·       Not in CS (California School) funding model
+
+
+      ·       Locally funded
+
+
+      ·       Directly funded'
+    physical_column_id: california_schools.schools.FundingType
+    data_type: text
+  - attr_id: california_schools.schools.DOC
+    biz_name: District Ownership Code
+    description: 'District Ownership Code. The District Ownership Code (DOC) is the
+      numeric code used to identify the category of the Administrative Authority.
+
+      •       00 - County Office of Education
+
+      •       02 – State Board of Education
+
+      •       03 – Statewide Benefit Charter
+
+      •       31 – State Special Schools
+
+      •       34 – Non-school Location*
+
+      •       52 – Elementary School District
+
+      •       54 – Unified School District
+
+      •       56 – High School District
+
+      •       98 – Regional Occupational Center/Program (ROC/P)
+
+      commonsense evidence:
+
+      *Only the California Education Authority has been included in the non-school
+      location category.'
+    physical_column_id: california_schools.schools.DOC
+    data_type: text
+  - attr_id: california_schools.schools.DOCType
+    biz_name: The District Ownership Code Type
+    description: The District Ownership Code Type is the text description of the DOC
+      category.. (See text values in DOC field description above)
+    physical_column_id: california_schools.schools.DOCType
+    data_type: text
+  - attr_id: california_schools.schools.SOC
+    biz_name: School Ownership Code
+    description: "The School Ownership Code is a numeric code used to identify the\
+      \ type of school.. •      08 - Preschool      \n•       09 – Special Education\
+      \ Schools (Public)\n•      11 – Youth Authority Facilities (CEA)\n•       13\
+      \ – Opportunity Schools\n•       14 – Juvenile Court Schools\n•       15 – Other\
+      \ County or District Programs\n•       31 – State Special Schools\n•       60\
+      \ – Elementary School (Public)\n•       61 – Elementary School in 1 School District\
+      \ (Public)\n•       62 – Intermediate/Middle Schools (Public)\n•       63 –\
+      \ Alternative Schools of Choice\n•       64 – Junior High Schools (Public)\n\
+      •       65 – K-12 Schools (Public)\n•       66 – High Schools (Public)\n•  \
+      \     67 – High Schools in 1 School District (Public)\n•       68 – Continuation\
+      \ High Schools\n•       69 – District Community Day Schools\n•       70 – Adult\
+      \ Education Centers\n•       98 – Regional Occupational Center/Program (ROC/P)"
+    physical_column_id: california_schools.schools.SOC
+    data_type: text
+  - attr_id: california_schools.schools.SOCType
+    biz_name: School Ownership Code Type
+    description: The School Ownership Code Type is the text description of the type
+      of school.. The School Ownership Code Type is the text description of the type
+      of school.
+    physical_column_id: california_schools.schools.SOCType
+    data_type: text
+  - attr_id: california_schools.schools.EdOpsCode
+    biz_name: Education Option Code
+    description: 'The Education Option Code is a short text description of the type
+      of education offered.. •      ALTSOC – Alternative School of Choice
+
+      •      COMM – County Community School
+
+      •       COMMDAY – Community Day School
+
+      •       CON – Continuation School
+
+      •       JUV – Juvenile Court School
+
+      •       OPP – Opportunity School
+
+      •       YTH – Youth Authority School
+
+      •       SSS – State Special School
+
+      •       SPEC – Special Education School
+
+      •       TRAD – Traditional
+
+      •       ROP – Regional Occupational Program
+
+      •       HOMHOS – Home and Hospital
+
+      •       SPECON – District Consortia Special Education School'
+    physical_column_id: california_schools.schools.EdOpsCode
+    data_type: text
+  - attr_id: california_schools.schools.EdOpsName
+    biz_name: Educational Option Name
+    description: Educational Option Name. The Educational Option Name is the long
+      text description of the type of education being offered.
+    physical_column_id: california_schools.schools.EdOpsName
+    data_type: text
+  - attr_id: california_schools.schools.EILCode
+    biz_name: Educational Instruction Level Code
+    description: 'The Educational Instruction Level Code is a short text description
+      of the institution''s type relative to the grade range served.. •       A –
+      Adult
+
+      •       ELEM – Elementary
+
+      •       ELEMHIGH – Elementary-High Combination
+
+      •       HS – High School
+
+      •       INTMIDJR – Intermediate/Middle/Junior High
+
+      •       PS – Preschool
+
+      •       UG – Ungraded'
+    physical_column_id: california_schools.schools.EILCode
+    data_type: text
+  - attr_id: california_schools.schools.EILName
+    biz_name: Educational Instruction Level Name
+    description: The Educational Instruction Level Name is the long text description
+      of the institution’s type relative to the grade range served.. The Educational
+      Instruction Level Name is the long text description of the institution’s type
+      relative to the grade range served.
+    physical_column_id: california_schools.schools.EILName
+    data_type: text
+  - attr_id: california_schools.schools.GSoffered
+    biz_name: grade span offered
+    description: 'The grade span offered is the lowest grade and the highest grade
+      offered or supported by the school, district, or administrative authority. This
+      field might differ from the grade span served as reported in the most recent
+      certified California Longitudinal Pupil Achievement (CALPADS) Fall 1 data collection..
+      For example XYZ School might display the following data:
+
+
+      GSoffered = P–Adult
+
+
+      GSserved = K–12'
+    physical_column_id: california_schools.schools.GSoffered
+    data_type: text
+  - attr_id: california_schools.schools.GSserved
+    biz_name: grade span served.
+    description: 'It is the lowest grade and the highest grade of student enrollment
+      as reported in the most recent certified CALPADS Fall 1 data collection. Only
+      K–12 enrollment is reported through CALPADS. This field may differ from the
+      grade span offered.. commonsense evidence:
+
+
+      1.     Only K–12 enrollment is reported through CALPADS
+
+
+      2.     Note: Special programs at independent study, alternative education, and
+      special education schools will often exceed the typical grade span for schools
+      of that type'
+    physical_column_id: california_schools.schools.GSserved
+    data_type: text
+  - attr_id: california_schools.schools.Virtual
+    biz_name: Virtual
+    description: 'This field identifies the type of virtual instruction offered by
+      the school. Virtual instruction is instruction in which students and teachers
+      are separated by time and/or location, and interaction occurs via computers
+      and/or telecommunications technologies.. The field is coded as follows:
+
+
+      ·       F = Exclusively Virtual – The school has no physical building where
+      students meet with each other or with teachers, all instruction is virtual.
+
+
+      ·       V = Primarily Virtual – The school focuses on a systematic program of
+      virtual instruction but includes some physical meetings among students or with
+      teachers.
+
+
+      ·       C = Primarily Classroom – The school offers virtual courses but virtual
+      instruction is not the primary means of instruction.
+
+
+      ·       N = Not Virtual – The school does not offer any virtual instruction.
+
+
+      ·       P = Partial Virtual – The school offers some, but not all, instruction
+      through virtual instruction. Note: This value was retired and replaced with
+      the Primarily Virtual and Primarily Classroom values beginning with the 2016–17
+      school year.'
+    physical_column_id: california_schools.schools.Virtual
+    data_type: text
+  - attr_id: california_schools.schools.Magnet
+    biz_name: Magnet
+    description: 'This field identifies whether a school is a magnet school and/or
+      provides a magnet program.. The field is coded as follows:
+
+
+      ·       1 = Magnet - The school is a magnet school and/or offers a magnet program.
+
+
+      ·       0 = Not Magnet - The school is not a magnet school and/or does not offer
+      a magnet program.
+
+
+      commonsense evidence:
+
+
+      Note: Preschools and adult education centers do not contain a magnet school
+      indicator.'
+    physical_column_id: california_schools.schools.Magnet
+    data_type: integer
+  - attr_id: california_schools.schools.Latitude
+    biz_name: Latitude
+    description: The angular distance (expressed in degrees) between the location
+      of the school, district, or administrative authority and the equator measured
+      north to south.. The angular distance (expressed in degrees) between the location
+      of the school, district, or administrative authority and the equator measured
+      north to south.
+    physical_column_id: california_schools.schools.Latitude
+    data_type: real
+  - attr_id: california_schools.schools.Longitude
+    biz_name: Longitude
+    description: The angular distance (expressed in degrees) between the location
+      of the school, district, or administrative authority and the prime meridian
+      (Greenwich, England) measured from west to east.. The angular distance (expressed
+      in degrees) between the location of the school, district, or administrative
+      authority and the prime meridian (Greenwich, England) measured from west to
+      east.
+    physical_column_id: california_schools.schools.Longitude
+    data_type: real
+  - attr_id: california_schools.schools.AdmFName1
+    biz_name: administrator's first name
+    description: 'administrator''s first name. The superintendent’s or principal’s
+      first name.
+
+
+      commonsense evidence:
+
+
+      Only active and pending districts and schools will display administrator information,
+      if applicable.'
+    physical_column_id: california_schools.schools.AdmFName1
+    data_type: text
+  - attr_id: california_schools.schools.AdmLName1
+    biz_name: administrator's last name
+    description: 'administrator''s last name. The superintendent’s or principal’s
+      last name.
+
+
+      commonsense evidence:
+
+      Only active and pending districts and schools will display administrator information,
+      if applicable.'
+    physical_column_id: california_schools.schools.AdmLName1
+    data_type: text
+  - attr_id: california_schools.schools.AdmEmail1
+    biz_name: administrator's email address
+    description: 'administrator''s email address. The superintendent’s or principal’s
+      email address.
+
+
+      commonsense evidence:
+
+
+      Only active and pending districts and schools will display administrator information,
+      if applicable.'
+    physical_column_id: california_schools.schools.AdmEmail1
+    data_type: text
+  - attr_id: california_schools.schools.AdmFName2
+    biz_name: AdmFName2
+    description: SAME as 1
+    physical_column_id: california_schools.schools.AdmFName2
+    data_type: text
+  - attr_id: california_schools.schools.AdmLName2
+    biz_name: AdmLName2
+    description: ''
+    physical_column_id: california_schools.schools.AdmLName2
+    data_type: text
+  - attr_id: california_schools.schools.AdmEmail2
+    biz_name: AdmEmail2
+    description: ''
+    physical_column_id: california_schools.schools.AdmEmail2
+    data_type: text
+  - attr_id: california_schools.schools.AdmFName3
+    biz_name: AdmFName3
+    description: not useful
+    physical_column_id: california_schools.schools.AdmFName3
+    data_type: text
+  - attr_id: california_schools.schools.AdmLName3
+    biz_name: AdmLName3
+    description: not useful
+    physical_column_id: california_schools.schools.AdmLName3
+    data_type: text
+  - attr_id: california_schools.schools.AdmEmail3
+    biz_name: AdmEmail3
+    description: not useful
+    physical_column_id: california_schools.schools.AdmEmail3
+    data_type: text
+  - attr_id: california_schools.schools.LastUpdate
+    biz_name: LastUpdate
+    description: 'when is this record updated last time. format: date'
+    physical_column_id: california_schools.schools.LastUpdate
+    data_type: date
+relations:
+- relation_id: california_schools.frpm_TO_schools
+  biz_name: frpm_to_schools
+  from_entity_attr_id: california_schools.frpm.CDSCode
+  to_entity_attr_id: california_schools.schools.CDSCode
+  description: frpm.CDSCode -> schools.CDSCode
+- relation_id: california_schools.satscores_TO_schools
+  biz_name: satscores_to_schools
+  from_entity_attr_id: california_schools.satscores.cds
+  to_entity_attr_id: california_schools.schools.CDSCode
+  description: satscores.cds -> schools.CDSCode

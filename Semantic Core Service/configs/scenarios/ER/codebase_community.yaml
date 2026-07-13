@@ -1,0 +1,475 @@
+mapping_type: er
+version: '1.0'
+scenario_name: codebase_community
+description: Auto-generated from dev_tables.json for codebase_community
+databases:
+  codebase_community: sqlite:///../MINIDEV_sqlite/dev_databases/codebase_community/codebase_community.sqlite
+entities:
+- entity_id: codebase_community.badges
+  biz_name: badges
+  description: 'badges: the badge id; the unique id of the user; the badge name the
+    user obtained'
+  physical_table_id: codebase_community.badges
+  attributes:
+  - attr_id: codebase_community.badges.Id
+    biz_name: Id
+    description: ''
+    physical_column_id: codebase_community.badges.Id
+    data_type: integer
+  - attr_id: codebase_community.badges.UserId
+    biz_name: UserId
+    description: ''
+    physical_column_id: codebase_community.badges.UserId
+    data_type: integer
+  - attr_id: codebase_community.badges.Name
+    biz_name: Name
+    description: ''
+    physical_column_id: codebase_community.badges.Name
+    data_type: text
+  - attr_id: codebase_community.badges.Date
+    biz_name: Date
+    description: ''
+    physical_column_id: codebase_community.badges.Date
+    data_type: datetime
+- entity_id: codebase_community.comments
+  biz_name: comments
+  description: 'comments: the comment Id; the unique id of the post; rating score'
+  physical_table_id: codebase_community.comments
+  attributes:
+  - attr_id: codebase_community.comments.Id
+    biz_name: Id
+    description: ''
+    physical_column_id: codebase_community.comments.Id
+    data_type: integer
+  - attr_id: codebase_community.comments.PostId
+    biz_name: PostId
+    description: ''
+    physical_column_id: codebase_community.comments.PostId
+    data_type: integer
+  - attr_id: codebase_community.comments.Score
+    biz_name: Score
+    description: ''
+    physical_column_id: codebase_community.comments.Score
+    data_type: integer
+  - attr_id: codebase_community.comments.Text
+    biz_name: Text
+    description: ''
+    physical_column_id: codebase_community.comments.Text
+    data_type: text
+  - attr_id: codebase_community.comments.CreationDate
+    biz_name: CreationDate
+    description: ''
+    physical_column_id: codebase_community.comments.CreationDate
+    data_type: datetime
+  - attr_id: codebase_community.comments.UserId
+    biz_name: UserId
+    description: ''
+    physical_column_id: codebase_community.comments.UserId
+    data_type: integer
+  - attr_id: codebase_community.comments.UserDisplayName
+    biz_name: UserDisplayName
+    description: ''
+    physical_column_id: codebase_community.comments.UserDisplayName
+    data_type: text
+- entity_id: codebase_community.postHistory
+  biz_name: postHistory
+  description: 'postHistory: the post history id; the id of the post history type;
+    the unique id of the post'
+  physical_table_id: codebase_community.postHistory
+  attributes:
+  - attr_id: codebase_community.postHistory.Id
+    biz_name: Id
+    description: ''
+    physical_column_id: codebase_community.postHistory.Id
+    data_type: integer
+  - attr_id: codebase_community.postHistory.PostHistoryTypeId
+    biz_name: PostHistoryTypeId
+    description: ''
+    physical_column_id: codebase_community.postHistory.PostHistoryTypeId
+    data_type: integer
+  - attr_id: codebase_community.postHistory.PostId
+    biz_name: PostId
+    description: ''
+    physical_column_id: codebase_community.postHistory.PostId
+    data_type: integer
+  - attr_id: codebase_community.postHistory.RevisionGUID
+    biz_name: RevisionGUID
+    description: ''
+    physical_column_id: codebase_community.postHistory.RevisionGUID
+    data_type: text
+  - attr_id: codebase_community.postHistory.CreationDate
+    biz_name: CreationDate
+    description: ''
+    physical_column_id: codebase_community.postHistory.CreationDate
+    data_type: datetime
+  - attr_id: codebase_community.postHistory.UserId
+    biz_name: UserId
+    description: ''
+    physical_column_id: codebase_community.postHistory.UserId
+    data_type: integer
+  - attr_id: codebase_community.postHistory.Text
+    biz_name: Text
+    description: ''
+    physical_column_id: codebase_community.postHistory.Text
+    data_type: text
+  - attr_id: codebase_community.postHistory.Comment
+    biz_name: Comment
+    description: ''
+    physical_column_id: codebase_community.postHistory.Comment
+    data_type: text
+  - attr_id: codebase_community.postHistory.UserDisplayName
+    biz_name: UserDisplayName
+    description: ''
+    physical_column_id: codebase_community.postHistory.UserDisplayName
+    data_type: text
+- entity_id: codebase_community.postLinks
+  biz_name: postLinks
+  description: 'postLinks: the post link id; the creation date of the post link; the
+    post id'
+  physical_table_id: codebase_community.postLinks
+  attributes:
+  - attr_id: codebase_community.postLinks.Id
+    biz_name: Id
+    description: ''
+    physical_column_id: codebase_community.postLinks.Id
+    data_type: integer
+  - attr_id: codebase_community.postLinks.CreationDate
+    biz_name: CreationDate
+    description: ''
+    physical_column_id: codebase_community.postLinks.CreationDate
+    data_type: datetime
+  - attr_id: codebase_community.postLinks.PostId
+    biz_name: PostId
+    description: ''
+    physical_column_id: codebase_community.postLinks.PostId
+    data_type: integer
+  - attr_id: codebase_community.postLinks.RelatedPostId
+    biz_name: RelatedPostId
+    description: ''
+    physical_column_id: codebase_community.postLinks.RelatedPostId
+    data_type: integer
+  - attr_id: codebase_community.postLinks.LinkTypeId
+    biz_name: LinkTypeId
+    description: ''
+    physical_column_id: codebase_community.postLinks.LinkTypeId
+    data_type: integer
+- entity_id: codebase_community.posts
+  biz_name: posts
+  description: 'posts: the post id; the id of the post type; the accepted answer id
+    of the post'
+  physical_table_id: codebase_community.posts
+  attributes:
+  - attr_id: codebase_community.posts.Id
+    biz_name: Id
+    description: ''
+    physical_column_id: codebase_community.posts.Id
+    data_type: integer
+  - attr_id: codebase_community.posts.PostTypeId
+    biz_name: PostTypeId
+    description: ''
+    physical_column_id: codebase_community.posts.PostTypeId
+    data_type: integer
+  - attr_id: codebase_community.posts.AcceptedAnswerId
+    biz_name: AcceptedAnswerId
+    description: ''
+    physical_column_id: codebase_community.posts.AcceptedAnswerId
+    data_type: integer
+  - attr_id: codebase_community.posts.CreaionDate
+    biz_name: CreaionDate
+    description: ''
+    physical_column_id: codebase_community.posts.CreaionDate
+    data_type: datetime
+  - attr_id: codebase_community.posts.Score
+    biz_name: Score
+    description: ''
+    physical_column_id: codebase_community.posts.Score
+    data_type: integer
+  - attr_id: codebase_community.posts.ViewCount
+    biz_name: ViewCount
+    description: ''
+    physical_column_id: codebase_community.posts.ViewCount
+    data_type: integer
+  - attr_id: codebase_community.posts.Body
+    biz_name: Body
+    description: ''
+    physical_column_id: codebase_community.posts.Body
+    data_type: text
+  - attr_id: codebase_community.posts.OwnerUserId
+    biz_name: OwnerUserId
+    description: ''
+    physical_column_id: codebase_community.posts.OwnerUserId
+    data_type: integer
+  - attr_id: codebase_community.posts.LasActivityDate
+    biz_name: LasActivityDate
+    description: ''
+    physical_column_id: codebase_community.posts.LasActivityDate
+    data_type: datetime
+  - attr_id: codebase_community.posts.Title
+    biz_name: Title
+    description: ''
+    physical_column_id: codebase_community.posts.Title
+    data_type: text
+  - attr_id: codebase_community.posts.Tags
+    biz_name: Tags
+    description: ''
+    physical_column_id: codebase_community.posts.Tags
+    data_type: text
+  - attr_id: codebase_community.posts.AnswerCount
+    biz_name: AnswerCount
+    description: ''
+    physical_column_id: codebase_community.posts.AnswerCount
+    data_type: integer
+  - attr_id: codebase_community.posts.CommentCount
+    biz_name: CommentCount
+    description: ''
+    physical_column_id: codebase_community.posts.CommentCount
+    data_type: integer
+  - attr_id: codebase_community.posts.FavoriteCount
+    biz_name: FavoriteCount
+    description: ''
+    physical_column_id: codebase_community.posts.FavoriteCount
+    data_type: integer
+  - attr_id: codebase_community.posts.LastEditorUserId
+    biz_name: LastEditorUserId
+    description: ''
+    physical_column_id: codebase_community.posts.LastEditorUserId
+    data_type: integer
+  - attr_id: codebase_community.posts.LastEditDate
+    biz_name: LastEditDate
+    description: ''
+    physical_column_id: codebase_community.posts.LastEditDate
+    data_type: datetime
+  - attr_id: codebase_community.posts.CommunityOwnedDate
+    biz_name: CommunityOwnedDate
+    description: ''
+    physical_column_id: codebase_community.posts.CommunityOwnedDate
+    data_type: datetime
+  - attr_id: codebase_community.posts.ParentId
+    biz_name: ParentId
+    description: ''
+    physical_column_id: codebase_community.posts.ParentId
+    data_type: integer
+  - attr_id: codebase_community.posts.ClosedDate
+    biz_name: ClosedDate
+    description: ''
+    physical_column_id: codebase_community.posts.ClosedDate
+    data_type: datetime
+  - attr_id: codebase_community.posts.OwnerDisplayName
+    biz_name: OwnerDisplayName
+    description: ''
+    physical_column_id: codebase_community.posts.OwnerDisplayName
+    data_type: text
+  - attr_id: codebase_community.posts.LastEditorDisplayName
+    biz_name: LastEditorDisplayName
+    description: ''
+    physical_column_id: codebase_community.posts.LastEditorDisplayName
+    data_type: text
+- entity_id: codebase_community.tags
+  biz_name: tags
+  description: 'tags: the tag id; the name of the tag; the count of posts that contain
+    this tag'
+  physical_table_id: codebase_community.tags
+  attributes:
+  - attr_id: codebase_community.tags.Id
+    biz_name: Id
+    description: ''
+    physical_column_id: codebase_community.tags.Id
+    data_type: integer
+  - attr_id: codebase_community.tags.TagName
+    biz_name: TagName
+    description: ''
+    physical_column_id: codebase_community.tags.TagName
+    data_type: text
+  - attr_id: codebase_community.tags.Count
+    biz_name: Count
+    description: ''
+    physical_column_id: codebase_community.tags.Count
+    data_type: integer
+  - attr_id: codebase_community.tags.ExcerptPostId
+    biz_name: ExcerptPostId
+    description: ''
+    physical_column_id: codebase_community.tags.ExcerptPostId
+    data_type: integer
+  - attr_id: codebase_community.tags.WikiPostId
+    biz_name: WikiPostId
+    description: ''
+    physical_column_id: codebase_community.tags.WikiPostId
+    data_type: integer
+- entity_id: codebase_community.users
+  biz_name: users
+  description: 'users: the user id; the user''s reputation; the creation date of the
+    user account'
+  physical_table_id: codebase_community.users
+  attributes:
+  - attr_id: codebase_community.users.Id
+    biz_name: Id
+    description: ''
+    physical_column_id: codebase_community.users.Id
+    data_type: integer
+  - attr_id: codebase_community.users.Reputation
+    biz_name: Reputation
+    description: ''
+    physical_column_id: codebase_community.users.Reputation
+    data_type: integer
+  - attr_id: codebase_community.users.CreationDate
+    biz_name: CreationDate
+    description: ''
+    physical_column_id: codebase_community.users.CreationDate
+    data_type: datetime
+  - attr_id: codebase_community.users.DisplayName
+    biz_name: DisplayName
+    description: ''
+    physical_column_id: codebase_community.users.DisplayName
+    data_type: text
+  - attr_id: codebase_community.users.LastAccessDate
+    biz_name: LastAccessDate
+    description: ''
+    physical_column_id: codebase_community.users.LastAccessDate
+    data_type: datetime
+  - attr_id: codebase_community.users.WebsiteUrl
+    biz_name: WebsiteUrl
+    description: ''
+    physical_column_id: codebase_community.users.WebsiteUrl
+    data_type: text
+  - attr_id: codebase_community.users.Location
+    biz_name: Location
+    description: ''
+    physical_column_id: codebase_community.users.Location
+    data_type: text
+  - attr_id: codebase_community.users.AboutMe
+    biz_name: AboutMe
+    description: ''
+    physical_column_id: codebase_community.users.AboutMe
+    data_type: text
+  - attr_id: codebase_community.users.Views
+    biz_name: Views
+    description: ''
+    physical_column_id: codebase_community.users.Views
+    data_type: integer
+  - attr_id: codebase_community.users.UpVotes
+    biz_name: UpVotes
+    description: ''
+    physical_column_id: codebase_community.users.UpVotes
+    data_type: integer
+  - attr_id: codebase_community.users.DownVotes
+    biz_name: DownVotes
+    description: ''
+    physical_column_id: codebase_community.users.DownVotes
+    data_type: integer
+  - attr_id: codebase_community.users.AccountId
+    biz_name: AccountId
+    description: ''
+    physical_column_id: codebase_community.users.AccountId
+    data_type: integer
+  - attr_id: codebase_community.users.Age
+    biz_name: Age
+    description: ''
+    physical_column_id: codebase_community.users.Age
+    data_type: integer
+  - attr_id: codebase_community.users.ProfileImageUrl
+    biz_name: ProfileImageUrl
+    description: ''
+    physical_column_id: codebase_community.users.ProfileImageUrl
+    data_type: text
+- entity_id: codebase_community.votes
+  biz_name: votes
+  description: 'votes: the vote id; the id of the post that is voted; the id of the
+    vote type'
+  physical_table_id: codebase_community.votes
+  attributes:
+  - attr_id: codebase_community.votes.Id
+    biz_name: Id
+    description: ''
+    physical_column_id: codebase_community.votes.Id
+    data_type: integer
+  - attr_id: codebase_community.votes.PostId
+    biz_name: PostId
+    description: ''
+    physical_column_id: codebase_community.votes.PostId
+    data_type: integer
+  - attr_id: codebase_community.votes.VoteTypeId
+    biz_name: VoteTypeId
+    description: ''
+    physical_column_id: codebase_community.votes.VoteTypeId
+    data_type: integer
+  - attr_id: codebase_community.votes.CreationDate
+    biz_name: CreationDate
+    description: ''
+    physical_column_id: codebase_community.votes.CreationDate
+    data_type: date
+  - attr_id: codebase_community.votes.UserId
+    biz_name: UserId
+    description: ''
+    physical_column_id: codebase_community.votes.UserId
+    data_type: integer
+  - attr_id: codebase_community.votes.BountyAmount
+    biz_name: BountyAmount
+    description: ''
+    physical_column_id: codebase_community.votes.BountyAmount
+    data_type: integer
+relations:
+- relation_id: codebase_community.badges_TO_users
+  biz_name: badges_to_users
+  from_entity_attr_id: codebase_community.badges.UserId
+  to_entity_attr_id: codebase_community.users.Id
+  description: badges.UserId -> users.Id
+- relation_id: codebase_community.comments_TO_users
+  biz_name: comments_to_users
+  from_entity_attr_id: codebase_community.comments.UserId
+  to_entity_attr_id: codebase_community.users.Id
+  description: comments.UserId -> users.Id
+- relation_id: codebase_community.comments_TO_posts
+  biz_name: comments_to_posts
+  from_entity_attr_id: codebase_community.comments.PostId
+  to_entity_attr_id: codebase_community.posts.Id
+  description: comments.PostId -> posts.Id
+- relation_id: codebase_community.postHistory_TO_users
+  biz_name: postHistory_to_users
+  from_entity_attr_id: codebase_community.postHistory.UserId
+  to_entity_attr_id: codebase_community.users.Id
+  description: postHistory.UserId -> users.Id
+- relation_id: codebase_community.postHistory_TO_posts
+  biz_name: postHistory_to_posts
+  from_entity_attr_id: codebase_community.postHistory.PostId
+  to_entity_attr_id: codebase_community.posts.Id
+  description: postHistory.PostId -> posts.Id
+- relation_id: codebase_community.postLinks_TO_posts
+  biz_name: postLinks_to_posts
+  from_entity_attr_id: codebase_community.postLinks.RelatedPostId
+  to_entity_attr_id: codebase_community.posts.Id
+  description: postLinks.RelatedPostId -> posts.Id
+- relation_id: codebase_community.postLinks_TO_posts
+  biz_name: postLinks_to_posts
+  from_entity_attr_id: codebase_community.postLinks.PostId
+  to_entity_attr_id: codebase_community.posts.Id
+  description: postLinks.PostId -> posts.Id
+- relation_id: codebase_community.posts_TO_posts
+  biz_name: posts_to_posts
+  from_entity_attr_id: codebase_community.posts.ParentId
+  to_entity_attr_id: codebase_community.posts.Id
+  description: posts.ParentId -> posts.Id
+- relation_id: codebase_community.posts_TO_users
+  biz_name: posts_to_users
+  from_entity_attr_id: codebase_community.posts.OwnerUserId
+  to_entity_attr_id: codebase_community.users.Id
+  description: posts.OwnerUserId -> users.Id
+- relation_id: codebase_community.posts_TO_users
+  biz_name: posts_to_users
+  from_entity_attr_id: codebase_community.posts.LastEditorUserId
+  to_entity_attr_id: codebase_community.users.Id
+  description: posts.LastEditorUserId -> users.Id
+- relation_id: codebase_community.tags_TO_posts
+  biz_name: tags_to_posts
+  from_entity_attr_id: codebase_community.tags.ExcerptPostId
+  to_entity_attr_id: codebase_community.posts.Id
+  description: tags.ExcerptPostId -> posts.Id
+- relation_id: codebase_community.votes_TO_users
+  biz_name: votes_to_users
+  from_entity_attr_id: codebase_community.votes.UserId
+  to_entity_attr_id: codebase_community.users.Id
+  description: votes.UserId -> users.Id
+- relation_id: codebase_community.votes_TO_posts
+  biz_name: votes_to_posts
+  from_entity_attr_id: codebase_community.votes.PostId
+  to_entity_attr_id: codebase_community.posts.Id
+  description: votes.PostId -> posts.Id

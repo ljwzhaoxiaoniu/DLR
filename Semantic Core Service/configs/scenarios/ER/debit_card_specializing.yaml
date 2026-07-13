@@ -1,0 +1,146 @@
+mapping_type: er
+version: '1.0'
+scenario_name: debit_card_specializing
+description: Auto-generated from dev_tables.json for debit_card_specializing
+databases:
+  debit_card_specializing: sqlite:///../MINIDEV_sqlite/dev_databases/debit_card_specializing/debit_card_specializing.sqlite
+entities:
+- entity_id: debit_card_specializing.customers
+  biz_name: customers
+  description: 'customers: identification of the customer; client segment; Currency'
+  physical_table_id: debit_card_specializing.customers
+  attributes:
+  - attr_id: debit_card_specializing.customers.CustomerID
+    biz_name: CustomerID
+    description: identification of the customer
+    physical_column_id: debit_card_specializing.customers.CustomerID
+    data_type: integer
+  - attr_id: debit_card_specializing.customers.Segment
+    biz_name: client segment
+    description: client segment
+    physical_column_id: debit_card_specializing.customers.Segment
+    data_type: text
+  - attr_id: debit_card_specializing.customers.Currency
+    biz_name: Currency
+    description: Currency
+    physical_column_id: debit_card_specializing.customers.Currency
+    data_type: text
+- entity_id: debit_card_specializing.gasstations
+  biz_name: gasstations
+  description: 'gasstations: Gas Station ID; Chain ID; chain segment'
+  physical_table_id: debit_card_specializing.gasstations
+  attributes:
+  - attr_id: debit_card_specializing.gasstations.GasStationID
+    biz_name: Gas Station ID
+    description: Gas Station ID
+    physical_column_id: debit_card_specializing.gasstations.GasStationID
+    data_type: integer
+  - attr_id: debit_card_specializing.gasstations.ChainID
+    biz_name: Chain ID
+    description: Chain ID
+    physical_column_id: debit_card_specializing.gasstations.ChainID
+    data_type: integer
+  - attr_id: debit_card_specializing.gasstations.Country
+    biz_name: Country
+    description: ''
+    physical_column_id: debit_card_specializing.gasstations.Country
+    data_type: text
+  - attr_id: debit_card_specializing.gasstations.Segment
+    biz_name: chain segment
+    description: chain segment
+    physical_column_id: debit_card_specializing.gasstations.Segment
+    data_type: text
+- entity_id: debit_card_specializing.products
+  biz_name: products
+  description: 'products: Product ID; Description'
+  physical_table_id: debit_card_specializing.products
+  attributes:
+  - attr_id: debit_card_specializing.products.ProductID
+    biz_name: Product ID
+    description: Product ID
+    physical_column_id: debit_card_specializing.products.ProductID
+    data_type: integer
+  - attr_id: debit_card_specializing.products.Description
+    biz_name: Description
+    description: Description
+    physical_column_id: debit_card_specializing.products.Description
+    data_type: text
+- entity_id: debit_card_specializing.transactions_1k
+  biz_name: transactions_1k
+  description: 'transactions_1k: Transaction ID; Date; Time'
+  physical_table_id: debit_card_specializing.transactions_1k
+  attributes:
+  - attr_id: debit_card_specializing.transactions_1k.TransactionID
+    biz_name: Transaction ID
+    description: Transaction ID
+    physical_column_id: debit_card_specializing.transactions_1k.TransactionID
+    data_type: integer
+  - attr_id: debit_card_specializing.transactions_1k.Date
+    biz_name: Date
+    description: 'Date. format: date'
+    physical_column_id: debit_card_specializing.transactions_1k.Date
+    data_type: date
+  - attr_id: debit_card_specializing.transactions_1k.Time
+    biz_name: Time
+    description: Time
+    physical_column_id: debit_card_specializing.transactions_1k.Time
+    data_type: text
+  - attr_id: debit_card_specializing.transactions_1k.CustomerID
+    biz_name: Customer ID
+    description: Customer ID
+    physical_column_id: debit_card_specializing.transactions_1k.CustomerID
+    data_type: integer
+  - attr_id: debit_card_specializing.transactions_1k.CardID
+    biz_name: Card ID
+    description: Card ID
+    physical_column_id: debit_card_specializing.transactions_1k.CardID
+    data_type: integer
+  - attr_id: debit_card_specializing.transactions_1k.GasStationID
+    biz_name: Gas Station ID
+    description: Gas Station ID
+    physical_column_id: debit_card_specializing.transactions_1k.GasStationID
+    data_type: integer
+  - attr_id: debit_card_specializing.transactions_1k.ProductID
+    biz_name: Product ID
+    description: Product ID
+    physical_column_id: debit_card_specializing.transactions_1k.ProductID
+    data_type: integer
+  - attr_id: debit_card_specializing.transactions_1k.Amount
+    biz_name: Amount
+    description: Amount
+    physical_column_id: debit_card_specializing.transactions_1k.Amount
+    data_type: integer
+  - attr_id: debit_card_specializing.transactions_1k.Price
+    biz_name: Price
+    description: 'Price. commonsense evidence:
+
+
+      total price = Amount x Price'
+    physical_column_id: debit_card_specializing.transactions_1k.Price
+    data_type: real
+- entity_id: debit_card_specializing.yearmonth
+  biz_name: yearmonth
+  description: 'yearmonth: Customer ID; Date; consumption'
+  physical_table_id: debit_card_specializing.yearmonth
+  attributes:
+  - attr_id: debit_card_specializing.yearmonth.CustomerID
+    biz_name: Customer ID
+    description: Customer ID
+    physical_column_id: debit_card_specializing.yearmonth.CustomerID
+    data_type: integer
+  - attr_id: debit_card_specializing.yearmonth.Date
+    biz_name: Date
+    description: Date
+    physical_column_id: debit_card_specializing.yearmonth.Date
+    data_type: text
+  - attr_id: debit_card_specializing.yearmonth.Consumption
+    biz_name: Consumption
+    description: consumption
+    physical_column_id: debit_card_specializing.yearmonth.Consumption
+    data_type: real
+relations:
+- relation_id: debit_card_specializing.yearmonth_TO_customers
+  biz_name: yearmonth_to_customers
+  from_entity_attr_id: debit_card_specializing.yearmonth.CustomerID
+  to_entity_attr_id: debit_card_specializing.customers.CustomerID
+  description: yearmonth.CustomerID -> customers.CustomerID

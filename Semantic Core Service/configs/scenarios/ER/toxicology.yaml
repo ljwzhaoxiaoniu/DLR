@@ -1,0 +1,112 @@
+mapping_type: er
+version: '1.0'
+scenario_name: toxicology
+description: Auto-generated from dev_tables.json for toxicology
+databases:
+  toxicology: sqlite:///../MINIDEV_sqlite/dev_databases/toxicology/toxicology.sqlite
+entities:
+- entity_id: toxicology.atom
+  biz_name: atom
+  description: 'atom: the unique id of atoms; identifying the molecule to which the
+    atom belongs; the element of the toxicology'
+  physical_table_id: toxicology.atom
+  attributes:
+  - attr_id: toxicology.atom.atom_id
+    biz_name: atom_id
+    description: ''
+    physical_column_id: toxicology.atom.atom_id
+    data_type: text
+  - attr_id: toxicology.atom.molecule_id
+    biz_name: molecule_id
+    description: ''
+    physical_column_id: toxicology.atom.molecule_id
+    data_type: text
+  - attr_id: toxicology.atom.element
+    biz_name: element
+    description: ''
+    physical_column_id: toxicology.atom.element
+    data_type: text
+- entity_id: toxicology.bond
+  biz_name: bond
+  description: 'bond: unique id representing bonds; identifying the molecule in which
+    the bond appears; type of the bond'
+  physical_table_id: toxicology.bond
+  attributes:
+  - attr_id: toxicology.bond.bond_id
+    biz_name: bond_id
+    description: ''
+    physical_column_id: toxicology.bond.bond_id
+    data_type: text
+  - attr_id: toxicology.bond.molecule_id
+    biz_name: molecule_id
+    description: ''
+    physical_column_id: toxicology.bond.molecule_id
+    data_type: text
+  - attr_id: toxicology.bond.bond_type
+    biz_name: bond_type
+    description: ''
+    physical_column_id: toxicology.bond.bond_type
+    data_type: text
+- entity_id: toxicology.connected
+  biz_name: connected
+  description: 'connected: id of the first atom; id of the second atom; bond id representing
+    bond between two atoms'
+  physical_table_id: toxicology.connected
+  attributes:
+  - attr_id: toxicology.connected.atom_id
+    biz_name: atom_id
+    description: ''
+    physical_column_id: toxicology.connected.atom_id
+    data_type: text
+  - attr_id: toxicology.connected.atom_id2
+    biz_name: atom_id2
+    description: ''
+    physical_column_id: toxicology.connected.atom_id2
+    data_type: text
+  - attr_id: toxicology.connected.bond_id
+    biz_name: bond_id
+    description: ''
+    physical_column_id: toxicology.connected.bond_id
+    data_type: text
+- entity_id: toxicology.molecule
+  biz_name: molecule
+  description: 'molecule: unique id of molecule; whether this molecule is carcinogenic
+    or not'
+  physical_table_id: toxicology.molecule
+  attributes:
+  - attr_id: toxicology.molecule.molecule_id
+    biz_name: molecule_id
+    description: ''
+    physical_column_id: toxicology.molecule.molecule_id
+    data_type: text
+  - attr_id: toxicology.molecule.label
+    biz_name: label
+    description: ''
+    physical_column_id: toxicology.molecule.label
+    data_type: text
+relations:
+- relation_id: toxicology.atom_TO_molecule
+  biz_name: atom_to_molecule
+  from_entity_attr_id: toxicology.atom.molecule_id
+  to_entity_attr_id: toxicology.molecule.molecule_id
+  description: atom.molecule_id -> molecule.molecule_id
+- relation_id: toxicology.bond_TO_molecule
+  biz_name: bond_to_molecule
+  from_entity_attr_id: toxicology.bond.molecule_id
+  to_entity_attr_id: toxicology.molecule.molecule_id
+  description: bond.molecule_id -> molecule.molecule_id
+- relation_id: toxicology.connected_TO_bond
+  biz_name: connected_to_bond
+  from_entity_attr_id: toxicology.connected.bond_id
+  to_entity_attr_id: toxicology.bond.bond_id
+  description: connected.bond_id -> bond.bond_id
+- relation_id: toxicology.connected_TO_atom
+  biz_name: connected_to_atom
+  from_entity_attr_id: toxicology.connected.atom_id2
+  to_entity_attr_id: toxicology.atom.atom_id
+  description: connected.atom_id2 -> atom.atom_id
+- relation_id: toxicology.connected_TO_atom
+  biz_name: connected_to_atom
+  from_entity_attr_id: toxicology.connected.atom_id
+  to_entity_attr_id: toxicology.atom.atom_id
+  description: connected.atom_id -> atom.atom_id

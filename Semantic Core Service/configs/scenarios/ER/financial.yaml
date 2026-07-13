@@ -1,0 +1,407 @@
+mapping_type: er
+version: '1.0'
+scenario_name: financial
+description: Auto-generated from dev_tables.json for financial
+databases:
+  financial: sqlite:///../MINIDEV_sqlite/dev_databases/financial/financial.sqlite
+entities:
+- entity_id: financial.account
+  biz_name: account
+  description: 'account: the id of the account; location of branch; frequency of the
+    acount'
+  physical_table_id: financial.account
+  attributes:
+  - attr_id: financial.account.account_id
+    biz_name: account id
+    description: the id of the account
+    physical_column_id: financial.account.account_id
+    data_type: integer
+  - attr_id: financial.account.district_id
+    biz_name: location of branch
+    description: location of branch
+    physical_column_id: financial.account.district_id
+    data_type: integer
+  - attr_id: financial.account.frequency
+    biz_name: frequency
+    description: frequency of the acount
+    physical_column_id: financial.account.frequency
+    data_type: text
+  - attr_id: financial.account.date
+    biz_name: date
+    description: 'the creation date of the account. in the form YYMMDD. format: date'
+    physical_column_id: financial.account.date
+    data_type: date
+- entity_id: financial.card
+  biz_name: card
+  description: 'card: id number of credit card; disposition id; type of credit card'
+  physical_table_id: financial.card
+  attributes:
+  - attr_id: financial.card.card_id
+    biz_name: credit card id
+    description: id number of credit card
+    physical_column_id: financial.card.card_id
+    data_type: integer
+  - attr_id: financial.card.disp_id
+    biz_name: disposition id
+    description: disposition id
+    physical_column_id: financial.card.disp_id
+    data_type: integer
+  - attr_id: financial.card.type
+    biz_name: type
+    description: "type of credit card. \"junior\": junior class of credit card; \n\
+      \"classic\": standard class of credit card; \n\"gold\": high-level credit card"
+    physical_column_id: financial.card.type
+    data_type: text
+  - attr_id: financial.card.issued
+    biz_name: issued
+    description: 'the date when the credit card issued. in the form YYMMDD. format:
+      date'
+    physical_column_id: financial.card.issued
+    data_type: date
+- entity_id: financial.client
+  biz_name: client
+  description: 'client: the unique number; birth date; location of branch'
+  physical_table_id: financial.client
+  attributes:
+  - attr_id: financial.client.client_id
+    biz_name: client_id
+    description: the unique number
+    physical_column_id: financial.client.client_id
+    data_type: integer
+  - attr_id: financial.client.gender
+    biz_name: gender
+    description: "F：female \nM：male"
+    physical_column_id: financial.client.gender
+    data_type: text
+  - attr_id: financial.client.birth_date
+    biz_name: birth_date
+    description: 'birth date. format: date'
+    physical_column_id: financial.client.birth_date
+    data_type: date
+  - attr_id: financial.client.district_id
+    biz_name: location of branch
+    description: location of branch
+    physical_column_id: financial.client.district_id
+    data_type: integer
+- entity_id: financial.disp
+  biz_name: disp
+  description: 'disp: unique number of identifying this row of record; id number of
+    client; id number of account'
+  physical_table_id: financial.disp
+  attributes:
+  - attr_id: financial.disp.disp_id
+    biz_name: disposition id
+    description: unique number of identifying this row of record
+    physical_column_id: financial.disp.disp_id
+    data_type: integer
+  - attr_id: financial.disp.client_id
+    biz_name: client_id
+    description: id number of client
+    physical_column_id: financial.disp.client_id
+    data_type: integer
+  - attr_id: financial.disp.account_id
+    biz_name: account_id
+    description: id number of account
+    physical_column_id: financial.disp.account_id
+    data_type: integer
+  - attr_id: financial.disp.type
+    biz_name: type
+    description: 'type of disposition. "OWNER" : "USER" : "DISPONENT"
+
+      commonsense evidence:
+
+      the account can only have the right to issue permanent orders or apply for loans'
+    physical_column_id: financial.disp.type
+    data_type: text
+- entity_id: financial.district
+  biz_name: district
+  description: 'district: location of branch; district_name; region'
+  physical_table_id: financial.district
+  attributes:
+  - attr_id: financial.district.district_id
+    biz_name: location of branch
+    description: location of branch
+    physical_column_id: financial.district.district_id
+    data_type: integer
+  - attr_id: financial.district.A2
+    biz_name: district_name
+    description: district_name
+    physical_column_id: financial.district.A2
+    data_type: text
+  - attr_id: financial.district.A3
+    biz_name: region
+    description: region
+    physical_column_id: financial.district.A3
+    data_type: text
+  - attr_id: financial.district.A4
+    biz_name: number of inhabitants
+    description: ''
+    physical_column_id: financial.district.A4
+    data_type: text
+  - attr_id: financial.district.A5
+    biz_name: no. of municipalities with inhabitants < 499
+    description: municipality < district < region
+    physical_column_id: financial.district.A5
+    data_type: text
+  - attr_id: financial.district.A6
+    biz_name: no. of municipalities with inhabitants 500-1999
+    description: municipality < district < region
+    physical_column_id: financial.district.A6
+    data_type: text
+  - attr_id: financial.district.A7
+    biz_name: no. of municipalities with inhabitants 2000-9999
+    description: municipality < district < region
+    physical_column_id: financial.district.A7
+    data_type: text
+  - attr_id: financial.district.A8
+    biz_name: no. of municipalities with inhabitants > 10000
+    description: municipality < district < region
+    physical_column_id: financial.district.A8
+    data_type: integer
+  - attr_id: financial.district.A9
+    biz_name: A9
+    description: not useful
+    physical_column_id: financial.district.A9
+    data_type: integer
+  - attr_id: financial.district.A10
+    biz_name: ratio of urban inhabitants
+    description: ratio of urban inhabitants
+    physical_column_id: financial.district.A10
+    data_type: real
+  - attr_id: financial.district.A11
+    biz_name: average salary
+    description: average salary
+    physical_column_id: financial.district.A11
+    data_type: integer
+  - attr_id: financial.district.A12
+    biz_name: unemployment rate 1995
+    description: unemployment rate 1995
+    physical_column_id: financial.district.A12
+    data_type: real
+  - attr_id: financial.district.A13
+    biz_name: unemployment rate 1996
+    description: unemployment rate 1996
+    physical_column_id: financial.district.A13
+    data_type: real
+  - attr_id: financial.district.A14
+    biz_name: no. of entrepreneurs per 1000 inhabitants
+    description: no. of entrepreneurs per 1000 inhabitants
+    physical_column_id: financial.district.A14
+    data_type: integer
+  - attr_id: financial.district.A15
+    biz_name: no. of committed crimes 1995
+    description: no. of committed crimes 1995
+    physical_column_id: financial.district.A15
+    data_type: integer
+  - attr_id: financial.district.A16
+    biz_name: no. of committed crimes 1996
+    description: no. of committed crimes 1996
+    physical_column_id: financial.district.A16
+    data_type: integer
+- entity_id: financial.loan
+  biz_name: loan
+  description: 'loan: the id number identifying the loan data; the id number identifying
+    the account; the date when the loan is approved'
+  physical_table_id: financial.loan
+  attributes:
+  - attr_id: financial.loan.loan_id
+    biz_name: loan_id
+    description: the id number identifying the loan data
+    physical_column_id: financial.loan.loan_id
+    data_type: integer
+  - attr_id: financial.loan.account_id
+    biz_name: account_id
+    description: the id number identifying the account
+    physical_column_id: financial.loan.account_id
+    data_type: integer
+  - attr_id: financial.loan.date
+    biz_name: date
+    description: 'the date when the loan is approved. format: date'
+    physical_column_id: financial.loan.date
+    data_type: date
+  - attr_id: financial.loan.amount
+    biz_name: amount
+    description: approved amount. unit：US dollar
+    physical_column_id: financial.loan.amount
+    data_type: integer
+  - attr_id: financial.loan.duration
+    biz_name: duration
+    description: loan duration. unit：month
+    physical_column_id: financial.loan.duration
+    data_type: integer
+  - attr_id: financial.loan.payments
+    biz_name: monthly payments
+    description: monthly payments. unit：month
+    physical_column_id: financial.loan.payments
+    data_type: real
+  - attr_id: financial.loan.status
+    biz_name: status
+    description: 'repayment status. ''A'' stands for contract finished, no problems;
+
+      ''B'' stands for contract finished, loan not paid;
+
+      ''C'' stands for running contract, OK so far;
+
+      ''D'' stands for running contract, client in debt'
+    physical_column_id: financial.loan.status
+    data_type: text
+- entity_id: financial.order
+  biz_name: order
+  description: 'order: identifying the unique order; id number of account; bank of
+    the recipient'
+  physical_table_id: financial.order
+  attributes:
+  - attr_id: financial.order.order_id
+    biz_name: order_id
+    description: identifying the unique order
+    physical_column_id: financial.order.order_id
+    data_type: integer
+  - attr_id: financial.order.account_id
+    biz_name: account_id
+    description: id number of account
+    physical_column_id: financial.order.account_id
+    data_type: integer
+  - attr_id: financial.order.bank_to
+    biz_name: bank of the recipient
+    description: bank of the recipient
+    physical_column_id: financial.order.bank_to
+    data_type: text
+  - attr_id: financial.order.account_to
+    biz_name: account of the recipient
+    description: account of the recipient. each bank has unique two-letter code
+    physical_column_id: financial.order.account_to
+    data_type: integer
+  - attr_id: financial.order.amount
+    biz_name: debited amount
+    description: debited amount
+    physical_column_id: financial.order.amount
+    data_type: real
+  - attr_id: financial.order.k_symbol
+    biz_name: characterization of the payment
+    description: 'purpose of the payment. "POJISTNE" stands for insurance payment
+
+      "SIPO" stands for household payment
+
+      "LEASING" stands for leasing
+
+      "UVER" stands for loan payment'
+    physical_column_id: financial.order.k_symbol
+    data_type: text
+- entity_id: financial.trans
+  biz_name: trans
+  description: 'trans: transaction id; date of transaction; +/- transaction'
+  physical_table_id: financial.trans
+  attributes:
+  - attr_id: financial.trans.trans_id
+    biz_name: transaction id
+    description: transaction id
+    physical_column_id: financial.trans.trans_id
+    data_type: integer
+  - attr_id: financial.trans.account_id
+    biz_name: account_id
+    description: ''
+    physical_column_id: financial.trans.account_id
+    data_type: integer
+  - attr_id: financial.trans.date
+    biz_name: date of transaction
+    description: 'date of transaction. format: date'
+    physical_column_id: financial.trans.date
+    data_type: date
+  - attr_id: financial.trans.type
+    biz_name: +/- transaction
+    description: '+/- transaction. "PRIJEM" stands for credit
+
+      "VYDAJ" stands for withdrawal'
+    physical_column_id: financial.trans.type
+    data_type: text
+  - attr_id: financial.trans.operation
+    biz_name: mode of transaction
+    description: 'mode of transaction. "VYBER KARTOU": credit card withdrawal
+
+      "VKLAD": credit in cash
+
+      "PREVOD Z UCTU" :collection from another bank
+
+      "VYBER": withdrawal in cash
+
+      "PREVOD NA UCET": remittance to another bank'
+    physical_column_id: financial.trans.operation
+    data_type: text
+  - attr_id: financial.trans.amount
+    biz_name: amount of money
+    description: amount of money. Unit：USD
+    physical_column_id: financial.trans.amount
+    data_type: integer
+  - attr_id: financial.trans.balance
+    biz_name: balance after transaction
+    description: balance after transaction. Unit：USD
+    physical_column_id: financial.trans.balance
+    data_type: integer
+  - attr_id: financial.trans.k_symbol
+    biz_name: characterization of the transaction
+    description: '"POJISTNE": stands for insurrance payment
+
+      "SLUZBY": stands for payment for statement
+
+      "UROK": stands for interest credited
+
+      "SANKC. UROK": sanction interest if negative balance
+
+      "SIPO": stands for household
+
+      "DUCHOD": stands for old-age pension
+
+      "UVER": stands for loan payment'
+    physical_column_id: financial.trans.k_symbol
+    data_type: text
+  - attr_id: financial.trans.bank
+    biz_name: bank of the partner
+    description: each bank has unique two-letter code
+    physical_column_id: financial.trans.bank
+    data_type: text
+  - attr_id: financial.trans.account
+    biz_name: account of the partner
+    description: ''
+    physical_column_id: financial.trans.account
+    data_type: integer
+relations:
+- relation_id: financial.account_TO_district
+  biz_name: account_to_district
+  from_entity_attr_id: financial.account.district_id
+  to_entity_attr_id: financial.district.district_id
+  description: account.district_id -> district.district_id
+- relation_id: financial.card_TO_disp
+  biz_name: card_to_disp
+  from_entity_attr_id: financial.card.disp_id
+  to_entity_attr_id: financial.disp.disp_id
+  description: card.disp_id -> disp.disp_id
+- relation_id: financial.client_TO_district
+  biz_name: client_to_district
+  from_entity_attr_id: financial.client.district_id
+  to_entity_attr_id: financial.district.district_id
+  description: client.district_id -> district.district_id
+- relation_id: financial.disp_TO_client
+  biz_name: disp_to_client
+  from_entity_attr_id: financial.disp.client_id
+  to_entity_attr_id: financial.client.client_id
+  description: disp.client_id -> client.client_id
+- relation_id: financial.disp_TO_account
+  biz_name: disp_to_account
+  from_entity_attr_id: financial.disp.account_id
+  to_entity_attr_id: financial.account.account_id
+  description: disp.account_id -> account.account_id
+- relation_id: financial.loan_TO_account
+  biz_name: loan_to_account
+  from_entity_attr_id: financial.loan.account_id
+  to_entity_attr_id: financial.account.account_id
+  description: loan.account_id -> account.account_id
+- relation_id: financial.order_TO_account
+  biz_name: order_to_account
+  from_entity_attr_id: financial.order.account_id
+  to_entity_attr_id: financial.account.account_id
+  description: order.account_id -> account.account_id
+- relation_id: financial.trans_TO_account
+  biz_name: trans_to_account
+  from_entity_attr_id: financial.trans.account_id
+  to_entity_attr_id: financial.account.account_id
+  description: trans.account_id -> account.account_id

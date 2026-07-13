@@ -1,0 +1,20 @@
+{
+  "name": "配网营销领域",
+  "version": "1.0.0",
+  "description": "配电网营销业务领域，包括线损分析、计量管理、用电检查等",
+  "layer": "L1",
+  "type": "domain",
+  "domains": [
+    "配网",
+    "营销",
+    "线损",
+    "计量",
+    "用电",
+    "台区"
+  ],
+  "scenarios": [
+    "line_loss_analysis",
+    "计量管理",
+    "用电检查"
+  ]
+}

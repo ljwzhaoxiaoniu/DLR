@@ -1,0 +1,639 @@
+mapping_type: er
+version: '1.0'
+scenario_name: card_games
+description: Auto-generated from dev_tables.json for card_games
+databases:
+  card_games: sqlite:///../MINIDEV_sqlite/dev_databases/card_games/card_games.sqlite
+entities:
+- entity_id: card_games.cards
+  biz_name: cards
+  description: 'cards: The name of the artist that illustrated the card art.; The
+    ASCII(opens new window) (Basic/128) code formatted card name with no special unicode
+    characters.; A list of the card''s available printing types.'
+  physical_table_id: card_games.cards
+  attributes:
+  - attr_id: card_games.cards.id
+    biz_name: id
+    description: ''
+    physical_column_id: card_games.cards.id
+    data_type: integer
+  - attr_id: card_games.cards.artist
+    biz_name: artist
+    description: ''
+    physical_column_id: card_games.cards.artist
+    data_type: text
+  - attr_id: card_games.cards.asciiName
+    biz_name: asciiName
+    description: ''
+    physical_column_id: card_games.cards.asciiName
+    data_type: text
+  - attr_id: card_games.cards.availability
+    biz_name: availability
+    description: ''
+    physical_column_id: card_games.cards.availability
+    data_type: text
+  - attr_id: card_games.cards.borderColor
+    biz_name: borderColor
+    description: ''
+    physical_column_id: card_games.cards.borderColor
+    data_type: text
+  - attr_id: card_games.cards.cardKingdomFoilId
+    biz_name: cardKingdomFoilId
+    description: ''
+    physical_column_id: card_games.cards.cardKingdomFoilId
+    data_type: text
+  - attr_id: card_games.cards.cardKingdomId
+    biz_name: cardKingdomId
+    description: ''
+    physical_column_id: card_games.cards.cardKingdomId
+    data_type: text
+  - attr_id: card_games.cards.colorIdentity
+    biz_name: colorIdentity
+    description: ''
+    physical_column_id: card_games.cards.colorIdentity
+    data_type: text
+  - attr_id: card_games.cards.colorIndicator
+    biz_name: colorIndicator
+    description: ''
+    physical_column_id: card_games.cards.colorIndicator
+    data_type: text
+  - attr_id: card_games.cards.colors
+    biz_name: colors
+    description: ''
+    physical_column_id: card_games.cards.colors
+    data_type: text
+  - attr_id: card_games.cards.convertedManaCost
+    biz_name: convertedManaCost
+    description: ''
+    physical_column_id: card_games.cards.convertedManaCost
+    data_type: real
+  - attr_id: card_games.cards.duelDeck
+    biz_name: duelDeck
+    description: ''
+    physical_column_id: card_games.cards.duelDeck
+    data_type: text
+  - attr_id: card_games.cards.edhrecRank
+    biz_name: edhrecRank
+    description: ''
+    physical_column_id: card_games.cards.edhrecRank
+    data_type: integer
+  - attr_id: card_games.cards.faceConvertedManaCost
+    biz_name: faceConvertedManaCost
+    description: ''
+    physical_column_id: card_games.cards.faceConvertedManaCost
+    data_type: real
+  - attr_id: card_games.cards.faceName
+    biz_name: faceName
+    description: ''
+    physical_column_id: card_games.cards.faceName
+    data_type: text
+  - attr_id: card_games.cards.flavorName
+    biz_name: flavorName
+    description: ''
+    physical_column_id: card_games.cards.flavorName
+    data_type: text
+  - attr_id: card_games.cards.flavorText
+    biz_name: flavorText
+    description: ''
+    physical_column_id: card_games.cards.flavorText
+    data_type: text
+  - attr_id: card_games.cards.frameEffects
+    biz_name: frameEffects
+    description: ''
+    physical_column_id: card_games.cards.frameEffects
+    data_type: text
+  - attr_id: card_games.cards.frameVersion
+    biz_name: frameVersion
+    description: ''
+    physical_column_id: card_games.cards.frameVersion
+    data_type: text
+  - attr_id: card_games.cards.hand
+    biz_name: hand
+    description: ''
+    physical_column_id: card_games.cards.hand
+    data_type: text
+  - attr_id: card_games.cards.hasAlternativeDeckLimit
+    biz_name: hasAlternativeDeckLimit
+    description: ''
+    physical_column_id: card_games.cards.hasAlternativeDeckLimit
+    data_type: integer
+  - attr_id: card_games.cards.hasContentWarning
+    biz_name: hasContentWarning
+    description: ''
+    physical_column_id: card_games.cards.hasContentWarning
+    data_type: integer
+  - attr_id: card_games.cards.hasFoil
+    biz_name: hasFoil
+    description: ''
+    physical_column_id: card_games.cards.hasFoil
+    data_type: integer
+  - attr_id: card_games.cards.hasNonFoil
+    biz_name: hasNonFoil
+    description: ''
+    physical_column_id: card_games.cards.hasNonFoil
+    data_type: integer
+  - attr_id: card_games.cards.isAlternative
+    biz_name: isAlternative
+    description: ''
+    physical_column_id: card_games.cards.isAlternative
+    data_type: integer
+  - attr_id: card_games.cards.isFullArt
+    biz_name: isFullArt
+    description: ''
+    physical_column_id: card_games.cards.isFullArt
+    data_type: integer
+  - attr_id: card_games.cards.isOnlineOnly
+    biz_name: isOnlineOnly
+    description: ''
+    physical_column_id: card_games.cards.isOnlineOnly
+    data_type: integer
+  - attr_id: card_games.cards.isOversized
+    biz_name: isOversized
+    description: ''
+    physical_column_id: card_games.cards.isOversized
+    data_type: integer
+  - attr_id: card_games.cards.isPromo
+    biz_name: isPromo
+    description: ''
+    physical_column_id: card_games.cards.isPromo
+    data_type: integer
+  - attr_id: card_games.cards.isReprint
+    biz_name: isReprint
+    description: ''
+    physical_column_id: card_games.cards.isReprint
+    data_type: integer
+  - attr_id: card_games.cards.isReserved
+    biz_name: isReserved
+    description: ''
+    physical_column_id: card_games.cards.isReserved
+    data_type: integer
+  - attr_id: card_games.cards.isStarter
+    biz_name: isStarter
+    description: ''
+    physical_column_id: card_games.cards.isStarter
+    data_type: integer
+  - attr_id: card_games.cards.isStorySpotlight
+    biz_name: isStorySpotlight
+    description: ''
+    physical_column_id: card_games.cards.isStorySpotlight
+    data_type: integer
+  - attr_id: card_games.cards.isTextless
+    biz_name: isTextless
+    description: ''
+    physical_column_id: card_games.cards.isTextless
+    data_type: integer
+  - attr_id: card_games.cards.isTimeshifted
+    biz_name: isTimeshifted
+    description: ''
+    physical_column_id: card_games.cards.isTimeshifted
+    data_type: integer
+  - attr_id: card_games.cards.keywords
+    biz_name: keywords
+    description: ''
+    physical_column_id: card_games.cards.keywords
+    data_type: text
+  - attr_id: card_games.cards.layout
+    biz_name: layout
+    description: ''
+    physical_column_id: card_games.cards.layout
+    data_type: text
+  - attr_id: card_games.cards.leadershipSkills
+    biz_name: leadershipSkills
+    description: ''
+    physical_column_id: card_games.cards.leadershipSkills
+    data_type: text
+  - attr_id: card_games.cards.life
+    biz_name: life
+    description: ''
+    physical_column_id: card_games.cards.life
+    data_type: text
+  - attr_id: card_games.cards.loyalty
+    biz_name: loyalty
+    description: ''
+    physical_column_id: card_games.cards.loyalty
+    data_type: text
+  - attr_id: card_games.cards.manaCost
+    biz_name: manaCost
+    description: ''
+    physical_column_id: card_games.cards.manaCost
+    data_type: text
+  - attr_id: card_games.cards.mcmId
+    biz_name: mcmId
+    description: ''
+    physical_column_id: card_games.cards.mcmId
+    data_type: text
+  - attr_id: card_games.cards.mcmMetaId
+    biz_name: mcmMetaId
+    description: ''
+    physical_column_id: card_games.cards.mcmMetaId
+    data_type: text
+  - attr_id: card_games.cards.mtgArenaId
+    biz_name: mtgArenaId
+    description: ''
+    physical_column_id: card_games.cards.mtgArenaId
+    data_type: text
+  - attr_id: card_games.cards.mtgjsonV4Id
+    biz_name: mtgjsonV4Id
+    description: ''
+    physical_column_id: card_games.cards.mtgjsonV4Id
+    data_type: text
+  - attr_id: card_games.cards.mtgoFoilId
+    biz_name: mtgoFoilId
+    description: ''
+    physical_column_id: card_games.cards.mtgoFoilId
+    data_type: text
+  - attr_id: card_games.cards.mtgoId
+    biz_name: mtgoId
+    description: ''
+    physical_column_id: card_games.cards.mtgoId
+    data_type: text
+  - attr_id: card_games.cards.multiverseId
+    biz_name: multiverseId
+    description: ''
+    physical_column_id: card_games.cards.multiverseId
+    data_type: text
+  - attr_id: card_games.cards.name
+    biz_name: name
+    description: ''
+    physical_column_id: card_games.cards.name
+    data_type: text
+  - attr_id: card_games.cards.number
+    biz_name: number
+    description: ''
+    physical_column_id: card_games.cards.number
+    data_type: text
+  - attr_id: card_games.cards.originalReleaseDate
+    biz_name: originalReleaseDate
+    description: ''
+    physical_column_id: card_games.cards.originalReleaseDate
+    data_type: text
+  - attr_id: card_games.cards.originalText
+    biz_name: originalText
+    description: ''
+    physical_column_id: card_games.cards.originalText
+    data_type: text
+  - attr_id: card_games.cards.originalType
+    biz_name: originalType
+    description: ''
+    physical_column_id: card_games.cards.originalType
+    data_type: text
+  - attr_id: card_games.cards.otherFaceIds
+    biz_name: otherFaceIds
+    description: ''
+    physical_column_id: card_games.cards.otherFaceIds
+    data_type: text
+  - attr_id: card_games.cards.power
+    biz_name: power
+    description: ''
+    physical_column_id: card_games.cards.power
+    data_type: text
+  - attr_id: card_games.cards.printings
+    biz_name: printings
+    description: ''
+    physical_column_id: card_games.cards.printings
+    data_type: text
+  - attr_id: card_games.cards.promoTypes
+    biz_name: promoTypes
+    description: ''
+    physical_column_id: card_games.cards.promoTypes
+    data_type: text
+  - attr_id: card_games.cards.purchaseUrls
+    biz_name: purchaseUrls
+    description: ''
+    physical_column_id: card_games.cards.purchaseUrls
+    data_type: text
+  - attr_id: card_games.cards.rarity
+    biz_name: rarity
+    description: ''
+    physical_column_id: card_games.cards.rarity
+    data_type: text
+  - attr_id: card_games.cards.scryfallId
+    biz_name: scryfallId
+    description: ''
+    physical_column_id: card_games.cards.scryfallId
+    data_type: text
+  - attr_id: card_games.cards.scryfallIllustrationId
+    biz_name: scryfallIllustrationId
+    description: ''
+    physical_column_id: card_games.cards.scryfallIllustrationId
+    data_type: text
+  - attr_id: card_games.cards.scryfallOracleId
+    biz_name: scryfallOracleId
+    description: ''
+    physical_column_id: card_games.cards.scryfallOracleId
+    data_type: text
+  - attr_id: card_games.cards.setCode
+    biz_name: setCode
+    description: ''
+    physical_column_id: card_games.cards.setCode
+    data_type: text
+  - attr_id: card_games.cards.side
+    biz_name: side
+    description: ''
+    physical_column_id: card_games.cards.side
+    data_type: text
+  - attr_id: card_games.cards.subtypes
+    biz_name: subtypes
+    description: ''
+    physical_column_id: card_games.cards.subtypes
+    data_type: text
+  - attr_id: card_games.cards.supertypes
+    biz_name: supertypes
+    description: ''
+    physical_column_id: card_games.cards.supertypes
+    data_type: text
+  - attr_id: card_games.cards.tcgplayerProductId
+    biz_name: tcgplayerProductId
+    description: ''
+    physical_column_id: card_games.cards.tcgplayerProductId
+    data_type: text
+  - attr_id: card_games.cards.text
+    biz_name: text
+    description: ''
+    physical_column_id: card_games.cards.text
+    data_type: text
+  - attr_id: card_games.cards.toughness
+    biz_name: toughness
+    description: ''
+    physical_column_id: card_games.cards.toughness
+    data_type: text
+  - attr_id: card_games.cards.type
+    biz_name: type
+    description: ''
+    physical_column_id: card_games.cards.type
+    data_type: text
+  - attr_id: card_games.cards.types
+    biz_name: types
+    description: ''
+    physical_column_id: card_games.cards.types
+    data_type: text
+  - attr_id: card_games.cards.uuid
+    biz_name: uuid
+    description: ''
+    physical_column_id: card_games.cards.uuid
+    data_type: text
+  - attr_id: card_games.cards.variations
+    biz_name: variations
+    description: ''
+    physical_column_id: card_games.cards.variations
+    data_type: text
+  - attr_id: card_games.cards.watermark
+    biz_name: watermark
+    description: ''
+    physical_column_id: card_games.cards.watermark
+    data_type: text
+- entity_id: card_games.foreign_data
+  biz_name: foreign_data
+  description: 'foreign_data: unique id number identifying this row of data; The foreign
+    flavor text of the card.; The foreign language of card.'
+  physical_table_id: card_games.foreign_data
+  attributes:
+  - attr_id: card_games.foreign_data.id
+    biz_name: id
+    description: ''
+    physical_column_id: card_games.foreign_data.id
+    data_type: integer
+  - attr_id: card_games.foreign_data.flavorText
+    biz_name: flavorText
+    description: ''
+    physical_column_id: card_games.foreign_data.flavorText
+    data_type: text
+  - attr_id: card_games.foreign_data.language
+    biz_name: language
+    description: ''
+    physical_column_id: card_games.foreign_data.language
+    data_type: text
+  - attr_id: card_games.foreign_data.multiverseid
+    biz_name: multiverseid
+    description: ''
+    physical_column_id: card_games.foreign_data.multiverseid
+    data_type: integer
+  - attr_id: card_games.foreign_data.name
+    biz_name: name
+    description: ''
+    physical_column_id: card_games.foreign_data.name
+    data_type: text
+  - attr_id: card_games.foreign_data.text
+    biz_name: text
+    description: ''
+    physical_column_id: card_games.foreign_data.text
+    data_type: text
+  - attr_id: card_games.foreign_data.type
+    biz_name: type
+    description: ''
+    physical_column_id: card_games.foreign_data.type
+    data_type: text
+  - attr_id: card_games.foreign_data.uuid
+    biz_name: uuid
+    description: ''
+    physical_column_id: card_games.foreign_data.uuid
+    data_type: text
+- entity_id: card_games.legalities
+  biz_name: legalities
+  description: 'legalities: unique id identifying this legality; format of play'
+  physical_table_id: card_games.legalities
+  attributes:
+  - attr_id: card_games.legalities.id
+    biz_name: id
+    description: ''
+    physical_column_id: card_games.legalities.id
+    data_type: integer
+  - attr_id: card_games.legalities.format
+    biz_name: format
+    description: ''
+    physical_column_id: card_games.legalities.format
+    data_type: text
+  - attr_id: card_games.legalities.status
+    biz_name: status
+    description: ''
+    physical_column_id: card_games.legalities.status
+    data_type: text
+  - attr_id: card_games.legalities.uuid
+    biz_name: uuid
+    description: ''
+    physical_column_id: card_games.legalities.uuid
+    data_type: text
+- entity_id: card_games.sets
+  biz_name: sets
+  description: 'sets: unique id identifying this set; The number of cards in the set.;
+    The block name the set was in.'
+  physical_table_id: card_games.sets
+  attributes:
+  - attr_id: card_games.sets.id
+    biz_name: id
+    description: ''
+    physical_column_id: card_games.sets.id
+    data_type: integer
+  - attr_id: card_games.sets.baseSetSize
+    biz_name: baseSetSize
+    description: ''
+    physical_column_id: card_games.sets.baseSetSize
+    data_type: integer
+  - attr_id: card_games.sets.block
+    biz_name: block
+    description: ''
+    physical_column_id: card_games.sets.block
+    data_type: text
+  - attr_id: card_games.sets.booster
+    biz_name: booster
+    description: ''
+    physical_column_id: card_games.sets.booster
+    data_type: text
+  - attr_id: card_games.sets.code
+    biz_name: code
+    description: ''
+    physical_column_id: card_games.sets.code
+    data_type: text
+  - attr_id: card_games.sets.isFoilOnly
+    biz_name: isFoilOnly
+    description: ''
+    physical_column_id: card_games.sets.isFoilOnly
+    data_type: integer
+  - attr_id: card_games.sets.isForeignOnly
+    biz_name: isForeignOnly
+    description: ''
+    physical_column_id: card_games.sets.isForeignOnly
+    data_type: integer
+  - attr_id: card_games.sets.isNonFoilOnly
+    biz_name: isNonFoilOnly
+    description: ''
+    physical_column_id: card_games.sets.isNonFoilOnly
+    data_type: integer
+  - attr_id: card_games.sets.isOnlineOnly
+    biz_name: isOnlineOnly
+    description: ''
+    physical_column_id: card_games.sets.isOnlineOnly
+    data_type: integer
+  - attr_id: card_games.sets.isPartialPreview
+    biz_name: isPartialPreview
+    description: ''
+    physical_column_id: card_games.sets.isPartialPreview
+    data_type: integer
+  - attr_id: card_games.sets.keyruneCode
+    biz_name: keyruneCode
+    description: ''
+    physical_column_id: card_games.sets.keyruneCode
+    data_type: text
+  - attr_id: card_games.sets.mcmId
+    biz_name: mcmId
+    description: ''
+    physical_column_id: card_games.sets.mcmId
+    data_type: integer
+  - attr_id: card_games.sets.mcmIdExtras
+    biz_name: mcmIdExtras
+    description: ''
+    physical_column_id: card_games.sets.mcmIdExtras
+    data_type: integer
+  - attr_id: card_games.sets.mcmName
+    biz_name: mcmName
+    description: ''
+    physical_column_id: card_games.sets.mcmName
+    data_type: text
+  - attr_id: card_games.sets.mtgoCode
+    biz_name: mtgoCode
+    description: ''
+    physical_column_id: card_games.sets.mtgoCode
+    data_type: text
+  - attr_id: card_games.sets.name
+    biz_name: name
+    description: ''
+    physical_column_id: card_games.sets.name
+    data_type: text
+  - attr_id: card_games.sets.parentCode
+    biz_name: parentCode
+    description: ''
+    physical_column_id: card_games.sets.parentCode
+    data_type: text
+  - attr_id: card_games.sets.releaseDate
+    biz_name: releaseDate
+    description: ''
+    physical_column_id: card_games.sets.releaseDate
+    data_type: date
+  - attr_id: card_games.sets.tcgplayerGroupId
+    biz_name: tcgplayerGroupId
+    description: ''
+    physical_column_id: card_games.sets.tcgplayerGroupId
+    data_type: integer
+  - attr_id: card_games.sets.totalSetSize
+    biz_name: totalSetSize
+    description: ''
+    physical_column_id: card_games.sets.totalSetSize
+    data_type: integer
+  - attr_id: card_games.sets.type
+    biz_name: type
+    description: ''
+    physical_column_id: card_games.sets.type
+    data_type: text
+- entity_id: card_games.set_translations
+  biz_name: set_translations
+  description: 'set_translations: unique id identifying this set; language of this
+    card; the set code for this set'
+  physical_table_id: card_games.set_translations
+  attributes:
+  - attr_id: card_games.set_translations.id
+    biz_name: id
+    description: ''
+    physical_column_id: card_games.set_translations.id
+    data_type: integer
+  - attr_id: card_games.set_translations.language
+    biz_name: language
+    description: ''
+    physical_column_id: card_games.set_translations.language
+    data_type: text
+  - attr_id: card_games.set_translations.setCode
+    biz_name: setCode
+    description: ''
+    physical_column_id: card_games.set_translations.setCode
+    data_type: text
+  - attr_id: card_games.set_translations.translation
+    biz_name: translation
+    description: ''
+    physical_column_id: card_games.set_translations.translation
+    data_type: text
+- entity_id: card_games.rulings
+  biz_name: rulings
+  description: 'rulings: unique id identifying this ruling; date; description about
+    this ruling'
+  physical_table_id: card_games.rulings
+  attributes:
+  - attr_id: card_games.rulings.id
+    biz_name: id
+    description: ''
+    physical_column_id: card_games.rulings.id
+    data_type: integer
+  - attr_id: card_games.rulings.date
+    biz_name: date
+    description: ''
+    physical_column_id: card_games.rulings.date
+    data_type: date
+  - attr_id: card_games.rulings.text
+    biz_name: text
+    description: ''
+    physical_column_id: card_games.rulings.text
+    data_type: text
+  - attr_id: card_games.rulings.uuid
+    biz_name: uuid
+    description: ''
+    physical_column_id: card_games.rulings.uuid
+    data_type: text
+relations:
+- relation_id: card_games.foreign_data_TO_cards
+  biz_name: foreign_data_to_cards
+  from_entity_attr_id: card_games.foreign_data.uuid
+  to_entity_attr_id: card_games.cards.uuid
+  description: foreign_data.uuid -> cards.uuid
+- relation_id: card_games.legalities_TO_cards
+  biz_name: legalities_to_cards
+  from_entity_attr_id: card_games.legalities.uuid
+  to_entity_attr_id: card_games.cards.uuid
+  description: legalities.uuid -> cards.uuid
+- relation_id: card_games.set_translations_TO_sets
+  biz_name: set_translations_to_sets
+  from_entity_attr_id: card_games.set_translations.setCode
+  to_entity_attr_id: card_games.sets.code
+  description: set_translations.setCode -> sets.code
+- relation_id: card_games.rulings_TO_cards
+  biz_name: rulings_to_cards
+  from_entity_attr_id: card_games.rulings.uuid
+  to_entity_attr_id: card_games.cards.uuid
+  description: rulings.uuid -> cards.uuid

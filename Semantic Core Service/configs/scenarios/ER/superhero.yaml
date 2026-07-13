@@ -1,0 +1,281 @@
+mapping_type: er
+version: '1.0'
+scenario_name: superhero
+description: Auto-generated from dev_tables.json for superhero
+databases:
+  superhero: sqlite:///../MINIDEV_sqlite/dev_databases/superhero/superhero.sqlite
+entities:
+- entity_id: superhero.alignment
+  biz_name: alignment
+  description: 'alignment: the unique identifier of the alignment; the alignment of
+    the superhero'
+  physical_table_id: superhero.alignment
+  attributes:
+  - attr_id: superhero.alignment.id
+    biz_name: id
+    description: ''
+    physical_column_id: superhero.alignment.id
+    data_type: integer
+  - attr_id: superhero.alignment.alignment
+    biz_name: alignment
+    description: ''
+    physical_column_id: superhero.alignment.alignment
+    data_type: text
+- entity_id: superhero.attribute
+  biz_name: attribute
+  description: 'attribute: the unique identifier of the attribute; the attribute'
+  physical_table_id: superhero.attribute
+  attributes:
+  - attr_id: superhero.attribute.id
+    biz_name: id
+    description: ''
+    physical_column_id: superhero.attribute.id
+    data_type: integer
+  - attr_id: superhero.attribute.attribute_name
+    biz_name: attribute_name
+    description: ''
+    physical_column_id: superhero.attribute.attribute_name
+    data_type: text
+- entity_id: superhero.colour
+  biz_name: colour
+  description: 'colour: the unique identifier of the color; the color of the superhero''s
+    skin/eye/hair/etc'
+  physical_table_id: superhero.colour
+  attributes:
+  - attr_id: superhero.colour.id
+    biz_name: id
+    description: ''
+    physical_column_id: superhero.colour.id
+    data_type: integer
+  - attr_id: superhero.colour.colour
+    biz_name: colour
+    description: ''
+    physical_column_id: superhero.colour.colour
+    data_type: text
+- entity_id: superhero.gender
+  biz_name: gender
+  description: 'gender: the unique identifier of the gender; the gender of the superhero'
+  physical_table_id: superhero.gender
+  attributes:
+  - attr_id: superhero.gender.id
+    biz_name: id
+    description: ''
+    physical_column_id: superhero.gender.id
+    data_type: integer
+  - attr_id: superhero.gender.gender
+    biz_name: gender
+    description: ''
+    physical_column_id: superhero.gender.gender
+    data_type: text
+- entity_id: superhero.publisher
+  biz_name: publisher
+  description: 'publisher: the unique identifier of the publisher; the name of the
+    publisher'
+  physical_table_id: superhero.publisher
+  attributes:
+  - attr_id: superhero.publisher.id
+    biz_name: id
+    description: ''
+    physical_column_id: superhero.publisher.id
+    data_type: integer
+  - attr_id: superhero.publisher.publisher_name
+    biz_name: publisher_name
+    description: ''
+    physical_column_id: superhero.publisher.publisher_name
+    data_type: text
+- entity_id: superhero.race
+  biz_name: race
+  description: 'race: the unique identifier of the race; the race of the superhero'
+  physical_table_id: superhero.race
+  attributes:
+  - attr_id: superhero.race.id
+    biz_name: id
+    description: ''
+    physical_column_id: superhero.race.id
+    data_type: integer
+  - attr_id: superhero.race.race
+    biz_name: race
+    description: ''
+    physical_column_id: superhero.race.race
+    data_type: text
+- entity_id: superhero.superhero
+  biz_name: superhero
+  description: 'superhero: the unique identifier of the superhero; the name of the
+    superhero; the full name of the superhero'
+  physical_table_id: superhero.superhero
+  attributes:
+  - attr_id: superhero.superhero.id
+    biz_name: id
+    description: ''
+    physical_column_id: superhero.superhero.id
+    data_type: integer
+  - attr_id: superhero.superhero.superhero_name
+    biz_name: superhero_name
+    description: ''
+    physical_column_id: superhero.superhero.superhero_name
+    data_type: text
+  - attr_id: superhero.superhero.full_name
+    biz_name: full_name
+    description: ''
+    physical_column_id: superhero.superhero.full_name
+    data_type: text
+  - attr_id: superhero.superhero.gender_id
+    biz_name: gender_id
+    description: ''
+    physical_column_id: superhero.superhero.gender_id
+    data_type: integer
+  - attr_id: superhero.superhero.eye_colour_id
+    biz_name: eye_colour_id
+    description: ''
+    physical_column_id: superhero.superhero.eye_colour_id
+    data_type: integer
+  - attr_id: superhero.superhero.hair_colour_id
+    biz_name: hair_colour_id
+    description: ''
+    physical_column_id: superhero.superhero.hair_colour_id
+    data_type: integer
+  - attr_id: superhero.superhero.skin_colour_id
+    biz_name: skin_colour_id
+    description: ''
+    physical_column_id: superhero.superhero.skin_colour_id
+    data_type: integer
+  - attr_id: superhero.superhero.race_id
+    biz_name: race_id
+    description: ''
+    physical_column_id: superhero.superhero.race_id
+    data_type: integer
+  - attr_id: superhero.superhero.publisher_id
+    biz_name: publisher_id
+    description: ''
+    physical_column_id: superhero.superhero.publisher_id
+    data_type: integer
+  - attr_id: superhero.superhero.alignment_id
+    biz_name: alignment_id
+    description: ''
+    physical_column_id: superhero.superhero.alignment_id
+    data_type: integer
+  - attr_id: superhero.superhero.height_cm
+    biz_name: height_cm
+    description: ''
+    physical_column_id: superhero.superhero.height_cm
+    data_type: integer
+  - attr_id: superhero.superhero.weight_kg
+    biz_name: weight_kg
+    description: ''
+    physical_column_id: superhero.superhero.weight_kg
+    data_type: integer
+- entity_id: superhero.hero_attribute
+  biz_name: hero_attribute
+  description: 'hero_attribute: the id of the hero
+
+    Maps to superhero(id); the id of the attribute
+
+    Maps to attribute(id); the attribute value'
+  physical_table_id: superhero.hero_attribute
+  attributes:
+  - attr_id: superhero.hero_attribute.hero_id
+    biz_name: hero_id
+    description: ''
+    physical_column_id: superhero.hero_attribute.hero_id
+    data_type: integer
+  - attr_id: superhero.hero_attribute.attribute_id
+    biz_name: attribute_id
+    description: ''
+    physical_column_id: superhero.hero_attribute.attribute_id
+    data_type: integer
+  - attr_id: superhero.hero_attribute.attribute_value
+    biz_name: attribute_value
+    description: ''
+    physical_column_id: superhero.hero_attribute.attribute_value
+    data_type: integer
+- entity_id: superhero.superpower
+  biz_name: superpower
+  description: 'superpower: the unique identifier of the superpower; the superpower
+    name'
+  physical_table_id: superhero.superpower
+  attributes:
+  - attr_id: superhero.superpower.id
+    biz_name: id
+    description: ''
+    physical_column_id: superhero.superpower.id
+    data_type: integer
+  - attr_id: superhero.superpower.power_name
+    biz_name: power_name
+    description: ''
+    physical_column_id: superhero.superpower.power_name
+    data_type: text
+- entity_id: superhero.hero_power
+  biz_name: hero_power
+  description: 'hero_power: the id of the hero
+
+    Maps to superhero(id); the id of the power
+
+    Maps to superpower(id)'
+  physical_table_id: superhero.hero_power
+  attributes:
+  - attr_id: superhero.hero_power.hero_id
+    biz_name: hero_id
+    description: ''
+    physical_column_id: superhero.hero_power.hero_id
+    data_type: integer
+  - attr_id: superhero.hero_power.power_id
+    biz_name: power_id
+    description: ''
+    physical_column_id: superhero.hero_power.power_id
+    data_type: integer
+relations:
+- relation_id: superhero.superhero_TO_colour
+  biz_name: superhero_to_colour
+  from_entity_attr_id: superhero.superhero.skin_colour_id
+  to_entity_attr_id: superhero.colour.id
+  description: superhero.skin_colour_id -> colour.id
+- relation_id: superhero.superhero_TO_race
+  biz_name: superhero_to_race
+  from_entity_attr_id: superhero.superhero.race_id
+  to_entity_attr_id: superhero.race.id
+  description: superhero.race_id -> race.id
+- relation_id: superhero.superhero_TO_publisher
+  biz_name: superhero_to_publisher
+  from_entity_attr_id: superhero.superhero.publisher_id
+  to_entity_attr_id: superhero.publisher.id
+  description: superhero.publisher_id -> publisher.id
+- relation_id: superhero.superhero_TO_colour
+  biz_name: superhero_to_colour
+  from_entity_attr_id: superhero.superhero.hair_colour_id
+  to_entity_attr_id: superhero.colour.id
+  description: superhero.hair_colour_id -> colour.id
+- relation_id: superhero.superhero_TO_gender
+  biz_name: superhero_to_gender
+  from_entity_attr_id: superhero.superhero.gender_id
+  to_entity_attr_id: superhero.gender.id
+  description: superhero.gender_id -> gender.id
+- relation_id: superhero.superhero_TO_colour
+  biz_name: superhero_to_colour
+  from_entity_attr_id: superhero.superhero.eye_colour_id
+  to_entity_attr_id: superhero.colour.id
+  description: superhero.eye_colour_id -> colour.id
+- relation_id: superhero.superhero_TO_alignment
+  biz_name: superhero_to_alignment
+  from_entity_attr_id: superhero.superhero.alignment_id
+  to_entity_attr_id: superhero.alignment.id
+  description: superhero.alignment_id -> alignment.id
+- relation_id: superhero.hero_attribute_TO_superhero
+  biz_name: hero_attribute_to_superhero
+  from_entity_attr_id: superhero.hero_attribute.hero_id
+  to_entity_attr_id: superhero.superhero.id
+  description: hero_attribute.hero_id -> superhero.id
+- relation_id: superhero.hero_attribute_TO_attribute
+  biz_name: hero_attribute_to_attribute
+  from_entity_attr_id: superhero.hero_attribute.attribute_id
+  to_entity_attr_id: superhero.attribute.id
+  description: hero_attribute.attribute_id -> attribute.id
+- relation_id: superhero.hero_power_TO_superpower
+  biz_name: hero_power_to_superpower
+  from_entity_attr_id: superhero.hero_power.power_id
+  to_entity_attr_id: superhero.superpower.id
+  description: hero_power.power_id -> superpower.id
+- relation_id: superhero.hero_power_TO_superhero
+  biz_name: hero_power_to_superhero
+  from_entity_attr_id: superhero.hero_power.hero_id
+  to_entity_attr_id: superhero.superhero.id
+  description: hero_power.hero_id -> superhero.id

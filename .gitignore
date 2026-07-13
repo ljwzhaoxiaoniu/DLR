@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+
+# 运行时存储（自动生成）
+Semantic Core Service/storage/
+
+# 根目录误生成防护
+/storage/
+
+# bench 数据仓库（太大，不入版本控制）
+MINIDEV_sqlite/
+
+# Kuzu
+*.wal
+
+# IDE / 本地设置
+.idea/
+.vscode/
+*.swp
+.claude/
+.mcp.json
+
+# 环境
+.env

@@ -1,0 +1,243 @@
+# 语义元数据平台 (DigitOnto-Lite)
+
+> 让 Agent 用自然语言查询 bench 数据库 —— 语义建模、双引擎检索、MCP 集成。
+
+## 架构
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                    OC 评测执行层                                   │
+│  OC Agent (OpenCode) ── 500 个自然语言任务 ── MCP 连接到指定范式     │
+└─────────────────────┬────────────────────────────────────────────┘
+                      │ MCP (SSE)  （每次连一个范式）
+┌─────────────────────▼────────────────────────────────────────────┐
+│                 语义查询层 (Semantic Core Service)                 │
+│                                                                  │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  │
+│  │   ER 范式        │  │   DLR 范式       │  │   RDF 范式       │  │
+│  │  Kuzu + FAISS   │  │  Kuzu + FAISS   │  │  Kuzu + FAISS   │  │
+│  │  专属 MCP 工具   │  │  专属 MCP 工具   │  │  (未来)          │  │
+│  │  专属 HTTP API   │  │  专属 HTTP API   │  │                 │  │
+│  └────────┬────────┘  └────────┬────────┘  └────────┬────────┘  │
+│           │                    │                    │           │
+│           └────────────────────┼────────────────────┘           │
+│                                │                                 │
+│  ┌─────────────────────────────▼─────────────────────────────┐  │
+│  │  解析层：YAML 配置 → Mapper Registry → SemanticModel       │  │
+│  │  ER: ERSemanticMapper  (BizEntity / BizRelation)           │  │
+│  │  DLR: DLRSemanticMapper (LogicalEntity / PE / PAS)         │  │
+│  └───────────────────────────────────────────────────────────┘  │
+└─────────────────────┬────────────────────────────────────────────┘
+                      │
+┌─────────────────────▼────────────────────────────────────────────┐
+│               物理数据层（各范式共享）                              │
+│  SQLite 数据库: california_schools / financial / superhero / ...  │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### 建模范式
+
+| 范式 | 状态 | 模型 | Kuzu Schema |
+|------|------|------|-------------|
+| **ER** | ✅ 已实现 + 有配置 | BizEntity / BizAttribute / BizRelation / RELATED_TO | 扁平实体+关系 |
+| **DLR** | ✅ 代码已实现，配置待写 | LogicalEntity / PhysicalEntity / PASRelation / ARCS | LE-PE 双层 + INHERITS + PAS |
+| **RDF** | 🔜 未来 | — | — |
+
+**启动方式**（每次只启动一个范式，不并行）：
+```bash
+python main.py build --paradigm ER      # 构建 ER 的知识库
+python main.py serve --paradigm ER      # 启动 ER 的 API + MCP
+
+python main.py build --paradigm DLR     # 构建 DLR 的知识库
+python main.py serve --paradigm DLR     # 启动 DLR 的 API + MCP
+```
+
+## 存储隔离
+
+各范式 Kuzu / FAISS 物理隔离（`config.paradigm_storage()`），但共享同一套 SQLite 物理数据：
+
+```
+storage/
+├── kuzu/
+│   ├── er/        ← ER 专用 Kuzu 图
+│   └── dlr/       ← DLR 专用 Kuzu 图
+├── vector/
+│   ├── er.pkl     ← ER 专用 FAISS 索引
+│   └── dlr.pkl    ← DLR 专用 FAISS 索引
+└── sqlite_dbs/
+    └── *.db       ← 共享的物理数据库
+```
+
+## 解析链路（以 ER 为例）
+
+```
+configs/scenarios/ER/*.yaml
+        │
+        ▼  ERSemanticMapper.parse()
+ERScenarioModel (BizEntity / BizAttribute / BizRelation)
+        │
+        ▼  BuildService.build()
+Kuzu 图节点 + FAISS 向量索引
+        │
+        ▼  MCP 工具暴露
+Agent 通过 MCP 调用 → 语义查询 → sqlite3 查证据
+```
+
+## 核心查询流程
+
+```
+自然语言问题
+    │
+    ▼  FAISS 向量召回 Top-K
+候选对象 (实体/属性/关系)
+    │
+    ▼  实体优先策略 + 置信度过滤 (≥ 0.415)
+目标实体
+    │
+    ▼  Kuzu 图谱扩展 (属性 + 关联关系)
+结构化结果
+    │
+    ▼  MCP 返回物理映射 (数据库路径 + 字段)
+sqlite3 只读查询 → 数据证据
+    │
+    ▼  Agent SOP 推理
+最终答案（引用数据来源）
+```
+
+## 项目结构
+
+```text
+DLR Proj/
+├── README.md
+├── requirements.txt
+│
+├── Semantic Core Service/          # 语义服务（Python）
+│   ├── main.py                     # CLI: build / serve / query / interactive / init / reset
+│   ├── config.py                   # 全局配置 + 范式存储路径 + extract_entity_id()
+│   ├── mcp_server.py               # MCP Server（范式隔离的工具注册）
+│   ├── models/
+│   │   ├── semantic_models.py      # ER: BizEntity / DLR: LogicalEntity, PE, PAS, ARCS
+│   │   └── physical_models.py      # PhysicalTable / PhysicalColumn
+│   ├── mapping/
+│   │   ├── base.py                 # ScenarioModel / ERScenarioModel / DLRScenarioModel
+│   │   ├── registry.py             # register() + get_mapper() 动态分发
+│   │   ├── er.py                   # @register("er") → ERSemanticMapper
+│   │   ├── dlr.py                  # @register("dlr") → DLRSemanticMapper
+│   │   ├── rdf.py                  # (未来)
+│   │   ├── config_loader.py        # YAML 加载
+│   │   ├── config_generator.py     # 物理库扫描 → 模板生成
+│   │   ├── physical_scanner.py     # SQLite 表/字段扫描
+│   │   └── semantic_mapper.py      # (兼容)
+│   ├── db/
+│   │   ├── graph_db.py             # Kuzu 双 schema (ER / DLR)
+│   │   └── vector_db.py            # FAISS + NumPy 降级
+│   ├── service/
+│   │   ├── build_service.py        # Kuzu + FAISS 写入
+│   │   └── query_service.py        # 向量召回 → 实体优先 → 图谱扩展
+│   ├── configs/scenarios/
+│   │   ├── ER/                     ← ✅ Bench 数据库配置 (11 个 yaml)
+│   │   ├── DLR/                    ← 空目录，配置待写
+│   │   ├── RDF/                    ← 预留
+│   │   └── *.yaml                   ← 范式参考示例 (er/dlr_line_loss 等)
+│   ├── static/index.html           # 图可视化 UI
+│   └── storage/                    # 运行时生成
+│
+├── OC-based Agent Service/          # Agent 层 (OpenCode)
+│   ├── AGENTS.md                   # Agent 角色指令 (元数据走 MCP，数据走 SQL)
+│   ├── oc_dlr/opencode.json        # MCP 连接: localhost:28765/mcp/sse
+│   └── (oc_er/ oc_rdf/)
+│
+└── mini_dev-main/                   # bench 评测框架 (参考)
+```
+
+## MCP 工具
+
+### 共享工具（所有范式）
+
+| Tool | 参数 | 语义 |
+|------|------|------|
+| `semantic_query` | `question, top_k=20` | 自然语言查询（主入口） |
+| `list_entities` | — | 列出所有实体 |
+| `list_relations` | — | 列出所有关系 |
+| `get_entity` | `entity_id` | 单个实体详情 |
+| `get_entity_attributes` | `entity_id` | 实体属性（含物理字段） |
+| `get_entity_relations` | `entity_id` | 实体关系（含方向） |
+| `get_entity_mapping` | `entity_id` | 物理映射（数据库+表+字段） |
+| `find_shortest_path` | `from_id, to_id` | 两实体最短路径 |
+| `list_all_tables` | — | 列出已注册实体表 |
+| `get_table_schema` | `table_id: "db.表名"` | 任意物理表结构 |
+| `calc_distance` | `tg_id1, tg_id2` | Haversine 距离（米） |
+| `find_nearby_transformers` | `tg_id, radius_m=1000` | 半径内邻近变压器 |
+| `summary` | — | 知识库摘要统计 |
+
+### DLR 范式专用工具
+
+| Tool | 参数 | 语义 |
+|------|------|------|
+| `recall_le` | `question, top_k, threshold` | 召回逻辑实体 |
+| `recall_pe` | `question, top_k, threshold` | 召回物理实体 |
+| `recall_pas` | `question, top_k, threshold` | 召回 PAS 语义路由 |
+| `list_le` | — | 列出所有逻辑实体 |
+| `list_pas` | — | 列出所有 PAS 关系 |
+| `get_le` | `le_id` | 逻辑实体详情 |
+| `get_le_attrs` | `le_id` | 逻辑实体属性 |
+| `get_le_children` | `le_id` | 获取物理实体 (PE) 列表 |
+| `get_pe_arcs` | `pe_id` | ARCS 锚定 + 数据库 URL |
+| `path_le_le` | `from_id, to_id` | 两 LE 最短 PAS 路径 |
+
+> **注意**：DLR 工具仅在 `--paradigm DLR` 启动时注册，ER 启动时不暴露。
+
+## HTTP API
+
+启动 `serve`（端口 28765）后可用：
+
+| 端点 | 用途 |
+|------|------|
+| `POST /api/v1/query` | 自然语言语义查询 |
+| `GET /api/v1/entities` | 列出所有实体 |
+| `GET /api/v1/graph` | 实体 + 关系（图谱数据） |
+| `GET /health` | 健康检查 |
+
+MCP SSE 端点：`http://localhost:28765/mcp/sse`
+
+## 快速开始
+
+### 1. 安装依赖
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. 构建 + 启动 ER 范式服务
+
+```bash
+cd Semantic\ Core\ Service
+python main.py build --paradigm ER
+python main.py serve --paradigm ER --port 28765
+
+# 浏览器打开 http://localhost:28765/ 查看语义图谱
+# MCP SSE 端点：http://localhost:28765/mcp/sse
+```
+
+### 3. 构建 + 启动 DLR 范式服务
+
+```bash
+cd Semantic\ Core\ Service
+# 需要先写 configs/scenarios/DLR/*.yaml 配置
+python main.py build --paradigm DLR
+python main.py serve --paradigm DLR --port 28765
+```
+
+### 3. 通过 OC Agent 执行 Bench 任务
+
+```bash
+cd OC-based Agent Service
+opencode    # 启动 OpenCode，连接 MCP → 跑 500 个 NL 任务
+```
+
+## 评测目标
+
+在 bench 数据集上跑通 **500 个自然语言查询任务**：
+- Agent 通过 MCP 获取语义理解（实体/关系/映射）
+- Agent 通过 sqlite3 只读查询获取数据证据
+- 最终输出结构化答案（引用数据来源）
