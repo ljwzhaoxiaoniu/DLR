@@ -50,19 +50,19 @@ def _resolve_preset(preset: str, paradigm: str):
             break
 
     if config_path is None:
-        click.echo(f"❌ 未找到: {base}/{preset}.yaml")
+        click.echo(f"[MISS] not found: {base}/{preset}.yaml")
         return None, None, None
 
     config_data = ConfigLoader.load_config(config_path)
     if not config_data:
-        click.echo(f"❌ 加载失败: {config_path}")
+        click.echo(f"[FAIL] load failed: {config_path}")
         return None, None, None
 
     mapping_type = config_data.get("mapping_type", "er")
     mapper = get_mapper(mapping_type)
 
     rel = config_path.relative_to(SCENARIOS_DIR)
-    click.echo(f"📂 {rel}  (mapping_type={mapping_type})")
+    click.echo(f"[LOAD] {rel}  (mapping_type={mapping_type})")
     return config_path, config_data, mapper
 
 
@@ -70,11 +70,11 @@ def _scan_paradigm_dir(paradigm: str):
     """Return all YAML file paths under SCENARIOS_DIR / paradigm/."""
     base = SCENARIOS_DIR / paradigm
     if not base.exists():
-        click.echo(f"❌ 范式目录不存在: {base}")
+        click.echo(f"[MISS] paradigm dir not found: {base}")
         return []
     files = sorted(base.glob("*.yaml")) + sorted(base.glob("*.yml"))
     if not files:
-        click.echo(f"⚠️  范式目录下无 YAML: {base}")
+        click.echo(f"[WARN] no YAML in: {base}")
     return files
 
 
@@ -121,7 +121,7 @@ def build(paradigm):
 
     # Shared storage for the whole paradigm
     storage = paradigm_storage(paradigm)
-    os.environ["KUZU_DIR"] = str(storage["kuzu"])
+    os.environ["KUZU_DIR"] = str(storage["graph"])
     os.environ["VECTOR_DIR"] = str(storage["vector"])
 
     # Scan once, share across all presets
@@ -132,7 +132,7 @@ def build(paradigm):
         return
 
     # Open shared DB once, build incrementally
-    graph_db = GraphDB(db_path=str(storage["kuzu"]), mapping_type=paradigm)
+    graph_db = GraphDB(db_path=str(storage["graph"]), mapping_type=paradigm)
     vector_db = VectorDB(db_path=str(storage["vector"]))
     build_service = BuildService(graph_db=graph_db, vector_db=vector_db)
 
@@ -144,7 +144,7 @@ def build(paradigm):
     for preset_path in preset_files:
         preset = preset_path.stem
         click.echo(f"\n{'='*50}")
-        click.echo(f"🔨 {paradigm}/{preset}.yaml")
+        click.echo(f"[BUILD] {paradigm}/{preset}.yaml")
         _, config_data, mapper = _resolve_preset(preset, paradigm)
         if not config_data:
             fail_count += 1
@@ -160,24 +160,24 @@ def build(paradigm):
         model = mapper.parse(config_data, preset_tables)
         ents = model.biz_entities if paradigm == "er" else model.logical_entities
         if not ents:
-            logger.error("  ❌ 未生成任何实体")
+            logger.error("  [FAIL] no entities generated")
             fail_count += 1
             continue
 
         ok = build_service.build(model)
         if ok:
-            logger.info("  ✅ 完成")
+            logger.info("  [OK] done")
             ok_count += 1
         else:
-            logger.error("  ❌ 失败")
+            logger.error("  [FAIL] build failed")
             fail_count += 1
 
     # Save once after all presets are built
     build_service.save()
 
     click.echo(f"\n{'='*50}")
-    click.echo(f"构建汇总: ✅ {ok_count} / ❌ {fail_count} / 共 {len(preset_files)}")
-    click.echo(f"存储位置: {storage['kuzu']}  +  {storage['vector']}")
+    click.echo(f"Build Summary: [OK] {ok_count} / [FAIL] {fail_count} / Total {len(preset_files)}")
+    click.echo(f"存储位置: {storage['graph']}  +  {storage['vector']}")
 
 
 # ---------------------------------------------------------------------------
@@ -191,7 +191,7 @@ def serve(paradigm, host, port):
     """启动 HTTP API + MCP SSE 服务 (覆盖范式下所有数据库)"""
     paradigm = paradigm.lower()
     storage = paradigm_storage(paradigm)
-    os.environ["KUZU_DIR"] = str(storage["kuzu"])
+    os.environ["KUZU_DIR"] = str(storage["graph"])
     os.environ["VECTOR_DIR"] = str(storage["vector"])
 
     try:
@@ -204,7 +204,7 @@ def serve(paradigm, host, port):
         logger.error("请先安装依赖: pip install fastapi uvicorn pydantic")
         return
 
-    graph_db = GraphDB(db_path=str(storage["kuzu"]), mapping_type=paradigm)
+    graph_db = GraphDB(db_path=str(storage["graph"]), mapping_type=paradigm)
     query_svc = QueryService(mapping_type=paradigm, graph_db=graph_db)
 
     app = FastAPI(title=f"语义元数据查询API [{paradigm.upper()}]", version="1.0.0")
@@ -213,9 +213,14 @@ def serve(paradigm, host, port):
     if static_dir.exists():
         app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
+    _visual_map = {"er": "er.html", "dlr": "dlr.html", "rdf": None}
+    _default_html = _visual_map.get(paradigm, "er.html")
+
     @app.get("/", include_in_schema=False)
     async def root():
-        return RedirectResponse(url="/static/index.html")
+        if _default_html and (static_dir / _default_html).exists():
+            return RedirectResponse(url=f"/static/{_default_html}")
+        return RedirectResponse(url="/static/er.html")
 
     class QueryRequest(BaseModel):
         question: str
@@ -232,6 +237,12 @@ def serve(paradigm, host, port):
     async def get_graph_data():
         return {"entities": graph_db.get_all_entities(),
                 "relations": graph_db.get_all_relations()}
+
+    @app.get("/api/v1/dlr/graph")
+    async def get_dlr_graph():
+        if paradigm != "dlr":
+            return {"error": "not in dlr paradigm"}
+        return graph_db.get_dlr_graph_data()
 
     @app.get("/health")
     async def health_check():
@@ -258,15 +269,15 @@ def serve(paradigm, host, port):
 @cli.command()
 @PARADIGM
 def reset(paradigm):
-    """清除范式的 Kuzu / 向量数据"""
+    """清除范式的 Graph / 向量数据"""
     paradigm = paradigm.lower()
     storage = paradigm_storage(paradigm)
 
     cleared = 0
-    kuzu_path = storage["kuzu"]
-    if kuzu_path.exists():
-        shutil.rmtree(kuzu_path)
-        logger.info(f"  已清除 Kuzu: {kuzu_path}")
+    graph_path = storage["graph"]
+    if graph_path.exists():
+        shutil.rmtree(graph_path)
+        logger.info(f"  已清除 Graph: {graph_path}")
         cleared += 1
 
     vec_path = storage["vector"]
@@ -276,13 +287,13 @@ def reset(paradigm):
         cleared += 1
 
     # Recreate empty dirs
-    kuzu_path.mkdir(parents=True, exist_ok=True)
+    graph_path.mkdir(parents=True, exist_ok=True)
     vec_path.parent.mkdir(parents=True, exist_ok=True)
 
     if cleared:
-        click.echo(f"✅ {paradigm.upper()} 已清除")
+        click.echo(f"[OK] {paradigm.upper()} cleared")
     else:
-        click.echo(f"⚠️  {paradigm.upper()} 无存储可清除")
+        click.echo(f"[WARN] {paradigm.upper()} nothing to clear")
 
 
 # ---------------------------------------------------------------------------
@@ -295,9 +306,9 @@ def query(paradigm, question):
     """语义查询: 向范式知识库提问"""
     paradigm = paradigm.lower()
     storage = paradigm_storage(paradigm)
-    os.environ["KUZU_DIR"] = str(storage["kuzu"])
+    os.environ["KUZU_DIR"] = str(storage["graph"])
     os.environ["VECTOR_DIR"] = str(storage["vector"])
-    graph_db = GraphDB(db_path=str(storage["kuzu"]), mapping_type=paradigm)
+    graph_db = GraphDB(db_path=str(storage["graph"]), mapping_type=paradigm)
     vector_db = VectorDB(db_path=str(storage["vector"]))
     qs = QueryService(mapping_type=paradigm, graph_db=graph_db, vector_db=vector_db)
     click.echo(qs.format_result(qs.query(question)))
@@ -312,7 +323,7 @@ def interactive(paradigm):
     """交互式查询模式"""
     paradigm = paradigm.lower()
     storage = paradigm_storage(paradigm)
-    os.environ["KUZU_DIR"] = str(storage["kuzu"])
+    os.environ["KUZU_DIR"] = str(storage["graph"])
     os.environ["VECTOR_DIR"] = str(storage["vector"])
     qs = QueryService(mapping_type=paradigm)
     click.echo(f"[{paradigm.upper()}] 输入问题查询，exit / quit / q 退出")

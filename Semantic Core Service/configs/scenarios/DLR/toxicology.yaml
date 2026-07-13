@@ -1,0 +1,88 @@
+mapping_type: "dlr"
+version: "2.0"
+scenario_name: dlr_toxicology
+description: "DLR 范式 — 毒理学场景：按需字段，4 PE 聚合 3 LE，化学键+连接关系多视图解耦"
+databases:
+  toxicology: "sqlite:///MINIDEV_sqlite/dev_databases/toxicology/toxicology.sqlite"
+
+logical_entities:
+  # ── 1. 分子 ──
+  - logical_entity_id: LOGICAL.分子
+    biz_name: 分子
+    description: "化学分子及其致癌性标签"
+    public_attributes:
+      - {attr_id: LOGICAL.分子.分子编号, biz_name: 分子编号}
+    physical_entities:
+      - physical_entity_id: PHYSICAL.分子表
+        physical_table_name: molecule
+        physical_table_id: toxicology.molecule
+        A: {cardinality: "1:1", key: molecule_id}
+        R: null
+        C:
+          LOGICAL.分子.分子编号: toxicology.molecule.molecule_id
+        S: "分子主表"
+        private_attributes:
+          - {attr_id: toxicology.molecule.label, biz_name: 致癌标签, physical_column_id: toxicology.molecule.label}
+
+  # ── 2. 原子 ──
+  - logical_entity_id: LOGICAL.原子
+    biz_name: 原子
+    description: "构成分子的原子信息"
+    public_attributes:
+      - {attr_id: LOGICAL.原子.原子编号, biz_name: 原子编号}
+      - {attr_id: LOGICAL.原子.所属分子, biz_name: 所属分子}
+    physical_entities:
+      - physical_entity_id: PHYSICAL.原子表
+        physical_table_name: atom
+        physical_table_id: toxicology.atom
+        A: {cardinality: "N:1", key: molecule_id}
+        R: null
+        C:
+          LOGICAL.原子.原子编号: toxicology.atom.atom_id
+          LOGICAL.原子.所属分子: toxicology.atom.molecule_id
+        S: "原子组成表"
+        private_attributes:
+          - {attr_id: toxicology.atom.element, biz_name: 元素类型, physical_column_id: toxicology.atom.element}
+
+  # ── 3. 化学键 (2 PE — 多视图核心) ──
+  - logical_entity_id: LOGICAL.化学键
+    biz_name: 化学键
+    description: "分子内的化学键及其连接关系，主表+关联表双视图"
+    public_attributes:
+      - {attr_id: LOGICAL.化学键.键编号, biz_name: 键编号}
+      - {attr_id: LOGICAL.化学键.所属分子, biz_name: 所属分子}
+    physical_entities:
+      - physical_entity_id: PHYSICAL.键表
+        physical_table_name: bond
+        physical_table_id: toxicology.bond
+        A: {cardinality: "N:1", key: molecule_id}
+        R: null
+        C:
+          LOGICAL.化学键.键编号: toxicology.bond.bond_id
+          LOGICAL.化学键.所属分子: toxicology.bond.molecule_id
+        S: "化学键主表 — 键类型"
+        private_attributes:
+          - {attr_id: toxicology.bond.bond_type, biz_name: 键类型, physical_column_id: toxicology.bond.bond_type}
+      - physical_entity_id: PHYSICAL.键连接表
+        physical_table_name: connected
+        physical_table_id: toxicology.connected
+        A: {cardinality: "N:1", key: bond_id}
+        R: null
+        C:
+          LOGICAL.化学键.键编号: toxicology.connected.bond_id
+        S: "键-原子连接关系 — 哪两个原子通过哪个键连接"
+        private_attributes:
+          - {attr_id: toxicology.connected.atom_id, biz_name: 原子1, physical_column_id: toxicology.connected.atom_id}
+          - {attr_id: toxicology.connected.atom_id2, biz_name: 原子2, physical_column_id: toxicology.connected.atom_id2}
+
+pas_relations:
+  - relation_id: LOGICAL.分子_TO_LOGICAL.原子
+    relation_name: 原子构成
+    P: {forward: {verb: 包含, cardinality: '1:N'}, reverse: {verb: 构成, cardinality: '1:1'}}
+    A: 所属分子
+    S: "1个分子由N个原子构成"
+  - relation_id: LOGICAL.分子_TO_LOGICAL.化学键
+    relation_name: 化学键
+    P: {forward: {verb: 包含, cardinality: '1:N'}, reverse: {verb: 归属, cardinality: '1:1'}}
+    A: 所属分子
+    S: "1个分子包含N个化学键"

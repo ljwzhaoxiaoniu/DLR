@@ -278,7 +278,7 @@ class VectorDB:
 
     def _load_data(self):
         """加载已有的向量数据"""
-        # db_path is already the full file path (e.g. xxx.pkl)
+        # db_path is the concrete file path (already resolved by config)
         data_path = self.db_path
         try:
             if os.path.exists(data_path):
@@ -296,7 +296,7 @@ class VectorDB:
 
     def _save_data(self):
         """保存向量数据到磁盘"""
-        # db_path is already the full file path (e.g. xxx.pkl)
+        # db_path is the concrete file path (already resolved by config)
         data_path = self.db_path
         try:
             data = {
@@ -308,6 +308,7 @@ class VectorDB:
             else:
                 data["vectors"] = self.vectors
 
+            os.makedirs(os.path.dirname(data_path), exist_ok=True)
             with open(data_path, "wb") as f:
                 pickle.dump(data, f)
             logger.info("向量数据已保存到磁盘")

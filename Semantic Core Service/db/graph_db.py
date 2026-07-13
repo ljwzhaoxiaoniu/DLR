@@ -316,6 +316,51 @@ class GraphDB:
     # DLR write methods
     # ===================================================================
 
+    def create_physical_attribute_node(self, attr_id: str, name: str,
+                                       description: Optional[str] = None,
+                                       physical_column_id: Optional[str] = None,
+                                       data_type: Optional[str] = None) -> bool:
+        """Create a PhysicalAttribute node (DLR)."""
+        try:
+            result = self.conn.execute("""
+                MERGE (a:PhysicalAttribute {attr_id: $attr_id})
+                SET a.name = $name,
+                    a.description = $description,
+                    a.physical_column_id = $physical_column_id,
+                    a.data_type = $data_type
+                RETURN a.attr_id
+            """, parameters={
+                "attr_id": attr_id, "name": name,
+                "description": description,
+                "physical_column_id": physical_column_id,
+                "data_type": data_type,
+            })
+            success = result.has_next()
+            if success:
+                logger.info(f"[GraphDB] 创建物理属性: {attr_id} - {name}")
+            return success
+        except Exception as e:
+            logger.error(f"[GraphDB] 创建物理属性失败 {attr_id}: {e}")
+            return False
+
+    def create_physical_entity_attribute_relation(self, physical_entity_id: str,
+                                                   attr_id: str) -> bool:
+        """Create HAS_ATTRIBUTE relation: PhysicalEntity → PhysicalAttribute (DLR)."""
+        try:
+            result = self.conn.execute("""
+                MATCH (e:PhysicalEntity {physical_entity_id: $pe_id}),
+                      (a:PhysicalAttribute {attr_id: $attr_id})
+                MERGE (e)-[r:HAS_ATTRIBUTE]->(a)
+                RETURN r
+            """, parameters={"pe_id": physical_entity_id, "attr_id": attr_id})
+            success = result.has_next()
+            if success:
+                logger.info(f"[GraphDB] 创建物理实体-属性关系: {physical_entity_id} -> {attr_id}")
+            return success
+        except Exception as e:
+            logger.error(f"[GraphDB] 创建物理实体属性关系失败: {e}")
+            return False
+
     def create_physical_entity_node(self, physical_entity_id: str, name: str,
                                     description: Optional[str] = None,
                                     physical_table_id: Optional[str] = None,
@@ -816,6 +861,94 @@ class GraphDB:
             logger.error(f"[GraphDB] LE路径查询失败: {e}")
             return {"success": False, "message": str(e),
                     "from_entity_id": from_le_id, "to_entity_id": to_le_id}
+
+    # ===================================================================
+    # DLR full-graph export (single-shot for visualization)
+    # ===================================================================
+
+    def get_dlr_graph_data(self) -> Dict[str, Any]:
+        """Return full DLR graph in a single payload for the visualization page.
+
+        Shape:
+            {
+                "logical_entities":  [{logical_entity_id, name, description, attributes:[{...}]}],
+                "physical_entities": [{physical_entity_id, name, description, source_table,
+                                        arcs:{A,R,C,S}, attributes:[{...}]}],
+                "inherits":           {pe_id: le_id, ...},
+                "pas_relations":      [{relation_id, relation_name, from_le_id, to_le_id,
+                                        P_predicate:{forward:{...}, reverse:{...}},
+                                        A_attribute, S_semantic4pas}]
+            }
+        """
+        try:
+            # LE + attributes
+            le_list = self.get_all_logical_entities()
+            for le in le_list:
+                le["attributes"] = self.get_logical_entity_attributes(le["logical_entity_id"])
+
+            # PE + attributes + ARCS
+            pe_list = self.get_all_entities()  # returns PhysicalEntity for dlr
+            for pe in pe_list:
+                pe["attributes"] = self.get_physical_entity_attributes(pe["entity_id"])
+                # Parse ARCS JSON strings back to objects
+                raw = self.conn.execute(
+                    "MATCH (p:PhysicalEntity {physical_entity_id: $id}) "
+                    "RETURN p.arcs_a_anchor, p.arcs_r_row, p.arcs_c_column, p.arcs_s_semantic4arcs",
+                    parameters={"id": pe["entity_id"]}
+                )
+                arcs = {"A_anchor": None, "R_row": None, "C_column": None, "S_semantic4arcs": None}
+                if raw.has_next():
+                    row = raw.get_next()
+                    try:
+                        arcs["A_anchor"] = json.loads(row[0]) if row[0] else None
+                    except Exception:
+                        arcs["A_anchor"] = row[0]
+                    arcs["R_row"] = row[1]
+                    try:
+                        arcs["C_column"] = json.loads(row[2]) if row[2] else None
+                    except Exception:
+                        arcs["C_column"] = row[2]
+                    arcs["S_semantic4arcs"] = row[3]
+                pe["arcs"] = arcs
+
+            # INHERITS: PE → LE
+            inherits: Dict[str, str] = {}
+            inh = self.conn.execute(
+                "MATCH (p:PhysicalEntity)-[:INHERITS]->(le:LogicalEntity) "
+                "RETURN p.physical_entity_id, le.logical_entity_id"
+            )
+            for r in inh.get_all():
+                inherits[r[0]] = r[1]
+
+            # PAS relations (re-shape to P_predicate container for frontend)
+            pas_list = self.get_all_pas_relations()
+            pas_by_le: Dict[str, list] = {}
+            for p in pas_list:
+                fwd_verb = p.pop("forward_verb", "")
+                fwd_card = p.pop("forward_cardinality", "")
+                rev_verb = p.pop("reverse_verb", "")
+                rev_card = p.pop("reverse_cardinality", "")
+                p["P_predicate"] = {
+                    "forward": {"verb": fwd_verb, "cardinality": fwd_card},
+                    "reverse": {"verb": rev_verb, "cardinality": rev_card},
+                }
+                pas_by_le.setdefault(p["from_le_id"], []).append(p)
+                pas_by_le.setdefault(p["to_le_id"], []).append(p)
+
+            # Attach PAS relations to each LE for the detail panel
+            for le in le_list:
+                le["pas_relations"] = pas_by_le.get(le["logical_entity_id"], [])
+
+            return {
+                "logical_entities": le_list,
+                "physical_entities": pe_list,
+                "inherits": inherits,
+                "pas_relations": pas_list,
+            }
+        except Exception as e:
+            logger.error(f"[GraphDB] get_dlr_graph_data 失败: {e}")
+            return {"logical_entities": [], "physical_entities": [],
+                    "inherits": {}, "pas_relations": []}
 
     # ===================================================================
     # Maintenance

@@ -43,8 +43,8 @@
 
 | 范式 | 全称 | 中文 | 状态 | 模型 | Kuzu Schema |
 |------|------|------|------|------|-------------|
-| **ER** | Entity-Relationship | 实体-关系 | ✅ 已实现 + 有配置 | BizEntity / BizAttribute / BizRelation / RELATED_TO | 扁平实体+关系 |
-| **DLR** | Decoupled Logic Representation | 解耦逻辑表达 | ✅ 代码已实现，配置待写 | LE / PE / PAS / ARCS | LE-PE 双层 + INHERITS + PAS |
+| **ER** | Entity-Relationship | 实体-关系 | ✅ 已实现 + 已配置 + 已构建 | BizEntity / BizAttribute / BizRelation / RELATED_TO | 扁平实体+关系 |
+| **DLR** | Decoupled Logic Representation | 解耦逻辑表达 | ✅ 已实现 + 已配置 + 已构建 | LE / PE / PAS / ARCS | LE-PE 双层 + INHERITS + PAS |
 | **RDF** | Resource Description Framework | 资源描述框架 | 🔜 未来 | — | — |
 
 > DLR 是核心范式；ER 与 RDF 作为对比基线纳入评测。
@@ -71,19 +71,26 @@ python main.py serve --paradigm DLR     # 启动 DLR 的 API + MCP
 
 ## 存储隔离
 
-各范式 Kuzu / FAISS 物理隔离（`config.paradigm_storage()`），但共享同一套 SQLite 物理数据：
+各范式 Graph / Vector 物理隔离（`config.paradigm_storage()`），但共享同一套 SQLite 物理数据：
 
 ```
 storage/
-├── kuzu/
-│   ├── er/        ← ER (Entity-Relationship) 专用 Kuzu 图
-│   └── dlr/       ← DLR (Decoupled Logic Representation) 专用 Kuzu 图
-├── vector/
-│   ├── er.pkl     ← ER 专用 FAISS 索引
-│   └── dlr.pkl    ← DLR 专用 FAISS 索引
+├── ER/
+│   ├── graph/             ← ER 专用 Kuzu 图数据库
+│   └── vector/
+│       └── vector.pkl     ← ER 专用 FAISS 向量索引
+├── DLR/
+│   ├── graph/             ← DLR 专用 Kuzu 图数据库
+│   └── vector/
+│       └── vector.pkl     ← DLR 专用 FAISS 向量索引
+├── RDF/                   ← 预留
+│   ├── graph/
+│   └── vector/
 └── sqlite_dbs/
-    └── *.db       ← 共享的物理数据库
+    └── *.db               ← 共享的物理数据库
 ```
+
+> **目录命名约定**：`graph/` 为能力层而非 Kuzu 引擎专属名（预留将来替换图引擎的灵活性），`vector/` 同理为向量索引能力名。
 
 ## 解析链路
 
@@ -170,10 +177,10 @@ DLR Proj/
 │   │   ├── build_service.py        # Kuzu + FAISS 写入
 │   │   └── query_service.py        # 向量召回 → 实体优先 → 图谱扩展
 │   ├── configs/scenarios/
-│   │   ├── ER/                     ← ✅ mini_dev 数据库配置 (11 个 yaml)
-│   │   ├── DLR/                    ← 空目录，配置待写
+│   │   ├── ER/                     ← ✅ mini_dev 11 个数据库配置 yaml
+│   │   ├── DLR/                    ← ✅ mini_dev 11 个数据库配置 yaml
 │   │   ├── RDF/                    ← 预留
-│   │   └── *.yaml                   ← 范式参考示例 (er/dlr 等)
+│   │   └── *.yaml                   ← 范式参考示例
 │   ├── static/index.html           # 图可视化 UI
 │   └── storage/                    # 运行时生成
 │
@@ -256,7 +263,6 @@ python main.py serve --paradigm ER --port 28765
 
 ```bash
 cd Semantic\ Core\ Service
-# 需要先写 configs/scenarios/DLR/*.yaml 配置
 python main.py build --paradigm DLR
 python main.py serve --paradigm DLR --port 28765
 ```

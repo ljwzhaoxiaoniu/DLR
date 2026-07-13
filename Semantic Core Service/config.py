@@ -44,7 +44,13 @@ CONFIDENCE_THRESHOLD = 0.415
 # Logging
 # ---------------------------------------------------------------------------
 LOG_LEVEL = "INFO"
-LOG_FILE = STORAGE_DIR / "app.log"
+LOG_DIR = BASE_DIR / "log"               # Semantic Core Service/log/
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+# 每次启动按时间戳生成新日志文件，下次启动不会复写
+import time as _time
+_LOG_TIMESTAMP = _time.strftime("%Y-%m-%d_%H-%M-%S")
+LOG_FILE = LOG_DIR / f"app.{_LOG_TIMESTAMP}.log"
 
 # ---------------------------------------------------------------------------
 # Auto-create directories (safe to call at import time)
@@ -77,15 +83,16 @@ def paradigm_storage(mapping_type: str) -> dict:
     questions across all databases in that paradigm.
 
     Returns:
-        {"kuzu": Path (dir), "vector": Path (file)}
+        {"graph": Path (dir), "vector": Path (concrete .pkl file)}
     """
-    kuzu_path = STORAGE_DIR / "kuzu" / mapping_type
-    vector_path = STORAGE_DIR / "vector" / f"{mapping_type}.pkl"
+    paradigm_dir = STORAGE_DIR / mapping_type
+    graph_path = paradigm_dir / "graph"
+    vector_path = paradigm_dir / "vector" / "vector.pkl"
 
-    kuzu_path.mkdir(parents=True, exist_ok=True)
+    graph_path.mkdir(parents=True, exist_ok=True)
     vector_path.parent.mkdir(parents=True, exist_ok=True)
 
     return {
-        "kuzu": kuzu_path,
+        "graph": graph_path,
         "vector": vector_path,
     }

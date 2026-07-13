@@ -55,7 +55,7 @@ def _ensure_services():
 
     _storage = paradigm_storage(_mapping_type)
 
-    _graph_db = GraphDB(db_path=str(_storage["kuzu"]), mapping_type=_mapping_type)
+    _graph_db = GraphDB(db_path=str(_storage["graph"]), mapping_type=_mapping_type)
     _vector_db = VectorDB(db_path=str(_storage["vector"]))
     _query_service = QueryService(
         mapping_type=_mapping_type,
@@ -615,7 +615,7 @@ if __name__ == "__main__":
     parser.add_argument("--config", default="",
                         help="场景配置文件名 (位于 configs/scenarios/); 新范式下可留空, 由 --mapping-type 决定存储路径")
     parser.add_argument("--mapping-type", required=True, choices=["er", "dlr", "rdf"],
-                        help="映射范式: er / dlr / rdf. 决定使用 storage/kuzu/<type> + storage/vector/<type>.pkl")
+                        help="映射范式: er / dlr / rdf. 决定使用 storage/<type>/graph + storage/<type>/vector/vector.pkl")
     parser.add_argument("--transport", default="stdio", choices=["stdio", "sse"],
                         help="传输模式: stdio (OpenCode spawn) 或 sse (独立调试)")
     parser.add_argument("--port", default=28765, type=int, help="SSE 模式监听端口")
@@ -628,7 +628,7 @@ if __name__ == "__main__":
 
     from config import paradigm_storage
     storage = paradigm_storage(args.mapping_type)
-    os.environ["KUZU_DIR"] = str(storage["kuzu"])
+    os.environ["KUZU_DIR"] = str(storage["graph"])
     os.environ["VECTOR_DIR"] = str(storage["vector"])
 
     # Optional: load single-preset YAML for extra metadata (旧兼容)

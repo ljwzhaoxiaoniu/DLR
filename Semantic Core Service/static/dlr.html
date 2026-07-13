@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语义元数据可视化</title>
+    <link rel="icon" href="data:;base64,=">
+    <script type="text/javascript" src="https://unpkg.com/vis-network@9.1.9/dist/vis-network.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        .left-panel {
+            width: 300px;
+            min-width: 260px;
+            background: #f5f5f5;
+            border-right: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+        .left-header {
+            padding: 12px 16px;
+            background: white;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .left-header h1 {
+            font-size: 16px;
+            color: #333;
+        }
+        .entity-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        .le-group-header {
+            padding: 8px 12px;
+            margin-top: 8px;
+            margin-bottom: 2px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #5c3d99;
+            background: #ede7f6;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .le-group-header:first-child {
+            margin-top: 0;
+        }
+        .le-group-header .le-arrow {
+            font-size: 10px;
+            transition: transform 0.2s;
+        }
+        .le-group-header.collapsed .le-arrow {
+            transform: rotate(-90deg);
+        }
+        .le-group-children {
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .le-group-children.collapsed {
+            max-height: 0 !important;
+        }
+        .le-group-children .entity-item {
+            margin-left: 16px;
+        }
+        .ungrouped-header {
+            padding: 8px 12px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #999;
+        }
+        .entity-item {
+            padding: 10px 12px;
+            margin-bottom: 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            background: white;
+            border: 1px solid #eee;
+        }
+        .entity-item:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+        .entity-item.active {
+            background: #2196f3;
+            color: white;
+            font-weight: bold;
+        }
+        .entity-item.le-item {
+            background: #ede7f6;
+            border-color: #b39ddb;
+        }
+        .entity-item.le-item:hover {
+            background: #d1c4e9;
+        }
+        .entity-item.le-item.active {
+            background: #5c3d99;
+            color: white;
+        }
+        .entity-item .badge {
+            display: inline-block;
+            font-size: 10px;
+            padding: 1px 5px;
+            border-radius: 3px;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+        .entity-item .badge.le-badge {
+            background: #5c3d99;
+            color: white;
+        }
+        .entity-item.le-item.active .badge.le-badge {
+            background: white;
+            color: #5c3d99;
+        }
+        .entity-item .badge.pe-badge {
+            background: #e0e0e0;
+            color: #555;
+        }
+        .entity-item.active .badge.pe-badge {
+            background: rgba(255,255,255,0.3);
+            color: white;
+        }
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .network {
+            flex: 1;
+            background: #fafafa;
+            min-height: 400px;
+        }
+        .attr-panel {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 300px;
+            height: 100%;
+            background: white;
+            border-left: 1px solid #ddd;
+            padding: 16px;
+            overflow-y: auto;
+            display: none;
+            z-index: 100;
+        }
+        .attr-panel h3 {
+            margin-bottom: 16px;
+            color: #333;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .attr-item {
+            margin-bottom: 12px;
+        }
+        .attr-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        .attr-value {
+            font-size: 13px;
+            color: #333;
+            word-break: break-all;
+        }
+        .close-btn {
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            cursor: pointer;
+            color: #999;
+            font-size: 18px;
+        }
+        .close-btn:hover {
+            color: #333;
+        }
+        .header {
+            padding: 12px 16px;
+            background: white;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            font-size: 16px;
+            color: #333;
+        }
+        .stats {
+            font-size: 12px;
+            color: #666;
+        }
+        .pas-info {
+            background: #fff3e0;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-size: 12px;
+        }
+        .pas-info .pas-field { margin-bottom: 4px; }
+        .pas-info .pas-label { color: #2e7d32; font-weight: 600; }
+        .arcs-info {
+            background: #e8f5e9;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-size: 12px;
+        }
+        .arcs-info .arcs-field { margin-bottom: 4px; }
+        .arcs-info .arcs-label { color: #2e7d32; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="left-header">
+                <h1>实体列表</h1>
+            </div>
+            <div class="entity-list" id="entityList">
+                <div style="padding:20px;text-align:center;color:#999;" id="loadingEntities">
+                    加载中...
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="header">
+                <h1>语义元数据关系图谱</h1>
+                <div class="stats" id="stats">等待数据...</div>
+            </div>
+            <div id="network" class="network"></div>
+        </div>
+
+        <div class="attr-panel" id="attrPanel">
+            <span class="close-btn" id="closeAttr">×</span>
+            <h3 id="attrTitle">实体属性</h3>
+            <div id="attrContent"></div>
+        </div>
+    </div>
+
+    <script>
+    const SemanticVis = {
+        state: {
+            entities: [],
+            logicalEntities: [],
+            relations: [],
+            pasRelations: [],
+            inherits: {},        // PE→LE mapping
+            arcsCMapping: {},    // PE→C_column mapping (for inherited attr detection)
+            network: null,
+            edgeData: {}
+        },
+
+        CONST: {
+            ATTR_NODE_SUFFIX: '_attr_',
+            LE_NODE_PREFIX: 'LE_',
+            UNKNOWN_LABEL: '未知',
+            // LE马卡龙颜色（圆形）
+            LE_COLORS: [
+                '#FFB5BA', '#FFDAB9', '#FFF6CC', '#C1E6C6', '#A8E6CF',
+                '#B5EAD7', '#C7CEEA', '#E0BBE4', '#FEC8D8', '#FFDFD3'
+            ],
+            // PE紫色矩形
+            PE_COLOR: { background: '#9575cd', border: '#5c3d99', highlight: { background: '#7e57c2', border: '#5c3d99' } },
+            // A_anchor key属性（身份锚点）橘黄色
+            ANCHOR_KEY_ATTR_COLOR: { background: '#FFB74D', border: '#E65100' },
+            ANCHOR_KEY_ATTR_EDGE_COLOR: '#FF9800',
+            // C_column 映射属性（继承属性）蓝色
+            MAPPING_ATTR_COLOR: { background: '#64B5F6', border: '#1565C0' },
+            MAPPING_ATTR_EDGE_COLOR: '#42A5F5',
+            // 专有属性灰色
+            PRIVATE_ATTR_COLOR: { background: '#9e9e9e', border: '#666' },
+            // 边颜色
+            PAS_EDGE_COLOR: '#2e7d32',
+            PAS_EDGE_FONT: '#1b5e20',
+            INHERITS_EDGE_COLOR: '#b39ddb',
+            RELATION_EDGE_COLOR: '#4caf50',
+            KEY_ATTR_EDGE_COLOR: '#FF9800',
+            PRIVATE_ATTR_EDGE_COLOR: '#bdbdbd'
+        }
+    };
+
+    async function loadData() {
+        try {
+            // 单次请求拿到完整 DLR graph（LE + PE + ARCS + INHERITS + PAS）
+            const res = await fetch('/api/v1/dlr/graph');
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+
+            // LE — 直接可用
+            SemanticVis.state.logicalEntities = data.logical_entities || [];
+
+            // PE — 把 physical_entity_id 映射到 entity_id 以适配后续渲染逻辑
+            SemanticVis.state.entities = (data.physical_entities || []).map(pe => ({
+                entity_id: pe.physical_entity_id || pe.entity_id,
+                name: pe.name,
+                description: pe.description,
+                source_table: pe.physical_table_id || pe.source_table,
+                attributes: pe.attributes || [],
+                arcs: pe.arcs || null,
+            }));
+
+            // ARCS C_column → arcsCMapping
+            SemanticVis.state.arcsCMapping = {};
+            SemanticVis.state.entities.forEach(pe => {
+                if (pe.arcs && pe.arcs.C_column) {
+                    SemanticVis.state.arcsCMapping[pe.entity_id] = pe.arcs.C_column;
+                }
+            });
+
+            // INHERITS  {pe_id: le_id}
+            SemanticVis.state.inherits = data.inherits || {};
+
+            // PAS — 适配 P_predicate 结构
+            SemanticVis.state.pasRelations = (data.pas_relations || []).map(p => ({
+                relation_id: p.relation_id,
+                relation_name: p.relation_name,
+                from_le_id: p.from_le_id || (p.relation_id || '').split('_TO_')[0],
+                to_le_id: p.to_le_id || (p.relation_id || '').split('_TO_')[1],
+                P_predicate: p.P_predicate || {},
+                A_attribute: p.A_attribute || '',
+                S_semantic4pas: p.S_semantic4pas || '',
+            }));
+
+            const leCount = SemanticVis.state.logicalEntities.length;
+            const peCount = SemanticVis.state.entities.length;
+            const pasCount = SemanticVis.state.pasRelations.length;
+
+            document.getElementById('stats').textContent =
+                (leCount > 0 ? 'LE:' + leCount + ' | ' : '') +
+                'PE:' + peCount + ' | ' +
+                'PAS:' + pasCount;
+
+            return true;
+        } catch (error) {
+            document.getElementById('stats').textContent = '加载失败：' + error.message;
+            document.getElementById('stats').style.color = '#f44336';
+            return false;
+        }
+    }
+
+    function renderEntityList() {
+        const listEl = document.getElementById('entityList');
+        const hasLE = SemanticVis.state.logicalEntities.length > 0;
+        let html = '';
+
+        if (hasLE) {
+            const groupedPEs = {};
+            const ungroupedPEs = [];
+
+            SemanticVis.state.entities.forEach(pe => {
+                const parentLE = SemanticVis.state.inherits[pe.entity_id];
+                if (parentLE) {
+                    if (!groupedPEs[parentLE]) groupedPEs[parentLE] = [];
+                    groupedPEs[parentLE].push(pe);
+                } else {
+                    ungroupedPEs.push(pe);
+                }
+            });
+
+            SemanticVis.state.logicalEntities.forEach(le => {
+                const childPEs = groupedPEs[le.logical_entity_id] || [];
+                html += '<div class="le-group-header" data-le-id="' + le.logical_entity_id + '">' +
+                    '<span class="le-arrow">▼</span>' +
+                    '<span class="badge le-badge">LE</span>' +
+                    (le.name || le.logical_entity_id) +
+                    ' <span style="font-size:11px;color:#888;">(' + childPEs.length + '个PE)</span>' +
+                    '</div>';
+                html += '<div class="le-group-children" data-le-children="' + le.logical_entity_id + '">';
+                html += '<div class="entity-item le-item" data-id="' + SemanticVis.CONST.LE_NODE_PREFIX + le.logical_entity_id + '" data-type="le">' +
+                    '<span class="badge le-badge">LE</span>' +
+                    '<div>' + (le.name || le.logical_entity_id) + '</div>' +
+                    '<div style="font-size:11px;color:#999;">' + le.logical_entity_id + '</div>' +
+                    '</div>';
+                childPEs.forEach(pe => {
+                    const name = pe.name || SemanticVis.CONST.UNKNOWN_LABEL;
+                    html += '<div class="entity-item" data-id="' + pe.entity_id + '" data-type="pe">' +
+                        '<span class="badge pe-badge">PE</span>' +
+                        '<div>' + name + '</div>' +
+                        '<div style="font-size:11px;color:#999;">' + pe.entity_id + '</div>' +
+                        '</div>';
+                });
+                html += '</div>';
+            });
+
+            if (ungroupedPEs.length > 0) {
+                html += '<div class="ungrouped-header">未分组物理实体</div>';
+                ungroupedPEs.forEach(pe => {
+                    const name = pe.name || SemanticVis.CONST.UNKNOWN_LABEL;
+                    html += '<div class="entity-item" data-id="' + pe.entity_id + '" data-type="pe">' +
+                        '<span class="badge pe-badge">PE</span>' +
+                        '<div>' + name + '</div>' +
+                        '<div style="font-size:11px;color:#999;">' + pe.entity_id + '</div>' +
+                        '</div>';
+                });
+            }
+        } else {
+            SemanticVis.state.entities.forEach(e => {
+                const name = e.name || SemanticVis.CONST.UNKNOWN_LABEL;
+                const id = e.entity_id || SemanticVis.CONST.UNKNOWN_LABEL;
+                html += '<div class="entity-item" data-id="' + id + '">' +
+                    '<div>' + name + '</div>' +
+                    '<div style="font-size:11px;color:#999;">' + id + '</div>' +
+                    '</div>';
+            });
+        }
+
+        listEl.innerHTML = html;
+
+        listEl.querySelectorAll('.le-group-header').forEach(header => {
+            header.addEventListener('click', function() {
+                this.classList.toggle('collapsed');
+                const leId = this.dataset.leId;
+                const children = listEl.querySelector('[data-le-children="' + leId + '"]');
+                if (children) children.classList.toggle('collapsed');
+            });
+        });
+    }
+
+    // 判断属性是否是继承的C_column映射属性
+    function isMappingAttr(peId, attrObj) {
+        const cMapping = SemanticVis.state.arcsCMapping[peId];
+        if (!cMapping || typeof cMapping !== 'object') return false;
+        let physicalColId = null;
+        if (typeof attrObj === 'object' && attrObj !== null) {
+            physicalColId = attrObj.physical_column_id || '';
+        }
+        for (let logicalAttrId in cMapping) {
+            const cPhysicalId = cMapping[logicalAttrId];
+            if (cPhysicalId && physicalColId && cPhysicalId === physicalColId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // 判断属性是否是A_anchor的身份锚点key
+    // 匹配策略：A_anchor.key 是物理列短名(如"变压器ID")，
+    // 属性的physical_column_id 以该key结尾(如"PMS.变压器档案.变压器ID")
+    function isAnchorKeyAttr(peId, attrObj) {
+        const entity = SemanticVis.state.entities.find(e => e.entity_id === peId);
+        if (!entity || !entity.arcs || !entity.arcs.A_anchor) return false;
+        const anchorKey = entity.arcs.A_anchor.key || '';
+        if (!anchorKey) return false;
+        let physicalColId = '';
+        if (typeof attrObj === 'object' && attrObj !== null) {
+            physicalColId = attrObj.physical_column_id || '';
+        }
+        // physical_column_id 以 "." + anchorKey 结尾
+        return physicalColId.endsWith('.' + anchorKey);
+    }
+
+    // 获取属性显示名
+    function getAttrName(attrKey, attrObj) {
+        if (typeof attrObj === 'object' && attrObj !== null) {
+            return attrObj.name || attrKey;
+        }
+        return attrKey;
+    }
+
+    // 获取属性物理列ID
+    function getAttrPhysicalColId(attrObj) {
+        if (typeof attrObj === 'object' && attrObj !== null) {
+            return attrObj.physical_column_id || '';
+        }
+        return '';
+    }
+
+    // 将属性转为可遍历的数组（兼容list和dict格式）
+    function attrsToArray(attrs) {
+        if (!attrs) return [];
+        if (Array.isArray(attrs)) return attrs;
+        if (typeof attrs === 'object') {
+            return Object.keys(attrs).map(k => {
+                const v = attrs[k];
+                if (typeof v === 'object' && v !== null) {
+                    return Object.assign({ _key: k }, v);
+                }
+                return { _key: k, name: k, description: String(v) };
+            });
+        }
+        return [];
+    }
+
+    function initNetwork() {
+        if (typeof vis === 'undefined') {
+            document.getElementById('stats').textContent = 'vis.js加载失败';
+            return;
+        }
+
+        const nodes = [];
+        const edges = [];
+        const edgeData = {};
+
+        // === LE节点：马卡龙圆形（大） ===
+        SemanticVis.state.logicalEntities.forEach((le, index) => {
+            const nodeId = SemanticVis.CONST.LE_NODE_PREFIX + le.logical_entity_id;
+            const color = SemanticVis.CONST.LE_COLORS[index % SemanticVis.CONST.LE_COLORS.length];
+            nodes.push({
+                id: nodeId,
+                label: le.name || le.logical_entity_id,
+                title: '逻辑实体: ' + (le.name || '') + '\nID: ' + le.logical_entity_id +
+                       (le.description ? '\n' + le.description : ''),
+                color: { background: color, border: '#333', highlight: { background: color, border: '#000' } },
+                font: { color: '#333333', size: 16, face: 'Arial', bold: true },
+                borderWidth: 3,
+                shape: 'circle',
+                size: 50,
+                group: 'logical_entity'
+            });
+        });
+
+        // === PE节点：紫色矩形（中） ===
+        SemanticVis.state.entities.forEach(pe => {
+            const id = pe.entity_id || SemanticVis.CONST.UNKNOWN_LABEL;
+            const name = pe.name || SemanticVis.CONST.UNKNOWN_LABEL;
+            const hasParent = !!SemanticVis.state.inherits[id];
+
+            nodes.push({
+                id: id,
+                label: name,
+                title: '物理实体: ' + name + '\nID: ' + id +
+                       (pe.source_table ? '\n表: ' + pe.source_table : ''),
+                color: SemanticVis.CONST.PE_COLOR,
+                font: { color: '#333333', size: 12, face: 'Arial', bold: true },
+                borderWidth: 2,
+                shape: 'box',
+                margin: { top: 12, bottom: 12, left: 10, right: 10 },
+                shapeProperties: { borderRadius: 6 },
+                group: 'physical_entity'
+            });
+
+            // 属性节点：继承key用彩色圆形，专有属性用灰色圆形
+            const attrsList = attrsToArray(pe.attributes);
+            const maxAttrs = 10;
+            attrsList.slice(0, maxAttrs).forEach((attr, attrIdx) => {
+                const attrName = getAttrName(attr._key || attr.name || ('attr' + attrIdx), attr);
+                const physicalColId = getAttrPhysicalColId(attr);
+                if (!attrName) return;
+
+                // 用physical_column_id做唯一节点ID（避免中文key问题）
+                const attrNodeId = id + SemanticVis.CONST.ATTR_NODE_SUFFIX + (physicalColId || attrName);
+                const attrLabel = attrName.length > 6 ? attrName.substring(0, 6) + '..' : attrName;
+                const isAnchor = isAnchorKeyAttr(id, attr);
+                const isMapped = !isAnchor && isMappingAttr(id, attr);
+
+                if (isAnchor) {
+                    // A_anchor身份锚点：橘黄色
+                    nodes.push({
+                        id: attrNodeId,
+                        label: attrLabel,
+                        title: '[身份Key] ' + attrName + '\n物理列: ' + (physicalColId || '-'),
+                        color: SemanticVis.CONST.ANCHOR_KEY_ATTR_COLOR,
+                        font: { color: '#fff', size: 11, face: 'Arial', bold: true },
+                        borderWidth: 2,
+                        shape: 'circle',
+                        size: 18,
+                        group: 'key_attribute'
+                    });
+                    edges.push({
+                        id: id + '_attr_' + (physicalColId || attrName),
+                        from: id,
+                        to: attrNodeId,
+                        color: SemanticVis.CONST.ANCHOR_KEY_ATTR_EDGE_COLOR,
+                        width: 1.5,
+                        arrows: '',
+                        smooth: true,
+                        length: 70
+                    });
+                } else if (isMapped) {
+                    // C_column映射属性：蓝色
+                    nodes.push({
+                        id: attrNodeId,
+                        label: attrLabel,
+                        title: '[映射Key] ' + attrName + '\n物理列: ' + (physicalColId || '-'),
+                        color: SemanticVis.CONST.MAPPING_ATTR_COLOR,
+                        font: { color: '#fff', size: 11, face: 'Arial', bold: true },
+                        borderWidth: 2,
+                        shape: 'circle',
+                        size: 18,
+                        group: 'key_attribute'
+                    });
+                    edges.push({
+                        id: id + '_attr_' + (physicalColId || attrName),
+                        from: id,
+                        to: attrNodeId,
+                        color: SemanticVis.CONST.MAPPING_ATTR_EDGE_COLOR,
+                        width: 1,
+                        arrows: '',
+                        smooth: true,
+                        length: 70
+                    });
+                } else {
+                    nodes.push({
+                        id: attrNodeId,
+                        label: attrLabel,
+                        title: attrName,
+                        color: SemanticVis.CONST.PRIVATE_ATTR_COLOR,
+                        font: { color: '#fff', size: 10, face: 'Arial' },
+                        borderWidth: 1,
+                        shape: 'circle',
+                        size: 14,
+                        group: 'attribute'
+                    });
+                    edges.push({
+                        id: id + '_attr_' + (physicalColId || attrName),
+                        from: id,
+                        to: attrNodeId,
+                        color: SemanticVis.CONST.PRIVATE_ATTR_EDGE_COLOR,
+                        width: 0.5,
+                        arrows: '',
+                        smooth: true,
+                        length: 60
+                    });
+                }
+            });
+        });
+
+        // === INHERITS边 (PE→LE) ===
+        Object.keys(SemanticVis.state.inherits).forEach(peId => {
+            const leId = SemanticVis.state.inherits[peId];
+            const leNodeId = SemanticVis.CONST.LE_NODE_PREFIX + leId;
+            const edgeId = 'ARCS_' + peId + '_' + leId;
+            edges.push({
+                id: edgeId,
+                from: peId,
+                to: leNodeId,
+                color: SemanticVis.CONST.INHERITS_EDGE_COLOR,
+                width: 2,
+                arrows: 'to',
+                dashes: [8, 4],
+                smooth: true,
+                length: 200,
+                title: 'ARCS锚定'
+            });
+            edgeData[edgeId] = {
+                type: 'ARCS',
+                peId: peId,
+                leId: leId
+            };
+        });
+
+        // === PAS边 (LE↔LE，1条PAS始终拆为2条单箭头: 正向内弧 + 反向外弧) ===
+        if (Array.isArray(SemanticVis.state.pasRelations)) {
+            SemanticVis.state.pasRelations.forEach((pas, index) => {
+                const fromLE = pas.from_le_id || pas.relation_id?.split('_TO_')[0];
+                const toLE = pas.to_le_id || pas.relation_id?.split('_TO_')[1];
+                if (!fromLE || !toLE) return;
+
+                const fromNodeId = SemanticVis.CONST.LE_NODE_PREFIX + fromLE;
+                const toNodeId = SemanticVis.CONST.LE_NODE_PREFIX + toLE;
+
+                // 正向边: from → to（内弧）
+                let fwdLabel = '';
+                let fwdTargetCard = '';
+                if (pas.P_predicate) {
+                    const fwd = pas.P_predicate.forward || pas.P_predicate;
+                    if (fwd.verb) fwdLabel = fwd.verb;
+                    if (fwd.cardinality) {
+                        const parts = fwd.cardinality.split(':');
+                        fwdTargetCard = parts.length === 2 ? parts[1] : fwd.cardinality;
+                    }
+                }
+                if (!fwdLabel) fwdLabel = pas.relation_name || '';
+                if (fwdTargetCard) fwdLabel = fwdLabel + ' →' + fwdTargetCard;
+
+                const fwdEdgeId = 'PAS_FWD_' + (pas.relation_id || index);
+                edges.push({
+                    id: fwdEdgeId,
+                    from: fromNodeId,
+                    to: toNodeId,
+                    label: fwdLabel,
+                    title: buildPasTooltip(pas),
+                    color: SemanticVis.CONST.PAS_EDGE_COLOR,
+                    width: 2,
+                    arrows: 'to',
+                    smooth: { type: 'curvedCCW', roundness: 0.15 },
+                    length: 350,
+                    font: { size: 11, color: SemanticVis.CONST.PAS_EDGE_FONT, align: 'top', strokeWidth: 3, strokeColor: '#fff' }
+                });
+                edgeData[fwdEdgeId] = {
+                    type: 'PAS',
+                    pas: pas,
+                    from: fromLE,
+                    to: toLE,
+                    fromLEName: findLEName(fromLE),
+                    toLEName: findLEName(toLE),
+                    direction: 'forward'
+                };
+
+                // 反向边: to → from（始终绘制，弧线方向与正向相同，因起止点相反自然分两边）
+                let revLabel = '';
+                let revTargetCard = '';
+                if (pas.P_predicate) {
+                    const rev = pas.P_predicate.reverse;
+                    if (rev && rev.verb) revLabel = rev.verb;
+                    if (rev && rev.cardinality) {
+                        const parts = rev.cardinality.split(':');
+                        revTargetCard = parts.length === 2 ? parts[1] : rev.cardinality;
+                    }
+                }
+                // 没有reverse谓词时，用关系名+反向箭头
+                if (!revLabel) {
+                    revLabel = (pas.relation_name || '') + ' ←';
+                }
+                if (revTargetCard) revLabel = revLabel + ' →' + revTargetCard;
+
+                const revEdgeId = 'PAS_REV_' + (pas.relation_id || index);
+                edges.push({
+                    id: revEdgeId,
+                    from: toNodeId,
+                    to: fromNodeId,
+                    label: revLabel,
+                    color: SemanticVis.CONST.PAS_EDGE_COLOR,
+                    width: 1.5,
+                    arrows: 'to',
+                    smooth: { type: 'curvedCCW', roundness: 0.15 },
+                    length: 350,
+                    font: { size: 10, color: SemanticVis.CONST.PAS_EDGE_FONT, align: 'bottom', strokeWidth: 3, strokeColor: '#fff' }
+                });
+                edgeData[revEdgeId] = {
+                    type: 'PAS',
+                    pas: pas,
+                    from: toLE,
+                    to: fromLE,
+                    fromLEName: findLEName(toLE),
+                    toLEName: findLEName(fromLE),
+                    direction: 'reverse'
+                };
+            });
+        }
+
+        // === 旧格式PE↔PE关系边 ===
+        if (Array.isArray(SemanticVis.state.relations)) {
+            SemanticVis.state.relations.forEach((r, index) => {
+                const fromId = r.from || '';
+                const toId = r.to || '';
+                if (!fromId || !toId) return;
+
+                const edgeId = 'REL_' + fromId + '-' + toId + '-' + index;
+                edges.push({
+                    id: edgeId,
+                    from: fromId,
+                    to: toId,
+                    label: r.type || '',
+                    arrows: 'to',
+                    color: SemanticVis.CONST.RELATION_EDGE_COLOR,
+                    width: 2,
+                    smooth: true,
+                    length: 500,
+                    font: { size: 10, color: '#333', align: 'middle' }
+                });
+                edgeData[edgeId] = {
+                    type: 'RELATION',
+                    from: fromId,
+                    to: toId,
+                    relation_id: r.relation_id,
+                    from_entity_attr_id: r.from_entity_attr_id,
+                    to_entity_attr_id: r.to_entity_attr_id,
+                    description: r.description,
+                    fromEntity: SemanticVis.state.entities.find(e => e.entity_id === fromId),
+                    toEntity: SemanticVis.state.entities.find(e => e.entity_id === toId)
+                };
+            });
+        }
+
+        SemanticVis.state.edgeData = edgeData;
+
+        const container = document.getElementById('network');
+        const data = { nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges) };
+        // 轻量物理配置：初始展开后关闭，避免持续计算卡顿
+        const options = {
+            nodes: { font: { size: 14, color: '#333', face: 'Arial' } },
+            edges: {
+                smooth: { type: 'continuous' },
+                color: '#999', width: 2,
+                arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+                font: { size: 10, color: '#333', align: 'middle' }
+            },
+            physics: {
+                enabled: true,
+                solver: 'barnesHut',
+                barnesHut: { gravitationalConstant: -1800, centralGravity: 0.15,
+                             springLength: 120, springConstant: 0.04, damping: 0.4 },
+                stabilization: { iterations: 80, fit: true }
+            },
+            layout: { improvedLayout: true, hierarchical: false }
+        };
+
+        try {
+            SemanticVis.state.network = new vis.Network(container, data, options);
+            SemanticVis.state.network.once('stabilizationIterationsDone', function() {
+                SemanticVis.state.network.setOptions({ physics: { enabled: false } });
+                SemanticVis.state.network.moveTo({
+                    position: { x: 0, y: 0 }, offset: { x: 0, y: 0 }, scale: 0.5,
+                    animation: { duration: 300, easingFunction: 'easeInOutQuad' }
+                });
+            });
+            SemanticVis.state.network.on('click', function(params) {
+                if (params.nodes.length > 0) {
+                    const nodeId = params.nodes[0];
+                    if (nodeId.startsWith(SemanticVis.CONST.LE_NODE_PREFIX)) {
+                        showLEDetail(nodeId);
+                    } else if (nodeId.includes(SemanticVis.CONST.ATTR_NODE_SUFFIX)) {
+                        showAttributeDetail(nodeId);
+                    } else {
+                        showEntityDetail(nodeId);
+                    }
+                } else if (params.edges.length > 0) {
+                    showEdgeDetail(params.edges[0]);
+                }
+            });
+        } catch (error) {
+            console.error('网络创建失败:', error);
+        }
+    }
+
+    function findLEName(leId) {
+        const le = SemanticVis.state.logicalEntities.find(l => l.logical_entity_id === leId);
+        return le ? (le.name || leId) : leId;
+    }
+
+    function buildPasTooltip(pas) {
+        let tip = (pas.relation_name || '') + '\n';
+        if (pas.P_predicate) {
+            const fwd = pas.P_predicate.forward || pas.P_predicate;
+            const rev = pas.P_predicate.reverse;
+            if (fwd) tip += '正向: ' + (fwd.verb || '') + ' ' + (fwd.cardinality || '') + '\n';
+            if (rev) tip += '反向: ' + (rev.verb || '') + ' ' + (rev.cardinality || '') + '\n';
+        }
+        if (pas.A_attribute) tip += '寻址: ' + pas.A_attribute + '\n';
+        if (pas.S_semantic4pas) tip += '语义: ' + pas.S_semantic4pas;
+        return tip.trim();
+    }
+
+    function showLEDetail(nodeId) {
+        const leId = nodeId.replace(SemanticVis.CONST.LE_NODE_PREFIX, '');
+        const le = SemanticVis.state.logicalEntities.find(l => l.logical_entity_id === leId);
+        if (!le) return;
+
+        document.getElementById('attrTitle').textContent = '逻辑实体: ' + (le.name || leId);
+
+        let html =
+            '<div class="attr-item"><div class="attr-label">名称</div><div class="attr-value">' + (le.name || '-') + '</div></div>' +
+            '<div class="attr-item"><div class="attr-label">ID</div><div class="attr-value">' + leId + '</div></div>' +
+            '<div class="attr-item"><div class="attr-label">描述</div><div class="attr-value">' + (le.description || '-') + '</div></div>';
+
+        // 下属PE列表
+        const childPEs = SemanticVis.state.entities.filter(e => SemanticVis.state.inherits[e.entity_id] === leId);
+        html += '<div style="margin:12px 0;border-bottom:1px solid #eee;"></div>';
+        html += '<h4 style="margin-bottom:8px;">下属物理实体 (' + childPEs.length + '个)</h4>';
+        if (childPEs.length > 0) {
+            childPEs.forEach(pe => {
+                html += '<div class="attr-item" style="background:#f3e5f5;padding:6px 8px;border-radius:4px;margin-bottom:4px;">' +
+                    '<div style="font-size:13px;color:#5c3d99;">' + (pe.name || pe.entity_id) + '</div>' +
+                    '<div style="font-size:11px;color:#888;">' + pe.entity_id + '</div>' +
+                    '</div>';
+            });
+        } else {
+            html += '<div style="color:#999;font-size:14px;">暂无</div>';
+        }
+
+        // PAS关系
+        if (le.pas_relations && le.pas_relations.length > 0) {
+            html += '<div style="margin:12px 0;border-bottom:1px solid #eee;"></div>';
+            html += '<h4 style="margin-bottom:8px;">PAS关系 (' + le.pas_relations.length + '个)</h4>';
+            le.pas_relations.forEach(pas => {
+                html += '<div class="pas-info">';
+                html += '<div class="pas-field"><span class="pas-label">关系:</span> ' + (pas.relation_name || pas.relation_id || '-') + '</div>';
+                if (pas.P_predicate) {
+                    const fwd = pas.P_predicate.forward || pas.P_predicate;
+                    if (fwd.verb) html += '<div class="pas-field"><span class="pas-label">谓词:</span> ' + fwd.verb + ' ' + (fwd.cardinality || '') + '</div>';
+                    const rev = pas.P_predicate.reverse;
+                    if (rev && rev.verb) html += '<div class="pas-field"><span class="pas-label">反向:</span> ' + rev.verb + ' ' + (rev.cardinality || '') + '</div>';
+                }
+                if (pas.A_attribute) html += '<div class="pas-field"><span class="pas-label">寻址:</span> ' + pas.A_attribute + '</div>';
+                if (pas.S_semantic4pas) html += '<div class="pas-field"><span class="pas-label">语义:</span> ' + pas.S_semantic4pas + '</div>';
+                html += '</div>';
+            });
+        }
+
+        document.getElementById('attrContent').innerHTML = html;
+        document.getElementById('attrPanel').style.display = 'block';
+    }
+
+    function showEntityDetail(entityId) {
+        const entity = SemanticVis.state.entities.find(e => e.entity_id === entityId);
+        if (!entity) return;
+
+        const parentLE = SemanticVis.state.inherits[entityId];
+        const leName = parentLE ? findLEName(parentLE) : null;
+        const cMapping = SemanticVis.state.arcsCMapping[entityId] || {};
+
+        document.getElementById('attrTitle').textContent = '物理: ' + (entity.name || entityId);
+
+        let html =
+            '<div class="attr-item"><div class="attr-label">名称</div><div class="attr-value">' + (entity.name || '-') + '</div></div>' +
+            '<div class="attr-item"><div class="attr-label">ID</div><div class="attr-value">' + (entity.entity_id || '-') + '</div></div>' +
+            '<div class="attr-item"><div class="attr-label">来源表</div><div class="attr-value">' + (entity.source_table || '-') + '</div></div>' +
+            (leName ? '<div class="attr-item"><div class="attr-label">所属逻辑实体</div><div class="attr-value" style="color:#5c3d99;">' + leName + '</div></div>' : '') +
+            '<div class="attr-item"><div class="attr-label">描述</div><div class="attr-value">' + (entity.description || '-') + '</div></div>';
+
+        // ARCS信息（PE独有）
+        const arcs = entity.arcs;
+        if (arcs) {
+            html += '<div style="margin:12px 0;border-bottom:1px solid #eee;"></div>';
+            html += '<h4 style="margin-bottom:8px;">ARCS 触角</h4>';
+            if (arcs.A_anchor) html += '<div class="attr-item"><div class="attr-label">A - 锚定</div><div class="attr-value">' +
+                (arcs.A_anchor.cardinality || '-') + ' (key: ' + (arcs.A_anchor.key || '-') + ')</div></div>';
+            if (arcs.R_row) html += '<div class="attr-item"><div class="attr-label">R - 行过滤</div><div class="attr-value">' + arcs.R_row + '</div></div>';
+            if (arcs.C_column) {
+                html += '<div class="attr-item"><div class="attr-label">C - 列映射</div><div class="attr-value">';
+                for (let lid in arcs.C_column) {
+                    html += '<div style="font-size:11px;margin:2px 0;">' + lid.split('.').pop() + ' → ' + arcs.C_column[lid].split('.').pop() + '</div>';
+                }
+                html += '</div></div>';
+            }
+            if (arcs.S_semantic4arcs) html += '<div class="attr-item"><div class="attr-label">S - 语义补充</div><div class="attr-value">' + arcs.S_semantic4arcs + '</div></div>';
+        }
+
+        // 属性列表（标注关联key）
+        const attrsList = attrsToArray(entity.attributes);
+        html += '<div style="margin:12px 0;border-bottom:1px solid #eee;"></div>';
+        html += '<h4 style="margin-bottom:8px;">属性 (' + attrsList.length + '个)</h4>';
+        if (attrsList.length > 0) {
+            attrsList.forEach((attr, idx) => {
+                const attrName = getAttrName(attr._key || attr.name || ('attr' + idx), attr);
+                const isAnchor = isAnchorKeyAttr(entityId, attr);
+                const isMapped = !isAnchor && isMappingAttr(entityId, attr);
+                let bg = '#f9f9f9';
+                let tag = '';
+                if (isAnchor) {
+                    bg = '#fff3e0';
+                    tag = ' <span style="font-size:10px;color:#e65100;">[身份Key]</span>';
+                } else if (isMapped) {
+                    bg = '#e3f2fd';
+                    tag = ' <span style="font-size:10px;color:#1565C0;">[映射]</span>';
+                }
+                html += '<div class="attr-item" style="background:' + bg + ';padding:8px;border-radius:4px;margin-bottom:8px;">' +
+                    '<div class="attr-label">' + attrName + tag + '</div>' +
+                    '<div class="attr-value">' + (attr.description || attr.physical_column_id || '-') + '</div>' +
+                    '</div>';
+            });
+        } else {
+            html += '<div style="color:#999;font-size:14px;">暂无属性</div>';
+        }
+
+        document.getElementById('attrContent').innerHTML = html;
+        document.getElementById('attrPanel').style.display = 'block';
+    }
+
+    function showAttributeDetail(attrNodeId) {
+        const parts = attrNodeId.split(SemanticVis.CONST.ATTR_NODE_SUFFIX);
+        if (parts.length !== 2) return;
+
+        const entityId = parts[0];
+        const attrSuffix = parts[1];  // physical_column_id or attrName
+        const entity = SemanticVis.state.entities.find(e => e.entity_id === entityId);
+        if (!entity) return;
+
+        // Find the attr object from the list
+        const attrsList = attrsToArray(entity.attributes);
+        let attrObj = null;
+        for (let attr of attrsList) {
+            const pcolId = getAttrPhysicalColId(attr);
+            const name = getAttrName(attr._key || attr.name || '', attr);
+            if (pcolId === attrSuffix || name === attrSuffix) {
+                attrObj = attr;
+                break;
+            }
+        }
+
+        const isAnchor = attrObj ? isAnchorKeyAttr(entityId, attrObj) : false;
+        const isMapped = attrObj && !isAnchor ? isMappingAttr(entityId, attrObj) : false;
+        const attrName = attrObj ? getAttrName(attrObj._key || attrObj.name || attrSuffix, attrObj) : attrSuffix;
+
+        document.getElementById('attrTitle').textContent = attrName;
+
+        let typeLabel = '专有属性';
+        let typeColor = '#666';
+        if (isAnchor) { typeLabel = '身份Key（A-锚定）'; typeColor = '#e65100'; }
+        else if (isMapped) { typeLabel = '映射属性（C-列映射 继承）'; typeColor = '#1565C0'; }
+
+        let html =
+            '<div class="attr-item"><div class="attr-label">属性名</div><div class="attr-value">' + attrName + '</div></div>' +
+            '<div class="attr-item"><div class="attr-label">所属实体</div><div class="attr-value">' + (entity.name || entityId) + '</div></div>' +
+            '<div class="attr-item"><div class="attr-label">类型</div><div class="attr-value" style="color:' + typeColor + ';">' + typeLabel + '</div></div>';
+
+        if (attrObj) {
+            if (attrObj.physical_column_id) {
+                html += '<div class="attr-item"><div class="attr-label">物理字段</div><div class="attr-value">' + attrObj.physical_column_id + '</div></div>';
+            }
+            if (attrObj.description) {
+                html += '<div class="attr-item"><div class="attr-label">描述</div><div class="attr-value">' + attrObj.description + '</div></div>';
+            }
+        }
+
+        if (isAnchor || isMapped) {
+            if (isAnchor && entity.arcs && entity.arcs.A_anchor) {
+                html += '<div class="attr-item"><div class="attr-label">A - 锚定</div><div class="attr-value">' +
+                    entity.arcs.A_anchor.cardinality + ' (key: ' + entity.arcs.A_anchor.key + ')</div></div>';
+            }
+            if (isMapped) {
+                const cMapping = SemanticVis.state.arcsCMapping[entityId] || {};
+                const pcolId = attrObj ? getAttrPhysicalColId(attrObj) : '';
+                for (let logicalAttrId in cMapping) {
+                    const cPhysicalId = cMapping[logicalAttrId];
+                    if (cPhysicalId && pcolId && cPhysicalId === pcolId) {
+                        html += '<div class="attr-item"><div class="attr-label">逻辑属性</div><div class="attr-value" style="color:#5c3d99;">' + logicalAttrId + '</div></div>';
+                        break;
+                    }
+                }
+            }
+        }
+
+        document.getElementById('attrContent').innerHTML = html;
+        document.getElementById('attrPanel').style.display = 'block';
+    }
+
+    function showEdgeDetail(edgeId) {
+        const data = SemanticVis.state.edgeData[edgeId];
+        if (!data) return;
+
+        if (data.type === 'PAS') {
+            document.getElementById('attrTitle').textContent = 'PAS关系';
+            const pas = data.pas;
+            let html =
+                '<div class="attr-item"><div class="attr-label">关系名称</div><div class="attr-value">' + (pas.relation_name || '-') + '</div></div>' +
+                '<div class="attr-item"><div class="attr-label">关系ID</div><div class="attr-value">' + (pas.relation_id || '-') + '</div></div>' +
+                '<div style="margin:12px 0;border-bottom:1px solid #eee;"></div>' +
+                '<h4 style="margin-bottom:8px;">源逻辑实体</h4>' +
+                '<div class="attr-item"><div class="attr-value" style="color:#5c3d99;">' + (data.fromLEName || data.from) + '</div></div>' +
+                '<h4 style="margin:12px 0 8px;">目标逻辑实体</h4>' +
+                '<div class="attr-item"><div class="attr-value" style="color:#5c3d99;">' + (data.toLEName || data.to) + '</div></div>';
+
+            html += '<div style="margin:12px 0;border-bottom:1px solid #eee;"></div><h4>P - 谓词</h4>';
+            if (pas.P_predicate) {
+                const fwd = pas.P_predicate.forward || pas.P_predicate;
+                const rev = pas.P_predicate.reverse;
+                html += '<div class="pas-info">';
+                if (fwd) html += '<div class="pas-field"><span class="pas-label">正向:</span> ' + (fwd.verb || '-') + ' (' + (fwd.cardinality || '-') + ')</div>';
+                if (rev) html += '<div class="pas-field"><span class="pas-label">反向:</span> ' + (rev.verb || '-') + ' (' + (rev.cardinality || '-') + ')</div>';
+                html += '</div>';
+            }
+            if (pas.A_attribute) html += '<div class="attr-item" style="margin-top:8px;"><div class="attr-label">A - 寻址属性</div><div class="attr-value">' + pas.A_attribute + '</div></div>';
+            if (pas.S_semantic4pas) html += '<div class="attr-item"><div class="attr-label">S - 语义</div><div class="attr-value">' + pas.S_semantic4pas + '</div></div>';
+
+            document.getElementById('attrContent').innerHTML = html;
+        } else if (data.type === 'ARCS') {
+            document.getElementById('attrTitle').textContent = 'ARCS关系';
+            const peEntity = SemanticVis.state.entities.find(e => e.entity_id === data.peId);
+            const leName = findLEName(data.leId);
+
+            // LE马卡龙色：找到LE在列表中的索引取对应颜色
+            const leIndex = SemanticVis.state.logicalEntities.findIndex(le => le.logical_entity_id === data.leId);
+            const leColor = leIndex >= 0 ? SemanticVis.CONST.LE_COLORS[leIndex % SemanticVis.CONST.LE_COLORS.length] : '#5c3d99';
+
+            let arcsHtml =
+                '<div style="margin-bottom:12px;">' +
+                '<div style="font-weight:bold;margin-bottom:6px;">物理实体(PE)</div>' +
+                '<div class="attr-item"><div class="attr-label">ID</div><div class="attr-value" style="color:#5c3d99;font-weight:bold;">' + data.peId + '</div></div>' +
+                '<div class="attr-item"><div class="attr-label">Name</div><div class="attr-value">' + (peEntity ? peEntity.name : '-') + '</div></div>' +
+                '</div>' +
+                '<div style="margin-bottom:12px;">' +
+                '<div style="font-weight:bold;margin-bottom:6px;">逻辑实体(LE)</div>' +
+                '<div class="attr-item"><div class="attr-label">ID</div><div class="attr-value" style="color:' + leColor + ';font-weight:bold;">' + data.leId + '</div></div>' +
+                '<div class="attr-item"><div class="attr-label">Name</div><div class="attr-value">' + leName + '</div></div>' +
+                '</div>';
+
+            // ARCS四维详情
+            if (peEntity && peEntity.arcs) {
+                const arcs = peEntity.arcs;
+
+                // A - 身份锚点（橙色）
+                if (arcs.A_anchor) {
+                    arcsHtml += '<div style="margin:10px 0 4px;font-weight:bold;color:#e65100;">A - 身份锚点</div>';
+                    arcsHtml += '<div class="attr-item"><div class="attr-label" style="color:#e65100;">Key</div><div class="attr-value">' + (arcs.A_anchor.key || '-') + '</div></div>';
+                }
+
+                // R - 行过滤（默认色）
+                if (arcs.R_row) {
+                    arcsHtml += '<div style="margin:10px 0 4px;font-weight:bold;color:#666;">R - 行过滤</div>';
+                    arcsHtml += '<div class="attr-item"><div class="attr-label">条件</div><div class="attr-value">' + arcs.R_row + '</div></div>';
+                }
+
+                // C - 列映射（蓝色）
+                if (arcs.C_column) {
+                    arcsHtml += '<div style="margin:10px 0 4px;font-weight:bold;color:#1565C0;">C - 列映射</div>';
+                    const cMapping = arcs.C_column;
+                    if (typeof cMapping === 'object') {
+                        for (let logicalAttr in cMapping) {
+                            arcsHtml += '<div class="attr-item" style="font-size:12px;"><div class="attr-label" style="color:#1565C0;">' + logicalAttr.split('.').pop() + '</div><div class="attr-value">' + cMapping[logicalAttr] + '</div></div>';
+                        }
+                    }
+                }
+
+                // S - 语义补充（默认色）
+                if (arcs.S_semantic4arcs) {
+                    arcsHtml += '<div style="margin:10px 0 4px;font-weight:bold;color:#666;">S - 语义补充</div>';
+                    arcsHtml += '<div class="attr-item"><div class="attr-label">描述</div><div class="attr-value">' + arcs.S_semantic4arcs + '</div></div>';
+                }
+            }
+            document.getElementById('attrContent').innerHTML = arcsHtml;
+        } else {
+            document.getElementById('attrTitle').textContent = data.type || '业务关系';
+            let html =
+                '<div class="attr-item"><div class="attr-label">关系名称</div><div class="attr-value">' + (data.type || '-') + '</div></div>' +
+                '<div class="attr-item"><div class="attr-label">关系ID</div><div class="attr-value">' + (data.relation_id || '-') + '</div></div>' +
+                '<div style="margin:12px 0;border-bottom:1px solid #eee;"></div>' +
+                '<h4 style="margin-bottom:12px;">源业务实体</h4>' +
+                '<div class="attr-item"><div class="attr-label">实体名称</div><div class="attr-value">' + (data.fromEntity?.name || data.from || '-') + '</div></div>' +
+                '<div class="attr-item"><div class="attr-label">关联属性</div><div class="attr-value">' + (data.from_entity_attr_id || '-') + '</div></div>' +
+                '<div style="margin:12px 0;border-bottom:1px solid #eee;"></div>' +
+                '<h4 style="margin-bottom:12px;">目标业务实体</h4>' +
+                '<div class="attr-item"><div class="attr-label">实体名称</div><div class="attr-value">' + (data.toEntity?.name || data.to || '-') + '</div></div>' +
+                '<div class="attr-item"><div class="attr-label">关联属性</div><div class="attr-value">' + (data.to_entity_attr_id || '-') + '</div></div>';
+            if (data.description) {
+                html += '<div style="margin:12px 0;border-bottom:1px solid #eee;"></div>' +
+                    '<div class="attr-item"><div class="attr-label">关系描述</div><div class="attr-value">' + data.description + '</div></div>';
+            }
+            document.getElementById('attrContent').innerHTML = html;
+        }
+
+        document.getElementById('attrPanel').style.display = 'block';
+    }
+
+    function bindEvents() {
+        document.getElementById('entityList').addEventListener('click', function(e) {
+            const item = e.target.closest('.entity-item');
+            if (!item) return;
+
+            const entityId = item.dataset.id;
+            const entityType = item.dataset.type;
+
+            document.querySelectorAll('.entity-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+
+            if (SemanticVis.state.network) {
+                SemanticVis.state.network.selectNodes([entityId]);
+                try {
+                    SemanticVis.state.network.focus(entityId, { animation: { duration: 300 } });
+                } catch (err) {
+                    try {
+                        const node = SemanticVis.state.network.body.nodes[entityId];
+                        if (node) {
+                            SemanticVis.state.network.moveTo({
+                                position: { x: node.x, y: node.y },
+                                scale: 0.6,
+                                animation: { duration: 300 }
+                            });
+                        }
+                    } catch (e2) { /* ignore */ }
+                }
+            }
+
+            if (entityType === 'le') {
+                showLEDetail(entityId);
+            } else {
+                showEntityDetail(entityId);
+            }
+        });
+
+        document.getElementById('closeAttr').addEventListener('click', function() {
+            document.getElementById('attrPanel').style.display = 'none';
+        });
+    }
+
+    async function init() {
+        const success = await loadData();
+
+        if (success && SemanticVis.state.entities.length > 0) {
+            renderEntityList();
+            initNetwork();
+            bindEvents();
+        } else {
+            document.getElementById('stats').textContent = '请先构建知识库数据（运行build命令）';
+            document.getElementById('stats').style.color = '#f44336';
+        }
+    }
+
+    init();
+    </script>
+</body>
+</html>

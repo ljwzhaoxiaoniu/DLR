@@ -7,9 +7,11 @@ __pycache__/
 
 # 运行时存储（自动生成）
 Semantic Core Service/storage/
+Semantic Core Service/log/
 
 # 根目录误生成防护
 /storage/
+/log/
 
 # bench 数据仓库（太大，不入版本控制）
 MINIDEV_sqlite/

@@ -190,15 +190,15 @@ class BuildService:
                 arcs_s=arcs_s,
             )
             for attr in pe.attributes:
-                self.graph_db.create_attribute_node(
+                self.graph_db.create_physical_attribute_node(
                     attr_id=attr.attr_id,
                     name=attr.name,
                     description=attr.description,
                     physical_column_id=attr.physical_column_id,
                     data_type=attr.data_type,
                 )
-                self.graph_db.create_entity_attribute_relation(
-                    entity_id=pe.physical_entity_id,
+                self.graph_db.create_physical_entity_attribute_relation(
+                    physical_entity_id=pe.physical_entity_id,
                     attr_id=attr.attr_id,
                 )
 

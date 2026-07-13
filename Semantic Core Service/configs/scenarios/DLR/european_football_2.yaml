@@ -1,0 +1,147 @@
+mapping_type: "dlr"
+version: "2.0"
+scenario_name: dlr_football
+description: "DLR 范式 — 欧洲足球场景：按需字段，6 PE 聚合 4 LE，球员/球队属性多视图解耦"
+databases:
+  european_football_2: "sqlite:///MINIDEV_sqlite/dev_databases/european_football_2/european_football_2.sqlite"
+
+logical_entities:
+  # ── 1. 球员 (2 PE — 多视图) ──
+  - logical_entity_id: LOGICAL.球员
+    biz_name: 球员
+    description: "足球运动员的基础信息与能力属性"
+    public_attributes:
+      - {attr_id: LOGICAL.球员.球员编号, biz_name: 球员编号}
+    physical_entities:
+      - physical_entity_id: PHYSICAL.球员表
+        physical_table_name: Player
+        physical_table_id: european_football_2.Player
+        A: {cardinality: "1:1", key: player_api_id}
+        R: null
+        C:
+          LOGICAL.球员.球员编号: european_football_2.Player.player_api_id
+        S: "球员基础信息"
+        private_attributes:
+          - {attr_id: european_football_2.Player.player_name, biz_name: 姓名, physical_column_id: european_football_2.Player.player_name}
+          - {attr_id: european_football_2.Player.birthday, biz_name: 生日, physical_column_id: european_football_2.Player.birthday}
+          - {attr_id: european_football_2.Player.height, biz_name: 身高, physical_column_id: european_football_2.Player.height}
+          - {attr_id: european_football_2.Player.weight, biz_name: 体重, physical_column_id: european_football_2.Player.weight}
+      - physical_entity_id: PHYSICAL.球员属性表
+        physical_table_name: Player_Attributes
+        physical_table_id: european_football_2.Player_Attributes
+        A: {cardinality: "N:1", key: player_api_id}
+        R: null
+        C:
+          LOGICAL.球员.球员编号: european_football_2.Player_Attributes.player_api_id
+        S: "球员能力属性 — FIFA评分"
+        private_attributes:
+          - {attr_id: european_football_2.Player_Attributes.overall_rating, biz_name: 综合评分, physical_column_id: european_football_2.Player_Attributes.overall_rating}
+          - {attr_id: european_football_2.Player_Attributes.preferred_foot, biz_name: 惯用脚, physical_column_id: european_football_2.Player_Attributes.preferred_foot}
+          - {attr_id: european_football_2.Player_Attributes.attacking_work_rate, biz_name: 进攻态度, physical_column_id: european_football_2.Player_Attributes.attacking_work_rate}
+          - {attr_id: european_football_2.Player_Attributes.defensive_work_rate, biz_name: 防守态度, physical_column_id: european_football_2.Player_Attributes.defensive_work_rate}
+          - {attr_id: european_football_2.Player_Attributes.crossing, biz_name: 传中, physical_column_id: european_football_2.Player_Attributes.crossing}
+          - {attr_id: european_football_2.Player_Attributes.finishing, biz_name: 射门, physical_column_id: european_football_2.Player_Attributes.finishing}
+          - {attr_id: european_football_2.Player_Attributes.heading_accuracy, biz_name: 头球, physical_column_id: european_football_2.Player_Attributes.heading_accuracy}
+          - {attr_id: european_football_2.Player_Attributes.short_passing, biz_name: 短传, physical_column_id: european_football_2.Player_Attributes.short_passing}
+          - {attr_id: european_football_2.Player_Attributes.volleys, biz_name: 凌空, physical_column_id: european_football_2.Player_Attributes.volleys}
+          - {attr_id: european_football_2.Player_Attributes.dribbling, biz_name: 盘带, physical_column_id: european_football_2.Player_Attributes.dribbling}
+          - {attr_id: european_football_2.Player_Attributes.curve, biz_name: 弧线, physical_column_id: european_football_2.Player_Attributes.curve}
+          - {attr_id: european_football_2.Player_Attributes.free_kick_accuracy, biz_name: 任意球, physical_column_id: european_football_2.Player_Attributes.free_kick_accuracy}
+          - {attr_id: european_football_2.Player_Attributes.long_shots, biz_name: 远射, physical_column_id: european_football_2.Player_Attributes.long_shots}
+          - {attr_id: european_football_2.Player_Attributes.sprint_speed, biz_name: 冲刺速度, physical_column_id: european_football_2.Player_Attributes.sprint_speed}
+          - {attr_id: european_football_2.Player_Attributes.`date`, biz_name: 评分日期, physical_column_id: european_football_2.Player_Attributes.`date`}
+          - {attr_id: european_football_2.Player_Attributes.jumping, biz_name: 弹跳, physical_column_id: european_football_2.Player_Attributes.jumping}
+          - {attr_id: european_football_2.Player_Attributes.potential, biz_name: 潜力, physical_column_id: european_football_2.Player_Attributes.potential}
+          - {attr_id: european_football_2.Player_Attributes.ball_control, biz_name: 控球, physical_column_id: european_football_2.Player_Attributes.ball_control}
+
+  # ── 2. 球队 (2 PE — 多视图) ──
+  - logical_entity_id: LOGICAL.球队
+    biz_name: 球队
+    description: "足球队的基础信息与战术属性"
+    public_attributes:
+      - {attr_id: LOGICAL.球队.球队编号, biz_name: 球队编号}
+    physical_entities:
+      - physical_entity_id: PHYSICAL.球队表
+        physical_table_name: Team
+        physical_table_id: european_football_2.Team
+        A: {cardinality: "1:1", key: team_api_id}
+        R: null
+        C:
+          LOGICAL.球队.球队编号: european_football_2.Team.team_api_id
+        S: "球队基础信息"
+        private_attributes:
+          - {attr_id: european_football_2.Team.team_long_name, biz_name: 全称, physical_column_id: european_football_2.Team.team_long_name}
+          - {attr_id: european_football_2.Team.team_short_name, biz_name: 简称, physical_column_id: european_football_2.Team.team_short_name}
+      - physical_entity_id: PHYSICAL.球队属性表
+        physical_table_name: Team_Attributes
+        physical_table_id: european_football_2.Team_Attributes
+        A: {cardinality: "N:1", key: team_api_id}
+        R: null
+        C:
+          LOGICAL.球队.球队编号: european_football_2.Team_Attributes.team_api_id
+        S: "球队战术属性"
+        private_attributes:
+          - {attr_id: european_football_2.Team_Attributes.buildUpPlaySpeed, biz_name: 组织速度, physical_column_id: european_football_2.Team_Attributes.buildUpPlaySpeed}
+          - {attr_id: european_football_2.Team_Attributes.buildUpPlaySpeedClass, biz_name: 速度分类, physical_column_id: european_football_2.Team_Attributes.buildUpPlaySpeedClass}
+          - {attr_id: european_football_2.Team_Attributes.buildUpPlayPassing, biz_name: 组织传球, physical_column_id: european_football_2.Team_Attributes.buildUpPlayPassing}
+          - {attr_id: european_football_2.Team_Attributes.buildUpPlayPassingClass, biz_name: 传球分类, physical_column_id: european_football_2.Team_Attributes.buildUpPlayPassingClass}
+          - {attr_id: european_football_2.Team_Attributes.chanceCreationPassing, biz_name: 机会创造传球, physical_column_id: european_football_2.Team_Attributes.chanceCreationPassing}
+          - {attr_id: european_football_2.Team_Attributes.chanceCreationPassingClass, biz_name: 机会创造分类, physical_column_id: european_football_2.Team_Attributes.chanceCreationPassingClass}
+          - {attr_id: european_football_2.Team_Attributes.defenceAggressionClass, biz_name: 防守侵略性分类, physical_column_id: european_football_2.Team_Attributes.defenceAggressionClass}
+          - {attr_id: european_football_2.Team_Attributes.`date`, biz_name: 属性日期, physical_column_id: european_football_2.Team_Attributes.`date`}
+
+  # ── 3. 比赛 ──
+  - logical_entity_id: LOGICAL.比赛
+    biz_name: 比赛
+    description: "足球联赛的每场对抗"
+    public_attributes:
+      - {attr_id: LOGICAL.比赛.比赛编号, biz_name: 比赛编号}
+    physical_entities:
+      - physical_entity_id: PHYSICAL.比赛表
+        physical_table_name: Match
+        physical_table_id: european_football_2.Match
+        A: {cardinality: "1:1", key: id}
+        R: null
+        C:
+          LOGICAL.比赛.比赛编号: european_football_2.Match.id
+        S: "赛事记录表"
+        private_attributes:
+          - {attr_id: european_football_2.Match.league_id, biz_name: 联赛ID, physical_column_id: european_football_2.Match.league_id}
+          - {attr_id: european_football_2.Match.season, biz_name: 赛季, physical_column_id: european_football_2.Match.season}
+          - {attr_id: european_football_2.Match.home_team_api_id, biz_name: 主队ID, physical_column_id: european_football_2.Match.home_team_api_id}
+          - {attr_id: european_football_2.Match.away_team_api_id, biz_name: 客队ID, physical_column_id: european_football_2.Match.away_team_api_id}
+          - {attr_id: european_football_2.Match.home_team_goal, biz_name: 主队进球, physical_column_id: european_football_2.Match.home_team_goal}
+          - {attr_id: european_football_2.Match.away_team_goal, biz_name: 客队进球, physical_column_id: european_football_2.Match.away_team_goal}
+          - {attr_id: european_football_2.Match.`date`, biz_name: 日期, physical_column_id: european_football_2.Match.`date`}
+          - {attr_id: european_football_2.Match.country_id, biz_name: 国家ID, physical_column_id: european_football_2.Match.country_id}
+
+  # ── 4. 联赛 ──
+  - logical_entity_id: LOGICAL.联赛
+    biz_name: 联赛
+    description: "足球联赛信息"
+    public_attributes:
+      - {attr_id: LOGICAL.联赛.联赛编号, biz_name: 联赛编号}
+    physical_entities:
+      - physical_entity_id: PHYSICAL.联赛表
+        physical_table_name: League
+        physical_table_id: european_football_2.League
+        A: {cardinality: "1:1", key: id}
+        R: null
+        C:
+          LOGICAL.联赛.联赛编号: european_football_2.League.id
+        S: "联赛信息表"
+        private_attributes:
+          - {attr_id: european_football_2.League.name, biz_name: 联赛名称, physical_column_id: european_football_2.League.name}
+          - {attr_id: european_football_2.League.country_id, biz_name: 国家ID, physical_column_id: european_football_2.League.country_id}
+
+pas_relations:
+  - relation_id: LOGICAL.联赛_TO_LOGICAL.比赛
+    relation_name: 赛事归属
+    P: {forward: {verb: 包含, cardinality: '1:N'}, reverse: {verb: 属于, cardinality: '1:1'}}
+    A: 联赛编号
+    S: "1个联赛包含N场比赛"
+  - relation_id: LOGICAL.球队_TO_LOGICAL.比赛
+    relation_name: 参赛
+    P: {forward: {verb: 参与, cardinality: '1:N'}, reverse: {verb: 包含, cardinality: '1:N'}}
+    A: 球队编号
+    S: "球队参与多场比赛（主队或客队）"
