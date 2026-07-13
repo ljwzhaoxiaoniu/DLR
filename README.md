@@ -341,3 +341,6 @@ Agent 的工作流：接收自然语言 `question` → 通过 MCP 语义查询�
 - Agent 通过 MCP 获取语义理解（实体/关系/映射）
 - Agent 通过 sqlite3 只读查询获取数据证据
 - 最终输出结构化答案（引用数据来源）
+
+
+![image.png](https://raw.gitcode.com/user-images/assets/10360544/6c684b8a-36a9-417d-a4d4-f98748d5a3ce/image.png 'image.png')
