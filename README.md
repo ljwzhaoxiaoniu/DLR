@@ -26,8 +26,8 @@
 │                                │                                 │
 │  ┌─────────────────────────────▼─────────────────────────────┐  │
 │  │  解析层：YAML 配置 → Mapper Registry → SemanticModel       │  │
-│  │  ER:  ERSemanticMapper  (BizEntity / BizRelation)          │  │
-│  │  DLR: DLRSemanticMapper (LE / PE / PAS / ARCS)             │  │
+│  │  ER:  ERSemanticMapper  (BizEntity / BizAttribute / BizRelation) │  │
+│  │  DLR: DLRSemanticMapper (LE / PE / PAS / ARCS)                  │  │
 │  └───────────────────────────────────────────────────────────┘  │
 └─────────────────────┬────────────────────────────────────────────┘
                       │
@@ -85,7 +85,9 @@ storage/
     └── *.db       ← 共享的物理数据库
 ```
 
-## 解析链路（以 ER 为例）
+## 解析链路
+
+### ER
 
 ```
 configs/scenarios/ER/*.yaml
@@ -98,6 +100,21 @@ Kuzu 图节点 + FAISS 向量索引
         │
         ▼  MCP 工具暴露
 Agent 通过 MCP 调用 → 语义查询 → sqlite3 查证据
+```
+
+### DLR
+
+```
+configs/scenarios/DLR/*.yaml
+        │
+        ▼  DLRSemanticMapper.parse()
+DLRScenarioModel (LogicalEntity / PhysicalEntity / PAS / ARCS)
+        │
+        ▼  BuildService.build()
+Kuzu 图节点 (LE-PE 双层 + INHERITS + PAS) + FAISS 向量索引
+        │
+        ▼  MCP 工具暴露 (recall_le / recall_pe / recall_pas / ...)
+Agent 通过 MCP 调用 → 语义路由 → sqlite3 查证据
 ```
 
 ## 核心查询流程
@@ -156,7 +173,7 @@ DLR Proj/
 │   │   ├── ER/                     ← ✅ mini_dev 数据库配置 (11 个 yaml)
 │   │   ├── DLR/                    ← 空目录，配置待写
 │   │   ├── RDF/                    ← 预留
-│   │   └── *.yaml                   ← 范式参考示例 (er/dlr_line_loss 等)
+│   │   └── *.yaml                   ← 范式参考示例 (er/dlr 等)
 │   ├── static/index.html           # 图可视化 UI
 │   └── storage/                    # 运行时生成
 │
@@ -184,8 +201,6 @@ DLR Proj/
 | `find_shortest_path` | `from_id, to_id` | 两实体最短路径 |
 | `list_all_tables` | — | 列出已注册实体表 |
 | `get_table_schema` | `table_id: "db.表名"` | 任意物理表结构 |
-| `calc_distance` | `tg_id1, tg_id2` | Haversine 距离（米） |
-| `find_nearby_transformers` | `tg_id, radius_m=1000` | 半径内邻近变压器 |
 | `summary` | — | 知识库摘要统计 |
 
 ### DLR（Decoupled Logic Representation）范式专用工具
