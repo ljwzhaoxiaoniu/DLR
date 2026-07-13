@@ -235,9 +235,76 @@ cd OC-based Agent Service
 opencode    # 启动 OpenCode，连接 MCP → 跑 500 个 NL 任务
 ```
 
+## 数据集
+
+本项目使用 **mini_dev**（bird-bench 子集，版本 **0703**）作为评测基准。
+
+| 属性 | 详情 |
+|------|------|
+| **名称** | mini_dev（BIRD-bench 精简开发版） |
+| **版本** | 0703 |
+| **数据库数量** | 11 个 SQLite 数据库 |
+| **任务数量** | 500 个自然语言查询任务 |
+| **评测目标** | NL2SQL（自然语言 → SQL 查询） |
+
+### 数据库一览
+
+| 数据库 | 领域 | 说明 |
+|--------|------|------|
+| `california_schools` | 教育 | 加州学校信息（学校、学区、学生数等） |
+| `financial` | 金融 | 银行账户、交易、客户信息 |
+| `superhero` | 娱乐 | 超级英雄角色、能力、所属团队 |
+| `debit_card_specializing` | 零售 | 借记卡消费记录与商户信息 |
+| `european_football_2` | 体育 | 欧洲足球联赛、球队、球员、比赛记录 |
+| `card_games` | 游戏 | 卡牌游戏、卡牌属性、对战记录 |
+| `formula_1` | 体育 | F1 赛车、车手、赛道、比赛结果 |
+| `codebase_community` | 技术 | 开源社区、代码仓库、开发者关系 |
+| `student_club` | 教育 | 大学社团、成员、活动信息 |
+| `thrombosis_prediction` | 医疗 | 血栓预测临床数据 |
+| `toxicology` | 化学 | 毒性物质、分子结构、毒性反应 |
+
+### 下载
+
+```
+版本：mini_dev 0703
+下载地址：https://drive.google.com/file/d/13VLWIwpw5E3d5DUkMvzw7hvHE67a4XkG/view
+```
+
+下载后解压到项目根目录，目录结构为：
+
+```
+DLR Proj/
+└── MINIDEV_sqlite/
+    ├── dev_tables.json              # 表结构元数据
+    ├── mini_dev_sqlite.json         # 任务集（500 条 NL → SQL）
+    ├── mini_dev_sqlite_gold.sql     # 标准答案 SQL
+    └── dev_databases/               # 11 个 SQLite 数据库
+        ├── california_schools/california_schools.sqlite
+        ├── financial/financial.sqlite
+        ├── superhero/superhero.sqlite
+        └── ...
+```
+
+> **注意**：`MINIDEV_sqlite/` 已加入 `.gitignore`，不纳入版本控制。
+
+### 任务格式
+
+`mini_dev_sqlite.json` 中每条任务包含：
+
+```json
+{
+  "question_id": 1,
+  "db_id": "financial",
+  "question": "查询账户余额大于10000的客户数量",
+  "SQL": "SELECT COUNT(*) FROM account WHERE balance > 10000;"
+}
+```
+
+Agent 的工作流：接收自然语言 `question` → 通过 MCP 语义查询定位实体/字段 → 生成并执行 SQL → 返回结果。
+
 ## 评测目标
 
-在 bench 数据集上跑通 **500 个自然语言查询任务**：
+在 mini_dev（0703）数据集上跑通 **500 个自然语言查询任务**：
 - Agent 通过 MCP 获取语义理解（实体/关系/映射）
 - Agent 通过 sqlite3 只读查询获取数据证据
 - 最终输出结构化答案（引用数据来源）
