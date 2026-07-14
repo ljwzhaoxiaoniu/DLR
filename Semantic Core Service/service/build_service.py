@@ -113,14 +113,24 @@ class BuildService:
         logger.info("[ER] 构建完成")
 
     def _build_er_vector(self, model: ERScenarioModel):
-        """Write ER vectors."""
+        """Write ER vectors.
+
+        For RDF paradigm, also vectorize each TriplesMap as a fused text
+        (table name + all column names) so FAISS recall surfaces physical tables.
+        """
+        is_rdf = (model.mapping_type == "rdf")
         entity_id_to_name = {e.entity_id: e.name for e in model.biz_entities}
 
         for entity in model.biz_entities:
+            # For RDF, override description with fused TriplesMap text
+            if is_rdf and hasattr(model, "_rdf_vec_texts") and entity.entity_id in model._rdf_vec_texts:
+                desc = model._rdf_vec_texts[entity.entity_id]
+            else:
+                desc = entity.description
             self.vector_db.insert_entity(
                 entity_id=entity.entity_id,
                 name=entity.name,
-                description=entity.description,
+                description=desc,
             )
             for attr in entity.attributes:
                 self.vector_db.insert_attribute(

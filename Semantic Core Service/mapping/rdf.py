@@ -218,7 +218,7 @@ class RDFSemanticMapper(SemanticMapperABC):
 
         logger.info(f"[RDF] parsed: {len(biz_entities)} entities, {len(biz_relations)} relations from {ttl_path}")
 
-        return ERScenarioModel(
+        model = ERScenarioModel(
             mapping_type="rdf",
             scenario_name=scenario,
             schema_version="1.0",
@@ -226,3 +226,54 @@ class RDFSemanticMapper(SemanticMapperABC):
             biz_entities=biz_entities,
             biz_relations=biz_relations,
         )
+
+        # Attach fused vector text per entity (build_service reads this).
+        # Walk the parsed TTL again: for each TriplesMap, build a flat text.
+        model._rdf_vec_texts = {}
+        for tm in g.subjects(Rdf.type, RR.TriplesMap):
+            lt = _first(g, tm, RR.logicalTable)
+            tname = str(_first(g, lt, RR.tableName)) if lt else None
+            if not tname:
+                continue
+            col_names = []
+            for pom in g.objects(tm, RR.predicateObjectMap):
+                om = _first(g, pom, RR.objectMap)
+                if om is None:
+                    continue
+                if _first(g, om, RR.parentTriplesMap) is not None:
+                    continue
+                col = _first(g, om, RR.column)
+                if col:
+                    col_names.append(str(col))
+            for pom in g.objects(tm, RR.predicateObjectMap):
+                om = _first(g, pom, RR.objectMap)
+                if om is None:
+                    continue
+                parent_tm = _first(g, om, RR.parentTriplesMap)
+                if parent_tm is None:
+                    continue
+                parent_lt = _first(g, parent_tm, RR.logicalTable)
+                if parent_lt:
+                    parent_tbl = str(_first(g, parent_lt, RR.tableName))
+                    col_names.append(f"->{parent_tbl}")
+            model._rdf_vec_texts[f"{db_name}.{tname}"] = f"{db_name} {tname} {' '.join(col_names)}"
+
+        return model
+
+    @staticmethod
+    def vector_text_for_tm(pe: Dict, db_name: str) -> str:
+        """Produce flat search text for one TriplesMap (used by FAISS).
+
+        Text format: "db.table col1 col2 col3 ..."
+        so vector recall can surface the physical table name by NL question.
+        """
+        tbl = pe["physical_table_name"]
+        parts = [f"{db_name}.{tbl}", tbl]
+        for attr in (pe.get("private_attributes") or []):
+            col = _bare(attr.get("physical_column_id", ""))
+            biz = attr.get("biz_name", col)
+            if col:
+                parts.append(col)
+            if biz and biz != col:
+                parts.append(biz)
+        return " ".join(parts)

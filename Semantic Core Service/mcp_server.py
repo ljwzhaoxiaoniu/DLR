@@ -109,8 +109,11 @@ def _ensure_paradigm_tools():
 
     if _mapping_type == "dlr":
         _register_dlr_tools()
+    elif _mapping_type == "rdf":
+        _register_rdf_tools()
     else:
         _remove_dlr_tools()
+        _remove_rdf_tools()
 
     logger.info(f"[MCP] Tools finalized for {_mapping_type.upper()} mode")
 
@@ -442,6 +445,75 @@ def find_nearby_transformers(tg_id: str, radius_m: float = 1000.0) -> dict:
 
 
 # ===================================================================
+# RDF tool — registered dynamically when _mapping_type == "rdf"
+# ===================================================================
+
+def _query_rdf_mapping(table_name: str) -> dict:
+    """[RDF] 用 SPARQL 查询 R2RML 图,返回指定表的字段和 JOIN 路径.
+
+    Args:
+        table_name: 物理表名 (如 "drivers"),由 semantic_query 向量召回提供
+
+    Returns:
+        {table, columns, relations}
+    """
+    from rdf_store.rdf_service import get_rdf_store
+    st = get_rdf_store()
+    st.load()
+
+    sparql = """
+    PREFIX rr: <http://www.w3.org/ns/r2rml#>
+    SELECT ?pred ?col ?joinTable ?joinChild ?joinParent WHERE {
+        ?tm rr:logicalTable [ rr:tableName ?table_name ] ;
+            rr:predicateObjectMap ?pom .
+        ?pom rr:predicate ?pred .
+        OPTIONAL { ?pom rr:objectMap [ rr:column ?col ] . }
+        OPTIONAL {
+            ?pom rr:objectMap [
+                rr:parentTriplesMap ?parentTm ;
+                rr:joinCondition [ rr:child ?joinChild ; rr:parent ?joinParent ]
+            ] .
+            ?parentTm rr:logicalTable [ rr:tableName ?joinTable ] .
+        }
+    }
+    """
+    result = st.sparql(sparql.replace("?table_name", f'"{table_name}"'))
+
+    if "error" in result:
+        return {"success": False, "error": result["error"]}
+
+    columns = []
+    relations = []
+    seen_cols = set()
+    seen_rels = set()
+
+    for binding in result.get("bindings", []):
+        pred = binding.get("pred", "")
+        col = binding.get("col", "")
+        jt = binding.get("joinTable", "")
+        jc = binding.get("joinChild", "")
+        jp = binding.get("joinParent", "")
+
+        if col and col not in seen_cols:
+            seen_cols.add(col)
+            columns.append(col)
+
+        if jt and (jc, jp) not in seen_rels:
+            seen_rels.add((jc, jp))
+            relations.append({
+                "target_table": jt,
+                "join_condition": f"{table_name}.{jc} = {jt}.{jp}"
+            })
+
+    return {
+        "success": True,
+        "table": table_name,
+        "columns": columns,
+        "relations": relations,
+    }
+
+
+# ===================================================================
 # DLR tools — registered dynamically when _mapping_type == "dlr"
 # ===================================================================
 
@@ -602,6 +674,49 @@ def _register_dlr_tools():
             logger.debug(f"[MCP] Registered DLR tool: {name}")
         except Exception as e:
             logger.warning(f"[MCP] Failed to register DLR tool {name}: {e}")
+
+
+_RDF_TOOL_FUNCS = {
+    "query_rdf_mapping": _query_rdf_mapping,
+}
+
+
+def _register_rdf_tools():
+    """Register RDF tools onto the mcp instance (idempotent)."""
+    from fastmcp.tools import Tool
+    existing = _get_tool_names()
+    added = 0
+    for name, func in _RDF_TOOL_FUNCS.items():
+        if name in existing:
+            continue
+        try:
+            tool = Tool.from_function(func, name=name)
+            mcp.add_tool(tool)
+            added += 1
+            logger.debug(f"[MCP] Registered RDF tool: {name}")
+        except Exception as e:
+            logger.warning(f"[MCP] Failed to register RDF tool: {e}")
+    if added:
+        logger.info(f"[MCP] Registered {added} RDF-specific tools")
+
+
+def _remove_rdf_tools():
+    """Remove RDF-only tools from the MCP registry."""
+    rdf_tool_names = set(_RDF_TOOL_FUNCS.keys())
+    provider = getattr(mcp, 'local_provider', None)
+    if provider is None:
+        return
+    existing = _get_tool_names()
+    removed = 0
+    for name in rdf_tool_names:
+        if name in existing:
+            try:
+                provider.remove_tool(name)
+                removed += 1
+            except Exception as e:
+                logger.warning(f"[MCP] Failed to remove RDF tool: {e}")
+    if removed:
+        logger.info(f"[MCP] Removed {removed} RDF tools for non-RDF mode")
 
 
 # ===================================================================
