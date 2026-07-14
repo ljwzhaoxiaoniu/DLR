@@ -1,0 +1,38 @@
+
+# ===== debit_card_specializing =====
+
+TM_debit_card_specializing_customers a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "customers" ] ;
+  rr:subjectMap [ rr:template "http://example.org/debit_card_specializing/customers/{CustomerID}" ; rr:class <debit_card_specializing/客户> ] ;
+  rr:predicateObjectMap [ rr:predicate <debit_card_specializing/客户类型> ; rr:objectMap [ rr:column "Segment" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <debit_card_specializing/结算货币> ; rr:objectMap [ rr:column "Currency" ; rr:datatype xsd:string ] ] .
+
+TM_debit_card_specializing_yearmonth a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "yearmonth" ] ;
+  rr:subjectMap [ rr:template "http://example.org/debit_card_specializing/yearmonth/{CustomerID}" ; rr:class <debit_card_specializing/消费行为> ] ;
+  rr:predicateObjectMap [ rr:predicate <debit_card_specializing/消费量> ; rr:objectMap [ rr:column "Consumption" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <debit_card_specializing/消费产生> ; rr:objectMap [ rr:parentTriplesMap TM_debit_card_specializing_customers ; rr:joinCondition [ rr:child "CustomerID" ; rr:parent "CustomerID" ] ] ] .
+
+TM_debit_card_specializing_transactions_1k a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "transactions_1k" ] ;
+  rr:subjectMap [ rr:template "http://example.org/debit_card_specializing/transactions_1k/{CustomerID}" ; rr:class <debit_card_specializing/消费行为> ] ;
+  rr:predicateObjectMap [ rr:predicate <debit_card_specializing/交易ID> ; rr:objectMap [ rr:column "TransactionID" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <debit_card_specializing/加油站ID> ; rr:objectMap [ rr:column "GasStationID" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <debit_card_specializing/商品ID> ; rr:objectMap [ rr:column "ProductID" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <debit_card_specializing/时间> ; rr:objectMap [ rr:column "Time" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <debit_card_specializing/价格> ; rr:objectMap [ rr:column "Price" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <debit_card_specializing/数量> ; rr:objectMap [ rr:column "Amount" ; rr:datatype xsd:string ] ] ;
+  # PAS: 加油站 -> 消费行为
+  rr:predicateObjectMap [ rr:predicate <debit_card_specializing/交易发生> ; rr:objectMap [ rr:parentTriplesMap TM_debit_card_specializing_gasstations ; rr:joinCondition [ rr:child "GasStationID" ; rr:parent "GasStationID" ] ] ] ;
+  # PAS: 商品 -> 消费行为
+  rr:predicateObjectMap [ rr:predicate <debit_card_specializing/商品消费> ; rr:objectMap [ rr:parentTriplesMap TM_debit_card_specializing_products ; rr:joinCondition [ rr:child "ProductID" ; rr:parent "ProductID" ] ] ] ;
+  # >>> FIX: transactions_1k -> customers (CustomerID)
+  rr:predicateObjectMap [ rr:predicate <debit_card_specializing/消费产生> ; rr:objectMap [ rr:parentTriplesMap TM_debit_card_specializing_customers ; rr:joinCondition [ rr:child "CustomerID" ; rr:parent "CustomerID" ] ] ] .
+
+TM_debit_card_specializing_gasstations a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "gasstations" ] ;
+  rr:subjectMap [ rr:template "http://example.org/debit_card_specializing/gasstations/{GasStationID}" ; rr:class <debit_card_specializing/加油站> ] ;
+  rr:predicateObjectMap [ rr:predicate <debit_card_specializing/国家> ; rr:objectMap [ rr:column "Country" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <debit_card_specializing/站点类型> ; rr:objectMap [ rr:column "Segment" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <debit_card_specializing/连锁编号> ; rr:objectMap [ rr:column "ChainID" ; rr:datatype xsd:string ] ] .
+

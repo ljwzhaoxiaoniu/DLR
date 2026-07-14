@@ -1,0 +1,46 @@
+
+# ===== financial =====
+# Already had most JOINs from DLR PAS, but ER has additional ones:
+#   - card.disp_id -> disp.disp_id (ER has it, RDF had it as disp_id->account_id which was WRONG)
+#   - client -> district (ER has it, RDF missing)
+
+TM_financial_account a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "account" ] ;
+  rr:subjectMap [ rr:template "http://example.org/financial/account/{account_id}" ; rr:class <financial/银行账户> ] ;
+  rr:predicateObjectMap [ rr:predicate <financial/对账单频率> ; rr:objectMap [ rr:column "frequency" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <financial/地区ID> ; rr:objectMap [ rr:column "district_id" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <financial/开户日期> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ] ;
+  # PAS: 地区 -> 银行账户
+  rr:predicateObjectMap [ rr:predicate <financial/地区归属> ; rr:objectMap [ rr:parentTriplesMap TM_financial_district ; rr:joinCondition [ rr:child "district_id" ; rr:parent "district_id" ] ] ] .
+
+TM_financial_client a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "client" ] ;
+  rr:subjectMap [ rr:template "http://example.org/financial/client/{client_id}" ; rr:class <financial/客户> ] ;
+  rr:predicateObjectMap [ rr:predicate <financial/性别> ; rr:objectMap [ rr:column "gender" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <financial/出生日期> ; rr:objectMap [ rr:column "birth_date" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <financial/地区ID> ; rr:objectMap [ rr:column "district_id" ; rr:datatype xsd:string ] ] ;
+  # >>> FIX: client -> district
+  rr:predicateObjectMap [ rr:predicate <financial/客户地区> ; rr:objectMap [ rr:parentTriplesMap TM_financial_district ; rr:joinCondition [ rr:child "district_id" ; rr:parent "district_id" ] ] ] .
+
+TM_financial_disp a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "disp" ] ;
+  rr:subjectMap [ rr:template "http://example.org/financial/disp/{account_id}" ; rr:class <financial/账户关联> ] ;
+  rr:predicateObjectMap [ rr:predicate <financial/授权ID> ; rr:objectMap [ rr:column "disp_id" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <financial/授权类型> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ] ;
+  # PAS: 客户 -> 账户关联
+  rr:predicateObjectMap [ rr:predicate <financial/账户持有> ; rr:objectMap [ rr:parentTriplesMap TM_financial_client ; rr:joinCondition [ rr:child "client_id" ; rr:parent "client_id" ] ] ] ;
+  # PAS: 银行账户 -> 账户关联
+  rr:predicateObjectMap [ rr:predicate <financial/账户授权> ; rr:objectMap [ rr:parentTriplesMap TM_financial_account ; rr:joinCondition [ rr:child "account_id" ; rr:parent "account_id" ] ] ] .
+
+TM_financial_card a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "card" ] ;
+  rr:subjectMap [ rr:template "http://example.org/financial/card/{disp_id}" ; rr:class <financial/账户关联> ] ;
+  rr:predicateObjectMap [ rr:predicate <financial/卡ID> ; rr:objectMap [ rr:column "card_id" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <financial/卡类型> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <financial/发卡日期> ; rr:objectMap [ rr:column "issued" ; rr:datatype xsd:string ] ] ;
+  # >>> FIX: card -> disp (disp_id, not account_id!)
+  rr:predicateObjectMap [ rr:predicate <financial/卡授权> ; rr:objectMap [ rr:parentTriplesMap TM_financial_disp ; rr:joinCondition [ rr:child "disp_id" ; rr:parent "disp_id" ] ] ] .
+
+TM_financial_district a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "district" ] ;
+  rr:subjectMap [ rr:template "http://example.org/financial/district/{district_id}" ; rr:class <financial/地区> ] ;

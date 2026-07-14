@@ -1,0 +1,87 @@
+# ===== superhero =====
+# FIX: superhero -> all 7 dimension tables (publisher, race, gender, 3x colour, alignment)
+# FIX: hero_power -> superpower (was only linked to superhero)
+# FIX: hero_attribute -> attribute (was only linked to superhero)
+
+TM_superhero_superhero a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "superhero" ] ;
+  rr:subjectMap [ rr:template "http://example.org/superhero/superhero/{id}" ; rr:class <superhero/超级英雄> ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/英雄名称> ; rr:objectMap [ rr:column "superhero_name" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/全名> ; rr:objectMap [ rr:column "full_name" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/身高> ; rr:objectMap [ rr:column "height_cm" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/体重> ; rr:objectMap [ rr:column "weight_kg" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/出版商ID> ; rr:objectMap [ rr:column "publisher_id" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/种族ID> ; rr:objectMap [ rr:column "race_id" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/性别ID> ; rr:objectMap [ rr:column "gender_id" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/眼睛颜色ID> ; rr:objectMap [ rr:column "eye_colour_id" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/头发颜色ID> ; rr:objectMap [ rr:column "hair_colour_id" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/肤色ID> ; rr:objectMap [ rr:column "skin_colour_id" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/阵营ID> ; rr:objectMap [ rr:column "alignment_id" ; rr:datatype xsd:string ] ] ;
+  # >>> FIX: superhero -> publisher
+  rr:predicateObjectMap [ rr:predicate <superhero/出版商> ; rr:objectMap [ rr:parentTriplesMap TM_superhero_publisher ; rr:joinCondition [ rr:child "publisher_id" ; rr:parent "id" ] ] ] ;
+  # >>> FIX: superhero -> race
+  rr:predicateObjectMap [ rr:predicate <superhero/种族> ; rr:objectMap [ rr:parentTriplesMap TM_superhero_race ; rr:joinCondition [ rr:child "race_id" ; rr:parent "id" ] ] ] ;
+  # >>> FIX: superhero -> gender
+  rr:predicateObjectMap [ rr:predicate <superhero/性别> ; rr:objectMap [ rr:parentTriplesMap TM_superhero_gender ; rr:joinCondition [ rr:child "gender_id" ; rr:parent "id" ] ] ] ;
+  # >>> FIX: superhero -> colour (eye)
+  rr:predicateObjectMap [ rr:predicate <superhero/眼睛颜色> ; rr:objectMap [ rr:parentTriplesMap TM_superhero_colour ; rr:joinCondition [ rr:child "eye_colour_id" ; rr:parent "id" ] ] ] ;
+  # >>> FIX: superhero -> colour (hair)
+  rr:predicateObjectMap [ rr:predicate <superhero/头发颜色> ; rr:objectMap [ rr:parentTriplesMap TM_superhero_colour ; rr:joinCondition [ rr:child "hair_colour_id" ; rr:parent "id" ] ] ] ;
+  # >>> FIX: superhero -> colour (skin)
+  rr:predicateObjectMap [ rr:predicate <superhero/肤色> ; rr:objectMap [ rr:parentTriplesMap TM_superhero_colour ; rr:joinCondition [ rr:child "skin_colour_id" ; rr:parent "id" ] ] ] ;
+  # >>> FIX: superhero -> alignment
+  rr:predicateObjectMap [ rr:predicate <superhero/阵营> ; rr:objectMap [ rr:parentTriplesMap TM_superhero_alignment ; rr:joinCondition [ rr:child "alignment_id" ; rr:parent "id" ] ] ] .
+
+TM_superhero_hero_power a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "hero_power" ] ;
+  rr:subjectMap [ rr:template "http://example.org/superhero/hero_power/{hero_id}" ; rr:class <superhero/英雄特征> ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/能力ID> ; rr:objectMap [ rr:column "power_id" ; rr:datatype xsd:string ] ] ;
+  # >>> FIX: hero_power -> superhero
+  rr:predicateObjectMap [ rr:predicate <superhero/能力归属> ; rr:objectMap [ rr:parentTriplesMap TM_superhero_superhero ; rr:joinCondition [ rr:child "hero_id" ; rr:parent "id" ] ] ] ;
+  # >>> FIX: hero_power -> superpower
+  rr:predicateObjectMap [ rr:predicate <superhero/能力引用> ; rr:objectMap [ rr:parentTriplesMap TM_superhero_superpower ; rr:joinCondition [ rr:child "power_id" ; rr:parent "id" ] ] ] .
+
+TM_superhero_hero_attribute a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "hero_attribute" ] ;
+  rr:subjectMap [ rr:template "http://example.org/superhero/hero_attribute/{hero_id}" ; rr:class <superhero/英雄特征> ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/属性ID> ; rr:objectMap [ rr:column "attribute_id" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/属性值> ; rr:objectMap [ rr:column "attribute_value" ; rr:datatype xsd:string ] ] ;
+  # >>> FIX: hero_attribute -> superhero
+  rr:predicateObjectMap [ rr:predicate <superhero/属性归属> ; rr:objectMap [ rr:parentTriplesMap TM_superhero_superhero ; rr:joinCondition [ rr:child "hero_id" ; rr:parent "id" ] ] ] ;
+  # >>> FIX: hero_attribute -> attribute
+  rr:predicateObjectMap [ rr:predicate <superhero/属性引用> ; rr:objectMap [ rr:parentTriplesMap TM_superhero_attribute ; rr:joinCondition [ rr:child "attribute_id" ; rr:parent "id" ] ] ] .
+
+TM_superhero_superpower a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "superpower" ] ;
+  rr:subjectMap [ rr:template "http://example.org/superhero/superpower/{id}" ; rr:class <superhero/超能力> ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/能力名称> ; rr:objectMap [ rr:column "power_name" ; rr:datatype xsd:string ] ] .
+
+TM_superhero_attribute a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "attribute" ] ;
+  rr:subjectMap [ rr:template "http://example.org/superhero/attribute/{id}" ; rr:class <superhero/属性> ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/属性名称> ; rr:objectMap [ rr:column "attribute_name" ; rr:datatype xsd:string ] ] .
+
+TM_superhero_publisher a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "publisher" ] ;
+  rr:subjectMap [ rr:template "http://example.org/superhero/publisher/{id}" ; rr:class <superhero/英雄维度> ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/出版商名称> ; rr:objectMap [ rr:column "publisher_name" ; rr:datatype xsd:string ] ] .
+
+TM_superhero_race a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "race" ] ;
+  rr:subjectMap [ rr:template "http://example.org/superhero/race/{id}" ; rr:class <superhero/英雄维度> ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/种族名称> ; rr:objectMap [ rr:column "race" ; rr:datatype xsd:string ] ] .
+
+TM_superhero_gender a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "gender" ] ;
+  rr:subjectMap [ rr:template "http://example.org/superhero/gender/{id}" ; rr:class <superhero/英雄维度> ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/性别> ; rr:objectMap [ rr:column "gender" ; rr:datatype xsd:string ] ] .
+
+TM_superhero_colour a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "colour" ] ;
+  rr:subjectMap [ rr:template "http://example.org/superhero/colour/{id}" ; rr:class <superhero/英雄维度> ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/颜色> ; rr:objectMap [ rr:column "colour" ; rr:datatype xsd:string ] ] .
+
+TM_superhero_alignment a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "alignment" ] ;
+  rr:subjectMap [ rr:template "http://example.org/superhero/alignment/{id}" ; rr:class <superhero/英雄维度> ] ;
+  rr:predicateObjectMap [ rr:predicate <superhero/阵营> ; rr:objectMap [ rr:column "alignment" ; rr:datatype xsd:string ] ] .

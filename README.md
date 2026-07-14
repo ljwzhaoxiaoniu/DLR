@@ -17,8 +17,8 @@
 │                                                                  │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  │
 │  │   ER 范式        │  │   DLR 范式       │  │   RDF 范式       │  │
+│  │  REST 设计       │  │  REST→CLI 设计   │  │  向量 + SPARQL   │  │
 │  │  Kuzu + FAISS   │  │  Kuzu + FAISS   │  │  Kuzu + FAISS   │  │
-│  │  HTTP + MCP     │  │  HTTP + MCP     │  │  HTTP + MCP     │  │
 │  │  + er.html      │  │  + dlr.html     │  │  + rdf.html     │  │
 │  └────────┬────────┘  └────────┬────────┘  └────────┬────────┘  │
 │           │                    │                    │           │
@@ -38,15 +38,15 @@
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-三种建模范式：**ER**（Entity-Relationship，实体-关系）、**DLR**（Decoupled Logic Representation，解耦逻辑表达）、**RDF**（Resource Description Framework，资源描述框架）。每次评测只启用一种范式，OC Agent 通过 MCP 连接到当前范式。
+三种建模范式，三种设计理念：**ER** = REST API（自研）、**DLR** = REST 模仿 CLI（自研）、**RDF** = 向量召回 + SPARQL（W3C 标准）。每次评测只启用一种范式，OC Agent 通过 MCP 连接到当前范式。
 
 ### 建模范式
 
-| 范式 | 全称 | 中文 | 状态 | 模型 | Kuzu Schema |
-|------|------|------|------|------|-------------|
-| **ER** | Entity-Relationship | 实体-关系 | ✅ 已实现 + 已配置 + 已构建 | BizEntity / BizAttribute / BizRelation / RELATED_TO | 扁平实体+关系 |
-| **DLR** | Decoupled Logic Representation | 解耦逻辑表达 | ✅ 已实现 + 已配置 + 已构建 | LE / PE / PAS / ARCS | LE-PE 双层 + INHERITS + PAS |
-| **RDF** | Resource Description Framework | 资源描述框架 | ✅ 已实现（rdflib + W3C R2RML 基线 + SPARQL） | rr:TriplesMap / rr:predicateObjectMap / rr:referencingObjectMap | Kuzu + FAISS（同 ER 管线） + rdflib SPARQL |
+| 范式 | 全称 | 中文 | 设计理念 | 模型 | Kuzu Schema |
+|------|------|------|----------|------|-------------|
+| **ER** | Entity-Relationship | 实体-关系 | REST API（自研） | BizEntity / BizAttribute / BizRelation / RELATED_TO | 扁平实体+关系 |
+| **DLR** | Decoupled Logic Representation | 解耦逻辑表达 | REST 模仿 CLI（自研） | LE / PE / PAS / ARCS | LE-PE 双层 + INHERITS + PAS |
+| **RDF** | Resource Description Framework | 资源描述框架 | 向量召回 + SPARQL（W3C 标准） | rr:TriplesMap / rr:predicateObjectMap / rr:referencingObjectMap | Kuzu + FAISS + rdflib SPARQL |
 
 > DLR 是核心范式；ER 与 RDF 作为对比基线纳入评测。
 
@@ -477,8 +477,9 @@ Agent 的工作流：接收自然语言 `question` → 通过 MCP 语义查询�
 
 ### 三范式统一评测链路
 
-| 阶段 | ER | DLR | RDF |
-|------|----|-----|-----|
+| 阶段 | ER（REST 设计） | DLR（REST→CLI 设计） | RDF（向量 + SPARQL） |
+|------|-----------------|----------------------|-----------------------|
+| 设计者 | 自研 | 自研 | W3C 标准 |
 | 语义召回 | `semantic_query` (FAISS) | `semantic_query` (FAISS) | `semantic_query` (FAISS) |
 | 映射查询 | 直接查 ER graph (Kuzu) | `get_pe_arcs` (Kuzu) → 列 + ARCS 中文语义 | `query_rdf_mapping` (SPARQL) → 列 + JOIN（纯物理） |
 | SQL 生成 | Agent 写 SQL → sqlite3 | Agent 写 SQL → sqlite3 | Agent 写 SQL → sqlite3 |

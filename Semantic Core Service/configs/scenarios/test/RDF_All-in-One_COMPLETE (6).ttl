@@ -1,0 +1,81 @@
+# ===== formula_1 =====
+# FIX: backfilled qualifying->constructors, results->constructors, results->status,
+#   seasons entity, status entity, races->seasons,
+#   driverStandings->drivers+races, pitStops->drivers+races,
+#   constructorResults->races, constructorStandings->races
+
+TM_formula_1_drivers a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "drivers" ] ;
+  rr:subjectMap [ rr:template "http://example.org/formula_1/drivers/{driverId}" ; rr:class <formula_1/车手> ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/引用名> ; rr:objectMap [ rr:column "driverRef" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/国籍> ; rr:objectMap [ rr:column "nationality" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/名> ; rr:objectMap [ rr:column "forename" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/姓> ; rr:objectMap [ rr:column "surname" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/出生日期> ; rr:objectMap [ rr:column "dob" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/车号> ; rr:objectMap [ rr:column "number" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/代码> ; rr:objectMap [ rr:column "code" ; rr:datatype xsd:string ] ] .
+
+TM_formula_1_circuits a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "circuits" ] ;
+  rr:subjectMap [ rr:template "http://example.org/formula_1/circuits/{circuitId}" ; rr:class <formula_1/赛道> ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/名称> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/国家> ; rr:objectMap [ rr:column "country" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/引用名> ; rr:objectMap [ rr:column "circuitRef" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/位置> ; rr:objectMap [ rr:column "location" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/纬度> ; rr:objectMap [ rr:column "lat" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/经度> ; rr:objectMap [ rr:column "lng" ; rr:datatype xsd:string ] ] .
+
+TM_formula_1_races a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "races" ] ;
+  rr:subjectMap [ rr:template "http://example.org/formula_1/races/{raceId}" ; rr:class <formula_1/分站赛> ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/年份> ; rr:objectMap [ rr:column "year" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/赛事名称> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/赛道ID> ; rr:objectMap [ rr:column "circuitId" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/日期> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/时间> ; rr:objectMap [ rr:column "time" ; rr:datatype xsd:string ] ] ;
+  # PAS: 赛道 -> 分站赛
+  rr:predicateObjectMap [ rr:predicate <formula_1/赛事举办> ; rr:objectMap [ rr:parentTriplesMap TM_formula_1_circuits ; rr:joinCondition [ rr:child "circuitId" ; rr:parent "circuitId" ] ] ] ;
+  # >>> FIX: races -> seasons (year)
+  rr:predicateObjectMap [ rr:predicate <formula_1/赛季归属> ; rr:objectMap [ rr:parentTriplesMap TM_formula_1_seasons ; rr:joinCondition [ rr:child "year" ; rr:parent "year" ] ] ] .
+
+# >>> FIX: seasons entity (was completely missing from RDF, ER has it)
+TM_formula_1_seasons a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "seasons" ] ;
+  rr:subjectMap [ rr:template "http://example.org/formula_1/seasons/{year}" ; rr:class <formula_1/赛季> ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/赛季链接> ; rr:objectMap [ rr:column "url" ; rr:datatype xsd:string ] ] .
+
+TM_formula_1_qualifying a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "qualifying" ] ;
+  rr:subjectMap [ rr:template "http://example.org/formula_1/qualifying/{raceId}" ; rr:class <formula_1/车手赛事数据> ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/排位ID> ; rr:objectMap [ rr:column "qualifyId" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/车号> ; rr:objectMap [ rr:column "number" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/排位> ; rr:objectMap [ rr:column "position" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/Q1> ; rr:objectMap [ rr:column "q1" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/Q2> ; rr:objectMap [ rr:column "q2" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/Q3> ; rr:objectMap [ rr:column "q3" ; rr:datatype xsd:string ] ] ;
+  # PAS: 分站赛 -> 车手赛事数据
+  rr:predicateObjectMap [ rr:predicate <formula_1/赛事数据> ; rr:objectMap [ rr:parentTriplesMap TM_formula_1_races ; rr:joinCondition [ rr:child "raceId" ; rr:parent "raceId" ] ] ] ;
+  # PAS: 车手 -> 车手赛事数据
+  rr:predicateObjectMap [ rr:predicate <formula_1/参赛> ; rr:objectMap [ rr:parentTriplesMap TM_formula_1_drivers ; rr:joinCondition [ rr:child "driverId" ; rr:parent "driverId" ] ] ] ;
+  # >>> FIX: qualifying -> constructors
+  rr:predicateObjectMap [ rr:predicate <formula_1/车队参赛> ; rr:objectMap [ rr:parentTriplesMap TM_formula_1_constructors ; rr:joinCondition [ rr:child "constructorId" ; rr:parent "constructorId" ] ] ] .
+
+TM_formula_1_results a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "results" ] ;
+  rr:subjectMap [ rr:template "http://example.org/formula_1/results/{raceId}" ; rr:class <formula_1/车手赛事数据> ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/结果ID> ; rr:objectMap [ rr:column "resultId" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/车队ID> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/车号> ; rr:objectMap [ rr:column "number" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/发车位> ; rr:objectMap [ rr:column "grid" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/名次> ; rr:objectMap [ rr:column "position" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/完赛顺序> ; rr:objectMap [ rr:column "positionOrder" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/积分> ; rr:objectMap [ rr:column "points" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/圈数> ; rr:objectMap [ rr:column "laps" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/时间> ; rr:objectMap [ rr:column "time" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/最快圈> ; rr:objectMap [ rr:column "fastestLap" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/最快圈时间> ; rr:objectMap [ rr:column "fastestLapTime" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/最快圈速> ; rr:objectMap [ rr:column "fastestLapSpeed" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/排名> ; rr:objectMap [ rr:column "rank" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <formula_1/状态ID> ; rr:objectMap [ rr:column "statusId" ; rr:datatype xsd:string ] ] ;
+  # PAS: 分站赛 -> 车手赛事数据
+  rr:predicateObjectMap [ rr:predicate <formula_1/赛事数据> ; rr:objectMap [ rr:parentTriplesMap

@@ -1,0 +1,106 @@
+
+# ===== codebase_community =====
+# FIX: backfilled ALL ER relations (comments->users, postHistory->users, 
+#   postLinks->posts[RelatedPostId], posts->posts[ParentId], 
+#   posts->users[LastEditorUserId], tags->posts, votes->posts)
+
+TM_codebase_community_users a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "users" ] ;
+  rr:subjectMap [ rr:template "http://example.org/codebase_community/users/{Id}" ; rr:class <codebase_community/社区用户> ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/显示名称> ; rr:objectMap [ rr:column "DisplayName" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/声望值> ; rr:objectMap [ rr:column "Reputation" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/年龄> ; rr:objectMap [ rr:column "Age" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/位置> ; rr:objectMap [ rr:column "Location" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/赞数> ; rr:objectMap [ rr:column "UpVotes" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/创建日期> ; rr:objectMap [ rr:column "CreationDate" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/最后访问> ; rr:objectMap [ rr:column "LastAccessDate" ; rr:datatype xsd:string ] ] .
+
+TM_codebase_community_posts a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "posts" ] ;
+  rr:subjectMap [ rr:template "http://example.org/codebase_community/posts/{Id}" ; rr:class <codebase_community/社区帖子> ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/标题> ; rr:objectMap [ rr:column "Title" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/发帖人> ; rr:objectMap [ rr:column "OwnerUserId" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/得分> ; rr:objectMap [ rr:column "Score" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/查看数> ; rr:objectMap [ rr:column "ViewCount" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/回答数> ; rr:objectMap [ rr:column "AnswerCount" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/评论数> ; rr:objectMap [ rr:column "CommentCount" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/收藏数> ; rr:objectMap [ rr:column "FavoriteCount" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/标签> ; rr:objectMap [ rr:column "Tags" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/正文> ; rr:objectMap [ rr:column "Body" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/创建日期> ; rr:objectMap [ rr:column "CreationDate" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/关闭日期> ; rr:objectMap [ rr:column "ClosedDate" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/最后编辑人> ; rr:objectMap [ rr:column "LastEditorUserId" ; rr:datatype xsd:string ] ] ;
+  # PAS: 社区用户 -> 社区帖子 (帖子发布)
+  rr:predicateObjectMap [ rr:predicate <codebase_community/帖子发布> ; rr:objectMap [ rr:parentTriplesMap TM_codebase_community_users ; rr:joinCondition [ rr:child "OwnerUserId" ; rr:parent "Id" ] ] ] ;
+  # >>> FIX: posts -> users (LastEditorUserId)
+  rr:predicateObjectMap [ rr:predicate <codebase_community/帖子编辑> ; rr:objectMap [ rr:parentTriplesMap TM_codebase_community_users ; rr:joinCondition [ rr:child "LastEditorUserId" ; rr:parent "Id" ] ] ] ;
+  # >>> FIX: posts -> posts (ParentId, self-reference)
+  rr:predicateObjectMap [ rr:predicate <codebase_community/父帖关联> ; rr:objectMap [ rr:parentTriplesMap TM_codebase_community_posts ; rr:joinCondition [ rr:child "ParentId" ; rr:parent "Id" ] ] ] .
+
+TM_codebase_community_comments a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "comments" ] ;
+  rr:subjectMap [ rr:template "http://example.org/codebase_community/comments/{PostId}" ; rr:class <codebase_community/帖子互动> ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/评论ID> ; rr:objectMap [ rr:column "Id" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/评论人> ; rr:objectMap [ rr:column "UserId" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/评论内容> ; rr:objectMap [ rr:column "Text" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/得分> ; rr:objectMap [ rr:column "Score" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/创建日期> ; rr:objectMap [ rr:column "CreationDate" ; rr:datatype xsd:string ] ] ;
+  # PAS: 社区帖子 -> 帖子互动 (互动产生)
+  rr:predicateObjectMap [ rr:predicate <codebase_community/互动产生> ; rr:objectMap [ rr:parentTriplesMap TM_codebase_community_posts ; rr:joinCondition [ rr:child "PostId" ; rr:parent "Id" ] ] ] ;
+  # >>> FIX: comments -> users (UserId)
+  rr:predicateObjectMap [ rr:predicate <codebase_community/评论发布> ; rr:objectMap [ rr:parentTriplesMap TM_codebase_community_users ; rr:joinCondition [ rr:child "UserId" ; rr:parent "Id" ] ] ] .
+
+TM_codebase_community_postHistory a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "postHistory" ] ;
+  rr:subjectMap [ rr:template "http://example.org/codebase_community/postHistory/{PostId}" ; rr:class <codebase_community/帖子互动> ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/历史类型> ; rr:objectMap [ rr:column "PostHistoryTypeId" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/编辑人> ; rr:objectMap [ rr:column "UserId" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/编辑备注> ; rr:objectMap [ rr:column "Comment" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/文本> ; rr:objectMap [ rr:column "Text" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/创建日期> ; rr:objectMap [ rr:column "CreationDate" ; rr:datatype xsd:string ] ] ;
+  # PAS: 社区帖子 -> 帖子互动
+  rr:predicateObjectMap [ rr:predicate <codebase_community/互动产生> ; rr:objectMap [ rr:parentTriplesMap TM_codebase_community_posts ; rr:joinCondition [ rr:child "PostId" ; rr:parent "Id" ] ] ] ;
+  # >>> FIX: postHistory -> users (UserId)
+  rr:predicateObjectMap [ rr:predicate <codebase_community/编辑发布> ; rr:objectMap [ rr:parentTriplesMap TM_codebase_community_users ; rr:joinCondition [ rr:child "UserId" ; rr:parent "Id" ] ] ] .
+
+TM_codebase_community_postLinks a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "postLinks" ] ;
+  rr:subjectMap [ rr:template "http://example.org/codebase_community/postLinks/{PostId}" ; rr:class <codebase_community/帖子互动> ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/链接ID> ; rr:objectMap [ rr:column "Id" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/关联帖子> ; rr:objectMap [ rr:column "RelatedPostId" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/创建日期> ; rr:objectMap [ rr:column "CreationDate" ; rr:datatype xsd:string ] ] ;
+  # PAS: 社区帖子 -> 帖子互动
+  rr:predicateObjectMap [ rr:predicate <codebase_community/互动产生> ; rr:objectMap [ rr:parentTriplesMap TM_codebase_community_posts ; rr:joinCondition [ rr:child "PostId" ; rr:parent "Id" ] ] ] ;
+  # >>> FIX: postLinks -> posts (RelatedPostId)
+  rr:predicateObjectMap [ rr:predicate <codebase_community/链接目标> ; rr:objectMap [ rr:parentTriplesMap TM_codebase_community_posts ; rr:joinCondition [ rr:child "RelatedPostId" ; rr:parent "Id" ] ] ] .
+
+TM_codebase_community_tags a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "tags" ] ;
+  rr:subjectMap [ rr:template "http://example.org/codebase_community/tags/{TagName}" ; rr:class <codebase_community/标签> ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/标签ID> ; rr:objectMap [ rr:column "Id" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/摘要帖> ; rr:objectMap [ rr:column "ExcerptPostId" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/Wiki帖> ; rr:objectMap [ rr:column "WikiPostId" ; rr:datatype xsd:string ] ] ;
+  # >>> FIX: tags -> posts (ExcerptPostId)
+  rr:predicateObjectMap [ rr:predicate <codebase_community/摘要关联> ; rr:objectMap [ rr:parentTriplesMap TM_codebase_community_posts ; rr:joinCondition [ rr:child "ExcerptPostId" ; rr:parent "Id" ] ] ] ;
+  # >>> FIX: tags -> posts (WikiPostId)
+  rr:predicateObjectMap [ rr:predicate <codebase_community/Wiki关联> ; rr:objectMap [ rr:parentTriplesMap TM_codebase_community_posts ; rr:joinCondition [ rr:child "WikiPostId" ; rr:parent "Id" ] ] ] .
+
+TM_codebase_community_badges a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "badges" ] ;
+  rr:subjectMap [ rr:template "http://example.org/codebase_community/badges/{UserId}" ; rr:class <codebase_community/徽章> ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/徽章ID> ; rr:objectMap [ rr:column "Id" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/徽章名称> ; rr:objectMap [ rr:column "Name" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/获得日期> ; rr:objectMap [ rr:column "Date" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/徽章获得> ; rr:objectMap [ rr:parentTriplesMap TM_codebase_community_users ; rr:joinCondition [ rr:child "UserId" ; rr:parent "Id" ] ] ] .
+
+TM_codebase_community_votes a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "votes" ] ;
+  rr:subjectMap [ rr:template "http://example.org/codebase_community/votes/{PostId}" ; rr:class <codebase_community/投票> ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/投票ID> ; rr:objectMap [ rr:column "Id" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/投票类型> ; rr:objectMap [ rr:column "VoteTypeId" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/悬赏金额> ; rr:objectMap [ rr:column "BountyAmount" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <codebase_community/创建日期> ; rr:objectMap [ rr:column "CreationDate" ; rr:datatype xsd:string ] ] ;
+  # PAS: 社区用户 -> 投票
+  rr:predicateObjectMap [ rr:predicate <codebase_community/投票发起> ; rr:objectMap [ rr:parentTriplesMap TM_codebase_community_users ; rr:joinCondition [ rr:child "UserId" ; rr:parent "Id" ] ] ] ;
+  # >>> FIX: votes -> posts (PostId)
+  rr:predicateObjectMap [ rr:predicate <codebase_community/投票对象> ; rr:objectMap [ rr:parentTriplesMap TM_codebase_community_posts ; rr:joinCondition [ rr:child "PostId" ; rr:parent "Id" ] ] ] .

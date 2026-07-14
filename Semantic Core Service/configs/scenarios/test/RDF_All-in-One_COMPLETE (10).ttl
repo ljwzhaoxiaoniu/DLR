@@ -1,0 +1,58 @@
+# ===== thrombosis_prediction =====
+# Already complete in original RDF (Laboratory->Patient, Examination->Patient both present)
+
+TM_thrombosis_prediction_Patient a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "Patient" ] ;
+  rr:subjectMap [ rr:template "http://example.org/thrombosis_prediction/Patient/{ID}" ; rr:class <thrombosis_prediction/患者> ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/性别> ; rr:objectMap [ rr:column "SEX" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/出生日期> ; rr:objectMap [ rr:column "Birthday" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/诊断结果> ; rr:objectMap [ rr:column "Diagnosis" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/住院状态> ; rr:objectMap [ rr:column "Admission" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/描述> ; rr:objectMap [ rr:column "Description" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/首诊日期> ; rr:objectMap [ rr:column "`First Date`" ; rr:datatype xsd:string ] ] .
+
+TM_thrombosis_prediction_Laboratory a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "Laboratory" ] ;
+  rr:subjectMap [ rr:template "http://example.org/thrombosis_prediction/Laboratory/{ID}" ; rr:class <thrombosis_prediction/实验室检验> ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/血红蛋白> ; rr:objectMap [ rr:column "HGB" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/血小板> ; rr:objectMap [ rr:column "PLT" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/尿酸> ; rr:objectMap [ rr:column "UA" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/乳酸脱氢酶> ; rr:objectMap [ rr:column "LDH" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/总胆固醇> ; rr:objectMap [ rr:column "`T-CHO`" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/谷丙转氨酶> ; rr:objectMap [ rr:column "GPT" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/白蛋白> ; rr:objectMap [ rr:column "ALB" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/IgG> ; rr:objectMap [ rr:column "IGG" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/IgM> ; rr:objectMap [ rr:column "IGM" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/IgA> ; rr:objectMap [ rr:column "IGA" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/C反应蛋白> ; rr:objectMap [ rr:column "CRP" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/抗RNP> ; rr:objectMap [ rr:column "RNP" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/抗SM> ; rr:objectMap [ rr:column "SM" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/抗Scl70> ; rr:objectMap [ rr:column "SC170" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/抗SSB> ; rr:objectMap [ rr:column "SSB" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/抗着丝粒> ; rr:objectMap [ rr:column "CENTROMEA" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/总胆红素> ; rr:objectMap [ rr:column "`T-BIL`" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/尿素氮> ; rr:objectMap [ rr:column "UN" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/肌酐> ; rr:objectMap [ rr:column "CRE" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/白细胞> ; rr:objectMap [ rr:column "WBC" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/纤维蛋白原> ; rr:objectMap [ rr:column "FG" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/红细胞> ; rr:objectMap [ rr:column "RBC" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/凝血酶原时间> ; rr:objectMap [ rr:column "PT" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/肌酸激酶> ; rr:objectMap [ rr:column "CPK" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/谷草转氨酶> ; rr:objectMap [ rr:column "GOT" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/血糖> ; rr:objectMap [ rr:column "GLU" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/甘油三酯> ; rr:objectMap [ rr:column "TG" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/检验申请> ; rr:objectMap [ rr:parentTriplesMap TM_thrombosis_prediction_Patient ; rr:joinCondition [ rr:child "ID" ; rr:parent "ID" ] ] ] .
+
+TM_thrombosis_prediction_Examination a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "Examination" ] ;
+  rr:subjectMap [ rr:template "http://example.org/thrombosis_prediction/Examination/{ID}" ; rr:class <thrombosis_prediction/临床检查> ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/血栓等级> ; rr:objectMap [ rr:column "Thrombosis" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/RVVT> ; rr:objectMap [ rr:column "RVVT" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/KCT> ; rr:objectMap [ rr:column "KCT" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/LAC> ; rr:objectMap [ rr:column "LAC" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/ANA模式> ; rr:objectMap [ rr:column "`ANA Pattern`" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/aCL_IgM> ; rr:objectMap [ rr:column "`aCL IgM`" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/aCL_IgG> ; rr:objectMap [ rr:column "`aCL IgG`" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/aCL_IgA> ; rr:objectMap [ rr:column "`aCL IgA`" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/症状> ; rr:objectMap [ rr:column "Symptoms" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <thrombosis_prediction/临床检查> ; rr:objectMap [ rr:parentTriplesMap TM_thrombosis_prediction_Patient ; rr:joinCondition [ rr:child "ID" ; rr:parent "ID" ] ] ] .

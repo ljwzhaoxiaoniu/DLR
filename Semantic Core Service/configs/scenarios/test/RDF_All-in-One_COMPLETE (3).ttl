@@ -1,0 +1,35 @@
+
+# ===== card_games =====
+
+TM_card_games_cards a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "cards" ] ;
+  rr:subjectMap [ rr:template "http://example.org/card_games/cards/{uuid}" ; rr:class <card_games/卡牌> ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/卡牌ID> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/卡牌名称> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/系列代码> ; rr:objectMap [ rr:column "setCode" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/边框颜色> ; rr:objectMap [ rr:column "borderColor" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/稀有度> ; rr:objectMap [ rr:column "rarity" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/法术力消耗> ; rr:objectMap [ rr:column "convertedManaCost" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/力量> ; rr:objectMap [ rr:column "power" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/画师> ; rr:objectMap [ rr:column "artist" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/边框版本> ; rr:objectMap [ rr:column "frameVersion" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/布局> ; rr:objectMap [ rr:column "layout" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/类型> ; rr:objectMap [ rr:column "types" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/原始类型> ; rr:objectMap [ rr:column "originalType" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/颜色> ; rr:objectMap [ rr:column "colors" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/子类型> ; rr:objectMap [ rr:column "subtypes" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/超类型> ; rr:objectMap [ rr:column "supertypes" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/内容警告> ; rr:objectMap [ rr:column "hasContentWarning" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/是否促销> ; rr:objectMap [ rr:column "isPromo" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/故事焦点> ; rr:objectMap [ rr:column "isStorySpotlight" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/是否无文本> ; rr:objectMap [ rr:column "isTextless" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/EDHRec排名> ; rr:objectMap [ rr:column "edhrecRank" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/可用性> ; rr:objectMap [ rr:column "availability" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/FoilID> ; rr:objectMap [ rr:column "cardKingdomFoilId" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/KingdomID> ; rr:objectMap [ rr:column "cardKingdomId" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/面> ; rr:objectMap [ rr:column "side" ; rr:datatype xsd:string ] ] ;
+  rr:predicateObjectMap [ rr:predicate <card_games/决斗组> ; rr:objectMap [ rr:column "duelDeck" ; rr:datatype xsd:string ] ] .
+
+TM_card_games_legalities a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "legalities" ] ;
+  rr:subjectMap [ rr:template "http://example.org/card_games/legalities/{uuid}" ; rr:class <card_games/卡牌扩展信息> ] ;
