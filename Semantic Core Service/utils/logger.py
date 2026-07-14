@@ -30,15 +30,17 @@ def reset_log_file_for_paradigm(log_path):
 
     Call at the start of a new paradigm serve.
     """
-    # Remove any existing file sinks (keep only the console handler at index 0)
+    # Remove any existing file sinks (keep only the console handlers)
     sinks = list(logger._core.handlers.copy())
-    for sink_id, handler in sinks:
-        sink = handler.get_sink()
-        if hasattr(sink, "file_path") or (hasattr(sink, "_file") and sink._file is not None):
-            try:
+    for sink_id, handler in sinks.items():
+        try:
+            sink = handler
+            if hasattr(sink, "_sink"):
+                sink = sink._sink
+            if hasattr(sink, "file_path") or (hasattr(sink, "_file") and sink._file is not None):
                 logger.remove(sink_id)
-            except Exception:
-                pass
+        except Exception:
+            continue
     # Add new paradigm-specific file sink
     logger.add(
         str(log_path),
