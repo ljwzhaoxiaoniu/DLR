@@ -24,7 +24,7 @@ from pathlib import Path
 
 import click
 
-from utils.logger import logger
+from utils.logger import logger, reset_log_file_for_build
 from config import BASE_DIR, SCENARIOS_DIR, SQLITE_DIR, paradigm_storage
 from mapping.config_loader import ConfigLoader
 from mapping.physical_scanner import PhysicalScanner
@@ -127,6 +127,7 @@ def build(paradigm):
 
 def _build_one(paradigm: str):
     """Build a single paradigm (internal helper)."""
+    reset_log_file_for_build(paradigm)
     preset_files = _scan_paradigm_dir(paradigm)
     if not preset_files:
         return
