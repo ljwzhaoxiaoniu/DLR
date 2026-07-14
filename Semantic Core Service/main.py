@@ -505,6 +505,18 @@ def _serve_all(host: str, base_port: int):
 def reset(paradigm):
     """清除范式的 Graph / 向量数据"""
     paradigm = paradigm.lower()
+    if paradigm == "all":
+        for p in ["er", "dlr", "rdf"]:
+            click.echo(f"\n{'#'*50}")
+            click.echo(f"# 重置范式: {p.upper()}")
+            click.echo(f"{'#'*50}")
+            _reset_one(p)
+        return
+    _reset_one(paradigm)
+
+
+def _reset_one(paradigm: str):
+    """Reset a single paradigm (internal helper)."""
     storage = paradigm_storage(paradigm)
 
     cleared = 0
