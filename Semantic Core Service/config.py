@@ -52,6 +52,11 @@ import time as _time
 _LOG_TIMESTAMP = _time.strftime("%Y-%m-%d_%H-%M-%S")
 LOG_FILE = LOG_DIR / f"app.{_LOG_TIMESTAMP}.log"
 
+
+def paradigm_log_file(paradigm: str, port: int) -> Path:
+    """Return a per-paradigm log file path: log/rdf_28785_2026-07-14_16-30-00.log"""
+    return LOG_DIR / f"{paradigm}_{port}_{_LOG_TIMESTAMP}.log"
+
 # ---------------------------------------------------------------------------
 # Auto-create directories (safe to call at import time)
 # ---------------------------------------------------------------------------

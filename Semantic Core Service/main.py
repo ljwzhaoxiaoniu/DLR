@@ -322,6 +322,9 @@ _PORT_MAP = {
 
 def _serve_one(paradigm: str, host: str, port: int):
     """Run uvicorn for a single paradigm (blocking)."""
+    from config import paradigm_log_file
+    from utils.logger import reset_log_file_for_paradigm
+    reset_log_file_for_paradigm(paradigm_log_file(paradigm, port))
     import uvicorn
     app = _build_serve_app(paradigm)
     access_host = "localhost" if host == "0.0.0.0" else host

@@ -24,4 +24,32 @@ logger.add(
     enqueue=True
 )
 
-__all__ = ["logger"]
+
+def reset_log_file_for_paradigm(log_path):
+    """Remove existing file handlers and switch to a new paradigm-specific log file.
+
+    Call at the start of a new paradigm serve.
+    """
+    # Remove any existing file sinks (keep only the console handler at index 0)
+    sinks = list(logger._core.handlers.copy())
+    for sink_id, handler in sinks:
+        sink = handler.get_sink()
+        if hasattr(sink, "file_path") or (hasattr(sink, "_file") and sink._file is not None):
+            try:
+                logger.remove(sink_id)
+            except Exception:
+                pass
+    # Add new paradigm-specific file sink
+    logger.add(
+        str(log_path),
+        level=LOG_LEVEL,
+        format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} - {message}",
+        rotation="10 MB",
+        retention="30 days",
+        compression="zip",
+        enqueue=True,
+    )
+    logger.info(f"[LOG] 切换到范式日志: {log_path}")
+
+
+__all__ = ["logger", "reset_log_file_for_paradigm"]
