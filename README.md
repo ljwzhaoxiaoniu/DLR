@@ -359,7 +359,7 @@ MCP SSE 端点：
 | 范式 | 页面 | 可视化内容 | 物理引擎 |
 |------|------|-----------|----------|
 | ER | `er.html` | 马卡龙圆形实体 + 灰色属性点 + RELATED_TO 蓝边 | barnesHut: -800 |
-| DLR | `dlr.html` | LE 马卡龙圆 + PE 紫色矩形 + PAS 绿边 + INHERITS 虚线 | barnesHut: -1800 |
+| DLR | `dlr.html` | LE 马卡龙圆 + PE 浅蓝矩形 + PAS 绿边 + INHERITS 虚线 | barnesHut: -1800 |
 | RDF | `rdf.html` | **Plan-A 映射图**：TriplesMap 马卡龙矩形 + 字段蓝点 + JOIN 橙边 | barnesHut: -800（同 ER） |
 
 > **Plan-A vs 原始 triples**：RDF 底层是 4844 个 R2RML 元数据三元组（`rr:subjectMap` / `rr:predicate` 等本体 URI），直接展示对用户不可读。Plan-A 通过 SPARQL 将映射解析为「物理表 + 字段 + JOIN」结构，视觉上和 ER/DLR 同构，正好体现 RDF"有结构但缺业务语义"的特点。
