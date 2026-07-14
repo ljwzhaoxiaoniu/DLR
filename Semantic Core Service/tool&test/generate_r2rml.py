@@ -1,51 +1,27 @@
 """
-R2RML generator — converts per-database DLR YAML configs to W3C-standard R2RML Turtle.
-(returns rc=0) -> test baseline comparison against the prevailing W3C R2RML standard.
+R2RML generator — produces W3C-standard Turtle FROM SQLite real foreign keys.
 
-Mapping rules (DLR → W3C R2RML)
----------------------------------
-DB → one .ttl
-
-1. Per PE table → one rr:TriplesMap
-      rr:logicalTable rr:tableName "<PE.physical_table_name>"
-      rr:subjectMap    rr:template "http://example.org/<db>/<table>/{<A.key>}"
-                        rr:class     <<db>/<LE.biz_name>>
-2. Per PE.private_attribute → rr:predicateObjectMap (nl-indented, W3C-std)
-3. Per PAS relation → rr:referencingObjectMap (many→one). The A attribute is a
-     LE public-attribute biz_name; we reconcile it to a physical column via the
-     C map.
-
-Run (from Semantic Core Service/):
-
-    python tool&test/generate_r2rml.py
-        --scenario-dir configs/scenarios/DLR --output-dir configs/scenarios/RDF
+Rule: rr:referencingObjectMap must reflect actual FK constraints, NOT DLR PAS.
+Source of truth: dev_tables.json (foreign_keys) or PRAGMA foreign_key_list.
 """
 from __future__ import annotations
 
 import argparse
 import io
+import json
 import re
+import sqlite3
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
-import yaml
-
-# make print safe under Windows GBK consoles
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
-sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
-
-# --------------------------------------------------------------------------- #
-# helpers                                                                     #
-# --------------------------------------------------------------------------- #
-# Allow unicode letters (incl Chinese); collapse anything unsafe into "_".
 _UNSAFE_IRI = re.compile(r"[^\w\-.]", re.UNICODE)
 
 
 def _slug(text: str) -> str:
-    s = _UNSAFE_IRI.sub("_", text.strip())
-    return s or "_"
+    return _UNSAFE_IRI.sub("_", text.strip()) or "_"
 
 
 def _bare(qcol: str) -> str:
@@ -53,18 +29,10 @@ def _bare(qcol: str) -> str:
 
 
 def _s(x: str) -> str:
-    # rdflib/N3 parser treats backticks inside string literals as syntax error
-    v = x.replace('\\', '\\\\').replace('"', '\\"').replace('`', '')
+    v = x.replace("\\", "\\\\").replace('"', '\\"').replace("`", "")
     return f'"{v}"'
 
 
-def _u(iri: str) -> str:
-    return f"<{iri}>"
-
-
-# --------------------------------------------------------------------------- #
-# Turtle builder                                                              #
-# --------------------------------------------------------------------------- #
 class Ttl:
     def __init__(self):
         self._lines: List[str] = []
@@ -82,268 +50,174 @@ class Ttl:
     def blank(self):
         self._lines.append("")
 
-    def line(self, s: str = ""):
-        self._lines.append(s)
-
     def text(self) -> str:
         return "\n".join(self._lines) + "\n"
 
 
-# --------------------------------------------------------------------------- #
-# core                                                                        #
-# --------------------------------------------------------------------------- #
-def gen(db_name: str, db_url: str,
-        les: List[Dict], pas_list: List[Dict]) -> str:
-    ttl = Ttl()
+def load_fks(sqlite_dir: Path, db_name: str) -> List[Tuple[str, str, str, str]]:
+    """Read foreign keys from SQLite via PRAGMA. Returns [(from_table, from_col, to_table, to_col), ...]."""
+    db_path = sqlite_dir / db_name / f"{db_name}.sqlite"
+    if not db_path.exists():
+        return []
+    try:
+        conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+        cur = conn.cursor()
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        tables = [r[0] for r in cur.fetchall()]
+        fks = []
+        for tbl in tables:
+            cur.execute(f"PRAGMA foreign_key_list('{tbl}')")
+            for row in cur.fetchall():
+                # id, seq, table, from, to, on_update, on_delete, match
+                _, _, parent_tbl, from_col, to_col, *_ = row
+                fks.append((tbl, from_col, parent_tbl, to_col))
+        conn.close()
+        return fks
+    except Exception:
+        return []
 
+
+def gen(
+    db_name: str,
+    db_url: str,
+    tables: List[str],
+    fks: List[Tuple[str, str, str, str]],
+    sqlite_dir: Path,
+    description: str = "",
+) -> str:
+    ttl = Ttl()
     ttl.pfx("rr",     "http://www.w3.org/ns/r2rml#")
     ttl.pfx("rdf",    "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
     ttl.pfx("rdfs",   "http://www.w3.org/2000/01/rdf-schema#")
     ttl.pfx("xsd",    "http://www.w3.org/2001/XMLSchema#")
-    ttl.pfx("dlr",    "http://example.org/dlr#")
-    ttl.pfx("schema", "http://schema.org/")
     ttl.pfx("ex",     "http://example.org/")
     ttl.blank()
-
-    ttl.cm(f"R2RML mapping — database: {db_name}")
-    ttl.cm(f"Source URL: {db_url}")
-    ttl.cm(f"LE={len(les)} PE={sum(len(x.get('physical_entities', [])) for x in les)} "
-           f"PAS={len(pas_list)}")
-    ttl.cm("Auto-generated by generate_r2rml.py — W3C R2RML compliant")
+    ttl.cm(f"R2RML — database: {db_name}")
+    ttl.cm(f"URL: {db_url}")
+    ttl.cm(f"Tables: {len(tables)}  ForeignKeys: {len(fks)}")
+    ttl.cm(f"Source: real FK constraints (PRAGMA foreign_key_list)")
     ttl.blank()
 
-    # index LE by biz_name
-    le_by_biz: Dict[str, Dict] = {}
-    for le in les:
-        le_by_biz[le["biz_name"]] = le
+    # Get column info per table directly from SQLite
+    sqlite_path = sqlite_dir / db_name / f"{db_name}.sqlite"
+    cols_map: Dict[str, List[Tuple[str, str]]] = {}
+    pk_map: Dict[str, str] = {}
+    if sqlite_path.exists():
+        try:
+            conn = sqlite3.connect(f"file:{sqlite_path}?mode=ro", uri=True)
+            cur = conn.cursor()
+            for tbl in tables:
+                cur.execute(f"PRAGMA table_info('{tbl}')")
+                cols = []
+                pk = None
+                for row in cur.fetchall():
+                    # cid, name, type, notnull, dflt_value, pk
+                    cid, name, ctype, notnull, dflt, is_pk = row
+                    cols.append((name, ctype or "TEXT"))
+                    if is_pk:
+                        pk = name
+                cols_map[tbl] = cols
+                pk_map[tbl] = pk or cols[0][0] if cols else "id"
+            conn.close()
+        except Exception:
+            pass
 
-    # ---------------------------------------------------------------------- #
-    # (1) TriplesMaps per PE                                                 #
-    # ---------------------------------------------------------------------- #
-    pe_tm: Dict[str, str] = {}          # pe_id -> TM string
+    # Group FKs by child table
+    fks_by_child: Dict[str, List[Tuple[str, str, str]]] = {}
+    for from_tbl, from_col, to_tbl, to_col in fks:
+        fks_by_child.setdefault(from_tbl, []).append((from_col, to_tbl, to_col))
 
-    def emit_tm(le_biz: str, pe: Dict) -> str:
-        tid = pe["physical_entity_id"]
-        tbl = pe["physical_table_name"]
-        akey = pe["A"]["key"]
-        # Use absolute IRI so rdflib doesn't try to parse the colon as CURIE prefix
-        tm_iri = f"<http://example.org/tm/{db_name}/{tbl}>"
-        pe_tm[tid] = tm_iri
+    for tbl in tables:
+        tbl_lower = tbl.lower()
+        pk = pk_map.get(tbl, tbl)
+        iri = f"http://example.org/{db_name}/{{{pk}}}"
 
-        body: List[str] = []
-        body.append(
-            f"rr:logicalTable [ rr:tableName {_s(tbl)} ]"
-        )
-        tmpl = f"http://example.org/{db_name}/{tbl}/{{{_slug(akey)}}}"
-        # class IRI uses the 'ex:' prefix defined in default prefix block
-        cls = f"ex:{_slug(le_biz)}"
-        body.append(
-            f"rr:subjectMap [ rr:template {_s(tmpl)} ; rr:class {cls} ]"
-        )
-        for attr in pe.get("private_attributes") or []:
-            biz = attr["biz_name"] or _bare(attr["physical_column_id"])
-            col_bare = _bare(attr["physical_column_id"])
-            pred = _u(f"{_slug(db_name)}/{_slug(biz)}")
-            body.append(
+        ttl.cm(f"=== Table: {db_name}.{tbl} (pk={pk}) ===")
+        ttl.raw(f"<http://example.org/tm/{db_name}/{tbl}> a rr:TriplesMap ;")
+        ttl.raw(f"    rr:logicalTable [ rr:tableName {_s(tbl)} ] ;")
+        ttl.raw(f"    rr:subjectMap [ rr:template {_s(iri)} ; rr:class ex:{_slug(tbl)} ] ;")
+
+        # Build all predicate-object entries for this TM (columns + FKs).
+        # In Turtle: head + "\n    pred ;\n    pred ." format.
+        entries: List[str] = []
+        cols = cols_map.get(tbl, [])
+        for col_name, col_type in cols:
+            if col_name == pk:
+                continue
+            pred = f"<http://example.org/{_slug(tbl)}/{_slug(col_name)}>"
+            entries.append(
                 f"rr:predicateObjectMap [ "
                 f"rr:predicate {pred} ; "
-                f"rr:objectMap [ rr:column {_s(col_bare)} ; rr:datatype xsd:string ] "
+                f"rr:objectMap [ rr:column {_s(col_name)} ; rr:datatype xsd:string ] "
+                f"]"
+            )
+        for from_col, parent_tbl, parent_col in fks_by_child.get(tbl, []):
+            actual_parent_col = parent_col if parent_col else pk_map.get(parent_tbl, from_col)
+            pred = f"<http://example.org/{_slug(tbl)}/refers_to_{_slug(parent_tbl)}>"
+            entries.append(
+                f"rr:predicateObjectMap [ "
+                f"rr:predicate {pred} ; "
+                f"rr:objectMap [ "
+                f"rr:parentTriplesMap <http://example.org/tm/{db_name}/{parent_tbl}> ; "
+                f"rr:joinCondition [ rr:child {_s(from_col)} ; rr:parent {_s(actual_parent_col)} ] "
+                f"] "
                 f"]"
             )
 
-        ttl.cm(f"=== Table: {pe['physical_table_id']} (PE {tid} -> LE {le_biz}) ===")
-        # Turtle: short lines (one predicate per line) parse reliably with rdflib.
-        # First predicate goes on same line as the head, with `;` after each item.
-        if body:
-            ttl.line(f"{tm_iri} a rr:TriplesMap ; {body[0]} ;")
-            for ln in body[1:-1]:
-                ttl.line(f"    {ln} ;")
-            ttl.line(f"    {body[-1]} .")
-        else:
-            ttl.line(f"{tm_iri} a rr:TriplesMap .")
+        for i, entry in enumerate(entries):
+            is_last = (i == len(entries) - 1)
+            sep = " ." if is_last else " ;"
+            ttl.raw(f"    {entry}{sep}")
+
+        if not entries:
+            ttl.raw(f"    .")
         ttl.blank()
-        return tm_iri
 
-    for le in les:
-        for pe in le.get("physical_entities", []) or []:
-            emit_tm(le["biz_name"], pe)
-
-    # ---------------------------------------------------------------------- #
-    # (2) PAS relations -> referencingObjectMap                              #
-    # ---------------------------------------------------------------------- #
-    skipped = 0
-    done = 0
-
-    def resolve_attr_id(biz_name: str) -> Optional[str]:
-        """Given a LE public-attribute biz_name in this db, return its attr_id."""
-        for le in les:
-            for pa in le.get("public_attributes") or []:
-                if pa.get("biz_name") == biz_name:
-                    return pa["attr_id"]
-        return None
-
-    for rel in pas_list:
-        rel_name = rel["relation_name"]
-        fwd = (rel.get("P") or {}).get("forward") or {}
-        pA = rel.get("A")                     # LE-side public-attr biz_name
-        # from_biz / to_biz
-        m = re.match(r"^LOGICAL\.(.+)_TO_LOGICAL\.(.+)$", rel["relation_id"])
-        if not m:
-            skipped += 1
-            ttl.cm(f"# PAS (cannot parse relation_id {rel['relation_id']}); skipped")
-            continue
-        from_biz, to_biz = m.group(1), m.group(2)
-
-        from_le = le_by_biz.get(from_biz)
-        to_le   = le_by_biz.get(to_biz)
-        if not from_le or not to_le:
-            skipped += 1
-            ttl.cm(f"# PAS {from_biz}->{to_biz}: LE not found; skipped")
-            continue
-
-        attr_id = resolve_attr_id(pA)
-        if not attr_id:
-            skipped += 1
-            ttl.cm(f"# PAS {from_biz}->{to_biz}: cannot resolve attr {pA}; skipped")
-            continue
-
-        # parent PE: the (from_le) PE owning attr_id in C map
-        parent_pe = None
-        for pe in from_le.get("physical_entities") or []:
-            if attr_id in (pe.get("C") or {}):
-                parent_pe = pe
-                break
-        if not parent_pe:
-            # fallback: first 1:1 PE in from_le
-            for pe in from_le.get("physical_entities") or []:
-                if (pe.get("A") or {}).get("cardinality", "").startswith("1:1"):
-                    parent_pe = pe
-                    break
-            if not parent_pe:
-                from_pes = from_le.get("physical_entities") or []
-                parent_pe = from_pes[0] if from_pes else None
-        if not parent_pe:
-            skipped += 1
-            ttl.cm(f"# PAS {from_biz}->{to_biz}: no parent PE; skipped")
-            continue
-
-        # parent pk column (via C map, fallback to A.key)
-        p_cmap = parent_pe.get("C") or {}
-        parent_pk = _bare(p_cmap.get(attr_id, parent_pe["A"]["key"]))
-
-        # child PE(s)
-        # Strategy A: child PE has the same attr_id in its C map (direct semantically-linked)
-        # Strategy B: child PE has private_attr matching by biz_name == PAS.A  (type-2 link)
-        # Strategy C (fallback): build child SQL query that joins through the parent PE
-        #                          via a M:N bridge, using a rr:logicalTable rr:sqlQuery.
-        children: List[tuple] = []   # (pe, join_col_bare)
-        col_by_biz: Dict[str, str] = {}
-        for pe in to_le.get("physical_entities") or []:
-            cmap = pe.get("C") or {}
-            for aid, qcol in cmap.items():
-                biz = ""
-                # resolve biz_name of the LE attr_id
-                for pa in to_le.get("public_attributes") or []:
-                    if pa["attr_id"] == aid:
-                        biz = pa["biz_name"]; break
-                col_by_biz[biz] = _bare(qcol)
-                if aid == attr_id:
-                    children.append((pe, _bare(qcol)))
-        if not children and pA in col_by_biz:
-            # strategy B: to_le has the PAS.A attribute by biz_name (different attr_id, same column)
-            join_col = col_by_biz[pA]
-            for pe in to_le.get("physical_entities") or []:
-                cmap = pe.get("C") or {}
-                for aid, qcol in cmap.items():
-                    biz = ""
-                    for pa in to_le.get("public_attributes") or []:
-                        if pa["attr_id"] == aid:
-                            biz = pa["biz_name"]; break
-                    if biz == pA:
-                        children.append((pe, join_col))
-                        break
-        if not children:
-            # strategy C: parent_pk column-name appears in child PE's C map OR private_attrs (name equality)
-            for pe in to_le.get("physical_entities") or []:
-                found = False
-                for qcol in (pe.get("C") or {}).values():
-                    if _bare(qcol) == parent_pk:
-                        children.append((pe, parent_pk)); found = True; break
-                if not found:
-                    for a in pe.get("private_attributes") or []:
-                        if _bare(a["physical_column_id"]) == parent_pk:
-                            children.append((pe, parent_pk)); found = True; break
-                if found:
-                    break
-
-        if not children:
-            skipped += 1
-            ttl.cm(f"# PAS {from_biz}->{to_biz}: cannot resolve child PE; skipped")
-            continue
-
-        ttl.cm(f"=== PAS {from_biz} -[{rel_name}]-> {to_biz}  "
-               f"(forward: {fwd.get('verb', '?')} {fwd.get('cardinality', '')}) ===")
-
-        for c_pe, c_col in children:
-            c_tm = pe_tm[c_pe["physical_entity_id"]]
-            parent_tm = pe_tm[parent_pe["physical_entity_id"]]
-            p_iri = _u(f"{_slug(db_name)}/{_slug(rel_name)}")
-
-            # W3C-compliant: augment child TM with a predicateObjectMap whose
-            # object is a referencingObjectMap (parentTriplesMap + joinCondition).
-            # Each child_triple_line on its own line with `;` at end.
-            aug = (
-                f"{c_tm} "  # reuse child TM IRI
-                f"rr:predicateObjectMap [ "
-                f"rr:predicate {p_iri} ; "
-                f"rr:objectMap [ "
-                f"rr:parentTriplesMap {parent_tm} ; "
-                f"rr:joinCondition [ rr:child {_s(c_col)} ; rr:parent {_s(parent_pk)} ] "
-                f"] "
-                f"] ."
-            )
-            ttl.line(aug)
-            ttl.blank()
-            done += 1
-
-    ttl.cm(f"# PAS emitted: {done}  skipped: {skipped}")
-    ttl.blank()
     return ttl.text()
 
 
-# --------------------------------------------------------------------------- #
-# CLI                                                                         #
-# --------------------------------------------------------------------------- #
-def main(argv: Optional[List[str]] = None) -> int:
-    parser = argparse.ArgumentParser(description="Generate W3C R2RML Turtle from DLR YAML")
-    parser.add_argument("--scenario-dir", type=Path, default=Path("configs/scenarios/DLR"))
-    parser.add_argument("--output-dir",   type=Path, default=Path("configs/scenarios/RDF"))
-    args = parser.parse_args(argv)
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Generate W3C R2RML from real FK constraints")
+    parser.add_argument("--sqlite-dir", type=Path,
+                        default=Path("D:/Code_Proj/DLR Proj/MINIDEV_sqlite/dev_databases"),
+                        help="SQLite databases directory")
+    parser.add_argument("--output-dir", type=Path,
+                        default=Path("D:/Code_Proj/DLR Proj/Semantic Core Service/configs/scenarios/RDF"))
+    args = parser.parse_args()
 
-    sdir, odir = args.scenario_dir, args.output_dir
-    if not sdir.is_dir():
-        print(f"ERR scenario-dir not found: {sdir}")
+    # parse sqlite dir for available databases
+    if not args.sqlite_dir.is_dir():
+        print(f"❌ sqlite-dir not found: {args.sqlite_dir}")
         return 1
 
-    yamls = sorted(sdir.glob("*.yaml"))
-    if not yamls:
-        print(f"WARN no yaml in {sdir}")
-        return 0
+    dbs = sorted(d for d in args.sqlite_dir.iterdir() if d.is_dir() and (d / f"{d.name}.sqlite").exists())
+    if not dbs:
+        print(f"❌ no SQLite databases in {args.sqlite_dir}")
+        return 1
 
-    odir.mkdir(parents=True, exist_ok=True)
-    print(f"R2RML generator — {len(yamls)} dbs -> {odir}")
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    print(f"R2RML generator (FK-driven) — {len(dbs)} dbs -> {args.output_dir}")
 
-    for yf in yamls:
-        d = yaml.safe_load(yf.read_text(encoding="utf-8"))
-        db_name, db_url = next(iter(d.get("databases", {}).items()))
-        txt = gen(db_name, db_url,
-                  d.get("logical_entities") or [],
-                  d.get("pas_relations") or [])
-        out = odir / f"{db_name}.ttl"
-        out.write_text(txt, encoding="utf-8")
-        print(f"  {yf.name} -> {out.name}  ({len(txt.splitlines())} lines)")
+    for db_dir in dbs:
+        db_name = db_dir.name
+        db_url = f"sqlite:///{db_dir}/{db_name}.sqlite"
 
-    print(f"DONE: {len(yamls)} ttl")
+        # get tables
+        conn = sqlite3.connect(f"file:{db_dir}/{db_name}.sqlite?mode=ro", uri=True)
+        cur = conn.cursor()
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
+        tables = [r[0] for r in cur.fetchall()]
+        conn.close()
+
+        fks = load_fks(args.sqlite_dir, db_name)
+        txt = gen(db_name, db_url, tables, fks, args.sqlite_dir)
+        out = args.output_dir / f"{db_name}.ttl"
+        # binary write to avoid Windows CRLF (\r\n) which breaks Turtle parser
+        out.write_bytes(txt.encode("utf-8"))
+
+        print(f"  {db_name}: {len(tables)} tables, {len(fks)} FKs -> {out.name}")
+
+    print(f"\nDONE: {len(dbs)} ttl written to {args.output_dir}")
     return 0
 
 
