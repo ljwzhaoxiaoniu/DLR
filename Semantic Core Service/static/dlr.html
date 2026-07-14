@@ -263,13 +263,15 @@
             inherits: {},        // PE→LE mapping
             arcsCMapping: {},    // PE→C_column mapping (for inherited attr detection)
             network: null,
-            edgeData: {}
+            edgeData: {},
+            selectedNodeId: null   // 当前高亮的 PE/LE 节点 id
         },
 
         CONST: {
             ATTR_NODE_SUFFIX: '_attr_',
             LE_NODE_PREFIX: 'LE_',
             UNKNOWN_LABEL: '未知',
+            // 属性节点不再渲染到图谱,仅 ARCS/详情面板使用
             // LE马卡龙颜色（圆形）
             LE_COLORS: [
                 '#FFB5BA', '#FFDAB9', '#FFF6CC', '#C1E6C6', '#A8E6CF',
@@ -526,16 +528,19 @@
         });
 
         // === PE节点：紫色矩形（中） ===
+        // 属性不渲染到图谱, 但把属性数作为 sublabel 显示在节点上, 让用户知道"这里有东西可点"
         SemanticVis.state.entities.forEach(pe => {
             const id = pe.entity_id || SemanticVis.CONST.UNKNOWN_LABEL;
             const name = pe.name || SemanticVis.CONST.UNKNOWN_LABEL;
             const hasParent = !!SemanticVis.state.inherits[id];
+            const attrCount = attrsToArray(pe.attributes).length;
 
             nodes.push({
                 id: id,
-                label: name,
+                label: name + (attrCount > 0 ? '\n[' + attrCount + ' 属性]' : ''),
                 title: '物理实体: ' + name + '\nID: ' + id +
-                       (pe.source_table ? '\n表: ' + pe.source_table : ''),
+                       (pe.source_table ? '\n表: ' + pe.source_table : '') +
+                       (attrCount > 0 ? '\n属性数: ' + attrCount + ' (点击查看详情)' : ''),
                 color: SemanticVis.CONST.PE_COLOR,
                 font: { color: '#333333', size: 12, face: 'Arial', bold: true },
                 borderWidth: 2,
@@ -545,90 +550,8 @@
                 group: 'physical_entity'
             });
 
-            // 属性节点：继承key用彩色圆形，专有属性用灰色圆形
-            const attrsList = attrsToArray(pe.attributes);
-            const maxAttrs = 10;
-            attrsList.slice(0, maxAttrs).forEach((attr, attrIdx) => {
-                const attrName = getAttrName(attr._key || attr.name || ('attr' + attrIdx), attr);
-                const physicalColId = getAttrPhysicalColId(attr);
-                if (!attrName) return;
-
-                // 用physical_column_id做唯一节点ID（避免中文key问题）
-                const attrNodeId = id + SemanticVis.CONST.ATTR_NODE_SUFFIX + (physicalColId || attrName);
-                const attrLabel = attrName.length > 6 ? attrName.substring(0, 6) + '..' : attrName;
-                const isAnchor = isAnchorKeyAttr(id, attr);
-                const isMapped = !isAnchor && isMappingAttr(id, attr);
-
-                if (isAnchor) {
-                    // A_anchor身份锚点：橘黄色
-                    nodes.push({
-                        id: attrNodeId,
-                        label: attrLabel,
-                        title: '[身份Key] ' + attrName + '\n物理列: ' + (physicalColId || '-'),
-                        color: SemanticVis.CONST.ANCHOR_KEY_ATTR_COLOR,
-                        font: { color: '#fff', size: 11, face: 'Arial', bold: true },
-                        borderWidth: 2,
-                        shape: 'circle',
-                        size: 18,
-                        group: 'key_attribute'
-                    });
-                    edges.push({
-                        id: id + '_attr_' + (physicalColId || attrName),
-                        from: id,
-                        to: attrNodeId,
-                        color: SemanticVis.CONST.ANCHOR_KEY_ATTR_EDGE_COLOR,
-                        width: 1.5,
-                        arrows: '',
-                        smooth: true,
-                        length: 70
-                    });
-                } else if (isMapped) {
-                    // C_column映射属性：蓝色
-                    nodes.push({
-                        id: attrNodeId,
-                        label: attrLabel,
-                        title: '[映射Key] ' + attrName + '\n物理列: ' + (physicalColId || '-'),
-                        color: SemanticVis.CONST.MAPPING_ATTR_COLOR,
-                        font: { color: '#fff', size: 11, face: 'Arial', bold: true },
-                        borderWidth: 2,
-                        shape: 'circle',
-                        size: 18,
-                        group: 'key_attribute'
-                    });
-                    edges.push({
-                        id: id + '_attr_' + (physicalColId || attrName),
-                        from: id,
-                        to: attrNodeId,
-                        color: SemanticVis.CONST.MAPPING_ATTR_EDGE_COLOR,
-                        width: 1,
-                        arrows: '',
-                        smooth: true,
-                        length: 70
-                    });
-                } else {
-                    nodes.push({
-                        id: attrNodeId,
-                        label: attrLabel,
-                        title: attrName,
-                        color: SemanticVis.CONST.PRIVATE_ATTR_COLOR,
-                        font: { color: '#fff', size: 10, face: 'Arial' },
-                        borderWidth: 1,
-                        shape: 'circle',
-                        size: 14,
-                        group: 'attribute'
-                    });
-                    edges.push({
-                        id: id + '_attr_' + (physicalColId || attrName),
-                        from: id,
-                        to: attrNodeId,
-                        color: SemanticVis.CONST.PRIVATE_ATTR_EDGE_COLOR,
-                        width: 0.5,
-                        arrows: '',
-                        smooth: true,
-                        length: 60
-                    });
-                }
-            });
+            // 属性节点不再渲染到图谱 —— 点击 PE 节点时右侧详情面板展示 ARCS + 属性
+            // (避免小属性圆爆炸式展开导致图谱混乱，与 ER 范式保持同一风格)
         });
 
         // === INHERITS边 (PE→LE) ===
@@ -815,14 +738,20 @@
                 if (params.nodes.length > 0) {
                     const nodeId = params.nodes[0];
                     if (nodeId.startsWith(SemanticVis.CONST.LE_NODE_PREFIX)) {
+                        SemanticVis.state.selectedNodeId = nodeId;
                         showLEDetail(nodeId);
-                    } else if (nodeId.includes(SemanticVis.CONST.ATTR_NODE_SUFFIX)) {
-                        showAttributeDetail(nodeId);
                     } else {
+                        // PE 节点: 展示 ARCS + 属性详情
+                        SemanticVis.state.selectedNodeId = nodeId;
                         showEntityDetail(nodeId);
                     }
+                    updateEntityListHighlight();
                 } else if (params.edges.length > 0) {
                     showEdgeDetail(params.edges[0]);
+                } else {
+                    // 点击空白: 取消高亮
+                    SemanticVis.state.selectedNodeId = null;
+                    updateEntityListHighlight();
                 }
             });
         } catch (error) {
@@ -1168,6 +1097,8 @@
                 }
             }
 
+            SemanticVis.state.selectedNodeId = entityId;
+
             if (entityType === 'le') {
                 showLEDetail(entityId);
             } else {
@@ -1177,7 +1108,25 @@
 
         document.getElementById('closeAttr').addEventListener('click', function() {
             document.getElementById('attrPanel').style.display = 'none';
+            // 关闭详情面板时清除高亮选中的图谱 + 列表
+            SemanticVis.state.selectedNodeId = null;
+            updateEntityListHighlight();
+            if (SemanticVis.state.network) SemanticVis.state.network.unselectAll();
         });
+    }
+
+    // 当图谱节点被点击/取消时, 同步高亮左侧列表里的对应条目
+    function updateEntityListHighlight() {
+        document.querySelectorAll('.entity-item').forEach(el => {
+            el.classList.remove('active');
+        });
+        const id = SemanticVis.state.selectedNodeId;
+        if (!id) return;
+        const el = document.querySelector('.entity-item[data-id="' + id + '"]');
+        if (el) {
+            el.classList.add('active');
+            el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
     }
 
     async function init() {
