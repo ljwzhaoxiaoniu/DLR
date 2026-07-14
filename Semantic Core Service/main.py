@@ -310,6 +310,16 @@ def _build_serve_app(paradigm: str):
     return app
 
 
+# Port convention: 287[6,7,8][5,6,7]
+#   tens digit:  6=ER, 7=DLR, 8=RDF
+#   ones digit:  5=web, 6=api, 7=mcp
+_PORT_MAP = {
+    "er":  {"web": 28765, "api": 28766, "mcp": 28767},
+    "dlr": {"web": 28775, "api": 28776, "mcp": 28777},
+    "rdf": {"web": 28785, "api": 28786, "mcp": 28787},
+}
+
+
 def _serve_one(paradigm: str, host: str, port: int):
     """Run uvicorn for a single paradigm (blocking)."""
     import uvicorn
@@ -324,35 +334,42 @@ def _serve_one(paradigm: str, host: str, port: int):
 # ---------------------------------------------------------------------------
 @cli.command()
 @PARADIGM
-@click.option("--port", default=28765, help="服务监听端口")
+@click.option("--port", default=None, type=int, help="服务监听端口 (默认根据范式自动选定)")
 @click.option("--host", default="0.0.0.0", help="服务监听地址")
 def serve(paradigm, host, port):
-    """启动 HTTP API + MCP SSE 服务 (覆盖范式下所有数据库)"""
+    """启动 HTTP API + MCP SSE 服务 (覆盖范式下所有数据库)
+
+    端口 conventions:
+      ER  web/api/mcp = 28765/28766/28767
+      DLR web/api/mcp = 28775/28776/28777
+      RDF web/api/mcp = 28785/28786/28787
+    """
     paradigm = paradigm.lower()
     if paradigm == "all":
-        _serve_all(host, port)
+        _serve_all(host)
         return
+    if port is None:
+        port = _PORT_MAP[paradigm]["web"]
     _serve_one(paradigm, host, port)
 
 
-def _serve_all(host: str, base_port: int):
-    """Spawn 3 SEPARATE python processes, one per paradigm, on consecutive ports.
+def _serve_all(host: str):
+    """Spawn 3 SEPARATE python processes, one per paradigm, on conventional ports.
 
-    ER  → base_port     (default 28765)
-    DLR → base_port + 1 (default 28766)
-    RDF → base_port + 2 (default 28767)
+    ER  → 28765
+    DLR → 28775
+    RDF → 28785
     """
     import subprocess, sys
     procs = []
     click.echo(f"\n{'='*50}")
     click.echo("ALL 模式: 启动 3 个独立服务")
-    for i, p in enumerate(["er", "dlr", "rdf"]):
-        port = base_port + i
+    for p in ["er", "dlr", "rdf"]:
+        port = _PORT_MAP[p]["web"]
         click.echo(f"  {p.upper():3s} -> http://localhost:{port}/")
         proc = subprocess.Popen(
             [sys.executable, __file__, "serve", "--paradigm", p,
              "--host", host, "--port", str(port)],
-            # Windows: new Ctrl-C group so parent can kill children cleanly
             **({"creationflags": 0x00000200} if sys.platform == "win32" else {}),
         )
         procs.append((p, port, proc))
@@ -360,7 +377,6 @@ def _serve_all(host: str, base_port: int):
     click.echo("3 个服务已全部拉起. Ctrl-C 全部退出.\n")
 
     try:
-        # block until any child exits OR user hits Ctrl-C
         while True:
             import time
             time.sleep(2)
