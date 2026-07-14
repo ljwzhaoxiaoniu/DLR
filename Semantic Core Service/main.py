@@ -328,7 +328,7 @@ def _serve_one(paradigm: str, host: str, port: int):
     import uvicorn
     app = _build_serve_app(paradigm)
     access_host = "localhost" if host == "0.0.0.0" else host
-    logger.info(f"🌐 {paradigm.upper()} -> http://{access_host}:{port}/  (API / MCP /mcp/sse)")
+    logger.info(f"[SERVE] {paradigm.upper()} -> http://{access_host}:{port}/  (API / MCP /mcp/sse)")
     uvicorn.run(app, host=host, port=port, log_level="info")
 
 

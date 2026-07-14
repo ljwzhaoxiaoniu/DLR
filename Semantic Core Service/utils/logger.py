@@ -31,13 +31,16 @@ def reset_log_file_for_paradigm(log_path):
     Call at the start of a new paradigm serve.
     """
     # Remove any existing file sinks (keep only the console handlers)
-    sinks = list(logger._core.handlers.copy())
-    for sink_id, handler in sinks.items():
+    # Snapshot as list of (id, handler) tuples since we mutate during iteration
+    sinks = list(logger._core.handlers.items())
+    for sink_id, handler in sinks:
         try:
-            sink = handler
-            if hasattr(sink, "_sink"):
-                sink = sink._sink
-            if hasattr(sink, "file_path") or (hasattr(sink, "_file") and sink._file is not None):
+            # handler is a loguru Handler; its underlying sink is handler._sink
+            sink = getattr(handler, "_sink", handler)
+            is_file = (
+                hasattr(sink, "_file") and sink._file is not None
+            ) or hasattr(sink, "file_path")
+            if is_file:
                 logger.remove(sink_id)
         except Exception:
             continue
