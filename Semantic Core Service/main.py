@@ -201,7 +201,11 @@ def _build_one(paradigm: str):
 # serve_app — build a FastAPI app for one paradigm (reused by serve / serve_all)
 # ---------------------------------------------------------------------------
 def _build_serve_app(paradigm: str):
-    """Construct the FastAPI app for a single paradigm. Returns (app, graph_db)."""
+    """Construct the FastAPI app for a single paradigm.
+
+    GraphDB is NOT opened here — it is created lazily on first API call.
+    This avoids Kuzu file-lock conflicts when _serve_all spawns subprocesses.
+    """
     from fastapi import FastAPI
     from fastapi.staticfiles import StaticFiles
     from fastapi.responses import RedirectResponse
@@ -211,8 +215,21 @@ def _build_serve_app(paradigm: str):
     os.environ["KUZU_DIR"] = str(storage["graph"])
     os.environ["VECTOR_DIR"] = str(storage["vector"])
 
-    graph_db = GraphDB(db_path=str(storage["graph"]), mapping_type=paradigm)
-    query_svc = QueryService(mapping_type=paradigm, graph_db=graph_db)
+    # Lazy singletons — created on first request, not at import time
+    _lazy_graph_db = None
+    _lazy_query_svc = None
+
+    def _get_graph_db():
+        nonlocal _lazy_graph_db
+        if _lazy_graph_db is None:
+            _lazy_graph_db = GraphDB(db_path=str(storage["graph"]), mapping_type=paradigm)
+        return _lazy_graph_db
+
+    def _get_query_svc():
+        nonlocal _lazy_query_svc
+        if _lazy_query_svc is None:
+            _lazy_query_svc = QueryService(mapping_type=paradigm, graph_db=_get_graph_db())
+        return _lazy_query_svc
 
     app = FastAPI(title=f"语义元数据查询API [{paradigm.upper()}]", version="1.0.0")
 
@@ -234,22 +251,22 @@ def _build_serve_app(paradigm: str):
 
     @app.post("/api/v1/query")
     async def api_query(req: QueryRequest):
-        return query_svc.query(req.question)
+        return _get_query_svc().query(req.question)
 
     @app.get("/api/v1/entities")
     async def get_all_entities():
-        return graph_db.get_all_entities()
+        return _get_graph_db().get_all_entities()
 
     @app.get("/api/v1/graph")
     async def get_graph_data():
-        return {"entities": graph_db.get_all_entities(),
-                "relations": graph_db.get_all_relations()}
+        return {"entities": _get_graph_db().get_all_entities(),
+                "relations": _get_graph_db().get_all_relations()}
 
     @app.get("/api/v1/dlr/graph")
     async def get_dlr_graph():
         if paradigm != "dlr":
             return {"error": "not in dlr paradigm"}
-        return graph_db.get_dlr_graph_data()
+        return _get_graph_db().get_dlr_graph_data()
 
     # ─── RDF / W3C-standard endpoints (only in rdf paradigm) ───────────────
     if paradigm == "rdf":
