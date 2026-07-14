@@ -172,7 +172,7 @@ def _build_one(paradigm: str):
         model = mapper.parse(config_data, preset_tables)
         # Get entity list regardless of paradigm — DLR uses logical_entities,
         # ER/RDF use biz_entities.
-        if hasattr(model, "logical_entities") and Paradigm == "dlr":
+        if hasattr(model, "logical_entities") and paradigm == "dlr":
             ents = model.logical_entities
         else:
             ents = model.biz_entities
