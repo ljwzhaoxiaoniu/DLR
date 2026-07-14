@@ -158,7 +158,12 @@ def build(paradigm):
             preset_tables = all_tables
 
         model = mapper.parse(config_data, preset_tables)
-        ents = model.biz_entities if paradigm == "er" else model.logical_entities
+        # Get entity list regardless of paradigm — DLR uses logical_entities,
+        # ER/RDF use biz_entities.
+        if hasattr(model, "logical_entities") and Paradigm == "dlr":
+            ents = model.logical_entities
+        else:
+            ents = model.biz_entities
         if not ents:
             logger.error("  [FAIL] no entities generated")
             fail_count += 1

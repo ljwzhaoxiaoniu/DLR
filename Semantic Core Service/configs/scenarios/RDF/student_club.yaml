@@ -1,0 +1,7 @@
+mapping_type: "rdf"
+version: "1.0"
+scenario_name: rdf_student_club
+database: "student_club"
+ttl_path: "student_club.ttl"
+databases:
+  student_club: "sqlite:///MINIDEV_sqlite/dev_databases/student_club/student_club.sqlite"

@@ -53,7 +53,9 @@ def _bare(qcol: str) -> str:
 
 
 def _s(x: str) -> str:
-    return f'"{x}"'
+    # rdflib/N3 parser treats backticks inside string literals as syntax error
+    v = x.replace('\\', '\\\\').replace('"', '\\"').replace('`', '')
+    return f'"{v}"'
 
 
 def _u(iri: str) -> str:
@@ -100,6 +102,7 @@ def gen(db_name: str, db_url: str,
     ttl.pfx("xsd",    "http://www.w3.org/2001/XMLSchema#")
     ttl.pfx("dlr",    "http://example.org/dlr#")
     ttl.pfx("schema", "http://schema.org/")
+    ttl.pfx("ex",     "http://example.org/")
     ttl.blank()
 
     ttl.cm(f"R2RML mapping — database: {db_name}")
@@ -123,16 +126,17 @@ def gen(db_name: str, db_url: str,
         tid = pe["physical_entity_id"]
         tbl = pe["physical_table_name"]
         akey = pe["A"]["key"]
-        tm_id = f"TM_{db_name}_{tbl}"
-        pe_tm[tid] = tm_id
+        # Use absolute IRI so rdflib doesn't try to parse the colon as CURIE prefix
+        tm_iri = f"<http://example.org/tm/{db_name}/{tbl}>"
+        pe_tm[tid] = tm_iri
 
-        # body = list of "    pred obj" strings  (joined by ' ;' , last -> ' .')
         body: List[str] = []
         body.append(
             f"rr:logicalTable [ rr:tableName {_s(tbl)} ]"
         )
-        tmpl = f"http://example.org/{db_name}/{tbl}/{{{akey}}}"
-        cls = _u(f"{_slug(db_name)}/{_slug(le_biz)}")
+        tmpl = f"http://example.org/{db_name}/{tbl}/{{{_slug(akey)}}}"
+        # class IRI uses the 'ex:' prefix defined in default prefix block
+        cls = f"ex:{_slug(le_biz)}"
         body.append(
             f"rr:subjectMap [ rr:template {_s(tmpl)} ; rr:class {cls} ]"
         )
@@ -148,12 +152,17 @@ def gen(db_name: str, db_url: str,
             )
 
         ttl.cm(f"=== Table: {pe['physical_table_id']} (PE {tid} -> LE {le_biz}) ===")
-        ttl.line(f"{tm_id} a rr:TriplesMap")
-        for i, ln in enumerate(body):
-            sep = " ." if i == len(body) - 1 else " ;"
-            ttl.line(f"    {ln}{sep}")
+        # Turtle: short lines (one predicate per line) parse reliably with rdflib.
+        # First predicate goes on same line as the head, with `;` after each item.
+        if body:
+            ttl.line(f"{tm_iri} a rr:TriplesMap ; {body[0]} ;")
+            for ln in body[1:-1]:
+                ttl.line(f"    {ln} ;")
+            ttl.line(f"    {body[-1]} .")
+        else:
+            ttl.line(f"{tm_iri} a rr:TriplesMap .")
         ttl.blank()
-        return tm_id
+        return tm_iri
 
     for le in les:
         for pe in le.get("physical_entities", []) or []:
@@ -281,20 +290,19 @@ def gen(db_name: str, db_url: str,
             p_iri = _u(f"{_slug(db_name)}/{_slug(rel_name)}")
 
             # W3C-compliant: augment child TM with a predicateObjectMap whose
-            # object is a referencingObjectMap (parentTriplesMap + joinCondition)
-            body = [
+            # object is a referencingObjectMap (parentTriplesMap + joinCondition).
+            # Each child_triple_line on its own line with `;` at end.
+            aug = (
+                f"{c_tm} "  # reuse child TM IRI
                 f"rr:predicateObjectMap [ "
                 f"rr:predicate {p_iri} ; "
                 f"rr:objectMap [ "
                 f"rr:parentTriplesMap {parent_tm} ; "
                 f"rr:joinCondition [ rr:child {_s(c_col)} ; rr:parent {_s(parent_pk)} ] "
                 f"] "
-                f"]"
-            ]
-            ttl.line(f"{c_tm} # PAS {from_biz}->{to_biz}")
-            for i, ln in enumerate(body):
-                sep = " ." if i == len(body) - 1 else " ;"
-                ttl.line(f"    {ln}{sep}")
+                f"] ."
+            )
+            ttl.line(aug)
             ttl.blank()
             done += 1
 
