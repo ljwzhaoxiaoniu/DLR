@@ -218,7 +218,7 @@ def serve(paradigm, host, port):
     if static_dir.exists():
         app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
-    _visual_map = {"er": "er.html", "dlr": "dlr.html", "rdf": None}
+    _visual_map = {"er": "er.html", "dlr": "dlr.html", "rdf": "rdf.html"}
     _default_html = _visual_map.get(paradigm, "er.html")
 
     @app.get("/", include_in_schema=False)
@@ -248,6 +248,69 @@ def serve(paradigm, host, port):
         if paradigm != "dlr":
             return {"error": "not in dlr paradigm"}
         return graph_db.get_dlr_graph_data()
+
+    # ─── RDF / W3C-standard endpoints (only in rdf paradigm) ───────────────
+    if paradigm == "rdf":
+        from rdf_store.rdf_service import get_rdf_store
+
+        @app.get("/api/v1/rdf/graph")
+        async def rdf_graph_summary():
+            st = get_rdf_store()
+            st.load()
+            return {
+                "total_triples": st.total_triples(),
+                "classes": st.classes(),
+                "predicates": st.predicates(),
+            }
+
+        @app.get("/api/v1/rdf/triples")
+        async def rdf_triples():
+            st = get_rdf_store()
+            st.load()
+            return {"triples": st.triples()}
+
+        @app.get("/api/v1/rdf/classes")
+        async def rdf_classes():
+            st = get_rdf_store()
+            st.load()
+            return {"classes": st.classes()}
+
+        @app.get("/api/v1/rdf/triples/class/{class_name:path}")
+        async def rdf_triples_for_class(class_name: str):
+            st = get_rdf_store()
+            st.load()
+            triples = st.triples_for_class(class_name)
+            return {"class": class_name, "triples": triples}
+
+        @app.post("/api/v1/rdf/sparql")
+        async def rdf_sparql(req: QueryRequest):
+            st = get_rdf_store()
+            st.load()
+            return st.sparql(req.question)
+
+        @app.get("/api/v1/rdf/serialize")
+        async def rdf_serialize(format: str = "turtle"):
+            st = get_rdf_store()
+            st.load()
+            from fastapi.responses import PlainTextResponse
+            ct_map = {
+                "turtle": "text/turtle",
+                "ttl": "text/turtle",
+                "jsonld": "application/ld+json",
+                "json-ld": "application/ld+json",
+                "xml": "application/rdf+xml",
+                "rdf/xml": "application/rdf+xml",
+                "n3": "text/n3",
+                "nt": "application/n-triples",
+            }
+            ct = ct_map.get(format.lower(), "text/turtle")
+            return PlainTextResponse(content=st.serialize(format=format), media_type=ct)
+
+        @app.get("/api/v1/rdf/search")
+        async def rdf_search(q: str = "", limit: int = 20):
+            st = get_rdf_store()
+            st.load()
+            return {"results": st.search(q, limit)}
 
     @app.get("/health")
     async def health_check():
