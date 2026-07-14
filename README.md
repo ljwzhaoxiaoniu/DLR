@@ -45,9 +45,9 @@
 |------|------|------|------|------|-------------|
 | **ER** | Entity-Relationship | 实体-关系 | ✅ 已实现 + 已配置 + 已构建 | BizEntity / BizAttribute / BizRelation / RELATED_TO | 扁平实体+关系 |
 | **DLR** | Decoupled Logic Representation | 解耦逻辑表达 | ✅ 已实现 + 已配置 + 已构建 | LE / PE / PAS / ARCS | LE-PE 双层 + INHERITS + PAS |
-| **RDF** | Resource Description Framework | 资源描述框架 | 🔜 未来 | — | — |
+| **RDF** | Resource Description Framework | 资源描述框架 | ✅ 已生成 R2RML 配置（W3C 标准基线） | rr:TriplesMap / rr:referencingObjectMap | — |
 
-> DLR 是核心范式；ER 与 RDF 作为对比基线纳入评测。
+> DLR 是核心范式；ER 与 RDF（R2RML 基线）作为对比基线纳入评测。
 
 ### DLR（Decoupled Logic Representation）缩写对照表
 
@@ -124,6 +124,47 @@ Kuzu 图节点 (LE-PE 双层 + INHERITS + PAS) + FAISS 向量索引
 Agent 通过 MCP 调用 → 语义路由 → sqlite3 查证据
 ```
 
+### RDF（R2RML 基线）
+
+RDF 范式以 W3C R2RML 标准作为**对比基线**——不做 Kuzu/FAISS 索引，只产出标准 R2RML 映射文件，供大模型直接读取并生成 SQL。
+
+```
+configs/scenarios/DLR/*.yaml
+        │
+        ▼  tool&test/generate_r2rml.py
+configs/scenarios/RDF/*.ttl   ← W3C R2RML (Turtle)
+        │
+        ▼  大模型读 .ttl → 理解表结构 + 关系 → 生成 SQL
+sqlite3 只读查询 → 数据证据
+```
+
+**生成命令**：
+
+```bash
+cd Semantic\ Core\ Service
+python tool&test/generate_r2rml.py
+    --scenario-dir configs/scenarios/DLR      # 输入：DLR yaml
+    --output-dir   configs/scenarios/RDF      # 输出：11 个 .ttl
+```
+
+**映射规则**：
+
+| DLR 概念 | R2RML 表达 |
+|----------|-----------|
+| 每个 PE 表 | `rr:TriplesMap` + `rr:tableName` |
+| PE 主键 (A.key) | `rr:subjectMap rr:template ".../{pk}"` |
+| PE 所属 LE | `rr:subjectMap rr:class <LE IRI>` |
+| PE 私有属性 | `rr:predicateObjectMap` → `rr:column` |
+| PAS 关系 (many→one) | `rr:referencingObjectMap` + `rr:joinCondition` |
+
+**对比维度**（DLR vs R2RML 基线）：
+
+| 维度 | DLR YAML | R2RML .ttl |
+|------|----------|------------|
+| Token 开销 | 低（中文动词 + 业务概念） | 高（嵌套 `predicateObjectMap → objectMap → column`） |
+| 多表 JOIN 表达 | PAS 一句话 (`P: {verb: 产生}`) | `rr:joinCondition` 显式列名 |
+| 大模型友好度 | 高（扁平、业务视角） | 低（嵌套、技术视角） |
+
 ## 核心查询流程
 
 ```
@@ -179,9 +220,11 @@ DLR Proj/
 │   ├── configs/scenarios/
 │   │   ├── ER/                     ← ✅ mini_dev 11 个数据库配置 yaml
 │   │   ├── DLR/                    ← ✅ mini_dev 11 个数据库配置 yaml
-│   │   ├── RDF/                    ← 预留
+│   │   ├── RDF/                    ← ✅ 11 个 R2RML .ttl（W3C 标准基线）
 │   │   └── *.yaml                   ← 范式参考示例
-│   ├── static/index.html           # 图可视化 UI
+│   ├── static/
+│   │   ├── dlr.html                 # DLR 可视化（LE/PE/PAS/INHERITS）
+│   │   └── er.html                  # ER 可视化
 │   └── storage/                    # 运行时生成
 │
 ├── OC-based Agent Service/          # Agent 层 (OpenCode)
