@@ -299,6 +299,8 @@ def _build_serve_app(paradigm: str):
 
     # ─── MCP (mounted for every paradigm, tool set filtered by paradigm) ────
     try:
+        import mcp_server
+        mcp_server._mapping_type = paradigm  # sync BEFORE tool finalization
         from mcp_server import mcp as mcp_app, _ensure_paradigm_tools
         _ensure_paradigm_tools()
         app.mount("/mcp", mcp_app.http_app(transport="sse"))
