@@ -102,8 +102,8 @@ def cli():
 PARADIGM = click.option(
     "--paradigm",
     required=True,
-    type=click.Choice(["ER", "DLR", "RDF"], case_sensitive=False),
-    help="建模范式 (ER / DLR / RDF)",
+    type=click.Choice(["ER", "DLR", "RDF", "ALL"], case_sensitive=False),
+    help="建模范式 (ER / DLR / RDF / ALL=三个一起跑)",
 )
 
 
@@ -115,6 +115,18 @@ PARADIGM = click.option(
 def build(paradigm):
     """构建知识库: 将范式下所有预设合并写入 Kuzu + FAISS"""
     paradigm = paradigm.lower()
+    if paradigm == "all":
+        for p in ["er", "dlr", "rdf"]:
+            click.echo(f"\n{'#'*60}")
+            click.echo(f"# 构建范式: {p.upper()}")
+            click.echo(f"{'#'*60}")
+            _build_one(p)
+        return
+    _build_one(paradigm)
+
+
+def _build_one(paradigm: str):
+    """Build a single paradigm (internal helper)."""
     preset_files = _scan_paradigm_dir(paradigm)
     if not preset_files:
         return
@@ -186,7 +198,127 @@ def build(paradigm):
 
 
 # ---------------------------------------------------------------------------
-# serve  — single shared endpoint for the whole paradigm
+# serve_app — build a FastAPI app for one paradigm (reused by serve / serve_all)
+# ---------------------------------------------------------------------------
+def _build_serve_app(paradigm: str):
+    """Construct the FastAPI app for a single paradigm. Returns (app, graph_db)."""
+    from fastapi import FastAPI
+    from fastapi.staticfiles import StaticFiles
+    from fastapi.responses import RedirectResponse
+    from pydantic import BaseModel
+
+    storage = paradigm_storage(paradigm)
+    os.environ["KUZU_DIR"] = str(storage["graph"])
+    os.environ["VECTOR_DIR"] = str(storage["vector"])
+
+    graph_db = GraphDB(db_path=str(storage["graph"]), mapping_type=paradigm)
+    query_svc = QueryService(mapping_type=paradigm, graph_db=graph_db)
+
+    app = FastAPI(title=f"语义元数据查询API [{paradigm.upper()}]", version="1.0.0")
+
+    static_dir = Path(__file__).parent / "static"
+    if static_dir.exists():
+        app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+
+    _visual_map = {"er": "er.html", "dlr": "dlr.html", "rdf": "rdf.html"}
+    _default_html = _visual_map.get(paradigm, "er.html")
+
+    @app.get("/", include_in_schema=False)
+    async def root():
+        if _default_html and (static_dir / _default_html).exists():
+            return RedirectResponse(url=f"/static/{_default_html}")
+        return RedirectResponse(url="/static/er.html")
+
+    class QueryRequest(BaseModel):
+        question: str
+
+    @app.post("/api/v1/query")
+    async def api_query(req: QueryRequest):
+        return query_svc.query(req.question)
+
+    @app.get("/api/v1/entities")
+    async def get_all_entities():
+        return graph_db.get_all_entities()
+
+    @app.get("/api/v1/graph")
+    async def get_graph_data():
+        return {"entities": graph_db.get_all_entities(),
+                "relations": graph_db.get_all_relations()}
+
+    @app.get("/api/v1/dlr/graph")
+    async def get_dlr_graph():
+        if paradigm != "dlr":
+            return {"error": "not in dlr paradigm"}
+        return graph_db.get_dlr_graph_data()
+
+    # ─── RDF / W3C-standard endpoints (only in rdf paradigm) ───────────────
+    if paradigm == "rdf":
+        from rdf_store.rdf_service import get_rdf_store
+
+        @app.get("/api/v1/rdf/graph")
+        async def rdf_graph_summary():
+            st = get_rdf_store(); st.load()
+            return {"total_triples": st.total_triples(),
+                    "classes": st.classes(), "predicates": st.predicates()}
+
+        @app.get("/api/v1/rdf/triples")
+        async def rdf_triples():
+            st = get_rdf_store(); st.load()
+            return {"triples": st.triples()}
+
+        @app.get("/api/v1/rdf/classes")
+        async def rdf_classes():
+            st = get_rdf_store(); st.load()
+            return {"classes": st.classes()}
+
+        @app.get("/api/v1/rdf/triples/class/{class_name:path}")
+        async def rdf_triples_for_class(class_name: str):
+            st = get_rdf_store(); st.load()
+            return {"class": class_name, "triples": st.triples_for_class(class_name)}
+
+        @app.post("/api/v1/rdf/sparql")
+        async def rdf_sparql(req: QueryRequest):
+            st = get_rdf_store(); st.load()
+            return st.sparql(req.question)
+
+        @app.get("/api/v1/rdf/serialize")
+        async def rdf_serialize(format: str = "turtle"):
+            st = get_rdf_store(); st.load()
+            from fastapi.responses import PlainTextResponse
+            ct_map = {"turtle": "text/turtle", "ttl": "text/turtle",
+                      "jsonld": "application/ld+json", "json-ld": "application/ld+json",
+                      "xml": "application/rdf+xml", "rdf/xml": "application/rdf+xml",
+                      "n3": "text/n3", "nt": "application/n-triples"}
+            ct = ct_map.get(format.lower(), "text/turtle")
+            return PlainTextResponse(content=st.serialize(format=format), media_type=ct)
+
+        @app.get("/api/v1/rdf/search")
+        async def rdf_search(q: str = "", limit: int = 20):
+            st = get_rdf_store(); st.load()
+            return {"results": st.search(q, limit)}
+
+    # ─── MCP (mounted for every paradigm, tool set filtered by paradigm) ────
+    try:
+        from mcp_server import mcp as mcp_app, _ensure_paradigm_tools
+        _ensure_paradigm_tools()
+        app.mount("/mcp", mcp_app.http_app(transport="sse"))
+    except Exception as e:
+        logger.warning(f"MCP 挂载失败: {e}")
+
+    return app
+
+
+def _serve_one(paradigm: str, host: str, port: int):
+    """Run uvicorn for a single paradigm (blocking)."""
+    import uvicorn
+    app = _build_serve_app(paradigm)
+    access_host = "localhost" if host == "0.0.0.0" else host
+    logger.info(f"🌐 {paradigm.upper()} -> http://{access_host}:{port}/  (API / MCP /mcp/sse)")
+    uvicorn.run(app, host=host, port=port, log_level="info")
+
+
+# ---------------------------------------------------------------------------
+# serve  — single paradigm (original, kept for per-paradigm debugging)
 # ---------------------------------------------------------------------------
 @cli.command()
 @PARADIGM
@@ -195,22 +327,56 @@ def build(paradigm):
 def serve(paradigm, host, port):
     """启动 HTTP API + MCP SSE 服务 (覆盖范式下所有数据库)"""
     paradigm = paradigm.lower()
-    storage = paradigm_storage(paradigm)
-    os.environ["KUZU_DIR"] = str(storage["graph"])
-    os.environ["VECTOR_DIR"] = str(storage["vector"])
+    if paradigm == "all":
+        _serve_all(host, port)
+        return
+    _serve_one(paradigm, host, port)
+
+
+def _serve_all(host: str, base_port: int):
+    """Spawn 3 SEPARATE python processes, one per paradigm, on consecutive ports.
+
+    ER  → base_port     (default 28765)
+    DLR → base_port + 1 (default 28766)
+    RDF → base_port + 2 (default 28767)
+    """
+    import subprocess, sys
+    procs = []
+    click.echo(f"\n{'='*50}")
+    click.echo("ALL 模式: 启动 3 个独立服务")
+    for i, p in enumerate(["er", "dlr", "rdf"]):
+        port = base_port + i
+        click.echo(f"  {p.upper():3s} -> http://localhost:{port}/")
+        proc = subprocess.Popen(
+            [sys.executable, __file__, "serve", "--paradigm", p,
+             "--host", host, "--port", str(port)],
+            # Windows: new Ctrl-C group so parent can kill children cleanly
+            **({"creationflags": 0x00000200} if sys.platform == "win32" else {}),
+        )
+        procs.append((p, port, proc))
+    click.echo(f"{'='*50}\n")
+    click.echo("3 个服务已全部拉起. Ctrl-C 全部退出.\n")
 
     try:
-        from fastapi import FastAPI
-        from fastapi.staticfiles import StaticFiles
-        from fastapi.responses import RedirectResponse
-        import uvicorn
-        from pydantic import BaseModel
-    except ImportError:
-        logger.error("请先安装依赖: pip install fastapi uvicorn pydantic")
-        return
-
-    graph_db = GraphDB(db_path=str(storage["graph"]), mapping_type=paradigm)
-    query_svc = QueryService(mapping_type=paradigm, graph_db=graph_db)
+        # block until any child exits OR user hits Ctrl-C
+        while True:
+            import time
+            time.sleep(2)
+            for p, port, proc in procs:
+                if proc.poll() is not None:
+                    click.echo(f"[ALL] ⚠️  {p.upper()}:{port} 已退出 (rc={proc.returncode})")
+            if all(proc.poll() is not None for _, _, proc in procs):
+                break
+    except KeyboardInterrupt:
+        click.echo("\n[ALL] Ctrl-C: 关闭所有服务...")
+    finally:
+        for p, port, proc in procs:
+            try:
+                proc.terminate()
+                proc.wait(timeout=5)
+            except Exception:
+                proc.kill()
+        click.echo("[ALL] 已停止")
 
     app = FastAPI(title=f"语义元数据查询API [{paradigm.upper()}]", version="1.0.0")
 
