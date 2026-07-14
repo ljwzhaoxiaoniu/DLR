@@ -159,6 +159,60 @@ class RDFGraphStore:
         return self.graph.serialize(format="turtle")
 
 
+    # ------------------------------------------------------------------
+    # Plan-A mapping helpers — used by the HTTP endpoint /api/v1/rdf/mapping/all
+    # (kept here so they can be called directly without MCP context)
+    # ------------------------------------------------------------------
+
+    def mapping_for_table(self, table_name: str) -> dict:
+        """Return {table, columns, relations} for a single physical table.
+
+        Wraps the same SPARQL as mcp_server._query_rdf_mapping but works
+        on an already-loaded store instance.
+        """
+        sparql = """
+        PREFIX rr: <http://www.w3.org/ns/r2rml#>
+        SELECT ?pred ?col ?joinTable ?joinChild ?joinParent WHERE {
+            ?tm rr:logicalTable [ rr:tableName ?table_name ] ;
+                rr:predicateObjectMap ?pom .
+            ?pom rr:predicate ?pred .
+            OPTIONAL { ?pom rr:objectMap [ rr:column ?col ] . }
+            OPTIONAL {
+                ?pom rr:objectMap [
+                    rr:parentTriplesMap ?parentTm ;
+                    rr:joinCondition [ rr:child ?joinChild ; rr:parent ?joinParent ]
+                ] .
+                ?parentTm rr:logicalTable [ rr:tableName ?joinTable ] .
+            }
+        }
+        """
+        result = self.sparql(sparql.replace("?table_name", f'"{table_name}"'))
+        if "error" in result:
+            return {"success": False, "error": result["error"]}
+
+        columns, relations = [], []
+        seen_cols, seen_rels = set(), set()
+        for b in result.get("bindings", []):
+            pred = b.get("pred", "")
+            col = b.get("col", "")
+            jt  = b.get("joinTable", "")
+            jc  = b.get("joinChild", "")
+            jp  = b.get("joinParent", "")
+
+            if col and col not in seen_cols:
+                seen_cols.add(col)
+                columns.append(col)
+            if jt and (jc, jp) not in seen_rels:
+                seen_rels.add((jc, jp))
+                relations.append({
+                    "target_table": jt,
+                    "join_condition": f"{table_name}.{jc} = {jt}.{jp}",
+                })
+
+        return {"success": True, "table": table_name,
+                "columns": columns, "relations": relations}
+
+
 _store: Optional[RDFGraphStore] = None
 
 

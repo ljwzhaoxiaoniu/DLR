@@ -314,6 +314,46 @@ def _build_serve_app(paradigm: str):
             st = get_rdf_store(); st.load()
             return {"results": st.search(q, limit)}
 
+        # ─── Plan-A mapping graph: one call returns ALL tables + columns + joins ──
+
+        @app.get("/api/v1/rdf/mapping/all")
+        async def rdf_mapping_all():
+            """Return the full R2RML mapping structure for the Plan-A visualization.
+
+            Shape:
+              {
+                "tables": [ {table, db, columns, relations}, ... ],
+                "total_tables": N,
+                "total_joins": M
+              }
+
+            One shot, no per-table round-trips from the front-end.
+            """
+            st = get_rdf_store(); st.load()
+
+            # Single SPARQL pulls every distinct tableName
+            sparql_tables = """
+            PREFIX rr: <http://www.w3.org/ns/r2rml#>
+            SELECT DISTINCT ?tn WHERE {
+              ?tm rr:logicalTable [ rr:tableName ?tn ] .
+            }
+            """
+            t_res = st.sparql(sparql_tables)
+            if "error" in t_res:
+                return {"error": t_res["error"], "tables": [], "total_tables": 0, "total_joins": 0}
+
+            table_names = sorted({b["tn"] for b in t_res.get("bindings", []) if b.get("tn")})
+
+            tables = []
+            total_joins = 0
+            for tn in table_names:
+                m = st.mapping_for_table(tn)
+                if m.get("success"):
+                    tables.append(m)
+                    total_joins += len(m.get("relations", []))
+
+            return {"tables": tables, "total_tables": len(tables), "total_joins": total_joins}
+
     # ─── MCP (mounted for every paradigm, tool set filtered by paradigm) ────
     try:
         import mcp_server
