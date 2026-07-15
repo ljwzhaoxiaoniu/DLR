@@ -500,7 +500,7 @@ Agent 的工作流：接收自然语言 `question` → 通过 MCP 语义查询�
 
 --- 
 DLR
-![image.png](https://raw.gitcode.com/user-images/assets/10360544/4c90fb5b-fbd5-4e34-9ef9-e83d6b61b3c6/image.png 'image.png')
+![image.png](https://raw.gitcode.com/user-images/assets/10360544/fb65f5f9-7135-4796-8b15-e127f10d941a/image.png 'image.png')
 
 ---
 RDF
