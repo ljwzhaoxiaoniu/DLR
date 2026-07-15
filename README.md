@@ -57,7 +57,7 @@ DLR 范式使用的内部缩写：
 | 缩写 | 全称 | 说明 |
 |------|------|------|
 | **LE** | LogicalEntity | 逻辑实体（业务概念层） |
-| **PE** | PhysicalEntity | 物理实体（具体表/字段层） |
+| **PE** | PhysicalEntity | 物理实体（类视图概念，通过 ARCS 锚定到物理库：可宽表拆分子对象、可多表拼合完整对象） |
 | **PAS** | Predicate-Attribute-Semantic | LE 间语义路由（三元组：谓词+属性+语义补注） |
 | **ARCS** | Anchor-Row-Column-Semantic | PE 到物理库的锚定（四元组：锚定+行过滤+列映射+语义补注） |
 
