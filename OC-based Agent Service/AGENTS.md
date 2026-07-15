@@ -28,10 +28,10 @@
 ## 数据查询流程
 
 ### Step 1：定位语义对象
-使用 MCP 工具输入自然语言问题，从返回结果中识别目标实体/属性。
+使用 `semantic_query` 输入自然语言问题，从 FAISS 向量召回结果中识别目标实体/属性。
 
 ### Step 2：获取物理映射
-调用对应的映射工具，从返回结果中提取：
+调用映射工具获取：
 - `database_url`：SQLite 数据库文件路径
 - 物理表名（不带库前缀）
 - 字段映射（逻辑属性 → 物理列名）
@@ -49,13 +49,27 @@ sqlite3 -header -column "<数据库文件路径>" "SELECT ..."
 
 ## 可用 MCP 工具
 
-所有工具由 **Semantic Core Service** MCP Server 暴露。具体工具集取决于当前加载的配置文件，使用 `/mcps` 命令可查看已启用的工具列表。常见的工具类别包括：
+所有工具由 **Semantic Core Service** MCP Server 暴露。使用 `/mcps` 命令可查看当前已启用的工具列表。
 
-- **向量召回**：自然语言检索相关语义对象
-- **实体查询**：获取实体详情、属性、关联关系
-- **路径查询**：两个实体间的最短关联路径
-- **映射获取**：获取物理表名、字段映射、行过滤规则
-- **SQL 执行**：执行只读查询
+### 共享工具（所有范式可用）
+
+| Tool | 语义 |
+|------|------|
+| `semantic_query` | 自然语言查询（FAISS 向量召回，主入口） |
+| `list_entities` | 列出所有实体 |
+| `list_relations` | 列出所有关系 |
+| `get_entity` | 单个实体详情 |
+| `get_entity_attributes` | 实体属性（含物理字段） |
+| `get_entity_relations` | 实体关系（含方向） |
+| `get_entity_mapping` | 物理映射（数据库+表+字段） |
+| `find_shortest_path` | 两实体最短路径 |
+| `list_all_tables` | 列出已注册实体表 |
+| `get_table_schema` | 任意物理表结构 |
+| `summary` | 知识库摘要统计 |
+
+### 范式专属工具（由 MCP 自动注册，通过 `/mcps` 确认）
+
+范式专属工具由 MCP Server 根据当前范式自动注册，Agent 无需预先知晓。收到问题后先用 `semantic_query` 定位，再用 `/mcps` 确认可用工具，按返回的工具签名调用即可。
 
 调用工具时，参数中的 ID、名称必须来自前序工具的返回结果，不得自行编造。
 
