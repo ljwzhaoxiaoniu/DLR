@@ -79,6 +79,7 @@
         .legend .lg-table  { background: #FFB5BA; border-radius: 3px; }
         .legend .lg-col    { background: #64B5F6; border-radius: 50%; width:10px;height:10px; }
         .legend .lg-join   { background: #FFDAB9; border-radius: 3px; }
+        .legend .toggle-fields { margin-left: auto; display: flex; align-items: center; gap: 4px; cursor: pointer; user-select: none; }
         #network { flex: 1; background: #fafafa; min-height: 400px; }
 
         /* ---------- attribute panel ---------- */
@@ -129,6 +130,7 @@
             <span><i class="lg-table"></i> 物理表 (TriplesMap)</span>
             <span><i class="lg-col"></i> 字段 / 对象属性</span>
             <span><i class="lg-join"></i> JOIN 目标表</span>
+            <label class="toggle-fields"><input type="checkbox" id="showFields"> 显示字段节点</label>
         </div>
         <div id="network" class="network"></div>
     </div>
@@ -307,7 +309,7 @@ function buildGraph() {
         }
 
         // ---- column / object-property leaf nodes — blue dot (DLR mapping-attr style) ----
-        (t.columns || []).forEach(c => {
+        if (document.getElementById('showFields').checked) (t.columns || []).forEach(c => {
             const colId = tmId + '::col::' + c;
             if (!seen[colId]) {
                 seen[colId] = true;
@@ -328,6 +330,7 @@ function buildGraph() {
                     color: RDFVis.CONST.COL_EDGE, width: 1, dashes: true });
             }
         });
+        } // end if showFields
 
         // ---- JOIN target nodes + edges — warm macaron box ----
         (t.relations || []).forEach(r => {
@@ -441,6 +444,12 @@ function bindEvents() {
     document.getElementById('searchInput').addEventListener('input', renderEntityList);
     document.getElementById('closeAttr').addEventListener('click',
         () => document.getElementById('attrPanel').style.display = 'none');
+    document.getElementById('showFields').addEventListener('change', () => {
+        if (RDFVis.state.network) {
+            const { nodes, edges } = buildGraph();
+            RDFVis.state.network.setData({ nodes, edges });
+        }
+    });
 }
 
 async function init() {
