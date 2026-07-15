@@ -6,7 +6,7 @@
   "mcp": {
     "semantic-core": {
       "type": "remote",
-      "url": "http://localhost:28766/mcp/sse",
+      "url": "http://localhost:28777/mcp/sse",
       "enabled": true,
       "timeout": 30000
     }
