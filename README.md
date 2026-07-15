@@ -462,10 +462,10 @@ DLR Proj/
 
 ```json
 {
-  "question_id": 1,
-  "db_id": "financial",
-  "question": "查询账户余额大于10000的客户数量",
-  "SQL": "SELECT COUNT(*) FROM account WHERE balance > 10000;"
+  "question_id": 1471,
+  "db_id": "debit_card_specializing",
+  "question": "What is the ratio of customers who pay in EUR against customers who pay in CZK?",
+  "SQL": "SELECT CAST(SUM(IIF(Currency = 'EUR', 1, 0)) AS FLOAT) / SUM(IIF(Currency = 'CZK', 1, 0)) AS ratio FROM customers"
 }
 ```
 
