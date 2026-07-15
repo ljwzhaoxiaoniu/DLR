@@ -309,28 +309,29 @@ function buildGraph() {
         }
 
         // ---- column / object-property leaf nodes — blue dot (DLR mapping-attr style) ----
-        if (document.getElementById('showFields').checked) (t.columns || []).forEach(c => {
-            const colId = tmId + '::col::' + c;
-            if (!seen[colId]) {
-                seen[colId] = true;
-                nodes.push({
-                    id: colId,
-                    label: shortUri(c),
-                    shape: 'dot',
-                    color: RDFVis.CONST.COL_COLOR,
-                    size: 9,
-                    font: { size: 9, color: '#1565c0' },
-                });
-                RDFVis.state.nodeData[colId] = { kind: 'column', parent: t.table, name: c };
-            }
-            const ed = tmId + '--col--' + colId;
-            if (!seen[ed]) {
-                seen[ed] = true;
-                edges.push({ from: tmId, to: colId, arrows: 'to',
-                    color: RDFVis.CONST.COL_EDGE, width: 1, dashes: true });
-            }
-        });
-        } // end if showFields
+        if (document.getElementById('showFields').checked) {
+            (t.columns || []).forEach(c => {
+                const colId = tmId + '::col::' + c;
+                if (!seen[colId]) {
+                    seen[colId] = true;
+                    nodes.push({
+                        id: colId,
+                        label: shortUri(c),
+                        shape: 'dot',
+                        color: RDFVis.CONST.COL_COLOR,
+                        size: 9,
+                        font: { size: 9, color: '#1565c0' },
+                    });
+                    RDFVis.state.nodeData[colId] = { kind: 'column', parent: t.table, name: c };
+                }
+                const ed = tmId + '--col--' + colId;
+                if (!seen[ed]) {
+                    seen[ed] = true;
+                    edges.push({ from: tmId, to: colId, arrows: 'to',
+                        color: RDFVis.CONST.COL_EDGE, width: 1, dashes: true });
+                }
+            });
+        }
 
         // ---- JOIN target nodes + edges — warm macaron box ----
         (t.relations || []).forEach(r => {
