@@ -84,11 +84,11 @@ python main.py reset --paradigm ALL     # 或 ER / DLR / RDF
 ```
 storage/
 ├── ER/
-│   ├── graph/             ← ER 专用 Kuzu 图数据库
+│   ├── graph/             ← ER 专用 Kuzu 图数据库（BizEntity 节点 + RELATED_TO 边）
 │   └── vector/
 │       └── vector.pkl     ← ER 专用 FAISS 向量索引
 ├── DLR/
-│   ├── graph/             ← DLR 专用 Kuzu 图数据库
+│   ├── graph/             ← DLR 专用 Kuzu 图数据库（LE/PE 双层节点 + PAS 边 + INHERITS 边）
 │   └── vector/
 │       └── vector.pkl     ← DLR 专用 FAISS 向量索引
 └── RDF/
