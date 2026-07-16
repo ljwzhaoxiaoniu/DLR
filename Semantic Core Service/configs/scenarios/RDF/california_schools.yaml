@@ -4,4 +4,4 @@ scenario_name: rdf_california_schools
 database: "california_schools"
 ttl_path: "california_schools.ttl"
 databases:
-  california_schools: "sqlite:///MINIDEV_sqlite/dev_databases/california_schools/california_schools.sqlite"
+  california_schools: "sqlite:///../MINIDEV_sqlite/dev_databases/california_schools/california_schools.sqlite"

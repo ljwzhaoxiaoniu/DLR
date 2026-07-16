@@ -4,4 +4,4 @@ scenario_name: rdf_card_games
 database: "card_games"
 ttl_path: "card_games.ttl"
 databases:
-  card_games: "sqlite:///MINIDEV_sqlite/dev_databases/card_games/card_games.sqlite"
+  card_games: "sqlite:///../MINIDEV_sqlite/dev_databases/card_games/card_games.sqlite"

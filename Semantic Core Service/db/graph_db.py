@@ -727,17 +727,32 @@ class GraphDB:
             return []
 
     def get_physical_entity_by_id(self, pe_id: str) -> Optional[Dict[str, Any]]:
-        """Query PhysicalEntity by ID (DLR)."""
+        """Query PhysicalEntity by ID (DLR). 含 ARCS 列(arcs_a_anchor/r_row/c_column/s_semantic4arcs)."""
         try:
             result = self.conn.execute("""
                 MATCH (pe:PhysicalEntity {physical_entity_id: $id})
-                RETURN pe.physical_entity_id, pe.name, pe.description, pe.physical_table_id
+                RETURN pe.physical_entity_id, pe.name, pe.description, pe.physical_table_id,
+                       pe.arcs_a_anchor, pe.arcs_r_row, pe.arcs_c_column, pe.arcs_s_semantic4arcs
             """, parameters={"id": pe_id})
             if result.has_next():
                 row = result.get_next()
+                # 解析 ARCS(JSON 字符串 → dict)
+                def _parse_json(v):
+                    if not v:
+                        return None
+                    try:
+                        return json.loads(v) if isinstance(v, str) else v
+                    except Exception:
+                        return None
                 return {
                     "physical_entity_id": row[0], "name": row[1],
                     "description": row[2], "physical_table_id": row[3],
+                    "arcs": {
+                        "A_anchor": _parse_json(row[4]),
+                        "R_row": row[5],
+                        "C_column": _parse_json(row[6]),
+                        "S_semantic4arcs": row[7],
+                    },
                 }
             return None
         except Exception as e:

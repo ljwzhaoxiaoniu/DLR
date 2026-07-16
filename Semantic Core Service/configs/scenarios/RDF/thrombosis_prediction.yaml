@@ -4,4 +4,4 @@ scenario_name: rdf_thrombosis_prediction
 database: "thrombosis_prediction"
 ttl_path: "thrombosis_prediction.ttl"
 databases:
-  thrombosis_prediction: "sqlite:///MINIDEV_sqlite/dev_databases/thrombosis_prediction/thrombosis_prediction.sqlite"
+  thrombosis_prediction: "sqlite:///../MINIDEV_sqlite/dev_databases/thrombosis_prediction/thrombosis_prediction.sqlite"

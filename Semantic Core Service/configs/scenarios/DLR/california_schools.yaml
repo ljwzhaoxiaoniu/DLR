@@ -1,106 +1,98 @@
 mapping_type: "dlr"
 version: "2.0"
 scenario_name: dlr_california_schools
-description: "DLR 范式 — 加州学校场景：按需字段，3 PE 聚合 2 LE，学校绩效多视图解耦"
+description: "DLR paradigm - California schools scenario: on-demand fields, 3 PEs aggregated into 2 LEs, school performance multi-view decoupling"
 databases:
   california_schools: "sqlite:///MINIDEV_sqlite/dev_databases/california_schools/california_schools.sqlite"
-
 logical_entities:
-  # ── 1. 学校 ──
-  - logical_entity_id: LOGICAL.学校
-    biz_name: 学校
-    description: "加州学校的基础档案"
+  - logical_entity_id: LOGICAL.School
+    biz_name: School
+    description: "California school profile"
     public_attributes:
-      - {attr_id: LOGICAL.学校.学校代码, biz_name: 学校代码}
+      - {attr_id: LOGICAL.School.SchoolCode, biz_name: SchoolCode}
     physical_entities:
-      - physical_entity_id: PHYSICAL.学校表
+      - physical_entity_id: PHYSICAL.School
         physical_table_name: schools
         physical_table_id: california_schools.schools
         A: {cardinality: "1:1", key: CDSCode}
         R: null
-        C:
-          LOGICAL.学校.学校代码: california_schools.schools.CDSCode
-        S: "学校档案主表"
+        C: {LOGICAL.School.SchoolCode: california_schools.schools.CDSCode}
+        S: "School master"
         private_attributes:
-          - {attr_id: california_schools.schools.School, biz_name: 学校名称, physical_column_id: california_schools.schools.School}
-          - {attr_id: california_schools.schools.City, biz_name: 所在城市, physical_column_id: california_schools.schools.City}
-          - {attr_id: california_schools.schools.County, biz_name: 县, physical_column_id: california_schools.schools.County}
-          - {attr_id: california_schools.schools.District, biz_name: 学区, physical_column_id: california_schools.schools.District}
-          - {attr_id: california_schools.schools.Street, biz_name: 街道, physical_column_id: california_schools.schools.Street}
-          - {attr_id: california_schools.schools.State, biz_name: 州, physical_column_id: california_schools.schools.State}
-          - {attr_id: california_schools.schools.Zip, biz_name: 邮编, physical_column_id: california_schools.schools.Zip}
-          - {attr_id: california_schools.schools.Phone, biz_name: 电话, physical_column_id: california_schools.schools.Phone}
-          - {attr_id: california_schools.schools.Virtual, biz_name: 是否虚拟, physical_column_id: california_schools.schools.Virtual}
-          - {attr_id: california_schools.schools.Charter, biz_name: 是否特许, physical_column_id: california_schools.schools.Charter}
-          - {attr_id: california_schools.schools.CharterNum, biz_name: 特许编号, physical_column_id: california_schools.schools.CharterNum}
-          - {attr_id: california_schools.schools.FundingType, biz_name: 资金类型, physical_column_id: california_schools.schools.FundingType}
+          - {attr_id: california_schools.schools.School, biz_name: School, physical_column_id: california_schools.schools.School}
+          - {attr_id: california_schools.schools.City, biz_name: City, physical_column_id: california_schools.schools.City}
+          - {attr_id: california_schools.schools.County, biz_name: County, physical_column_id: california_schools.schools.County}
+          - {attr_id: california_schools.schools.District, biz_name: District, physical_column_id: california_schools.schools.District}
+          - {attr_id: california_schools.schools.Street, biz_name: Street, physical_column_id: california_schools.schools.Street}
+          - {attr_id: california_schools.schools.State, biz_name: State, physical_column_id: california_schools.schools.State}
+          - {attr_id: california_schools.schools.Zip, biz_name: Zip, physical_column_id: california_schools.schools.Zip}
+          - {attr_id: california_schools.schools.Phone, biz_name: Phone, physical_column_id: california_schools.schools.Phone}
+          - {attr_id: california_schools.schools.Virtual, biz_name: Virtual, physical_column_id: california_schools.schools.Virtual}
+          - {attr_id: california_schools.schools.Charter, biz_name: Charter, physical_column_id: california_schools.schools.Charter}
+          - {attr_id: california_schools.schools.CharterNum, biz_name: CharterNum, physical_column_id: california_schools.schools.CharterNum}
+          - {attr_id: california_schools.schools.FundingType, biz_name: FundingType, physical_column_id: california_schools.schools.FundingType}
           - {attr_id: california_schools.schools.DOC, biz_name: DOC, physical_column_id: california_schools.schools.DOC}
           - {attr_id: california_schools.schools.SOC, biz_name: SOC, physical_column_id: california_schools.schools.SOC}
           - {attr_id: california_schools.schools.EdOpsCode, biz_name: EdOpsCode, physical_column_id: california_schools.schools.EdOpsCode}
-          - {attr_id: california_schools.schools.Magnet, biz_name: 磁吸项目, physical_column_id: california_schools.schools.Magnet}
-          - {attr_id: california_schools.schools.OpenDate, biz_name: 开校日期, physical_column_id: california_schools.schools.OpenDate}
-          - {attr_id: california_schools.schools.ClosedDate, biz_name: 关闭日期, physical_column_id: california_schools.schools.ClosedDate}
-          - {attr_id: california_schools.schools.StatusType, biz_name: 状态类型, physical_column_id: california_schools.schools.StatusType}
-          - {attr_id: california_schools.schools.GSoffered, biz_name: 提供年级, physical_column_id: california_schools.schools.GSoffered}
-          - {attr_id: california_schools.schools.GSserved, biz_name: 服务年级, physical_column_id: california_schools.schools.GSserved}
-          - {attr_id: california_schools.schools.MailStreet, biz_name: 邮寄街道, physical_column_id: california_schools.schools.MailStreet}
-          - {attr_id: california_schools.schools.AdmFName1, biz_name: 管理员名1, physical_column_id: california_schools.schools.AdmFName1}
-          - {attr_id: california_schools.schools.AdmLName1, biz_name: 管理员姓1, physical_column_id: california_schools.schools.AdmLName1}
-          - {attr_id: california_schools.schools.AdmFName2, biz_name: 管理员名2, physical_column_id: california_schools.schools.AdmFName2}
-          - {attr_id: california_schools.schools.AdmLName2, biz_name: 管理员姓2, physical_column_id: california_schools.schools.AdmLName2}
-          - {attr_id: california_schools.schools.AdmFName3, biz_name: 管理员名3, physical_column_id: california_schools.schools.AdmFName3}
-          - {attr_id: california_schools.schools.AdmLName3, biz_name: 管理员姓3, physical_column_id: california_schools.schools.AdmLName3}
-          - {attr_id: california_schools.schools.AdmEmail1, biz_name: 管理员邮箱1, physical_column_id: california_schools.schools.AdmEmail1}
-          - {attr_id: california_schools.schools.AdmEmail2, biz_name: 管理员邮箱2, physical_column_id: california_schools.schools.AdmEmail2}
-          - {attr_id: california_schools.schools.longitude, biz_name: 经度, physical_column_id: california_schools.schools.longitude}
-
-  # ── 2. 学校绩效 (2 PE — 多视图核心) ──
-  - logical_entity_id: LOGICAL.学校绩效
-    biz_name: 学校绩效
-    description: "学校的学术成绩与经济补贴双视图：SAT成绩+免费餐补贴"
+          - {attr_id: california_schools.schools.Magnet, biz_name: Magnet, physical_column_id: california_schools.schools.Magnet}
+          - {attr_id: california_schools.schools.OpenDate, biz_name: OpenDate, physical_column_id: california_schools.schools.OpenDate}
+          - {attr_id: california_schools.schools.ClosedDate, biz_name: ClosedDate, physical_column_id: california_schools.schools.ClosedDate}
+          - {attr_id: california_schools.schools.StatusType, biz_name: StatusType, physical_column_id: california_schools.schools.StatusType}
+          - {attr_id: california_schools.schools.GSoffered, biz_name: GSoffered, physical_column_id: california_schools.schools.GSoffered}
+          - {attr_id: california_schools.schools.GSserved, biz_name: GSserved, physical_column_id: california_schools.schools.GSserved}
+          - {attr_id: california_schools.schools.MailStreet, biz_name: MailStreet, physical_column_id: california_schools.schools.MailStreet}
+          - {attr_id: california_schools.schools.AdmFName1, biz_name: AdmFName1, physical_column_id: california_schools.schools.AdmFName1}
+          - {attr_id: california_schools.schools.AdmLName1, biz_name: AdmLName1, physical_column_id: california_schools.schools.AdmLName1}
+          - {attr_id: california_schools.schools.AdmFName2, biz_name: AdmFName2, physical_column_id: california_schools.schools.AdmFName2}
+          - {attr_id: california_schools.schools.AdmLName2, biz_name: AdmLName2, physical_column_id: california_schools.schools.AdmLName2}
+          - {attr_id: california_schools.schools.AdmFName3, biz_name: AdmFName3, physical_column_id: california_schools.schools.AdmFName3}
+          - {attr_id: california_schools.schools.AdmLName3, biz_name: AdmLName3, physical_column_id: california_schools.schools.AdmLName3}
+          - {attr_id: california_schools.schools.AdmEmail1, biz_name: AdmEmail1, physical_column_id: california_schools.schools.AdmEmail1}
+          - {attr_id: california_schools.schools.AdmEmail2, biz_name: AdmEmail2, physical_column_id: california_schools.schools.AdmEmail2}
+          - {attr_id: california_schools.schools.longitude, biz_name: longitude, physical_column_id: california_schools.schools.longitude}
+  - logical_entity_id: LOGICAL.SchoolPerformance
+    biz_name: SchoolPerformance
+    description: "SAT scores and FRPM statistics"
     public_attributes:
-      - {attr_id: LOGICAL.学校绩效.关联学校, biz_name: 关联学校}
+      - {attr_id: LOGICAL.SchoolPerformance.School, biz_name: School}
     physical_entities:
-      - physical_entity_id: PHYSICAL.SAT成绩表
+      - physical_entity_id: PHYSICAL.SATScore
         physical_table_name: satscores
         physical_table_id: california_schools.satscores
         A: {cardinality: "1:1", key: cds}
         R: null
-        C:
-          LOGICAL.学校绩效.关联学校: california_schools.satscores.cds
-        S: "SAT成绩汇总 — 数学/阅读/写作平均分"
+        C: {LOGICAL.SchoolPerformance.School: california_schools.satscores.cds}
+        S: "SAT scores"
         private_attributes:
-          - {attr_id: california_schools.satscores.AvgScrMath, biz_name: 平均数学成绩, physical_column_id: california_schools.satscores.AvgScrMath}
-          - {attr_id: california_schools.satscores.AvgScrRead, biz_name: 平均阅读成绩, physical_column_id: california_schools.satscores.AvgScrRead}
-          - {attr_id: california_schools.satscores.AvgScrWrite, biz_name: 平均写作成绩, physical_column_id: california_schools.satscores.AvgScrWrite}
-          - {attr_id: california_schools.satscores.NumTstTakr, biz_name: 考试人数, physical_column_id: california_schools.satscores.NumTstTakr}
-          - {attr_id: california_schools.satscores.NumGE1500, biz_name: ≥1500人数, physical_column_id: california_schools.satscores.NumGE1500}
-      - physical_entity_id: PHYSICAL.免费餐补贴表
+          - {attr_id: california_schools.satscores.AvgScrMath, biz_name: AvgScrMath, physical_column_id: california_schools.satscores.AvgScrMath}
+          - {attr_id: california_schools.satscores.AvgScrRead, biz_name: AvgScrRead, physical_column_id: california_schools.satscores.AvgScrRead}
+          - {attr_id: california_schools.satscores.AvgScrWrite, biz_name: AvgScrWrite, physical_column_id: california_schools.satscores.AvgScrWrite}
+          - {attr_id: california_schools.satscores.NumTstTakr, biz_name: NumTstTakr, physical_column_id: california_schools.satscores.NumTstTakr}
+          - {attr_id: california_schools.satscores.NumGE1500, biz_name: NumGE1500, physical_column_id: california_schools.satscores.NumGE1500}
+      - physical_entity_id: PHYSICAL.FRPM
         physical_table_name: frpm
         physical_table_id: california_schools.frpm
         A: {cardinality: "1:1", key: CDSCode}
         R: null
-        C:
-          LOGICAL.学校绩效.关联学校: california_schools.frpm.CDSCode
-        S: "免费/减价餐补贴统计 — 入学人数与补贴人数"
+        C: {LOGICAL.SchoolPerformance.School: california_schools.frpm.CDSCode}
+        S: "Free/reduced price meal statistics"
         private_attributes:
-          - {attr_id: california_schools.frpm.`Enrollment (K-12)`, biz_name: K-12入学人数, physical_column_id: california_schools.frpm.`Enrollment (K-12)`}
-          - {attr_id: california_schools.frpm.`Enrollment (Ages 5-17)`, biz_name: 5-17岁入学人数, physical_column_id: california_schools.frpm.`Enrollment (Ages 5-17)`}
-          - {attr_id: california_schools.frpm.`Free Meal Count (K-12)`, biz_name: K-12免费餐人数, physical_column_id: california_schools.frpm.`Free Meal Count (K-12)`}
-          - {attr_id: california_schools.frpm.`Free Meal Count (Ages 5-17)`, biz_name: 5-17岁免费餐人数, physical_column_id: california_schools.frpm.`Free Meal Count (Ages 5-17)`}
-          - {attr_id: california_schools.frpm.`FRPM Count (K-12)`, biz_name: K-12 FRPM人数, physical_column_id: california_schools.frpm.`FRPM Count (K-12)`}
-          - {attr_id: california_schools.frpm.`FRPM Count (Ages 5-17)`, biz_name: 5-17岁FRPM人数, physical_column_id: california_schools.frpm.`FRPM Count (Ages 5-17)`}
-          - {attr_id: california_schools.frpm.`NSLP Provision Status`, biz_name: NSLP状态, physical_column_id: california_schools.frpm.`NSLP Provision Status`}
-          - {attr_id: california_schools.frpm.`Charter Funding Type`, biz_name: 特许资金类型, physical_column_id: california_schools.frpm.`Charter Funding Type`}
-          - {attr_id: california_schools.frpm.`District Name`, biz_name: 学区名称, physical_column_id: california_schools.frpm.`District Name`}
-          - {attr_id: california_schools.frpm.`School Name`, biz_name: 学校名称, physical_column_id: california_schools.frpm.`School Name`}
-          - {attr_id: california_schools.frpm.`School Type`, biz_name: 学校类型, physical_column_id: california_schools.frpm.`School Type`}
-          - {attr_id: california_schools.frpm.`Academic Year`, biz_name: 学年, physical_column_id: california_schools.frpm.`Academic Year`}
-          - {attr_id: california_schools.frpm.`District Code`, biz_name: 学区代码, physical_column_id: california_schools.frpm.`District Code`}
-
+          - {attr_id: california_schools.frpm.`Enrollment (K-12)`, biz_name: Enrollment_K12, physical_column_id: california_schools.frpm.`Enrollment (K-12)`}
+          - {attr_id: california_schools.frpm.`Enrollment (Ages 5-17)`, biz_name: Enrollment_5_17, physical_column_id: california_schools.frpm.`Enrollment (Ages 5-17)`}
+          - {attr_id: california_schools.frpm.`Free Meal Count (K-12)`, biz_name: FreeMeal_K12, physical_column_id: california_schools.frpm.`Free Meal Count (K-12)`}
+          - {attr_id: california_schools.frpm.`Free Meal Count (Ages 5-17)`, biz_name: FreeMeal_5_17, physical_column_id: california_schools.frpm.`Free Meal Count (Ages 5-17)`}
+          - {attr_id: california_schools.frpm.`FRPM Count (K-12)`, biz_name: FRPM_K12, physical_column_id: california_schools.frpm.`FRPM Count (K-12)`}
+          - {attr_id: california_schools.frpm.`FRPM Count (Ages 5-17)`, biz_name: FRPM_5_17, physical_column_id: california_schools.frpm.`FRPM Count (Ages 5-17)`}
+          - {attr_id: california_schools.frpm.`NSLP Provision Status`, biz_name: NSLP_Status, physical_column_id: california_schools.frpm.`NSLP Provision Status`}
+          - {attr_id: california_schools.frpm.`Charter Funding Type`, biz_name: CharterFundingType, physical_column_id: california_schools.frpm.`Charter Funding Type`}
+          - {attr_id: california_schools.frpm.`District Name`, biz_name: DistrictName, physical_column_id: california_schools.frpm.`District Name`}
+          - {attr_id: california_schools.frpm.`School Name`, biz_name: SchoolName, physical_column_id: california_schools.frpm.`School Name`}
+          - {attr_id: california_schools.frpm.`School Type`, biz_name: SchoolType, physical_column_id: california_schools.frpm.`School Type`}
+          - {attr_id: california_schools.frpm.`Academic Year`, biz_name: AcademicYear, physical_column_id: california_schools.frpm.`Academic Year`}
+          - {attr_id: california_schools.frpm.`District Code`, biz_name: DistrictCode, physical_column_id: california_schools.frpm.`District Code`}
 pas_relations:
-  - relation_id: LOGICAL.学校_TO_LOGICAL.学校绩效
-    relation_name: 绩效产出
-    P: {forward: {verb: 产出, cardinality: '1:1'}, reverse: {verb: 归属, cardinality: '1:1'}}
-    A: 学校代码
-    S: "1所学校对应1条SAT成绩 + 1条补贴统计"
+  - relation_id: LOGICAL.School_TO_LOGICAL.SchoolPerformance
+    relation_name: HasPerformance
+    P: {forward: {verb: has, cardinality: '1:1'}, reverse: {verb: belongs to, cardinality: '1:1'}}
+    A: SchoolCode
+    S: "1 school has 1 SAT record and 1 FRPM record"

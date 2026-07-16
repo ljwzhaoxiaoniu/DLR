@@ -4,4 +4,4 @@ scenario_name: rdf_formula_1
 database: "formula_1"
 ttl_path: "formula_1.ttl"
 databases:
-  formula_1: "sqlite:///MINIDEV_sqlite/dev_databases/formula_1/formula_1.sqlite"
+  formula_1: "sqlite:///../MINIDEV_sqlite/dev_databases/formula_1/formula_1.sqlite"

@@ -1,255 +1,223 @@
 mapping_type: "dlr"
 version: "2.0"
 scenario_name: dlr_formula_1
-description: "DLR 范式 — F1赛车场景：按需字段，11 PE 聚合 8 LE，车手/车队赛事多视图解耦"
+description: "DLR paradigm - F1 racing scenario: on-demand fields, 11 PEs aggregated into 8 LEs, driver/constructor race data multi-view decoupling"
 databases:
   formula_1: "sqlite:///MINIDEV_sqlite/dev_databases/formula_1/formula_1.sqlite"
-
 logical_entities:
-  # ── 1. 车手 (1 PE) ──
-  - logical_entity_id: LOGICAL.车手
-    biz_name: 车手
+  - logical_entity_id: LOGICAL.Driver
+    biz_name: Driver
     public_attributes:
-      - {attr_id: LOGICAL.车手.车手编号, biz_name: 车手编号}  # JOIN key
+      - {attr_id: LOGICAL.Driver.DriverID, biz_name: DriverID}
     physical_entities:
-      - physical_entity_id: PHYSICAL.车手表
+      - physical_entity_id: PHYSICAL.Driver
         physical_table_name: drivers
         physical_table_id: formula_1.drivers
         A: {cardinality: "1:1", key: driverId}
         R: null
-        C:
-          LOGICAL.车手.车手编号: formula_1.drivers.driverId
-        S: "车手主数据"
+        C: {LOGICAL.Driver.DriverID: formula_1.drivers.driverId}
+        S: "Driver master data"
         private_attributes:
-          - {attr_id: formula_1.drivers.driverRef, biz_name: 引用名, physical_column_id: formula_1.drivers.driverRef}
-          - {attr_id: formula_1.drivers.nationality, biz_name: 国籍, physical_column_id: formula_1.drivers.nationality}
-          - {attr_id: formula_1.drivers.forename, biz_name: 名, physical_column_id: formula_1.drivers.forename}
-          - {attr_id: formula_1.drivers.surname, biz_name: 姓, physical_column_id: formula_1.drivers.surname}
-          - {attr_id: formula_1.drivers.dob, biz_name: 出生日期, physical_column_id: formula_1.drivers.dob}
-          - {attr_id: formula_1.drivers.number, biz_name: 车号, physical_column_id: formula_1.drivers.number}
-          - {attr_id: formula_1.drivers.code, biz_name: 代码, physical_column_id: formula_1.drivers.code}
-
-  # ── 2. 赛道 (1 PE) ──
-  - logical_entity_id: LOGICAL.赛道
-    biz_name: 赛道
+          - {attr_id: formula_1.drivers.driverRef, biz_name: driverRef, physical_column_id: formula_1.drivers.driverRef}
+          - {attr_id: formula_1.drivers.nationality, biz_name: nationality, physical_column_id: formula_1.drivers.nationality}
+          - {attr_id: formula_1.drivers.forename, biz_name: forename, physical_column_id: formula_1.drivers.forename}
+          - {attr_id: formula_1.drivers.surname, biz_name: surname, physical_column_id: formula_1.drivers.surname}
+          - {attr_id: formula_1.drivers.dob, biz_name: dob, physical_column_id: formula_1.drivers.dob}
+          - {attr_id: formula_1.drivers.number, biz_name: number, physical_column_id: formula_1.drivers.number}
+          - {attr_id: formula_1.drivers.code, biz_name: code, physical_column_id: formula_1.drivers.code}
+          - {attr_id: formula_1.drivers.url, biz_name: url, physical_column_id: formula_1.drivers.url}
+  - logical_entity_id: LOGICAL.Circuit
+    biz_name: Circuit
     public_attributes:
-      - {attr_id: LOGICAL.赛道.赛道编号, biz_name: 赛道编号}  # JOIN key
+      - {attr_id: LOGICAL.Circuit.CircuitID, biz_name: CircuitID}
     physical_entities:
-      - physical_entity_id: PHYSICAL.赛道表
+      - physical_entity_id: PHYSICAL.Circuit
         physical_table_name: circuits
         physical_table_id: formula_1.circuits
         A: {cardinality: "1:1", key: circuitId}
         R: null
-        C:
-          LOGICAL.赛道.赛道编号: formula_1.circuits.circuitId
-        S: "赛道信息"
+        C: {LOGICAL.Circuit.CircuitID: formula_1.circuits.circuitId}
+        S: "Circuit information"
         private_attributes:
-          - {attr_id: formula_1.circuits.name, biz_name: 名称, physical_column_id: formula_1.circuits.name}
-          - {attr_id: formula_1.circuits.country, biz_name: 国家, physical_column_id: formula_1.circuits.country}
-          - {attr_id: formula_1.circuits.circuitRef, biz_name: 引用名, physical_column_id: formula_1.circuits.circuitRef}
-          - {attr_id: formula_1.circuits.location, biz_name: 位置, physical_column_id: formula_1.circuits.location}
-          - {attr_id: formula_1.circuits.lat, biz_name: 纬度, physical_column_id: formula_1.circuits.lat}
-          - {attr_id: formula_1.circuits.lng, biz_name: 经度, physical_column_id: formula_1.circuits.lng}
-
-  # ── 3. 分站赛 (1 PE) ──
-  - logical_entity_id: LOGICAL.分站赛
-    biz_name: 分站赛
+          - {attr_id: formula_1.circuits.name, biz_name: name, physical_column_id: formula_1.circuits.name}
+          - {attr_id: formula_1.circuits.country, biz_name: country, physical_column_id: formula_1.circuits.country}
+          - {attr_id: formula_1.circuits.circuitRef, biz_name: circuitRef, physical_column_id: formula_1.circuits.circuitRef}
+          - {attr_id: formula_1.circuits.location, biz_name: location, physical_column_id: formula_1.circuits.location}
+          - {attr_id: formula_1.circuits.lat, biz_name: lat, physical_column_id: formula_1.circuits.lat}
+          - {attr_id: formula_1.circuits.lng, biz_name: lng, physical_column_id: formula_1.circuits.lng}
+  - logical_entity_id: LOGICAL.Race
+    biz_name: Race
     public_attributes:
-      - {attr_id: LOGICAL.分站赛.赛事编号, biz_name: 赛事编号}  # JOIN key
+      - {attr_id: LOGICAL.Race.RaceID, biz_name: RaceID}
     physical_entities:
-      - physical_entity_id: PHYSICAL.赛事表
+      - physical_entity_id: PHYSICAL.Race
         physical_table_name: races
         physical_table_id: formula_1.races
         A: {cardinality: "1:1", key: raceId}
         R: null
-        C:
-          LOGICAL.分站赛.赛事编号: formula_1.races.raceId
-        S: "赛事主记录"
+        C: {LOGICAL.Race.RaceID: formula_1.races.raceId}
+        S: "Race master record"
         private_attributes:
-          - {attr_id: formula_1.races.year, biz_name: 年份, physical_column_id: formula_1.races.year}
-          - {attr_id: formula_1.races.name, biz_name: 赛事名称, physical_column_id: formula_1.races.name}
-          - {attr_id: formula_1.races.circuitId, biz_name: 赛道ID, physical_column_id: formula_1.races.circuitId}
-          - {attr_id: formula_1.races.date, biz_name: 日期, physical_column_id: formula_1.races.date}
-          - {attr_id: formula_1.races.time, biz_name: 时间, physical_column_id: formula_1.races.time}
-
-  # ── 4. 车手赛事数据 (3 PE — DLR 多视图核心) ──
-  - logical_entity_id: LOGICAL.车手赛事数据
-    biz_name: 车手赛事数据
-    description: "车手在分站赛中的表现：排位赛+正赛结果+圈速"
+          - {attr_id: formula_1.races.year, biz_name: year, physical_column_id: formula_1.races.year}
+          - {attr_id: formula_1.races.name, biz_name: name, physical_column_id: formula_1.races.name}
+          - {attr_id: formula_1.races.circuitId, biz_name: circuitId, physical_column_id: formula_1.races.circuitId}
+          - {attr_id: formula_1.races.date, biz_name: date, physical_column_id: formula_1.races.date}
+          - {attr_id: formula_1.races.time, biz_name: time, physical_column_id: formula_1.races.time}
+          - {attr_id: formula_1.races.url, biz_name: url, physical_column_id: formula_1.races.url}
+  - logical_entity_id: LOGICAL.DriverRaceData
+    biz_name: DriverRaceData
+    description: "Driver performance in a race: qualifying + race results + lap times"
     public_attributes:
-      - {attr_id: LOGICAL.车手赛事数据.所属车手, biz_name: 所属车手}  # JOIN key
-      - {attr_id: LOGICAL.车手赛事数据.所属赛事, biz_name: 所属赛事}  # JOIN key
+      - {attr_id: LOGICAL.DriverRaceData.Driver, biz_name: Driver}
+      - {attr_id: LOGICAL.DriverRaceData.Race, biz_name: Race}
     physical_entities:
-      - physical_entity_id: PHYSICAL.排位赛表
+      - physical_entity_id: PHYSICAL.Qualifying
         physical_table_name: qualifying
         physical_table_id: formula_1.qualifying
         A: {cardinality: "N:1", key: raceId}
         R: null
-        C:
-          LOGICAL.车手赛事数据.所属车手: formula_1.qualifying.driverId
-          LOGICAL.车手赛事数据.所属赛事: formula_1.qualifying.raceId
-        S: "排位赛成绩"
+        C: {LOGICAL.DriverRaceData.Driver: formula_1.qualifying.driverId, LOGICAL.DriverRaceData.Race: formula_1.qualifying.raceId}
+        S: "Qualifying results"
         private_attributes:
-          - {attr_id: formula_1.qualifying.qualifyId, biz_name: 排位ID, physical_column_id: formula_1.qualifying.qualifyId}
-          - {attr_id: formula_1.qualifying.number, biz_name: 车号, physical_column_id: formula_1.qualifying.number}
-          - {attr_id: formula_1.qualifying.position, biz_name: 排位, physical_column_id: formula_1.qualifying.position}
-          - {attr_id: formula_1.qualifying.q1, biz_name: Q1, physical_column_id: formula_1.qualifying.q1}
-          - {attr_id: formula_1.qualifying.q2, biz_name: Q2, physical_column_id: formula_1.qualifying.q2}
-          - {attr_id: formula_1.qualifying.q3, biz_name: Q3, physical_column_id: formula_1.qualifying.q3}
-      - physical_entity_id: PHYSICAL.正赛结果表
+          - {attr_id: formula_1.qualifying.qualifyId, biz_name: qualifyId, physical_column_id: formula_1.qualifying.qualifyId}
+          - {attr_id: formula_1.qualifying.number, biz_name: number, physical_column_id: formula_1.qualifying.number}
+          - {attr_id: formula_1.qualifying.position, biz_name: position, physical_column_id: formula_1.qualifying.position}
+          - {attr_id: formula_1.qualifying.q1, biz_name: q1, physical_column_id: formula_1.qualifying.q1}
+          - {attr_id: formula_1.qualifying.q2, biz_name: q2, physical_column_id: formula_1.qualifying.q2}
+          - {attr_id: formula_1.qualifying.q3, biz_name: q3, physical_column_id: formula_1.qualifying.q3}
+      - physical_entity_id: PHYSICAL.Result
         physical_table_name: results
         physical_table_id: formula_1.results
         A: {cardinality: "N:1", key: raceId}
         R: null
-        C:
-          LOGICAL.车手赛事数据.所属车手: formula_1.results.driverId
-          LOGICAL.车手赛事数据.所属赛事: formula_1.results.raceId
-        S: "正赛结果"
+        C: {LOGICAL.DriverRaceData.Driver: formula_1.results.driverId, LOGICAL.DriverRaceData.Race: formula_1.results.raceId}
+        S: "Race results"
         private_attributes:
-          - {attr_id: formula_1.results.resultId, biz_name: 结果ID, physical_column_id: formula_1.results.resultId}
-          - {attr_id: formula_1.results.constructorId, biz_name: 车队ID, physical_column_id: formula_1.results.constructorId}
-          - {attr_id: formula_1.results.number, biz_name: 车号, physical_column_id: formula_1.results.number}
-          - {attr_id: formula_1.results.grid, biz_name: 发车位, physical_column_id: formula_1.results.grid}
-          - {attr_id: formula_1.results.position, biz_name: 名次, physical_column_id: formula_1.results.position}
-          - {attr_id: formula_1.results.positionOrder, biz_name: 完赛顺序, physical_column_id: formula_1.results.positionOrder}
-          - {attr_id: formula_1.results.points, biz_name: 积分, physical_column_id: formula_1.results.points}
-          - {attr_id: formula_1.results.laps, biz_name: 圈数, physical_column_id: formula_1.results.laps}
-          - {attr_id: formula_1.results.time, biz_name: 时间, physical_column_id: formula_1.results.time}
-          - {attr_id: formula_1.results.fastestLap, biz_name: 最快圈, physical_column_id: formula_1.results.fastestLap}
-          - {attr_id: formula_1.results.fastestLapTime, biz_name: 最快圈时间, physical_column_id: formula_1.results.fastestLapTime}
-          - {attr_id: formula_1.results.fastestLapSpeed, biz_name: 最快圈速, physical_column_id: formula_1.results.fastestLapSpeed}
-          - {attr_id: formula_1.results.rank, biz_name: 排名, physical_column_id: formula_1.results.rank}
-          - {attr_id: formula_1.results.statusId, biz_name: 状态ID, physical_column_id: formula_1.results.statusId}
-      - physical_entity_id: PHYSICAL.圈速表
+          - {attr_id: formula_1.results.resultId, biz_name: resultId, physical_column_id: formula_1.results.resultId}
+          - {attr_id: formula_1.results.constructorId, biz_name: constructorId, physical_column_id: formula_1.results.constructorId}
+          - {attr_id: formula_1.results.number, biz_name: number, physical_column_id: formula_1.results.number}
+          - {attr_id: formula_1.results.grid, biz_name: grid, physical_column_id: formula_1.results.grid}
+          - {attr_id: formula_1.results.position, biz_name: position, physical_column_id: formula_1.results.position}
+          - {attr_id: formula_1.results.positionOrder, biz_name: positionOrder, physical_column_id: formula_1.results.positionOrder}
+          - {attr_id: formula_1.results.points, biz_name: points, physical_column_id: formula_1.results.points}
+          - {attr_id: formula_1.results.laps, biz_name: laps, physical_column_id: formula_1.results.laps}
+          - {attr_id: formula_1.results.time, biz_name: time, physical_column_id: formula_1.results.time}
+          - {attr_id: formula_1.results.fastestLap, biz_name: fastestLap, physical_column_id: formula_1.results.fastestLap}
+          - {attr_id: formula_1.results.fastestLapTime, biz_name: fastestLapTime, physical_column_id: formula_1.results.fastestLapTime}
+          - {attr_id: formula_1.results.fastestLapSpeed, biz_name: fastestLapSpeed, physical_column_id: formula_1.results.fastestLapSpeed}
+          - {attr_id: formula_1.results.rank, biz_name: rank, physical_column_id: formula_1.results.rank}
+          - {attr_id: formula_1.results.statusId, biz_name: statusId, physical_column_id: formula_1.results.statusId}
+      - physical_entity_id: PHYSICAL.LapTime
         physical_table_name: lapTimes
         physical_table_id: formula_1.lapTimes
         A: {cardinality: "N:1", key: raceId}
         R: null
-        C:
-          LOGICAL.车手赛事数据.所属车手: formula_1.lapTimes.driverId
-          LOGICAL.车手赛事数据.所属赛事: formula_1.lapTimes.raceId
-        S: "逐圈时间"
+        C: {LOGICAL.DriverRaceData.Driver: formula_1.lapTimes.driverId, LOGICAL.DriverRaceData.Race: formula_1.lapTimes.raceId}
+        S: "Lap times"
         private_attributes:
-          - {attr_id: formula_1.lapTimes.lap, biz_name: 圈数, physical_column_id: formula_1.lapTimes.lap}
-          - {attr_id: formula_1.lapTimes.position, biz_name: 位置, physical_column_id: formula_1.lapTimes.position}
-          - {attr_id: formula_1.lapTimes.time, biz_name: 圈时间, physical_column_id: formula_1.lapTimes.time}
-          - {attr_id: formula_1.lapTimes.milliseconds, biz_name: 毫秒, physical_column_id: formula_1.lapTimes.milliseconds}
-
-  # ── 5. 车手积分榜 (1 PE) ──
-  - logical_entity_id: LOGICAL.车手积分榜
-    biz_name: 车手积分榜
+          - {attr_id: formula_1.lapTimes.lap, biz_name: lap, physical_column_id: formula_1.lapTimes.lap}
+          - {attr_id: formula_1.lapTimes.position, biz_name: position, physical_column_id: formula_1.lapTimes.position}
+          - {attr_id: formula_1.lapTimes.time, biz_name: time, physical_column_id: formula_1.lapTimes.time}
+          - {attr_id: formula_1.lapTimes.milliseconds, biz_name: milliseconds, physical_column_id: formula_1.lapTimes.milliseconds}
+  - logical_entity_id: LOGICAL.DriverStandings
+    biz_name: DriverStandings
     public_attributes:
-      - {attr_id: LOGICAL.车手积分榜.所属车手, biz_name: 所属车手}
-      - {attr_id: LOGICAL.车手积分榜.所属赛事, biz_name: 所属赛事}
+      - {attr_id: LOGICAL.DriverStandings.Driver, biz_name: Driver}
+      - {attr_id: LOGICAL.DriverStandings.Race, biz_name: Race}
     physical_entities:
-      - physical_entity_id: PHYSICAL.车手积分表
+      - physical_entity_id: PHYSICAL.DriverStanding
         physical_table_name: driverStandings
         physical_table_id: formula_1.driverStandings
         A: {cardinality: "N:1", key: raceId}
         R: null
-        C:
-          LOGICAL.车手积分榜.所属车手: formula_1.driverStandings.driverId
-          LOGICAL.车手积分榜.所属赛事: formula_1.driverStandings.raceId
-        S: "车手赛季积分排名"
+        C: {LOGICAL.DriverStandings.Driver: formula_1.driverStandings.driverId, LOGICAL.DriverStandings.Race: formula_1.driverStandings.raceId}
+        S: "Driver season standings"
         private_attributes:
-          - {attr_id: formula_1.driverStandings.driverStandingsId, biz_name: 积分ID, physical_column_id: formula_1.driverStandings.driverStandingsId}
-          - {attr_id: formula_1.driverStandings.points, biz_name: 积分, physical_column_id: formula_1.driverStandings.points}
-          - {attr_id: formula_1.driverStandings.position, biz_name: 排名, physical_column_id: formula_1.driverStandings.position}
-          - {attr_id: formula_1.driverStandings.wins, biz_name: 胜场, physical_column_id: formula_1.driverStandings.wins}
-
-  # ── 6. 进站记录 (1 PE) ──
-  - logical_entity_id: LOGICAL.进站记录
-    biz_name: 进站记录
+          - {attr_id: formula_1.driverStandings.driverStandingsId, biz_name: driverStandingsId, physical_column_id: formula_1.driverStandings.driverStandingsId}
+          - {attr_id: formula_1.driverStandings.points, biz_name: points, physical_column_id: formula_1.driverStandings.points}
+          - {attr_id: formula_1.driverStandings.position, biz_name: position, physical_column_id: formula_1.driverStandings.position}
+          - {attr_id: formula_1.driverStandings.wins, biz_name: wins, physical_column_id: formula_1.driverStandings.wins}
+  - logical_entity_id: LOGICAL.PitStop
+    biz_name: PitStop
     public_attributes:
-      - {attr_id: LOGICAL.进站记录.所属车手, biz_name: 所属车手}
-      - {attr_id: LOGICAL.进站记录.所属赛事, biz_name: 所属赛事}
+      - {attr_id: LOGICAL.PitStop.Driver, biz_name: Driver}
+      - {attr_id: LOGICAL.PitStop.Race, biz_name: Race}
     physical_entities:
-      - physical_entity_id: PHYSICAL.进站表
+      - physical_entity_id: PHYSICAL.PitStop
         physical_table_name: pitStops
         physical_table_id: formula_1.pitStops
         A: {cardinality: "N:1", key: raceId}
         R: null
-        C:
-          LOGICAL.进站记录.所属车手: formula_1.pitStops.driverId
-          LOGICAL.进站记录.所属赛事: formula_1.pitStops.raceId
-        S: "进站记录"
+        C: {LOGICAL.PitStop.Driver: formula_1.pitStops.driverId, LOGICAL.PitStop.Race: formula_1.pitStops.raceId}
+        S: "Pit stop records"
         private_attributes:
-          - {attr_id: formula_1.pitStops.stop, biz_name: 进站序号, physical_column_id: formula_1.pitStops.stop}
-          - {attr_id: formula_1.pitStops.lap, biz_name: 圈数, physical_column_id: formula_1.pitStops.lap}
-          - {attr_id: formula_1.pitStops.time, biz_name: 时间, physical_column_id: formula_1.pitStops.time}
-          - {attr_id: formula_1.pitStops.duration, biz_name: 持续时间, physical_column_id: formula_1.pitStops.duration}
-
-  # ── 7. 车队 (1 PE) ──
-  - logical_entity_id: LOGICAL.车队
-    biz_name: 车队
+          - {attr_id: formula_1.pitStops.stop, biz_name: stop, physical_column_id: formula_1.pitStops.stop}
+          - {attr_id: formula_1.pitStops.lap, biz_name: lap, physical_column_id: formula_1.pitStops.lap}
+          - {attr_id: formula_1.pitStops.time, biz_name: time, physical_column_id: formula_1.pitStops.time}
+          - {attr_id: formula_1.pitStops.duration, biz_name: duration, physical_column_id: formula_1.pitStops.duration}
+  - logical_entity_id: LOGICAL.Constructor
+    biz_name: Constructor
     public_attributes:
-      - {attr_id: LOGICAL.车队.车队编号, biz_name: 车队编号}
+      - {attr_id: LOGICAL.Constructor.ConstructorID, biz_name: ConstructorID}
     physical_entities:
-      - physical_entity_id: PHYSICAL.车队表
+      - physical_entity_id: PHYSICAL.Constructor
         physical_table_name: constructors
         physical_table_id: formula_1.constructors
         A: {cardinality: "1:1", key: constructorId}
         R: null
-        C:
-          LOGICAL.车队.车队编号: formula_1.constructors.constructorId
-        S: "车队主数据"
+        C: {LOGICAL.Constructor.ConstructorID: formula_1.constructors.constructorId}
+        S: "Constructor master data"
         private_attributes:
-          - {attr_id: formula_1.constructors.name, biz_name: 车队名称, physical_column_id: formula_1.constructors.name}
-          - {attr_id: formula_1.constructors.nationality, biz_name: 国籍, physical_column_id: formula_1.constructors.nationality}
-          - {attr_id: formula_1.constructors.constructorRef, biz_name: 引用名, physical_column_id: formula_1.constructors.constructorRef}
-
-  # ── 8. 车队赛事数据 (2 PE — 多视图) ──
-  - logical_entity_id: LOGICAL.车队赛事数据
-    biz_name: 车队赛事数据
+          - {attr_id: formula_1.constructors.name, biz_name: name, physical_column_id: formula_1.constructors.name}
+          - {attr_id: formula_1.constructors.nationality, biz_name: nationality, physical_column_id: formula_1.constructors.nationality}
+          - {attr_id: formula_1.constructors.constructorRef, biz_name: constructorRef, physical_column_id: formula_1.constructors.constructorRef}
+          - {attr_id: formula_1.constructors.url, biz_name: url, physical_column_id: formula_1.constructors.url}
+  - logical_entity_id: LOGICAL.ConstructorRaceData
+    biz_name: ConstructorRaceData
     public_attributes:
-      - {attr_id: LOGICAL.车队赛事数据.所属车队, biz_name: 所属车队}
-      - {attr_id: LOGICAL.车队赛事数据.所属赛事, biz_name: 所属赛事}
+      - {attr_id: LOGICAL.ConstructorRaceData.Constructor, biz_name: Constructor}
+      - {attr_id: LOGICAL.ConstructorRaceData.Race, biz_name: Race}
     physical_entities:
-      - physical_entity_id: PHYSICAL.车队成绩表
+      - physical_entity_id: PHYSICAL.ConstructorResult
         physical_table_name: constructorResults
         physical_table_id: formula_1.constructorResults
         A: {cardinality: "N:1", key: raceId}
         R: null
-        C:
-          LOGICAL.车队赛事数据.所属车队: formula_1.constructorResults.constructorId
-          LOGICAL.车队赛事数据.所属赛事: formula_1.constructorResults.raceId
-        S: "车队单站成绩"
+        C: {LOGICAL.ConstructorRaceData.Constructor: formula_1.constructorResults.constructorId, LOGICAL.ConstructorRaceData.Race: formula_1.constructorResults.raceId}
+        S: "Constructor race results"
         private_attributes:
-          - {attr_id: formula_1.constructorResults.constructorResultsId, biz_name: 成绩ID, physical_column_id: formula_1.constructorResults.constructorResultsId}
-          - {attr_id: formula_1.constructorResults.points, biz_name: 积分, physical_column_id: formula_1.constructorResults.points}
-      - physical_entity_id: PHYSICAL.车队积分表
+          - {attr_id: formula_1.constructorResults.constructorResultsId, biz_name: constructorResultsId, physical_column_id: formula_1.constructorResults.constructorResultsId}
+          - {attr_id: formula_1.constructorResults.points, biz_name: points, physical_column_id: formula_1.constructorResults.points}
+      - physical_entity_id: PHYSICAL.ConstructorStanding
         physical_table_name: constructorStandings
         physical_table_id: formula_1.constructorStandings
         A: {cardinality: "N:1", key: raceId}
         R: null
-        C:
-          LOGICAL.车队赛事数据.所属车队: formula_1.constructorStandings.constructorId
-          LOGICAL.车队赛事数据.所属赛事: formula_1.constructorStandings.raceId
-        S: "车队赛季积分排名"
+        C: {LOGICAL.ConstructorRaceData.Constructor: formula_1.constructorStandings.constructorId, LOGICAL.ConstructorRaceData.Race: formula_1.constructorStandings.raceId}
+        S: "Constructor season standings"
         private_attributes:
-          - {attr_id: formula_1.constructorStandings.constructorStandingsId, biz_name: 积分ID, physical_column_id: formula_1.constructorStandings.constructorStandingsId}
-          - {attr_id: formula_1.constructorStandings.points, biz_name: 积分, physical_column_id: formula_1.constructorStandings.points}
-          - {attr_id: formula_1.constructorStandings.position, biz_name: 排名, physical_column_id: formula_1.constructorStandings.position}
-          - {attr_id: formula_1.constructorStandings.wins, biz_name: 胜场, physical_column_id: formula_1.constructorStandings.wins}
-
+          - {attr_id: formula_1.constructorStandings.constructorStandingsId, biz_name: constructorStandingsId, physical_column_id: formula_1.constructorStandings.constructorStandingsId}
+          - {attr_id: formula_1.constructorStandings.points, biz_name: points, physical_column_id: formula_1.constructorStandings.points}
+          - {attr_id: formula_1.constructorStandings.position, biz_name: position, physical_column_id: formula_1.constructorStandings.position}
+          - {attr_id: formula_1.constructorStandings.wins, biz_name: wins, physical_column_id: formula_1.constructorStandings.wins}
 pas_relations:
-  - relation_id: LOGICAL.赛道_TO_LOGICAL.分站赛
-    relation_name: 赛事举办
-    P: {forward: {verb: 举办, cardinality: '1:N'}, reverse: {verb: 位于, cardinality: '1:1'}}
-    A: 赛道编号
-    S: "1条赛道举办多场分站赛"
-  - relation_id: LOGICAL.分站赛_TO_LOGICAL.车手赛事数据
-    relation_name: 赛事数据
-    P: {forward: {verb: 产生, cardinality: '1:N'}, reverse: {verb: 归属, cardinality: '1:1'}}
-    A: 所属赛事
-    S: "1场赛事产生N条车手数据（排位+正赛+圈速）"
-  - relation_id: LOGICAL.车手_TO_LOGICAL.车手赛事数据
-    relation_name: 参赛
-    P: {forward: {verb: 参与, cardinality: '1:N'}, reverse: {verb: 归属, cardinality: '1:1'}}
-    A: 所属车手
-    S: "1个车手参与N场赛事"
-  - relation_id: LOGICAL.车队_TO_LOGICAL.车队赛事数据
-    relation_name: 车队参赛
-    P: {forward: {verb: 参与, cardinality: '1:N'}, reverse: {verb: 归属, cardinality: '1:1'}}
-    A: 所属车队
-    S: "1个车队参与N场赛事"
+  - relation_id: LOGICAL.Circuit_TO_LOGICAL.Race
+    relation_name: Hosts
+    P: {forward: {verb: hosts, cardinality: '1:N'}, reverse: {verb: is located at, cardinality: '1:1'}}
+    A: CircuitID
+    S: "1 circuit hosts many races"
+  - relation_id: LOGICAL.Race_TO_LOGICAL.DriverRaceData
+    relation_name: Produces
+    P: {forward: {verb: produces, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
+    A: Race
+    S: "1 race produces N driver race data records"
+  - relation_id: LOGICAL.Driver_TO_LOGICAL.DriverRaceData
+    relation_name: Participates
+    P: {forward: {verb: participates, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
+    A: Driver
+    S: "1 driver participates in N races"
+  - relation_id: LOGICAL.Constructor_TO_LOGICAL.ConstructorRaceData
+    relation_name: Participates
+    P: {forward: {verb: participates, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
+    A: Constructor
+    S: "1 constructor participates in N races"

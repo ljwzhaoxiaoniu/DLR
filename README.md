@@ -275,11 +275,30 @@ DLR Proj/
 
 ## MCP 工具
 
-### 共享工具（所有范式）
+### 设计原则(2026-07-16 重构)
+
+**三范式统一 `semantic_query` 接口,返回各自建模核心概念,第一跳完全屏蔽物理信息:**
+
+| 范式 | 接口名 | 返回容器 | 核心 ID 字段 | 内部结构特色 | 边界控制 |
+|------|--------|---------|-------------|-------------|---------|
+| **ER** | `er_semantic_query` | `data.entities` | `entity_id` | 扁平实体结构 | 无物理表/字段 |
+| **DLR** | `dlr_semantic_query` | `data.structures` | `logical_entity_id` + `physical_entities[].physical_entity_id` | LE-PE 复合结构 | 无物理表名/字段 |
+| **RDF** | `rdf_semantic_query` | `data.classes` | `class_uri` | URI 本体结构 | 无 R2RML 映射/字段 |
+
+**统一返回顶层结构:** `{success, confidence, data:{...}}`
+
+**description 规范:** 三范式 description 仅放纯业务描述,不带属性字段名(避免变相免费给属性信息)。
+
+**LLM 自动判断范式:** 从返回容器名 + 字段名自动判断范式,决定后续调用:
+- `entities` + `entity_id` → ER → 调 `get_entity_mapping(entity_id)`
+- `structures` + `logical_entity_id` + `physical_entities` → DLR → 调 `get_pe_arcs(pe_id)`
+- `classes` + `class_uri` → RDF → 调 `query_rdf_mapping(class_name)`
+
+### ER 范式工具(11 件)
 
 | Tool | 参数 | 语义 |
 |------|------|------|
-| `semantic_query` | `question, top_k=20` | 自然语言查询（主入口） |
+| `er_semantic_query` | `question, top_k=20` | 语义召回 → 返回实体(扁平,无物理信息) |
 | `list_entities` | — | 列出所有实体 |
 | `list_relations` | — | 列出所有关系 |
 | `get_entity` | `entity_id` | 单个实体详情 |
@@ -291,28 +310,48 @@ DLR Proj/
 | `get_table_schema` | `table_id: "db.表名"` | 任意物理表结构 |
 | `summary` | — | 知识库摘要统计 |
 
-### DLR（Decoupled Logic Representation）范式专用工具
+### DLR（Decoupled Logic Representation）范式工具(23 件)
 
 | Tool | 参数 | 语义 |
 |------|------|------|
-| `recall_le` | `question, top_k, threshold` | 召回逻辑实体 (LE) |
+| `dlr_semantic_query` | `question, top_k, threshold` | 语义召回 → 返回结构体(LE-PE 复合,无物理信息) |
 | `recall_pe` | `question, top_k, threshold` | 召回物理实体 (PE) |
 | `recall_pas` | `question, top_k, threshold` | 召回 PAS 语义路由 |
 | `list_le` | — | 列出所有逻辑实体 (LE) |
+| `list_pe` | — | 列出所有物理实体 (PE) |
 | `list_pas` | — | 列出所有 PAS 关系 |
 | `get_le` | `le_id` | 逻辑实体 (LE) 详情 |
 | `get_le_attrs` | `le_id` | 逻辑实体 (LE) 属性 |
 | `get_le_children` | `le_id` | 获取物理实体 (PE) 列表 |
+| `get_le_pas` | `le_id` | 获取 LE 的所有 PAS 关系 |
+| `get_pe` | `pe_id` | 物理实体 (PE) 详情 |
+| `get_pe_attrs` | `pe_id` | 物理实体 (PE) 属性 |
 | `get_pe_arcs` | `pe_id` | ARCS 锚定 + 数据库 URL |
+| `get_pe_parent` | `pe_id` | 获取 PE 的父 LE |
+| `get_pas` | `relation_id` | PAS 关系详情 |
+| `get_pas_by_le` | `le_id` | 获取 LE 的所有 PAS 关系 |
 | `path_le_le` | `from_id, to_id` | 两 LE 最短 PAS 路径 |
+| `path_pe_pe` | `pe_id1, pe_id2` | 两 PE 最短路径(跨 LE) |
+| `is_le` | `id` | 判断 ID 是否为 LE |
+| `is_pe` | `id` | 判断 ID 是否为 PE |
+| `is_arcs` | `pe_id, le_id` | 判断 PE 是否通过 ARCS 挂在该 LE 下 |
+| `is_same_le` | `pe_id1, pe_id2` | 判断两 PE 是否同父 LE |
+| `schema` | — | 获取完整 schema(LE+PE+PAS) |
 
-### RDF 范式专用工具
+### RDF 范式工具(8 件)
 
 | Tool | 参数 | 语义 |
 |------|------|------|
+| `rdf_semantic_query` | `question, top_k=20` | 语义召回 → 返回类(IRI 本体,无物理信息) |
 | `query_rdf_mapping` | `table_name` | 查询表的 R2RML 映射（列 + JOIN 关系） |
+| `rdf_classes` | — | 列出所有 rr:class |
+| `rdf_predicates` | — | 列出所有谓词 |
+| `rdf_search` | `q, limit` | 文本搜索三元组 |
+| `rdf_triples_for_class` | `class_uri` | 按类过滤三元组 |
+| `rdf_serialize` | `format` | 序列化(turtle/json-ld/xml/n3/nt) |
+| `rdf_sparql` | `query` | 执行 SPARQL(SELECT/ASK/CONSTRUCT/DESCRIBE) |
 
-> **注意**：范式专属工具仅在对应 `--paradigm` 启动时注册，其他范式不暴露。三个范式均暴露全部 14 个共享工具。
+> **注意:** 范式专属工具仅在对应 `--paradigm` 启动时注册,其他范式不暴露。三范式各自独立,零共享。第一跳 `*_semantic_query` 完全屏蔽物理信息,database_url / 属性字段名等需通过第二跳(`get_entity_mapping` / `get_pe_arcs` / `query_rdf_mapping`)按需获取。
 
 ## HTTP API
 
@@ -490,6 +529,116 @@ Agent 的工作流：接收自然语言 `question` → 通过 MCP 语义查询�
 - 映射阶段结构性等价：都返回 `{table, columns, relations}`
 - **RDF 的"干瘪"是设计意图**：R2RML 只有物理列名 + JOIN，无中文业务语义 — 和 DLR 的 ARCS（中文动词 + 业务描述）形成**纯粹对照**，用于评测建模范式本身对 LLM SQL 生成的引导能力差异
 
+## 评测流水线（Evaluation/）
+
+本项目使用 **Evaluation/** 目录承载的四阶段串行流水线，依赖关系严格串行、每阶段可独立重跑。
+
+### 四阶段总览
+
+| 阶段 | 脚本 | 输入 | 输出 | 依赖 |
+|------|------|------|------|------|
+| **Stage 0** 预处理 | `00_preprocess.py` | `mini_dev_sqlite.json` + 物理 SQLite | `00_golden_cache.json` | 无 |
+| **Stage 1** Agent 执行 | `01_run_agent.py --paradigm` | Stage 0 cache + MCP 范式服务 | `01_logs/{paradigm}/` | Stage 0 + MCP 服务 |
+| **Stage 2** 结果提取与预执行 | `02_extract_and_run.py --paradigm` | Stage 1 日志 | `02_predictions/{paradigm}/` | Stage 1 |
+| **Stage 3** 评测与仲裁 | `03_evaluate.py --paradigm --judge` | Stage 2 预测 + Stage 0 Golden | `03_reports/metrics.csv` | Stage 0 + Stage 2 |
+
+### Stage 0 — 预处理与基准缓存 ✅ 已完成
+
+**目的**：把 Golden SQL 跑一遍,生成标准化结果缓存,为后续比对打下地基。
+
+```bash
+cd Evaluation/scripts
+python 00_preprocess.py
+```
+
+**输出**:`outputs/00_golden_cache.json`(500 题,按数据库分组)。
+
+**标准化规则**(避免无谓评测误差):
+- `float 1.0 == int 1` → round(6) 后比较
+- `None == NULL` → 等价处理
+- **行序 / 列序忽略** → 排序后比较
+- `bytes`(BLOB)→ decode 为 string,避免 JSON 崩溃
+- 连接 timeout=30s,防止损坏库卡死流水线
+
+**当前状态**:**500/500 执行成功,零失败**。
+
+### Stage 1 — Agent 执行(脚本已写,待运行)
+
+**目的**：逐题让 OC Agent 通过 MCP 连接范式服务,生成 SQL 与工具调用日志。每个问题 = 独立 `opencode run` session(零上下文污染)。
+
+```powershell
+# 先启 MCP 服务(ALL 模式,三范式并行)
+cd Semantic\ Core\ Service && python main.py serve --paradigm ALL
+
+# 再跑 Agent(PowerShell 直接 python,不走 conda run)
+cd Evaluation\scripts
+python 01_run_agent.py --paradigm DLR --count 500
+```
+
+**Prompt 设计**(QL 方案,只给 Question + Evidence,schema 信息收起来):
+```
+Question: {question}
+Evidence: {evidence}
+```
+
+**输出**:`outputs/01_logs/{paradigm}/{question_id}.json`(NDJSON 原始日志,含 `.usage` token 事件)。
+
+**Token 追踪**: 每个 step_finish 事件含 `tokens.input/output`,Stage 3 汇总 per-question token 消耗。
+
+### Stage 2 — 结果提取与预执行(脚本已写,待运行)
+
+```powershell
+python 02_extract_and_run.py --paradigm DLR
+```
+
+**目的**：从 Stage 1 NDJSON 日志中提取 Evidence SQL → 执行 → 结果标准化(同 Stage 0 `norm()` 规则)。
+
+**输出**:`outputs/02_predictions/{paradigm}/{question_id}.json`。
+
+### Stage 3 — 评测与仲裁(脚本已写,待运行)
+
+```powershell
+python 03_evaluate.py --paradigm DLR --judge --judge-budget 100
+```
+
+**目的**：Pred 结果 vs Golden 结果比对：
+- 结果一致 → `CORRECT`
+- 结果不一致 + 带 `--judge` → LLM 仲裁(`CORRECT` / `INCORRECT`)
+- 汇总 → `outputs/03_reports/metrics.csv`
+
+### 评测公平性(编码 + 语言)
+
+**编码问题屏蔽**:
+- 三范式 YAML / TTL 映射**全部英文化**,零 CJK 残留(已逐文件验证)
+- MCP 日志为 UTF-16 LE + BOM,NDJSON 格式,解析阶段统一转为 UTF-8
+- 控制台 + 日志消息强制 ASCII,避免 GBK 编码炸弹
+
+**语言公平**:
+- Prompt = 英文 Question + Evidence(**QL 方案**),schema 信息收起来
+- 三范式输入对齐:ER(REST) / DLR(REST→CLI) / RDF(向量 + SPARQL)
+- **唯一变量是建模范式本身的结构差异**,语言/编码干扰全部屏蔽
+
+### 目录结构
+
+```text
+Evaluation/
+├── scripts/
+│   ├── 00_preprocess.py     # Stage 0: 跑 Golden SQL,生成基准缓存 ✅
+│   ├── 01_run_agent.py      # Stage 1: 跑 Agent,生成原始日志
+│   ├── 02_extract_and_run.py# Stage 2: 提取 Pred SQL 并执行
+│   └── 03_evaluate.py       # Stage 3: 比对 + LLM Judge,生成报表
+├── src/
+│   ├── __init__.py
+│   ├── config.py            # 路径配置、Prompt 模板、超时设置
+│   ├── log_parser.py        # 纯正则提取 SQL 逻辑
+│   ├── db_executor.py       # 纯 SQLite 执行与结果标准化
+│   └── llm_judge.py         # 纯 LLM 仲裁 API 调用
+└── outputs/
+    ├── 00_golden_cache.json # Golden 标准化结果缓存 ✅ 已生成
+    ├── 01_logs/             # Agent 原始日志 (按 paradigm 分目录)
+    ├── 02_predictions/      # 提取的 SQL 及其执行结果
+    └── 03_reports/          # 最终评测 CSV 报表
+```
 
 ---
 

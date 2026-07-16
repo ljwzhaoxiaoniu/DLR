@@ -27,23 +27,24 @@
 
 ## 数据查询流程
 
-### Step 1：定位语义对象
-使用 `semantic_query` 输入自然语言问题，从 FAISS 向量召回结果中识别目标实体/属性。
+### Step 1：语义召回定位对象
+用语义召回工具(业务对象 `xxx_semantic_query`)输入自然语言问题,向量召回匹配的语义对象. 具体范式工具名通过 `/mcps` 确认.
 
-### Step 2：获取物理映射
-调用映射工具获取：
-- `database_url`：SQLite 数据库文件路径
-- 物理表名（不带库前缀）
-- 字段映射（逻辑属性 → 物理列名）
+### Step 2：获取物理映射 + 数据库路径
+调用映射工具拿到:
+- 物理表名(不带库前缀)
+- 列名(字段列表)
+- JOIN 关系(如有)
+- database_url:SQLite 数据库文件路径(用于下一步 sqlite3 查询)
 
 ### Step 3：执行 SQL 查询
 ```bash
 sqlite3 -header -column "<数据库文件路径>" "SELECT ..."
 ```
-- 只读查询（SELECT），禁止 INSERT/UPDATE/DELETE
+- 只读查询(SELECT),禁止 INSERT/UPDATE/DELETE
 
 ### Step 4：按 SOP 判定
-将查询结果与 SOP 中的判定规则对照，得出结论。
+将查询结果与 SOP 中的判定规则对照,得出结论.
 
 ---
 
@@ -98,3 +99,16 @@ skills/
 - 数据来自 MCP 工具调用结果，引用时注明工具名 + 关键字段
 - 不确定的对象，先向量召回定位，确认后再深入查询
 - 无法回答时明确告知"当前知识库未覆盖此问题"，不编造不推测
+- **每次回答末尾必须输出 Final Answer 块**(见下方模板),这是给评测流水线双通道校验用的
+
+## Final Answer 模板(回答末尾必输出)
+
+```
+Final Answer: <纯文本结果，数值/字符串/行列表>
+Evidence SQL: <你实际执行的最后一条 SELECT SQL>
+```
+
+规则:
+- Final Answer 必须来自 Evidence SQL 的执行结果，不能凭空写
+- Evidence SQL 必须是可被 sqlite3 直接执行的 SELECT 语句
+- 若执行失败，Final Answer 写 `ERROR: <原因>`，Evidence SQL 写失败的语句

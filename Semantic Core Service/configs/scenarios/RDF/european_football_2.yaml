@@ -4,4 +4,4 @@ scenario_name: rdf_european_football_2
 database: "european_football_2"
 ttl_path: "european_football_2.ttl"
 databases:
-  european_football_2: "sqlite:///MINIDEV_sqlite/dev_databases/european_football_2/european_football_2.sqlite"
+  european_football_2: "sqlite:///../MINIDEV_sqlite/dev_databases/european_football_2/european_football_2.sqlite"

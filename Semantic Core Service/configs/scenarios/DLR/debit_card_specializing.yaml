@@ -1,117 +1,101 @@
 mapping_type: "dlr"
 version: "2.0"
 scenario_name: dlr_debit_card
-description: "DLR 范式 — 借记卡消费场景：按需字段配置，5 PE 聚合 4 LE"
+description: "DLR paradigm - Debit card consumption scenario: on-demand fields, 5 PEs aggregated into 4 LEs"
 databases:
   debit_card_specializing: "sqlite:///MINIDEV_sqlite/dev_databases/debit_card_specializing/debit_card_specializing.sqlite"
-
 logical_entities:
-  # ── 1. 客户 (1 PE) ──
-  - logical_entity_id: LOGICAL.客户
-    biz_name: 客户
-    description: "借记卡客户的身份与分类"
+  - logical_entity_id: LOGICAL.Customer
+    biz_name: Customer
+    description: "Identity and classification of debit card customers"
     public_attributes:
-      - {attr_id: LOGICAL.客户.客户编号, biz_name: 客户编号}  # JOIN key
+      - {attr_id: LOGICAL.Customer.CustomerID, biz_name: CustomerID}
     physical_entities:
-      - physical_entity_id: PHYSICAL.客户表
+      - physical_entity_id: PHYSICAL.Customer
         physical_table_name: customers
         physical_table_id: debit_card_specializing.customers
         A: {cardinality: "1:1", key: CustomerID}
         R: null
-        C:
-          LOGICAL.客户.客户编号: debit_card_specializing.customers.CustomerID
-        S: "客户主数据表"
+        C: {LOGICAL.Customer.CustomerID: debit_card_specializing.customers.CustomerID}
+        S: "Customer master data"
         private_attributes:
-          - {attr_id: debit_card_specializing.customers.Segment, biz_name: 客户类型, physical_column_id: debit_card_specializing.customers.Segment}
-          - {attr_id: debit_card_specializing.customers.Currency, biz_name: 结算货币, physical_column_id: debit_card_specializing.customers.Currency}
-
-  # ── 2. 消费行为 (2 PE — 多视图) ──
-  - logical_entity_id: LOGICAL.消费行为
-    biz_name: 消费行为
-    description: "客户消费记录：月度账单 + 交易明细"
+          - {attr_id: debit_card_specializing.customers.Segment, biz_name: Segment, physical_column_id: debit_card_specializing.customers.Segment}
+          - {attr_id: debit_card_specializing.customers.Currency, biz_name: Currency, physical_column_id: debit_card_specializing.customers.Currency}
+  - logical_entity_id: LOGICAL.Consumption
+    biz_name: Consumption
+    description: "Customer consumption records: monthly bills + transaction details"
     public_attributes:
-      - {attr_id: LOGICAL.消费行为.所属客户, biz_name: 所属客户}  # JOIN key
-      - {attr_id: LOGICAL.消费行为.日期, biz_name: 日期}  # JOIN key (Date)
+      - {attr_id: LOGICAL.Consumption.Customer, biz_name: Customer}
+      - {attr_id: LOGICAL.Consumption.Date, biz_name: Date}
     physical_entities:
-      - physical_entity_id: PHYSICAL.月度账单
+      - physical_entity_id: PHYSICAL.YearMonth
         physical_table_name: yearmonth
         physical_table_id: debit_card_specializing.yearmonth
         A: {cardinality: "N:1", key: CustomerID}
         R: null
-        C:
-          LOGICAL.消费行为.所属客户: debit_card_specializing.yearmonth.CustomerID
-          LOGICAL.消费行为.日期: debit_card_specializing.yearmonth.Date
-        S: "月度燃气消费汇总"
+        C: {LOGICAL.Consumption.Customer: debit_card_specializing.yearmonth.CustomerID, LOGICAL.Consumption.Date: debit_card_specializing.yearmonth.Date}
+        S: "Monthly gas consumption summary"
         private_attributes:
-          - {attr_id: debit_card_specializing.yearmonth.Consumption, biz_name: 消费量, physical_column_id: debit_card_specializing.yearmonth.Consumption}
-      - physical_entity_id: PHYSICAL.交易明细
+          - {attr_id: debit_card_specializing.yearmonth.Consumption, biz_name: Volume, physical_column_id: debit_card_specializing.yearmonth.Consumption}
+      - physical_entity_id: PHYSICAL.Transaction
         physical_table_name: transactions_1k
         physical_table_id: debit_card_specializing.transactions_1k
         A: {cardinality: "N:1", key: CustomerID}
         R: null
-        C:
-          LOGICAL.消费行为.所属客户: debit_card_specializing.transactions_1k.CustomerID
-          LOGICAL.消费行为.日期: debit_card_specializing.transactions_1k.Date
-        S: "加油站单笔交易明细"
+        C: {LOGICAL.Consumption.Customer: debit_card_specializing.transactions_1k.CustomerID, LOGICAL.Consumption.Date: debit_card_specializing.transactions_1k.Date}
+        S: "Gas station single transaction details"
         private_attributes:
-          - {attr_id: debit_card_specializing.transactions_1k.TransactionID, biz_name: 交易ID, physical_column_id: debit_card_specializing.transactions_1k.TransactionID}
-          - {attr_id: debit_card_specializing.transactions_1k.GasStationID, biz_name: 加油站ID, physical_column_id: debit_card_specializing.transactions_1k.GasStationID}
-          - {attr_id: debit_card_specializing.transactions_1k.ProductID, biz_name: 商品ID, physical_column_id: debit_card_specializing.transactions_1k.ProductID}
-          - {attr_id: debit_card_specializing.transactions_1k.Time, biz_name: 时间, physical_column_id: debit_card_specializing.transactions_1k.Time}
-          - {attr_id: debit_card_specializing.transactions_1k.Price, biz_name: 价格, physical_column_id: debit_card_specializing.transactions_1k.Price}
-          - {attr_id: debit_card_specializing.transactions_1k.Amount, biz_name: 数量, physical_column_id: debit_card_specializing.transactions_1k.Amount}
-
-  # ── 3. 加油站 (1 PE) ──
-  - logical_entity_id: LOGICAL.加油站
-    biz_name: 加油站
-    description: "提供加油服务的站点"
+          - {attr_id: debit_card_specializing.transactions_1k.TransactionID, biz_name: TransactionID, physical_column_id: debit_card_specializing.transactions_1k.TransactionID}
+          - {attr_id: debit_card_specializing.transactions_1k.GasStationID, biz_name: GasStationID, physical_column_id: debit_card_specializing.transactions_1k.GasStationID}
+          - {attr_id: debit_card_specializing.transactions_1k.ProductID, biz_name: ProductID, physical_column_id: debit_card_specializing.transactions_1k.ProductID}
+          - {attr_id: debit_card_specializing.transactions_1k.Time, biz_name: Time, physical_column_id: debit_card_specializing.transactions_1k.Time}
+          - {attr_id: debit_card_specializing.transactions_1k.Price, biz_name: Price, physical_column_id: debit_card_specializing.transactions_1k.Price}
+          - {attr_id: debit_card_specializing.transactions_1k.Amount, biz_name: Amount, physical_column_id: debit_card_specializing.transactions_1k.Amount}
+  - logical_entity_id: LOGICAL.GasStation
+    biz_name: GasStation
+    description: "Fuel service stations"
     public_attributes:
-      - {attr_id: LOGICAL.加油站.站点编号, biz_name: 站点编号}  # JOIN key
+      - {attr_id: LOGICAL.GasStation.GasStationID, biz_name: GasStationID}
     physical_entities:
-      - physical_entity_id: PHYSICAL.加油站表
+      - physical_entity_id: PHYSICAL.GasStation
         physical_table_name: gasstations
         physical_table_id: debit_card_specializing.gasstations
         A: {cardinality: "1:1", key: GasStationID}
         R: null
-        C:
-          LOGICAL.加油站.站点编号: debit_card_specializing.gasstations.GasStationID
-        S: "加油站信息"
+        C: {LOGICAL.GasStation.GasStationID: debit_card_specializing.gasstations.GasStationID}
+        S: "Gas station information"
         private_attributes:
-          - {attr_id: debit_card_specializing.gasstations.Country, biz_name: 国家, physical_column_id: debit_card_specializing.gasstations.Country}
-          - {attr_id: debit_card_specializing.gasstations.Segment, biz_name: 站点类型, physical_column_id: debit_card_specializing.gasstations.Segment}
-          - {attr_id: debit_card_specializing.gasstations.ChainID, biz_name: 连锁编号, physical_column_id: debit_card_specializing.gasstations.ChainID}
-
-  # ── 4. 商品 (1 PE) ──
-  - logical_entity_id: LOGICAL.商品
-    biz_name: 商品
-    description: "加油站售卖的商品"
+          - {attr_id: debit_card_specializing.gasstations.Country, biz_name: Country, physical_column_id: debit_card_specializing.gasstations.Country}
+          - {attr_id: debit_card_specializing.gasstations.Segment, biz_name: Segment, physical_column_id: debit_card_specializing.gasstations.Segment}
+          - {attr_id: debit_card_specializing.gasstations.ChainID, biz_name: ChainID, physical_column_id: debit_card_specializing.gasstations.ChainID}
+  - logical_entity_id: LOGICAL.Product
+    biz_name: Product
+    description: "Products sold at gas stations"
     public_attributes:
-      - {attr_id: LOGICAL.商品.商品编号, biz_name: 商品编号}  # JOIN key
+      - {attr_id: LOGICAL.Product.ProductID, biz_name: ProductID}
     physical_entities:
-      - physical_entity_id: PHYSICAL.商品表
+      - physical_entity_id: PHYSICAL.Product
         physical_table_name: products
         physical_table_id: debit_card_specializing.products
         A: {cardinality: "1:1", key: ProductID}
         R: null
-        C:
-          LOGICAL.商品.商品编号: debit_card_specializing.products.ProductID
-        S: "商品字典"
+        C: {LOGICAL.Product.ProductID: debit_card_specializing.products.ProductID}
+        S: "Product dictionary"
         private_attributes:
-          - {attr_id: debit_card_specializing.products.Description, biz_name: 商品描述, physical_column_id: debit_card_specializing.products.Description}
-
+          - {attr_id: debit_card_specializing.products.Description, biz_name: Description, physical_column_id: debit_card_specializing.products.Description}
 pas_relations:
-  - relation_id: LOGICAL.客户_TO_LOGICAL.消费行为
-    relation_name: 消费产生
-    P: {forward: {verb: 产生, cardinality: '1:N'}, reverse: {verb: 归属, cardinality: '1:1'}}
-    A: 客户编号
-    S: "1个客户产生N条消费记录"
-  - relation_id: LOGICAL.加油站_TO_LOGICAL.消费行为
-    relation_name: 交易发生
-    P: {forward: {verb: 发生, cardinality: '1:N'}, reverse: {verb: 发生于, cardinality: '1:1'}}
-    A: 站点编号
-    S: "1个加油站发生N笔交易"
-  - relation_id: LOGICAL.商品_TO_LOGICAL.消费行为
-    relation_name: 商品消费
-    P: {forward: {verb: 被购买, cardinality: '1:N'}, reverse: {verb: 购买了, cardinality: '1:1'}}
-    A: 商品编号
-    S: "1种商品被N笔交易购买"
+  - relation_id: LOGICAL.Customer_TO_LOGICAL.Consumption
+    relation_name: Generates
+    P: {forward: {verb: generates, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
+    A: CustomerID
+    S: "1 customer generates N consumption records"
+  - relation_id: LOGICAL.GasStation_TO_LOGICAL.Consumption
+    relation_name: Hosts
+    P: {forward: {verb: hosts, cardinality: '1:N'}, reverse: {verb: occurs at, cardinality: '1:1'}}
+    A: GasStationID
+    S: "1 gas station hosts N transactions"
+  - relation_id: LOGICAL.Product_TO_LOGICAL.Consumption
+    relation_name: Purchased
+    P: {forward: {verb: is purchased, cardinality: '1:N'}, reverse: {verb: purchased, cardinality: '1:1'}}
+    A: ProductID
+    S: "1 product is purchased in N transactions"

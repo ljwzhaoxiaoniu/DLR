@@ -1,0 +1,202 @@
+mapping_type: "dlr"
+version: "2.0"
+scenario_name: dlr_financial
+description: "DLR 范式 — 金融场景：按需字段，7 PE 聚合 7 LE"
+databases:
+  financial: "sqlite:///MINIDEV_sqlite/dev_databases/financial/financial.sqlite"
+
+logical_entities:
+  # ── 1. 银行账户 ──
+  - logical_entity_id: LOGICAL.银行账户
+    biz_name: 银行账户
+    public_attributes:
+      - {attr_id: LOGICAL.银行账户.账户编号, biz_name: 账户编号}
+    physical_entities:
+      - physical_entity_id: PHYSICAL.账户表
+        physical_table_name: account
+        physical_table_id: financial.account
+        A: {cardinality: "1:1", key: account_id}
+        R: null
+        C:
+          LOGICAL.银行账户.账户编号: financial.account.account_id
+        S: "账户主表"
+        private_attributes:
+          - {attr_id: financial.account.frequency, biz_name: 对账单频率, physical_column_id: financial.account.frequency}
+          - {attr_id: financial.account.district_id, biz_name: 地区ID, physical_column_id: financial.account.district_id}
+          - {attr_id: financial.account.date, biz_name: 开户日期, physical_column_id: financial.account.date}
+
+  # ── 2. 客户 ──
+  - logical_entity_id: LOGICAL.客户
+    biz_name: 客户
+    public_attributes:
+      - {attr_id: LOGICAL.客户.客户编号, biz_name: 客户编号}
+    physical_entities:
+      - physical_entity_id: PHYSICAL.客户表
+        physical_table_name: client
+        physical_table_id: financial.client
+        A: {cardinality: "1:1", key: client_id}
+        R: null
+        C:
+          LOGICAL.客户.客户编号: financial.client.client_id
+        S: "客户主数据"
+        private_attributes:
+          - {attr_id: financial.client.gender, biz_name: 性别, physical_column_id: financial.client.gender}
+          - {attr_id: financial.client.birth_date, biz_name: 出生日期, physical_column_id: financial.client.birth_date}
+          - {attr_id: financial.client.district_id, biz_name: 地区ID, physical_column_id: financial.client.district_id}
+
+  # ── 3. 账户关联 (2 PE — 多视图) ──
+  - logical_entity_id: LOGICAL.账户关联
+    biz_name: 账户关联
+    description: "客户-账户授权关系 + 信用卡"
+    public_attributes:
+      - {attr_id: LOGICAL.账户关联.关联账户, biz_name: 关联账户}
+      - {attr_id: LOGICAL.账户关联.关联客户, biz_name: 关联客户}
+    physical_entities:
+      - physical_entity_id: PHYSICAL.授权表
+        physical_table_name: disp
+        physical_table_id: financial.disp
+        A: {cardinality: "N:1", key: account_id}
+        R: null
+        C:
+          LOGICAL.账户关联.关联账户: financial.disp.account_id
+          LOGICAL.账户关联.关联客户: financial.disp.client_id
+        S: "客户-账户授权关系"
+        private_attributes:
+          - {attr_id: financial.disp.disp_id, biz_name: 授权ID, physical_column_id: financial.disp.disp_id}
+          - {attr_id: financial.disp.type, biz_name: 授权类型, physical_column_id: financial.disp.type}
+      - physical_entity_id: PHYSICAL.信用卡表
+        physical_table_name: card
+        physical_table_id: financial.card
+        A: {cardinality: "N:1", key: disp_id}
+        R: null
+        C:
+          LOGICAL.账户关联.关联账户: financial.card.disp_id
+        S: "信用卡信息"
+        private_attributes:
+          - {attr_id: financial.card.card_id, biz_name: 卡ID, physical_column_id: financial.card.card_id}
+          - {attr_id: financial.card.type, biz_name: 卡类型, physical_column_id: financial.card.type}
+          - {attr_id: financial.card.issued, biz_name: 发卡日期, physical_column_id: financial.card.issued}
+
+  # ── 4. 地区 ──
+  - logical_entity_id: LOGICAL.地区
+    biz_name: 地区
+    public_attributes:
+      - {attr_id: LOGICAL.地区.地区编号, biz_name: 地区编号}
+    physical_entities:
+      - physical_entity_id: PHYSICAL.地区表
+        physical_table_name: district
+        physical_table_id: financial.district
+        A: {cardinality: "1:1", key: district_id}
+        R: null
+        C:
+          LOGICAL.地区.地区编号: financial.district.district_id
+        S: "地区人口经济统计"
+        private_attributes:
+          - {attr_id: financial.district.A2, biz_name: 地区名称, physical_column_id: financial.district.A2}
+          - {attr_id: financial.district.A3, biz_name: 区域, physical_column_id: financial.district.A3}
+          - {attr_id: financial.district.A4, biz_name: 居民数, physical_column_id: financial.district.A4}
+          - {attr_id: financial.district.A11, biz_name: 平均薪资, physical_column_id: financial.district.A11}
+          - {attr_id: financial.district.A12, biz_name: 失业率95, physical_column_id: financial.district.A12}
+          - {attr_id: financial.district.A13, biz_name: 失业率96, physical_column_id: financial.district.A13}
+          - {attr_id: financial.district.A15, biz_name: 犯罪数95, physical_column_id: financial.district.A15}
+
+  # ── 5. 贷款 ──
+  - logical_entity_id: LOGICAL.贷款
+    biz_name: 贷款
+    public_attributes:
+      - {attr_id: LOGICAL.贷款.贷款编号, biz_name: 贷款编号}
+      - {attr_id: LOGICAL.贷款.关联账户, biz_name: 关联账户}
+    physical_entities:
+      - physical_entity_id: PHYSICAL.贷款表
+        physical_table_name: loan
+        physical_table_id: financial.loan
+        A: {cardinality: "N:1", key: account_id}
+        R: null
+        C:
+          LOGICAL.贷款.贷款编号: financial.loan.loan_id
+          LOGICAL.贷款.关联账户: financial.loan.account_id
+        S: "贷款合同表"
+        private_attributes:
+          - {attr_id: financial.loan.amount, biz_name: 贷款金额, physical_column_id: financial.loan.amount}
+          - {attr_id: financial.loan.date, biz_name: 批准日期, physical_column_id: financial.loan.date}
+          - {attr_id: financial.loan.duration, biz_name: 期限, physical_column_id: financial.loan.duration}
+          - {attr_id: financial.loan.payments, biz_name: 月供, physical_column_id: financial.loan.payments}
+          - {attr_id: financial.loan.status, biz_name: 状态, physical_column_id: financial.loan.status}
+
+  # ── 6. 交易流水 ──
+  - logical_entity_id: LOGICAL.交易流水
+    biz_name: 交易流水
+    public_attributes:
+      - {attr_id: LOGICAL.交易流水.关联账户, biz_name: 关联账户}
+    physical_entities:
+      - physical_entity_id: PHYSICAL.交易表
+        physical_table_name: trans
+        physical_table_id: financial.trans
+        A: {cardinality: "N:1", key: account_id}
+        R: null
+        C:
+          LOGICAL.交易流水.关联账户: financial.trans.account_id
+        S: "交易流水明细"
+        private_attributes:
+          - {attr_id: financial.trans.trans_id, biz_name: 交易ID, physical_column_id: financial.trans.trans_id}
+          - {attr_id: financial.trans.date, biz_name: 交易日期, physical_column_id: financial.trans.date}
+          - {attr_id: financial.trans.type, biz_name: 交易类型, physical_column_id: financial.trans.type}
+          - {attr_id: financial.trans.operation, biz_name: 操作, physical_column_id: financial.trans.operation}
+          - {attr_id: financial.trans.amount, biz_name: 金额, physical_column_id: financial.trans.amount}
+          - {attr_id: financial.trans.balance, biz_name: 余额, physical_column_id: financial.trans.balance}
+          - {attr_id: financial.trans.k_symbol, biz_name: 用途, physical_column_id: financial.trans.k_symbol}
+          - {attr_id: financial.trans.bank, biz_name: 对方银行, physical_column_id: financial.trans.bank}
+          - {attr_id: financial.trans.account, biz_name: 对方账户, physical_column_id: financial.trans.account}
+
+  # ── 7. 永久订单 ──
+  - logical_entity_id: LOGICAL.永久订单
+    biz_name: 永久订单
+    public_attributes:
+      - {attr_id: LOGICAL.永久订单.关联账户, biz_name: 关联账户}
+    physical_entities:
+      - physical_entity_id: PHYSICAL.订单表
+        physical_table_name: order
+        physical_table_id: financial.order
+        A: {cardinality: "N:1", key: account_id}
+        R: null
+        C:
+          LOGICAL.永久订单.关联账户: financial.order.account_id
+        S: "永久付款指令"
+        private_attributes:
+          - {attr_id: financial.order.order_id, biz_name: 订单ID, physical_column_id: financial.order.order_id}
+          - {attr_id: financial.order.bank_to, biz_name: 目标银行, physical_column_id: financial.order.bank_to}
+          - {attr_id: financial.order.account_to, biz_name: 目标账户, physical_column_id: financial.order.account_to}
+          - {attr_id: financial.order.amount, biz_name: 金额, physical_column_id: financial.order.amount}
+          - {attr_id: financial.order.k_symbol, biz_name: 用途, physical_column_id: financial.order.k_symbol}
+
+pas_relations:
+  - relation_id: LOGICAL.客户_TO_LOGICAL.账户关联
+    relation_name: 账户持有
+    P: {forward: {verb: 持有, cardinality: '1:N'}, reverse: {verb: 归属, cardinality: '1:1'}}
+    A: 关联客户
+    S: "1个客户持有多条账户授权"
+  - relation_id: LOGICAL.银行账户_TO_LOGICAL.账户关联
+    relation_name: 账户授权
+    P: {forward: {verb: 拥有, cardinality: '1:N'}, reverse: {verb: 归属, cardinality: '1:1'}}
+    A: 关联账户
+    S: "1个账户拥有多条授权（含信用卡）"
+  - relation_id: LOGICAL.银行账户_TO_LOGICAL.贷款
+    relation_name: 贷款发放
+    P: {forward: {verb: 发放, cardinality: '1:N'}, reverse: {verb: 归属, cardinality: '1:1'}}
+    A: 关联账户
+    S: "1个账户关联多笔贷款"
+  - relation_id: LOGICAL.银行账户_TO_LOGICAL.交易流水
+    relation_name: 交易产生
+    P: {forward: {verb: 产生, cardinality: '1:N'}, reverse: {verb: 归属, cardinality: '1:1'}}
+    A: 关联账户
+    S: "1个账户产生N笔交易"
+  - relation_id: LOGICAL.银行账户_TO_LOGICAL.永久订单
+    relation_name: 订单关联
+    P: {forward: {verb: 拥有, cardinality: '1:N'}, reverse: {verb: 归属, cardinality: '1:1'}}
+    A: 关联账户
+    S: "1个账户拥有N条永久订单"
+  - relation_id: LOGICAL.地区_TO_LOGICAL.银行账户
+    relation_name: 地区归属
+    P: {forward: {verb: 包含, cardinality: '1:N'}, reverse: {verb: 位于, cardinality: 'N:1'}}
+    A: 地区编号
+    S: "1个地区包含N个账户"

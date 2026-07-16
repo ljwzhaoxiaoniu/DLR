@@ -273,6 +273,22 @@ class QueryService:
     # Helpers
     # ===================================================================
 
+    def _get_parent_logical_entity(self, physical_entity_id: str) -> str:
+        """通过 INHERITS 边查找 PE 所属的 LE ID (PE → 父 LE 的向上导航).
+
+        参考:LPE VOA 项目 query_service._get_parent_logical_entity
+        """
+        try:
+            result = self.graph_db.conn.execute(
+                """MATCH (e:PhysicalEntity {physical_entity_id: $id})-[:INHERITS]->(le:LogicalEntity)
+                   RETURN le.logical_entity_id""",
+                parameters={"id": physical_entity_id}
+            )
+            return result.get_next()[0] if result.has_next() else ""
+        except Exception as e:
+            logger.warning(f"[DLR] 查询PE父LE失败 {physical_entity_id}: {e}")
+            return ""
+
     @staticmethod
     def _empty_result(message: str, confidence: float = 0.0) -> Dict[str, Any]:
         return {"success": False, "message": message, "data": {}, "confidence": confidence}

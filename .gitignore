@@ -28,3 +28,19 @@ MINIDEV_sqlite/
 
 # 环境
 .env
+
+# 评测脚本临时输出
+Evaluation/outputs/01_logs/*/answer.txt
+Evaluation/outputs/01_logs/*/debug.log
+oc_*/answer.txt
+oc_*/debug.log
+oc_*/*.db
+oc_*/*.txt
+Semantic Core Service/_*.py
+Semantic Core Service/*_*.txt
+_static_check.py
+_verify_edit.py
+*_check.txt
+static_check.txt
+verify_edit.txt
+*.db

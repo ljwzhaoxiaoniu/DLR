@@ -2,7 +2,7 @@
 MCP Server — dual-mode (stdio + SSE) + paradigm-isolated tools.
 
 Paradigm isolation:
-  - Shared + ER tools: registered at module import via @mcp.tool()
+  - All tools: registered DYNAMICALLY per paradigm (no @mcp.tool() decorators)
   - DLR tools: registered DYNAMICALLY at runtime when _mapping_type == "dlr"
   - ER mode: DLR tools are removed from the registry after import
 
@@ -35,6 +35,12 @@ _query_service = None
 _mapping_type = "er"
 _config_data = {}
 _tools_finalized = False
+
+
+# ---------------------------------------------------------------------------
+# FastMCP instance
+# ---------------------------------------------------------------------------
+mcp = FastMCP("Semantic Core Service")
 
 
 def _ensure_services():
@@ -93,11 +99,10 @@ def _ensure_services():
 
 
 def _ensure_paradigm_tools():
-    """Ensure only the tools for the active paradigm are exposed.
+    """范式工具注册 —— 各注册各的,零剥除.
 
-    - DLR mode: register DLR tools if not already present
-    - ER mode: unregister DLR tools if they were registered (e.g. during import)
-
+    由于 @mcp.tool() 装饰器已全部去除,模块加载时不会注册任何工具.
+    各范式通过自己的 _register_*_tools() 函数,只注册本范式的工具.
     Idempotent — safe to call multiple times.
     """
     global _tools_finalized
@@ -108,131 +113,82 @@ def _ensure_paradigm_tools():
     _tools_finalized = True
 
     if _mapping_type == "dlr":
-        _register_dlr_tools()
+        _register_dlr_tools()       # 23 件 DLR CLI 工具(LE/PE/PAS)
     elif _mapping_type == "rdf":
-        _register_rdf_tools()
-    else:
-        _remove_dlr_tools()
-        _remove_rdf_tools()
+        _register_rdf_tools()       # 8 件 RDF 工具(语义召回 + SPARQL)
+    else:  # ER
+        _register_er_tools()        # 13 件 ER 工具(REST 语义查询入口)
 
     logger.info(f"[MCP] Tools finalized for {_mapping_type.upper()} mode")
 
 
 def _get_tool_names() -> set:
-    """Return set of currently registered tool names (via local_provider)."""
-    if hasattr(mcp, 'local_provider'):
-        provider = mcp.local_provider
-        if hasattr(provider, '_tools'):
-            return set(t.name for t in provider._tools.values())
-        if hasattr(provider, 'tools'):
-            return set(t.name for t in provider.tools.values())
-    return set()
+    """Return set of currently registered tool names (via local_provider).
 
-
-def _remove_dlr_tools():
-    """Remove DLR-only tools from the MCP registry."""
-    dlr_tool_names = {
-        "recall_le", "recall_pe", "recall_pas",
-        "list_le", "list_pas",
-        "get_le", "get_le_attrs", "get_le_children", "get_pe_arcs",
-        "path_le_le",
-    }
+    FastMCP stores tools in provider._components dict keyed by "tool:<name>@".
+    Fall back to list_tools() if _components is unavailable.
+    """
     provider = getattr(mcp, 'local_provider', None)
     if provider is None:
-        return
+        return set()
+    # Primary: provider._components (FastMCP internal)
+    components = getattr(provider, '_components', None)
+    if components and isinstance(components, dict):
+        names = set()
+        for key in components:
+            if key.startswith('tool:') and key.endswith('@'):
+                names.add(key[5:-1])  # strip "tool:" prefix and "@" suffix
+        return names
+    # Fallback: provider._tools / provider.tools (older FastMCP)
+    if hasattr(provider, '_tools'):
+        return set(t.name for t in provider._tools.values())
+    if hasattr(provider, 'tools'):
+        return set(t.name for t in provider.tools.values())
+    return set()
 
-    existing = _get_tool_names()
-    removed = 0
-    for name in dlr_tool_names:
-        if name in existing:
-            try:
-                provider.remove_tool(name)
-                removed += 1
-            except Exception as e:
-                logger.warning(f"[MCP] Failed to remove tool {name}: {e}")
-
-    if removed:
-        logger.info(f"[MCP] Removed {removed} DLR tools for {_mapping_type.upper()} mode")
-
-
-# ---------------------------------------------------------------------------
-# FastMCP instance
-# ---------------------------------------------------------------------------
-mcp = FastMCP("Semantic Core Service")
-
-
-def _resolve_database_url(physical_table_id: str = "") -> str:
-    """Resolve SQLite database file path from config.
-
-    Returns the absolute path to the .sqlite/.db file (without sqlite:/// prefix)
-    so it can be passed directly to sqlite3 CLI.
-    """
-    databases = _config_data.get("databases", {})
-
-    def _resolve_url(url: str) -> str:
-        """Convert a sqlite:/// URL to an absolute file path."""
-        if url.startswith("sqlite:///"):
-            rel = url[len("sqlite:///"):]
-            # Try resolving relative to the Semantic Core Service directory
-            base_dir = Path(__file__).parent  # Semantic Core Service/
-            candidate = (base_dir / rel).resolve()
-            if candidate.exists():
-                return str(candidate)
-            # Try resolving relative to project root (one level up)
-            project_root = base_dir.parent  # DLR Proj/
-            candidate2 = (project_root / rel).resolve()
-            if candidate2.exists():
-                return str(candidate2)
-            # Fallback: return the base_dir resolution even if not exists
-            return str(candidate)
-        return url
-
-    # Match by prefix (e.g. "financial" from "financial.account")
-    if "." in physical_table_id:
-        prefix = physical_table_id.split(".")[0]
-        if prefix in databases:
-            return _resolve_url(databases[prefix])
-
-    # Fallback: first database
-    for url in databases.values():
-        if url.startswith("sqlite:///"):
-            return _resolve_url(url)
-    return ""
 
 
 # ===================================================================
 # Shared + ER tools (registered at module import)
 # ===================================================================
 
-@mcp.tool()
-def semantic_query(question: str, top_k: int = 20) -> dict:
-    """自然语言语义查询：输入业务问题，返回匹配的业务实体、属性及关联关系。
+def er_semantic_query(question: str, top_k: int = 20) -> dict:
+    """[ER] 语义召回 → 返回实体(扁平结构,无物理表/字段).
 
-    Works for both ER and DLR paradigms. The return structure differs:
-    - ER: {success, confidence, data: {entities: [...]}}
-    - DLR: {success, confidence, data: {logical_entities: [...], physical_entities: [...], pas_relations: [...]}}
+    返回: {success, confidence, data:{entities:[{entity_id, name, description}]}}
+    description 仅业务描述,不带属性字段名.
     """
     _, _, qs = _ensure_services()
-    return qs.query(question, top_k)
+    raw = qs.query(question, top_k)
+    # 剥离物理信息(source_table/database_url/attributes/relations),仅保留业务语义
+    clean_entities = []
+    for e in raw.get("data", {}).get("entities", []):
+        clean_entities.append({
+            "entity_id": e.get("entity_id", ""),
+            "name": e.get("name", ""),
+            "description": e.get("description", ""),
+        })
+    return {
+        "success": raw.get("success", True),
+        "confidence": raw.get("confidence", 0.0),
+        "data": {"entities": clean_entities},
+    }
 
 
-@mcp.tool()
 def list_entities() -> list:
-    """列出所有业务实体（ER: BizEntity / DLR: PhysicalEntity）。"""
+    """[ER] List all entities (BizEntity in ER / PhysicalEntity in DLR)."""
     gdb, _, _ = _ensure_services()
     return gdb.get_all_entities()
 
 
-@mcp.tool()
 def list_relations() -> list:
-    """列出所有实体间的关联关系。"""
+    """[ER] List all entity relations."""
     gdb, _, _ = _ensure_services()
     return gdb.get_all_relations()
 
 
-@mcp.tool()
 def get_entity(entity_id: str) -> dict:
-    """获取单个实体详情。"""
+    """[ER] Get single entity details."""
     gdb, _, _ = _ensure_services()
     entity = gdb.get_entity_by_id(entity_id)
     if not entity:
@@ -240,29 +196,22 @@ def get_entity(entity_id: str) -> dict:
     return {"success": True, "entity": entity}
 
 
-@mcp.tool()
 def get_entity_attributes(entity_id: str) -> list:
-    """获取实体的所有属性列表（含物理字段映射）。"""
+    """[ER] Get all attributes of an entity (with physical column mapping)."""
     gdb, _, _ = _ensure_services()
     return gdb.get_entity_attributes_list(entity_id)
 
 
-@mcp.tool()
 def get_entity_relations(entity_id: str) -> list:
-    """获取实体的所有关联关系（含出边和入边）。"""
+    """[ER] Get all relations of an entity (out + in edges)."""
     gdb, _, _ = _ensure_services()
     return gdb.get_entity_relations(entity_id)
 
 
-@mcp.tool()
 def get_entity_mapping(entity_id: str) -> dict:
-    """获取实体的物理映射信息（数据库、物理表、属性-字段对应）。
+    """[ER] Get physical mapping: database_url + physical_table + column mapping.
 
-    database_url 在 build 阶段从 YAML 的 databases 字段解析后存入 Kuzu 节点，
-    此处直接读取，无需运行时匹配。
-
-    Returns:
-        {success, entity_id, physical_table, database_url, attributes}
+    Returns: {success, entity_id, physical_table, database_url, attributes}
     """
     gdb, _, _ = _ensure_services()
     entity = gdb.get_entity_by_id(entity_id)
@@ -283,9 +232,8 @@ def get_entity_mapping(entity_id: str) -> dict:
     }
 
 
-@mcp.tool()
 def find_shortest_path(from_entity_id: str, to_entity_id: str) -> dict:
-    """查询两个实体之间的最短关联路径。"""
+    """[ER] Shortest path between two entities."""
     gdb, _, _ = _ensure_services()
     # Use DLR LE path if in DLR mode, otherwise ER path
     if _mapping_type == "dlr":
@@ -293,9 +241,8 @@ def find_shortest_path(from_entity_id: str, to_entity_id: str) -> dict:
     return gdb.find_shortest_path(from_entity_id, to_entity_id)
 
 
-@mcp.tool()
 def list_all_tables() -> list:
-    """列出已注册实体对应的物理表。"""
+    """[ER] List registered entity tables."""
     gdb, _, _ = _ensure_services()
     entities = gdb.get_all_entities()
     seen = set()
@@ -313,9 +260,8 @@ def list_all_tables() -> list:
     return tables
 
 
-@mcp.tool()
 def get_table_schema(table_id: str) -> list:
-    """查询任意物理表的字段结构。"""
+    """[ER] Get schema of any physical table."""
     from mapping.physical_scanner import PhysicalScanner
     parts = table_id.split(".")
     if len(parts) != 2:
@@ -336,9 +282,8 @@ def get_table_schema(table_id: str) -> list:
     return {"success": False, "message": f"table not found: {table_id}"}
 
 
-@mcp.tool()
 def summary() -> dict:
-    """获取知识库摘要统计。"""
+    """[ER] Get knowledge base summary stats."""
     gdb, _, _ = _ensure_services()
     result = {"success": True, "mapping_type": _mapping_type}
     if _mapping_type == "dlr":
@@ -353,106 +298,15 @@ def summary() -> dict:
 # Geo tools (shared)
 # ===================================================================
 
-@mcp.tool()
-def calc_distance(tg_id1: str, tg_id2: str) -> dict:
-    """计算两个变压器之间的最小距离（米，Haversine 公式）。"""
-    def _haversine(lat1, lon1, lat2, lon2):
-        R = 6371000
-        phi1, phi2 = math.radians(lat1), math.radians(lat2)
-        dphi = math.radians(lat2 - lat1)
-        dlambda = math.radians(lon2 - lon1)
-        a = math.sin(dphi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(dlambda / 2) ** 2
-        return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-
-    db_path = _resolve_database_url("")
-    if not db_path:
-        return {"success": False, "message": "无法解析数据库路径"}
-    db_path = db_path.replace("sqlite:///", "")
-
-    try:
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
-        cursor.execute(
-            'SELECT "变压器编号", "变压器经度", "变压器纬度" FROM "变压器" WHERE "变压器编号" IN (?, ?)',
-            (tg_id1, tg_id2),
-        )
-        rows = {row[0]: (row[1], row[2]) for row in cursor.fetchall()}
-        conn.close()
-
-        if tg_id1 not in rows or tg_id2 not in rows:
-            return {"success": False, "message": "变压器坐标未找到"}
-
-        lat1, lon1 = rows[tg_id1]
-        lat2, lon2 = rows[tg_id2]
-        dist = _haversine(lat1, lon1, lat2, lon2)
-
-        return {
-            "success": True,
-            "tg_id1": tg_id1,
-            "tg_id2": tg_id2,
-            "min_distance_m": round(dist, 2),
-        }
-    except Exception as e:
-        return {"success": False, "message": str(e)}
-
-
-@mcp.tool()
-def find_nearby_transformers(tg_id: str, radius_m: float = 1000.0) -> dict:
-    """查找指定半径内的所有邻近变压器（Haversine 距离）。"""
-    def _haversine(lat1, lon1, lat2, lon2):
-        R = 6371000
-        phi1, phi2 = math.radians(lat1), math.radians(lat2)
-        dphi = math.radians(lat2 - lat1)
-        dlambda = math.radians(lon2 - lon1)
-        a = math.sin(dphi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(dlambda / 2) ** 2
-        return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-
-    db_path = _resolve_database_url("")
-    if not db_path:
-        return {"success": False, "message": "无法解析数据库路径"}
-    db_path = db_path.replace("sqlite:///", "")
-
-    try:
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
-
-        cursor.execute(
-            'SELECT "变压器经度", "变压器纬度" FROM "变压器" WHERE "变压器编号" = ?',
-            (tg_id,),
-        )
-        target = cursor.fetchone()
-        if not target:
-            conn.close()
-            return {"success": False, "message": f"变压器 {tg_id} 坐标不存在"}
-        target_lon, target_lat = target
-
-        cursor.execute('SELECT "变压器编号", "变压器名称", "变压器经度", "变压器纬度" FROM "变压器"')
-        nearby = []
-        for row in cursor.fetchall():
-            other_id, other_name, lon, lat = row
-            if other_id == tg_id:
-                continue
-            dist = _haversine(target_lat, target_lon, lat, lon)
-            if dist <= radius_m:
-                nearby.append({"tg_id": other_id, "name": other_name, "distance_m": round(dist, 2)})
-
-        conn.close()
-        nearby.sort(key=lambda x: x["distance_m"])
-
-        return {"success": True, "tg_id": tg_id, "radius_m": radius_m, "nearby": nearby}
-    except Exception as e:
-        return {"success": False, "message": str(e)}
-
-
 # ===================================================================
 # RDF tool — registered dynamically when _mapping_type == "rdf"
 # ===================================================================
 
 def _query_rdf_mapping(table_name: str) -> dict:
-    """[RDF] 用 SPARQL 查询 R2RML 图,返回指定表的字段和 JOIN 路径.
+    """[RDF] SPARQL query on R2RML graph. Returns {table, columns, relations:[{target_table, join_condition}]}.
 
     Args:
-        table_name: 物理表名 (如 "drivers"),由 semantic_query 向量召回提供
+        table_name: physical table name (e.g. "drivers"),supplied by rdf_semantic_query
 
     Returns:
         {table, columns, relations}
@@ -513,34 +367,150 @@ def _query_rdf_mapping(table_name: str) -> dict:
     }
 
 
+def rdf_semantic_query(question: str, top_k: int = 20) -> dict:
+    """[RDF] 语义召回 → 返回类(URI 本体结构,无 R2RML 映射/字段).
+
+    返回: {success, confidence, data:{classes:[{class_uri, name, description}]}}
+    class_uri 仅为 IRI 标识,不带 physical_table / predicateObjectMap.
+    """
+    from db.vector_db import VectorDB
+    from db.graph_db import GraphDB
+    from config import paradigm_storage
+
+    storage = paradigm_storage("rdf")
+    vector_db = VectorDB(db_path=str(storage["vector"]))
+    graph_db = GraphDB(db_path=str(storage["graph"]), mapping_type="rdf")
+
+    search_results = vector_db.search(question, top_k=top_k * 3)
+    if not search_results:
+        return {"success": False, "message": "未找到相关内容", "data": {}, "confidence": 0.0}
+
+    entity_results = [r for r in search_results if r["type"] == "entity"]
+    seen = set()
+    classes = []
+    for res in entity_results[:top_k]:
+        eid = res["id"]
+        if eid in seen:
+            continue
+        seen.add(eid)
+        entity = graph_db.get_entity_by_id(eid)
+        if entity:
+            # 仅保留 class_uri + 业务描述,剥离 source_table/database_url/attributes/relations
+            classes.append({
+                "class_uri": entity.get("entity_id", eid),
+                "name": entity.get("name", ""),
+                "description": entity.get("description", ""),
+            })
+
+    max_score = max((r.get("score", 0.0) for r in search_results), default=0.0)
+    return {
+        "success": True,
+        "confidence": round(max_score, 4),
+        "data": {"classes": classes},
+    }
+
+
+# ── 新增:RDF 专属工具(仿 ER semantic_query + 对标 DLR 接口隔离) ──────────
+
+def _rdf_classes() -> dict:
+    """[RDF] List all rr:class URIs in R2RML graph."""
+    from rdf_store.rdf_service import get_rdf_store
+    st = get_rdf_store()
+    st.load()
+    return {"success": True, "classes": st.classes()}
+
+
+def _rdf_predicates() -> dict:
+    """[RDF] List all predicate URIs in R2RML graph."""
+    from rdf_store.rdf_service import get_rdf_store
+    st = get_rdf_store()
+    st.load()
+    return {"success": True, "predicates": st.predicates()}
+
+
+def _rdf_search(q: str, limit: int = 20) -> dict:
+    """[RDF] Text search triples by substring."""
+    from rdf_store.rdf_service import get_rdf_store
+    st = get_rdf_store()
+    st.load()
+    results = st.search(q, limit)
+    return {"success": True, "results": results}
+
+
+def _rdf_triples_for_class(class_uri: str) -> dict:
+    """[RDF] Get all triples for a given rr:class URI."""
+    from rdf_store.rdf_service import get_rdf_store
+    st = get_rdf_store()
+    st.load()
+    triples = st.triples_for_class(class_uri)
+    return {"success": True, "class_uri": class_uri, "triples": triples}
+
+
+def _rdf_serialize(format: str = "turtle") -> dict:
+    """[RDF] Serialize R2RML graph (turtle/json-ld/xml/n3/nt)."""
+    from rdf_store.rdf_service import get_rdf_store
+    st = get_rdf_store()
+    st.load()
+    data = st.serialize(format)
+    return {"success": True, "format": format, "data": data}
+
+
+def _rdf_sparql(query: str) -> dict:
+    """[RDF] Execute SPARQL (SELECT/ASK/CONSTRUCT/DESCRIBE) — W3C standard for R2RML mapping."""
+    from rdf_store.rdf_service import get_rdf_store
+    st = get_rdf_store()
+    st.load()
+    result = st.sparql(query)
+    return result
+
+
 # ===================================================================
 # DLR tools — registered dynamically when _mapping_type == "dlr"
 # ===================================================================
 
 # Plain function definitions (no decorator) — registered in _register_dlr_tools()
-def _recall_le(question: str, top_k: int = 3, threshold: float = 0.5) -> dict:
-    """[DLR] 自然语言召回逻辑实体(LE)。"""
-    _, vector_db, _ = _ensure_services()
+def dlr_semantic_query(question: str, top_k: int = 3, threshold: float = 0.5) -> dict:
+    """[DLR] 语义召回 → 返回结构体(LE-PE 复合,无物理表/字段).
+
+    返回: {success, data:{structures:[{logical_entity_id, name, description, physical_entities:[{physical_entity_id, pe_name}]}]}}
+    不含 physical_table_id / database_url / 属性字段.
+    """
+    gdb, vector_db, _ = _ensure_services()
     results = vector_db.search(question, top_k=max(top_k * 3, 20))
     le_results = [r for r in results if r["type"] == "logical_entity"]
     le_results.sort(key=lambda x: x.get("score", 0), reverse=True)
     le_results = [r for r in le_results if r.get("score", 0) >= threshold][:top_k]
+
+    structures = []
+    for r in le_results:
+        le_id = r["id"]
+        # 获取该 LE 下挂的 PE 列表(仅 id + name,无物理表名)
+        child_pe_ids = gdb.get_child_entity_ids(le_id)
+        pes = []
+        for pe_id in child_pe_ids:
+            pe = gdb.get_physical_entity_by_id(pe_id)
+            if pe:
+                pes.append({
+                    "physical_entity_id": pe_id,
+                    "pe_name": pe.get("name", ""),
+                })
+        structures.append({
+            "logical_entity_id": le_id,
+            "name": r["name"],
+            "description": r.get("description", ""),
+            "physical_entities": pes,
+        })
+
+    max_score = max((r.get("score", 0.0) for r in le_results), default=0.0)
     return {
         "success": True,
-        "results": [
-            {
-                "logical_entity_id": r["id"],
-                "name": r["name"],
-                "description": r.get("description", ""),
-                "confidence": round(r.get("score", 0), 4),
-            }
-            for r in le_results
-        ],
+        "confidence": round(max_score, 4),
+        "data": {"structures": structures},
     }
 
 
 def _recall_pe(question: str, top_k: int = 3, threshold: float = 0.5) -> dict:
-    """[DLR] 自然语言召回物理实体(PE)。"""
+    """[DLR] Recall physical entities (PE) by natural language."""
     _, vector_db, _ = _ensure_services()
     results = vector_db.search(question, top_k=max(top_k * 3, 20))
     pe_results = [r for r in results if r["type"] == "entity"]
@@ -561,7 +531,7 @@ def _recall_pe(question: str, top_k: int = 3, threshold: float = 0.5) -> dict:
 
 
 def _recall_pas(question: str, top_k: int = 3, threshold: float = 0.5) -> dict:
-    """[DLR] 自然语言召回 PAS 关系。"""
+    """[DLR] Recall PAS semantic routing relations by natural language."""
     _, vector_db, _ = _ensure_services()
     results = vector_db.search(question, top_k=max(top_k * 3, 20))
     pas_results = [r for r in results if r["type"] == "pas_relation"]
@@ -583,21 +553,21 @@ def _recall_pas(question: str, top_k: int = 3, threshold: float = 0.5) -> dict:
 
 
 def _list_le() -> dict:
-    """[DLR] 列出所有逻辑实体(LE)。"""
+    """[DLR] List all logical entities (LE)."""
     gdb, _, _ = _ensure_services()
     results = gdb.get_all_logical_entities()
     return {"success": True, "count": len(results), "results": results}
 
 
 def _list_pas() -> dict:
-    """[DLR] 列出所有 PAS 语义路由关系。"""
+    """[DLR] List all PAS semantic routing relations."""
     gdb, _, _ = _ensure_services()
     results = gdb.get_all_pas_relations()
     return {"success": True, "count": len(results), "results": results}
 
 
 def _get_le(le_id: str) -> dict:
-    """[DLR] 获取逻辑实体详情。"""
+    """[DLR] Get logical entity details."""
     gdb, _, _ = _ensure_services()
     le = gdb.get_logical_entity_by_id(le_id)
     if not le:
@@ -606,59 +576,325 @@ def _get_le(le_id: str) -> dict:
 
 
 def _get_le_attrs(le_id: str) -> dict:
-    """[DLR] 获取逻辑实体的所有属性。"""
+    """[DLR] Get all attributes of a logical entity."""
     gdb, _, _ = _ensure_services()
     return {"success": True, "logical_entity_id": le_id,
             "attributes": gdb.get_logical_entity_attributes(le_id)}
 
 
 def _get_le_children(le_id: str) -> dict:
-    """[DLR] 获取逻辑实体下挂的所有物理实体(PE)列表。"""
+    """[DLR] List child physical entities (PE) of a logical entity."""
     gdb, _, _ = _ensure_services()
     child_ids = gdb.get_child_entity_ids(le_id)
     children = []
     for pe_id in child_ids:
-        entity = gdb.get_entity_by_id(pe_id)
+        # DLR 的 PE 在 PhysicalEntity 表(非 ER 的 BizEntity)
+        entity = gdb.get_physical_entity_by_id(pe_id)
         if entity:
             children.append({
-                "physical_entity_id": entity["entity_id"],
-                "name": entity["name"],
-                "source_table": entity.get("source_table", ""),
+                "physical_entity_id": pe_id,
+                "name": entity.get("name", ""),
+                "source_table": entity.get("physical_table_id", ""),
             })
     return {"success": True, "logical_entity_id": le_id, "children": children}
 
 
+def _resolve_database_url(physical_table_id: str = "") -> str:
+    """Resolve SQLite database file path from config.
+
+    Returns the absolute path to the .sqlite/.db file (without sqlite:/// prefix)
+    so it can be passed directly to sqlite3 CLI.
+    """
+    # 兼容两种格式: 单文件模式 nested {"databases": {...}} / 范式模式 flat {prefix: url}
+    databases = _config_data.get("databases", _config_data)
+
+    def _resolve_url(url: str) -> str:
+        """Convert a sqlite:/// URL to an absolute file path."""
+        if url.startswith("sqlite:///"):
+            rel = url[len("sqlite:///"):]
+            # Try resolving relative to the Semantic Core Service directory
+            base_dir = Path(__file__).parent  # Semantic Core Service/
+            candidate = (base_dir / rel).resolve()
+            if candidate.exists():
+                return str(candidate)
+            # Try resolving relative to project root (one level up)
+            project_root = base_dir.parent  # DLR Proj/
+            candidate2 = (project_root / rel).resolve()
+            if candidate2.exists():
+                return str(candidate2)
+            # Fallback: return the base_dir resolution even if not exists
+            return str(candidate)
+        return url
+
+    # Match by prefix (e.g. "financial" from "financial.account")
+    if "." in physical_table_id:
+        prefix = physical_table_id.split(".")[0]
+        if prefix in databases:
+            return _resolve_url(databases[prefix])
+
+    # Fallback: first database
+    for url in databases.values():
+        if url.startswith("sqlite:///"):
+            return _resolve_url(url)
+    return ""
+
+
 def _get_pe_arcs(pe_id: str) -> dict:
-    """[DLR] 获取物理实体的 ARCS 物理锚定信息 + 数据库连接 URL。"""
+    """[DLR] Get ARCS anchor info + database_url for a physical entity.
+
+    参考: LPE VOA 项目 get_pe_arcs — 查 PhysicalEntity 表, physical_table_id AS source_table.
+    """
     gdb, _, _ = _ensure_services()
-    entity = gdb.get_entity_by_id(pe_id)
+    # DLR 的 PE 节点在 PhysicalEntity 表(非 ER 的 BizEntity),且字段名是 physical_table_id
+    entity = gdb.get_physical_entity_by_id(pe_id)
     if not entity:
         return {"success": False, "message": f"物理实体不存在: {pe_id}"}
     arcs = entity.get("arcs", {})
-    database_url = _resolve_database_url(entity.get("source_table", ""))
+    # _resolve_database_url 按前缀 "db.table" 匹配 config, physical_table_id 格式兼容
+    database_url = _resolve_database_url(entity.get("physical_table_id", ""))
     return {"success": True, "physical_entity_id": pe_id,
             "database_url": database_url, "arcs": arcs}
 
 
 def _path_le_le(from_id: str, to_id: str) -> dict:
-    """[DLR] 查询两个逻辑实体(LE)之间的最短 PAS 路径。"""
+    """[DLR] Shortest PAS path between two logical entities (LE)."""
     gdb, _, _ = _ensure_services()
     return gdb.find_le_shortest_path(from_id, to_id)
 
 
-# Mapping of tool name → plain function for DLR tools
+# ── 新增:list_pe / LE 导航 / PE 详情 / PAS / 判断 / schema ──────────────
+
+def _list_pe() -> dict:
+    """[DLR] List all physical entities (PE)."""
+    gdb, _, _ = _ensure_services()
+    results = gdb.get_all_entities()
+    return {"success": True, "count": len(results), "results": results}
+
+
+def _get_le_pas(le_id: str) -> dict:
+    """[DLR] Get all PAS relations involving a given LE."""
+    gdb, _, _ = _ensure_services()
+    le = gdb.get_logical_entity_by_id(le_id)
+    if not le:
+        return {"success": False, "message": f"逻辑实体不存在: {le_id}"}
+    pas_relations = gdb.get_pas_relations_for_le(le_id)
+    return {"success": True, "logical_entity_id": le_id, "pas_relations": pas_relations}
+
+
+def _get_pe(pe_id: str) -> dict:
+    """[DLR] Get physical entity details."""
+    gdb, _, _ = _ensure_services()
+    entity = gdb.get_physical_entity_by_id(pe_id)
+    if not entity:
+        return {"success": False, "message": f"物理实体不存在: {pe_id}"}
+    return {"success": True, **entity}
+
+
+def _get_pe_attrs(pe_id: str) -> dict:
+    """[DLR] Get all attributes of a physical entity (with physical column mapping)."""
+    gdb, _, _ = _ensure_services()
+    entity = gdb.get_physical_entity_by_id(pe_id)
+    if not entity:
+        return {"success": False, "message": f"物理实体不存在: {pe_id}"}
+    attributes = gdb.get_physical_entity_attributes(pe_id)
+    return {"success": True, "physical_entity_id": pe_id, "attributes": attributes}
+
+
+def _get_pe_parent(pe_id: str) -> dict:
+    """[DLR] Get parent logical entity (LE) + ARCS details for a PE."""
+    gdb, _, qs = _ensure_services()
+    entity = gdb.get_physical_entity_by_id(pe_id)
+    if not entity:
+        return {"success": False, "message": f"物理实体不存在: {pe_id}"}
+    parent_le_id = qs._get_parent_logical_entity(pe_id)
+    parent_le = gdb.get_logical_entity_by_id(parent_le_id) if parent_le_id else None
+    return {
+        "success": True,
+        "physical_entity_id": pe_id,
+        "parent_le_id": parent_le_id,
+        "parent_le_name": parent_le.get("name", "") if parent_le else "",
+        "arcs": entity.get("arcs", {}),
+    }
+
+
+def _get_pas(relation_id: str) -> dict:
+    """[DLR] Get details of a PAS relation by id."""
+    gdb, _, _ = _ensure_services()
+    all_pas = gdb.get_all_pas_relations()
+    for pas in all_pas:
+        if pas.get("relation_id") == relation_id:
+            return {"success": True, "pas_relation": pas}
+    return {"success": False, "message": f"PAS 关系不存在: {relation_id}"}
+
+
+def _get_pas_by_le(le_id: str) -> dict:
+    """[DLR] Get all PAS relations for a given LE."""
+    gdb, _, _ = _ensure_services()
+    le = gdb.get_logical_entity_by_id(le_id)
+    if not le:
+        return {"success": False, "message": f"逻辑实体不存在: {le_id}"}
+    pas_relations = gdb.get_pas_relations_for_le(le_id)
+    return {"success": True, "logical_entity_id": le_id, "pas_relations": pas_relations}
+
+
+def _path_pe_pe(pe_id1: str, pe_id2: str) -> dict:
+    """[DLR] Shortest path between two PEs (across LE via PAS + ARCS)."""
+    gdb, _, qs = _ensure_services()
+    parent1 = qs._get_parent_logical_entity(pe_id1)
+    parent2 = qs._get_parent_logical_entity(pe_id2)
+    if not parent1 or not parent2:
+        return {"success": False, "message": "至少一个 PE 不存在或无父 LE"}
+    if parent1 == parent2:
+        return {"success": False, "message": "两个 PE 属于同一 LE,请使用 get_pe_arcs"}
+
+    le_path = gdb.find_le_shortest_path(parent1, parent2)
+    if not le_path.get("success"):
+        return le_path
+
+    entity1 = gdb.get_physical_entity_by_id(pe_id1)
+    entity2 = gdb.get_physical_entity_by_id(pe_id2)
+    le_rels = le_path.get("relations", [])
+    path_steps = []
+    for i, rel in enumerate(le_rels):
+        step = {"pas": rel}
+        if i == 0 and entity1:
+            step["from_arcs"] = {"physical_entity_id": pe_id1, "arcs": entity1.get("arcs", {})}
+        if i == len(le_rels) - 1 and entity2:
+            step["to_arcs"] = {"physical_entity_id": pe_id2, "arcs": entity2.get("arcs", {})}
+        path_steps.append(step)
+
+    return {
+        "success": True,
+        "from_pe_id": pe_id1,
+        "to_pe_id": pe_id2,
+        "from_le_id": parent1,
+        "to_le_id": parent2,
+        "path_length": le_path.get("path_length", 0),
+        "path": path_steps,
+    }
+
+
+def _is_le(id: str) -> dict:
+    """[DLR] Check if id is a logical entity (LE)."""
+    gdb, _, _ = _ensure_services()
+    le = gdb.get_logical_entity_by_id(id)
+    return {"success": True, "is_le": le is not None, "id": id}
+
+
+def _is_pe(id: str) -> dict:
+    """[DLR] Check if id is a physical entity (PE)."""
+    gdb, _, _ = _ensure_services()
+    entity = gdb.get_physical_entity_by_id(id)
+    return {"success": True, "is_pe": entity is not None, "id": id}
+
+
+def _is_arcs(pe_id: str, le_id: str) -> dict:
+    """[DLR] Check if PE belongs to LE via ARCS."""
+    _, _, qs = _ensure_services()
+    parent_le = qs._get_parent_logical_entity(pe_id)
+    return {"success": True, "is_arcs": parent_le == le_id, "pe_id": pe_id, "le_id": le_id}
+
+
+def _is_same_le(pe_id1: str, pe_id2: str) -> dict:
+    """[DLR] Check if two PEs share the same parent LE."""
+    _, _, qs = _ensure_services()
+    parent1 = qs._get_parent_logical_entity(pe_id1)
+    parent2 = qs._get_parent_logical_entity(pe_id2)
+    return {
+        "success": True,
+        "is_same_le": (parent1 == parent2 and parent1 != ""),
+        "pe_id1_parent_le": parent1,
+        "pe_id2_parent_le": parent2,
+    }
+
+
+def _schema() -> dict:
+    """[DLR] Get full schema: all LE, PE, PAS."""
+    gdb, _, _ = _ensure_services()
+    return {
+        "success": True,
+        "logical_entities": gdb.get_all_logical_entities(),
+        "physical_entities": gdb.get_all_entities(),
+        "pas_relations": gdb.get_all_pas_relations(),
+    }
+
+
+# Mapping of tool name → plain function for DLR tools (23 个纯 CLI 风格)
 _DLR_TOOL_FUNCS = {
-    "recall_le": _recall_le,
+    # 召回层(主入口是 dlr_semantic_query;recall_pe/recall_pas 为辅助按类型召回)
+    "dlr_semantic_query": dlr_semantic_query,
     "recall_pe": _recall_pe,
     "recall_pas": _recall_pas,
+    # 列表层
     "list_le": _list_le,
+    "list_pe": _list_pe,
     "list_pas": _list_pas,
+    # LE 查询
     "get_le": _get_le,
     "get_le_attrs": _get_le_attrs,
     "get_le_children": _get_le_children,
+    "get_le_pas": _get_le_pas,
+    # PE 查询
+    "get_pe": _get_pe,
+    "get_pe_attrs": _get_pe_attrs,
     "get_pe_arcs": _get_pe_arcs,
+    "get_pe_parent": _get_pe_parent,
+    # PAS 导航
+    "get_pas": _get_pas,
+    "get_pas_by_le": _get_pas_by_le,
+    # 路径层
     "path_le_le": _path_le_le,
+    "path_pe_pe": _path_pe_pe,
+    # 判断层
+    "is_le": _is_le,
+    "is_pe": _is_pe,
+    "is_arcs": _is_arcs,
+    "is_same_le": _is_same_le,
+    # 统计层
+    "schema": _schema,
 }
+
+
+# ER 范式专属工具集(原模块级 @mcp.tool() 注册,现改为动态注册)
+_ER_TOOL_FUNCS = {
+    # 语义入口
+    "er_semantic_query": er_semantic_query,
+    # 实体图谱导航
+    "list_entities": list_entities,
+    "list_relations": list_relations,
+    "get_entity": get_entity,
+    "get_entity_attributes": get_entity_attributes,
+    "get_entity_relations": get_entity_relations,
+    "get_entity_mapping": get_entity_mapping,
+    "find_shortest_path": find_shortest_path,
+    # 表结构
+    "list_all_tables": list_all_tables,
+    "get_table_schema": get_table_schema,
+    # 统计
+    "summary": summary,
+}
+
+
+def _register_er_tools():
+    """注册 ER 专属工具集: semantic_query(语义入口) + 12 个 REST 查询工具.
+
+    对标: DLR 23 件(LE/PE/PAS CLI), RDF 8 件(语义召回 + SPARQL).
+    """
+    from fastmcp.tools import Tool
+    existing = _get_tool_names()
+    added = 0
+    for name, func in _ER_TOOL_FUNCS.items():
+        if name in existing:
+            continue
+        try:
+            tool = Tool.from_function(func, name=name)
+            mcp.add_tool(tool)
+            added += 1
+            logger.debug(f"[MCP] Registered ER tool: {name}")
+        except Exception as e:
+            logger.warning(f"[MCP] Failed to register ER tool {name}: {e}")
+    if added:
+        logger.info(f"[MCP] Registered {added} ER-specific tools")
 
 
 def _register_dlr_tools():
@@ -673,11 +909,24 @@ def _register_dlr_tools():
             mcp.add_tool(tool)
             logger.debug(f"[MCP] Registered DLR tool: {name}")
         except Exception as e:
-            logger.warning(f"[MCP] Failed to register DLR tool {name}: {e}")
+            logger.warning(f"[MCP] Failed to register DLR tool: {name}: {e}")
 
 
 _RDF_TOOL_FUNCS = {
+    # 语义召回(对标 ER 的 semantic_query / DLR 的 recall_*)
+    "rdf_semantic_query": rdf_semantic_query,
+    # 映射查询(对标 ER 的 get_entity_mapping / DLR 的 get_pe_arcs)
     "query_rdf_mapping": _query_rdf_mapping,
+    # 图探索
+    "rdf_classes": _rdf_classes,
+    "rdf_predicates": _rdf_predicates,
+    "rdf_search": _rdf_search,
+    # 三元组
+    "rdf_triples_for_class": _rdf_triples_for_class,
+    # 序列化
+    "rdf_serialize": _rdf_serialize,
+    # SPARQL 控制台(W3C 标准,Agent 自由验证映射)
+    "rdf_sparql": _rdf_sparql,
 }
 
 
@@ -699,24 +948,6 @@ def _register_rdf_tools():
     if added:
         logger.info(f"[MCP] Registered {added} RDF-specific tools")
 
-
-def _remove_rdf_tools():
-    """Remove RDF-only tools from the MCP registry."""
-    rdf_tool_names = set(_RDF_TOOL_FUNCS.keys())
-    provider = getattr(mcp, 'local_provider', None)
-    if provider is None:
-        return
-    existing = _get_tool_names()
-    removed = 0
-    for name in rdf_tool_names:
-        if name in existing:
-            try:
-                provider.remove_tool(name)
-                removed += 1
-            except Exception as e:
-                logger.warning(f"[MCP] Failed to remove RDF tool: {e}")
-    if removed:
-        logger.info(f"[MCP] Removed {removed} RDF tools for non-RDF mode")
 
 
 # ===================================================================

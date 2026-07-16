@@ -1,200 +1,174 @@
 mapping_type: "dlr"
 version: "2.0"
 scenario_name: dlr_student_club
-description: "DLR 范式 — 学生社团场景：按需字段，8 PE 聚合 7 LE，活动财务多视图解耦"
+description: "DLR paradigm - Student club scenario: on-demand fields, 8 PEs aggregated into 7 LEs, activity finance multi-view decoupling"
 databases:
   student_club: "sqlite:///MINIDEV_sqlite/dev_databases/student_club/student_club.sqlite"
-
 logical_entities:
-  # ── 1. 社团成员 ──
-  - logical_entity_id: LOGICAL.社团成员
-    biz_name: 社团成员
-    description: "学生社团的成员主体"
+  - logical_entity_id: LOGICAL.Member
+    biz_name: Member
+    description: "Student club member"
     public_attributes:
-      - {attr_id: LOGICAL.社团成员.成员编号, biz_name: 成员编号}
+      - {attr_id: LOGICAL.Member.MemberID, biz_name: MemberID}
     physical_entities:
-      - physical_entity_id: PHYSICAL.成员表
+      - physical_entity_id: PHYSICAL.Member
         physical_table_name: member
         physical_table_id: student_club.member
         A: {cardinality: "1:1", key: member_id}
         R: null
-        C:
-          LOGICAL.社团成员.成员编号: student_club.member.member_id
-        S: "成员主数据表"
+        C: {LOGICAL.Member.MemberID: student_club.member.member_id}
+        S: "Member master"
         private_attributes:
-          - {attr_id: student_club.member.first_name, biz_name: 名, physical_column_id: student_club.member.first_name}
-          - {attr_id: student_club.member.last_name, biz_name: 姓, physical_column_id: student_club.member.last_name}
-          - {attr_id: student_club.member.position, biz_name: 职务, physical_column_id: student_club.member.position}
-          - {attr_id: student_club.member.t_shirt_size, biz_name: T恤尺码, physical_column_id: student_club.member.t_shirt_size}
-          - {attr_id: student_club.member.phone, biz_name: 电话, physical_column_id: student_club.member.phone}
-          - {attr_id: student_club.member.zip, biz_name: 邮编, physical_column_id: student_club.member.zip}
-          - {attr_id: student_club.member.link_to_major, biz_name: 专业ID, physical_column_id: student_club.member.link_to_major}
-
-  # ── 2. 社团活动 ──
-  - logical_entity_id: LOGICAL.社团活动
-    biz_name: 社团活动
-    description: "社团举办的各类活动"
+          - {attr_id: student_club.member.first_name, biz_name: first_name, physical_column_id: student_club.member.first_name}
+          - {attr_id: student_club.member.last_name, biz_name: last_name, physical_column_id: student_club.member.last_name}
+          - {attr_id: student_club.member.position, biz_name: position, physical_column_id: student_club.member.position}
+          - {attr_id: student_club.member.t_shirt_size, biz_name: t_shirt_size, physical_column_id: student_club.member.t_shirt_size}
+          - {attr_id: student_club.member.phone, biz_name: phone, physical_column_id: student_club.member.phone}
+          - {attr_id: student_club.member.zip, biz_name: zip, physical_column_id: student_club.member.zip}
+          - {attr_id: student_club.member.link_to_major, biz_name: link_to_major, physical_column_id: student_club.member.link_to_major}
+  - logical_entity_id: LOGICAL.Event
+    biz_name: Event
+    description: "Club events"
     public_attributes:
-      - {attr_id: LOGICAL.社团活动.活动编号, biz_name: 活动编号}
+      - {attr_id: LOGICAL.Event.EventID, biz_name: EventID}
     physical_entities:
-      - physical_entity_id: PHYSICAL.活动表
+      - physical_entity_id: PHYSICAL.Event
         physical_table_name: event
         physical_table_id: student_club.event
         A: {cardinality: "1:1", key: event_id}
         R: null
-        C:
-          LOGICAL.社团活动.活动编号: student_club.event.event_id
-        S: "活动记录表"
+        C: {LOGICAL.Event.EventID: student_club.event.event_id}
+        S: "Event records"
         private_attributes:
-          - {attr_id: student_club.event.event_name, biz_name: 活动名称, physical_column_id: student_club.event.event_name}
-          - {attr_id: student_club.event.event_date, biz_name: 活动日期, physical_column_id: student_club.event.event_date}
-          - {attr_id: student_club.event.type, biz_name: 类型, physical_column_id: student_club.event.type}
-          - {attr_id: student_club.event.location, biz_name: 地点, physical_column_id: student_club.event.location}
-          - {attr_id: student_club.event.status, biz_name: 状态, physical_column_id: student_club.event.status}
-
-  # ── 3. 活动出勤 ──
-  - logical_entity_id: LOGICAL.活动出勤
-    biz_name: 活动出勤
-    description: "成员参加活动的出勤记录"
+          - {attr_id: student_club.event.event_name, biz_name: event_name, physical_column_id: student_club.event.event_name}
+          - {attr_id: student_club.event.event_date, biz_name: event_date, physical_column_id: student_club.event.event_date}
+          - {attr_id: student_club.event.type, biz_name: type, physical_column_id: student_club.event.type}
+          - {attr_id: student_club.event.location, biz_name: location, physical_column_id: student_club.event.location}
+          - {attr_id: student_club.event.status, biz_name: status, physical_column_id: student_club.event.status}
+  - logical_entity_id: LOGICAL.Attendance
+    biz_name: Attendance
+    description: "Member attendance at events"
     public_attributes:
-      - {attr_id: LOGICAL.活动出勤.关联活动, biz_name: 关联活动}
-      - {attr_id: LOGICAL.活动出勤.关联成员, biz_name: 关联成员}
+      - {attr_id: LOGICAL.Attendance.Event, biz_name: Event}
+      - {attr_id: LOGICAL.Attendance.Member, biz_name: Member}
     physical_entities:
-      - physical_entity_id: PHYSICAL.出勤表
+      - physical_entity_id: PHYSICAL.Attendance
         physical_table_name: attendance
         physical_table_id: student_club.attendance
         A: {cardinality: "N:1", key: link_to_event}
         R: null
-        C:
-          LOGICAL.活动出勤.关联活动: student_club.attendance.link_to_event
-          LOGICAL.活动出勤.关联成员: student_club.attendance.link_to_member
-        S: "成员-活动多对多关联表"
+        C: {LOGICAL.Attendance.Event: student_club.attendance.link_to_event, LOGICAL.Attendance.Member: student_club.attendance.link_to_member}
+        S: "Member-event many-to-many"
         private_attributes: []
-
-  # ── 4. 活动财务 (2 PE — 多视图) ──
-  - logical_entity_id: LOGICAL.活动财务
-    biz_name: 活动财务
-    description: "活动预算与实际支出双视图"
+  - logical_entity_id: LOGICAL.EventFinance
+    biz_name: EventFinance
+    description: "Event budget and actual expenses"
     public_attributes:
-      - {attr_id: LOGICAL.活动财务.财务编号, biz_name: 财务编号}
-      - {attr_id: LOGICAL.活动财务.关联活动, biz_name: 关联活动}
+      - {attr_id: LOGICAL.EventFinance.FinanceID, biz_name: FinanceID}
+      - {attr_id: LOGICAL.EventFinance.Event, biz_name: Event}
     physical_entities:
-      - physical_entity_id: PHYSICAL.预算表
+      - physical_entity_id: PHYSICAL.Budget
         physical_table_name: budget
         physical_table_id: student_club.budget
         A: {cardinality: "N:1", key: link_to_event}
         R: null
-        C:
-          LOGICAL.活动财务.财务编号: student_club.budget.budget_id
-          LOGICAL.活动财务.关联活动: student_club.budget.link_to_event
-        S: "活动预算 — 预算额度与已花费"
+        C: {LOGICAL.EventFinance.FinanceID: student_club.budget.budget_id, LOGICAL.EventFinance.Event: student_club.budget.link_to_event}
+        S: "Budget - amount, spent, remaining"
         private_attributes:
-          - {attr_id: student_club.budget.amount, biz_name: 预算额度, physical_column_id: student_club.budget.amount}
-          - {attr_id: student_club.budget.spent, biz_name: 已花费, physical_column_id: student_club.budget.spent}
-          - {attr_id: student_club.budget.category, biz_name: 预算分类, physical_column_id: student_club.budget.category}
-          - {attr_id: student_club.budget.remaining, biz_name: 剩余, physical_column_id: student_club.budget.remaining}
-          - {attr_id: student_club.budget.event_status, biz_name: 事件状态, physical_column_id: student_club.budget.event_status}
-      - physical_entity_id: PHYSICAL.支出表
+          - {attr_id: student_club.budget.amount, biz_name: amount, physical_column_id: student_club.budget.amount}
+          - {attr_id: student_club.budget.spent, biz_name: spent, physical_column_id: student_club.budget.spent}
+          - {attr_id: student_club.budget.category, biz_name: category, physical_column_id: student_club.budget.category}
+          - {attr_id: student_club.budget.remaining, biz_name: remaining, physical_column_id: student_club.budget.remaining}
+          - {attr_id: student_club.budget.event_status, biz_name: event_status, physical_column_id: student_club.budget.event_status}
+      - physical_entity_id: PHYSICAL.Expense
         physical_table_name: expense
         physical_table_id: student_club.expense
         A: {cardinality: "N:1", key: link_to_budget}
         R: null
-        C:
-          LOGICAL.活动财务.财务编号: student_club.expense.link_to_budget
-        S: "实际支出明细"
+        C: {LOGICAL.EventFinance.FinanceID: student_club.expense.link_to_budget}
+        S: "Actual expenses"
         private_attributes:
-          - {attr_id: student_club.expense.expense_description, biz_name: 支出描述, physical_column_id: student_club.expense.expense_description}
-          - {attr_id: student_club.expense.cost, biz_name: 费用, physical_column_id: student_club.expense.cost}
-          - {attr_id: student_club.expense.expense_date, biz_name: 支出日期, physical_column_id: student_club.expense.expense_date}
-          - {attr_id: student_club.expense.approved, biz_name: 是否批准, physical_column_id: student_club.expense.approved}
-          - {attr_id: student_club.expense.link_to_member, biz_name: 经手成员, physical_column_id: student_club.expense.link_to_member}
-
-  # ── 5. 资金收入 ──
-  - logical_entity_id: LOGICAL.资金收入
-    biz_name: 资金收入
-    description: "社团收到的资金（会费、募捐等）"
+          - {attr_id: student_club.expense.expense_description, biz_name: expense_description, physical_column_id: student_club.expense.expense_description}
+          - {attr_id: student_club.expense.cost, biz_name: cost, physical_column_id: student_club.expense.cost}
+          - {attr_id: student_club.expense.expense_date, biz_name: expense_date, physical_column_id: student_club.expense.expense_date}
+          - {attr_id: student_club.expense.approved, biz_name: approved, physical_column_id: student_club.expense.approved}
+          - {attr_id: student_club.expense.link_to_member, biz_name: link_to_member, physical_column_id: student_club.expense.link_to_member}
+  - logical_entity_id: LOGICAL.Income
+    biz_name: Income
+    description: "Funds received by the club"
     public_attributes:
-      - {attr_id: LOGICAL.资金收入.收入编号, biz_name: 收入编号}
-      - {attr_id: LOGICAL.资金收入.关联成员, biz_name: 关联成员}
+      - {attr_id: LOGICAL.Income.IncomeID, biz_name: IncomeID}
+      - {attr_id: LOGICAL.Income.Member, biz_name: Member}
     physical_entities:
-      - physical_entity_id: PHYSICAL.收入表
+      - physical_entity_id: PHYSICAL.Income
         physical_table_name: income
         physical_table_id: student_club.income
         A: {cardinality: "N:1", key: link_to_member}
         R: null
-        C:
-          LOGICAL.资金收入.收入编号: student_club.income.income_id
-          LOGICAL.资金收入.关联成员: student_club.income.link_to_member
-        S: "收入记录表"
+        C: {LOGICAL.Income.IncomeID: student_club.income.income_id, LOGICAL.Income.Member: student_club.income.link_to_member}
+        S: "Income records"
         private_attributes:
-          - {attr_id: student_club.income.amount, biz_name: 金额, physical_column_id: student_club.income.amount}
-          - {attr_id: student_club.income.source, biz_name: 来源, physical_column_id: student_club.income.source}
-          - {attr_id: student_club.income.date_received, biz_name: 收到日期, physical_column_id: student_club.income.date_received}
-          - {attr_id: student_club.income.notes, biz_name: 备注, physical_column_id: student_club.income.notes}
-
-  # ── 6. 专业 ──
-  - logical_entity_id: LOGICAL.专业
-    biz_name: 专业
-    description: "成员所属的学术专业"
+          - {attr_id: student_club.income.amount, biz_name: amount, physical_column_id: student_club.income.amount}
+          - {attr_id: student_club.income.source, biz_name: source, physical_column_id: student_club.income.source}
+          - {attr_id: student_club.income.date_received, biz_name: date_received, physical_column_id: student_club.income.date_received}
+          - {attr_id: student_club.income.notes, biz_name: notes, physical_column_id: student_club.income.notes}
+  - logical_entity_id: LOGICAL.Major
+    biz_name: Major
+    description: "Academic major"
     public_attributes:
-      - {attr_id: LOGICAL.专业.专业编号, biz_name: 专业编号}
+      - {attr_id: LOGICAL.Major.MajorID, biz_name: MajorID}
     physical_entities:
-      - physical_entity_id: PHYSICAL.专业表
+      - physical_entity_id: PHYSICAL.Major
         physical_table_name: major
         physical_table_id: student_club.major
         A: {cardinality: "1:1", key: major_id}
         R: null
-        C:
-          LOGICAL.专业.专业编号: student_club.major.major_id
-        S: "专业字典表"
+        C: {LOGICAL.Major.MajorID: student_club.major.major_id}
+        S: "Major dictionary"
         private_attributes:
-          - {attr_id: student_club.major.major_name, biz_name: 专业名称, physical_column_id: student_club.major.major_name}
-          - {attr_id: student_club.major.department, biz_name: 院系, physical_column_id: student_club.major.department}
-          - {attr_id: student_club.major.college, biz_name: 学院, physical_column_id: student_club.major.college}
-
-  # ── 7. 邮编区域 ──
-  - logical_entity_id: LOGICAL.邮编区域
-    biz_name: 邮编区域
-    description: "邮编对应的地理信息"
+          - {attr_id: student_club.major.major_name, biz_name: major_name, physical_column_id: student_club.major.major_name}
+          - {attr_id: student_club.major.department, biz_name: department, physical_column_id: student_club.major.department}
+          - {attr_id: student_club.major.college, biz_name: college, physical_column_id: student_club.major.college}
+  - logical_entity_id: LOGICAL.ZipCode
+    biz_name: ZipCode
+    description: "Zip code geographic information"
     public_attributes:
-      - {attr_id: LOGICAL.邮编区域.邮编, biz_name: 邮编}
+      - {attr_id: LOGICAL.ZipCode.Zip, biz_name: Zip}
     physical_entities:
-      - physical_entity_id: PHYSICAL.邮编表
+      - physical_entity_id: PHYSICAL.ZipCode
         physical_table_name: zip_code
         physical_table_id: student_club.zip_code
         A: {cardinality: "1:1", key: zip_code}
         R: null
-        C:
-          LOGICAL.邮编区域.邮编: student_club.zip_code.zip_code
-        S: "邮编地理字典"
+        C: {LOGICAL.ZipCode.Zip: student_club.zip_code.zip_code}
+        S: "Zip code dictionary"
         private_attributes:
-          - {attr_id: student_club.zip_code.city, biz_name: 城市, physical_column_id: student_club.zip_code.city}
-          - {attr_id: student_club.zip_code.state, biz_name: 州, physical_column_id: student_club.zip_code.state}
-          - {attr_id: student_club.zip_code.county, biz_name: 县, physical_column_id: student_club.zip_code.county}
-
+          - {attr_id: student_club.zip_code.city, biz_name: city, physical_column_id: student_club.zip_code.city}
+          - {attr_id: student_club.zip_code.state, biz_name: state, physical_column_id: student_club.zip_code.state}
+          - {attr_id: student_club.zip_code.county, biz_name: county, physical_column_id: student_club.zip_code.county}
 pas_relations:
-  - relation_id: LOGICAL.社团成员_TO_LOGICAL.社团活动
-    relation_name: 活动参与
-    P: {forward: {verb: 参与, cardinality: '1:N'}, reverse: {verb: 涉及, cardinality: '1:N'}}
-    A: 成员编号
-    S: "成员通过出勤表关联活动"
-  - relation_id: LOGICAL.社团活动_TO_LOGICAL.活动财务
-    relation_name: 预算分配
-    P: {forward: {verb: 拥有, cardinality: '1:N'}, reverse: {verb: 归属, cardinality: '1:1'}}
-    A: 关联活动
-    S: "1个活动拥有N项预算/支出"
-  - relation_id: LOGICAL.社团成员_TO_LOGICAL.资金收入
-    relation_name: 资金收取
-    P: {forward: {verb: 收取, cardinality: '1:N'}, reverse: {verb: 归属, cardinality: '1:1'}}
-    A: 关联成员
-    S: "1个成员收取N笔资金"
-  - relation_id: LOGICAL.社团成员_TO_LOGICAL.专业
-    relation_name: 专业归属
-    P: {forward: {verb: 属于, cardinality: 'N:1'}, reverse: {verb: 包含, cardinality: '1:N'}}
-    A: 专业编号
-    S: "成员属于某个专业"
-  - relation_id: LOGICAL.社团成员_TO_LOGICAL.邮编区域
-    relation_name: 地区归属
-    P: {forward: {verb: 居住于, cardinality: 'N:1'}, reverse: {verb: 包含, cardinality: '1:N'}}
-    A: 邮编
-    S: "成员居住于某邮编区域"
+  - relation_id: LOGICAL.Member_TO_LOGICAL.Event
+    relation_name: Participates
+    P: {forward: {verb: participates, cardinality: '1:N'}, reverse: {verb: involves, cardinality: '1:N'}}
+    A: MemberID
+    S: "Members participate in events via attendance"
+  - relation_id: LOGICAL.Event_TO_LOGICAL.EventFinance
+    relation_name: HasBudget
+    P: {forward: {verb: has, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
+    A: Event
+    S: "1 event has N budget/expense items"
+  - relation_id: LOGICAL.Member_TO_LOGICAL.Income
+    relation_name: Receives
+    P: {forward: {verb: receives, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
+    A: Member
+    S: "1 member receives N income entries"
+  - relation_id: LOGICAL.Member_TO_LOGICAL.Major
+    relation_name: BelongsTo
+    P: {forward: {verb: belongs to, cardinality: 'N:1'}, reverse: {verb: contains, cardinality: '1:N'}}
+    A: MajorID
+    S: "Members belong to a major"
+  - relation_id: LOGICAL.Member_TO_LOGICAL.ZipCode
+    relation_name: LivesIn
+    P: {forward: {verb: lives in, cardinality: 'N:1'}, reverse: {verb: contains, cardinality: '1:N'}}
+    A: Zip
+    S: "Members live in a zip code area"
