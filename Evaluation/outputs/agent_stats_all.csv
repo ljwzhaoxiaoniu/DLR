@@ -1,0 +1,4 @@
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tool_calls_total,tool_calls_detail,final_answer,evidence_sql,error
+847,ER,10,99610,20039,532,0,{},,,
+847,DLR,25,351423,32106,2146,0,{},Räikkönen,SELECT d.surname FROM qualifying q JOIN drivers d ON q.driverId = d.driverId WHERE q.raceId = 19 AND q.q2 IS NOT NULL AND q.q2 != '' ORDER BY q.q2 ASC LIMIT 1;,
+847,RDF,9,89997,17230,801,0,{},Räikkönen,"SELECT d.surname, q.q2 FROM qualifying q JOIN drivers d ON q.driverId = d.driverId WHERE q.raceId = 19 AND q.q2 != '' AND q.q2 IS NOT NULL ORDER BY q.q2 ASC LIMIT 1;",

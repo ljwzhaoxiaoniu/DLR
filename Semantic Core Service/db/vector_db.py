@@ -60,7 +60,7 @@ class VectorDB:
         """初始化Embedding模型"""
         try:
             logger.info(f"加载Embedding模型: {EMBEDDING_MODEL}")
-            self.embedding_model = SentenceTransformer(EMBEDDING_MODEL)
+            self.embedding_model = SentenceTransformer(EMBEDDING_MODEL, local_files_only=True)
             logger.info("Embedding模型加载成功")
         except Exception as e:
             logger.error(f"Embedding模型加载失败: {str(e)}")

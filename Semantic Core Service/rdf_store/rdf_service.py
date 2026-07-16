@@ -212,6 +212,72 @@ class RDFGraphStore:
         return {"success": True, "table": table_name,
                 "columns": columns, "relations": relations}
 
+    def mapping_for_class(self, class_uri: str) -> dict:
+        """RDF 第二跳封装:从 class IRI 一步 SPARQL 解析出 table + columns + relations.
+
+        LLM 只传 class_uri(本体概念),服务内部解析物理映射,LLM 全程不见表名。
+        与 mapping_for_table 区别:入口是 rr:class 而非 rr:tableName。
+        """
+        from rdflib import URIRef
+        try:
+            cls = URIRef(class_uri)
+        except Exception:
+            return {"success": False, "error": f"invalid class_uri: {class_uri}"}
+
+        sparql = """
+        PREFIX rr: <http://www.w3.org/ns/r2rml#>
+        SELECT ?tableName ?col ?joinTable ?joinChild ?joinParent WHERE {
+            ?tm rr:subjectMap ?sm .
+            ?sm rr:class ?class .
+            ?tm rr:logicalTable ?lt .
+            ?lt rr:tableName ?tableName .
+            ?tm rr:predicateObjectMap ?pom .
+            ?pom rr:predicate ?pred .
+            OPTIONAL { ?pom rr:objectMap ?om1 . ?om1 rr:column ?col . }
+            OPTIONAL {
+                ?pom rr:objectMap ?om2 .
+                ?om2 rr:parentTriplesMap ?parentTm ;
+                     rr:joinCondition ?jc .
+                ?jc rr:child ?joinChild ;
+                    rr:parent ?joinParent .
+                ?parentTm rr:logicalTable ?plt .
+                ?plt rr:tableName ?joinTable .
+            }
+        }
+        """
+        try:
+            result = self.graph.query(sparql, initBindings={'class': cls})
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
+        table_name = None
+        columns, relations = [], []
+        seen_cols, seen_rels = set(), set()
+        for row in result:
+            tn = str(row[0]) if row[0] else ""
+            col = str(row[1]) if row[1] else ""
+            jt = str(row[2]) if row[2] else ""
+            jc = str(row[3]) if row[3] else ""
+            jp = str(row[4]) if row[4] else ""
+
+            if tn and not table_name:
+                table_name = tn
+            if col and col not in seen_cols:
+                seen_cols.add(col)
+                columns.append(col)
+            if jt and (jc, jp) not in seen_rels:
+                seen_rels.add((jc, jp))
+                relations.append({
+                    "target_table": jt,
+                    "join_condition": f"{jc} = {jt}.{jp}",
+                })
+
+        if not table_name:
+            return {"success": False, "error": f"no TriplesMap for class {class_uri}"}
+
+        return {"success": True, "class_uri": class_uri, "table": table_name,
+                "columns": columns, "relations": relations}
+
 
 _store: Optional[RDFGraphStore] = None
 

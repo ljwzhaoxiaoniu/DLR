@@ -48,31 +48,18 @@ sqlite3 -header -column "<数据库文件路径>" "SELECT ..."
 
 ---
 
-## 可用 MCP 工具
+## MCP 工具发现(强制第一步)
 
-所有工具由 **Semantic Core Service** MCP Server 暴露。使用 `/mcps` 命令可查看当前已启用的工具列表。
+**收到问题后,第一件事永远是先调用 `/mcps` 查看当前可用工具列表。**
 
-### 共享工具（所有范式可用）
+MCP Server 根据当前范式自动注册工具子集(ER≈11 / DLR≈23 / RDF≈8)。Agent 不知道自己在哪个范式,**必须通过 `/mcps` 发现入口工具名**:
 
-| Tool | 语义 |
-|------|------|
-| `semantic_query` | 自然语言查询（FAISS 向量召回，主入口） |
-| `list_entities` | 列出所有实体 |
-| `list_relations` | 列出所有关系 |
-| `get_entity` | 单个实体详情 |
-| `get_entity_attributes` | 实体属性（含物理字段） |
-| `get_entity_relations` | 实体关系（含方向） |
-| `get_entity_mapping` | 物理映射（数据库+表+字段） |
-| `find_shortest_path` | 两实体最短路径 |
-| `list_all_tables` | 列出已注册实体表 |
-| `get_table_schema` | 任意物理表结构 |
-| `summary` | 知识库摘要统计 |
+- 入口工具命名模式:`<paradigm>_semantic_query`(如 `er_semantic_query` / `dlr_semantic_query` / `rdf_semantic_query`)
+- 映射工具:通过 `/mcps` 查找含 `mapping` / `arcs` / `entity` 签名的工具
 
-### 范式专属工具（由 MCP 自动注册，通过 `/mcps` 确认）
+**禁止**直接调用任何工具名(如 `semantic_query`、`get_entity` 等旧名),必须先 `/mcps` 确认。
 
-范式专属工具由 MCP Server 根据当前范式自动注册，Agent 无需预先知晓。收到问题后先用 `semantic_query` 定位，再用 `/mcps` 确认可用工具，按返回的工具签名调用即可。
-
-调用工具时，参数中的 ID、名称必须来自前序工具的返回结果，不得自行编造。
+调用工具时,参数中的 ID、名称必须来自前序工具的返回结果,不得自行编造。
 
 ---
 

@@ -25,6 +25,8 @@ from mapping.registry import register
 
 # R2RML namespace
 _RR = rdflib.Namespace("http://www.w3.org/ns/r2rml#")
+# rr:class 标准 URI — rdflib 无法直接表示(保留字冲突:RR.clazz→#clazz, RR.class_→#class_)
+R2RML_CLASS = rdflib.URIRef("http://www.w3.org/ns/r2rml#class")
 
 
 def _safe_name(uri: str) -> str:
@@ -138,7 +140,7 @@ class RDFSemanticMapper(SemanticMapperABC):
 
             # RDF class → entity name + description
             sm = _first(g, tm, RR.subjectMap)
-            class_node = _first(g, sm, RR.clazz) if sm else None
+            class_node = _first(g, sm, R2RML_CLASS) if sm else None
             biz_name = _safe_name(str(class_node)) if class_node else table_name
 
             # primary key
@@ -181,8 +183,10 @@ class RDFSemanticMapper(SemanticMapperABC):
                     data_type=pcol.data_type if pcol else None,
                 ))
 
+            # RDF 原生起点:class IRI(非物理表名),保证 LLM 第一跳只见 class
+            class_iri = str(class_node) if class_node else physical_table_id
             biz_entities.append(BizEntity(
-                entity_id=physical_table_id,
+                entity_id=class_iri,
                 name=biz_name,
                 description=f"[RDF] R2RML class {class_node}" if class_node else None,
                 physical_table_id=physical_table_id,
@@ -205,14 +209,16 @@ class RDFSemanticMapper(SemanticMapperABC):
                 rel_name = _safe_name(str(pred)) if pred else "related"
 
                 parent_sm = _first(g, parent_tm, RR.subjectMap)
-                parent_class = _first(g, parent_sm, RR.clazz) if parent_sm else None
+                parent_class = _first(g, parent_sm, R2RML_CLASS) if parent_sm else None
                 parent_name = _safe_name(str(parent_class)) if parent_class else parent_table
 
+                # 关系端点也使用 class IRI,与 entity_id 一致
+                parent_class_iri = str(parent_class) if parent_class else f"{db_name}.{parent_table}"
                 biz_relations.append(BizRelation(
                     relation_id=f"{biz_name}_TO_{parent_name}",
                     biz_name=rel_name,
-                    from_entity_attr_id=physical_table_id,
-                    to_entity_attr_id=f"{db_name}.{parent_table}",
+                    from_entity_attr_id=class_iri,
+                    to_entity_attr_id=parent_class_iri,
                     description=f"[RDF] referencingObjectMap -> {parent_table}",
                 ))
 
@@ -229,10 +235,15 @@ class RDFSemanticMapper(SemanticMapperABC):
 
         # Attach fused vector text per entity (build_service reads this).
         # Walk the parsed TTL again: for each TriplesMap, build a flat text.
+        # key = class IRI(与 entity_id 一致),保证 build_service 能命中
         model._rdf_vec_texts = {}
         for tm in g.subjects(Rdf.type, RR.TriplesMap):
             lt = _first(g, tm, RR.logicalTable)
             tname = str(_first(g, lt, RR.tableName)) if lt else None
+            sm = _first(g, tm, RR.subjectMap)
+            class_node = _first(g, sm, R2RML_CLASS) if sm else None
+            # key 必须与上面 biz_entities 的 entity_id 一致:优先 class_iri,回退 physical
+            entity_key = str(class_node) if class_node else f"{db_name}.{tname}"
             if not tname:
                 continue
             col_names = []
@@ -256,7 +267,7 @@ class RDFSemanticMapper(SemanticMapperABC):
                 if parent_lt:
                     parent_tbl = str(_first(g, parent_lt, RR.tableName))
                     col_names.append(f"->{parent_tbl}")
-            model._rdf_vec_texts[f"{db_name}.{tname}"] = f"{db_name} {tname} {' '.join(col_names)}"
+            model._rdf_vec_texts[entity_key] = f"{db_name} {tname} {' '.join(col_names)}"
 
         return model
 

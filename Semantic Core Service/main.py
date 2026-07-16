@@ -218,6 +218,7 @@ def _build_serve_app(paradigm: str):
 
     # Lazy singletons — created on first request, not at import time
     _lazy_graph_db = None
+    _lazy_vector_db = None
     _lazy_query_svc = None
 
     def _get_graph_db():
@@ -226,10 +227,21 @@ def _build_serve_app(paradigm: str):
             _lazy_graph_db = GraphDB(db_path=str(storage["graph"]), mapping_type=paradigm)
         return _lazy_graph_db
 
+    def _get_vector_db():
+        nonlocal _lazy_vector_db
+        if _lazy_vector_db is None:
+            from db.vector_db import VectorDB
+            _lazy_vector_db = VectorDB(db_path=str(storage["vector"]))
+        return _lazy_vector_db
+
     def _get_query_svc():
         nonlocal _lazy_query_svc
         if _lazy_query_svc is None:
-            _lazy_query_svc = QueryService(mapping_type=paradigm, graph_db=_get_graph_db())
+            _lazy_query_svc = QueryService(
+                mapping_type=paradigm,
+                graph_db=_get_graph_db(),
+                vector_db=_get_vector_db(),
+            )
         return _lazy_query_svc
 
     app = FastAPI(title=f"语义元数据查询API [{paradigm.upper()}]", version="1.0.0")

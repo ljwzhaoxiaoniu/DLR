@@ -302,69 +302,37 @@ def summary() -> dict:
 # RDF tool — registered dynamically when _mapping_type == "rdf"
 # ===================================================================
 
-def _query_rdf_mapping(table_name: str) -> dict:
-    """[RDF] SPARQL query on R2RML graph. Returns {table, columns, relations:[{target_table, join_condition}]}.
+def _query_rdf_mapping(class_uri: str) -> dict:
+    """[RDF] 第二跳封装:从 class IRI 解析物理映射(table + columns + relations).
+
+    SPARQL 服务内部完成 class → table 解析,LLM 全程不见物理表名。
+    参数 class_uri 来自 rdf_semantic_query 返回的 data.classes[].class_uri。
 
     Args:
-        table_name: physical table name (e.g. "drivers"),supplied by rdf_semantic_query
+        class_uri: R2RML class IRI (e.g. "http://example.org/customers")
 
     Returns:
-        {table, columns, relations}
+        {success, class_uri, table, columns, relations:[{target_table, join_condition}]}
     """
     from rdf_store.rdf_service import get_rdf_store
     st = get_rdf_store()
     st.load()
+    result = st.mapping_for_class(class_uri)
 
-    sparql = """
-    PREFIX rr: <http://www.w3.org/ns/r2rml#>
-    SELECT ?pred ?col ?joinTable ?joinChild ?joinParent WHERE {
-        ?tm rr:logicalTable [ rr:tableName ?table_name ] ;
-            rr:predicateObjectMap ?pom .
-        ?pom rr:predicate ?pred .
-        OPTIONAL { ?pom rr:objectMap [ rr:column ?col ] . }
-        OPTIONAL {
-            ?pom rr:objectMap [
-                rr:parentTriplesMap ?parentTm ;
-                rr:joinCondition [ rr:child ?joinChild ; rr:parent ?joinParent ]
-            ] .
-            ?parentTm rr:logicalTable [ rr:tableName ?joinTable ] .
-        }
-    }
-    """
-    result = st.sparql(sparql.replace("?table_name", f'"{table_name}"'))
+    # 统一 join_condition 格式: "source.col = target.col"
+    if result.get("success"):
+        for rel in result.get("relations", []):
+            src_table = result.get("table", "")
+            jc = rel.get("join_condition", "=")
+            # mapping_for_class 返回 "child = target.parent",补源表前缀
+            if src_table and not jc.startswith(src_table):
+                # jc 格式为 "CustomerID = customers.CustomerID"
+                parts = jc.split("=")
+                if len(parts) == 2:
+                    child = parts[0].strip()
+                    rel["join_condition"] = f"{src_table}.{child} = {parts[1].strip()}"
 
-    if "error" in result:
-        return {"success": False, "error": result["error"]}
-
-    columns = []
-    relations = []
-    seen_cols = set()
-    seen_rels = set()
-
-    for binding in result.get("bindings", []):
-        pred = binding.get("pred", "")
-        col = binding.get("col", "")
-        jt = binding.get("joinTable", "")
-        jc = binding.get("joinChild", "")
-        jp = binding.get("joinParent", "")
-
-        if col and col not in seen_cols:
-            seen_cols.add(col)
-            columns.append(col)
-
-        if jt and (jc, jp) not in seen_rels:
-            seen_rels.add((jc, jp))
-            relations.append({
-                "target_table": jt,
-                "join_condition": f"{table_name}.{jc} = {jt}.{jp}"
-            })
-
-    return {
-        "success": True,
-        "table": table_name,
-        "columns": columns,
-        "relations": relations,
-    }
+    return result
 
 
 def rdf_semantic_query(question: str, top_k: int = 20) -> dict:
