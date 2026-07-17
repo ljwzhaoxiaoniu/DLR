@@ -383,11 +383,23 @@ def _build_serve_app(paradigm: str):
 # Port convention: 287[6,7,8][5,6,7]
 #   tens digit:  6=ER, 7=DLR, 8=RDF
 #   ones digit:  5=web, 6=api, 7=mcp
-_PORT_MAP = {
+#   优先读项目根 config.json / 环境变量, 其次用约定值
+import json as _json
+_DEFAULT_PORT_MAP = {
     "er":  {"web": 28765, "api": 28766, "mcp": 28767},
     "dlr": {"web": 28775, "api": 28776, "mcp": 28777},
     "rdf": {"web": 28785, "api": 28786, "mcp": 28787},
 }
+_PORT_MAP = dict(_DEFAULT_PORT_MAP)
+_cfg = Path(__file__).resolve().parent.parent / "config.json"
+if _cfg.exists():
+    try:
+        _cfg_srv = _json.load(open(_cfg, encoding="utf-8")).get("server", {})
+        for _p in ("er", "dlr", "rdf"):
+            if _p in _cfg_srv:
+                _PORT_MAP[_p] = {**_DEFAULT_PORT_MAP[_p], **_cfg_srv[_p]}
+    except Exception:
+        pass
 
 
 def _serve_one(paradigm: str, host: str, port: int):

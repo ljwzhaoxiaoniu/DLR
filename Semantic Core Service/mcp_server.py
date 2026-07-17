@@ -241,8 +241,8 @@ def find_shortest_path(from_entity_id: str, to_entity_id: str) -> dict:
     return gdb.find_shortest_path(from_entity_id, to_entity_id)
 
 
-def list_all_tables() -> list:
-    """[ER] List registered entity tables."""
+def list_all_tables(db: str = "") -> list:
+    """[ER] List registered entity tables. Use db='debit_card_specializing' to filter."""
     gdb, _, _ = _ensure_services()
     entities = gdb.get_all_entities()
     seen = set()
@@ -250,12 +250,16 @@ def list_all_tables() -> list:
     for e in entities:
         tid = e.get("source_table", "")
         if tid and tid not in seen:
-            seen.add(tid)
             parts = tid.split(".", 1)
+            db_name = parts[0] if len(parts) == 2 else ""
+            # 支持 db 过滤
+            if db and db_name != db:
+                continue
+            seen.add(tid)
             tables.append({
                 "table_id": tid,
                 "table_name": parts[1] if len(parts) == 2 else tid,
-                "db_name": parts[0] if len(parts) == 2 else "",
+                "db_name": db_name,
             })
     return tables
 
@@ -302,35 +306,68 @@ def summary() -> dict:
 # RDF tool — registered dynamically when _mapping_type == "rdf"
 # ===================================================================
 
+def _find_db_for_table(table_name: str) -> str:
+    """根据表名扫描 MINIDEV 目录,返回对应 SQLite 数据库的绝对路径."""
+    import sqlite3
+    # 查找 MINIDEV 数据库目录
+    candidates = [
+        Path(__file__).resolve().parent.parent / "MINIDEV_sqlite" / "dev_databases",
+        Path(__file__).resolve().parent.parent.parent / "MINIDEV_sqlite" / "dev_databases",
+    ]
+    db_dir = None
+    for c in candidates:
+        if c.exists():
+            db_dir = c
+            break
+    if not db_dir:
+        return ""
+
+    # 遍历每个子目录,查 sqlite 文件
+    for db_path in sorted(db_dir.glob("*/*.sqlite")) + sorted(db_dir.glob("*/*.db")):
+        try:
+            con = sqlite3.connect(str(db_path), timeout=5)
+            cur = con.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
+            if cur.fetchone():
+                con.close()
+                return str(db_path.resolve())
+            con.close()
+        except Exception:
+            continue
+    return ""
+
+
 def _query_rdf_mapping(class_uri: str) -> dict:
-    """[RDF] 第二跳封装:从 class IRI 解析物理映射(table + columns + relations).
+    """[RDF] 第二跳封装:从 class IRI 解析物理映射(table + columns + relations + database_url).
 
     SPARQL 服务内部完成 class → table 解析,LLM 全程不见物理表名。
     参数 class_uri 来自 rdf_semantic_query 返回的 data.classes[].class_uri。
 
-    Args:
-        class_uri: R2RML class IRI (e.g. "http://example.org/customers")
-
     Returns:
-        {success, class_uri, table, columns, relations:[{target_table, join_condition}]}
+        {success, class_uri, table, columns, relations, database_url}
     """
     from rdf_store.rdf_service import get_rdf_store
     st = get_rdf_store()
     st.load()
     result = st.mapping_for_class(class_uri)
 
-    # 统一 join_condition 格式: "source.col = target.col"
+    # 统一 join_condition 格式 + 补 database_url
     if result.get("success"):
+        table = result.get("table", "")
+        # 补 database_url (与 ER/DLR 对齐)
+        if not result.get("database_url"):
+            result["database_url"] = _find_db_for_table(table)
         for rel in result.get("relations", []):
-            src_table = result.get("table", "")
+            src_table = table
             jc = rel.get("join_condition", "=")
-            # mapping_for_class 返回 "child = target.parent",补源表前缀
             if src_table and not jc.startswith(src_table):
-                # jc 格式为 "CustomerID = customers.CustomerID"
                 parts = jc.split("=")
                 if len(parts) == 2:
                     child = parts[0].strip()
                     rel["join_condition"] = f"{src_table}.{child} = {parts[1].strip()}"
+            # 关联表也补 database_url
+            tgt = rel.get("target_table", "")
+            if tgt and not rel.get("target_database_url"):
+                rel["target_database_url"] = _find_db_for_table(tgt)
 
     return result
 
@@ -520,10 +557,13 @@ def _recall_pas(question: str, top_k: int = 3, threshold: float = 0.5) -> dict:
     }
 
 
-def _list_le() -> dict:
-    """[DLR] List all logical entities (LE)."""
+def _list_le(keyword: str = "") -> dict:
+    """[DLR] List logical entities (LE). Use keyword='Customer' to filter by name."""
     gdb, _, _ = _ensure_services()
     results = gdb.get_all_logical_entities()
+    if keyword:
+        kw = keyword.lower()
+        results = [r for r in results if kw in r.get("name", "").lower() or kw in r.get("description", "").lower()]
     return {"success": True, "count": len(results), "results": results}
 
 
@@ -650,7 +690,7 @@ def _get_le_pas(le_id: str) -> dict:
 
 
 def _get_pe(pe_id: str) -> dict:
-    """[DLR] Get physical entity details."""
+    """[DLR] Get physical entity details. Prefer get_pe_full for all info in one call."""
     gdb, _, _ = _ensure_services()
     entity = gdb.get_physical_entity_by_id(pe_id)
     if not entity:
@@ -659,13 +699,31 @@ def _get_pe(pe_id: str) -> dict:
 
 
 def _get_pe_attrs(pe_id: str) -> dict:
-    """[DLR] Get all attributes of a physical entity (with physical column mapping)."""
+    """[DLR] Get attributes of a physical entity. Prefer get_pe_full."""
     gdb, _, _ = _ensure_services()
     entity = gdb.get_physical_entity_by_id(pe_id)
     if not entity:
         return {"success": False, "message": f"物理实体不存在: {pe_id}"}
     attributes = gdb.get_physical_entity_attributes(pe_id)
     return {"success": True, "physical_entity_id": pe_id, "attributes": attributes}
+
+
+def _get_pe_full(pe_id: str) -> dict:
+    """[DLR] Get PE details + attributes + ARCS + database_url — all in one call.
+
+    Recommended over calling get_pe/get_pe_attrs/get_pe_arcs separately.
+    Returns: {success, entity, attributes, arcs, database_url}
+    """
+    gdb, _, _ = _ensure_services()
+    entity = gdb.get_physical_entity_by_id(pe_id)
+    if not entity:
+        return {"success": False, "message": f"物理实体不存在: {pe_id}"}
+    attributes = gdb.get_physical_entity_attributes(pe_id)
+    arcs = entity.get("arcs", {})
+    database_url = _resolve_database_url(entity.get("physical_table_id", ""))
+    return {"success": True, "physical_entity_id": pe_id,
+            "entity": entity, "attributes": attributes,
+            "arcs": arcs, "database_url": database_url}
 
 
 def _get_pe_parent(pe_id: str) -> dict:
@@ -803,6 +861,7 @@ _DLR_TOOL_FUNCS = {
     "get_le_children": _get_le_children,
     "get_le_pas": _get_le_pas,
     # PE 查询
+    "get_pe_full": _get_pe_full,  # 推荐:一次获取 PE+属性+ARCS+database_url
     "get_pe": _get_pe,
     "get_pe_attrs": _get_pe_attrs,
     "get_pe_arcs": _get_pe_arcs,
@@ -889,8 +948,7 @@ _RDF_TOOL_FUNCS = {
     "rdf_classes": _rdf_classes,
     "rdf_predicates": _rdf_predicates,
     "rdf_search": _rdf_search,
-    # 三元组
-    "rdf_triples_for_class": _rdf_triples_for_class,
+    # rdf_triples_for_class 已移除 — 永远返回空,误导 Agent
     # 序列化
     "rdf_serialize": _rdf_serialize,
     # SPARQL 控制台(W3C 标准,Agent 自由验证映射)

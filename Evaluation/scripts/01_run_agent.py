@@ -17,29 +17,40 @@ import json, os, subprocess, sys, time, argparse, shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-MINI = ROOT / "MINIDEV_sqlite" / "mini_dev_sqlite.json"
+
+# 加载项目级 config
+CFG = {}
+_cfg_path = ROOT / "config.json"
+if _cfg_path.exists():
+    CFG = json.load(open(_cfg_path, encoding="utf-8"))
+_cfg_paths = CFG.get("paths", {})
+_cfg_oc = CFG.get("opencode", {})
+_cfg_server = CFG.get("server", {})
+_cfg_eval = CFG.get("eval", {})
+
+MINIDEV_REL = _cfg_paths.get("minidev_dir", "MINIDEV_sqlite")
+MINI = ROOT / MINIDEV_REL / "mini_dev_sqlite.json"
 OUT_DIR = ROOT / "Evaluation" / "outputs" / "01_logs"
 AGENT_DIR = ROOT / "OC-based Agent Service"
 
-PARADIGM_PORT = {"er": 28767, "dlr": 28777, "rdf": 28787}
 PARADIGM_DIR = {"er": "oc_er", "dlr": "oc_dlr", "rdf": "oc_rdf"}
+DEFAULT_TIMEOUT = _cfg_eval.get("timeout_per_question", 300)
 
-# 定位 opencode 可执行文件(Windows 上 Python CreateProcess 找不到 npm 全局 .ps1)
+# 定位 opencode 可执行文件(从 config 或环境变量读 npm 搜索路径)
 def _find_opencode():
-    # shutil.which 在 Windows 上只找 .exe/.cmd/.bat,不找 .ps1
     for name in ["opencode.exe", "opencode.cmd", "opencode"]:
         p = shutil.which(name)
         if p:
             return p
-    # 兜底:npm 全局 bin 目录
-    npm_root = shutil.which("npm")
-    if npm_root:
-        npm_bin = Path(npm_root).parent
+    # 从 config 读取 npm 搜索路径,支持 %USERPROFILE% 展开
+    search_paths = _cfg_oc.get("npm_search_paths", [])
+    for sp in search_paths:
+        sp = os.path.expandvars(sp)
         for name in ["opencode.cmd", "opencode.exe", "opencode"]:
-            candidate = npm_bin / name
-            if candidate.exists():
-                return str(candidate)
-    return "opencode"  # 让它报错如果找不到
+            cand = Path(sp) / name
+            if cand.exists():
+                return str(cand)
+    return "opencode"
 
 OPENCODE = _find_opencode()
 
@@ -57,7 +68,13 @@ def run_one(q, paradigm, timeout=300):
     if out_path.exists():
         return out_path, True, 0.0  # 续跑跳过
 
-    prompt = f"Question: {q['question']}\nEvidence: {q.get('evidence', '')}"
+    prompt = (
+        "CRITICAL: MCP tools only. Skip list_mcp_resource* — go straight to semantic_query->mapping->sqlite3. "
+        "Use get_pe_full(DLR) or get_entity_mapping(ER) for complete info in one call. "
+        "NO glob/read/bash to find databases. "
+        "End with: Final Answer: <result> | Evidence SQL: <sql>. "
+        f"Question: {q['question']} Evidence: {q.get('evidence', '')}"
+    )
     session_title = f"eval_{paradigm}_{qid}"
     cmd = [
         OPENCODE, "run", "--format", "json",
@@ -65,21 +82,19 @@ def run_one(q, paradigm, timeout=300):
         prompt,
     ]
     cwd = str(AGENT_DIR / PARADIGM_DIR[paradigm])
-    # Windows 上 opencode.cmd 需要 cmd.exe 执行 + 完整用户 PATH
+    # 从 config 读取 npm 路径注入 PATH
     run_env = os.environ.copy()
-    if sys.platform == "win32":
-        # COMSPEC = cmd.exe; 传递完整环境 + 显式 PATH
-        npm_paths = [
-            r"C:\Users\user\AppData\Roaming\npm",
-            r"C:\Program Files\nodejs",
-        ]
+    npm_search = _cfg_oc.get("npm_search_paths", [])
+    if npm_search:
+        npm_paths = [os.path.expandvars(p) for p in npm_search]
         run_env["PATH"] = os.pathsep.join(npm_paths) + os.pathsep + run_env.get("PATH", "")
     t0 = time.time()
     try:
-        # Windows: 通过 cmd /c 调用 opencode.cmd,匹配交互模式
-        if sys.platform == "win32":
-            cmd = ["cmd", "/c"] + cmd
-        r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout, encoding='utf-8', errors='replace', env=run_env)
+        # 转义双引号防止 prompt 中的引号截断
+        escaped_prompt = prompt.replace('"', '\\"')
+        cmd_str = f'"{OPENCODE}" run --format json --title "{session_title}" "{escaped_prompt}"'
+        r = subprocess.run(cmd_str, cwd=cwd, capture_output=True, text=True, timeout=timeout,
+                          encoding='utf-8', errors='replace', env=run_env, shell=True)
         out_path.write_text(r.stdout, encoding="utf-8")
         if r.returncode != 0:
             (out_dir / f"{qid}.err").write_text(r.stderr, encoding="utf-8")
@@ -94,7 +109,7 @@ def main():
     ap.add_argument("--paradigm", required=True, choices=["er", "dlr", "rdf"])
     ap.add_argument("--count", type=int, default=500, help="跑几题(默认500, 小批测试设5)")
     ap.add_argument("--offset", type=int, default=0, help="起始偏移")
-    ap.add_argument("--timeout", type=int, default=300, help="每题超时秒")
+    ap.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT, help="每题超时秒")
     a = ap.parse_args()
 
     qs = load_questions()

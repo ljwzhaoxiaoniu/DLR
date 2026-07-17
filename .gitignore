@@ -28,6 +28,7 @@ MINIDEV_sqlite/
 
 # 环境
 .env
+.env_judge
 
 # 评测脚本临时输出
 Evaluation/outputs/01_logs/*/answer.txt

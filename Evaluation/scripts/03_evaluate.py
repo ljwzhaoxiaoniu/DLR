@@ -55,38 +55,57 @@ def load_tokens(paradigm, qid):
             ev = json.loads(line.strip())
         except:
             continue
-        u = ev.get("usage") or (ev.get("part", {}) or {}).get("usage") or {}
-        if u:
-            inp += u.get("input_tokens", 0) or u.get("prompt_tokens", 0) or 0
-            out += u.get("output_tokens", 0) or u.get("completion_tokens", 0) or 0
+        # opencode NDJSON format: step_finish.part.tokens.{input, output}
+        tok = (ev.get("part", {}) or {}).get("tokens", {}) or {}
+        if tok:
+            inp += tok.get("input", 0) or 0
+            out += tok.get("output", 0) or 0
     return inp, out
 
 
 def llm_judge(question, evidence, gold_res, pred_res, gold_sql, pred_sql, db_id):
-    """LLM 仲裁: 对比 gold/pred 结果是否一致. 返回 CORRECT / INCORRECT / UNKNOWN.
-    使用 prompt caching (长 system + 前缀复用) 控制成本.
-    """
-    try:
-        import anthropic
-    except ImportError:
-        return "UNKNOWN", "anthropic not installed"
-    client = anthropic.Anthropic()  # 走 ANTHROPIC_API_KEY 环境变量
-    system = ("You are a SQL evaluation arbiter. SQL-run evaluator. "
-              "Decide whether two result sets are semantically equivalent. "
-              "Consider: float tolerance 1e-6, row/column order irrelevant, NULL == None. "
-              "Reply EXACTLY: CORRECT or INCORRECT (no other text).")
-    user = (f"Question: {question}\nEvidence: {evidence or ''}\nDatabase: {db_id}\n\n"
-            f"Gold SQL:\n{gold_sql}\nGold result:\n{json.dumps(gold_res, default=str)[:1500]}\n\n"
-            f"Predicted SQL:\n{pred_sql}\nPredicted result:\n{json.dumps(pred_res, default=str)[:1500]}\n\n"
-            "Are the predicted results correct? Reply CORRECT or INCORRECT.")
-    msg = client.messages.create(
-        model="claude-haiku-4-5-20251001",  # 省钱、快
-        max_tokens=10, temperature=0,
-        system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
-        messages=[{"role": "user", "content": user}],
+    """LLM 仲裁: 用 opencode run 判断结果语义等价. 返回 (verdict, reason)."""
+    import subprocess, shutil, tempfile
+    # 从项目 config 读 API 配置
+    cfg_path = ROOT / "config.json"
+    api_cfg = {}
+    if cfg_path.exists():
+        try: api_cfg = json.load(open(cfg_path, encoding="utf-8")).get("api", {})
+        except: pass
+    prompt = (
+        f"Judge: Q={question} | DB={db_id} | "
+        f"GoldSQL={gold_sql[:300]} | Gold={json.dumps(gold_res, default=str)[:300]} | "
+        f"PredSQL={pred_sql[:300]} | Pred={json.dumps(pred_res, default=str)[:300]} | "
+        f"Reply: VERDICT: CORRECT|INCORRECT | REASON: <why>"
     )
-    reply = "".join(getattr(b, "text", "") for b in msg.content).strip()
-    return reply if reply in ("CORRECT", "INCORRECT") else "UNKNOWN"
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False, encoding='utf-8') as f:
+        f.write(prompt)
+        tmp = f.name
+    try:
+        opencode = shutil.which("opencode") or "opencode"
+        # Use bash to avoid cmd.exe prompt truncation
+        escaped = tmp.replace('\\', '/')
+        r = subprocess.run(
+            ['bash', '-c', f'"{opencode}" run --format json "$(cat {escaped})"'],
+            capture_output=True, text=True, timeout=120,
+            encoding='utf-8', errors='replace', cwd=str(ROOT)
+        )
+        reply = ""
+        for line in r.stdout.splitlines():
+            try:
+                ev = json.loads(line.strip())
+                if ev.get("type") == "text":
+                    reply = ev["part"]["text"]
+            except: pass
+        v_m = re.search(r'VERDICT:\s*(CORRECT|INCORRECT)', reply, re.I)
+        r_m = re.search(r'REASON:\s*(.+)', reply, re.I)
+        return (v_m.group(1).upper() if v_m else "UNKNOWN",
+                r_m.group(1).strip() if r_m else reply[:200])
+    except Exception as e:
+        return "UNKNOWN", str(e)[:200]
+    finally:
+        try: os.unlink(tmp)
+        except: pass
 
 
 def main():
@@ -119,16 +138,20 @@ def main():
 
         verdict = ""
         judge_v = ""
+        judge_reason = ""
+        strict_ok = False
         if not rec["ok"] or rec["result"] is None:
             verdict = "INCORRECT"
         elif strict_match(rec["result"]["rows"], gold["rows"]):
+            strict_ok = True
             verdict = "CORRECT"
             n_ok += 1
         else:
             # 严格不一致 → 可选仲裁
             if a.judge and n_judge < judge_budget:
-                v, err = llm_judge(q.get("question", ""), evidence, gold["rows"], rec["result"]["rows"], gold["SQL"], rec["sql"], gold["db_id"])
+                v, reason = llm_judge(q.get("question", ""), evidence, gold["rows"], rec["result"]["rows"], q.get("SQL", ""), rec["sql"], gold["db_id"])
                 judge_v = v
+                judge_reason = reason
                 n_judge += 1
                 if v == "CORRECT":
                     n_flip += 1
@@ -141,8 +164,10 @@ def main():
                 verdict = "INCORRECT"
 
         rows.append({
-            "q_id": qid, "db_id": gold["db_id"], "verdict": verdict,
-            "judge_verdict": judge_v, "judge_flipped": int(judge_v == "CORRECT"),
+            "q_id": qid, "db_id": gold["db_id"],
+            "strict_match": "PASS" if strict_ok else "FAIL",
+            "judge_verdict": judge_v, "judge_reason": judge_reason,
+            "verdict": verdict,
             "sql": rec.get("sql", ""), "error": rec.get("error", ""),
             "input_tokens": inp, "output_tokens": outp,
         })
@@ -152,7 +177,7 @@ def main():
     n_correct = sum(1 for r in rows if r["verdict"] == "CORRECT")
     csv_path = REPORT_DIR / f"{a.paradigm}.csv"
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=["q_id", "db_id", "verdict", "judge_verdict", "judge_flipped", "sql", "error", "input_tokens", "output_tokens"])
+        w = csv.DictWriter(f, fieldnames=["q_id", "db_id", "strict_match", "judge_verdict", "judge_reason", "verdict", "sql", "error", "input_tokens", "output_tokens"])
         w.writeheader()
         w.writerows(rows)
 

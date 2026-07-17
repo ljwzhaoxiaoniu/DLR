@@ -1,0 +1,26 @@
+{
+  "paths": {
+    "minidev_dir": "MINIDEV_sqlite",
+    "storage_dir": "Semantic Core Service/storage"
+  },
+  "server": {
+    "er": { "web": 28765, "mcp": 28767 },
+    "dlr": { "web": 28775, "mcp": 28777 },
+    "rdf": { "web": 28785, "mcp": 28787 }
+  },
+  "opencode": {
+    "npm_search_paths": [
+      "%USERPROFILE%/AppData/Roaming/npm",
+      "C:/Program Files/nodejs"
+    ]
+  },
+  "api": {
+    "auth_token_env": "ANTHROPIC_AUTH_TOKEN",
+    "base_url": "https://api.longcat.chat/anthropic"
+  },
+  "eval": {
+    "timeout_per_question": 300,
+    "judge_model": "LongCat-2.0",
+    "judge_budget": 100
+  }
+}

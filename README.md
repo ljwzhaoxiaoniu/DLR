@@ -1,8 +1,8 @@
-# DLR Proj（Decoupled Logic Representation）— 逻辑与物理解耦的语义建模
+# DLR Proj — 原创的 Decoupled Logic Representation 建模范式
 
-> 让 Agent 用自然语言查询 mini_dev 数据库 —— 逻辑与物理解耦的语义建模、双引擎检索、MCP 集成。
-
-**DLR** = **Decoupled Logic Representation**（解耦逻辑表达），即逻辑层与物理层分离的语义建模方法。
+> **DLR（解耦逻辑表达）是一种原创的语义建模范式**，将逻辑概念层与物理数据层解耦，
+> 使 LLM Agent 能够用自然语言理解和查询关系数据库。
+> 项目同时实现 ER（自研基线）和 RDF（W3C 标准基线），三范式同构对比评测。
 
 ## 架构
 
@@ -38,17 +38,18 @@
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-三种建模范式，三种设计理念：**ER** = REST API（自研）、**DLR** = REST 模仿 CLI（自研）、**RDF** = 向量召回 + SPARQL（W3C 标准）。每次评测只启用一种范式，OC Agent 通过 MCP 连接到当前范式。
+三种建模范式：**DLR 是原创核心**，ER 为自研对比基线，RDF 为 W3C 标准对照基线。
+每次评测只启用一种范式，OC Agent 通过 MCP 连接到当前范式。
 
 ### 建模范式
 
-| 范式 | 全称 | 中文 | 设计理念 | 模型 | Kuzu Schema |
-|------|------|------|----------|------|-------------|
-| **ER** | Entity-Relationship | 实体-关系 | REST API（自研） | BizEntity / BizAttribute / BizRelation / RELATED_TO | 扁平实体+关系 |
-| **DLR** | Decoupled Logic Representation | 解耦逻辑表达 | REST 模仿 CLI（自研） | LE / PE / PAS / ARCS | LE-PE 双层 + INHERITS + PAS |
-| **RDF** | Resource Description Framework | 资源描述框架 | 向量召回 + SPARQL（W3C 标准） | rr:TriplesMap / rr:predicateObjectMap / rr:referencingObjectMap | Kuzu + FAISS + rdflib SPARQL |
+| 范式 | 全称 | 设计理念 | 角色 | 模型 |
+|------|------|----------|------|------|
+| **★ DLR** | Decoupled Logic Representation | 逻辑-物理解耦 | **原创核心范式** | LE / PE / PAS / ARCS |
+| **ER** | Entity-Relationship | 传统实体-关系建模 | 自研对比基线 | BizEntity / BizAttribute / BizRelation |
+| **RDF** | Resource Description Framework | W3C R2RML + SPARQL | W3C 标准对照基线 | rr:TriplesMap / rr:predicateObjectMap |
 
-> DLR 是核心范式；ER 与 RDF 作为对比基线纳入评测。
+> DLR 的 LE-PE 双层模型 + PAS 语义路由是核心创新点，与 RDF 的物理元数据映射形成纯粹对照。
 
 ### DLR（Decoupled Logic Representation）缩写对照表
 
@@ -223,6 +224,7 @@ sqlite3 只读查询 → 数据证据
 DLR Proj/
 ├── README.md
 ├── requirements.txt
+├── config.json                      # 项目全局配置(路径/端口/API/评测参数)
 │
 ├── Semantic Core Service/          # 语义服务（Python）
 │   ├── main.py                     # CLI: build / serve / query / interactive / init / reset / ALL
@@ -306,24 +308,25 @@ DLR Proj/
 | `get_entity_relations` | `entity_id` | 实体关系（含方向） |
 | `get_entity_mapping` | `entity_id` | 物理映射（数据库+表+字段） |
 | `find_shortest_path` | `from_id, to_id` | 两实体最短路径 |
-| `list_all_tables` | — | 列出已注册实体表 |
+| `list_all_tables` | `db` | 列出已注册实体表,支持 db 过滤 |
 | `get_table_schema` | `table_id: "db.表名"` | 任意物理表结构 |
 | `summary` | — | 知识库摘要统计 |
 
-### DLR（Decoupled Logic Representation）范式工具(23 件)
+### DLR（Decoupled Logic Representation）范式工具(24 件)
 
 | Tool | 参数 | 语义 |
 |------|------|------|
 | `dlr_semantic_query` | `question, top_k, threshold` | 语义召回 → 返回结构体(LE-PE 复合,无物理信息) |
 | `recall_pe` | `question, top_k, threshold` | 召回物理实体 (PE) |
 | `recall_pas` | `question, top_k, threshold` | 召回 PAS 语义路由 |
-| `list_le` | — | 列出所有逻辑实体 (LE) |
+| `list_le` | `keyword` | 列出逻辑实体 (LE),支持 keyword 过滤 |
 | `list_pe` | — | 列出所有物理实体 (PE) |
 | `list_pas` | — | 列出所有 PAS 关系 |
 | `get_le` | `le_id` | 逻辑实体 (LE) 详情 |
 | `get_le_attrs` | `le_id` | 逻辑实体 (LE) 属性 |
 | `get_le_children` | `le_id` | 获取物理实体 (PE) 列表 |
 | `get_le_pas` | `le_id` | 获取 LE 的所有 PAS 关系 |
+| **`get_pe_full`** ★ | `pe_id` | **PE 详情+属性+ARCS+database_url 一次调用** |
 | `get_pe` | `pe_id` | 物理实体 (PE) 详情 |
 | `get_pe_attrs` | `pe_id` | 物理实体 (PE) 属性 |
 | `get_pe_arcs` | `pe_id` | ARCS 锚定 + 数据库 URL |
@@ -338,18 +341,19 @@ DLR Proj/
 | `is_same_le` | `pe_id1, pe_id2` | 判断两 PE 是否同父 LE |
 | `schema` | — | 获取完整 schema(LE+PE+PAS) |
 
-### RDF 范式工具(8 件)
+### RDF 范式工具(7 件)
 
 | Tool | 参数 | 语义 |
 |------|------|------|
 | `rdf_semantic_query` | `question, top_k=20` | 语义召回 → 返回类(IRI 本体,无物理信息) |
-| `query_rdf_mapping` | `table_name` | 查询表的 R2RML 映射（列 + JOIN 关系） |
+| `query_rdf_mapping` | `class_uri` | 查询 R2RML 映射(列+JOIN+**database_url**) |
 | `rdf_classes` | — | 列出所有 rr:class |
 | `rdf_predicates` | — | 列出所有谓词 |
 | `rdf_search` | `q, limit` | 文本搜索三元组 |
-| `rdf_triples_for_class` | `class_uri` | 按类过滤三元组 |
-| `rdf_serialize` | `format` | 序列化(turtle/json-ld/xml/n3/nt) |
-| `rdf_sparql` | `query` | 执行 SPARQL(SELECT/ASK/CONSTRUCT/DESCRIBE) |
+| `rdf_serialize` | `format` | 序列化(turtle/json-ld/xml/n3/nt) — W3C 标准 |
+| `rdf_sparql` | `query` | 执行 SPARQL(SELECT/ASK/CONSTRUCT/DESCRIBE) — W3C 标准 |
+
+> `rdf_triples_for_class` 已移除(永远返回空,误导 Agent)。`query_rdf_mapping` 参数改为 `class_uri`(来自语义召回),返回含 `database_url`。
 
 > **注意:** 范式专属工具仅在对应 `--paradigm` 启动时注册,其他范式不暴露。三范式各自独立,零共享。第一跳 `*_semantic_query` 完全屏蔽物理信息,database_url / 属性字段名等需通过第二跳(`get_entity_mapping` / `get_pe_arcs` / `query_rdf_mapping`)按需获取。
 
@@ -382,9 +386,9 @@ MCP SSE 端点：
 
 | 范式 | MCP 地址 | 工具数 |
 |------|----------|--------|
-| ER | `http://localhost:28767/mcp/sse` | 14 shared |
-| DLR | `http://localhost:28777/mcp/sse` | 14 shared + 10 DL tools |
-| RDF | `http://localhost:28787/mcp/sse` | 14 shared + 1 RDF tool |
+| ER | `http://localhost:28765/mcp/sse` | 11 |
+| DLR | `http://localhost:28775/mcp/sse` | 24 |
+| RDF | `http://localhost:28785/mcp/sse` | 7 |
 
 ## 可视化
 
@@ -419,46 +423,6 @@ MCP SSE 端点：
 -  RDF 矩形 + 橙色 JOIN 边 → 纯物理层,像 ER 但节点是表不是实体
 
 **为什么这样设计**:三个页面调用同一个 Kuzu + FAISS 后端,但映射文件设计理念不同(YAML 业务视角 vs R2RML 标准元数据)。可视化把"建模范式差异"直接变成**可看的结构差异**,配合评测的 Token/准确率数据,构成完整的"DLR vs RDF vs ER"同构对比证据链。
-
-## 快速开始
-
-### 1. 安装依赖
-
-```bash
-pip install -r requirements.txt    # 含 rdflib (RDF 范式必需)
-```
-
-### 2. 一键构建 + 启动 3 个范式 (ALL 模式)
-
-```bash
-cd Semantic\ Core\ Service
-python main.py build --paradigm ALL     # 逐个构建 ER/DLR/RDF
-python main.py serve --paradigm ALL     # fork 3 进程，端口 28765/28775/28785
-```
-
-启动后 3 个独立服务:
-- `http://localhost:28765/` ER  + MCP 28767 (14 tools)
-- `http://localhost:28775/` DLR + MCP 28777 (24 tools)
-- `http://localhost:28785/` RDF + MCP 28787 (15 tools)
-
-### 3. 单范式调试
-
-```bash
-python main.py build --paradigm ER   && python main.py serve --paradigm ER    # 28765
-python main.py build --paradigm DLR  && python main.py serve --paradigm DLR   # 28775
-python main.py build --paradigm RDF  && python main.py serve --paradigm RDF   # 28785
-
-python main.py reset --paradigm ALL     # 全部清理
-```
-
-### 4. 通过 OC Agent 执行 mini_dev 评测任务 (3 个 OpenCode 窗口)
-
-```bash
-cd "D:\Code_Proj\DLR Proj\OC-based Agent Service"
-cd oc_er   && opencode    # window 1 → ER   (localhost:28767/mcp/sse)
-cd oc_dlr  && opencode    # window 2 → DLR  (localhost:28777/mcp/sse)
-cd oc_rdf  && opencode    # window 3 → RDF  (localhost:28787/mcp/sse)
-```
 
 ## 数据集
 
@@ -600,15 +564,18 @@ python 01_run_agent.py --paradigm ER --count 500
 > ⚠️ **MCP 环境说明**:opencode MCP 工具在持久 git-bash shell 中稳定,但 Python subprocess 可能丢失。
 > 如果发现日志全是 bash 调用(无 `*_semantic_query`),说明 MCP 未生效,请改用 `run_serial.sh`。
 
-**Prompt 设计**(QL 方案,只给 Question + Evidence,schema 信息收起来):
+**Prompt 设计**(MCP 强制 + QL 方案):
 ```
-Question: {question}
-Evidence: {evidence}
+CRITICAL: MCP tools only. Skip list_mcp_resource* — go straight to semantic_query->mapping->sqlite3.
+Use get_pe_full(DLR) or get_entity_mapping(ER) for complete info in one call.
+NO glob/read/bash to find databases.
+End with Final Answer: <result> | Evidence SQL: <sql>.
+Question: {question} | Evidence: {evidence}
 ```
 
-**输出**:`outputs/01_logs/{paradigm}/{question_id}.json`(NDJSON 原始日志,含 `.usage` token 事件)。
+**输出**:`outputs/01_logs/{paradigm}/{question_id}.json`(NDJSON 原始日志,含 token 事件)。
 
-**Token 追踪**: 每个 step_finish 事件含 `tokens.input/output`,Stage 3 汇总 per-question token 消耗。
+**Token 追踪**: `parse_agent_stats.py` 生成 `agent_stats_{题号范围}_{时间戳}.csv`。
 
 ### Stage 2 — 结果提取与预执行(脚本已写,待运行)
 
@@ -620,16 +587,18 @@ python 02_extract_and_run.py --paradigm DLR
 
 **输出**:`outputs/02_predictions/{paradigm}/{question_id}.json`。
 
-### Stage 3 — 评测与仲裁(脚本已写,待运行)
+### Stage 3 — 评测与仲裁
 
-```powershell
+```bash
 python 03_evaluate.py --paradigm DLR --judge --judge-budget 100
 ```
 
-**目的**：Pred 结果 vs Golden 结果比对：
-- 结果一致 → `CORRECT`
-- 结果不一致 + 带 `--judge` → LLM 仲裁(`CORRECT` / `INCORRECT`)
-- 汇总 → `outputs/03_reports/metrics.csv`
+**目的**：三列判定链：
+- `strict_match`: 脚本严格比对结果行(PASS/FAIL,float 容差 1e-6,行/列序忽略)
+- `judge_verdict` + `judge_reason`: LLM 仲裁(strict FAIL 时用 opencode run 触发)
+- `verdict`: 最终判定(CORRECT/INCORRECT)
+
+**输出**:`outputs/03_reports/{paradigm}.csv` + `agent_stats_{题号范围}_{时间戳}.csv`(滚动保留历史)
 
 ### 评测公平性(编码 + 语言)
 
@@ -648,36 +617,106 @@ python 03_evaluate.py --paradigm DLR --judge --judge-budget 100
 ```text
 Evaluation/
 ├── scripts/
-│   ├── 00_preprocess.py     # Stage 0: 跑 Golden SQL,生成基准缓存 ✅
-│   ├── 01_run_agent.py      # Stage 1: Python串行(subprocess.run + env注入)
-│   ├── run_serial.sh        # Stage 1: Bash串行(git-bash,唯一稳定MCP路径) ★推荐
-│   ├── 02_extract_and_run.py# Stage 2: 提取 Pred SQL 并执行
-│   ├── 03_evaluate.py       # Stage 3: 比对 + LLM Judge,生成报表
-│   └── parse_agent_stats.py # NDJSON → token/步数/工具调用 CSV
-├── src/
-│   ├── __init__.py
-│   ├── config.py            # 路径配置、Prompt 模板、超时设置
-│   ├── log_parser.py        # 纯正则提取 SQL 逻辑
-│   ├── db_executor.py       # 纯 SQLite 执行与结果标准化
-│   └── llm_judge.py         # 纯 LLM 仲裁 API 调用
+│   ├── 00_preprocess.py         # Stage 0: 跑 Golden SQL,生成基准缓存 ✅
+│   ├── 01_run_agent.py          # Stage 1: Python串行(subprocess + config.json)
+│   ├── run_serial.sh            # Stage 1: Bash串行(git-bash) ★推荐
+│   ├── 02_extract_and_run.py    # Stage 2: 提取 Pred SQL 并执行(.sqlite/.db)
+│   ├── 03_evaluate.py           # Stage 3: strict_match + LLM Judge(opencode run)
+│   └── parse_agent_stats.py     # NDJSON → agent_stats_{q范围}_{时间戳}.csv
 └── outputs/
-    ├── 00_golden_cache.json # Golden 标准化结果缓存 ✅ 已生成
-    ├── 01_logs/             # Agent 原始日志 (按 paradigm 分目录)
-    ├── 02_predictions/      # 提取的 SQL 及其执行结果
-    └── 03_reports/          # 最终评测 CSV 报表
+    ├── 00_golden_cache.json     # Golden 标准化结果缓存 ✅ 已生成
+    ├── 01_logs/                 # Agent 原始日志 (按 paradigm 分目录)
+    ├── 02_predictions/          # 提取的 SQL 及其执行结果
+    ├── 03_reports/              # 评测 CSV({paradigm}.csv) + summary.json
+    └── agent_stats_*.csv        # 合并报表(滚动生成,历史保留)
 ```
 
 ---
 
 
-![image.png](https://raw.gitcode.com/user-images/assets/10360544/5c2b3bfb-acb8-463b-a5a8-0cf7026ac437/image.png 'image.png')
+**三范式可视化截图：**
 
-![image.png](https://raw.gitcode.com/user-images/assets/10360544/6c684b8a-36a9-417d-a4d4-f98748d5a3ce/image.png 'image.png')
+ER — 扁平实体+关系图：
+![ER 可视化](https://raw.gitcode.com/user-images/assets/10360544/5c2b3bfb-acb8-463b-a5a8-0cf7026ac437/image.png)
 
---- 
-DLR
-![image.png](https://raw.gitcode.com/user-images/assets/10360544/fb65f5f9-7135-4796-8b15-e127f10d941a/image.png 'image.png')
+![ER 可视化 2](https://raw.gitcode.com/user-images/assets/10360544/6c684b8a-36a9-417d-a4d4-f98748d5a3ce/image.png)
 
----
-RDF
-![image.png](https://raw.gitcode.com/user-images/assets/10360544/5a98b0b2-1141-45e2-9c99-3d159028305e/image.png 'image.png')
+DLR — LE/PE 双层 + PAS 语义路由 + INHERITS：
+![DLR 可视化](https://raw.gitcode.com/user-images/assets/10360544/fb65f5f9-7135-4796-8b15-e127f10d941a/image.png)
+
+RDF — TriplesMap 映射 + JOIN 关系：
+![RDF 可视化](https://raw.gitcode.com/user-images/assets/10360544/5a98b0b2-1141-45e2-9c99-3d159028305e/image.png)
+
+## 快速开始
+
+### 1. 安装依赖
+
+```bash
+pip install -r requirements.txt    # 含 rdflib (RDF 范式必需)
+```
+
+### 2. 一键构建 + 启动 3 个范式 (ALL 模式)
+
+```bash
+cd Semantic\ Core\ Service
+python main.py build --paradigm ALL     # 逐个构建 ER/DLR/RDF
+python main.py serve --paradigm ALL     # fork 3 进程，端口 28765/28775/28785
+```
+
+启动后 3 个独立服务:
+- `http://localhost:28765/` ER  + MCP 28767 (14 tools)
+- `http://localhost:28775/` DLR + MCP 28777 (24 tools)
+- `http://localhost:28785/` RDF + MCP 28787 (15 tools)
+
+### 3. 单范式调试
+
+```bash
+python main.py build --paradigm ER   && python main.py serve --paradigm ER    # 28765
+python main.py build --paradigm DLR  && python main.py serve --paradigm DLR   # 28775
+python main.py build --paradigm RDF  && python main.py serve --paradigm RDF   # 28785
+
+python main.py reset --paradigm ALL     # 全部清理
+```
+
+### 2. 配置
+
+首次使用需编辑根目录 `config.json`，配置路径与 API:
+
+```json
+{
+  "paths": { "minidev_dir": "MINIDEV_sqlite" },
+  "server": { "er": {"web": 28765}, "dlr": {"web": 28775}, "rdf": {"web": 28785} },
+  "api": { "auth_token_env": "ANTHROPIC_AUTH_TOKEN", "base_url": "..." },
+  "eval": { "timeout_per_question": 300 }
+}
+```
+
+### 3. 一键构建 + 启动 3 个范式 (ALL 模式)
+
+```bash
+cd Semantic\ Core\ Service
+python main.py build --paradigm ALL     # 逐个构建 ER/DLR/RDF
+python main.py serve --paradigm ALL     # fork 3 进程，端口从 config.json 读取
+```
+
+### 4. 单范式调试
+
+```bash
+python main.py build --paradigm ER   && python main.py serve --paradigm ER
+python main.py build --paradigm DLR  && python main.py serve --paradigm DLR
+python main.py build --paradigm RDF  && python main.py serve --paradigm RDF
+python main.py reset --paradigm ALL     # 全部清理
+```
+
+### 5. 批量评测(推荐 Bash 串行)
+
+```bash
+# 先启服务
+cd Semantic\ Core\ Service && python main.py serve --paradigm ALL
+# 再跑评测
+cd Evaluation/scripts
+bash run_serial.sh er 500 0    # ER 范式 500 题
+bash run_serial.sh dlr 500 0   # DLR 范式 500 题
+bash run_serial.sh rdf 500 0   # RDF 范式 500 题
+```
+

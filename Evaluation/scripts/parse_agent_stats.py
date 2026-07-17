@@ -9,10 +9,12 @@ Usage:
 """
 import json, csv, re, argparse
 from collections import Counter
+from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 LOG_DIR = ROOT / "Evaluation" / "outputs" / "01_logs"
+EVAL_DIR = ROOT / "Evaluation" / "outputs" / "03_reports"
 OUT_DIR = ROOT / "Evaluation" / "outputs"
 
 
@@ -38,7 +40,8 @@ def parse_ndjson(path):
                 steps += 1
                 tk = p.get("tokens", {})
                 if tk:
-                    tokens_total += tk.get("total", 0)
+                    # total 是累计值,只取最后一次; input/output 是每步增量
+                    tokens_total = tk.get("total", tokens_total)
                     tokens_in += tk.get("input", 0)
                     tokens_out += tk.get("output", 0)
 
@@ -101,13 +104,46 @@ def main():
             stats = parse_ndjson(f)
             rows.append({"question_id": qid, "paradigm": para, **stats})
 
-    # write CSV
-    out_path = OUT_DIR / f"agent_stats_{a.paradigm.lower()}.csv"
-    out_path.parent.mkdir(parents=True, exist_ok=True)
+    # load evaluation results for merge
+    eval_data = {}  # (qid, paradigm) -> {strict_match, judge_verdict, judge_reason, verdict}
+    for ev_csv in EVAL_DIR.glob("*.csv"):
+        para = ev_csv.stem.upper()  # er.csv -> ER
+        if para not in ("ER", "DLR", "RDF"):
+            continue
+        try:
+            with open(ev_csv, encoding="utf-8") as ef:
+                for erow in csv.DictReader(ef):
+                    eval_data[(int(erow["q_id"]), para)] = {
+                        "strict_match": erow.get("strict_match", ""),
+                        "judge_verdict": erow.get("judge_verdict", ""),
+                        "judge_reason": erow.get("judge_reason", ""),
+                        "verdict": erow.get("verdict", ""),
+                    }
+        except Exception:
+            pass
+
+    # merge eval results into rows
+    for r in rows:
+        key = (r["question_id"], r["paradigm"])
+        ev = eval_data.get(key, {})
+        r["strict_match"] = ev.get("strict_match", "")
+        r["judge_verdict"] = ev.get("judge_verdict", "")
+        r["judge_reason"] = ev.get("judge_reason", "")
+        r["verdict"] = ev.get("verdict", "")
+
+    # build timestamped filename with question range
+    qids = sorted(set(r["question_id"] for r in rows))
+    q_range = f"{min(qids)}-{max(qids)}" if len(qids) > 1 else str(qids[0]) if qids else "none"
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+    out_name = f"agent_stats_{q_range}_{ts}.csv"
+    out_path = OUT_DIR / out_name
+
+    # write CSV (no final_answer/evidence_sql)
     fields = ["question_id", "paradigm", "steps", "tokens_total", "tokens_in", "tokens_out",
-              "tool_calls_total", "tool_calls_detail", "final_answer", "evidence_sql", "error"]
+              "tool_calls_total", "tool_calls_detail", "error",
+              "strict_match", "judge_verdict", "judge_reason", "verdict"]
     with open(out_path, "w", newline="", encoding="utf-8") as w:
-        dw = csv.DictWriter(w, fieldnames=fields)
+        dw = csv.DictWriter(w, fieldnames=fields, extrasaction='ignore')
         dw.writeheader()
         for r in rows:
             dw.writerow(r)

@@ -1,0 +1,20 @@
+{
+  "q_id": 1472,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT c.CustomerID, c.Segment, SUM(y.Consumption) AS TotalConsumption FROM customers c JOIN yearmonth y ON c.CustomerID = y.CustomerID WHERE c.Segment = 'LAM' AND y.Date BETWEEN 201201 AND 201212 GROUP BY c.CustomerID ORDER BY TotalConsumption ASC LIMIT 1;",
+  "result": {
+    "columns": [
+      "CustomerID",
+      "Segment",
+      "TotalConsumption"
+    ],
+    "rows": [
+      [
+        47273,
+        "LAM",
+        0.74
+      ]
+    ]
+  }
+}

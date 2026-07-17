@@ -8,7 +8,9 @@ COUNT=${2:-10}
 OFFSET=${3:-0}
 TIMEOUT=300
 
-ROOT="/d/Code_Proj/DLR Proj"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+TIMEOUT=$(python -c "import json; c=json.load(open('$ROOT/config.json')); print(c.get('eval',{}).get('timeout_per_question',300))" 2>/dev/null || echo 300)
 OUTPUT_DIR="$ROOT/Evaluation/outputs/01_logs/$PARADIGM"
 AGENT_DIR="$ROOT/OC-based Agent Service/oc_$PARADIGM"
 
@@ -35,18 +37,17 @@ while IFS='|' read -r QID QUESTION EVIDENCE; do
 
     echo "[RUN] q$QID ($((OK+FAIL+1))/$TOTAL)"
 
-    # 构造 prompt(转义引号)
-    PROMPT="Question: $QUESTION"
+    # 构造 prompt — 强制 MCP 路径 + 单行避免换行截断
+    PROMPT="CRITICAL: MCP tools only. Skip list_mcp_resource* — go straight to semantic_query->mapping->sqlite3. Use get_pe_full(DLR) or get_entity_mapping(ER) for complete info in one call. NO glob/read/bash to find databases. End with Final Answer: <result> | Evidence SQL: <sql>. Question: $QUESTION"
     if [ -n "$EVIDENCE" ]; then
-        PROMPT="$PROMPT
-Evidence: $EVIDENCE"
+        PROMPT="$PROMPT | Evidence: $EVIDENCE"
     fi
 
     # 在 agent 目录下执行(opencode.json 在该目录)
     cd "$AGENT_DIR" || exit 1
 
     # 用 timeout 保护 + opencode run 串行
-    timeout "$TIMEOUT" opencode run --format json --title "eval_${PARADIGM}_${QID}" "$PROMPT" > "$OUT_FILE" 2>&1
+    timeout "$TIMEOUT" opencode run --format json --title "eval_${PARADIGM}_${QID}" "$PROMPT" < /dev/null > "$OUT_FILE" 2>&1
     RC=$?
 
     if [ $RC -eq 0 ]; then
