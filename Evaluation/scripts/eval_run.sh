@@ -28,6 +28,7 @@ echo "  RUN: $RUN_ID  mode=$MODE  workers=$WORKERS"
 echo "========================================="
 echo ""
 
+PIDS=()
 for (( i=0; i<${#PARADIGMS}; i++ )); do
     P="${PARADIGMS:$i:1}"
     case "$P" in
@@ -38,11 +39,16 @@ for (( i=0; i<${#PARADIGMS}; i++ )); do
     esac
     echo "--- $P ($PARADIGM) ---"
     if [ "$MODE" = "parallel" ]; then
-        bash "$SCRIPT_DIR/run_parallel.sh" "$PARADIGM" "$COUNT" "$OFFSET" --run-id "$RUN_ID" --workers "$WORKERS"
+        bash "$SCRIPT_DIR/run_parallel.sh" "$PARADIGM" "$COUNT" "$OFFSET" --run-id "$RUN_ID" --workers "$WORKERS" &
+        PIDS+=($!)
     else
         bash "$SCRIPT_DIR/run_serial.sh" "$PARADIGM" "$COUNT" "$OFFSET" --run-id "$RUN_ID"
     fi
-    echo ""
+done
+
+# 等待所有并行任务
+for pid in "${PIDS[@]}"; do
+    wait "$pid"
 done
 
 echo "========================================="
