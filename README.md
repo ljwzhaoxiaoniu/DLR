@@ -296,7 +296,7 @@ DLR Proj/
 - `structures` + `logical_entity_id` + `physical_entities` → DLR → 调 `get_pe_arcs(pe_id)`
 - `classes` + `class_uri` → RDF → 调 `query_rdf_mapping(class_name)`
 
-### ER 范式工具(11 件)
+### ER 范式工具(11 件 + 1 共享)
 
 | Tool | 参数 | 语义 |
 |------|------|------|
@@ -312,7 +312,7 @@ DLR Proj/
 | `get_table_schema` | `table_id: "db.表名"` | 任意物理表结构 |
 | `summary` | — | 知识库摘要统计 |
 
-### DLR（Decoupled Logic Representation）范式工具(24 件)
+### DLR（Decoupled Logic Representation）范式工具(21 件 + 1 共享)
 
 | Tool | 参数 | 语义 |
 |------|------|------|
@@ -327,9 +327,6 @@ DLR Proj/
 | `get_le_children` | `le_id` | 获取物理实体 (PE) 列表 |
 | `get_le_pas` | `le_id` | 获取 LE 的所有 PAS 关系 |
 | **`get_pe_full`** ★ | `pe_id` | **PE 详情+属性+ARCS+database_url 一次调用** |
-| `get_pe` | `pe_id` | 物理实体 (PE) 详情 |
-| `get_pe_attrs` | `pe_id` | 物理实体 (PE) 属性 |
-| `get_pe_arcs` | `pe_id` | ARCS 锚定 + 数据库 URL |
 | `get_pe_parent` | `pe_id` | 获取 PE 的父 LE |
 | `get_pas` | `relation_id` | PAS 关系详情 |
 | `get_pas_by_le` | `le_id` | 获取 LE 的所有 PAS 关系 |
@@ -341,7 +338,7 @@ DLR Proj/
 | `is_same_le` | `pe_id1, pe_id2` | 判断两 PE 是否同父 LE |
 | `schema` | — | 获取完整 schema(LE+PE+PAS) |
 
-### RDF 范式工具(7 件)
+### RDF 范式工具(7 件 + 1 共享)
 
 | Tool | 参数 | 语义 |
 |------|------|------|
@@ -355,7 +352,15 @@ DLR Proj/
 
 > `rdf_triples_for_class` 已移除(永远返回空,误导 Agent)。`query_rdf_mapping` 参数改为 `class_uri`(来自语义召回),返回含 `database_url`。
 
-> **注意:** 范式专属工具仅在对应 `--paradigm` 启动时注册,其他范式不暴露。三范式各自独立,零共享。第一跳 `*_semantic_query` 完全屏蔽物理信息,database_url / 属性字段名等需通过第二跳(`get_entity_mapping` / `get_pe_arcs` / `query_rdf_mapping`)按需获取。
+> `get_pe` / `get_pe_attrs` / `get_pe_arcs`(DLR)已合并入 `get_pe_full`,不再单独注册。
+
+### 共享工具(所有范式)
+
+| Tool | 参数 | 语义 |
+|------|------|------|
+| `execute_sql` | `sql, database_url` | 薄透传 SQL 执行(只读)。Agent 必须先通过映射工具拿到 `database_url` 再调用。 |
+
+> **注意:** 范式专属工具仅在对应 `--paradigm` 启动时注册,其他范式不暴露。`execute_sql` 为共享工具,所有范式可用。第一跳 `*_semantic_query` 完全屏蔽物理信息,database_url / 属性字段名等需通过第二跳(`get_entity_mapping` / `get_pe_full` / `query_rdf_mapping`)按需获取,再通过 `execute_sql` 执行 Agent 编写的 SQL。
 
 ## HTTP API
 
@@ -387,8 +392,11 @@ MCP SSE 端点：
 | 范式 | MCP 地址 | 工具数 |
 |------|----------|--------|
 | ER | `http://localhost:28765/mcp/sse` | 11 |
-| DLR | `http://localhost:28775/mcp/sse` | 24 |
+| DLR | `http://localhost:28775/mcp/sse` | 21 |
 | RDF | `http://localhost:28785/mcp/sse` | 7 |
+| 共享 | 所有范式 | +1 (`execute_sql`) |
+
+> `execute_sql(sql, database_url)` — 薄透传 SQL 执行服务,三范式共用。Agent 通过 MCP 映射拿到 `database_url` 后调用,禁止用 bash sqlite3。
 
 ## 可视化
 
