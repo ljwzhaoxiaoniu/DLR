@@ -44,3 +44,5 @@ _verify_edit.py
 static_check.txt
 verify_edit.txt
 *.db
+Evaluation/outputs/00_golden_cache.json
+Evaluation/outputs/01_logs/
