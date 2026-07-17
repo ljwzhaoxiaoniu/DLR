@@ -579,18 +579,26 @@ python 00_preprocess.py
 
 **当前状态**:**500/500 执行成功,零失败**。
 
-### Stage 1 — Agent 执行(脚本已写,待运行)
+### Stage 1 — Agent 执行(脚本已写,待大批量运行)
 
 **目的**：逐题让 OC Agent 通过 MCP 连接范式服务,生成 SQL 与工具调用日志。每个问题 = 独立 `opencode run` session(零上下文污染)。
 
-```powershell
-# 先启 MCP 服务(ALL 模式,三范式并行)
+```bash
+# 1. 先启 MCP 服务(ALL 模式,三范式并行)
 cd Semantic\ Core\ Service && python main.py serve --paradigm ALL
 
-# 再跑 Agent(PowerShell 直接 python,不走 conda run)
-cd Evaluation\scripts
-python 01_run_agent.py --paradigm DLR --count 500
+# 2. 跑 Agent — 推荐 Bash 串行(git-bash 环境,MCP 稳定)
+cd Evaluation/scripts
+bash run_serial.sh ER 500 0   # ER 范式 500 题
+bash run_serial.sh DLR 500 0  # DLR 范式 500 题
+bash run_serial.sh RDF 500 0  # RDF 范式 500 题
+
+# 备用:Python 版(注意 MCP 环境可能不稳定,Agent 会 fallback 到 bash)
+python 01_run_agent.py --paradigm ER --count 500
 ```
+
+> ⚠️ **MCP 环境说明**:opencode MCP 工具在持久 git-bash shell 中稳定,但 Python subprocess 可能丢失。
+> 如果发现日志全是 bash 调用(无 `*_semantic_query`),说明 MCP 未生效,请改用 `run_serial.sh`。
 
 **Prompt 设计**(QL 方案,只给 Question + Evidence,schema 信息收起来):
 ```
@@ -641,9 +649,11 @@ python 03_evaluate.py --paradigm DLR --judge --judge-budget 100
 Evaluation/
 ├── scripts/
 │   ├── 00_preprocess.py     # Stage 0: 跑 Golden SQL,生成基准缓存 ✅
-│   ├── 01_run_agent.py      # Stage 1: 跑 Agent,生成原始日志
+│   ├── 01_run_agent.py      # Stage 1: Python串行(subprocess.run + env注入)
+│   ├── run_serial.sh        # Stage 1: Bash串行(git-bash,唯一稳定MCP路径) ★推荐
 │   ├── 02_extract_and_run.py# Stage 2: 提取 Pred SQL 并执行
-│   └── 03_evaluate.py       # Stage 3: 比对 + LLM Judge,生成报表
+│   ├── 03_evaluate.py       # Stage 3: 比对 + LLM Judge,生成报表
+│   └── parse_agent_stats.py # NDJSON → token/步数/工具调用 CSV
 ├── src/
 │   ├── __init__.py
 │   ├── config.py            # 路径配置、Prompt 模板、超时设置
