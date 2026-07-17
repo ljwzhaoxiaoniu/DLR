@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 DB_DIR = ROOT / "MINIDEV_sqlite" / "dev_databases"
 LOG_DIR = ROOT / "Evaluation" / "outputs" / "01_logs"
-PRED_DIR = ROOT / "Evaluation" / "outputs" / "02_predictions"
+OUT_BASE = ROOT / "Evaluation" / "outputs"
 GOLD = json.load(open(ROOT / "Evaluation" / "outputs" / "00_golden_cache.json", encoding="utf-8"))
 GOLD_MAP = {x["q_id"]: x for x in GOLD}
 
@@ -96,17 +96,32 @@ def run_sql(sql, db_id):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--paradigm", required=True, choices=["er", "dlr", "rdf"])
+    ap.add_argument("--log-subdir", default="", help="Stage 1 子目录名(如 20260717_160000)")
     a = ap.parse_args()
 
-    log_dir = LOG_DIR / a.paradigm
-    out_dir = PRED_DIR / a.paradigm
+    base_dir = LOG_DIR
+    # 自动检测最新 run-id
+    run_id = a.log_subdir
+    if not run_id:
+        # 找 01_logs/ 下最新的子目录
+        subdirs = sorted([d for d in base_dir.iterdir() if d.is_dir() and d.name != a.paradigm], reverse=True)
+        if subdirs:
+            run_id = subdirs[0].name
+    log_dir = base_dir / run_id / a.paradigm if run_id else base_dir / a.paradigm
+    if not log_dir.exists():
+        print(f"[{a.paradigm.upper()}] 日志目录不存在: {log_dir}")
+        return
+
+    out_dir = OUT_BASE / run_id / "02_predictions" / a.paradigm if run_id else OUT_BASE / "02_predictions" / a.paradigm
     out_dir.mkdir(parents=True, exist_ok=True)
 
     logs = sorted(log_dir.glob("*.json"))
-    print(f"[{a.paradigm.upper()}] 处理 {len(logs)} 题", flush=True)
+    print(f"[{a.paradigm.upper()}] 处理 {len(logs)} 题 (log_dir={log_dir})", flush=True)
 
     ok = fail = missing = 0
     for lf in logs:
+        if not lf.stem.isdigit():
+            continue  # 跳过脏文件(如 .json, .err)
         qid = int(lf.stem)
         if qid not in GOLD_MAP:
             missing += 1
@@ -129,6 +144,10 @@ def main():
         (out_dir / f"{qid}.json").write_text(json.dumps(rec, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print(f"\n[{a.paradigm.upper()}] 完成: ok={ok} fail={fail} missing={missing}")
+    if fail == 0 and ok > 0 and run_id:
+        print(f"  [CLEAN] Stage 1 logs: rm -rf {OUT_BASE / run_id / '01_logs'}")
+    elif fail > 0:
+        print(f"  [KEEP] 有失败题,日志保留: {log_dir}")
 
 
 if __name__ == "__main__":

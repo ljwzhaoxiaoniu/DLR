@@ -19,9 +19,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 GOLD = json.load(open(ROOT / "Evaluation" / "outputs" / "00_golden_cache.json", encoding="utf-8"))
 GOLD_MAP = {x["q_id"]: x for x in GOLD}
-PRED_DIR = ROOT / "Evaluation" / "outputs" / "02_predictions"
-LOG_DIR = ROOT / "Evaluation" / "outputs" / "01_logs"
-REPORT_DIR = ROOT / "Evaluation" / "outputs" / "03_reports"
+OUT_BASE = ROOT / "Evaluation" / "outputs"
+LOG_DIR = OUT_BASE / "01_logs"
 
 
 def strict_match(pred_rows, gold_rows):
@@ -113,11 +112,29 @@ def main():
     ap.add_argument("--paradigm", required=True, choices=["er", "dlr", "rdf"])
     ap.add_argument("--judge", action="store_true", help="对不一致题触发 LLM 仲裁")
     ap.add_argument("--judge-budget", type=int, default=100, help="最多仲裁几题(默认100)")
+    ap.add_argument("--log-subdir", default="", help="Stage 1 run-id")
     a = ap.parse_args()
 
-    pred_dir = PRED_DIR / a.paradigm
-    REPORT_DIR.mkdir(parents=True, exist_ok=True)
+    run_id = a.log_subdir
+    if not run_id:
+        subdirs = sorted([d for d in LOG_DIR.iterdir() if d.is_dir()], reverse=True)
+        if subdirs:
+            run_id = subdirs[0].name
+    if run_id:
+        LOG_DIR = LOG_DIR / run_id
+    base = OUT_BASE / run_id if run_id else OUT_BASE
+    pred_dir = base / "02_predictions" / a.paradigm
+    report_dir = base / "03_reports"
+    report_dir.mkdir(parents=True, exist_ok=True)
     preds = sorted(pred_dir.glob("*.json"))
+    csv_path = report_dir / f"{a.paradigm}.csv"
+
+    # 读已有 CSV(支持增量 judge: 只补空白行)
+    existing = {}
+    if csv_path.exists():
+        with open(csv_path, encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                existing[int(r["q_id"])] = r
 
     rows = []
     n_ok = n_judge = n_flip = arb_cost = 0
@@ -135,20 +152,28 @@ def main():
         token_out += outp
         q = next((qq for qq in json.load(open(ROOT / "MINIDEV_sqlite" / "mini_dev_sqlite.json", encoding="utf-8")) if qq["question_id"] == qid), {})
         evidence = q.get("evidence", "")
+        prev = existing.get(qid, {})
 
-        verdict = ""
-        judge_v = ""
-        judge_reason = ""
-        strict_ok = False
-        if not rec["ok"] or rec["result"] is None:
+        verdict = prev.get("verdict", "")
+        judge_v = prev.get("judge_verdict", "")
+        judge_reason = prev.get("judge_reason", "")
+        strict_ok = (prev.get("strict_match") == "PASS")
+
+        # 已有 judge 结果 → 复用,不重判
+        if judge_v and judge_v != "UNKNOWN":
+            if judge_v == "CORRECT":
+                n_flip += 1
+            n_judge += 1
+        elif not rec["ok"] or rec["result"] is None:
             verdict = "INCORRECT"
         elif strict_match(rec["result"]["rows"], gold["rows"]):
             strict_ok = True
             verdict = "CORRECT"
             n_ok += 1
         else:
-            # 严格不一致 → 可选仲裁
-            if a.judge and n_judge < judge_budget:
+            strict_ok = False
+            # 严格不一致 → 可选仲裁(仅当 judge_verdict 为空时)
+            if a.judge and not judge_v and n_judge < judge_budget:
                 v, reason = llm_judge(q.get("question", ""), evidence, gold["rows"], rec["result"]["rows"], q.get("SQL", ""), rec["sql"], gold["db_id"])
                 judge_v = v
                 judge_reason = reason
@@ -161,7 +186,7 @@ def main():
                 else:
                     verdict = "INCORRECT"
             else:
-                verdict = "INCORRECT"
+                verdict = verdict or "INCORRECT"
 
         rows.append({
             "q_id": qid, "db_id": gold["db_id"],
@@ -175,7 +200,6 @@ def main():
     # 写 CSV
     total = len(rows)
     n_correct = sum(1 for r in rows if r["verdict"] == "CORRECT")
-    csv_path = REPORT_DIR / f"{a.paradigm}.csv"
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["q_id", "db_id", "strict_match", "judge_verdict", "judge_reason", "verdict", "sql", "error", "input_tokens", "output_tokens"])
         w.writeheader()
@@ -189,7 +213,7 @@ def main():
         "judge_flip_rate": round(n_flip / max(n_judge, 1), 4) if a.judge else None,
         "total_input_tokens": token_in, "total_output_tokens": token_out,
     }
-    (REPORT_DIR / f"{a.paradigm}_summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+    (report_dir / f"{a.paradigm}_summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
 
     print(f"\n[{a.paradigm.upper()}] accuracy={n_correct}/{total} ({summary['accuracy']:.2%})")
     print(f"  judge: used={n_judge} flipped={n_flip}")

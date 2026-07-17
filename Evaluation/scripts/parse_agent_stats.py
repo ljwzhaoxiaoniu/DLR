@@ -14,8 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 LOG_DIR = ROOT / "Evaluation" / "outputs" / "01_logs"
-EVAL_DIR = ROOT / "Evaluation" / "outputs" / "03_reports"
-OUT_DIR = ROOT / "Evaluation" / "outputs"
+OUT_BASE = ROOT / "Evaluation" / "outputs"
 
 
 def parse_ndjson(path):
@@ -86,18 +85,28 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--paradigm", required=True, choices=["ER", "DLR", "RDF", "ALL"])
     ap.add_argument("--qid", type=int, default=None, help="single question id")
+    ap.add_argument("--log-subdir", default="", help="Stage 1 run-id")
     a = ap.parse_args()
+
+    # 自动检测最新 run-id
+    run_id = a.log_subdir
+    if not run_id:
+        subdirs = sorted([d for d in LOG_DIR.iterdir() if d.is_dir()], reverse=True)
+        if subdirs:
+            run_id = subdirs[0].name
 
     paradigms = ["ER", "DLR", "RDF"] if a.paradigm == "ALL" else [a.paradigm]
     rows = []
 
     for para in paradigms:
-        log_dir = LOG_DIR / para.lower()
+        log_dir = LOG_DIR / run_id / para.lower() if run_id else LOG_DIR / para.lower()
         if not log_dir.exists():
             print(f"[SKIP] {para}: {log_dir} not found")
             continue
         files = sorted(log_dir.glob("*.json"))
         for f in files:
+            if not f.stem.isdigit():
+                continue  # 跳过脏文件
             qid = int(f.stem)
             if a.qid and qid != a.qid:
                 continue
@@ -105,8 +114,10 @@ def main():
             rows.append({"question_id": qid, "paradigm": para, **stats})
 
     # load evaluation results for merge
+    base = OUT_BASE / run_id if run_id else OUT_BASE
+    eval_dir = base / "03_reports"
     eval_data = {}  # (qid, paradigm) -> {strict_match, judge_verdict, judge_reason, verdict}
-    for ev_csv in EVAL_DIR.glob("*.csv"):
+    for ev_csv in (eval_dir.glob("*.csv") if eval_dir.exists() else []):
         para = ev_csv.stem.upper()  # er.csv -> ER
         if para not in ("ER", "DLR", "RDF"):
             continue
@@ -131,12 +142,11 @@ def main():
         r["judge_reason"] = ev.get("judge_reason", "")
         r["verdict"] = ev.get("verdict", "")
 
-    # build timestamped filename with question range
-    qids = sorted(set(r["question_id"] for r in rows))
-    q_range = f"{min(qids)}-{max(qids)}" if len(qids) > 1 else str(qids[0]) if qids else "none"
-    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_name = f"agent_stats_{q_range}_{ts}.csv"
-    out_path = OUT_DIR / out_name
+    # 输出到 run 目录下(对齐 Stage 1/2/3)
+    out_dir = base
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_name = "agent_stats.csv"
+    out_path = out_dir / out_name
 
     # write CSV (no final_answer/evidence_sql)
     fields = ["question_id", "paradigm", "steps", "tokens_total", "tokens_in", "tokens_out",

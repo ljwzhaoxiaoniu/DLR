@@ -1,20 +1,41 @@
 #!/usr/bin/env bash
 # Stage 1 串行执行器 — 在 git-bash 中运行,保证 opencode MCP 可用
-# 用法: bash run_serial.sh <paradigm> <count> <offset>
+# 用法: bash run_serial.sh <paradigm> <count> <offset> [--run-id <name>]
 # 示例: bash run_serial.sh er 10 0
+#       bash run_serial.sh er 5 0 --run-id test_20260717
 
 PARADIGM=$1
 COUNT=${2:-10}
 OFFSET=${3:-0}
-TIMEOUT=300
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+# 解析 --run-id (支持位置参数后)
+RUN_ID=""
+for arg in "$@"; do
+    case "$arg" in
+        --run-id) shift ;;  # 下一个参数是值
+        --run-id=*) RUN_ID="${arg#*=}" ;;
+    esac
+done
+# 也支持第4个位置参数
+[ -z "$RUN_ID" ] && RUN_ID="${4:-}"
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -W)"
+ROOT="$(cd "$SCRIPT_DIR/../.." && pwd -W)"
 TIMEOUT=$(python -c "import json; c=json.load(open('$ROOT/config.json')); print(c.get('eval',{}).get('timeout_per_question',300))" 2>/dev/null || echo 300)
-OUTPUT_DIR="$ROOT/Evaluation/outputs/01_logs/$PARADIGM"
+
+# 自动生成 run-id: MMDD_HHMM_{count}q_{paradigm_letter} (E=ER, D=DLR, R=RDF)
+if [ -z "$RUN_ID" ]; then
+    case "$PARADIGM" in er) PL="E";; dlr) PL="D";; rdf) PL="R";; *) PL="$PARADIGM";; esac
+    RUN_ID="$(date +%m%d_%H%M)_${COUNT}q_${PL}"
+fi
+
+LOG_ROOT="$ROOT/Evaluation/outputs/01_logs"
+OUTPUT_DIR="$LOG_ROOT/$RUN_ID/$PARADIGM"
 AGENT_DIR="$ROOT/OC-based Agent Service/oc_$PARADIGM"
 
 mkdir -p "$OUTPUT_DIR"
+echo "$RUN_ID" > "$LOG_ROOT/.last_run_id"
+echo "[RUN] $RUN_ID  $PARADIGM  ${COUNT}q  offset=$OFFSET"
 
 # 用 python 生成题目列表(offset..offset+count)
 QUESTIONS=$(cd "$ROOT/Evaluation/scripts" && python -c "
@@ -29,6 +50,8 @@ FAIL=0
 TOTAL=$(echo "$QUESTIONS" | wc -l)
 
 while IFS='|' read -r QID QUESTION EVIDENCE; do
+    # 跳过空 QID(Python 生成失败时的脏数据)
+    [ -z "$QID" ] && continue
     OUT_FILE="$OUTPUT_DIR/${QID}.json"
     if [ -f "$OUT_FILE" ]; then
         echo "[SKIP] q$QID (already exists)"
