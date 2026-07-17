@@ -19,7 +19,7 @@
     "base_url": "https://api.longcat.chat/anthropic"
   },
   "eval": {
-    "timeout_per_question": 300,
+    "timeout_per_question": 600,
     "judge_model": "LongCat-2.0",
     "judge_budget": 100
   }

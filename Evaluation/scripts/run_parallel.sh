@@ -8,17 +8,17 @@ COUNT=${2:-10}
 OFFSET=${3:-0}
 WORKERS=2  # 默认 2 并发
 
-# 解析参数
+# 解析参数(while/case/shift 正确模式)
 RUN_ID=""
-for arg in "$@"; do
-    case "$arg" in
-        --run-id) shift; RUN_ID="$5" ;;
-        --run-id=*) RUN_ID="${arg#*=}" ;;
-        --workers) shift; WORKERS="$5" ;;
-        --workers=*) WORKERS="${arg#*=}" ;;
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --run-id) shift; RUN_ID="$1" ;;
+        --run-id=*) RUN_ID="${1#*=}" ;;
+        --workers) shift; WORKERS="$1" ;;
+        --workers=*) WORKERS="${1#*=}" ;;
     esac
+    shift
 done
-[ -z "$RUN_ID" ] && RUN_ID="${4:-}"
 [ -z "$RUN_ID" ] && RUN_ID="$(date +%m%d_%H%M)_${COUNT}q_$(echo $PARADIGM | tr 'a-z' 'A-Z' | head -c1)"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -W)"
@@ -31,11 +31,12 @@ AGENT_DIR="$ROOT/OC-based Agent Service/oc_$PARADIGM"
 mkdir -p "$OUTPUT_DIR"
 echo "$RUN_ID" > "$LOG_ROOT/.last_run_id"
 
-# 生成题目列表
+# 生成题目列表(offset 为 question_id 起始值,count 为题数)
 QUESTIONS=$(python -c "
 import json
 qs = json.load(open('$ROOT/MINIDEV_sqlite/mini_dev_sqlite.json', encoding='utf-8'))
-for q in qs[$OFFSET:$OFFSET+$COUNT]:
+start = next((i for i, q in enumerate(qs) if q['question_id'] >= $OFFSET), len(qs))
+for q in qs[start:start+$COUNT]:
     print(f\"{q['question_id']}|{q['question']}|{q.get('evidence','')}\")
 ")
 
@@ -52,8 +53,9 @@ run_one() {
     local OUT_FILE="$OUTPUT_DIR/${QID}.json"
     [ -f "$OUT_FILE" ] && return 0  # 续跑跳过
 
-    local PROMPT="CRITICAL: MCP tools only. Skip list_mcp_resource* — go straight to semantic_query->mapping->sqlite3. Use get_pe_full(DLR) or get_entity_mapping(ER) for complete info in one call. NO glob/read/bash to find databases. End with Final Answer: <result> | Evidence SQL: <sql>. Question: $QUESTION"
+    local PROMPT="Question: $QUESTION"
     [ -n "$EVIDENCE" ] && PROMPT="$PROMPT | Evidence: $EVIDENCE"
+
 
     cd "$AGENT_DIR" || return 1
     timeout "$TIMEOUT" opencode run --format json --title "eval_${PARADIGM}_${QID}" "$PROMPT" < /dev/null > "$OUT_FILE" 2>"$OUTPUT_DIR/${QID}.err"

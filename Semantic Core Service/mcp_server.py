@@ -112,12 +112,13 @@ def _ensure_paradigm_tools():
 
     _tools_finalized = True
 
+    _register_shared_tools()        # execute_sql (所有范式共用)
     if _mapping_type == "dlr":
-        _register_dlr_tools()       # 23 件 DLR CLI 工具(LE/PE/PAS)
+        _register_dlr_tools()       # DLR CLI 工具(LE/PE/PAS)
     elif _mapping_type == "rdf":
-        _register_rdf_tools()       # 8 件 RDF 工具(语义召回 + SPARQL)
+        _register_rdf_tools()       # RDF 工具(语义召回 + SPARQL)
     else:  # ER
-        _register_er_tools()        # 13 件 ER 工具(REST 语义查询入口)
+        _register_er_tools()        # ER 工具(REST 语义查询入口)
 
     logger.info(f"[MCP] Tools finalized for {_mapping_type.upper()} mode")
 
@@ -299,8 +300,27 @@ def summary() -> dict:
 
 
 # ===================================================================
-# Geo tools (shared)
+# Shared SQL execution service (all paradigms)
 # ===================================================================
+
+def _execute_sql(sql: str, database_url: str) -> dict:
+    """薄透传服务: Agent 提供 SQL + database_url, 服务端执行并返回结果.
+
+    Agent 必须先通过 MCP 映射工具拿到 database_url, 再调用本工具.
+    """
+    import sqlite3
+    if not sql or not database_url:
+        return {"success": False, "error": "sql and database_url are required"}
+    try:
+        con = sqlite3.connect(database_url, timeout=30)
+        cur = con.execute(sql.strip().rstrip(";"))
+        cols = [d[0] for d in cur.description] if cur.description else []
+        rows = [list(r) for r in cur.fetchall()]
+        con.close()
+        return {"success": True, "columns": cols, "rows": rows}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
 
 # ===================================================================
 # RDF tool — registered dynamically when _mapping_type == "rdf"
@@ -647,21 +667,7 @@ def _resolve_database_url(physical_table_id: str = "") -> str:
     return ""
 
 
-def _get_pe_arcs(pe_id: str) -> dict:
-    """[DLR] Get ARCS anchor info + database_url for a physical entity.
-
-    参考: LPE VOA 项目 get_pe_arcs — 查 PhysicalEntity 表, physical_table_id AS source_table.
-    """
-    gdb, _, _ = _ensure_services()
-    # DLR 的 PE 节点在 PhysicalEntity 表(非 ER 的 BizEntity),且字段名是 physical_table_id
-    entity = gdb.get_physical_entity_by_id(pe_id)
-    if not entity:
-        return {"success": False, "message": f"物理实体不存在: {pe_id}"}
-    arcs = entity.get("arcs", {})
-    # _resolve_database_url 按前缀 "db.table" 匹配 config, physical_table_id 格式兼容
-    database_url = _resolve_database_url(entity.get("physical_table_id", ""))
-    return {"success": True, "physical_entity_id": pe_id,
-            "database_url": database_url, "arcs": arcs}
+# get_pe_arcs 已合并入 get_pe_full,不再单独注册
 
 
 def _path_le_le(from_id: str, to_id: str) -> dict:
@@ -689,23 +695,7 @@ def _get_le_pas(le_id: str) -> dict:
     return {"success": True, "logical_entity_id": le_id, "pas_relations": pas_relations}
 
 
-def _get_pe(pe_id: str) -> dict:
-    """[DLR] Get physical entity details. Prefer get_pe_full for all info in one call."""
-    gdb, _, _ = _ensure_services()
-    entity = gdb.get_physical_entity_by_id(pe_id)
-    if not entity:
-        return {"success": False, "message": f"物理实体不存在: {pe_id}"}
-    return {"success": True, **entity}
-
-
-def _get_pe_attrs(pe_id: str) -> dict:
-    """[DLR] Get attributes of a physical entity. Prefer get_pe_full."""
-    gdb, _, _ = _ensure_services()
-    entity = gdb.get_physical_entity_by_id(pe_id)
-    if not entity:
-        return {"success": False, "message": f"物理实体不存在: {pe_id}"}
-    attributes = gdb.get_physical_entity_attributes(pe_id)
-    return {"success": True, "physical_entity_id": pe_id, "attributes": attributes}
+# get_pe / get_pe_attrs 已合并入 get_pe_full,不再单独注册
 
 
 def _get_pe_full(pe_id: str) -> dict:
@@ -771,7 +761,7 @@ def _path_pe_pe(pe_id1: str, pe_id2: str) -> dict:
     if not parent1 or not parent2:
         return {"success": False, "message": "至少一个 PE 不存在或无父 LE"}
     if parent1 == parent2:
-        return {"success": False, "message": "两个 PE 属于同一 LE,请使用 get_pe_arcs"}
+        return {"success": False, "message": "两个 PE 属于同一 LE,请使用 get_pe_full"}
 
     le_path = gdb.find_le_shortest_path(parent1, parent2)
     if not le_path.get("success"):
@@ -860,11 +850,8 @@ _DLR_TOOL_FUNCS = {
     "get_le_attrs": _get_le_attrs,
     "get_le_children": _get_le_children,
     "get_le_pas": _get_le_pas,
-    # PE 查询
-    "get_pe_full": _get_pe_full,  # 推荐:一次获取 PE+属性+ARCS+database_url
-    "get_pe": _get_pe,
-    "get_pe_attrs": _get_pe_attrs,
-    "get_pe_arcs": _get_pe_arcs,
+    # PE 查询(get_pe/get_pe_attrs/get_pe_arcs 已合并入 get_pe_full)
+    "get_pe_full": _get_pe_full,  # PE+属性+ARCS+database_url 一次调用
     "get_pe_parent": _get_pe_parent,
     # PAS 导航
     "get_pas": _get_pas,
@@ -902,10 +889,22 @@ _ER_TOOL_FUNCS = {
 }
 
 
+def _register_shared_tools():
+    """注册所有范式共用的工具(薄透传 SQL 执行服务)."""
+    from fastmcp.tools import Tool
+    if "execute_sql" in _get_tool_names():
+        return
+    try:
+        mcp.add_tool(Tool.from_function(_execute_sql, name="execute_sql"))
+        logger.info("[MCP] Registered shared tool: execute_sql")
+    except Exception as e:
+        logger.warning(f"[MCP] Failed to register execute_sql: {e}")
+
+
 def _register_er_tools():
     """注册 ER 专属工具集: semantic_query(语义入口) + 12 个 REST 查询工具.
 
-    对标: DLR 23 件(LE/PE/PAS CLI), RDF 8 件(语义召回 + SPARQL).
+    对标: DLR CLI 工具(LE/PE/PAS), RDF 工具(语义召回 + SPARQL).
     """
     from fastmcp.tools import Tool
     existing = _get_tool_names()
@@ -928,21 +927,25 @@ def _register_dlr_tools():
     """Register DLR tools onto the mcp instance (idempotent)."""
     from fastmcp.tools import Tool
     existing = _get_tool_names()
+    added = 0
     for name, func in _DLR_TOOL_FUNCS.items():
         if name in existing:
             continue
         try:
             tool = Tool.from_function(func, name=name)
             mcp.add_tool(tool)
+            added += 1
             logger.debug(f"[MCP] Registered DLR tool: {name}")
         except Exception as e:
             logger.warning(f"[MCP] Failed to register DLR tool: {name}: {e}")
+    if added:
+        logger.info(f"[MCP] Registered {added} DLR-specific tools")
 
 
 _RDF_TOOL_FUNCS = {
     # 语义召回(对标 ER 的 semantic_query / DLR 的 recall_*)
     "rdf_semantic_query": rdf_semantic_query,
-    # 映射查询(对标 ER 的 get_entity_mapping / DLR 的 get_pe_arcs)
+    # 映射查询(对标 ER 的 get_entity_mapping / DLR 的 get_pe_full)
     "query_rdf_mapping": _query_rdf_mapping,
     # 图探索
     "rdf_classes": _rdf_classes,

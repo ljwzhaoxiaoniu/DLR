@@ -512,16 +512,16 @@ Agent 的工作流：接收自然语言 `question` → 通过 MCP 语义查询�
 
 ## 评测流水线（Evaluation/）
 
-本项目使用 **Evaluation/** 目录承载的四阶段串行流水线，依赖关系严格串行、每阶段可独立重跑。
+本项目使用 **Evaluation/** 目录承载的四阶段流水线,支持串行/并行,依赖关系严格、每阶段可独立重跑。
 
 ### 四阶段总览
 
 | 阶段 | 脚本 | 输入 | 输出 | 依赖 |
 |------|------|------|------|------|
 | **Stage 0** 预处理 | `00_preprocess.py` | `mini_dev_sqlite.json` + 物理 SQLite | `00_golden_cache.json` | 无 |
-| **Stage 1** Agent 执行 | `01_run_agent.py --paradigm` | Stage 0 cache + MCP 范式服务 | `01_logs/{paradigm}/` | Stage 0 + MCP 服务 |
-| **Stage 2** 结果提取与预执行 | `02_extract_and_run.py --paradigm` | Stage 1 日志 | `02_predictions/{paradigm}/` | Stage 1 |
-| **Stage 3** 评测与仲裁 | `03_evaluate.py --paradigm --judge` | Stage 2 预测 + Stage 0 Golden | `03_reports/metrics.csv` | Stage 0 + Stage 2 |
+| **Stage 1** Agent 执行 | `run_serial.sh` / `run_parallel.sh` | Stage 0 cache + MCP 范式服务 | `01_logs/{paradigm}/` | Stage 0 + MCP 服务 |
+| **Stage 2** 结果提取与预执行 | `02_extract_and_run.py` | Stage 1 日志 | `02_predictions/{paradigm}/` | Stage 1 |
+| **Stage 3** 评测与仲裁 | `03_evaluate.py` | Stage 2 预测 + Stage 0 Golden | `03_reports/*.csv` | Stage 0 + Stage 2 |
 
 ### Stage 0 — 预处理与基准缓存 ✅ 已完成
 
@@ -543,7 +543,7 @@ python 00_preprocess.py
 
 **当前状态**:**500/500 执行成功,零失败**。
 
-### Stage 1 — Agent 执行(脚本已写,待大批量运行)
+### Stage 1 — Agent 执行
 
 **目的**：逐题让 OC Agent 通过 MCP 连接范式服务,生成 SQL 与工具调用日志。每个问题 = 独立 `opencode run` session(零上下文污染)。
 
@@ -551,85 +551,112 @@ python 00_preprocess.py
 # 1. 先启 MCP 服务(ALL 模式,三范式并行)
 cd Semantic\ Core\ Service && python main.py serve --paradigm ALL
 
-# 2. 跑 Agent — 推荐 Bash 串行(git-bash 环境,MCP 稳定)
+# 2. 跑 Agent
+
 cd Evaluation/scripts
-bash run_serial.sh ER 500 0   # ER 范式 500 题
-bash run_serial.sh DLR 500 0  # DLR 范式 500 题
-bash run_serial.sh RDF 500 0  # RDF 范式 500 题
 
-# 备用:Python 版(注意 MCP 环境可能不稳定,Agent 会 fallback 到 bash)
-python 01_run_agent.py --paradigm ER --count 500
+# 串行(稳定,日志干净)
+bash eval_run.sh EDR 500 0
+
+# 并行(快:三范式同时,每范式多窗口)
+bash eval_run.sh EDR 500 0 --parallel --workers 6
 ```
 
-> ⚠️ **MCP 环境说明**:opencode MCP 工具在持久 git-bash shell 中稳定,但 Python subprocess 可能丢失。
-> 如果发现日志全是 bash 调用(无 `*_semantic_query`),说明 MCP 未生效,请改用 `run_serial.sh`。
+**run_id 命名**:`MMDD_HHMM_{起始ID}-{结束ID}_{范式字母}`,如 `0718_0033_1471-1472_EDR`。
 
-**Prompt 设计**(MCP 强制 + QL 方案):
-```
-CRITICAL: MCP tools only. Skip list_mcp_resource* — go straight to semantic_query->mapping->sqlite3.
-Use get_pe_full(DLR) or get_entity_mapping(ER) for complete info in one call.
-NO glob/read/bash to find databases.
-End with Final Answer: <result> | Evidence SQL: <sql>.
-Question: {question} | Evidence: {evidence}
-```
+### Prompt 设计原则(铁律)
 
-**输出**:`outputs/01_logs/{paradigm}/{question_id}.json`(NDJSON 原始日志,含 token 事件)。
+1. **脚本只传 Question + Evidence** — 不可以在脚本里塞任何额外的指令(禁止 bash、推荐工具名、输出格式要求等)
+2. **所有 Agent 行为规则只写在 AGENTS.md** — 这是唯一的规则入口(位于 `OC-based Agent Service/AGENTS.md`)
+3. **三范式共用一份 AGENTS.md** — 不含范式专属工具名(工具差异由 MCP 范式隔离屏蔽)
 
-**Token 追踪**: `parse_agent_stats.py` 生成 `agent_stats_{题号范围}_{时间戳}.csv`。
-
-### Stage 2 — 结果提取与预执行(脚本已写,待运行)
-
-```powershell
-python 02_extract_and_run.py --paradigm DLR
+```bash
+# 脚本 Prompt(唯一允许的格式)
+PROMPT="Question: $QUESTION | Evidence: $EVIDENCE"
 ```
 
-**目的**：从 Stage 1 NDJSON 日志中提取 Evidence SQL → 执行 → 结果标准化(同 Stage 0 `norm()` 规则)。
+**AGENTS.md 职责**：角色定义、MCP 工具发现、数据查询流程、输出格式、防作弊规则。
 
-**输出**:`outputs/02_predictions/{paradigm}/{question_id}.json`。
+### 防作弊机制(架构级)
+
+| 层级 | 机制 | 效果 |
+|------|------|------|
+| **opencode.json** | `permission.bash: "deny"` | Agent **没有 bash 工具**,无法硬解查库 |
+| **execute_sql MCP** | 薄透传服务(`sql` + `database_url`) | SQL 执行唯一正经路径 |
+| **MCP 范式隔离** | 服务端按 `_mapping_type` 注册/移除工具 | Agent 只能看到当前范式的工具 |
+
+Agent 强制路径:`xxx_semantic_query` → 映射工具(`get_pe_full`/`get_entity_mapping`/`query_rdf_mapping`) → `execute_sql`(拿到 database_url 后) → 输出 Final Answer。
+
+### Stage 2 — 结果提取与预执行
+
+```bash
+python 02_extract_and_run.py --paradigm er --log-subdir 0718_0033_1471-1472_EDR
+```
+
+**目的**：从 Stage 1 NDJSON 日志中正则提取 Evidence SQL → 执行 → 结果标准化。
+
+**输出**:`outputs/{run_id}/02_predictions/{paradigm}/{question_id}.json`。
+
+**注意**:Stage 1 原始日志默认**保留**(用于 debug Agent 行为 / 回溯工具调用链),不自动清理。
 
 ### Stage 3 — 评测与仲裁
 
 ```bash
-python 03_evaluate.py --paradigm DLR --judge --judge-budget 100
+python 03_evaluate.py --paradigm er --judge --log-subdir 0718_0033_1471-1472_EDR
 ```
 
-**目的**：三列判定链：
-- `strict_match`: 脚本严格比对结果行(PASS/FAIL,float 容差 1e-6,行/列序忽略)
-- `judge_verdict` + `judge_reason`: LLM 仲裁(strict FAIL 时用 opencode run 触发)
+**目的**：两阶段判定链：
+- `strict_match`: 脚本严格比对结果行列(PASS/FAIL,float 容差 1e-6,行/列序忽略)
+- `judge_verdict` + `judge_reason`: LLM 仲裁(strict FAIL 且 judge_verdict 为空时触发)
 - `verdict`: 最终判定(CORRECT/INCORRECT)
 
-**输出**:`outputs/03_reports/{paradigm}.csv` + `agent_stats_{题号范围}_{时间戳}.csv`(滚动保留历史)
+**增量 Judge**: 已有非 UNKNOWN 结果的题不重判,只补空白行,节省 token。
 
-### 评测公平性(编码 + 语言)
+**输出**:`outputs/{run_id}/03_reports/{paradigm}.csv` + `{paradigm}_summary.json`。
 
-**编码问题屏蔽**:
-- 三范式 YAML / TTL 映射**全部英文化**,零 CJK 残留(已逐文件验证)
-- MCP 日志为 UTF-16 LE + BOM,NDJSON 格式,解析阶段统一转为 UTF-8
-- 控制台 + 日志消息强制 ASCII,避免 GBK 编码炸弹
+### 汇总报表
 
-**语言公平**:
-- Prompt = 英文 Question + Evidence(**QL 方案**),schema 信息收起来
-- 三范式输入对齐:ER(REST) / DLR(REST→CLI) / RDF(向量 + SPARQL)
-- **唯一变量是建模范式本身的结构差异**,语言/编码干扰全部屏蔽
+```bash
+python parse_agent_stats.py --paradigm ALL
+```
 
-### 目录结构
+合并三范式评测结果到 `agent_stats_{范围}_{时间戳}.csv`。
+
+### 输出目录结构
 
 ```text
-Evaluation/
-├── scripts/
-│   ├── 00_preprocess.py         # Stage 0: 跑 Golden SQL,生成基准缓存 ✅
-│   ├── 01_run_agent.py          # Stage 1: Python串行(subprocess + config.json)
-│   ├── run_serial.sh            # Stage 1: Bash串行(git-bash) ★推荐
-│   ├── 02_extract_and_run.py    # Stage 2: 提取 Pred SQL 并执行(.sqlite/.db)
-│   ├── 03_evaluate.py           # Stage 3: strict_match + LLM Judge(opencode run)
-│   └── parse_agent_stats.py     # NDJSON → agent_stats_{q范围}_{时间戳}.csv
-└── outputs/
-    ├── 00_golden_cache.json     # Golden 标准化结果缓存 ✅ 已生成
-    ├── 01_logs/                 # Agent 原始日志 (按 paradigm 分目录)
-    ├── 02_predictions/          # 提取的 SQL 及其执行结果
-    ├── 03_reports/              # 评测 CSV({paradigm}.csv) + summary.json
-    └── agent_stats_*.csv        # 合并报表(滚动生成,历史保留)
+Evaluation/outputs/
+├── 00_golden_cache.json     # Golden 标准化结果缓存 ✅ 500/500
+└── {run_id}/                ← 每次 run 一个目录
+    ├── 01_logs/{er,dlr,rdf}/     # Agent 原始 NDJSON 日志(保留)
+    ├── 02_predictions/{er,dlr,rdf}/  # 提取的 SQL 及执行结果
+    └── 03_reports/{er,dlr,rdf}.csv   # 评测结果
 ```
+
+### 评测公平性
+
+**编码**:
+- 三范式 YAML / TTL 映射**全部英文化**,零 CJK 残留
+- 控制台 + 日志消息强制 ASCII,避免 GBK 编码炸弹
+
+**语言**:
+- Prompt = 英文 Question + Evidence,**唯一变量是建模范式本身的结构差异**
+
+### 端到端示例
+
+```bash
+# 完整 2 题测试(三范式并行)
+cd Evaluation/scripts
+bash eval_run.sh EDR 2 1471 --parallel --workers 6   # Stage 1
+python 02_extract_and_run.py --paradigm er --log-subdir 0718_0033_1471-1472_EDR
+python 02_extract_and_run.py --paradigm dlr --log-subdir 0718_0033_1471-1472_EDR
+python 02_extract_and_run.py --paradigm rdf --log-subdir 0718_0033_1471-1472_EDR  # Stage 2
+python 03_evaluate.py --paradigm er --judge --log-subdir 0718_0033_1471-1472_EDR
+python 03_evaluate.py --paradigm dlr --judge --log-subdir 0718_0033_1471-1472_EDR
+python 03_evaluate.py --paradigm rdf --judge --log-subdir 0718_0033_1471-1472_EDR  # Stage 3
+python parse_agent_stats.py --paradigm ALL  # 汇总
+```
+
 
 ---
 

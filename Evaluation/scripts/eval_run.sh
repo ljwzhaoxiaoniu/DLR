@@ -11,17 +11,19 @@ OFFSET="${3:-0}"
 MODE="serial"
 WORKERS=2
 
-# 解析额外参数
-for arg in "$@"; do
-    case "$arg" in
+# 解析额外参数(while/case/shift 正确模式)
+shift 3  # 跳过前三个位置参数
+while [ $# -gt 0 ]; do
+    case "$1" in
         --parallel) MODE="parallel" ;;
-        --workers) shift; WORKERS="$5" ;;
-        --workers=*) WORKERS="${arg#*=}" ;;
+        --workers) shift; WORKERS="$1" ;;
+        --workers=*) WORKERS="${1#*=}" ;;
     esac
+    shift
 done
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -W)"
-RUN_ID="$(date +%m%d_%H%M)_${COUNT}q_${PARADIGMS}"
+RUN_ID="$(date +%m%d_%H%M)_${OFFSET}-$((OFFSET+COUNT-1))_${PARADIGMS}"
 
 echo "========================================="
 echo "  RUN: $RUN_ID  mode=$MODE  workers=$WORKERS"

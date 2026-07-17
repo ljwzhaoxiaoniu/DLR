@@ -144,10 +144,12 @@ def main():
         (out_dir / f"{qid}.json").write_text(json.dumps(rec, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print(f"\n[{a.paradigm.upper()}] 完成: ok={ok} fail={fail} missing={missing}")
-    if fail == 0 and ok > 0 and run_id:
-        print(f"  [CLEAN] Stage 1 logs: rm -rf {OUT_BASE / run_id / '01_logs'}")
-    elif fail > 0:
-        print(f"  [KEEP] 有失败题,日志保留: {log_dir}")
+    # 默认保留全量原始日志 — 唯一数据源,用于 debug Agent 行为 / 回溯工具调用链 / 重新提取 SQL
+    if run_id:
+        log_path = OUT_BASE / run_id / "01_logs"
+        print(f"  [KEEP] Stage 1 日志保留: {log_path}")
+    if fail > 0:
+        print(f"  [NOTE] 有 {fail} 题失败,建议保留日志排查")
 
 
 if __name__ == "__main__":

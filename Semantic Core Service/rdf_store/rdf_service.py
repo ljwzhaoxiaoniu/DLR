@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import io
 import re
+import threading
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -31,6 +32,8 @@ class RDFGraphStore:
         self.graph = rdflib.Graph()
         self._loaded = False
         self._paradigm_dir = paradigm_dir
+        # rdflib SPARQL parser is NOT thread-safe — protect all graph reads
+        self._lock = threading.Lock()
         # bind namespaces for readable serialization
         self.graph.bind("rr", rdflib.Namespace("http://www.w3.org/ns/r2rml#"))
         self.graph.bind("rdf", RDF)
@@ -113,7 +116,8 @@ class RDFGraphStore:
           ASK               → {boolean: true/false}
         """
         try:
-            result = self.graph.query(query)
+            with self._lock:
+                result = self.graph.query(query)
         except Exception as e:
             return {"error": str(e)}
 
@@ -246,7 +250,8 @@ class RDFGraphStore:
         }
         """
         try:
-            result = self.graph.query(sparql, initBindings={'class': cls})
+            with self._lock:
+                result = self.graph.query(sparql, initBindings={'class': cls})
         except Exception as e:
             return {"success": False, "error": str(e)}
 

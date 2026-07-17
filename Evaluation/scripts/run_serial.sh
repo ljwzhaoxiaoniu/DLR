@@ -37,11 +37,12 @@ mkdir -p "$OUTPUT_DIR"
 echo "$RUN_ID" > "$LOG_ROOT/.last_run_id"
 echo "[RUN] $RUN_ID  $PARADIGM  ${COUNT}q  offset=$OFFSET"
 
-# 用 python 生成题目列表(offset..offset+count)
+# 用 python 生成题目列表(offset 为 question_id 起始值,count 为题数)
 QUESTIONS=$(cd "$ROOT/Evaluation/scripts" && python -c "
 import json
 qs = json.load(open('$ROOT/MINIDEV_sqlite/mini_dev_sqlite.json', encoding='utf-8'))
-for q in qs[$OFFSET:$OFFSET+$COUNT]:
+start = next((i for i, q in enumerate(qs) if q['question_id'] >= $OFFSET), len(qs))
+for q in qs[start:start+$COUNT]:
     print(f\"{q['question_id']}|{q['question']}|{q.get('evidence','')}\")
 ")
 
@@ -61,10 +62,8 @@ while IFS='|' read -r QID QUESTION EVIDENCE; do
     echo "[RUN] q$QID ($((OK+FAIL+1))/$TOTAL)"
 
     # 构造 prompt — 强制 MCP 路径 + 单行避免换行截断
-    PROMPT="CRITICAL: MCP tools only. Skip list_mcp_resource* — go straight to semantic_query->mapping->sqlite3. Use get_pe_full(DLR) or get_entity_mapping(ER) for complete info in one call. NO glob/read/bash to find databases. End with Final Answer: <result> | Evidence SQL: <sql>. Question: $QUESTION"
-    if [ -n "$EVIDENCE" ]; then
-        PROMPT="$PROMPT | Evidence: $EVIDENCE"
-    fi
+    PROMPT="Question: $QUESTION"
+    [ -n "$EVIDENCE" ] && PROMPT="$PROMPT | Evidence: $EVIDENCE"
 
     # 在 agent 目录下执行(opencode.json 在该目录)
     cd "$AGENT_DIR" || exit 1

@@ -42,9 +42,9 @@ def strict_match(pred_rows, gold_rows):
     return True
 
 
-def load_tokens(paradigm, qid):
+def load_tokens(paradigm, qid, run_id=""):
     """从 Stage 1 NDJSON 拉取 token 消耗(input/output sum)."""
-    f = LOG_DIR / paradigm / f"{qid}.json"
+    f = (LOG_DIR / run_id / paradigm / f"{qid}.json") if run_id else (LOG_DIR / paradigm / f"{qid}.json")
     if not f.exists():
         return 0, 0
     txt = f.read_text(encoding="utf-8", errors="replace")
@@ -64,7 +64,7 @@ def load_tokens(paradigm, qid):
 
 def llm_judge(question, evidence, gold_res, pred_res, gold_sql, pred_sql, db_id):
     """LLM 仲裁: 用 opencode run 判断结果语义等价. 返回 (verdict, reason)."""
-    import subprocess, shutil, tempfile
+    import subprocess, shutil
     # 从项目 config 读 API 配置
     cfg_path = ROOT / "config.json"
     api_cfg = {}
@@ -72,20 +72,25 @@ def llm_judge(question, evidence, gold_res, pred_res, gold_sql, pred_sql, db_id)
         try: api_cfg = json.load(open(cfg_path, encoding="utf-8")).get("api", {})
         except: pass
     prompt = (
-        f"Judge: Q={question} | DB={db_id} | "
-        f"GoldSQL={gold_sql[:300]} | Gold={json.dumps(gold_res, default=str)[:300]} | "
-        f"PredSQL={pred_sql[:300]} | Pred={json.dumps(pred_res, default=str)[:300]} | "
+        f"Judge NL2SQL correctness (semantic equivalence).\n"
+        f"Q: {question}\n"
+        f"DB: {db_id}\n"
+        f"GoldSQL: {gold_sql[:300]}\n"
+        f"GoldResult: {json.dumps(gold_res, default=str)[:300]}\n"
+        f"PredSQL: {pred_sql[:300]}\n"
+        f"PredResult: {json.dumps(pred_res, default=str)[:300]}\n\n"
+        f"Rules:\n"
+        f"- CORRECT if PredResult contains the correct answer to Q, even if row/column count differs from Gold.\n"
+        f"- CORRECT if Pred returns extra rows/columns but the answer (e.g. the target CustomerID/value) is present.\n"
+        f"- INCORRECT if the answer is wrong or missing.\n"
         f"Reply: VERDICT: CORRECT|INCORRECT | REASON: <why>"
     )
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False, encoding='utf-8') as f:
-        f.write(prompt)
-        tmp = f.name
     try:
         opencode = shutil.which("opencode") or "opencode"
-        # Use bash to avoid cmd.exe prompt truncation
-        escaped = tmp.replace('\\', '/')
+        # Pass prompt via stdin to avoid shell-escaping issues with long/complex prompts
         r = subprocess.run(
-            ['bash', '-c', f'"{opencode}" run --format json "$(cat {escaped})"'],
+            ['bash', '-c', f'"{opencode}" run --format json'],
+            input=prompt,
             capture_output=True, text=True, timeout=120,
             encoding='utf-8', errors='replace', cwd=str(ROOT)
         )
@@ -94,17 +99,21 @@ def llm_judge(question, evidence, gold_res, pred_res, gold_sql, pred_sql, db_id)
             try:
                 ev = json.loads(line.strip())
                 if ev.get("type") == "text":
-                    reply = ev["part"]["text"]
+                    reply += ev["part"]["text"]
             except: pass
-        v_m = re.search(r'VERDICT:\s*(CORRECT|INCORRECT)', reply, re.I)
-        r_m = re.search(r'REASON:\s*(.+)', reply, re.I)
-        return (v_m.group(1).upper() if v_m else "UNKNOWN",
-                r_m.group(1).strip() if r_m else reply[:200])
+        # 兼容多种 LLM 输出格式:
+        #   "**Judgment: 0 (Incorrect)**", "VERDICT: CORRECT", "**Incorrect**", "Judgment: CORRECT"
+        v_m = re.search(r'(?:VERDICT|Judgment|判断)[\s:：\d]*\(?\s*\*?(CORRECT|INCORRECT)\*?\)?', reply, re.I)
+        if not v_m:
+            v_m = re.search(r'\*\*(CORRECT|INCORRECT)\*\*', reply, re.I)
+        if not v_m:
+            v_m = re.search(r'\b(CORRECT|INCORRECT)\b', reply, re.I)
+        r_m = re.search(r'(?:REASON|原因|分析)\s*[:：]?\s*(.+)', reply, re.I | re.S)
+        verdict = v_m.group(1).upper() if v_m else "UNKNOWN"
+        reason = r_m.group(1).strip() if r_m else reply[:200]
+        return verdict, reason
     except Exception as e:
         return "UNKNOWN", str(e)[:200]
-    finally:
-        try: os.unlink(tmp)
-        except: pass
 
 
 def main():
@@ -120,8 +129,7 @@ def main():
         subdirs = sorted([d for d in LOG_DIR.iterdir() if d.is_dir()], reverse=True)
         if subdirs:
             run_id = subdirs[0].name
-    if run_id:
-        LOG_DIR = LOG_DIR / run_id
+    log_dir = LOG_DIR / run_id if run_id else LOG_DIR
     base = OUT_BASE / run_id if run_id else OUT_BASE
     pred_dir = base / "02_predictions" / a.paradigm
     report_dir = base / "03_reports"
@@ -147,7 +155,7 @@ def main():
             continue
         gold = GOLD_MAP[qid]
         rec = json.load(open(pf, encoding="utf-8"))
-        inp, outp = load_tokens(a.paradigm, qid)
+        inp, outp = load_tokens(a.paradigm, qid, run_id)
         token_in += inp
         token_out += outp
         q = next((qq for qq in json.load(open(ROOT / "MINIDEV_sqlite" / "mini_dev_sqlite.json", encoding="utf-8")) if qq["question_id"] == qid), {})
@@ -172,8 +180,8 @@ def main():
             n_ok += 1
         else:
             strict_ok = False
-            # 严格不一致 → 可选仲裁(仅当 judge_verdict 为空时)
-            if a.judge and not judge_v and n_judge < judge_budget:
+            # 严格不一致 → 可选仲裁(judge_verdict 为空或 UNKNOWN 时触发)
+            if a.judge and (not judge_v or judge_v == "UNKNOWN") and n_judge < judge_budget:
                 v, reason = llm_judge(q.get("question", ""), evidence, gold["rows"], rec["result"]["rows"], q.get("SQL", ""), rec["sql"], gold["db_id"])
                 judge_v = v
                 judge_reason = reason
@@ -201,7 +209,7 @@ def main():
     total = len(rows)
     n_correct = sum(1 for r in rows if r["verdict"] == "CORRECT")
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=["q_id", "db_id", "strict_match", "judge_verdict", "judge_reason", "verdict", "sql", "error", "input_tokens", "output_tokens"])
+        w = csv.DictWriter(f, fieldnames=["q_id", "db_id", "strict_match", "judge_verdict", "judge_reason", "verdict", "sql", "error", "input_tokens", "output_tokens"], quoting=csv.QUOTE_ALL)
         w.writeheader()
         w.writerows(rows)
 

@@ -3,6 +3,9 @@
   "instructions": [
     "../AGENTS.md"
   ],
+  "permission": {
+    "bash": "deny"
+  },
   "mcp": {
     "semantic-core": {
       "type": "remote",
