@@ -13,7 +13,7 @@ Token 提取: jq 'select(.usage != null) | .usage' <file>
 
 注意: 跑前请确保 serve 已启动 (python main.py serve --paradigm <P>).
 """
-import json, subprocess, sys, time, argparse, shutil
+import json, os, subprocess, sys, time, argparse, shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -65,9 +65,21 @@ def run_one(q, paradigm, timeout=300):
         prompt,
     ]
     cwd = str(AGENT_DIR / PARADIGM_DIR[paradigm])
+    # Windows 上 opencode.cmd 需要 cmd.exe 执行 + 完整用户 PATH
+    run_env = os.environ.copy()
+    if sys.platform == "win32":
+        # COMSPEC = cmd.exe; 传递完整环境 + 显式 PATH
+        npm_paths = [
+            r"C:\Users\user\AppData\Roaming\npm",
+            r"C:\Program Files\nodejs",
+        ]
+        run_env["PATH"] = os.pathsep.join(npm_paths) + os.pathsep + run_env.get("PATH", "")
     t0 = time.time()
     try:
-        r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout, encoding='utf-8', errors='replace')
+        # Windows: 通过 cmd /c 调用 opencode.cmd,匹配交互模式
+        if sys.platform == "win32":
+            cmd = ["cmd", "/c"] + cmd
+        r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout, encoding='utf-8', errors='replace', env=run_env)
         out_path.write_text(r.stdout, encoding="utf-8")
         if r.returncode != 0:
             (out_dir / f"{qid}.err").write_text(r.stderr, encoding="utf-8")
