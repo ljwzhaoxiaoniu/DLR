@@ -47,3 +47,5 @@ verify_edit.txt
 *.db
 Evaluation/outputs/00_golden_cache.json
 Evaluation/outputs/01_logs/
+# run_id 工作目录(正式成果归档在 validated_results/)
+Evaluation/outputs/[0-9]*/

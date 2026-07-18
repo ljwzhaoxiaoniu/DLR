@@ -39,14 +39,17 @@ def main():
 
     copied = 0
     for p in ["er", "dlr", "rdf"]:
-        for q_dir in src_logs.iterdir():
-            if q_dir.is_dir():
-                for qf in q_dir.glob("*.json"):
-                    if qf.stem.isdigit():
-                        dest = raw_dir / f"{p}_{qf.stem}.json"
-                        if not dest.exists():
-                            shutil.copy2(qf, dest)
-                            copied += 1
+        # 按范式子目录取日志(曾因遍历全部子目录+先到先得,把 dlr 日志复制成三份范式文件)
+        p_dir = src_logs / p
+        if not p_dir.is_dir():
+            print(f"[WARN] 缺范式日志目录: {p_dir}")
+            continue
+        for qf in sorted(p_dir.glob("*.json")):
+            if qf.stem.isdigit():
+                dest = raw_dir / f"{p}_{qf.stem}.json"
+                if not dest.exists():
+                    shutil.copy2(qf, dest)
+                    copied += 1
     print(f"[OK] 复制 {copied} 个 raw 日志 → {raw_dir}")
 
     # 2. 合并三范式 report CSV
