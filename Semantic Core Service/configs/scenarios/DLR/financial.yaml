@@ -54,7 +54,7 @@ logical_entities:
         private_attributes:
           - {attr_id: financial.disp.disp_id, biz_name: disp_id, physical_column_id: financial.disp.disp_id}
           - {attr_id: financial.disp.type, biz_name: type, physical_column_id: financial.disp.type}
-      - physical_entity_id: PHYSICAL.Card
+      - physical_entity_id: PHYSICAL.CreditCard
         physical_table_name: card
         physical_table_id: financial.card
         A: {cardinality: "N:1", key: disp_id}

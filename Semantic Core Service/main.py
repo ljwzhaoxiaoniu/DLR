@@ -21,6 +21,7 @@ import os
 import shutil
 import sys
 from pathlib import Path
+from typing import Optional
 
 import click
 
@@ -261,10 +262,11 @@ def _build_serve_app(paradigm: str):
 
     class QueryRequest(BaseModel):
         question: str
+        db: Optional[str] = None  # 可选：锁定数据库召回
 
     @app.post("/api/v1/query")
     async def api_query(req: QueryRequest):
-        return _get_query_svc().query(req.question)
+        return _get_query_svc().query(req.question, db=req.db)
 
     @app.get("/api/v1/entities")
     async def get_all_entities():

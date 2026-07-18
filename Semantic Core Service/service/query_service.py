@@ -26,22 +26,25 @@ class QueryService:
         self.graph_db = graph_db or GraphDB(mapping_type=mapping_type)
         self.vector_db = vector_db or VectorDB()
 
-    def query(self, question: str, top_k: int = 20) -> Dict[str, Any]:
-        """Execute semantic query. Dispatches to ER or DLR path."""
+    def query(self, question: str, top_k: int = 20, db: Optional[str] = None) -> Dict[str, Any]:
+        """Execute semantic query. Dispatches to ER or DLR path.
+
+        db: 可选，数据库名过滤（锁库召回，防跨库漂移）。
+        """
         if self.mapping_type == "dlr":
-            return self._query_dlr(question, top_k)
-        return self._query_er(question, top_k)
+            return self._query_dlr(question, top_k, db)
+        return self._query_er(question, top_k, db)
 
     # ===================================================================
     # ER query path
     # ===================================================================
 
-    def _query_er(self, question: str, top_k: int = 20) -> Dict[str, Any]:
+    def _query_er(self, question: str, top_k: int = 20, db: Optional[str] = None) -> Dict[str, Any]:
         """ER query: vector recall → entity-first → graph expand."""
         try:
-            logger.info(f"[ER] 查询: {question}")
+            logger.info(f"[ER] 查询: {question}" + (f" (db={db})" if db else ""))
 
-            search_results = self.vector_db.search(question, top_k=top_k * 3)
+            search_results = self.vector_db.search(question, top_k=top_k * 3, db=db)
             if not search_results:
                 return self._empty_result("未找到相关内容")
 
@@ -53,13 +56,15 @@ class QueryService:
             logger.info(f"[ER] 召回: entity={len(entity_results)}, "
                         f"attr={len(attribute_results)}, rel={len(relation_results)}")
 
-            # Extract entity IDs with scores
+            # Extract entity IDs with scores (记录每个实体的 db 归属)
             entity_id_to_score: Dict[str, float] = {}
+            entity_id_to_db: Dict[str, str] = {}
             for res in entity_results:
                 eid = res["id"]
                 score = res.get("score", 0.0)
                 if eid not in entity_id_to_score or score > entity_id_to_score[eid]:
                     entity_id_to_score[eid] = score
+                entity_id_to_db.setdefault(eid, res.get("db", ""))
 
             # Infer entities from relations
             for res in relation_results:
@@ -67,6 +72,8 @@ class QueryService:
                 for fid in (res.get("from_entity_id"), res.get("to_entity_id")):
                     if fid and (fid not in entity_id_to_score or score > entity_id_to_score[fid]):
                         entity_id_to_score[fid] = score
+                    if fid:
+                        entity_id_to_db.setdefault(fid, res.get("db", ""))
 
             # Infer entities from attributes
             if not entity_id_to_score and attribute_results:
@@ -75,13 +82,14 @@ class QueryService:
                     score = res.get("score", 0.0)
                     if eid not in entity_id_to_score or score > entity_id_to_score[eid]:
                         entity_id_to_score[eid] = score
+                    entity_id_to_db.setdefault(eid, res.get("db", ""))
 
             if not entity_id_to_score:
                 return self._empty_result("未找到相关实体")
 
             # Graph expansion
             entity_ids = list(entity_id_to_score.keys())
-            result_data = self._expand_er(entity_ids, entity_id_to_score)
+            result_data = self._expand_er(entity_ids, entity_id_to_score, entity_id_to_db)
 
             max_confidence = max(entity_id_to_score.values())
             if max_confidence < CONFIDENCE_THRESHOLD:
@@ -98,7 +106,8 @@ class QueryService:
             return self._empty_result(f"查询失败: {e}")
 
     def _expand_er(self, entity_ids: List[str],
-                   entity_id_to_score: Optional[Dict[str, float]] = None) -> Dict[str, Any]:
+                   entity_id_to_score: Optional[Dict[str, float]] = None,
+                   entity_id_to_db: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
         """Expand ER entities with attributes and relations."""
         entities = []
         for eid in entity_ids:
@@ -109,6 +118,9 @@ class QueryService:
             info["relations"] = self.graph_db.get_entity_relations(eid)
             if entity_id_to_score and eid in entity_id_to_score:
                 info["confidence"] = entity_id_to_score[eid]
+            # db 归属：优先向量 metadata，兜底 source_table 前缀（'db.table'）
+            info["db"] = (entity_id_to_db or {}).get(eid) or \
+                (info.get("source_table", "") or "").split(".", 1)[0]
             entities.append(info)
         return {"entities": entities}
 
@@ -116,12 +128,12 @@ class QueryService:
     # DLR query path
     # ===================================================================
 
-    def _query_dlr(self, question: str, top_k: int = 20) -> Dict[str, Any]:
+    def _query_dlr(self, question: str, top_k: int = 20, db: Optional[str] = None) -> Dict[str, Any]:
         """DLR query: vector recall → LE/PE/PAS → ARCS mapping."""
         try:
-            logger.info(f"[DLR] 查询: {question}")
+            logger.info(f"[DLR] 查询: {question}" + (f" (db={db})" if db else ""))
 
-            search_results = self.vector_db.search(question, top_k=top_k * 3)
+            search_results = self.vector_db.search(question, top_k=top_k * 3, db=db)
             if not search_results:
                 return self._empty_result("未找到相关内容")
 
@@ -146,6 +158,7 @@ class QueryService:
                 le_info = self.graph_db.get_logical_entity_by_id(le_id)
                 if le_info:
                     le_info["confidence"] = res.get("score", 0.0)
+                    le_info["db"] = res.get("db", "")
                     le_info["attributes"] = self.graph_db.get_logical_entity_attributes(le_id)
                     le_info["children"] = self.graph_db.get_child_entity_ids(le_id)
                     result_data["logical_entities"].append(le_info)
@@ -155,6 +168,9 @@ class QueryService:
                 pe_info = self.graph_db.get_physical_entity_by_id(res["id"])
                 if pe_info:
                     pe_info["confidence"] = res.get("score", 0.0)
+                    # db 归属：优先 Kuzu 节点 physical_table_id 前缀，兜底向量 metadata
+                    pe_info["db"] = (pe_info.get("physical_table_id") or "").split(".", 1)[0] \
+                        or res.get("db", "")
                     pe_info["attributes"] = self.graph_db.get_physical_entity_attributes(res["id"])
                     result_data["physical_entities"].append(pe_info)
 
@@ -164,6 +180,7 @@ class QueryService:
                     "relation_id": res["id"],
                     "relation_name": res.get("name", ""),
                     "confidence": res.get("score", 0.0),
+                    "db": res.get("db", ""),
                 })
 
             # Calculate max confidence

@@ -970,18 +970,25 @@ class GraphDB:
     # ===================================================================
 
     def clear(self):
-        """Clear all data (both schemas if present)."""
+        """Clear all data (both schemas if present).
+
+        Kuzu 中带边的节点不能直接 DELETE(会报错被吞),必须先删全部边表;
+        节点用 DETACH DELETE 双保险。曾因只删 2 种边导致 DLR 图从未真正清空
+        (INHERITS 双挂鬼魂边残留)。
+        """
         try:
-            # Try ER tables
-            for rel in ["RELATED_TO", "HAS_ATTRIBUTE"]:
+            # 1. 先删所有边(ER 2 种 + DLR 4 种,不带节点标签最稳)
+            for rel in ["RELATED_TO", "HAS_ATTRIBUTE", "INHERITS", "PAS_RELATED_TO",
+                        "HAS_LOGICAL_ATTRIBUTE", "LOGICALLY_RELATED_TO"]:
                 try:
-                    self.conn.execute(f"MATCH (a:{'BizEntity' if self.mapping_type == 'er' else 'PhysicalEntity'})-[r:{rel}]->(b) DELETE r")
+                    self.conn.execute(f"MATCH ()-[r:{rel}]->() DELETE r")
                 except Exception:
                     pass
+            # 2. 再删所有节点
             for label in ["BizEntity", "BizAttribute", "PhysicalEntity", "PhysicalAttribute",
                           "LogicalEntity", "LogicalAttribute"]:
                 try:
-                    self.conn.execute(f"MATCH (n:{label}) DELETE n")
+                    self.conn.execute(f"MATCH (n:{label}) DETACH DELETE n")
                 except Exception:
                     pass
             logger.info("[GraphDB] 已清空")

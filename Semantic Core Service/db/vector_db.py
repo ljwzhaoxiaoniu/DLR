@@ -17,6 +17,11 @@ except ImportError:
     FAISS_AVAILABLE = False
     logger.warning("FAISS不可用，将使用内置余弦相似度实现向量搜索")
 
+# db 过滤时的检索策略：库规模在此阈值内直接全量检索（IndexFlatIP 本就是暴力精确检索，
+# n<1000 时全量为亚毫秒级；超采在单库占比低时有零命中风险），超过才退化为超采
+FULL_SCAN_MAX = 10_000
+OVERSAMPLE = 10
+
 class VectorDB:
     """向量数据库封装（FAISS实现，兼容Windows）"""
     _instances: Dict[str, "VectorDB"] = {}
@@ -76,7 +81,7 @@ class VectorDB:
         """将文本转换为向量"""
         return self.embedding_model.encode(text).tolist()
 
-    def insert_entity(self, entity_id: str, name: str, description: Optional[str] = None) -> bool:
+    def insert_entity(self, entity_id: str, name: str, description: Optional[str] = None, db: str = "") -> bool:
         """插入业务实体向量"""
         try:
             text = f"{name} {description or ''}"
@@ -93,7 +98,8 @@ class VectorDB:
                 "id": entity_id,
                 "name": name,
                 "type": "entity",
-                "description": description or ""
+                "description": description or "",
+                "db": db or ""
             })
 
             logger.info(f"插入实体向量: {entity_id} - {name}")
@@ -102,7 +108,7 @@ class VectorDB:
             logger.error(f"插入实体向量失败 {entity_id}: {str(e)}")
             return False
 
-    def insert_attribute(self, attr_id: str, name: str, description: Optional[str] = None) -> bool:
+    def insert_attribute(self, attr_id: str, name: str, description: Optional[str] = None, db: str = "") -> bool:
         """插入业务属性向量"""
         try:
             text = f"{name} {description or ''}"
@@ -119,7 +125,8 @@ class VectorDB:
                 "id": attr_id,
                 "name": name,
                 "type": "attribute",
-                "description": description or ""
+                "description": description or "",
+                "db": db or ""
             })
 
             logger.info(f"插入属性向量: {attr_id} - {name}")
@@ -128,7 +135,7 @@ class VectorDB:
             logger.error(f"插入属性向量失败 {attr_id}: {str(e)}")
             return False
 
-    def insert_relation(self, relation_id: str, name: str, from_entity_attr_id: str, from_entity_name: str, to_entity_attr_id: str, to_entity_name: str, description: Optional[str] = None) -> bool:
+    def insert_relation(self, relation_id: str, name: str, from_entity_attr_id: str, from_entity_name: str, to_entity_attr_id: str, to_entity_name: str, description: Optional[str] = None, db: str = "") -> bool:
         """插入业务关系向量"""
         try:
             text = f"{name} {from_entity_name} {to_entity_name} {description or ''}"
@@ -155,7 +162,8 @@ class VectorDB:
                 "to_entity_id": to_entity_id,
                 "to_entity_attr_id": to_entity_attr_id,
                 "to_entity_name": to_entity_name,
-                "description": description or ""
+                "description": description or "",
+                "db": db or ""
             })
 
             logger.info(f"插入关系向量: {relation_id} - {name} ({from_entity_name} -> {to_entity_name})")
@@ -169,7 +177,7 @@ class VectorDB:
     # ===================================================================
 
     def insert_logical_entity(self, logical_entity_id: str, name: str,
-                              description: Optional[str] = None) -> bool:
+                              description: Optional[str] = None, db: str = "") -> bool:
         """Insert LogicalEntity vector (DLR)."""
         try:
             text = f"{name} {description or ''}"
@@ -187,6 +195,7 @@ class VectorDB:
                 "name": name,
                 "type": "logical_entity",
                 "description": description or "",
+                "db": db or "",
             })
             logger.info(f"插入逻辑实体向量: {logical_entity_id} - {name}")
             return True
@@ -196,7 +205,8 @@ class VectorDB:
 
     def insert_pas_relation(self, relation_id: str, relation_name: str,
                             vector_text: str, from_le_id: str = "",
-                            to_le_id: str = "", a_attribute: str = "") -> bool:
+                            to_le_id: str = "", a_attribute: str = "",
+                            db: str = "") -> bool:
         """Insert PAS relation vector (DLR)."""
         try:
             vector = self.encode_text(vector_text)
@@ -216,6 +226,7 @@ class VectorDB:
                 "to_le_id": to_le_id,
                 "A_attribute": a_attribute,
                 "description": vector_text,
+                "db": db or "",
             })
             logger.info(f"插入PAS关系向量: {relation_id} - {relation_name}")
             return True
@@ -223,8 +234,11 @@ class VectorDB:
             logger.error(f"插入PAS关系向量失败 {relation_id}: {e}")
             return False
 
-    def search(self, query: str, top_k: int = TOP_K) -> List[Dict[str, Any]]:
-        """语义搜索"""
+    def search(self, query: str, top_k: int = TOP_K, db: Optional[str] = None) -> List[Dict[str, Any]]:
+        """语义搜索
+
+        db: 可选，按所属数据库名过滤候选（metadata["db"]）。不传时行为与全局召回一致。
+        """
         try:
             query_vector = self.encode_text(query)
             normalized_query = self._normalize_vector(query_vector)
@@ -234,20 +248,23 @@ class VectorDB:
                 return []
 
             if FAISS_AVAILABLE:
-                # FAISS搜索
-                scores, indices = self.index.search(normalized_query.reshape(1, -1), min(top_k, len(self.id_map)))
+                # FAISS搜索：db 过滤时全量检索后过滤（小库精确无遗漏），超大库退化为超采
+                n = len(self.id_map)
+                if db:
+                    k = n if n <= FULL_SCAN_MAX else min(n, top_k * OVERSAMPLE)
+                else:
+                    k = min(top_k, n)
+                scores, indices = self.index.search(normalized_query.reshape(1, -1), k)
                 results = []
                 for i, idx in enumerate(indices[0]):
                     if idx < 0 or idx >= len(self.metadata):
                         continue
                     meta = self.metadata[idx]
-                    results.append({
-                        "id": meta["id"],
-                        "name": meta["name"],
-                        "type": meta["type"],
-                        "description": meta["description"],
-                        "score": float(scores[0][i])
-                    })
+                    if db and meta.get("db", "") != db:
+                        continue
+                    results.append({**meta, "score": float(scores[0][i])})
+                    if len(results) >= top_k:
+                        break
             else:
                 # 内置余弦相似度搜索
                 similarities = []
@@ -255,20 +272,21 @@ class VectorDB:
                     sim = np.dot(normalized_query, vec)
                     similarities.append(sim)
 
-                # 获取top_k结果
-                top_indices = np.argsort(similarities)[-min(top_k, len(similarities)):][::-1]
+                # db 过滤：先筛出允许的索引集，再取 top_k
+                order = np.argsort(similarities)[::-1]
                 results = []
-                for idx in top_indices:
+                for idx in order:
                     meta = self.metadata[idx]
-                    results.append({
-                        "id": meta["id"],
-                        "name": meta["name"],
-                        "type": meta["type"],
-                        "description": meta["description"],
-                        "score": float(similarities[idx])
-                    })
+                    if db and meta.get("db", "") != db:
+                        continue
+                    results.append({**meta, "score": float(similarities[idx])})
+                    if len(results) >= top_k:
+                        break
 
-            logger.info(f"搜索查询 '{query}' 返回 {len(results)} 条结果")
+            if db and not results:
+                logger.warning(f"db 过滤 '{db}' 零命中——检查库名是否正确，或 vector.pkl 为旧格式(缺 db 字段)需重建")
+
+            logger.info(f"搜索查询 '{query}' 返回 {len(results)} 条结果" + (f" (db={db})" if db else ""))
             for r in results:
                 logger.info(f"  - {r['type']} | {r['id']} | score={r['score']:.3f}")
             return results

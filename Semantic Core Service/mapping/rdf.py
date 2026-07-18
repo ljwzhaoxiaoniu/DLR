@@ -137,6 +137,8 @@ class RDFSemanticMapper(SemanticMapperABC):
             table_name = str(_first(g, lt, RR.tableName)) if lt else None
             if not table_name:
                 continue
+            if table_name == "sqlite_sequence":
+                continue  # SQLite 自增元数据表:4 库 TTL 中 class URI 相同会跨库撞名,且非业务表
 
             # RDF class → entity name + description
             sm = _first(g, tm, RR.subjectMap)
@@ -246,6 +248,8 @@ class RDFSemanticMapper(SemanticMapperABC):
             entity_key = str(class_node) if class_node else f"{db_name}.{tname}"
             if not tname:
                 continue
+            if tname == "sqlite_sequence":
+                continue  # 与主解析循环一致:跳过 SQLite 元数据表
             col_names = []
             for pom in g.objects(tm, RR.predicateObjectMap):
                 om = _first(g, pom, RR.objectMap)

@@ -29,6 +29,8 @@
 ### Step 1：语义召回定位对象
 用语义召回工具(业务对象 `xxx_semantic_query`)输入自然语言问题,向量召回匹配的语义对象. 具体范式工具名通过 `/mcps` 确认.
 
+召回结果的每个候选都带 `db` 字段(所属数据库). 第一次召回不传 `db`(全局召回,用于判断问题属于哪个数据库);确定目标库后,后续所有支持 `db` 参数的召回类调用都必须传入该库名,防止召回漂移到其他数据库.
+
 ### Step 2：获取物理映射 + 数据库路径
 调用映射工具拿到:
 - 物理表名(不带库前缀)
@@ -45,6 +47,8 @@ execute_sql(sql="SELECT ...", database_url="<Step 2 拿到的 URL>")
 ```
 - 只读查询(SELECT),禁止 INSERT/UPDATE/DELETE
 - `database_url` **必须**来自 Step 2 的 `database_url`
+- `SELECT *` 必须带 `LIMIT`(无 LIMIT 会被拒绝执行)
+- 结果超 200 行会被截断(`truncated: true`),截断结果不可作为答案,需改写 SQL 缩小结果集
 
 ### Step 4：得出结论
 基于查询结果直接回答问题。
@@ -81,6 +85,6 @@ Evidence SQL: <你实际执行的最后一条 SELECT SQL>
 ```
 
 规则:
-- Final Answer 必须来自 Evidence SQL 的执行结果，不能凭空写
+- **Evidence SQL 单独执行必须直接返回 Final Answer 的值**(单值题=单行单列)——不能只查中间数据(如两个 count)再自行心算最终值(如 ratio/差值),计算必须写进 SQL
 - Evidence SQL 必须是可被 sqlite3 直接执行的 SELECT 语句
 - 若执行失败，Final Answer 写 `ERROR: <原因>`，Evidence SQL 写失败的语句

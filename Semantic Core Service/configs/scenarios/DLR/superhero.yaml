@@ -100,7 +100,7 @@ logical_entities:
         S: "Publisher dimension"
         private_attributes:
           - {attr_id: superhero.publisher.publisher_name, biz_name: publisher_name, physical_column_id: superhero.publisher.publisher_name}
-      - physical_entity_id: PHYSICAL.Race
+      - physical_entity_id: PHYSICAL.HeroRace
         physical_table_name: race
         physical_table_id: superhero.race
         A: {cardinality: "1:1", key: id}

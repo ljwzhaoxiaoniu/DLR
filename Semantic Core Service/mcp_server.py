@@ -153,14 +153,17 @@ def _get_tool_names() -> set:
 # Shared + ER tools (registered at module import)
 # ===================================================================
 
-def er_semantic_query(question: str, top_k: int = 20) -> dict:
+def er_semantic_query(question: str, top_k: int = 20, db: str = "") -> dict:
     """[ER] 语义召回 → 返回实体(扁平结构,无物理表/字段).
 
-    返回: {success, confidence, data:{entities:[{entity_id, name, description}]}}
+    db: 可选,数据库名过滤. 首次调用留空做全局召回,用于判断问题属于哪个数据库;
+    从返回的 entities[].db 确定目标库后,后续调用必须传入该 db 锁定范围,避免召回漂移到其他库.
+
+    返回: {success, confidence, data:{entities:[{entity_id, name, description, db}]}}
     description 仅业务描述,不带属性字段名.
     """
     _, _, qs = _ensure_services()
-    raw = qs.query(question, top_k)
+    raw = qs.query(question, top_k, db=db or None)
     # 剥离物理信息(source_table/database_url/attributes/relations),仅保留业务语义
     clean_entities = []
     for e in raw.get("data", {}).get("entities", []):
@@ -168,6 +171,7 @@ def er_semantic_query(question: str, top_k: int = 20) -> dict:
             "entity_id": e.get("entity_id", ""),
             "name": e.get("name", ""),
             "description": e.get("description", ""),
+            "db": e.get("db", ""),
         })
     return {
         "success": raw.get("success", True),
@@ -307,16 +311,33 @@ def _execute_sql(sql: str, database_url: str) -> dict:
     """薄透传服务: Agent 提供 SQL + database_url, 服务端执行并返回结果.
 
     Agent 必须先通过 MCP 映射工具拿到 database_url, 再调用本工具.
+    SELECT * 必须带 LIMIT;结果超 200 行截断(truncated=true).
     """
+    import re
     import sqlite3
+    MAX_ROWS = 200  # 防全表 dump 撑爆 Agent 上下文
     if not sql or not database_url:
         return {"success": False, "error": "sql and database_url are required"}
+    _sql = sql.strip().rstrip(";")
+    if re.match(r"^\s*SELECT\s+(DISTINCT\s+)?(\w+\.)?\*", _sql, re.IGNORECASE) and \
+            not re.search(r"\bLIMIT\b", _sql, re.IGNORECASE):
+        return {
+            "success": False,
+            "error": "SELECT * without LIMIT is not allowed. "
+                     "Add LIMIT (e.g. LIMIT 5) or select specific columns.",
+        }
     try:
         con = sqlite3.connect(database_url, timeout=30)
-        cur = con.execute(sql.strip().rstrip(";"))
+        cur = con.execute(_sql)
         cols = [d[0] for d in cur.description] if cur.description else []
-        rows = [list(r) for r in cur.fetchall()]
+        rows = [list(r) for r in cur.fetchmany(MAX_ROWS + 1)]
         con.close()
+        if len(rows) > MAX_ROWS:
+            return {
+                "success": True, "columns": cols, "rows": rows[:MAX_ROWS],
+                "truncated": True, "returned_rows": MAX_ROWS,
+                "hint": f"Result truncated at {MAX_ROWS} rows. Narrow the query (WHERE/GROUP BY/LIMIT).",
+            }
         return {"success": True, "columns": cols, "rows": rows}
     except Exception as e:
         return {"success": False, "error": str(e)}
@@ -392,10 +413,13 @@ def _query_rdf_mapping(class_uri: str) -> dict:
     return result
 
 
-def rdf_semantic_query(question: str, top_k: int = 20) -> dict:
+def rdf_semantic_query(question: str, top_k: int = 20, db: str = "") -> dict:
     """[RDF] 语义召回 → 返回类(URI 本体结构,无 R2RML 映射/字段).
 
-    返回: {success, confidence, data:{classes:[{class_uri, name, description}]}}
+    db: 可选,数据库名过滤. 首次调用留空做全局召回,用于判断问题属于哪个数据库;
+    从返回的 classes[].db 确定目标库后,后续调用必须传入该 db 锁定范围,避免召回漂移到其他库.
+
+    返回: {success, confidence, data:{classes:[{class_uri, name, description, db}]}}
     class_uri 仅为 IRI 标识,不带 physical_table / predicateObjectMap.
     """
     from db.vector_db import VectorDB
@@ -406,7 +430,7 @@ def rdf_semantic_query(question: str, top_k: int = 20) -> dict:
     vector_db = VectorDB(db_path=str(storage["vector"]))
     graph_db = GraphDB(db_path=str(storage["graph"]), mapping_type="rdf")
 
-    search_results = vector_db.search(question, top_k=top_k * 3)
+    search_results = vector_db.search(question, top_k=top_k * 3, db=db or None)
     if not search_results:
         return {"success": False, "message": "未找到相关内容", "data": {}, "confidence": 0.0}
 
@@ -420,11 +444,12 @@ def rdf_semantic_query(question: str, top_k: int = 20) -> dict:
         seen.add(eid)
         entity = graph_db.get_entity_by_id(eid)
         if entity:
-            # 仅保留 class_uri + 业务描述,剥离 source_table/database_url/attributes/relations
+            # 仅保留 class_uri + 业务描述 + db 归属,剥离 source_table/database_url/attributes/relations
             classes.append({
                 "class_uri": entity.get("entity_id", eid),
                 "name": entity.get("name", ""),
                 "description": entity.get("description", ""),
+                "db": res.get("db", ""),
             })
 
     max_score = max((r.get("score", 0.0) for r in search_results), default=0.0)
@@ -494,14 +519,17 @@ def _rdf_sparql(query: str) -> dict:
 # ===================================================================
 
 # Plain function definitions (no decorator) — registered in _register_dlr_tools()
-def dlr_semantic_query(question: str, top_k: int = 3, threshold: float = 0.5) -> dict:
+def dlr_semantic_query(question: str, top_k: int = 3, threshold: float = 0.5, db: str = "") -> dict:
     """[DLR] 语义召回 → 返回结构体(LE-PE 复合,无物理表/字段).
 
-    返回: {success, data:{structures:[{logical_entity_id, name, description, physical_entities:[{physical_entity_id, pe_name}]}]}}
+    db: 可选,数据库名过滤. 首次调用留空做全局召回,用于判断问题属于哪个数据库;
+    从返回的 structures[].db 确定目标库后,后续召回类调用必须传入该 db,避免跨库串扰.
+
+    返回: {success, data:{structures:[{logical_entity_id, name, description, db, physical_entities:[{physical_entity_id, pe_name, db}]}]}}
     不含 physical_table_id / database_url / 属性字段.
     """
     gdb, vector_db, _ = _ensure_services()
-    results = vector_db.search(question, top_k=max(top_k * 3, 20))
+    results = vector_db.search(question, top_k=max(top_k * 3, 20), db=db or None)
     le_results = [r for r in results if r["type"] == "logical_entity"]
     le_results.sort(key=lambda x: x.get("score", 0), reverse=True)
     le_results = [r for r in le_results if r.get("score", 0) >= threshold][:top_k]
@@ -509,7 +537,7 @@ def dlr_semantic_query(question: str, top_k: int = 3, threshold: float = 0.5) ->
     structures = []
     for r in le_results:
         le_id = r["id"]
-        # 获取该 LE 下挂的 PE 列表(仅 id + name,无物理表名)
+        # 获取该 LE 下挂的 PE 列表(仅 id + name + db 归属,无物理表名)
         child_pe_ids = gdb.get_child_entity_ids(le_id)
         pes = []
         for pe_id in child_pe_ids:
@@ -518,11 +546,13 @@ def dlr_semantic_query(question: str, top_k: int = 3, threshold: float = 0.5) ->
                 pes.append({
                     "physical_entity_id": pe_id,
                     "pe_name": pe.get("name", ""),
+                    "db": (pe.get("physical_table_id") or "").split(".", 1)[0],
                 })
         structures.append({
             "logical_entity_id": le_id,
             "name": r["name"],
             "description": r.get("description", ""),
+            "db": r.get("db", ""),
             "physical_entities": pes,
         })
 
@@ -534,10 +564,13 @@ def dlr_semantic_query(question: str, top_k: int = 3, threshold: float = 0.5) ->
     }
 
 
-def _recall_pe(question: str, top_k: int = 3, threshold: float = 0.5) -> dict:
-    """[DLR] Recall physical entities (PE) by natural language."""
+def _recall_pe(question: str, top_k: int = 3, threshold: float = 0.5, db: str = "") -> dict:
+    """[DLR] Recall physical entities (PE) by natural language.
+
+    db: 可选,数据库名过滤;锁定目标库后必须传入,防止召回漂移到其他库.
+    """
     _, vector_db, _ = _ensure_services()
-    results = vector_db.search(question, top_k=max(top_k * 3, 20))
+    results = vector_db.search(question, top_k=max(top_k * 3, 20), db=db or None)
     pe_results = [r for r in results if r["type"] == "entity"]
     pe_results.sort(key=lambda x: x.get("score", 0), reverse=True)
     pe_results = [r for r in pe_results if r.get("score", 0) >= threshold][:top_k]
@@ -548,6 +581,7 @@ def _recall_pe(question: str, top_k: int = 3, threshold: float = 0.5) -> dict:
                 "physical_entity_id": r["id"],
                 "name": r["name"],
                 "source_table": r.get("description", ""),
+                "db": r.get("db", ""),
                 "confidence": round(r.get("score", 0), 4),
             }
             for r in pe_results
@@ -555,10 +589,13 @@ def _recall_pe(question: str, top_k: int = 3, threshold: float = 0.5) -> dict:
     }
 
 
-def _recall_pas(question: str, top_k: int = 3, threshold: float = 0.5) -> dict:
-    """[DLR] Recall PAS semantic routing relations by natural language."""
+def _recall_pas(question: str, top_k: int = 3, threshold: float = 0.5, db: str = "") -> dict:
+    """[DLR] Recall PAS semantic routing relations by natural language.
+
+    db: 可选,数据库名过滤;锁定目标库后必须传入,防止召回漂移到其他库.
+    """
     _, vector_db, _ = _ensure_services()
-    results = vector_db.search(question, top_k=max(top_k * 3, 20))
+    results = vector_db.search(question, top_k=max(top_k * 3, 20), db=db or None)
     pas_results = [r for r in results if r["type"] == "pas_relation"]
     pas_results.sort(key=lambda x: x.get("score", 0), reverse=True)
     pas_results = [r for r in pas_results if r.get("score", 0) >= threshold][:top_k]
@@ -570,6 +607,7 @@ def _recall_pas(question: str, top_k: int = 3, threshold: float = 0.5) -> dict:
                 "relation_name": r["name"],
                 "from_le_id": r.get("from_le_id", ""),
                 "to_le_id": r.get("to_le_id", ""),
+                "db": r.get("db", ""),
                 "confidence": round(r.get("score", 0), 4),
             }
             for r in pas_results

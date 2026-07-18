@@ -62,7 +62,7 @@ def load_fks(sqlite_dir: Path, db_name: str) -> List[Tuple[str, str, str, str]]:
     try:
         conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
         cur = conn.cursor()
-        cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name != 'sqlite_sequence'")
         tables = [r[0] for r in cur.fetchall()]
         fks = []
         for tbl in tables:
@@ -205,7 +205,7 @@ def main() -> int:
         # get tables
         conn = sqlite3.connect(f"file:{db_dir}/{db_name}.sqlite?mode=ro", uri=True)
         cur = conn.cursor()
-        cur.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name != 'sqlite_sequence' ORDER BY name")
         tables = [r[0] for r in cur.fetchall()]
         conn.close()
 
