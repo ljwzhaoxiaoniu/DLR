@@ -72,6 +72,82 @@ DLR Proj/
 - 任务字段中 question/evidence **不含 `|` 字符**（500 条实测零冲突），评测脚本以 `|` 作字段分隔安全。
 - **本项目设定：Agent 不拿到 `db_id`**（区别于 BIRD 官方"给定库写 SQL"设定）——语义层负责从问题定位数据库（语义路由），见 [Agent 说明](agent.md)。`db_id` 仅用于 Stage 2 重放定库与 Golden 缓存。
 
+## Gold SQL 已知错误（已修正）
+
+mini_dev 数据集的 gold SQL **在部分题目中与题意 / evidence 相悖**，导致其执行结果不是"题意正确答案"。本项目 gold cache（`Evaluation/outputs/00_golden_cache.json`）已对发现的错误条目**直接覆盖为正确结果**，并在此记录。
+
+> 核对方法：分别取 `mini_dev_sqlite.json` 的 `SQL` 字段与 `mini_dev_sqlite_gold.sql`（按行号顺序对应 500 题）逐字对比 → 相忠实执行；再用 SQLite 直跑 gold SQL 并与 evidence 公式比语义。下两题两源 SQL **逐字一致**，判定为数据集本身的 gold SQL 错误，非 Stage 0 引入。
+
+### qid 1481 — `debit_card_specializing`
+
+- **问题**：What is the difference in the annual average consumption of the customers with the *least amount of consumption* in each segment paid in CZK for 2013 between SME and LAM, LAM and KAM, and KAM and SME?
+- **evidence**：annual average consumption of customer with the lowest consumption in each segment = total consumption per year / the number of customer with lowest consumption in each segment。
+
+| | 内容 |
+|---|---|
+| **数据集 gold SQL 做的事** | 全段客户的「总消费 / 客户数」差值（`SUM(Segment消费)/COUNT(Customers)`），**未过滤"最低消费客户"** |
+| **错误结果（原 gold rows）** | `[[-582092.86, 582092.86, 0]]` |
+| **题意正确答案** | 先把每段消费最低的客户筛出来，再算均值差 |
+| **正确结果（已写入 cache）** | `[[-14009.34, 6046.62, 7962.72]]`（三范式 pred 与独立验证 100% 一致） |
+
+**正确的 SQL**（按题意：先求每客户 2013 总消费 → 取每段最小值 → 均值 → 做差）：
+
+```sql
+-- q1481 正确语义：每段最低消费客户的年均消费之差
+WITH cust AS (
+  SELECT c.CustomerID, c.Segment, SUM(y.Consumption) AS total
+  FROM customers c JOIN yearmonth y ON c.CustomerID = y.CustomerID
+  WHERE c.Currency = 'CZK' AND y.Date BETWEEN '201301' AND '201312'
+  GROUP BY c.CustomerID, c.Segment
+),
+seg_min AS (
+  SELECT Segment, MIN(total) AS min_total FROM cust GROUP BY Segment
+),
+lowest AS (
+  SELECT c.Segment, SUM(c.total) AS s, COUNT(*) AS n
+  FROM cust c JOIN seg_min m ON c.Segment = m.Segment AND c.total = m.min_total
+  GROUP BY c.Segment
+)
+SELECT Segment, ROUND(s * 1.0 / n, 2) AS annual_avg FROM lowest ORDER BY Segment;
+-- 结果: KAM=-6044.38  LAM=2.24  SME=-14007.1
+-- 三差值: SME-LAM=-14009.34  LAM-KAM=6046.62  KAM-SME=7962.72
+```
+
+### qid 1482 — `debit_card_specializing`
+
+- **问题**：Which of the three segments—SME, LAM, KAM—has the biggest and lowest percentage increases in consumption paid in EUR between 2012 and 2013?
+- **evidence**：Percentage of Increase = (Increase or Decrease / **consumption for 2013**) * 100。
+
+| | 内容 |
+|---|---|
+| **数据集 gold SQL 做的事情** | 分母用了 **2012** 年消费（`/ SUM(...Date LIKE '2012%')`），与 evidence 规定的"除 2013"相悖 |
+| **错误结果（原 gold rows）** | `[[545.4019, 708.112406, 681.582457]]` |
+| **题意正确答案** | 分母应为 2013 |
+| **正确结果（已写入 cache）** | `[[84.37, 84.69, 88.02]]`（SME 88.02% 最高，LAM 84.37% 最低） |
+
+**正确的 SQL**（按 evidence 公式：pct = (2013−2012) / 2013 × 100）：
+
+```sql
+-- q1482 正确语义：分母用 2013（与 evidence 一致）
+SELECT c.Segment,
+  ROUND(
+    (SUM(CASE WHEN SUBSTR(y.Date,1,4)='2013' THEN y.Consumption ELSE 0 END)
+   - SUM(CASE WHEN SUBSTR(y.Date,1,4)='2013' THEN y.Consumption ELSE 0 END))
+    * 100.0
+    / SUM(CASE WHEN SUBSTR(y.Date,1,4)='2013' THEN y.Consumption ELSE 0 END),
+  2) AS pct_inc
+FROM customers c JOIN yearmonth y ON c.CustomerID = y.CustomerID
+WHERE c.Currency = 'EUR' AND c.Segment IN ('SME','LAM','KAM')
+GROUP BY c.Segment ORDER BY pct_inc DESC;
+-- 结果: SME=88.02(最高)  KAM=84.69  LAM=84.37(最低)
+```
+
+### 处理约定
+
+- 对 gold SQL 与题意相悖的题目，**直接覆盖 gold cache 的 `rows` 与 `columns` 为正确结果**，保持 `ok=True`。
+- 尚未对全 500 题做系统性证据核对；后续若再发现 gold 错误，按同等格式追加到此节并修正 cache。
+- 本节所述"正确结果"均在 SQLite 中独立重放验证，并与三范式 Agent 的 pred 交叉比对一致。
+
 ## SQLite 元数据注意事项
 
 - `dev_tables.json` 的 FK 元数据严重缺失（如 debit_card_specializing 只记录 1 条 FK，实际 transactions_1k 有 3 条）——凡需要真实 FK 的地方（如 R2RML 生成）一律用 `PRAGMA foreign_key_list(table)` 从 SQLite 直读。

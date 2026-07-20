@@ -9,7 +9,7 @@
 用法:
   python 04_judge.py --paradigm er --log-subdir <run_id> [--budget 100]
 """
-import json, csv, argparse, re, subprocess, shutil
+import json, csv, argparse, re, subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -63,11 +63,14 @@ def llm_judge(question, evidence, gold_res, pred_res, gold_sql, pred_sql, db_id,
         f"AgentLogPath: {log_path}"
     )
     try:
-        opencode = shutil.which("opencode") or "opencode"
+        # 用命令名走 PATH(不要用 shutil.which 解析出的 Windows .CMD 路径,
+        # 否则 bash -c 包裹后反斜杠被当转义符,路径解析失败导致 120s 超时)
+        # timeout: Judge 按 AGENTS.md 会读完整 AgentLogPath(NDJSON 最大 ~50KB)+PredJsonPath,
+        # LLM 多轮读+推理需 2-4 分钟,120s 会误伤大日志题 → 300s
         r = subprocess.run(
-            ['bash', '-c', f'"{opencode}" run --format json'],
+            ['bash', '-c', 'opencode run --format json'],
             input=prompt,
-            capture_output=True, text=True, timeout=120,
+            capture_output=True, text=True, timeout=300,
             encoding='utf-8', errors='replace', cwd=str(JUDGE_CWD)
         )
         reply = ""
