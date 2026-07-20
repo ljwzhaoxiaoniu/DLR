@@ -10,13 +10,15 @@ logical_entities:
     description: "Identity and classification of debit card customers"
     public_attributes:
       - {attr_id: LOGICAL.Customer.CustomerID, biz_name: CustomerID}
+      - {attr_id: LOGICAL.Customer.Segment, biz_name: Segment}
+      - {attr_id: LOGICAL.Customer.Currency, biz_name: Currency}
     physical_entities:
       - physical_entity_id: PHYSICAL.Customer
         physical_table_name: customers
         physical_table_id: debit_card_specializing.customers
         A: {cardinality: "1:1", key: CustomerID}
         R: null
-        C: {LOGICAL.Customer.CustomerID: debit_card_specializing.customers.CustomerID}
+        C: {LOGICAL.Customer.CustomerID: debit_card_specializing.customers.CustomerID, LOGICAL.Customer.Segment: debit_card_specializing.customers.Segment, LOGICAL.Customer.Currency: debit_card_specializing.customers.Currency}
         S: "Customer master data"
         private_attributes:
           - {attr_id: debit_card_specializing.customers.Segment, biz_name: Segment, physical_column_id: debit_card_specializing.customers.Segment}
