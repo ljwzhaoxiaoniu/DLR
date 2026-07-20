@@ -52,27 +52,54 @@ def main():
                     copied += 1
     print(f"[OK] 复制 {copied} 个 raw 日志 → {raw_dir}")
 
-    # 2. 合并三范式 report CSV
+    # 2. 合并三范式 report CSV + parse_agent_stats token 数据
     reports_dir = OUT_BASE / run_id / "03_reports"
     if not reports_dir.exists():
         print(f"[ERR] reports 不存在: {reports_dir}")
         return
 
-    rows, fields = [], ["paradigm"]
+    # 读 run 目录 agent_stats(parse_agent_stats.py 产出:含 reasoning/cache_read/total tokens)
+    stats_csv = OUT_BASE / run_id / "agent_stats.csv"
+    stats_map = {}  # (paradigm, q_id) -> row
+    if stats_csv.exists():
+        with open(stats_csv, encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                stats_map[(r["paradigm"].lower(), int(r["question_id"]))] = r
+
+    rows = []
+    fields = ["paradigm", "q_id", "db_id", "strict_match", "judge_verdict", "judge_reason",
+              "verdict", "process_score", "error", "input_tokens", "output_tokens",
+              "reasoning_tokens", "cache_read_tokens", "total_tokens"]
     for p in ["er", "dlr", "rdf"]:
         csv_path = reports_dir / f"{p}.csv"
         if not csv_path.exists():
             continue
         with open(csv_path, encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            if not fields[1:]:
-                fields += [k for k in reader.fieldnames if k not in fields and k != "sql"]
-            for r in reader:
-                rows.append({"paradigm": p, **{k: v for k, v in r.items() if k != "sql"}})
+            for r in csv.DictReader(f):
+                qid = int(r["q_id"])
+                row = {
+                    "paradigm": p,
+                    "q_id": qid,
+                    "db_id": r.get("db_id", ""),
+                    "strict_match": r.get("strict_match", ""),
+                    "judge_verdict": r.get("judge_verdict", ""),
+                    "judge_reason": r.get("judge_reason", ""),
+                    "verdict": r.get("verdict", ""),
+                    "process_score": r.get("process_score", ""),
+                    "error": r.get("error", ""),
+                    "input_tokens": r.get("input_tokens", ""),
+                    "output_tokens": r.get("output_tokens", ""),
+                }
+                # 合并 token 列(parse_agent_stats.py 产出: tokens_reasoning/tokens_cache_read/tokens_total)
+                st = stats_map.get((p, qid), {})
+                row["reasoning_tokens"] = st.get("tokens_reasoning", "")
+                row["cache_read_tokens"] = st.get("tokens_cache_read", "")
+                row["total_tokens"] = st.get("tokens_total", "")
+                rows.append(row)
 
     out_csv = target / "agent_stats.csv"
     with open(out_csv, "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=fields, quoting=csv.QUOTE_ALL)
+        w = csv.DictWriter(f, fieldnames=fields, quoting=csv.QUOTE_ALL, extrasaction="ignore")
         w.writeheader()
         w.writerows(rows)
     print(f"[OK] 汇总 CSV: {len(rows)} rows → {out_csv}")

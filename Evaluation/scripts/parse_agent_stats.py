@@ -23,7 +23,7 @@ def parse_ndjson(path):
     tool_calls = []
     final_answer = ""
     evidence_sql = ""
-    first_error = ""
+    # error 列不再从 NDJSON 提取,由 Stage 4 judge 在判定 INCORRECT 时写入 judge_reason
 
     with open(path, encoding="utf-8", errors="replace") as f:
         for line in f:
@@ -67,9 +67,6 @@ def parse_ndjson(path):
                     if m2:
                         evidence_sql = m2.group(1).strip()[:300]
 
-            if not first_error and p.get("state", {}).get("status") == "error":
-                first_error = text[:100]
-
     return {
         "steps": steps,
         "tokens_total": tokens_total,
@@ -81,7 +78,6 @@ def parse_ndjson(path):
         "tool_calls_detail": json.dumps(dict(Counter(tool_calls)), ensure_ascii=False),
         "final_answer": final_answer,
         "evidence_sql": evidence_sql,
-        "error": first_error,
     }
 
 
