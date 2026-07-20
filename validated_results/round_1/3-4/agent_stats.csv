@@ -1,8 +1,8 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens"
-"er","1473","debit_card_specializing","PASS","","","CORRECT","100","","7993","347"
-"er","1476","debit_card_specializing","PASS","","","CORRECT","100","","16859","719"
-"dlr","1473","debit_card_specializing","PASS","","","CORRECT","100","","19661","623"
-"dlr","1476","debit_card_specializing","FAIL","CORRECT","All steps pass — correct tables (customers, yearmonth), proper tool chain (semantic_query → mapping → execute_sql), SQL filters 2012 correctly and returns per-currency totals, and the final answer 402524570.17 matches GoldResult (CZK 404716983.98 − EUR 2192413.81).","CORRECT","100","","20210","528"
-"rdf","1473","debit_card_specializing","PASS","","","CORRECT","100","","19400","760"
-"rdf","1476","debit_card_specializing","FAIL","CORRECT","五步全部通过。1)正确召回yearmonth和customers表；2)rdf_semantic_query→rdf_search→query_rdf_mapping→execute_sql调用链规范；3)所用库表字段均来自映射返回，database_url正确；4)SQL语义正确（FROM/JOIN/WHERE/GROUP BY准确表达题意且执行成功）；5)最终答案402,524,570.17 = 404,716,983.98 - 2,192,413.81与GoldResult完全一致。
-```","CORRECT","100","","17609","951"
+paradigm,q_id,db_id,strict_match,judge_verdict,judge_reason,verdict,process_score,error,input_tokens,output_tokens,reasoning_tokens,cache_read_tokens,total_tokens
+er,1473,debit_card_specializing,PASS,,,CORRECT,100,,7993,347,605,26880,35825
+er,1476,debit_card_specializing,PASS,,,CORRECT,100,,16859,719,731,54912,73221
+dlr,1473,debit_card_specializing,PASS,,,CORRECT,100,,19661,623,770,51712,72766
+dlr,1476,debit_card_specializing,FAIL,CORRECT,"All steps pass — correct tables (customers, yearmonth), proper tool chain (semantic_query → mapping → execute_sql), SQL filters 2012 correctly and returns per-currency totals, and the final answer 402524570.17 matches GoldResult (CZK 404716983.98 − EUR 2192413.81).",CORRECT,100,,20210,528,456,40576,61770
+rdf,1473,debit_card_specializing,PASS,,,CORRECT,100,,19400,760,1531,72704,94395
+rdf,1476,debit_card_specializing,FAIL,CORRECT,"五步全部通过。1)正确召回yearmonth和customers表；2)rdf_semantic_query→rdf_search→query_rdf_mapping→execute_sql调用链规范；3)所用库表字段均来自映射返回，database_url正确；4)SQL语义正确（FROM/JOIN/WHERE/GROUP BY准确表达题意且执行成功）；5)最终答案402,524,570.17 = 404,716,983.98 - 2,192,413.81与GoldResult完全一致。
+```",CORRECT,100,,17609,951,993,50176,69729

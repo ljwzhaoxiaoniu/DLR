@@ -19,7 +19,7 @@ OUT_BASE = ROOT / "Evaluation" / "outputs"
 
 def parse_ndjson(path):
     steps = 0
-    tokens_total = tokens_in = tokens_out = 0
+    tokens_total = tokens_in = tokens_out = tokens_reasoning = tokens_cache_read = 0
     tool_calls = []
     final_answer = ""
     evidence_sql = ""
@@ -39,10 +39,12 @@ def parse_ndjson(path):
                 steps += 1
                 tk = p.get("tokens", {})
                 if tk:
-                    # total 是累计值,只取最后一次; input/output 是每步增量
-                    tokens_total = tk.get("total", tokens_total)
+                    # 所有字段按每步增量累加；sum(input+output+reasoning+cache_read) = sum(total)
+                    tokens_total += tk.get("total", 0)
                     tokens_in += tk.get("input", 0)
                     tokens_out += tk.get("output", 0)
+                    tokens_reasoning += tk.get("reasoning", 0)
+                    tokens_cache_read += tk.get("cache", {}).get("read", 0)
 
             if obj.get("type") == "tool_use" and pt == "tool":
                 tname = p.get("tool", "")
@@ -73,6 +75,8 @@ def parse_ndjson(path):
         "tokens_total": tokens_total,
         "tokens_in": tokens_in,
         "tokens_out": tokens_out,
+        "tokens_reasoning": tokens_reasoning,
+        "tokens_cache_read": tokens_cache_read,
         "tool_calls_total": len(tool_calls),
         "tool_calls_detail": json.dumps(dict(Counter(tool_calls)), ensure_ascii=False),
         "final_answer": final_answer,
@@ -149,7 +153,8 @@ def main():
     out_path = out_dir / out_name
 
     # write CSV (no final_answer/evidence_sql)
-    fields = ["question_id", "paradigm", "steps", "tokens_total", "tokens_in", "tokens_out",
+    fields = ["question_id", "paradigm", "steps",
+              "tokens_total", "tokens_in", "tokens_out", "tokens_reasoning", "tokens_cache_read",
               "tool_calls_total", "tool_calls_detail", "error",
               "strict_match", "judge_verdict", "judge_reason", "verdict"]
     with open(out_path, "w", newline="", encoding="utf-8") as w:

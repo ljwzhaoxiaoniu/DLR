@@ -4,7 +4,11 @@
     "../AGENTS.md"
   ],
   "permission": {
-    "bash": "deny"
+    "bash": "deny",
+    "task": "deny",
+    "read": "deny",
+    "glob": "deny",
+    "grep": "deny"
   },
   "mcp": {
     "semantic-core": {

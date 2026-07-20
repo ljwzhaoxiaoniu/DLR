@@ -4,6 +4,9 @@
     "AGENTS.md"
   ],
   "permission": {
-    "bash": "deny"
+    "bash": "deny",
+    "task": "deny",
+    "glob": "deny",
+    "grep": "deny"
   }
 }
