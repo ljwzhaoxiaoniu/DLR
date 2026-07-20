@@ -1,7 +1,7 @@
 paradigm,q_id,db_id,strict_match,judge_verdict,judge_reason,verdict,process_score,error,input_tokens,output_tokens,reasoning_tokens,cache_read_tokens,total_tokens
-dlr,1479,debit_card_specializing,,,,,,,8816,445,458,29824,39543
-dlr,1480,debit_card_specializing,,,,,,,9792,625,600,48128,59145
-er,1479,debit_card_specializing,,,,,,,14369,531,524,28288,43712
-er,1480,debit_card_specializing,,,,,,error,8299,686,443,40832,50260
-rdf,1479,debit_card_specializing,,,,,,,14283,586,1137,29312,45318
-rdf,1480,debit_card_specializing,,,,,,,12713,1063,1055,50688,65519
+dlr,1479,debit_card_specializing,FAIL,INCORRECT,语义召回不完整——Agent 未定位 customers 表及其 Currency 列，SQL 遗漏了关键的 `WHERE Currency='CZK'` 过滤条件，导致无法按币种筛选。虽然最终答案碰巧与 GoldResult 一致（2013 年占比极大），但这是凑巧而非正确推理。 ```,INCORRECT,80,,8816,445,458,29824,39543
+dlr,1480,debit_card_specializing,FAIL,CORRECT,"全部条件满足——SQL语义正确(SME客户2013年按月聚合取峰值)，工具调用链走正道，库表字段来自映射，SQL执行成功，结果""04""与GoldResult一致。 ```",CORRECT,100,,9792,625,600,48128,59145
+er,1479,debit_card_specializing,FAIL,CORRECT,"SQL语义正确(db_url来自get_entity_mapping)、工具链SOP完整(er_semantic_query→mapping→relations→execute_sql)、SQL执行成功且返回年份""2013""与GoldResult一致。 ```",CORRECT,100,,14369,531,524,28288,43712
+er,1480,debit_card_specializing,FAIL,CORRECT,"全部满足——语义定位正确（customers/yearmonth表），工具链走正道（semantic_query→mapping→execute_sql），SQL使用映射返回的库表字段且逻辑正确，执行成功，结果[[""04"", 126047776.92]]与GoldResult[""04""]一致，最终答案""04 (April)""正确。",CORRECT,100,error,8299,686,443,40832,50260
+rdf,1479,debit_card_specializing,FAIL,CORRECT,"All steps pass — semantic understanding correct, tool chain follows SOP, SQL uses mapped tables/columns, execution succeeds, and the top result (2013) matches GoldResult with the highest total consump",CORRECT,100,,14283,586,1137,29312,45318
+rdf,1480,debit_card_specializing,FAIL,CORRECT,"All 5 steps pass — correct tables (yearmonth, customers), correct tool chain (rdf_semantic_query → mapping → execute_sql), correct SQL semantics (filter Segment='SME' and year 2013, group by month, or",CORRECT,100,,12713,1063,1055,50688,65519
