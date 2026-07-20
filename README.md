@@ -77,10 +77,11 @@ python main.py serve --paradigm ALL     # 3 进程: ER 28765 / DLR 28775 / RDF 2
 
 ```bash
 cd Evaluation/scripts
-bash eval_run.sh EDR 2 1471 --parallel --workers 6            # Stage 1（三范式并行）
-python 02_extract_and_run.py --paradigm er --log-subdir <run_id>   # Stage 2
-python 03_evaluate.py --paradigm er --judge --log-subdir <run_id>  # Stage 3（增量 judge）
-python parse_agent_stats.py --paradigm ALL                     # 汇总
+bash eval_run.sh EDR 2 1471 --parallel --workers 6                 # Stage 1: Agent 跑题 → raw NDJSON
+python 02_extract_and_run.py --paradigm er --log-subdir <run_id>   # Stage 2: 提取 SQL → 执行 → norm
+python 03_evaluate.py --paradigm er --log-subdir <run_id>          # Stage 3: strict 初判(脚本秒级)
+python 04_judge.py --paradigm er --log-subdir <run_id>             # Stage 4: LLM 仲裁(增量,可断点续跑)
+python parse_agent_stats.py --paradigm ALL                         # 汇总 token + 工具调用统计
 ```
 
 四阶段细节、Prompt 铁律与防作弊设计见 [评测流水线](docs/evaluation.md)。
