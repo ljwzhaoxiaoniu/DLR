@@ -32,14 +32,14 @@ OC-based Agent Service/
 
 | 层级 | 机制 | 效果 |
 |------|------|------|
-| **opencode.json** | `permission.bash: "deny"` | Agent 没有 bash 工具，无法绕过语义层硬解查库 |
-| **execute_sql MCP** | 薄透传服务（`sql` + `database_url`，只读） | SQL 执行的唯一正经路径；`database_url` 必须来自映射工具返回 |
+| **opencode.json** | `permission: {bash, task, read, glob, grep: "deny"}` | Agent 只有 MCP 工具，无文件系统/子代理后门 |
+| **execute_sql MCP** | 薄透传服务（`sql` + `database_url`，只读），200 行硬截断 | SQL 执行的唯一正经路径；`database_url` 必须来自映射工具返回 |
 | **MCP 范式隔离** | 服务端按 `_mapping_type` 注册工具子集 | Agent 只能看到当前范式的工具 |
 | **第一跳信息屏蔽** | `*_semantic_query` 不返回物理表/字段/database_url | 物理信息必须经第二跳映射工具按需获取 |
 
 Agent 强制路径：`*_semantic_query`（首跳全局/锁库召回）→ 映射工具（`get_pe_full` / `get_entity_mapping` / `query_rdf_mapping`）→ `execute_sql` → `Final Answer`。
 
-**已知待加固项**（行为检查发现，见 [evaluation.md](evaluation.md) 已知问题）：opencode 内置 `task` 子代理（含 read/grep）未 deny；`execute_sql` 尚无服务端行数上限。
+> **2026-07-20 防作弊加固**：实测发现 er_1472 用 `task` 子代理 grep 磁盘溢出文件绕过 MCP。已将评测 Agent 的 `opencode.json` deny 列表从 `bash` 扩展为 `bash/task/read/glob/grep`，Judge 保留 `read`（需读预测文件）。跑满 3 pair 后零违规。
 
 ## 4. db 锁库行为（2026-07-18）
 
