@@ -1,0 +1,7 @@
+paradigm,q_id,db_id,strict_match,judge_verdict,judge_reason,verdict,process_score,error,input_tokens,output_tokens,reasoning_tokens,cache_read_tokens,total_tokens
+dlr,1479,debit_card_specializing,,,,,,,8816,445,458,29824,39543
+dlr,1480,debit_card_specializing,,,,,,,9792,625,600,48128,59145
+er,1479,debit_card_specializing,,,,,,,14369,531,524,28288,43712
+er,1480,debit_card_specializing,,,,,,error,8299,686,443,40832,50260
+rdf,1479,debit_card_specializing,,,,,,,14283,586,1137,29312,45318
+rdf,1480,debit_card_specializing,,,,,,,12713,1063,1055,50688,65519
