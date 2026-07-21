@@ -13,7 +13,7 @@
 | 7-8 | q1481, q1482 | 100% | **100%** | 100% | gold 数据集错误 → 修正 gold cache 后 judge 翻盘 |
 | 9-10 | q1483, q1484 | 100% | **100%** | 100% | q1483 三范式 strict PASS |
 | 11-12 | q1486, q1490 | 100% | **100%** | **83%** | q1490 gold 两轮修正（缺DISTINCT→INNER→LEFT JOIN），ER/DLR 翻盘 CORRECT；RDF bare FK 导致多跳失败 INCORRECT(20) |
-| 13-14 | q1493, q1498 | 100% | **100%** | **83%** | q1498 DLR YAML 修复 Consumption 属性后翻盘(3次重跑)；RDF INCORRECT(60)—MAX 代替 SUM+GROUP BY |
+| 13-14 | q1493, q1498 | 100% | **100%** | **83%** | q1498 DLR YAML 修复 Consumption 属性后翻盘；RDF INCORRECT(60)—MAX 代替 SUM+GROUP BY |
 | 15-16 | q1500, q1501 | 100% | **100%** | 100% | q1500 DLR 两次失败后修复 MCP docstring 补 ARCS 语义→翻盘；三范式 q1501 strict PASS |
 
 **round_1 终态：46/48 CORRECT**（判定政策：五环节全对才翻盘——语义召回/工具链/映射/SQL 执行/最终一致性，见 [evaluation.md](evaluation.md)）。
