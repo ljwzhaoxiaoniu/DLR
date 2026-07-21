@@ -3,7 +3,7 @@
 > 目标结论方向：**DLR 原创建模（LE-PE 双层 + PAS 语义路由）对 LLM Agent 的 NL2SQL 引导优于 ER/RDF 基线**。
 > 本文件随评测推进滚动更新；所有数字可从 `validated_results/` 与 `Evaluation/outputs/{run_id}/` 复核。
 
-## round_1 — 流水线验证（q1471-1498，14 题 × 3 范式，db=debit_card_specializing）
+## round_1 — 流水线验证（q1471-1501，16 题 × 3 范式，db=debit_card_specializing）
 
 | 轮次 | 题号 | ER | DLR | RDF | 备注 |
 |------|------|----|----|-----|------|
@@ -14,8 +14,9 @@
 | 9-10 | q1483, q1484 | 100% | **100%** | 100% | q1483 三范式 strict PASS |
 | 11-12 | q1486, q1490 | 100% | **100%** | **83%** | q1490 gold 两轮修正（缺DISTINCT→INNER→LEFT JOIN），ER/DLR 翻盘 CORRECT；RDF bare FK 导致多跳失败 INCORRECT(20) |
 | 13-14 | q1493, q1498 | 100% | **100%** | **83%** | q1498 DLR YAML 修复 Consumption 属性后翻盘(3次重跑)；RDF INCORRECT(60)—MAX 代替 SUM+GROUP BY |
+| 15-16 | q1500, q1501 | 100% | **100%** | 100% | q1500 DLR 两次失败后修复 MCP docstring 补 ARCS 语义→翻盘；三范式 q1501 strict PASS |
 
-**round_1 终态：40/42 CORRECT**（判定政策：五环节全对才翻盘——语义召回/工具链/映射/SQL 执行/最终一致性，见 [evaluation.md](evaluation.md)；q1471 式"SQL 返回 count、比值由 Agent 直接加工"按最终一致性认定为对，同时 AGENTS.md 已引导后续轮次把计算写进 SQL 以提升 strict PASS 率）。
+**round_1 终态：46/48 CORRECT**（判定政策：五环节全对才翻盘——语义召回/工具链/映射/SQL 执行/最终一致性，见 [evaluation.md](evaluation.md)）。
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -35,6 +36,8 @@
 | q1490 | 105,687 | **80,806** | 57,840 |
 | q1493 | **36,552** | 54,977 | 78,468 |
 | q1498 | **26,961** | 32,300 | 75,705 |
+| q1500 | **118,035** | 189,364 | 351,999 |
+| q1501 | **152,200** | 194,886 | 153,328 |
 
 \* 粗体 = 该题最优范式；q1490 值取首轮归档数据，多次重跑有波动
 
@@ -43,34 +46,36 @@
 | 指标 | ER | DLR | RDF |
 |------|----|----|-----|
 | 最低单题 total | **26,961 (q1498)** | 32,300 (q1498) | 45,318 (q1479) |
-| 最高单题 total | 230,002 (q1481) | 195,482 (q1481) | 183,400 (q1472) |
-| 平均 total | ~64K | **~66K** | ~88K |
-| strict PASS 率 | 1/14 | **4/14** | 3/14 |
-| process_score 100 | **14/14** | **14/14** | 12/14 |
-| CORRECT | **14/14** | **14/14** | 12/14 |
+| 最高单题 total | 295,225 (q1500) | 347,304 (q1500) | **357,599 (q1500)** |
+| 平均 total | ~97K | **~108K** | ~121K |
+| strict PASS 率 | 1/16 | **5/16** | 4/16 |
+| process_score 100 | **16/16** | **16/16** | 14/16 |
+| CORRECT | **16/16** | **16/16** | 14/16 |
 
 ### 定性观察
 
 - **DLR q1471 是教科书链路**：`dlr_semantic_query` 一跳召回 LE-PE 结构 → `get_pe_full` 一跳拿全（属性+ARCS+database_url）→ 一条 SQL 收工。ER 需要 2-3 跳分散工具，RDF 需要 mapping + PRAGMA 兜底（R2RML 缺列所致）。
 - **跨库漂移**（q1472 "LAM" 语义模糊）：三范式都发生过全局召回漂移——已由 db-aware recall（2026-07-18）机制性解决，后续轮次预期步数/token 显著下降。
 - **RDF 的"干瘪"如实生效**：映射只有列名+JOIN，Agent 被迫用 `PRAGMA table_info` 内省补 schema（其中一部分是生成器缺列 bug，修复后仍缺业务语义——这正是对照设计要测的）。
-- **35/36 无一例绕过 MCP 直接猜库/猜表**：`execute_sql` 的 database_url 全部来自映射工具——防作弊路径生效。
+- **46/48 无一例绕过 MCP 直接猜库/猜表**：`execute_sql` 的 database_url 全部来自映射工具——防作弊路径生效。
 - **q1483 是首个三范式 strict PASS 的题**（ER/DLR/RDF 全 PASS），Agent 对简洁语义（"统计每个国家的加油站数量"）的 SQL 产出质量高。
 - **q1481 是高成本题**：三范式 total 均超 120K（需嵌套子查询找最低消费客户），但 judge 验证全部五环节通过。
 - **q1493 是第二个三范式 strict PASS 的题**（DLR/RDF 全 PASS，ER 翻盘），Agent 对"Feb 2012 consumption >528.3 占比"产出高质量 SQL。
 - **q1498 暴露 LLM 聚合语义盲区**：DLR 三次重跑均 `MAX(Consumption)`→445K 而非 `SUM→GROUP BY month→MAX`→51.8M，process_score 从 60→80(YAML 修复)→最终 Instance 才写对；RDF 同理。ER 首次即正确——三范式 Agent 独立性导致同题不同命。
+- **q1500 原创范式的工具"教材"角色**：DLR 同 LE 下多 PE 需通过 `A_anchor.key` JOIN——这从未出现在 LLM 训练数据中。前两次 Agent 看到 `transactions_1k` 无 2013 数据即放弃，第三次修复 `get_pe_full` docstring 后正确理解 ARCS 锚定键=CUSTOMERID JOIN 桥，首次写出三表 JOIN。**原创模型的每一个概念都需在工具描述中"教"给 LLM。**
 
 ## 数据可信性备注
 
-- round_1 14 题全部落在 `debit_card_specializing`，**结果可信**；
+- round_1 16 题全部落在 `debit_card_specializing`，**结果可信**；
 - pair 7-8 (q1481/q1482) 发现 gold SQL 与题意/evidence 相悖（两源一致，判定为数据集本身错），已修正 gold cache 并记录到 [dataset.md](dataset.md) § Gold SQL 已知错误；
 - 修正 gold 后 strict_match 仍 FAIL（pred 带标签多行 vs gold 单行纯值）→ 由 Stage 4 judge 按语义翻盘，这是两段式设计的预期行为；
 - 2026-07-18 起的轮次运行在 db-aware recall + PE 改名 + clear() 修复后的索引上，后续跨库题目（card_games/formula_1 等）的召回锁库行为与 round_1 有预期差异；
 - q1498 DLR/RDF 实证 YAML `private_attributes` 中核心度量列暴露不足→修复 `LOGICAL.Consumption` 新增 `Consumption` public attribute（2026-07-21）。
+- **q1500 DLR 实证原创范式需要工具承担"教材"角色**：ARCS 是 DLR 独创概念，LLM 无先验知识。`get_pe_full` docstring 补上 A_anchor.key=JOIN 键、多 PE 联查模式后，Agent 首次正确写出 `yearmonth JOIN transactions_1k ON CustomerID`。
 
 ## 下一步
 
-- 从 q1500 继续推进（下一对 15-16: q1500+q1501）；
+- 从 q1505 继续推进（下一对 17-18: q1505+q1506）；
 - 修复 P1 R2RML 缺列后再跑 RDF 对照，消除 `PRAGMA table_info` 兜底噪声；
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 
