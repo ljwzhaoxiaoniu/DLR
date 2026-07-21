@@ -194,6 +194,10 @@ def _build_one(paradigm: str):
     # Save once after all presets are built
     build_service.save()
 
+    # 必须显式 close —— Kuzu 的 WAL 只在 Database.close() 时刷到主库.
+    # (singleton _instances 缓存使 __del__ 不会被调用, 不能依赖析构)
+    graph_db.close()
+
     click.echo(f"\n{'='*50}")
     click.echo(f"Build Summary: [OK] {ok_count} / [FAIL] {fail_count} / Total {len(preset_files)}")
     click.echo(f"存储位置: {storage['graph']}  +  {storage['vector']}")
@@ -504,7 +508,19 @@ def reset(paradigm):
 
 def _reset_one(paradigm: str):
     """Reset a single paradigm (internal helper)."""
+    from db.graph_db import GraphDB
+
     storage = paradigm_storage(paradigm)
+
+    # 必须先清 singleton 缓存 —— 否则 GraphDB() 返回旧实例,
+    # __init__ 因 self.conn!=None 早返, 新路径不会生效, 写到的还是旧(已删)文件.
+    for key in list(GraphDB._instances.keys()):
+        if key.endswith(f"::{paradigm}"):
+            try:
+                GraphDB._instances[key].close()
+            except Exception:
+                pass
+            GraphDB._instances.pop(key, None)
 
     cleared = 0
     graph_path = storage["graph"]

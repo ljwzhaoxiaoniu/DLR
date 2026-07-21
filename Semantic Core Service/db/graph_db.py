@@ -998,10 +998,24 @@ class GraphDB:
             return False
 
     def close(self):
-        """Close connection and remove from singleton cache."""
+        """Close connection and remove from singleton cache.
+
+        必须调 db.close() —— Kuzu 的 WAL 只在 Database.close() 时刷到主库,
+        仅 conn=None 会导致 WAL 堆积、主库空(数据看起来丢了).
+        """
         if self.conn:
             self.conn = None
-            self.db = None
+            if self.db is not None:
+                self.db.close()
+                self.db = None
             key = f"{self.db_path}::{self.mapping_type}"
             GraphDB._instances.pop(key, None)
             logger.info("[GraphDB] 连接已关闭")
+
+    def __del__(self):
+        """析构时确保 WAL 刷到主库(兜底:build 路径没人调 close)."""
+        try:
+            if getattr(self, "conn", None) is not None:
+                self.close()
+        except Exception:
+            pass

@@ -8,7 +8,8 @@
     "task": "deny",
     "read": "deny",
     "glob": "deny",
-    "grep": "deny"
+    "grep": "deny",
+    "write": "deny"
   },
   "mcp": {
     "semantic-core": {

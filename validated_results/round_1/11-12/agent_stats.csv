@@ -1,0 +1,8 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","1486","debit_card_specializing","FAIL","CORRECT","All steps pass. SQL correctly retrieves per-currency counts from mapped fields, agent computes 25134-1629=23505, final answer matches GoldResult.","CORRECT","100","","17878","490","568","43264","62200"
+"er","1490","debit_card_specializing","FAIL","CORRECT","Gold二次修正(LEFT JOIN): 98.39% = 3599/3658, 与evidence""Total no. of LAM customers""一致。Pred正确使用LEFT JOIN+SUM(Consumption),答案完全匹配。","CORRECT","100","","17373","1389","2445","84480","105687"
+"dlr","1486","debit_card_specializing","PASS","","","CORRECT","100","","17697","562","768","53632","72659"
+"dlr","1490","debit_card_specializing","FAIL","CORRECT","Gold二次修正(LEFT JOIN): 98.39% = 3599/3658, 与evidence""Total no. of LAM customers""一致。Pred正确使用LEFT JOIN+SUM(Consumption),答案完全匹配。","CORRECT","100","","19512","1253","1929","58112","80806"
+"rdf","1486","debit_card_specializing","PASS","","","CORRECT","100","","18264","675","575","56448","75962"
+"rdf","1490","debit_card_specializing","FAIL","INCORRECT","Step1 fail — semantic query returned yearmonth (top-2, has Consumption) but agent used transactions_1k.Amount instead; step3 fail — yearmonth mapping never queried; step4 fail — SQL uses wrong data source for ""consumption""; step5 fail — answer 0.68% vs gold 99.53%.
+```","INCORRECT","20","","14740","931","825","41344","57840"

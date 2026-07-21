@@ -1,18 +1,23 @@
 #!/usr/bin/env bash
-# 批量评测入口 — 一个 run-id 管理多范式, 支持并行
-# 用法: bash eval_run.sh <paradigms> <count> <offset> [--parallel] [--workers N]
+# 批量评测入口 — 按 pair 跑题
+# 用法: bash eval_run.sh <paradigms> <qid1> <qid2> [--parallel] [--workers N]
 #   paradigms: E=ER, D=DLR, R=RDF, 可组合如 EDR, ED, ER, D
-# 示例: bash eval_run.sh EDR 500 0 --parallel --workers 6   # 三范式各500题,每范式6并发
-#       bash eval_run.sh ED 10 0                             # 串行
+# 示例: bash eval_run.sh EDR 1486 1490 --parallel --workers 6
+#       bash eval_run.sh ED 1471 1472
 
 PARADIGMS="${1:-EDR}"
-COUNT="${2:-10}"
-OFFSET="${3:-0}"
+QID1="$2"
+QID2="$3"
 MODE="serial"
 WORKERS=2
 
-# 解析额外参数(while/case/shift 正确模式)
-shift 3  # 跳过前三个位置参数
+if [ -z "$QID1" ] || [ -z "$QID2" ]; then
+    echo "用法: bash eval_run.sh <paradigms> <qid1> <qid2> [--parallel] [--workers N]"
+    echo "示例: bash eval_run.sh EDR 1486 1490 --parallel --workers 6"
+    exit 1
+fi
+
+shift 3
 while [ $# -gt 0 ]; do
     case "$1" in
         --parallel) MODE="parallel" ;;
@@ -23,10 +28,10 @@ while [ $# -gt 0 ]; do
 done
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -W)"
-RUN_ID="$(date +%m%d_%H%M)_${OFFSET}-$((OFFSET+COUNT-1))_${PARADIGMS}"
+RUN_ID="$(date +%m%d_%H%M)_${QID1}-${QID2}_${PARADIGMS}"
 
 echo "========================================="
-echo "  RUN: $RUN_ID  mode=$MODE  workers=$WORKERS"
+echo "  RUN: $RUN_ID  (q$QID1 + q$QID2)  mode=$MODE  workers=$WORKERS"
 echo "========================================="
 echo ""
 
@@ -41,14 +46,13 @@ for (( i=0; i<${#PARADIGMS}; i++ )); do
     esac
     echo "--- $P ($PARADIGM) ---"
     if [ "$MODE" = "parallel" ]; then
-        bash "$SCRIPT_DIR/run_parallel.sh" "$PARADIGM" "$COUNT" "$OFFSET" --run-id "$RUN_ID" --workers "$WORKERS" &
+        bash "$SCRIPT_DIR/run_parallel.sh" "$PARADIGM" "$QID1" "$QID2" --run-id "$RUN_ID" --workers "$WORKERS" &
         PIDS+=($!)
     else
-        bash "$SCRIPT_DIR/run_serial.sh" "$PARADIGM" "$COUNT" "$OFFSET" --run-id "$RUN_ID"
+        bash "$SCRIPT_DIR/run_serial.sh" "$PARADIGM" "$QID1" "$QID2" --run-id "$RUN_ID"
     fi
 done
 
-# 等待所有并行任务
 for pid in "${PIDS[@]}"; do
     wait "$pid"
 done

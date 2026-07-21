@@ -142,6 +142,35 @@ GROUP BY c.Segment ORDER BY pct_inc DESC;
 -- 结果: SME=88.02(最高)  KAM=84.69  LAM=84.37(最低)
 ```
 
+### qid 1490 — `debit_card_specializing`
+
+- **问题**：How many percent of LAM customer consumed more than 46.73?
+- **evidence**：Percentage of LAM customer consumed more than 46.73 = (Total no. of LAM customers who consumed more than 46.73 / Total no. of LAM customers) * 100。
+
+| | 内容 |
+|---|---|
+| **Bug #1 — 缺 DISTINCT** | `SUM(IIF(…)) / COUNT(T1.CustomerID)` 分子分母都数的是 customer-month records（59530 条），不是 customers |
+| **Bug #2 — INNER JOIN** | evidence 明确说 "Total no. of LAM customers" = 3658，但 INNER JOIN 排除 47 个无 yearmonth 记录的客户，分母仅 3611 |
+| **错误结果（原 gold rows）** | `[[98.526793]]` → 第一次修正（加 DISTINCT）→ `[[99.529216]]` → 第二次修正（INNER→LEFT JOIN）→ `[[98.38709732]]` |
+| **题意正确答案** | `COUNT(DISTINCT CASE WHEN SUM(Consumption) > 46.73 THEN CustomerID END) / COUNT(DISTINCT CustomerID)`，LEFT JOIN 包含所有 LAM 客户 |
+| **正确结果（已写入 cache）** | `[[98.38709732]]`（3599/3658，总消费 > 46.73 的 LAM 客户 / 全部 LAM 客户） |
+
+**正确的 SQL**（DISTINCT + LEFT JOIN + SUM 聚合）：
+
+```sql
+-- q1490 正确语义：按客户总消费聚合，LEFT JOIN 包含全部 3658 个 LAM 客户
+SELECT ROUND(CAST(SUM(CASE WHEN total > 46.73 THEN 1 ELSE 0 END) AS FLOAT) / COUNT(*) * 100, 2)
+FROM (
+  SELECT c.CustomerID, SUM(y.Consumption) as total
+  FROM customers c LEFT JOIN yearmonth y ON c.CustomerID = y.CustomerID
+  WHERE c.Segment = 'LAM'
+  GROUP BY c.CustomerID
+);
+-- 结果: 98.39%（3599 个总消费 > 46.73 / 3658 全部 LAM 客户）
+
+> **备注**：q1490 ER/DLR 能得出 98.39% 是在将 opencode 底层 LLM 从 longcat 切换为 deepseek-pro 之后。旧模型（longcat）下三范式全错——ER 用 AVG、DLR 走 transactions_1k、RDF 走 transactions_1k——多次重跑均无法收敛到正确答案。模型能力是这道题 ER/DLR 翻盘的关键变量。
+```
+
 ### 处理约定
 
 - 对 gold SQL 与题意相悖的题目，**直接覆盖 gold cache 的 `rows` 与 `columns` 为正确结果**，保持 `ok=True`。

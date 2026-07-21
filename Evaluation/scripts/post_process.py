@@ -74,7 +74,7 @@ def main():
         csv_path = reports_dir / f"{p}.csv"
         if not csv_path.exists():
             continue
-        with open(csv_path, encoding="utf-8") as f:
+        with open(csv_path, encoding="utf-8-sig") as f:
             for r in csv.DictReader(f):
                 qid = int(r["q_id"])
                 row = {
