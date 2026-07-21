@@ -20,7 +20,7 @@
 cd "Semantic Core Service" && python main.py serve --paradigm ALL
 # 端到端（三范式并行）
 cd Evaluation/scripts
-bash eval_run.sh EDR 2 1471 --parallel --workers 6                  # Stage 1
+bash eval_run.sh EDR 1471 1472 --parallel                              # Stage 1
 python 02_extract_and_run.py --paradigm er --log-subdir <run_id>    # ×3 范式
 python 03_evaluate.py --paradigm er --log-subdir <run_id>           # ×3 范式(秒级,纯脚本)
 python 04_judge.py --paradigm er --log-subdir <run_id>              # ×3 范式(仅判 strict FAIL 且未判的行)
@@ -98,7 +98,7 @@ validated_results/round_N/{q_start}-{q_end}/    # post_process.py 归档
 | P1 | Agent SQL 心算终值 / 多列多行 | ✅ 双侧处理：AGENTS.md 加"Evidence SQL 必须直接返回 Final Answer 的值"引导；judge 侧按最终一致性判定（可直接加工得出即认），不再卡口径摇摆 |
 | P1 | AGENTS.md 的 `/mcps` 指令在 `opencode run` 下不可执行 | ⏳ 待修（模型退而调 `list_mcp_resources` 恒空浪费） |
 | P1 | `find_shortest_path` Cypher bug；`rdf_classes` 只返回 TriplesMap | ⏳ 待修 |
-| P1 | `input_tokens` 不含 cache read，跨范式/跨轮对比失真 | ⏳ 待修（需补 cache_read 列） |
+| P1 | `input_tokens` 不含 cache read，跨范式/跨轮对比失真 | ✅ 已修：`parse_agent_stats.py` 新增 reasoning_tokens/cache_read_tokens 列（2026-07-20） |
 
 ## 5. 已知问题（2026-07-20 评测过程发现）
 

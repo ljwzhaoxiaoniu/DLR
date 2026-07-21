@@ -66,7 +66,7 @@ DLR Proj/
 
 ## 与评测相关的实测特征
 
-- **question_id 不连续**：前 15 个 qid 为 `1471, 1472, 1473, 1476, 1479, 1480, 1481, 1482, 1483, 1484, 1486, 1490, 1493, 1498, 1500`；全量 min=5、max=1533，共 317 处跳号。评测脚本按 `question_id >= OFFSET` 定位起点。
+- **question_id 不连续**：debit_card_specializing 库已测 20 题 qid 为 `1471,1472,1473,1476,1479,1480,1481,1482,1483,1484,1486,1490,1493,1498,1500,1501,1505,1506,1507,1509`；全量 min=5、max=1533，共 317 处跳号。
 - **文件按 db 分组排列**，并非全局按 qid 升序。
 - **evidence 为空的仅 2 条**：qid 1507、1528。
 - 任务字段中 question/evidence **不含 `|` 字符**（500 条实测零冲突），评测脚本以 `|` 作字段分隔安全。
@@ -170,6 +170,17 @@ FROM (
 
 > **备注**：q1490 ER/DLR 能得出 98.39% 是在将 opencode 底层 LLM 从 longcat 切换为 deepseek-pro 之后。旧模型（longcat）下三范式全错——ER 用 AVG、DLR 走 transactions_1k、RDF 走 transactions_1k——多次重跑均无法收敛到正确答案。模型能力是这道题 ER/DLR 翻盘的关键变量。
 ```
+
+### qid 1505 — `debit_card_specializing`（待确认：gold COUNT(*) vs COUNT(DISTINCT)）
+
+- **问题**：Among the customers who paid in euro, how many of them have a monthly consumption of over 1000?
+- **evidence**：Pays in euro = Currency = 'EUR'.
+
+| | 内容 |
+|---|---|
+| **Gold SQL** | `SELECT COUNT(*) FROM yearmonth JOIN customers ON CustomerID WHERE Currency='EUR' AND Consumption>1000` → 2,730 |
+| **三范式 Pred SQL** | `SELECT COUNT(DISTINCT c.CustomerID) ...` → 391 |
+| **分歧性质** | "how many **of them**"（them=customers）问的是有多少个**客户**——如果某 EUR 客户在多个月消费 >1000，他仍是 ONE customer。Gold COUNT(*) 统计了人次，三范式 COUNT(DISTINCT CustomerID) 统计了不重复客户数，语义上后者更忠实于题干指代。**暂未修改 gold cache**（待后续系统性核对后决定）。 |
 
 ### 处理约定
 

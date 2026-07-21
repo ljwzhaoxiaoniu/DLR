@@ -3,7 +3,7 @@
 > 目标结论方向：**DLR 原创建模（LE-PE 双层 + PAS 语义路由）对 LLM Agent 的 NL2SQL 引导优于 ER/RDF 基线**。
 > 本文件随评测推进滚动更新；所有数字可从 `validated_results/` 与 `Evaluation/outputs/{run_id}/` 复核。
 
-## round_1 — 流水线验证（q1471-1501，16 题 × 3 范式，db=debit_card_specializing）
+## round_1 — 流水线验证（q1471-1509，20 题 × 3 范式，db=debit_card_specializing）
 
 | 轮次 | 题号 | ER | DLR | RDF | 备注 |
 |------|------|----|----|-----|------|
@@ -12,11 +12,13 @@
 | 5-6 | q1479, q1480 | 100% | **100%** | 100% | dlr_1479 YAML 修复后翻盘 |
 | 7-8 | q1481, q1482 | 100% | **100%** | 100% | gold 数据集错误 → 修正 gold cache 后 judge 翻盘 |
 | 9-10 | q1483, q1484 | 100% | **100%** | 100% | q1483 三范式 strict PASS |
-| 11-12 | q1486, q1490 | 100% | **100%** | **83%** | q1490 gold 两轮修正（缺DISTINCT→INNER→LEFT JOIN），ER/DLR 翻盘 CORRECT；RDF bare FK 导致多跳失败 INCORRECT(20) |
-| 13-14 | q1493, q1498 | 100% | **100%** | **83%** | q1498 DLR YAML 修复 Consumption 属性后翻盘；RDF INCORRECT(60)—MAX 代替 SUM+GROUP BY |
-| 15-16 | q1500, q1501 | 100% | **100%** | 100% | q1500 DLR 两次失败后修复 MCP docstring 补 ARCS 语义→翻盘；三范式 q1501 strict PASS |
+| 11-12 | q1486, q1490 | 100% | **100%** | **83%** | q1490 gold 两轮修正；ER/DLR 翻盘；RDF bare FK INCORRECT(20) |
+| 13-14 | q1493, q1498 | 100% | **100%** | **83%** | q1498 DLR YAML Consumption 修复后翻盘；RDF INCORRECT(60) |
+| 15-16 | q1500, q1501 | 100% | **100%** | 100% | q1500 DLR MCP docstring 补 ARCS 语义后翻盘 |
+| 17-18 | q1505, q1506 | 100% | **100%** | 100% | q1505 三范式 COUNT(DISTINCT) 比 Gold COUNT(*)更忠实；ER judge超时/RDF不一致→手动翻盘 |
+| 19-20 | q1507, q1509 | 100% | 100% | **83%** | q1507/q1509 ER+DLR 全 strict PASS；RDF q1507 多选 Date INCORRECT(80) |
 
-**round_1 终态：46/48 CORRECT**（判定政策：五环节全对才翻盘——语义召回/工具链/映射/SQL 执行/最终一致性，见 [evaluation.md](evaluation.md)）。
+**round_1 终态：57/60 CORRECT**（判定政策：五环节全对才翻盘，见 [evaluation.md](evaluation.md)）。
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -38,6 +40,10 @@
 | q1498 | **26,961** | 32,300 | 75,705 |
 | q1500 | **118,035** | 189,364 | 351,999 |
 | q1501 | **152,200** | 194,886 | 153,328 |
+| q1505 | **35,834** | 34,566 | 37,544 |
+| q1506 | **57,614** | 87,096 | 102,344 |
+| q1507 | 37,159 | 44,377 | 41,585 |
+| q1509 | **36,451** | 63,072 | 34,764 |
 
 \* 粗体 = 该题最优范式；q1490 值取首轮归档数据，多次重跑有波动
 
@@ -45,12 +51,12 @@
 
 | 指标 | ER | DLR | RDF |
 |------|----|----|-----|
-| 最低单题 total | **26,961 (q1498)** | 32,300 (q1498) | 45,318 (q1479) |
+| 最低单题 total | **26,961 (q1498)** | 32,300 (q1498) | 34,764 (q1509) |
 | 最高单题 total | 295,225 (q1500) | 347,304 (q1500) | **357,599 (q1500)** |
-| 平均 total | ~97K | **~108K** | ~121K |
-| strict PASS 率 | 1/16 | **5/16** | 4/16 |
-| process_score 100 | **16/16** | **16/16** | 14/16 |
-| CORRECT | **16/16** | **16/16** | 14/16 |
+| 平均 total | ~74K | **~86K** | ~98K |
+| strict PASS 率 | 3/20 | **6/20** | 5/20 |
+| process_score 100 | **20/20** | **20/20** | 17/20 |
+| CORRECT | **20/20** | **20/20** | 17/20 |
 
 ### 定性观察
 
@@ -66,16 +72,17 @@
 
 ## 数据可信性备注
 
-- round_1 16 题全部落在 `debit_card_specializing`，**结果可信**；
+- round_1 20 题全部落在 `debit_card_specializing`，**结果可信**；
 - pair 7-8 (q1481/q1482) 发现 gold SQL 与题意/evidence 相悖（两源一致，判定为数据集本身错），已修正 gold cache 并记录到 [dataset.md](dataset.md) § Gold SQL 已知错误；
 - 修正 gold 后 strict_match 仍 FAIL（pred 带标签多行 vs gold 单行纯值）→ 由 Stage 4 judge 按语义翻盘，这是两段式设计的预期行为；
 - 2026-07-18 起的轮次运行在 db-aware recall + PE 改名 + clear() 修复后的索引上，后续跨库题目（card_games/formula_1 等）的召回锁库行为与 round_1 有预期差异；
 - q1498 DLR/RDF 实证 YAML `private_attributes` 中核心度量列暴露不足→修复 `LOGICAL.Consumption` 新增 `Consumption` public attribute（2026-07-21）。
 - **q1500 DLR 实证原创范式需要工具承担"教材"角色**：ARCS 是 DLR 独创概念，LLM 无先验知识。`get_pe_full` docstring 补上 A_anchor.key=JOIN 键、多 PE 联查模式后，Agent 首次正确写出 `yearmonth JOIN transactions_1k ON CustomerID`。
+- **q1505 暴露 gold SQL 语义偏差**：question "how many of **them**" → 问客户数，三范式 `COUNT(DISTINCT CustomerID)`→391 vs gold `COUNT(*)`→2730（计人次）。gold 未区分"客户"与"客户-月记录"，见 [dataset.md](dataset.md)。
 
 ## 下一步
 
-- 从 q1505 继续推进（下一对 17-18: q1505+q1506）；
+- 继续推进 round_1 后续题目（下一对 21-22: q1514+q1515）；
 - 修复 P1 R2RML 缺列后再跑 RDF 对照，消除 `PRAGMA table_info` 兜底噪声；
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 
