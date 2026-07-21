@@ -3,7 +3,7 @@
 > 目标结论方向：**DLR 原创建模（LE-PE 双层 + PAS 语义路由）对 LLM Agent 的 NL2SQL 引导优于 ER/RDF 基线**。
 > 本文件随评测推进滚动更新；所有数字可从 `validated_results/` 与 `Evaluation/outputs/{run_id}/` 复核。
 
-## round_1 — 流水线验证（q1471-1490，12 题 × 3 范式，db=debit_card_specializing）
+## round_1 — 流水线验证（q1471-1498，14 题 × 3 范式，db=debit_card_specializing）
 
 | 轮次 | 题号 | ER | DLR | RDF | 备注 |
 |------|------|----|----|-----|------|
@@ -13,8 +13,9 @@
 | 7-8 | q1481, q1482 | 100% | **100%** | 100% | gold 数据集错误 → 修正 gold cache 后 judge 翻盘 |
 | 9-10 | q1483, q1484 | 100% | **100%** | 100% | q1483 三范式 strict PASS |
 | 11-12 | q1486, q1490 | 100% | **100%** | **83%** | q1490 gold 两轮修正（缺DISTINCT→INNER→LEFT JOIN），ER/DLR 翻盘 CORRECT；RDF bare FK 导致多跳失败 INCORRECT(20) |
+| 13-14 | q1493, q1498 | 100% | **100%** | **83%** | q1498 DLR YAML 修复 Consumption 属性后翻盘(3次重跑)；RDF INCORRECT(60)—MAX 代替 SUM+GROUP BY |
 
-**round_1 终态：35/36 CORRECT**（判定政策：五环节全对才翻盘——语义召回/工具链/映射/SQL 执行/最终一致性，见 [evaluation.md](evaluation.md)；q1471 式"SQL 返回 count、比值由 Agent 直接加工"按最终一致性认定为对，同时 AGENTS.md 已引导后续轮次把计算写进 SQL 以提升 strict PASS 率）。
+**round_1 终态：40/42 CORRECT**（判定政策：五环节全对才翻盘——语义召回/工具链/映射/SQL 执行/最终一致性，见 [evaluation.md](evaluation.md)；q1471 式"SQL 返回 count、比值由 Agent 直接加工"按最终一致性认定为对，同时 AGENTS.md 已引导后续轮次把计算写进 SQL 以提升 strict PASS 率）。
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -32,6 +33,8 @@
 | q1484 | 41,164 | **39,184** | 71,763 |
 | q1486 | **62,200** | 72,659 | 75,962 |
 | q1490 | 105,687 | **80,806** | 57,840 |
+| q1493 | **36,552** | 54,977 | 78,468 |
+| q1498 | **26,961** | 32,300 | 75,705 |
 
 \* 粗体 = 该题最优范式；q1490 值取首轮归档数据，多次重跑有波动
 
@@ -39,11 +42,12 @@
 
 | 指标 | ER | DLR | RDF |
 |------|----|----|-----|
-| 最低单题 total | 35,825 (q1473) | **33,927 (q1483)** | 45,318 (q1479) |
+| 最低单题 total | **26,961 (q1498)** | 32,300 (q1498) | 45,318 (q1479) |
 | 最高单题 total | 230,002 (q1481) | 195,482 (q1481) | 183,400 (q1472) |
-| 平均 total | ~72K | **~74K** | ~105K |
-| strict PASS 率 | ~3/12 | ~2/12 | **~4/12** |
-| process_score 100 | 10/12 | **10/12** | 9/12 |
+| 平均 total | ~64K | **~66K** | ~88K |
+| strict PASS 率 | 1/14 | **4/14** | 3/14 |
+| process_score 100 | **14/14** | **14/14** | 12/14 |
+| CORRECT | **14/14** | **14/14** | 12/14 |
 
 ### 定性观察
 
@@ -53,18 +57,20 @@
 - **35/36 无一例绕过 MCP 直接猜库/猜表**：`execute_sql` 的 database_url 全部来自映射工具——防作弊路径生效。
 - **q1483 是首个三范式 strict PASS 的题**（ER/DLR/RDF 全 PASS），Agent 对简洁语义（"统计每个国家的加油站数量"）的 SQL 产出质量高。
 - **q1481 是高成本题**：三范式 total 均超 120K（需嵌套子查询找最低消费客户），但 judge 验证全部五环节通过。
+- **q1493 是第二个三范式 strict PASS 的题**（DLR/RDF 全 PASS，ER 翻盘），Agent 对"Feb 2012 consumption >528.3 占比"产出高质量 SQL。
+- **q1498 暴露 LLM 聚合语义盲区**：DLR 三次重跑均 `MAX(Consumption)`→445K 而非 `SUM→GROUP BY month→MAX`→51.8M，process_score 从 60→80(YAML 修复)→最终 Instance 才写对；RDF 同理。ER 首次即正确——三范式 Agent 独立性导致同题不同命。
 
 ## 数据可信性备注
 
-- round_1 12 题全部落在 `debit_card_specializing`，**结果可信**；
+- round_1 14 题全部落在 `debit_card_specializing`，**结果可信**；
 - pair 7-8 (q1481/q1482) 发现 gold SQL 与题意/evidence 相悖（两源一致，判定为数据集本身错），已修正 gold cache 并记录到 [dataset.md](dataset.md) § Gold SQL 已知错误；
 - 修正 gold 后 strict_match 仍 FAIL（pred 带标签多行 vs gold 单行纯值）→ 由 Stage 4 judge 按语义翻盘，这是两段式设计的预期行为；
 - 2026-07-18 起的轮次运行在 db-aware recall + PE 改名 + clear() 修复后的索引上，后续跨库题目（card_games/formula_1 等）的召回锁库行为与 round_1 有预期差异；
-- DLR 范式下 card_games（52 题）/ formula_1（66 题）必须使用修复后索引（修复前 `PHYSICAL.Card`/`PHYSICAL.Race` 被跨库覆盖，涉及题必错）。
+- q1498 DLR/RDF 实证 YAML `private_attributes` 中核心度量列暴露不足→修复 `LOGICAL.Consumption` 新增 `Consumption` public attribute（2026-07-21）。
 
 ## 下一步
 
-- 从 q1486 继续推进（`bash eval_run.sh EDR 2 1486 --parallel --workers 6`）；
+- 从 q1500 继续推进（下一对 15-16: q1500+q1501）；
 - 修复 P1 R2RML 缺列后再跑 RDF 对照，消除 `PRAGMA table_info` 兜底噪声；
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 
