@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Stage 1 并行执行器 — 跑指定的两个题
-# 用法: bash run_parallel.sh <paradigm> <qid1> <qid2> --run-id <name> [--workers N]
-# 示例: bash run_parallel.sh er 1486 1490 --run-id 0720_1000_1486-1490_EDR --workers 6
+# 用法: bash run_parallel.sh <paradigm> <qid1> <qid2> --run-id <name>
+# 示例: bash run_parallel.sh er 1486 1490 --run-id 0720_1000_1486-1490_EDR
+# workers 自动计算: 题数 (QID1!=QID2 时 2, 否则 1)
 
 PARADIGM="$1"
 QID1="$2"
 QID2="$3"
-WORKERS=2
 RUN_ID=""
 
 shift 3
@@ -14,14 +14,12 @@ while [ $# -gt 0 ]; do
     case "$1" in
         --run-id) shift; RUN_ID="$1" ;;
         --run-id=*) RUN_ID="${1#*=}" ;;
-        --workers) shift; WORKERS="$1" ;;
-        --workers=*) WORKERS="${1#*=}" ;;
     esac
     shift
 done
 
 if [ -z "$PARADIGM" ] || [ -z "$QID1" ] || [ -z "$QID2" ]; then
-    echo "用法: bash run_parallel.sh <paradigm> <qid1> <qid2> --run-id <name> [--workers N]"
+    echo "用法: bash run_parallel.sh <paradigm> <qid1> <qid2> --run-id <name>"
     exit 1
 fi
 
@@ -52,6 +50,7 @@ for q in qs:
 TASK_FILE="$OUTPUT_DIR/.tasks.txt"
 echo "$QUESTIONS" > "$TASK_FILE"
 TOTAL=$(echo "$QUESTIONS" | grep -c '|')
+WORKERS=$TOTAL  # 每范式 worker = 实际题目数
 
 echo "[RUN] $RUN_ID  $PARADIGM  q$QID1 + q$QID2  workers=$WORKERS"
 

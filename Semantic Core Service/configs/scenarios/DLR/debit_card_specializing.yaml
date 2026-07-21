@@ -29,16 +29,16 @@ logical_entities:
     public_attributes:
       - {attr_id: LOGICAL.Consumption.Customer, biz_name: Customer}
       - {attr_id: LOGICAL.Consumption.Date, biz_name: Date}
+      - {attr_id: LOGICAL.Consumption.Consumption, biz_name: Consumption}
     physical_entities:
       - physical_entity_id: PHYSICAL.YearMonth
         physical_table_name: yearmonth
         physical_table_id: debit_card_specializing.yearmonth
         A: {cardinality: "N:1", key: CustomerID}
         R: null
-        C: {LOGICAL.Consumption.Customer: debit_card_specializing.yearmonth.CustomerID, LOGICAL.Consumption.Date: debit_card_specializing.yearmonth.Date}
+        C: {LOGICAL.Consumption.Customer: debit_card_specializing.yearmonth.CustomerID, LOGICAL.Consumption.Date: debit_card_specializing.yearmonth.Date, LOGICAL.Consumption.Consumption: debit_card_specializing.yearmonth.Consumption}
         S: "Monthly gas consumption summary"
-        private_attributes:
-          - {attr_id: debit_card_specializing.yearmonth.Consumption, biz_name: Consumption, physical_column_id: debit_card_specializing.yearmonth.Consumption}
+        private_attributes: []
       - physical_entity_id: PHYSICAL.Transaction
         physical_table_name: transactions_1k
         physical_table_id: debit_card_specializing.transactions_1k

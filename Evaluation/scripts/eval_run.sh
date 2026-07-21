@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 # 批量评测入口 — 按 pair 跑题
-# 用法: bash eval_run.sh <paradigms> <qid1> <qid2> [--parallel] [--workers N]
+# 用法: bash eval_run.sh <paradigms> <qid1> <qid2> [--parallel]
 #   paradigms: E=ER, D=DLR, R=RDF, 可组合如 EDR, ED, ER, D
-# 示例: bash eval_run.sh EDR 1486 1490 --parallel --workers 6
+# 示例: bash eval_run.sh EDR 1486 1490 --parallel
 #       bash eval_run.sh ED 1471 1472
+# workers 自动 = 范式数 × 题数,由 run_parallel.sh 内部计算
 
 PARADIGMS="${1:-EDR}"
 QID1="$2"
 QID2="$3"
 MODE="serial"
-WORKERS=2
 
 if [ -z "$QID1" ] || [ -z "$QID2" ]; then
-    echo "用法: bash eval_run.sh <paradigms> <qid1> <qid2> [--parallel] [--workers N]"
-    echo "示例: bash eval_run.sh EDR 1486 1490 --parallel --workers 6"
+    echo "用法: bash eval_run.sh <paradigms> <qid1> <qid2> [--parallel]"
+    echo "示例: bash eval_run.sh EDR 1486 1490 --parallel"
     exit 1
 fi
 
@@ -21,8 +21,6 @@ shift 3
 while [ $# -gt 0 ]; do
     case "$1" in
         --parallel) MODE="parallel" ;;
-        --workers) shift; WORKERS="$1" ;;
-        --workers=*) WORKERS="${1#*=}" ;;
     esac
     shift
 done
@@ -31,7 +29,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -W)"
 RUN_ID="$(date +%m%d_%H%M)_${QID1}-${QID2}_${PARADIGMS}"
 
 echo "========================================="
-echo "  RUN: $RUN_ID  (q$QID1 + q$QID2)  mode=$MODE  workers=$WORKERS"
+echo "  RUN: $RUN_ID  (q$QID1 + q$QID2)  mode=$MODE"
 echo "========================================="
 echo ""
 
@@ -46,7 +44,7 @@ for (( i=0; i<${#PARADIGMS}; i++ )); do
     esac
     echo "--- $P ($PARADIGM) ---"
     if [ "$MODE" = "parallel" ]; then
-        bash "$SCRIPT_DIR/run_parallel.sh" "$PARADIGM" "$QID1" "$QID2" --run-id "$RUN_ID" --workers "$WORKERS" &
+        bash "$SCRIPT_DIR/run_parallel.sh" "$PARADIGM" "$QID1" "$QID2" --run-id "$RUN_ID" &
         PIDS+=($!)
     else
         bash "$SCRIPT_DIR/run_serial.sh" "$PARADIGM" "$QID1" "$QID2" --run-id "$RUN_ID"
