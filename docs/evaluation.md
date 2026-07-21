@@ -84,53 +84,19 @@ validated_results/round_N/{q_start}-{q_end}/    # post_process.py 归档
 └── agent_stats.csv    # 字段: paradigm,q_id,db_id,strict_match,judge_verdict,judge_reason,verdict,error,input_tokens,output_tokens
 ```
 
-## 4. 已知问题（行为审计发现，2026-07-18，待修）
+## 4. 待修问题
 
-前 4 题（q1471/1472/1473/1476 × 3 范式）逐日志审计的遗留问题：
-
-| 级别 | 问题 | 状态 |
+| 级别 | 问题 | 说明 |
 |------|------|------|
-| P0 | `post_process.py` 归档循环未按范式过滤（raw 全是 DLR 拷贝） | ✅ 已修（2026-07-18），round_1 已重归档，12 份 raw MD5 唯一 |
-| P0 | `execute_sql` 无行数上限 / 无 LIMIT 的 `SELECT *` | ✅ 已修：200 行截断 + `SELECT *` 无 LIMIT 拒绝执行（重启 serve 生效） |
-| P0 | opencode 内置 `task`/`read` 子代理未 deny | ⏳ 待修（防作弊活口） |
-| P0 | R2RML 生成器主键列不入 predicateObjectMap | ⏳ 待修（RDF Agent 靠 PRAGMA 兜底） |
-| P1 | er_1471 judge 超时误判 | ✅ 判定政策已定为"五环节全对才翻盘 + 过程分"（oc_judge/AGENTS.md），按新政策由 Stage 4 重判 |
-| P1 | Agent SQL 心算终值 / 多列多行 | ✅ 双侧处理：AGENTS.md 加"Evidence SQL 必须直接返回 Final Answer 的值"引导；judge 侧按最终一致性判定（可直接加工得出即认），不再卡口径摇摆 |
-| P1 | AGENTS.md 的 `/mcps` 指令在 `opencode run` 下不可执行 | ⏳ 待修（模型退而调 `list_mcp_resources` 恒空浪费） |
-| P1 | `find_shortest_path` Cypher bug；`rdf_classes` 只返回 TriplesMap | ⏳ 待修 |
-| P1 | `input_tokens` 不含 cache read，跨范式/跨轮对比失真 | ✅ 已修：`parse_agent_stats.py` 新增 reasoning_tokens/cache_read_tokens 列（2026-07-20） |
+| P0 | opencode 内置 `task`/`read` 子代理未 deny | 防作弊活口，待加 deny |
+| P0 | R2RML 生成器主键列不入 predicateObjectMap | RDF Agent 缺列靠 `PRAGMA table_info` 兜底 |
+| P1 | AGENTS.md `/mcps` 指令在 `opencode run` 下不可执行 | 模型退而调 `list_mcp_resources` 恒空浪费；偶发 Agent 扫 localhost 端口失败→无法连接 MCP |
+| P1 | `find_shortest_path` Cypher bug；`rdf_classes` 只返回 TriplesMap | 已定位，待修 |
+| P1 | 04_judge.py emoji 崩溃 | print() GBK 编码遇 emoji → `UnicodeEncodeError`（CSV 已落盘，仅日志冗余） |
+| P2 | 并行 eval 偶发 Kuzu 锁冲突 | 三范式同时初始化 MCP→争抢 Kuzu 排他锁，部分 Agent 启动即崩溃（database locked）。重跑可恢复 |
+| P2 | Stage 4 LLM Judge 偶发超时 300s | 大日志或网络波动时 judge 无法完成，默认 UNKNOWN→INCORRECT，需手动翻盘 |
+| P2 | RDF serve 进程静默崩溃 | `serve --paradigm ALL` 下 RDF 进程偶发崩溃，端口无监听但无错误日志（复启后正常） |
 
-## 5. 已知问题（2026-07-20 评测过程发现）
+### Gold 数据集已知错误
 
-### 5.1 Gold 数据集本身错误（q1481 / q1482，已修）
-
-mini_dev 数据集的 gold SQL **在部分题目中与题意 / evidence 相悖**，执行结果不是"题意正确答案"。经逐字核对 `mini_dev_sqlite.json`（SQL 字段）与 `mini_dev_sqlite_gold.sql`（按行号顺序对应），两源**完全一致**——判定为数据集本身错误，非 Stage 0 引入。
-
-| qid | 数据集 gold SQL 实际做的 | 题意/evidence 要求的 | 修复方式 |
-|-----|--------------------------|----------------------|----------|
-| **1481** | 全段客户「总消费/客户数」差值（`SUM/COUNT`），**未过滤"最低消费客户"** | 先筛出每段消费最低的客户，再算均值差 | gold cache rows 覆盖为正确结果 `[[-14009.34, 6046.62, 7962.72]]` |
-| **1482** | 分母用 **2012**（`(2013-2012)/2012*100`） | evidence 明确定义"除 **2013**" | gold cache rows 覆盖为正确结果 `[[84.37, 84.69, 88.02]]` |
-
-**证据链**：三范式 Agent 的 pred 答案与题意一致、且互相吻合；独立编写证据链 SQL 在 SQLite 重放结果与 pred 100% 对齐（详见 [dataset.md](dataset.md) § Gold SQL 已知错误）。金标准 round_1（q1471-1480）的 gold SQL 经验证正确，**非系统性问题**。
-
-**副作用**：修正 gold 后 strict_match 仍 FAIL（pred 带标签多行 vs gold 单行纯值，形状不同）——这是预期的，由 Stage 4 judge 按语义翻盘。
-
-### 5.2 Stage 4 judge 调用链 bug 簇（已修）
-
-judge 走 `opencode run` 仲裁，评测过程发现一串调用链缺陷：
-
-| 级别 | 问题 | 根因 | 修复 |
-|------|------|------|------|
-| **P0** | judge 每题必 120s 超时（Windows） | `04_judge.py` 用 `shutil.which("opencode")` 解析到 `...\opencode.CMD`，再被 `bash -c '"..."'` 包裹 → 反斜杠被 bash 当转义符，路径解析失败 | 去掉路径解析，直接用命令名 `bash -c 'opencode run --format json'` 走 PATH |
-| **P0** | 大日志题（>30KB）即使调用正常也超时 | 原 timeout=120s 对"读完整 AgentLogPath + LLM 多轮推理"不足 | 阈值提到 **300s** |
-| **P1** | CSV 已正确写入但进程崩溃退出 | opencode 回复含 emoji（如 ✅ U+2705），`print()` 走 GBK 控制台编码 → `UnicodeEncodeError` | ⏳ print 数据本身是冗余日志（CSV 在 print 之前已落盘），**待修**：`sys.stdout.reconfigure(errors='replace')` 或过滤非 ASCII |
-| **P2** | 断网期间 judge 批量 UNKNOWN | opencode 需要网络调 LLM | 网络恢复后清掉 UNKNOWN 行重新跑即可（增量机制天然支持） |
-
-### 5.3 评测 Agent 行为审计（本 pair 新增）
-
-| qid | 范式 | 现象 | 评估 |
-|-----|------|------|------|
-| 1481 | ER | 61 行 / 25 次工具调用，execute_sql×18 且中间夹 `list_all_tables`（迷失重搜） | 结果正确，但**工具链严重冗长**；AGENTS.md 可考虑加"锁库后不再 list_all_tables" |
-| 1481 | DLR | 1 个 tool error：`execute_sql: MCP error -32001: Request timed out` | Agent 自动换 SQL 跑完，**容错正常**；判 CORRECT 合理 |
-| 1481 | RDF | trace 出现可疑 `skill` 调用 | 待排查是否 AGENTS.md 外的指令泄漏 |
-| 1482 | RDF | 6 次 `rdf_search` 循环 | 冗长但结果正确 |
+详见 [dataset.md](dataset.md) § Gold SQL 已知错误：q1481、q1482、q1490 已修正 gold cache；q1505 待确认（COUNT(*) vs COUNT(DISTINCT)）。
