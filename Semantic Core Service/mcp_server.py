@@ -737,10 +737,23 @@ def _get_le_pas(le_id: str) -> dict:
 
 
 def _get_pe_full(pe_id: str) -> dict:
-    """[DLR] Get PE details + attributes + ARCS + database_url — all in one call.
+    """[DLR] Get PE complete info: table name, columns, JOIN keys, and DB path — all in one call.
 
-    Recommended over calling get_pe/get_pe_attrs/get_pe_arcs separately.
-    Returns: {success, entity, attributes, arcs, database_url}
+    Use this tool for EVERY PE you plan to query — it returns everything needed to write SQL.
+
+    **ARCS structure** (returned in `arcs` field):
+    - A_anchor: the JOIN key for this PE. PEs under the SAME Logical Entity (LE) share the
+      same A_anchor.key — you MUST join them on this key when combining data across PEs.
+      Example: YearMonth.A.key=CustomerID, Transaction.A.key=CustomerID → JOIN ON CustomerID.
+    - R_row: row-level relation (null for most tables).
+    - C_column: mapping from LE logical attributes to physical column names.
+    - S_semantic4arcs: human-readable description of what this PE represents.
+
+    **Multi-PE query pattern**: when you need data from multiple PEs of the same LE
+    (e.g. filter by Date in YearMonth, get ProductID from Transaction), check if both
+    have the same A_anchor.key — if yes, JOIN them on that key.
+
+    Returns: {success, physical_entity_id, entity, attributes, arcs, database_url}
     """
     gdb, _, _ = _ensure_services()
     entity = gdb.get_physical_entity_by_id(pe_id)
@@ -792,7 +805,11 @@ def _get_pas_by_le(le_id: str) -> dict:
 
 
 def _path_pe_pe(pe_id1: str, pe_id2: str) -> dict:
-    """[DLR] Shortest path between two PEs (across LE via PAS + ARCS)."""
+    """[DLR] Find the JOIN path between two PEs (across LEs via PAS + ARCS).
+
+    If PEs belong to different LEs, returns the PAS relation chain linking them.
+    If PEs belong to the SAME LE, use get_pe_full on both and JOIN on A_anchor.key.
+    """
     gdb, _, qs = _ensure_services()
     parent1 = qs._get_parent_logical_entity(pe_id1)
     parent2 = qs._get_parent_logical_entity(pe_id2)
@@ -850,7 +867,11 @@ def _is_arcs(pe_id: str, le_id: str) -> dict:
 
 
 def _is_same_le(pe_id1: str, pe_id2: str) -> dict:
-    """[DLR] Check if two PEs share the same parent LE."""
+    """[DLR] Check if two PEs belong to the same LE.
+
+    If yes, they share the same A_anchor.key and can be JOINed on it.
+    Use this to confirm a multi-PE JOIN is valid before writing SQL.
+    """
     _, _, qs = _ensure_services()
     parent1 = qs._get_parent_logical_entity(pe_id1)
     parent2 = qs._get_parent_logical_entity(pe_id2)
