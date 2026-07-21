@@ -16,49 +16,34 @@
 
 **round_1 终态：35/36 CORRECT**（判定政策：五环节全对才翻盘——语义召回/工具链/映射/SQL 执行/最终一致性，见 [evaluation.md](evaluation.md)；q1471 式"SQL 返回 count、比值由 Agent 直接加工"按最终一致性认定为对，同时 AGENTS.md 已引导后续轮次把计算写进 SQL 以提升 strict PASS 率）。
 
-### 行为效率对比（12 题 × 3 范式）
+### 行为效率 — 逐题 Token 消耗
+
+| 题号 | ER | DLR | RDF |
+|------|----|-----|-----|
+| q1471 | 60,262 | **39,078** | 61,468 |
+| q1472 | **44,719** | 94,317 | 183,400 |
+| q1473 | **35,825** | 72,766 | 94,395 |
+| q1476 | 73,221 | **61,770** | 69,729 |
+| q1479 | 43,712 | **39,543** | 45,318 |
+| q1480 | **50,260** | 59,145 | 65,519 |
+| q1481 | 230,002 | 195,482 | **120,958** |
+| q1482 | **46,942** | 54,712 | 65,209 |
+| q1483 | 44,551 | **33,927** | 170,885 |
+| q1484 | 41,164 | **39,184** | 71,763 |
+| q1486 | **62,200** | 72,659 | 75,962 |
+| q1490 | 105,687 | **80,806** | 57,840 |
+
+\* 粗体 = 该题最优范式；q1490 值取首轮归档数据，多次重跑有波动
+
+### 汇总
 
 | 指标 | ER | DLR | RDF |
 |------|----|----|-----|
-| 最低单题 total | 35,825 (q1473) | **33,927 (q1483)** | 61,468 (q1471) |
+| 最低单题 total | 35,825 (q1473) | **33,927 (q1483)** | 45,318 (q1479) |
 | 最高单题 total | 230,002 (q1481) | 195,482 (q1481) | 183,400 (q1472) |
 | 平均 total | ~72K | **~74K** | ~105K |
 | strict PASS 率 | ~3/12 | ~2/12 | **~4/12** |
 | process_score 100 | 10/12 | **10/12** | 9/12 |
-
-\* q1490 三范式高 token 题，多次重跑验证基础设施修复，具体 token 因 LLM 非确定性有波动
-
-<canvas id="tokenChart" width="800" height="400"></canvas>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-<script>
-const labels = ['q1471','q1472','q1473','q1476','q1479','q1480','q1481','q1482','q1483','q1484','q1486','q1490'];
-const erData  = [60262,44719,35825,73221,43712,50260,230002,46942,44551,41164,62200,105687];
-const dlrData = [39078,94317,72766,61770,39543,59145,195482,54712,33927,39184,72659,80806];
-const rdfData = [61468,183400,94395,69729,45318,65519,120958,65209,170885,71763,75962,57840];
-new Chart('tokenChart', {
-  type: 'line',
-  data: {
-    labels: labels,
-    datasets: [
-      { label: 'ER',  data: erData,  borderColor: '#6666ff', backgroundColor: 'rgba(102,102,255,0.1)', tension: 0.3 },
-      { label: 'DLR', data: dlrData, borderColor: '#2e7d32', backgroundColor: 'rgba(46,125,50,0.1)', tension: 0.3, borderWidth: 2 },
-      { label: 'RDF', data: rdfData, borderColor: '#e65100', backgroundColor: 'rgba(230,81,0,0.1)', tension: 0.3, borderDash: [5,5] },
-    ]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      title: { display: true, text: '三范式 Token 消耗对比 (total_tokens/题)', font: { size: 14 } },
-      legend: { position: 'bottom' }
-    },
-    scales: {
-      y: { title: { display: true, text: 'total_tokens' }, beginAtZero: false },
-      x: { title: { display: true, text: '题号' } }
-    },
-    interaction: { mode: 'index', intersect: false }
-  }
-});
-</script>
 
 ### 定性观察
 
