@@ -28,6 +28,38 @@
 
 \* q1490 三范式高 token 题，多次重跑验证基础设施修复，具体 token 因 LLM 非确定性有波动
 
+<canvas id="tokenChart" width="800" height="400"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script>
+const labels = ['q1471','q1472','q1473','q1476','q1479','q1480','q1481','q1482','q1483','q1484','q1486','q1490'];
+const erData  = [60262,44719,35825,73221,43712,50260,230002,46942,44551,41164,62200,105687];
+const dlrData = [39078,94317,72766,61770,39543,59145,195482,54712,33927,39184,72659,80806];
+const rdfData = [61468,183400,94395,69729,45318,65519,120958,65209,170885,71763,75962,57840];
+new Chart('tokenChart', {
+  type: 'line',
+  data: {
+    labels: labels,
+    datasets: [
+      { label: 'ER',  data: erData,  borderColor: '#6666ff', backgroundColor: 'rgba(102,102,255,0.1)', tension: 0.3 },
+      { label: 'DLR', data: dlrData, borderColor: '#2e7d32', backgroundColor: 'rgba(46,125,50,0.1)', tension: 0.3, borderWidth: 2 },
+      { label: 'RDF', data: rdfData, borderColor: '#e65100', backgroundColor: 'rgba(230,81,0,0.1)', tension: 0.3, borderDash: [5,5] },
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      title: { display: true, text: '三范式 Token 消耗对比 (total_tokens/题)', font: { size: 14 } },
+      legend: { position: 'bottom' }
+    },
+    scales: {
+      y: { title: { display: true, text: 'total_tokens' }, beginAtZero: false },
+      x: { title: { display: true, text: '题号' } }
+    },
+    interaction: { mode: 'index', intersect: false }
+  }
+});
+</script>
+
 ### 定性观察
 
 - **DLR q1471 是教科书链路**：`dlr_semantic_query` 一跳召回 LE-PE 结构 → `get_pe_full` 一跳拿全（属性+ARCS+database_url）→ 一条 SQL 收工。ER 需要 2-3 跳分散工具，RDF 需要 mapping + PRAGMA 兜底（R2RML 缺列所致）。
