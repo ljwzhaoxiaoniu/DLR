@@ -5,14 +5,15 @@
 @prefix ex: <http://example.org/> .
 
 # R2RML — database: california_schools
-# URL: sqlite:///D:\Code_Proj\DLR Proj\MINIDEV_sqlite\dev_databases\california_schools/california_schools.sqlite
-# Tables: 3  ForeignKeys: 2
-# Source: real FK constraints (PRAGMA foreign_key_list)
+# URL: sqlite:///MINIDEV_sqlite\dev_databases\california_schools/california_schools.sqlite
+# Tables: 3  ForeignKeys: 2 formal + 0 heuristic = 2 total
+# Source: PRAGMA foreign_key_list + column-name→PK matching
 
 # === Table: california_schools.frpm (pk=CDSCode) ===
 <http://example.org/tm/california_schools/frpm> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "frpm" ] ;
     rr:subjectMap [ rr:template "http://example.org/california_schools/{CDSCode}" ; rr:class ex:frpm ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/frpm/CDSCode> ; rr:objectMap [ rr:column "CDSCode" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/frpm/Academic_Year> ; rr:objectMap [ rr:column "Academic Year" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/frpm/County_Code> ; rr:objectMap [ rr:column "County Code" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/frpm/District_Code> ; rr:objectMap [ rr:column "District Code" ; rr:datatype xsd:string ] ] ;
@@ -47,6 +48,7 @@
 <http://example.org/tm/california_schools/satscores> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "satscores" ] ;
     rr:subjectMap [ rr:template "http://example.org/california_schools/{cds}" ; rr:class ex:satscores ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/satscores/cds> ; rr:objectMap [ rr:column "cds" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/satscores/rtype> ; rr:objectMap [ rr:column "rtype" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/satscores/sname> ; rr:objectMap [ rr:column "sname" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/satscores/dname> ; rr:objectMap [ rr:column "dname" ; rr:datatype xsd:string ] ] ;
@@ -63,6 +65,7 @@
 <http://example.org/tm/california_schools/schools> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "schools" ] ;
     rr:subjectMap [ rr:template "http://example.org/california_schools/{CDSCode}" ; rr:class ex:schools ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/schools/CDSCode> ; rr:objectMap [ rr:column "CDSCode" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/schools/NCESDist> ; rr:objectMap [ rr:column "NCESDist" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/schools/NCESSchool> ; rr:objectMap [ rr:column "NCESSchool" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/schools/StatusType> ; rr:objectMap [ rr:column "StatusType" ; rr:datatype xsd:string ] ] ;

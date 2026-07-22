@@ -5,15 +5,16 @@
 @prefix ex: <http://example.org/> .
 
 # R2RML — database: student_club
-# URL: sqlite:///D:\Code_Proj\DLR Proj\MINIDEV_sqlite\dev_databases\student_club/student_club.sqlite
-# Tables: 8  ForeignKeys: 8
-# Source: real FK constraints (PRAGMA foreign_key_list)
+# URL: sqlite:///MINIDEV_sqlite\dev_databases\student_club/student_club.sqlite
+# Tables: 8  ForeignKeys: 8 formal + 0 heuristic = 8 total
+# Source: PRAGMA foreign_key_list + column-name→PK matching
 
 # === Table: student_club.attendance (pk=link_to_member) ===
 <http://example.org/tm/student_club/attendance> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "attendance" ] ;
     rr:subjectMap [ rr:template "http://example.org/student_club/{link_to_member}" ; rr:class ex:attendance ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/attendance/link_to_event> ; rr:objectMap [ rr:column "link_to_event" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/attendance/link_to_member> ; rr:objectMap [ rr:column "link_to_member" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/attendance/refers_to_member> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/student_club/member> ; rr:joinCondition [ rr:child "link_to_member" ; rr:parent "member_id" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/attendance/refers_to_event> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/student_club/event> ; rr:joinCondition [ rr:child "link_to_event" ; rr:parent "event_id" ] ] ] .
 
@@ -21,6 +22,7 @@
 <http://example.org/tm/student_club/budget> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "budget" ] ;
     rr:subjectMap [ rr:template "http://example.org/student_club/{budget_id}" ; rr:class ex:budget ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/budget/budget_id> ; rr:objectMap [ rr:column "budget_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/budget/category> ; rr:objectMap [ rr:column "category" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/budget/spent> ; rr:objectMap [ rr:column "spent" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/budget/remaining> ; rr:objectMap [ rr:column "remaining" ; rr:datatype xsd:string ] ] ;
@@ -33,6 +35,7 @@
 <http://example.org/tm/student_club/event> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "event" ] ;
     rr:subjectMap [ rr:template "http://example.org/student_club/{event_id}" ; rr:class ex:event ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/event/event_id> ; rr:objectMap [ rr:column "event_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/event/event_name> ; rr:objectMap [ rr:column "event_name" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/event/event_date> ; rr:objectMap [ rr:column "event_date" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/event/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ] ;
@@ -44,6 +47,7 @@
 <http://example.org/tm/student_club/expense> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "expense" ] ;
     rr:subjectMap [ rr:template "http://example.org/student_club/{expense_id}" ; rr:class ex:expense ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/expense/expense_id> ; rr:objectMap [ rr:column "expense_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/expense/expense_description> ; rr:objectMap [ rr:column "expense_description" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/expense/expense_date> ; rr:objectMap [ rr:column "expense_date" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/expense/cost> ; rr:objectMap [ rr:column "cost" ; rr:datatype xsd:string ] ] ;
@@ -57,6 +61,7 @@
 <http://example.org/tm/student_club/income> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "income" ] ;
     rr:subjectMap [ rr:template "http://example.org/student_club/{income_id}" ; rr:class ex:income ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/income/income_id> ; rr:objectMap [ rr:column "income_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/income/date_received> ; rr:objectMap [ rr:column "date_received" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/income/amount> ; rr:objectMap [ rr:column "amount" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/income/source> ; rr:objectMap [ rr:column "source" ; rr:datatype xsd:string ] ] ;
@@ -68,6 +73,7 @@
 <http://example.org/tm/student_club/major> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "major" ] ;
     rr:subjectMap [ rr:template "http://example.org/student_club/{major_id}" ; rr:class ex:major ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/major/major_id> ; rr:objectMap [ rr:column "major_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/major/major_name> ; rr:objectMap [ rr:column "major_name" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/major/department> ; rr:objectMap [ rr:column "department" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/major/college> ; rr:objectMap [ rr:column "college" ; rr:datatype xsd:string ] ] .
@@ -76,6 +82,7 @@
 <http://example.org/tm/student_club/member> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "member" ] ;
     rr:subjectMap [ rr:template "http://example.org/student_club/{member_id}" ; rr:class ex:member ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/member/member_id> ; rr:objectMap [ rr:column "member_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/member/first_name> ; rr:objectMap [ rr:column "first_name" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/member/last_name> ; rr:objectMap [ rr:column "last_name" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/member/email> ; rr:objectMap [ rr:column "email" ; rr:datatype xsd:string ] ] ;
@@ -91,6 +98,7 @@
 <http://example.org/tm/student_club/zip_code> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "zip_code" ] ;
     rr:subjectMap [ rr:template "http://example.org/student_club/{zip_code}" ; rr:class ex:zip_code ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/zip_code/zip_code> ; rr:objectMap [ rr:column "zip_code" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/zip_code/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/zip_code/city> ; rr:objectMap [ rr:column "city" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/zip_code/county> ; rr:objectMap [ rr:column "county" ; rr:datatype xsd:string ] ] ;

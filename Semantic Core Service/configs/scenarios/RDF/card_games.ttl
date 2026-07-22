@@ -5,14 +5,15 @@
 @prefix ex: <http://example.org/> .
 
 # R2RML — database: card_games
-# URL: sqlite:///D:\Code_Proj\DLR Proj\MINIDEV_sqlite\dev_databases\card_games/card_games.sqlite
-# Tables: 7  ForeignKeys: 4
-# Source: real FK constraints (PRAGMA foreign_key_list)
+# URL: sqlite:///MINIDEV_sqlite\dev_databases\card_games/card_games.sqlite
+# Tables: 6  ForeignKeys: 4 formal + 0 heuristic = 4 total
+# Source: PRAGMA foreign_key_list + column-name→PK matching
 
 # === Table: card_games.cards (pk=id) ===
 <http://example.org/tm/card_games/cards> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "cards" ] ;
     rr:subjectMap [ rr:template "http://example.org/card_games/{id}" ; rr:class ex:cards ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/cards/artist> ; rr:objectMap [ rr:column "artist" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/cards/asciiName> ; rr:objectMap [ rr:column "asciiName" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/cards/availability> ; rr:objectMap [ rr:column "availability" ; rr:datatype xsd:string ] ] ;
@@ -91,6 +92,7 @@
 <http://example.org/tm/card_games/foreign_data> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "foreign_data" ] ;
     rr:subjectMap [ rr:template "http://example.org/card_games/{id}" ; rr:class ex:foreign_data ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/flavorText> ; rr:objectMap [ rr:column "flavorText" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/language> ; rr:objectMap [ rr:column "language" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/multiverseid> ; rr:objectMap [ rr:column "multiverseid" ; rr:datatype xsd:string ] ] ;
@@ -104,6 +106,7 @@
 <http://example.org/tm/card_games/legalities> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "legalities" ] ;
     rr:subjectMap [ rr:template "http://example.org/card_games/{id}" ; rr:class ex:legalities ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/format> ; rr:objectMap [ rr:column "format" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/status> ; rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/uuid> ; rr:objectMap [ rr:column "uuid" ; rr:datatype xsd:string ] ] ;
@@ -113,6 +116,7 @@
 <http://example.org/tm/card_games/rulings> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "rulings" ] ;
     rr:subjectMap [ rr:template "http://example.org/card_games/{id}" ; rr:class ex:rulings ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/rulings/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/rulings/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/rulings/text> ; rr:objectMap [ rr:column "text" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/rulings/uuid> ; rr:objectMap [ rr:column "uuid" ; rr:datatype xsd:string ] ] ;
@@ -122,6 +126,7 @@
 <http://example.org/tm/card_games/set_translations> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "set_translations" ] ;
     rr:subjectMap [ rr:template "http://example.org/card_games/{id}" ; rr:class ex:set_translations ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/set_translations/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/set_translations/language> ; rr:objectMap [ rr:column "language" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/set_translations/setCode> ; rr:objectMap [ rr:column "setCode" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/set_translations/translation> ; rr:objectMap [ rr:column "translation" ; rr:datatype xsd:string ] ] ;
@@ -131,6 +136,7 @@
 <http://example.org/tm/card_games/sets> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "sets" ] ;
     rr:subjectMap [ rr:template "http://example.org/card_games/{id}" ; rr:class ex:sets ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/sets/baseSetSize> ; rr:objectMap [ rr:column "baseSetSize" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/sets/block> ; rr:objectMap [ rr:column "block" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/sets/booster> ; rr:objectMap [ rr:column "booster" ; rr:datatype xsd:string ] ] ;
@@ -151,10 +157,4 @@
     rr:predicateObjectMap [ rr:predicate <http://example.org/sets/tcgplayerGroupId> ; rr:objectMap [ rr:column "tcgplayerGroupId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/sets/totalSetSize> ; rr:objectMap [ rr:column "totalSetSize" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/sets/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ] .
-
-# === Table: card_games.sqlite_sequence (pk=name) ===
-<http://example.org/tm/card_games/sqlite_sequence> a rr:TriplesMap ;
-    rr:logicalTable [ rr:tableName "sqlite_sequence" ] ;
-    rr:subjectMap [ rr:template "http://example.org/card_games/{name}" ; rr:class ex:sqlite_sequence ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sqlite_sequence/seq> ; rr:objectMap [ rr:column "seq" ; rr:datatype xsd:string ] ] .
 

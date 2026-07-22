@@ -30,6 +30,8 @@ logical_entities:
       - {attr_id: LOGICAL.Consumption.Customer, biz_name: Customer}
       - {attr_id: LOGICAL.Consumption.Date, biz_name: Date}
       - {attr_id: LOGICAL.Consumption.Consumption, biz_name: Consumption}
+      - {attr_id: LOGICAL.Consumption.GasStationID, biz_name: GasStationID}
+      - {attr_id: LOGICAL.Consumption.ProductID, biz_name: ProductID}
     physical_entities:
       - physical_entity_id: PHYSICAL.YearMonth
         physical_table_name: yearmonth
@@ -44,12 +46,10 @@ logical_entities:
         physical_table_id: debit_card_specializing.transactions_1k
         A: {cardinality: "N:1", key: CustomerID}
         R: null
-        C: {LOGICAL.Consumption.Customer: debit_card_specializing.transactions_1k.CustomerID, LOGICAL.Consumption.Date: debit_card_specializing.transactions_1k.Date}
+        C: {LOGICAL.Consumption.Customer: debit_card_specializing.transactions_1k.CustomerID, LOGICAL.Consumption.Date: debit_card_specializing.transactions_1k.Date, LOGICAL.Consumption.GasStationID: debit_card_specializing.transactions_1k.GasStationID, LOGICAL.Consumption.ProductID: debit_card_specializing.transactions_1k.ProductID}
         S: "Gas station single transaction details"
         private_attributes:
           - {attr_id: debit_card_specializing.transactions_1k.TransactionID, biz_name: TransactionID, physical_column_id: debit_card_specializing.transactions_1k.TransactionID}
-          - {attr_id: debit_card_specializing.transactions_1k.GasStationID, biz_name: GasStationID, physical_column_id: debit_card_specializing.transactions_1k.GasStationID}
-          - {attr_id: debit_card_specializing.transactions_1k.ProductID, biz_name: ProductID, physical_column_id: debit_card_specializing.transactions_1k.ProductID}
           - {attr_id: debit_card_specializing.transactions_1k.Time, biz_name: Time, physical_column_id: debit_card_specializing.transactions_1k.Time}
           - {attr_id: debit_card_specializing.transactions_1k.Price, biz_name: Price, physical_column_id: debit_card_specializing.transactions_1k.Price}
           - {attr_id: debit_card_specializing.transactions_1k.Amount, biz_name: Amount, physical_column_id: debit_card_specializing.transactions_1k.Amount}
@@ -58,18 +58,18 @@ logical_entities:
     description: "Fuel service stations"
     public_attributes:
       - {attr_id: LOGICAL.GasStation.GasStationID, biz_name: GasStationID}
+      - {attr_id: LOGICAL.GasStation.Country, biz_name: Country}
+      - {attr_id: LOGICAL.GasStation.ChainID, biz_name: ChainID}
     physical_entities:
       - physical_entity_id: PHYSICAL.GasStation
         physical_table_name: gasstations
         physical_table_id: debit_card_specializing.gasstations
         A: {cardinality: "1:1", key: GasStationID}
         R: null
-        C: {LOGICAL.GasStation.GasStationID: debit_card_specializing.gasstations.GasStationID}
+        C: {LOGICAL.GasStation.GasStationID: debit_card_specializing.gasstations.GasStationID, LOGICAL.GasStation.Country: debit_card_specializing.gasstations.Country, LOGICAL.GasStation.ChainID: debit_card_specializing.gasstations.ChainID}
         S: "Gas station information"
         private_attributes:
-          - {attr_id: debit_card_specializing.gasstations.Country, biz_name: Country, physical_column_id: debit_card_specializing.gasstations.Country}
           - {attr_id: debit_card_specializing.gasstations.Segment, biz_name: Segment, physical_column_id: debit_card_specializing.gasstations.Segment}
-          - {attr_id: debit_card_specializing.gasstations.ChainID, biz_name: ChainID, physical_column_id: debit_card_specializing.gasstations.ChainID}
   - logical_entity_id: LOGICAL.Product
     biz_name: Product
     description: "Products sold at gas stations"

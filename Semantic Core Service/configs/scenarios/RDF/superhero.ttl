@@ -5,38 +5,43 @@
 @prefix ex: <http://example.org/> .
 
 # R2RML — database: superhero
-# URL: sqlite:///D:\Code_Proj\DLR Proj\MINIDEV_sqlite\dev_databases\superhero/superhero.sqlite
-# Tables: 10  ForeignKeys: 11
-# Source: real FK constraints (PRAGMA foreign_key_list)
+# URL: sqlite:///MINIDEV_sqlite\dev_databases\superhero/superhero.sqlite
+# Tables: 10  ForeignKeys: 11 formal + 0 heuristic = 11 total
+# Source: PRAGMA foreign_key_list + column-name→PK matching
 
 # === Table: superhero.alignment (pk=id) ===
 <http://example.org/tm/superhero/alignment> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "alignment" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:alignment ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/alignment/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/alignment/alignment> ; rr:objectMap [ rr:column "alignment" ; rr:datatype xsd:string ] ] .
 
 # === Table: superhero.attribute (pk=id) ===
 <http://example.org/tm/superhero/attribute> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "attribute" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:attribute ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/attribute/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/attribute/attribute_name> ; rr:objectMap [ rr:column "attribute_name" ; rr:datatype xsd:string ] ] .
 
 # === Table: superhero.colour (pk=id) ===
 <http://example.org/tm/superhero/colour> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "colour" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:colour ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/colour/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/colour/colour> ; rr:objectMap [ rr:column "colour" ; rr:datatype xsd:string ] ] .
 
 # === Table: superhero.gender (pk=id) ===
 <http://example.org/tm/superhero/gender> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "gender" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:gender ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/gender/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/gender/gender> ; rr:objectMap [ rr:column "gender" ; rr:datatype xsd:string ] ] .
 
 # === Table: superhero.hero_attribute (pk=hero_id) ===
 <http://example.org/tm/superhero/hero_attribute> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "hero_attribute" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{hero_id}" ; rr:class ex:hero_attribute ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/hero_attribute/hero_id> ; rr:objectMap [ rr:column "hero_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/hero_attribute/attribute_id> ; rr:objectMap [ rr:column "attribute_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/hero_attribute/attribute_value> ; rr:objectMap [ rr:column "attribute_value" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/hero_attribute/refers_to_superhero> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/superhero/superhero> ; rr:joinCondition [ rr:child "hero_id" ; rr:parent "id" ] ] ] ;
@@ -46,6 +51,7 @@
 <http://example.org/tm/superhero/hero_power> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "hero_power" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{hero_id}" ; rr:class ex:hero_power ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/hero_power/hero_id> ; rr:objectMap [ rr:column "hero_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/hero_power/power_id> ; rr:objectMap [ rr:column "power_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/hero_power/refers_to_superpower> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/superhero/superpower> ; rr:joinCondition [ rr:child "power_id" ; rr:parent "id" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/hero_power/refers_to_superhero> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/superhero/superhero> ; rr:joinCondition [ rr:child "hero_id" ; rr:parent "id" ] ] ] .
@@ -54,18 +60,21 @@
 <http://example.org/tm/superhero/publisher> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "publisher" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:publisher ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/publisher/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/publisher/publisher_name> ; rr:objectMap [ rr:column "publisher_name" ; rr:datatype xsd:string ] ] .
 
 # === Table: superhero.race (pk=id) ===
 <http://example.org/tm/superhero/race> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "race" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:race ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/race/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/race/race> ; rr:objectMap [ rr:column "race" ; rr:datatype xsd:string ] ] .
 
 # === Table: superhero.superhero (pk=id) ===
 <http://example.org/tm/superhero/superhero> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "superhero" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:superhero ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/superhero_name> ; rr:objectMap [ rr:column "superhero_name" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/full_name> ; rr:objectMap [ rr:column "full_name" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/gender_id> ; rr:objectMap [ rr:column "gender_id" ; rr:datatype xsd:string ] ] ;
@@ -89,5 +98,6 @@
 <http://example.org/tm/superhero/superpower> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "superpower" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:superpower ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superpower/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/superpower/power_name> ; rr:objectMap [ rr:column "power_name" ; rr:datatype xsd:string ] ] .
 

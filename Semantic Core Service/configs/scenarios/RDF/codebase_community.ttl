@@ -5,23 +5,26 @@
 @prefix ex: <http://example.org/> .
 
 # R2RML — database: codebase_community
-# URL: sqlite:///D:\Code_Proj\DLR Proj\MINIDEV_sqlite\dev_databases\codebase_community/codebase_community.sqlite
-# Tables: 8  ForeignKeys: 13
-# Source: real FK constraints (PRAGMA foreign_key_list)
+# URL: sqlite:///MINIDEV_sqlite\dev_databases\codebase_community/codebase_community.sqlite
+# Tables: 8  ForeignKeys: 13 formal + 8 heuristic = 21 total
+# Source: PRAGMA foreign_key_list + column-name→PK matching
 
 # === Table: codebase_community.badges (pk=Id) ===
 <http://example.org/tm/codebase_community/badges> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "badges" ] ;
     rr:subjectMap [ rr:template "http://example.org/codebase_community/{Id}" ; rr:class ex:badges ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/badges/Id> ; rr:objectMap [ rr:column "Id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/badges/UserId> ; rr:objectMap [ rr:column "UserId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/badges/Name> ; rr:objectMap [ rr:column "Name" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/badges/Date> ; rr:objectMap [ rr:column "Date" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/badges/refers_to_users> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/users> ; rr:joinCondition [ rr:child "UserId" ; rr:parent "Id" ] ] ] .
+    rr:predicateObjectMap [ rr:predicate <http://example.org/badges/refers_to_users> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/users> ; rr:joinCondition [ rr:child "UserId" ; rr:parent "Id" ] ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/badges/refers_to_comments> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/comments> ; rr:joinCondition [ rr:child "Id" ; rr:parent "Id" ] ] ] .
 
 # === Table: codebase_community.comments (pk=Id) ===
 <http://example.org/tm/codebase_community/comments> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "comments" ] ;
     rr:subjectMap [ rr:template "http://example.org/codebase_community/{Id}" ; rr:class ex:comments ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/comments/Id> ; rr:objectMap [ rr:column "Id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/comments/PostId> ; rr:objectMap [ rr:column "PostId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/comments/Score> ; rr:objectMap [ rr:column "Score" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/comments/Text> ; rr:objectMap [ rr:column "Text" ; rr:datatype xsd:string ] ] ;
@@ -29,12 +32,14 @@
     rr:predicateObjectMap [ rr:predicate <http://example.org/comments/UserId> ; rr:objectMap [ rr:column "UserId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/comments/UserDisplayName> ; rr:objectMap [ rr:column "UserDisplayName" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/comments/refers_to_users> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/users> ; rr:joinCondition [ rr:child "UserId" ; rr:parent "Id" ] ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/comments/refers_to_posts> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/posts> ; rr:joinCondition [ rr:child "PostId" ; rr:parent "Id" ] ] ] .
+    rr:predicateObjectMap [ rr:predicate <http://example.org/comments/refers_to_posts> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/posts> ; rr:joinCondition [ rr:child "PostId" ; rr:parent "Id" ] ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/comments/refers_to_badges> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/badges> ; rr:joinCondition [ rr:child "Id" ; rr:parent "Id" ] ] ] .
 
 # === Table: codebase_community.postHistory (pk=Id) ===
 <http://example.org/tm/codebase_community/postHistory> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "postHistory" ] ;
     rr:subjectMap [ rr:template "http://example.org/codebase_community/{Id}" ; rr:class ex:postHistory ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/postHistory/Id> ; rr:objectMap [ rr:column "Id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/postHistory/PostHistoryTypeId> ; rr:objectMap [ rr:column "PostHistoryTypeId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/postHistory/PostId> ; rr:objectMap [ rr:column "PostId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/postHistory/RevisionGUID> ; rr:objectMap [ rr:column "RevisionGUID" ; rr:datatype xsd:string ] ] ;
@@ -44,23 +49,27 @@
     rr:predicateObjectMap [ rr:predicate <http://example.org/postHistory/Comment> ; rr:objectMap [ rr:column "Comment" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/postHistory/UserDisplayName> ; rr:objectMap [ rr:column "UserDisplayName" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/postHistory/refers_to_users> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/users> ; rr:joinCondition [ rr:child "UserId" ; rr:parent "Id" ] ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/postHistory/refers_to_posts> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/posts> ; rr:joinCondition [ rr:child "PostId" ; rr:parent "Id" ] ] ] .
+    rr:predicateObjectMap [ rr:predicate <http://example.org/postHistory/refers_to_posts> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/posts> ; rr:joinCondition [ rr:child "PostId" ; rr:parent "Id" ] ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/postHistory/refers_to_badges> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/badges> ; rr:joinCondition [ rr:child "Id" ; rr:parent "Id" ] ] ] .
 
 # === Table: codebase_community.postLinks (pk=Id) ===
 <http://example.org/tm/codebase_community/postLinks> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "postLinks" ] ;
     rr:subjectMap [ rr:template "http://example.org/codebase_community/{Id}" ; rr:class ex:postLinks ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/postLinks/Id> ; rr:objectMap [ rr:column "Id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/postLinks/CreationDate> ; rr:objectMap [ rr:column "CreationDate" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/postLinks/PostId> ; rr:objectMap [ rr:column "PostId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/postLinks/RelatedPostId> ; rr:objectMap [ rr:column "RelatedPostId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/postLinks/LinkTypeId> ; rr:objectMap [ rr:column "LinkTypeId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/postLinks/refers_to_posts> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/posts> ; rr:joinCondition [ rr:child "RelatedPostId" ; rr:parent "Id" ] ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/postLinks/refers_to_posts> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/posts> ; rr:joinCondition [ rr:child "PostId" ; rr:parent "Id" ] ] ] .
+    rr:predicateObjectMap [ rr:predicate <http://example.org/postLinks/refers_to_posts> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/posts> ; rr:joinCondition [ rr:child "PostId" ; rr:parent "Id" ] ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/postLinks/refers_to_badges> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/badges> ; rr:joinCondition [ rr:child "Id" ; rr:parent "Id" ] ] ] .
 
 # === Table: codebase_community.posts (pk=Id) ===
 <http://example.org/tm/codebase_community/posts> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "posts" ] ;
     rr:subjectMap [ rr:template "http://example.org/codebase_community/{Id}" ; rr:class ex:posts ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/posts/Id> ; rr:objectMap [ rr:column "Id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/posts/PostTypeId> ; rr:objectMap [ rr:column "PostTypeId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/posts/AcceptedAnswerId> ; rr:objectMap [ rr:column "AcceptedAnswerId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/posts/CreaionDate> ; rr:objectMap [ rr:column "CreaionDate" ; rr:datatype xsd:string ] ] ;
@@ -83,22 +92,26 @@
     rr:predicateObjectMap [ rr:predicate <http://example.org/posts/LastEditorDisplayName> ; rr:objectMap [ rr:column "LastEditorDisplayName" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/posts/refers_to_posts> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/posts> ; rr:joinCondition [ rr:child "ParentId" ; rr:parent "Id" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/posts/refers_to_users> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/users> ; rr:joinCondition [ rr:child "OwnerUserId" ; rr:parent "Id" ] ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/posts/refers_to_users> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/users> ; rr:joinCondition [ rr:child "LastEditorUserId" ; rr:parent "Id" ] ] ] .
+    rr:predicateObjectMap [ rr:predicate <http://example.org/posts/refers_to_users> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/users> ; rr:joinCondition [ rr:child "LastEditorUserId" ; rr:parent "Id" ] ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/posts/refers_to_badges> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/badges> ; rr:joinCondition [ rr:child "Id" ; rr:parent "Id" ] ] ] .
 
 # === Table: codebase_community.tags (pk=Id) ===
 <http://example.org/tm/codebase_community/tags> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "tags" ] ;
     rr:subjectMap [ rr:template "http://example.org/codebase_community/{Id}" ; rr:class ex:tags ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/tags/Id> ; rr:objectMap [ rr:column "Id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/tags/TagName> ; rr:objectMap [ rr:column "TagName" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/tags/Count> ; rr:objectMap [ rr:column "Count" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/tags/ExcerptPostId> ; rr:objectMap [ rr:column "ExcerptPostId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/tags/WikiPostId> ; rr:objectMap [ rr:column "WikiPostId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/tags/refers_to_posts> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/posts> ; rr:joinCondition [ rr:child "ExcerptPostId" ; rr:parent "Id" ] ] ] .
+    rr:predicateObjectMap [ rr:predicate <http://example.org/tags/refers_to_posts> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/posts> ; rr:joinCondition [ rr:child "ExcerptPostId" ; rr:parent "Id" ] ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/tags/refers_to_badges> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/badges> ; rr:joinCondition [ rr:child "Id" ; rr:parent "Id" ] ] ] .
 
 # === Table: codebase_community.users (pk=Id) ===
 <http://example.org/tm/codebase_community/users> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "users" ] ;
     rr:subjectMap [ rr:template "http://example.org/codebase_community/{Id}" ; rr:class ex:users ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/users/Id> ; rr:objectMap [ rr:column "Id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/users/Reputation> ; rr:objectMap [ rr:column "Reputation" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/users/CreationDate> ; rr:objectMap [ rr:column "CreationDate" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/users/DisplayName> ; rr:objectMap [ rr:column "DisplayName" ; rr:datatype xsd:string ] ] ;
@@ -111,17 +124,20 @@
     rr:predicateObjectMap [ rr:predicate <http://example.org/users/DownVotes> ; rr:objectMap [ rr:column "DownVotes" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/users/AccountId> ; rr:objectMap [ rr:column "AccountId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/users/Age> ; rr:objectMap [ rr:column "Age" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/users/ProfileImageUrl> ; rr:objectMap [ rr:column "ProfileImageUrl" ; rr:datatype xsd:string ] ] .
+    rr:predicateObjectMap [ rr:predicate <http://example.org/users/ProfileImageUrl> ; rr:objectMap [ rr:column "ProfileImageUrl" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/users/refers_to_badges> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/badges> ; rr:joinCondition [ rr:child "Id" ; rr:parent "Id" ] ] ] .
 
 # === Table: codebase_community.votes (pk=Id) ===
 <http://example.org/tm/codebase_community/votes> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "votes" ] ;
     rr:subjectMap [ rr:template "http://example.org/codebase_community/{Id}" ; rr:class ex:votes ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/votes/Id> ; rr:objectMap [ rr:column "Id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/votes/PostId> ; rr:objectMap [ rr:column "PostId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/votes/VoteTypeId> ; rr:objectMap [ rr:column "VoteTypeId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/votes/CreationDate> ; rr:objectMap [ rr:column "CreationDate" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/votes/UserId> ; rr:objectMap [ rr:column "UserId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/votes/BountyAmount> ; rr:objectMap [ rr:column "BountyAmount" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/votes/refers_to_users> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/users> ; rr:joinCondition [ rr:child "UserId" ; rr:parent "Id" ] ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/votes/refers_to_posts> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/posts> ; rr:joinCondition [ rr:child "PostId" ; rr:parent "Id" ] ] ] .
+    rr:predicateObjectMap [ rr:predicate <http://example.org/votes/refers_to_posts> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/posts> ; rr:joinCondition [ rr:child "PostId" ; rr:parent "Id" ] ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/votes/refers_to_badges> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/codebase_community/badges> ; rr:joinCondition [ rr:child "Id" ; rr:parent "Id" ] ] ] .
 

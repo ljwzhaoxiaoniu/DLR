@@ -5,14 +5,15 @@
 @prefix ex: <http://example.org/> .
 
 # R2RML — database: toxicology
-# URL: sqlite:///D:\Code_Proj\DLR Proj\MINIDEV_sqlite\dev_databases\toxicology/toxicology.sqlite
-# Tables: 4  ForeignKeys: 5
-# Source: real FK constraints (PRAGMA foreign_key_list)
+# URL: sqlite:///MINIDEV_sqlite\dev_databases\toxicology/toxicology.sqlite
+# Tables: 4  ForeignKeys: 5 formal + 0 heuristic = 5 total
+# Source: PRAGMA foreign_key_list + column-name→PK matching
 
 # === Table: toxicology.atom (pk=atom_id) ===
 <http://example.org/tm/toxicology/atom> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "atom" ] ;
     rr:subjectMap [ rr:template "http://example.org/toxicology/{atom_id}" ; rr:class ex:atom ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/atom/atom_id> ; rr:objectMap [ rr:column "atom_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/atom/molecule_id> ; rr:objectMap [ rr:column "molecule_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/atom/element> ; rr:objectMap [ rr:column "element" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/atom/refers_to_molecule> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/toxicology/molecule> ; rr:joinCondition [ rr:child "molecule_id" ; rr:parent "molecule_id" ] ] ] .
@@ -21,6 +22,7 @@
 <http://example.org/tm/toxicology/bond> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "bond" ] ;
     rr:subjectMap [ rr:template "http://example.org/toxicology/{bond_id}" ; rr:class ex:bond ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/bond/bond_id> ; rr:objectMap [ rr:column "bond_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/bond/molecule_id> ; rr:objectMap [ rr:column "molecule_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/bond/bond_type> ; rr:objectMap [ rr:column "bond_type" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/bond/refers_to_molecule> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/toxicology/molecule> ; rr:joinCondition [ rr:child "molecule_id" ; rr:parent "molecule_id" ] ] ] .
@@ -30,6 +32,7 @@
     rr:logicalTable [ rr:tableName "connected" ] ;
     rr:subjectMap [ rr:template "http://example.org/toxicology/{atom_id2}" ; rr:class ex:connected ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/connected/atom_id> ; rr:objectMap [ rr:column "atom_id" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/connected/atom_id2> ; rr:objectMap [ rr:column "atom_id2" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/connected/bond_id> ; rr:objectMap [ rr:column "bond_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/connected/refers_to_bond> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/toxicology/bond> ; rr:joinCondition [ rr:child "bond_id" ; rr:parent "bond_id" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/connected/refers_to_atom> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/toxicology/atom> ; rr:joinCondition [ rr:child "atom_id2" ; rr:parent "atom_id" ] ] ] ;
@@ -39,5 +42,6 @@
 <http://example.org/tm/toxicology/molecule> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "molecule" ] ;
     rr:subjectMap [ rr:template "http://example.org/toxicology/{molecule_id}" ; rr:class ex:molecule ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/molecule/molecule_id> ; rr:objectMap [ rr:column "molecule_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/molecule/label> ; rr:objectMap [ rr:column "label" ; rr:datatype xsd:string ] ] .
 

@@ -65,12 +65,16 @@ def load_fks(sqlite_dir: Path, db_name: str) -> List[Tuple[str, str, str, str]]:
         cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name != 'sqlite_sequence'")
         tables = [r[0] for r in cur.fetchall()]
         fks = []
+        seen_fks = set()
         for tbl in tables:
             cur.execute(f"PRAGMA foreign_key_list('{tbl}')")
             for row in cur.fetchall():
                 # id, seq, table, from, to, on_update, on_delete, match
                 _, _, parent_tbl, from_col, to_col, *_ = row
-                fks.append((tbl, from_col, parent_tbl, to_col))
+                key = (tbl, from_col, parent_tbl, to_col)
+                if key not in seen_fks:
+                    seen_fks.add(key)
+                    fks.append(key)
         conn.close()
         return fks
     except Exception:
@@ -91,11 +95,6 @@ def gen(
     ttl.pfx("rdfs",   "http://www.w3.org/2000/01/rdf-schema#")
     ttl.pfx("xsd",    "http://www.w3.org/2001/XMLSchema#")
     ttl.pfx("ex",     "http://example.org/")
-    ttl.blank()
-    ttl.cm(f"R2RML — database: {db_name}")
-    ttl.cm(f"URL: {db_url}")
-    ttl.cm(f"Tables: {len(tables)}  ForeignKeys: {len(fks)}")
-    ttl.cm(f"Source: real FK constraints (PRAGMA foreign_key_list)")
     ttl.blank()
 
     # Get column info per table directly from SQLite
@@ -124,8 +123,37 @@ def gen(
 
     # Group FKs by child table
     fks_by_child: Dict[str, List[Tuple[str, str, str]]] = {}
+    formal_fk_cols: set = set()  # (table, col) already covered by formal FK
     for from_tbl, from_col, to_tbl, to_col in fks:
         fks_by_child.setdefault(from_tbl, []).append((from_col, to_tbl, to_col))
+        formal_fk_cols.add((from_tbl, from_col))
+
+    # Heuristic FK detection: if a column name in table A matches a PK name in table B,
+    # treat it as a FK (covers databases without formal FK constraints).
+    heuristic_fk_count = 0
+    for tbl in tables:
+        tbl_cols = cols_map.get(tbl, [])
+        for col_name, _ in tbl_cols:
+            if (tbl, col_name) in formal_fk_cols:
+                continue
+            # Check if col_name matches any other table's PK
+            for other_tbl, other_pk in pk_map.items():
+                if other_tbl == tbl:
+                    continue
+                # Only match FK-style column names (ending in "ID" or "Id")
+                if not (col_name.endswith("ID") or col_name.endswith("Id")):
+                    continue
+                if col_name == other_pk:
+                    fks_by_child.setdefault(tbl, []).append((col_name, other_tbl, other_pk))
+                    heuristic_fk_count += 1
+                    break  # first match wins
+
+    total_fks = len(fks) + heuristic_fk_count
+    ttl.cm(f"R2RML — database: {db_name}")
+    ttl.cm(f"URL: {db_url}")
+    ttl.cm(f"Tables: {len(tables)}  ForeignKeys: {len(fks)} formal + {heuristic_fk_count} heuristic = {total_fks} total")
+    ttl.cm(f"Source: PRAGMA foreign_key_list + column-name→PK matching")
+    ttl.blank()
 
     for tbl in tables:
         tbl_lower = tbl.lower()
@@ -142,8 +170,6 @@ def gen(
         entries: List[str] = []
         cols = cols_map.get(tbl, [])
         for col_name, col_type in cols:
-            if col_name == pk:
-                continue
             pred = f"<http://example.org/{_slug(tbl)}/{_slug(col_name)}>"
             entries.append(
                 f"rr:predicateObjectMap [ "

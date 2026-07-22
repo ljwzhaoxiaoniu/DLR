@@ -5,20 +5,22 @@
 @prefix ex: <http://example.org/> .
 
 # R2RML — database: european_football_2
-# URL: sqlite:///D:\Code_Proj\DLR Proj\MINIDEV_sqlite\dev_databases\european_football_2/european_football_2.sqlite
-# Tables: 8  ForeignKeys: 31
-# Source: real FK constraints (PRAGMA foreign_key_list)
+# URL: sqlite:///MINIDEV_sqlite\dev_databases\european_football_2/european_football_2.sqlite
+# Tables: 7  ForeignKeys: 31 formal + 0 heuristic = 31 total
+# Source: PRAGMA foreign_key_list + column-name→PK matching
 
 # === Table: european_football_2.Country (pk=id) ===
 <http://example.org/tm/european_football_2/Country> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "Country" ] ;
     rr:subjectMap [ rr:template "http://example.org/european_football_2/{id}" ; rr:class ex:Country ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Country/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Country/name> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ] .
 
 # === Table: european_football_2.League (pk=id) ===
 <http://example.org/tm/european_football_2/League> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "League" ] ;
     rr:subjectMap [ rr:template "http://example.org/european_football_2/{id}" ; rr:class ex:League ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/League/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/League/country_id> ; rr:objectMap [ rr:column "country_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/League/name> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/League/refers_to_country> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/european_football_2/country> ; rr:joinCondition [ rr:child "country_id" ; rr:parent "id" ] ] ] .
@@ -27,6 +29,7 @@
 <http://example.org/tm/european_football_2/Match> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "Match" ] ;
     rr:subjectMap [ rr:template "http://example.org/european_football_2/{id}" ; rr:class ex:Match ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Match/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Match/country_id> ; rr:objectMap [ rr:column "country_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Match/league_id> ; rr:objectMap [ rr:column "league_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Match/season> ; rr:objectMap [ rr:column "season" ; rr:datatype xsd:string ] ] ;
@@ -172,6 +175,7 @@
 <http://example.org/tm/european_football_2/Player> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "Player" ] ;
     rr:subjectMap [ rr:template "http://example.org/european_football_2/{id}" ; rr:class ex:Player ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Player/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Player/player_api_id> ; rr:objectMap [ rr:column "player_api_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Player/player_name> ; rr:objectMap [ rr:column "player_name" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Player/player_fifa_api_id> ; rr:objectMap [ rr:column "player_fifa_api_id" ; rr:datatype xsd:string ] ] ;
@@ -183,6 +187,7 @@
 <http://example.org/tm/european_football_2/Player_Attributes> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "Player_Attributes" ] ;
     rr:subjectMap [ rr:template "http://example.org/european_football_2/{id}" ; rr:class ex:Player_Attributes ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Player_Attributes/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Player_Attributes/player_fifa_api_id> ; rr:objectMap [ rr:column "player_fifa_api_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Player_Attributes/player_api_id> ; rr:objectMap [ rr:column "player_api_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Player_Attributes/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ] ;
@@ -231,6 +236,7 @@
 <http://example.org/tm/european_football_2/Team> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "Team" ] ;
     rr:subjectMap [ rr:template "http://example.org/european_football_2/{id}" ; rr:class ex:Team ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Team/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team/team_api_id> ; rr:objectMap [ rr:column "team_api_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team/team_fifa_api_id> ; rr:objectMap [ rr:column "team_fifa_api_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team/team_long_name> ; rr:objectMap [ rr:column "team_long_name" ; rr:datatype xsd:string ] ] ;
@@ -240,6 +246,7 @@
 <http://example.org/tm/european_football_2/Team_Attributes> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "Team_Attributes" ] ;
     rr:subjectMap [ rr:template "http://example.org/european_football_2/{id}" ; rr:class ex:Team_Attributes ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/team_fifa_api_id> ; rr:objectMap [ rr:column "team_fifa_api_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/team_api_id> ; rr:objectMap [ rr:column "team_api_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ] ;
@@ -266,10 +273,4 @@
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/defenceDefenderLineClass> ; rr:objectMap [ rr:column "defenceDefenderLineClass" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/refers_to_Team> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/european_football_2/Team> ; rr:joinCondition [ rr:child "team_api_id" ; rr:parent "team_api_id" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/refers_to_Team> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/european_football_2/Team> ; rr:joinCondition [ rr:child "team_fifa_api_id" ; rr:parent "team_fifa_api_id" ] ] ] .
-
-# === Table: european_football_2.sqlite_sequence (pk=name) ===
-<http://example.org/tm/european_football_2/sqlite_sequence> a rr:TriplesMap ;
-    rr:logicalTable [ rr:tableName "sqlite_sequence" ] ;
-    rr:subjectMap [ rr:template "http://example.org/european_football_2/{name}" ; rr:class ex:sqlite_sequence ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sqlite_sequence/seq> ; rr:objectMap [ rr:column "seq" ; rr:datatype xsd:string ] ] .
 

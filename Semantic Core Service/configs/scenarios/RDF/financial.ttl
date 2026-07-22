@@ -5,14 +5,15 @@
 @prefix ex: <http://example.org/> .
 
 # R2RML — database: financial
-# URL: sqlite:///D:\Code_Proj\DLR Proj\MINIDEV_sqlite\dev_databases\financial/financial.sqlite
-# Tables: 8  ForeignKeys: 8
-# Source: real FK constraints (PRAGMA foreign_key_list)
+# URL: sqlite:///MINIDEV_sqlite\dev_databases\financial/financial.sqlite
+# Tables: 8  ForeignKeys: 8 formal + 0 heuristic = 8 total
+# Source: PRAGMA foreign_key_list + column-name→PK matching
 
 # === Table: financial.account (pk=account_id) ===
 <http://example.org/tm/financial/account> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "account" ] ;
     rr:subjectMap [ rr:template "http://example.org/financial/{account_id}" ; rr:class ex:account ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/account/account_id> ; rr:objectMap [ rr:column "account_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/account/district_id> ; rr:objectMap [ rr:column "district_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/account/frequency> ; rr:objectMap [ rr:column "frequency" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/account/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ] ;
@@ -22,6 +23,7 @@
 <http://example.org/tm/financial/card> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "card" ] ;
     rr:subjectMap [ rr:template "http://example.org/financial/{card_id}" ; rr:class ex:card ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/card/card_id> ; rr:objectMap [ rr:column "card_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/card/disp_id> ; rr:objectMap [ rr:column "disp_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/card/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/card/issued> ; rr:objectMap [ rr:column "issued" ; rr:datatype xsd:string ] ] ;
@@ -31,6 +33,7 @@
 <http://example.org/tm/financial/client> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "client" ] ;
     rr:subjectMap [ rr:template "http://example.org/financial/{client_id}" ; rr:class ex:client ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/client/client_id> ; rr:objectMap [ rr:column "client_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/client/gender> ; rr:objectMap [ rr:column "gender" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/client/birth_date> ; rr:objectMap [ rr:column "birth_date" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/client/district_id> ; rr:objectMap [ rr:column "district_id" ; rr:datatype xsd:string ] ] ;
@@ -40,6 +43,7 @@
 <http://example.org/tm/financial/disp> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "disp" ] ;
     rr:subjectMap [ rr:template "http://example.org/financial/{disp_id}" ; rr:class ex:disp ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/disp/disp_id> ; rr:objectMap [ rr:column "disp_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/disp/client_id> ; rr:objectMap [ rr:column "client_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/disp/account_id> ; rr:objectMap [ rr:column "account_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/disp/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ] ;
@@ -50,6 +54,7 @@
 <http://example.org/tm/financial/district> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "district" ] ;
     rr:subjectMap [ rr:template "http://example.org/financial/{district_id}" ; rr:class ex:district ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/district_id> ; rr:objectMap [ rr:column "district_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/district/A2> ; rr:objectMap [ rr:column "A2" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/district/A3> ; rr:objectMap [ rr:column "A3" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/district/A4> ; rr:objectMap [ rr:column "A4" ; rr:datatype xsd:string ] ] ;
@@ -70,6 +75,7 @@
 <http://example.org/tm/financial/loan> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "loan" ] ;
     rr:subjectMap [ rr:template "http://example.org/financial/{loan_id}" ; rr:class ex:loan ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/loan/loan_id> ; rr:objectMap [ rr:column "loan_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/loan/account_id> ; rr:objectMap [ rr:column "account_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/loan/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/loan/amount> ; rr:objectMap [ rr:column "amount" ; rr:datatype xsd:string ] ] ;
@@ -82,6 +88,7 @@
 <http://example.org/tm/financial/order> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "order" ] ;
     rr:subjectMap [ rr:template "http://example.org/financial/{order_id}" ; rr:class ex:order ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/order/order_id> ; rr:objectMap [ rr:column "order_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/order/account_id> ; rr:objectMap [ rr:column "account_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/order/bank_to> ; rr:objectMap [ rr:column "bank_to" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/order/account_to> ; rr:objectMap [ rr:column "account_to" ; rr:datatype xsd:string ] ] ;
@@ -93,6 +100,7 @@
 <http://example.org/tm/financial/trans> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "trans" ] ;
     rr:subjectMap [ rr:template "http://example.org/financial/{trans_id}" ; rr:class ex:trans ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/trans_id> ; rr:objectMap [ rr:column "trans_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/trans/account_id> ; rr:objectMap [ rr:column "account_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/trans/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/trans/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ] ;

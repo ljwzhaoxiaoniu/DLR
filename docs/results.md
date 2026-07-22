@@ -18,8 +18,9 @@
 | 17-18 | q1505, q1506 | 100% | **100%** | 100% | q1505 三范式 COUNT(DISTINCT) 比 Gold COUNT(*)更忠实；ER judge超时/RDF不一致→手动翻盘 |
 | 19-20 | q1507, q1509 | 100% | 100% | **83%** | q1507/q1509 ER+DLR 全 strict PASS；RDF q1507 多选 Date INCORRECT(80) |
 | 21-22 | q1514, q1515 | 100% | **100%** | 100% | 三范式 6/6；q1514 三范式 judge 翻盘，q1515 ER/RDF strict PASS |
+| 23-24 | q1521, q1524 | **83%** | 100% | 100% | ER q1524 走 yearmonth+Currency 而非 transactions_1k+gasstations.Country；DLR YAML+R2RML 修复后 DLR/RDF 均正确 |
 
-**round_1 终态：63/66 CORRECT**（截至 pair 21-22）（判定政策：五环节全对才翻盘，见 [evaluation.md](evaluation.md)）。
+**round_1 终态：68/72 CORRECT**（截至 pair 23-24）（判定政策：五环节全对才翻盘，见 [evaluation.md](evaluation.md)）。
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -47,6 +48,8 @@
 | q1509 | **36,451** | 63,072 | 34,764 |
 | q1514 | 62,465 | 69,134 | **45,594** |
 | q1515 | 46,645 | 43,077 | **50,827** |
+| q1521 | **46,690** | 136,201 | 46,206 |
+| q1524 | 117,758 | **77,815** | 66,272 |
 
 \* 粗体 = 该题最优范式；q1490 值取首轮归档数据，多次重跑有波动
 
@@ -56,10 +59,10 @@
 |------|----|----|-----|
 | 最低单题 total | **26,961 (q1498)** | 32,300 (q1498) | 34,764 (q1509) |
 | 最高单题 total | 295,225 (q1500) | 347,304 (q1500) | **357,599 (q1500)** |
-| 平均 total | ~73K | **~83K** | ~94K |
-| strict PASS 率 | 4/22 | **6/22** | 6/22 |
-| process_score 100 | **22/22** | **22/22** | 19/22 |
-| CORRECT | **22/22** | **22/22** | 19/22 |
+| 平均 total | ~75K | **~85K** | ~91K |
+| strict PASS 率 | 5/24 | **7/24** | 7/24 |
+| process_score 100 | 23/24 | **24/24** | 21/24 |
+| CORRECT | 23/24 | **24/24** | 21/24 |
 
 ### 定性观察
 
@@ -83,10 +86,11 @@
 - **q1500 DLR 实证原创范式需要工具承担"教材"角色**：ARCS 是 DLR 独创概念，LLM 无先验知识。`get_pe_full` docstring 补上 A_anchor.key=JOIN 键、多 PE 联查模式后，Agent 首次正确写出 `yearmonth JOIN transactions_1k ON CustomerID`。
 - **q1505 暴露 gold SQL 语义偏差**：question "how many of **them**" → 问客户数，三范式 `COUNT(DISTINCT CustomerID)`→391 vs gold `COUNT(*)`→2730（计人次）。gold 未区分"客户"与"客户-月记录"，见 [dataset.md](dataset.md)。
 - **q1514/q1515 结构化查询**：时间+日期双条件定位单条记录再关联查 Currency/Segment，三范式全部写出正确 JOIN/子查询。DLR strict PASS 率仍为 0/2 但 judge 五环节全翻盘——说明预测结果正确只是与 gold 格式/细节略有偏差（如 LIMIT 10 等）。
+- **q1524 ER 过度互联反成噪音**：ER 范式所有表 FK 全暴露，面对三张有 CustomerID 的表（customers/yearmonth/transactions_1k），Agent 选了错误的 yearmonth（月度聚合表）而非 transactions_1k（交易明细）。DLR 的 PAS 精准路由和 RDF 的显式 `refers_to` 反而提供了更清晰的路径引导。**全互联≠好引导。**
 
 ## 下一步
 
-- 继续推进 round_1 后续题目（下一对 23-24: q1521+q1524）；
+- 继续推进 round_1 后续题目（下一对 25-26: q1525+q1526）；
 - 修复 P1 R2RML 缺列后再跑 RDF 对照，消除 `PRAGMA table_info` 兜底噪声；
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 

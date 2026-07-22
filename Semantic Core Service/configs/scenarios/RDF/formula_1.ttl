@@ -5,14 +5,15 @@
 @prefix ex: <http://example.org/> .
 
 # R2RML — database: formula_1
-# URL: sqlite:///D:\Code_Proj\DLR Proj\MINIDEV_sqlite\dev_databases\formula_1/formula_1.sqlite
-# Tables: 14  ForeignKeys: 19
-# Source: real FK constraints (PRAGMA foreign_key_list)
+# URL: sqlite:///MINIDEV_sqlite\dev_databases\formula_1/formula_1.sqlite
+# Tables: 13  ForeignKeys: 19 formal + 0 heuristic = 19 total
+# Source: PRAGMA foreign_key_list + column-name→PK matching
 
 # === Table: formula_1.circuits (pk=circuitId) ===
 <http://example.org/tm/formula_1/circuits> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "circuits" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{circuitId}" ; rr:class ex:circuits ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/circuitId> ; rr:objectMap [ rr:column "circuitId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/circuitRef> ; rr:objectMap [ rr:column "circuitRef" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/name> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/location> ; rr:objectMap [ rr:column "location" ; rr:datatype xsd:string ] ] ;
@@ -26,6 +27,7 @@
 <http://example.org/tm/formula_1/constructorResults> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "constructorResults" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{constructorResultsId}" ; rr:class ex:constructorResults ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorResults/constructorResultsId> ; rr:objectMap [ rr:column "constructorResultsId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/constructorResults/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/constructorResults/constructorId> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/constructorResults/points> ; rr:objectMap [ rr:column "points" ; rr:datatype xsd:string ] ] ;
@@ -37,6 +39,7 @@
 <http://example.org/tm/formula_1/constructorStandings> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "constructorStandings" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{constructorStandingsId}" ; rr:class ex:constructorStandings ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/constructorStandingsId> ; rr:objectMap [ rr:column "constructorStandingsId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/constructorId> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/points> ; rr:objectMap [ rr:column "points" ; rr:datatype xsd:string ] ] ;
@@ -50,6 +53,7 @@
 <http://example.org/tm/formula_1/constructors> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "constructors" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{constructorId}" ; rr:class ex:constructors ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructors/constructorId> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/constructors/constructorRef> ; rr:objectMap [ rr:column "constructorRef" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/constructors/name> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/constructors/nationality> ; rr:objectMap [ rr:column "nationality" ; rr:datatype xsd:string ] ] ;
@@ -59,6 +63,7 @@
 <http://example.org/tm/formula_1/driverStandings> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "driverStandings" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{driverStandingsId}" ; rr:class ex:driverStandings ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/driverStandingsId> ; rr:objectMap [ rr:column "driverStandingsId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/points> ; rr:objectMap [ rr:column "points" ; rr:datatype xsd:string ] ] ;
@@ -72,6 +77,7 @@
 <http://example.org/tm/formula_1/drivers> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "drivers" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{driverId}" ; rr:class ex:drivers ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/driverRef> ; rr:objectMap [ rr:column "driverRef" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/number> ; rr:objectMap [ rr:column "number" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/code> ; rr:objectMap [ rr:column "code" ; rr:datatype xsd:string ] ] ;
@@ -87,6 +93,7 @@
     rr:subjectMap [ rr:template "http://example.org/formula_1/{lap}" ; rr:class ex:lapTimes ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/lap> ; rr:objectMap [ rr:column "lap" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/position> ; rr:objectMap [ rr:column "position" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/time> ; rr:objectMap [ rr:column "time" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/milliseconds> ; rr:objectMap [ rr:column "milliseconds" ; rr:datatype xsd:string ] ] ;
@@ -99,6 +106,7 @@
     rr:subjectMap [ rr:template "http://example.org/formula_1/{stop}" ; rr:class ex:pitStops ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/stop> ; rr:objectMap [ rr:column "stop" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/lap> ; rr:objectMap [ rr:column "lap" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/time> ; rr:objectMap [ rr:column "time" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/duration> ; rr:objectMap [ rr:column "duration" ; rr:datatype xsd:string ] ] ;
@@ -110,6 +118,7 @@
 <http://example.org/tm/formula_1/qualifying> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "qualifying" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{qualifyId}" ; rr:class ex:qualifying ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/qualifyId> ; rr:objectMap [ rr:column "qualifyId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/constructorId> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ] ;
@@ -126,6 +135,7 @@
 <http://example.org/tm/formula_1/races> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "races" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{raceId}" ; rr:class ex:races ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/races/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/races/year> ; rr:objectMap [ rr:column "year" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/races/round> ; rr:objectMap [ rr:column "round" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/races/circuitId> ; rr:objectMap [ rr:column "circuitId" ; rr:datatype xsd:string ] ] ;
@@ -140,6 +150,7 @@
 <http://example.org/tm/formula_1/results> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "results" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{resultId}" ; rr:class ex:results ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/resultId> ; rr:objectMap [ rr:column "resultId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/results/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/results/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/results/constructorId> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ] ;
@@ -166,17 +177,13 @@
 <http://example.org/tm/formula_1/seasons> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "seasons" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{year}" ; rr:class ex:seasons ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/seasons/year> ; rr:objectMap [ rr:column "year" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/seasons/url> ; rr:objectMap [ rr:column "url" ; rr:datatype xsd:string ] ] .
-
-# === Table: formula_1.sqlite_sequence (pk=name) ===
-<http://example.org/tm/formula_1/sqlite_sequence> a rr:TriplesMap ;
-    rr:logicalTable [ rr:tableName "sqlite_sequence" ] ;
-    rr:subjectMap [ rr:template "http://example.org/formula_1/{name}" ; rr:class ex:sqlite_sequence ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sqlite_sequence/seq> ; rr:objectMap [ rr:column "seq" ; rr:datatype xsd:string ] ] .
 
 # === Table: formula_1.status (pk=statusId) ===
 <http://example.org/tm/formula_1/status> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "status" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{statusId}" ; rr:class ex:status ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/status/statusId> ; rr:objectMap [ rr:column "statusId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/status/status> ; rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ] ] .
 
