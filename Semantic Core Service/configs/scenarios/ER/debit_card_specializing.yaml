@@ -144,3 +144,18 @@ relations:
   from_entity_attr_id: debit_card_specializing.yearmonth.CustomerID
   to_entity_attr_id: debit_card_specializing.customers.CustomerID
   description: yearmonth.CustomerID -> customers.CustomerID
+- relation_id: debit_card_specializing.transactions_1k_TO_customers
+  biz_name: transactions_1k_to_customers
+  from_entity_attr_id: debit_card_specializing.transactions_1k.CustomerID
+  to_entity_attr_id: debit_card_specializing.customers.CustomerID
+  description: transactions_1k.CustomerID -> customers.CustomerID
+- relation_id: debit_card_specializing.transactions_1k_TO_gasstations
+  biz_name: transactions_1k_to_gasstations
+  from_entity_attr_id: debit_card_specializing.transactions_1k.GasStationID
+  to_entity_attr_id: debit_card_specializing.gasstations.GasStationID
+  description: transactions_1k.GasStationID -> gasstations.GasStationID
+- relation_id: debit_card_specializing.transactions_1k_TO_products
+  biz_name: transactions_1k_to_products
+  from_entity_attr_id: debit_card_specializing.transactions_1k.ProductID
+  to_entity_attr_id: debit_card_specializing.products.ProductID
+  description: transactions_1k.ProductID -> products.ProductID

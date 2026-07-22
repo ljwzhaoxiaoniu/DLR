@@ -12,15 +12,16 @@
 | 5-6 | q1479, q1480 | 100% | **100%** | 100% | dlr_1479 YAML 修复后翻盘 |
 | 7-8 | q1481, q1482 | 100% | **100%** | 100% | gold 数据集错误 → 修正 gold cache 后 judge 翻盘 |
 | 9-10 | q1483, q1484 | 100% | **100%** | 100% | q1483 三范式 strict PASS |
-| 11-12 | q1486, q1490 | 100% | **100%** | **83%** | q1490 gold 两轮修正；ER/DLR 翻盘；RDF bare FK INCORRECT(20) |
-| 13-14 | q1493, q1498 | 100% | **100%** | **83%** | q1498 DLR YAML Consumption 修复后翻盘；RDF INCORRECT(60) |
+| 11-12 | q1486, q1490 | 100% | **100%** | **100%** | q1490 gold 两轮修正；RDF R2RML 修复后翻盘 CORRECT |
+| 13-14 | q1493, q1498 | 100% | **100%** | **100%** | q1498 R2RML 修复后 RDF SUM→GROUP BY→MAX 正确 |
 | 15-16 | q1500, q1501 | 100% | **100%** | 100% | q1500 DLR MCP docstring 补 ARCS 语义后翻盘 |
 | 17-18 | q1505, q1506 | 100% | **100%** | 100% | q1505 三范式 COUNT(DISTINCT) 比 Gold COUNT(*)更忠实；ER judge超时/RDF不一致→手动翻盘 |
 | 19-20 | q1507, q1509 | 100% | 100% | **83%** | q1507/q1509 ER+DLR 全 strict PASS；RDF q1507 多选 Date INCORRECT(80) |
 | 21-22 | q1514, q1515 | 100% | **100%** | 100% | 三范式 6/6；q1514 三范式 judge 翻盘，q1515 ER/RDF strict PASS |
 | 23-24 | q1521, q1524 | **83%** | 100% | 100% | ER q1524 走 yearmonth+Currency 而非 transactions_1k+gasstations.Country；DLR YAML+R2RML 修复后 DLR/RDF 均正确 |
+| 25-26 | q1525, q1526 | **0%** | 100% | 100% | ER 双败：q1525 yearmonth、q1526 找错 CustomerID；gold q1525 COUNT(*)、q1526 返回 NULL |
 
-**round_1 终态：68/72 CORRECT**（截至 pair 23-24）（判定政策：五环节全对才翻盘，见 [evaluation.md](evaluation.md)）。
+**round_1 终态：74/78 CORRECT**（截至 pair 25-26，含 q1490/q1498 RDF 修复后翻盘）（判定政策：五环节全对才翻盘，见 [evaluation.md](evaluation.md)）。
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -50,6 +51,8 @@
 | q1515 | 46,645 | 43,077 | **50,827** |
 | q1521 | **46,690** | 136,201 | 46,206 |
 | q1524 | 117,758 | **77,815** | 66,272 |
+| q1525 | **46,996** | 73,653 | 61,123 |
+| q1526 | 92,849 | **53,856** | 72,518 |
 
 \* 粗体 = 该题最优范式；q1490 值取首轮归档数据，多次重跑有波动
 
@@ -59,10 +62,10 @@
 |------|----|----|-----|
 | 最低单题 total | **26,961 (q1498)** | 32,300 (q1498) | 34,764 (q1509) |
 | 最高单题 total | 295,225 (q1500) | 347,304 (q1500) | **357,599 (q1500)** |
-| 平均 total | ~75K | **~85K** | ~91K |
-| strict PASS 率 | 5/24 | **7/24** | 7/24 |
-| process_score 100 | 23/24 | **24/24** | 21/24 |
-| CORRECT | 23/24 | **24/24** | 21/24 |
+| 平均 total | ~78K | **~86K** | ~90K |
+| strict PASS 率 | 5/26 | **7/26** | 7/26 |
+| process_score 100 | 23/26 | **26/26** | **25/26** |
+| CORRECT | 23/26 | **26/26** | **25/26** |
 
 ### 定性观察
 
@@ -86,11 +89,13 @@
 - **q1500 DLR 实证原创范式需要工具承担"教材"角色**：ARCS 是 DLR 独创概念，LLM 无先验知识。`get_pe_full` docstring 补上 A_anchor.key=JOIN 键、多 PE 联查模式后，Agent 首次正确写出 `yearmonth JOIN transactions_1k ON CustomerID`。
 - **q1505 暴露 gold SQL 语义偏差**：question "how many of **them**" → 问客户数，三范式 `COUNT(DISTINCT CustomerID)`→391 vs gold `COUNT(*)`→2730（计人次）。gold 未区分"客户"与"客户-月记录"，见 [dataset.md](dataset.md)。
 - **q1514/q1515 结构化查询**：时间+日期双条件定位单条记录再关联查 Currency/Segment，三范式全部写出正确 JOIN/子查询。DLR strict PASS 率仍为 0/2 但 judge 五环节全翻盘——说明预测结果正确只是与 gold 格式/细节略有偏差（如 LIMIT 10 等）。
-- **q1524 ER 过度互联反成噪音**：ER 范式所有表 FK 全暴露，面对三张有 CustomerID 的表（customers/yearmonth/transactions_1k），Agent 选了错误的 yearmonth（月度聚合表）而非 transactions_1k（交易明细）。DLR 的 PAS 精准路由和 RDF 的显式 `refers_to` 反而提供了更清晰的路径引导。**全互联≠好引导。**
+- **q1525 gold 同 q1505 缺陷**：`COUNT(CustomerID)` 计交易次而非客户数；三范式 `COUNT(DISTINCT CustomerID)` 更忠实。
+- **q1526 gold 返回 NULL**：子查询多 JOIN gasstations 无匹配。DLR/RDF 绕过缺陷正确给出 -5.8152（CustomerID=6718→yearmonth 聚合）。
+- **ER 连续 3 题走 yearmonth 替代 transactions_1k**（q1524/1525/1526）：ER 全互联暴露 3 张 CustomerID 表，Agent 持续选错粒度（月度 vs 日级）。非偶然。：ER 范式所有表 FK 全暴露，面对三张有 CustomerID 的表（customers/yearmonth/transactions_1k），Agent 选了错误的 yearmonth（月度聚合表）而非 transactions_1k（交易明细）。DLR 的 PAS 精准路由和 RDF 的显式 `refers_to` 反而提供了更清晰的路径引导。**全互联≠好引导。**
 
 ## 下一步
 
-- 继续推进 round_1 后续题目（下一对 25-26: q1525+q1526）；
+- 继续推进 round_1 后续题目（下一对 27-28: q1528+q1529）；
 - 修复 P1 R2RML 缺列后再跑 RDF 对照，消除 `PRAGMA table_info` 兜底噪声；
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 

@@ -182,6 +182,28 @@ FROM (
 | **三范式 Pred SQL** | `SELECT COUNT(DISTINCT c.CustomerID) ...` → 391 |
 | **分歧性质** | "how many **of them**"（them=customers）问的是有多少个**客户**——如果某 EUR 客户在多个月消费 >1000，他仍是 ONE customer。Gold COUNT(*) 统计了人次，三范式 COUNT(DISTINCT CustomerID) 统计了不重复客户数，语义上后者更忠实于题干指代。**暂未修改 gold cache**（待后续系统性核对后决定）。 |
 
+### qid 1525 — `debit_card_specializing`（同 q1505：gold COUNT(*) vs COUNT(DISTINCT)）
+
+- **问题**：What is the percentage of the customers who used EUR in 2012/8/25?
+- **evidence**：EUR can be represented by Currency = 'EUR'.
+
+| | 内容 |
+|---|---|
+| **Gold SQL** | `SELECT CAST(SUM(...) AS REAL) * 100 / COUNT(T1.CustomerID) FROM transactions_1k T1 INNER JOIN customers T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Date = '2012-08-25'` — COUNT 计交易次数而非客户数 |
+| **三范式 Pred SQL** | `COUNT(DISTINCT t.CustomerID)` → 7/259 = 2.70% |
+| **分歧性质** | 同 q1505。题目问 "percentage of **the customers**"，Gold 用 `COUNT(CustomerID)` 统计的是交易人次，三范式用 `COUNT(DISTINCT CustomerID)` 统计不重复客户数。一个在同一天有多笔 EUR 交易的客户在 Gold 中被重复计数。**暂未修改 gold cache**。 |
+
+### qid 1526 — `debit_card_specializing`（gold 返回 NULL：子查询多 JOIN gasstations 导致无匹配）
+
+- **问题**：For the customer who paid 634.8 in 2012/8/25, what was the consumption decrease rate from Year 2012 to 2013?
+- **evidence**：decrease rate = (consumption of 2012 - consumption of 2013) / consumption of 2012.
+
+| | 内容 |
+|---|---|
+| **Gold SQL** | 子查询中多 JOIN 了 `gasstations` 表，导致无匹配行 → 外层 `yearmonth` 查不到数据 → 返回 NULL |
+| **正确做法** | 第一步：`transactions_1k WHERE Date='2012-08-24' AND Price=634.8` → CustomerID=6718；第二步：`yearmonth WHERE CustomerID=6718` 聚合 2012/2013 → decrease rate = -5.8152 |
+| **影响** | DLR/RDF strict FAIL（因 gold=NULL 无法匹配），但 judge 正确翻盘。DLR/RDF 答案 -5.8152 与独立验证一致。**需修正 gold cache**。 |
+
 ### 处理约定
 
 - 对 gold SQL 与题意相悖的题目，**直接覆盖 gold cache 的 `rows` 与 `columns` 为正确结果**，保持 `ok=True`。
