@@ -17,8 +17,9 @@
 | 15-16 | q1500, q1501 | 100% | **100%** | 100% | q1500 DLR MCP docstring 补 ARCS 语义后翻盘 |
 | 17-18 | q1505, q1506 | 100% | **100%** | 100% | q1505 三范式 COUNT(DISTINCT) 比 Gold COUNT(*)更忠实；ER judge超时/RDF不一致→手动翻盘 |
 | 19-20 | q1507, q1509 | 100% | 100% | **83%** | q1507/q1509 ER+DLR 全 strict PASS；RDF q1507 多选 Date INCORRECT(80) |
+| 21-22 | q1514, q1515 | 100% | **100%** | 100% | 三范式 6/6；q1514 三范式 judge 翻盘，q1515 ER/RDF strict PASS |
 
-**round_1 终态：57/60 CORRECT**（判定政策：五环节全对才翻盘，见 [evaluation.md](evaluation.md)）。
+**round_1 终态：63/66 CORRECT**（截至 pair 21-22）（判定政策：五环节全对才翻盘，见 [evaluation.md](evaluation.md)）。
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -44,6 +45,8 @@
 | q1506 | **57,614** | 87,096 | 102,344 |
 | q1507 | 37,159 | 44,377 | 41,585 |
 | q1509 | **36,451** | 63,072 | 34,764 |
+| q1514 | 62,465 | 69,134 | **45,594** |
+| q1515 | 46,645 | 43,077 | **50,827** |
 
 \* 粗体 = 该题最优范式；q1490 值取首轮归档数据，多次重跑有波动
 
@@ -53,10 +56,10 @@
 |------|----|----|-----|
 | 最低单题 total | **26,961 (q1498)** | 32,300 (q1498) | 34,764 (q1509) |
 | 最高单题 total | 295,225 (q1500) | 347,304 (q1500) | **357,599 (q1500)** |
-| 平均 total | ~74K | **~86K** | ~98K |
-| strict PASS 率 | 3/20 | **6/20** | 5/20 |
-| process_score 100 | **20/20** | **20/20** | 17/20 |
-| CORRECT | **20/20** | **20/20** | 17/20 |
+| 平均 total | ~73K | **~83K** | ~94K |
+| strict PASS 率 | 4/22 | **6/22** | 6/22 |
+| process_score 100 | **22/22** | **22/22** | 19/22 |
+| CORRECT | **22/22** | **22/22** | 19/22 |
 
 ### 定性观察
 
@@ -79,10 +82,11 @@
 - q1498 DLR/RDF 实证 YAML `private_attributes` 中核心度量列暴露不足→修复 `LOGICAL.Consumption` 新增 `Consumption` public attribute（2026-07-21）。
 - **q1500 DLR 实证原创范式需要工具承担"教材"角色**：ARCS 是 DLR 独创概念，LLM 无先验知识。`get_pe_full` docstring 补上 A_anchor.key=JOIN 键、多 PE 联查模式后，Agent 首次正确写出 `yearmonth JOIN transactions_1k ON CustomerID`。
 - **q1505 暴露 gold SQL 语义偏差**：question "how many of **them**" → 问客户数，三范式 `COUNT(DISTINCT CustomerID)`→391 vs gold `COUNT(*)`→2730（计人次）。gold 未区分"客户"与"客户-月记录"，见 [dataset.md](dataset.md)。
+- **q1514/q1515 结构化查询**：时间+日期双条件定位单条记录再关联查 Currency/Segment，三范式全部写出正确 JOIN/子查询。DLR strict PASS 率仍为 0/2 但 judge 五环节全翻盘——说明预测结果正确只是与 gold 格式/细节略有偏差（如 LIMIT 10 等）。
 
 ## 下一步
 
-- 继续推进 round_1 后续题目（下一对 21-22: q1514+q1515）；
+- 继续推进 round_1 后续题目（下一对 23-24: q1521+q1524）；
 - 修复 P1 R2RML 缺列后再跑 RDF 对照，消除 `PRAGMA table_info` 兜底噪声；
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 
