@@ -19,9 +19,9 @@
 | 19-20 | q1507, q1509 | 100% | 100% | **83%** | q1507/q1509 ER+DLR 全 strict PASS；RDF q1507 多选 Date INCORRECT(80) |
 | 21-22 | q1514, q1515 | 100% | **100%** | 100% | 三范式 6/6；q1514 三范式 judge 翻盘，q1515 ER/RDF strict PASS |
 | 23-24 | q1521, q1524 | **83%** | 100% | 100% | ER q1524 走 yearmonth+Currency 而非 transactions_1k+gasstations.Country；DLR YAML+R2RML 修复后 DLR/RDF 均正确 |
-| 25-26 | q1525, q1526 | **0%** | 100% | 100% | ER 双败：q1525 yearmonth、q1526 找错 CustomerID；gold q1525 COUNT(*)、q1526 返回 NULL |
+| 25-26 | q1525, q1526 | **100%** | 100% | 100% | ER YAML 修复后三题全翻盘；q1525 gold COUNT(*) 已修正 cache；q1526 gold NULL 已修正 |
 
-**round_1 终态：74/78 CORRECT**（截至 pair 25-26，含 q1490/q1498 RDF 修复后翻盘）（判定政策：五环节全对才翻盘，见 [evaluation.md](evaluation.md)）。
+**round_1 终态：77/78 CORRECT**（截至 pair 25-26，含 ER/RDF 修复后翻盘）（判定政策：五环节全对才翻盘，见 [evaluation.md](evaluation.md)）。
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -64,8 +64,8 @@
 | 最高单题 total | 295,225 (q1500) | 347,304 (q1500) | **357,599 (q1500)** |
 | 平均 total | ~78K | **~86K** | ~90K |
 | strict PASS 率 | 5/26 | **7/26** | 7/26 |
-| process_score 100 | 23/26 | **26/26** | **25/26** |
-| CORRECT | 23/26 | **26/26** | **25/26** |
+| process_score 100 | **26/26** | **26/26** | **25/26** |
+| CORRECT | **26/26** | **26/26** | **25/26** |
 
 ### 定性观察
 
