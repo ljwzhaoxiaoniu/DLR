@@ -204,6 +204,18 @@ FROM (
 | **正确结果（已写入 cache）** | CustomerID=6718 → yearmonth 聚合 2012/2013 → **-5.8152** |
 | **三范式一致** | ER/DLR/RDF 均输出 -5.8152。2026-07-23 修正 gold cache。 |
 
+### qid 1529 — `debit_card_specializing`（gold JOIN 笛卡尔积→SUM(Price) 膨胀 20 倍，已修正 gold cache）
+
+- **问题**：What is the amount spent by customer "38508" at the gas stations? How much had the customer spent in January 2012?
+- **evidence**：January 2012 refers to the Date value = '201201'.
+
+| | 内容 |
+|---|---|
+| **Gold SQL（原）** | `transactions_1k JOIN gasstations JOIN yearmonth ON CustomerID` → 8 条交易 × 20 条年月 = 160 行笛卡尔积。`SUM(Price)`=68740.2（3437.01×20 膨胀），`SUM(IIF(Date='201201',Price,0))`=3437.01（实为交易总额，非一月消费） |
+| **Bug 本质** | yearmonth JOIN 造成 Price 重复求和。Gold Part1 是正确值的 20 倍，Part2 返回了 Part1 的正确值而非一月消费 |
+| **正确结果（已写入 cache）** | Part1（加油站花费）= `SUM(Price) FROM transactions_1k WHERE CustomerID='38508'` = **3437.01**；Part2（2012年1月消费）= `Consumption FROM yearmonth WHERE CustomerID='38508' AND Date='201201'` = **67156.94** |
+| **验证** | ER 正确输出 [3437.01, 67156.94]。DLR/RDF 因多步查询复杂度各自走了错误路径。2026-07-23 修正 gold cache。 |
+
 ### 处理约定
 
 - 对 gold SQL 与题意相悖的题目，**直接覆盖 gold cache 的 `rows` 与 `columns` 为正确结果**，保持 `ok=True`。

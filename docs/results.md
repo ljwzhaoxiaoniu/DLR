@@ -20,8 +20,9 @@
 | 21-22 | q1514, q1515 | 100% | **100%** | 100% | 三范式 6/6；q1514 三范式 judge 翻盘，q1515 ER/RDF strict PASS |
 | 23-24 | q1521, q1524 | 100% | 100% | 100% | ER YAML 修复后 q1524 翻盘：transactions_1k JOIN gasstations→Country ✅ |
 | 25-26 | q1525, q1526 | **100%** | 100% | 100% | ER YAML 修复后三题全翻盘；q1525 gold COUNT(*) 已修正 cache；q1526 gold NULL 已修正 |
+| 27-28 | q1528, q1529 | **100%** | **50%** | **50%** | q1528 三范式全对；q1529 gold 笛卡尔积 bug(已修正)，ER 手动 CORRECT，DLR/RDF 多步查询失败 |
 
-**round_1 终态：77/78 CORRECT**（截至 pair 25-26，含 ER/RDF 修复后翻盘）（判定政策：五环节全对才翻盘，见 [evaluation.md](evaluation.md)）。
+**round_1 终态：81/84 CORRECT**（截至 pair 27-28）
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -53,6 +54,8 @@
 | q1524 | 111,307 | **77,815** | 66,272 |
 | q1525 | 54,895 | 73,653 | 61,123 |
 | q1526 | 116,689 | **53,856** | 72,518 |
+| q1528 | **30,924** | 75,015 | 63,763 |
+| q1529 | **85,962** | 214,700 | 49,941 |
 
 \* 粗体 = 该题最优范式；q1490/q1498/q1524/q1525/q1526 取修复后重跑数据
 
@@ -63,9 +66,9 @@
 | 最低单题 total | **26,961 (q1498)** | 32,300 (q1498) | 34,764 (q1509) |
 | 最高单题 total | 295,225 (q1500) | 347,304 (q1500) | **357,599 (q1500)** |
 | 平均 total | ~78K | **~86K** | ~90K |
-| strict PASS 率 | 5/26 | **7/26** | 7/26 |
-| process_score 100 | **26/26** | **26/26** | **25/26** |
-| CORRECT | **26/26** | **26/26** | **25/26** |
+| strict PASS 率 | 7/28 | 7/28 | **8/28** |
+| process_score 100 | **28/28** | 27/28 | 26/28 |
+| CORRECT | **28/28** | 27/28 | 26/28 |
 
 ### 定性观察
 
@@ -91,11 +94,12 @@
 - **q1514/q1515 结构化查询**：时间+日期双条件定位单条记录再关联查 Currency/Segment，三范式全部写出正确 JOIN/子查询。DLR strict PASS 率仍为 0/2 但 judge 五环节全翻盘——说明预测结果正确只是与 gold 格式/细节略有偏差（如 LIMIT 10 等）。
 - **q1525 gold 同 q1505 缺陷**：`COUNT(CustomerID)` 计交易次而非客户数；三范式 `COUNT(DISTINCT CustomerID)` 更忠实。
 - **q1526 gold 返回 NULL**：子查询多 JOIN gasstations 无匹配。DLR/RDF 绕过缺陷正确给出 -5.8152（CustomerID=6718→yearmonth 聚合）。
+- **q1529 gold 笛卡尔积 bug**：`transactions_1k × yearmonth ON CustomerID` 产生 8×20=160 行，`SUM(Price)` 膨胀 20 倍（68740.2 实为 3437.01×20）。Gold 两个子答案都有错。已修正 cache → [3437.01, 67156.94]。ER 正确，DLR/RDF 多步查询失败。
 - **ER q1524/1525/1526 初跑走 yearmonth（已修复验证✅）**：根因是 ER YAML 缺 FK relations→Agent 只看到 yearmonth→customers 一条路。手动补 3 条 relation + rebuild 后三题全部翻盘，验证通过。**全互联≠好引导——关键是 FK 关系要显式暴露。**
 
 ## 下一步
 
-- 继续推进 round_1 后续题目（下一对 27-28: q1528+q1529）；debit_card 后还有 10 个库约 470 题
+- 继续推进 round_1 后续题目（下一对 29-30: q1531+q1533），debit_card 最后两题
 - 修复 P1 R2RML 缺列后再跑 RDF 对照，消除 `PRAGMA table_info` 兜底噪声；
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 

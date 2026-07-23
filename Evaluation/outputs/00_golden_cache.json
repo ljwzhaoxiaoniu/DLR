@@ -3381,13 +3381,13 @@
     "db_id": "debit_card_specializing",
     "ok": true,
     "columns": [
-      "SUM(IIF(T3.Date = '201201', T1.Price, 0))",
-      "SUM(T1.Price )"
+      "total_spent_at_gasstations",
+      "spent_in_jan_2012"
     ],
     "rows": [
       [
         3437.01,
-        68740.2
+        67156.94
       ]
     ],
     "error": null
