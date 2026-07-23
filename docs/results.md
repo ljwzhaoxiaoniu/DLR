@@ -25,8 +25,9 @@
 | 31-32 | thrombosis | q1149, q1150 | 100% | 100% | 100% | thrombosis 开局全通；DLR q1149 judge超时手动翻盘(CORRECT) |
 | 33-34 | football | q1025, q1028 | 100% | 100% | 100% | football 开局全通；ER q1028 tie(Celtic/Rangers 各11胜)手动翻盘 |
 | 35-36 | formula_1 | q846, q847 | 100% | 100% | 100% | formula_1 开局全通；q847 三范式一致(Räikkönen),Gold NULL排序bug,Fisichella应为NULL;DLR/RDF翻盘 |
+| 37-38 | superhero | q717, q994 | 100% | 100% | 100% | superhero 开局全通；q994 judge 全翻 |
 
-**round_1 当前：107/108 CORRECT**（五库推进中：credit 30 + student 2 + thrombosis 2 + football 2 + formula_1 2）
+**round_1 当前：113/114 CORRECT**（六库推进中，六库开局全通 🔥）
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -68,6 +69,8 @@
 | q1028 | 74,394 | **60,051** | 46,738 |
 | q846 | 36,922 | 40,153 | **30,029** |
 | q847 | 61,332 | **43,575** | 43,756 |
+| q717 | **45,779** | 67,161 | 86,780 |
+| q994 | 84,002 | **41,006** | 64,438 |
 
 \* 粗体 = 该题最优范式；q1490/q1498/q1524/q1525/q1526 取修复后重跑数据
 
@@ -78,9 +81,9 @@
 | 最低单题 total | **26,961 (q1498)** | 32,300 (q1498) | 34,764 (q1509) |
 | 最高单题 total | 295,225 (q1500) | 347,304 (q1500) | **357,599 (q1500)** |
 | 平均 total | ~78K | **~86K** | ~90K |
-| strict PASS 率 | 8/36 | 9/36 | **9/36** |
-| process_score 100 | **36/36** | **36/36** | **35/36** |
-| CORRECT | **36/36** | **36/36** | **35/36** |
+| strict PASS 率 | 9/38 | 10/38 | **10/38** |
+| process_score 100 | **38/38** | **38/38** | **37/38** |
+| CORRECT | **38/38** | **38/38** | **37/38** |
 
 ### 定性观察
 
@@ -112,6 +115,6 @@
 
 ## 下一步
 
-- credit 30/30 ✅ → student 2/48 🔄 → thrombosis 2/50 🔄 → football 2/51 🔄 → formula_1 2/66 🔄 → superhero 待续
+- credit 30/30 ✅ → student 2/48 🔄 → thrombosis 2/50 🔄 → football 2/51 🔄 → formula_1 2/66 🔄 → superhero 2/52 🔄 → codebase_community 待续
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 
