@@ -94,7 +94,8 @@
 - **q1514/q1515 结构化查询**：时间+日期双条件定位单条记录再关联查 Currency/Segment，三范式全部写出正确 JOIN/子查询。DLR strict PASS 率仍为 0/2 但 judge 五环节全翻盘——说明预测结果正确只是与 gold 格式/细节略有偏差（如 LIMIT 10 等）。
 - **q1525 gold 同 q1505 缺陷**：`COUNT(CustomerID)` 计交易次而非客户数；三范式 `COUNT(DISTINCT CustomerID)` 更忠实。
 - **q1526 gold 返回 NULL**：子查询多 JOIN gasstations 无匹配。DLR/RDF 绕过缺陷正确给出 -5.8152（CustomerID=6718→yearmonth 聚合）。
-- **q1529 gold 笛卡尔积 bug**：`transactions_1k × yearmonth ON CustomerID` 产生 8×20=160 行，`SUM(Price)` 膨胀 20 倍（68740.2 实为 3437.01×20）。Gold 两个子答案都有错。已修正 cache → [3437.01, 67156.94]。ER 正确，DLR/RDF 多步查询失败。
+- **q1529 模型升级翻盘**：旧模型下 DLR/RDF 均失败——10+ 轮工具调用后上下文丢失，汇总时搞混中间结果（拿到正确值但答错）。切换新模型后三范式一次全对 [3437.01, 67156.94]。与 **q1490 原因完全相同**：旧模型（longcat）下三范式全错，切换 deepseek-pro 后 ER/DLR 独立收敛到正确答案。**长程多步推理对模型能力敏感。**
+- **q1529 gold 笛卡尔积 bug**：`transactions_1k × yearmonth ON CustomerID` 产生 8×20=160 行，`SUM(Price)` 膨胀 20 倍（68740.2 实为 3437.01×20）。已修正 cache。
 - **ER q1524/1525/1526 初跑走 yearmonth（已修复验证✅）**：根因是 ER YAML 缺 FK relations→Agent 只看到 yearmonth→customers 一条路。手动补 3 条 relation + rebuild 后三题全部翻盘，验证通过。**全互联≠好引导——关键是 FK 关系要显式暴露。**
 
 ## 下一步
