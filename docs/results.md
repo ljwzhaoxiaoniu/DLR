@@ -118,6 +118,7 @@
 - **q1529 模型升级翻盘**：旧模型下 DLR/RDF 均失败——10+ 轮工具调用后上下文丢失，汇总时搞混中间结果（拿到正确值但答错）。切换新模型后三范式一次全对 [3437.01, 67156.94]。与 **q1490 原因完全相同**：旧模型（longcat）下三范式全错，切换 deepseek-pro 后 ER/DLR 独立收敛到正确答案。**长程多步推理对模型能力敏感。**
 - **q1529 gold 笛卡尔积 bug**：`transactions_1k × yearmonth ON CustomerID` 产生 8×20=160 行，`SUM(Price)` 膨胀 20 倍（68740.2 实为 3437.01×20）。已修正 cache。
 - **ER q1524/1525/1526 初跑走 yearmonth（已修复验证✅）**：根因是 ER YAML 缺 FK relations→Agent 只看到 yearmonth→customers 一条路。手动补 3 条 relation + rebuild 后三题全部翻盘，验证通过。**全互联≠好引导——关键是 FK 关系要显式暴露。**
+- **🆕 Helpfulness-Correctness Trade-off（card_games q340）**："Which are the cards" 25,061 条→三范式 9 次仅 1 次正确列出，其余全自动转 `COUNT(*)`。改 "How many"→三范式 strict PASS 全过。**RLHF 的 helpfulness 本能压过 correctness 指令**——LLM 判断"列 25,061 行 ID 不友好"，无意识优化。信息越多的范式越早满足于 COUNT（ER/DLR > RDF），工具信息量存在倒 U 型最优区间。**这是对照实验的意外发现，直接支撑 DLR 叙事。**
 
 ## 下一步
 
