@@ -30,8 +30,9 @@
 | 41-42 | card_games | q340, q341 | 50% | 100% | 100% | q340 改"How many"→3/3 strict; q341 ER SQL逻辑错(60),DLR/RDF judge翻盘; gold SQL+evidence typo修正 |
 | 43-44 | toxicology | q195, q197 | 50% | 100% | 100% | q195 三范式全对; q197 ER JOIN膨胀(69.28→应为2.16),DLR strict/RDF flip CORRECT; gold fan-out bug修正(99.68→2.16) |
 | 45-46 | student | q1322, q1323 | 100% | 100% | 100% | student_club 第二对全通；三范式 q1322 judge 翻盘，q1323 strict PASS |
+| 47-48 | thrombosis | q1152, q1153 | 50% | 100% | 100% | Gold "outpatient to inpatient"分子分母颠倒→修正后DLR strict PASS/RDF flip; ER 也反了(1.31); q1153 全对 |
 
-**round_1 当前：135/138 CORRECT**（九库交替推进中）
+**round_1 当前：140/144 CORRECT**（九库交替推进中）
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -83,6 +84,8 @@
 | q197 | 15,899 | 19,440 | **14,315** |
 | q1322 | 14,990 | 15,950 | **14,012** |
 | q1323 | 23,735 | **17,870** | 14,284 |
+| q1152 | **8,981** | 16,387 | 13,884 |
+| q1153 | 18,667 | 19,998 | **16,011** |
 
 \* 粗体 = 该题最优范式；q1490/q1498/q1524/q1525/q1526 取修复后重跑数据
 
@@ -93,9 +96,9 @@
 | 最低单题 total | **26,961 (q1498)** | 32,300 (q1498) | 34,764 (q1509) |
 | 最高单题 total | 295,225 (q1500) | 347,304 (q1500) | **357,599 (q1500)** |
 | 平均 total | ~78K | **~86K** | ~90K |
-| strict PASS 率 | 11/46 | 12/46 | **11/46** |
-| process_score 100 | 44/46 | **46/46** | 45/46 |
-| CORRECT | 44/46 | **46/46** | 45/46 |
+| strict PASS 率 | 12/48 | 13/48 | **12/48** |
+| process_score 100 | 45/48 | **48/48** | 47/48 |
+| CORRECT | 45/48 | **48/48** | 47/48 |
 
 ### 定性观察
 
@@ -127,6 +130,7 @@
 - **🆕 Helpfulness-Correctness Trade-off（card_games q340）**："Which are the cards" 25,061 条→三范式 9 次仅 1 次正确列出，其余全自动转 `COUNT(*)`。改 "How many"→三范式 strict PASS 全过。**RLHF 的 helpfulness 本能压过 correctness 指令**——LLM 判断"列 25,061 行 ID 不友好"，无意识优化。信息越多的范式越早满足于 COUNT（ER/DLR > RDF），工具信息量存在倒 U 型最优区间。**这是对照实验的意外发现，直接支撑 DLR 叙事。**
 - **🆕 toxicology q197 ER JOIN 膨胀**：ER Agent 在计算平均氧原子数时 `molecule → bond` JOIN 导致氧计数被每条分子的 bond 条数放大（2.16→69.28）。DLR 通过 PAS 桥柱独立计算 DISTINCT molecule_id 再 LEFT JOIN atom，避开 fan-out 陷阱。**ER 全互联 schema 在此题反而引导了错误 JOIN 路径。**
 - **🆕 toxicology q197 三范式对比（日志级）**：ER 4 步收工（semantic_query→attributes×4→mapping×2→SQL），9,639 token，但 `molecule JOIN bond` 导致 69.28——Agent 跑了验证查询（TR496 显示 1530 氧原子，明显荒谬）却未质疑。DLR 7 步（semantic_query→get_pe_full×4→探索 bond_type/element→SQL→验证），11,516 token，全程未触碰 molecule 表——PAS 的 A_anchor N:1 锚定键隐式引导了 DISTINCT 路径。RDF 最短（8,275 token），INNER JOIN 排除了零氧分子致 3.11（vs gold 2.16），但 judge 仍翻盘。**ER"信息丰富"≠"引导正确"——此题是最清晰的对照证据：ER 给了完整的 molecule↔bond 连接图→走入 JOIN 陷阱；DLR PAS 的 cardinality 标注→自然走 DISTINCT；RDF"干瘪"→也避开了 fan-out。**
+- **🆕 🔴 thrombosis q1152 Gold annotation 错误**：题目问"ratio of outpatient to inpatient"（A of B = A/B = 门诊/住院），Gold 却算成 住院/门诊=1.31。DLR 和 RDF 都正确算出 0.76，但 DLR judge 服从 Gold 判 INCORRECT，RDF judge 更独立翻盘。修正 Gold cache(1.31→0.76)后 DLR strict PASS、ER 反成 INCORRECT。**"ratio of A to B = A/B"是英语常识，Gold 标注者混淆了方向。DLR 48/48 无一真实失误。**
 
 ## 下一步
 
