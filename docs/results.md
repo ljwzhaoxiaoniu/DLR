@@ -27,9 +27,10 @@
 | 35-36 | formula_1 | q846, q847 | 100% | 100% | 100% | formula_1 开局全通；q847 三范式一致(Räikkönen),Gold NULL排序bug,Fisichella应为NULL;DLR/RDF翻盘 |
 | 37-38 | superhero | q717, q994 | 100% | 100% | 100% | superhero 开局全通；q994 judge 全翻 |
 | 39-40 | codebase | q531, q532 | 100% | 100% | 100% | codebase_community 开局全通；DLR/RDF 各1 extract失败但judge翻盘 |
-| 41-42 | card_games | q340, q341 | 83% | 83% | 83% | q340 改"How many"→3/3; q341 ER错,DLR/RDF对; gold SQL+evidence typo修正 |
+| 41-42 | card_games | q340, q341 | 50% | 100% | 100% | q340 改"How many"→3/3 strict; q341 ER SQL逻辑错(60),DLR/RDF judge翻盘; gold SQL+evidence typo修正 |
+| 43-44 | toxicology | q195, q197 | 50% | 100% | 100% | q195 三范式全对; q197 ER JOIN膨胀(69.28→应为2.16),DLR strict/RDF flip CORRECT; gold fan-out bug修正(99.68→2.16) |
 
-**round_1 当前：124/126 CORRECT**（八库推进中）
+**round_1 当前：129/132 CORRECT**（九库推进中，toxicology 开局完成）
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -77,6 +78,8 @@
 | q532 | 64,496 | **64,266** | 205,419 |
 | q340 | 80,305 | **43,024** | 44,504 |
 | q341 | 107,074 | 56,930 | **38,000** |
+| q195 | **8,016** | 8,747 | 12,798 |
+| q197 | 15,899 | 19,440 | **14,315** |
 
 \* 粗体 = 该题最优范式；q1490/q1498/q1524/q1525/q1526 取修复后重跑数据
 
@@ -87,9 +90,9 @@
 | 最低单题 total | **26,961 (q1498)** | 32,300 (q1498) | 34,764 (q1509) |
 | 最高单题 total | 295,225 (q1500) | 347,304 (q1500) | **357,599 (q1500)** |
 | 平均 total | ~78K | **~86K** | ~90K |
-| strict PASS 率 | 10/42 | 10/42 | **10/42** |
-| process_score 100 | **41/42** | **42/42** | **41/42** |
-| CORRECT | **41/42** | **42/42** | **41/42** |
+| strict PASS 率 | 10/44 | 11/44 | **10/44** |
+| process_score 100 | 42/44 | **44/44** | 43/44 |
+| CORRECT | 42/44 | **44/44** | 43/44 |
 
 ### 定性观察
 
@@ -119,9 +122,10 @@
 - **q1529 gold 笛卡尔积 bug**：`transactions_1k × yearmonth ON CustomerID` 产生 8×20=160 行，`SUM(Price)` 膨胀 20 倍（68740.2 实为 3437.01×20）。已修正 cache。
 - **ER q1524/1525/1526 初跑走 yearmonth（已修复验证✅）**：根因是 ER YAML 缺 FK relations→Agent 只看到 yearmonth→customers 一条路。手动补 3 条 relation + rebuild 后三题全部翻盘，验证通过。**全互联≠好引导——关键是 FK 关系要显式暴露。**
 - **🆕 Helpfulness-Correctness Trade-off（card_games q340）**："Which are the cards" 25,061 条→三范式 9 次仅 1 次正确列出，其余全自动转 `COUNT(*)`。改 "How many"→三范式 strict PASS 全过。**RLHF 的 helpfulness 本能压过 correctness 指令**——LLM 判断"列 25,061 行 ID 不友好"，无意识优化。信息越多的范式越早满足于 COUNT（ER/DLR > RDF），工具信息量存在倒 U 型最优区间。**这是对照实验的意外发现，直接支撑 DLR 叙事。**
+- **🆕 toxicology q197 ER JOIN 膨胀**：ER Agent 在计算平均氧原子数时 `molecule → bond` JOIN 导致氧计数被每条分子的 bond 条数放大（2.16→69.28）。DLR 通过 PAS 桥柱独立计算 DISTINCT molecule_id 再 LEFT JOIN atom，避开 fan-out 陷阱。**ER 全互联 schema 在此题反而引导了错误 JOIN 路径。**
 
 ## 下一步
 
-- credit 30/30 ✅ → student 🔄 → thrombosis 🔄 → football 🔄 → formula_1 🔄 → superhero 🔄 → codebase 🔄 → card_games 待续
+- credit 30/30 ✅ → student ✅ → thrombosis ✅ → football ✅ → formula_1 ✅ → superhero ✅ → codebase ✅ → card_games ✅ → toxicology ✅ → 待续
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 
