@@ -38,7 +38,8 @@ echo "$RUN_ID" > "$LOG_ROOT/.last_run_id"
 
 # 从数据集取出指定的两道题
 QUESTIONS=$(python -c "
-import json
+import json, sys
+sys.stdout.reconfigure(encoding='utf-8')
 qs = json.load(open('$ROOT/MINIDEV_sqlite/mini_dev_sqlite.json', encoding='utf-8'))
 targets = {$QID1, $QID2}
 for q in qs:

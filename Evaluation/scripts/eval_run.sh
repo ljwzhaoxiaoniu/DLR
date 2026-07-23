@@ -6,6 +6,8 @@
 #       bash eval_run.sh ED 1471 1472
 # workers 自动 = 范式数 × 题数,由 run_parallel.sh 内部计算
 
+export PYTHONIOENCODING=utf-8
+
 PARADIGMS="${1:-EDR}"
 QID1="$2"
 QID2="$3"

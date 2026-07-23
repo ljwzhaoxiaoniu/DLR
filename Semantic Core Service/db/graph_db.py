@@ -653,7 +653,7 @@ class GraphDB:
             query = """
                 MATCH path = (e1:BizEntity {entity_id: $from_id})-[:RELATED_TO*1..10]-(e2:BizEntity {entity_id: $to_id})
                 RETURN nodes(path), relationships(path), length(path)
-                ORDER BY path_len ASC
+                ORDER BY length(path) ASC
                 LIMIT 1
             """
             result = self.conn.execute(query, parameters={
@@ -843,7 +843,7 @@ class GraphDB:
             query = """
                 MATCH path = (le1:LogicalEntity {logical_entity_id: $from_id})-[:PAS_RELATED_TO*1..10]-(le2:LogicalEntity {logical_entity_id: $to_id})
                 RETURN nodes(path), relationships(path), length(path)
-                ORDER BY path_len ASC
+                ORDER BY length(path) ASC
                 LIMIT 1
             """
             result = self.conn.execute(query, parameters={

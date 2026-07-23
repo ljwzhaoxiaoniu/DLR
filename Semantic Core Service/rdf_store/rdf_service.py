@@ -83,7 +83,10 @@ class RDFGraphStore:
         return out
 
     def classes(self) -> List[str]:
-        return sorted(set(str(o) for o in self.graph.objects(None, RDF.type)))
+        RR_CLASS = rdflib.URIRef("http://www.w3.org/ns/r2rml#class")
+        classes = set(str(o) for o in self.graph.objects(None, RDF.type))
+        classes.update(str(o) for o in self.graph.objects(None, RR_CLASS))
+        return sorted(classes)
 
     def predicates(self) -> List[str]:
         return sorted(set(str(p) for p in self.graph.predicates(None, None)))
