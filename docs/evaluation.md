@@ -88,15 +88,16 @@ validated_results/round_N/{q_start}-{q_end}/    # post_process.py 归档
 
 | 级别 | 问题 | 说明 |
 |------|------|------|
-| P0 | opencode 内置 `task`/`read` 子代理未 deny | 防作弊活口，待加 deny |
-| P0 | R2RML 生成器主键列不入 predicateObjectMap | RDF Agent 缺列靠 `PRAGMA table_info` 兜底 |
+| P0 | ~~opencode 内置 `task`/`read` 子代理未 deny~~ | ✅ 已加入 deny 列表(bash/task/read/glob/grep/write) |
+| P0 | ~~R2RML 生成器主键列不入 predicateObjectMap~~ | ✅ 2026-07-22 修复：PK 暴露 + 启发式 FK(ID 后缀匹配) + FK 去重，11 库全量重生成 |
 | P1 | AGENTS.md `/mcps` 指令在 `opencode run` 下不可执行 | 模型退而调 `list_mcp_resources` 恒空浪费；偶发 Agent 扫 localhost 端口失败→无法连接 MCP |
 | P1 | `find_shortest_path` Cypher bug；`rdf_classes` 只返回 TriplesMap | 已定位，待修 |
 | P1 | 04_judge.py emoji 崩溃 | print() GBK 编码遇 emoji → `UnicodeEncodeError`（CSV 已落盘，仅日志冗余） |
+| P2 | ER YAML 缺 FK relations（dev_tables.json 无 FK） | 已手动补 3 条 relation，待 rebuild ER 后重跑验证。根治需 ER 配置生成器读 SQLite PRAGMA |
 | P2 | 并行 eval 偶发 Kuzu 锁冲突 | 三范式同时初始化 MCP→争抢 Kuzu 排他锁，部分 Agent 启动即崩溃（database locked）。重跑可恢复 |
 | P2 | Stage 4 LLM Judge 偶发超时 300s | 大日志或网络波动时 judge 无法完成，默认 UNKNOWN→INCORRECT，需手动翻盘 |
 | P2 | RDF serve 进程静默崩溃 | `serve --paradigm ALL` 下 RDF 进程偶发崩溃，端口无监听但无错误日志（复启后正常） |
 
 ### Gold 数据集已知错误
 
-详见 [dataset.md](dataset.md) § Gold SQL 已知错误：q1481、q1482、q1490 已修正 gold cache；q1505 待确认（COUNT(*) vs COUNT(DISTINCT)）。
+详见 [dataset.md](dataset.md) § Gold SQL 已知错误：q1481、q1482、q1490、q1526 已修正 gold cache；q1505、q1525 待确认（COUNT(*) vs COUNT(DISTINCT)）；q1526 gold 返回 NULL（多余 JOIN gasstations）。

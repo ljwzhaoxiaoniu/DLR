@@ -14,7 +14,7 @@
 | [数据集说明](docs/dataset.md) | mini_dev 0703：11 库 500 题、下载、任务格式、实测特征 |
 | [Agent 说明](docs/agent.md) | OpenCode + MCP 架构、AGENTS.md 规则、防作弊、db 锁库行为 |
 | [评测流水线](docs/evaluation.md) | 四阶段流水线、Prompt 铁律、双通道判定、公平性、已知问题 |
-| [评测结果](docs/results.md) | round_1 滚动更新（57/60 CORRECT, pair 1-20）：正确率、行为效率、定性观察 |
+| [评测结果](docs/results.md) | round_1 滚动更新（74/78 CORRECT, pair 1-26）：正确率、行为效率、定性观察 |
 
 ## 架构
 

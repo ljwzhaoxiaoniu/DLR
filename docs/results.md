@@ -91,7 +91,7 @@
 - **q1514/q1515 结构化查询**：时间+日期双条件定位单条记录再关联查 Currency/Segment，三范式全部写出正确 JOIN/子查询。DLR strict PASS 率仍为 0/2 但 judge 五环节全翻盘——说明预测结果正确只是与 gold 格式/细节略有偏差（如 LIMIT 10 等）。
 - **q1525 gold 同 q1505 缺陷**：`COUNT(CustomerID)` 计交易次而非客户数；三范式 `COUNT(DISTINCT CustomerID)` 更忠实。
 - **q1526 gold 返回 NULL**：子查询多 JOIN gasstations 无匹配。DLR/RDF 绕过缺陷正确给出 -5.8152（CustomerID=6718→yearmonth 聚合）。
-- **ER 连续 3 题走 yearmonth 替代 transactions_1k**（q1524/1525/1526）：ER 全互联暴露 3 张 CustomerID 表，Agent 持续选错粒度（月度 vs 日级）。非偶然。：ER 范式所有表 FK 全暴露，面对三张有 CustomerID 的表（customers/yearmonth/transactions_1k），Agent 选了错误的 yearmonth（月度聚合表）而非 transactions_1k（交易明细）。DLR 的 PAS 精准路由和 RDF 的显式 `refers_to` 反而提供了更清晰的路径引导。**全互联≠好引导。**
+- **ER 连续 3 题走 yearmonth 替代 transactions_1k**（q1524/1525/1526）：ER 范式所有表 FK 全暴露，面对三张有 CustomerID 的表（customers/yearmonth/transactions_1k），Agent 持续选了错误的 yearmonth（月度聚合表）而非 transactions_1k（交易明细）。DLR 的 PAS 精准路由和 RDF 的显式 `refers_to` 反而提供了更清晰的路径引导。**全互联≠好引导。**
 
 ## 下一步
 
