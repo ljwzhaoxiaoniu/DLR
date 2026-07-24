@@ -1,0 +1,20 @@
+{
+  "q_id": 854,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT DISTINCT c.name AS circuit_name, c.lat, c.lng FROM circuits c JOIN races r ON c.circuitId = r.circuitId WHERE r.name = 'Australian Grand Prix'",
+  "result": {
+    "columns": [
+      "circuit_name",
+      "lat",
+      "lng"
+    ],
+    "rows": [
+      [
+        "Adelaide Street Circuit",
+        -34.9272,
+        138.617
+      ]
+    ]
+  }
+}
