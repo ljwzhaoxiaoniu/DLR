@@ -1,0 +1,7 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","200","toxicology","PASS","","","CORRECT","100","","17869","600","571","57216","76256"
+"dlr","200","toxicology","FAIL","CORRECT","语义正确，工具链正确，SQL正确筛选三键且致癌的分子，结果与Gold一致。","CORRECT","100","","8402","319","299","22784","31804"
+"rdf","200","toxicology","PASS","","","CORRECT","100","","12431","234","143","13184","25992"
+"er","198","toxicology","FAIL","CORRECT","Evidence公式修正(去笛卡尔积)+gold cache修正后重跑翻盘——AVG(per-molecule single bond count)正确，20.25与Gold一致","CORRECT","100","","2229","312","817","32640","35998"
+"dlr","198","toxicology","FAIL","CORRECT","Evidence公式修正(去笛卡尔积)+gold cache修正后重跑翻盘——AVG(per-molecule single bond count)正确，20.25与Gold一致","CORRECT","100","","9607","420","1034","24832","35893"
+"rdf","198","toxicology","FAIL","CORRECT","Evidence公式修正(去笛卡尔积)+gold cache修正后重跑翻盘——AVG(per-molecule single bond count)正确，20.25与Gold一致","CORRECT","100","","17193","446","587","32384","50610"

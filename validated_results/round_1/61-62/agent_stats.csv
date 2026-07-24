@@ -1,0 +1,8 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","1331","student_club","PASS","","","CORRECT","100","","10057","538","762","62464","73821"
+"er","1334","student_club","PASS","","","CORRECT","100","","9297","513","504","44800","55114"
+"dlr","1331","student_club","FAIL","CORRECT","全部五步通过——语义定位正确(member/income表)、工具链完整(semantic_query→get_pe_full×2→execute_sql)、SQL库表字段均来自映射、执行成功、最终答案50与GoldResult一致
+```","CORRECT","100","","15755","249","431","16128","32563"
+"dlr","1334","student_club","PASS","","","CORRECT","100","","9261","306","396","38912","48875"
+"rdf","1331","student_club","PASS","","","CORRECT","100","","18234","361","956","57728","77279"
+"rdf","1334","student_club","PASS","","","CORRECT","100","","7821","273","617","33792","42503"

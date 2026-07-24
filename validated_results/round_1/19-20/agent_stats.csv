@@ -3,5 +3,5 @@
 "dlr","1509","debit_card_specializing","PASS","","","CORRECT","100","","17152","381","1379","44160","63072"
 "er","1507","debit_card_specializing","PASS","","","CORRECT","100","","13696","498","437","22528","37159"
 "er","1509","debit_card_specializing","PASS","","","CORRECT","100","","13691","417","583","21760","36451"
-"rdf","1507","debit_card_specializing","FAIL","INCORRECT","SQL语义错误，题目只要求Time字段，但Pred SQL额外SELECT了Date字段，导致去重维度从单纯Time变成(Date, Time)组合，最终答案也包含了多余的日期信息。","INCORRECT","80","","7630","613","446","32896","41585"
+"rdf","1507","debit_card_specializing","FAIL","CORRECT","列谓词修复后翻盘——RDF列谓词补全解决多余列问题，结果与Gold一致","CORRECT","100","","7344","331","485","25600","33760"
 "rdf","1509","debit_card_specializing","PASS","","","CORRECT","100","","7545","443","664","26112","34764"

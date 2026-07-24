@@ -1,12 +1,11 @@
 "paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"er","1525","debit_card_specializing","FAIL","INCORRECT","映射选错表——使用了yearmonth(月度聚合)而非transactions_1k(日粒度交易表)，导致日期过滤从单日变成整月，结果语义完全不同
-```","INCORRECT","40","","9774","759","","",""
-"er","1526","debit_card_specializing","FAIL","UNKNOWN","Command '['bash', '-c', 'opencode run --format json']' timed out after 300 seconds","INCORRECT","","","23460","1831","","",""
+"er","1525","debit_card_specializing","FAIL","CORRECT","Gold修正后翻盘——COUNT(DISTINCT CustomerID)更忠实于question""customers""语义，Gold cache已修正","CORRECT","100","","3709","778","744","49664","54895"
+"er","1526","debit_card_specializing","FAIL","CORRECT","Gold修正后翻盘——gold NULL→正确值-5.8152，ER YAML修复后正确绕过缺陷","CORRECT","100","","20315","1127","1679","93568","116689"
 "dlr","1525","debit_card_specializing","FAIL","CORRECT","语义/工具/映射/SQL/结果五步全部正确。PredSQL 使用 COUNT(DISTINCT t.CustomerID) 比 GoldSQL 的 COUNT(T1.CustomerID) 更准确地表达""percentage of customers""（题意要求的是客户百分比而非交易百分比）。Agent 通过 dlr_semantic_query 正确定位库表，database_url 来自映射返回，SQL 执行成功，最终答案 2.70% 与 PredResult 一致。
-```","CORRECT","100","","11511","958","","",""
+```","CORRECT","100","","11511","958","1147","47488","61104"
 "dlr","1526","debit_card_specializing","FAIL","CORRECT","Agent correctly identified CustomerID=6718 via transactions_1k (Price=634.8, Date=2012-08-25), then applied the decrease rate formula on yearmonth data. The gold result [[null]] is caused by the gasstati join in the gold subquery returning no match (a gold SQL artifact), not by any error in the agent's logic. All 5 steps pass: semantic lookup → PE mapping → correct database_url → valid SQL → result -5.8152 is the correct computation per the evidence formula.
-```","CORRECT","100","","13246","1040","","",""
+```","CORRECT","100","","13246","1040","1965","69120","85371"
 "rdf","1525","debit_card_specializing","FAIL","CORRECT","All 5 steps pass. Pred correctly counts DISTINCT customers (7/259=2.70%) which matches the question's intent (""percentage of customers""), while Gold erroneously counts transaction rows (double-counting multi-transaction customers). The Agent's tool chain, mapping, SQL, and final answer are all correct.
-```","CORRECT","100","","13097","755","","",""
+```","CORRECT","100","","13097","755","1043","87424","102319"
 "rdf","1526","debit_card_specializing","FAIL","CORRECT","All 5 steps pass. Agent correctly identified CustomerID=6718 via transactions_1k, queried yearmonth for consumption, and computed the decrease rate (-5.8152). The Gold SQL returns null likely due to its subquery join on gasstations being overly restrictive or failing to match, while the agent's direct approach is semantically sound and produces the correct calculable answer from the data.
-```","CORRECT","100","","15854","932","","",""
+```","CORRECT","100","","15854","932","1752","41984","60522"

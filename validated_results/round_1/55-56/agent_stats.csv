@@ -1,0 +1,7 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","533","codebase_community","FAIL","CORRECT","Evidence DATE()修正后重跑翻盘——LastAccessDate用DATE()函数过滤，结果与Gold一致","CORRECT","100","","8007","367","490","28032","36896"
+"er","537","codebase_community","PASS","CORRECT","","CORRECT","100","","13994","294","309","21504","36101"
+"dlr","533","codebase_community","FAIL","CORRECT","Evidence DATE()修正后重跑翻盘——LastAccessDate用DATE()函数过滤，结果与Gold一致","CORRECT","100","","15580","200","290","15616","31686"
+"dlr","537","codebase_community","PASS","CORRECT","","CORRECT","100","","15678","312","290","33408","49688"
+"rdf","533","codebase_community","FAIL","CORRECT","Evidence DATE()修正后重跑翻盘——LastAccessDate用DATE()函数过滤，结果与Gold一致","CORRECT","100","","11398","207","372","37248","49225"
+"rdf","537","codebase_community","PASS","CORRECT","","CORRECT","100","","17165","321","471","32896","50853"

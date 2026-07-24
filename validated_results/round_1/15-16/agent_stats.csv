@@ -1,10 +1,10 @@
 "paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
 "dlr","1500","debit_card_specializing","FAIL","CORRECT","All 5 steps pass — semantic query correctly located debit_card_specializing DB and tables (products, yearmonth, transactions_1k); tool chain followed semantic_query → get_pe_full → execute_sql; SQL used mapped schema (yearmonth.Date='201309', joins on CustomerID/ProductID); execution returned 27 distinct descriptions; final answer matches PredResult exactly. DISTINCT is appropriate here (listing product descriptions, not raw transaction rows).
-```","CORRECT","100","","29023","1809","6212","152320","189364"
+```","CORRECT","100","","13415","1636","2757","89472","107280"
 "dlr","1501","debit_card_specializing","PASS","","","CORRECT","100","","27051","1595","4320","161920","194886"
 "er","1500","debit_card_specializing","FAIL","CORRECT","All 5 steps pass - (1) semantic query correctly targets products/yearmonth/transactions_1k tables, (2) tool chain follows er_semantic_query→get_entity_mapping→get_entity_relations→execute_sql, (3) SQL uses correct joined schema with proper database_url, (4) SQL semantically equivalent to Gold (DISTINCT vs non-DISTINCT yields same unique products; question asks ""list the product descriptions"" which naturally implies distinct entries), (5) AgentFinalAnswer products all appear in PredResult which fully covers GoldResult's unique set.
-```","CORRECT","100","","7139","1486","2658","106752","118035"
+```","CORRECT","100","","23453","1558","4486","265728","295225"
 "er","1501","debit_card_specializing","PASS","","","CORRECT","100","","14614","1488","3594","133632","153328"
 "rdf","1500","debit_card_specializing","FAIL","CORRECT","All 5 steps pass. The agent correctly identified the database/tables, followed the SOP, used mapped objects, executed a correct SQL, and the DISTINCT result set is the deduplicated equivalent of GoldResult (27 unique products — more faithful to the question's ""list the products"" intent than the Gold query which returns duplicates).
-```","CORRECT","100","","30686","2989","7284","311040","351999"
+```","CORRECT","100","","18228","1796","2810","72960","95794"
 "rdf","1501","debit_card_specializing","PASS","","","CORRECT","100","","22061","1079","2980","126080","152200"

@@ -4,5 +4,4 @@
 "dlr","1486","debit_card_specializing","PASS","","","CORRECT","100","","17697","562","768","53632","72659"
 "dlr","1490","debit_card_specializing","FAIL","CORRECT","Gold二次修正(LEFT JOIN): 98.39% = 3599/3658, 与evidence""Total no. of LAM customers""一致。Pred正确使用LEFT JOIN+SUM(Consumption),答案完全匹配。","CORRECT","100","","19512","1253","1929","58112","80806"
 "rdf","1486","debit_card_specializing","PASS","","","CORRECT","100","","18264","675","575","56448","75962"
-"rdf","1490","debit_card_specializing","FAIL","INCORRECT","Step1 fail — semantic query returned yearmonth (top-2, has Consumption) but agent used transactions_1k.Amount instead; step3 fail — yearmonth mapping never queried; step4 fail — SQL uses wrong data source for ""consumption""; step5 fail — answer 0.68% vs gold 99.53%.
-```","INCORRECT","20","","14740","931","825","41344","57840"
+"rdf","1490","debit_card_specializing","FAIL","CORRECT","R2RML修复后翻盘——SQL子查询SUM→COUNT(DISTINCT)>46.73/COUNT(DISTINCT)正确，judge超时→手动CORRECT","CORRECT","100","","12675","1810","3265","90368","108118"

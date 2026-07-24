@@ -1,12 +1,7 @@
-question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
-531,ER,5,36525,13348,359,290,22528,4,"{""er_semantic_query"": 1, ""get_entity_mapping"": 1, ""execute_sql"": 2}",,FAIL,CORRECT,"五步全部通过：正确召回 users 表，工具链走正道，SQL 用映射返回的库表字段且执行成功，最终答案""Harlan has a higher reputation (457) than Jarrod Dixon (101)""与 GoldResult [[""Harlan""]] 一致，多余列(MaxReputation数值)不扣分。
-```",CORRECT
-532,ER,7,55456,9804,1885,631,43136,6,"{""er_semantic_query"": 1, ""get_entity_mapping"": 1, ""execute_sql"": 4}",,PASS,,,CORRECT
-531,DLR,5,39782,15160,213,345,24064,3,"{""dlr_semantic_query"": 1, ""get_pe_full"": 1, ""execute_sql"": 1}",,FAIL,CORRECT,"全部满足——语义正确召回users表，工具链走正道(semantic_query→get_pe_full→execute_sql)，SQL正确查询两人Reputation，执行成功，最终答案""Harlan""与GoldResult一致(457>101)
-```",CORRECT
-532,DLR,8,134647,39616,10380,4011,80640,30,"{""dlr_semantic_query"": 1, ""get_pe_full"": 1, ""execute_sql"": 28}",,FAIL,CORRECT,"Agent correctly identified DB/table/columns, executed semantically correct SQL via pagination, and produced a final answer containing all 4430 display names matching GoldResult. The ""no SQL extracted"" error is an extraction pipeline limitation (multi-query pattern), not an agent failure.
-```",CORRECT
-531,RDF,5,48961,10891,248,446,37376,3,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 1, ""execute_sql"": 1}",,FAIL,CORRECT,"全部满足。PredSQL虽未用MAX子查询，但返回了两行数据，Agent正确比较后得出Harlan声誉更高，与GoldResult一致。
-```",CORRECT
-532,RDF,13,254156,34230,6180,1650,212096,30,"{""rdf_classes"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 27}",,FAIL,CORRECT,"Agent correctly identified the users table via RDF mapping, executed the correct SQL, paginated through all 4,430 results, and produced a final answer with the complete list of display names matching GoldResult. The PredResult extraction failure was a pipeline issue, not an agent error.
-```",CORRECT
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","531","codebase_community","FAIL","CORRECT","五步全部通过：正确召回 users 表，工具链走正道，SQL 用映射返回的库表字段且执行成功，最终答案""Harlan has a higher reputation (457) than Jarrod Dixon (101)""与 GoldResult [[""Harlan""]] 一致，多余列(MaxReputation数值)不扣分。 ```","CORRECT","100","","13348","359","290","22528","36525"
+"er","532","codebase_community","PASS","","","CORRECT","100","","9804","1885","631","43136","55456"
+"dlr","531","codebase_community","FAIL","CORRECT","全部满足——语义正确召回users表，工具链走正道(semantic_query→get_pe_full→execute_sql)，SQL正确查询两人Reputation，执行成功，最终答案""Harlan""与GoldResult一致(457>101) ```","CORRECT","100","","15160","213","345","24064","39782"
+"dlr","532","codebase_community","FAIL","CORRECT","Agent correctly identified DB/table/columns, executed semantically correct SQL via pagination, and produced a final answer containing all 4430 display names matching GoldResult. The ""no SQL extracted"" error is an extraction pipeline limitation (multi-query pattern), not an agent failure. ```","CORRECT","100","no SQL extracted","39616","10380","4011","80640","134647"
+"rdf","531","codebase_community","FAIL","CORRECT","全部满足。PredSQL虽未用MAX子查询，但返回了两行数据，Agent正确比较后得出Harlan声誉更高，与GoldResult一致。 ```","CORRECT","100","","10891","248","446","37376","48961"
+"rdf","532","codebase_community","FAIL","CORRECT","Agent correctly identified the users table via RDF mapping, executed the correct SQL, paginated through all 4,430 results, and produced a final answer with the complete list of display names matching GoldResult. The PredResult extraction failure was a pipeline issue, not an agent error. ```","CORRECT","100","no SQL extracted","34230","6180","1650","212096","254156"

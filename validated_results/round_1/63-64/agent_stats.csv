@@ -1,0 +1,7 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","1155","thrombosis_prediction","PASS","","","CORRECT","100","","13935","2952","859","66688","84434"
+"er","1156","thrombosis_prediction","PASS","","","CORRECT","100","","7049","635","885","59392","67961"
+"dlr","1155","thrombosis_prediction","PASS","","","CORRECT","100","","5884","2913","291","47616","56704"
+"dlr","1156","thrombosis_prediction","PASS","","","CORRECT","100","","15692","480","389","16768","33329"
+"rdf","1155","thrombosis_prediction","PASS","","","CORRECT","100","","24626","5083","664","84608","114981"
+"rdf","1156","thrombosis_prediction","PASS","","","CORRECT","100","","2212","600","364","25344","28520"

@@ -1,0 +1,7 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","1322","student_club","FAIL","CORRECT","All 5 steps pass. PredSQL correctly computes the count of meeting events with >10 attendees (=4), matching the gold semantics. Tool chain follows proper SOP with mapped database_url and schema-derived columns. ```","CORRECT","100","","14478","512","402","28544","43936"
+"er","1323","student_club","PASS","CORRECT","","CORRECT","100","","22767","968","2413","77952","104100"
+"dlr","1322","student_club","FAIL","CORRECT","Agent correctly identified tables (event, attendance), mapped through get_pe_full, executed valid SQL returning 4 — same answer as GoldResult (4 meetings with >10 attendees). PredSQL is actually cleaner than GoldSQL (which returns [[1],[1],[1],[1]] due to GROUP BY per event instead of a single COUNT). ```","CORRECT","100","","15720","230","71","15488","31509"
+"dlr","1323","student_club","PASS","CORRECT","","CORRECT","100","","17501","369","1161","50176","69207"
+"rdf","1322","student_club","FAIL","CORRECT","All steps pass; PredResult 4 matches GoldResult (4 rows of 1 = 4 qualifying meeting events), confirmed by detailed breakdown in second SQL query. ```","CORRECT","100","","13548","464","567","20864","35443"
+"rdf","1323","student_club","PASS","CORRECT","","CORRECT","100","","13997","287","633","21632","36549"

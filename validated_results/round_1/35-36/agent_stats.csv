@@ -1,0 +1,7 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","846","formula_1","PASS","CORRECT","","CORRECT","100","","10144","700","1143","56576","68563"
+"er","847","formula_1","FAIL","CORRECT","Pred SQL correctly filters NULL/empty q2 values; Gold SQL has a bug (NULL sorts first in SQLite, returning a driver with no q2 time). Räikkönen with 1:34.188 is the true best q2 time in race 19. ```","CORRECT","100","","14092","445","500","29440","44477"
+"dlr","846","formula_1","PASS","CORRECT","","CORRECT","100","","9083","318","397","23808","33606"
+"dlr","847","formula_1","FAIL","CORRECT","manual: SQL正确执行(非失败),三范式一致(Raikkonen 1:34.188),Gold有NULL排序bug(Fisichella q2=NULL排最前)","CORRECT","100","","15933","285","380","16640","33238"
+"rdf","846","formula_1","PASS","CORRECT","","CORRECT","100","","7064","341","83","25472","32960"
+"rdf","847","formula_1","FAIL","CORRECT","manual: judge自认Gold有NULL排序bug(Fisichella q2=null排最前),三范式一致(Raikkonen 1:34.188)","CORRECT","100","","14643","297","422","17152","32514"
