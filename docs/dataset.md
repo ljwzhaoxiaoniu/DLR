@@ -191,7 +191,29 @@ FROM (
 |---|---|
 | **Gold SQL（原）** | `COUNT(T1.CustomerID)` 计交易次数而非客户数 → 1.65% |
 | **正确结果（已写入 cache）** | `COUNT(DISTINCT CustomerID)` → 7/259 = **2.70%** |
-| **三范式一致** | ER/DLR/RDF 均输出 2.70%（7 个 EUR 客户 / 259 个当天有交易的客户）。2026-07-23 修正 gold cache。 |
+| **三范式一致** | ER/DLR/RDF 均输出 2.70%（7 个 EUR 客户 / 259 个当天有交易的客户）。2026-07-23 修正 gold cache。
+
+### qid 1152 — `thrombosis_prediction`（gold 分子分母颠倒，2026-07-24 修正）
+
+- **问题**：What is the ratio of outpatient to inpatient followed up treatment among all the 'SLE' diagnosed patient?
+
+| | 内容 |
+|---|---|
+| **Gold SQL** | `SUM(CASE WHEN Admission='+' THEN 1.0 ELSE 0 END) / SUM(CASE WHEN Admission='-' THEN 1 ELSE 0 END)` = 110/84 = **1.3095** |
+| **Bug** | "ratio of A to B" = A/B（门诊/住院 = 84/110 = **0.7636**），Gold 计算了 B/A |
+| **正确结果** | `CAST(SUM(CASE WHEN Admission='-' THEN 1.0 ELSE 0 END) AS REAL) / SUM(CASE WHEN Admission='+' THEN 1 ELSE 0 END)` = **0.7636** |
+| **验证** | DLR/RDF 均正确算出 0.76；ER 初始 strict PASS 因公式反了撞上错误 Gold。修正后 DLR strict PASS。2026-07-24 修正 cache。 |
+
+### qid 1029 — `european_football_2`（gold ASC/DESC 颠倒，2026-07-24 修正）
+
+- **问题**：What are the speed in which attacks are put together of the top 4 teams with the highest build Up Play Speed?
+
+| | 内容 |
+|---|---|
+| **Gold SQL** | `ORDER BY buildUpPlaySpeed ASC LIMIT 4` → 最低值 [20, 20, 20, 23] |
+| **Bug** | 题目要求 "highest"，应取 DESC。Gold 用 ASC 取了最低的 4 个 |
+| **正确结果** | `ORDER BY buildUpPlaySpeed DESC LIMIT 4` → 最高值 [80, 78, 78, 77] |
+| **验证** | 三范式一致输出 80/78/78/77。2026-07-24 修正 cache。 |
 
 ### qid 1526 — `debit_card_specializing`（gold 返回 NULL：子查询多 JOIN gasstations，已修正 gold cache）
 
@@ -202,7 +224,29 @@ FROM (
 |---|---|
 | **Gold SQL（原）** | 子查询多 JOIN `gasstations` → 无匹配 → 返回 NULL |
 | **正确结果（已写入 cache）** | CustomerID=6718 → yearmonth 聚合 2012/2013 → **-5.8152** |
-| **三范式一致** | ER/DLR/RDF 均输出 -5.8152。2026-07-23 修正 gold cache。 |
+| **三范式一致** | ER/DLR/RDF 均输出 -5.8152。2026-07-23 修正 gold cache。
+
+### qid 1152 — `thrombosis_prediction`（gold 分子分母颠倒，2026-07-24 修正）
+
+- **问题**：What is the ratio of outpatient to inpatient followed up treatment among all the 'SLE' diagnosed patient?
+
+| | 内容 |
+|---|---|
+| **Gold SQL** | `SUM(CASE WHEN Admission='+' THEN 1.0 ELSE 0 END) / SUM(CASE WHEN Admission='-' THEN 1 ELSE 0 END)` = 110/84 = **1.3095** |
+| **Bug** | "ratio of A to B" = A/B（门诊/住院 = 84/110 = **0.7636**），Gold 计算了 B/A |
+| **正确结果** | `CAST(SUM(CASE WHEN Admission='-' THEN 1.0 ELSE 0 END) AS REAL) / SUM(CASE WHEN Admission='+' THEN 1 ELSE 0 END)` = **0.7636** |
+| **验证** | DLR/RDF 均正确算出 0.76；ER 初始 strict PASS 因公式反了撞上错误 Gold。修正后 DLR strict PASS。2026-07-24 修正 cache。 |
+
+### qid 1029 — `european_football_2`（gold ASC/DESC 颠倒，2026-07-24 修正）
+
+- **问题**：What are the speed in which attacks are put together of the top 4 teams with the highest build Up Play Speed?
+
+| | 内容 |
+|---|---|
+| **Gold SQL** | `ORDER BY buildUpPlaySpeed ASC LIMIT 4` → 最低值 [20, 20, 20, 23] |
+| **Bug** | 题目要求 "highest"，应取 DESC。Gold 用 ASC 取了最低的 4 个 |
+| **正确结果** | `ORDER BY buildUpPlaySpeed DESC LIMIT 4` → 最高值 [80, 78, 78, 77] |
+| **验证** | 三范式一致输出 80/78/78/77。2026-07-24 修正 cache。 |
 
 ### qid 1529 — `debit_card_specializing`（gold JOIN 笛卡尔积→SUM(Price) 膨胀 20 倍，已修正 gold cache）
 
@@ -214,7 +258,29 @@ FROM (
 | **Gold SQL（原）** | `transactions_1k JOIN gasstations JOIN yearmonth ON CustomerID` → 8 条交易 × 20 条年月 = 160 行笛卡尔积。`SUM(Price)`=68740.2（3437.01×20 膨胀），`SUM(IIF(Date='201201',Price,0))`=3437.01（实为交易总额，非一月消费） |
 | **Bug 本质** | yearmonth JOIN 造成 Price 重复求和。Gold Part1 是正确值的 20 倍，Part2 返回了 Part1 的正确值而非一月消费 |
 | **正确结果（已写入 cache）** | Part1（加油站花费）= `SUM(Price) FROM transactions_1k WHERE CustomerID='38508'` = **3437.01**；Part2（2012年1月消费）= `Consumption FROM yearmonth WHERE CustomerID='38508' AND Date='201201'` = **67156.94** |
-| **验证** | ER 正确输出 [3437.01, 67156.94]。DLR/RDF 因多步查询复杂度各自走了错误路径。2026-07-23 修正 gold cache。 |
+| **验证** | ER 正确输出 [3437.01, 67156.94]。DLR/RDF 因多步查询复杂度各自走了错误路径。2026-07-23 修正 gold cache。
+
+### qid 1152 — `thrombosis_prediction`（gold 分子分母颠倒，2026-07-24 修正）
+
+- **问题**：What is the ratio of outpatient to inpatient followed up treatment among all the 'SLE' diagnosed patient?
+
+| | 内容 |
+|---|---|
+| **Gold SQL** | `SUM(CASE WHEN Admission='+' THEN 1.0 ELSE 0 END) / SUM(CASE WHEN Admission='-' THEN 1 ELSE 0 END)` = 110/84 = **1.3095** |
+| **Bug** | "ratio of A to B" = A/B（门诊/住院 = 84/110 = **0.7636**），Gold 计算了 B/A |
+| **正确结果** | `CAST(SUM(CASE WHEN Admission='-' THEN 1.0 ELSE 0 END) AS REAL) / SUM(CASE WHEN Admission='+' THEN 1 ELSE 0 END)` = **0.7636** |
+| **验证** | DLR/RDF 均正确算出 0.76；ER 初始 strict PASS 因公式反了撞上错误 Gold。修正后 DLR strict PASS。2026-07-24 修正 cache。 |
+
+### qid 1029 — `european_football_2`（gold ASC/DESC 颠倒，2026-07-24 修正）
+
+- **问题**：What are the speed in which attacks are put together of the top 4 teams with the highest build Up Play Speed?
+
+| | 内容 |
+|---|---|
+| **Gold SQL** | `ORDER BY buildUpPlaySpeed ASC LIMIT 4` → 最低值 [20, 20, 20, 23] |
+| **Bug** | 题目要求 "highest"，应取 DESC。Gold 用 ASC 取了最低的 4 个 |
+| **正确结果** | `ORDER BY buildUpPlaySpeed DESC LIMIT 4` → 最高值 [80, 78, 78, 77] |
+| **验证** | 三范式一致输出 80/78/78/77。2026-07-24 修正 cache。 |
 
 ### 处理约定
 
