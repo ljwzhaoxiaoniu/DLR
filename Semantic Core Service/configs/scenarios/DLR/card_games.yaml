@@ -13,6 +13,9 @@ logical_entities:
   - attr_id: LOGICAL.Card.CardID
     biz_name: CardID
     description: 'UUID: 卡牌全局唯一标识符'
+  - attr_id: LOGICAL.Card.PrintID
+    biz_name: PrintID
+    description: '打印ID: 卡牌整数主键，每张卡的具体印刷版本有唯一ID（同名卡的不同印刷版本用这个区分）'
   physical_entities:
   - physical_entity_id: PHYSICAL.Card
     physical_table_name: cards
@@ -23,12 +26,13 @@ logical_entities:
     R: null
     C:
       LOGICAL.Card.CardID: card_games.cards.uuid
+      LOGICAL.Card.PrintID: card_games.cards.id
     S: Card attributes
     private_attributes:
     - attr_id: card_games.cards.id
       biz_name: id
       physical_column_id: card_games.cards.id
-      description: '卡牌ID: 卡牌唯一标识符'
+      description: '卡牌ID: 卡牌整数主键'
     - attr_id: card_games.cards.name
       biz_name: name
       physical_column_id: card_games.cards.name
