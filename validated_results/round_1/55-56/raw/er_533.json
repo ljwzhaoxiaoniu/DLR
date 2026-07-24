@@ -1,0 +1,16 @@
+{
+  "q_id": 533,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT COUNT(*) FROM users WHERE LastAccessDate > '2014-09-01'",
+  "result": {
+    "columns": [
+      "COUNT(*)"
+    ],
+    "rows": [
+      [
+        5146
+      ]
+    ]
+  }
+}
