@@ -293,6 +293,18 @@ FROM (
 | **修正** | `DATE(LastAccessDate) > '2014-09-01'`（LastAccessDate 是 datetime 列，需用 DATE() 取日期部分） |
 | **教训** | 排查失败先看 question + evidence + gold，不要先怪 Agent/范式/模型 |
 
+
+### qid 198 — `toxicology`（evidence 公式错误导致 gold 同样出错，2026-07-24 修正）
+
+- **问题**：On average how many carcinogenic molecules are single bonded?
+- **原 evidence**：`DIVIDE(SUM(bond_type='-'), COUNT(atom_id))`
+
+| | 内容 |
+|---|---|
+| **Bug** | evidence 公式 JOIN bond+atom 产生笛卡尔积（分子内每条 bond × 每个 atom），COUNT 被放大。正确做法：只 JOIN bond 按分子 GROUP BY 后 AVG。三者均独立验证得 20.25 |
+| **Gold 原值** | 732.125（同样被笛卡尔积污染） |
+| **正确结果** | 20.25（每个致癌分子平均约 20 条单键） |
+| **验证** | 修正 evidence 后三范式一致输出 20.25。2026-07-24 修正 cache。
 ### 处理约定
 
 - 对 gold SQL 与题意相悖的题目，**直接覆盖 gold cache 的 `rows` 与 `columns` 为正确结果**，保持 `ok=True`。
