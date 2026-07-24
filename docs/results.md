@@ -16,7 +16,7 @@
 | 13-14 | credit | q1493, q1498 | 100% | **100%** | **100%** | q1498 R2RML 修复后 RDF SUM→GROUP BY→MAX 正确 |
 | 15-16 | credit | q1500, q1501 | 100% | **100%** | 100% | q1500 DLR MCP docstring 补 ARCS 语义后翻盘 |
 | 17-18 | credit | q1505, q1506 | 100% | **100%** | 100% | q1505 三范式 COUNT(DISTINCT) 比 Gold COUNT(*)更忠实；ER judge超时/RDF不一致→手动翻盘 |
-| 19-20 | credit | q1507, q1509 | 100% | 100% | 50% | q1507/q1509 ER+DLR 全 strict PASS；RDF q1507 多选 Date INCORRECT(80) |
+| 19-20 | credit | q1507, q1509 | 100% | 100% | 100% | ER+DLR+RDF 全 strict PASS；列谓词修复 RDF q1507 多余列问题 |
 | 21-22 | credit | q1514, q1515 | 100% | **100%** | 100% | 三范式 6/6；q1514 三范式 judge 翻盘，q1515 ER/RDF strict PASS |
 | 23-24 | credit | q1521, q1524 | 100% | 100% | 100% | ER YAML 修复后 q1524 翻盘：transactions_1k JOIN gasstations→Country ✅ |
 | 25-26 | credit | q1525, q1526 | **100%** | 100% | 100% | ER YAML 修复后三题全翻盘；q1525 gold COUNT(*) 已修正 cache；q1526 gold NULL 已修正 |
@@ -34,7 +34,7 @@
 | 49-50 | football | q1029, q1030 | 100% | 100% | 50% | q1029 RDF ASC/DESC争议(Agent DESC取最高→Gold ASC取最低); q1030 全对 |
 | 51-52 | formula_1 | q850, q854 | 100% | 100% | 100% | formula_1 第二对全通；三范式 6/6，ER 双翻盘 |
 
-**round_1 当前：151/156 CORRECT**（九库交替推进中）
+**round_1 当前：152/156 CORRECT**（RDF q1507 列谓词修复，51/52）
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -99,7 +99,7 @@
 
 | 指标 | ER | DLR | RDF |
 |------|----|----|-----|
-| CORRECT | 49/52 | **52/52** | 50/52 |
+| CORRECT | 49/52 | **52/52** | 51/52 |
 
 ### 定性观察
 
