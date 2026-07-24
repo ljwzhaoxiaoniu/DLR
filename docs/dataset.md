@@ -203,7 +203,7 @@ FROM (
 | | 内容 |
 |---|---|
 | **Gold SQL** | `SUM(CASE WHEN Admission='+' THEN 1.0 ELSE 0 END) / SUM(CASE WHEN Admission='-' THEN 1 ELSE 0 END)` = 110/84 = **1.3095** |
-| **Bug** | "ratio of A to B" = A/B（门诊/住院 = 84/110 = **0.7636**），Gold 计算了 B/A |
+| **Bug** | 题目写"ratio of outpatient to inpatient"（门诊/住院 = 84/110 = 0.7636），Gold 和 evidence 都计算了 B/A（住院/门诊）。Gold cache 和 evidence 均已修正（门诊/住院 = 84/110 = **0.7636**），Gold 计算了 B/A |
 | **正确结果** | `CAST(SUM(CASE WHEN Admission='-' THEN 1.0 ELSE 0 END) AS REAL) / SUM(CASE WHEN Admission='+' THEN 1 ELSE 0 END)` = **0.7636** |
 | **验证** | DLR/RDF 均正确算出 0.76；ER 初始 strict PASS 因公式反了撞上错误 Gold。修正后 DLR strict PASS。2026-07-24 修正 cache。 |
 
@@ -236,7 +236,7 @@ FROM (
 | | 内容 |
 |---|---|
 | **Gold SQL** | `SUM(CASE WHEN Admission='+' THEN 1.0 ELSE 0 END) / SUM(CASE WHEN Admission='-' THEN 1 ELSE 0 END)` = 110/84 = **1.3095** |
-| **Bug** | "ratio of A to B" = A/B（门诊/住院 = 84/110 = **0.7636**），Gold 计算了 B/A |
+| **Bug** | 题目写"ratio of outpatient to inpatient"（门诊/住院 = 84/110 = 0.7636），Gold 和 evidence 都计算了 B/A（住院/门诊）。Gold cache 和 evidence 均已修正（门诊/住院 = 84/110 = **0.7636**），Gold 计算了 B/A |
 | **正确结果** | `CAST(SUM(CASE WHEN Admission='-' THEN 1.0 ELSE 0 END) AS REAL) / SUM(CASE WHEN Admission='+' THEN 1 ELSE 0 END)` = **0.7636** |
 | **验证** | DLR/RDF 均正确算出 0.76；ER 初始 strict PASS 因公式反了撞上错误 Gold。修正后 DLR strict PASS。2026-07-24 修正 cache。 |
 
@@ -270,7 +270,7 @@ FROM (
 | | 内容 |
 |---|---|
 | **Gold SQL** | `SUM(CASE WHEN Admission='+' THEN 1.0 ELSE 0 END) / SUM(CASE WHEN Admission='-' THEN 1 ELSE 0 END)` = 110/84 = **1.3095** |
-| **Bug** | "ratio of A to B" = A/B（门诊/住院 = 84/110 = **0.7636**），Gold 计算了 B/A |
+| **Bug** | 题目写"ratio of outpatient to inpatient"（门诊/住院 = 84/110 = 0.7636），Gold 和 evidence 都计算了 B/A（住院/门诊）。Gold cache 和 evidence 均已修正（门诊/住院 = 84/110 = **0.7636**），Gold 计算了 B/A |
 | **正确结果** | `CAST(SUM(CASE WHEN Admission='-' THEN 1.0 ELSE 0 END) AS REAL) / SUM(CASE WHEN Admission='+' THEN 1 ELSE 0 END)` = **0.7636** |
 | **验证** | DLR/RDF 均正确算出 0.76；ER 初始 strict PASS 因公式反了撞上错误 Gold。修正后 DLR strict PASS。2026-07-24 修正 cache。 |
 
