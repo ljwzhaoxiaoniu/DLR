@@ -282,6 +282,17 @@ FROM (
 | **正确结果** | `ORDER BY buildUpPlaySpeed DESC LIMIT 4` → 最高值 [80, 78, 78, 77] |
 | **验证** | 三范式一致输出 80/78/78/77。2026-07-24 修正 cache。 |
 
+### qid 533 — `codebase_community`（evidence 引导错误，2026-07-24 修正）
+
+- **问题**：How many users last accessed the website after 2014/9/1?
+- **原 evidence**：`LastAccessDate > '2014-09-01'`
+
+| | 内容 |
+|---|---|
+| **Bug** | evidence 写了 `LastAccessDate > '2014-09-01'` 未用 DATE()，导致 Agent 照做得到 5146（含当天有时间分量的记录）。Gold 正确答案 4941 需要 `DATE(LastAccessDate) > '2014-09-01'` |
+| **修正** | `DATE(LastAccessDate) > '2014-09-01'`（LastAccessDate 是 datetime 列，需用 DATE() 取日期部分） |
+| **教训** | 排查失败先看 question + evidence + gold，不要先怪 Agent/范式/模型 |
+
 ### 处理约定
 
 - 对 gold SQL 与题意相悖的题目，**直接覆盖 gold cache 的 `rows` 与 `columns` 为正确结果**，保持 `ok=True`。
