@@ -31,10 +31,10 @@
 | 43-44 | toxicology | q195, q197 | 50% | 100% | 100% | q195 三范式全对; q197 ER JOIN膨胀(69.28→应为2.16),DLR strict/RDF flip CORRECT; gold fan-out bug修正(99.68→2.16) |
 | 45-46 | student | q1322, q1323 | 100% | 100% | 100% | student_club 第二对全通；三范式 q1322 judge 翻盘，q1323 strict PASS |
 | 47-48 | thrombosis | q1152, q1153 | 50% | 100% | 100% | Gold "outpatient to inpatient"分子分母颠倒→修正后DLR strict PASS/RDF flip; ER 也反了(1.31); q1153 全对 |
-| 49-50 | football | q1029, q1030 | 100% | 100% | 50% | q1029 RDF ASC/DESC争议(Agent DESC取最高→Gold ASC取最低); q1030 全对 |
+| 49-50 | football | q1029, q1030 | 100% | 100% | 100% | Gold q1029 ASC/DESC颠倒→修正后三范式全对；DLR/RDF 正确取 DESC |
 | 51-52 | formula_1 | q850, q854 | 100% | 100% | 100% | formula_1 第二对全通；三范式 6/6，ER 双翻盘 |
 
-**round_1 当前：152/156 CORRECT**（RDF q1507 列谓词修复，51/52）
+**round_1 当前：153/156 CORRECT**（DLR 52 RDF 52 ER 49 — RDF 列谓词修复 q1507+q1029）
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -99,7 +99,7 @@
 
 | 指标 | ER | DLR | RDF |
 |------|----|----|-----|
-| CORRECT | 49/52 | **52/52** | 51/52 |
+| CORRECT | 49/52 | **52/52** | **52/52** |
 
 ### 定性观察
 
