@@ -1,223 +1,439 @@
-mapping_type: "dlr"
-version: "2.0"
+mapping_type: dlr
+version: '2.0'
 scenario_name: dlr_formula_1
-description: "DLR paradigm - F1 racing scenario: on-demand fields, 11 PEs aggregated into 8 LEs, driver/constructor race data multi-view decoupling"
+description: 'DLR paradigm - F1 racing scenario: on-demand fields, 11 PEs aggregated
+  into 8 LEs, driver/constructor race data multi-view decoupling'
 databases:
-  formula_1: "sqlite:///MINIDEV_sqlite/dev_databases/formula_1/formula_1.sqlite"
+  formula_1: sqlite:///MINIDEV_sqlite/dev_databases/formula_1/formula_1.sqlite
 logical_entities:
-  - logical_entity_id: LOGICAL.Driver
+- logical_entity_id: LOGICAL.Driver
+  biz_name: Driver
+  public_attributes:
+  - attr_id: LOGICAL.Driver.DriverID
+    biz_name: DriverID
+    description: '车手ID: F1车手唯一标识符'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Driver
+    physical_table_name: drivers
+    physical_table_id: formula_1.drivers
+    A:
+      cardinality: '1:1'
+      key: driverId
+    R: null
+    C:
+      LOGICAL.Driver.DriverID: formula_1.drivers.driverId
+    S: Driver master data
+    private_attributes:
+    - attr_id: formula_1.drivers.driverRef
+      biz_name: driverRef
+      physical_column_id: formula_1.drivers.driverRef
+      description: '车手引用名: 车手英文引用名'
+    - attr_id: formula_1.drivers.nationality
+      biz_name: nationality
+      physical_column_id: formula_1.drivers.nationality
+    - attr_id: formula_1.drivers.forename
+      biz_name: forename
+      physical_column_id: formula_1.drivers.forename
+    - attr_id: formula_1.drivers.surname
+      biz_name: surname
+      physical_column_id: formula_1.drivers.surname
+      description: '姓氏: 车手的姓氏'
+    - attr_id: formula_1.drivers.dob
+      biz_name: dob
+      physical_column_id: formula_1.drivers.dob
+    - attr_id: formula_1.drivers.number
+      biz_name: number
+      physical_column_id: formula_1.drivers.number
+    - attr_id: formula_1.drivers.code
+      biz_name: code
+      physical_column_id: formula_1.drivers.code
+    - attr_id: formula_1.drivers.url
+      biz_name: url
+      physical_column_id: formula_1.drivers.url
+- logical_entity_id: LOGICAL.Circuit
+  biz_name: Circuit
+  public_attributes:
+  - attr_id: LOGICAL.Circuit.CircuitID
+    biz_name: CircuitID
+    description: '赛道ID: F1赛道唯一标识符'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Circuit
+    physical_table_name: circuits
+    physical_table_id: formula_1.circuits
+    A:
+      cardinality: '1:1'
+      key: circuitId
+    R: null
+    C:
+      LOGICAL.Circuit.CircuitID: formula_1.circuits.circuitId
+    S: Circuit information
+    private_attributes:
+    - attr_id: formula_1.circuits.name
+      biz_name: name
+      physical_column_id: formula_1.circuits.name
+    - attr_id: formula_1.circuits.country
+      biz_name: country
+      physical_column_id: formula_1.circuits.country
+    - attr_id: formula_1.circuits.circuitRef
+      biz_name: circuitRef
+      physical_column_id: formula_1.circuits.circuitRef
+    - attr_id: formula_1.circuits.location
+      biz_name: location
+      physical_column_id: formula_1.circuits.location
+    - attr_id: formula_1.circuits.lat
+      biz_name: lat
+      physical_column_id: formula_1.circuits.lat
+    - attr_id: formula_1.circuits.lng
+      biz_name: lng
+      physical_column_id: formula_1.circuits.lng
+- logical_entity_id: LOGICAL.Race
+  biz_name: Race
+  public_attributes:
+  - attr_id: LOGICAL.Race.RaceID
+    biz_name: RaceID
+    description: '比赛ID: F1比赛唯一标识符'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Race
+    physical_table_name: races
+    physical_table_id: formula_1.races
+    A:
+      cardinality: '1:1'
+      key: raceId
+    R: null
+    C:
+      LOGICAL.Race.RaceID: formula_1.races.raceId
+    S: Race master record
+    private_attributes:
+    - attr_id: formula_1.races.year
+      biz_name: year
+      physical_column_id: formula_1.races.year
+      description: '年份: 比赛举办年份'
+    - attr_id: formula_1.races.name
+      biz_name: name
+      physical_column_id: formula_1.races.name
+      description: '比赛名称: 大奖赛名称'
+    - attr_id: formula_1.races.circuitId
+      biz_name: circuitId
+      physical_column_id: formula_1.races.circuitId
+      description: '赛道ID: 比赛赛道ID，关联 circuits 表'
+    - attr_id: formula_1.races.date
+      biz_name: date
+      physical_column_id: formula_1.races.date
+    - attr_id: formula_1.races.time
+      biz_name: time
+      physical_column_id: formula_1.races.time
+    - attr_id: formula_1.races.url
+      biz_name: url
+      physical_column_id: formula_1.races.url
+- logical_entity_id: LOGICAL.DriverRaceData
+  biz_name: DriverRaceData
+  description: 'Driver performance in a race: qualifying + race results + lap times'
+  public_attributes:
+  - attr_id: LOGICAL.DriverRaceData.Driver
     biz_name: Driver
-    public_attributes:
-      - {attr_id: LOGICAL.Driver.DriverID, biz_name: DriverID}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Driver
-        physical_table_name: drivers
-        physical_table_id: formula_1.drivers
-        A: {cardinality: "1:1", key: driverId}
-        R: null
-        C: {LOGICAL.Driver.DriverID: formula_1.drivers.driverId}
-        S: "Driver master data"
-        private_attributes:
-          - {attr_id: formula_1.drivers.driverRef, biz_name: driverRef, physical_column_id: formula_1.drivers.driverRef}
-          - {attr_id: formula_1.drivers.nationality, biz_name: nationality, physical_column_id: formula_1.drivers.nationality}
-          - {attr_id: formula_1.drivers.forename, biz_name: forename, physical_column_id: formula_1.drivers.forename}
-          - {attr_id: formula_1.drivers.surname, biz_name: surname, physical_column_id: formula_1.drivers.surname}
-          - {attr_id: formula_1.drivers.dob, biz_name: dob, physical_column_id: formula_1.drivers.dob}
-          - {attr_id: formula_1.drivers.number, biz_name: number, physical_column_id: formula_1.drivers.number}
-          - {attr_id: formula_1.drivers.code, biz_name: code, physical_column_id: formula_1.drivers.code}
-          - {attr_id: formula_1.drivers.url, biz_name: url, physical_column_id: formula_1.drivers.url}
-  - logical_entity_id: LOGICAL.Circuit
-    biz_name: Circuit
-    public_attributes:
-      - {attr_id: LOGICAL.Circuit.CircuitID, biz_name: CircuitID}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Circuit
-        physical_table_name: circuits
-        physical_table_id: formula_1.circuits
-        A: {cardinality: "1:1", key: circuitId}
-        R: null
-        C: {LOGICAL.Circuit.CircuitID: formula_1.circuits.circuitId}
-        S: "Circuit information"
-        private_attributes:
-          - {attr_id: formula_1.circuits.name, biz_name: name, physical_column_id: formula_1.circuits.name}
-          - {attr_id: formula_1.circuits.country, biz_name: country, physical_column_id: formula_1.circuits.country}
-          - {attr_id: formula_1.circuits.circuitRef, biz_name: circuitRef, physical_column_id: formula_1.circuits.circuitRef}
-          - {attr_id: formula_1.circuits.location, biz_name: location, physical_column_id: formula_1.circuits.location}
-          - {attr_id: formula_1.circuits.lat, biz_name: lat, physical_column_id: formula_1.circuits.lat}
-          - {attr_id: formula_1.circuits.lng, biz_name: lng, physical_column_id: formula_1.circuits.lng}
-  - logical_entity_id: LOGICAL.Race
+    description: '车手ID: 参加排位赛的车手ID'
+  - attr_id: LOGICAL.DriverRaceData.Race
     biz_name: Race
-    public_attributes:
-      - {attr_id: LOGICAL.Race.RaceID, biz_name: RaceID}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Race
-        physical_table_name: races
-        physical_table_id: formula_1.races
-        A: {cardinality: "1:1", key: raceId}
-        R: null
-        C: {LOGICAL.Race.RaceID: formula_1.races.raceId}
-        S: "Race master record"
-        private_attributes:
-          - {attr_id: formula_1.races.year, biz_name: year, physical_column_id: formula_1.races.year}
-          - {attr_id: formula_1.races.name, biz_name: name, physical_column_id: formula_1.races.name}
-          - {attr_id: formula_1.races.circuitId, biz_name: circuitId, physical_column_id: formula_1.races.circuitId}
-          - {attr_id: formula_1.races.date, biz_name: date, physical_column_id: formula_1.races.date}
-          - {attr_id: formula_1.races.time, biz_name: time, physical_column_id: formula_1.races.time}
-          - {attr_id: formula_1.races.url, biz_name: url, physical_column_id: formula_1.races.url}
-  - logical_entity_id: LOGICAL.DriverRaceData
-    biz_name: DriverRaceData
-    description: "Driver performance in a race: qualifying + race results + lap times"
-    public_attributes:
-      - {attr_id: LOGICAL.DriverRaceData.Driver, biz_name: Driver}
-      - {attr_id: LOGICAL.DriverRaceData.Race, biz_name: Race}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Qualifying
-        physical_table_name: qualifying
-        physical_table_id: formula_1.qualifying
-        A: {cardinality: "N:1", key: raceId}
-        R: null
-        C: {LOGICAL.DriverRaceData.Driver: formula_1.qualifying.driverId, LOGICAL.DriverRaceData.Race: formula_1.qualifying.raceId}
-        S: "Qualifying results"
-        private_attributes:
-          - {attr_id: formula_1.qualifying.qualifyId, biz_name: qualifyId, physical_column_id: formula_1.qualifying.qualifyId}
-          - {attr_id: formula_1.qualifying.number, biz_name: number, physical_column_id: formula_1.qualifying.number}
-          - {attr_id: formula_1.qualifying.position, biz_name: position, physical_column_id: formula_1.qualifying.position}
-          - {attr_id: formula_1.qualifying.q1, biz_name: q1, physical_column_id: formula_1.qualifying.q1}
-          - {attr_id: formula_1.qualifying.q2, biz_name: q2, physical_column_id: formula_1.qualifying.q2}
-          - {attr_id: formula_1.qualifying.q3, biz_name: q3, physical_column_id: formula_1.qualifying.q3}
-      - physical_entity_id: PHYSICAL.Result
-        physical_table_name: results
-        physical_table_id: formula_1.results
-        A: {cardinality: "N:1", key: raceId}
-        R: null
-        C: {LOGICAL.DriverRaceData.Driver: formula_1.results.driverId, LOGICAL.DriverRaceData.Race: formula_1.results.raceId}
-        S: "Race results"
-        private_attributes:
-          - {attr_id: formula_1.results.resultId, biz_name: resultId, physical_column_id: formula_1.results.resultId}
-          - {attr_id: formula_1.results.constructorId, biz_name: constructorId, physical_column_id: formula_1.results.constructorId}
-          - {attr_id: formula_1.results.number, biz_name: number, physical_column_id: formula_1.results.number}
-          - {attr_id: formula_1.results.grid, biz_name: grid, physical_column_id: formula_1.results.grid}
-          - {attr_id: formula_1.results.position, biz_name: position, physical_column_id: formula_1.results.position}
-          - {attr_id: formula_1.results.positionOrder, biz_name: positionOrder, physical_column_id: formula_1.results.positionOrder}
-          - {attr_id: formula_1.results.points, biz_name: points, physical_column_id: formula_1.results.points}
-          - {attr_id: formula_1.results.laps, biz_name: laps, physical_column_id: formula_1.results.laps}
-          - {attr_id: formula_1.results.time, biz_name: time, physical_column_id: formula_1.results.time}
-          - {attr_id: formula_1.results.fastestLap, biz_name: fastestLap, physical_column_id: formula_1.results.fastestLap}
-          - {attr_id: formula_1.results.fastestLapTime, biz_name: fastestLapTime, physical_column_id: formula_1.results.fastestLapTime}
-          - {attr_id: formula_1.results.fastestLapSpeed, biz_name: fastestLapSpeed, physical_column_id: formula_1.results.fastestLapSpeed}
-          - {attr_id: formula_1.results.rank, biz_name: rank, physical_column_id: formula_1.results.rank}
-          - {attr_id: formula_1.results.statusId, biz_name: statusId, physical_column_id: formula_1.results.statusId}
-      - physical_entity_id: PHYSICAL.LapTime
-        physical_table_name: lapTimes
-        physical_table_id: formula_1.lapTimes
-        A: {cardinality: "N:1", key: raceId}
-        R: null
-        C: {LOGICAL.DriverRaceData.Driver: formula_1.lapTimes.driverId, LOGICAL.DriverRaceData.Race: formula_1.lapTimes.raceId}
-        S: "Lap times"
-        private_attributes:
-          - {attr_id: formula_1.lapTimes.lap, biz_name: lap, physical_column_id: formula_1.lapTimes.lap}
-          - {attr_id: formula_1.lapTimes.position, biz_name: position, physical_column_id: formula_1.lapTimes.position}
-          - {attr_id: formula_1.lapTimes.time, biz_name: time, physical_column_id: formula_1.lapTimes.time}
-          - {attr_id: formula_1.lapTimes.milliseconds, biz_name: milliseconds, physical_column_id: formula_1.lapTimes.milliseconds}
-  - logical_entity_id: LOGICAL.DriverStandings
-    biz_name: DriverStandings
-    public_attributes:
-      - {attr_id: LOGICAL.DriverStandings.Driver, biz_name: Driver}
-      - {attr_id: LOGICAL.DriverStandings.Race, biz_name: Race}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.DriverStanding
-        physical_table_name: driverStandings
-        physical_table_id: formula_1.driverStandings
-        A: {cardinality: "N:1", key: raceId}
-        R: null
-        C: {LOGICAL.DriverStandings.Driver: formula_1.driverStandings.driverId, LOGICAL.DriverStandings.Race: formula_1.driverStandings.raceId}
-        S: "Driver season standings"
-        private_attributes:
-          - {attr_id: formula_1.driverStandings.driverStandingsId, biz_name: driverStandingsId, physical_column_id: formula_1.driverStandings.driverStandingsId}
-          - {attr_id: formula_1.driverStandings.points, biz_name: points, physical_column_id: formula_1.driverStandings.points}
-          - {attr_id: formula_1.driverStandings.position, biz_name: position, physical_column_id: formula_1.driverStandings.position}
-          - {attr_id: formula_1.driverStandings.wins, biz_name: wins, physical_column_id: formula_1.driverStandings.wins}
-  - logical_entity_id: LOGICAL.PitStop
-    biz_name: PitStop
-    public_attributes:
-      - {attr_id: LOGICAL.PitStop.Driver, biz_name: Driver}
-      - {attr_id: LOGICAL.PitStop.Race, biz_name: Race}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.PitStop
-        physical_table_name: pitStops
-        physical_table_id: formula_1.pitStops
-        A: {cardinality: "N:1", key: raceId}
-        R: null
-        C: {LOGICAL.PitStop.Driver: formula_1.pitStops.driverId, LOGICAL.PitStop.Race: formula_1.pitStops.raceId}
-        S: "Pit stop records"
-        private_attributes:
-          - {attr_id: formula_1.pitStops.stop, biz_name: stop, physical_column_id: formula_1.pitStops.stop}
-          - {attr_id: formula_1.pitStops.lap, biz_name: lap, physical_column_id: formula_1.pitStops.lap}
-          - {attr_id: formula_1.pitStops.time, biz_name: time, physical_column_id: formula_1.pitStops.time}
-          - {attr_id: formula_1.pitStops.duration, biz_name: duration, physical_column_id: formula_1.pitStops.duration}
-  - logical_entity_id: LOGICAL.Constructor
+    description: '比赛ID: 所属比赛ID'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Qualifying
+    physical_table_name: qualifying
+    physical_table_id: formula_1.qualifying
+    A:
+      cardinality: N:1
+      key: raceId
+    R: null
+    C:
+      LOGICAL.DriverRaceData.Driver: formula_1.qualifying.driverId
+      LOGICAL.DriverRaceData.Race: formula_1.qualifying.raceId
+    S: Qualifying results
+    private_attributes:
+    - attr_id: formula_1.qualifying.qualifyId
+      biz_name: qualifyId
+      physical_column_id: formula_1.qualifying.qualifyId
+    - attr_id: formula_1.qualifying.number
+      biz_name: number
+      physical_column_id: formula_1.qualifying.number
+    - attr_id: formula_1.qualifying.position
+      biz_name: position
+      physical_column_id: formula_1.qualifying.position
+    - attr_id: formula_1.qualifying.q1
+      biz_name: q1
+      physical_column_id: formula_1.qualifying.q1
+      description: 'Q1成绩: 排位赛Q1阶段成绩（毫秒）'
+    - attr_id: formula_1.qualifying.q2
+      biz_name: q2
+      physical_column_id: formula_1.qualifying.q2
+      description: 'Q2成绩: 排位赛Q2阶段成绩（毫秒），NULL=未进Q2'
+    - attr_id: formula_1.qualifying.q3
+      biz_name: q3
+      physical_column_id: formula_1.qualifying.q3
+  - physical_entity_id: PHYSICAL.Result
+    physical_table_name: results
+    physical_table_id: formula_1.results
+    A:
+      cardinality: N:1
+      key: raceId
+    R: null
+    C:
+      LOGICAL.DriverRaceData.Driver: formula_1.results.driverId
+      LOGICAL.DriverRaceData.Race: formula_1.results.raceId
+    S: Race results
+    private_attributes:
+    - attr_id: formula_1.results.resultId
+      biz_name: resultId
+      physical_column_id: formula_1.results.resultId
+    - attr_id: formula_1.results.constructorId
+      biz_name: constructorId
+      physical_column_id: formula_1.results.constructorId
+    - attr_id: formula_1.results.number
+      biz_name: number
+      physical_column_id: formula_1.results.number
+    - attr_id: formula_1.results.grid
+      biz_name: grid
+      physical_column_id: formula_1.results.grid
+    - attr_id: formula_1.results.position
+      biz_name: position
+      physical_column_id: formula_1.results.position
+    - attr_id: formula_1.results.positionOrder
+      biz_name: positionOrder
+      physical_column_id: formula_1.results.positionOrder
+    - attr_id: formula_1.results.points
+      biz_name: points
+      physical_column_id: formula_1.results.points
+    - attr_id: formula_1.results.laps
+      biz_name: laps
+      physical_column_id: formula_1.results.laps
+    - attr_id: formula_1.results.time
+      biz_name: time
+      physical_column_id: formula_1.results.time
+    - attr_id: formula_1.results.fastestLap
+      biz_name: fastestLap
+      physical_column_id: formula_1.results.fastestLap
+    - attr_id: formula_1.results.fastestLapTime
+      biz_name: fastestLapTime
+      physical_column_id: formula_1.results.fastestLapTime
+    - attr_id: formula_1.results.fastestLapSpeed
+      biz_name: fastestLapSpeed
+      physical_column_id: formula_1.results.fastestLapSpeed
+    - attr_id: formula_1.results.rank
+      biz_name: rank
+      physical_column_id: formula_1.results.rank
+    - attr_id: formula_1.results.statusId
+      biz_name: statusId
+      physical_column_id: formula_1.results.statusId
+  - physical_entity_id: PHYSICAL.LapTime
+    physical_table_name: lapTimes
+    physical_table_id: formula_1.lapTimes
+    A:
+      cardinality: N:1
+      key: raceId
+    R: null
+    C:
+      LOGICAL.DriverRaceData.Driver: formula_1.lapTimes.driverId
+      LOGICAL.DriverRaceData.Race: formula_1.lapTimes.raceId
+    S: Lap times
+    private_attributes:
+    - attr_id: formula_1.lapTimes.lap
+      biz_name: lap
+      physical_column_id: formula_1.lapTimes.lap
+    - attr_id: formula_1.lapTimes.position
+      biz_name: position
+      physical_column_id: formula_1.lapTimes.position
+    - attr_id: formula_1.lapTimes.time
+      biz_name: time
+      physical_column_id: formula_1.lapTimes.time
+    - attr_id: formula_1.lapTimes.milliseconds
+      biz_name: milliseconds
+      physical_column_id: formula_1.lapTimes.milliseconds
+- logical_entity_id: LOGICAL.DriverStandings
+  biz_name: DriverStandings
+  public_attributes:
+  - attr_id: LOGICAL.DriverStandings.Driver
+    biz_name: Driver
+  - attr_id: LOGICAL.DriverStandings.Race
+    biz_name: Race
+  physical_entities:
+  - physical_entity_id: PHYSICAL.DriverStanding
+    physical_table_name: driverStandings
+    physical_table_id: formula_1.driverStandings
+    A:
+      cardinality: N:1
+      key: raceId
+    R: null
+    C:
+      LOGICAL.DriverStandings.Driver: formula_1.driverStandings.driverId
+      LOGICAL.DriverStandings.Race: formula_1.driverStandings.raceId
+    S: Driver season standings
+    private_attributes:
+    - attr_id: formula_1.driverStandings.driverStandingsId
+      biz_name: driverStandingsId
+      physical_column_id: formula_1.driverStandings.driverStandingsId
+    - attr_id: formula_1.driverStandings.points
+      biz_name: points
+      physical_column_id: formula_1.driverStandings.points
+    - attr_id: formula_1.driverStandings.position
+      biz_name: position
+      physical_column_id: formula_1.driverStandings.position
+    - attr_id: formula_1.driverStandings.wins
+      biz_name: wins
+      physical_column_id: formula_1.driverStandings.wins
+- logical_entity_id: LOGICAL.PitStop
+  biz_name: PitStop
+  public_attributes:
+  - attr_id: LOGICAL.PitStop.Driver
+    biz_name: Driver
+  - attr_id: LOGICAL.PitStop.Race
+    biz_name: Race
+  physical_entities:
+  - physical_entity_id: PHYSICAL.PitStop
+    physical_table_name: pitStops
+    physical_table_id: formula_1.pitStops
+    A:
+      cardinality: N:1
+      key: raceId
+    R: null
+    C:
+      LOGICAL.PitStop.Driver: formula_1.pitStops.driverId
+      LOGICAL.PitStop.Race: formula_1.pitStops.raceId
+    S: Pit stop records
+    private_attributes:
+    - attr_id: formula_1.pitStops.stop
+      biz_name: stop
+      physical_column_id: formula_1.pitStops.stop
+    - attr_id: formula_1.pitStops.lap
+      biz_name: lap
+      physical_column_id: formula_1.pitStops.lap
+    - attr_id: formula_1.pitStops.time
+      biz_name: time
+      physical_column_id: formula_1.pitStops.time
+    - attr_id: formula_1.pitStops.duration
+      biz_name: duration
+      physical_column_id: formula_1.pitStops.duration
+- logical_entity_id: LOGICAL.Constructor
+  biz_name: Constructor
+  public_attributes:
+  - attr_id: LOGICAL.Constructor.ConstructorID
+    biz_name: ConstructorID
+    description: '车队ID: F1车队唯一标识符'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Constructor
+    physical_table_name: constructors
+    physical_table_id: formula_1.constructors
+    A:
+      cardinality: '1:1'
+      key: constructorId
+    R: null
+    C:
+      LOGICAL.Constructor.ConstructorID: formula_1.constructors.constructorId
+    S: Constructor master data
+    private_attributes:
+    - attr_id: formula_1.constructors.name
+      biz_name: name
+      physical_column_id: formula_1.constructors.name
+      description: '车队名称: 车队完整名称'
+    - attr_id: formula_1.constructors.nationality
+      biz_name: nationality
+      physical_column_id: formula_1.constructors.nationality
+      description: '国籍: 车队所属国家/地区'
+    - attr_id: formula_1.constructors.constructorRef
+      biz_name: constructorRef
+      physical_column_id: formula_1.constructors.constructorRef
+    - attr_id: formula_1.constructors.url
+      biz_name: url
+      physical_column_id: formula_1.constructors.url
+- logical_entity_id: LOGICAL.ConstructorRaceData
+  biz_name: ConstructorRaceData
+  public_attributes:
+  - attr_id: LOGICAL.ConstructorRaceData.Constructor
     biz_name: Constructor
-    public_attributes:
-      - {attr_id: LOGICAL.Constructor.ConstructorID, biz_name: ConstructorID}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Constructor
-        physical_table_name: constructors
-        physical_table_id: formula_1.constructors
-        A: {cardinality: "1:1", key: constructorId}
-        R: null
-        C: {LOGICAL.Constructor.ConstructorID: formula_1.constructors.constructorId}
-        S: "Constructor master data"
-        private_attributes:
-          - {attr_id: formula_1.constructors.name, biz_name: name, physical_column_id: formula_1.constructors.name}
-          - {attr_id: formula_1.constructors.nationality, biz_name: nationality, physical_column_id: formula_1.constructors.nationality}
-          - {attr_id: formula_1.constructors.constructorRef, biz_name: constructorRef, physical_column_id: formula_1.constructors.constructorRef}
-          - {attr_id: formula_1.constructors.url, biz_name: url, physical_column_id: formula_1.constructors.url}
-  - logical_entity_id: LOGICAL.ConstructorRaceData
-    biz_name: ConstructorRaceData
-    public_attributes:
-      - {attr_id: LOGICAL.ConstructorRaceData.Constructor, biz_name: Constructor}
-      - {attr_id: LOGICAL.ConstructorRaceData.Race, biz_name: Race}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.ConstructorResult
-        physical_table_name: constructorResults
-        physical_table_id: formula_1.constructorResults
-        A: {cardinality: "N:1", key: raceId}
-        R: null
-        C: {LOGICAL.ConstructorRaceData.Constructor: formula_1.constructorResults.constructorId, LOGICAL.ConstructorRaceData.Race: formula_1.constructorResults.raceId}
-        S: "Constructor race results"
-        private_attributes:
-          - {attr_id: formula_1.constructorResults.constructorResultsId, biz_name: constructorResultsId, physical_column_id: formula_1.constructorResults.constructorResultsId}
-          - {attr_id: formula_1.constructorResults.points, biz_name: points, physical_column_id: formula_1.constructorResults.points}
-      - physical_entity_id: PHYSICAL.ConstructorStanding
-        physical_table_name: constructorStandings
-        physical_table_id: formula_1.constructorStandings
-        A: {cardinality: "N:1", key: raceId}
-        R: null
-        C: {LOGICAL.ConstructorRaceData.Constructor: formula_1.constructorStandings.constructorId, LOGICAL.ConstructorRaceData.Race: formula_1.constructorStandings.raceId}
-        S: "Constructor season standings"
-        private_attributes:
-          - {attr_id: formula_1.constructorStandings.constructorStandingsId, biz_name: constructorStandingsId, physical_column_id: formula_1.constructorStandings.constructorStandingsId}
-          - {attr_id: formula_1.constructorStandings.points, biz_name: points, physical_column_id: formula_1.constructorStandings.points}
-          - {attr_id: formula_1.constructorStandings.position, biz_name: position, physical_column_id: formula_1.constructorStandings.position}
-          - {attr_id: formula_1.constructorStandings.wins, biz_name: wins, physical_column_id: formula_1.constructorStandings.wins}
+  - attr_id: LOGICAL.ConstructorRaceData.Race
+    biz_name: Race
+  physical_entities:
+  - physical_entity_id: PHYSICAL.ConstructorResult
+    physical_table_name: constructorResults
+    physical_table_id: formula_1.constructorResults
+    A:
+      cardinality: N:1
+      key: raceId
+    R: null
+    C:
+      LOGICAL.ConstructorRaceData.Constructor: formula_1.constructorResults.constructorId
+      LOGICAL.ConstructorRaceData.Race: formula_1.constructorResults.raceId
+    S: Constructor race results
+    private_attributes:
+    - attr_id: formula_1.constructorResults.constructorResultsId
+      biz_name: constructorResultsId
+      physical_column_id: formula_1.constructorResults.constructorResultsId
+    - attr_id: formula_1.constructorResults.points
+      biz_name: points
+      physical_column_id: formula_1.constructorResults.points
+  - physical_entity_id: PHYSICAL.ConstructorStanding
+    physical_table_name: constructorStandings
+    physical_table_id: formula_1.constructorStandings
+    A:
+      cardinality: N:1
+      key: raceId
+    R: null
+    C:
+      LOGICAL.ConstructorRaceData.Constructor: formula_1.constructorStandings.constructorId
+      LOGICAL.ConstructorRaceData.Race: formula_1.constructorStandings.raceId
+    S: Constructor season standings
+    private_attributes:
+    - attr_id: formula_1.constructorStandings.constructorStandingsId
+      biz_name: constructorStandingsId
+      physical_column_id: formula_1.constructorStandings.constructorStandingsId
+    - attr_id: formula_1.constructorStandings.points
+      biz_name: points
+      physical_column_id: formula_1.constructorStandings.points
+    - attr_id: formula_1.constructorStandings.position
+      biz_name: position
+      physical_column_id: formula_1.constructorStandings.position
+    - attr_id: formula_1.constructorStandings.wins
+      biz_name: wins
+      physical_column_id: formula_1.constructorStandings.wins
 pas_relations:
-  - relation_id: LOGICAL.Circuit_TO_LOGICAL.Race
-    relation_name: Hosts
-    P: {forward: {verb: hosts, cardinality: '1:N'}, reverse: {verb: is located at, cardinality: '1:1'}}
-    A: CircuitID
-    S: "1 circuit hosts many races"
-  - relation_id: LOGICAL.Race_TO_LOGICAL.DriverRaceData
-    relation_name: Produces
-    P: {forward: {verb: produces, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
-    A: Race
-    S: "1 race produces N driver race data records"
-  - relation_id: LOGICAL.Driver_TO_LOGICAL.DriverRaceData
-    relation_name: Participates
-    P: {forward: {verb: participates, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
-    A: Driver
-    S: "1 driver participates in N races"
-  - relation_id: LOGICAL.Constructor_TO_LOGICAL.ConstructorRaceData
-    relation_name: Participates
-    P: {forward: {verb: participates, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
-    A: Constructor
-    S: "1 constructor participates in N races"
+- relation_id: LOGICAL.Circuit_TO_LOGICAL.Race
+  relation_name: Hosts
+  P:
+    forward:
+      verb: hosts
+      cardinality: 1:N
+    reverse:
+      verb: is located at
+      cardinality: '1:1'
+  A: CircuitID
+  S: 1 circuit hosts many races
+- relation_id: LOGICAL.Race_TO_LOGICAL.DriverRaceData
+  relation_name: Produces
+  P:
+    forward:
+      verb: produces
+      cardinality: 1:N
+    reverse:
+      verb: belongs to
+      cardinality: '1:1'
+  A: Race
+  S: 1 race produces N driver race data records
+- relation_id: LOGICAL.Driver_TO_LOGICAL.DriverRaceData
+  relation_name: Participates
+  P:
+    forward:
+      verb: participates
+      cardinality: 1:N
+    reverse:
+      verb: belongs to
+      cardinality: '1:1'
+  A: Driver
+  S: 1 driver participates in N races
+- relation_id: LOGICAL.Constructor_TO_LOGICAL.ConstructorRaceData
+  relation_name: Participates
+  P:
+    forward:
+      verb: participates
+      cardinality: 1:N
+    reverse:
+      verb: belongs to
+      cardinality: '1:1'
+  A: Constructor
+  S: 1 constructor participates in N races

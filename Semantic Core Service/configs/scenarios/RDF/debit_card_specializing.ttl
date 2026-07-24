@@ -13,39 +13,69 @@
 <http://example.org/tm/debit_card_specializing/customers> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "customers" ] ;
     rr:subjectMap [ rr:template "http://example.org/debit_card_specializing/{CustomerID}" ; rr:class ex:customers ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/customers/CustomerID> ; rr:objectMap [ rr:column "CustomerID" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/customers/Segment> ; rr:objectMap [ rr:column "Segment" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/customers/Currency> ; rr:objectMap [ rr:column "Currency" ; rr:datatype xsd:string ] ] .
+    rr:predicateObjectMap [ rr:predicate <http://example.org/customers/CustomerID> ; rr:objectMap [ rr:column "CustomerID" ; rr:datatype xsd:string ] ;
+        rdfs:label "客户ID"@zh ;
+        rdfs:comment "客户唯一标识符"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/customers/Segment> ; rr:objectMap [ rr:column "Segment" ; rr:datatype xsd:string ] ;
+        rdfs:label "客户分类"@zh ;
+        rdfs:comment "客户市场细分（SME/LAM/KAM等）"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/customers/Currency> ; rr:objectMap [ rr:column "Currency" ; rr:datatype xsd:string ] ;
+        rdfs:label "币种"@zh ;
+        rdfs:comment "客户使用的货币（CZK/EUR）"@zh ] .
 
 # === Table: debit_card_specializing.gasstations (pk=GasStationID) ===
 <http://example.org/tm/debit_card_specializing/gasstations> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "gasstations" ] ;
     rr:subjectMap [ rr:template "http://example.org/debit_card_specializing/{GasStationID}" ; rr:class ex:gasstations ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/gasstations/GasStationID> ; rr:objectMap [ rr:column "GasStationID" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/gasstations/ChainID> ; rr:objectMap [ rr:column "ChainID" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/gasstations/Country> ; rr:objectMap [ rr:column "Country" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/gasstations/GasStationID> ; rr:objectMap [ rr:column "GasStationID" ; rr:datatype xsd:string ] ;
+        rdfs:label "加油站ID"@zh ;
+        rdfs:comment "加油站唯一标识符"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/gasstations/ChainID> ; rr:objectMap [ rr:column "ChainID" ; rr:datatype xsd:string ] ;
+        rdfs:label "连锁品牌ID"@zh ;
+        rdfs:comment "加油站连锁品牌ID"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/gasstations/Country> ; rr:objectMap [ rr:column "Country" ; rr:datatype xsd:string ] ;
+        rdfs:label "国家"@zh ;
+        rdfs:comment "加油站所在国家代码（CZE=捷克）"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/gasstations/Segment> ; rr:objectMap [ rr:column "Segment" ; rr:datatype xsd:string ] ] .
 
 # === Table: debit_card_specializing.products (pk=ProductID) ===
 <http://example.org/tm/debit_card_specializing/products> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "products" ] ;
     rr:subjectMap [ rr:template "http://example.org/debit_card_specializing/{ProductID}" ; rr:class ex:products ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/products/ProductID> ; rr:objectMap [ rr:column "ProductID" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/products/Description> ; rr:objectMap [ rr:column "Description" ; rr:datatype xsd:string ] ] .
+    rr:predicateObjectMap [ rr:predicate <http://example.org/products/ProductID> ; rr:objectMap [ rr:column "ProductID" ; rr:datatype xsd:string ] ;
+        rdfs:label "产品ID"@zh ;
+        rdfs:comment "产品唯一标识符"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/products/Description> ; rr:objectMap [ rr:column "Description" ; rr:datatype xsd:string ] ;
+        rdfs:label "产品描述"@zh ;
+        rdfs:comment "产品名称/描述"@zh ] .
 
 # === Table: debit_card_specializing.transactions_1k (pk=TransactionID) ===
 <http://example.org/tm/debit_card_specializing/transactions_1k> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "transactions_1k" ] ;
     rr:subjectMap [ rr:template "http://example.org/debit_card_specializing/{TransactionID}" ; rr:class ex:transactions_1k ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/TransactionID> ; rr:objectMap [ rr:column "TransactionID" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/Date> ; rr:objectMap [ rr:column "Date" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/Time> ; rr:objectMap [ rr:column "Time" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/CustomerID> ; rr:objectMap [ rr:column "CustomerID" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/Date> ; rr:objectMap [ rr:column "Date" ; rr:datatype xsd:string ] ;
+        rdfs:label "交易日期"@zh ;
+        rdfs:comment "交易日期，格式 YYYY-MM-DD"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/Time> ; rr:objectMap [ rr:column "Time" ; rr:datatype xsd:string ] ;
+        rdfs:label "交易时间"@zh ;
+        rdfs:comment "交易时间，格式 HH:MM:SS"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/CustomerID> ; rr:objectMap [ rr:column "CustomerID" ; rr:datatype xsd:string ] ;
+        rdfs:label "客户ID"@zh ;
+        rdfs:comment "交易所属客户ID，关联 customers 表"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/CardID> ; rr:objectMap [ rr:column "CardID" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/GasStationID> ; rr:objectMap [ rr:column "GasStationID" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/ProductID> ; rr:objectMap [ rr:column "ProductID" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/Amount> ; rr:objectMap [ rr:column "Amount" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/Price> ; rr:objectMap [ rr:column "Price" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/GasStationID> ; rr:objectMap [ rr:column "GasStationID" ; rr:datatype xsd:string ] ;
+        rdfs:label "加油站ID"@zh ;
+        rdfs:comment "关联 gasstations 表"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/ProductID> ; rr:objectMap [ rr:column "ProductID" ; rr:datatype xsd:string ] ;
+        rdfs:label "产品ID"@zh ;
+        rdfs:comment "关联 products 表"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/Amount> ; rr:objectMap [ rr:column "Amount" ; rr:datatype xsd:string ] ;
+        rdfs:label "交易金额"@zh ;
+        rdfs:comment "交易金额"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/Price> ; rr:objectMap [ rr:column "Price" ; rr:datatype xsd:string ] ;
+        rdfs:label "单价"@zh ;
+        rdfs:comment "产品单价"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/refers_to_customers> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/debit_card_specializing/customers> ; rr:joinCondition [ rr:child "CustomerID" ; rr:parent "CustomerID" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/refers_to_gasstations> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/debit_card_specializing/gasstations> ; rr:joinCondition [ rr:child "GasStationID" ; rr:parent "GasStationID" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/refers_to_products> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/debit_card_specializing/products> ; rr:joinCondition [ rr:child "ProductID" ; rr:parent "ProductID" ] ] ] .
@@ -54,8 +84,14 @@
 <http://example.org/tm/debit_card_specializing/yearmonth> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "yearmonth" ] ;
     rr:subjectMap [ rr:template "http://example.org/debit_card_specializing/{Date}" ; rr:class ex:yearmonth ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/yearmonth/CustomerID> ; rr:objectMap [ rr:column "CustomerID" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/yearmonth/Date> ; rr:objectMap [ rr:column "Date" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/yearmonth/Consumption> ; rr:objectMap [ rr:column "Consumption" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/yearmonth/CustomerID> ; rr:objectMap [ rr:column "CustomerID" ; rr:datatype xsd:string ] ;
+        rdfs:label "客户ID"@zh ;
+        rdfs:comment "客户ID，关联 customers 表"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/yearmonth/Date> ; rr:objectMap [ rr:column "Date" ; rr:datatype xsd:string ] ;
+        rdfs:label "月份"@zh ;
+        rdfs:comment "年月，格式 YYYYMM（如 201301）"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/yearmonth/Consumption> ; rr:objectMap [ rr:column "Consumption" ; rr:datatype xsd:string ] ;
+        rdfs:label "消费量"@zh ;
+        rdfs:comment "该客户当月的总消费量（升）"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/yearmonth/refers_to_customers> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/debit_card_specializing/customers> ; rr:joinCondition [ rr:child "CustomerID" ; rr:parent "CustomerID" ] ] ] .
 

@@ -13,10 +13,18 @@
 <http://example.org/tm/student_club/attendance> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "attendance" ] ;
     rr:subjectMap [ rr:template "http://example.org/student_club/{link_to_member}" ; rr:class ex:attendance ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/attendance/link_to_event> ; rr:objectMap [ rr:column "link_to_event" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/attendance/link_to_member> ; rr:objectMap [ rr:column "link_to_member" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/attendance/refers_to_member> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/student_club/member> ; rr:joinCondition [ rr:child "link_to_member" ; rr:parent "member_id" ] ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/attendance/refers_to_event> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/student_club/event> ; rr:joinCondition [ rr:child "link_to_event" ; rr:parent "event_id" ] ] ] .
+    rr:predicateObjectMap [ rr:predicate <http://example.org/attendance/link_to_event> ; rr:objectMap [ rr:column "link_to_event" ; rr:datatype xsd:string ] ;
+        rdfs:label "关联活动ID"@zh ;
+        rdfs:comment "参加的活动ID，关联 event 表"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/attendance/link_to_member> ; rr:objectMap [ rr:column "link_to_member" ; rr:datatype xsd:string ] ;
+        rdfs:label "关联成员ID"@zh ;
+        rdfs:comment "参加的成员ID，关联 member 表"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/attendance/refers_to_member> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/student_club/member> ; rr:joinCondition [ rr:child "link_to_member" ; rr:parent "member_id" ] ;
+        rdfs:label "参与成员"@zh ;
+        rdfs:comment "FK：attendance.link_to_member → member.member_id"@zh ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/attendance/refers_to_event> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/student_club/event> ; rr:joinCondition [ rr:child "link_to_event" ; rr:parent "event_id" ] ;
+        rdfs:label "所属活动"@zh ;
+        rdfs:comment "FK：attendance.link_to_event → event.event_id"@zh ] ] .
 
 # === Table: student_club.budget (pk=budget_id) ===
 <http://example.org/tm/student_club/budget> a rr:TriplesMap ;
@@ -35,10 +43,16 @@
 <http://example.org/tm/student_club/event> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "event" ] ;
     rr:subjectMap [ rr:template "http://example.org/student_club/{event_id}" ; rr:class ex:event ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/event/event_id> ; rr:objectMap [ rr:column "event_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/event/event_name> ; rr:objectMap [ rr:column "event_name" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/event/event_id> ; rr:objectMap [ rr:column "event_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "活动ID"@zh ;
+        rdfs:comment "校园活动唯一标识符"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/event/event_name> ; rr:objectMap [ rr:column "event_name" ; rr:datatype xsd:string ] ;
+        rdfs:label "活动名称"@zh ;
+        rdfs:comment "校园活动名称"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/event/event_date> ; rr:objectMap [ rr:column "event_date" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/event/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/event/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ;
+        rdfs:label "活动类型"@zh ;
+        rdfs:comment "活动类型，如 Meeting=会议、fundraiser=筹款"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/event/notes> ; rr:objectMap [ rr:column "notes" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/event/location> ; rr:objectMap [ rr:column "location" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/event/status> ; rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ] ] .
@@ -73,8 +87,12 @@
 <http://example.org/tm/student_club/major> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "major" ] ;
     rr:subjectMap [ rr:template "http://example.org/student_club/{major_id}" ; rr:class ex:major ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/major/major_id> ; rr:objectMap [ rr:column "major_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/major/major_name> ; rr:objectMap [ rr:column "major_name" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/major/major_id> ; rr:objectMap [ rr:column "major_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "专业ID"@zh ;
+        rdfs:comment "专业唯一标识符"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/major/major_name> ; rr:objectMap [ rr:column "major_name" ; rr:datatype xsd:string ] ;
+        rdfs:label "专业名称"@zh ;
+        rdfs:comment "专业的名称"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/major/department> ; rr:objectMap [ rr:column "department" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/major/college> ; rr:objectMap [ rr:column "college" ; rr:datatype xsd:string ] ] .
 
@@ -82,15 +100,25 @@
 <http://example.org/tm/student_club/member> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "member" ] ;
     rr:subjectMap [ rr:template "http://example.org/student_club/{member_id}" ; rr:class ex:member ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/member/member_id> ; rr:objectMap [ rr:column "member_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/member/first_name> ; rr:objectMap [ rr:column "first_name" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/member/last_name> ; rr:objectMap [ rr:column "last_name" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/member/member_id> ; rr:objectMap [ rr:column "member_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "成员ID"@zh ;
+        rdfs:comment "社团成员唯一标识符"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/member/first_name> ; rr:objectMap [ rr:column "first_name" ; rr:datatype xsd:string ] ;
+        rdfs:label "名"@zh ;
+        rdfs:comment "成员的名字/名"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/member/last_name> ; rr:objectMap [ rr:column "last_name" ; rr:datatype xsd:string ] ;
+        rdfs:label "姓"@zh ;
+        rdfs:comment "成员的姓氏"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/member/email> ; rr:objectMap [ rr:column "email" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/member/position> ; rr:objectMap [ rr:column "position" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/member/t_shirt_size> ; rr:objectMap [ rr:column "t_shirt_size" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/member/t_shirt_size> ; rr:objectMap [ rr:column "t_shirt_size" ; rr:datatype xsd:string ] ;
+        rdfs:label "T恤尺码"@zh ;
+        rdfs:comment "成员的T恤尺码"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/member/phone> ; rr:objectMap [ rr:column "phone" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/member/zip> ; rr:objectMap [ rr:column "zip" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/member/link_to_major> ; rr:objectMap [ rr:column "link_to_major" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/member/link_to_major> ; rr:objectMap [ rr:column "link_to_major" ; rr:datatype xsd:string ] ;
+        rdfs:label "专业ID"@zh ;
+        rdfs:comment "成员所属专业ID，关联 major 表"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/member/refers_to_zip_code> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/student_club/zip_code> ; rr:joinCondition [ rr:child "zip" ; rr:parent "zip_code" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/member/refers_to_major> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/student_club/major> ; rr:joinCondition [ rr:child "link_to_major" ; rr:parent "major_id" ] ] ] .
 

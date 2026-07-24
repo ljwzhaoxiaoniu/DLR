@@ -20,9 +20,13 @@
 <http://example.org/tm/european_football_2/League> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "League" ] ;
     rr:subjectMap [ rr:template "http://example.org/european_football_2/{id}" ; rr:class ex:League ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/League/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/League/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
+        rdfs:label "联赛ID"@zh ;
+        rdfs:comment "联赛唯一标识符"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/League/country_id> ; rr:objectMap [ rr:column "country_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/League/name> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/League/name> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ;
+        rdfs:label "联赛名称"@zh ;
+        rdfs:comment "联赛名称"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/League/refers_to_country> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/european_football_2/country> ; rr:joinCondition [ rr:child "country_id" ; rr:parent "id" ] ] ] .
 
 # === Table: european_football_2.Match (pk=id) ===
@@ -31,15 +35,27 @@
     rr:subjectMap [ rr:template "http://example.org/european_football_2/{id}" ; rr:class ex:Match ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Match/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Match/country_id> ; rr:objectMap [ rr:column "country_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/Match/league_id> ; rr:objectMap [ rr:column "league_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/Match/season> ; rr:objectMap [ rr:column "season" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Match/league_id> ; rr:objectMap [ rr:column "league_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "联赛ID"@zh ;
+        rdfs:comment "所属联赛ID，关联 League 表"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Match/season> ; rr:objectMap [ rr:column "season" ; rr:datatype xsd:string ] ;
+        rdfs:label "赛季"@zh ;
+        rdfs:comment "比赛所属赛季，格式如 2015/2016"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Match/stage> ; rr:objectMap [ rr:column "stage" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Match/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Match/match_api_id> ; rr:objectMap [ rr:column "match_api_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/Match/home_team_api_id> ; rr:objectMap [ rr:column "home_team_api_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/Match/away_team_api_id> ; rr:objectMap [ rr:column "away_team_api_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/Match/home_team_goal> ; rr:objectMap [ rr:column "home_team_goal" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/Match/away_team_goal> ; rr:objectMap [ rr:column "away_team_goal" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Match/home_team_api_id> ; rr:objectMap [ rr:column "home_team_api_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "主队API ID"@zh ;
+        rdfs:comment "主队ID，关联 Team 表"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Match/away_team_api_id> ; rr:objectMap [ rr:column "away_team_api_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "客队API ID"@zh ;
+        rdfs:comment "客队ID，关联 Team 表"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Match/home_team_goal> ; rr:objectMap [ rr:column "home_team_goal" ; rr:datatype xsd:string ] ;
+        rdfs:label "主队进球"@zh ;
+        rdfs:comment "主队的进球数量"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Match/away_team_goal> ; rr:objectMap [ rr:column "away_team_goal" ; rr:datatype xsd:string ] ;
+        rdfs:label "客队进球"@zh ;
+        rdfs:comment "客队的进球数量"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Match/home_player_X1> ; rr:objectMap [ rr:column "home_player_X1" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Match/home_player_X2> ; rr:objectMap [ rr:column "home_player_X2" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Match/home_player_X3> ; rr:objectMap [ rr:column "home_player_X3" ; rr:datatype xsd:string ] ] ;
@@ -237,9 +253,13 @@
     rr:logicalTable [ rr:tableName "Team" ] ;
     rr:subjectMap [ rr:template "http://example.org/european_football_2/{id}" ; rr:class ex:Team ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/Team/team_api_id> ; rr:objectMap [ rr:column "team_api_id" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Team/team_api_id> ; rr:objectMap [ rr:column "team_api_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "球队API ID"@zh ;
+        rdfs:comment "球队唯一标识符（API来源）"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team/team_fifa_api_id> ; rr:objectMap [ rr:column "team_fifa_api_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/Team/team_long_name> ; rr:objectMap [ rr:column "team_long_name" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Team/team_long_name> ; rr:objectMap [ rr:column "team_long_name" ; rr:datatype xsd:string ] ;
+        rdfs:label "球队全名"@zh ;
+        rdfs:comment "球队完整名称"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team/team_short_name> ; rr:objectMap [ rr:column "team_short_name" ; rr:datatype xsd:string ] ] .
 
 # === Table: european_football_2.Team_Attributes (pk=id) ===
@@ -248,9 +268,13 @@
     rr:subjectMap [ rr:template "http://example.org/european_football_2/{id}" ; rr:class ex:Team_Attributes ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/team_fifa_api_id> ; rr:objectMap [ rr:column "team_fifa_api_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/team_api_id> ; rr:objectMap [ rr:column "team_api_id" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/team_api_id> ; rr:objectMap [ rr:column "team_api_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "球队API ID"@zh ;
+        rdfs:comment "关联 Team 表的球队ID"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/buildUpPlaySpeed> ; rr:objectMap [ rr:column "buildUpPlaySpeed" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/buildUpPlaySpeed> ; rr:objectMap [ rr:column "buildUpPlaySpeed" ; rr:datatype xsd:string ] ;
+        rdfs:label "组织进攻速度"@zh ;
+        rdfs:comment "球队组织进攻的速度评分"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/buildUpPlaySpeedClass> ; rr:objectMap [ rr:column "buildUpPlaySpeedClass" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/buildUpPlayDribbling> ; rr:objectMap [ rr:column "buildUpPlayDribbling" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Team_Attributes/buildUpPlayDribblingClass> ; rr:objectMap [ rr:column "buildUpPlayDribblingClass" ; rr:datatype xsd:string ] ] ;

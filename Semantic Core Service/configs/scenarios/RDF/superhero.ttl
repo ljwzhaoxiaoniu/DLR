@@ -51,10 +51,18 @@
 <http://example.org/tm/superhero/hero_power> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "hero_power" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{hero_id}" ; rr:class ex:hero_power ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/hero_power/hero_id> ; rr:objectMap [ rr:column "hero_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/hero_power/power_id> ; rr:objectMap [ rr:column "power_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/hero_power/refers_to_superpower> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/superhero/superpower> ; rr:joinCondition [ rr:child "power_id" ; rr:parent "id" ] ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/hero_power/refers_to_superhero> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/superhero/superhero> ; rr:joinCondition [ rr:child "hero_id" ; rr:parent "id" ] ] ] .
+    rr:predicateObjectMap [ rr:predicate <http://example.org/hero_power/hero_id> ; rr:objectMap [ rr:column "hero_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "英雄ID"@zh ;
+        rdfs:comment "拥有该能力的英雄ID"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/hero_power/power_id> ; rr:objectMap [ rr:column "power_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "能力ID"@zh ;
+        rdfs:comment "该英雄拥有的超能力ID"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/hero_power/refers_to_superpower> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/superhero/superpower> ; rr:joinCondition [ rr:child "power_id" ; rr:parent "id" ] ;
+        rdfs:label "对应能力"@zh ;
+        rdfs:comment "FK：hero_power.power_id → superpower.id"@zh ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/hero_power/refers_to_superhero> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/superhero/superhero> ; rr:joinCondition [ rr:child "hero_id" ; rr:parent "id" ] ;
+        rdfs:label "所属英雄"@zh ;
+        rdfs:comment "FK：hero_power.hero_id → superhero.id"@zh ] ] .
 
 # === Table: superhero.publisher (pk=id) ===
 <http://example.org/tm/superhero/publisher> a rr:TriplesMap ;
@@ -74,8 +82,12 @@
 <http://example.org/tm/superhero/superhero> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "superhero" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:superhero ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/superhero_name> ; rr:objectMap [ rr:column "superhero_name" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
+        rdfs:label "英雄ID"@zh ;
+        rdfs:comment "超级英雄唯一标识符"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/superhero_name> ; rr:objectMap [ rr:column "superhero_name" ; rr:datatype xsd:string ] ;
+        rdfs:label "英雄名称"@zh ;
+        rdfs:comment "超级英雄的名称"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/full_name> ; rr:objectMap [ rr:column "full_name" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/gender_id> ; rr:objectMap [ rr:column "gender_id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/eye_colour_id> ; rr:objectMap [ rr:column "eye_colour_id" ; rr:datatype xsd:string ] ] ;
@@ -98,6 +110,10 @@
 <http://example.org/tm/superhero/superpower> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "superpower" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:superpower ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/superpower/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/superpower/power_name> ; rr:objectMap [ rr:column "power_name" ; rr:datatype xsd:string ] ] .
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superpower/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
+        rdfs:label "能力ID"@zh ;
+        rdfs:comment "超能力唯一标识符"@zh ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superpower/power_name> ; rr:objectMap [ rr:column "power_name" ; rr:datatype xsd:string ] ;
+        rdfs:label "能力名称"@zh ;
+        rdfs:comment "超能力的名称"@zh ] .
 

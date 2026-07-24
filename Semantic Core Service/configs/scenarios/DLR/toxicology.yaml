@@ -1,75 +1,127 @@
-mapping_type: "dlr"
-version: "2.0"
+mapping_type: dlr
+version: '2.0'
 scenario_name: dlr_toxicology
-description: "DLR paradigm - Toxicology scenario: on-demand fields, 4 PEs aggregated into 3 LEs, bond+connection multi-view decoupling"
+description: 'DLR paradigm - Toxicology scenario: on-demand fields, 4 PEs aggregated
+  into 3 LEs, bond+connection multi-view decoupling'
 databases:
-  toxicology: "sqlite:///MINIDEV_sqlite/dev_databases/toxicology/toxicology.sqlite"
+  toxicology: sqlite:///MINIDEV_sqlite/dev_databases/toxicology/toxicology.sqlite
 logical_entities:
-  - logical_entity_id: LOGICAL.Molecule
+- logical_entity_id: LOGICAL.Molecule
+  biz_name: Molecule
+  description: Chemical molecule with carcinogenicity label
+  public_attributes:
+  - attr_id: LOGICAL.Molecule.MoleculeID
+    biz_name: MoleculeID
+    description: '分子ID: 分子的唯一标识符'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Molecule
+    physical_table_name: molecule
+    physical_table_id: toxicology.molecule
+    A:
+      cardinality: '1:1'
+      key: molecule_id
+    R: null
+    C:
+      LOGICAL.Molecule.MoleculeID: toxicology.molecule.molecule_id
+    S: Molecule master
+    private_attributes:
+    - attr_id: toxicology.molecule.label
+      biz_name: label
+      physical_column_id: toxicology.molecule.label
+      description: '致癌性标签: 该分子是否具有致癌性'
+- logical_entity_id: LOGICAL.Atom
+  biz_name: Atom
+  description: Atoms composing molecules
+  public_attributes:
+  - attr_id: LOGICAL.Atom.AtomID
+    biz_name: AtomID
+    description: '原子ID: 原子的唯一标识符'
+  - attr_id: LOGICAL.Atom.Molecule
     biz_name: Molecule
-    description: "Chemical molecule with carcinogenicity label"
-    public_attributes:
-      - {attr_id: LOGICAL.Molecule.MoleculeID, biz_name: MoleculeID}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Molecule
-        physical_table_name: molecule
-        physical_table_id: toxicology.molecule
-        A: {cardinality: "1:1", key: molecule_id}
-        R: null
-        C: {LOGICAL.Molecule.MoleculeID: toxicology.molecule.molecule_id}
-        S: "Molecule master"
-        private_attributes:
-          - {attr_id: toxicology.molecule.label, biz_name: label, physical_column_id: toxicology.molecule.label}
-  - logical_entity_id: LOGICAL.Atom
-    biz_name: Atom
-    description: "Atoms composing molecules"
-    public_attributes:
-      - {attr_id: LOGICAL.Atom.AtomID, biz_name: AtomID}
-      - {attr_id: LOGICAL.Atom.Molecule, biz_name: Molecule}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Atom
-        physical_table_name: atom
-        physical_table_id: toxicology.atom
-        A: {cardinality: "N:1", key: molecule_id}
-        R: null
-        C: {LOGICAL.Atom.AtomID: toxicology.atom.atom_id, LOGICAL.Atom.Molecule: toxicology.atom.molecule_id}
-        S: "Atom composition"
-        private_attributes:
-          - {attr_id: toxicology.atom.element, biz_name: element, physical_column_id: toxicology.atom.element}
-  - logical_entity_id: LOGICAL.Bond
-    biz_name: Bond
-    description: "Chemical bonds and connections"
-    public_attributes:
-      - {attr_id: LOGICAL.Bond.BondID, biz_name: BondID}
-      - {attr_id: LOGICAL.Bond.Molecule, biz_name: Molecule}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Bond
-        physical_table_name: bond
-        physical_table_id: toxicology.bond
-        A: {cardinality: "N:1", key: molecule_id}
-        R: null
-        C: {LOGICAL.Bond.BondID: toxicology.bond.bond_id, LOGICAL.Bond.Molecule: toxicology.bond.molecule_id}
-        S: "Bond master - bond type"
-        private_attributes:
-          - {attr_id: toxicology.bond.bond_type, biz_name: bond_type, physical_column_id: toxicology.bond.bond_type}
-      - physical_entity_id: PHYSICAL.Connected
-        physical_table_name: connected
-        physical_table_id: toxicology.connected
-        A: {cardinality: "N:1", key: bond_id}
-        R: null
-        C: {LOGICAL.Bond.BondID: toxicology.connected.bond_id}
-        S: "Bond-atom connections"
-        private_attributes:
-          - {attr_id: toxicology.connected.atom_id, biz_name: atom1, physical_column_id: toxicology.connected.atom_id}
-          - {attr_id: toxicology.connected.atom_id2, biz_name: atom2, physical_column_id: toxicology.connected.atom_id2}
+    description: '所属分子ID: 该原子所属分子的唯一标识，关联 molecule 表'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Atom
+    physical_table_name: atom
+    physical_table_id: toxicology.atom
+    A:
+      cardinality: N:1
+      key: molecule_id
+    R: null
+    C:
+      LOGICAL.Atom.AtomID: toxicology.atom.atom_id
+      LOGICAL.Atom.Molecule: toxicology.atom.molecule_id
+    S: Atom composition
+    private_attributes:
+    - attr_id: toxicology.atom.element
+      biz_name: element
+      physical_column_id: toxicology.atom.element
+      description: '元素符号: 化学元素符号，如 o=氧、c=碳、h=氢、n=氮'
+- logical_entity_id: LOGICAL.Bond
+  biz_name: Bond
+  description: Chemical bonds and connections
+  public_attributes:
+  - attr_id: LOGICAL.Bond.BondID
+    biz_name: BondID
+    description: '化学键ID: 化学键的唯一标识符'
+  - attr_id: LOGICAL.Bond.Molecule
+    biz_name: Molecule
+    description: '所属分子ID: 该化学键所属分子的唯一标识，关联 molecule 表'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Bond
+    physical_table_name: bond
+    physical_table_id: toxicology.bond
+    A:
+      cardinality: N:1
+      key: molecule_id
+    R: null
+    C:
+      LOGICAL.Bond.BondID: toxicology.bond.bond_id
+      LOGICAL.Bond.Molecule: toxicology.bond.molecule_id
+    S: Bond master - bond type
+    private_attributes:
+    - attr_id: toxicology.bond.bond_type
+      biz_name: bond_type
+      physical_column_id: toxicology.bond.bond_type
+      description: '键类型: 化学键类型：- 单键、= 双键、# 三键'
+  - physical_entity_id: PHYSICAL.Connected
+    physical_table_name: connected
+    physical_table_id: toxicology.connected
+    A:
+      cardinality: N:1
+      key: bond_id
+    R: null
+    C:
+      LOGICAL.Bond.BondID: toxicology.connected.bond_id
+    S: Bond-atom connections
+    private_attributes:
+    - attr_id: toxicology.connected.atom_id
+      biz_name: atom1
+      physical_column_id: toxicology.connected.atom_id
+      description: '原子1 ID: 连接中第一个原子的ID'
+    - attr_id: toxicology.connected.atom_id2
+      biz_name: atom2
+      physical_column_id: toxicology.connected.atom_id2
+      description: '原子2 ID: 连接中第二个原子的ID'
 pas_relations:
-  - relation_id: LOGICAL.Molecule_TO_LOGICAL.Atom
-    relation_name: Contains
-    P: {forward: {verb: contains, cardinality: '1:N'}, reverse: {verb: constitutes, cardinality: '1:1'}}
-    A: Molecule
-    S: "1 molecule contains N atoms"
-  - relation_id: LOGICAL.Molecule_TO_LOGICAL.Bond
-    relation_name: HasBond
-    P: {forward: {verb: has, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
-    A: Molecule
-    S: "1 molecule contains N bonds"
+- relation_id: LOGICAL.Molecule_TO_LOGICAL.Atom
+  relation_name: Contains
+  P:
+    forward:
+      verb: contains
+      cardinality: 1:N
+    reverse:
+      verb: constitutes
+      cardinality: '1:1'
+  A: Molecule
+  S: 1 molecule contains N atoms
+- relation_id: LOGICAL.Molecule_TO_LOGICAL.Bond
+  relation_name: HasBond
+  P:
+    forward:
+      verb: has
+      cardinality: 1:N
+    reverse:
+      verb: belongs to
+      cardinality: '1:1'
+  A: Molecule
+  S: 1 molecule contains N bonds

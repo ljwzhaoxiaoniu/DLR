@@ -1,159 +1,267 @@
-mapping_type: "dlr"
-version: "2.0"
+mapping_type: dlr
+version: '2.0'
 scenario_name: dlr_superhero
-description: "DLR paradigm - Superhero scenario: on-demand fields, 10 PEs aggregated into 5 LEs, hero features + dimension dictionaries multi-view decoupling"
+description: 'DLR paradigm - Superhero scenario: on-demand fields, 10 PEs aggregated
+  into 5 LEs, hero features + dimension dictionaries multi-view decoupling'
 databases:
-  superhero: "sqlite:///MINIDEV_sqlite/dev_databases/superhero/superhero.sqlite"
+  superhero: sqlite:///MINIDEV_sqlite/dev_databases/superhero/superhero.sqlite
 logical_entities:
-  - logical_entity_id: LOGICAL.Superhero
-    biz_name: Superhero
-    description: "Superhero entity"
-    public_attributes:
-      - {attr_id: LOGICAL.Superhero.HeroID, biz_name: HeroID}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Superhero
-        physical_table_name: superhero
-        physical_table_id: superhero.superhero
-        A: {cardinality: "1:1", key: id}
-        R: null
-        C: {LOGICAL.Superhero.HeroID: superhero.superhero.id}
-        S: "Hero master"
-        private_attributes:
-          - {attr_id: superhero.superhero.superhero_name, biz_name: superhero_name, physical_column_id: superhero.superhero.superhero_name}
-          - {attr_id: superhero.superhero.full_name, biz_name: full_name, physical_column_id: superhero.superhero.full_name}
-          - {attr_id: superhero.superhero.height_cm, biz_name: height_cm, physical_column_id: superhero.superhero.height_cm}
-          - {attr_id: superhero.superhero.weight_kg, biz_name: weight_kg, physical_column_id: superhero.superhero.weight_kg}
-          - {attr_id: superhero.superhero.publisher_id, biz_name: publisher_id, physical_column_id: superhero.superhero.publisher_id}
-          - {attr_id: superhero.superhero.race_id, biz_name: race_id, physical_column_id: superhero.superhero.race_id}
-          - {attr_id: superhero.superhero.gender_id, biz_name: gender_id, physical_column_id: superhero.superhero.gender_id}
-          - {attr_id: superhero.superhero.eye_colour_id, biz_name: eye_colour_id, physical_column_id: superhero.superhero.eye_colour_id}
-          - {attr_id: superhero.superhero.hair_colour_id, biz_name: hair_colour_id, physical_column_id: superhero.superhero.hair_colour_id}
-          - {attr_id: superhero.superhero.skin_colour_id, biz_name: skin_colour_id, physical_column_id: superhero.superhero.skin_colour_id}
-          - {attr_id: superhero.superhero.alignment_id, biz_name: alignment_id, physical_column_id: superhero.superhero.alignment_id}
-  - logical_entity_id: LOGICAL.HeroFeature
-    biz_name: HeroFeature
-    description: "Hero powers and attributes"
-    public_attributes:
-      - {attr_id: LOGICAL.HeroFeature.Hero, biz_name: Hero}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.HeroPower
-        physical_table_name: hero_power
-        physical_table_id: superhero.hero_power
-        A: {cardinality: "N:1", key: hero_id}
-        R: null
-        C: {LOGICAL.HeroFeature.Hero: superhero.hero_power.hero_id}
-        S: "Hero-power many-to-many"
-        private_attributes:
-          - {attr_id: superhero.hero_power.power_id, biz_name: power_id, physical_column_id: superhero.hero_power.power_id}
-      - physical_entity_id: PHYSICAL.HeroAttribute
-        physical_table_name: hero_attribute
-        physical_table_id: superhero.hero_attribute
-        A: {cardinality: "N:1", key: hero_id}
-        R: null
-        C: {LOGICAL.HeroFeature.Hero: superhero.hero_attribute.hero_id}
-        S: "Hero-attribute values"
-        private_attributes:
-          - {attr_id: superhero.hero_attribute.attribute_id, biz_name: attribute_id, physical_column_id: superhero.hero_attribute.attribute_id}
-          - {attr_id: superhero.hero_attribute.attribute_value, biz_name: attribute_value, physical_column_id: superhero.hero_attribute.attribute_value}
-  - logical_entity_id: LOGICAL.Superpower
-    biz_name: Superpower
-    description: "Superpower dictionary"
-    public_attributes:
-      - {attr_id: LOGICAL.Superpower.PowerID, biz_name: PowerID}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Superpower
-        physical_table_name: superpower
-        physical_table_id: superhero.superpower
-        A: {cardinality: "1:1", key: id}
-        R: null
-        C: {LOGICAL.Superpower.PowerID: superhero.superpower.id}
-        S: "Superpower dictionary"
-        private_attributes:
-          - {attr_id: superhero.superpower.power_name, biz_name: power_name, physical_column_id: superhero.superpower.power_name}
-  - logical_entity_id: LOGICAL.Attribute
-    biz_name: Attribute
-    description: "Attribute dictionary"
-    public_attributes:
-      - {attr_id: LOGICAL.Attribute.AttributeID, biz_name: AttributeID}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Attribute
-        physical_table_name: attribute
-        physical_table_id: superhero.attribute
-        A: {cardinality: "1:1", key: id}
-        R: null
-        C: {LOGICAL.Attribute.AttributeID: superhero.attribute.id}
-        S: "Attribute dictionary"
-        private_attributes:
-          - {attr_id: superhero.attribute.attribute_name, biz_name: attribute_name, physical_column_id: superhero.attribute.attribute_name}
-  - logical_entity_id: LOGICAL.HeroDimension
-    biz_name: HeroDimension
-    description: "Classification dimensions: publisher, race, gender, colours, alignment"
-    public_attributes:
-      - {attr_id: LOGICAL.HeroDimension.DimensionID, biz_name: DimensionID}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Publisher
-        physical_table_name: publisher
-        physical_table_id: superhero.publisher
-        A: {cardinality: "1:1", key: id}
-        R: null
-        C: {LOGICAL.HeroDimension.DimensionID: superhero.publisher.id}
-        S: "Publisher dimension"
-        private_attributes:
-          - {attr_id: superhero.publisher.publisher_name, biz_name: publisher_name, physical_column_id: superhero.publisher.publisher_name}
-      - physical_entity_id: PHYSICAL.HeroRace
-        physical_table_name: race
-        physical_table_id: superhero.race
-        A: {cardinality: "1:1", key: id}
-        R: null
-        C: {LOGICAL.HeroDimension.DimensionID: superhero.race.id}
-        S: "Race dimension"
-        private_attributes:
-          - {attr_id: superhero.race.race, biz_name: race, physical_column_id: superhero.race.race}
-      - physical_entity_id: PHYSICAL.Gender
-        physical_table_name: gender
-        physical_table_id: superhero.gender
-        A: {cardinality: "1:1", key: id}
-        R: null
-        C: {LOGICAL.HeroDimension.DimensionID: superhero.gender.id}
-        S: "Gender dimension"
-        private_attributes:
-          - {attr_id: superhero.gender.gender, biz_name: gender, physical_column_id: superhero.gender.gender}
-      - physical_entity_id: PHYSICAL.Colour
-        physical_table_name: colour
-        physical_table_id: superhero.colour
-        A: {cardinality: "1:1", key: id}
-        R: null
-        C: {LOGICAL.HeroDimension.DimensionID: superhero.colour.id}
-        S: "Colour dimension (shared for eyes/hair/skin)"
-        private_attributes:
-          - {attr_id: superhero.colour.colour, biz_name: colour, physical_column_id: superhero.colour.colour}
-      - physical_entity_id: PHYSICAL.Alignment
-        physical_table_name: alignment
-        physical_table_id: superhero.alignment
-        A: {cardinality: "1:1", key: id}
-        R: null
-        C: {LOGICAL.HeroDimension.DimensionID: superhero.alignment.id}
-        S: "Alignment dimension (good/evil/neutral)"
-        private_attributes:
-          - {attr_id: superhero.alignment.alignment, biz_name: alignment, physical_column_id: superhero.alignment.alignment}
+- logical_entity_id: LOGICAL.Superhero
+  biz_name: Superhero
+  description: Superhero entity
+  public_attributes:
+  - attr_id: LOGICAL.Superhero.HeroID
+    biz_name: HeroID
+    description: '英雄ID: 超级英雄唯一标识符'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Superhero
+    physical_table_name: superhero
+    physical_table_id: superhero.superhero
+    A:
+      cardinality: '1:1'
+      key: id
+    R: null
+    C:
+      LOGICAL.Superhero.HeroID: superhero.superhero.id
+    S: Hero master
+    private_attributes:
+    - attr_id: superhero.superhero.superhero_name
+      biz_name: superhero_name
+      physical_column_id: superhero.superhero.superhero_name
+      description: '英雄名称: 超级英雄的名称'
+    - attr_id: superhero.superhero.full_name
+      biz_name: full_name
+      physical_column_id: superhero.superhero.full_name
+    - attr_id: superhero.superhero.height_cm
+      biz_name: height_cm
+      physical_column_id: superhero.superhero.height_cm
+    - attr_id: superhero.superhero.weight_kg
+      biz_name: weight_kg
+      physical_column_id: superhero.superhero.weight_kg
+    - attr_id: superhero.superhero.publisher_id
+      biz_name: publisher_id
+      physical_column_id: superhero.superhero.publisher_id
+    - attr_id: superhero.superhero.race_id
+      biz_name: race_id
+      physical_column_id: superhero.superhero.race_id
+    - attr_id: superhero.superhero.gender_id
+      biz_name: gender_id
+      physical_column_id: superhero.superhero.gender_id
+    - attr_id: superhero.superhero.eye_colour_id
+      biz_name: eye_colour_id
+      physical_column_id: superhero.superhero.eye_colour_id
+    - attr_id: superhero.superhero.hair_colour_id
+      biz_name: hair_colour_id
+      physical_column_id: superhero.superhero.hair_colour_id
+    - attr_id: superhero.superhero.skin_colour_id
+      biz_name: skin_colour_id
+      physical_column_id: superhero.superhero.skin_colour_id
+    - attr_id: superhero.superhero.alignment_id
+      biz_name: alignment_id
+      physical_column_id: superhero.superhero.alignment_id
+- logical_entity_id: LOGICAL.HeroFeature
+  biz_name: HeroFeature
+  description: Hero powers and attributes
+  public_attributes:
+  - attr_id: LOGICAL.HeroFeature.Hero
+    biz_name: Hero
+    description: '英雄ID: 拥有该能力的英雄ID'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.HeroPower
+    physical_table_name: hero_power
+    physical_table_id: superhero.hero_power
+    A:
+      cardinality: N:1
+      key: hero_id
+    R: null
+    C:
+      LOGICAL.HeroFeature.Hero: superhero.hero_power.hero_id
+    S: Hero-power many-to-many
+    private_attributes:
+    - attr_id: superhero.hero_power.power_id
+      biz_name: power_id
+      physical_column_id: superhero.hero_power.power_id
+      description: '能力ID: 该英雄拥有的超能力ID'
+  - physical_entity_id: PHYSICAL.HeroAttribute
+    physical_table_name: hero_attribute
+    physical_table_id: superhero.hero_attribute
+    A:
+      cardinality: N:1
+      key: hero_id
+    R: null
+    C:
+      LOGICAL.HeroFeature.Hero: superhero.hero_attribute.hero_id
+    S: Hero-attribute values
+    private_attributes:
+    - attr_id: superhero.hero_attribute.attribute_id
+      biz_name: attribute_id
+      physical_column_id: superhero.hero_attribute.attribute_id
+    - attr_id: superhero.hero_attribute.attribute_value
+      biz_name: attribute_value
+      physical_column_id: superhero.hero_attribute.attribute_value
+- logical_entity_id: LOGICAL.Superpower
+  biz_name: Superpower
+  description: Superpower dictionary
+  public_attributes:
+  - attr_id: LOGICAL.Superpower.PowerID
+    biz_name: PowerID
+    description: '能力ID: 超能力唯一标识符'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Superpower
+    physical_table_name: superpower
+    physical_table_id: superhero.superpower
+    A:
+      cardinality: '1:1'
+      key: id
+    R: null
+    C:
+      LOGICAL.Superpower.PowerID: superhero.superpower.id
+    S: Superpower dictionary
+    private_attributes:
+    - attr_id: superhero.superpower.power_name
+      biz_name: power_name
+      physical_column_id: superhero.superpower.power_name
+      description: '能力名称: 超能力的名称'
+- logical_entity_id: LOGICAL.Attribute
+  biz_name: Attribute
+  description: Attribute dictionary
+  public_attributes:
+  - attr_id: LOGICAL.Attribute.AttributeID
+    biz_name: AttributeID
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Attribute
+    physical_table_name: attribute
+    physical_table_id: superhero.attribute
+    A:
+      cardinality: '1:1'
+      key: id
+    R: null
+    C:
+      LOGICAL.Attribute.AttributeID: superhero.attribute.id
+    S: Attribute dictionary
+    private_attributes:
+    - attr_id: superhero.attribute.attribute_name
+      biz_name: attribute_name
+      physical_column_id: superhero.attribute.attribute_name
+- logical_entity_id: LOGICAL.HeroDimension
+  biz_name: HeroDimension
+  description: 'Classification dimensions: publisher, race, gender, colours, alignment'
+  public_attributes:
+  - attr_id: LOGICAL.HeroDimension.DimensionID
+    biz_name: DimensionID
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Publisher
+    physical_table_name: publisher
+    physical_table_id: superhero.publisher
+    A:
+      cardinality: '1:1'
+      key: id
+    R: null
+    C:
+      LOGICAL.HeroDimension.DimensionID: superhero.publisher.id
+    S: Publisher dimension
+    private_attributes:
+    - attr_id: superhero.publisher.publisher_name
+      biz_name: publisher_name
+      physical_column_id: superhero.publisher.publisher_name
+  - physical_entity_id: PHYSICAL.HeroRace
+    physical_table_name: race
+    physical_table_id: superhero.race
+    A:
+      cardinality: '1:1'
+      key: id
+    R: null
+    C:
+      LOGICAL.HeroDimension.DimensionID: superhero.race.id
+    S: Race dimension
+    private_attributes:
+    - attr_id: superhero.race.race
+      biz_name: race
+      physical_column_id: superhero.race.race
+  - physical_entity_id: PHYSICAL.Gender
+    physical_table_name: gender
+    physical_table_id: superhero.gender
+    A:
+      cardinality: '1:1'
+      key: id
+    R: null
+    C:
+      LOGICAL.HeroDimension.DimensionID: superhero.gender.id
+    S: Gender dimension
+    private_attributes:
+    - attr_id: superhero.gender.gender
+      biz_name: gender
+      physical_column_id: superhero.gender.gender
+  - physical_entity_id: PHYSICAL.Colour
+    physical_table_name: colour
+    physical_table_id: superhero.colour
+    A:
+      cardinality: '1:1'
+      key: id
+    R: null
+    C:
+      LOGICAL.HeroDimension.DimensionID: superhero.colour.id
+    S: Colour dimension (shared for eyes/hair/skin)
+    private_attributes:
+    - attr_id: superhero.colour.colour
+      biz_name: colour
+      physical_column_id: superhero.colour.colour
+  - physical_entity_id: PHYSICAL.Alignment
+    physical_table_name: alignment
+    physical_table_id: superhero.alignment
+    A:
+      cardinality: '1:1'
+      key: id
+    R: null
+    C:
+      LOGICAL.HeroDimension.DimensionID: superhero.alignment.id
+    S: Alignment dimension (good/evil/neutral)
+    private_attributes:
+    - attr_id: superhero.alignment.alignment
+      biz_name: alignment
+      physical_column_id: superhero.alignment.alignment
 pas_relations:
-  - relation_id: LOGICAL.Superhero_TO_LOGICAL.HeroFeature
-    relation_name: HasFeature
-    P: {forward: {verb: has, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
-    A: HeroID
-    S: "1 hero has N powers/attributes"
-  - relation_id: LOGICAL.Superpower_TO_LOGICAL.HeroFeature
-    relation_name: Grants
-    P: {forward: {verb: grants, cardinality: '1:N'}, reverse: {verb: referenced by, cardinality: '1:1'}}
-    A: PowerID
-    S: "1 power is granted to N heroes"
-  - relation_id: LOGICAL.Attribute_TO_LOGICAL.HeroFeature
-    relation_name: Associated
-    P: {forward: {verb: associated, cardinality: '1:N'}, reverse: {verb: referenced by, cardinality: '1:1'}}
-    A: AttributeID
-    S: "1 attribute is associated with N heroes"
-  - relation_id: LOGICAL.Superhero_TO_LOGICAL.HeroDimension
-    relation_name: BelongsTo
-    P: {forward: {verb: belongs to, cardinality: 'N:1'}, reverse: {verb: contains, cardinality: '1:N'}}
-    A: DimensionID
-    S: "Heroes belong to dimensions (publisher/race/gender/colour/alignment)"
+- relation_id: LOGICAL.Superhero_TO_LOGICAL.HeroFeature
+  relation_name: HasFeature
+  P:
+    forward:
+      verb: has
+      cardinality: 1:N
+    reverse:
+      verb: belongs to
+      cardinality: '1:1'
+  A: HeroID
+  S: 1 hero has N powers/attributes
+- relation_id: LOGICAL.Superpower_TO_LOGICAL.HeroFeature
+  relation_name: Grants
+  P:
+    forward:
+      verb: grants
+      cardinality: 1:N
+    reverse:
+      verb: referenced by
+      cardinality: '1:1'
+  A: PowerID
+  S: 1 power is granted to N heroes
+- relation_id: LOGICAL.Attribute_TO_LOGICAL.HeroFeature
+  relation_name: Associated
+  P:
+    forward:
+      verb: associated
+      cardinality: 1:N
+    reverse:
+      verb: referenced by
+      cardinality: '1:1'
+  A: AttributeID
+  S: 1 attribute is associated with N heroes
+- relation_id: LOGICAL.Superhero_TO_LOGICAL.HeroDimension
+  relation_name: BelongsTo
+  P:
+    forward:
+      verb: belongs to
+      cardinality: N:1
+    reverse:
+      verb: contains
+      cardinality: 1:N
+  A: DimensionID
+  S: Heroes belong to dimensions (publisher/race/gender/colour/alignment)

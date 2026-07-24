@@ -1,174 +1,318 @@
-mapping_type: "dlr"
-version: "2.0"
+mapping_type: dlr
+version: '2.0'
 scenario_name: dlr_student_club
-description: "DLR paradigm - Student club scenario: on-demand fields, 8 PEs aggregated into 7 LEs, activity finance multi-view decoupling"
+description: 'DLR paradigm - Student club scenario: on-demand fields, 8 PEs aggregated
+  into 7 LEs, activity finance multi-view decoupling'
 databases:
-  student_club: "sqlite:///MINIDEV_sqlite/dev_databases/student_club/student_club.sqlite"
+  student_club: sqlite:///MINIDEV_sqlite/dev_databases/student_club/student_club.sqlite
 logical_entities:
-  - logical_entity_id: LOGICAL.Member
-    biz_name: Member
-    description: "Student club member"
-    public_attributes:
-      - {attr_id: LOGICAL.Member.MemberID, biz_name: MemberID}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Member
-        physical_table_name: member
-        physical_table_id: student_club.member
-        A: {cardinality: "1:1", key: member_id}
-        R: null
-        C: {LOGICAL.Member.MemberID: student_club.member.member_id}
-        S: "Member master"
-        private_attributes:
-          - {attr_id: student_club.member.first_name, biz_name: first_name, physical_column_id: student_club.member.first_name}
-          - {attr_id: student_club.member.last_name, biz_name: last_name, physical_column_id: student_club.member.last_name}
-          - {attr_id: student_club.member.position, biz_name: position, physical_column_id: student_club.member.position}
-          - {attr_id: student_club.member.t_shirt_size, biz_name: t_shirt_size, physical_column_id: student_club.member.t_shirt_size}
-          - {attr_id: student_club.member.phone, biz_name: phone, physical_column_id: student_club.member.phone}
-          - {attr_id: student_club.member.zip, biz_name: zip, physical_column_id: student_club.member.zip}
-          - {attr_id: student_club.member.link_to_major, biz_name: link_to_major, physical_column_id: student_club.member.link_to_major}
-  - logical_entity_id: LOGICAL.Event
+- logical_entity_id: LOGICAL.Member
+  biz_name: Member
+  description: Student club member
+  public_attributes:
+  - attr_id: LOGICAL.Member.MemberID
+    biz_name: MemberID
+    description: '成员ID: 社团成员唯一标识符'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Member
+    physical_table_name: member
+    physical_table_id: student_club.member
+    A:
+      cardinality: '1:1'
+      key: member_id
+    R: null
+    C:
+      LOGICAL.Member.MemberID: student_club.member.member_id
+    S: Member master
+    private_attributes:
+    - attr_id: student_club.member.first_name
+      biz_name: first_name
+      physical_column_id: student_club.member.first_name
+      description: '名: 成员的名字'
+    - attr_id: student_club.member.last_name
+      biz_name: last_name
+      physical_column_id: student_club.member.last_name
+      description: '姓: 成员的姓氏'
+    - attr_id: student_club.member.position
+      biz_name: position
+      physical_column_id: student_club.member.position
+    - attr_id: student_club.member.t_shirt_size
+      biz_name: t_shirt_size
+      physical_column_id: student_club.member.t_shirt_size
+      description: 'T恤尺码: 成员的T恤尺码'
+    - attr_id: student_club.member.phone
+      biz_name: phone
+      physical_column_id: student_club.member.phone
+    - attr_id: student_club.member.zip
+      biz_name: zip
+      physical_column_id: student_club.member.zip
+    - attr_id: student_club.member.link_to_major
+      biz_name: link_to_major
+      physical_column_id: student_club.member.link_to_major
+      description: '专业ID: 成员所属专业ID，关联 major 表'
+- logical_entity_id: LOGICAL.Event
+  biz_name: Event
+  description: Club events
+  public_attributes:
+  - attr_id: LOGICAL.Event.EventID
+    biz_name: EventID
+    description: '活动ID: 校园活动唯一标识符'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Event
+    physical_table_name: event
+    physical_table_id: student_club.event
+    A:
+      cardinality: '1:1'
+      key: event_id
+    R: null
+    C:
+      LOGICAL.Event.EventID: student_club.event.event_id
+    S: Event records
+    private_attributes:
+    - attr_id: student_club.event.event_name
+      biz_name: event_name
+      physical_column_id: student_club.event.event_name
+      description: '活动名称: 校园活动名称'
+    - attr_id: student_club.event.event_date
+      biz_name: event_date
+      physical_column_id: student_club.event.event_date
+    - attr_id: student_club.event.type
+      biz_name: type
+      physical_column_id: student_club.event.type
+      description: '活动类型: 活动类型，如 Meeting=会议、fundraiser=筹款'
+    - attr_id: student_club.event.location
+      biz_name: location
+      physical_column_id: student_club.event.location
+    - attr_id: student_club.event.status
+      biz_name: status
+      physical_column_id: student_club.event.status
+- logical_entity_id: LOGICAL.Attendance
+  biz_name: Attendance
+  description: Member attendance at events
+  public_attributes:
+  - attr_id: LOGICAL.Attendance.Event
     biz_name: Event
-    description: "Club events"
-    public_attributes:
-      - {attr_id: LOGICAL.Event.EventID, biz_name: EventID}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Event
-        physical_table_name: event
-        physical_table_id: student_club.event
-        A: {cardinality: "1:1", key: event_id}
-        R: null
-        C: {LOGICAL.Event.EventID: student_club.event.event_id}
-        S: "Event records"
-        private_attributes:
-          - {attr_id: student_club.event.event_name, biz_name: event_name, physical_column_id: student_club.event.event_name}
-          - {attr_id: student_club.event.event_date, biz_name: event_date, physical_column_id: student_club.event.event_date}
-          - {attr_id: student_club.event.type, biz_name: type, physical_column_id: student_club.event.type}
-          - {attr_id: student_club.event.location, biz_name: location, physical_column_id: student_club.event.location}
-          - {attr_id: student_club.event.status, biz_name: status, physical_column_id: student_club.event.status}
-  - logical_entity_id: LOGICAL.Attendance
-    biz_name: Attendance
-    description: "Member attendance at events"
-    public_attributes:
-      - {attr_id: LOGICAL.Attendance.Event, biz_name: Event}
-      - {attr_id: LOGICAL.Attendance.Member, biz_name: Member}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Attendance
-        physical_table_name: attendance
-        physical_table_id: student_club.attendance
-        A: {cardinality: "N:1", key: link_to_event}
-        R: null
-        C: {LOGICAL.Attendance.Event: student_club.attendance.link_to_event, LOGICAL.Attendance.Member: student_club.attendance.link_to_member}
-        S: "Member-event many-to-many"
-        private_attributes: []
-  - logical_entity_id: LOGICAL.EventFinance
-    biz_name: EventFinance
-    description: "Event budget and actual expenses"
-    public_attributes:
-      - {attr_id: LOGICAL.EventFinance.FinanceID, biz_name: FinanceID}
-      - {attr_id: LOGICAL.EventFinance.Event, biz_name: Event}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Budget
-        physical_table_name: budget
-        physical_table_id: student_club.budget
-        A: {cardinality: "N:1", key: link_to_event}
-        R: null
-        C: {LOGICAL.EventFinance.FinanceID: student_club.budget.budget_id, LOGICAL.EventFinance.Event: student_club.budget.link_to_event}
-        S: "Budget - amount, spent, remaining"
-        private_attributes:
-          - {attr_id: student_club.budget.amount, biz_name: amount, physical_column_id: student_club.budget.amount}
-          - {attr_id: student_club.budget.spent, biz_name: spent, physical_column_id: student_club.budget.spent}
-          - {attr_id: student_club.budget.category, biz_name: category, physical_column_id: student_club.budget.category}
-          - {attr_id: student_club.budget.remaining, biz_name: remaining, physical_column_id: student_club.budget.remaining}
-          - {attr_id: student_club.budget.event_status, biz_name: event_status, physical_column_id: student_club.budget.event_status}
-      - physical_entity_id: PHYSICAL.Expense
-        physical_table_name: expense
-        physical_table_id: student_club.expense
-        A: {cardinality: "N:1", key: link_to_budget}
-        R: null
-        C: {LOGICAL.EventFinance.FinanceID: student_club.expense.link_to_budget}
-        S: "Actual expenses"
-        private_attributes:
-          - {attr_id: student_club.expense.expense_description, biz_name: expense_description, physical_column_id: student_club.expense.expense_description}
-          - {attr_id: student_club.expense.cost, biz_name: cost, physical_column_id: student_club.expense.cost}
-          - {attr_id: student_club.expense.expense_date, biz_name: expense_date, physical_column_id: student_club.expense.expense_date}
-          - {attr_id: student_club.expense.approved, biz_name: approved, physical_column_id: student_club.expense.approved}
-          - {attr_id: student_club.expense.link_to_member, biz_name: link_to_member, physical_column_id: student_club.expense.link_to_member}
-  - logical_entity_id: LOGICAL.Income
-    biz_name: Income
-    description: "Funds received by the club"
-    public_attributes:
-      - {attr_id: LOGICAL.Income.IncomeID, biz_name: IncomeID}
-      - {attr_id: LOGICAL.Income.Member, biz_name: Member}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Income
-        physical_table_name: income
-        physical_table_id: student_club.income
-        A: {cardinality: "N:1", key: link_to_member}
-        R: null
-        C: {LOGICAL.Income.IncomeID: student_club.income.income_id, LOGICAL.Income.Member: student_club.income.link_to_member}
-        S: "Income records"
-        private_attributes:
-          - {attr_id: student_club.income.amount, biz_name: amount, physical_column_id: student_club.income.amount}
-          - {attr_id: student_club.income.source, biz_name: source, physical_column_id: student_club.income.source}
-          - {attr_id: student_club.income.date_received, biz_name: date_received, physical_column_id: student_club.income.date_received}
-          - {attr_id: student_club.income.notes, biz_name: notes, physical_column_id: student_club.income.notes}
-  - logical_entity_id: LOGICAL.Major
-    biz_name: Major
-    description: "Academic major"
-    public_attributes:
-      - {attr_id: LOGICAL.Major.MajorID, biz_name: MajorID}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Major
-        physical_table_name: major
-        physical_table_id: student_club.major
-        A: {cardinality: "1:1", key: major_id}
-        R: null
-        C: {LOGICAL.Major.MajorID: student_club.major.major_id}
-        S: "Major dictionary"
-        private_attributes:
-          - {attr_id: student_club.major.major_name, biz_name: major_name, physical_column_id: student_club.major.major_name}
-          - {attr_id: student_club.major.department, biz_name: department, physical_column_id: student_club.major.department}
-          - {attr_id: student_club.major.college, biz_name: college, physical_column_id: student_club.major.college}
-  - logical_entity_id: LOGICAL.ZipCode
-    biz_name: ZipCode
-    description: "Zip code geographic information"
-    public_attributes:
-      - {attr_id: LOGICAL.ZipCode.Zip, biz_name: Zip}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.ZipCode
-        physical_table_name: zip_code
-        physical_table_id: student_club.zip_code
-        A: {cardinality: "1:1", key: zip_code}
-        R: null
-        C: {LOGICAL.ZipCode.Zip: student_club.zip_code.zip_code}
-        S: "Zip code dictionary"
-        private_attributes:
-          - {attr_id: student_club.zip_code.city, biz_name: city, physical_column_id: student_club.zip_code.city}
-          - {attr_id: student_club.zip_code.state, biz_name: state, physical_column_id: student_club.zip_code.state}
-          - {attr_id: student_club.zip_code.county, biz_name: county, physical_column_id: student_club.zip_code.county}
+    description: '关联活动ID: 参加的活动ID，关联 event 表'
+  - attr_id: LOGICAL.Attendance.Member
+    biz_name: Member
+    description: '关联成员ID: 参加的成员ID，关联 member 表'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Attendance
+    physical_table_name: attendance
+    physical_table_id: student_club.attendance
+    A:
+      cardinality: N:1
+      key: link_to_event
+    R: null
+    C:
+      LOGICAL.Attendance.Event: student_club.attendance.link_to_event
+      LOGICAL.Attendance.Member: student_club.attendance.link_to_member
+    S: Member-event many-to-many
+    private_attributes: []
+- logical_entity_id: LOGICAL.EventFinance
+  biz_name: EventFinance
+  description: Event budget and actual expenses
+  public_attributes:
+  - attr_id: LOGICAL.EventFinance.FinanceID
+    biz_name: FinanceID
+  - attr_id: LOGICAL.EventFinance.Event
+    biz_name: Event
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Budget
+    physical_table_name: budget
+    physical_table_id: student_club.budget
+    A:
+      cardinality: N:1
+      key: link_to_event
+    R: null
+    C:
+      LOGICAL.EventFinance.FinanceID: student_club.budget.budget_id
+      LOGICAL.EventFinance.Event: student_club.budget.link_to_event
+    S: Budget - amount, spent, remaining
+    private_attributes:
+    - attr_id: student_club.budget.amount
+      biz_name: amount
+      physical_column_id: student_club.budget.amount
+    - attr_id: student_club.budget.spent
+      biz_name: spent
+      physical_column_id: student_club.budget.spent
+    - attr_id: student_club.budget.category
+      biz_name: category
+      physical_column_id: student_club.budget.category
+    - attr_id: student_club.budget.remaining
+      biz_name: remaining
+      physical_column_id: student_club.budget.remaining
+    - attr_id: student_club.budget.event_status
+      biz_name: event_status
+      physical_column_id: student_club.budget.event_status
+  - physical_entity_id: PHYSICAL.Expense
+    physical_table_name: expense
+    physical_table_id: student_club.expense
+    A:
+      cardinality: N:1
+      key: link_to_budget
+    R: null
+    C:
+      LOGICAL.EventFinance.FinanceID: student_club.expense.link_to_budget
+    S: Actual expenses
+    private_attributes:
+    - attr_id: student_club.expense.expense_description
+      biz_name: expense_description
+      physical_column_id: student_club.expense.expense_description
+    - attr_id: student_club.expense.cost
+      biz_name: cost
+      physical_column_id: student_club.expense.cost
+    - attr_id: student_club.expense.expense_date
+      biz_name: expense_date
+      physical_column_id: student_club.expense.expense_date
+    - attr_id: student_club.expense.approved
+      biz_name: approved
+      physical_column_id: student_club.expense.approved
+    - attr_id: student_club.expense.link_to_member
+      biz_name: link_to_member
+      physical_column_id: student_club.expense.link_to_member
+- logical_entity_id: LOGICAL.Income
+  biz_name: Income
+  description: Funds received by the club
+  public_attributes:
+  - attr_id: LOGICAL.Income.IncomeID
+    biz_name: IncomeID
+  - attr_id: LOGICAL.Income.Member
+    biz_name: Member
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Income
+    physical_table_name: income
+    physical_table_id: student_club.income
+    A:
+      cardinality: N:1
+      key: link_to_member
+    R: null
+    C:
+      LOGICAL.Income.IncomeID: student_club.income.income_id
+      LOGICAL.Income.Member: student_club.income.link_to_member
+    S: Income records
+    private_attributes:
+    - attr_id: student_club.income.amount
+      biz_name: amount
+      physical_column_id: student_club.income.amount
+    - attr_id: student_club.income.source
+      biz_name: source
+      physical_column_id: student_club.income.source
+    - attr_id: student_club.income.date_received
+      biz_name: date_received
+      physical_column_id: student_club.income.date_received
+    - attr_id: student_club.income.notes
+      biz_name: notes
+      physical_column_id: student_club.income.notes
+- logical_entity_id: LOGICAL.Major
+  biz_name: Major
+  description: Academic major
+  public_attributes:
+  - attr_id: LOGICAL.Major.MajorID
+    biz_name: MajorID
+    description: '专业ID: 专业唯一标识符'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Major
+    physical_table_name: major
+    physical_table_id: student_club.major
+    A:
+      cardinality: '1:1'
+      key: major_id
+    R: null
+    C:
+      LOGICAL.Major.MajorID: student_club.major.major_id
+    S: Major dictionary
+    private_attributes:
+    - attr_id: student_club.major.major_name
+      biz_name: major_name
+      physical_column_id: student_club.major.major_name
+      description: '专业名称: 专业的名称'
+    - attr_id: student_club.major.department
+      biz_name: department
+      physical_column_id: student_club.major.department
+    - attr_id: student_club.major.college
+      biz_name: college
+      physical_column_id: student_club.major.college
+- logical_entity_id: LOGICAL.ZipCode
+  biz_name: ZipCode
+  description: Zip code geographic information
+  public_attributes:
+  - attr_id: LOGICAL.ZipCode.Zip
+    biz_name: Zip
+  physical_entities:
+  - physical_entity_id: PHYSICAL.ZipCode
+    physical_table_name: zip_code
+    physical_table_id: student_club.zip_code
+    A:
+      cardinality: '1:1'
+      key: zip_code
+    R: null
+    C:
+      LOGICAL.ZipCode.Zip: student_club.zip_code.zip_code
+    S: Zip code dictionary
+    private_attributes:
+    - attr_id: student_club.zip_code.city
+      biz_name: city
+      physical_column_id: student_club.zip_code.city
+    - attr_id: student_club.zip_code.state
+      biz_name: state
+      physical_column_id: student_club.zip_code.state
+    - attr_id: student_club.zip_code.county
+      biz_name: county
+      physical_column_id: student_club.zip_code.county
 pas_relations:
-  - relation_id: LOGICAL.Member_TO_LOGICAL.Event
-    relation_name: Participates
-    P: {forward: {verb: participates, cardinality: '1:N'}, reverse: {verb: involves, cardinality: '1:N'}}
-    A: MemberID
-    S: "Members participate in events via attendance"
-  - relation_id: LOGICAL.Event_TO_LOGICAL.EventFinance
-    relation_name: HasBudget
-    P: {forward: {verb: has, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
-    A: Event
-    S: "1 event has N budget/expense items"
-  - relation_id: LOGICAL.Member_TO_LOGICAL.Income
-    relation_name: Receives
-    P: {forward: {verb: receives, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
-    A: Member
-    S: "1 member receives N income entries"
-  - relation_id: LOGICAL.Member_TO_LOGICAL.Major
-    relation_name: BelongsTo
-    P: {forward: {verb: belongs to, cardinality: 'N:1'}, reverse: {verb: contains, cardinality: '1:N'}}
-    A: MajorID
-    S: "Members belong to a major"
-  - relation_id: LOGICAL.Member_TO_LOGICAL.ZipCode
-    relation_name: LivesIn
-    P: {forward: {verb: lives in, cardinality: 'N:1'}, reverse: {verb: contains, cardinality: '1:N'}}
-    A: Zip
-    S: "Members live in a zip code area"
+- relation_id: LOGICAL.Member_TO_LOGICAL.Event
+  relation_name: Participates
+  P:
+    forward:
+      verb: participates
+      cardinality: 1:N
+    reverse:
+      verb: involves
+      cardinality: 1:N
+  A: MemberID
+  S: Members participate in events via attendance
+- relation_id: LOGICAL.Event_TO_LOGICAL.EventFinance
+  relation_name: HasBudget
+  P:
+    forward:
+      verb: has
+      cardinality: 1:N
+    reverse:
+      verb: belongs to
+      cardinality: '1:1'
+  A: Event
+  S: 1 event has N budget/expense items
+- relation_id: LOGICAL.Member_TO_LOGICAL.Income
+  relation_name: Receives
+  P:
+    forward:
+      verb: receives
+      cardinality: 1:N
+    reverse:
+      verb: belongs to
+      cardinality: '1:1'
+  A: Member
+  S: 1 member receives N income entries
+- relation_id: LOGICAL.Member_TO_LOGICAL.Major
+  relation_name: BelongsTo
+  P:
+    forward:
+      verb: belongs to
+      cardinality: N:1
+    reverse:
+      verb: contains
+      cardinality: 1:N
+  A: MajorID
+  S: Members belong to a major
+- relation_id: LOGICAL.Member_TO_LOGICAL.ZipCode
+  relation_name: LivesIn
+  P:
+    forward:
+      verb: lives in
+      cardinality: N:1
+    reverse:
+      verb: contains
+      cardinality: 1:N
+  A: Zip
+  S: Members live in a zip code area
