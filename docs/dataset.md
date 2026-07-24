@@ -29,8 +29,12 @@
 ## 下载与目录
 
 ```
-版本：mini_dev 0703
-下载地址：https://drive.google.com/file/d/13VLWIwpw5E3d5DUkMvzw7hvHE7a4XkG/view
+版本：BIRD Mini-Dev (SQLite)
+官方下载：https://bird-bench.oss-cn-beijing.aliyuncs.com/minidev.zip
+Google Drive：https://drive.google.com/file/d/13VLWIwpw5E3d5DUkMvzw7hvHE67a4XkG/view
+HuggingFace：https://huggingface.co/datasets/birdsql/bird_mini_dev
+论文：https://arxiv.org/abs/2305.03111
+排行榜：https://bird-bench.github.io/
 ```
 
 下载后解压到项目根目录：
