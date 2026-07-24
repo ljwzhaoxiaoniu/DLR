@@ -1,0 +1,16 @@
+{
+  "q_id": 197,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT AVG(COALESCE(o.oxygen_count, 0)) as avg_oxygen\nFROM (\n    SELECT DISTINCT b.molecule_id\n    FROM bond b\n    WHERE b.bond_type = '-'\n) m\nLEFT JOIN (\n    SELECT a.molecule_id, COUNT(*) as oxygen_count\n    FROM atom a\n    WHERE a.element = 'o'\n    GROUP BY a.molecule_id\n) o ON m.molecule_id = o.molecule_id",
+  "result": {
+    "columns": [
+      "avg_oxygen"
+    ],
+    "rows": [
+      [
+        2.16129
+      ]
+    ]
+  }
+}

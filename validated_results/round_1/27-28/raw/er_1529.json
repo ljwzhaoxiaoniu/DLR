@@ -1,0 +1,7 @@
+{
+  "q_id": 1529,
+  "ok": false,
+  "error": "You can only execute one statement at a time.",
+  "sql": "SELECT SUM(Price) AS total_spent FROM transactions_1k WHERE CustomerID = 38508; SELECT SUM(Consumption) AS jan_2012_spent FROM yearmonth WHERE CustomerID = 38508 AND Date = '201201'",
+  "result": null
+}

@@ -1,0 +1,30 @@
+{
+  "q_id": 1029,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT t.team_long_name, ta.buildUpPlaySpeed\nFROM Team_Attributes ta\nJOIN Team t ON ta.team_api_id = t.team_api_id\nORDER BY ta.buildUpPlaySpeed DESC\nLIMIT 4",
+  "result": {
+    "columns": [
+      "buildUpPlaySpeed",
+      "team_long_name"
+    ],
+    "rows": [
+      [
+        77,
+        "West Ham United"
+      ],
+      [
+        78,
+        "Hannover 96"
+      ],
+      [
+        78,
+        "Udinese"
+      ],
+      [
+        80,
+        "Carpi"
+      ]
+    ]
+  }
+}

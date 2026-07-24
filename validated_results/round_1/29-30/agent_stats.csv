@@ -1,0 +1,9 @@
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+1312,ER,7,49351,13167,531,325,35328,7,"{""er_semantic_query"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 3}",,FAIL,CORRECT,"语义定位正确，工具调用链符合规范，SQL逻辑正确且执行成功，最终答案与GoldResult一致。
+```",CORRECT
+1317,ER,5,38963,8982,526,783,28672,8,"{""er_semantic_query"": 1, ""get_entity"": 3, ""get_entity_attributes"": 3, ""execute_sql"": 1}",,PASS,,,CORRECT
+1312,DLR,5,40382,15595,276,319,24192,6,"{""dlr_semantic_query"": 2, ""get_le"": 1, ""get_pe_full"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
+1317,DLR,7,81251,17699,789,811,61952,16,"{""dlr_semantic_query"": 2, ""list_le"": 3, ""get_le_attrs"": 3, ""get_le_children"": 3, ""schema"": 1, ""get_pe_full"": 3, ""execute_sql"": 1}",,PASS,,,CORRECT
+1312,RDF,7,47942,13451,317,382,33792,5,"{""rdf_semantic_query"": 2, ""query_rdf_mapping"": 2, ""execute_sql"": 1}",,FAIL,CORRECT,"全部条件满足——语义定位正确(member+major表)，工具链走正道(semantic_query→mapping→execute_sql)，SQL执行成功，最终答案""Business""与GoldResult一致。
+```",CORRECT
+1317,RDF,5,37558,8666,475,385,28032,6,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 3, ""execute_sql"": 2}",,PASS,,,CORRECT

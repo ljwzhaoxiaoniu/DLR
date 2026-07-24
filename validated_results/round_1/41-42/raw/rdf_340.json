@@ -1,0 +1,313 @@
+{
+  "q_id": 340,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT name FROM cards WHERE cardKingdomFoilId IS NOT NULL AND cardKingdomId IS NOT NULL LIMIT 100",
+  "result": {
+    "columns": [
+      "name"
+    ],
+    "rows": [
+      [
+        "Academy Researchers"
+      ],
+      [
+        "Afflict"
+      ],
+      [
+        "Agonizing Memories"
+      ],
+      [
+        "Ambassador Laquatus"
+      ],
+      [
+        "Assassinate"
+      ],
+      [
+        "Ballista Squad"
+      ],
+      [
+        "Bandage"
+      ],
+      [
+        "Beacon of Destruction"
+      ],
+      [
+        "Beacon of Immortality"
+      ],
+      [
+        "Beacon of Unrest"
+      ],
+      [
+        "Blaze"
+      ],
+      [
+        "Bloodfire Colossus"
+      ],
+      [
+        "Bloodrock Cyclops"
+      ],
+      [
+        "Bogardan Firefiend"
+      ],
+      [
+        "Boomerang"
+      ],
+      [
+        "Cancel"
+      ],
+      [
+        "Cephalid Constable"
+      ],
+      [
+        "Cho-Manno, Revolutionary"
+      ],
+      [
+        "Clone"
+      ],
+      [
+        "Condemn"
+      ],
+      [
+        "Consume Spirit"
+      ],
+      [
+        "Counsel of the Soratami"
+      ],
+      [
+        "Crafty Pathmage"
+      ],
+      [
+        "Cruel Edict"
+      ],
+      [
+        "Deathmark"
+      ],
+      [
+        "Deluge"
+      ],
+      [
+        "Demystify"
+      ],
+      [
+        "Denizen of the Deep"
+      ],
+      [
+        "Diabolic Tutor"
+      ],
+      [
+        "Discombobulate"
+      ],
+      [
+        "Distress"
+      ],
+      [
+        "Doomed Necromancer"
+      ],
+      [
+        "Dreamborn Muse"
+      ],
+      [
+        "Dross Crocodile"
+      ],
+      [
+        "Essence Drain"
+      ],
+      [
+        "Evacuation"
+      ],
+      [
+        "Festering Goblin"
+      ],
+      [
+        "Fists of the Anvil"
+      ],
+      [
+        "Flamewave Invoker"
+      ],
+      [
+        "Flashfreeze"
+      ],
+      [
+        "Flowstone Slide"
+      ],
+      [
+        "Fugitive Wizard"
+      ],
+      [
+        "Furnace of Rath"
+      ],
+      [
+        "Ghost Warden"
+      ],
+      [
+        "Glorious Anthem"
+      ],
+      [
+        "Goblin Elite Infantry"
+      ],
+      [
+        "Goblin Lore"
+      ],
+      [
+        "Goblin Piker"
+      ],
+      [
+        "Grave Pact"
+      ],
+      [
+        "Graveborn Muse"
+      ],
+      [
+        "Gravedigger"
+      ],
+      [
+        "Guerrilla Tactics"
+      ],
+      [
+        "Hail of Arrows"
+      ],
+      [
+        "Hate Weaver"
+      ],
+      [
+        "Head Games"
+      ],
+      [
+        "Hidden Horror"
+      ],
+      [
+        "High Ground"
+      ],
+      [
+        "Highway Robber"
+      ],
+      [
+        "Hill Giant"
+      ],
+      [
+        "Holy Day"
+      ],
+      [
+        "Honor Guard"
+      ],
+      [
+        "Horseshoe Crab"
+      ],
+      [
+        "Hurkyl's Recall"
+      ],
+      [
+        "Icatian Priest"
+      ],
+      [
+        "Incinerate"
+      ],
+      [
+        "Kjeldoran Royal Guard"
+      ],
+      [
+        "Knight of Dusk"
+      ],
+      [
+        "Lava Axe"
+      ],
+      [
+        "Lavaborn Muse"
+      ],
+      [
+        "Looming Shade"
+      ],
+      [
+        "Lord of the Undead"
+      ],
+      [
+        "Loxodon Mystic"
+      ],
+      [
+        "Loyal Sentry"
+      ],
+      [
+        "Lumengrid Warden"
+      ],
+      [
+        "Luminesce"
+      ],
+      [
+        "Merfolk Looter"
+      ],
+      [
+        "Midnight Ritual"
+      ],
+      [
+        "Nantuko Husk"
+      ],
+      [
+        "No Rest for the Wicked"
+      ],
+      [
+        "Peek"
+      ],
+      [
+        "Phage the Untouchable"
+      ],
+      [
+        "Phantom Warrior"
+      ],
+      [
+        "Phyrexian Rager"
+      ],
+      [
+        "Plagiarize"
+      ],
+      [
+        "Plague Wind"
+      ],
+      [
+        "Rain of Tears"
+      ],
+      [
+        "Ravenous Rats"
+      ],
+      [
+        "Recover"
+      ],
+      [
+        "Relentless Rats"
+      ],
+      [
+        "Reminisce"
+      ],
+      [
+        "Remove Soul"
+      ],
+      [
+        "Reviving Dose"
+      ],
+      [
+        "Righteousness"
+      ],
+      [
+        "Rootwater Matriarch"
+      ],
+      [
+        "Royal Assassin"
+      ],
+      [
+        "Rule of Law"
+      ],
+      [
+        "Samite Healer"
+      ],
+      [
+        "Scathe Zombies"
+      ],
+      [
+        "Sea Monster"
+      ],
+      [
+        "Sift"
+      ]
+    ]
+  }
+}

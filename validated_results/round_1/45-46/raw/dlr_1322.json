@@ -1,0 +1,16 @@
+{
+  "q_id": 1322,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT COUNT(*) AS meeting_count FROM event WHERE type = 'Meeting' AND event_id IN (SELECT link_to_event FROM attendance GROUP BY link_to_event HAVING COUNT(link_to_member) > 10)",
+  "result": {
+    "columns": [
+      "meeting_count"
+    ],
+    "rows": [
+      [
+        4
+      ]
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "q_id": 1528,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT ROUND(CAST(SUM(CASE WHEN Segment = 'Premium' THEN 1 ELSE 0 END) AS FLOAT) / COUNT(*) * 100, 2) as premium_percentage FROM gasstations WHERE Country = 'SVK'",
+  "result": {
+    "columns": [
+      "premium_percentage"
+    ],
+    "rows": [
+      [
+        35.68
+      ]
+    ]
+  }
+}

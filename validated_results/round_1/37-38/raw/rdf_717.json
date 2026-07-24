@@ -1,0 +1,25 @@
+{
+  "q_id": 717,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT sp.power_name\nFROM superhero s\nJOIN hero_power hp ON s.id = hp.hero_id\nJOIN superpower sp ON hp.power_id = sp.id\nWHERE s.superhero_name = '3-D Man';",
+  "result": {
+    "columns": [
+      "power_name"
+    ],
+    "rows": [
+      [
+        "Agility"
+      ],
+      [
+        "Stamina"
+      ],
+      [
+        "Super Speed"
+      ],
+      [
+        "Super Strength"
+      ]
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "q_id": 1028,
+  "ok": false,
+  "error": "no such column: T.team_long_name",
+  "sql": "SELECT T.team_long_name, COUNT(*) AS win_count",
+  "result": null
+}
