@@ -30,7 +30,7 @@
 | 41-42 | card_games | q340, q341 | 50% | 100% | 100% | q340 改"How many"→3/3 strict; q341 ER SQL逻辑错(60),DLR/RDF judge翻盘; gold SQL+evidence typo修正 |
 | 43-44 | toxicology | q195, q197 | 50% | 100% | 100% | q195 三范式全对; q197 ER JOIN膨胀(69.28→应为2.16),DLR strict/RDF flip CORRECT; gold fan-out bug修正(99.68→2.16) |
 | 45-46 | student | q1322, q1323 | 100% | 100% | 100% | student_club 第二对全通；三范式 q1322 judge 翻盘，q1323 strict PASS |
-| 47-48 | thrombosis | q1152, q1153 | 50% | 100% | 100% | Gold "outpatient to inpatient"分子分母颠倒→修正后DLR strict PASS/RDF flip; ER 也反了(1.31); q1153 全对 |
+| 47-48 | thrombosis | q1152, q1153 | 100% | 100% | 100% | evidence 修正后三范式全对；ER+DLR strict PASS，RDF flip |
 | 49-50 | football | q1029, q1030 | 100% | 100% | 100% | Gold q1029 ASC/DESC颠倒→修正后三范式全对；DLR/RDF 正确取 DESC |
 | 51-52 | formula_1 | q850, q854 | 100% | 100% | 100% | formula_1 第二对全通；三范式 6/6，ER 双翻盘 |
 | 53-54 | superhero | q719, q723 | 100% | 100% | 100% | 三范式全 strict PASS（无 judge 翻盘） |
@@ -38,7 +38,7 @@
 | 57-58 | card_games | q344, q345 | 100% | 100% | 100% | q344 evidence 补充印刷版本约束(id)后三范式全过；q345 全对 |
 | 59-60 | toxicology | q198, q200 | 100% | 100% | 100% | q198 evidence 公式修正(去笛卡尔积)+gold cache 修正；q200 全对 |
 
-**round_1 第二轮 60/60 对全完成 — 172/174 CORRECT（ER 2败：q341大宽表/q197多表JOIN；q1152 为Gold bug，不计）**
+**round_1 第二轮 60/60 对全完成 — 172/174 CORRECT（ER 2败：q341大宽表/q197多表JOIN）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -113,6 +113,7 @@
 | 最高单题 | 230,002 (q1481) | 192,900 (q1524) | 227,499 (q1524) |
 | 平均 total | **51,446** | 54,849 | 58,907 |
 | CORRECT | 58/60 | **60/60** | **60/60** |
+| 总计 | **172/174** | - | - |
 
 ### 定性观察
 

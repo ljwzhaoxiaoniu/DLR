@@ -2,14 +2,18 @@
   "q_id": 1152,
   "ok": true,
   "error": null,
-  "sql": "SELECT ROUND(CAST(COUNT(CASE WHEN Admission = '-' THEN 1 END) AS FLOAT) / COUNT(CASE WHEN Admission = '+' THEN 1 END), 2) as ratio FROM Patient WHERE Diagnosis = 'SLE'",
+  "sql": "SELECT CAST(SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END) AS REAL) * 1.0 / NULLIF(SUM(CASE WHEN Admission = '+' THEN 1 ELSE 0 END), 0) as ratio, SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END) as outpatient_count, SUM(CASE WHEN Admission = '+' THEN 1 ELSE 0 END) as inpatient_count FROM Patient WHERE Diagnosis = 'SLE'",
   "result": {
     "columns": [
+      "inpatient_count",
+      "outpatient_count",
       "ratio"
     ],
     "rows": [
       [
-        0.76
+        110,
+        84,
+        0.763636
       ]
     ]
   }

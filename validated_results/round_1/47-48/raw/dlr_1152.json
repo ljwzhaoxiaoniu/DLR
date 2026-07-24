@@ -2,10 +2,10 @@
   "q_id": 1152,
   "ok": true,
   "error": null,
-  "sql": "SELECT CAST(SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN Admission = '+' THEN 1 ELSE 0 END) AS ratio FROM Patient WHERE Diagnosis = 'SLE'",
+  "sql": "SELECT CAST(SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN Admission = '+' THEN 1 ELSE 0 END) AS outpatient_to_inpatient_ratio FROM Patient WHERE Diagnosis = 'SLE'",
   "result": {
     "columns": [
-      "ratio"
+      "outpatient_to_inpatient_ratio"
     ],
     "rows": [
       [

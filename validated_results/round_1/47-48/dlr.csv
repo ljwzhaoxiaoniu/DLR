@@ -1,0 +1,2 @@
+"q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","sql","error","input_tokens","output_tokens"
+"1152","thrombosis_prediction","PASS","","","CORRECT","100","SELECT CAST(SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN Admission = '+' THEN 1 ELSE 0 END) AS outpatient_to_inpatient_ratio FROM Patient WHERE Diagnosis = 'SLE'","","8501","475"
