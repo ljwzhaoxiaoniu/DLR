@@ -900,9 +900,7 @@ _DLR_TOOL_FUNCS = {
     "dlr_semantic_query": dlr_semantic_query,
     "recall_pe": _recall_pe,
     "recall_pas": _recall_pas,
-    # 列表层
-    "list_le": _list_le,
-    "list_pe": _list_pe,
+    # 列表层（list_le/list_pe 已移除 — 暴力枚举绕过 semantic_query，触发过度探索）
     "list_pas": _list_pas,
     # LE 查询
     "get_le": _get_le,
