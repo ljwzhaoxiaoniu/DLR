@@ -229,7 +229,6 @@ FROM (
 | **正确结果（已写入 cache）** | CustomerID=6718 → yearmonth 聚合 2012/2013 → **-5.8152** |
 | **三范式一致** | ER/DLR/RDF 均输出 -5.8152。2026-07-23 修正 gold cache。
 
-### qid 1152 — `thrombosis_prediction`（gold 分子分母颠倒，2026-07-24 修正）
 
 - **问题**：What is the ratio of outpatient to inpatient followed up treatment among all the 'SLE' diagnosed patient?
 
@@ -240,7 +239,6 @@ FROM (
 | **正确结果** | `CAST(SUM(CASE WHEN Admission='-' THEN 1.0 ELSE 0 END) AS REAL) / SUM(CASE WHEN Admission='+' THEN 1 ELSE 0 END)` = **0.7636** |
 | **验证** | DLR/RDF 均正确算出 0.76；ER 初始 strict PASS 因公式反了撞上错误 Gold。修正后 DLR strict PASS。2026-07-24 修正 cache。 |
 
-### qid 1029 — `european_football_2`（gold ASC/DESC 颠倒，2026-07-24 修正）
 
 - **问题**：What are the speed in which attacks are put together of the top 4 teams with the highest build Up Play Speed?
 
@@ -263,7 +261,6 @@ FROM (
 | **正确结果（已写入 cache）** | Part1（加油站花费）= `SUM(Price) FROM transactions_1k WHERE CustomerID='38508'` = **3437.01**；Part2（2012年1月消费）= `Consumption FROM yearmonth WHERE CustomerID='38508' AND Date='201201'` = **67156.94** |
 | **验证** | ER 正确输出 [3437.01, 67156.94]。DLR/RDF 因多步查询复杂度各自走了错误路径。2026-07-23 修正 gold cache。
 
-### qid 1152 — `thrombosis_prediction`（gold 分子分母颠倒，2026-07-24 修正）
 
 - **问题**：What is the ratio of outpatient to inpatient followed up treatment among all the 'SLE' diagnosed patient?
 
@@ -274,7 +271,6 @@ FROM (
 | **正确结果** | `CAST(SUM(CASE WHEN Admission='-' THEN 1.0 ELSE 0 END) AS REAL) / SUM(CASE WHEN Admission='+' THEN 1 ELSE 0 END)` = **0.7636** |
 | **验证** | DLR/RDF 均正确算出 0.76；ER 初始 strict PASS 因公式反了撞上错误 Gold。修正后 DLR strict PASS。2026-07-24 修正 cache。 |
 
-### qid 1029 — `european_football_2`（gold ASC/DESC 颠倒，2026-07-24 修正）
 
 - **问题**：What are the speed in which attacks are put together of the top 4 teams with the highest build Up Play Speed?
 
@@ -284,6 +280,17 @@ FROM (
 | **Bug** | 题目要求 "highest"，应取 DESC。Gold 用 ASC 取了最低的 4 个 |
 | **正确结果** | `ORDER BY buildUpPlaySpeed DESC LIMIT 4` → 最高值 [80, 78, 78, 77] |
 | **验证** | 三范式一致输出 80/78/78/77。2026-07-24 修正 cache。 |
+
+### qid 344 — `card_games`（evidence 缺少领域知识，2026-07-24 修正）
+
+- **问题**：List all the mythic rarity print cards banned in gladiator format.
+- **原 evidence**：`mythic rarity printing refers to rarity = 'mythic'; card banned refers to status = 'Banned'; in gladiator format refers to format = 'gladiator'`
+
+| | 内容 |
+|---|---|
+| **Bug** | evidence 只给了过滤条件，未说明同名卡有多个印刷版本（不同 id）。三范式全选了 name 只得 2 个名字，Gold 用 id 得 5 个。换上 longcat 和 deepseek-v4pro 均无效 |
+| **修正** | 补充 "A card may have multiple printings with the same name but different ids — return each printing's id" |
+| **验证** | 修正后三范式一致输出 5 个 id。2026-07-24 修正 evidence。
 
 ### qid 533 — `codebase_community`（evidence 引导错误，2026-07-24 修正）
 
