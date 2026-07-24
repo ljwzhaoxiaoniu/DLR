@@ -121,6 +121,8 @@
 - **q1498 暴露 LLM 聚合语义盲区**：DLR 三次重跑均 `MAX(Consumption)`→445K 而非 `SUM→GROUP BY month→MAX`→51.8M，process_score 从 60→80(YAML 修复)→最终 Instance 才写对；RDF 同理。ER 首次即正确——三范式 Agent 独立性导致同题不同命。
 - **q719+q723 是第三个三范式 strict PASS 的题**（ER/DLR/RDF 全 PASS），Agent 对简洁 schema（hero/power 两张表）的 SQL 产出质量高。
 - **🔴 q533 证据错误**：原始 evidence 写 `LastAccessDate > '2014-09-01'` 未用 DATE()，三范式照做得 5146 vs gold 4941。**非 Agent/范式/模型问题——evidence 本身有 bug。教训：排查失败先查 question + evidence + gold。**
+
+- **🔴 q344 语义建模的盲区——领域知识**：问题要求列出 "print cards"（印刷版本），Gold 用 `id`（同名卡有多个印刷版本 ID 不同），三范式全选了 `name` 只得 2 个名字。先后换 longcat 和 deepseek-v4pro 两个模型都无效，直到 evidence 补充 "A card may have multiple printings with the same name but different ids" 才修复。**语义建模只做数据映射（列名→含义），不注入领域常识。MTG 卡牌"同名≠同印刷"这个知识，ER/DLR/RDF 都无法从 schema 自动推导——必须 evidence 或业务人员参与。模型的隐性知识盲区恰是语义建模需补位的地方。**
 - **q1500 原创范式的工具"教材"角色**：DLR 同 LE 下多 PE 需通过 `A_anchor.key` JOIN——这从未出现在 LLM 训练数据中。前两次 Agent 看到 `transactions_1k` 无 2013 数据即放弃，第三次修复 `get_pe_full` docstring 后正确理解 ARCS 锚定键=CUSTOMERID JOIN 桥，首次写出三表 JOIN。**原创模型的每一个概念都需在工具描述中"教"给 LLM。**
 
 ## 数据可信性备注
