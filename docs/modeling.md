@@ -23,7 +23,109 @@
 
 **命名约束**：LE/PE id（`LOGICAL.*` / `PHYSICAL.*`）不带库前缀，因此**必须全局唯一**——构建期由 `BuildConflictError` 强制（同 id 映射不同物理表 → 中止 build）。历史教训：`PHYSICAL.Card`/`PHYSICAL.Race` 曾跨库重名导致 Kuzu 静默覆盖，已分别改名 `PHYSICAL.CreditCard`（financial）/`PHYSICAL.HeroRace`（superhero）。
 
-## 2. 解析链路
+## 2. DLR 建模规则 — LE/PE 聚合与业务-物理边界
+
+> **从 superhero + debit_card 建模修复总结**（2026-07-25）。核心原则：**一个 LE = 一个真实业务概念**。不要人为捏造 LE 来"收纳"碎片化表——那反而破坏了 DLR 的优势。
+
+### 2.1 PE 聚合规则：ARCS 还是 PAS？
+
+问题：物理表何时作为 PE 并入同一个 LE（ARCS），何时拆为独立 LE（PAS）？
+
+**规则 1：FK 在主表上的 1:1 维度查表 → ARCS，PE 直挂主 LE**
+
+```
+superhero 表有 eye_colour_id, race_id, gender_id, …
+         ↓ FK 长在主表上, 1:1 查维度
+    colour, race, gender, publisher, alignment
+         ↓ 全部挂为 LOGICAL.Superhero 的 PE（ARCS）
+```
+
+这是 DLR "碎表集中"的核心优势——物理上碎片化的维度表对 Agent 透明，Agent 看到的是一棵完整的业务实体树。
+
+**规则 2：Junction 表（多对多）→ 拆为独立 LE，PAS 关联**
+
+```
+superhero ──N:1── hero_power ──1:N── superpower
+                  ↑ junction, 主表被引用
+→ LOGICAL.Power (独立 LE, hero_power + superpower)
+→ PAS: Superhero ──possesses──→ Power  (A: HeroID, 1:N / N:1)
+```
+
+特征：主表被 junction 表**引用**（`hero_power.hero_id → superhero.id`），不是主表主动指向 junction。这种反向引用必须拆独立 LE。PAS 提供语义层关联，两面都可导航。
+
+### 2.2 PAS 锚定键规则
+
+**规则 3：PAS 的 `A`（锚定键）必须在源 LE 端有对应的 `public_attributes` 条目**
+
+```
+PAS: Superhero ──BelongsTo──→ HeroDimension
+     A: DimensionID
+         ↑
+     必须在 LOGICAL.Superhero.public_attributes 中可查到
+     否则 Agent 拿到 PAS 后在源端找不到 JOIN 落脚点
+```
+
+### 2.3 public/private 属性约定
+
+**规则 4：业务核心度量列 → `public_attributes`**
+
+- 金额、数量、日期等查询高频列必须在 LE 层设为 public
+- 辅助列（ID 派生、内部编码等）可留在 PE 层 private
+
+### 2.4 案例：superhero
+
+**旧建模（错误）**：
+
+```
+LOGICAL.Superhero          LOGICAL.HeroDimension       LOGICAL.HeroFeature          LOGICAL.Superpower
+  └ PE: Superhero            └ PE: Colour/Race/…         └ PE: HeroPower/HeroAttr     └ PE: Superpower
+      5 个 LE, 10 个 PE, 复杂的 PAS/ARCS 嵌套
+```
+
+问题：
+- `HeroDimension` 虚构——实体世界没有这个概念
+- 5 个维度 PE 挤一个 LE，PAS 锚定键 `DimensionID` 在 Superhero 端断头
+- `HeroFeature` 把 hero_power 和 hero_attribute 混在一起
+- `colour.colour`、`power_name` 等关键列缺 description
+
+**新建模（正确）**：
+
+```
+LOGICAL.Superhero                          LOGICAL.Power           LOGICAL.Attribute
+  ├ PE: Superhero (master, A: id)           ├ PE: HeroPower (N:1)    └ PE: HeroAttribute
+  ├ PE: Colour (A: id)                      └ PE: Superpower (1:1)
+  ├ PE: HeroRace (A: id)                    PAS: Superhero──possesses──→Power
+  ├ PE: Gender (A: id)                      PAS: Superhero──has attr──→Attribute
+  ├ PE: Publisher (A: id)
+  └ PE: Alignment (A: id)                   3 个 LE, 10 个 PE, 2 条 PAS
+```
+
+改进：
+- 拆掉 3 个虚构 LE，维度 PE 直挂 Superhero——Agent 一次 `get_pe_full` 看到完整业务结构
+- hero_power/superpower 拆为独立 Power LE——PAS 表达多对多，语义清晰
+- 所有列补 description，`colour.colour`、`power_name` 不再裸奔
+
+**效果**：DLR q723 token 72K→47K（-35%），`semantic_query` 从 6 次降至 1 次。
+
+### 2.5 案例：debit_card_specializing
+
+**问题**：`LOGICAL.Consumption` 的 public_attributes 只有 `Customer`, `Date`, `Consumption`, `GasStationID`, `ProductID`——缺"消费金额"。`Price` 和 `Amount` 全在 `PHYSICAL.Transaction` 的 private 中。Agent 找不到"amount spent"对应的列，反复试 SQL。
+
+**修复**：新增 `Spending` public 属性，映射到 `transactions_1k.Price`。同时修正 `Amount` 的 description 从"交易金额"→"加油量(升)"，避免与"amount spent"语义冲突。
+
+**效果**：DLR q1529 token 132K→88K（-33%）。
+
+### 2.6 检查清单
+
+1. 每个 LE 在实体世界有对应概念吗？（没有则拆）
+2. FK 在主表上（→ ARCS）还是被引用（→ PAS）？
+3. PAS 的 `A` 锚定键在源 LE 端有 public_attributes 条目吗？
+4. 业务核心度量列在 public_attributes 中可找到吗？
+5. 所有属性都有 description 吗？
+
+---
+
+## 3. 解析链路
 
 ### ER
 
@@ -70,7 +172,7 @@ configs/scenarios/RDF/*.ttl  ← W3C R2RML (Turtle)
 | 大模型友好度 | 高（扁平、业务视角） | 低（嵌套、技术视角） |
 | 标准接口 | 自定义 HTTP + MCP | **W3C SPARQL Protocol** |
 
-## 3. 存储隔离
+## 4. 存储隔离
 
 各范式 Graph / Vector 物理隔离（`config.paradigm_storage()`），共享同一套 SQLite 物理数据：
 
@@ -82,10 +184,10 @@ storage/
 ```
 
 - 范式之间隔离；**范式内 11 个库合并**在一个 Kuzu + 一个 vector.pkl 中；
-- 每条向量 metadata 带 `db` 字段（所属数据库名）→ 支撑召回锁库（见 §5）；
+- 每条向量 metadata 带 `db` 字段（所属数据库名）→ 支撑召回锁库（见 §6）；
 - RDF 同时持有 rdflib 内存图以支持 SPARQL。
 
-## 4. 核心查询流程
+## 5. 核心查询流程
 
 ### ER / DLR（FAISS + Kuzu）
 
@@ -113,7 +215,7 @@ Agent 写 SQL → execute_sql → Final Answer
 
 > RDF 的映射结果只含**物理列名 + JOIN 条件**，无业务语义注释 —— 与 DLR 的 ARCS（业务动词 + 语义补注）形成纯粹对照。
 
-## 5. 召回分库（db-aware recall，2026-07-18）
+## 6. 召回分库（db-aware recall，2026-07-18）
 
 11 库合并索引存在跨库召回污染（实测 q1472 曾把 Agent 带进错误的库）。机制：
 
@@ -121,7 +223,7 @@ Agent 写 SQL → execute_sql → Final Answer
 - 5 个召回工具（`er/dlr/rdf_semantic_query`、`recall_pe`、`recall_pas`）支持可选 `db` 参数，候选统一带 `db` 字段；
 - **Agent 不预先知道 db_id**：首跳全局召回，从候选 db 分布判断归属库（= 语义路由定位库），锁库后传 `db` 防漂移（规则见 `OC-based Agent Service/AGENTS.md` Step 1）。
 
-## 6. MCP 工具
+## 7. MCP 工具
 
 设计原则：三范式统一 `*_semantic_query` 入口，返回各自建模核心概念，**第一跳完全屏蔽物理信息**（物理表/字段/database_url 只在第二跳映射工具暴露；`db` 库名属语义路由信息，不在屏蔽之列）。
 
@@ -177,7 +279,7 @@ Agent 写 SQL → execute_sql → Final Answer
 
 > 范式专属工具仅在对应 `--paradigm` 启动时注册（服务端按 `_mapping_type` 隔离），Agent 无需预知范式。
 
-## 7. 可视化
+## 8. 可视化
 
 三范式各自静态页面，共享 macaron 10 色调色板：
 `['#FFB5BA','#FFDAB9','#FFF6CC','#C1E6C6','#A8E6CF','#B5EAD7','#C7CEEA','#E0BBE4','#FEC8D8','#FFDFD3']`
