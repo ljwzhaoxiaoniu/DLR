@@ -12,13 +12,13 @@ logical_entities:
   public_attributes:
   - attr_id: LOGICAL.Customer.CustomerID
     biz_name: CustomerID
-    description: '客户ID: 客户唯一标识符'
+    description: 'Customer ID: unique identifier for the customer'
   - attr_id: LOGICAL.Customer.Segment
     biz_name: Segment
-    description: '客户分类: 客户市场细分，SME=中小企业/LAM=本地客户/KAM=大客户'
+    description: 'Customer segment: SME=Small Business, LAM=Local, KAM=Key Account'
   - attr_id: LOGICAL.Customer.Currency
     biz_name: Currency
-    description: '币种: 客户使用的货币，CZK=捷克克朗/EUR=欧元'
+    description: 'Currency: CZK=Czech Koruna, EUR=Euro'
   physical_entities:
   - physical_entity_id: PHYSICAL.Customer
     physical_table_name: customers
@@ -36,30 +36,33 @@ logical_entities:
     - attr_id: debit_card_specializing.customers.Segment
       biz_name: Segment
       physical_column_id: debit_card_specializing.customers.Segment
-      description: '客户分类: 客户市场细分，SME=中小企业/LAM=本地客户/KAM=大客户'
+      description: 'Customer segment: SME=Small Business, LAM=Local, KAM=Key Account'
     - attr_id: debit_card_specializing.customers.Currency
       biz_name: Currency
       physical_column_id: debit_card_specializing.customers.Currency
-      description: '币种: 客户使用的货币，CZK=捷克克朗/EUR=欧元'
+      description: 'Currency: CZK=Czech Koruna, EUR=Euro'
 - logical_entity_id: LOGICAL.Consumption
   biz_name: Consumption
   description: 'Customer consumption records: monthly bills + transaction details'
   public_attributes:
   - attr_id: LOGICAL.Consumption.Customer
     biz_name: Customer
-    description: '客户ID: 客户ID，关联 customers 表'
+    description: 'Customer ID: FK to customers table'
   - attr_id: LOGICAL.Consumption.Date
     biz_name: Date
-    description: '月份: 年月，格式 YYYYMM，如 201301 表示2013年1月'
+    description: 'Date: year-month in YYYYMM format, e.g. 201301 = January 2013'
   - attr_id: LOGICAL.Consumption.Consumption
     biz_name: Consumption
-    description: '消费量: 该客户当月总消费量（升）'
+    description: 'Total fuel consumption in liters for the month'
+  - attr_id: LOGICAL.Consumption.Spending
+    biz_name: Spending
+    description: 'Unit price (CZK) per liter of fuel'
   - attr_id: LOGICAL.Consumption.GasStationID
     biz_name: GasStationID
-    description: '加油站ID: 关联 gasstations 表的加油站ID'
+    description: 'Gas station ID: FK to gasstations table'
   - attr_id: LOGICAL.Consumption.ProductID
     biz_name: ProductID
-    description: '产品ID: 关联 products 表的产品ID'
+    description: 'Product ID: FK to products table'
   physical_entities:
   - physical_entity_id: PHYSICAL.YearMonth
     physical_table_name: yearmonth
@@ -84,6 +87,7 @@ logical_entities:
     C:
       LOGICAL.Consumption.Customer: debit_card_specializing.transactions_1k.CustomerID
       LOGICAL.Consumption.Date: debit_card_specializing.transactions_1k.Date
+      LOGICAL.Consumption.Spending: debit_card_specializing.transactions_1k.Price
       LOGICAL.Consumption.GasStationID: debit_card_specializing.transactions_1k.GasStationID
       LOGICAL.Consumption.ProductID: debit_card_specializing.transactions_1k.ProductID
     S: Gas station single transaction details
@@ -94,28 +98,28 @@ logical_entities:
     - attr_id: debit_card_specializing.transactions_1k.Time
       biz_name: Time
       physical_column_id: debit_card_specializing.transactions_1k.Time
-      description: '交易时间: 交易时间，格式 HH:MM:SS'
+      description: 'Transaction time in HH:MM:SS format'
     - attr_id: debit_card_specializing.transactions_1k.Price
       biz_name: Price
       physical_column_id: debit_card_specializing.transactions_1k.Price
-      description: '单价: 产品单价'
+      description: 'Unit price of the product'
     - attr_id: debit_card_specializing.transactions_1k.Amount
       biz_name: Amount
       physical_column_id: debit_card_specializing.transactions_1k.Amount
-      description: '交易金额: 交易金额'
+      description: 'Fuel quantity purchased in this transaction (liters)'
 - logical_entity_id: LOGICAL.GasStation
   biz_name: GasStation
   description: Fuel service stations
   public_attributes:
   - attr_id: LOGICAL.GasStation.GasStationID
     biz_name: GasStationID
-    description: '加油站ID: 加油站唯一标识符'
+    description: 'Gas station unique identifier'
   - attr_id: LOGICAL.GasStation.Country
     biz_name: Country
-    description: '国家: 加油站所在国家代码，CZE=捷克'
+    description: 'Country code, e.g. CZE=Czech Republic'
   - attr_id: LOGICAL.GasStation.ChainID
     biz_name: ChainID
-    description: '连锁品牌ID: 加油站连锁品牌ID'
+    description: 'Chain ID: gas station chain brand identifier'
   physical_entities:
   - physical_entity_id: PHYSICAL.GasStation
     physical_table_name: gasstations
@@ -139,7 +143,7 @@ logical_entities:
   public_attributes:
   - attr_id: LOGICAL.Product.ProductID
     biz_name: ProductID
-    description: '产品ID: 产品唯一标识符'
+    description: 'Product unique identifier'
   physical_entities:
   - physical_entity_id: PHYSICAL.Product
     physical_table_name: products
@@ -155,7 +159,7 @@ logical_entities:
     - attr_id: debit_card_specializing.products.Description
       biz_name: Description
       physical_column_id: debit_card_specializing.products.Description
-      description: '产品描述: 产品名称/描述'
+      description: 'Product name/description'
 pas_relations:
 - relation_id: LOGICAL.Customer_TO_LOGICAL.Consumption
   relation_name: Generates

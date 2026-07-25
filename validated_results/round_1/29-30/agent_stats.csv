@@ -2,6 +2,6 @@
 "er","1312","student_club","FAIL","CORRECT","语义定位正确，工具调用链符合规范，SQL逻辑正确且执行成功，最终答案与GoldResult一致。 ```","CORRECT","100","","13167","531","325","35328","49351"
 "er","1317","student_club","PASS","","","CORRECT","100","","8982","526","783","28672","38963"
 "dlr","1312","student_club","PASS","","","CORRECT","100","","15595","276","319","24192","40382"
-"dlr","1317","student_club","PASS","","","CORRECT","100","","17699","789","811","61952","81251"
+"dlr","1317","student_club","PASS","","","CORRECT","100","","16839","446","439","16768","34492"
 "rdf","1312","student_club","FAIL","CORRECT","全部条件满足——语义定位正确(member+major表)，工具链走正道(semantic_query→mapping→execute_sql)，SQL执行成功，最终答案""Business""与GoldResult一致。 ```","CORRECT","100","","13451","317","382","33792","47942"
 "rdf","1317","student_club","PASS","","","CORRECT","100","","8666","475","385","28032","37558"

@@ -76,7 +76,7 @@
 | q1528 | 78,950 | 97,956 | **62,428** |
 | q1529 | **37,936** | 132,570 | 51,275 |
 | q1312 | 49,351 | **40,382** | 47,942 |
-| q1317 | 38,963 | 81,251 | **37,558** |
+| q1317 | 38,963 | **34,492** | 37,558 |
 | q1149 | 36,998 | **32,309** | 50,686 |
 | q1150 | 59,539 | **41,067** | 68,233 |
 | q1025 | 95,251 | 33,757 | **31,916** |
@@ -100,7 +100,7 @@
 | q850 | 45,188 | **41,934** | 76,224 |
 | q854 | 63,486 | 59,238 | **36,067** |
 | q719 | 90,494 | 36,282 | **28,825** |
-| q723 | **29,068** | 71,506 | 29,175 |
+| q723 | **29,068** | 46,820 | 29,175 |
 | q533 | 36,896 | **31,686** | 49,225 |
 | q537 | **36,101** | 49,688 | 50,853 |
 | q198 | 35,998 | **35,893** | 50,610 |
@@ -122,7 +122,7 @@
 |------|----|----|-----|
 | 最低单题 | 29,068 (q723) | 31,353 (q195) | **25,992 (q200)** |
 | 最高单题 | 295,225 (q1500) | 195,482 (q1481) | **254,156 (q532)** |
-| 平均 total | 68,555 | **59,608** | 63,314 |
+| 平均 total | 68,555 | **58,526** | 63,314 |
 | CORRECT | 63/66 | 65/66 | 65/66 |
 | 总计 | **193/198** | - | - |
 
@@ -153,8 +153,7 @@
 - **q1514/q1515 结构化查询**：时间+日期双条件定位单条记录再关联查 Currency/Segment，三范式全部写出正确 JOIN/子查询。DLR strict PASS 率仍为 0/2 但 judge 五环节全翻盘——说明预测结果正确只是与 gold 格式/细节略有偏差（如 LIMIT 10 等）。
 - **q1525 gold 同 q1505 缺陷**：`COUNT(CustomerID)` 计交易次而非客户数；三范式 `COUNT(DISTINCT CustomerID)` 更忠实。
 - **q1526 gold 返回 NULL**：子查询多 JOIN gasstations 无匹配。DLR/RDF 绕过缺陷正确给出 -5.8152（CustomerID=6718→yearmonth 聚合）。
-- **q1529 模型升级翻盘**：旧模型下 DLR/RDF 均失败——10+ 轮工具调用后上下文丢失，汇总时搞混中间结果（拿到正确值但答错）。切换新模型后三范式一次全对 [3437.01, 67156.94]。与 **q1490 原因完全相同**：旧模型（longcat）下三范式全错，切换 deepseek-pro 后 ER/DLR 独立收敛到正确答案。**长程多步推理对模型能力敏感。**
-- **q1529 gold 笛卡尔积 bug**：`transactions_1k × yearmonth ON CustomerID` 产生 8×20=160 行，`SUM(Price)` 膨胀 20 倍（68740.2 实为 3437.01×20）。已修正 cache。
+- **q1529 gold 笛卡尔积 bug + LLM 复合问题理解缺陷**：原 gold SQL `transactions_1k × yearmonth ON CustomerID` 产生 8×20=160 行笛卡尔积，`SUM(Price)` 膨胀 20 倍。已修正 cache + source SQL 为两个独立子查询：Part1=3437.01（Price from txn），Part2=67156.94（Consumption from yearmonth）。**更深层发现：原题 "What is...? How much..." 是两句自然语言合并的复合问题，LLM 容易只答半题。** 测试中把 question 明确标注为 `(question1)...;(question2)...` 且 evidence 标注 `(question2)` 后，DLR 首次直接写出两个子查询拿到两值 [3437.01, 67156.94]（仅因 `||` 拼接成字符串被 strict 判格式不匹配，judge 翻盘）。**本质：LLM 对自然语言中的隐式多问题边界不敏感，需要显式标注才能可靠处理。这不是范式问题，是 prompt engineering 问题。**
 - **ER q1524/1525/1526 初跑走 yearmonth（已修复验证✅）**：根因是 ER YAML 缺 FK relations→Agent 只看到 yearmonth→customers 一条路。手动补 3 条 relation + rebuild 后三题全部翻盘，验证通过。**全互联≠好引导——关键是 FK 关系要显式暴露。**
 - **🆕 🔴 evidence 的 few-shot 写法——SQL 伪代码对 LLM 无效（european_football_2 q1031）**：原始 evidence `age = SUBTRACT((DATETIME(), birthday))`，三范式多次重跑仅 ~20% 得 36。排查过程：① AGENTS.md 核心约束加 "Evidence 优先" → 无效 ② 提升到角色定义第 1 条 → ER/RDF 偶尔遵从，DLR 仍然不跟 ③ 换模型 → 不变。最后把 evidence 从 SQL 伪代码改成自然语言 `age = current year minus birth year` → 三范式一次全对。**LLM 不是编译器，不理解 SQLite 隐式类型转换规则。它像人一样读指令——自然语言有效，伪代码无效。给模型的 few-shot/evidence 必须说人话，不能写只有 DB 引擎才懂的表达式。**
 - **Helpfulness-Correctness Trade-off（card_games q340）**："Which are the cards" 25,061 条→三范式 9 次仅 1 次正确列出，其余全自动转 `COUNT(*)`。改 "How many"→三范式 strict PASS 全过。**RLHF 的 helpfulness 本能压过 correctness 指令**——LLM 判断"列 25,061 行 ID 不友好"，无意识优化。信息越多的范式越早满足于 COUNT（ER/DLR > RDF），工具信息量存在倒 U 型最优区间。**这是对照实验的意外发现，直接支撑 DLR 叙事。**
