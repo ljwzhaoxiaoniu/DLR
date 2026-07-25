@@ -53,10 +53,10 @@ logical_entities:
     description: 'Date: year-month in YYYYMM format, e.g. 201301 = January 2013'
   - attr_id: LOGICAL.Consumption.Consumption
     biz_name: Consumption
-    description: 'Total fuel consumption in liters for the month'
+    description: 'Monthly spending amount (CZK): total customer spending in this month'
   - attr_id: LOGICAL.Consumption.Spending
     biz_name: Spending
-    description: 'Unit price (CZK) per liter of fuel'
+    description: 'Unit price (CZK) per single item in the transaction'
   - attr_id: LOGICAL.Consumption.GasStationID
     biz_name: GasStationID
     description: 'Gas station ID: FK to gasstations table'
@@ -75,7 +75,7 @@ logical_entities:
       LOGICAL.Consumption.Customer: debit_card_specializing.yearmonth.CustomerID
       LOGICAL.Consumption.Date: debit_card_specializing.yearmonth.Date
       LOGICAL.Consumption.Consumption: debit_card_specializing.yearmonth.Consumption
-    S: Monthly gas consumption summary
+    S: Monthly customer spending summary
     private_attributes: []
   - physical_entity_id: PHYSICAL.Transaction
     physical_table_name: transactions_1k
@@ -102,11 +102,11 @@ logical_entities:
     - attr_id: debit_card_specializing.transactions_1k.Price
       biz_name: Price
       physical_column_id: debit_card_specializing.transactions_1k.Price
-      description: 'Unit price of the product'
+      description: 'Unit price per item (CZK)'
     - attr_id: debit_card_specializing.transactions_1k.Amount
       biz_name: Amount
       physical_column_id: debit_card_specializing.transactions_1k.Amount
-      description: 'Fuel quantity purchased in this transaction (liters)'
+      description: 'Quantity: number of items purchased in this transaction'
 - logical_entity_id: LOGICAL.GasStation
   biz_name: GasStation
   description: Fuel service stations

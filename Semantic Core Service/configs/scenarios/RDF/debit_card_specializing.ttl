@@ -71,11 +71,11 @@
         rdfs:label "产品ID"@zh ;
         rdfs:comment "关联 products 表"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/Amount> ; rr:objectMap [ rr:column "Amount" ; rr:datatype xsd:string ] ;
-        rdfs:label "交易金额"@zh ;
-        rdfs:comment "交易金额"@zh ] ;
+        rdfs:label "数量"@zh ;
+        rdfs:comment "购买数量（件数）"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/Price> ; rr:objectMap [ rr:column "Price" ; rr:datatype xsd:string ] ;
         rdfs:label "单价"@zh ;
-        rdfs:comment "产品单价"@zh ] ;
+        rdfs:comment "产品单价（CZK）"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/refers_to_customers> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/debit_card_specializing/customers> ; rr:joinCondition [ rr:child "CustomerID" ; rr:parent "CustomerID" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/refers_to_gasstations> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/debit_card_specializing/gasstations> ; rr:joinCondition [ rr:child "GasStationID" ; rr:parent "GasStationID" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/refers_to_products> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/debit_card_specializing/products> ; rr:joinCondition [ rr:child "ProductID" ; rr:parent "ProductID" ] ] ] .
@@ -91,7 +91,7 @@
         rdfs:label "月份"@zh ;
         rdfs:comment "年月，格式 YYYYMM（如 201301）"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/yearmonth/Consumption> ; rr:objectMap [ rr:column "Consumption" ; rr:datatype xsd:string ] ;
-        rdfs:label "消费量"@zh ;
-        rdfs:comment "该客户当月的总消费量（升）"@zh ] ;
+        rdfs:label "月消费金额"@zh ;
+        rdfs:comment "该客户当月的总消费金额（CZK）"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/yearmonth/refers_to_customers> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/debit_card_specializing/customers> ; rr:joinCondition [ rr:child "CustomerID" ; rr:parent "CustomerID" ] ] ] .
 

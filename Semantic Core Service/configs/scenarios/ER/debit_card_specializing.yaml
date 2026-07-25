@@ -120,7 +120,7 @@ entities:
     data_type: real
 - entity_id: debit_card_specializing.yearmonth
   biz_name: yearmonth
-  description: 'yearmonth: Customer ID; Date; consumption'
+  description: 'yearmonth: Customer ID; Date; monthly spending amount'
   physical_table_id: debit_card_specializing.yearmonth
   attributes:
   - attr_id: debit_card_specializing.yearmonth.CustomerID
@@ -135,7 +135,7 @@ entities:
     data_type: text
   - attr_id: debit_card_specializing.yearmonth.Consumption
     biz_name: Consumption
-    description: consumption
+    description: 'Monthly spending amount (CZK)'
     physical_column_id: debit_card_specializing.yearmonth.Consumption
     data_type: real
 relations:
