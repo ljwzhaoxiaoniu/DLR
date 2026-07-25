@@ -78,13 +78,13 @@ logical_entities:
         C: {LOGICAL.District.DistrictID: financial.district.district_id}
         S: "District demographic and economic statistics"
         private_attributes:
-          - {attr_id: financial.district.A2, biz_name: A2, physical_column_id: financial.district.A2}
-          - {attr_id: financial.district.A3, biz_name: A3, physical_column_id: financial.district.A3}
-          - {attr_id: financial.district.A4, biz_name: A4, physical_column_id: financial.district.A4}
-          - {attr_id: financial.district.A11, biz_name: A11, physical_column_id: financial.district.A11}
-          - {attr_id: financial.district.A12, biz_name: A12, physical_column_id: financial.district.A12}
-          - {attr_id: financial.district.A13, biz_name: A13, physical_column_id: financial.district.A13}
-          - {attr_id: financial.district.A15, biz_name: A15, physical_column_id: financial.district.A15}
+          - {attr_id: financial.district.A2, biz_name: DistrictName, physical_column_id: financial.district.A2, description: 'District name'}
+          - {attr_id: financial.district.A3, biz_name: Region, physical_column_id: financial.district.A3, description: 'Region name'}
+          - {attr_id: financial.district.A4, biz_name: Inhabitants, physical_column_id: financial.district.A4, description: 'Number of inhabitants'}
+          - {attr_id: financial.district.A11, biz_name: AvgSalary, physical_column_id: financial.district.A11, description: 'Average salary (A11)'}
+          - {attr_id: financial.district.A12, biz_name: UnempRate95, physical_column_id: financial.district.A12, description: 'Unemployment rate 1995'}
+          - {attr_id: financial.district.A13, biz_name: UnempRate96, physical_column_id: financial.district.A13, description: 'Unemployment rate 1996'}
+          - {attr_id: financial.district.A15, biz_name: Crimes95, physical_column_id: financial.district.A15, description: 'Number of crimes 1995'}
   - logical_entity_id: LOGICAL.Loan
     biz_name: Loan
     public_attributes:

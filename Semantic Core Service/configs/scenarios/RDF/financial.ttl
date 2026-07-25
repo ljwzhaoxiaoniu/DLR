@@ -64,11 +64,16 @@
     rr:predicateObjectMap [ rr:predicate <http://example.org/district/A8> ; rr:objectMap [ rr:column "A8" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/district/A9> ; rr:objectMap [ rr:column "A9" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/district/A10> ; rr:objectMap [ rr:column "A10" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A11> ; rr:objectMap [ rr:column "A11" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A12> ; rr:objectMap [ rr:column "A12" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A13> ; rr:objectMap [ rr:column "A13" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A11> ; rr:objectMap [ rr:column "A11" ; rr:datatype xsd:string ] ;
+        rdfs:label "Average salary"@en ;
+        rdfs:comment "Average salary in the district"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A12> ; rr:objectMap [ rr:column "A12" ; rr:datatype xsd:string ] ;
+        rdfs:label "Unemployment rate 95"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A13> ; rr:objectMap [ rr:column "A13" ; rr:datatype xsd:string ] ;
+        rdfs:label "Unemployment rate 96"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/district/A14> ; rr:objectMap [ rr:column "A14" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A15> ; rr:objectMap [ rr:column "A15" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A15> ; rr:objectMap [ rr:column "A15" ; rr:datatype xsd:string ] ;
+        rdfs:label "Crimes 1995"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/district/A16> ; rr:objectMap [ rr:column "A16" ; rr:datatype xsd:string ] ] .
 
 # === Table: financial.loan (pk=loan_id) ===

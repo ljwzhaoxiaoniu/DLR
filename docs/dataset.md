@@ -275,6 +275,19 @@ FROM (
 | **验证** | DLR 三范式中唯一路由到 yearmonth.Consumption 找到 CustomerID 12459；ER 走 transactions_1k 得 CustomerID 13665（avg 5762 离谱）；RDF 未触及 yearmonth。2026-07-25 标记，暂不修正 cache。 |
 
 
+### qid 94 — `financial`（gold SQL 逻辑错误：锁区不锁人 + cache 列序反转）
+
+- **问题**：List out the account numbers of female clients who are oldest and has lowest average salary, calculate the gap between this lowest average salary with the highest average salary?
+- **evidence**：Female = 'F'; A11 = average salary; Gap = highest - lowest; birth_date 比大小
+
+| | 内容 |
+|---|---|
+| **Gold SQL（原）** | `WHERE district_id = (SELECT district_id FROM client WHERE gender='F' ORDER BY birth_date ASC LIMIT 1)` — 子查询找了最老女性的 district_id → 外层 JOIN 拉出该 district 所有 account（364 行），不限定该女性本人。正确做法是以 client_id 锁人。 |
+| **Bug 本质** | ① WHERE 子查询只锁区不锁人；② 结果未筛选 client.gender='F'；③ gold cache 列序与 SQL 执行结果反转（[4431, 6] vs SQL 返回 (6, 4431)）；④ 正确结果 account_id=1743, gap=4431 |
+| **正确结果（已写入 cache）** | `account_id=1743, gap=4431`（最老女性 client_id=2115, district_id=51） |
+| **验证** | ER/RDF 提取失败，DLR 用 Price*Amount 误入歧途但 Agent 找到 district。2026-07-25 修正 cache + source SQL。 |
+
+
 - **问题**：What is the ratio of outpatient to inpatient followed up treatment among all the 'SLE' diagnosed patient?
 
 | | 内容 |
