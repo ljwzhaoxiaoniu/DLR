@@ -1,0 +1,305 @@
+{
+  "q_id": 17,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT ss.sname AS school_name, ss.AvgScrWrite AS avg_writing_score, s.CharterNum FROM satscores ss JOIN schools s ON ss.cds = s.CDSCode WHERE ss.AvgScrWrite > 499 AND s.CharterNum IS NOT NULL ORDER BY ss.AvgScrWrite DESC",
+  "result": {
+    "columns": [
+      "CharterNum",
+      "avg_writing_score",
+      "school_name"
+    ],
+    "rows": [
+      [
+        "0005",
+        527,
+        "Charter Community School Home Study Academy"
+      ],
+      [
+        "0019",
+        524,
+        "Natomas Charter"
+      ],
+      [
+        "0037",
+        525,
+        "Palisades Charter High"
+      ],
+      [
+        "0050",
+        531,
+        "Guajome Park Academy Charter"
+      ],
+      [
+        "0056",
+        533,
+        "Elise P. Buckingham Charter Magnet High"
+      ],
+      [
+        "0084",
+        530,
+        "Placer High"
+      ],
+      [
+        "0109",
+        513,
+        "Escondido Charter High"
+      ],
+      [
+        "0120",
+        555,
+        "River Valley Charter"
+      ],
+      [
+        "0127",
+        505,
+        "Academy for Academic Excellence"
+      ],
+      [
+        "0147",
+        528,
+        "OCCS:CHEP/PCHS"
+      ],
+      [
+        "0169",
+        520,
+        "Preuss School UCSD"
+      ],
+      [
+        "0180",
+        535,
+        "Grove"
+      ],
+      [
+        "0210",
+        630,
+        "Pacific Collegiate Charter"
+      ],
+      [
+        "0248",
+        533,
+        "Visions In Education"
+      ],
+      [
+        "0267",
+        517,
+        "Julian Charter"
+      ],
+      [
+        "0271",
+        540,
+        "Redwood Academy of Ukiah"
+      ],
+      [
+        "0284",
+        539,
+        "Temecula Preparatory"
+      ],
+      [
+        "0290",
+        582,
+        "OCSA"
+      ],
+      [
+        "0332",
+        502,
+        "Valley Oaks Charter"
+      ],
+      [
+        "0340",
+        523,
+        "Oakland School for the Arts"
+      ],
+      [
+        "0352",
+        581,
+        "Alameda Community Learning Center"
+      ],
+      [
+        "0419",
+        529,
+        "Dehesa Charter"
+      ],
+      [
+        "0477",
+        504,
+        "Connecting Waters Charter"
+      ],
+      [
+        "0493",
+        517,
+        "California Virtual Academy @ San Diego"
+      ],
+      [
+        "0512",
+        506,
+        "Cypress Charter High"
+      ],
+      [
+        "0537",
+        508,
+        "High Tech LA"
+      ],
+      [
+        "0565",
+        503,
+        "Aspire Benjamin Holt College Preparatory Academy"
+      ],
+      [
+        "0572",
+        543,
+        "Granada Hills Charter High"
+      ],
+      [
+        "0579",
+        506,
+        "Renaissance Arts Academy"
+      ],
+      [
+        "0588",
+        526,
+        "George Washington Carver School of Arts and Scienc"
+      ],
+      [
+        "0612",
+        551,
+        "University Preparatory"
+      ],
+      [
+        "0658",
+        542,
+        "Whitmore Charter High"
+      ],
+      [
+        "0664",
+        512,
+        "Capistrano Connections Academy"
+      ],
+      [
+        "0728",
+        505,
+        "FAME Public Charter"
+      ],
+      [
+        "0730",
+        503,
+        "Santa Rosa Academy"
+      ],
+      [
+        "0747",
+        554,
+        "Ocean Grove Charter"
+      ],
+      [
+        "0756",
+        511,
+        "High Tech High North County"
+      ],
+      [
+        "0759",
+        548,
+        "Classical Academy High"
+      ],
+      [
+        "0765",
+        514,
+        "American Indian Public High"
+      ],
+      [
+        "0835",
+        522,
+        "Summit Preparatory Charter High"
+      ],
+      [
+        "0838",
+        521,
+        "California Virtual Academy @ Los Angeles"
+      ],
+      [
+        "0844",
+        537,
+        "University Preparatory Academy Charter"
+      ],
+      [
+        "0883",
+        524,
+        "Oakland Charter High"
+      ],
+      [
+        "0890",
+        593,
+        "University High"
+      ],
+      [
+        "0930",
+        579,
+        "Northcoast Preparatory and Performing Arts Academy"
+      ],
+      [
+        "1070",
+        538,
+        "Everest Public High"
+      ],
+      [
+        "1071",
+        547,
+        "Western Sierra Collegiate Academy"
+      ],
+      [
+        "1079",
+        558,
+        "Da Vinci Charter Academy"
+      ],
+      [
+        "1083",
+        519,
+        "Stockton Unified Early College Academy"
+      ],
+      [
+        "1114",
+        562,
+        "Inspire School of Arts and Sciences"
+      ],
+      [
+        "1169",
+        576,
+        "John Adams Academy"
+      ],
+      [
+        "1208",
+        502,
+        "San Francisco Flex Academy"
+      ],
+      [
+        "1314",
+        514,
+        "El Camino Real Charter High"
+      ],
+      [
+        "1398",
+        535,
+        "California Connections Academy @ Ripon"
+      ],
+      [
+        "1400",
+        501,
+        "Clayton Valley Charter High"
+      ],
+      [
+        "1427",
+        508,
+        "Forest Charter"
+      ],
+      [
+        "1571",
+        509,
+        "Grover Cleveland Charter High"
+      ],
+      [
+        "1580",
+        524,
+        "William Howard Taft Charter High"
+      ]
+    ]
+  }
+}
