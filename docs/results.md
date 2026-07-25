@@ -43,7 +43,7 @@
 | 67-68 | credit | q1531, q1533 | 50% | 50% | 50% | debit_card 收官；q1531 gold SQL与evidence公式矛盾(全 INCORRECT)，q1533 全 CORRECT；DLR 唯一路由到 yearmonth 找对 top spender |
 | 69-70 | california | q5, q11 | 100% | 100% | 50% | california_schools 开局；ER/DLR 全 strict PASS；RDF q11 选错列(School Code→应为CDSCode) |
 
-**round_1 前 70 对完成 — 200/210 CORRECT（ER 66/70, DLR 68/70, RDF 66/70）**
+**round_1 前 70 对完成 — 201/210 CORRECT（ER 66/70, DLR 68/70, RDF 67/70）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -129,8 +129,8 @@
 | 最低单题 | 29,068 (q723) | 31,353 (q195) | **25,992 (q200)** |
 | 最高单题 | 295,225 (q1500) | 195,482 (q1481) | **254,156 (q532)** |
 | 平均 total | 71,240 | **58,214** | 63,115 |
-| CORRECT | 66/70 | 68/70 | 66/70 |
-| 总计 | **200/210** | - | - |
+| CORRECT | 66/70 | 68/70 | 67/70 |
+| 总计 | **201/210** | - | - |
 
 ### 定性观察
 
