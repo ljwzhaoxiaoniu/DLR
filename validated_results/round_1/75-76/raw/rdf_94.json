@@ -1,0 +1,7 @@
+{
+  "q_id": 94,
+  "ok": false,
+  "error": "You can only execute one statement at a time.",
+  "sql": "SELECT account_id FROM disp WHERE client_id = (SELECT client_id FROM client WHERE district_id = (SELECT district_id FROM district WHERE A11 = (SELECT MIN(A11) FROM district)) AND gender = 'F' ORDER BY birth_date ASC LIMIT 1); SELECT MAX(A11) - MIN(A11) AS gap FROM district",
+  "result": null
+}

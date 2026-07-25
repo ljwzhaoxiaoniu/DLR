@@ -1,0 +1,16 @@
+{
+  "q_id": 93,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT COUNT(*) FROM client c JOIN district d ON c.district_id = d.district_id WHERE c.gender = 'M' AND d.A3 = 'north Bohemia' AND d.A11 > 8000",
+  "result": {
+    "columns": [
+      "COUNT(*)"
+    ],
+    "rows": [
+      [
+        280
+      ]
+    ]
+  }
+}

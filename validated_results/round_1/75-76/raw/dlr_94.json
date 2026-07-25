@@ -1,0 +1,22 @@
+{
+  "q_id": 94,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT d.account_id, (SELECT MIN(dist_sub.A11) FROM client c_sub JOIN district dist_sub ON c_sub.district_id = dist_sub.district_id WHERE c_sub.gender = 'F' AND c_sub.birth_date = (SELECT MIN(birth_date) FROM client WHERE gender='F')) as lowest_avg_salary, (SELECT MAX(A11) FROM district) as highest_avg_salary, (SELECT MAX(A11) FROM district) - (SELECT MIN(dist_sub.A11) FROM client c_sub JOIN district dist_sub ON c_sub.district_id = dist_sub.district_id WHERE c_sub.gender = 'F' AND c_sub.birth_date = (SELECT MIN(birth_date) FROM client WHERE gender='F')) as gap FROM client c JOIN disp d ON c.client_id = d.client_id JOIN district dist ON c.district_id = dist.district_id WHERE c.gender = 'F' AND c.birth_date = (SELECT MIN(birth_date) FROM client WHERE gender='F') AND dist.A11 = (SELECT MIN(dist_sub.A11) FROM client c_sub JOIN district dist_sub ON c_sub.district_id = dist_sub.district_id WHERE c_sub.gender = 'F' AND c_sub.birth_date = (SELECT MIN(birth_date) FROM client WHERE gender='F')) LIMIT 1",
+  "result": {
+    "columns": [
+      "account_id",
+      "gap",
+      "highest_avg_salary",
+      "lowest_avg_salary"
+    ],
+    "rows": [
+      [
+        1743,
+        4000,
+        12541,
+        8541
+      ]
+    ]
+  }
+}
