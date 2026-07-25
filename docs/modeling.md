@@ -23,9 +23,11 @@
 
 **命名约束**：LE/PE id（`LOGICAL.*` / `PHYSICAL.*`）不带库前缀，因此**必须全局唯一**——构建期由 `BuildConflictError` 强制（同 id 映射不同物理表 → 中止 build）。历史教训：`PHYSICAL.Card`/`PHYSICAL.Race` 曾跨库重名导致 Kuzu 静默覆盖，已分别改名 `PHYSICAL.CreditCard`（financial）/`PHYSICAL.HeroRace`（superhero）。
 
-## 2. DLR 建模规则 — LE/PE 聚合与业务-物理边界
+## 2. DLR 建模规则 — 多表聚合场景
 
-> **从 superhero + debit_card 建模修复总结**（2026-07-25）。核心原则：**一个 LE = 一个真实业务概念**。不要人为捏造 LE 来"收纳"碎片化表——那反而破坏了 DLR 的优势。
+> **适用场景**：一个业务概念对应一张主表 + 多张碎片化维度表/子表，需要聚合成统一的业务视图。核心原则：**一个 LE = 一个真实业务概念**，通过 PE 的聚合实现"碎表集中"——这是 DLR 区分于 ER/RDF 的核心优势。但聚合密度高的前提是每个 PE 的锚定键和关键属性暴露给 LE（public），否则 Agent 找不到落脚点。
+>
+> 从 superhero + debit_card 建模修复总结（2026-07-25）。
 
 ### 2.1 PE 聚合规则：ARCS 还是 PAS？
 
