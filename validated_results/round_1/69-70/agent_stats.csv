@@ -1,0 +1,8 @@
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+11,ER,7,87085,18044,623,578,67840,9,"{""er_semantic_query"": 2, ""get_entity_attributes"": 3, ""list_all_tables"": 1, ""get_entity_mapping"": 1, ""execute_sql"": 2}",,PASS,,,CORRECT
+5,ER,6,67294,20289,654,1167,45184,7,"{""er_semantic_query"": 1, ""get_entity_attributes"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 2}",,PASS,,,CORRECT
+11,DLR,10,132322,30116,1054,1056,100096,11,"{""dlr_semantic_query"": 2, ""get_pe_full"": 1, ""get_le_attrs"": 1, ""execute_sql"": 7}",,PASS,,,CORRECT
+5,DLR,4,35885,17257,342,494,17792,4,"{""dlr_semantic_query"": 1, ""get_pe_full"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
+11,RDF,7,60690,19175,4023,756,36736,5,"{""rdf_classes"": 1, ""query_rdf_mapping"": 2, ""rdf_search"": 1, ""execute_sql"": 1}",,FAIL,INCORRECT,"步骤3映射正确性失败——SQL直接查frpm的School Code而非通过schools表JOIN获取CDSCode，导致返回的标识符与GoldResult不一致（7位School Code vs 14位CDSCode）
+```",INCORRECT
+5,RDF,5,37623,13650,346,587,23040,4,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT

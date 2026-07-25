@@ -1,0 +1,16 @@
+{
+  "q_id": 5,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT COUNT(DISTINCT s.cds) AS school_count\nFROM satscores s\nJOIN schools sch ON s.cds = sch.CDSCode\nWHERE s.AvgScrMath > 400 AND sch.Virtual = 'F'",
+  "result": {
+    "columns": [
+      "school_count"
+    ],
+    "rows": [
+      [
+        4
+      ]
+    ]
+  }
+}
