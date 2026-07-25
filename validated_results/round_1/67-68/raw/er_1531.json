@@ -1,0 +1,16 @@
+{
+  "q_id": 1531,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT SUM(Amount * Price) / SUM(Amount) AS AvgPricePerItem FROM transactions_1k WHERE CustomerID = 13665",
+  "result": {
+    "columns": [
+      "AvgPricePerItem"
+    ],
+    "rows": [
+      [
+        5762.49
+      ]
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "q_id": 1531,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT CustomerID, SUM(Price) AS TotalPrice, SUM(Amount) AS TotalAmount, CAST(SUM(Price) AS REAL) / SUM(Amount) AS AvgPricePerItem FROM transactions_1k WHERE CustomerID = 19182",
+  "result": {
+    "columns": [
+      "AvgPricePerItem",
+      "CustomerID",
+      "TotalAmount",
+      "TotalPrice"
+    ],
+    "rows": [
+      [
+        24.277577,
+        19182,
+        355,
+        8618.54
+      ]
+    ]
+  }
+}

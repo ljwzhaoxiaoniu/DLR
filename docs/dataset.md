@@ -262,6 +262,19 @@ FROM (
 | **验证** | ER 正确输出 [3437.01, 67156.94]。DLR/RDF 因多步查询复杂度各自走了错误路径。2026-07-23 修正 gold cache。
 
 
+### qid 1531 — `debit_card_specializing`（gold SQL 与 evidence 公式矛盾）
+
+- **问题**：Who is the top spending customer and how much is the average price per single item purchased by this customer? What currency was being used?
+- **evidence**：average price per single item = Total(price) / Total(amount)
+
+| | 内容 |
+|---|---|
+| **Gold SQL** | `SUM(T2.Price / T2.Amount)`（每行比值相加）|
+| **Bug 本质** | evidence 定义 avg = Total(price)/Total(amount) = SUM(Price)/SUM(Amount)，但 Gold SQL 用 `SUM(Price/Amount)`——两种算法结果不同（22.55 vs 203.86）。**Agent 按 evidence 执行，Gold 却按另一种算法评判。** |
+| **正确结果（与 evidence 一致）** | `SUM(Price)/SUM(Amount) FROM transactions_1k WHERE CustomerID = (SELECT CustomerID FROM yearmonth ORDER BY Consumption DESC LIMIT 1)` = **22.55**（CustomerID 12459, CZK） |
+| **验证** | DLR 三范式中唯一路由到 yearmonth.Consumption 找到 CustomerID 12459；ER 走 transactions_1k 得 CustomerID 13665（avg 5762 离谱）；RDF 未触及 yearmonth。2026-07-25 标记，暂不修正 cache。 |
+
+
 - **问题**：What is the ratio of outpatient to inpatient followed up treatment among all the 'SLE' diagnosed patient?
 
 | | 内容 |
