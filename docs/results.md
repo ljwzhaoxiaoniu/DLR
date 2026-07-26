@@ -44,9 +44,9 @@
 | 69-70 | california | q5, q11 | 100% | 100% | 50% | california_schools 开局；ER/DLR 全 strict PASS；RDF q11 选错列(School Code→应为CDSCode) |
 | 71-72 | california | q12, q17 | 50% | 100% | 50% | q12 全 PASS；q17 Gold 多要求 RANK() 列号(题目没要)，DLR judge翻盘 |
 | 73-74 | financial | q89, q92 | 100% | 100% | 100% | financial 开局全通；三范式 strict PASS |
-| 75-76 | financial | q93, q94 | 50% | 50% | 100% | q93 全 PASS；q94 ER/DLR 映射走偏，RDF judge 翻盘唯一正确 |
+| 75-76 | financial | q93, q94 | 100% | 100% | 100% | q93 全 PASS；q94 题目歧义修正后三范式全对 |
 
-**round_1 前 76 对完成 — 215/228 CORRECT（ER 70/76, DLR 73/76, RDF 72/76）**
+**round_1 前 76 对完成 — 217/228 CORRECT（ER 71/76, DLR 74/76, RDF 72/76）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -138,8 +138,8 @@
 | 最低单题 | 29,068 (q723) | 31,353 (q195) | **25,992 (q200)** |
 | 最高单题 | 295,225 (q1500) | 195,482 (q1481) | **254,156 (q532)** |
 | 平均 total | 74,072 | **62,952** | 63,907 |
-| CORRECT | 70/76 | 73/76 | 72/76 |
-| 总计 | **215/228** | - | - |
+| CORRECT | 71/76 | 74/76 | 72/76 |
+| 总计 | **217/228** | - | - |
 
 ### 定性观察
 
