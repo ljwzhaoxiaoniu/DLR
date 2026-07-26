@@ -9,34 +9,36 @@ logical_entities:
     biz_name: Account
     public_attributes:
       - {attr_id: LOGICAL.Account.AccountID, biz_name: AccountID}
+      - {attr_id: LOGICAL.Account.DistrictID, biz_name: DistrictID, description: 'District where the account branch is located'}
     physical_entities:
       - physical_entity_id: PHYSICAL.Account
         physical_table_name: account
         physical_table_id: financial.account
         A: {cardinality: "1:1", key: account_id}
         R: null
-        C: {LOGICAL.Account.AccountID: financial.account.account_id}
+        C: {LOGICAL.Account.AccountID: financial.account.account_id, LOGICAL.Account.DistrictID: financial.account.district_id}
         S: "Account master"
         private_attributes:
           - {attr_id: financial.account.frequency, biz_name: frequency, physical_column_id: financial.account.frequency}
-          - {attr_id: financial.account.district_id, biz_name: district_id, physical_column_id: financial.account.district_id}
           - {attr_id: financial.account.date, biz_name: date, physical_column_id: financial.account.date}
+          - {attr_id: financial.account.district_id, biz_name: district_id, physical_column_id: financial.account.district_id, description: 'FK to district'}
   - logical_entity_id: LOGICAL.Client
     biz_name: Client
     public_attributes:
       - {attr_id: LOGICAL.Client.ClientID, biz_name: ClientID}
+      - {attr_id: LOGICAL.Client.DistrictID, biz_name: DistrictID, description: 'District where the client resides'}
     physical_entities:
       - physical_entity_id: PHYSICAL.Client
         physical_table_name: client
         physical_table_id: financial.client
         A: {cardinality: "1:1", key: client_id}
         R: null
-        C: {LOGICAL.Client.ClientID: financial.client.client_id}
+        C: {LOGICAL.Client.ClientID: financial.client.client_id, LOGICAL.Client.DistrictID: financial.client.district_id}
         S: "Client master"
         private_attributes:
           - {attr_id: financial.client.gender, biz_name: gender, physical_column_id: financial.client.gender}
           - {attr_id: financial.client.birth_date, biz_name: birth_date, physical_column_id: financial.client.birth_date}
-          - {attr_id: financial.client.district_id, biz_name: district_id, physical_column_id: financial.client.district_id}
+          - {attr_id: financial.client.district_id, biz_name: district_id, physical_column_id: financial.client.district_id, description: 'FK to district'}
   - logical_entity_id: LOGICAL.AccountRelation
     biz_name: AccountRelation
     description: "Client-account authorization + credit cards"
@@ -170,6 +172,11 @@ pas_relations:
     P: {forward: {verb: has, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
     A: Account
     S: "1 account has N permanent orders"
+  - relation_id: LOGICAL.Client_TO_LOGICAL.District
+    relation_name: ResidesIn
+    P: {forward: {verb: resides in, cardinality: 'N:1'}, reverse: {verb: contains, cardinality: '1:N'}}
+    A: DistrictID
+    S: "N clients reside in 1 district"
   - relation_id: LOGICAL.District_TO_LOGICAL.Account
     relation_name: Contains
     P: {forward: {verb: contains, cardinality: '1:N'}, reverse: {verb: is located in, cardinality: 'N:1'}}
