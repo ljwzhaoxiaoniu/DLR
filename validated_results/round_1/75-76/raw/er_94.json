@@ -1,7 +1,16 @@
 {
   "q_id": 94,
-  "ok": false,
-  "error": "no SQL extracted",
-  "sql": null,
-  "result": null
+  "ok": true,
+  "error": null,
+  "sql": "SELECT MAX(A11) - MIN(A11) as gap FROM district",
+  "result": {
+    "columns": [
+      "gap"
+    ],
+    "rows": [
+      [
+        4431
+      ]
+    ]
+  }
 }

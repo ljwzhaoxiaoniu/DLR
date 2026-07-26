@@ -1,7 +1,20 @@
 {
   "q_id": 94,
-  "ok": false,
-  "error": "You can only execute one statement at a time.",
-  "sql": "SELECT account_id FROM disp WHERE client_id = (SELECT client_id FROM client WHERE district_id = (SELECT district_id FROM district WHERE A11 = (SELECT MIN(A11) FROM district)) AND gender = 'F' ORDER BY birth_date ASC LIMIT 1); SELECT MAX(A11) - MIN(A11) AS gap FROM district",
-  "result": null
+  "ok": true,
+  "error": null,
+  "sql": "SELECT a.account_id, d.A11, (SELECT MAX(A11) FROM district) - (SELECT MIN(A11) FROM district) as gap\nFROM client c\nJOIN district d ON c.district_id = d.district_id\nJOIN disp ON c.client_id = disp.client_id\nJOIN account a ON disp.account_id = a.account_id\nWHERE c.gender = 'F'\nAND c.birth_date = (SELECT MIN(birth_date) FROM client WHERE gender = 'F')\nORDER BY d.A11 ASC\nLIMIT 1",
+  "result": {
+    "columns": [
+      "A11",
+      "account_id",
+      "gap"
+    ],
+    "rows": [
+      [
+        8541,
+        1743,
+        4431
+      ]
+    ]
+  }
 }
