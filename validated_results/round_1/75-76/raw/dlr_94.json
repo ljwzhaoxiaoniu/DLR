@@ -2,13 +2,15 @@
   "q_id": 94,
   "ok": true,
   "error": null,
-  "sql": "SELECT MAX(A11) - MIN(A11) AS gap FROM district",
+  "sql": "SELECT a.account_id, (SELECT MAX(A11) FROM district) - (SELECT MIN(A11) FROM district WHERE district_id IN (SELECT district_id FROM client WHERE gender='F')) AS gap FROM client c JOIN district d ON c.district_id = d.district_id JOIN disp di ON c.client_id = di.client_id JOIN account a ON di.account_id = a.account_id WHERE c.gender = 'F' AND d.A11 = (SELECT MIN(A11) FROM district WHERE district_id IN (SELECT district_id FROM client WHERE gender='F')) AND c.birth_date = ( SELECT MIN(c2.birth_date) FROM client c2 JOIN district d2 ON c2.district_id = d2.district_id WHERE c2.gender = 'F' AND d2.A11 = (SELECT MIN(A11) FROM district WHERE district_id IN (SELECT district_id FROM client WHERE gender='F')) )",
   "result": {
     "columns": [
+      "account_id",
       "gap"
     ],
     "rows": [
       [
+        3214,
         4431
       ]
     ]
