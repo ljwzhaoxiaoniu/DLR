@@ -93,6 +93,22 @@ DLR 的 LE-PE 双层模型可以将这类表**吸收为 PE**，挂到有业务�
 
 **效果**：Agent 不需要理解 `disp` 这个中间件——它只看到 Client、Account、District 三个业务对象。消除了一层无意义的导航跳转。
 
+### 2.5 案例：financial
+
+**物理设计**：`disp` 是 client↔account 的纯 junction 表，`district` 是统计维表（A2-A16 魔鬼数字列）。旧 DLR 建模把 disp 提升为独立 LE `AccountRelation`，District 又设为孤立 LE，三条 PAS 绕了 Agent 两跳还找不到北。
+
+**问题**：
+- `disp` 被建模为独立 `LOGICAL.AccountRelation`——它没有业务意义，Agent 绕路
+- `District` 无 PAS 连接到 Client/Account，虽 FK 存在但语义路由断链
+- A* 列全为魔鬼数字（A11=平均工资），无描述无法召回
+
+**修复**：
+- `DistrictID` 升为 Client 和 Account 的 public attribute，补 PAS `Client→District` 和 `District→Account`
+- A11-A15 补英文 description
+- 后续可进一步将 disp 吸收为 Account 的 PE
+
+**效果**：Agent 现在能从 Client 直接导航到 District，q94 的 gap 计算全部取对（4431）。
+
 ### 2.6 案例：superhero
 
 **旧建模（错误）**：
@@ -138,11 +154,12 @@ LOGICAL.Superhero                          LOGICAL.Power           LOGICAL.Attri
 
 ### 2.8 检查清单
 
-1. 每个 LE 在实体世界有对应概念吗？（没有则拆）
+1. 每个 LE 在实体世界有对应概念吗？（没有则拆；纯 junction 表下沉为 PE）
 2. FK 在主表上（→ ARCS）还是被引用（→ PAS）？
 3. PAS 的 `A` 锚定键在源 LE 端有 public_attributes 条目吗？
-4. 业务核心度量列在 public_attributes 中可找到吗？
-5. 所有属性都有 description 吗？
+4. junction PE 的连接键升为所属 LE 的 public 了吗？
+5. 业务核心度量列在 public_attributes 中可找到吗？
+6. 所有属性都有 description 吗？
 
 ---
 
