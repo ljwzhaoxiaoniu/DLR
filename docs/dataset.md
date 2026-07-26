@@ -284,8 +284,9 @@ FROM (
 |---|---|
 | **Gold SQL（原）** | `WHERE district_id = (SELECT district_id FROM client WHERE gender='F' ORDER BY birth_date ASC LIMIT 1)` — 子查询找了最老女性的 district_id → 外层 JOIN 拉出该 district 所有 account（364 行），不限定该女性本人。正确做法是以 client_id 锁人。 |
 | **Bug 本质** | ① WHERE 子查询只锁区不锁人；② 结果未筛选 client.gender='F'；③ gold cache 列序与 SQL 执行结果反转（[4431, 6] vs SQL 返回 (6, 4431)）；④ 正确结果 account_id=1743, gap=4431 |
-| **正确结果（已写入 cache）** | `account_id=1743, gap=4431`（最老女性 client_id=2115, district_id=51） |
-| **验证** | ER/RDF 提取失败，DLR 用 Price*Amount 误入歧途但 Agent 找到 district。2026-07-25 修正 cache + source SQL。 |
+| **正确结果（已写入 cache）** | `account_id=3214, gap=4431`（最低工资区 district 67, A11=8110 中最老女性 client 3888, born 1916-10-27） |
+| **修复** | 原题条件互斥（最老≠最低工资区）。question 明确为"先圈最低工资区→再取最老"，evidence 补执行顺序。修正 gold SQL + cache + source JSON。 |
+| **验证** | DLR 三次中两次命中 3214+4431；ER/RDF 因条件模糊各次答案不一。2026-07-26 修正完成。 |
 
 
 - **问题**：What is the ratio of outpatient to inpatient followed up treatment among all the 'SLE' diagnosed patient?
