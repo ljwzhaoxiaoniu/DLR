@@ -74,7 +74,26 @@ PAS: Superhero ──BelongsTo──→ HeroDimension
 - 金额、数量、日期等查询高频列必须在 LE 层设为 public
 - 辅助列（ID 派生、内部编码等）可留在 PE 层 private
 
-### 2.4 案例：superhero
+### 2.4 规则 5：纯关联表下沉为 PE
+
+**物理数据设计常引入纯粹的关联表（junction table）来表达多对多关系**——如 `disp`（client↔account）、`hero_power`（hero↔power）。这类表没有独立业务意义，只是关系型数据库的工程手段。
+
+DLR 的 LE-PE 双层模型可以将这类表**吸收为 PE**，挂到有业务意义的 LE 下，而不必提升为独立 LE：
+
+```
+❌ ER/RDF：client ── disp(独立实体) ── account   （disp 被当作一等实体，Agent 多一跳）
+✅ DLR：    LOGICAL.Account                      （disp 作为 PE 挂 Account 下）
+              ├ PE: Account (master)
+              ├ PE: Disp (N:1, A: account_id)     ← junction 不暴露为 LE
+              └ ...
+            PAS: Client ──owns──→ Account (A: ClientID, via disp.client_id 暴露为 public)
+```
+
+**关键**：junction PE 的连接键（如 `disp.client_id`）必须升为所属 LE 的 `public_attributes`，否则 PAS 锚定键在源端断头。
+
+**效果**：Agent 不需要理解 `disp` 这个中间件——它只看到 Client、Account、District 三个业务对象。消除了一层无意义的导航跳转。
+
+### 2.6 案例：superhero
 
 **旧建模（错误）**：
 
@@ -109,7 +128,7 @@ LOGICAL.Superhero                          LOGICAL.Power           LOGICAL.Attri
 
 **效果**：DLR q723 token 72K→47K（-35%），`semantic_query` 从 6 次降至 1 次。
 
-### 2.5 案例：debit_card_specializing
+### 2.7 案例：debit_card_specializing
 
 **问题**：`LOGICAL.Consumption` 的 public_attributes 只有 `Customer`, `Date`, `Consumption`, `GasStationID`, `ProductID`——缺"消费金额"。`Price` 和 `Amount` 全在 `PHYSICAL.Transaction` 的 private 中。Agent 找不到"amount spent"对应的列，反复试 SQL。
 
@@ -117,7 +136,7 @@ LOGICAL.Superhero                          LOGICAL.Power           LOGICAL.Attri
 
 **效果**：DLR q1529 token 132K→88K（-33%）。
 
-### 2.6 检查清单
+### 2.8 检查清单
 
 1. 每个 LE 在实体世界有对应概念吗？（没有则拆）
 2. FK 在主表上（→ ARCS）还是被引用（→ PAS）？
