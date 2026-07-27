@@ -1,0 +1,7 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","859","formula_1","PASS","","","CORRECT","100","","3146","439","625","42496","46706"
+"er","861","formula_1","PASS","","","CORRECT","100","","2599","394","1128","34304","38425"
+"dlr","859","formula_1","PASS","","","CORRECT","100","","10332","348","318","42112","53110"
+"dlr","861","formula_1","FAIL","CORRECT","All 5 steps pass","CORRECT","100","","10320","446","1381","32384","44531"
+"rdf","859","formula_1","PASS","","","CORRECT","100","","17451","315","427","32640","50833"
+"rdf","861","formula_1","FAIL","CORRECT","All 5 steps pass","CORRECT","100","","8054","441","1102","34304","43901"
