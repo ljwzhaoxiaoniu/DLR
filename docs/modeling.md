@@ -152,7 +152,52 @@ LOGICAL.Superhero                          LOGICAL.Power           LOGICAL.Attri
 
 **效果**：DLR q1529 token 132K→88K（-33%）。
 
-### 2.8 检查清单
+### 2.8 案例：student_club — A_anchor 逻辑归属 + 独立 LE + LE description 质量
+
+**旧建模（错误）**：
+
+```
+LOGICAL.EventFinance
+  ├── PHYSICAL.Budget     (A: link_to_event)
+  └── PHYSICAL.Expense    (A: link_to_budget)   ← 纯 junction，无逻辑意义
+```
+
+问题：
+- `PHYSICAL.Expense` 的 A_anchor 是 `link_to_budget`——"属于哪个预算桶"没有业务意义
+- `link_to_member` FK（到 Member）是 private_attribute，无 PAS 表达——Member→Expense 需 2 跳（Member→Event→EventFinance→Expense）
+- `LOGICAL.Member` description 只有 "Student club member"（3 词），first_name/last_name 全在 private 中——语义路由搜 "first_name" 零命中
+- 首跳 `dlr_semantic_query("expense...first_name last_name")` 将 "expense" 错误路由到 debit_card（LOGICAL.Consumption 描述更丰富，向量得分更高），Agent 14 步后才通过 `schema()` 发现 student_club
+
+**新建模（正确，参照 superhero Power 模式）**：
+
+```
+LOGICAL.Budget              LOGICAL.Expense
+  └ PE: Budget (A: event)     └ PE: Expense (A: link_to_member)  ← 逻辑归属！
+                              
+PAS: Member ──incurs──→ Expense       (A: Member, 1 跳直达)
+PAS: Event ──has──→ Budget            (A: Event)
+PAS: Budget ──funds──→ Expense        (A: Budget)
+```
+
+改进：
+- Expense 升级为独立 LE，A_anchor 锚到 `link_to_member`——"谁花的钱"才是业务核心
+- `link_to_member` 升为 public attribute，语义路由可见
+- 新增 PAS `Member→Expense`（Incurs）——1 跳直达，和 superhero `Superhero→Power` 同模式
+- `LOGICAL.Member` description 丰富为 "Student club member — first_name, last_name, position, phone, T-shirt size, zip code, and major"
+- `LOGICAL.Expense` description 包含 "cost, expense_date, description, approval status"
+- PE description 写业务事实（"YYYY-MM-DD 格式"），不写查询技巧（"月=SUBSTR(6,2)"，过拟合单题）
+
+**效果**：q1339 DLR 389K/25步/15次execute_sql → 34K/4步/1次execute_sql（-91% token），strict PASS。
+
+**揭示的通用规则**：
+
+**规则 6（A_anchor 逻辑归属）**：PE 的 A_anchor 必须锚到有逻辑意义的 FK。纯 junction FK（如 link_to_budget）不配做主锚——它们只应作为 PAS 桥连接另一个 LE。
+
+**规则 7（独立业务概念 = 独立 LE）**：如果一个 PE 代表独立的业务概念（Expense、Power），即使物理上通过 FK 挂在另一张表下，也应该升级为独立 LE + 直接 PAS。不为物理表结构所限。
+
+**规则 8（LE description 质量 = 语义路由质量）**：`dlr_semantic_query` 只返回 LE 结果（PE/attribute/PAS 向量全被丢弃），LE description 是决定路由正确性的**唯一信号**。描述必须包含关键字段名和业务语义——不是写个名字就够。3 词描述在向量空间中会被其他库的丰富描述压过。
+
+### 2.9 检查清单
 
 1. 每个 LE 在实体世界有对应概念吗？（没有则拆；纯 junction 表下沉为 PE）
 2. FK 在主表上（→ ARCS）还是被引用（→ PAS）？
@@ -160,6 +205,9 @@ LOGICAL.Superhero                          LOGICAL.Power           LOGICAL.Attri
 4. junction PE 的连接键升为所属 LE 的 public 了吗？
 5. 业务核心度量列在 public_attributes 中可找到吗？
 6. 所有属性都有 description 吗？
+7. **PE 的 A_anchor 有逻辑意义吗？**（纯 junction FK → 换锚点或升级为独立 LE + PAS）**[规则 6]**
+8. **有没有独立业务概念被埋在某 LE 下？**（如 Expense 埋 EventFinance、Power 埋 HeroFeature）→ 拆为独立 LE + 直接 PAS **[规则 7]**
+9. **LE description 够丰富吗？**（3-5 词不够——至少包含该 LE 下所有关键字段名和业务语义）**[规则 8]**
 
 ---
 
