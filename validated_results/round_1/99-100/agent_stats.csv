@@ -1,0 +1,56 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","207","toxicology","FAIL","CORRECT","手动翻盘: judge超时(300s)。ER SQL通过connected表UNION atom_id+atom_id2两端，精确定位参与双键的原子，结果[c,ca,n,o,s]正确。Gold SQL有bug——仅通过molecule_id关联bond，召回了含双键分子中所有原子而非参与双键的原子。","CORRECT","100","","14296","565","576","37888","53325"
+"er","208","toxicology","FAIL","CORRECT","SQL语义正确，定位到atom/molecule表，过滤element='h'后按label分组计数取最大值，结果label为""-""与GoldResult一致，多余cnt列不扣分
+```","CORRECT","100","","16175","501","619","52480","69775"
+"dlr","207","toxicology","FAIL","CORRECT","**Gold SQL 的问题：**
+```sql
+SELECT DISTINCT T1.element FROM atom AS T1 
+INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id 
+INNER JOIN connected AS T3 ON T1.atom_id = T3.atom_id 
+WHERE T2.bond_type = '='
+```
+这个 SQL 的语义是：找到**所有存在于含有双键的分子中的原子**，而非**参与双键的原子**。因为 `atom` 和 `bond` 仅通过 `molecule_id` 关联，同一分子中只要有双键，该分子所有原子都会被召回——无论它们是否真的参与了双键。
+
+**Pred SQL 的语义：**
+```sql
+SELECT DISTINCT element FROM (
+  SELECT a.element FROM bond b JOIN connected c ON b.bond_id = c.bond_id 
+  JOIN atom a ON a.atom_id = c.atom_id AND a.molecule_id = b.molecule_id WHERE b.bond_type = '='
+  UNION
+  SELECT a.element FROM bond b JOIN connected c ON b.bond_id = c.bond_id 
+  JOIN atom a ON a.atom_id = c.atom_id2 AND a.molecule_id = b.molecule_id WHERE b.bond_type = '='
+)
+```
+这个 SQL 正确通过 `connected` 表定位**真正参与双键的两端原子**，语义上更准确地回答了""What elements are in a double type bond""。
+
+**逐步判定：**
+
+1. ✅ **语义正确**：Pred 正确召回参与双键的库/表对象（bond → connected → atom）
+2. ✅ **工具正确**：调用链走正道 dlr_semantic_query → get_pe_full → execute_sql
+3. ✅ **映射正确**：SQL 用的库表字段均来自映射返回，database_url 正确
+4. ✅ **SQL 执行正确**：SQL 正确表达""参与双键的元素""且执行成功
+5. ❌ **结果正确**：PredResult (c, ca, n, o, s) ≠ GoldResult (br, c, ca, cl, cu, f, h, n, o, p, pb, s, sn)
+
+但第5步的差异根因是 **Gold SQL 本身语义有误**（召回的是含双键分子中的所有原子，而非参与双键的原子）。Pred SQL 的建模更精准，结果更可信。按翻盘条件""答案值在 PredResult 中，或按题意直接加工可得""——PredResult 是 GoldResult 的真子集，且 Pred 的答案才是对题意的正确回答。
+
+```
+VERDICT: CORRECT
+PROCESS: 100
+REASON: Pred SQL通过connected表精确定位参与双键的原子，语义正确且执行成功；Gold SQL因仅通过molecule_id关联而错误召回了含双键分子中的所有原子，Pred结果才是对题意的正确回答
+```","CORRECT","100","","7097","841","541","101120","109599"
+"dlr","208","toxicology","FAIL","CORRECT","语义正确(atom/molecule表)、工具调用链正确(semantic_query→get_pe_full→execute_sql)、SQL逻辑等价且执行成功、最终答案""-""与GoldResult一致(额外cnt列不扣分)
+```","CORRECT","100","","8966","340","850","31744","41900"
+"rdf","207","toxicology","FAIL","CORRECT","手动翻盘: judge超时(300s)。RDF SQL通过connected表atom_id端定位参与双键的原子，结果[c,ca,n,o,s]与ER/DLR一致且正确。Gold SQL有bug——仅通过molecule_id关联bond，召回了含双键分子中所有原子而非参与双键的原子。","CORRECT","100","","9699","393","523","26624","37239"
+"rdf","208","toxicology","FAIL","INCORRECT","|
+|------|--------|--------|
+| 1. 语义正确 | ❌ FAIL | ""label"" refers to molecule.label, not bond.bond_type |
+| 2. 工具正确 | ✅ PASS | Chain: semantic_query → mapping → execute_sql |
+| 3. 映射正确 | ❌ FAIL | Used bond table instead of molecule table for ""label"" |
+| 4. SQL执行正确 | ✅ PASS | SQL executed successfully |
+| 5. 结果正确 | ❌ FAIL | Answer matches by coincidence, not by correct reasoning |
+
+```
+VERDICT: INCORRECT
+PROCESS: 40
+REASON: 语义理解错误——将molecule表的label字段误解为bond表的bond_type，虽然结果值巧合一致(""-"")，但回答的是""氢原子最常见的键类型""而非""氢原子所属分子最常见的label""，第1/3/5步均失败
+```","INCORRECT","40","","13771","479","1129","77440","92819"

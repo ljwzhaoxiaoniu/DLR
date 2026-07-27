@@ -396,6 +396,19 @@ FROM (
 | **Gold 原值** | 732.125（同样被笛卡尔积污染） |
 | **正确结果** | 20.25（每个致癌分子平均约 20 条单键） |
 | **验证** | 修正 evidence 后三范式一致输出 20.25。2026-07-24 修正 cache。
+
+### qid 207 — `toxicology`（gold JOIN 粒度错：分子级→原子级，2026-07-27 修正）
+
+- **问题**：What elements are in a double type bond?
+- **evidence**：double type bond refers to bond_type = '='
+
+| | 内容 |
+|---|---|
+| **Bug** | 原 Gold SQL `atom JOIN bond ON molecule_id` 是分子级关联——只要分子里有双键，该分子**所有原子**全被召回（13 元素），而非真正参与双键的原子（5 元素） |
+| **Gold 原值** | br, c, ca, cl, cu, f, h, n, o, p, pb, s, sn（13 元素） |
+| **正确结果** | c, ca, n, o, s（5 元素，三范式一致通过 `bond → connected → atom ON atom_id + atom_id2` 精确定位双键两端） |
+| **验证** | ER/DLR/RDF 三种建模独立得出相同 SQL 结构和相同结果，SQLite 直跑确认。三范式 judge 均判 CORRECT（DLR judge 在裁决过程中发现并记录了 gold bug）。2026-07-27 修正 cache + mini_dev_sqlite.json。 |
+
 ### 处理约定
 
 - 对 gold SQL 与题意相悖的题目，**直接覆盖 gold cache 的 `rows` 与 `columns` 为正确结果**，保持 `ok=True`。
