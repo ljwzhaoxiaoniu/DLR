@@ -91,7 +91,8 @@
     rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/driverRef> ; rr:objectMap [ rr:column "driverRef" ; rr:datatype xsd:string ] ;
         rdfs:label "车手引用名"@zh ;
         rdfs:comment "车手的英文引用名称"@zh ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/number> ; rr:objectMap [ rr:column "number" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/number> ; rr:objectMap [ rr:column "number" ; rr:datatype xsd:string ] ;
+        rdfs:comment "Driver number: permanent race car number, NOT qualifying position"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/code> ; rr:objectMap [ rr:column "code" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/forename> ; rr:objectMap [ rr:column "forename" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/surname> ; rr:objectMap [ rr:column "surname" ; rr:datatype xsd:string ] ;
@@ -140,7 +141,8 @@
         rdfs:label "车手ID"@zh ;
         rdfs:comment "参加排位赛的车手ID"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/constructorId> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/number> ; rr:objectMap [ rr:column "number" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/number> ; rr:objectMap [ rr:column "number" ; rr:datatype xsd:string ] ;
+        rdfs:comment "Qualifying position: final grid position (1=pole), NOT driver number"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/position> ; rr:objectMap [ rr:column "position" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/q1> ; rr:objectMap [ rr:column "q1" ; rr:datatype xsd:string ] ;
         rdfs:label "Q1成绩"@zh ;
@@ -184,7 +186,8 @@
     rr:predicateObjectMap [ rr:predicate <http://example.org/results/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/results/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/results/constructorId> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/number> ; rr:objectMap [ rr:column "number" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/number> ; rr:objectMap [ rr:column "number" ; rr:datatype xsd:string ] ;
+        rdfs:comment "Race finishing position: final race result, NOT driver number"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/results/grid> ; rr:objectMap [ rr:column "grid" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/results/position> ; rr:objectMap [ rr:column "position" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/results/positionText> ; rr:objectMap [ rr:column "positionText" ; rr:datatype xsd:string ] ] ;

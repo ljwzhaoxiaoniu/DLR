@@ -44,7 +44,7 @@ logical_entities:
     - attr_id: formula_1.drivers.number
       biz_name: number
       physical_column_id: formula_1.drivers.number
-      description: '车手号码: 车手的永久赛车号码，如 44=Hamilton、33=Verstappen'
+      description: 'Driver number: permanent race car number of the driver, e.g. 44=Hamilton, 33=Verstappen'
     - attr_id: formula_1.drivers.code
       biz_name: code
       physical_column_id: formula_1.drivers.code
@@ -155,7 +155,7 @@ logical_entities:
     - attr_id: formula_1.qualifying.number
       biz_name: number
       physical_column_id: formula_1.qualifying.number
-      description: '排位名次: 排位赛中的最终名次（1=杆位、2=第二...），NOT 车手号码'
+      description: 'Qualifying position: final grid position (1=pole, 2=second...), NOT driver number'
     - attr_id: formula_1.qualifying.position
       biz_name: position
       physical_column_id: formula_1.qualifying.position
@@ -191,7 +191,7 @@ logical_entities:
     - attr_id: formula_1.results.number
       biz_name: number
       physical_column_id: formula_1.results.number
-      description: '正赛名次: 正赛最终完赛名次，NOT 车手号码'
+      description: 'Race finishing position: final race result, NOT driver number'
     - attr_id: formula_1.results.grid
       biz_name: grid
       physical_column_id: formula_1.results.grid
