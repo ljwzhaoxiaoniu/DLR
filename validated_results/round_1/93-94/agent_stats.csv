@@ -1,0 +1,9 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","547","codebase_community","PASS","","","CORRECT","100","","16330","454","553","43136","60473"
+"er","549","codebase_community","FAIL","CORRECT","全部步骤通过。Agent 正确识别 tags/posts 实体 → 获取属性/映射 → 从 tags 查得 ExcerptPostId=20258 → 从 posts 查得 Body，最终答案与 GoldResult 完全一致。中间虽有第一次 SQL 表名格式错误(codebase_community.tags)，但自行通过 get_table_schema 修正为正确表名后成功执行。
+```","CORRECT","100","","2947","526","467","62848","66788"
+"dlr","547","codebase_community","PASS","","","CORRECT","100","","17315","414","621","34432","52782"
+"dlr","549","codebase_community","PASS","","","CORRECT","100","","16073","418","384","34304","51179"
+"rdf","547","codebase_community","PASS","","","CORRECT","100","","14661","429","554","37504","53148"
+"rdf","549","codebase_community","FAIL","CORRECT","召回正确表(tags/posts)，工具调用链走正道，SQL语义等价且执行成功，最终答案Body与GoldResult完全一致。
+```","CORRECT","100","","1420","303","323","31104","33150"
