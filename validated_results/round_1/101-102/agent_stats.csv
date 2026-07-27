@@ -1,0 +1,9 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","1035","european_football_2","PASS","","","CORRECT","100","","21284","2286","501","82176","106247"
+"er","1036","european_football_2","PASS","","","CORRECT","100","","16891","1806","635","23296","42628"
+"dlr","1035","european_football_2","PASS","","","CORRECT","100","","0","0","625","33232","47081"
+"dlr","1036","european_football_2","FAIL","CORRECT","All 5 steps pass — semantic mapping to correct tables (Team, Team_Attributes), proper tool flow (semantic_query → get_pe_full ×2 → execute_sql), database_url from mapping, SQL executes successfully, and PredResult contains all 101 teams matching GoldResult (identical team lists, order irrelevant).
+```","CORRECT","100","","17138","1722","447","17024","36331"
+"rdf","1035","european_football_2","PASS","","","CORRECT","100","","15344","1307","518","31360","48529"
+"rdf","1036","european_football_2","FAIL","INCORRECT","SQL缺少DISTINCT导致结果出现重复队名(如Widzew Łódź出现两次)，GoldResult为去重后的唯一队名列表；步骤1-3(语义定位、工具链、映射)均正确，第4步SQL表达存在缺陷。
+```","INCORRECT","80","","12659","1688","530","50176","65053"

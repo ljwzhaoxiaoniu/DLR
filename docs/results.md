@@ -57,8 +57,9 @@
 | 95-96 | student | q1338, q1339 | 100% | 100% | 100% | student_club 第四对全通；q1339 DLR 旧模型 389K→建模修复后 34K strict PASS（参照 superhero Power 模式，Expense 独立 LE + A 锚 Member） |
 | 97-98 | thrombosis | q1157, q1162 | 100% | 100% | 100% | thrombosis 第四对全通；三范式 strict PASS（无 judge 翻盘） |
 | 99-100 | toxicology | q207, q208 | 100% | 100% | 50% | 🔴 q207 gold SQL bug：通过 molecule_id 关联 bond→召回含双键分子中所有原子而非参与双键的原子；三范式均正确通过 connected 表定位双键两端原子；ER/RDF judge超时手动翻盘；q208 RDF 语义理解错（将 molecule.label 误解为 bond.bond_type） |
+| 101-102 | football | q1035, q1036 | 100% | 100% | 50% | football 第四对；q1035 三范式 strict PASS；q1036 ER/DLR CORRECT，RDF 缺 DISTINCT→INCORRECT（Team_Attributes 多日期导致 JOIN 重复） |
 
-**round_1 前 100 对完成 — 283/300 CORRECT（ER 94/100, DLR 98/100, RDF 91/100）**
+**round_1 前 102 对完成 — 288/306 CORRECT（ER 96/102, DLR 100/102, RDF 92/102）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -164,6 +165,8 @@
 | q1162 | **28,614** | 65,198 | 36,698 |
 | q207 | 53,325 | 43,279 | **37,239** |
 | q208 | 69,775 | **41,900** | 92,819 |
+| q1035 | 106,247 | **47,081** | 48,529 |
+| q1036 | 42,628 | **36,331** | 65,053 |
 
 \* 粗体 = 该题最优范式
 
@@ -173,9 +176,9 @@
 |------|----|----|-----|
 | 最低单题 | 29,068 (q723) | 31,353 (q195) | **25,992 (q200)** |
 | 最高单题 | 295,225 (q1500) | 195,482 (q1481) | **254,156 (q532)** |
-| 平均 total | 76,381 | 65,921 | **63,885** |
-| CORRECT | 94/100 | 98/100 | 91/100 |
-| 总计 | **283/300** | - | - |
+| 平均 total | 76,343 | 65,446 | **63,746** |
+| CORRECT | 96/102 | 100/102 | 92/102 |
+| 总计 | **288/306** | - | - |
 
 ### 定性观察
 
@@ -228,6 +231,6 @@
 
 ## 下一步
 
-- debit_card 30/30 ✅ → student 8/48 → thrombosis 8/50 → football 6/51 → formula_1 6/66 → superhero 6/52 → codebase 8/49 → card_games 8/52 → toxicology 8/40 → california 6/30 → financial 6/32 → 待续
+- debit_card 30/30 ✅ → student 8/48 → thrombosis 8/50 → football 8/51 → formula_1 6/66 → superhero 6/52 → codebase 8/49 → card_games 8/52 → toxicology 8/40 → california 6/30 → financial 6/32 → 待续
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 
