@@ -145,14 +145,17 @@ logical_entities:
       description: '阵营: Good / Bad / Neutral / -'
 - logical_entity_id: LOGICAL.Power
   biz_name: Power
-  description: 超能力 — 通过 junction 表 hero_power 与英雄形成多对多关系
+  description: Superpowers — e.g. Super Strength, Agility, Flight, Telepathy, Energy Blast; linked to heroes via hero_power junction table (many-to-many)
   public_attributes:
   - attr_id: LOGICAL.Power.PowerID
     biz_name: PowerID
-    description: '能力ID: 超能力唯一标识符'
+    description: 'Power ID: unique identifier'
   - attr_id: LOGICAL.Power.HeroID
     biz_name: HeroID
-    description: '英雄ID: 拥有该能力的英雄ID，FK→superhero.id'
+    description: 'HeroID: FK→superhero.id'
+  - attr_id: LOGICAL.Power.PowerName
+    biz_name: power_name
+    description: 'Power name: e.g. Super Strength, Agility, Flight, Telepathy, Energy Blast, etc.'
   physical_entities:
   - physical_entity_id: PHYSICAL.HeroPower
     physical_table_name: hero_power
@@ -178,22 +181,25 @@ logical_entities:
     R: null
     C:
       LOGICAL.Power.PowerID: superhero.superpower.id
+      LOGICAL.Power.PowerName: superhero.superpower.power_name
     S: 超能力字典
-    private_attributes:
-    - attr_id: superhero.superpower.power_name
-      biz_name: power_name
-      physical_column_id: superhero.superpower.power_name
-      description: '能力名称: 如 Agility, Flight, Super Strength 等'
+    private_attributes: []
 - logical_entity_id: LOGICAL.Attribute
   biz_name: Attribute
-  description: 英雄属性数值 — 通过 junction 表 hero_attribute 与英雄形成多对多关系
+  description: Hero attributes with numeric values — Intelligence, Strength, Speed, Agility, Durability, Power, Combat; linked to heroes via hero_attribute junction table (many-to-many)
   public_attributes:
   - attr_id: LOGICAL.Attribute.AttrID
     biz_name: AttrID
-    description: '属性ID: 属性字典唯一标识符'
+    description: 'Attribute ID: unique identifier'
   - attr_id: LOGICAL.Attribute.HeroID
     biz_name: HeroID
-    description: '英雄ID: FK→superhero.id'
+    description: 'HeroID: FK→superhero.id'
+  - attr_id: LOGICAL.Attribute.AttrName
+    biz_name: attribute_name
+    description: 'Attribute name: e.g. Intelligence, Strength, Speed, Agility, Durability, Power, Combat'
+  - attr_id: LOGICAL.Attribute.AttrValue
+    biz_name: attribute_value
+    description: 'Attribute value: numeric score of the attribute for a specific hero'
   physical_entities:
   - physical_entity_id: PHYSICAL.HeroAttribute
     physical_table_name: hero_attribute
@@ -204,16 +210,13 @@ logical_entities:
     R: null
     C:
       LOGICAL.Attribute.HeroID: superhero.hero_attribute.hero_id
+      LOGICAL.Attribute.AttrValue: superhero.hero_attribute.attribute_value
     S: Junction 表 — hero_id→superhero.id + attribute_id→attribute.id, 含属性值
     private_attributes:
     - attr_id: superhero.hero_attribute.attribute_id
       biz_name: attribute_id
       physical_column_id: superhero.hero_attribute.attribute_id
       description: 'FK→attribute.id: 属性ID'
-    - attr_id: superhero.hero_attribute.attribute_value
-      biz_name: attribute_value
-      physical_column_id: superhero.hero_attribute.attribute_value
-      description: '属性值: 该属性的数值'
   - physical_entity_id: PHYSICAL.Attribute
     physical_table_name: attribute
     physical_table_id: superhero.attribute
@@ -223,12 +226,9 @@ logical_entities:
     R: null
     C:
       LOGICAL.Attribute.AttrID: superhero.attribute.id
+      LOGICAL.Attribute.AttrName: superhero.attribute.attribute_name
     S: 属性字典
-    private_attributes:
-    - attr_id: superhero.attribute.attribute_name
-      biz_name: attribute_name
-      physical_column_id: superhero.attribute.attribute_name
-      description: '属性名称: 如 Intelligence, Strength, Speed, Agility 等'
+    private_attributes: []
 pas_relations:
 - relation_id: LOGICAL.Superhero_TO_LOGICAL.Power
   relation_name: Possesses
