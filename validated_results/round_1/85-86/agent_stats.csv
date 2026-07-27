@@ -1,0 +1,8 @@
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+724,ER,5,37230,14471,995,388,21376,5,"{""er_semantic_query"": 1, ""get_entity_mapping"": 2, ""execute_sql"": 2}",,PASS,,,CORRECT
+857,ER,7,54217,15473,343,385,38016,7,"{""er_semantic_query"": 2, ""get_entity_attributes"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 1}",,FAIL,CORRECT,语义、工具链、映射、SQL 执行与最终答案均正确，PredResult 虽因缺少 DISTINCT 产生重复行但坐标值与 GoldResult 一致。,CORRECT
+724,DLR,5,43001,17317,943,549,24192,6,"{""dlr_semantic_query"": 2, ""get_le"": 1, ""get_pe_full"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
+857,DLR,7,60127,17103,410,502,42112,7,"{""dlr_semantic_query"": 3, ""get_le_attrs"": 1, ""get_pe_full"": 2, ""execute_sql"": 1}",,FAIL,CORRECT,"SQL语义正确，调用链走正道，最终答案坐标(24.4672, 54.6031)与GoldResult一致，多余重复行不扣分",CORRECT
+724,RDF,4,30272,7999,1408,513,20352,4,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
+857,RDF,7,78188,19118,346,740,57984,5,"{""rdf_semantic_query"": 2, ""query_rdf_mapping"": 2, ""execute_sql"": 1}",,FAIL,CORRECT,"全部满足。语义正确(定位Abu Dhabi Grand Prix)、工具链正确(semantic_query→mapping→execute_sql)、映射正确(database_url来自映射返回)、SQL执行成功、最终答案lat=24.4672, lng=54.6031与GoldResult一致(多余race_name列和重复行不扣分)
+```",CORRECT

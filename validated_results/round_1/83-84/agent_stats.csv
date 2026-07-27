@@ -1,0 +1,10 @@
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+201,ER,4,29179,7745,326,500,20608,5,"{""er_semantic_query"": 1, ""get_entity_mapping"": 3, ""execute_sql"": 1}",,PASS,,,CORRECT
+206,ER,8,57597,13562,461,438,43136,8,"{""er_semantic_query"": 1, ""get_entity_attributes"": 2, ""get_entity_mapping"": 1, ""execute_sql"": 3, ""get_table_schema"": 1}",,FAIL,CORRECT,"Agent correctly used connected table to resolve bond_id→atoms then looked up elements; final answer matches GoldResult (both atoms are carbon/c)
+```",CORRECT
+201,DLR,4,33423,8946,396,529,23552,4,"{""dlr_semantic_query"": 1, ""get_pe_full"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
+206,DLR,5,40861,9158,564,419,30720,5,"{""dlr_semantic_query"": 1, ""get_pe_full"": 3, ""execute_sql"": 1}",,FAIL,CORRECT,"SQL语义正确，召回bond_id='TR004_8_9'的两个原子元素均为c，最终答案""carbon (c)""与GoldResult一致
+```",CORRECT
+201,RDF,5,37098,13762,621,571,22144,6,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 3, ""execute_sql"": 2}",,PASS,,,CORRECT
+206,RDF,7,50559,14077,545,481,35456,8,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 3, ""execute_sql"": 4}",,FAIL,INCORRECT,"第4步SQL未走connected表JOIN正轨，而是靠bond_id命名格式反推atom_id，属投机取巧不具泛化性
+```",INCORRECT

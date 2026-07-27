@@ -1,0 +1,11 @@
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+349,ER,7,87205,21536,433,596,64640,8,"{""er_semantic_query"": 1, ""get_entity_attributes"": 2, ""get_entity_relations"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 1}",,FAIL,CORRECT,"Agent完整遵循SOP流程，正确识别cards/rulings实体，SQL执行成功，结果Teferi's Protection (Chase Stone, isPromo=1, 27 rulings)正确回答了""促销印刷中裁决信息最多的卡""。GoldResult (Serrated Arrows)基于有缺陷的SQL逻辑（寻找促销卡最多的艺术家而非最多裁决的卡），PredResult语义正确。
+```",CORRECT
+352,ER,9,98276,20243,819,2590,74624,9,"{""er_semantic_query"": 1, ""get_entity_attributes"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 4}",,FAIL,INCORRECT,"步骤1语义错误——""percentage of cards""应以cards表为主体通过uuid关联foreign_data计算卡片级别的百分比，但PredSQL仅对foreign_data表做行级COUNT，未JOIN cards表，概念上行数≠卡片数(虽然数值接近但语义不对)。工具链与映射步骤正确。
+```",INCORRECT
+349,DLR,5,43995,10277,266,940,32512,4,"{""dlr_semantic_query"": 1, ""get_pe_full"": 2, ""execute_sql"": 1}",,FAIL,CORRECT,"PredSQL correctly implements ""card with most rulings"" (Max(count(rulings.uuid))) per evidence; GoldSQL groups by artist counting distinct promo cards, answering a different question — gold standard appears semantically flawed.
+```",CORRECT
+352,DLR,11,121361,22399,1197,4709,93056,13,"{""dlr_semantic_query"": 1, ""get_pe_full"": 2, ""execute_sql"": 10}",,FAIL,INCORRECT,"SQL语义偏差——使用COUNT(DISTINCT uuid)导致分子计算的是""有简体中文的不同卡牌数""而非""简体中文条目占总条目比例""，最终答案35.38%与GoldResult 8.77%不一致（第5步失败，根因在第4步SQL逻辑）
+```",INCORRECT
+349,RDF,5,53523,12587,333,667,39936,5,"{""rdf_classes"": 1, ""rdf_semantic_query"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 1}",,FAIL,UNKNOWN,"Command '['bash', '-c', 'opencode run --format json']' timed out after 300 seconds",INCORRECT
+352,RDF,6,65060,18098,469,797,45696,5,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 2}",,FAIL,INCORRECT,SQL未正确表达题意：错误使用LEFT JOIN扩大数据集范围，且对卡片ID去重导致统计口径与标准逻辑不符，最终结果与GoldResult不一致,INCORRECT

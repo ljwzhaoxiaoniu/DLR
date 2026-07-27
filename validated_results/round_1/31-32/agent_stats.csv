@@ -1,7 +1,9 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"er","1149","thrombosis_prediction","FAIL","CORRECT","全部满足——语义定位正确(Patient表)，工具链走正道(semantic_query→mapping→execute_sql)，SQL使用映射字段执行成功，结果83.17757与GoldResult一致，最终答案正确解读了outpatient更多且百分比计算正确。 ```","CORRECT","100","","14229","824","697","21248","36998"
-"er","1150","thrombosis_prediction","PASS","","","CORRECT","100","","2958","675","738","55168","59539"
-"dlr","1149","thrombosis_prediction","FAIL","CORRECT","Judge超时手动翻盘——DLR SQL正确，结果与Gold一致","CORRECT","100","","8639","528","358","22784","32309"
-"dlr","1150","thrombosis_prediction","PASS","","","CORRECT","100","","9249","263","707","30848","41067"
-"rdf","1149","thrombosis_prediction","FAIL","CORRECT","全部步骤通过。语义定位正确(Patient表)，工具链rdf_semantic_query→query_rdf_mapping→execute_sql走正道，database_url和列名均来自映射返回，SQL执行成功，百分比83.18与GoldResult 83.17757一致(四舍五入差异)，最终答案正确。 ```","CORRECT","100","","17248","579","475","32384","50686"
-"rdf","1150","thrombosis_prediction","PASS","","","CORRECT","100","","15586","936","2047","49664","68233"
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+1149,ER,5,36998,14229,824,697,21248,5,"{""er_semantic_query"": 1, ""get_entity_attributes"": 1, ""get_entity_mapping"": 1, ""execute_sql"": 2}",,FAIL,CORRECT,"全部满足——语义定位正确(Patient表)，工具链走正道(semantic_query→mapping→execute_sql)，SQL使用映射字段执行成功，结果83.17757与GoldResult一致，最终答案正确解读了outpatient更多且百分比计算正确。
+```",CORRECT
+1150,ER,8,59539,2958,675,738,55168,7,"{""er_semantic_query"": 1, ""get_entity_mapping"": 1, ""execute_sql"": 5}",,PASS,,,CORRECT
+1149,DLR,4,32309,8639,528,358,22784,4,"{""dlr_semantic_query"": 1, ""get_le_attrs"": 1, ""get_pe_full"": 1, ""execute_sql"": 1}",,FAIL,UNKNOWN,"Command '['bash', '-c', 'opencode run --format json']' timed out after 300 seconds",INCORRECT
+1150,DLR,5,41067,9249,263,707,30848,4,"{""dlr_semantic_query"": 1, ""get_le_attrs"": 1, ""get_pe_full"": 1, ""execute_sql"": 1}",,PASS,,,CORRECT
+1149,RDF,5,50686,17248,579,475,32384,3,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 1, ""execute_sql"": 1}",,FAIL,CORRECT,"全部步骤通过。语义定位正确(Patient表)，工具链rdf_semantic_query→query_rdf_mapping→execute_sql走正道，database_url和列名均来自映射返回，SQL执行成功，百分比83.18与GoldResult 83.17757一致(四舍五入差异)，最终答案正确。
+```",CORRECT
+1150,RDF,9,68233,15586,936,2047,49664,8,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 1, ""execute_sql"": 6}",,PASS,,,CORRECT

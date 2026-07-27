@@ -1,0 +1,10 @@
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+346,ER,6,64089,19744,2552,833,40960,7,"{""er_semantic_query"": 1, ""get_entity_attributes"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 2}",,PASS,,,CORRECT
+347,ER,11,144494,26906,2721,1203,113664,11,"{""er_semantic_query"": 1, ""get_entity_mapping"": 2, ""execute_sql"": 8}",,FAIL,CORRECT,"All 5 steps pass. Agent correctly located card_games DB, used proper tool chain (semantic_query→mapping→execute_sql), SQL returns all 74 cards with ruling texts and hasContentWarning flags. PredResult contains all GoldResult rows (cards with rulings) plus additional cards without rulings — LEFT JOIN is semantically appropriate since question asks for ""all cards."" Final answer correctly states none have missing/degraded properties.
+```",CORRECT
+346,DLR,7,74484,21843,2689,1056,48896,7,"{""dlr_semantic_query"": 2, ""get_pe_full"": 2, ""execute_sql"": 3}",,PASS,,,CORRECT
+347,DLR,6,105495,32719,1107,2165,69504,6,"{""schema"": 1, ""get_pe_full"": 2, ""execute_sql"": 3}",,FAIL,CORRECT,"Agent correctly identified 74 unique cards by Stephen Daniele via proper tool chain (schema → get_pe_full → execute_sql), used correct database_url from mapping, SQL properly JOINs cards and rulings filtering by artist, and the final answer matches GoldResult — all cards have hasContentWarning=0 (no missing/degraded properties), ruling texts are correctly retrieved. The difference in join type (LEFT vs INNER) and column choice (uuid vs id) doesn't affect correctness of the answer content.
+```",CORRECT
+346,RDF,5,45578,16576,2508,766,25728,6,"{""rdf_semantic_query"": 1, ""rdf_classes"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 2}",,PASS,,,CORRECT
+347,RDF,4,36459,10356,2773,3106,20224,3,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 1, ""execute_sql"": 1}",,FAIL,INCORRECT,"SQL未JOIN rulings表，将card自身的text误当作ruling text返回，第4步( SQL正确性)和第5步(结果正确性)不通过
+```",INCORRECT

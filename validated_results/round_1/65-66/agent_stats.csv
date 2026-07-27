@@ -1,15 +1,16 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"er","1031","european_football_2","FAIL","INCORRECT","Evidence 指定 DATETIME()-birthday 计算年龄=36，Agent 用 julianday/365.25 得 35，未遵守 evidence 公式。AGENTS.md 已加 evidence 优先规则但模型在 date math 场景依从性不稳定。","INCORRECT","80","","6798","995","894","56832","65519"
-"er","1032","european_football_2","FAIL","CORRECT","q1032重跑judge翻盘——evidence改为自然语言后三范式全对","CORRECT","100","","10198","360","264","22784","33606"
-"dlr","1031","european_football_2","FAIL","INCORRECT","语义/工具/映射/SQL执行均正确，但年龄计算方式与Gold不同（Pred用年份差+生日修正得35岁，Gold用DATETIME()-birthday得36岁），最终答案与GoldResult不一致，失败在第5步结果正确性
-```","INCORRECT","100","","2431","923","1574","55168","60096"
-"dlr","1032","european_football_2","FAIL","CORRECT","q1032重跑judge翻盘——evidence改为自然语言后三范式全对","CORRECT","100","","8686","260","226","23040","32212"
-"rdf","1031","european_football_2","FAIL","INCORRECT","Agent 用 `(julianday('now') - julianday(birthday)) / 365.25` 取整得到 35，而 GoldSQL 用 `DATETIME() - birthday` 得到 36。虽然 Agent 的方法在数学上更精确（该球员截至2026-07-24尚未到11月生日），但与标准答案不一致。按评测规则""最终答案与 GoldResult 一致""判定为不通过。
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+1031,ER,7,65519,6798,995,894,56832,8,"{""er_semantic_query"": 1, ""get_entity_attributes"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 3}",,FAIL,INCORRECT,Evidence 指定 DATETIME()-birthday 计算年龄=36，Agent 用 julianday/365.25 得 35，未遵守 evidence 公式。AGENTS.md 已加 evidence 优先规则但模型在 date math 场景依从性不稳定。,INCORRECT
+1032,ER,4,33606,10198,360,264,22784,4,"{""er_semantic_query"": 1, ""get_entity_mapping"": 2, ""execute_sql"": 1}",,FAIL,UNKNOWN,"Command '['bash', '-c', 'opencode run --format json']' timed out after 300 seconds",INCORRECT
+1031,DLR,6,52620,16838,425,925,34432,5,"{""dlr_semantic_query"": 1, ""get_le_attrs"": 1, ""get_pe_full"": 2, ""execute_sql"": 1}",,FAIL,INCORRECT,"语义/工具/映射/SQL执行均正确，但年龄计算方式与Gold不同（Pred用年份差+生日修正得35岁，Gold用DATETIME()-birthday得36岁），最终答案与GoldResult不一致，失败在第5步结果正确性
+```",INCORRECT
+1032,DLR,4,32212,8686,260,226,23040,4,"{""dlr_semantic_query"": 1, ""get_pe_full"": 2, ""execute_sql"": 1}",,FAIL,INCORRECT,"步骤1-4均通过(语义召回正确、工具调用链正确、映射正确、SQL执行成功)，但步骤5结果错误——SQL按l.name分组导致同match_count下取到""Spain LIGA BBVA""而非Gold的""England Premier League""，说明数据中存在多个league_id映射到同一name或分组粒度有误，最终答案与GoldResult不一致。
+```",INCORRECT
+1031,RDF,6,49065,9865,980,716,37504,6,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 3}",,FAIL,INCORRECT,"Agent 用 `(julianday('now') - julianday(birthday)) / 365.25` 取整得到 35，而 GoldSQL 用 `DATETIME() - birthday` 得到 36。虽然 Agent 的方法在数学上更精确（该球员截至2026-07-24尚未到11月生日），但与标准答案不一致。按评测规则""最终答案与 GoldResult 一致""判定为不通过。
 
 ```
 VERDICT: INCORRECT
 PROCESS: 80
 REASON: 步骤5失败——年龄计算方式与Gold不一致，GoldResult=36而Agent回答35，差1岁
-```","INCORRECT","80","","9865","980","716","37504","49065"
-"rdf","1032","european_football_2","FAIL","CORRECT","Agent执行链完整正确(rdf_semantic_query→mapping→execute_sql)，SQL逻辑正确表达""最高比赛场次联赛""(GROUP BY+ORDER BY COUNT DESC LIMIT 1)，database_url与字段均来自映射，执行成功返回3040与GoldResult数值一致；联赛名差异系GoldSQL本身存在语法问题(外层SELECT league_id与MAX(cnt)无GROUP BY导致可能错误匹配)，PredSQL写法更规范正确
-```","CORRECT","100","","14037","284","360","18048","32729"
+```",INCORRECT
+1032,RDF,4,32729,14037,284,360,18048,5,"{""rdf_classes"": 1, ""rdf_semantic_query"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 1}",,FAIL,CORRECT,"Agent执行链完整正确(rdf_semantic_query→mapping→execute_sql)，SQL逻辑正确表达""最高比赛场次联赛""(GROUP BY+ORDER BY COUNT DESC LIMIT 1)，database_url与字段均来自映射，执行成功返回3040与GoldResult数值一致；联赛名差异系GoldSQL本身存在语法问题(外层SELECT league_id与MAX(cnt)无GROUP BY导致可能错误匹配)，PredSQL写法更规范正确
+```",CORRECT

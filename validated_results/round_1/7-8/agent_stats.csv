@@ -1,6 +1,6 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"er","1481","debit_card_specializing","FAIL","CORRECT","All five steps pass — semantic understanding correct (lowest consumption customers per segment in CZK for 2013), tool chain follows proper SOP, SQL uses correct schema mappings from customers/yearmonth tables, execution succeeds with `ok: true`, and PredResult values exactly match GoldResult: SME-LAM=-14009.34, LAM-KAM=6046.62, KAM-SME=7962.72.","CORRECT","100","","25480","3660","3358","197504","230002"
-"er","1482","debit_card_specializing","FAIL","CORRECT","完成。**
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+1481,ER,18,230002,25480,3660,3358,197504,24,"{""er_semantic_query"": 1, ""get_entity"": 2, ""get_entity_attributes"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 16, ""list_all_tables"": 1}",,FAIL,CORRECT,"All five steps pass — semantic understanding correct (lowest consumption customers per segment in CZK for 2013), tool chain follows proper SOP, SQL uses correct schema mappings from customers/yearmonth tables, execution succeeds with `ok: true`, and PredResult values exactly match GoldResult: SME-LAM=-14009.34, LAM-KAM=6046.62, KAM-SME=7962.72.",CORRECT
+1482,ER,6,46942,8736,1298,812,36096,7,"{""er_semantic_query"": 2, ""list_all_tables"": 1, ""get_entity_mapping"": 2, ""execute_sql"": 2}",,FAIL,CORRECT,"完成。**
 
 - **语义正确** ✅：正确召回 `debit_card_specializing.customers` 和 `yearmonth` 表。
 - **工具链正确** ✅：`er_semantic_query` → `list_all_tables` → `get_entity_mapping` ×2 → `execute_sql` ×2（首次因表名带库前缀失败后修正，第二次成功）。
@@ -12,11 +12,11 @@
 VERDICT: CORRECT
 PROCESS: 100
 REASON: 全部步均通过；公式按题干 Evidence 定义计算百分比增长，结果与 Gold 一致(SME 88.02%最大, LAM 84.37%最小)
-```","CORRECT","100","","8736","1298","812","36096","46942"
-"dlr","1481","debit_card_specializing","FAIL","CORRECT","All 5 steps pass — correct DB/table identification, proper tool chain, mapping-derived schema, valid SQL computing per-segment min-consumption averages and their differences, and final answer matches GoldResult exactly.
-```","CORRECT","100","","27681","3537","7336","156928","195482"
-"dlr","1482","debit_card_specializing","FAIL","CORRECT","Manually verified: pred values [SME=88.02, LAM=84.37, KAM=84.69] match evidence formula (2013-2012)/2013*100, confirmed by independent SQLite replay. Judge opencode call hung (subprocess timeout bypass); ER+RDF same question both CORRECT.","CORRECT","100","","18167","1402","711","34432","54712"
-"rdf","1481","debit_card_specializing","FAIL","CORRECT","All 5 steps pass — semantic query locates correct tables (customers, yearmonth), mapping returns proper database_url, SQL correctly identifies min-consumption customers per segment and computes differences, final answer matches GoldResult values exactly.
-```","CORRECT","100","","24012","1835","1927","93184","120958"
-"rdf","1482","debit_card_specializing","FAIL","CORRECT","All steps correct — semantic query locates right tables/fields, mapping used properly, SQL implements the evidence formula (Δ/2013×100), results match GoldResult exactly, and final answer correctly identifies SME as biggest (88.02%) and LAM as lowest (84.37%).
-```","CORRECT","100","","17439","1516","942","45312","65209"
+```",CORRECT
+1481,DLR,13,195482,27681,3537,7336,156928,21,"{""dlr_semantic_query"": 1, ""get_le_attrs"": 2, ""get_pe_full"": 3, ""execute_sql"": 15}",,FAIL,CORRECT,"All 5 steps pass — correct DB/table identification, proper tool chain, mapping-derived schema, valid SQL computing per-segment min-consumption averages and their differences, and final answer matches GoldResult exactly.
+```",CORRECT
+1482,DLR,6,54712,18167,1402,711,34432,10,"{""dlr_semantic_query"": 2, ""get_le"": 1, ""get_pe_full"": 3, ""execute_sql"": 4}",,FAIL,CORRECT,"Manually verified: pred values [SME=88.02, LAM=84.37, KAM=84.69] match evidence formula (2013-2012)/2013*100, confirmed by independent SQLite replay. Judge opencode call hung (subprocess timeout bypass); ER+RDF same question both CORRECT.",CORRECT
+1481,RDF,9,120958,24012,1835,1927,93184,11,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 3, ""execute_sql"": 7}",,FAIL,CORRECT,"All 5 steps pass — semantic query locates correct tables (customers, yearmonth), mapping returns proper database_url, SQL correctly identifies min-consumption customers per segment and computes differences, final answer matches GoldResult values exactly.
+```",CORRECT
+1482,RDF,7,65209,17439,1516,942,45312,13,"{""rdf_classes"": 1, ""rdf_search"": 6, ""query_rdf_mapping"": 2, ""execute_sql"": 4}",,FAIL,CORRECT,"All steps correct — semantic query locates right tables/fields, mapping used properly, SQL implements the evidence formula (Δ/2013×100), results match GoldResult exactly, and final answer correctly identifies SME as biggest (88.02%) and LAM as lowest (84.37%).
+```",CORRECT

@@ -1,7 +1,27 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"er","1528","debit_card_specializing","PASS","","","CORRECT","100","","16237","671","858","61184","78950"
-"er","1529","debit_card_specializing","FAIL","CORRECT","Manual: gold bug. Gold cross-joined transactions×yearmonth→Price×20 inflated. ER correctly: SUM(Price)=3437.01, yearmonth.Consumption(Jan2012)=67156.94. Both parts correct.","CORRECT","100","You can only execute one statement at a time.","8554","563","787","28032","37936"
-"dlr","1528","debit_card_specializing","FAIL","CORRECT","全部满足——语义定位到 debit_card_specializing.gasstations 表，工具链走正道(semantic_query→list_le→get_le_attrs→get_le_children→get_pe_full→execute_sql)，SQL 使用映射返回的库表字段和 database_url，执行成功，结果 35.68% 与 GoldResult 35.681818 一致（仅四舍五入差异）。 ```","CORRECT","100","","19416","828","912","76800","97956"
-"dlr","1529","debit_card_specializing","FAIL","CORRECT","Manual: new model re-run (0723_1042_1529-1529_D) got both parts correct. Part1 SUM(Price)=3437.01, Part2 yearmonth Jan2012=67156.94.","CORRECT","100","You can only execute one statement at a time.","25300","1409","3845","102016","132570"
-"rdf","1528","debit_card_specializing","PASS","","","CORRECT","100","","14258","793","913","46464","62428"
-"rdf","1529","debit_card_specializing","FAIL","CORRECT","Manual: new model re-run (0723_1039_1529-1529_EDR) got both parts correct. Part1 SUM(Price)=3437.01, Part2 yearmonth Jan2012=67156.94.","CORRECT","100","You can only execute one statement at a time.","17249","515","615","32896","51275"
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+1528,ER,9,78950,16237,671,858,61184,11,"{""er_semantic_query"": 3, ""get_entity_attributes"": 2, ""get_entity_relations"": 1, ""get_entity_mapping"": 2, ""execute_sql"": 3}",,,,,
+1529,ER,5,37936,8554,563,787,28032,9,"{""er_semantic_query"": 1, ""get_entity"": 3, ""get_entity_attributes"": 3, ""execute_sql"": 2}",,,,,
+1528,DLR,15,157146,20265,956,1013,134912,18,"{""dlr_semantic_query"": 4, ""list_le"": 2, ""get_le_attrs"": 2, ""get_le_children"": 2, ""get_pe_full"": 2, ""get_le"": 1, ""execute_sql"": 5}",,FAIL,CORRECT,"全部满足——语义定位到 debit_card_specializing.gasstations 表，工具链走正道(semantic_query→list_le→get_le_attrs→get_le_children→get_pe_full→execute_sql)，SQL 使用映射返回的库表字段和 database_url，执行成功，结果 35.68% 与 GoldResult 35.681818 一致（仅四舍五入差异）。
+```",CORRECT
+1529,DLR,9,132570,25300,1409,3845,102016,12,"{""dlr_semantic_query"": 1, ""get_pe_full"": 3, ""execute_sql"": 8}",,FAIL,INCORRECT,"**逐步检查：**
+
+1. **语义正确（召回库/表）**：❌ 失败。Agent 识别到了 `transactions_1k` 和 `yearmonth` 两个相关表，但最终选择了 `yearmonth.Consumption` 作为""消费金额""，而 GoldSQL 明确使用 `transactions_1k.Price` 并通过 `gasstations` 表确认是在加油站消费。`yearmonth.Consumption` 是月度聚合指标，并非单笔交易的花费金额。
+
+2. **工具正确（调用链）**：✅ 通过了 `dlr_semantic_query → get_pe_full → execute_sql` 的正道流程。
+
+3. **映射正确（库表字段来源）**：✅ SQL 中的库表字段确实来自映射返回，database_url 也是映射提供的。
+
+4. **SQL 执行正确**：⚠️ SQL 本身执行成功，但逻辑错误。Agent 正确查出了 `SUM(Price)=3437.01`（line 15），也发现 January 2012 在 transactions 中无数据（Date 格式不匹配），然后错误地转向 `yearmonth.Consumption` 来替代""花费""。
+
+5. **结果正确**：❌ 完全不一致。Agent 答案为 `5,124,646.35 / 67,156.94`，GoldResult 为 `3,437.01 / 68,740.2`。数量和数量级均不对。
+
+**核心失败点：** Agent 混淆了 `transactions_1k.Price`（单笔交易金额）与 `yearmonth.Consumption`（月度消费汇总），导致语义理解错误，最终答案完全偏离。
+
+```
+VERDICT: INCORRECT
+PROCESS: 40
+REASON: 第1步语义理解错误——将yearmonth.Consumption误认为""花费金额""，实际应为transactions_1k.Price(通过gasstations表确认加油站消费)，导致最终结果与GoldResult完全不符
+```",INCORRECT
+1528,RDF,8,62428,14258,793,913,46464,11,"{""rdf_search"": 3, ""rdf_semantic_query"": 3, ""query_rdf_mapping"": 3, ""execute_sql"": 2}",,PASS,,,CORRECT
+1529,RDF,5,51275,17249,515,615,32896,6,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 3, ""execute_sql"": 2}",,FAIL,INCORRECT,"SQL逻辑错误——使用了Amount而非Price，且Date='201201'过滤条件错放在transactions_1k表上（该表无此格式Date列，应在yearmonth表上过滤），导致结果与GoldResult不一致
+```",INCORRECT

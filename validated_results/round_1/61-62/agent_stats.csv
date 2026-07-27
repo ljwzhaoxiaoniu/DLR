@@ -1,8 +1,8 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"er","1331","student_club","PASS","","","CORRECT","100","","10057","538","762","62464","73821"
-"er","1334","student_club","PASS","","","CORRECT","100","","9297","513","504","44800","55114"
-"dlr","1331","student_club","FAIL","CORRECT","全部五步通过——语义定位正确(member/income表)、工具链完整(semantic_query→get_pe_full×2→execute_sql)、SQL库表字段均来自映射、执行成功、最终答案50与GoldResult一致
-```","CORRECT","100","","15755","249","431","16128","32563"
-"dlr","1334","student_club","PASS","","","CORRECT","100","","9261","306","396","38912","48875"
-"rdf","1331","student_club","PASS","","","CORRECT","100","","18234","361","956","57728","77279"
-"rdf","1334","student_club","PASS","","","CORRECT","100","","7821","273","617","33792","42503"
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+1331,ER,9,73821,10057,538,762,62464,14,"{""er_semantic_query"": 2, ""list_all_tables"": 1, ""get_entity"": 3, ""get_entity_attributes"": 4, ""get_entity_relations"": 2, ""execute_sql"": 2}",,PASS,,,CORRECT
+1334,ER,7,55114,9297,513,504,44800,7,"{""er_semantic_query"": 1, ""get_entity_mapping"": 1, ""get_entity_relations"": 1, ""get_table_schema"": 2, ""execute_sql"": 2}",,PASS,,,CORRECT
+1331,DLR,4,32563,15755,249,431,16128,4,"{""dlr_semantic_query"": 1, ""get_pe_full"": 2, ""execute_sql"": 1}",,FAIL,CORRECT,"全部五步通过——语义定位正确(member/income表)、工具链完整(semantic_query→get_pe_full×2→execute_sql)、SQL库表字段均来自映射、执行成功、最终答案50与GoldResult一致
+```",CORRECT
+1334,DLR,6,48875,9261,306,396,38912,5,"{""dlr_semantic_query"": 2, ""get_pe_full"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
+1331,RDF,7,77279,18234,361,956,57728,6,"{""rdf_classes"": 1, ""rdf_search"": 1, ""rdf_semantic_query"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
+1334,RDF,6,42503,7821,273,617,33792,4,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT

@@ -1,0 +1,12 @@
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+23,ER,8,115584,20317,1941,910,92416,8,"{""er_semantic_query"": 1, ""get_entity_attributes"": 2, ""get_entity_relations"": 1, ""get_entity_mapping"": 2, ""execute_sql"": 2}",,FAIL,CORRECT,"语义定位正确，工具调用链规范，映射来源真实，SQL 正确执行，最终答案与 GoldResult 一致（学校名+街道地址均正确返回）
+```",CORRECT
+24,ER,9,115409,23842,2131,988,88448,10,"{""er_semantic_query"": 2, ""get_entity_attributes"": 3, ""get_entity_mapping"": 2, ""execute_sql"": 3}",,FAIL,CORRECT,"全部条件满足，PredSQL语义正确、工具调用链规范、映射来源正确、执行结果与GoldResult一致
+```",CORRECT
+23,DLR,13,366782,86605,11821,1348,267008,14,"{""dlr_semantic_query"": 2, ""get_le_attrs"": 1, ""get_pe_full"": 3, ""execute_sql"": 8}",,FAIL,INCORRECT,"SQL语义错误——使用ABS()导致方向性丢失,题意要求`Enrollment (K-12)` - `Enrollment (Ages 5-17)` > 30(正向差值),但Pred的ABS()同时召回了Ages 5-17 > K-12的学校,导致结果集与Gold不一致
+```",INCORRECT
+24,DLR,7,100263,30852,6788,1183,61440,13,"{""dlr_semantic_query"": 1, ""get_pe_full"": 3, ""execute_sql"": 9}",,PASS,,,CORRECT
+23,RDF,6,80078,25532,1224,714,52608,5,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 2}",,FAIL,CORRECT,"全部条件满足——语义正确(定位frpm和schools表)、工具链正确(rdf_semantic_query→mapping→execute_sql)、映射正确(库表字段来自映射返回)、SQL执行成功、结果包含GoldResult全部记录(ABS条件覆盖Gold的单向条件,多余行列不扣分)
+```",CORRECT
+24,RDF,6,52956,10506,1488,770,40192,7,"{""rdf_classes"": 1, ""query_rdf_mapping"": 3, ""execute_sql"": 3}",,FAIL,INCORRECT,"SQL逻辑正确但选取的schools.School列与Gold的frpm.School Name列值不同(命名规范差异),导致结果集严格比对失败;语义/工具/映射/SQL执行四步均通过
+```",INCORRECT

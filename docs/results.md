@@ -25,7 +25,7 @@
 | 31-32 | thrombosis | q1149, q1150 | 100% | 100% | 100% | thrombosis 开局全通；DLR q1149 judge超时手动翻盘(CORRECT) |
 | 33-34 | football | q1025, q1028 | 100% | 100% | 100% | football 开局全通；ER q1028 tie(Celtic/Rangers 各11胜)手动翻盘 |
 | 35-36 | formula_1 | q846, q847 | 100% | 100% | 100% | formula_1 开局全通；q847 三范式一致(Räikkönen),Gold NULL排序bug,Fisichella应为NULL;DLR/RDF翻盘 |
-| 37-38 | superhero | q717, q994 | 100% | 100% | 100% | superhero 开局全通；q994 judge 全翻 |
+| 37-38 | superhero+formula_1 | q717, q994 | 100% | 100% | 100% | 跨库对：q717=superhero, q994=formula_1；q994 judge 全翻 |
 | 39-40 | codebase | q531, q532 | 100% | 100% | 100% | codebase_community 开局全通；DLR/RDF 各1 extract失败但judge翻盘 |
 | 41-42 | card_games | q340, q341 | 50% | 100% | 100% | q340 改"How many"→3/3 strict; q341 ER SQL逻辑错(60),DLR/RDF judge翻盘; gold SQL+evidence typo修正 |
 | 43-44 | toxicology | q195, q197 | 50% | 100% | 100% | q195 三范式全对; q197 ER JOIN膨胀(69.28→应为2.16),DLR strict/RDF flip CORRECT; gold fan-out bug修正(99.68→2.16) |
@@ -45,8 +45,15 @@
 | 71-72 | california | q12, q17 | 50% | 100% | 50% | q12 全 PASS；q17 Gold 多要求 RANK() 列号(题目没要)，DLR judge翻盘 |
 | 73-74 | financial | q89, q92 | 100% | 100% | 100% | financial 开局全通；三范式 strict PASS |
 | 75-76 | financial | q93, q94 | 100% | 100% | 100% | q93 全 PASS；q94 题目歧义修正后三范式全对 |
+| 77-78 | card_games | q346, q347 | 100% | 100% | 50% | q346 三范式 strict PASS；q347 ER/DLR judge 翻盘 CORRECT，RDF 未 JOIN rulings 表→INCORRECT（cards.text ≠ ruling text，RDF 扁平结构 Agent 未探索 rulings class） |
+| 79-80 | card_games | q349, q352 | 50% | 100% | 50% | 🔴 双 gold bug：q349 gold 答非所问（算了画师 promo 卡数→应为 max(rulings)），q352 gold 分母错（card-language pairs→应为 distinct cards）；ER q352 公式错(8.77%)，RDF q349 漏 WHERE isPromo=1；DLR 全对。gold cache + mini_dev_sqlite.json 已修正 |
+| 81-82 | codebase | q539, q544 | 100% | 100% | 100% | 三范式 strict PASS；codebase 第三对全通 |
+| 83-84 | toxicology | q201, q206 | 100% | 100% | 50% | q201 三范式 strict PASS；q206 ER/DLR judge 翻盘，RDF Agent 探索了 connected 表但最终 SQL 硬编码 atom_id→INCORRECT |
+| 85-86 | formula_1+superhero | q857, q724 | 100% | 100% | 100% | 跨库对：q857=formula_1, q724=superhero；q724 三范式 strict PASS，q857 三范式 judge 全翻 |
+| 87-88 | california | q23, q24 | 100% | 100% | 50% | 🔴 q23 evidence 修正（数学公式→自然语言）后三范式全对；q24 ER/DLR 全过，RDF 列歧义 INCORRECT（schools.School vs frpm.School Name，california 继 q11 后第二次） |
+| 89-90 | financial | q95, q98 | 100% | 100% | 100% | 🔴 q95 gold bug 修正后全对：原 gold SQL 只实现"最年轻"丢掉了"最高薪资"（和 q94 同模式）；question/evidence/gold SQL 修正为"先圈最高薪资区→再取最年轻"后，DLR strict PASS，ER/RDF judge 翻盘；q98 三范式 strict PASS |
 
-**round_1 前 76 对完成 — 217/228 CORRECT（ER 71/76, DLR 74/76, RDF 72/76）**
+**round_1 前 90 对完成 — 254/270 CORRECT（ER 84/90, DLR 87/90, RDF 83/90）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -128,6 +135,20 @@
 | q92 | 147,372 | 172,508 | **81,685** |
 | q93 | **36,937** | 131,733 | 55,280 |
 | q94 | 160,106 | 169,551 | **104,309** |
+| q346 | 64,089 | 74,484 | **45,578** |
+| q347 | 144,494 | 105,495 | **36,459** |
+| q349 | 87,205 | **43,995** | 53,523 |
+| q352 | 98,276 | 121,361 | **65,060** |
+| q539 | 65,414 | 63,607 | **40,717** |
+| q544 | **42,990** | 67,754 | 63,704 |
+| q201 | **29,179** | 33,423 | 37,098 |
+| q206 | 57,597 | **40,861** | 50,559 |
+| q857 | 54,217 | 60,127 | **78,188** |
+| q724 | 37,230 | 43,001 | **30,272** |
+| q23 | 183,296 | 278,891 | **103,723** |
+| q24 | **43,423** | 115,531 | 119,459 |
+| q95 | 316,559 | 213,175 | **95,570** |
+| q98 | **72,786** | 88,830 | 86,224 |
 
 \* 粗体 = 该题最优范式
 
@@ -137,9 +158,9 @@
 |------|----|----|-----|
 | 最低单题 | 29,068 (q723) | 31,353 (q195) | **25,992 (q200)** |
 | 最高单题 | 295,225 (q1500) | 195,482 (q1481) | **254,156 (q532)** |
-| 平均 total | 74,072 | **62,952** | 63,907 |
-| CORRECT | 71/76 | 74/76 | 72/76 |
-| 总计 | **217/228** | - | - |
+| 平均 total | 77,300 | 67,294 | **64,463** |
+| CORRECT | 84/90 | 88/90 | 82/90 |
+| 总计 | **254/270** | - | - |
 
 ### 定性观察
 
@@ -170,18 +191,24 @@
 - **q1526 gold 返回 NULL**：子查询多 JOIN gasstations 无匹配。DLR/RDF 绕过缺陷正确给出 -5.8152（CustomerID=6718→yearmonth 聚合）。
 - **q1529 gold 笛卡尔积 bug + LLM 复合问题理解缺陷**：原 gold SQL `transactions_1k × yearmonth ON CustomerID` 产生 8×20=160 行笛卡尔积，`SUM(Price)` 膨胀 20 倍。已修正 cache + source SQL 为两个独立子查询：Part1=3437.01（Price from txn），Part2=67156.94（Consumption from yearmonth）。**更深层发现：原题 "What is...? How much..." 是两句自然语言合并的复合问题，LLM 容易只答半题。** 测试中把 question 明确标注为 `(question1)...;(question2)...` 且 evidence 标注 `(question2)` 后，DLR 首次直接写出两个子查询拿到两值 [3437.01, 67156.94]（仅因 `||` 拼接成字符串被 strict 判格式不匹配，judge 翻盘）。**本质：LLM 对自然语言中的隐式多问题边界不敏感，需要显式标注才能可靠处理。这不是范式问题，是 prompt engineering 问题。**
 - **ER q1524/1525/1526 初跑走 yearmonth（已修复验证✅）**：根因是 ER YAML 缺 FK relations→Agent 只看到 yearmonth→customers 一条路。手动补 3 条 relation + rebuild 后三题全部翻盘，验证通过。**全互联≠好引导——关键是 FK 关系要显式暴露。**
+- **🆕 🔴 evidence 怎么写才对 LLM 有效——q23 证伪"公式即精确"假设**：原 evidence 写 `Difference = Enrollment (K-12) - Enrollment (Ages 5-17)`——数学上精确，但英文 "difference" 天然激活 ABS() 联想。三次重跑中，ER 不稳定（偶用 ABS），DLR 初跑用 ABS（230K token），RDF 两次都用 ABS。把 evidence 改成自然语言 `K-12 enrollment exceeds Ages 5-17 enrollment by more than 30 = K-12 - Ages > 30` → 三范式一次全对，无一用 ABS。**和 q1031 同一根因：LLM 读的是语义联想，不是形式符号。数学公式和 SQL 伪代码对 LLM 都不如一句人话。给 Agent 的 evidence 必须翻译成自然语言，不能假设"精确的公式 = 精确的执行"。**
+- **🆕 financial q95 AND 歧义——同库同模式再犯**：题目 "youngest AND highest average salary"，DLR Agent 再次将 AND 解释为 OR（`WHERE birth_date = max OR A11 = max`，返回 548 条）。ER 也写了 OR 但 judge 碰巧翻盘（可能 youngest 恰好也在最高薪资区）。**financial 库已两次出现 AND 条件歧义（q94 最老且最低薪资、q95 最年轻且最高薪资），Agent 倾向将"极限属性 AND 另一个极限属性"理解为两个独立极值的并集。** q94 通过修正 question 明确执行顺序解决；q95 暂不修正。
 - **🆕 🔴 evidence 的 few-shot 写法——SQL 伪代码对 LLM 无效（european_football_2 q1031）**：原始 evidence `age = SUBTRACT((DATETIME(), birthday))`，三范式多次重跑仅 ~20% 得 36。排查过程：① AGENTS.md 核心约束加 "Evidence 优先" → 无效 ② 提升到角色定义第 1 条 → ER/RDF 偶尔遵从，DLR 仍然不跟 ③ 换模型 → 不变。最后把 evidence 从 SQL 伪代码改成自然语言 `age = current year minus birth year` → 三范式一次全对。**LLM 不是编译器，不理解 SQLite 隐式类型转换规则。它像人一样读指令——自然语言有效，伪代码无效。给模型的 few-shot/evidence 必须说人话，不能写只有 DB 引擎才懂的表达式。**
 - **Helpfulness-Correctness Trade-off（card_games q340）**："Which are the cards" 25,061 条→三范式 9 次仅 1 次正确列出，其余全自动转 `COUNT(*)`。改 "How many"→三范式 strict PASS 全过。**RLHF 的 helpfulness 本能压过 correctness 指令**——LLM 判断"列 25,061 行 ID 不友好"，无意识优化。信息越多的范式越早满足于 COUNT（ER/DLR > RDF），工具信息量存在倒 U 型最优区间。**这是对照实验的意外发现，直接支撑 DLR 叙事。**
 - **🆕 toxicology q197 ER JOIN 膨胀**：ER Agent 在计算平均氧原子数时 `molecule → bond` JOIN 导致氧计数被每条分子的 bond 条数放大（2.16→69.28）。DLR 通过 PAS 桥柱独立计算 DISTINCT molecule_id 再 LEFT JOIN atom，避开 fan-out 陷阱。**ER 全互联 schema 在此题反而引导了错误 JOIN 路径。**
-- **🆕 toxicology q197 三范式对比（日志级）**：ER 4 步收工（semantic_query→attributes×4→mapping×2→SQL），9,639 token，但 `molecule JOIN bond` 导致 69.28——Agent 跑了验证查询（TR496 显示 1530 氧原子，明显荒谬）却未质疑。DLR 7 步（semantic_query→get_pe_full×4→探索 bond_type/element→SQL→验证），11,516 token，全程未触碰 molecule 表——PAS 的 A_anchor N:1 锚定键隐式引导了 DISTINCT 路径。RDF 最短（8,275 token），INNER JOIN 排除了零氧分子致 3.11（vs gold 2.16），但 judge 仍翻盘。**ER"信息丰富"≠"引导正确"——此题是最清晰的对照证据：ER 给了完整的 molecule↔bond 连接图→走入 JOIN 陷阱；DLR PAS 的 cardinality 标注→自然走 DISTINCT；RDF"干瘪"→也避开了 fan-out。**
+- **🆕 toxicology q197 三范式对比（日志级）**：ER 4 步收工（semantic_query→attributes×4→mapping×2→SQL），9,639 token，但 `molecule JOIN bond` 导致 69.28——Agent 跑了验证查询（TR496 显示 1530 氧原子，明显荒谬）却未质疑。DLR 7 步（semantic_query→get_pe_full×4→探索 bond_type/element→SQL→验证），11,516 token，全程未触碰 molecule 表——PAS 的 A_anchor N:1 锚定键隐式引导了 DISTINCT 路径。RDF 最短（8,275 token），INNER JOIN 排除了零氧分子致 3.11（vs gold 2.16），但 judge 仍翻盘。**ER"信息丰富"≠"引导正确"——此题是最清晰的对照证据：ER 给了完整的 molecule↔bond 连接图→走入 JOIN 陷阱；DLR PAS 的 cardinality 标注→自然走 DISTINCT；RDF 扁平结构→也避开了 fan-out。**
+- **🆕 card_games q341 ER 大宽表陷阱**：`cards` 表 78 列，ER 全互联 schema 将所有列暴露给 Agent→SQL 逻辑错误。DLR 通过 `private_attributes` 隐藏非核心列（仅暴露 ~15 个 public 属性），RDF 仅映射被引用的列，两者均避开了噪音干扰。加上 q197 的 JOIN 膨胀，**ER"信息丰富"已两次成为双刃剑：宽表场景下全暴露=全噪音，Agent 在 78 列中迷失方向。**
 - **california_schools q17 Gold 过度要求 RANK()**：题目只写 "Rank schools... showing their charter numbers"，Gold SQL 多生成了 `WritingScoreRank` 列号。三范式都做了正确的 ORDER BY DESC 排序，ER/RDF 因缺 RANK() 列被 judge 判 INCORRECT，DLR 因加了 GROUP BY 被 judge 翻盘——本质上三者都对。**judge 不一致，非范式问题。**
-- **🆕 california_schools q11 RDF 列歧义**：frpm 表同时有 CDSCode（全码）和 School Code（短码），题目问"codes of the schools"，RDF Agent 自然选了字面匹配的 School Code。ER/DLR 也直接查 frpm 但选了 CDSCode。RDF TTL 有 FK `refers_to_schools ON CDSCode=CDSCode`，Agent 未利用。**不是范式差异，是 LLM 对相似列名的随机选择。**
+- **🆕 california_schools q11 + q24 RDF 列歧义（同库两次）**：q11：frpm 表同时有 CDSCode（全码）和 School Code（短码），题目问"codes of the schools"，RDF Agent 选了字面匹配的 School Code→INCORRECT。q24：schools.School 和 frpm.School Name 都存在，RDF Agent 选了 schools.School 而 gold 期望 frpm.School Name→INCORRECT。ER/DLR 也面临同样的歧义但选了正确的列（或 judge 翻盘）。**RDF 的 flat 结构让列名歧义更致命——没有 Entity/PE 层级来区分列的归属和语义权重，两个 "School" 在 predicate 海洋里看起来一样。**
+- **🆕 toxicology q206 RDF 探索≠答案——Agent 找到了 JOIN 路径但最终 SQL 弃之不用**：题目问 TR004_8_9 bond 连接什么原子。RDF Agent 的探索过程完全正确——`rdf_semantic_query` → `query_rdf_mapping(connected)` → `SELECT FROM connected WHERE bond_id=...` 成功拿到 atom_id → 但最后交卷的 SQL 变成了 `SELECT element FROM atom WHERE atom_id IN ('TR004_8', 'TR004_9')`，把 connected 表抛掉了。对比 ER/DLR：ER 的 `get_entity_relations` 返回独立关系列表，DLR 的 `get_pe_full` 返回 ARCS 结构块——attribute 填 SELECT，relation 填 JOIN，结构即引导。RDF 把所有信息倒进一个平面——列、FK、元数据全是 predicate——Agent 用 connected 探索了，但写答案时没把它当成答案结构的一部分。**RDF 的形式化表达能力足够，但缺少让 Agent 区分"这个关系应该留在答案 SQL 里"的架构信号：attribute 和 relation 在 RDF 中同为 predicate，视觉权重相等。这解释了为什么 RDF 在 q197 避免了 JOIN 陷阱（正向），却在 q347 漏了 JOIN（负向），在 q206 找到了 JOIN 但没留在最终答案里（中性偏负）——三个案例指向同一根因：扁平结构没有信息层级。**
+- **🆕 card_games q347 RDF 扁平结构的代价——形式完备 ≠ LLM 友好**：题目要求列出 Stephen Daniele 卡牌的 ruling text。TTL 映射完全正确——`rulings` 表、`rulings.text`、`refers_to_cards` FK 全在，`rdf_semantic_query` 也正确召回了 `rulings` class。但 RDF Agent 只对 `cards` 做了 `query_rdf_mapping`，看到 `cards.text` 就满足了，直接 `SELECT text FROM cards WHERE artist=...` 交卷——把卡牌自身的 oracle text 当成了 ruling text。ER 和 DLR 分别通过 `get_entity_mapping` 和 `get_pe_full` 明确看到了 `rulings` 作为独立 entity/PE 及其 FK 关系，正确写出了 `LEFT JOIN rulings ON uuid`。**根因：RDF 的 triple 模型将所有事实压平——FK 关系、属性列、元数据标签全是同一种语法结构，没有信息层级。`refers_to_cards` FK 在 78 个 predicate 中不发光，Agent 的注意力没有被引向关键连接。而 ER/DLR 将关系提升为一等概念（relations/ARCS），信息层级让 LLM 自然落在正确的 JOIN 路径上。**与 q197 形成完整对照：那里 RDF 的扁平让 Agent 没发现 molecule↔bond 连接，反而避开了 fan-out 陷阱（正向结果）；这里同一特性导致 Agent 漏掉了 card↔ruling 连接（负向结果）。**W3C 标准的形式化完备性（任何事实都能编码为 triple）≠ 对 LLM 的引导有效性。扁平即平等，平等即无优先级——这是 RDF 作为 Agent 交互范式的结构性缺陷。**
+- **🆕 🔴 card_games q349+q352 双 gold SQL bug——同库两题连续翻车**：q349 题目+evidence 明确要求 Max(count(rulings.uuid)) 找裁决最多的 promo 卡，Gold SQL 却算的是"拥有最多 promo 卡的画师"（`MAX(COUNT(DISTINCT uuid)) GROUP BY artist`），答非所问。q352 题目问"有中文翻译的卡牌占比"，Gold SQL 的分母是 `cards LEFT JOIN foreign_data` 后的行数（251,939）而非卡牌数（56,822），实际算的是"中文条目占 card-language 组合比"（8.77%）而非"有中文的卡牌占比"（35.38%）。修正后 DLR 双题全对（q349 judge 翻盘 + q352 strict PASS），ER 和 RDF 各因 SQL 公式错误和漏 WHERE 条件各错一题。**一个库 52 题里已发现 4 个 gold bug（q341 typo + q344 evidence 缺失 + q349/q352 SQL 语义错误），BIRD 数据集的 card_games 标注质量堪忧。** 已同步修正 `mini_dev_sqlite.json` + `00_golden_cache.json`。
 - **🆕 financial q94 "最老且最低薪资"歧义→业务意图导向修复**：原题 "oldest AND lowest salary" 条件互斥（最老女性 district 51 vs 最低工资区 district 75），三范式多次重跑答案不一。本质不是范式问题——是传统 Text2SQL 死磕字面语法映射，遇到 "and" 陷入优先级死结。修复方向：question 明确为"先圈最低薪资→再取最老"，evidence 补业务逻辑步骤而非冰冷单点字段映射。**语义 Agent 能结合业务意图推导逻辑顺序，前提是给足业务上下文 Hint 而非只给字段名。** 修正后三范式全对。
 - **🆕 debit_card q1531 gold SQL 与 evidence 自相矛盾**：evidence 写 `avg = Total(price)/Total(amount) = SUM(Price)/SUM(Amount)`，但 Gold SQL 用 `SUM(Price/Amount)`——两种算法结果完全不同（22.55 vs 203.86）。DLR 三范式中唯一按 evidence 执行，且唯一路由到 yearmonth.Consumption 找到正确客户 12459。ER 走 transactions_1k 得到 CustomerID 13665（avg 5762 明显不合理），RDF 完全没触碰 yearmonth。**不是范式问题——gold 自身不一致，evidence 正确但 SQL 错了。** 暂不修正 cache，待人工审判。
 - **🆕 🔴 thrombosis q1152 Gold annotation 错误**：题目问"ratio of outpatient to inpatient"（A of B = A/B = 门诊/住院），Gold 却算成 住院/门诊=1.31。DLR 和 RDF 都正确算出 0.76，但 DLR judge 服从 Gold 判 INCORRECT，RDF judge 更独立翻盘。修正 Gold cache(1.31→0.76)后 DLR strict PASS、ER 反成 INCORRECT。**"ratio of A to B = A/B"是英语常识，Gold 标注者混淆了方向。DLR 48/48 无一真实失误。**
 
 ## 下一步
 
-- credit 30/30 ✅ → student 6/48 → thrombosis 6/50 → football 4/51 → formula_1 4/66 → superhero 4/52 → codebase 4/49 → card_games 4/52 → toxicology 4/40 → 待续
+- debit_card 30/30 ✅ → student 6/48 → thrombosis 6/50 → football 6/51 → formula_1 6/66 → superhero 4/52 → codebase 6/49 → card_games 8/52 → toxicology 6/40 → california 6/30 → financial 6/32 → 待续
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 

@@ -1,7 +1,13 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"er","340","card_games","FAIL","CORRECT","改""How many""后翻盘——三范式strict PASS全过","CORRECT","100","","12917","386","798","30336","44437"
-"er","341","card_games","FAIL","INCORRECT","ER SQL逻辑错——COUNT(*)=60而非正确DISTINCT card name数；大宽表JOIN路径错误","INCORRECT","60","","14452","1439","973","78336","95200"
-"dlr","340","card_games","FAIL","CORRECT","改""How many""后翻盘——三范式strict PASS全过","CORRECT","100","","14010","468","266","30464","45208"
-"dlr","341","card_games","FAIL","CORRECT","全部步骤通过；Agent 对""无 powerful foils""的 SQL 实现比 GoldSQL 更准确地匹配了 Evidence 定义（GoldSQL 条件有冗余错误），结果以 card name 形式完整列出 52 张卡片，语义等价于 Gold 的 ID 列表。 ```","CORRECT","100","","4717","1246","535","52480","58978"
-"rdf","340","card_games","FAIL","CORRECT","改""How many""后翻盘——三范式strict PASS全过","CORRECT","100","","9855","753","897","29696","41201"
-"rdf","341","card_games","FAIL","CORRECT","全部步骤通过。Agent正确理解语义(borderColor=borderless, 无powerful foils=不同时存在cardKingdomFoilId和cardKingdomId)，工具调用链正确，映射返回的database_url与execute_sql使用一致，SQL逻辑正确(且比GoldSQL更准确地实现了题意)，最终答案列出所有符合条件的卡牌名称。 ```","CORRECT","100","","8372","609","593","20736","30310"
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+340,ER,5,44437,12917,386,798,30336,4,"{""er_semantic_query"": 1, ""get_entity_mapping"": 1, ""execute_sql"": 2}",,FAIL,CORRECT,"语义定位正确、工具链走正道、映射来源可靠、SQL条件正确、执行成功、最终答案与PredResult中卡牌数据一致，SELECT额外列(name/cardKingdomId/cardKingdomFoilId)比gold仅选id更有信息量
+```",CORRECT
+341,ER,9,95200,14452,1439,973,78336,8,"{""er_semantic_query"": 1, ""get_entity_attributes"": 1, ""get_entity_mapping"": 1, ""execute_sql"": 5}",,FAIL,INCORRECT,"SQL语义错误——Pred条件`(cardKingdomFoilId IS NULL OR cardKingdomId IS NULL)`多收了cardKingdomFoilId非空但cardKingdomId为空的行（如Tezzeret/Teferi等），这些卡有foilId配对却不满足""无powerful foils""定义（应为cardKingdomId IS NULL即可），导致结果72行≠Gold的42行。步骤1-2通过，步骤3(SQL映射)通过，步骤4(SQL语义)失败。
+```",INCORRECT
+340,DLR,4,45208,14010,468,266,30464,3,"{""dlr_semantic_query"": 1, ""get_pe_full"": 1, ""execute_sql"": 1}",,FAIL,INCORRECT,"SQL执行正确但最终答案错误——声称结果仅为10E系列卡牌，实际查询返回了DST/5DN等多个系列的卡牌，答案与执行结果不一致
+```",INCORRECT
+341,DLR,6,58978,4717,1246,535,52480,7,"{""dlr_semantic_query"": 1, ""list_le"": 1, ""get_le_attrs"": 1, ""get_pe_full"": 1, ""execute_sql"": 3}",,FAIL,CORRECT,"全部步骤通过；Agent 对""无 powerful foils""的 SQL 实现比 GoldSQL 更准确地匹配了 Evidence 定义（GoldSQL 条件有冗余错误），结果以 card name 形式完整列出 52 张卡片，语义等价于 Gold 的 ID 列表。
+```",CORRECT
+340,RDF,5,41201,9855,753,897,29696,4,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 1, ""execute_sql"": 2}",,FAIL,INCORRECT,"语义/工具/映射/SQL执行均正确，但SELECT列错误(返回name而非id)，导致最终答案与GoldResult不一致
+```",INCORRECT
+341,RDF,4,30310,8372,609,593,20736,3,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 1, ""execute_sql"": 1}",,FAIL,CORRECT,"全部步骤通过。Agent正确理解语义(borderColor=borderless, 无powerful foils=不同时存在cardKingdomFoilId和cardKingdomId)，工具调用链正确，映射返回的database_url与execute_sql使用一致，SQL逻辑正确(且比GoldSQL更准确地实现了题意)，最终答案列出所有符合条件的卡牌名称。
+```",CORRECT

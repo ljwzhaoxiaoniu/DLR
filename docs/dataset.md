@@ -288,6 +288,47 @@ FROM (
 | **修复** | 原题条件互斥（最老≠最低工资区）。question 明确为"先圈最低工资区→再取最老"，evidence 补执行顺序。修正 gold SQL + cache + source JSON。 |
 | **验证** | DLR 三次中两次命中 3214+4431；ER/RDF 因条件模糊各次答案不一。2026-07-26 修正完成。 |
 
+### qid 349 — `card_games`（gold SQL 答非所问：算了画师 promo 卡数而非裁决数，2026-07-26 修正）
+
+- **问题**：Name the card and artist with the most ruling information. Also state if the card is a promotional printing.
+- **evidence**：with the most ruling information refers to Max(count(rulings.uuid)); the card is the promotional printing refers to isPromo = 1;
+
+| | 内容 |
+|---|---|
+| **Gold SQL（原）** | 子查询 `SELECT artist FROM cards WHERE isPromo=1 GROUP BY artist HAVING COUNT(DISTINCT uuid) = (SELECT MAX(count_uuid) FROM (SELECT COUNT(DISTINCT uuid) AS count_uuid FROM cards WHERE isPromo=1 GROUP BY artist))` — 找的是**拥有最多 promo 卡的画师**，而非裁决最多的卡 |
+| **Bug 本质** | 题目+evidence 明确要求 Max(count(rulings.uuid))，Gold SQL 却用 MAX(COUNT(DISTINCT uuid)) 按 artist 聚合，完全无视了 rulings 表和 evidence 公式。Gold answer=Serrated Arrows/John Avon（John Avon 有 96 张 promo 卡最多） |
+| **正确结果（已写入 cache）** | `SELECT name, artist, isPromo FROM cards JOIN rulings ON uuid GROUP BY uuid ORDER BY COUNT(rulings.uuid) DESC LIMIT 1` → **Teferi's Protection / Chase Stone / isPromo=1**（27 rulings） |
+| **验证** | ER/DLR 均正确找到 Teferi's Protection，judge 翻盘时明确指出 gold 语义错误。RDF 漏 WHERE isPromo=1 被判 INCORRECT。2026-07-26 修正 gold cache + mini_dev_sqlite.json。 |
+
+### qid 352 — `card_games`（gold SQL 分母口径错：card-language pairs 而非 cards，2026-07-26 修正）
+
+- **问题**：What is the percentage of cards available in Chinese Simplified language?
+- **evidence**：percentage = number of Chinese Simplified language card / total number of cards; cards available in Chinese Simplified refers to language = 'Chinese Simplified'  in foreign_data;
+
+| | 内容 |
+|---|---|
+| **Gold SQL（原）** | `CAST(SUM(CASE WHEN T2.language='Chinese Simplified' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.id) FROM cards T1 LEFT JOIN foreign_data T2 ON T1.uuid = T2.uuid` — LEFT JOIN 后 COUNT(T1.id) 统计的是所有 card-language 组合行数（251,939），而非卡牌数（56,822） |
+| **Bug 本质** | 分母是 card-language pairs，分子是 Chinese 条目数。算的是"中文条目占所有 card-language 对的比例"=8.77%，而非"有中文翻译的卡牌占所有卡牌的比例"=35.38% |
+| **正确结果（已写入 cache）** | `CAST(COUNT(DISTINCT CASE WHEN language='Chinese Simplified' THEN T1.uuid END) AS REAL) * 100 / COUNT(DISTINCT T1.uuid) FROM cards T1 LEFT JOIN foreign_data T2 ON T1.uuid = T2.uuid` → **35.38%**（20,106 张有中文 / 56,822 张总计） |
+| **验证** | DLR 正确算出 35.38%，gold 修正后 strict PASS。ER 仅查 foreign_data 得 8.77%（错公式），RDF SQL 正确但 judge 初判被旧 gold 误导→手动翻盘。2026-07-26 修正 gold cache + mini_dev_sqlite.json。 |
+
+> **card_games 已发现 4 个 gold/evidence bug**：q341 typo、q344 evidence 缺领域知识、q349 答非所问、q352 分母口径错。标注质量堪忧。
+
+### qid 95 — `financial`（gold SQL 只实现"最年轻"丢掉了"最高薪资"，2026-07-27 修正）
+
+- **问题**：List out the account numbers of clients who are youngest and have highest average salary?
+- **原 evidence**：`birth_date 比较规则 + A11 指平均薪资`（仅定义术语，未说明 AND 如何组合）
+
+| | 内容 |
+|---|---|
+| **Gold SQL（原）** | `WHERE client_id = (SELECT client_id FROM client ORDER BY birth_date DESC LIMIT 1)` — 只取了最年轻的人，完全无视 "highest average salary" 条件 |
+| **Bug 本质** | 最年轻的人（client 3428, district 42, A11=8388）不在最高薪资区（district 1, A11=12541）。gold 只实现了 "youngest"，"highest" 被吞了 |
+| **正确结果（已写入 cache）** | 先圈最高薪资区（A11=MAX）→ 再取该区最年轻：client 1660, account **1372** |
+| **修正** | question 改 "in the highest average salary district and are youngest"，evidence 补执行顺序 "first find highest A11 district, then youngest"，gold SQL 补 `WHERE district_id = (SELECT district_id FROM district ORDER BY A11 DESC LIMIT 1) AND birth_date = (SELECT MAX(birth_date) FROM client WHERE district_id = ...)` |
+| **验证** | 和 q94 同模式——financial 库的 AND of 极值条件，需明确执行顺序才能有解。2026-07-27 修正 gold cache + mini_dev_sqlite.json。 |
+
+> **financial 已发现 2 个 gold/evidence bug**：q94 条件互斥（最老≠最低工资区）、q95 gold 只实现一半条件（丢掉了 highest salary）。
+
 
 - **问题**：What is the ratio of outpatient to inpatient followed up treatment among all the 'SLE' diagnosed patient?
 
@@ -329,6 +370,19 @@ FROM (
 | **Bug** | evidence 写了 `LastAccessDate > '2014-09-01'` 未用 DATE()，导致 Agent 照做得到 5146（含当天有时间分量的记录）。Gold 正确答案 4941 需要 `DATE(LastAccessDate) > '2014-09-01'` |
 | **修正** | `DATE(LastAccessDate) > '2014-09-01'`（LastAccessDate 是 datetime 列，需用 DATE() 取日期部分） |
 | **教训** | 排查失败先看 question + evidence + gold，不要先怪 Agent/范式/模型 |
+
+### qid 23 — `california_schools`（evidence 数学公式触发 ABS() 误解，2026-07-27 修正）
+
+- **问题**：List the names of schools with more than 30 difference in enrollments between K-12 and ages 5-17?
+- **原 evidence**：`Difference = Enrollment (K-12) - Enrollment (Ages 5-17)`
+
+| | 内容 |
+|---|---|
+| **Bug** | evidence 写数学公式 `Diff = A - B`，但英文 "difference" 天然激活 LLM 的 ABS() 联想。三次重跑中 DLR 初跑加 ABS（230K token），RDF 两次都加 ABS，ER 偶有不稳。**LLM 不是编译器——它读语义联想而非形式符号。** |
+| **修正** | `K-12 enrollment exceeds Ages 5-17 enrollment by more than 30 = Enrollment (K-12) - Enrollment (Ages 5-17) > 30`（自然语言描述方向，公式作为补充） |
+| **验证** | 修正后三范式一次全对，无一用 ABS。2026-07-27 修正 mini_dev_sqlite.json。 |
+
+> **和 q1031 同一根因**：SQL 伪代码（`age = SUBTRACT(DATETIME(), birthday)`）和数学公式（`Diff = A - B`）对 LLM 都不如一句人话。给 Agent 的 evidence 必须翻译成自然语言。
 
 
 ### qid 198 — `toxicology`（evidence 公式错误导致 gold 同样出错，2026-07-24 修正）

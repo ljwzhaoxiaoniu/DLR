@@ -1,10 +1,10 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"dlr","1505","debit_card_specializing","FAIL","CORRECT","All 5 steps pass — semantic query correctly located debit_card_specializing DB and yearmonth/customers tables; tool chain properly followed SOP; SQL used mapped columns from get_pe_full; execution succeeded; the agent's interpretation of the question as ""distinct customers with any monthly consumption > 1000"" is semantically more faithful to the phrasing ""how many of them have a monthly consumption over 1000"" than the Gold's COUNT(*) which counts duplicate customer-month rows across multiple months.
-```","CORRECT","100","","15599","357","306","18304","34566"
-"dlr","1506","debit_card_specializing","PASS","","","CORRECT","100","","20872","757","699","64768","87096"
-"er","1505","debit_card_specializing","FAIL","CORRECT","All 5 steps pass. COUNT(DISTINCT CustomerID) correctly answers ""how many of them"" (unique customers) — same logic as DLR/RDF which were judged CORRECT. Manual override: judge timeout caused UNKNOWN→INCORRECT default.
-```","CORRECT","100","","7994","404","300","27136","35834"
-"er","1506","debit_card_specializing","PASS","","","CORRECT","100","","17085","916","445","39168","57614"
-"rdf","1505","debit_card_specializing","FAIL","CORRECT","All 5 steps pass. Question asks ""how many of them"" (customers), not ""how many records"". COUNT(DISTINCT CustomerID) correctly counts unique customers meeting the condition — semantically more faithful than Gold's COUNT(*) which double-counts multi-month customers. Manual override: same SQL logic as DLR which was already judged CORRECT.
-```","CORRECT","100","","8191","526","539","28288","37544"
-"rdf","1506","debit_card_specializing","PASS","","","CORRECT","100","","19384","1280","912","80768","102344"
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+1505,ER,0,0,0,0,0,0,0,{},,FAIL,INCORRECT,"Agent未生成任何SQL，error=no SQL extracted，工具调用链亦为空，全程未执行。
+```",INCORRECT
+1506,ER,6,57614,17085,916,445,39168,8,"{""list_all_tables"": 1, ""er_semantic_query"": 1, ""get_entity_attributes"": 3, ""get_entity_mapping"": 1, ""execute_sql"": 2}",,PASS,,,CORRECT
+1505,DLR,4,34566,15599,357,306,18304,7,"{""dlr_semantic_query"": 1, ""get_le_attrs"": 2, ""get_pe_full"": 3, ""execute_sql"": 1}",,FAIL,CORRECT,"All 5 steps pass — semantic query correctly located debit_card_specializing DB and yearmonth/customers tables; tool chain properly followed SOP; SQL used mapped columns from get_pe_full; execution succeeded; the agent's interpretation of the question as ""distinct customers with any monthly consumption > 1000"" is semantically more faithful to the phrasing ""how many of them have a monthly consumption over 1000"" than the Gold's COUNT(*) which counts duplicate customer-month rows across multiple months.
+```",CORRECT
+1506,DLR,7,87096,20872,757,699,64768,7,"{""dlr_semantic_query"": 1, ""get_pe_full"": 4, ""recall_pe"": 1, ""execute_sql"": 1}",,PASS,,,CORRECT
+1505,RDF,5,37544,8191,526,539,28288,6,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 3, ""execute_sql"": 2}",,FAIL,CORRECT,"All 5 steps pass. Question asks ""how many of them"" (customers), not ""how many records"". COUNT(DISTINCT CustomerID) correctly counts unique customers meeting the condition — semantically more faithful than Gold's COUNT(*) which double-counts multi-month customers. Manual override: same SQL logic as DLR which was already judged CORRECT.
+```",CORRECT
+1506,RDF,9,102344,19384,1280,912,80768,9,"{""rdf_semantic_query"": 2, ""query_rdf_mapping"": 3, ""execute_sql"": 4}",,PASS,,,CORRECT

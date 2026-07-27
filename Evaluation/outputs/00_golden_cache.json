@@ -165357,15 +165357,15 @@
     "db_id": "card_games",
     "ok": true,
     "columns": [
+      "name",
       "artist",
-      "isPromo",
-      "name"
+      "isPromo"
     ],
     "rows": [
       [
-        "John Avon",
-        1,
-        "Serrated Arrows"
+        "Teferi's Protection",
+        "Chase Stone",
+        1
       ]
     ],
     "error": null
@@ -165375,11 +165375,11 @@
     "db_id": "card_games",
     "ok": true,
     "columns": [
-      "CAST(SUM(CASE WHEN T2.language = 'Chinese Simplified' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(T1.id)"
+      "percentage"
     ],
     "rows": [
       [
-        8.7734
+        35.384182182957304
       ]
     ],
     "error": null
@@ -297863,7 +297863,7 @@
     ],
     "rows": [
       [
-        2836
+        1372
       ]
     ],
     "error": null

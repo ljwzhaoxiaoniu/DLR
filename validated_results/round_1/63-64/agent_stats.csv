@@ -1,7 +1,7 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"er","1155","thrombosis_prediction","PASS","","","CORRECT","100","","13935","2952","859","66688","84434"
-"er","1156","thrombosis_prediction","PASS","","","CORRECT","100","","7049","635","885","59392","67961"
-"dlr","1155","thrombosis_prediction","PASS","","","CORRECT","100","","5884","2913","291","47616","56704"
-"dlr","1156","thrombosis_prediction","PASS","","","CORRECT","100","","15692","480","389","16768","33329"
-"rdf","1155","thrombosis_prediction","PASS","","","CORRECT","100","","24626","5083","664","84608","114981"
-"rdf","1156","thrombosis_prediction","PASS","","","CORRECT","100","","2212","600","364","25344","28520"
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+1155,ER,7,84434,13935,2952,859,66688,9,"{""er_semantic_query"": 1, ""list_all_tables"": 1, ""get_table_schema"": 3, ""get_entity_mapping"": 2, ""execute_sql"": 2}",,PASS,,,CORRECT
+1156,ER,7,67961,7049,635,885,59392,9,"{""er_semantic_query"": 2, ""get_entity_attributes"": 3, ""get_table_schema"": 1, ""get_entity_mapping"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
+1155,DLR,6,56704,5884,2913,291,47616,5,"{""dlr_semantic_query"": 2, ""get_pe_full"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
+1156,DLR,4,33329,15692,480,389,16768,4,"{""dlr_semantic_query"": 1, ""get_pe_full"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
+1155,RDF,9,114981,24626,5083,664,84608,8,"{""rdf_semantic_query"": 2, ""query_rdf_mapping"": 3, ""rdf_search"": 1, ""execute_sql"": 2}",,PASS,,,CORRECT
+1156,RDF,4,28520,2212,600,364,25344,5,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 3, ""execute_sql"": 1}",,PASS,,,CORRECT
