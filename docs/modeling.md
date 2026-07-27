@@ -208,6 +208,41 @@ PAS: Budget ──funds──→ Expense        (A: Budget)
 7. **PE 的 A_anchor 有逻辑意义吗？**（纯 junction FK → 换锚点或升级为独立 LE + PAS）**[规则 6]**
 8. **有没有独立业务概念被埋在某 LE 下？**（如 Expense 埋 EventFinance、Power 埋 HeroFeature）→ 拆为独立 LE + 直接 PAS **[规则 7]**
 9. **LE description 够丰富吗？**（3-5 词不够——至少包含该 LE 下所有关键字段名和业务语义）**[规则 8]**
+10. **所有同名异义的列都被 disambiguate 了吗？**（如三个 `number` 列分属 driver/qualifying/results → 每个必须有 description 说明含义）**[规则 9]**
+11. **WHERE / GROUP BY / JOIN 高频列都是 public 吗？**（gender, birth_date, element, bond_type, buildUpPlaySpeed — Agent 能找到但要 2-3 步探索）**[规则 10]**
+12. **LE description 用英文写了吗？**（中文 BGE 模型 + 英文查询 → 向量空间不匹配，例名要列全，不能只藏在 private 的 description 里）**[规则 11]**
+
+### 2.10 案例：toxicology — JOIN 键 private + 缺 PAS + 同名列歧义
+
+**问题**：q207 DLR 110K/10步/4次 execute_sql。`atom.element`、`bond.bond_type`、`connected.atom_id/atom_id2` 全是 private，Bond→Atom 无 PAS，LE description 稀疏（3-4 词）。
+
+**修复**：element/bond_type/atom_id/atom_id2 → public；新增 PAS `Bond→Atom`；LE description 英文 + 字段名。效果：110K→43K（-60%）。
+
+**同时发现**：toxicology 已跑 8 题，全部是 strict PASS 或 judge 翻盘 CORRECT——模型"能工作"，但 Agent 额外花 2-3 步探索 private 列。**public/private 不影响正确性，但影响效率（步数×token）。**
+
+### 2.11 案例：formula_1 — 三个同名列 `number` 全无描述
+
+**问题**：q861 "What is his number" → 三范式全 INCORRECT。`drivers.number`（车手号码）、`qualifying.number`（排位名次）、`results.number`（正赛名次）三个同名列 description 全空，Agent 无法区分。
+
+**修复**：evidence 补 `his number refers to drivers.number`；DLR/ER/RDF 三范式为三个 `number` 列补英文 description（"Driver number: permanent race car number, NOT qualifying position" 等）。
+
+**教训**：evidence 是主因，但模型 description 是防线。如果三个 `number` 预先有明确描述，即使 evidence 有歧义，Agent 也能自主选择正确列。
+
+### 2.12 案例：financial — LE description 完全缺失
+
+**问题**：q100 DLR 148K。`LOGICAL.Client`、`LOGICAL.Account`、`LOGICAL.District` **完全没有 `description` 字段**——向量仅 = 实体名（1 词）。问题含 "customers"→debit_card 的 `LOGICAL.Customer`（9 词描述）稳赢。Agent 前 7 步全浪费在错误数据库。
+
+**修复**：三个 LE 补英文 description，`client.gender`/`birth_date`、`district.A2` 升 public。效果：q100 148K→89K（-40%）。
+
+**结论**：**LE description 缺失 = 语义路由随机。** 这是所有问题中最严重的一类——不是效率问题，是正确性问题（Agent 走错库）。
+
+### 2.13 案例：superhero — 例名在 private 不进向量
+
+**问题**：q732 DLR 120K/5次 `dlr_semantic_query`。Agent 搜 "speed"→`LOGICAL.Attribute` 的 LE description 不含这个词（只有 "英雄属性数值"），实际在 `attribute_name` 的 private description 里（"...Speed, Agility 等"）→ 零命中。
+
+**修复**：`power_name`/`attribute_name`/`attribute_value` → public；LE description 改英文，包含例名。效果：120K→56K（-53%）。
+
+**教训**：`dlr_semantic_query` 只搜 LE name+description——private 属性描述再好也进不了向量。LE description 写通用描述如 "英雄属性数值" 不够——必须列出具体例名（"Intelligence, Strength, Speed, Agility"）。
 
 ---
 
