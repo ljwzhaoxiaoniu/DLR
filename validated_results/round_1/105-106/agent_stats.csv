@@ -1,0 +1,10 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","100","financial","PASS","","","CORRECT","100","","9117","466","1056","45696","56335"
+"er","99","financial","FAIL","CORRECT","全部条件满足——语义正确(duration>12, 1993年开户), 工具链走正道, SQL使用映射库表, 执行成功, 结果account_id=10451与GoldResult一致(多返回amount列不扣分)
+```","CORRECT","100","","9616","647","1674","53248","65185"
+"dlr","100","financial","PASS","","","CORRECT","100","","27250","1072","1276","118528","148126"
+"dlr","99","financial","FAIL","CORRECT","全部步骤通过——语义映射正确，工具调用链规范，SQL基于映射返回的库表字段执行，多步查询逻辑合理，最终答案 Account ID 10451 与 GoldResult 一致。
+```","CORRECT","100","","21967","937","820","71424","95148"
+"rdf","100","financial","FAIL","CORRECT","Agent correctly identified the financial DB, mapped client/district/account/disp via RDF, constructed a valid multi-table join (account→disp→client→district) with gender='F', birth_date<'1950-01-01', A2='Sokolov', executed successfully and returned 8 matching GoldResult.","CORRECT","100","no such column: c.client_id","14928","401","1421","40320","57070"
+"rdf","99","financial","FAIL","CORRECT","语义正确（定位loan/account表），工具调用链走正道（semantic_query→mapping→execute_sql），SQL用子查询取MAX(amount)正确表达""最高批准金额""，最终答案account_id=10451与GoldResult一致
+```","CORRECT","100","","20428","955","1009","59264","81656"
