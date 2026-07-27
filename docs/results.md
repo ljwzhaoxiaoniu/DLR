@@ -162,7 +162,7 @@
 | q1339 | 145,494 | 34,001 | **84,865** |
 | q1157 | 54,114 | **41,491** | 52,667 |
 | q1162 | **28,614** | 65,198 | 36,698 |
-| q207 | 53,325 | 109,599 | **37,239** |
+| q207 | 53,325 | 43,279 | **37,239** |
 | q208 | 69,775 | **41,900** | 92,819 |
 
 \* 粗体 = 该题最优范式
@@ -173,7 +173,7 @@
 |------|----|----|-----|
 | 最低单题 | 29,068 (q723) | 31,353 (q195) | **25,992 (q200)** |
 | 最高单题 | 295,225 (q1500) | 195,482 (q1481) | **254,156 (q532)** |
-| 平均 total | 76,381 | 66,696 | **63,885** |
+| 平均 total | 76,381 | 66,033 | **63,885** |
 | CORRECT | 94/100 | 98/100 | 91/100 |
 | 总计 | **283/300** | - | - |
 
@@ -222,6 +222,7 @@
 - **🆕 financial q94 "最老且最低薪资"歧义→业务意图导向修复**：原题 "oldest AND lowest salary" 条件互斥（最老女性 district 51 vs 最低工资区 district 75），三范式多次重跑答案不一。本质不是范式问题——是传统 Text2SQL 死磕字面语法映射，遇到 "and" 陷入优先级死结。修复方向：question 明确为"先圈最低薪资→再取最老"，evidence 补业务逻辑步骤而非冰冷单点字段映射。**语义 Agent 能结合业务意图推导逻辑顺序，前提是给足业务上下文 Hint 而非只给字段名。** 修正后三范式全对。
 - **🆕 debit_card q1531 gold SQL 与 evidence 自相矛盾**：evidence 写 `avg = Total(price)/Total(amount) = SUM(Price)/SUM(Amount)`，但 Gold SQL 用 `SUM(Price/Amount)`——两种算法结果完全不同（22.55 vs 203.86）。DLR 三范式中唯一按 evidence 执行，且唯一路由到 yearmonth.Consumption 找到正确客户 12459。ER 走 transactions_1k 得到 CustomerID 13665（avg 5762 明显不合理），RDF 完全没触碰 yearmonth。**不是范式问题——gold 自身不一致，evidence 正确但 SQL 错了。** 暂不修正 cache，待人工审判。
 - **🆕 🔴 thrombosis q1152 Gold annotation 错误**：题目问"ratio of outpatient to inpatient"（A of B = A/B = 门诊/住院），Gold 却算成 住院/门诊=1.31。DLR 和 RDF 都正确算出 0.76，但 DLR judge 服从 Gold 判 INCORRECT，RDF judge 更独立翻盘。修正 Gold cache(1.31→0.76)后 DLR strict PASS、ER 反成 INCORRECT。**"ratio of A to B = A/B"是英语常识，Gold 标注者混淆了方向。DLR 48/48 无一真实失误。**
+- **🆕 🔴 toxicology DLR 建模修复——private_attributes 隐藏 JOIN 键 + 缺 PAS**：q207 DLR 旧模型 110K/10步/4次execute_sql。根因：`atom.element`、`bond.bond_type`、`connected.atom_id/atom_id2` 全是 private；Bond→Atom 无 PAS（Agent 需手动解析 connected 表）；LE description 稀疏（3-4 词）。修复：全部关键列升 public、新增 PAS `Bond→Atom`、丰富 LE description。效果：q207 DLR 110K/10步→43K/5步 strict PASS（-60%）。**和 student_club 同一根因：核心查询列和 JOIN 键不能是 private，独立业务关系必须有 PAS。**
 - **🆕 🔴 toxicology q207 Gold SQL bug——分子级关联 vs 原子级关联**：题目问"What elements are in a double type bond"（参与双键的元素），Gold SQL 用 `atom JOIN bond ON molecule_id`——这是分子级关联，只要分子里有双键，该分子所有原子全被召回（13 元素：br, c, ca, cl, cu, f, h, n, o, p, pb, s, sn）。三范式均使用 `bond → connected → atom` 精确定位双键两端的原子（5 元素：c, ca, n, o, s）。独立验证确认三范式正确、gold 错误。已修正 gold cache + mini_dev_sqlite.json。**和 q1481/q1482/q1529 同模式：gold SQL 的 JOIN 粒度错了。**
 - **🆕 🔴 student_club DLR 建模修复——语义路由错库根因与解法**：q1339 DLR 首跳 `dlr_semantic_query("expense...first_name last_name")` 将 "expense" 路由到 debit_card（LOGICAL.Consumption "monthly bills + transaction details" 9 词丰富描述 > LOGICAL.EventFinance "Event budget and actual expenses" 5 词稀疏描述），Agent 花了 14 步/360K cache 才逃出来。根因三层：① LE description 太短（LOGICAL.Member 仅 "Student club member" 3 词，first_name/last_name 全在 private_attributes 中，不进向量）；② Expense 作为 PE 挂在 Budget 下（A=link_to_budget），link_to_member FK 无 PAS 表达，Member→Expense 需 2 跳；③ `dlr_semantic_query` 只返回 LE 结果，PE 和 attribute 的向量被丢弃。**修复（参照 superhero Power 模式）**：Expense 拆为独立 LE，A_anchor 从 link_to_budget→link_to_member（逻辑归属），加 PAS Member→Expense + Budget→Expense，LE description 全量丰富（字段名+业务语义）。效果：q1339 DLR 389K/25步/15次 execute_sql → 34K/4步/1次 execute_sql，strict PASS。**教训：① PE 的 A_anchor 必须锚到有逻辑意义的 FK，纯 junction FK 只配做 PAS 桥；② 独立业务概念（Expense/Power）应升级为独立 LE + 直接 PAS，不为物理表结构所限；③ LE description 是语义路由的唯一信号——必须包含关键字段名和业务语义，不是写个名字就够。**
 
