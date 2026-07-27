@@ -1,17 +1,38 @@
 mapping_type: dlr
 version: '2.0'
 scenario_name: dlr_football
-description: 'DLR paradigm - European football scenario: on-demand fields, 6 PEs aggregated
-  into 4 LEs, player/team attributes multi-view decoupling'
+description: 'DLR paradigm - European football: players with FIFA skill ratings, teams with tactical attributes (buildUpPlay/chanceCreation/defence), league matches (home/away goals), and leagues'
 databases:
   european_football_2: sqlite:///MINIDEV_sqlite/dev_databases/european_football_2/european_football_2.sqlite
 logical_entities:
 - logical_entity_id: LOGICAL.Player
   biz_name: Player
-  description: Player basic info and attributes
+  description: Football player — player_name, birthday, height, weight, and FIFA skill ratings (overall_rating, potential, finishing, dribbling, sprint_speed, etc.) tracked by date
   public_attributes:
   - attr_id: LOGICAL.Player.PlayerID
     biz_name: PlayerID
+    description: '球员API ID: 球员唯一标识符'
+  - attr_id: LOGICAL.Player.Name
+    biz_name: player_name
+    description: '球员姓名: 球员的全名'
+  - attr_id: LOGICAL.Player.Birthday
+    biz_name: birthday
+    description: '生日: 球员出生日期'
+  - attr_id: LOGICAL.Player.Height
+    biz_name: height
+    description: '身高: 球员身高(cm)'
+  - attr_id: LOGICAL.Player.Weight
+    biz_name: weight
+    description: '体重: 球员体重(kg)'
+  - attr_id: LOGICAL.Player.OverallRating
+    biz_name: overall_rating
+    description: '综合评分: FIFA综合能力评分'
+  - attr_id: LOGICAL.Player.Potential
+    biz_name: potential
+    description: '潜力值: FIFA潜力评分'
+  - attr_id: LOGICAL.Player.Date
+    biz_name: date
+    description: '日期: FIFA数据记录日期'
   physical_entities:
   - physical_entity_id: PHYSICAL.Player
     physical_table_name: Player
@@ -22,20 +43,12 @@ logical_entities:
     R: null
     C:
       LOGICAL.Player.PlayerID: european_football_2.Player.player_api_id
-    S: Player basic info
-    private_attributes:
-    - attr_id: european_football_2.Player.player_name
-      biz_name: player_name
-      physical_column_id: european_football_2.Player.player_name
-    - attr_id: european_football_2.Player.birthday
-      biz_name: birthday
-      physical_column_id: european_football_2.Player.birthday
-    - attr_id: european_football_2.Player.height
-      biz_name: height
-      physical_column_id: european_football_2.Player.height
-    - attr_id: european_football_2.Player.weight
-      biz_name: weight
-      physical_column_id: european_football_2.Player.weight
+      LOGICAL.Player.Name: european_football_2.Player.player_name
+      LOGICAL.Player.Birthday: european_football_2.Player.birthday
+      LOGICAL.Player.Height: european_football_2.Player.height
+      LOGICAL.Player.Weight: european_football_2.Player.weight
+    S: Player basic info — name, birthday, height, weight
+    private_attributes: []
   - physical_entity_id: PHYSICAL.PlayerAttribute
     physical_table_name: Player_Attributes
     physical_table_id: european_football_2.Player_Attributes
@@ -45,14 +58,15 @@ logical_entities:
     R: null
     C:
       LOGICAL.Player.PlayerID: european_football_2.Player_Attributes.player_api_id
-    S: Player attributes - FIFA ratings
+      LOGICAL.Player.OverallRating: european_football_2.Player_Attributes.overall_rating
+      LOGICAL.Player.Potential: european_football_2.Player_Attributes.potential
+      LOGICAL.Player.Date: european_football_2.Player_Attributes.date
+    S: Player FIFA attributes — overall_rating, potential, and skill ratings tracked by date
     private_attributes:
-    - attr_id: european_football_2.Player_Attributes.overall_rating
-      biz_name: overall_rating
-      physical_column_id: european_football_2.Player_Attributes.overall_rating
     - attr_id: european_football_2.Player_Attributes.preferred_foot
       biz_name: preferred_foot
       physical_column_id: european_football_2.Player_Attributes.preferred_foot
+      description: '惯用脚: left / right'
     - attr_id: european_football_2.Player_Attributes.attacking_work_rate
       biz_name: attacking_work_rate
       physical_column_id: european_football_2.Player_Attributes.attacking_work_rate
@@ -89,25 +103,37 @@ logical_entities:
     - attr_id: european_football_2.Player_Attributes.sprint_speed
       biz_name: sprint_speed
       physical_column_id: european_football_2.Player_Attributes.sprint_speed
-    - attr_id: european_football_2.Player_Attributes.`date`
-      biz_name: date
-      physical_column_id: european_football_2.Player_Attributes.`date`
     - attr_id: european_football_2.Player_Attributes.jumping
       biz_name: jumping
       physical_column_id: european_football_2.Player_Attributes.jumping
-    - attr_id: european_football_2.Player_Attributes.potential
-      biz_name: potential
-      physical_column_id: european_football_2.Player_Attributes.potential
     - attr_id: european_football_2.Player_Attributes.ball_control
       biz_name: ball_control
       physical_column_id: european_football_2.Player_Attributes.ball_control
 - logical_entity_id: LOGICAL.Team
   biz_name: Team
-  description: Team basic info and tactics
+  description: Football team — team_long_name, team_short_name, team_fifa_api_id; tactical attributes (buildUpPlay speed/passing, chanceCreation, defence) tracked by date
   public_attributes:
   - attr_id: LOGICAL.Team.TeamID
     biz_name: TeamID
     description: '球队API ID: 球队唯一标识符'
+  - attr_id: LOGICAL.Team.FifaID
+    biz_name: team_fifa_api_id
+    description: '球队FIFA ID: 球队在FIFA系统中的ID'
+  - attr_id: LOGICAL.Team.LongName
+    biz_name: team_long_name
+    description: '球队全名: 球队完整名称'
+  - attr_id: LOGICAL.Team.ShortName
+    biz_name: team_short_name
+    description: '球队简称: 球队缩写名称'
+  - attr_id: LOGICAL.Team.BuildUpSpeed
+    biz_name: buildUpPlaySpeed
+    description: '组织进攻速度: 球队组织进攻的速度评分'
+  - attr_id: LOGICAL.Team.BuildUpPassing
+    biz_name: buildUpPlayPassing
+    description: '组织进攻传球: 球队组织进攻的传球评分'
+  - attr_id: LOGICAL.Team.AttrDate
+    biz_name: date
+    description: '日期: 战术属性记录日期 YYYY-MM-DD'
   physical_entities:
   - physical_entity_id: PHYSICAL.Team
     physical_table_name: Team
@@ -118,15 +144,11 @@ logical_entities:
     R: null
     C:
       LOGICAL.Team.TeamID: european_football_2.Team.team_api_id
-    S: Team basic info
-    private_attributes:
-    - attr_id: european_football_2.Team.team_long_name
-      biz_name: team_long_name
-      physical_column_id: european_football_2.Team.team_long_name
-      description: '球队全名: 球队完整名称'
-    - attr_id: european_football_2.Team.team_short_name
-      biz_name: team_short_name
-      physical_column_id: european_football_2.Team.team_short_name
+      LOGICAL.Team.FifaID: european_football_2.Team.team_fifa_api_id
+      LOGICAL.Team.LongName: european_football_2.Team.team_long_name
+      LOGICAL.Team.ShortName: european_football_2.Team.team_short_name
+    S: Team basic info — team_api_id, team_fifa_api_id, team_long_name, team_short_name
+    private_attributes: []
   - physical_entity_id: PHYSICAL.TeamAttribute
     physical_table_name: Team_Attributes
     physical_table_id: european_football_2.Team_Attributes
@@ -136,39 +158,93 @@ logical_entities:
     R: null
     C:
       LOGICAL.Team.TeamID: european_football_2.Team_Attributes.team_api_id
-    S: Team tactical attributes
+      LOGICAL.Team.BuildUpSpeed: european_football_2.Team_Attributes.buildUpPlaySpeed
+      LOGICAL.Team.BuildUpPassing: european_football_2.Team_Attributes.buildUpPlayPassing
+      LOGICAL.Team.AttrDate: european_football_2.Team_Attributes.date
+    S: Team tactical attributes — buildUpPlay speed/passing, chanceCreation, defence
     private_attributes:
-    - attr_id: european_football_2.Team_Attributes.buildUpPlaySpeed
-      biz_name: buildUpPlaySpeed
-      physical_column_id: european_football_2.Team_Attributes.buildUpPlaySpeed
-      description: '组织进攻速度: 球队组织进攻的速度评分'
     - attr_id: european_football_2.Team_Attributes.buildUpPlaySpeedClass
       biz_name: buildUpPlaySpeedClass
       physical_column_id: european_football_2.Team_Attributes.buildUpPlaySpeedClass
-    - attr_id: european_football_2.Team_Attributes.buildUpPlayPassing
-      biz_name: buildUpPlayPassing
-      physical_column_id: european_football_2.Team_Attributes.buildUpPlayPassing
     - attr_id: european_football_2.Team_Attributes.buildUpPlayPassingClass
       biz_name: buildUpPlayPassingClass
       physical_column_id: european_football_2.Team_Attributes.buildUpPlayPassingClass
+    - attr_id: european_football_2.Team_Attributes.buildUpPlayDribbling
+      biz_name: buildUpPlayDribbling
+      physical_column_id: european_football_2.Team_Attributes.buildUpPlayDribbling
+    - attr_id: european_football_2.Team_Attributes.buildUpPlayDribblingClass
+      biz_name: buildUpPlayDribblingClass
+      physical_column_id: european_football_2.Team_Attributes.buildUpPlayDribblingClass
     - attr_id: european_football_2.Team_Attributes.chanceCreationPassing
       biz_name: chanceCreationPassing
       physical_column_id: european_football_2.Team_Attributes.chanceCreationPassing
     - attr_id: european_football_2.Team_Attributes.chanceCreationPassingClass
       biz_name: chanceCreationPassingClass
       physical_column_id: european_football_2.Team_Attributes.chanceCreationPassingClass
+    - attr_id: european_football_2.Team_Attributes.chanceCreationCrossing
+      biz_name: chanceCreationCrossing
+      physical_column_id: european_football_2.Team_Attributes.chanceCreationCrossing
+    - attr_id: european_football_2.Team_Attributes.chanceCreationCrossingClass
+      biz_name: chanceCreationCrossingClass
+      physical_column_id: european_football_2.Team_Attributes.chanceCreationCrossingClass
+    - attr_id: european_football_2.Team_Attributes.chanceCreationShooting
+      biz_name: chanceCreationShooting
+      physical_column_id: european_football_2.Team_Attributes.chanceCreationShooting
+    - attr_id: european_football_2.Team_Attributes.chanceCreationShootingClass
+      biz_name: chanceCreationShootingClass
+      physical_column_id: european_football_2.Team_Attributes.chanceCreationShootingClass
+    - attr_id: european_football_2.Team_Attributes.defencePressure
+      biz_name: defencePressure
+      physical_column_id: european_football_2.Team_Attributes.defencePressure
+    - attr_id: european_football_2.Team_Attributes.defencePressureClass
+      biz_name: defencePressureClass
+      physical_column_id: european_football_2.Team_Attributes.defencePressureClass
+    - attr_id: european_football_2.Team_Attributes.defenceAggression
+      biz_name: defenceAggression
+      physical_column_id: european_football_2.Team_Attributes.defenceAggression
     - attr_id: european_football_2.Team_Attributes.defenceAggressionClass
       biz_name: defenceAggressionClass
       physical_column_id: european_football_2.Team_Attributes.defenceAggressionClass
-    - attr_id: european_football_2.Team_Attributes.`date`
-      biz_name: date
-      physical_column_id: european_football_2.Team_Attributes.`date`
+    - attr_id: european_football_2.Team_Attributes.defenceTeamWidth
+      biz_name: defenceTeamWidth
+      physical_column_id: european_football_2.Team_Attributes.defenceTeamWidth
+    - attr_id: european_football_2.Team_Attributes.defenceTeamWidthClass
+      biz_name: defenceTeamWidthClass
+      physical_column_id: european_football_2.Team_Attributes.defenceTeamWidthClass
+    - attr_id: european_football_2.Team_Attributes.defenceDefenderLineClass
+      biz_name: defenceDefenderLineClass
+      physical_column_id: european_football_2.Team_Attributes.defenceDefenderLineClass
+    - attr_id: european_football_2.Team_Attributes.chanceCreationPositioningClass
+      biz_name: chanceCreationPositioningClass
+      physical_column_id: european_football_2.Team_Attributes.chanceCreationPositioningClass
+    - attr_id: european_football_2.Team_Attributes.buildUpPlayPositioningClass
+      biz_name: buildUpPlayPositioningClass
+      physical_column_id: european_football_2.Team_Attributes.buildUpPlayPositioningClass
 - logical_entity_id: LOGICAL.Match
   biz_name: Match
-  description: League matches
+  description: League matches — home/away team (FK to Team), goals, season, and date; belongs to a league
   public_attributes:
   - attr_id: LOGICAL.Match.MatchID
     biz_name: MatchID
+    description: '比赛ID: 比赛唯一标识符'
+  - attr_id: LOGICAL.Match.HomeTeam
+    biz_name: home_team_api_id
+    description: '主队API ID: FK→Team，主队标识'
+  - attr_id: LOGICAL.Match.AwayTeam
+    biz_name: away_team_api_id
+    description: '客队API ID: FK→Team，客队标识'
+  - attr_id: LOGICAL.Match.HomeGoal
+    biz_name: home_team_goal
+    description: '主队进球: 主队的进球数量'
+  - attr_id: LOGICAL.Match.AwayGoal
+    biz_name: away_team_goal
+    description: '客队进球: 客队的进球数量'
+  - attr_id: LOGICAL.Match.Season
+    biz_name: season
+    description: '赛季: 比赛所属赛季，格式如 2015/2016'
+  - attr_id: LOGICAL.Match.Date
+    biz_name: date
+    description: '日期: 比赛日期'
   physical_entities:
   - physical_entity_id: PHYSICAL.Match
     physical_table_name: Match
@@ -179,45 +255,31 @@ logical_entities:
     R: null
     C:
       LOGICAL.Match.MatchID: european_football_2.Match.id
-    S: Match records
+      LOGICAL.Match.HomeTeam: european_football_2.Match.home_team_api_id
+      LOGICAL.Match.AwayTeam: european_football_2.Match.away_team_api_id
+      LOGICAL.Match.HomeGoal: european_football_2.Match.home_team_goal
+      LOGICAL.Match.AwayGoal: european_football_2.Match.away_team_goal
+      LOGICAL.Match.Season: european_football_2.Match.season
+      LOGICAL.Match.Date: european_football_2.Match.date
+    S: Match records — home/away team FK, goals, season, date
     private_attributes:
     - attr_id: european_football_2.Match.league_id
       biz_name: league_id
       physical_column_id: european_football_2.Match.league_id
-      description: '联赛ID: 所属联赛ID，关联 League 表'
-    - attr_id: european_football_2.Match.season
-      biz_name: season
-      physical_column_id: european_football_2.Match.season
-      description: '赛季: 比赛所属赛季，格式如 2015/2016'
-    - attr_id: european_football_2.Match.home_team_api_id
-      biz_name: home_team_api_id
-      physical_column_id: european_football_2.Match.home_team_api_id
-      description: '主队API ID: 主队ID，关联 Team 表'
-    - attr_id: european_football_2.Match.away_team_api_id
-      biz_name: away_team_api_id
-      physical_column_id: european_football_2.Match.away_team_api_id
-      description: '客队API ID: 客队ID，关联 Team 表'
-    - attr_id: european_football_2.Match.home_team_goal
-      biz_name: home_team_goal
-      physical_column_id: european_football_2.Match.home_team_goal
-      description: '主队进球: 主队的进球数量'
-    - attr_id: european_football_2.Match.away_team_goal
-      biz_name: away_team_goal
-      physical_column_id: european_football_2.Match.away_team_goal
-      description: '客队进球: 客队的进球数量'
-    - attr_id: european_football_2.Match.`date`
-      biz_name: date
-      physical_column_id: european_football_2.Match.`date`
+      description: '联赛ID: FK→League，所属联赛'
     - attr_id: european_football_2.Match.country_id
       biz_name: country_id
       physical_column_id: european_football_2.Match.country_id
 - logical_entity_id: LOGICAL.League
   biz_name: League
-  description: League information
+  description: League information — league name and country; contains matches
   public_attributes:
   - attr_id: LOGICAL.League.LeagueID
     biz_name: LeagueID
     description: '联赛ID: 联赛唯一标识符'
+  - attr_id: LOGICAL.League.Name
+    biz_name: name
+    description: '联赛名称: 联赛名称，如 England Premier League'
   physical_entities:
   - physical_entity_id: PHYSICAL.League
     physical_table_name: League
@@ -228,12 +290,9 @@ logical_entities:
     R: null
     C:
       LOGICAL.League.LeagueID: european_football_2.League.id
-    S: League information
+      LOGICAL.League.Name: european_football_2.League.name
+    S: League information — name and country
     private_attributes:
-    - attr_id: european_football_2.League.name
-      biz_name: name
-      physical_column_id: european_football_2.League.name
-      description: '联赛名称: 联赛名称'
     - attr_id: european_football_2.League.country_id
       biz_name: country_id
       physical_column_id: european_football_2.League.country_id
@@ -248,7 +307,7 @@ pas_relations:
       verb: belongs to
       cardinality: '1:1'
   A: LeagueID
-  S: 1 league contains N matches
+  S: 1 league contains N matches — Match.league_id → League.id
 - relation_id: LOGICAL.Team_TO_LOGICAL.Match
   relation_name: Participates
   P:
@@ -259,4 +318,4 @@ pas_relations:
       verb: involves
       cardinality: 1:N
   A: TeamID
-  S: Teams participate in many matches (home or away)
+  S: Teams participate in matches as home or away — Match.home_team_api_id → Team.team_api_id, Match.away_team_api_id → Team.team_api_id (use home_team_api_id for home, away_team_api_id for away)
