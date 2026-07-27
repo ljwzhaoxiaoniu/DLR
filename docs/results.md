@@ -52,8 +52,11 @@
 | 85-86 | formula_1+superhero | q857, q724 | 100% | 100% | 100% | 跨库对：q857=formula_1, q724=superhero；q724 三范式 strict PASS，q857 三范式 judge 全翻 |
 | 87-88 | california | q23, q24 | 100% | 100% | 50% | 🔴 q23 evidence 修正（数学公式→自然语言）后三范式全对；q24 ER/DLR 全过，RDF 列歧义 INCORRECT（schools.School vs frpm.School Name，california 继 q11 后第二次） |
 | 89-90 | financial | q95, q98 | 100% | 100% | 100% | 🔴 q95 gold bug 修正后全对：原 gold SQL 只实现"最年轻"丢掉了"最高薪资"（和 q94 同模式）；question/evidence/gold SQL 修正为"先圈最高薪资区→再取最年轻"后，DLR strict PASS，ER/RDF judge 翻盘；q98 三范式 strict PASS |
+| 91-92 | superhero | q726, q728 | 100% | 100% | 100% | q726 三范式翻盘：题目 "Rank heroes"→Agent 理解 ORDER BY→gold 多要求 RANK() 列（和 q17 同模式）；q728 DLR judge 翻盘 CORRECT，ER/RDF 手动翻盘 |
+| 93-94 | codebase | q547, q549 | 100% | 100% | 100% | codebase 第四对全通；q547 三范式 strict PASS；q549 ER 表名格式错自行修正→judge 翻盘，DLR strict PASS，RDF judge 翻盘 |
+| 95-96 | student | q1338, q1339 | 100% | 100% | 100% | student_club 第四对全通；q1339 三范式 strict PASS；q1338 三范式 judge 全翻（event_date 格式适配）；⚠️ DLR q1339 25步/15次 execute_sql/389K token，为单表 AVG 付出了异常代价 |
 
-**round_1 前 90 对完成 — 254/270 CORRECT（ER 84/90, DLR 87/90, RDF 83/90）**
+**round_1 前 96 对完成 — 272/288 CORRECT（ER 90/96, DLR 94/96, RDF 88/96）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -149,6 +152,12 @@
 | q24 | **43,423** | 115,531 | 119,459 |
 | q95 | 316,559 | 213,175 | **95,570** |
 | q98 | **72,786** | 88,830 | 86,224 |
+| q726 | **59,696** | 65,984 | 65,196 |
+| q728 | **46,561** | 54,075 | 52,604 |
+| q547 | 60,473 | **52,782** | 53,148 |
+| q549 | 66,788 | 51,179 | **33,150** |
+| q1338 | **82,444** | 94,553 | 84,515 |
+| q1339 | 145,494 | 389,454 | **84,865** |
 
 \* 粗体 = 该题最优范式
 
@@ -157,10 +166,10 @@
 | 指标 | ER | DLR | RDF |
 |------|----|----|-----|
 | 最低单题 | 29,068 (q723) | 31,353 (q195) | **25,992 (q200)** |
-| 最高单题 | 295,225 (q1500) | 195,482 (q1481) | **254,156 (q532)** |
-| 平均 total | 77,300 | 67,294 | **64,463** |
-| CORRECT | 84/90 | 88/90 | 82/90 |
-| 总计 | **254/270** | - | - |
+| 最高单题 | 295,225 (q1500) | 389,454 (q1339) | **254,156 (q532)** |
+| 平均 total | 77,420 | 70,487 | **64,262** |
+| CORRECT | 90/96 | 94/96 | 88/96 |
+| 总计 | **272/288** | - | - |
 
 ### 定性观察
 
@@ -199,6 +208,7 @@
 - **🆕 toxicology q197 三范式对比（日志级）**：ER 4 步收工（semantic_query→attributes×4→mapping×2→SQL），9,639 token，但 `molecule JOIN bond` 导致 69.28——Agent 跑了验证查询（TR496 显示 1530 氧原子，明显荒谬）却未质疑。DLR 7 步（semantic_query→get_pe_full×4→探索 bond_type/element→SQL→验证），11,516 token，全程未触碰 molecule 表——PAS 的 A_anchor N:1 锚定键隐式引导了 DISTINCT 路径。RDF 最短（8,275 token），INNER JOIN 排除了零氧分子致 3.11（vs gold 2.16），但 judge 仍翻盘。**ER"信息丰富"≠"引导正确"——此题是最清晰的对照证据：ER 给了完整的 molecule↔bond 连接图→走入 JOIN 陷阱；DLR PAS 的 cardinality 标注→自然走 DISTINCT；RDF 扁平结构→也避开了 fan-out。**
 - **🆕 card_games q341 ER 大宽表陷阱**：`cards` 表 78 列，ER 全互联 schema 将所有列暴露给 Agent→SQL 逻辑错误。DLR 通过 `private_attributes` 隐藏非核心列（仅暴露 ~15 个 public 属性），RDF 仅映射被引用的列，两者均避开了噪音干扰。加上 q197 的 JOIN 膨胀，**ER"信息丰富"已两次成为双刃剑：宽表场景下全暴露=全噪音，Agent 在 78 列中迷失方向。**
 - **california_schools q17 Gold 过度要求 RANK()**：题目只写 "Rank schools... showing their charter numbers"，Gold SQL 多生成了 `WritingScoreRank` 列号。三范式都做了正确的 ORDER BY DESC 排序，ER/RDF 因缺 RANK() 列被 judge 判 INCORRECT，DLR 因加了 GROUP BY 被 judge 翻盘——本质上三者都对。**judge 不一致，非范式问题。**
+- **🆕 superhero q726 同 q17——"Rank" ≠ RANK()**：题目 "Rank heroes by height in descending order"，Gold 多要求 `RANK() OVER (ORDER BY height_cm DESC)` 列。三范式 Agent 做了 ORDER BY height_cm DESC，结果正确但缺 Rank 列号。和 q17 同一模式：**BIRD 数据集中 "Rank" 在部分题中被 gold 解释为窗口函数 RANK() 列，而非自然语言中的"排序展示"**。手动翻盘三范式全 CORRECT。**LLM 对 "rank" 的理解（排序）与 gold 标注者的理解（产生序号列）存在系统性偏差。**
 - **🆕 california_schools q11 + q24 RDF 列歧义（同库两次）**：q11：frpm 表同时有 CDSCode（全码）和 School Code（短码），题目问"codes of the schools"，RDF Agent 选了字面匹配的 School Code→INCORRECT。q24：schools.School 和 frpm.School Name 都存在，RDF Agent 选了 schools.School 而 gold 期望 frpm.School Name→INCORRECT。ER/DLR 也面临同样的歧义但选了正确的列（或 judge 翻盘）。**RDF 的 flat 结构让列名歧义更致命——没有 Entity/PE 层级来区分列的归属和语义权重，两个 "School" 在 predicate 海洋里看起来一样。**
 - **🆕 toxicology q206 RDF 探索≠答案——Agent 找到了 JOIN 路径但最终 SQL 弃之不用**：题目问 TR004_8_9 bond 连接什么原子。RDF Agent 的探索过程完全正确——`rdf_semantic_query` → `query_rdf_mapping(connected)` → `SELECT FROM connected WHERE bond_id=...` 成功拿到 atom_id → 但最后交卷的 SQL 变成了 `SELECT element FROM atom WHERE atom_id IN ('TR004_8', 'TR004_9')`，把 connected 表抛掉了。对比 ER/DLR：ER 的 `get_entity_relations` 返回独立关系列表，DLR 的 `get_pe_full` 返回 ARCS 结构块——attribute 填 SELECT，relation 填 JOIN，结构即引导。RDF 把所有信息倒进一个平面——列、FK、元数据全是 predicate——Agent 用 connected 探索了，但写答案时没把它当成答案结构的一部分。**RDF 的形式化表达能力足够，但缺少让 Agent 区分"这个关系应该留在答案 SQL 里"的架构信号：attribute 和 relation 在 RDF 中同为 predicate，视觉权重相等。这解释了为什么 RDF 在 q197 避免了 JOIN 陷阱（正向），却在 q347 漏了 JOIN（负向），在 q206 找到了 JOIN 但没留在最终答案里（中性偏负）——三个案例指向同一根因：扁平结构没有信息层级。**
 - **🆕 card_games q347 RDF 扁平结构的代价——形式完备 ≠ LLM 友好**：题目要求列出 Stephen Daniele 卡牌的 ruling text。TTL 映射完全正确——`rulings` 表、`rulings.text`、`refers_to_cards` FK 全在，`rdf_semantic_query` 也正确召回了 `rulings` class。但 RDF Agent 只对 `cards` 做了 `query_rdf_mapping`，看到 `cards.text` 就满足了，直接 `SELECT text FROM cards WHERE artist=...` 交卷——把卡牌自身的 oracle text 当成了 ruling text。ER 和 DLR 分别通过 `get_entity_mapping` 和 `get_pe_full` 明确看到了 `rulings` 作为独立 entity/PE 及其 FK 关系，正确写出了 `LEFT JOIN rulings ON uuid`。**根因：RDF 的 triple 模型将所有事实压平——FK 关系、属性列、元数据标签全是同一种语法结构，没有信息层级。`refers_to_cards` FK 在 78 个 predicate 中不发光，Agent 的注意力没有被引向关键连接。而 ER/DLR 将关系提升为一等概念（relations/ARCS），信息层级让 LLM 自然落在正确的 JOIN 路径上。**与 q197 形成完整对照：那里 RDF 的扁平让 Agent 没发现 molecule↔bond 连接，反而避开了 fan-out 陷阱（正向结果）；这里同一特性导致 Agent 漏掉了 card↔ruling 连接（负向结果）。**W3C 标准的形式化完备性（任何事实都能编码为 triple）≠ 对 LLM 的引导有效性。扁平即平等，平等即无优先级——这是 RDF 作为 Agent 交互范式的结构性缺陷。**
@@ -209,6 +219,6 @@
 
 ## 下一步
 
-- debit_card 30/30 ✅ → student 6/48 → thrombosis 6/50 → football 6/51 → formula_1 6/66 → superhero 4/52 → codebase 6/49 → card_games 8/52 → toxicology 6/40 → california 6/30 → financial 6/32 → 待续
+- debit_card 30/30 ✅ → student 8/48 → thrombosis 6/50 → football 6/51 → formula_1 6/66 → superhero 6/52 → codebase 8/49 → card_games 8/52 → toxicology 6/40 → california 6/30 → financial 6/32 → 待续
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 

@@ -1,14 +1,13 @@
 mapping_type: dlr
 version: '2.0'
 scenario_name: dlr_student_club
-description: 'DLR paradigm - Student club scenario: on-demand fields, 8 PEs aggregated
-  into 7 LEs, activity finance multi-view decoupling'
+description: 'DLR paradigm - Student club: members attend events, incur expenses funded by event budgets, and receive income; majors and zip codes as dimension tables'
 databases:
   student_club: sqlite:///MINIDEV_sqlite/dev_databases/student_club/student_club.sqlite
 logical_entities:
 - logical_entity_id: LOGICAL.Member
   biz_name: Member
-  description: Student club member
+  description: Student club member — first_name, last_name, position, phone, T-shirt size, zip code, and major; the central entity for member activities, expenses, and income
   public_attributes:
   - attr_id: LOGICAL.Member.MemberID
     biz_name: MemberID
@@ -52,7 +51,7 @@ logical_entities:
       description: '专业ID: 成员所属专业ID，关联 major 表'
 - logical_entity_id: LOGICAL.Event
   biz_name: Event
-  description: Club events
+  description: Club events — event_name, event_date, type (Meeting/fundraiser/...), location, and status; has budgets and records member attendance
   public_attributes:
   - attr_id: LOGICAL.Event.EventID
     biz_name: EventID
@@ -88,7 +87,7 @@ logical_entities:
       physical_column_id: student_club.event.status
 - logical_entity_id: LOGICAL.Attendance
   biz_name: Attendance
-  description: Member attendance at events
+  description: Member attendance at events — many-to-many junction linking members to events they attended
   public_attributes:
   - attr_id: LOGICAL.Attendance.Event
     biz_name: Event
@@ -109,14 +108,16 @@ logical_entities:
       LOGICAL.Attendance.Member: student_club.attendance.link_to_member
     S: Member-event many-to-many
     private_attributes: []
-- logical_entity_id: LOGICAL.EventFinance
-  biz_name: EventFinance
-  description: Event budget and actual expenses
+- logical_entity_id: LOGICAL.Budget
+  biz_name: Budget
+  description: Event budget tracking — allocated amount, spent, remaining, category, and status per event; funds member expenses
   public_attributes:
-  - attr_id: LOGICAL.EventFinance.FinanceID
-    biz_name: FinanceID
-  - attr_id: LOGICAL.EventFinance.Event
+  - attr_id: LOGICAL.Budget.BudgetID
+    biz_name: BudgetID
+    description: '预算ID: 预算项唯一标识符'
+  - attr_id: LOGICAL.Budget.Event
     biz_name: Event
+    description: '活动ID: FK→event，预算所属的活动'
   physical_entities:
   - physical_entity_id: PHYSICAL.Budget
     physical_table_name: budget
@@ -126,9 +127,9 @@ logical_entities:
       key: link_to_event
     R: null
     C:
-      LOGICAL.EventFinance.FinanceID: student_club.budget.budget_id
-      LOGICAL.EventFinance.Event: student_club.budget.link_to_event
-    S: Budget - amount, spent, remaining
+      LOGICAL.Budget.BudgetID: student_club.budget.budget_id
+      LOGICAL.Budget.Event: student_club.budget.link_to_event
+    S: Event budget item — amount, spent, remaining, category
     private_attributes:
     - attr_id: student_club.budget.amount
       biz_name: amount
@@ -145,35 +146,52 @@ logical_entities:
     - attr_id: student_club.budget.event_status
       biz_name: event_status
       physical_column_id: student_club.budget.event_status
+- logical_entity_id: LOGICAL.Expense
+  biz_name: Expense
+  description: Member expense records — individual spending with cost, expense_date, description, and approval status; incurred by members, funded by event budgets
+  public_attributes:
+  - attr_id: LOGICAL.Expense.ExpenseID
+    biz_name: ExpenseID
+    description: '开支ID: 开支记录唯一标识符'
+  - attr_id: LOGICAL.Expense.Member
+    biz_name: Member
+    description: '成员ID: FK→member，花钱的人'
+  - attr_id: LOGICAL.Expense.Budget
+    biz_name: Budget
+    description: '预算ID: FK→budget，所属预算项'
+  - attr_id: LOGICAL.Expense.Cost
+    biz_name: cost
+    description: '金额: 开支金额'
+  - attr_id: LOGICAL.Expense.Date
+    biz_name: expense_date
+    description: '日期: 支出日期 YYYY-MM-DD 格式'
+  physical_entities:
   - physical_entity_id: PHYSICAL.Expense
     physical_table_name: expense
     physical_table_id: student_club.expense
     A:
       cardinality: N:1
-      key: link_to_budget
+      key: link_to_member
     R: null
     C:
-      LOGICAL.EventFinance.FinanceID: student_club.expense.link_to_budget
-    S: Actual expenses
+      LOGICAL.Expense.ExpenseID: student_club.expense.expense_id
+      LOGICAL.Expense.Member: student_club.expense.link_to_member
+      LOGICAL.Expense.Budget: student_club.expense.link_to_budget
+      LOGICAL.Expense.Cost: student_club.expense.cost
+      LOGICAL.Expense.Date: student_club.expense.expense_date
+    S: Individual member expense at an event — cost, date, description, approval status
     private_attributes:
     - attr_id: student_club.expense.expense_description
       biz_name: expense_description
       physical_column_id: student_club.expense.expense_description
-    - attr_id: student_club.expense.cost
-      biz_name: cost
-      physical_column_id: student_club.expense.cost
-    - attr_id: student_club.expense.expense_date
-      biz_name: expense_date
-      physical_column_id: student_club.expense.expense_date
+      description: '描述: 开支说明'
     - attr_id: student_club.expense.approved
       biz_name: approved
       physical_column_id: student_club.expense.approved
-    - attr_id: student_club.expense.link_to_member
-      biz_name: link_to_member
-      physical_column_id: student_club.expense.link_to_member
+      description: '审批状态: 是否已批准 true/false'
 - logical_entity_id: LOGICAL.Income
   biz_name: Income
-  description: Funds received by the club
+  description: Funds received by the club — amount, source, date_received, and notes; received by members
   public_attributes:
   - attr_id: LOGICAL.Income.IncomeID
     biz_name: IncomeID
@@ -206,7 +224,7 @@ logical_entities:
       physical_column_id: student_club.income.notes
 - logical_entity_id: LOGICAL.Major
   biz_name: Major
-  description: Academic major
+  description: Academic major — major_name, department, and college
   public_attributes:
   - attr_id: LOGICAL.Major.MajorID
     biz_name: MajorID
@@ -235,7 +253,7 @@ logical_entities:
       physical_column_id: student_club.major.college
 - logical_entity_id: LOGICAL.ZipCode
   biz_name: ZipCode
-  description: Zip code geographic information
+  description: Zip code geographic information — city, state, and county
   public_attributes:
   - attr_id: LOGICAL.ZipCode.Zip
     biz_name: Zip
@@ -272,7 +290,7 @@ pas_relations:
       cardinality: 1:N
   A: MemberID
   S: Members participate in events via attendance
-- relation_id: LOGICAL.Event_TO_LOGICAL.EventFinance
+- relation_id: LOGICAL.Event_TO_LOGICAL.Budget
   relation_name: HasBudget
   P:
     forward:
@@ -282,7 +300,29 @@ pas_relations:
       verb: belongs to
       cardinality: '1:1'
   A: Event
-  S: 1 event has N budget/expense items
+  S: 1 event has N budget items — amount, spent, remaining per event
+- relation_id: LOGICAL.Budget_TO_LOGICAL.Expense
+  relation_name: Funds
+  P:
+    forward:
+      verb: funds
+      cardinality: 1:N
+    reverse:
+      verb: is funded by
+      cardinality: N:1
+  A: Budget
+  S: 1 budget item funds N member expenses — expense.link_to_budget → budget.budget_id
+- relation_id: LOGICAL.Member_TO_LOGICAL.Expense
+  relation_name: Incurs
+  P:
+    forward:
+      verb: incurs
+      cardinality: 1:N
+    reverse:
+      verb: belongs to
+      cardinality: N:1
+  A: Member
+  S: 1 member incurs N expenses at events — expense.link_to_member → member.member_id
 - relation_id: LOGICAL.Member_TO_LOGICAL.Income
   relation_name: Receives
   P:
