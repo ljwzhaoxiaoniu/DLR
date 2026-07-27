@@ -1,0 +1,613 @@
+{
+  "q_id": 730,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT DISTINCT s.superhero_name FROM superhero s JOIN publisher p ON s.publisher_id = p.id JOIN hero_power hp ON s.id = hp.hero_id JOIN superpower sp ON hp.power_id = sp.id WHERE p.publisher_name = 'Marvel Comics' AND sp.power_name = 'Super Strength'",
+  "result": {
+    "columns": [
+      "superhero_name"
+    ],
+    "rows": [
+      [
+        "3-D Man"
+      ],
+      [
+        "A-Bomb"
+      ],
+      [
+        "Abomination"
+      ],
+      [
+        "Abraxas"
+      ],
+      [
+        "Absorbing Man"
+      ],
+      [
+        "Agent Zero"
+      ],
+      [
+        "Air-Walker"
+      ],
+      [
+        "Ajax"
+      ],
+      [
+        "Angel Dust"
+      ],
+      [
+        "Angel"
+      ],
+      [
+        "Annihilus"
+      ],
+      [
+        "Ant-Man II"
+      ],
+      [
+        "Anti-Venom"
+      ],
+      [
+        "Apocalypse"
+      ],
+      [
+        "Arachne"
+      ],
+      [
+        "Archangel"
+      ],
+      [
+        "Arclight"
+      ],
+      [
+        "Ardina"
+      ],
+      [
+        "Ares"
+      ],
+      [
+        "Armor"
+      ],
+      [
+        "Atlas"
+      ],
+      [
+        "Bantam"
+      ],
+      [
+        "Battlestar"
+      ],
+      [
+        "Beast"
+      ],
+      [
+        "Beta Ray Bill"
+      ],
+      [
+        "Beyonder"
+      ],
+      [
+        "Binary"
+      ],
+      [
+        "Bird-Man"
+      ],
+      [
+        "Bishop"
+      ],
+      [
+        "Black Bolt"
+      ],
+      [
+        "Black Cat"
+      ],
+      [
+        "Blackout"
+      ],
+      [
+        "Blackwulf"
+      ],
+      [
+        "Blade"
+      ],
+      [
+        "Blob"
+      ],
+      [
+        "Bloodaxe"
+      ],
+      [
+        "Bloodwraith"
+      ],
+      [
+        "Cable"
+      ],
+      [
+        "Callisto"
+      ],
+      [
+        "Captain Britain"
+      ],
+      [
+        "Captain Marvel"
+      ],
+      [
+        "Captain Planet"
+      ],
+      [
+        "Carnage"
+      ],
+      [
+        "Cat"
+      ],
+      [
+        "Colossus"
+      ],
+      [
+        "Cottonmouth"
+      ],
+      [
+        "Crimson Dynamo"
+      ],
+      [
+        "Crystal"
+      ],
+      [
+        "Deathlok"
+      ],
+      [
+        "Demogoblin"
+      ],
+      [
+        "Destroyer"
+      ],
+      [
+        "Doc Samson"
+      ],
+      [
+        "Doctor Doom II"
+      ],
+      [
+        "Doctor Doom"
+      ],
+      [
+        "Doctor Octopus"
+      ],
+      [
+        "Doppelganger"
+      ],
+      [
+        "Dormammu"
+      ],
+      [
+        "Drax the Destroyer"
+      ],
+      [
+        "Ego"
+      ],
+      [
+        "Emma Frost"
+      ],
+      [
+        "Evilhawk"
+      ],
+      [
+        "Fallen One II"
+      ],
+      [
+        "Feral"
+      ],
+      [
+        "Fin Fang Foom"
+      ],
+      [
+        "Franklin Richards"
+      ],
+      [
+        "Frenzy"
+      ],
+      [
+        "Frigga"
+      ],
+      [
+        "Galactus"
+      ],
+      [
+        "Gamora"
+      ],
+      [
+        "Ghost Rider II"
+      ],
+      [
+        "Ghost Rider"
+      ],
+      [
+        "Gladiator"
+      ],
+      [
+        "Goliath IV"
+      ],
+      [
+        "Green Goblin II"
+      ],
+      [
+        "Green Goblin III"
+      ],
+      [
+        "Green Goblin IV"
+      ],
+      [
+        "Green Goblin"
+      ],
+      [
+        "Groot"
+      ],
+      [
+        "Hela"
+      ],
+      [
+        "Hellcat"
+      ],
+      [
+        "Hercules"
+      ],
+      [
+        "Hobgoblin"
+      ],
+      [
+        "Hulk"
+      ],
+      [
+        "Husk"
+      ],
+      [
+        "Hybrid"
+      ],
+      [
+        "Hyperion"
+      ],
+      [
+        "Iceman"
+      ],
+      [
+        "Ink"
+      ],
+      [
+        "Iron Fist"
+      ],
+      [
+        "Iron Man"
+      ],
+      [
+        "Iron Monger"
+      ],
+      [
+        "Jack of Hearts"
+      ],
+      [
+        "Jessica Jones"
+      ],
+      [
+        "Jolt"
+      ],
+      [
+        "Juggernaut"
+      ],
+      [
+        "Junkpile"
+      ],
+      [
+        "Kang"
+      ],
+      [
+        "Klaw"
+      ],
+      [
+        "Kraven II"
+      ],
+      [
+        "Kraven the Hunter"
+      ],
+      [
+        "Lady Deathstrike"
+      ],
+      [
+        "Legion"
+      ],
+      [
+        "Living Brain"
+      ],
+      [
+        "Living Tribunal"
+      ],
+      [
+        "Lizard"
+      ],
+      [
+        "Loki"
+      ],
+      [
+        "Luke Cage"
+      ],
+      [
+        "Mach-IV"
+      ],
+      [
+        "Machine Man"
+      ],
+      [
+        "Magneto"
+      ],
+      [
+        "Magus"
+      ],
+      [
+        "Man-Thing"
+      ],
+      [
+        "Man-Wolf"
+      ],
+      [
+        "Medusa"
+      ],
+      [
+        "Mephisto"
+      ],
+      [
+        "Mimic"
+      ],
+      [
+        "Mister Sinister"
+      ],
+      [
+        "Mockingbird"
+      ],
+      [
+        "Molten Man"
+      ],
+      [
+        "Moon Knight"
+      ],
+      [
+        "Moonstone"
+      ],
+      [
+        "Morlun"
+      ],
+      [
+        "Ms Marvel II"
+      ],
+      [
+        "Mystique"
+      ],
+      [
+        "Namor"
+      ],
+      [
+        "Namora"
+      ],
+      [
+        "Namorita"
+      ],
+      [
+        "Nebula"
+      ],
+      [
+        "Nova"
+      ],
+      [
+        "Odin"
+      ],
+      [
+        "One-Above-All"
+      ],
+      [
+        "Onslaught"
+      ],
+      [
+        "Plantman"
+      ],
+      [
+        "Proto-Goblin"
+      ],
+      [
+        "Psylocke"
+      ],
+      [
+        "Quicksilver"
+      ],
+      [
+        "Red Hulk"
+      ],
+      [
+        "Rhino"
+      ],
+      [
+        "Sabretooth"
+      ],
+      [
+        "Sandman"
+      ],
+      [
+        "Sasquatch"
+      ],
+      [
+        "Scarlet Spider II"
+      ],
+      [
+        "Scarlet Spider"
+      ],
+      [
+        "Scorpia"
+      ],
+      [
+        "Scorpion"
+      ],
+      [
+        "Sebastian Shaw"
+      ],
+      [
+        "Sentry"
+      ],
+      [
+        "Shatterstar"
+      ],
+      [
+        "She-Hulk"
+      ],
+      [
+        "She-Thing"
+      ],
+      [
+        "Sif"
+      ],
+      [
+        "Silk"
+      ],
+      [
+        "Silver Surfer"
+      ],
+      [
+        "Silverclaw"
+      ],
+      [
+        "Skaar"
+      ],
+      [
+        "Snowbird"
+      ],
+      [
+        "Songbird"
+      ],
+      [
+        "Spider-Girl"
+      ],
+      [
+        "Spider-Gwen"
+      ],
+      [
+        "Spider-Man"
+      ],
+      [
+        "Spider-Woman III"
+      ],
+      [
+        "Spider-Woman IV"
+      ],
+      [
+        "Spider-Woman"
+      ],
+      [
+        "Stardust"
+      ],
+      [
+        "Sunspot"
+      ],
+      [
+        "Swarm"
+      ],
+      [
+        "Thanos"
+      ],
+      [
+        "Thing"
+      ],
+      [
+        "Thor Girl"
+      ],
+      [
+        "Thor"
+      ],
+      [
+        "Thunderbird"
+      ],
+      [
+        "Thunderstrike"
+      ],
+      [
+        "Thundra"
+      ],
+      [
+        "Tiger Shark"
+      ],
+      [
+        "Tigra"
+      ],
+      [
+        "Toad"
+      ],
+      [
+        "Toxin"
+      ],
+      [
+        "Triton"
+      ],
+      [
+        "Ultragirl"
+      ],
+      [
+        "Ultron"
+      ],
+      [
+        "Utgard-Loki"
+      ],
+      [
+        "Valkyrie"
+      ],
+      [
+        "Venom II"
+      ],
+      [
+        "Venom III"
+      ],
+      [
+        "Venom"
+      ],
+      [
+        "Venompool"
+      ],
+      [
+        "Vision"
+      ],
+      [
+        "Vulture"
+      ],
+      [
+        "Walrus"
+      ],
+      [
+        "War Machine"
+      ],
+      [
+        "Warlock"
+      ],
+      [
+        "Warpath"
+      ],
+      [
+        "Wasp"
+      ],
+      [
+        "Weapon XI"
+      ],
+      [
+        "Winter Soldier"
+      ],
+      [
+        "Wolfsbane"
+      ],
+      [
+        "Wolverine"
+      ],
+      [
+        "Wonder Man"
+      ],
+      [
+        "X-23"
+      ],
+      [
+        "Ymir"
+      ]
+    ]
+  }
+}

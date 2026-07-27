@@ -1,0 +1,16 @@
+{
+  "q_id": 732,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT p.publisher_name FROM superhero s JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id = a.id JOIN publisher p ON s.publisher_id = p.id WHERE a.attribute_name = 'Speed' ORDER BY ha.attribute_value ASC LIMIT 1",
+  "result": {
+    "columns": [
+      "publisher_name"
+    ],
+    "rows": [
+      [
+        "Marvel Comics"
+      ]
+    ]
+  }
+}

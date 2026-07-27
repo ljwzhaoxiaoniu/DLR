@@ -1,0 +1,7 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","730","superhero","PASS","","","CORRECT","100","","17959","2601","740","63232","84532"
+"er","732","superhero","PASS","","","CORRECT","100","","14535","576","382","30976","46469"
+"dlr","730","superhero","FAIL","CORRECT","judge∑≠≈Ã","CORRECT","100","","11176","1714","381","24320","37591"
+"dlr","732","superhero","PASS","","","CORRECT","100","","4124","504","397","50560","55585"
+"rdf","730","superhero","PASS","","","CORRECT","100","","14641","2042","808","65920","83411"
+"rdf","732","superhero","PASS","","","CORRECT","100","","2620","573","593","34176","37962"
