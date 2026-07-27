@@ -409,6 +409,17 @@ FROM (
 | **正确结果** | c, ca, n, o, s（5 元素，三范式一致通过 `bond → connected → atom ON atom_id + atom_id2` 精确定位双键两端） |
 | **验证** | ER/DLR/RDF 三种建模独立得出相同 SQL 结构和相同结果，SQLite 直跑确认。三范式 judge 均判 CORRECT（DLR judge 在裁决过程中发现并记录了 gold bug）。2026-07-27 修正 cache + mini_dev_sqlite.json。 |
 
+### qid 861 — `formula_1`（evidence 未区分两个同名 number 列，2026-07-27 修正）
+
+- **问题**：What is his number of the driver who finished 0:01:54 in the Q3 of qualifying race No.903?
+- **原 evidence**：`race number refers to raceId; finished 0:0M:SS in the Q3 refers to q3 LIKE 'M:SS%'`
+
+| | 内容 |
+|---|---|
+| **Bug** | "his number" 有歧义——`qualifying.number`（排位名次）和 `drivers.number`（车手号码）两个同名列，evidence 未区分。三范式 Agent 都用了 `qualifying.number`→全部 INCORRECT |
+| **修正** | evidence 补 `his number refers to drivers.number` |
+| **验证** | 修正后三范式全部 CORRECT（JOIN drivers 取 `drivers.number`）。同时 DLR/ER/RDF 三范式为三个 `number` 列补了 description（Driver number / Qualifying position / Race finishing position）。2026-07-27 修正 mini_dev_sqlite.json。 |
+
 ### 处理约定
 
 - 对 gold SQL 与题意相悖的题目，**直接覆盖 gold cache 的 `rows` 与 `columns` 为正确结果**，保持 `ok=True`。
