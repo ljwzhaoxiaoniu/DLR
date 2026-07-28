@@ -114,10 +114,16 @@ logical_entities:
       physical_column_id: card_games.cards.duelDeck
 - logical_entity_id: LOGICAL.CardExtension
   biz_name: CardExtension
-  description: Rulings, legalities, foreign data
+  description: Card extensions — format legality (commander/modern/legacy etc.) with status, official rulings (text/date), and foreign language translations; linked to card via uuid
   public_attributes:
   - attr_id: LOGICAL.CardExtension.Card
     biz_name: Card
+  - attr_id: LOGICAL.CardExtension.Format
+    biz_name: format
+    description: 'Format name: e.g. commander, modern, legacy, vintage, pauper, duel, premodern, penny'
+  - attr_id: LOGICAL.CardExtension.LegalStatus
+    biz_name: status
+    description: 'Legality status: Legal, Banned, Restricted'
   physical_entities:
   - physical_entity_id: PHYSICAL.Legality
     physical_table_name: legalities
@@ -128,14 +134,10 @@ logical_entities:
     R: null
     C:
       LOGICAL.CardExtension.Card: card_games.legalities.uuid
-    S: Format legalities
-    private_attributes:
-    - attr_id: card_games.legalities.format
-      biz_name: format
-      physical_column_id: card_games.legalities.format
-    - attr_id: card_games.legalities.status
-      biz_name: status
-      physical_column_id: card_games.legalities.status
+      LOGICAL.CardExtension.Format: card_games.legalities.format
+      LOGICAL.CardExtension.LegalStatus: card_games.legalities.status
+    S: Format legalities — format name and legality status per card
+    private_attributes: []
   - physical_entity_id: PHYSICAL.Ruling
     physical_table_name: rulings
     physical_table_id: card_games.rulings
