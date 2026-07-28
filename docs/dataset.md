@@ -420,6 +420,17 @@ FROM (
 | **修正** | evidence 补 `his number refers to drivers.number` |
 | **验证** | 修正后三范式全部 CORRECT（JOIN drivers 取 `drivers.number`）。同时 DLR/ER/RDF 三范式为三个 `number` 列补了 description（Driver number / Qualifying position / Race finishing position）。2026-07-27 修正 mini_dev_sqlite.json。 |
 
+### qid 1037 — `european_football_2`（evidence 公式用错 JOIN 键，2026-07-28 修正）
+
+- **问题**：Calculate the percentage of players who prefer left foot, who were born between 1987 and 1992.
+- **原 evidence**：`COUNT(player_fifa_api_id)`
+
+| | 内容 |
+|---|---|
+| **Bug** | evidence 公式写 `COUNT(player_fifa_api_id)`，但 gold SQL JOIN 用的是 `player_api_id`。Player 表同时有 `player_api_id` 和 `player_fifa_api_id` 两列，都是合法的 JOIN 键但值不同。ER 和 RDF 按 evidence 使用 `player_fifa_api_id`→结果 25.6% vs gold 24.6%→INCORRECT |
+| **修正** | evidence `player_fifa_api_id` → `player_api_id`，与 gold SQL 一致 |
+| **验证** | 修正后三范式统一使用 `player_api_id`。同时 DLR 模型补了 `player_fifa_api_id` 列（private + 描述区分），保证三范式公平对比。2026-07-28 修正 mini_dev_sqlite.json。 |
+
 ### 处理约定
 
 - 对 gold SQL 与题意相悖的题目，**直接覆盖 gold cache 的 `rows` 与 `columns` 为正确结果**，保持 `ok=True`。
