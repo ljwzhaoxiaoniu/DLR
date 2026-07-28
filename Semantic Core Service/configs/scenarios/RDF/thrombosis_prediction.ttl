@@ -20,7 +20,8 @@
     rr:predicateObjectMap [ rr:predicate <http://example.org/Examination/ANA> ; rr:objectMap [ rr:column "ANA" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Examination/ANA_Pattern> ; rr:objectMap [ rr:column "ANA Pattern" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Examination/aCL_IgA> ; rr:objectMap [ rr:column "aCL IgA" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/Examination/Diagnosis> ; rr:objectMap [ rr:column "Diagnosis" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/Examination/Diagnosis> ; rr:objectMap [ rr:column "Diagnosis" ; rr:datatype xsd:string ] ;
+        rdfs:comment "Examination diagnosis: diagnosis during this exam, may include comorbidities, NOT the primary diagnosis"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Examination/KCT> ; rr:objectMap [ rr:column "KCT" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Examination/RVVT> ; rr:objectMap [ rr:column "RVVT" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Examination/LAC> ; rr:objectMap [ rr:column "LAC" ; rr:datatype xsd:string ] ] ;
@@ -97,7 +98,7 @@
     rr:predicateObjectMap [ rr:predicate <http://example.org/Patient/First_Date> ; rr:objectMap [ rr:column "First Date" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Patient/Admission> ; rr:objectMap [ rr:column "Admission" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Patient/Diagnosis> ; rr:objectMap [ rr:column "Diagnosis" ; rr:datatype xsd:string ] ;
-        rdfs:label "诊断结果"@zh ;
+        rdfs:comment "Primary diagnosis: patient main disease, differs from Examination.Diagnosis"@en ;
         rdfs:comment "疾病诊断结果，如 SLE=系统性红斑狼疮、MCTD=混合性结缔组织病"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/Patient/refers_to_Examination> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/thrombosis_prediction/Examination> ; rr:joinCondition [ rr:child "ID" ; rr:parent "ID" ] ] ] .
 

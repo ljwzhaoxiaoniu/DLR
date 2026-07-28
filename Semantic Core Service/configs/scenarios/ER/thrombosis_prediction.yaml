@@ -48,7 +48,7 @@ entities:
     data_type: integer
   - attr_id: thrombosis_prediction.Examination.Diagnosis
     biz_name: Diagnosis
-    description: disease names
+    description: 'Examination diagnosis: diagnosis during this exam, may include comorbidities (e.g. SLE+Psy), NOT the primary diagnosis'
     physical_column_id: thrombosis_prediction.Examination.Diagnosis
     data_type: text
   - attr_id: thrombosis_prediction.Examination.KCT
@@ -129,7 +129,7 @@ entities:
     data_type: text
   - attr_id: thrombosis_prediction.Patient.Diagnosis
     biz_name: Diagnosis
-    description: disease names
+    description: 'Primary diagnosis: patient main disease (e.g. SLE), this is the diagnosis referred to in queries, differs from Examination.Diagnosis'
     physical_column_id: thrombosis_prediction.Patient.Diagnosis
     data_type: text
 - entity_id: thrombosis_prediction.Laboratory
