@@ -1,0 +1,8 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","212","toxicology","FAIL","CORRECT","Agent correctly identified all elements tied at minimum count (ca, k, pb each with count 1); GoldResult ""ca"" is contained in PredResult, extra tied rows not penalized per criteria
+```","CORRECT","100","","14186","486","404","34048","49124"
+"er","213","toxicology","PASS","","","CORRECT","100","","19491","1047","785","93952","115275"
+"dlr","212","toxicology","FAIL","CORRECT","手动翻盘: judge超时。ca是tied minimum(3元素count=1)之一, Gold仅含ca, 答案正确","CORRECT","100","","16109","400","499","24960","41968"
+"dlr","213","toxicology","PASS","","","CORRECT","100","","16325","354","432","24320","41431"
+"rdf","212","toxicology","FAIL","CORRECT","手动翻盘: judge超时。ca是tied minimum(3元素count=1)之一, gold仅为ca, LIMIT 10多余行不扣分","CORRECT","100","","13444","324","359","15104","29231"
+"rdf","213","toxicology","FAIL","CORRECT","手动翻盘: judge超时。SQL逻辑与ER/DLR一致(UNION两端), 仅多bond_id列, bond_type答案正确","CORRECT","100","","13397","428","629","20864","35318"

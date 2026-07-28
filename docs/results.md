@@ -67,7 +67,9 @@
 | 115-116 | student | q1340, q1344 | 100% | 100% | 100% | student_club 第五对全通；ER+RDF strict PASS；DLR q1340 judge 翻盘 |
 | 117-118 | thrombosis | q1164, q1166 | 100% | 100% | 100% | thrombosis 第五对全通；q1164 三范式 strict PASS；q1166 evidence 修正 + 三范式 Diagnosis 列描述区分后全 CORRECT |
 
-**round_1 前 118 对完成 — 336/354 CORRECT（ER 112/118, DLR 117/118, RDF 108/118）**
+| 119-120 | toxicology | q212, q213 | 100% | 100% | 100% | toxicology 第五对全通；q213 ER/DLR strict PASS, RDF 手动翻盘；q212 三范式 judge 全翻（tied minimum） |
+
+**round_1 前 120 对完成 — 342/360 CORRECT（ER 114/120, DLR 119/120, RDF 110/120）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -191,6 +193,8 @@
 | q1344 | 61,185 | **39,130** | 27,522 |
 | q1164 | 52,462 | 52,132 | **36,101** |
 | q1166 | 48,084 | 41,830 | **37,609** |
+| q212 | 49,124 | 41,968 | **29,231** |
+| q213 | 115,275 | **41,431** | 35,318 |
 
 \* 粗体 = 该题最优范式
 
@@ -201,9 +205,9 @@
 | strict PASS 率 | 41% (41/99) | **45% (45/99)** | 42% (42/99) |
 | 最低单题 | 29,068 (q723) | 31,353 (q195) | **25,992 (q200)** |
 | 最高单题 | 295,225 (q1500) | 195,482 (q1481) | **254,156 (q532)** |
-| 平均 total | 74,490 | 62,913 | **62,886** |
-| CORRECT | 112/118 | 117/118 | 108/118 |
-| 总计 | **336/354** | - | - |
+| 平均 total | 74,655 | 62,735 | **62,581** |
+| CORRECT | 114/120 | 119/120 | 110/120 |
+| 总计 | **343/360** | - | - |
 
 ### 定性观察
 
@@ -257,6 +261,6 @@
 
 ## 下一步
 
-- debit_card 30/30 ✅ → student 10/48 → thrombosis 10/50 → football 8/51 → formula_1 8/66 → superhero 8/52 → codebase 10/49 → card_games 12/52 → toxicology 8/40 → california 6/30 → financial 8/32 → 待续
+- debit_card 30/30 ✅ → student 10/48 → thrombosis 10/50 → football 8/51 → formula_1 8/66 → superhero 8/52 → codebase 10/49 → card_games 12/52 → toxicology 10/40 → california 6/30 → financial 8/32 → 待续
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 
