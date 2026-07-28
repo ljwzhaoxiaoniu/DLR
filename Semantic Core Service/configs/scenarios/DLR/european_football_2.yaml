@@ -48,7 +48,11 @@ logical_entities:
       LOGICAL.Player.Height: european_football_2.Player.height
       LOGICAL.Player.Weight: european_football_2.Player.weight
     S: Player basic info — name, birthday, height, weight
-    private_attributes: []
+    private_attributes:
+    - attr_id: european_football_2.Player.player_fifa_api_id
+      biz_name: player_fifa_api_id
+      physical_column_id: european_football_2.Player.player_fifa_api_id
+      description: 'Player FIFA ID: FIFA system ID, DIFFERENT from player_api_id which is the primary join key'
   - physical_entity_id: PHYSICAL.PlayerAttribute
     physical_table_name: Player_Attributes
     physical_table_id: european_football_2.Player_Attributes
