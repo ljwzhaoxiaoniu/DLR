@@ -62,9 +62,10 @@
 | 105-106 | financial | q99, q100 | 100% | 100% | 100% | financial 第四对全通；q100 DLR 建模修复后 148K→89K strict PASS（-40%）；q99 三范式 judge 全翻 |
 | 107-108 | superhero | q730, q732 | 100% | 100% | 100% | superhero 第五对全通；ER+RDF strict PASS；DLR 建模修复后 108K→47K（-57%），q730 judge翻盘 |
 | 109-110 | card_games | q356, q358 | 100% | 100% | 100% | card_games 第五对全通；q356 三范式 strict PASS；q358 三范式 judge 全翻（缺 DISTINCT）；DLR 4步/33K 最低 |
-| 111-112 | card_games | q366, q368 | 100% | 100% | 100% | card_games 第六对全通；q368 三范式 strict PASS；q366 三范式 judge 全翻（format 列多选） |
+| 111-112 | card_games | q366, q368 | 100% | 100% | 100% | card_games 第六对全通；q368 三范式 strict PASS；q366 DLR 建模修复后 110K→36K strict PASS |
+| 113-114 | codebase | q555, q557 | 100% | 100% | 100% | codebase 第五对全通；三范式 strict PASS（零 judge） |
 
-**round_1 前 112 对完成 — 318/336 CORRECT（ER 106/112, DLR 110/112, RDF 102/112）**
+**round_1 前 114 对完成 — 324/342 CORRECT（ER 108/114, DLR 112/114, RDF 104/114）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -182,6 +183,8 @@
 | q358 | 75,681 | **32,909** | 51,641 |
 | q366 | 49,239 | **36,324** | 60,841 |
 | q368 | 42,655 | **32,962** | 36,478 |
+| q555 | **46,479** | 50,639 | 100,051 |
+| q557 | 59,209 | **61,472** | 51,605 |
 
 \* 粗体 = 该题最优范式
 
@@ -192,9 +195,9 @@
 | strict PASS 率 | 41% (41/99) | **45% (45/99)** | 42% (42/99) |
 | 最低单题 | 29,068 (q723) | 31,353 (q195) | **25,992 (q200)** |
 | 最高单题 | 295,225 (q1500) | 195,482 (q1481) | **254,156 (q532)** |
-| 平均 total | 75,516 | 63,274 | **63,574** |
-| CORRECT | 106/112 | 110/112 | 102/112 |
-| 总计 | **318/336** | - | - |
+| 平均 total | 75,285 | 63,179 | **63,496** |
+| CORRECT | 108/114 | 112/114 | 104/114 |
+| 总计 | **324/342** | - | - |
 
 ### 定性观察
 
@@ -248,6 +251,6 @@
 
 ## 下一步
 
-- debit_card 30/30 ✅ → student 8/48 → thrombosis 8/50 → football 8/51 → formula_1 8/66 → superhero 8/52 → codebase 8/49 → card_games 12/52 → toxicology 8/40 → california 6/30 → financial 8/32 → 待续
+- debit_card 30/30 ✅ → student 8/48 → thrombosis 8/50 → football 8/51 → formula_1 8/66 → superhero 8/52 → codebase 10/49 → card_games 12/52 → toxicology 8/40 → california 6/30 → financial 8/32 → 待续
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 

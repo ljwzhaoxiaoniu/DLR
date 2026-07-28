@@ -1,0 +1,7 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","555","codebase_community","PASS","","","CORRECT","100","","14364","427","328","31360","46479"
+"er","557","codebase_community","PASS","","","CORRECT","100","","18109","364","416","40320","59209"
+"dlr","555","codebase_community","PASS","","","CORRECT","100","","9289","323","323","40704","50639"
+"dlr","557","codebase_community","PASS","","","CORRECT","100","","9841","498","445","50688","61472"
+"rdf","555","codebase_community","PASS","","","CORRECT","100","","12436","549","794","86272","100051"
+"rdf","557","codebase_community","PASS","","","CORRECT","100","","17852","304","553","32896","51605"
