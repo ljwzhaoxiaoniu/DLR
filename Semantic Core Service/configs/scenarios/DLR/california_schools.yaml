@@ -55,12 +55,12 @@ logical_entities:
     description: "SAT scores (AvgScrMath/Read/Write) and FRPM statistics — Free Meal Count (free only), FRPM Count (free+reduced combined), Charter Funding Type (for charter schools), District Name, School Type, Enrollment"
     public_attributes:
       - {attr_id: LOGICAL.SchoolPerformance.School, biz_name: School}
-      - {attr_id: LOGICAL.SchoolPerformance.CharterFundingType, biz_name: CharterFundingType, description: "Charter funding type: Directly funded / Locally funded / Not in CS funding model"}
-      - {attr_id: LOGICAL.SchoolPerformance.DistrictName, biz_name: DistrictName, description: "District name, e.g. 'Riverside Unified'"}
-      - {attr_id: LOGICAL.SchoolPerformance.FRPM_5_17, biz_name: FRPM_5_17, description: "Free and Reduced Price Meals combined (FRPM) count for ages 5-17"}
-      - {attr_id: LOGICAL.SchoolPerformance.FreeMeal_5_17, biz_name: FreeMeal_5_17, description: "Free Meal Count for ages 5-17 (free only, not including reduced price meals)"}
-      - {attr_id: LOGICAL.SchoolPerformance.SchoolType, biz_name: SchoolType, description: "School type: High Schools (Public) / Elementary / etc."}
-      - {attr_id: LOGICAL.SchoolPerformance.SchoolName, biz_name: SchoolName, description: "School name from frpm table"}
+      - {attr_id: LOGICAL.SchoolPerformance.CharterFundingType, biz_name: CharterFundingType, description: "Charter Funding Type"}
+      - {attr_id: LOGICAL.SchoolPerformance.DistrictName, biz_name: DistrictName, description: "District Name"}
+      - {attr_id: LOGICAL.SchoolPerformance.FRPM_5_17, biz_name: FRPM_5_17, description: "FRPM Count (Ages 5-17)"}
+      - {attr_id: LOGICAL.SchoolPerformance.FreeMeal_5_17, biz_name: FreeMeal_5_17, description: "Free Meal Count (Ages 5-17)"}
+      - {attr_id: LOGICAL.SchoolPerformance.SchoolType, biz_name: SchoolType, description: "School Type"}
+      - {attr_id: LOGICAL.SchoolPerformance.SchoolName, biz_name: SchoolName, description: "School Name"}
     physical_entities:
       - physical_entity_id: PHYSICAL.SATScore
         physical_table_name: satscores
