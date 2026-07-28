@@ -1,0 +1,8 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","1037","european_football_2","FAIL","INCORRECT","映射信息正确但SQL选错关联字段——用player_fifa_api_id关联两表而非正确的player_api_id，导致JOIN语义偏离、结果不同
+```","INCORRECT","80","","14738","825","1487","79488","96538"
+"er","1039","european_football_2","PASS","","","CORRECT","100","","16806","538","687","48768","66799"
+"dlr","1037","european_football_2","FAIL","CORRECT","手动翻盘: judge超时。DLR正确使用player_api_id JOIN(ER/RDF错用player_fifa_api_id), SQL逻辑正确","CORRECT","100","","24560","502","7810","17664","50536"
+"dlr","1039","european_football_2","PASS","","","CORRECT","100","","18171","635","885","54016","73707"
+"rdf","1037","european_football_2","FAIL","","","INCORRECT","","","13769","390","1115","20608","35882"
+"rdf","1039","european_football_2","PASS","","","CORRECT","100","","9519","544","643","43520","54226"
