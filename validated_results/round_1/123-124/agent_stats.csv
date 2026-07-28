@@ -1,0 +1,8 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","862","formula_1","PASS","","","CORRECT","100","","7972","293","329","26240","34834"
+"er","865","formula_1","FAIL","CORRECT","语义、工具调用链、映射、SQL执行及最终答案均符合要求，结果与GoldResult一致，多余字段不扣分","CORRECT","100","","8782","380","977","38016","48155"
+"dlr","862","formula_1","PASS","","","CORRECT","100","","11159","528","423","53888","65998"
+"dlr","865","formula_1","FAIL","CORRECT","全部满足——语义正确(找raceId=592且time非空的司机中dob最小者)，工具链走正道，SQL使用正确库表JOIN与筛选，执行成功，最终答案Jean-Pierre Beltoise与GoldResult一致。","CORRECT","100","","2734","322","550","30720","34326"
+"rdf","862","formula_1","PASS","","","CORRECT","100","","8164","440","458","33536","42598"
+"rdf","865","formula_1","FAIL","CORRECT","全部条件满足——语义正确（raceId=592, time IS NOT NULL, dob ASC取最年长），工具链正确，SQL执行成功，最终答案 Jean-Pierre Beltoise 与 GoldResult 一致（PredResult 仅多了 driverId 和 dob 列，不扣分）
+```","CORRECT","100","","7841","256","827","21120","30044"
