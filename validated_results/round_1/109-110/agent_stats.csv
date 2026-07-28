@@ -1,0 +1,10 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","356","card_games","PASS","","","CORRECT","100","","11166","414","449","60416","72445"
+"er","358","card_games","FAIL","CORRECT","五步全部通过——语义定位正确、工具链走正道、库表字段来自映射、SQL执行成功、最终答案""black""与GoldResult一致（DISTINCT缺失导致多余行列但不扣分）
+```","CORRECT","100","","18733","288","468","56192","75681"
+"dlr","356","card_games","PASS","","","CORRECT","100","","15561","236","236","16896","32929"
+"dlr","358","card_games","FAIL","CORRECT","全部条件满足——语义定位正确、工具链走正道、库表字段映射正确、SQL执行成功、最终答案""black""与GoldResult一致（DISTINCT缺失仅产生重复行，答案值正确）
+```","CORRECT","100","","8898","166","293","23552","32909"
+"rdf","356","card_games","PASS","","","CORRECT","100","","12918","233","294","14080","27525"
+"rdf","358","card_games","FAIL","CORRECT","全部步骤通过——语义定位cards表正确，工具链rdf_semantic_query→query_rdf_mapping→execute_sql走正道，database_url和字段均来自映射返回，SQL执行成功，最终答案""black""与GoldResult一致（DISTINCT缺失导致多行但不影响答案正确性）。
+```","CORRECT","100","","6358","270","469","44544","51641"
