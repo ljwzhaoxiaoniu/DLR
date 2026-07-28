@@ -7,30 +7,30 @@ databases:
 logical_entities:
   - logical_entity_id: LOGICAL.School
     biz_name: School
-    description: "California school profile"
+    description: "California school profile — CDSCode, School name, Street, City, County, District, Zip, State, Charter, FundingType"
     public_attributes:
       - {attr_id: LOGICAL.School.SchoolCode, biz_name: SchoolCode}
+      - {attr_id: LOGICAL.School.SchoolName, biz_name: SchoolName, description: "School name"}
+      - {attr_id: LOGICAL.School.Street, biz_name: Street, description: "Street address"}
+      - {attr_id: LOGICAL.School.City, biz_name: City, description: "City name"}
+      - {attr_id: LOGICAL.School.State, biz_name: State, description: "State code"}
+      - {attr_id: LOGICAL.School.Zip, biz_name: Zip, description: "Zip code"}
+      - {attr_id: LOGICAL.School.County, biz_name: County, description: "County name"}
     physical_entities:
       - physical_entity_id: PHYSICAL.School
         physical_table_name: schools
         physical_table_id: california_schools.schools
         A: {cardinality: "1:1", key: CDSCode}
         R: null
-        C: {LOGICAL.School.SchoolCode: california_schools.schools.CDSCode}
-        S: "School master"
+        C: {LOGICAL.School.SchoolCode: california_schools.schools.CDSCode, LOGICAL.School.SchoolName: california_schools.schools.School, LOGICAL.School.Street: california_schools.schools.Street, LOGICAL.School.City: california_schools.schools.City, LOGICAL.School.State: california_schools.schools.State, LOGICAL.School.Zip: california_schools.schools.Zip, LOGICAL.School.County: california_schools.schools.County}
+        S: "School master — CDSCode, name, address, district"
         private_attributes:
-          - {attr_id: california_schools.schools.School, biz_name: School, physical_column_id: california_schools.schools.School}
-          - {attr_id: california_schools.schools.City, biz_name: City, physical_column_id: california_schools.schools.City}
-          - {attr_id: california_schools.schools.County, biz_name: County, physical_column_id: california_schools.schools.County}
           - {attr_id: california_schools.schools.District, biz_name: District, physical_column_id: california_schools.schools.District}
-          - {attr_id: california_schools.schools.Street, biz_name: Street, physical_column_id: california_schools.schools.Street}
-          - {attr_id: california_schools.schools.State, biz_name: State, physical_column_id: california_schools.schools.State}
-          - {attr_id: california_schools.schools.Zip, biz_name: Zip, physical_column_id: california_schools.schools.Zip}
           - {attr_id: california_schools.schools.Phone, biz_name: Phone, physical_column_id: california_schools.schools.Phone}
           - {attr_id: california_schools.schools.Virtual, biz_name: Virtual, physical_column_id: california_schools.schools.Virtual}
           - {attr_id: california_schools.schools.Charter, biz_name: Charter, physical_column_id: california_schools.schools.Charter}
           - {attr_id: california_schools.schools.CharterNum, biz_name: CharterNum, physical_column_id: california_schools.schools.CharterNum}
-          - {attr_id: california_schools.schools.FundingType, biz_name: FundingType, physical_column_id: california_schools.schools.FundingType}
+          - {attr_id: california_schools.schools.FundingType, biz_name: FundingType, physical_column_id: california_schools.schools.FundingType, description: "Funding type from schools table, DIFFERENT from Charter Funding Type in frpm table"}
           - {attr_id: california_schools.schools.DOC, biz_name: DOC, physical_column_id: california_schools.schools.DOC}
           - {attr_id: california_schools.schools.SOC, biz_name: SOC, physical_column_id: california_schools.schools.SOC}
           - {attr_id: california_schools.schools.EdOpsCode, biz_name: EdOpsCode, physical_column_id: california_schools.schools.EdOpsCode}
@@ -52,9 +52,15 @@ logical_entities:
           - {attr_id: california_schools.schools.longitude, biz_name: longitude, physical_column_id: california_schools.schools.longitude}
   - logical_entity_id: LOGICAL.SchoolPerformance
     biz_name: SchoolPerformance
-    description: "SAT scores and FRPM statistics"
+    description: "SAT scores (AvgScrMath/Read/Write) and FRPM statistics — Free Meal Count (free only), FRPM Count (free+reduced combined), Charter Funding Type (for charter schools), District Name, School Type, Enrollment"
     public_attributes:
       - {attr_id: LOGICAL.SchoolPerformance.School, biz_name: School}
+      - {attr_id: LOGICAL.SchoolPerformance.CharterFundingType, biz_name: CharterFundingType, description: "Charter funding type: Directly funded / Locally funded / Not in CS funding model"}
+      - {attr_id: LOGICAL.SchoolPerformance.DistrictName, biz_name: DistrictName, description: "District name, e.g. 'Riverside Unified'"}
+      - {attr_id: LOGICAL.SchoolPerformance.FRPM_5_17, biz_name: FRPM_5_17, description: "Free + Reduced Price Meals count for ages 5-17 — use for 'free or reduced' queries"}
+      - {attr_id: LOGICAL.SchoolPerformance.FreeMeal_5_17, biz_name: FreeMeal_5_17, description: "Free Meal Count only (ages 5-17), NOT including reduced meals — differs from FRPM Count which includes both"}
+      - {attr_id: LOGICAL.SchoolPerformance.SchoolType, biz_name: SchoolType, description: "School type: High Schools (Public) / Elementary / etc."}
+      - {attr_id: LOGICAL.SchoolPerformance.SchoolName, biz_name: SchoolName, description: "School name from frpm table"}
     physical_entities:
       - physical_entity_id: PHYSICAL.SATScore
         physical_table_name: satscores
@@ -74,20 +80,14 @@ logical_entities:
         physical_table_id: california_schools.frpm
         A: {cardinality: "1:1", key: CDSCode}
         R: null
-        C: {LOGICAL.SchoolPerformance.School: california_schools.frpm.CDSCode}
-        S: "Free/reduced price meal statistics"
+        C: {LOGICAL.SchoolPerformance.School: california_schools.frpm.CDSCode, LOGICAL.SchoolPerformance.CharterFundingType: california_schools.frpm.\"Charter Funding Type\", LOGICAL.SchoolPerformance.DistrictName: california_schools.frpm.\"District Name\", LOGICAL.SchoolPerformance.FRPM_5_17: california_schools.frpm.\"FRPM Count (Ages 5-17)\", LOGICAL.SchoolPerformance.FreeMeal_5_17: california_schools.frpm.\"Free Meal Count (Ages 5-17)\", LOGICAL.SchoolPerformance.SchoolType: california_schools.frpm.\"School Type\", LOGICAL.SchoolPerformance.SchoolName: california_schools.frpm.\"School Name\"}
+        S: "FRPM statistics — enrollment, free meals, FRPM combined, charter funding, district"
         private_attributes:
           - {attr_id: california_schools.frpm.`Enrollment (K-12)`, biz_name: Enrollment_K12, physical_column_id: california_schools.frpm.`Enrollment (K-12)`}
           - {attr_id: california_schools.frpm.`Enrollment (Ages 5-17)`, biz_name: Enrollment_5_17, physical_column_id: california_schools.frpm.`Enrollment (Ages 5-17)`}
           - {attr_id: california_schools.frpm.`Free Meal Count (K-12)`, biz_name: FreeMeal_K12, physical_column_id: california_schools.frpm.`Free Meal Count (K-12)`}
-          - {attr_id: california_schools.frpm.`Free Meal Count (Ages 5-17)`, biz_name: FreeMeal_5_17, physical_column_id: california_schools.frpm.`Free Meal Count (Ages 5-17)`}
           - {attr_id: california_schools.frpm.`FRPM Count (K-12)`, biz_name: FRPM_K12, physical_column_id: california_schools.frpm.`FRPM Count (K-12)`}
-          - {attr_id: california_schools.frpm.`FRPM Count (Ages 5-17)`, biz_name: FRPM_5_17, physical_column_id: california_schools.frpm.`FRPM Count (Ages 5-17)`}
           - {attr_id: california_schools.frpm.`NSLP Provision Status`, biz_name: NSLP_Status, physical_column_id: california_schools.frpm.`NSLP Provision Status`}
-          - {attr_id: california_schools.frpm.`Charter Funding Type`, biz_name: CharterFundingType, physical_column_id: california_schools.frpm.`Charter Funding Type`}
-          - {attr_id: california_schools.frpm.`District Name`, biz_name: DistrictName, physical_column_id: california_schools.frpm.`District Name`}
-          - {attr_id: california_schools.frpm.`School Name`, biz_name: SchoolName, physical_column_id: california_schools.frpm.`School Name`}
-          - {attr_id: california_schools.frpm.`School Type`, biz_name: SchoolType, physical_column_id: california_schools.frpm.`School Type`}
           - {attr_id: california_schools.frpm.`Academic Year`, biz_name: AcademicYear, physical_column_id: california_schools.frpm.`Academic Year`}
           - {attr_id: california_schools.frpm.`District Code`, biz_name: DistrictCode, physical_column_id: california_schools.frpm.`District Code`}
 pas_relations:
