@@ -34,7 +34,7 @@ logical_entities:
     - attr_id: thrombosis_prediction.Patient.Diagnosis
       biz_name: Diagnosis
       physical_column_id: thrombosis_prediction.Patient.Diagnosis
-      description: '诊断结果: 疾病诊断结果，如 SLE=系统性红斑狼疮、MCTD=混合性结缔组织病'
+      description: 'Primary diagnosis: patient main disease diagnosis (e.g. SLE), differs from Examination.Diagnosis which may include exam-specific comorbidities'
     - attr_id: thrombosis_prediction.Patient.Admission
       biz_name: Admission
       physical_column_id: thrombosis_prediction.Patient.Admission
@@ -197,6 +197,13 @@ logical_entities:
     - attr_id: thrombosis_prediction.Examination.Symptoms
       biz_name: Symptoms
       physical_column_id: thrombosis_prediction.Examination.Symptoms
+    - attr_id: thrombosis_prediction.Examination.Diagnosis
+      biz_name: Diagnosis
+      physical_column_id: thrombosis_prediction.Examination.Diagnosis
+      description: 'Examination diagnosis: diagnosis noted during this specific exam, may include comorbidities (e.g. SLE+Psy), differs from Patient.Diagnosis which is the primary diagnosis'
+    - attr_id: thrombosis_prediction.Examination.ANA
+      biz_name: ANA
+      physical_column_id: thrombosis_prediction.Examination.ANA
 pas_relations:
 - relation_id: LOGICAL.Patient_TO_LOGICAL.LaboratoryTest
   relation_name: HasLabTest
