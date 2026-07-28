@@ -64,8 +64,9 @@
 | 109-110 | card_games | q356, q358 | 100% | 100% | 100% | card_games 第五对全通；q356 三范式 strict PASS；q358 三范式 judge 全翻（缺 DISTINCT）；DLR 4步/33K 最低 |
 | 111-112 | card_games | q366, q368 | 100% | 100% | 100% | card_games 第六对全通；q368 三范式 strict PASS；q366 DLR 建模修复后 110K→36K strict PASS |
 | 113-114 | codebase | q555, q557 | 100% | 100% | 100% | codebase 第五对全通；三范式 strict PASS（零 judge） |
+| 115-116 | student | q1340, q1344 | 100% | 100% | 100% | student_club 第五对全通；ER+RDF strict PASS；DLR q1340 judge 翻盘 |
 
-**round_1 前 114 对完成 — 324/342 CORRECT（ER 108/114, DLR 112/114, RDF 104/114）**
+**round_1 前 116 对完成 — 330/348 CORRECT（ER 110/116, DLR 114/116, RDF 106/116）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -185,6 +186,8 @@
 | q368 | 42,655 | **32,962** | 36,478 |
 | q555 | **46,479** | 50,639 | 100,051 |
 | q557 | 59,209 | **61,472** | 51,605 |
+| q1340 | 52,963 | 72,344 | **45,518** |
+| q1344 | 61,185 | **39,130** | 27,522 |
 
 \* 粗体 = 该题最优范式
 
@@ -195,9 +198,9 @@
 | strict PASS 率 | 41% (41/99) | **45% (45/99)** | 42% (42/99) |
 | 最低单题 | 29,068 (q723) | 31,353 (q195) | **25,992 (q200)** |
 | 最高单题 | 295,225 (q1500) | 195,482 (q1481) | **254,156 (q532)** |
-| 平均 total | 75,285 | 63,179 | **63,496** |
-| CORRECT | 108/114 | 112/114 | 104/114 |
-| 总计 | **324/342** | - | - |
+| 平均 total | 75,085 | 63,074 | **63,125** |
+| CORRECT | 110/116 | 114/116 | 106/116 |
+| 总计 | **330/348** | - | - |
 
 ### 定性观察
 
@@ -251,6 +254,6 @@
 
 ## 下一步
 
-- debit_card 30/30 ✅ → student 8/48 → thrombosis 8/50 → football 8/51 → formula_1 8/66 → superhero 8/52 → codebase 10/49 → card_games 12/52 → toxicology 8/40 → california 6/30 → financial 8/32 → 待续
+- debit_card 30/30 ✅ → student 10/48 → thrombosis 8/50 → football 8/51 → formula_1 8/66 → superhero 8/52 → codebase 10/49 → card_games 12/52 → toxicology 8/40 → california 6/30 → financial 8/32 → 待续
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 
