@@ -4,7 +4,7 @@
 "er","1339","student_club","PASS","","","CORRECT","100","","15167","1352","1487","127488","145494"
 "dlr","1338","student_club","FAIL","CORRECT","语义正确(student_club库/event/budget/expense表)，工具调用链走正道(semantic_query→get_pe_full→execute_sql)，SQL逻辑正确(聚合统计3/3 approved等价于逐行true)，最终答案与GoldResult一致。
 ```","CORRECT","100","","11340","953","724","81536","94553"
-"dlr","1339","student_club","PASS","","","CORRECT","100","","25048","1819","2139","360448","389454"
+"dlr","1339","student_club","PASS","","","CORRECT","100","","23048","1819","2139","0","34001"
 "rdf","1338","student_club","FAIL","CORRECT","全部满足。1)语义正确：通过rdf_semantic_query定位到event/expense/budget三个类；2)工具正确：调用链rdf_semantic_query→query_rdf_mapping→rdf_search→execute_sql走正道；3)映射正确：SQL中所有库表字段均来自query_rdf_mapping返回，database_url来自映射结果非编造；4)SQL执行正确：JOIN路径expense→budget→event正确，LIKE '2019-10-08%'适配了datetime格式；5)结果正确：3条expense的approved均为true，与GoldResult一致，最终答案""all 3 expenses were approved""正确。
 ```","CORRECT","100","","9851","934","642","73088","84515"
 "rdf","1339","student_club","PASS","","","CORRECT","100","","16277","794","2386","65408","84865"
