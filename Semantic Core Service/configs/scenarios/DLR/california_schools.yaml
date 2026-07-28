@@ -57,8 +57,8 @@ logical_entities:
       - {attr_id: LOGICAL.SchoolPerformance.School, biz_name: School}
       - {attr_id: LOGICAL.SchoolPerformance.CharterFundingType, biz_name: CharterFundingType, description: "Charter funding type: Directly funded / Locally funded / Not in CS funding model"}
       - {attr_id: LOGICAL.SchoolPerformance.DistrictName, biz_name: DistrictName, description: "District name, e.g. 'Riverside Unified'"}
-      - {attr_id: LOGICAL.SchoolPerformance.FRPM_5_17, biz_name: FRPM_5_17, description: "Free + Reduced Price Meals count for ages 5-17 — use for 'free or reduced' queries"}
-      - {attr_id: LOGICAL.SchoolPerformance.FreeMeal_5_17, biz_name: FreeMeal_5_17, description: "Free Meal Count only (ages 5-17), NOT including reduced meals — differs from FRPM Count which includes both"}
+      - {attr_id: LOGICAL.SchoolPerformance.FRPM_5_17, biz_name: FRPM_5_17, description: "Free and Reduced Price Meals combined (FRPM) count for ages 5-17"}
+      - {attr_id: LOGICAL.SchoolPerformance.FreeMeal_5_17, biz_name: FreeMeal_5_17, description: "Free Meal Count for ages 5-17 (free only, not including reduced price meals)"}
       - {attr_id: LOGICAL.SchoolPerformance.SchoolType, biz_name: SchoolType, description: "School type: High Schools (Public) / Elementary / etc."}
       - {attr_id: LOGICAL.SchoolPerformance.SchoolName, biz_name: SchoolName, description: "School name from frpm table"}
     physical_entities:
