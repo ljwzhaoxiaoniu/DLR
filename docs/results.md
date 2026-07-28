@@ -65,9 +65,9 @@
 | 111-112 | card_games | q366, q368 | 100% | 100% | 100% | card_games 第六对全通；q368 三范式 strict PASS；q366 DLR 建模修复后 110K→36K strict PASS |
 | 113-114 | codebase | q555, q557 | 100% | 100% | 100% | codebase 第五对全通；三范式 strict PASS（零 judge） |
 | 115-116 | student | q1340, q1344 | 100% | 100% | 100% | student_club 第五对全通；ER+RDF strict PASS；DLR q1340 judge 翻盘 |
-| 117-118 | thrombosis | q1164, q1166 | 100% | 100% | 100% | thrombosis 第五对全通；q1164 三范式 strict PASS；q1166 三范式手动翻盘（judge 超时，SQL 逻辑正确） |
+| 117-118 | thrombosis | q1164, q1166 | 50% | 100% | 50% | thrombosis 第五对；q1164 三范式 strict PASS；q1166 ER+RDF 取错 Diagnosis 列（Patient 和 Examination 有同名 Diagnosis 列但值不同），DLR 正确取 p.Diagnosis |
 
-**round_1 前 118 对完成 — 336/354 CORRECT（ER 112/118, DLR 116/118, RDF 108/118）**
+**round_1 前 118 对完成 — 334/354 CORRECT（ER 111/118, DLR 116/118, RDF 107/118）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -201,9 +201,9 @@
 | strict PASS 率 | 41% (41/99) | **45% (45/99)** | 42% (42/99) |
 | 最低单题 | 29,068 (q723) | 31,353 (q195) | **25,992 (q200)** |
 | 最高单题 | 295,225 (q1500) | 195,482 (q1481) | **254,156 (q532)** |
-| 平均 total | 74,908 | 62,913 | **62,886** |
-| CORRECT | 112/118 | 116/118 | 108/118 |
-| 总计 | **336/354** | - | - |
+| 平均 total | 74,490 | 62,913 | **62,886** |
+| CORRECT | 111/118 | 116/118 | 107/118 |
+| 总计 | **334/354** | - | - |
 
 ### 定性观察
 
