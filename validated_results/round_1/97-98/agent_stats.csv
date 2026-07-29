@@ -1,7 +1,7 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"er","1157","thrombosis_prediction","PASS","","","CORRECT","100","","15104","574","292","38144","54114"
-"er","1162","thrombosis_prediction","PASS","","","CORRECT","100","","7449","320","493","20352","28614"
-"dlr","1157","thrombosis_prediction","PASS","","","CORRECT","100","","16693","442","292","24064","41491"
-"dlr","1162","thrombosis_prediction","PASS","","","CORRECT","100","","10869","510","1211","52608","65198"
-"rdf","1157","thrombosis_prediction","PASS","","","CORRECT","100","","8327","589","615","43136","52667"
-"rdf","1162","thrombosis_prediction","PASS","","","CORRECT","100","","14118","395","681","21504","36698"
+﻿paradigm,q_id,db_id,strict_match,judge_verdict,judge_reason,verdict,process_score,error,input_tokens,output_tokens,reasoning_tokens,cache_read_tokens,total_tokens
+er,1157,thrombosis_prediction,PASS,,,CORRECT,100,,15104,574,292,38144,54114
+er,1162,thrombosis_prediction,PASS,,,CORRECT,100,,7449,320,493,20352,28614
+dlr,1157,thrombosis_prediction,PASS,,,CORRECT,100,,16693,442,292,24064,41491
+dlr,1162,thrombosis_prediction,PASS,,,CORRECT,100,,15911,341,524,15872,32648
+rdf,1157,thrombosis_prediction,PASS,,,CORRECT,100,,8327,589,615,43136,52667
+rdf,1162,thrombosis_prediction,PASS,,,CORRECT,100,,14118,395,681,21504,36698
