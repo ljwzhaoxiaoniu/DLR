@@ -51,11 +51,12 @@ logical_entities:
       description: '专业ID: 成员所属专业ID，关联 major 表'
 - logical_entity_id: LOGICAL.Event
   biz_name: Event
-  description: Club events — event_name, event_date, type (Meeting/fundraiser/...), location, and status; has budgets and records member attendance
+  description: Club events — event_name, event_date, type, location, status; has budgets and records member attendance
   public_attributes:
-  - attr_id: LOGICAL.Event.EventID
-    biz_name: EventID
-    description: '活动ID: 校园活动唯一标识符'
+  - {attr_id: LOGICAL.Event.EventID, biz_name: EventID, description: 'Event ID: unique identifier'}
+  - {attr_id: LOGICAL.Event.EventName, biz_name: EventName, description: 'Event name'}
+  - {attr_id: LOGICAL.Event.EventDate, biz_name: EventDate, description: 'Event date'}
+  - {attr_id: LOGICAL.Event.Type, biz_name: Type, description: 'Event type: Meeting, fundraiser, etc.'}
   physical_entities:
   - physical_entity_id: PHYSICAL.Event
     physical_table_name: event
@@ -66,19 +67,11 @@ logical_entities:
     R: null
     C:
       LOGICAL.Event.EventID: student_club.event.event_id
+      LOGICAL.Event.EventName: student_club.event.event_name
+      LOGICAL.Event.EventDate: student_club.event.event_date
+      LOGICAL.Event.Type: student_club.event.type
     S: Event records
-    private_attributes:
-    - attr_id: student_club.event.event_name
-      biz_name: event_name
-      physical_column_id: student_club.event.event_name
-      description: '活动名称: 校园活动名称'
-    - attr_id: student_club.event.event_date
-      biz_name: event_date
-      physical_column_id: student_club.event.event_date
-    - attr_id: student_club.event.type
-      biz_name: type
-      physical_column_id: student_club.event.type
-      description: '活动类型: 活动类型，如 Meeting=会议、fundraiser=筹款'
+    private_attributes: []
     - attr_id: student_club.event.location
       biz_name: location
       physical_column_id: student_club.event.location
@@ -117,7 +110,13 @@ logical_entities:
     description: '预算ID: 预算项唯一标识符'
   - attr_id: LOGICAL.Budget.Event
     biz_name: Event
-    description: '活动ID: FK→event，预算所属的活动'
+    description: 'Event ID: FK to event table'
+  - attr_id: LOGICAL.Budget.Amount
+    biz_name: Amount
+    description: 'Budget amount: total allocated budget'
+  - attr_id: LOGICAL.Budget.Spent
+    biz_name: Spent
+    description: 'Spent amount: actual expenses charged to this budget'
   physical_entities:
   - physical_entity_id: PHYSICAL.Budget
     physical_table_name: budget
@@ -129,14 +128,10 @@ logical_entities:
     C:
       LOGICAL.Budget.BudgetID: student_club.budget.budget_id
       LOGICAL.Budget.Event: student_club.budget.link_to_event
+      LOGICAL.Budget.Amount: student_club.budget.amount
+      LOGICAL.Budget.Spent: student_club.budget.spent
     S: Event budget item — amount, spent, remaining, category
     private_attributes:
-    - attr_id: student_club.budget.amount
-      biz_name: amount
-      physical_column_id: student_club.budget.amount
-    - attr_id: student_club.budget.spent
-      biz_name: spent
-      physical_column_id: student_club.budget.spent
     - attr_id: student_club.budget.category
       biz_name: category
       physical_column_id: student_club.budget.category
