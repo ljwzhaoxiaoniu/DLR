@@ -709,7 +709,11 @@ def _resolve_database_url(physical_table_id: str = "") -> str:
 
 
 def _path_le_le(from_id: str, to_id: str) -> dict:
-    """[DLR] Shortest PAS path between two logical entities (LE)."""
+    """[DLR] Find the PAS connection path between two Logical Entities (LE).
+
+    Use this when your query spans multiple LEs (e.g. Client→Account→District) —
+    it returns the sequence of LE hops and the JOIN keys (A_attribute) for each step.
+    Much cheaper than calling dlr_semantic_query repeatedly to guess connections."""
     gdb, _, _ = _ensure_services()
 
     # Step 1: validate both IDs are valid LEs
