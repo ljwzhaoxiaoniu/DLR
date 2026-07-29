@@ -1,9 +1,2 @@
-question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+﻿question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
 1521,ER,7,74604,12520,430,342,61312,5,"{""er_semantic_query"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
-1524,ER,11,89845,10386,992,1155,77312,12,"{""er_semantic_query"": 1, ""get_entity"": 2, ""get_entity_attributes"": 2, ""execute_sql"": 7}",,FAIL,INCORRECT,"失败在步骤1(语义正确)。Agent 混淆了""国籍""与""Currency""字段——customers 表只有 Currency(CZK) 无国籍属性，且 yearmonth 是月度聚合表(Date格式YYYYMM)无法回答具体日期'2012/8/24'的消费问题；正确答案(Czech)是数据巧合而非语义推导得出的。
-```",INCORRECT
-1521,DLR,10,90990,11513,465,1188,77824,9,"{""dlr_semantic_query"": 1, ""list_le"": 1, ""get_le_children"": 2, ""get_pe_full"": 3, ""recall_pe"": 1, ""execute_sql"": 1}",,FAIL,CORRECT,"Agent 完整执行了语义正确的 SQL（JOIN transactions_1k + gasstations，筛选 Date/Time/Country），执行结果 14 与 GoldResult 一致；PredJsonPath 仅截断显示首行 SQL 造成假性失败
-```",CORRECT
-1524,DLR,12,123025,12596,1022,1375,108032,15,"{""dlr_semantic_query"": 2, ""get_pe_full"": 3, ""get_le_attrs"": 1, ""execute_sql"": 9}",,PASS,,,CORRECT
-1521,RDF,6,44761,8520,513,400,35328,6,"{""rdf_semantic_query"": 2, ""query_rdf_mapping"": 3, ""execute_sql"": 1}",,PASS,,,CORRECT
-1524,RDF,6,67717,20089,611,937,46080,5,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 2, ""rdf_search"": 1, ""execute_sql"": 1}",,FAIL,CORRECT,全部步骤满足。召回库正确，工具链走正道（rdf_semantic_query → query_rdf_mapping → execute_sql），SQL 使用的表来自映射返回，SQL 表达正确且执行成功，最终答案 CZE 与 GoldResult 一致。,CORRECT
