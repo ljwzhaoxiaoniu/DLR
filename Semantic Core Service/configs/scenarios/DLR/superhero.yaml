@@ -9,9 +9,15 @@ logical_entities:
   biz_name: Superhero
   description: 超级英雄本体，集成了所有 1:1 维度查表（颜色/种族/性别/出版商/阵营），碎片化物理表对 Agent 透明
   public_attributes:
-  - attr_id: LOGICAL.Superhero.HeroID
-    biz_name: HeroID
-    description: '英雄ID: 超级英雄唯一标识符'
+  - {attr_id: LOGICAL.Superhero.HeroID, biz_name: HeroID, description: '英雄ID: 超级英雄唯一标识符'}
+  - {attr_id: LOGICAL.Superhero.HeroName, biz_name: HeroName, description: '英雄代号: 如 "Batman", "Spider-Man"'}
+  - {attr_id: LOGICAL.Superhero.EyeColour, biz_name: EyeColour, description: '眼睛颜色: 如 Blue, Brown, Gold, Red, Green'}
+  - {attr_id: LOGICAL.Superhero.PublisherName, biz_name: PublisherName, description: '出版商名称: 如 Marvel Comics, DC Comics'}
+  - {attr_id: LOGICAL.Superhero.Race, biz_name: Race, description: '种族: 如 Human, Kryptonian, Mutant'}
+  - {attr_id: LOGICAL.Superhero.Gender, biz_name: Gender, description: '性别: Male / Female'}
+  - {attr_id: LOGICAL.Superhero.Alignment, biz_name: Alignment, description: '阵营: Good / Bad / Neutral'}
+  - {attr_id: LOGICAL.Superhero.Height_cm, biz_name: Height_cm, description: '身高(cm)'}
+  - {attr_id: LOGICAL.Superhero.Weight_kg, biz_name: Weight_kg, description: '体重(kg)'}
   physical_entities:
   - physical_entity_id: PHYSICAL.Superhero
     physical_table_name: superhero
@@ -22,24 +28,15 @@ logical_entities:
     R: null
     C:
       LOGICAL.Superhero.HeroID: superhero.superhero.id
-    S: Hero master — 主记录
+      LOGICAL.Superhero.HeroName: superhero.superhero.superhero_name
+      LOGICAL.Superhero.Height_cm: superhero.superhero.height_cm
+      LOGICAL.Superhero.Weight_kg: superhero.superhero.weight_kg
+    S: Hero master — 主记录, FK→colour/race/gender/publisher/alignment
     private_attributes:
-    - attr_id: superhero.superhero.superhero_name
-      biz_name: superhero_name
-      physical_column_id: superhero.superhero.superhero_name
-      description: '英雄名称: 超级英雄的代号，如 "Batman"'
     - attr_id: superhero.superhero.full_name
       biz_name: full_name
       physical_column_id: superhero.superhero.full_name
       description: '全名: 超级英雄的真实姓名'
-    - attr_id: superhero.superhero.height_cm
-      biz_name: height_cm
-      physical_column_id: superhero.superhero.height_cm
-      description: '身高(cm): 英雄身高，单位厘米'
-    - attr_id: superhero.superhero.weight_kg
-      biz_name: weight_kg
-      physical_column_id: superhero.superhero.weight_kg
-      description: '体重(kg): 英雄体重，单位公斤'
     - attr_id: superhero.superhero.eye_colour_id
       biz_name: eye_colour_id
       physical_column_id: superhero.superhero.eye_colour_id
@@ -77,12 +74,9 @@ logical_entities:
     R: null
     C:
       LOGICAL.Superhero.HeroID: superhero.colour.id
+      LOGICAL.Superhero.EyeColour: superhero.colour.colour
     S: 颜色字典 — superhero.eye_colour_id / hair_colour_id / skin_colour_id 三条 FK 路径均指向此表
-    private_attributes:
-    - attr_id: superhero.colour.colour
-      biz_name: colour
-      physical_column_id: superhero.colour.colour
-      description: '颜色名称: 如 Blue, Brown, Red, Green, Black 等'
+    private_attributes: []
   - physical_entity_id: PHYSICAL.HeroRace
     physical_table_name: race
     physical_table_id: superhero.race
@@ -92,12 +86,9 @@ logical_entities:
     R: null
     C:
       LOGICAL.Superhero.HeroID: superhero.race.id
+      LOGICAL.Superhero.Race: superhero.race.race
     S: 种族字典 — superhero.race_id → race.id
-    private_attributes:
-    - attr_id: superhero.race.race
-      biz_name: race
-      physical_column_id: superhero.race.race
-      description: '种族名称: 如 Human, Kryptonian, Mutant 等'
+    private_attributes: []
   - physical_entity_id: PHYSICAL.Gender
     physical_table_name: gender
     physical_table_id: superhero.gender
@@ -107,12 +98,9 @@ logical_entities:
     R: null
     C:
       LOGICAL.Superhero.HeroID: superhero.gender.id
+      LOGICAL.Superhero.Gender: superhero.gender.gender
     S: 性别字典 — superhero.gender_id → gender.id
-    private_attributes:
-    - attr_id: superhero.gender.gender
-      biz_name: gender
-      physical_column_id: superhero.gender.gender
-      description: '性别: Male / Female / 等'
+    private_attributes: []
   - physical_entity_id: PHYSICAL.Publisher
     physical_table_name: publisher
     physical_table_id: superhero.publisher
@@ -122,12 +110,9 @@ logical_entities:
     R: null
     C:
       LOGICAL.Superhero.HeroID: superhero.publisher.id
+      LOGICAL.Superhero.PublisherName: superhero.publisher.publisher_name
     S: 出版商字典 — superhero.publisher_id → publisher.id
-    private_attributes:
-    - attr_id: superhero.publisher.publisher_name
-      biz_name: publisher_name
-      physical_column_id: superhero.publisher.publisher_name
-      description: '出版商名称: 如 DC Comics, Marvel Comics 等'
+    private_attributes: []
   - physical_entity_id: PHYSICAL.Alignment
     physical_table_name: alignment
     physical_table_id: superhero.alignment
@@ -137,12 +122,9 @@ logical_entities:
     R: null
     C:
       LOGICAL.Superhero.HeroID: superhero.alignment.id
+      LOGICAL.Superhero.Alignment: superhero.alignment.alignment
     S: 阵营字典 — superhero.alignment_id → alignment.id
-    private_attributes:
-    - attr_id: superhero.alignment.alignment
-      biz_name: alignment
-      physical_column_id: superhero.alignment.alignment
-      description: '阵营: Good / Bad / Neutral / -'
+    private_attributes: []
 - logical_entity_id: LOGICAL.Power
   biz_name: Power
   description: Superpowers — e.g. Super Strength, Agility, Flight, Telepathy, Energy Blast; linked to heroes via hero_power junction table (many-to-many)

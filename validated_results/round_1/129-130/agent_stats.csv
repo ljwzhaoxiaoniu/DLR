@@ -1,10 +1,10 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"er","733","superhero","PASS","","","CORRECT","100","","7578","282","452","20608","28920"
-"er","736","superhero","FAIL","CORRECT","语义正确召回 Intelligence 属性最小值，工具链走正道，SQL 正确执行，最终答案 Ammo 与 GoldResult 一致（PredResult 含 attribute_value 35 为附加信息，不扣分）
-```","CORRECT","100","","14158","476","363","29952","44949"
-"dlr","733","superhero","PASS","","","CORRECT","100","","22274","530","1037","64384","88225"
-"dlr","736","superhero","FAIL","CORRECT","五步全过——语义正确锁定 superhero 库，工具链走正道，SQL 正确 JOIN 三表取 Intelligence 最低值，最终答案 ""Ammo"" 与 GoldResult 一致。
-```","CORRECT","100","","16520","292","427","17408","34647"
-"rdf","733","superhero","PASS","","","CORRECT","100","","13551","270","357","14464","28642"
-"rdf","736","superhero","FAIL","CORRECT","全部满足——语义正确(最低智力英雄)、工具链走正道(rdf_semantic_query→query_rdf_mapping→execute_sql)、映射正确(attribute_id=1对应Intelligence)、SQL执行成功、结果Ammo与GoldResult一致
-```","CORRECT","100","","13406","403","537","22528","36874"
+﻿paradigm,q_id,db_id,strict_match,judge_verdict,judge_reason,verdict,process_score,error,input_tokens,output_tokens,reasoning_tokens,cache_read_tokens,total_tokens
+er,733,superhero,PASS,,,CORRECT,100,,7578,282,452,20608,28920
+er,736,superhero,FAIL,CORRECT,"语义正确召回 Intelligence 属性最小值，工具链走正道，SQL 正确执行，最终答案 Ammo 与 GoldResult 一致（PredResult 含 attribute_value 35 为附加信息，不扣分）
+```",CORRECT,100,,14158,476,363,29952,44949
+dlr,733,superhero,PASS,,,CORRECT,100,,22274,530,1037,64384,45089
+dlr,736,superhero,FAIL,CORRECT,"五步全过——语义正确锁定 superhero 库，工具链走正道，SQL 正确 JOIN 三表取 Intelligence 最低值，最终答案 ""Ammo"" 与 GoldResult 一致。
+```",CORRECT,100,,16520,292,427,17408,34647
+rdf,733,superhero,PASS,,,CORRECT,100,,13551,270,357,14464,28642
+rdf,736,superhero,FAIL,CORRECT,"全部满足——语义正确(最低智力英雄)、工具链走正道(rdf_semantic_query→query_rdf_mapping→execute_sql)、映射正确(attribute_id=1对应Intelligence)、SQL执行成功、结果Ammo与GoldResult一致
+```",CORRECT,100,,13406,403,537,22528,36874
