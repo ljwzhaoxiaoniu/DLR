@@ -1,9 +1,9 @@
-question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+﻿question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
 93,ER,9,89663,18015,661,843,70144,13,"{""er_semantic_query"": 4, ""get_entity_attributes"": 3, ""list_all_tables"": 1, ""get_entity_mapping"": 2, ""execute_sql"": 3}",,PASS,,,CORRECT
 94,ER,12,107382,12151,1165,2674,91392,11,"{""er_semantic_query"": 1, ""get_entity"": 1, ""get_entity_attributes"": 5, ""list_all_tables"": 1, ""execute_sql"": 3}",,FAIL,INCORRECT,"映射错误——""average salary""(A11)是district表中的区域平均薪资字段，Agent误用trans表的交易金额AVG(t.amount)来计算个人平均薪资，导致库表字段映射完全偏离，最终答案(account 271, gap 23400.56)与Gold(account 4431, gap 6)不符
 ```",INCORRECT
 93,DLR,10,114953,23918,501,806,89728,10,"{""dlr_semantic_query"": 4, ""get_pe_full"": 3, ""schema"": 1, ""execute_sql"": 2}",,PASS,,,CORRECT
-94,DLR,17,186331,16142,1150,3535,165504,16,"{""dlr_semantic_query"": 3, ""get_le_attrs"": 3, ""get_pe_full"": 5, ""recall_pe"": 4, ""execute_sql"": 1}",,FAIL,INCORRECT,"语义错误——将""最低工资地区中最年长女性""误解为""全局最年长女性且恰好在最低工资地区""，导致account_id错误(1743 vs 4431)；gap计算也错误(4000 vs 6)，应用全表MAX(A11)-MIN(A11)而非与最年长女性所在区的差
+94,DLR,9,86847,12573,938,1784,71552,16,"{""dlr_semantic_query"": 3, ""get_le_attrs"": 3, ""get_pe_full"": 5, ""recall_pe"": 4, ""execute_sql"": 1}",,FAIL,INCORRECT,"语义错误——将""最低工资地区中最年长女性""误解为""全局最年长女性且恰好在最低工资地区""，导致account_id错误(1743 vs 4431)；gap计算也错误(4000 vs 6)，应用全表MAX(A11)-MIN(A11)而非与最年长女性所在区的差
 ```",INCORRECT
 93,RDF,8,61037,14813,703,977,44544,7,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 3, ""execute_sql"": 3}",,PASS,,,CORRECT
 94,RDF,11,98553,10709,944,1524,85376,13,"{""rdf_semantic_query"": 1, ""rdf_search"": 2, ""query_rdf_mapping"": 4, ""execute_sql"": 6}",,FAIL,CORRECT,所有翻盘条件均满足：语义定位到最低平均工资区域及最老女性客户，工具调用链符合SOP，库表字段均来自RDF映射，SQL分步执行正确，最终答案account_id=3214、gap=4431与GoldResult一致。,CORRECT
