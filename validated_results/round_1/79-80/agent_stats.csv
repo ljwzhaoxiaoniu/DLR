@@ -1,4 +1,4 @@
-question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+﻿question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
 349,ER,7,87205,21536,433,596,64640,8,"{""er_semantic_query"": 1, ""get_entity_attributes"": 2, ""get_entity_relations"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 1}",,FAIL,CORRECT,"Agent完整遵循SOP流程，正确识别cards/rulings实体，SQL执行成功，结果Teferi's Protection (Chase Stone, isPromo=1, 27 rulings)正确回答了""促销印刷中裁决信息最多的卡""。GoldResult (Serrated Arrows)基于有缺陷的SQL逻辑（寻找促销卡最多的艺术家而非最多裁决的卡），PredResult语义正确。
 ```",CORRECT
 352,ER,9,98276,20243,819,2590,74624,9,"{""er_semantic_query"": 1, ""get_entity_attributes"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 4}",,FAIL,INCORRECT,"步骤1语义错误——""percentage of cards""应以cards表为主体通过uuid关联foreign_data计算卡片级别的百分比，但PredSQL仅对foreign_data表做行级COUNT，未JOIN cards表，概念上行数≠卡片数(虽然数值接近但语义不对)。工具链与映射步骤正确。
