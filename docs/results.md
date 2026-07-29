@@ -46,7 +46,7 @@
 | 73-74 | financial | q89, q92 | 100% | 100% | 100% | financial 开局全通；三范式 strict PASS |
 | 75-76 | financial | q93, q94 | 100% | 100% | 100% | q93 三范式 strict PASS；q94 DLR strict PASS, ER/RDF judge翻盘 |
 | 77-78 | card_games | q346, q347 | 100% | 100% | 50% | q346 三范式 strict PASS；q347 ER/DLR judge 翻盘 CORRECT，RDF 未 JOIN rulings 表→INCORRECT（cards.text ≠ ruling text，RDF 扁平结构 Agent 未探索 rulings class） |
-| 79-80 | card_games | q349, q352 | 100% | 100% | 100% | 🔴 双 gold bug修正: q352三范式全CORRECT(ER/DLR strict PASS, RDF judge翻盘); q349 DLR全对; gold cache + mini_dev_sqlite.json 已修正 |
+| 79-80 | card_games | q349, q352 | 100% | 100% | 100% | 🔴 双 gold bug修正 + 模型longcat→deepseek-pro: q352三范式全翻盘CORRECT(old全INCORRECT); q349 DLR全对; gold cache + mini_dev_sqlite.json 已修正 |
 | 81-82 | codebase | q539, q544 | 100% | 100% | 100% | 三范式 strict PASS；codebase 第三对全通 |
 | 83-84 | toxicology | q201, q206 | 100% | 100% | 50% | q201 三范式 strict PASS；q206 ER/DLR judge 翻盘，RDF Agent 探索了 connected 表但最终 SQL 硬编码 atom_id→INCORRECT |
 | 85-86 | formula_1+superhero | q857, q724 | 100% | 100% | 100% | 跨库对：q857=formula_1, q724=superhero；q724 三范式 strict PASS，q857 三范式 judge 全翻 |
