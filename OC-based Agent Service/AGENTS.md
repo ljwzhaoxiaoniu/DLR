@@ -32,27 +32,34 @@
 
 召回结果的每个候选都带 `db` 字段(所属数据库). 第一次召回不传 `db`(全局召回,用于判断问题属于哪个数据库);确定目标库后,后续所有支持 `db` 参数的召回类调用都必须传入该库名,防止召回漂移到其他数据库.
 
-### Step 2：获取物理映射 + 数据库路径
-调用映射工具拿到:
-- 物理表名(不带库前缀)
-- 列名(字段列表)
-- JOIN 关系(如有)
-- database_url:SQLite 数据库文件路径(用于下一步 sqlite3 查询)
+### Step 2：探索数据
 
-### Step 3：执行 SQL 查询
-**前提**：必须已完成 Step 2 并拿到 `database_url` 和字段映射。**禁止跳过 Step 2 直接查库**。
+通过 `/mcps` 了解当前可用的 MCP 工具，用它们理解业务对象的结构和关联——详情、导航、列表、判断等，按需组合。
 
-通过 MCP 工具 `execute_sql` 执行:
-```python
-execute_sql(sql="SELECT ...", database_url="<Step 2 拿到的 URL>")
+### Step 3：获取映射
+
+通过映射工具拿到：
+- 物理表名（不带库前缀）
+- 列名（字段列表）
+- JOIN 关系（如有）
+- database_url：SQLite 数据库文件路径
+
+### Step 4：执行查询
+
+**前提**：必须已完成映射拿到 `database_url` 和字段名。通过公共工具 `execute_sql` 执行：
+
 ```
-- 只读查询(SELECT),禁止 INSERT/UPDATE/DELETE
-- `database_url` **必须**来自 Step 2 的 `database_url`
-- `SELECT *` 必须带 `LIMIT`(无 LIMIT 会被拒绝执行)
-- 结果超 200 行会被截断(`truncated: true`),截断结果不可作为答案,需改写 SQL 缩小结果集
+execute_sql(sql="SELECT ...", database_url="<映射工具返回的 URL>")
+```
+- 只读查询（SELECT），`database_url` 必须来自映射工具
+- `SELECT *` 必须带 `LIMIT`；结果超 200 行会被截断
 
-### Step 4：得出结论
+### Step 5：得出结论
 基于查询结果直接回答问题。
+
+---
+
+以上流程是**引导框架而非固定顺序**——简单问题可能只需 Step 1→3→4→5，复杂问题可能在 Step 2 和 Step 3 之间反复探索。
 
 ---
 
