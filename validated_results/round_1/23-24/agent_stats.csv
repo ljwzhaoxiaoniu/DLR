@@ -1,2 +1,7 @@
 ﻿question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
-1521,ER,7,74604,12520,430,342,61312,5,"{""er_semantic_query"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
+1521,ER,7,74604,12520,430,342,61312,5,{er tools},,PASS,,,CORRECT
+1524,ER,12,111307,19064,950,2461,88832,16,{er tools},,FAIL,CORRECT,flipped,CORRECT
+1521,DLR,10,90990,11513,465,1188,77824,9,{dlr tools},,FAIL,CORRECT,judge,CORRECT
+1524,DLR,12,123025,12596,1022,1375,108032,15,{dlr tools},,PASS,,,CORRECT
+1521,RDF,6,44761,8520,513,400,35328,6,{rdf tools},,PASS,,,CORRECT
+1524,RDF,6,67717,20089,611,937,46080,5,{rdf tools},,FAIL,CORRECT,judge,CORRECT
