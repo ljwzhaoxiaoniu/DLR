@@ -89,7 +89,7 @@ logical_entities:
       physical_column_id: formula_1.circuits.lng
 - logical_entity_id: LOGICAL.Race
   biz_name: Race
-  description: 'Formula 1 Grand Prix race — year, name (e.g. Bahrain Grand Prix), date, circuit; drivers participate and produce results (position, time, points, laps)'
+  description: 'F1 race event — year, race name, date, circuit; drivers compete with qualifying results, race results (position, time, laps), and lap times'
   public_attributes:
   - {attr_id: LOGICAL.Race.RaceID, biz_name: RaceID, description: 'Race ID: unique identifier'}
   - {attr_id: LOGICAL.Race.Year, biz_name: Year, description: 'Year: race season year'}
