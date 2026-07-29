@@ -75,21 +75,21 @@ logical_entities:
     public_attributes:
       - {attr_id: LOGICAL.District.DistrictID, biz_name: DistrictID}
       - {attr_id: LOGICAL.District.DistrictName, biz_name: DistrictName, description: 'District name (column A2), e.g. Sokolov, Praha'}
+      - {attr_id: LOGICAL.District.AvgSalary, biz_name: AvgSalary, description: 'Average salary (column A11)'}
+      - {attr_id: LOGICAL.District.UnempRate96, biz_name: UnempRate96, description: 'Unemployment rate 1996 (column A13)'}
+      - {attr_id: LOGICAL.District.Crimes95, biz_name: Crimes95, description: 'Number of crimes 1995 (column A15)'}
     physical_entities:
       - physical_entity_id: PHYSICAL.District
         physical_table_name: district
         physical_table_id: financial.district
         A: {cardinality: "1:1", key: district_id}
         R: null
-        C: {LOGICAL.District.DistrictID: financial.district.district_id, LOGICAL.District.DistrictName: financial.district.A2}
+        C: {LOGICAL.District.DistrictID: financial.district.district_id, LOGICAL.District.DistrictName: financial.district.A2, LOGICAL.District.AvgSalary: financial.district.A11, LOGICAL.District.UnempRate96: financial.district.A13, LOGICAL.District.Crimes95: financial.district.A15}
         S: "District demographic and economic statistics — A2(name), A3(region), A4(inhabitants), A11(avg salary), A12/A13(unemployment), A15(crimes)"
         private_attributes:
           - {attr_id: financial.district.A3, biz_name: Region, physical_column_id: financial.district.A3, description: 'Region name'}
           - {attr_id: financial.district.A4, biz_name: Inhabitants, physical_column_id: financial.district.A4, description: 'Number of inhabitants'}
-          - {attr_id: financial.district.A11, biz_name: AvgSalary, physical_column_id: financial.district.A11, description: 'Average salary'}
           - {attr_id: financial.district.A12, biz_name: UnempRate95, physical_column_id: financial.district.A12, description: 'Unemployment rate 1995'}
-          - {attr_id: financial.district.A13, biz_name: UnempRate96, physical_column_id: financial.district.A13, description: 'Unemployment rate 1996'}
-          - {attr_id: financial.district.A15, biz_name: Crimes95, physical_column_id: financial.district.A15, description: 'Number of crimes 1995'}
   - logical_entity_id: LOGICAL.Loan
     biz_name: Loan
     description: "Bank loan — amount, date, duration, payments, status; belongs to an account"
