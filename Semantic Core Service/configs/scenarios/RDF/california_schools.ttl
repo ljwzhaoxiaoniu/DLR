@@ -32,8 +32,12 @@
     rr:predicateObjectMap [ rr:predicate <http://example.org/frpm/Low_Grade> ; rr:objectMap [ rr:column "Low Grade" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/frpm/High_Grade> ; rr:objectMap [ rr:column "High Grade" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/frpm/Enrollment__K-12_> ; rr:objectMap [ rr:column "Enrollment (K-12)" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/frpm/Free_Meal_Count__K-12_> ; rr:objectMap [ rr:column "Free Meal Count (K-12)" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/frpm/Percent_____Eligible_Free__K-12_> ; rr:objectMap [ rr:column "Percent (%) Eligible Free (K-12)" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/frpm/Free_Meal_Count__K-12_> ; rr:objectMap [ rr:column "Free Meal Count (K-12)" ; rr:datatype xsd:string ] ;
+        rdfs:label "Free Meal Count (K-12)"@en ;
+        rdfs:comment "Number of students receiving free meals, grades K-12"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/frpm/Percent_____Eligible_Free__K-12_> ; rr:objectMap [ rr:column "Percent (%) Eligible Free (K-12)" ; rr:datatype xsd:string ] ;
+        rdfs:label "Percent Eligible Free (K-12)"@en ;
+        rdfs:comment "Percent of students eligible for free meals, grades K-12"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/frpm/FRPM_Count__K-12_> ; rr:objectMap [ rr:column "FRPM Count (K-12)" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/frpm/Percent_____Eligible_FRPM__K-12_> ; rr:objectMap [ rr:column "Percent (%) Eligible FRPM (K-12)" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/frpm/Enrollment__Ages_5-17_> ; rr:objectMap [ rr:column "Enrollment (Ages 5-17)" ; rr:datatype xsd:string ] ] ;
@@ -58,7 +62,9 @@
     rr:predicateObjectMap [ rr:predicate <http://example.org/satscores/AvgScrRead> ; rr:objectMap [ rr:column "AvgScrRead" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/satscores/AvgScrMath> ; rr:objectMap [ rr:column "AvgScrMath" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/satscores/AvgScrWrite> ; rr:objectMap [ rr:column "AvgScrWrite" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/satscores/NumGE1500> ; rr:objectMap [ rr:column "NumGE1500" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/satscores/NumGE1500> ; rr:objectMap [ rr:column "NumGE1500" ; rr:datatype xsd:string ] ;
+        rdfs:label "NumGE1500"@en ;
+        rdfs:comment "Number of test takers with total SAT score >= 1500"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/satscores/refers_to_schools> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/california_schools/schools> ; rr:joinCondition [ rr:child "cds" ; rr:parent "CDSCode" ] ] ] .
 
 # === Table: california_schools.schools (pk=CDSCode) ===
