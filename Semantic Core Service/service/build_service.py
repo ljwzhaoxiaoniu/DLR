@@ -310,11 +310,19 @@ class BuildService:
 
         # Logical entities
         for le in model.logical_entities:
+            # Collect public attribute descriptions for vector search
+            public_attr_parts = []
+            for attr in le.public_attributes:
+                if attr.description:
+                    public_attr_parts.append(f"{attr.name} {attr.description}")
+            public_attrs_text = " ".join(public_attr_parts)
+
             self.vector_db.insert_logical_entity(
                 logical_entity_id=le.logical_entity_id,
                 name=le.name,
                 description=le.description,
                 db=preset_db,
+                public_attrs_text=public_attrs_text,
             )
 
         # Physical entities + attributes

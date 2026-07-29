@@ -52,7 +52,7 @@ logical_entities:
           - {attr_id: california_schools.schools.longitude, biz_name: longitude, physical_column_id: california_schools.schools.longitude}
   - logical_entity_id: LOGICAL.SchoolPerformance
     biz_name: SchoolPerformance
-    description: "SAT scores (AvgScrMath/Read/Write) and FRPM statistics — Enrollment (K-12/5-17), Free Meal Count, FRPM Count, Percent (%) Eligible Free/FRPM, Charter Funding Type, District Name, School Type"
+    description: "California school performance — SAT scores (AvgScrMath, AvgScrRead, AvgScrWrite, NumGE1500, NumTstTakr), FRPM student statistics (Enrollment K-12, Enrollment Ages 5-17, Free Meal Count K-12, FRPM Count K-12, Percent Eligible Free K-12, Percent Eligible FRPM K-12), Charter Funding Type, District Name, School Name, School Type"
     public_attributes:
       - {attr_id: LOGICAL.SchoolPerformance.School, biz_name: School}
       - {attr_id: LOGICAL.SchoolPerformance.CharterFundingType, biz_name: CharterFundingType, description: "Charter Funding Type"}

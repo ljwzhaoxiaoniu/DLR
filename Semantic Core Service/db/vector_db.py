@@ -177,10 +177,11 @@ class VectorDB:
     # ===================================================================
 
     def insert_logical_entity(self, logical_entity_id: str, name: str,
-                              description: Optional[str] = None, db: str = "") -> bool:
+                              description: Optional[str] = None, db: str = "",
+                              public_attrs_text: str = "") -> bool:
         """Insert LogicalEntity vector (DLR)."""
         try:
-            text = f"{name} {description or ''}"
+            text = f"{name} {description or ''} {public_attrs_text}"
             vector = self.encode_text(text)
             normalized_vec = self._normalize_vector(vector)
 
