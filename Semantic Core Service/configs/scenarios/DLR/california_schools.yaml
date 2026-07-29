@@ -88,10 +88,6 @@ logical_entities:
         C: {LOGICAL.SchoolPerformance.School: california_schools.frpm.CDSCode, LOGICAL.SchoolPerformance.CharterFundingType: california_schools.frpm.\"Charter Funding Type\", LOGICAL.SchoolPerformance.DistrictName: california_schools.frpm.\"District Name\", LOGICAL.SchoolPerformance.FRPM_5_17: california_schools.frpm.\"FRPM Count (Ages 5-17)\", LOGICAL.SchoolPerformance.FreeMeal_5_17: california_schools.frpm.\"Free Meal Count (Ages 5-17)\", LOGICAL.SchoolPerformance.SchoolType: california_schools.frpm.\"School Type\", LOGICAL.SchoolPerformance.SchoolName: california_schools.frpm.\"School Name\", LOGICAL.SchoolPerformance.Enrollment_K12: california_schools.frpm.\"Enrollment (K-12)\", LOGICAL.SchoolPerformance.Enrollment_5_17: california_schools.frpm.\"Enrollment (Ages 5-17)\", LOGICAL.SchoolPerformance.FreeMeal_K12: california_schools.frpm.\"Free Meal Count (K-12)\", LOGICAL.SchoolPerformance.PercentEligibleFree_K12: california_schools.frpm.\"Percent (%) Eligible Free (K-12)\", LOGICAL.SchoolPerformance.FRPM_K12: california_schools.frpm.\"FRPM Count (K-12)\"}
         S: "FRPM statistics — enrollment, free meals, FRPM combined, charter funding, district"
         private_attributes: []
-          - {attr_id: california_schools.frpm.`FRPM Count (K-12)`, biz_name: FRPM_K12, physical_column_id: california_schools.frpm.`FRPM Count (K-12)`}
-          - {attr_id: california_schools.frpm.`NSLP Provision Status`, biz_name: NSLP_Status, physical_column_id: california_schools.frpm.`NSLP Provision Status`}
-          - {attr_id: california_schools.frpm.`Academic Year`, biz_name: AcademicYear, physical_column_id: california_schools.frpm.`Academic Year`}
-          - {attr_id: california_schools.frpm.`District Code`, biz_name: DistrictCode, physical_column_id: california_schools.frpm.`District Code`}
 pas_relations:
   - relation_id: LOGICAL.School_TO_LOGICAL.SchoolPerformance
     relation_name: HasPerformance
