@@ -1,0 +1,7 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","112","financial","PASS","","","CORRECT","100","","8618","476","334","37760","47188"
+"er","115","financial","FAIL","CORRECT","手动翻盘: judge超时。结果40.0=gold 40.0, ER先找到最大人口district_id=14再算百分比, 逻辑等价于gold的GROUP BY+LIMIT","CORRECT","100","","14955","507","536","38016","54014"
+"dlr","112","financial","PASS","","","CORRECT","100","","18356","494","470","62080","81400"
+"dlr","115","financial","PASS","","","CORRECT","100","","17314","364","1258","35328","54264"
+"rdf","112","financial","PASS","","","CORRECT","100","","11540","377","442","38144","50503"
+"rdf","115","financial","PASS","","","CORRECT","100","","14516","378","1353","38016","54263"

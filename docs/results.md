@@ -75,7 +75,9 @@
 
 | 125-126 | california | q25, q26 | 0% | 100% | 50% | california 第四对；q25 DLR strict PASS（District Name+Charter Funding Type 用对），ER/RDF 错用 s.dname 列；q26 DLR+RDF judge 翻盘，ER 提取失败；🔴 q26 gold SQL bug（Free Meal→FRPM Count，题目说 free or reduced） |
 
-**round_1 前 126 对完成 — 355/378 CORRECT（ER 117/126, DLR 124/126, RDF 114/126）**
+| 127-128 | financial | q112, q115 | 100% | 100% | 100% | financial 第五对全通；DLR+RDF strict PASS；ER q115 手动翻盘（结果 40%=gold） |
+
+**round_1 前 128 对完成 — 361/384 CORRECT（ER 119/128, DLR 126/128, RDF 116/128）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -207,6 +209,8 @@
 | q865 | 48,155 | 34,326 | **30,044** |
 | q25 | 101,558 | **46,950** | 50,841 |
 | q26 | 0 | **69,814** | 95,363 |
+| q112 | **47,188** | 81,400 | 50,503 |
+| q115 | 54,014 | **54,264** | 54,263 |
 
 \* 粗体 = 该题最优范式
 
@@ -217,9 +221,9 @@
 | strict PASS 率 | 41% (41/99) | **45% (45/99)** | 42% (42/99) |
 | 最低单题 | 29,068 (q723) | 31,353 (q195) | **25,992 (q200)** |
 | 最高单题 | 295,225 (q1500) | 195,482 (q1481) | **254,156 (q532)** |
-| 平均 total | 74,402 | 62,542 | **62,473** |
-| CORRECT | 117/126 | 124/126 | 114/126 |
-| 总计 | **355/378** | - | - |
+| 平均 total | 74,201 | 62,558 | **62,387** |
+| CORRECT | 119/128 | 126/128 | 116/128 |
+| 总计 | **361/384** | - | - |
 
 ### 定性观察
 
@@ -273,6 +277,6 @@
 
 ## 下一步
 
-- debit_card 30/30 ✅ → student 10/48 → thrombosis 10/50 → football 10/51 → formula_1 10/66 → superhero 8/52 → codebase 10/49 → card_games 12/52 → toxicology 10/40 → california 8/30 → financial 8/32 → 待续
+- debit_card 30/30 ✅ → student 10/48 → thrombosis 10/50 → football 10/51 → formula_1 10/66 → superhero 8/52 → codebase 10/49 → card_games 12/52 → toxicology 10/40 → california 8/30 → financial 10/32 → 待续
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 
