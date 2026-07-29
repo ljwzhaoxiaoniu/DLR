@@ -11,7 +11,7 @@ logical_entities:
   public_attributes:
   - attr_id: LOGICAL.Driver.DriverID
     biz_name: DriverID
-    description: '车手ID: F1车手唯一标识符'
+    description: 'Driver ID: unique F1 driver identifier'
   physical_entities:
   - physical_entity_id: PHYSICAL.Driver
     physical_table_name: drivers
@@ -27,7 +27,7 @@ logical_entities:
     - attr_id: formula_1.drivers.driverRef
       biz_name: driverRef
       physical_column_id: formula_1.drivers.driverRef
-      description: '车手引用名: 车手英文引用名'
+      description: 'Driver reference name (URL-friendly)'
     - attr_id: formula_1.drivers.nationality
       biz_name: nationality
       physical_column_id: formula_1.drivers.nationality
@@ -37,7 +37,7 @@ logical_entities:
     - attr_id: formula_1.drivers.surname
       biz_name: surname
       physical_column_id: formula_1.drivers.surname
-      description: '姓氏: 车手的姓氏'
+      description: 'Surname: driver last name'
     - attr_id: formula_1.drivers.dob
       biz_name: dob
       physical_column_id: formula_1.drivers.dob
@@ -56,7 +56,7 @@ logical_entities:
   public_attributes:
   - attr_id: LOGICAL.Circuit.CircuitID
     biz_name: CircuitID
-    description: '赛道ID: F1赛道唯一标识符'
+    description: 'Circuit ID: unique F1 circuit identifier'
   physical_entities:
   - physical_entity_id: PHYSICAL.Circuit
     physical_table_name: circuits
@@ -108,30 +108,16 @@ logical_entities:
       LOGICAL.Race.Name: formula_1.races.name
     S: Race master record
     private_attributes: []
-      description: '比赛名称: 大奖赛名称'
-    - attr_id: formula_1.races.circuitId
-      biz_name: circuitId
-      physical_column_id: formula_1.races.circuitId
-      description: '赛道ID: 比赛赛道ID，关联 circuits 表'
-    - attr_id: formula_1.races.date
-      biz_name: date
-      physical_column_id: formula_1.races.date
-    - attr_id: formula_1.races.time
-      biz_name: time
-      physical_column_id: formula_1.races.time
-    - attr_id: formula_1.races.url
-      biz_name: url
-      physical_column_id: formula_1.races.url
 - logical_entity_id: LOGICAL.DriverRaceData
   biz_name: DriverRaceData
   description: 'Driver performance in a race: qualifying + race results + lap times'
   public_attributes:
   - attr_id: LOGICAL.DriverRaceData.Driver
     biz_name: Driver
-    description: '车手ID: 参加排位赛的车手ID'
+    description: 'Driver ID: FK to drivers table'
   - attr_id: LOGICAL.DriverRaceData.Race
     biz_name: Race
-    description: '比赛ID: 所属比赛ID'
+    description: 'Race ID: FK to races table'
   physical_entities:
   - physical_entity_id: PHYSICAL.Qualifying
     physical_table_name: qualifying
@@ -158,11 +144,11 @@ logical_entities:
     - attr_id: formula_1.qualifying.q1
       biz_name: q1
       physical_column_id: formula_1.qualifying.q1
-      description: 'Q1成绩: 排位赛Q1阶段成绩（毫秒）'
+      description: 'Q1 time: qualifying Q1 lap time (ms)'
     - attr_id: formula_1.qualifying.q2
       biz_name: q2
       physical_column_id: formula_1.qualifying.q2
-      description: 'Q2成绩: 排位赛Q2阶段成绩（毫秒），NULL=未进Q2'
+      description: 'Q2 time: qualifying Q2 lap time (ms), NULL=did not advance to Q2'
     - attr_id: formula_1.qualifying.q3
       biz_name: q3
       physical_column_id: formula_1.qualifying.q3
@@ -314,7 +300,7 @@ logical_entities:
   public_attributes:
   - attr_id: LOGICAL.Constructor.ConstructorID
     biz_name: ConstructorID
-    description: '车队ID: F1车队唯一标识符'
+    description: 'Constructor ID: unique F1 team identifier'
   physical_entities:
   - physical_entity_id: PHYSICAL.Constructor
     physical_table_name: constructors
@@ -330,11 +316,11 @@ logical_entities:
     - attr_id: formula_1.constructors.name
       biz_name: name
       physical_column_id: formula_1.constructors.name
-      description: '车队名称: 车队完整名称'
+      description: 'Constructor name: full team name'
     - attr_id: formula_1.constructors.nationality
       biz_name: nationality
       physical_column_id: formula_1.constructors.nationality
-      description: '国籍: 车队所属国家/地区'
+      description: 'Nationality: team country of origin'
     - attr_id: formula_1.constructors.constructorRef
       biz_name: constructorRef
       physical_column_id: formula_1.constructors.constructorRef
