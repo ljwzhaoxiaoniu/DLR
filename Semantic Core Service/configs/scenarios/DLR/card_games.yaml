@@ -124,6 +124,9 @@ logical_entities:
   - attr_id: LOGICAL.CardExtension.LegalStatus
     biz_name: status
     description: 'Legality status: Legal, Banned, Restricted'
+  - attr_id: LOGICAL.CardExtension.Language
+    biz_name: language
+    description: 'Foreign language: e.g. Chinese Simplified, Japanese, German, French'
   physical_entities:
   - physical_entity_id: PHYSICAL.Legality
     physical_table_name: legalities
@@ -161,14 +164,12 @@ logical_entities:
     R: null
     C:
       LOGICAL.CardExtension.Card: card_games.foreign_data.uuid
+      LOGICAL.CardExtension.Language: card_games.foreign_data.language
     S: Foreign translations
     private_attributes:
     - attr_id: card_games.foreign_data.name
       biz_name: name
       physical_column_id: card_games.foreign_data.name
-    - attr_id: card_games.foreign_data.language
-      biz_name: language
-      physical_column_id: card_games.foreign_data.language
     - attr_id: card_games.foreign_data.flavorText
       biz_name: flavorText
       physical_column_id: card_games.foreign_data.flavorText
