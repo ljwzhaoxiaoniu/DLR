@@ -72,12 +72,6 @@ logical_entities:
       LOGICAL.Event.Type: student_club.event.type
     S: Event records
     private_attributes: []
-    - attr_id: student_club.event.location
-      biz_name: location
-      physical_column_id: student_club.event.location
-    - attr_id: student_club.event.status
-      biz_name: status
-      physical_column_id: student_club.event.status
 - logical_entity_id: LOGICAL.Attendance
   biz_name: Attendance
   description: Member attendance at events — many-to-many junction linking members to events they attended
