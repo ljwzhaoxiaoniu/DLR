@@ -1,0 +1,12 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","25","california_schools","FAIL","INCORRECT","Step 4 failed - SQL logic misinterpreted the question: computed overall district average instead of filtering individual schools with AvgScrMath > 400, leading to inclusion of null-score schools in final answer
+```","INCORRECT","60","","21842","1039","1109","77568","101558"
+"er","26","california_schools","FAIL","INCORRECT","Agent 未生成任何 SQL（error: ""no SQL extracted""），工具调用日志为空，全流程未启动，5 步全部失败。
+```","INCORRECT","0","no SQL extracted","0","0","0","0","0"
+"dlr","25","california_schools","PASS","","","CORRECT","100","","18309","342","1803","26496","46950"
+"dlr","26","california_schools","FAIL","CORRECT","语义正确召回frpm/schools表，工具链正确(semantic_query→get_le_attrs→get_pe_full→execute_sql)，SQL使用映射字段并成功执行，结果包含Gold全部4所学校且额外2所同样满足条件(GoldResult本身截断不完整)。
+```","CORRECT","100","","21165","1320","1633","45696","69814"
+"rdf","25","california_schools","FAIL","INCORRECT","Step4失败，SQL缺少GROUP BY和HAVING子句，未实现每校平均数学分数>400的筛选，导致结果包含不满足条件的6所学校
+```","INCORRECT","60","","15694","479","2156","32512","50841"
+"rdf","26","california_schools","FAIL","CORRECT","All 4 gold schools found with correct addresses; 2 extra continuation high schools included but per criteria extra rows are not penalized; tool chain and mapping fully correct.
+```","CORRECT","100","","20222","1643","1306","72192","95363"

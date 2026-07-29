@@ -73,7 +73,9 @@
 
 | 123-124 | formula_1 | q862, q865 | 100% | 100% | 100% | formula_1 第六对全通；q862 三范式 strict PASS；q865 三范式 judge 全翻 |
 
-**round_1 前 124 对完成 — 352/372 CORRECT（ER 117/124, DLR 122/124, RDF 113/124）**
+| 125-126 | california | q25, q26 | 0% | 100% | 50% | california 第四对；q25 DLR strict PASS（District Name+Charter Funding Type 用对），ER/RDF 错用 s.dname 列；q26 DLR+RDF judge 翻盘，ER 提取失败；🔴 q26 gold SQL bug（Free Meal→FRPM Count，题目说 free or reduced） |
+
+**round_1 前 126 对完成 — 355/378 CORRECT（ER 117/126, DLR 124/126, RDF 114/126）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -203,6 +205,8 @@
 | q1039 | 66,799 | 73,707 | **54,226** |
 | q862 | **34,834** | 65,998 | 42,598 |
 | q865 | 48,155 | 34,326 | **30,044** |
+| q25 | 101,558 | **46,950** | 50,841 |
+| q26 | 0 | **69,814** | 95,363 |
 
 \* 粗体 = 该题最优范式
 
@@ -213,9 +217,9 @@
 | strict PASS 率 | 41% (41/99) | **45% (45/99)** | 42% (42/99) |
 | 最低单题 | 29,068 (q723) | 31,353 (q195) | **25,992 (q200)** |
 | 最高单题 | 295,225 (q1500) | 195,482 (q1481) | **254,156 (q532)** |
-| 平均 total | 74,474 | 62,525 | **62,268** |
-| CORRECT | 117/124 | 122/124 | 113/124 |
-| 总计 | **352/372** | - | - |
+| 平均 total | 74,402 | 62,542 | **62,473** |
+| CORRECT | 117/126 | 124/126 | 114/126 |
+| 总计 | **355/378** | - | - |
 
 ### 定性观察
 
@@ -250,6 +254,7 @@
 - **🆕 financial q95 AND 歧义——同库同模式再犯**：题目 "youngest AND highest average salary"，DLR Agent 再次将 AND 解释为 OR（`WHERE birth_date = max OR A11 = max`，返回 548 条）。ER 也写了 OR 但 judge 碰巧翻盘（可能 youngest 恰好也在最高薪资区）。**financial 库已两次出现 AND 条件歧义（q94 最老且最低薪资、q95 最年轻且最高薪资），Agent 倾向将"极限属性 AND 另一个极限属性"理解为两个独立极值的并集。** q94 通过修正 question 明确执行顺序解决；q95 暂不修正。
 - **🆕 🔴 evidence 的 few-shot 写法——SQL 伪代码对 LLM 无效（european_football_2 q1031）**：原始 evidence `age = SUBTRACT((DATETIME(), birthday))`，三范式多次重跑仅 ~20% 得 36。排查过程：① AGENTS.md 核心约束加 "Evidence 优先" → 无效 ② 提升到角色定义第 1 条 → ER/RDF 偶尔遵从，DLR 仍然不跟 ③ 换模型 → 不变。最后把 evidence 从 SQL 伪代码改成自然语言 `age = current year minus birth year` → 三范式一次全对。**LLM 不是编译器，不理解 SQLite 隐式类型转换规则。它像人一样读指令——自然语言有效，伪代码无效。给模型的 few-shot/evidence 必须说人话，不能写只有 DB 引擎才懂的表达式。**
 - **Helpfulness-Correctness Trade-off（card_games q340）**："Which are the cards" 25,061 条→三范式 9 次仅 1 次正确列出，其余全自动转 `COUNT(*)`。改 "How many"→三范式 strict PASS 全过。**RLHF 的 helpfulness 本能压过 correctness 指令**——LLM 判断"列 25,061 行 ID 不友好"，无意识优化。信息越多的范式越早满足于 COUNT（ER/DLR > RDF），工具信息量存在倒 U 型最优区间。**这是对照实验的意外发现，直接支撑 DLR 叙事。**
+- **🆕 california_schools q25 DLR PE 属性归属消解列名歧义**：题目问"funding type"和"schools in Riverside"→对应 `frpm.Charter Funding Type` 和 `frpm.District Name`。但 satscores 表也有 `dname` 列。ER 和 RDF 的扁平结构让 Agent 就近选了 satscores.dname→INCORRECT；DLR 的 `DistrictName` 是 PHYSICAL.FRPM 的 public 属性，Agent 搜 "District Name" 直接命中 frpm→CORRECT。**PE 级别的属性归属让同名/类似名的歧义自然消解，这是 DLR 分层结构相对于扁平建模的又一可量化优势。**
 - **🆕 toxicology q197 ER JOIN 膨胀 + football q1037 同模式**：q197 ER Agent 在计算平均氧原子数时 `molecule → bond` JOIN 致氧计数被每条分子的 bond 条数放大（2.16→69.28），DLR 通过 PAS 桥独立计算 DISTINCT molecule_id 再 LEFT JOIN atom 避开 fan-out（4步 vs 7步 vs 5步，DLR 全程未触碰 molecule 表）。🆕 q1037 Player→Player_Attributes 1:N JOIN 同模式：DLR 用子查询 `GROUP BY player_api_id` 先去重得 24.60%（与 gold 24.57% 一致），ER/RDF 的 DISTINCT 逻辑错致分母偏差→INCORRECT。**两题指向同一结论：PAS 的 N:1 锚定键隐式引导 Agent 选择正确的 DISTINCT/子查询路径，避免 1:N JOIN 行膨胀；ER 全互联 schema 反而引导错误 JOIN 路径。**
 - **🆕 card_games q341 ER 大宽表陷阱**：`cards` 表 78 列，ER 全互联 schema 将所有列暴露给 Agent→SQL 逻辑错误。DLR 通过 `private_attributes` 隐藏非核心列（仅暴露 ~15 个 public 属性），RDF 仅映射被引用的列，两者均避开了噪音干扰。加上 q197 的 JOIN 膨胀，**ER"信息丰富"已两次成为双刃剑：宽表场景下全暴露=全噪音，Agent 在 78 列中迷失方向。**
 - **california_schools q17 Gold 过度要求 RANK()**：题目只写 "Rank schools... showing their charter numbers"，Gold SQL 多生成了 `WritingScoreRank` 列号。三范式都做了正确的 ORDER BY DESC 排序，ER/RDF 因缺 RANK() 列被 judge 判 INCORRECT，DLR 因加了 GROUP BY 被 judge 翻盘——本质上三者都对。**judge 不一致，非范式问题。**
@@ -268,6 +273,6 @@
 
 ## 下一步
 
-- debit_card 30/30 ✅ → student 10/48 → thrombosis 10/50 → football 10/51 → formula_1 10/66 → superhero 8/52 → codebase 10/49 → card_games 12/52 → toxicology 10/40 → california 6/30 → financial 8/32 → 待续
+- debit_card 30/30 ✅ → student 10/48 → thrombosis 10/50 → football 10/51 → formula_1 10/66 → superhero 8/52 → codebase 10/49 → card_games 12/52 → toxicology 10/40 → california 8/30 → financial 8/32 → 待续
 - 500 题全量后补充：分范式准确率总表、分库分难度矩阵、token/步数分布、DLR 语义路由收益归因分析。
 
