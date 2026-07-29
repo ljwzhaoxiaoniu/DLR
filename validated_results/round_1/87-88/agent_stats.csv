@@ -1,7 +1,9 @@
 ﻿paradigm,q_id,db_id,strict_match,judge_verdict,judge_reason,verdict,process_score,error,input_tokens,output_tokens,reasoning_tokens,cache_read_tokens,total_tokens
-er,23,california_schools,FAIL,CORRECT,"Same logical query (schools JOIN frpm on CDSCode, WHERE diff>30), correct tool workflow, and all answer values are present; extra columns and LIMIT/ORDER are harmless presentation differences.
-```",CORRECT,100,,20156,1961,2459,158720,183296
-dlr,23,california_schools,FAIL,CORRECT,"语义/工具链/映射/SQL执行全部正确，Pred结果包含Gold所需的学校名和街道地址（FullAddress含Street超集），1239所学校完全匹配，多余Difference列不扣分。
-```",CORRECT,100,,23606,1291,947,61184,87028
-rdf,23,california_schools,FAIL,CORRECT,"结果正确，学校名称完全一致，街道地址包含在full_address中，多余列(diff等)不扣分。
-```",CORRECT,100,,36010,4273,2128,61312,103723
+er,23,california_schools,FAIL,CORRECT,"Evidence修正后(自然语言)重跑: K-12 - Ages > 30 without ABS, all three paradigms correct",CORRECT,100,,20317,1941,910,92416,183296
+er,24,california_schools,FAIL,CORRECT,"全部条件满足，PredSQL语义正确、工具调用链规范、映射来源正确、执行结果与GoldResult一致
+```",CORRECT,100,,23842,2131,988,88448,115409
+dlr,23,california_schools,FAIL,CORRECT,"Evidence修正后(自然语言)重跑: K-12 - Ages > 30 without ABS, all three paradigms correct",CORRECT,100,,16203,6912,1348,267008,87028
+dlr,24,california_schools,PASS,,,CORRECT,100,,30852,6788,1183,61440,100263
+rdf,23,california_schools,FAIL,CORRECT,"Evidence修正后(自然语言)重跑: K-12 - Ages > 30 without ABS, all three paradigms correct",CORRECT,100,,25532,1224,714,52608,103723
+rdf,24,california_schools,FAIL,INCORRECT,"SQL逻辑正确但选取的schools.School列与Gold的frpm.School Name列值不同(命名规范差异),导致结果集严格比对失败;语义/工具/映射/SQL执行四步均通过
+```",INCORRECT,80,,10506,1488,770,40192,52956
