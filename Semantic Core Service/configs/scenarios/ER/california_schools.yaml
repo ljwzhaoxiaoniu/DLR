@@ -213,17 +213,17 @@ entities:
     data_type: integer
   - attr_id: california_schools.satscores.AvgScrRead
     biz_name: average scores in Reading
-    description: average scores in Reading. average scores in Reading
+    description: Pre-computed average Reading score for this school, from SAT test results
     physical_column_id: california_schools.satscores.AvgScrRead
     data_type: integer
   - attr_id: california_schools.satscores.AvgScrMath
     biz_name: average scores in Math
-    description: average scores in Math. average scores in Math
+    description: Pre-computed average Math score for this school, from SAT test results
     physical_column_id: california_schools.satscores.AvgScrMath
     data_type: integer
   - attr_id: california_schools.satscores.AvgScrWrite
     biz_name: average scores in writing
-    description: average scores in writing. average scores in writing
+    description: Pre-computed average Writing score for this school, from SAT test results
     physical_column_id: california_schools.satscores.AvgScrWrite
     data_type: integer
   - attr_id: california_schools.satscores.NumGE1500

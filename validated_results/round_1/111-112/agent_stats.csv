@@ -1,8 +1,8 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"er","366","card_games","FAIL","CORRECT","全部五步通过；PredSQL多选了name/uuid/status列但不影响语义正确性，最终答案与GoldResult格式集合完全一致
-```","CORRECT","100","","16705","465","709","31360","49239"
-"er","368","card_games","PASS","","","CORRECT","100","","16755","279","277","25344","42655"
-"dlr","366","card_games","FAIL","CORRECT","**逐步检查：**
+﻿paradigm,q_id,db_id,strict_match,judge_verdict,judge_reason,verdict,process_score,error,input_tokens,output_tokens,reasoning_tokens,cache_read_tokens,total_tokens
+er,366,card_games,FAIL,CORRECT,"全部五步通过；PredSQL多选了name/uuid/status列但不影响语义正确性，最终答案与GoldResult格式集合完全一致
+```",CORRECT,100,,16705,465,709,31360,49239
+er,368,card_games,PASS,,,CORRECT,100,,16755,279,277,25344,42655
+dlr,366,card_games,FAIL,CORRECT,"**逐步检查：**
 
 1. **语义正确** ✅ — Agent 正确识别出""rule of playing card refers to format""，定位到 `cards` + `legalities` 表，database 正确为 `card_games`
 
@@ -20,8 +20,8 @@
 VERDICT: CORRECT
 PROCESS: 100
 REASON: 全部步骤通过——语义定位正确、工具链走正道、映射来源可信、SQL执行成功、结果与GoldResult完全一致（8种format全部覆盖）
-```","CORRECT","100","","27872","796","820","81152","110640"
-"dlr","368","card_games","PASS","","","CORRECT","100","","24689","222","243","7808","32962"
-"rdf","366","card_games","FAIL","CORRECT","Agent 语义理解正确（""rule of playing card""→format），工具调用链走正道（rdf_semantic_query→query_rdf_mapping→execute_sql），SQL 通过 uuid JOIN cards 与 legalities 表获取全部赛制，执行成功，最终答案的 8 种 format 与 GoldResult 完全一致（Pred 用 DISTINCT 去重等价于 Gold 的重复行，答案值覆盖 Gold 全部结果）。
-```","CORRECT","100","","15078","529","818","44416","60841"
-"rdf","368","card_games","PASS","","","CORRECT","100","","14089","384","373","21632","36478"
+```",CORRECT,100,,27872,796,820,81152,36324
+dlr,368,card_games,PASS,,,CORRECT,100,,24689,222,243,7808,32962
+rdf,366,card_games,FAIL,CORRECT,"Agent 语义理解正确（""rule of playing card""→format），工具调用链走正道（rdf_semantic_query→query_rdf_mapping→execute_sql），SQL 通过 uuid JOIN cards 与 legalities 表获取全部赛制，执行成功，最终答案的 8 种 format 与 GoldResult 完全一致（Pred 用 DISTINCT 去重等价于 Gold 的重复行，答案值覆盖 Gold 全部结果）。
+```",CORRECT,100,,15078,529,818,44416,60841
+rdf,368,card_games,PASS,,,CORRECT,100,,14089,384,373,21632,36478

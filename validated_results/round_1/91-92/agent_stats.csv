@@ -1,0 +1,8 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","726","superhero","FAIL","CORRECT","Same as q17: ORDER BY is correct ranking. Gold adds RANK() column not requested by question. All 5 steps semantically correct.","CORRECT","100","","4782","853","557","53504","59696"
+"er","728","superhero","FAIL","CORRECT","Manual review: SQL logic correct (same as DLR which was judged CORRECT)","CORRECT","100","","8999","843","495","36224","46561"
+"dlr","726","superhero","FAIL","CORRECT","Same as q17: ORDER BY is correct ranking. Gold adds RANK() column not requested by question. All 5 steps semantically correct.","CORRECT","100","","4779","736","309","60160","65984"
+"dlr","728","superhero","FAIL","CORRECT","语义定位正确、工具链完整、映射来源可靠、SQL 表达题意且执行成功，最终答案与执行结果一致（Blue 126 为最常见眼色）；GoldResult 数据本身存在排名与计数矛盾的异常
+```","CORRECT","100","","10461","482","764","42368","54075"
+"rdf","726","superhero","FAIL","CORRECT","Same as q17: ORDER BY is correct ranking. Gold adds RANK() column not requested by question. All 5 steps semantically correct.","CORRECT","100","","11293","709","842","52352","65196"
+"rdf","728","superhero","FAIL","CORRECT","Manual review: SQL logic correct (same as DLR which was judged CORRECT)","CORRECT","100","","17761","688","875","33280","52604"

@@ -20,8 +20,8 @@
         rdfs:label "客户分类"@zh ;
         rdfs:comment "客户市场细分（SME/LAM/KAM等）"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/customers/Currency> ; rr:objectMap [ rr:column "Currency" ; rr:datatype xsd:string ] ;
-        rdfs:label "币种"@zh ;
-        rdfs:comment "客户使用的货币（CZK/EUR）"@zh ] .
+        rdfs:label "Currency"@en ;
+        rdfs:comment "Currency: CZK=Czech Koruna, EUR=Euro"@en ] .
 
 # === Table: debit_card_specializing.gasstations (pk=GasStationID) ===
 <http://example.org/tm/debit_card_specializing/gasstations> a rr:TriplesMap ;
@@ -71,11 +71,11 @@
         rdfs:label "产品ID"@zh ;
         rdfs:comment "关联 products 表"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/Amount> ; rr:objectMap [ rr:column "Amount" ; rr:datatype xsd:string ] ;
-        rdfs:label "数量"@zh ;
-        rdfs:comment "购买数量（件数）"@zh ] ;
+        rdfs:label "Quantity"@en ;
+        rdfs:comment "Quantity: number of items purchased in this transaction"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/Price> ; rr:objectMap [ rr:column "Price" ; rr:datatype xsd:string ] ;
-        rdfs:label "单价"@zh ;
-        rdfs:comment "产品单价（CZK）"@zh ] ;
+        rdfs:label "Unit price"@en ;
+        rdfs:comment "Unit price per item (CZK)"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/refers_to_customers> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/debit_card_specializing/customers> ; rr:joinCondition [ rr:child "CustomerID" ; rr:parent "CustomerID" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/refers_to_gasstations> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/debit_card_specializing/gasstations> ; rr:joinCondition [ rr:child "GasStationID" ; rr:parent "GasStationID" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/transactions_1k/refers_to_products> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/debit_card_specializing/products> ; rr:joinCondition [ rr:child "ProductID" ; rr:parent "ProductID" ] ] ] .
@@ -91,7 +91,7 @@
         rdfs:label "月份"@zh ;
         rdfs:comment "年月，格式 YYYYMM（如 201301）"@zh ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/yearmonth/Consumption> ; rr:objectMap [ rr:column "Consumption" ; rr:datatype xsd:string ] ;
-        rdfs:label "月消费金额"@zh ;
-        rdfs:comment "该客户当月的总消费金额（CZK）"@zh ] ;
+        rdfs:label "Consumption"@en ;
+        rdfs:comment "Monthly spending amount (CZK): total customer spending in this month"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/yearmonth/refers_to_customers> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/debit_card_specializing/customers> ; rr:joinCondition [ rr:child "CustomerID" ; rr:parent "CustomerID" ] ] ] .
 

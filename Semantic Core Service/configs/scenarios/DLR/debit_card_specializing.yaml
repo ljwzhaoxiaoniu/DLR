@@ -43,7 +43,7 @@ logical_entities:
       description: 'Currency: CZK=Czech Koruna, EUR=Euro'
 - logical_entity_id: LOGICAL.Consumption
   biz_name: Consumption
-  description: 'Customer consumption records: monthly bills + transaction details'
+  description: 'Customer consumption records: monthly bills (yearmonth) + transaction details (transactions_1k) — Consumption, UnitPrice, Quantity'
   public_attributes:
   - attr_id: LOGICAL.Consumption.Customer
     biz_name: Customer
@@ -54,9 +54,12 @@ logical_entities:
   - attr_id: LOGICAL.Consumption.Consumption
     biz_name: Consumption
     description: 'Monthly spending amount (CZK): total customer spending in this month'
-  - attr_id: LOGICAL.Consumption.Spending
-    biz_name: Spending
-    description: 'Unit price (CZK) per single item in the transaction'
+  - attr_id: LOGICAL.Consumption.UnitPrice
+    biz_name: UnitPrice
+    description: 'Unit price per item (CZK)'
+  - attr_id: LOGICAL.Consumption.Quantity
+    biz_name: Quantity
+    description: 'Quantity: number of items purchased in this transaction'
   - attr_id: LOGICAL.Consumption.GasStationID
     biz_name: GasStationID
     description: 'Gas station ID: FK to gasstations table'
@@ -87,10 +90,11 @@ logical_entities:
     C:
       LOGICAL.Consumption.Customer: debit_card_specializing.transactions_1k.CustomerID
       LOGICAL.Consumption.Date: debit_card_specializing.transactions_1k.Date
-      LOGICAL.Consumption.Spending: debit_card_specializing.transactions_1k.Price
+      LOGICAL.Consumption.UnitPrice: debit_card_specializing.transactions_1k.Price
+      LOGICAL.Consumption.Quantity: debit_card_specializing.transactions_1k.Amount
       LOGICAL.Consumption.GasStationID: debit_card_specializing.transactions_1k.GasStationID
       LOGICAL.Consumption.ProductID: debit_card_specializing.transactions_1k.ProductID
-    S: Gas station single transaction details
+    S: Gas station single transaction details — Price per item, Quantity, GasStation, Product
     private_attributes:
     - attr_id: debit_card_specializing.transactions_1k.TransactionID
       biz_name: TransactionID
@@ -99,14 +103,6 @@ logical_entities:
       biz_name: Time
       physical_column_id: debit_card_specializing.transactions_1k.Time
       description: 'Transaction time in HH:MM:SS format'
-    - attr_id: debit_card_specializing.transactions_1k.Price
-      biz_name: Price
-      physical_column_id: debit_card_specializing.transactions_1k.Price
-      description: 'Unit price per item (CZK)'
-    - attr_id: debit_card_specializing.transactions_1k.Amount
-      biz_name: Amount
-      physical_column_id: debit_card_specializing.transactions_1k.Amount
-      description: 'Quantity: number of items purchased in this transaction'
 - logical_entity_id: LOGICAL.GasStation
   biz_name: GasStation
   description: Fuel service stations

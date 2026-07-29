@@ -1,0 +1,13 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","27","california_schools","FAIL","INCORRECT","SQL执行成功且聚合平均值可能正确，但未按题意列出各学校名称、写作成绩和电话号码，仅返回单一AVG聚合值，结果不完整。
+```","INCORRECT","80","","38408","14713","795","166656","220572"
+"er","28","california_schools","FAIL","CORRECT","All steps pass - correct semantic query, proper tool chain, SQL executes successfully with same schools and correct difference values; DOC vs DOCType is the same concept expressed as code vs description.
+```","CORRECT","100","","21824","1580","1230","55296","79930"
+"dlr","27","california_schools","FAIL","INCORRECT","SQL语义错误——题目要求列出各校名称及写作分数和电话，Pred却计算了整体平均分，未返回个体学校明细数据
+```","INCORRECT","60","","38745","14578","1167","129280","183770"
+"dlr","28","california_schools","FAIL","CORRECT","Agent correctly identifies database, maps through semantic layer, computes average difference, and returns matching schools with DOC types; results align with gold.
+```","CORRECT","100","","21747","1720","749","54016","78232"
+"rdf","27","california_schools","FAIL","INCORRECT","步骤1-3通过(语义/工具/映射正确)，但步骤4-5失败：PredSQL只返回AVG聚合值，未列出题意要求的学校名单与分数；AgentFinalAnswer虽声称提供493所学校明细，但PredJsonPath中仅记录聚合SQL，且该SQL用INNER JOIN逻辑(过滤掉AvgScrWrite IS NULL的学校)，与GoldSQL的LEFT JOIN语义不一致。
+```","INCORRECT","60","","37100","14852","1443","167040","220435"
+"rdf","28","california_schools","FAIL","CORRECT","全部满足——语义定位正确(frpm+schools, CDSCode关联)，工具链走正道(rdf_search→rdf_classes→query_rdf_mapping→execute_sql)，库表字段均来自映射返回，SQL逻辑正确(CTE计算差值+平均值+筛选)，执行成功，结果集包含GoldResult中所有学校(Castle Rock、Come Back Kids等)且最终答案正确报告57所学校高于平均值16.70。GoldResult中""00""为DOC字段截断，非DOCType，Pred侧使用DOCType更准确。
+```","CORRECT","100","","14930","2080","716","89728","107454"

@@ -3397,15 +3397,15 @@
     "db_id": "debit_card_specializing",
     "ok": true,
     "columns": [
-      "Currency",
       "CustomerID",
-      "SUM(T2.Price / T2.Amount)"
+      "SUM(T2.Price) / SUM(T2.Amount)",
+      "Currency"
     ],
     "rows": [
       [
-        "CZK",
         12459,
-        203.856079
+        22.545169811320754,
+        "CZK"
       ]
     ],
     "error": null
@@ -254173,46 +254173,53 @@
     "db_id": "california_schools",
     "ok": true,
     "columns": [
-      "City",
       "School Name",
-      "State",
       "Street",
+      "City",
+      "State",
       "Zip"
     ],
     "rows": [
       [
-        "Salinas",
         "Alisal High",
-        "CA",
         "777 Williams Road",
+        "Salinas",
+        "CA",
         "93905-1907"
       ],
       [
-        "Salinas",
         "Everett Alvarez High",
-        "CA",
         "1900 Independence Boulevard",
+        "Salinas",
+        "CA",
         "93906-5300"
       ],
       [
-        "Salinas",
         "North Salinas High",
-        "CA",
         "55 Kip Drive",
+        "Salinas",
+        "CA",
         "93906-2908"
       ],
       [
-        "Salinas",
         "Salinas High",
-        "CA",
         "726 South Main Street",
+        "Salinas",
+        "CA",
         "93901-3243"
       ],
       [
-        "Soledad",
-        "Soledad High",
+        "North Monterey County High",
+        "13990 Castroville Boulevard",
+        "Castroville",
         "CA",
+        "95012-9749"
+      ],
+      [
+        "Soledad High",
         "425 Gabilan Drive",
+        "Soledad",
+        "CA",
         "93960-3207"
       ]
     ],

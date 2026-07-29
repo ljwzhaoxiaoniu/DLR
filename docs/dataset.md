@@ -272,7 +272,7 @@ FROM (
 | **Gold SQL** | `SUM(T2.Price / T2.Amount)`（每行比值相加）|
 | **Bug 本质** | evidence 定义 avg = Total(price)/Total(amount) = SUM(Price)/SUM(Amount)，但 Gold SQL 用 `SUM(Price/Amount)`——两种算法结果不同（22.55 vs 203.86）。**Agent 按 evidence 执行，Gold 却按另一种算法评判。** |
 | **正确结果（与 evidence 一致）** | `SUM(Price)/SUM(Amount) FROM transactions_1k WHERE CustomerID = (SELECT CustomerID FROM yearmonth ORDER BY Consumption DESC LIMIT 1)` = **22.55**（CustomerID 12459, CZK） |
-| **验证** | DLR 三范式中唯一路由到 yearmonth.Consumption 找到 CustomerID 12459；ER 走 transactions_1k 得 CustomerID 13665（avg 5762 离谱）；RDF 未触及 yearmonth。2026-07-25 标记，暂不修正 cache。 |
+| **验证** | DLR 三范式中唯一路由到 yearmonth.Consumption 找到 CustomerID 12459；ER 走 transactions_1k 得 CustomerID 13665（avg 5762 离谱）；RDF 未触及 yearmonth。**2026-07-29 修正**：evidence `Total(price)/Total(amount) = SUM(Price)/SUM(Amount)` 是正确的加权平均，gold SQL `SUM(Price/Amount)` 是求和而非平均。已修正 gold SQL → `SUM(Price)/SUM(Amount)`，cache 更新为 22.545。 |
 
 
 ### qid 94 — `financial`（gold SQL 逻辑错误：锁区不锁人 + cache 列序反转）

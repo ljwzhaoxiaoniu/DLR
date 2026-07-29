@@ -61,18 +61,18 @@ logical_entities:
       - {attr_id: LOGICAL.SchoolPerformance.FreeMeal_5_17, biz_name: FreeMeal_5_17, description: "Free Meal Count (Ages 5-17)"}
       - {attr_id: LOGICAL.SchoolPerformance.SchoolType, biz_name: SchoolType, description: "School Type"}
       - {attr_id: LOGICAL.SchoolPerformance.SchoolName, biz_name: SchoolName, description: "School Name"}
+      - {attr_id: LOGICAL.SchoolPerformance.AvgScrMath, biz_name: AvgScrMath, description: "Pre-computed average Math score for this school, from SAT test results"}
+      - {attr_id: LOGICAL.SchoolPerformance.AvgScrRead, biz_name: AvgScrRead, description: "Pre-computed average Reading score for this school, from SAT test results"}
+      - {attr_id: LOGICAL.SchoolPerformance.AvgScrWrite, biz_name: AvgScrWrite, description: "Pre-computed average Writing score for this school, from SAT test results"}
     physical_entities:
       - physical_entity_id: PHYSICAL.SATScore
         physical_table_name: satscores
         physical_table_id: california_schools.satscores
         A: {cardinality: "1:1", key: cds}
         R: null
-        C: {LOGICAL.SchoolPerformance.School: california_schools.satscores.cds}
-        S: "SAT scores"
+        C: {LOGICAL.SchoolPerformance.School: california_schools.satscores.cds, LOGICAL.SchoolPerformance.AvgScrMath: california_schools.satscores.AvgScrMath, LOGICAL.SchoolPerformance.AvgScrRead: california_schools.satscores.AvgScrRead, LOGICAL.SchoolPerformance.AvgScrWrite: california_schools.satscores.AvgScrWrite}
+        S: "SAT scores — AvgScrMath/Read/Write are pre-computed per-school averages, not raw scores"
         private_attributes:
-          - {attr_id: california_schools.satscores.AvgScrMath, biz_name: AvgScrMath, physical_column_id: california_schools.satscores.AvgScrMath}
-          - {attr_id: california_schools.satscores.AvgScrRead, biz_name: AvgScrRead, physical_column_id: california_schools.satscores.AvgScrRead}
-          - {attr_id: california_schools.satscores.AvgScrWrite, biz_name: AvgScrWrite, physical_column_id: california_schools.satscores.AvgScrWrite}
           - {attr_id: california_schools.satscores.NumTstTakr, biz_name: NumTstTakr, physical_column_id: california_schools.satscores.NumTstTakr}
           - {attr_id: california_schools.satscores.NumGE1500, biz_name: NumGE1500, physical_column_id: california_schools.satscores.NumGE1500}
       - physical_entity_id: PHYSICAL.FRPM

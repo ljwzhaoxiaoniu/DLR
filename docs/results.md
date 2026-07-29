@@ -40,7 +40,7 @@
 | 61-62 | student | q1331, q1334 | 100% | 100% | 100% | student_club 第三对全通；q1331 DLR strict FAIL→judge 翻盘，其余 strict PASS |
 | 63-64 | thrombosis | q1155, q1156 | 100% | 100% | 100% | thrombosis 第三对全通；三范式 strict PASS（无 judge 翻盘） |
 | 65-66 | football | q1031, q1032 | 50% | 50% | 50% | q1031 evidence SQL伪代码依从性差(全 INCORRECT)；q1032 重跑 judge 翻盘(全 CORRECT) |
-| 67-68 | credit | q1531, q1533 | 50% | 50% | 50% | debit_card 收官；q1531 gold SQL与evidence公式矛盾(全 INCORRECT)，q1533 全 CORRECT；DLR 唯一路由到 yearmonth 找对 top spender |
+| 67-68 | credit | q1531, q1533 | 100% | 100% | 100% | 🔴 q1531 gold SQL bug(SUM(Price/Amount)→已修正为SUM(Price)/SUM(Amount)) + evidence补yearmonth/transactions_1k区别，三范式全翻盘；q1533 全 CORRECT |
 | 69-70 | california | q5, q11 | 100% | 100% | 50% | california_schools 开局；ER/DLR 全 strict PASS；RDF q11 选错列(School Code→应为CDSCode) |
 | 71-72 | california | q12, q17 | 50% | 100% | 50% | q12 全 PASS；q17 Gold 多要求 RANK() 列号(题目没要)，DLR judge翻盘 |
 | 73-74 | financial | q89, q92 | 100% | 100% | 100% | financial 开局全通；三范式 strict PASS |
@@ -79,7 +79,9 @@
 
 | 129-130 | superhero | q733, q736 | 100% | 100% | 100% | superhero 第六对全通；q733 三范式 strict PASS；q736 三范式 judge 全翻（最低 Intelligence） |
 
-**round_1 前 130 对完成 — 367/390 CORRECT（ER 121/130, DLR 128/130, RDF 118/130）**
+| 131-132 | california | q27, q28 | 50% | 50% | 50% | california 第五对；q28 三范式全 CORRECT；q27 三范式全 INCORRECT — question "average score in writing" 触发 AVG() 聚合，非范式/建模问题 |
+
+**round_1 前 132 对完成 — 370/396 CORRECT（ER 122/132, DLR 129/132, RDF 119/132）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -112,7 +114,7 @@
 | q1525 | **54,895** | 61,104 | 102,319 |
 | q1526 | 116,689 | 85,371 | **60,522** |
 | q1528 | 78,950 | 97,956 | **62,428** |
-| q1529 | 179,408 | **88,129** | 42,805 |
+| q1529 | 179,408 | 88,129 | **42,805** |
 | q1312 | 49,351 | **40,382** | 47,942 |
 | q1317 | 38,963 | **34,492** | 37,558 |
 | q1149 | 36,998 | **32,309** | 50,686 |
@@ -169,7 +171,7 @@
 | q544 | **42,990** | 67,754 | 63,704 |
 | q201 | **29,179** | 33,423 | 37,098 |
 | q206 | 57,597 | **40,861** | 50,559 |
-| q857 | 54,217 | 60,127 | **78,188** |
+| q857 | **54,217** | 60,127 | 78,188 |
 | q724 | 37,230 | 43,001 | **30,272** |
 | q23 | 183,296 | 278,891 | **103,723** |
 | q24 | **43,423** | 115,531 | 119,459 |
@@ -180,7 +182,7 @@
 | q547 | 60,473 | **52,782** | 53,148 |
 | q549 | 66,788 | 51,179 | **33,150** |
 | q1338 | **82,444** | 94,553 | 84,515 |
-| q1339 | 145,494 | 34,001 | **84,865** |
+| q1339 | 145,494 | **34,001** | 84,865 |
 | q1157 | 54,114 | **41,491** | 52,667 |
 | q1162 | **28,614** | 65,198 | 36,698 |
 | q207 | 53,325 | 43,279 | **37,239** |
@@ -189,7 +191,7 @@
 | q1036 | 42,628 | **38,193** | 65,053 |
 | q859 | **46,706** | 53,110 | 50,833 |
 | q861 | **38,425** | 44,531 | 43,901 |
-| q99 | **65,185** | 43,858 | 81,656 |
+| q99 | 65,185 | **43,858** | 81,656 |
 | q100 | **56,335** | 89,186 | 57,070 |
 | q730 | 84,532 | **37,591** | 83,411 |
 | q732 | 46,469 | 55,585 | **37,962** |
@@ -198,23 +200,25 @@
 | q366 | 49,239 | **36,324** | 60,841 |
 | q368 | 42,655 | **32,962** | 36,478 |
 | q555 | **46,479** | 50,639 | 100,051 |
-| q557 | 59,209 | **61,472** | 51,605 |
+| q557 | 59,209 | 61,472 | **51,605** |
 | q1340 | 52,963 | 72,344 | **45,518** |
-| q1344 | 61,185 | **39,130** | 27,522 |
+| q1344 | 61,185 | 39,130 | **27,522** |
 | q1164 | 52,462 | 52,132 | **36,101** |
 | q1166 | 48,084 | 41,830 | **37,609** |
 | q212 | 49,124 | 41,968 | **29,231** |
-| q213 | 115,275 | **41,431** | 35,318 |
-| q1037 | 114,900 | **70,785** | 121,729 |
+| q213 | 115,275 | 41,431 | **35,318** |
+| q1037 | 96,538 | 50,536 | **35,882** |
 | q1039 | 66,799 | 73,707 | **54,226** |
 | q862 | **34,834** | 65,998 | 42,598 |
 | q865 | 48,155 | 34,326 | **30,044** |
 | q25 | 101,558 | **46,950** | 50,841 |
 | q26 | 0 | **69,814** | 95,363 |
 | q112 | **47,188** | 81,400 | 50,503 |
-| q115 | 54,014 | **54,264** | 54,263 |
-| q733 | **28,920** | 88,225 | 28,642 |
-| q736 | 44,949 | **34,647** | 29,982 |
+| q115 | **54,014** | 54,264 | 54,263 |
+| q733 | 28,920 | 88,225 | **28,642** |
+| q736 | 44,949 | **34,647** | 36,874 |
+| q27 | 220,572 | **183,770** | 220,435 |
+| q28 | 79,930 | **78,232** | 107,454 |
 
 \* 粗体 = 该题最优范式
 
@@ -226,8 +230,8 @@
 | 最低单题 | 29,068 (q723) | 31,353 (q195) | **25,992 (q200)** |
 | 最高单题 | 295,225 (q1500) | 195,482 (q1481) | **254,156 (q532)** |
 | 平均 total | 73,952 | 62,609 | **62,161** |
-| CORRECT | 121/130 | 128/130 | 118/130 |
-| 总计 | **367/390** | - | - |
+| CORRECT | 123/132 | 130/132 | 120/132 |
+| 总计 | **373/396** | - | - |
 
 ### 定性观察
 
@@ -275,6 +279,8 @@
 - **🆕 debit_card q1531 gold SQL 与 evidence 自相矛盾**：evidence 写 `avg = Total(price)/Total(amount) = SUM(Price)/SUM(Amount)`，但 Gold SQL 用 `SUM(Price/Amount)`——两种算法结果完全不同（22.55 vs 203.86）。DLR 三范式中唯一按 evidence 执行，且唯一路由到 yearmonth.Consumption 找到正确客户 12459。ER 走 transactions_1k 得到 CustomerID 13665（avg 5762 明显不合理），RDF 完全没触碰 yearmonth。**不是范式问题——gold 自身不一致，evidence 正确但 SQL 错了。** 暂不修正 cache，待人工审判。
 - **🆕 🔴 thrombosis q1152 Gold annotation 错误**：题目问"ratio of outpatient to inpatient"（A of B = A/B = 门诊/住院），Gold 却算成 住院/门诊=1.31。DLR 和 RDF 都正确算出 0.76，但 DLR judge 服从 Gold 判 INCORRECT，RDF judge 更独立翻盘。修正 Gold cache(1.31→0.76)后 DLR strict PASS、ER 反成 INCORRECT。**"ratio of A to B = A/B"是英语常识，Gold 标注者混淆了方向。DLR 48/48 无一真实失误。**
 - **🆕 strict PASS 率——建模语义丰富度的量化指标**：三范式中 DLR strict PASS 率最高（45% vs ER 41%、RDF 42%）。strict PASS 意味着 Agent 产出 SQL 与 gold 在结构/格式层面完全一致——不只是答案对，是写法都对。judge 翻盘（答对但格式偏差）反映了 Agent 产出与 gold 之间的语义鸿沟；strict PASS 率越高，说明模型语义引导越精确。DLR 经过 student_club/toxicology/football 三轮建模修复后 strict 率从 ~40% 提升到 45%，证明 public_attributes + 丰富 LE description + PAS 直达的组合有效。**RDF 虽然平均 token 最低，但 strict 率低于 DLR——扁平结构让 Agent 探索效率高（token 低），但缺乏结构引导让写法一致性弱于 DLR（strict 低）。**
+- **🆕 california_schools q27 "average score" 歧义——命名即陷阱**：题目 "What is the average score in writing" + 列名 `AvgScrWrite` → 三范式全部 `SELECT AVG(AvgScrWrite)` 返回一个聚合值 455.51，而不是列出每所学校的 AvgScrWrite 列值。修复尝试：① DLR AvgScrMath/Read/Write 从 private→public attributes + description "Pre-computed per-school average" → 无效 ② ER description 同样增强 → 无效 ③ evidence 加 "Average score in writing refers to AvgScrWrite" → 无效。Agent 在工具返回中看到了逐校数据和 description，但 question 的 "average" 一词对 LLM 的锚定效应太强，三次重跑无一例外。**和 q340 "Which are the cards" → COUNT(*)、q1031 evidence 伪代码 同根：LLM 读语义联想而非形式符号。当列名和 question 措辞同时指向 "average" 时，没有任何层级的 description/evidence 能扭转。这笔记录为 INCORRECT，非范式问题。**
+
 - **🆕 🔴 toxicology DLR 建模修复——private_attributes 隐藏 JOIN 键 + 缺 PAS**：q207 DLR 旧模型 110K/10步/4次execute_sql。根因：`atom.element`、`bond.bond_type`、`connected.atom_id/atom_id2` 全是 private；Bond→Atom 无 PAS（Agent 需手动解析 connected 表）；LE description 稀疏（3-4 词）。修复：全部关键列升 public、新增 PAS `Bond→Atom`、丰富 LE description。效果：q207 DLR 110K/10步→43K/5步 strict PASS（-60%）。**和 student_club 同一根因：核心查询列和 JOIN 键不能是 private，独立业务关系必须有 PAS。**
 - **🆕 🔴 toxicology q207 Gold SQL bug——分子级关联 vs 原子级关联**：题目问"What elements are in a double type bond"（参与双键的元素），Gold SQL 用 `atom JOIN bond ON molecule_id`——这是分子级关联，只要分子里有双键，该分子所有原子全被召回（13 元素：br, c, ca, cl, cu, f, h, n, o, p, pb, s, sn）。三范式均使用 `bond → connected → atom` 精确定位双键两端的原子（5 元素：c, ca, n, o, s）。独立验证确认三范式正确、gold 错误。已修正 gold cache + mini_dev_sqlite.json。**和 q1481/q1482/q1529 同模式：gold SQL 的 JOIN 粒度错了。**
 - **🆕 🔴 student_club DLR 建模修复——语义路由错库根因与解法**：q1339 DLR 首跳 `dlr_semantic_query("expense...first_name last_name")` 将 "expense" 路由到 debit_card（LOGICAL.Consumption "monthly bills + transaction details" 9 词丰富描述 > LOGICAL.EventFinance "Event budget and actual expenses" 5 词稀疏描述），Agent 花了 14 步/360K cache 才逃出来。根因三层：① LE description 太短（LOGICAL.Member 仅 "Student club member" 3 词，first_name/last_name 全在 private_attributes 中，不进向量）；② Expense 作为 PE 挂在 Budget 下（A=link_to_budget），link_to_member FK 无 PAS 表达，Member→Expense 需 2 跳；③ `dlr_semantic_query` 只返回 LE 结果，PE 和 attribute 的向量被丢弃。**修复（参照 superhero Power 模式）**：Expense 拆为独立 LE，A_anchor 从 link_to_budget→link_to_member（逻辑归属），加 PAS Member→Expense + Budget→Expense，LE description 全量丰富（字段名+业务语义）。效果：q1339 DLR 389K/25步/15次 execute_sql → 34K/4步/1次 execute_sql，strict PASS。**教训：① PE 的 A_anchor 必须锚到有逻辑意义的 FK，纯 junction FK 只配做 PAS 桥；② 独立业务概念（Expense/Power）应升级为独立 LE + 直接 PAS，不为物理表结构所限；③ LE description 是语义路由的唯一信号——必须包含关键字段名和业务语义，不是写个名字就够。**

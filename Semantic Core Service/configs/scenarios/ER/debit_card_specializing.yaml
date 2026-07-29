@@ -22,7 +22,7 @@ entities:
     data_type: text
   - attr_id: debit_card_specializing.customers.Currency
     biz_name: Currency
-    description: Currency
+    description: 'Currency: CZK=Czech Koruna, EUR=Euro'
     physical_column_id: debit_card_specializing.customers.Currency
     data_type: text
 - entity_id: debit_card_specializing.gasstations
@@ -107,15 +107,12 @@ entities:
     data_type: integer
   - attr_id: debit_card_specializing.transactions_1k.Amount
     biz_name: Amount
-    description: Amount
+    description: 'Quantity: number of items purchased in this transaction'
     physical_column_id: debit_card_specializing.transactions_1k.Amount
     data_type: integer
   - attr_id: debit_card_specializing.transactions_1k.Price
     biz_name: Price
-    description: 'Price. commonsense evidence:
-
-
-      total price = Amount x Price'
+    description: 'Unit price per item (CZK)'
     physical_column_id: debit_card_specializing.transactions_1k.Price
     data_type: real
 - entity_id: debit_card_specializing.yearmonth
@@ -135,7 +132,7 @@ entities:
     data_type: text
   - attr_id: debit_card_specializing.yearmonth.Consumption
     biz_name: Consumption
-    description: 'Monthly spending amount (CZK)'
+    description: 'Monthly spending amount (CZK): total customer spending in this month'
     physical_column_id: debit_card_specializing.yearmonth.Consumption
     data_type: real
 relations:
