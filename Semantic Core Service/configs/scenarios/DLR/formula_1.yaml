@@ -90,9 +90,9 @@ logical_entities:
 - logical_entity_id: LOGICAL.Race
   biz_name: Race
   public_attributes:
-  - attr_id: LOGICAL.Race.RaceID
-    biz_name: RaceID
-    description: '比赛ID: F1比赛唯一标识符'
+  - {attr_id: LOGICAL.Race.RaceID, biz_name: RaceID, description: 'Race ID: unique identifier'}
+  - {attr_id: LOGICAL.Race.Year, biz_name: Year, description: 'Year: race season year'}
+  - {attr_id: LOGICAL.Race.Name, biz_name: Name, description: 'Race name: e.g. Bahrain Grand Prix'}
   physical_entities:
   - physical_entity_id: PHYSICAL.Race
     physical_table_name: races
@@ -103,15 +103,10 @@ logical_entities:
     R: null
     C:
       LOGICAL.Race.RaceID: formula_1.races.raceId
+      LOGICAL.Race.Year: formula_1.races.year
+      LOGICAL.Race.Name: formula_1.races.name
     S: Race master record
-    private_attributes:
-    - attr_id: formula_1.races.year
-      biz_name: year
-      physical_column_id: formula_1.races.year
-      description: '年份: 比赛举办年份'
-    - attr_id: formula_1.races.name
-      biz_name: name
-      physical_column_id: formula_1.races.name
+    private_attributes: []
       description: '比赛名称: 大奖赛名称'
     - attr_id: formula_1.races.circuitId
       biz_name: circuitId
