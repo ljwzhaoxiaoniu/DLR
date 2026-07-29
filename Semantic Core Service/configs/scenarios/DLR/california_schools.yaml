@@ -64,6 +64,7 @@ logical_entities:
       - {attr_id: LOGICAL.SchoolPerformance.AvgScrMath, biz_name: AvgScrMath, description: "Pre-computed average Math score for this school, from SAT test results"}
       - {attr_id: LOGICAL.SchoolPerformance.AvgScrRead, biz_name: AvgScrRead, description: "Pre-computed average Reading score for this school, from SAT test results"}
       - {attr_id: LOGICAL.SchoolPerformance.AvgScrWrite, biz_name: AvgScrWrite, description: "Pre-computed average Writing score for this school, from SAT test results"}
+      - {attr_id: LOGICAL.SchoolPerformance.NumGE1500, biz_name: NumGE1500, description: "Number of test takers with total SAT score >= 1500"}
       - {attr_id: LOGICAL.SchoolPerformance.Enrollment_K12, biz_name: Enrollment_K12, description: "Enrollment (K-12): number of students in grades 1-12"}
       - {attr_id: LOGICAL.SchoolPerformance.Enrollment_5_17, biz_name: Enrollment_5_17, description: "Enrollment (Ages 5-17): number of students aged 5-17"}
       - {attr_id: LOGICAL.SchoolPerformance.FreeMeal_K12, biz_name: FreeMeal_K12, description: "Free Meal Count (K-12): students receiving free meals, grades K-12"}
@@ -75,11 +76,10 @@ logical_entities:
         physical_table_id: california_schools.satscores
         A: {cardinality: "1:1", key: cds}
         R: null
-        C: {LOGICAL.SchoolPerformance.School: california_schools.satscores.cds, LOGICAL.SchoolPerformance.AvgScrMath: california_schools.satscores.AvgScrMath, LOGICAL.SchoolPerformance.AvgScrRead: california_schools.satscores.AvgScrRead, LOGICAL.SchoolPerformance.AvgScrWrite: california_schools.satscores.AvgScrWrite}
+        C: {LOGICAL.SchoolPerformance.School: california_schools.satscores.cds, LOGICAL.SchoolPerformance.AvgScrMath: california_schools.satscores.AvgScrMath, LOGICAL.SchoolPerformance.AvgScrRead: california_schools.satscores.AvgScrRead, LOGICAL.SchoolPerformance.AvgScrWrite: california_schools.satscores.AvgScrWrite, LOGICAL.SchoolPerformance.NumGE1500: california_schools.satscores.NumGE1500}
         S: "SAT scores — AvgScrMath/Read/Write are pre-computed per-school averages, not raw scores"
         private_attributes:
           - {attr_id: california_schools.satscores.NumTstTakr, biz_name: NumTstTakr, physical_column_id: california_schools.satscores.NumTstTakr}
-          - {attr_id: california_schools.satscores.NumGE1500, biz_name: NumGE1500, physical_column_id: california_schools.satscores.NumGE1500}
       - physical_entity_id: PHYSICAL.FRPM
         physical_table_name: frpm
         physical_table_id: california_schools.frpm
