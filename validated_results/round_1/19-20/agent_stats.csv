@@ -1,7 +1,7 @@
-question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+﻿question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
 1507,ER,5,37159,13696,498,437,22528,6,"{""er_semantic_query"": 1, ""get_entity_attributes"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
 1509,ER,5,36451,13691,417,583,21760,7,"{""er_semantic_query"": 1, ""get_entity_attributes"": 2, ""get_entity_relations"": 1, ""get_entity_mapping"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
 1507,DLR,5,44377,16378,555,564,26880,6,"{""dlr_semantic_query"": 1, ""get_le_attrs"": 1, ""get_pe_full"": 2, ""execute_sql"": 2}",,PASS,,,CORRECT
-1509,DLR,7,63072,17152,381,1379,44160,6,"{""dlr_semantic_query"": 1, ""path_le_le"": 1, ""get_pe_full"": 2, ""recall_pe"": 1, ""execute_sql"": 1}",,PASS,,,CORRECT
+1509,DLR,7,44932,17152,381,1379,44160,6,"{""dlr_semantic_query"": 1, ""path_le_le"": 1, ""get_pe_full"": 2, ""recall_pe"": 1, ""execute_sql"": 1}",,PASS,,,CORRECT
 1507,RDF,6,41585,7630,613,446,32896,7,"{""rdf_semantic_query"": 1, ""rdf_classes"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 3}",,FAIL,INCORRECT,"SQL语义错误，题目只要求Time字段，但Pred SQL额外SELECT了Date字段，导致去重维度从单纯Time变成(Date, Time)组合，最终答案也包含了多余的日期信息。",INCORRECT
 1509,RDF,5,34764,7545,443,664,26112,6,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 3}",,PASS,,,CORRECT
