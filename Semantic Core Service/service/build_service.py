@@ -312,7 +312,7 @@ class BuildService:
         for le in model.logical_entities:
             # Collect public attribute descriptions for vector search
             public_attr_parts = []
-            for attr in le.public_attributes:
+            for attr in le.attributes:
                 if attr.description:
                     public_attr_parts.append(f"{attr.name} {attr.description}")
             public_attrs_text = " ".join(public_attr_parts)
