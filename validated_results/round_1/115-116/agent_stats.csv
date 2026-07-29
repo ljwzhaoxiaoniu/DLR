@@ -1,8 +1,8 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"er","1340","student_club","PASS","","","CORRECT","100","","8165","754","396","43648","52963"
-"er","1344","student_club","PASS","","","CORRECT","100","","10875","331","443","49536","61185"
-"dlr","1340","student_club","FAIL","CORRECT","SQL语义正确，计算2019与2020花费差额为2086.05，与GoldResult一致；结果列顺序重排不影响数值正确性，Agent最终答案也正确。
-```","CORRECT","100","","14641","780","1115","55808","72344"
-"dlr","1344","student_club","PASS","","","CORRECT","100","","8293","233","268","30336","39130"
-"rdf","1340","student_club","PASS","","","CORRECT","100","","8629","697","736","35456","45518"
-"rdf","1344","student_club","PASS","","","CORRECT","100","","7510","211","345","19456","27522"
+﻿paradigm,q_id,db_id,strict_match,judge_verdict,judge_reason,verdict,process_score,error,input_tokens,output_tokens,reasoning_tokens,cache_read_tokens,total_tokens
+er,1340,student_club,PASS,,,CORRECT,100,,8165,754,396,43648,78516
+er,1344,student_club,PASS,,,CORRECT,100,,10875,331,443,49536,61185
+dlr,1340,student_club,FAIL,CORRECT,"SQL语义正确，计算2019与2020花费差额为2086.05，与GoldResult一致；结果列顺序重排不影响数值正确性，Agent最终答案也正确。
+```",CORRECT,100,,14641,780,1115,55808,33630
+dlr,1344,student_club,PASS,,,CORRECT,100,,8293,233,268,30336,39130
+rdf,1340,student_club,PASS,,,CORRECT,100,,8629,697,736,35456,51922
+rdf,1344,student_club,PASS,,,CORRECT,100,,7510,211,345,19456,27522
