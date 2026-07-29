@@ -1,7 +1,7 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"er","719","superhero","PASS","CORRECT","","CORRECT","100","","18614","673","679","70528","90494"
-"er","723","superhero","PASS","CORRECT","","CORRECT","100","","13326","347","419","14976","29068"
-"dlr","719","superhero","PASS","CORRECT","","CORRECT","100","","16985","427","566","18304","36282"
-"dlr","723","superhero","PASS","CORRECT","","CORRECT","100","","10935","587","610","34688","46820"
-"rdf","719","superhero","PASS","CORRECT","","CORRECT","100","","13991","376","250","14208","28825"
-"rdf","723","superhero","PASS","CORRECT","","CORRECT","100","","13705","375","375","14720","29175"
+﻿paradigm,q_id,db_id,strict_match,judge_verdict,judge_reason,verdict,process_score,error,input_tokens,output_tokens,reasoning_tokens,cache_read_tokens,total_tokens
+er,719,superhero,PASS,CORRECT,,CORRECT,100,,18614,673,679,70528,90494
+er,723,superhero,PASS,CORRECT,,CORRECT,100,,13326,347,419,14976,29068
+dlr,719,superhero,PASS,CORRECT,,CORRECT,100,,16985,427,566,18304,36282
+dlr,723,superhero,PASS,CORRECT,,CORRECT,100,,10935,587,610,34688,35981
+rdf,719,superhero,PASS,CORRECT,,CORRECT,100,,13991,376,250,14208,28825
+rdf,723,superhero,PASS,CORRECT,,CORRECT,100,,13705,375,375,14720,29175
