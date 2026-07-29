@@ -44,7 +44,7 @@
 | 69-70 | california | q5, q11 | 100% | 100% | 50% | california_schools 开局；ER/DLR 全 strict PASS；RDF q11 选错列(School Code→应为CDSCode) |
 | 71-72 | california | q12, q17 | 50% | 100% | 50% | q12 全 PASS；q17 Gold 多要求 RANK() 列号(题目没要)，DLR judge翻盘 |
 | 73-74 | financial | q89, q92 | 100% | 100% | 100% | financial 开局全通；三范式 strict PASS |
-| 75-76 | financial | q93, q94 | 100% | 100% | 100% | q93 全 PASS；q94 题目歧义修正后三范式全对 |
+| 75-76 | financial | q93, q94 | 100% | 100% | 100% | q93 三范式 strict PASS；q94 DLR strict PASS, ER/RDF judge翻盘 |
 | 77-78 | card_games | q346, q347 | 100% | 100% | 50% | q346 三范式 strict PASS；q347 ER/DLR judge 翻盘 CORRECT，RDF 未 JOIN rulings 表→INCORRECT（cards.text ≠ ruling text，RDF 扁平结构 Agent 未探索 rulings class） |
 | 79-80 | card_games | q349, q352 | 50% | 100% | 50% | 🔴 双 gold bug：q349 gold 答非所问（算了画师 promo 卡数→应为 max(rulings)），q352 gold 分母错（card-language pairs→应为 distinct cards）；ER q352 公式错(8.77%)，RDF q349 漏 WHERE isPromo=1；DLR 全对。gold cache + mini_dev_sqlite.json 已修正 |
 | 81-82 | codebase | q539, q544 | 100% | 100% | 100% | 三范式 strict PASS；codebase 第三对全通 |
