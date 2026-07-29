@@ -46,7 +46,7 @@
 | 73-74 | financial | q89, q92 | 100% | 100% | 100% | financial 开局全通；三范式 strict PASS |
 | 75-76 | financial | q93, q94 | 100% | 100% | 100% | q93 三范式 strict PASS；q94 DLR strict PASS, ER/RDF judge翻盘 |
 | 77-78 | card_games | q346, q347 | 100% | 100% | 50% | q346 三范式 strict PASS；q347 ER/DLR judge 翻盘 CORRECT，RDF 未 JOIN rulings 表→INCORRECT（cards.text ≠ ruling text，RDF 扁平结构 Agent 未探索 rulings class） |
-| 79-80 | card_games | q349, q352 | 50% | 100% | 50% | 🔴 双 gold bug：q349 gold 答非所问（算了画师 promo 卡数→应为 max(rulings)），q352 gold 分母错（card-language pairs→应为 distinct cards）；ER q352 公式错(8.77%)，RDF q349 漏 WHERE isPromo=1；DLR 全对。gold cache + mini_dev_sqlite.json 已修正 |
+| 79-80 | card_games | q349, q352 | 100% | 100% | 50% | 🔴 双 gold bug修正后重跑: ER q352翻盘 strict PASS(35.38%), DLR q352 strict PASS(35.38%), RDF q352仍INCORRECT(未JOIN cards表); q349 DLR全对; gold cache + mini_dev_sqlite.json 已修正 |
 | 81-82 | codebase | q539, q544 | 100% | 100% | 100% | 三范式 strict PASS；codebase 第三对全通 |
 | 83-84 | toxicology | q201, q206 | 100% | 100% | 50% | q201 三范式 strict PASS；q206 ER/DLR judge 翻盘，RDF Agent 探索了 connected 表但最终 SQL 硬编码 atom_id→INCORRECT |
 | 85-86 | formula_1+superhero | q857, q724 | 100% | 100% | 100% | 跨库对：q857=formula_1, q724=superhero；q724 三范式 strict PASS，q857 三范式 judge 全翻 |
@@ -166,7 +166,7 @@
 | q346 | 64,089 | 74,484 | **45,578** |
 | q347 | 144,494 | 105,495 | **36,459** |
 | q349 | 87,205 | **43,995** | 53,523 |
-| q352 | 98,276 | 121,361 | **65,060** |
+| q352 | 107,869 | **105,239** | 107,600 |
 | q539 | 65,414 | 63,607 | **40,717** |
 | q544 | **42,990** | 67,754 | 63,704 |
 | q201 | **29,179** | 33,423 | 37,098 |
@@ -230,8 +230,8 @@
 | 最低单题 | 29,068 (q723) | 31,353 (q195) | **25,992 (q200)** |
 | 最高单题 | 295,225 (q1500) | 195,482 (q1481) | **254,156 (q532)** |
 | 平均 total | 73,952 | 62,609 | **62,161** |
-| CORRECT | 123/132 | 130/132 | 120/132 |
-| 总计 | **373/396** | - | - |
+| CORRECT | 124/132 | 130/132 | 120/132 |
+| 总计 | **374/396** | - | - |
 
 ### 定性观察
 
