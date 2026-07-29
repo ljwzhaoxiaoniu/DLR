@@ -711,7 +711,45 @@ def _resolve_database_url(physical_table_id: str = "") -> str:
 def _path_le_le(from_id: str, to_id: str) -> dict:
     """[DLR] Shortest PAS path between two logical entities (LE)."""
     gdb, _, _ = _ensure_services()
+
+    # Step 1: validate both IDs are valid LEs
+    invalid = {}
+    from_le = gdb.get_logical_entity_by_id(from_id)
+    to_le = gdb.get_logical_entity_by_id(to_id)
+
+    if not from_le:
+        similar = _fuzzy_match_le(gdb, from_id)
+        invalid["from"] = {"id": from_id, "is_le": False, "hint": f"'{from_id}' 不是有效的LE", "suggestions": similar}
+    if not to_le:
+        similar = _fuzzy_match_le(gdb, to_id)
+        invalid["to"] = {"id": to_id, "is_le": False, "hint": f"'{to_id}' 不是有效的LE", "suggestions": similar}
+
+    if invalid:
+        return {"success": False, "message": "一个或多个ID不是有效的LogicalEntity，请检查 from/to 参数",
+                "invalid": invalid}
+
+    # Step 2: find path
     return gdb.find_le_shortest_path(from_id, to_id)
+
+
+def _fuzzy_match_le(gdb, partial_id: str, top_k: int = 3) -> list:
+    """Fuzzy match a partial LE ID to existing LE IDs (searches ID, name, description)."""
+    entities = gdb.get_all_logical_entities()
+    partial_lower = partial_id.lower()
+    scored = []
+    for e in entities:
+        le_id = e.get("logical_entity_id", "")
+        name = e.get("name", "")
+        desc = e.get("description", "")
+        score = 0
+        if partial_lower in le_id.lower(): score += 10
+        if partial_lower in name.lower(): score += 5
+        if partial_lower in desc.lower(): score += 3
+        if le_id.lower().startswith(partial_lower): score += 2
+        if score > 0:
+            scored.append((score, le_id))
+    scored.sort(key=lambda x: -x[0])
+    return [le_id for score, le_id in scored[:top_k]]
 
 
 # ── 新增:list_pe / LE 导航 / PE 详情 / PAS / 判断 / schema ──────────────
