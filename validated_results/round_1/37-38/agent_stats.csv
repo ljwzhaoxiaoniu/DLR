@@ -1,10 +1,10 @@
-question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
-717,ER,6,44528,8419,445,336,35328,7,"{""er_semantic_query"": 1, ""get_entity_mapping"": 3, ""execute_sql"": 3}",,PASS,,,CORRECT
+﻿question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+717,ER,6,45433,8419,445,336,35328,7,"{""er_semantic_query"": 1, ""get_entity_mapping"": 3, ""execute_sql"": 3}",,PASS,,,CORRECT
 994,ER,9,80923,17361,934,548,62080,15,"{""er_semantic_query"": 2, ""get_entity_attributes"": 4, ""get_entity_mapping"": 4, ""execute_sql"": 4, ""list_all_tables"": 1}",,FAIL,CORRECT,"全部满足。语义定位正确(formula_1库+constructorResults/constructors/races/circuits表)，工具链走正道(semantic_query→get_entity_attributes→get_entity_mapping→execute_sql)，SQL使用映射返回的database_url且circuitId=6经查询确认为Monaco赛道，执行成功，最终答案McLaren/British/218.5与GoldResult完全一致。
 ```",CORRECT
-717,DLR,6,53510,3238,423,569,49280,8,"{""dlr_semantic_query"": 1, ""get_pe_full"": 3, ""get_le_pas"": 2, ""get_le_children"": 1, ""execute_sql"": 1}",,PASS,,,CORRECT
+717,DLR,5,44113,3238,423,569,49280,8,"{""dlr_semantic_query"": 1, ""get_pe_full"": 3, ""get_le_pas"": 2, ""get_le_children"": 1, ""execute_sql"": 1}",,PASS,,,CORRECT
 994,DLR,6,54656,10709,715,480,42752,7,"{""dlr_semantic_query"": 2, ""get_pe_full"": 3, ""execute_sql"": 2}",,FAIL,CORRECT,"All 5 steps passed. Agent correctly recalled formula_1 schema, mapped entities via get_pe_full, executed correct SQL, and final answer matches GoldResult (McLaren, British, 218.5 points).
 ```",CORRECT
-717,RDF,4,29369,8289,323,405,20352,5,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 3, ""execute_sql"": 1}",,PASS,,,CORRECT
+717,RDF,4,28504,8289,323,405,20352,5,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 3, ""execute_sql"": 1}",,PASS,,,CORRECT
 994,RDF,13,121849,18149,1046,766,101888,12,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 4, ""rdf_search"": 3, ""rdf_classes"": 1, ""execute_sql"": 3}",,FAIL,CORRECT,"全部条件满足——语义正确（Monaco GP 1980-2010 积分最高车队），工具链走正道（semantic_query→mapping→execute_sql），SQL 使用正确库表字段，执行成功，最终答案 McLaren/British/218.5 与 GoldResult 完全一致。
 ```",CORRECT
