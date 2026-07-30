@@ -1,5 +1,5 @@
 """Build per-question verification table: strict/judge/result/token per paradigm."""
-import csv, os, re
+import csv, os, re, io
 from collections import defaultdict
 
 BASE = "D:/Code_Proj/DLR Proj/validated_results/round_1"
@@ -11,7 +11,12 @@ def read_csv_safe(path):
     for enc in ["utf-8-sig", "gbk", "latin-1"]:
         try:
             with open(path, encoding=enc) as f:
-                rows = list(csv.DictReader(f))
+                content = f.read()
+            # Remove stray lines (artifacts from multi-line fields)
+            lines = content.split('\n')
+            cleaned = [l for l in lines if not l.startswith('```')]
+            content = '\n'.join(cleaned)
+            rows = list(csv.DictReader(io.StringIO(content)))
             if rows and ("q_id" in rows[0] or "question_id" in rows[0]):
                 return rows
         except (UnicodeDecodeError, KeyError):
@@ -35,30 +40,34 @@ for pair_dir in os.listdir(BASE):
         for r in rows:
             try:
                 qid = int(r["q_id"])
-            except (ValueError, KeyError):
+            except (ValueError, KeyError, TypeError):
                 continue
-            par = r["paradigm"].strip().lower()
+            par = (r["paradigm"] or "").strip().lower()
+            if not par:
+                continue
             csv_data.setdefault(qid, {})[par] = {
-                "strict": r["strict_match"].strip(),
-                "judge": r["judge_verdict"].strip(),
-                "result": r["verdict"].strip(),
-                "token": int(r["total_tokens"]) if r.get("total_tokens","").strip().isdigit() else 0,
-                "db": r["db_id"].strip(),
+                "strict": (r["strict_match"] or "").strip(),
+                "judge": (r["judge_verdict"] or "").strip(),
+                "result": (r["verdict"] or "").strip(),
+                "token": int(r["total_tokens"]) if (r.get("total_tokens") or "").strip().isdigit() else 0,
+                "db": (r["db_id"] or "").strip(),
             }
     elif "question_id" in rows[0]:
         # 旧格式: question_id,paradigm,steps,tokens_total,...,strict_match,judge_verdict,judge_reason,verdict
         for r in rows:
             try:
                 qid = int(r["question_id"])
-            except (ValueError, KeyError):
+            except (ValueError, KeyError, TypeError):
                 continue
-            par = r["paradigm"].strip().lower()
+            par = (r["paradigm"] or "").strip().lower()
+            if not par:
+                continue
             csv_data.setdefault(qid, {})[par] = {
-                "strict": r.get("strict_match", "").strip(),
-                "judge": r.get("judge_verdict", "").strip(),
-                "result": r.get("verdict", "").strip(),
-                "token": int(r["tokens_total"]) if r.get("tokens_total","").strip().isdigit() else 0,
-                "db": r.get("db_id", "").strip(),
+                "strict": (r.get("strict_match") or "").strip(),
+                "judge": (r.get("judge_verdict") or "").strip(),
+                "result": (r.get("verdict") or "").strip(),
+                "token": int(r["tokens_total"]) if (r.get("tokens_total") or "").strip().isdigit() else 0,
+                "db": (r.get("db_id") or "").strip(),
             }
 
 # 2. Parse results.md for verdicts + tokens
@@ -246,7 +255,7 @@ q_obs_notes = {
     555: "三范式strict PASS",
     557: "三范式strict PASS",
     # === card_games ===
-    340: "🔴Helpfulness-Correctness Trade-off:25061条→三范式9次仅1次正确列出，其余自动转COUNT(*)；改How many→strict PASS",
+    340: "问题改How many后三范式strict PASS(DLR 33K/ER 51K/RDF 28K)",
     341: "ER大宽表陷阱:cards表78列全暴露→SQL逻辑错误；DLR private_attributes隐藏非核心列避噪",
     344: "🔴语义建模盲区——领域知识:同名卡多印刷版本，gold用id三范式选name；evidence补充后修复",
     345: "三范式judge翻盘",
