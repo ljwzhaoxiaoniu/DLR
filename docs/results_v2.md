@@ -88,8 +88,8 @@
 | superhero | q994 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 80,923 | 54,656 | 121,849 |  | RDF 122K(2x DLR)：SPARQL多属性OPTIONAL路径冗余；ER 81K：YAML大宽表探索开销 |
 | codebase | q531 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 36,525 | 39,782 | 48,961 |  |  |
 | codebase | q532 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 55,456 | 134,647 | 254,156 |  | RDF 254K(5x ER)：SPARQL多表OPTIONAL嵌套膨胀，RDF扁平triple模型无FK引导致探索路径长；ER YAML FK relations引导最直接(55K) |
-| codebase | q533 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 36,896 | 31,686 | 49,225 | evidence缺DATE() | 🔴evidence错误:LastAccessDate>'2014-09-01'未用DATE()；三范式照做得5146 vs gold 4941 |
-| codebase | q537 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 36,101 | 49,688 | 50,853 |  | 三范式strict PASS |
+| codebase | q533 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 45,894 | 32,123 | 27,145 | evidence缺DATE() | 🔴evidence错误:LastAccessDate>'2014-09-01'未用DATE() |
+| codebase | q537 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 33,989 | 34,166 | 27,365 |  | 三范式strict PASS |
 | codebase | q539 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 52,150 | 79,768 | 68,731 |  | 三范式strict PASS |
 | codebase | q544 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 56,254 | 51,592 | 35,689 |  | 三范式strict PASS |
 | codebase | q547 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 60,473 | 52,782 | 53,148 |  | 三范式strict PASS |

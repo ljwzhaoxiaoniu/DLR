@@ -2,10 +2,10 @@
   "q_id": 537,
   "ok": true,
   "error": null,
-  "sql": "SELECT COUNT(*) AS post_count FROM posts p JOIN users u ON p.OwnerUserId = u.Id WHERE u.DisplayName = 'csgillespie'",
+  "sql": "SELECT COUNT(*) FROM posts WHERE OwnerUserId = (SELECT Id FROM users WHERE DisplayName = 'csgillespie')",
   "result": {
     "columns": [
-      "post_count"
+      "COUNT(*)"
     ],
     "rows": [
       [
