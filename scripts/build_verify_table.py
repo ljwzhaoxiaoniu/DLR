@@ -7,21 +7,87 @@ MD_PATH = "D:/Code_Proj/DLR Proj/docs/results.md"
 OUT_PATH = "D:/Code_Proj/DLR Proj/docs/_verify_table.md"
 
 
-def read_csv_safe(path):
+def parse_csv_robust(path):
+    """Parse CSV handling multi-line judge_reason fields."""
+    content = None
     for enc in ["utf-8-sig", "gbk", "latin-1"]:
         try:
             with open(path, encoding=enc) as f:
                 content = f.read()
-            # Remove stray lines (artifacts from multi-line fields)
-            lines = content.split('\n')
-            cleaned = [l for l in lines if not l.startswith('```')]
-            content = '\n'.join(cleaned)
-            rows = list(csv.DictReader(io.StringIO(content)))
-            if rows and ("q_id" in rows[0] or "question_id" in rows[0]):
-                return rows
+            break
         except (UnicodeDecodeError, KeyError):
             continue
-    return []
+
+    if not content:
+        return []
+
+    # Merge continuation lines (multi-line judge_reason)
+    lines = content.split('\n')
+    # First line is always the header
+    merged = [lines[0]] if lines else []
+    for line in lines[1:]:
+        is_new_row = bool(re.match(r'^("?er"?|"?dlr"?|"?rdf"?|\d+),', line))
+        if is_new_row:
+            merged.append(line)
+        else:
+            # Continuation of previous row's multi-line field
+            if merged:
+                merged[-1] += ' ' + line
+
+    if not merged:
+        return []
+
+    header = merged[0]
+    is_new_format = 'paradigm' in header and 'q_id' in header
+
+    results = []
+    for line in merged[1:]:
+        if not line.strip():
+            continue
+
+        # Use csv reader for proper quoted field handling
+        try:
+            row = list(csv.reader(io.StringIO(line)))
+        except:
+            continue
+        if not row:
+            continue
+        parts = row[0]
+
+        if is_new_format:
+            # paradigm,q_id,db_id,strict_match,judge_verdict,judge_reason,verdict,...,total_tokens
+            if len(parts) < 7:
+                continue
+            paradigm = parts[0].strip().lower()
+            qid = parts[1].strip()
+            strict = parts[3].strip()
+            judge = parts[4].strip()
+            verdict = parts[6].strip()
+            token = parts[13].strip() if len(parts) > 13 else ''
+        else:
+            # question_id,paradigm,steps,tokens_total,...,strict_match,judge_verdict,judge_reason,verdict
+            if len(parts) < 15:
+                continue
+            paradigm = parts[1].strip().lower()
+            qid = parts[0].strip()
+            strict = parts[11].strip()
+            judge = parts[12].strip()
+            verdict = parts[14].strip()
+            token = parts[3].strip()
+
+        if paradigm not in ['er', 'dlr', 'rdf'] or not qid.isdigit():
+            continue
+
+        results.append({
+            'qid': int(qid),
+            'paradigm': paradigm,
+            'strict': strict,
+            'judge': judge,
+            'verdict': verdict,
+            'token': int(token) if token.isdigit() else 0,
+        })
+
+    return results
 
 
 # 1. Read all CSVs
@@ -32,43 +98,15 @@ for pair_dir in os.listdir(BASE):
     csv_path = os.path.join(BASE, pair_dir, "agent_stats.csv")
     if not os.path.exists(csv_path):
         continue
-    rows = read_csv_safe(csv_path)
-    if not rows:
-        continue
-    if "q_id" in rows[0]:
-        # 新格式: paradigm,q_id,db_id,strict_match,judge_verdict,judge_reason,verdict,...,total_tokens
-        for r in rows:
-            try:
-                qid = int(r["q_id"])
-            except (ValueError, KeyError, TypeError):
-                continue
-            par = (r["paradigm"] or "").strip().lower()
-            if not par:
-                continue
-            csv_data.setdefault(qid, {})[par] = {
-                "strict": (r["strict_match"] or "").strip(),
-                "judge": (r["judge_verdict"] or "").strip(),
-                "result": (r["verdict"] or "").strip(),
-                "token": int(r["total_tokens"]) if (r.get("total_tokens") or "").strip().isdigit() else 0,
-                "db": (r["db_id"] or "").strip(),
-            }
-    elif "question_id" in rows[0]:
-        # 旧格式: question_id,paradigm,steps,tokens_total,...,strict_match,judge_verdict,judge_reason,verdict
-        for r in rows:
-            try:
-                qid = int(r["question_id"])
-            except (ValueError, KeyError, TypeError):
-                continue
-            par = (r["paradigm"] or "").strip().lower()
-            if not par:
-                continue
-            csv_data.setdefault(qid, {})[par] = {
-                "strict": (r.get("strict_match") or "").strip(),
-                "judge": (r.get("judge_verdict") or "").strip(),
-                "result": (r.get("verdict") or "").strip(),
-                "token": int(r["tokens_total"]) if (r.get("tokens_total") or "").strip().isdigit() else 0,
-                "db": (r.get("db_id") or "").strip(),
-            }
+    rows = parse_csv_robust(csv_path)
+    for r in rows:
+        csv_data.setdefault(r['qid'], {})[r['paradigm']] = {
+            "strict": r["strict"],
+            "judge": r["judge"],
+            "result": r["verdict"],
+            "token": r["token"],
+            "db": r.get("db", ""),
+        }
 
 # 2. Parse results.md for verdicts + tokens
 md_rows = {}
@@ -145,13 +183,12 @@ for qid in all_qids:
     by_db[canon].append(qid)
 
 # 4. Per-quid notes — split into 数据集问题 vs 范式行为/归档观察
-# 数据集备注: gold/evidence/question 本身的缺陷 (对应 dataset.md § Gold SQL 已知错误)
 q_dataset_notes = {
     1481: "gold bug(未过滤最低消费客户)",
     1482: "gold bug(分母应为2013)",
     1490: "gold bug(两轮修正)",
     1529: "gold笛卡尔积bug(已修正cache)",
-    1531: "数据集无矛盾(evidence/gold SQL/gold cache均为SUM(Price)/SUM(Amount)=22.55);旧跑次已CORRECT",
+    1531: "数据集无矛盾(evidence/gold SQL/gold cache均为SUM(Price)/SUM(Amount)=22.55)",
     1505: "gold语义偏差(COUNT(*)非客户数)",
     1525: "gold同1505缺陷",
     1526: "gold返回NULL(子查询无匹配)",
@@ -174,9 +211,7 @@ q_dataset_notes = {
     23: "evidence公式触发ABS()→自然语言修正",
     847: "gold NULL排序bug(Fisichella应为Räikkönen)",
 }
-# 备注: 测试观察 + 建模发现 (来自results.md定性观察 + 核对发现)
 q_obs_notes = {
-    # === debit_card (原有) ===
     1471: "DLR教科书链路(3工具1次SQL)；RDF唯一strict PASS",
     1473: "三范式strict PASS；简单题ER更高效(35K vs 72K vs 94K)",
     1481: "高成本题(三范式total均超120K)；gold bug修正后judge翻盘",
@@ -192,7 +227,6 @@ q_obs_notes = {
     1526: "gold返回NULL(子查询无匹配)；DLR/RDF绕过缺陷正确给出-5.8152",
     1529: "gold笛卡尔积bug:transactions_1k×yearmonth ON CustomerID致SUM(Price)膨胀20倍；LLM复合问题理解缺陷(两句自然语言合并)",
     1531: "旧跑次三范式全CORRECT(ER 53K/DLR 53K/RDF 47K)",
-    # === student_club ===
     1312: "student_club开局；ER/RDF judge翻盘，DLR strict PASS",
     1317: "student_club开局全通",
     1322: "三范式judge翻盘",
@@ -202,7 +236,6 @@ q_obs_notes = {
     1339: "DLR建模修复:语义路由错库→Expense独立LE+PAS；389K/25步→34K/4步strict PASS",
     1340: "AGENTS.md引导生效:DLR 72K→34K(-53%)反超",
     1344: "三范式strict PASS",
-    # === thrombosis ===
     1149: "thrombosis开局全通；DLR judge超时手动翻盘",
     1152: "gold ratio方向反:门诊/住院→住院/门诊；DLR/RDF正确算出0.76；修正后DLR strict PASS",
     1153: "三范式judge翻盘",
@@ -211,8 +244,7 @@ q_obs_notes = {
     1157: "三范式strict PASS",
     1162: "三范式strict PASS",
     1164: "三范式strict PASS",
-    1166: "⚠️CSV=ER INCORRECT+RDF INCORRECT, pair表已修正为50%",
-    # === football ===
+    1166: "CSV=ER INCORRECT+RDF INCORRECT, pair表已修正为50%",
     1025: "football开局全通",
     1028: "ER tie(Celtic/Rangers各11胜)手动翻盘",
     1029: "gold ASC/DESC颠倒→修正后三范式全对",
@@ -223,7 +255,6 @@ q_obs_notes = {
     1036: "RDF缺DISTINCT→INCORRECT",
     1037: "ER/RDF JOIN键错(player_fifa_api_id→应为player_api_id)；DLR子查询去重正确",
     1039: "三范式strict PASS",
-    # === formula_1 ===
     846: "formula_1开局全通",
     847: "gold NULL排序bug:Fisichella(q2=NULL)排第一；DLR/RDF返回Räikkönen(judge翻盘)，ER strict PASS返回Fisichella",
     850: "formula_1第二对全通",
@@ -233,7 +264,6 @@ q_obs_notes = {
     861: "evidence未区分两个同名number列；补description后全通",
     862: "三范式strict PASS",
     865: "三范式judge全翻",
-    # === superhero ===
     719: "三范式strict PASS；Agent对简洁schema(hero/power)SQL产出质量高",
     723: "三范式strict PASS",
     724: "三范式strict PASS",
@@ -243,7 +273,6 @@ q_obs_notes = {
     732: "三范式strict PASS",
     733: "三范式strict PASS；DLR建模修复(1→9 public)后-49% token",
     736: "三范式judge全翻(最低Intelligence)",
-    # === codebase ===
     531: "codebase开局全通；DLR/RDF各1 extract失败但judge翻盘",
     532: "三范式全CORRECT",
     533: "🔴evidence错误:LastAccessDate>'2014-09-01'未用DATE()；三范式照做得5146 vs gold 4941",
@@ -254,7 +283,6 @@ q_obs_notes = {
     549: "ER表名格式错自行修正→judge翻盘；DLR strict PASS，RDF judge翻盘",
     555: "三范式strict PASS",
     557: "三范式strict PASS",
-    # === card_games ===
     340: "问题改How many后三范式strict PASS(DLR 33K/ER 51K/RDF 28K)",
     341: "ER大宽表陷阱:cards表78列全暴露→SQL逻辑错误；DLR private_attributes隐藏非核心列避噪",
     344: "🔴语义建模盲区——领域知识:同名卡多印刷版本，gold用id三范式选name；evidence补充后修复",
@@ -267,7 +295,6 @@ q_obs_notes = {
     358: "三范式judge全翻(缺DISTINCT)",
     366: "DLR建模修复后110K→36K strict PASS",
     368: "三范式strict PASS",
-    # === toxicology ===
     195: "三范式judge翻盘",
     197: "ER JOIN膨胀:molecule→bond致氧计数被bond条数放大(2.16→69.28)；DLR PAS桥独立计算DISTINCT molecule_id避开fan-out",
     198: "evidence笛卡尔积(去笛卡尔积修正)+gold cache修正；三范式judge翻盘",
@@ -278,7 +305,6 @@ q_obs_notes = {
     208: "RDF语义理解错:molecule.label误解为bond.bond_type",
     212: "三范式judge全翻(tied minimum)",
     213: "RDF手动翻盘",
-    # === california_schools ===
     5: "california开局；ER/DLR strict PASS",
     11: "🔴RDF列歧义:frpm有CDSCode(全码)和School Code(短码)，RDF选错列；ER/DLR选了正确列",
     12: "三范式strict PASS",
@@ -289,7 +315,6 @@ q_obs_notes = {
     26: "🔴gold bug:Free Meal→FRPM Count(题目说free or reduced)；DLR+RDF judge翻盘",
     27: "🔴average歧义:列名AvgScrWrite+question'average'双触发AVG()→三范式全INCORRECT；LLM语义联想非形式符号",
     28: "三范式judge翻盘全CORRECT",
-    # === financial ===
     89: "financial开局全通",
     92: "三范式全CORRECT",
     93: "三范式strict PASS",
@@ -300,7 +325,6 @@ q_obs_notes = {
     100: "DLR建模修复后148K→89K strict PASS(-40%)",
     112: "三范式strict PASS",
     115: "ER手动翻盘(结果40%=gold)",
-    # === 跨题总结性观察 ===
     1037: "ER/RDF JOIN键错；DLR子查询去重正确",
 }
 
@@ -309,9 +333,8 @@ out = []
 out.append("## 逐题校验表 — strict / judge / result / token")
 out.append("")
 out.append("> **说明**: 每行一题，每范式 4 列（strict 初判 / judge 仲裁 / result 最终判定 / token 消耗）。")
-out.append("> **数据来源**: `validated_results/round_1/*/agent_stats.csv`（94 题标准格式）+ `results.md` token 表（38 题旧格式仅 token）。")
+out.append("> **数据来源**: `validated_results/round_1/*/agent_stats.csv` + `results.md` token 表。")
 out.append("> **⚠️ 标记**: CSV 实际 verdict 与 results.md 不一致的题。")
-out.append("> **旧格式 pair**（仅 token，无 strict/judge/result）: 7-8, 9-10, 17-18, 21-22, 31-32, 33-34, 37-38, 39-40, 41-42, 61-62, 63-64, 67-68, 69-70, 73-74, 75-76, 77-78, 83-84, 85-86, 89-90")
 out.append("")
 out.append("| 专题 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 数据集备注 | 备注 |")
 out.append("|------|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|----------|------|")
@@ -345,9 +368,7 @@ for db in db_order:
         if rdf_r != "—" and md.get("rdf") == 100 and rdf_r != "CORRECT":
             flags.append("⚠️RDF")
 
-        # 数据集备注 (gold/evidence/question 缺陷)
         ds_note = q_dataset_notes.get(qid, "")
-        # 范式行为/归档观察备注
         obs_note = " ".join(flags) if flags else q_obs_notes.get(qid, "")
 
         er_t_s = f"{er_t:,}" if er_t else "—"
