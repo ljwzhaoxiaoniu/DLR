@@ -110,8 +110,8 @@
 | card_games | q368 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 42,655 | 32,962 | 36,478 |  | 三范式strict PASS |
 | toxicology | q195 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 34,216 | 30,923 | 32,314 |  |  |
 | toxicology | q197 | FAIL | INCORRECT | PASS | CORRECT | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 57,780 | 34,878 | 52,623 |  | ER JOIN膨胀:molecule→bond致氧计数被bond条数放大(2.16→69.28)；DLR PAS桥独立计算DISTINCT molecule_id避开fan-out |
-| toxicology | q198 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 35,998 | 35,893 | 50,610 | evidence笛卡尔积(去笛卡尔积修正) |  |
-| toxicology | q200 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 76,256 | 31,804 | 25,992 |  | ER 76K(3x DLR/RDF)：大宽表+多FK探索开销；DLR PAS直连/RDF SPARQL精准谓词均高效 |
+| toxicology | q198 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 35,987 | 33,619 | 29,929 | evidence笛卡尔积(去笛卡尔积修正) |  |
+| toxicology | q200 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 35,557 | 34,173 | 28,168 |  | 三范式均~30K均衡高效 |
 | toxicology | q201 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 29,179 | 33,423 | 37,098 |  | 三范式均30K左右，均衡高效 |
 | toxicology | q206 | FAIL | CORRECT | FAIL | CORRECT | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 57,597 | 40,861 | 50,559 |  | RDF探索≠答案:找到connected表但最终SQL弃之不用；attribute和relation同为predicate视觉权重相等 |
 | toxicology | q207 | FAIL | CORRECT | PASS | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 53,325 | 43,279 | 37,239 | gold SQL bug(分子级关联vs原子级) | 🔴gold SQL bug:atom JOIN bond ON molecule_id(分子级)→三范式用bond→connected→atom(原子级)精确定位 |
