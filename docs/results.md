@@ -27,7 +27,7 @@
 | 35-36 | formula_1 | q846, q847 | 100% | 100% | 100% | formula_1 开局全通；q847 三范式一致(Räikkönen),Gold NULL排序bug,Fisichella应为NULL;DLR/RDF翻盘 |
 | 37-38 | superhero+formula_1 | q717, q994 | 100% | 100% | 100% | 跨库对：q717=superhero, q994=formula_1；q994 judge 全翻 |
 | 39-40 | codebase | q531, q532 | 100% | 100% | 100% | codebase_community 开局全通；DLR/RDF 各1 extract失败但judge翻盘 |
-| 41-42 | card_games | q340, q341 | 50% | 100% | 100% | q340 改"How many"→3/3 strict; q341 ER SQL逻辑错(60),DLR/RDF judge翻盘; gold SQL+evidence typo修正 |
+| 41-42 | card_games | q340, q341 | 50% | 50% | 50% | q340 ER CORRECT(DLR/RDF INCORRECT:答案错误/SELECT列错); q341 ER INCORRECT(SQL逻辑错),DLR/RDF judge翻盘CORRECT |
 | 43-44 | toxicology | q195, q197 | 50% | 100% | 100% | q195 三范式全对; q197 ER JOIN膨胀(69.28→应为2.16),DLR strict/RDF flip CORRECT; gold fan-out bug修正(99.68→2.16) |
 | 45-46 | student | q1322, q1323 | 100% | 100% | 100% | student_club 第二对全通；三范式 q1322 judge 翻盘，q1323 strict PASS |
 | 47-48 | thrombosis | q1152, q1153 | 100% | 100% | 100% | evidence 修正后三范式全对；ER+DLR strict PASS，RDF flip |
@@ -40,7 +40,7 @@
 | 61-62 | student | q1331, q1334 | 100% | 100% | 100% | student_club 第三对全通；q1331 DLR strict FAIL→judge 翻盘，其余 strict PASS |
 | 63-64 | thrombosis | q1155, q1156 | 100% | 100% | 100% | thrombosis 第三对全通；三范式 strict PASS（无 judge 翻盘） |
 | 65-66 | football | q1031, q1032 | 50% | 50% | 50% | q1031 evidence SQL伪代码依从性差(全 INCORRECT)；q1032 重跑 judge 翻盘(全 CORRECT) |
-| 67-68 | credit | q1531, q1533 | 100% | 100% | 100% | 🔴 q1531 gold SQL bug(SUM(Price/Amount)→已修正为SUM(Price)/SUM(Amount)) + evidence补yearmonth/transactions_1k区别，三范式全翻盘；q1533 全 CORRECT |
+| 67-68 | credit | q1531, q1533 | 50% | 100% | 100% | 🔴 q1531 三范式全INCORRECT: gold SQL与evidence矛盾(SUM(Price/Amount) vs SUM(Price)/SUM(Amount))；ER judge超时；q1533 全 CORRECT |
 | 69-70 | california | q5, q11 | 100% | 100% | 50% | california_schools 开局；ER/DLR 全 strict PASS；RDF q11 选错列(School Code→应为CDSCode) |
 | 71-72 | california | q12, q17 | 50% | 100% | 50% | q12 全 PASS；q17 Gold 多要求 RANK() 列号(题目没要)，DLR judge翻盘 |
 | 73-74 | financial | q89, q92 | 100% | 100% | 100% | financial 开局全通；三范式 strict PASS |
@@ -51,7 +51,7 @@
 | 83-84 | toxicology | q201, q206 | 100% | 100% | 50% | q201 三范式 strict PASS；q206 ER/DLR judge 翻盘，RDF Agent 探索了 connected 表但最终 SQL 硬编码 atom_id→INCORRECT |
 | 85-86 | formula_1+superhero | q857, q724 | 100% | 100% | 100% | 跨库对：q857=formula_1, q724=superhero；q724 三范式 strict PASS，q857 三范式 judge 全翻 |
 | 87-88 | california | q23, q24 | 100% | 100% | 50% | 🔴 q23 evidence 修正（数学公式→自然语言）后三范式全对；q24 ER/DLR 全过，RDF 列歧义 INCORRECT（schools.School vs frpm.School Name，california 继 q11 后第二次） |
-| 89-90 | financial | q95, q98 | 100% | 100% | 100% | 🔴 q95 gold bug 修正后全对：原 gold SQL 只实现"最年轻"丢掉了"最高薪资"（和 q94 同模式）；question/evidence/gold SQL 修正为"先圈最高薪资区→再取最年轻"后，DLR strict PASS，ER/RDF judge 翻盘；q98 三范式 strict PASS |
+| 89-90 | financial | q95, q98 | 100% | 50% | 100% | 🔴 q95 gold bug 修正：原 gold SQL 只实现"最年轻"丢掉了"最高薪资"；修正后ER/RDF judge翻盘CORRECT，DLR INCORRECT(AND→OR错误)；q98 三范式 strict PASS |
 | 91-92 | superhero | q726, q728 | 100% | 100% | 100% | q726 三范式翻盘：题目 "Rank heroes"→Agent 理解 ORDER BY→gold 多要求 RANK() 列（和 q17 同模式）；q728 DLR judge 翻盘 CORRECT，ER/RDF 手动翻盘 |
 | 93-94 | codebase | q547, q549 | 100% | 100% | 100% | codebase 第四对全通；q547 三范式 strict PASS；q549 ER 表名格式错自行修正→judge 翻盘，DLR strict PASS，RDF judge 翻盘 |
 | 95-96 | student | q1338, q1339 | 100% | 100% | 100% | student_club 第四对全通；q1339 DLR 旧模型 389K→建模修复后 34K strict PASS（参照 superhero Power 模式，Expense 独立 LE + A 锚 Member） |
@@ -81,7 +81,7 @@
 
 | 131-132 | california | q27, q28 | 50% | 50% | 50% | california 第五对；q28 三范式全 CORRECT；q27 三范式全 INCORRECT — question "average score in writing" 触发 AVG() 聚合，非范式/建模问题 |
 
-**round_1 前 132 对完成 — 372/396 CORRECT（ER 123/132, DLR 130/132, RDF 119/132）**
+**round_1 前 132 对完成 — 366/396 CORRECT（ER 122/132, DLR 127/132, RDF 117/132）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -231,8 +231,8 @@
 | 最高单题 | 316,559 (q95) | 219,771 (q92) | **254,156 (q532)** |
 | 中位 | 59,979 | **46,332** | 50,847 |
 | 平均 | 75,548 | **58,303** | 61,532 |
-| CORRECT | 123/132 | 130/132 | 119/132 |
-| 总计 | **372/396** | - | - |
+| CORRECT | 122/132 | 127/132 | 117/132 |
+| 总计 | **366/396** | - | - |
 
 ### 定性观察
 

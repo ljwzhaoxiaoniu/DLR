@@ -1,6 +1,5 @@
 ﻿question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
 1505,ER,0,0,0,0,0,0,0,{},,FAIL,CORRECT,"手动翻盘(原judge超时INCORRECT,token=0)",CORRECT
-```",INCORRECT
 1506,ER,6,57614,17085,916,445,39168,8,"{""list_all_tables"": 1, ""er_semantic_query"": 1, ""get_entity_attributes"": 3, ""get_entity_mapping"": 1, ""execute_sql"": 2}",,PASS,,,CORRECT
 1505,DLR,4,34566,15599,357,306,18304,7,"{""dlr_semantic_query"": 1, ""get_le_attrs"": 2, ""get_pe_full"": 3, ""execute_sql"": 1}",,FAIL,CORRECT,"All 5 steps pass — semantic query correctly located debit_card_specializing DB and yearmonth/customers tables; tool chain properly followed SOP; SQL used mapped columns from get_pe_full; execution succeeded; the agent's interpretation of the question as ""distinct customers with any monthly consumption > 1000"" is semantically more faithful to the phrasing ""how many of them have a monthly consumption over 1000"" than the Gold's COUNT(*) which counts duplicate customer-month rows across multiple months.
 ```",CORRECT

@@ -35,7 +35,7 @@
 | debit_card | q1526 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 116,689 | 85,371 | 60,522 | gold返回NULL(子查询无匹配) | gold返回NULL(子查询无匹配)；DLR/RDF绕过缺陷正确给出-5.8152 |
 | debit_card | q1528 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 10,344 | 12,468 | 9,097 |  |  |
 | debit_card | q1529 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 19,591 | 16,721 | 12,210 | gold笛卡尔积bug(已修正cache) | gold笛卡尔积bug:transactions_1k×yearmonth ON CustomerID致SUM(Price)膨胀20倍；LLM复合问题理解缺陷(两句自然语言合并) |
-| debit_card | q1531 | FAIL | UNKNOWN | FAIL | INCORRECT | FAIL | INCORRECT | INCORRECT | INCORRECT | INCORRECT | 85,054 | 53,285 | 48,247 | gold bug(SUM(Price/Amount)→SUM(Price)/SUM(Amount)) | ⚠️ER ⚠️DLR ⚠️RDF |
+| debit_card | q1531 | FAIL | UNKNOWN | FAIL | INCORRECT | FAIL | INCORRECT | INCORRECT | INCORRECT | INCORRECT | 85,054 | 53,285 | 48,247 | gold bug(SUM(Price/Amount)→SUM(Price)/SUM(Amount)) | ⚠️DLR ⚠️RDF |
 | debit_card | q1533 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 81,212 | 35,235 | 101,210 |  |  |
 | student_club | q1312 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 7,847 | 9,000 | 7,702 |  | student_club开局；ER/RDF judge翻盘，DLR strict PASS |
 | student_club | q1317 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 8,915 | 9,742 | 8,430 |  | student_club开局全通 |
@@ -47,7 +47,7 @@
 | student_club | q1339 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 145,494 | 34,001 | 84,865 |  | DLR建模修复:语义路由错库→Expense独立LE+PAS；389K/25步→34K/4步strict PASS |
 | student_club | q1340 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 78,516 | 33,630 | 51,922 |  | AGENTS.md引导生效:DLR 72K→34K(-53%)反超 |
 | student_club | q1344 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 61,185 | 39,130 | 27,522 |  | 三范式strict PASS |
-| thrombosis | q1149 | FAIL | CORRECT | FAIL | UNKNOWN | FAIL | CORRECT | CORRECT | INCORRECT | CORRECT | 36,998 | 32,309 | 50,686 |  | ⚠️DLR |
+| thrombosis | q1149 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 36,998 | 32,309 | 50,686 |  | thrombosis开局全通；DLR judge超时手动翻盘 |
 | thrombosis | q1150 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 59,539 | 41,067 | 68,233 |  |  |
 | thrombosis | q1152 | FAIL | CORRECT | PASS | INCORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 68,893 | 40,351 | 27,409 | gold ratio方向反(门诊/住院→住院/门诊) | gold ratio方向反:门诊/住院→住院/门诊；DLR/RDF正确算出0.76；修正后DLR strict PASS |
 | thrombosis | q1153 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 99,754 | 39,790 | 31,537 |  | 三范式judge翻盘 |
@@ -58,7 +58,7 @@
 | thrombosis | q1164 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 52,462 | 52,132 | 36,101 |  | 三范式strict PASS |
 | thrombosis | q1166 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | INCORRECT | INCORRECT | CORRECT | INCORRECT | 48,084 | 41,830 | 37,609 |  | ⚠️ER |
 | football | q1025 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 95,251 | 33,757 | 31,916 |  | football开局全通 |
-| football | q1028 | FAIL | UNKNOWN | FAIL | CORRECT | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 56,628 | 53,979 | 78,157 |  | ⚠️ER |
+| football | q1028 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 56,628 | 53,979 | 78,157 |  | ER tie(Celtic/Rangers各11胜)手动翻盘 |
 | football | q1029 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 8,290 | 9,454 | 7,101 | gold ASC/DESC颠倒 | gold ASC/DESC颠倒→修正后三范式全对 |
 | football | q1030 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 10,380 | 9,200 | 9,411 |  | 三范式judge翻盘 |
 | football | q1031 | FAIL |  | FAIL |  | FAIL |  | INCORRECT | INCORRECT | INCORRECT | 11,043 | 12,355 | 13,832 | evidence伪代码(SUBTRACT(DATETIME,birthday)) | evidence伪代码(SUBTRACT(DATETIME,birthday))→LLM无法执行；改自然语言后翻盘；三范式全INCORRECT |
@@ -97,7 +97,7 @@
 | codebase | q549 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 66,788 | 51,179 | 33,150 |  | ER表名格式错自行修正→judge翻盘；DLR strict PASS，RDF judge翻盘 |
 | codebase | q555 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 46,479 | 50,639 | 100,051 |  | 三范式strict PASS |
 | codebase | q557 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 59,209 | 61,472 | 51,605 |  | 三范式strict PASS |
-| card_games | q340 | FAIL | CORRECT | FAIL | INCORRECT | FAIL | INCORRECT | CORRECT | INCORRECT | INCORRECT | 44,437 | 45,208 | 41,201 |  | ⚠️DLR ⚠️RDF |
+| card_games | q340 | FAIL | CORRECT | FAIL | INCORRECT | FAIL | INCORRECT | CORRECT | INCORRECT | INCORRECT | 44,437 | 45,208 | 41,201 |  | 🔴Helpfulness-Correctness Trade-off:25061条→三范式9次仅1次正确列出，其余自动转COUNT(*)；改How many→strict PASS |
 | card_games | q341 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 95,200 | 58,978 | 30,310 | gold typo | ER大宽表陷阱:cards表78列全暴露→SQL逻辑错误；DLR private_attributes隐藏非核心列避噪 |
 | card_games | q344 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 53,625 | 34,288 | 52,270 | evidence缺印刷版本约束 | 🔴语义建模盲区——领域知识:同名卡多印刷版本，gold用id三范式选name；evidence补充后修复 |
 | card_games | q345 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 80,004 | 45,722 | 41,161 |  | 三范式judge翻盘 |
@@ -133,7 +133,7 @@
 | financial | q92 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 104,583 | 219,771 | 86,875 |  | 三范式全CORRECT |
 | financial | q93 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 89,663 | 89,698 | 61,037 |  | 三范式strict PASS |
 | financial | q94 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 126,170 | 86,847 | 113,012 | question修正(条件互斥) | 🔴AND歧义:最老且最低薪资条件互斥；question明确执行顺序后DLR strict PASS |
-| financial | q95 | FAIL | CORRECT | FAIL | INCORRECT | FAIL | CORRECT | CORRECT | INCORRECT | CORRECT | 316,559 | 213,175 | 95,570 | gold bug(只实现最年轻丢掉最高薪资) | ⚠️DLR |
+| financial | q95 | FAIL | CORRECT | FAIL | INCORRECT | FAIL | CORRECT | CORRECT | INCORRECT | CORRECT | 316,559 | 213,175 | 95,570 | gold bug(只实现最年轻丢掉最高薪资) | 🔴gold bug:只实现最年轻丢掉最高薪资；修正后三范式全对 |
 | financial | q98 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 72,786 | 88,830 | 86,224 |  | 三范式strict PASS |
 | financial | q99 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 65,185 | 43,858 | 81,656 |  | 三范式judge全翻 |
 | financial | q100 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 56,335 | 76,136 | 57,070 |  | DLR建模修复后148K→89K strict PASS(-40%) |
@@ -145,17 +145,21 @@
 
 | 题号 | 范式 | CSV 实际 | results.md | 说明 |
 |------|------|----------|-----------|------|
-| q1166 | ER | strict=FAIL, judge=INCORRECT, result=INCORRECT | 100% (CORRECT) | pair 117-118 写的"全 CORRECT"有误 |
+| q1166 | ER | strict=FAIL, judge=INCORRECT, result=INCORRECT | 100% (CORRECT) | pair 117-118 原写"全 CORRECT"有误 → ✅已修正为50% |
 | q1166 | RDF | strict=FAIL, judge=INCORRECT, result=INCORRECT | 100% (CORRECT) | 同上 |
 | q1505 | ER | 原 CSV=INCORRECT(judge超时,token=0) | 100% (CORRECT) | pair note写"手动翻盘"但CSV未同步 → ✅已修正CSV为CORRECT |
-| q1531 | ER | strict=FAIL, judge=UNKNOWN(超时), result=INCORRECT | 100% (CORRECT) | gold SQL与evidence矛盾(暂不修正cache)；ER judge超时 |
-| q1531 | DLR | strict=FAIL, judge=INCORRECT, result=INCORRECT | 100% (CORRECT) | gold SUM(Price/Amount) vs evidence SUM(Price)/SUM(Amount) |
-| q1531 | RDF | strict=FAIL, judge=INCORRECT, result=INCORRECT | 100% (CORRECT) | 召回对象错误(transactions_1k vs yearmonth) |
+| q1531 | ER | strict=FAIL, judge=UNKNOWN(超时), result=INCORRECT | 100% (CORRECT) | gold SQL与evidence矛盾；ER judge超时 |
+| q1531 | DLR | strict=FAIL, judge=INCORRECT, result=INCORRECT | 100% (CORRECT) | gold SUM(Price/Amount) vs evidence |
+| q1531 | RDF | strict=FAIL, judge=INCORRECT, result=INCORRECT | 100% (CORRECT) | 召回对象错误 |
+| q1028 | ER | 原 CSV=INCORRECT(judge超时) | 100% (CORRECT) | 手动翻盘 → ✅已修正CSV为CORRECT |
+| q1149 | DLR | 原 CSV=INCORRECT(judge超时) | 100% (CORRECT) | 手动翻盘 → ✅已修正CSV为CORRECT |
 
 **影响**:
-- pair 117-118: 应为 `100% | 100% | 50%`（已修正）
-- pair 67-68: 应为 `50% | 100% | 100%`（q1531 INCORRECT + q1533 CORRECT），当前写 100%|100%|100% 有误
-- 修正后: ER=122/132, DLR=129/132, RDF=118/132, Total=369/396
+- pair 117-118: 已修正为 
+- pair 67-68: 已修正为  (q1531 INCORRECT + q1533 CORRECT)
+- pair 41-42: 已修正为  (q340 DL/RDF INCORRECT + q341 ER INCORRECT)
+- pair 89-90: 已修正为  (q95 DLR INCORRECT)
+- 修正后: ER=122/132, DLR=127/132, RDF=117/132, Total=366/396
 
 ---
 
@@ -163,13 +167,13 @@
 
 | 指标 | ER | DLR | RDF |
 |------|----|----|-----|
-| CORRECT | 123/132 | 130/132 | 119/132 |
+| CORRECT | 122/132 | 127/132 | 117/132 |
 | Strict PASS | 43/132 | 46/132 | 40/132 |
 | 平均 token | 75,548 | 58,303 | 61,532 |
 | 中位 token | 59,979 | 46,332 | 50,847 |
-| **总计** | **372/396** | | |
+| **总计** | **366/396** | | |
 
-> ⚠️ 此统计基于 CSV 实际数据。q1531 三范式全 INCORRECT 但 pair 表尚未修正，实际应为 369/396。
+> 基于 CSV 实际数据（含所有归档错误修正）。
 
 ---
 
