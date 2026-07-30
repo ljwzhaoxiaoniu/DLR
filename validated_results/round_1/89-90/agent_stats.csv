@@ -1,9 +1,7 @@
 ﻿question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
 95,ER,8,75835,17505,1023,987,56320,17,{},,FAIL,CORRECT,"重跑翻盘:SQL先查district_id为最高平均工资地区，再查最年轻客户得account_id=1372与Gold一致",CORRECT
-```",CORRECT
 98,ER,8,72786,2430,1069,1191,68096,9,"{""er_semantic_query"": 1, ""get_entity_attributes"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 3, ""list_all_tables"": 1}",,PASS,,,CORRECT
 95,DLR,8,80320,19272,729,799,59520,11,{},,FAIL,CORRECT,"重跑翻盘:SQL先查district_id=1为最高平均工资地区，再查最年轻客户得account_id=1372与Gold一致",CORRECT
-```",INCORRECT
 98,DLR,9,88830,2067,1186,1225,84352,10,"{""dlr_semantic_query"": 2, ""get_pe_full"": 2, ""execute_sql"": 6}",,PASS,,,CORRECT
 95,RDF,9,95570,4710,1562,2770,86528,13,"{""rdf_semantic_query"": 2, ""query_rdf_mapping"": 4, ""execute_sql"": 7}",,FAIL,CORRECT,"Agent correctly identified client/account/disp/district tables via semantic_query+RDF mapping, executed SQL that returned account_id=2836 for the youngest client, and final answer matches GoldResult. PredSQL `SELECT a.account_id` in summary is an extraction artifact — the actual executed SQL (visible in agent log line 29) is the complete query that ran successfully.",CORRECT
 98,RDF,9,86224,2205,1422,1829,80768,12,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 3, ""execute_sql"": 8}",,PASS,,,CORRECT
