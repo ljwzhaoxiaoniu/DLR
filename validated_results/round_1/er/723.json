@@ -2,10 +2,10 @@
   "q_id": 723,
   "ok": true,
   "error": null,
-  "sql": "SELECT COUNT(DISTINCT s.id) FROM superhero s JOIN colour c ON s.eye_colour_id = c.id JOIN hero_power hp ON s.id = hp.hero_id JOIN superpower sp ON hp.power_id = sp.id WHERE c.colour = 'Blue' AND sp.power_name = 'Agility'",
+  "sql": "SELECT COUNT(DISTINCT s.id) AS count\nFROM superhero s\nJOIN colour c ON s.eye_colour_id = c.id\nJOIN hero_power hp ON s.id = hp.hero_id\nJOIN superpower sp ON hp.power_id = sp.id\nWHERE c.colour = 'Blue' AND sp.power_name = 'Agility'",
   "result": {
     "columns": [
-      "COUNT(DISTINCT s.id)"
+      "count"
     ],
     "rows": [
       [

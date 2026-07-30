@@ -77,8 +77,8 @@
 | formula_1 | q862 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 34,834 | 33,632 | 42,598 |  | 三范式strict PASS |
 | formula_1 | q865 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 48,155 | 34,326 | 30,044 |  |  |
 | superhero | q717 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 45,433 | 44,113 | 28,504 |  |  |
-| superhero | q719 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 90,494 | 36,282 | 28,825 |  | 三范式strict PASS；Agent对简洁schema(hero/power)SQL产出质量高 |
-| superhero | q723 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 29,068 | 35,981 | 29,175 |  | 三范式strict PASS |
+| superhero | q719 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 29,488 | 36,084 | 46,206 |  | 三范式strict PASS；ER 29K最高效，hero/power简洁schema |
+| superhero | q723 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 60,608 | 37,199 | 29,263 |  | ER 61K偏高：get_entity_mapping×4+get_table_schema×4重复探索；RDF最省29K |
 | superhero | q726 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 59,696 | 65,984 | 65,196 | gold过度要求RANK()列 | gold过度要求RANK()列(题目只写Rank)；三范式ORDER BY正确 |
 | superhero | q728 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 46,561 | 54,075 | 52,604 |  |  |
 | superhero | q730 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 84,532 | 37,591 | 83,411 |  | DLR 38K(ER/RDF均80K+)：PAS桥一步定位hero→power，ER/RDF需遍历多表探索 |
