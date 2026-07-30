@@ -78,7 +78,7 @@
 | formula_1 | q865 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 48,155 | 34,326 | 30,044 |  |  |
 | superhero | q717 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 45,433 | 44,113 | 28,504 |  |  |
 | superhero | q719 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 29,488 | 36,084 | 46,206 |  | 三范式strict PASS；ER 29K最高效，hero/power简洁schema |
-| superhero | q723 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 60,608 | 37,199 | 29,263 |  | ER 61K：4实体×3轮(attributes→mapping→schema)，get_table_schema冗余(get_entity_mapping已含列信息)；DLR/RDF单轮定位 |
+| superhero | q723 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 60,608 | 37,199 | 29,263 |  | ER 61K：4实体×3轮(attributes→mapping→schema)，工具粒度过细致Agent不收敛——宽表迷失(q341)与小表拼JOIN重复验证，均非ER优势；DLR/RDF单工具拿全量 |
 | superhero | q726 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 59,696 | 65,984 | 65,196 | gold过度要求RANK()列 | gold过度要求RANK()列(题目只写Rank)；三范式ORDER BY正确 |
 | superhero | q728 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 46,561 | 54,075 | 52,604 |  |  |
 | superhero | q730 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 84,532 | 37,591 | 83,411 |  | DLR 38K(ER/RDF均80K+)：PAS桥一步定位hero→power，ER/RDF需遍历多表探索 |
