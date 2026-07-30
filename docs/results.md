@@ -27,7 +27,7 @@
 | 35-36 | formula_1 | q846, q847 | 100% | 100% | 100% | formula_1 开局全通；q847 三范式一致(Räikkönen),Gold NULL排序bug,Fisichella应为NULL;DLR/RDF翻盘 |
 | 37-38 | superhero+formula_1 | q717, q994 | 100% | 100% | 100% | 跨库对：q717=superhero, q994=formula_1；q994 judge 全翻 |
 | 39-40 | codebase | q531, q532 | 100% | 100% | 100% | codebase_community 开局全通；DLR/RDF 各1 extract失败但judge翻盘 |
-| 41-42 | card_games | q340, q341 | 50% | 50% | 50% | q340 ER CORRECT(DLR/RDF INCORRECT:答案错误/SELECT列错); q341 ER INCORRECT(SQL逻辑错),DLR/RDF judge翻盘CORRECT |
+| 41-42 | card_games | q340, q341 | 50% | 100% | 100% | q340 三范式全CORRECT(重跑翻盘)；q341 ER INCORRECT(SQL逻辑错),DLR/RDF CORRECT |
 | 43-44 | toxicology | q195, q197 | 50% | 100% | 100% | q195 三范式全对; q197 ER JOIN膨胀(69.28→应为2.16),DLR strict/RDF flip CORRECT; gold fan-out bug修正(99.68→2.16) |
 | 45-46 | student | q1322, q1323 | 100% | 100% | 100% | student_club 第二对全通；三范式 q1322 judge 翻盘，q1323 strict PASS |
 | 47-48 | thrombosis | q1152, q1153 | 100% | 100% | 100% | evidence 修正后三范式全对；ER+DLR strict PASS，RDF flip |
@@ -65,7 +65,7 @@
 | 111-112 | card_games | q366, q368 | 100% | 100% | 100% | card_games 第六对全通；q368 三范式 strict PASS；q366 DLR 建模修复后 110K→36K strict PASS |
 | 113-114 | codebase | q555, q557 | 100% | 100% | 100% | codebase 第五对全通；三范式 strict PASS（零 judge） |
 | 115-116 | student | q1340, q1344 | 100% | 100% | 100% | student_club 第五对全通；ER+RDF strict PASS；DLR q1340 judge 翻盘 |
-| 117-118 | thrombosis | q1164, q1166 | 100% | 100% | 50% | thrombosis 第五对；q1164 三范式 strict PASS；q1166 DLR CORRECT，ER+RDF INCORRECT（CSV 实际 verdict，pair 表原写 100% 有误） |
+| 117-118 | thrombosis | q1164, q1166 | 50% | 100% | 50% | thrombosis 第五对；q1164 三范式 strict PASS；q1166 DLR CORRECT，ER+RDF INCORRECT |
 
 | 119-120 | toxicology | q212, q213 | 100% | 100% | 100% | toxicology 第五对全通；q213 ER/DLR strict PASS, RDF 手动翻盘；q212 三范式 judge 全翻（tied minimum） |
 
@@ -127,7 +127,7 @@
 | q994 | 80923 | **54656** | 121849 |
 | q531 | **36525** | 39782 | 48961 |
 | q532 | **55456** | 134647 | 254156 |
-| q340 | 44437 | 45208 | **41201** |
+| q340 | 50870 | 33440 | **27685** |
 | q341 | 95200 | 58978 | **30310** |
 | q195 | 40,714 | 31,353 | **26,530** |
 | q197 | 57,143 | 47,527 | **37,140** |
@@ -153,7 +153,7 @@
 | q1156 | 67961 | 33329 | **28520** |
 | q1031 | **11,043** | 12,355 | 13,832 |
 | q1032 | 15,042 | **8,959** | 9,801 |
-| q1531 | 85054 | 53285 | **48247** |
+| q1531 | 53497 | 53285 | **46551** |
 | q1533 | 81212 | **35235** | 101210 |
 | q5 | 67294 | **35885** | 37623 |
 | q11 | 87085 | **57929** | 60690 |
@@ -167,8 +167,8 @@
 | q347 | 144494 | 105495 | **36459** |
 | q349 | 16,159 | **10,202** | 12,825 |
 | q352 | 16,188 | 17,845 | **11,863** |
-| q539 | **8,429** | 10,615 | 8,978 |
-| q544 | 8,883 | 10,193 | **8,150** |
+| q539 | **52150** | 79768 | 68731 |
+| q544 | 56254 | 51592 | **35689** |
 | q201 | **29179** | 33423 | 37098 |
 | q206 | 57597 | **40861** | 50559 |
 | q857 | **54217** | 60127 | 78188 |

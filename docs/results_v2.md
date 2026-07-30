@@ -22,7 +22,7 @@
 | debit_card | q1498 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 34,828 | 32,300 | 55,564 |  | LLM聚合语义盲区:DLR误用三次MAX(Consumption)而非SUM→GROUP BY→MAX |
 | debit_card | q1500 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 12,809 | 14,273 | 24,543 |  | ARCS(DLR独创概念)通过get_pe_full docstring引导三表JOIN |
 | debit_card | q1501 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 14,500 | 19,962 | 16,182 |  |  |
-| debit_card | q1505 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | — | 34,566 | 37,544 | gold语义偏差(COUNT(*)非客户数) | 三范式均用COUNT(DISTINCT CustomerID)，更忠实于题意 |
+| debit_card | q1505 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 35,834 | 34,566 | 37,544 | gold语义偏差(COUNT(*)非客户数) | 三范式均用COUNT(DISTINCT CustomerID)，更忠实于题意 |
 | debit_card | q1506 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 57,614 | 87,096 | 102,344 |  | RDF 102K(2x ER)：SPARQL多表FILTER嵌套；ER单表聚合SQL最直接(58K) |
 | debit_card | q1507 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 8,521 | 9,925 | 7,644 |  |  |
 | debit_card | q1509 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 8,403 | 10,503 | 12,599 |  |  |
