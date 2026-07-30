@@ -2,10 +2,10 @@
   "q_id": 345,
   "ok": true,
   "error": null,
-  "sql": "SELECT l.status, COUNT(*) as cnt FROM cards c JOIN legalities l ON c.uuid = l.uuid WHERE c.types = 'Artifact' AND c.side IS NULL AND l.format = 'vintage' GROUP BY l.status",
+  "sql": "SELECT l.status, COUNT(*) as count FROM cards c JOIN legalities l ON c.uuid = l.uuid WHERE c.types = 'Artifact' AND c.side IS NULL AND l.format = 'vintage' GROUP BY l.status",
   "result": {
     "columns": [
-      "cnt",
+      "count",
       "status"
     ],
     "rows": [

@@ -1,7 +1,52 @@
 {
   "q_id": 344,
-  "ok": false,
-  "error": "no SQL extracted",
-  "sql": null,
-  "result": null
+  "ok": true,
+  "error": null,
+  "sql": "SELECT c.id, c.name, c.rarity, l.format, l.status FROM cards c JOIN legalities l ON c.uuid = l.uuid WHERE c.rarity = 'mythic' AND l.format = 'gladiator' AND l.status = 'Banned'",
+  "result": {
+    "columns": [
+      "format",
+      "id",
+      "name",
+      "rarity",
+      "status"
+    ],
+    "rows": [
+      [
+        "gladiator",
+        17983,
+        "Oko, Thief of Crowns",
+        "mythic",
+        "Banned"
+      ],
+      [
+        "gladiator",
+        18058,
+        "Oko, Thief of Crowns",
+        "mythic",
+        "Banned"
+      ],
+      [
+        "gladiator",
+        29523,
+        "Nexus of Fate",
+        "mythic",
+        "Banned"
+      ],
+      [
+        "gladiator",
+        38736,
+        "Oko, Thief of Crowns",
+        "mythic",
+        "Banned"
+      ],
+      [
+        "gladiator",
+        38737,
+        "Oko, Thief of Crowns",
+        "mythic",
+        "Banned"
+      ]
+    ]
+  }
 }

@@ -2,17 +2,26 @@
   "q_id": 344,
   "ok": true,
   "error": null,
-  "sql": "SELECT DISTINCT c.name FROM cards c JOIN legalities l ON c.uuid = l.uuid WHERE c.rarity = 'mythic' AND l.status = 'Banned' AND l.format = 'gladiator' ORDER BY c.name",
+  "sql": "SELECT cards.id FROM cards JOIN legalities ON cards.uuid = legalities.uuid WHERE cards.rarity = 'mythic' AND legalities.format = 'gladiator' AND legalities.status = 'Banned'",
   "result": {
     "columns": [
-      "name"
+      "id"
     ],
     "rows": [
       [
-        "Nexus of Fate"
+        17983
       ],
       [
-        "Oko, Thief of Crowns"
+        18058
+      ],
+      [
+        29523
+      ],
+      [
+        38736
+      ],
+      [
+        38737
       ]
     ]
   }

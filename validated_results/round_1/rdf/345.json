@@ -2,24 +2,20 @@
   "q_id": 345,
   "ok": true,
   "error": null,
-  "sql": "SELECT l.status, COUNT(*) as cnt FROM legalities l JOIN cards c ON l.uuid = c.uuid WHERE c.types = 'Artifact' AND c.side IS NULL AND l.format = 'vintage' GROUP BY l.status",
+  "sql": "SELECT DISTINCT l.status FROM cards c JOIN legalities l ON c.uuid = l.uuid WHERE c.types = 'Artifact' AND c.side IS NULL AND l.format = 'vintage'",
   "result": {
     "columns": [
-      "cnt",
       "status"
     ],
     "rows": [
       [
-        14,
         "Banned"
       ],
       [
-        151,
-        "Restricted"
+        "Legal"
       ],
       [
-        3645,
-        "Legal"
+        "Restricted"
       ]
     ]
   }
