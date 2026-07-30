@@ -139,28 +139,3 @@
 | financial | q100 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 56,335 | 76,136 | 57,070 |  |  |
 | financial | q112 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 47,188 | 66,742 | 50,503 |  |  |
 | financial | q115 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 54,014 | 54,264 | 54,263 |  |  |
----
-
-## 数据不一致报告
-
-| 题号 | 范式 | CSV 实际 | results.md | 说明 |
-|------|------|----------|-----------|------|
-| q1166 | ER | strict=FAIL, judge=INCORRECT, result=INCORRECT | 100% (CORRECT) | pair 117-118 写的"全 CORRECT"有误 |
-| q1166 | RDF | strict=FAIL, judge=INCORRECT, result=INCORRECT | 100% (CORRECT) | 同上 |
-
-**影响**: pair 117-118 应为 `100% | 100% | 50%`（q1164 全对 + q1166 DLR 对），而非 `100% | 100% | 100%`。
-修正后总计: ER=123/132, DLR=130/132, RDF=119/132, Total=372/396。
-
----
-
-## 汇总统计
-
-| 指标 | ER | DLR | RDF |
-|------|----|----|-----|
-| CORRECT | 124/132 | 130/132 | 120/132 |
-| Strict PASS | 43/132 | 46/132 | 40/132 |
-| 平均 token | 75,548 | 58,303 | 61,532 |
-| 中位 token | 59,979 | 46,332 | 50,847 |
-| **总计** | **374/396** | | |
-
-> ⚠️ 此统计基于 CSV 实际数据。若修正 q1166 不一致，则 ER=123, RDF=119, Total=372。

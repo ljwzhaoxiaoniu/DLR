@@ -116,21 +116,44 @@ for qid in all_qids:
     canon = db_map.get(md_db, md_db)
     by_db[canon].append(qid)
 
-# 4. Per-quid notes (from results.md pair notes + dataset.md)
-q_notes = {
-    1481: "gold bug修正", 1482: "gold bug修正", 1490: "gold bug修正",
-    1529: "gold笛卡尔积修正", 1531: "gold bug修正",
-    1505: "gold COUNT(*)", 1525: "gold COUNT(*)", 1526: "gold NULL",
-    94: "question修正", 95: "gold bug修正", 1031: "evidence伪代码修正",
-    1029: "gold ASC/DESC修正", 1152: "gold ratio方向修正",
-    198: "evidence笛卡尔积修正", 207: "gold SQL bug修正",
-    341: "gold typo修正", 344: "evidence补充", 349: "gold bug修正", 352: "gold bug修正",
-    533: "evidence DATE()修正",
-    26: "gold bug(FreeMeal→FRPM)待修正",
-    27: "average歧义/LLM极限", 1037: "ER/RDF JOIN键错",
-    17: "gold RANK()过度", 726: "gold RANK()过度",
-    23: "evidence公式→自然语言", 206: "RDF探索≠答案", 347: "RDF扁平漏JOIN",
-    208: "RDF语义理解错", 1036: "RDF缺DISTINCT",
+# 4. Per-quid notes — split into 数据集问题 vs 范式行为/归档观察
+# 数据集备注: gold/evidence/question 本身的缺陷 (对应 dataset.md § Gold SQL 已知错误)
+q_dataset_notes = {
+    1481: "gold bug(未过滤最低消费客户)",
+    1482: "gold bug(分母应为2013)",
+    1490: "gold bug(两轮修正)",
+    1529: "gold笛卡尔积bug(已修正cache)",
+    1531: "gold bug(SUM(Price/Amount)→SUM(Price)/SUM(Amount))",
+    1505: "gold语义偏差(COUNT(*)非客户数)",
+    1525: "gold同1505缺陷",
+    1526: "gold返回NULL(子查询无匹配)",
+    94: "question修正(条件互斥)",
+    95: "gold bug(只实现最年轻丢掉最高薪资)",
+    1031: "evidence伪代码(SUBTRACT(DATETIME,birthday))",
+    1029: "gold ASC/DESC颠倒",
+    1152: "gold ratio方向反(门诊/住院→住院/门诊)",
+    198: "evidence笛卡尔积(去笛卡尔积修正)",
+    207: "gold SQL bug(分子级关联vs原子级)",
+    341: "gold typo",
+    344: "evidence缺印刷版本约束",
+    349: "gold bug(答非所问)",
+    352: "gold bug(分母错)",
+    533: "evidence缺DATE()",
+    26: "gold bug(Free Meal→FRPM Count)待修正",
+    27: "average歧义(列名+question双触发AVG)",
+    17: "gold过度要求RANK()列",
+    726: "gold过度要求RANK()列",
+    23: "evidence公式触发ABS()→自然语言修正",
+}
+# 备注: 测试观察 + 建模发现 (不含系统修复记录)
+q_obs_notes = {
+    1471: "DLR教科书链路(3工具1次SQL)；RDF唯一strict PASS",
+    1473: "简单题ER更高效(35K vs 72K vs 94K)",
+    1037: "ER/RDF JOIN键错",
+    206: "RDF探索≠答案",
+    347: "RDF扁平漏JOIN",
+    208: "RDF语义理解错",
+    1036: "RDF缺DISTINCT",
     1166: "⚠️CSV=INCORRECT MD=100%",
 }
 
@@ -143,8 +166,8 @@ out.append("> **数据来源**: `validated_results/round_1/*/agent_stats.csv`（
 out.append("> **⚠️ 标记**: CSV 实际 verdict 与 results.md 不一致的题。")
 out.append("> **旧格式 pair**（仅 token，无 strict/judge/result）: 7-8, 9-10, 17-18, 21-22, 31-32, 33-34, 37-38, 39-40, 41-42, 61-62, 63-64, 67-68, 69-70, 73-74, 75-76, 77-78, 83-84, 85-86, 89-90")
 out.append("")
-out.append("| 专题 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 备注 |")
-out.append("|------|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|------|")
+out.append("| 专题 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 数据集备注 | 备注 |")
+out.append("|------|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|----------|------|")
 
 for db in db_order:
     for qid in by_db.get(db, []):
@@ -175,7 +198,10 @@ for db in db_order:
         if rdf_r != "—" and md.get("rdf") == 100 and rdf_r != "CORRECT":
             flags.append("⚠️RDF")
 
-        note = " ".join(flags) if flags else q_notes.get(qid, "")
+        # 数据集备注 (gold/evidence/question 缺陷)
+        ds_note = q_dataset_notes.get(qid, "")
+        # 范式行为/归档观察备注
+        obs_note = " ".join(flags) if flags else q_obs_notes.get(qid, "")
 
         er_t_s = f"{er_t:,}" if er_t else "—"
         dlr_t_s = f"{dlr_t:,}" if dlr_t else "—"
@@ -186,7 +212,7 @@ for db in db_order:
             f"| {dlr_s} | {dlr_j} "
             f"| {rdf_s} | {rdf_j} "
             f"| {er_r} | {dlr_r} | {rdf_r} "
-            f"| {er_t_s} | {dlr_t_s} | {rdf_t_s} | {note} |"
+            f"| {er_t_s} | {dlr_t_s} | {rdf_t_s} | {ds_note} | {obs_note} |"
         )
 
 with open(OUT_PATH, "w", encoding="utf-8") as f:
