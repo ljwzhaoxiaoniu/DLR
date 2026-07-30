@@ -1,0 +1,16 @@
+{
+  "q_id": 1162,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT COUNT(*) FROM Patient WHERE SEX = 'F' AND Description LIKE '1997%' AND Admission = '-'",
+  "result": {
+    "columns": [
+      "COUNT(*)"
+    ],
+    "rows": [
+      [
+        161
+      ]
+    ]
+  }
+}

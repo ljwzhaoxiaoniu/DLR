@@ -1,0 +1,16 @@
+{
+  "q_id": 1339,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT AVG(e.cost) AS total_average_cost\nFROM expense e\nJOIN member m ON e.link_to_member = m.member_id\nWHERE m.first_name = 'Elijah' AND m.last_name = 'Allen'\nAND (SUBSTR(e.expense_date, 6, 2) = '09' OR SUBSTR(e.expense_date, 6, 2) = '10')",
+  "result": {
+    "columns": [
+      "total_average_cost"
+    ],
+    "rows": [
+      [
+        74.0775
+      ]
+    ]
+  }
+}

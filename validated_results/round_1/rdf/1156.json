@@ -1,0 +1,42 @@
+{
+  "q_id": 1156,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT Patient.ID, (CAST(strftime('%Y', 'now') AS INTEGER) - CAST(strftime('%Y', Patient.Birthday) AS INTEGER)) AS age FROM Patient JOIN Examination ON Patient.ID = Examination.ID WHERE Examination.RVVT = '+'",
+  "result": {
+    "columns": [
+      "ID",
+      "age"
+    ],
+    "rows": [
+      [
+        1567380,
+        67
+      ],
+      [
+        163109,
+        76
+      ],
+      [
+        174116,
+        53
+      ],
+      [
+        2803470,
+        41
+      ],
+      [
+        3192610,
+        88
+      ],
+      [
+        355009,
+        42
+      ],
+      [
+        4130000,
+        63
+      ]
+    ]
+  }
+}

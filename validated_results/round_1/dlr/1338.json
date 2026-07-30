@@ -1,0 +1,18 @@
+{
+  "q_id": 1338,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT COUNT(*) AS total_expenses, SUM(CASE WHEN approved = 'true' THEN 1 ELSE 0 END) AS approved_count\nFROM expense e\nJOIN budget b ON e.link_to_budget = b.budget_id\nJOIN event ev ON b.link_to_event = ev.event_id\nWHERE ev.event_name = 'October Meeting' AND ev.event_date LIKE '2019-10-08%'",
+  "result": {
+    "columns": [
+      "approved_count",
+      "total_expenses"
+    ],
+    "rows": [
+      [
+        3,
+        3
+      ]
+    ]
+  }
+}

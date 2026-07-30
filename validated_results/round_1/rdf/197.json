@@ -1,0 +1,16 @@
+{
+  "q_id": 197,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT AVG(oxygen_count) as avg_oxygen FROM (SELECT a.molecule_id, COUNT(*) as oxygen_count FROM atom a INNER JOIN (SELECT DISTINCT molecule_id FROM bond WHERE bond_type = '-') b ON a.molecule_id = b.molecule_id WHERE a.element = 'o' GROUP BY a.molecule_id)",
+  "result": {
+    "columns": [
+      "avg_oxygen"
+    ],
+    "rows": [
+      [
+        3.109705
+      ]
+    ]
+  }
+}

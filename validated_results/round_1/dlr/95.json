@@ -1,0 +1,20 @@
+{
+  "q_id": 95,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT c.client_id, c.birth_date, d.account_id FROM client c JOIN disp d ON c.client_id = d.client_id WHERE c.district_id = 1 AND c.birth_date = (SELECT MAX(birth_date) FROM client WHERE district_id = 1)",
+  "result": {
+    "columns": [
+      "account_id",
+      "birth_date",
+      "client_id"
+    ],
+    "rows": [
+      [
+        1372,
+        "1982-12-11",
+        1660
+      ]
+    ]
+  }
+}

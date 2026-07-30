@@ -1,0 +1,26 @@
+{
+  "q_id": 1481,
+  "ok": true,
+  "error": null,
+  "sql": "WITH customer_totals AS (SELECT c.CustomerID, c.Segment, SUM(y.Consumption) as total_consumption FROM customers c JOIN yearmonth y ON c.CustomerID = y.CustomerID WHERE y.Date BETWEEN '201301' AND '201312' AND c.Currency = 'CZK' GROUP BY c.Segment, c.CustomerID), min_per_segment AS (SELECT Segment, MIN(total_consumption) as min_cons FROM customer_totals GROUP BY Segment), lowest_customers AS (SELECT ct.Segment, ct.total_consumption, COUNT(*) as cnt FROM customer_totals ct JOIN min_per_segment mp ON ct.Segment = mp.Segment AND ct.total_consumption = mp.min_cons GROUP BY ct.Segment, ct.total_consumption), annual_avg AS (SELECT Segment, total_consumption * 1.0 / cnt as annual_average FROM lowest_customers) SELECT 'SME-LAM' as diff, (SELECT annual_average FROM annual_avg WHERE Segment = 'SME') - (SELECT annual_average FROM annual_avg WHERE Segment = 'LAM') as difference UNION ALL SELECT 'LAM-KAM', (SELECT annual_average FROM annual_avg WHERE Segment = 'LAM') - (SELECT annual_average FROM annual_avg WHERE Segment = 'KAM') UNION ALL SELECT 'KAM-SME', (SELECT annual_average FROM annual_avg WHERE Segment = 'KAM') - (SELECT annual_average FROM annual_avg WHERE Segment = 'SME')",
+  "result": {
+    "columns": [
+      "diff",
+      "difference"
+    ],
+    "rows": [
+      [
+        "KAM-SME",
+        7962.72
+      ],
+      [
+        "LAM-KAM",
+        6046.62
+      ],
+      [
+        "SME-LAM",
+        -14009.34
+      ]
+    ]
+  }
+}

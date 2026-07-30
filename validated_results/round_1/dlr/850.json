@@ -1,0 +1,22 @@
+{
+  "q_id": 850,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT DISTINCT r.name FROM races r JOIN circuits c ON r.circuitId = c.circuitId WHERE c.country = 'Germany'",
+  "result": {
+    "columns": [
+      "name"
+    ],
+    "rows": [
+      [
+        "European Grand Prix"
+      ],
+      [
+        "German Grand Prix"
+      ],
+      [
+        "Luxembourg Grand Prix"
+      ]
+    ]
+  }
+}

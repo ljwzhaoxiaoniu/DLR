@@ -1,0 +1,16 @@
+{
+  "q_id": 1484,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT (SELECT COUNT(*) FROM gasstations WHERE Country = 'CZE' AND Segment = 'Discount') - (SELECT COUNT(*) FROM gasstations WHERE Country = 'SVK' AND Segment = 'Discount') AS difference",
+  "result": {
+    "columns": [
+      "difference"
+    ],
+    "rows": [
+      [
+        176
+      ]
+    ]
+  }
+}

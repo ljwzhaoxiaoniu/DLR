@@ -1,0 +1,16 @@
+{
+  "q_id": 92,
+  "ok": true,
+  "error": null,
+  "sql": "select count(distinct d.district_id) from district d join client c on d.district_id = c.district_id where c.gender = 'F' and d.A11 > 6000 and d.A11 < 10000",
+  "result": {
+    "columns": [
+      "count(distinct d.district_id)"
+    ],
+    "rows": [
+      [
+        69
+      ]
+    ]
+  }
+}

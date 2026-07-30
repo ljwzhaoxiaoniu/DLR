@@ -1,0 +1,16 @@
+{
+  "q_id": 1339,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT AVG(cost) as total_average_cost FROM expense WHERE link_to_member='recro8T1MPMwRadVH' AND substr(expense_date,6,2) IN ('09','10')",
+  "result": {
+    "columns": [
+      "total_average_cost"
+    ],
+    "rows": [
+      [
+        74.0775
+      ]
+    ]
+  }
+}

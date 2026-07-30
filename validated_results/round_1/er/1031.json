@@ -1,0 +1,20 @@
+{
+  "q_id": 1031,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT DISTINCT p.player_name, p.birthday, CAST((julianday('now') - julianday(p.birthday)) / 365.25 AS INTEGER) AS age\nFROM Player_Attributes pa\nJOIN Player p ON pa.player_api_id = p.player_api_id\nWHERE pa.sprint_speed >= 97\nAND CAST(strftime('%Y', pa.date) AS INTEGER) >= 2013\nAND CAST(strftime('%Y', pa.date) AS INTEGER) <= 2015\nORDER BY age",
+  "result": {
+    "columns": [
+      "age",
+      "birthday",
+      "player_name"
+    ],
+    "rows": [
+      [
+        35,
+        "1990-11-14 00:00:00",
+        "Mathis Bolly"
+      ]
+    ]
+  }
+}

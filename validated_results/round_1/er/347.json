@@ -1,0 +1,460 @@
+{
+  "q_id": 347,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT c.id, c.name, c.hasContentWarning, r.text AS ruling_text FROM cards c LEFT JOIN rulings r ON c.uuid = r.uuid WHERE c.artist = 'Stephen Daniele' GROUP BY c.id ORDER BY c.name",
+  "result": {
+    "columns": [
+      "hasContentWarning",
+      "id",
+      "name",
+      "ruling_text"
+    ],
+    "rows": [
+      [
+        0,
+        12407,
+        "Polluted Mire",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        12417,
+        "Slippery Karst",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        14653,
+        "Slippery Karst",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        14686,
+        "Polluted Mire",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        18965,
+        "Killer Whale",
+        null
+      ],
+      [
+        0,
+        19006,
+        "Volrath's Dungeon",
+        null
+      ],
+      [
+        0,
+        19041,
+        "Manabond",
+        "Putting a land onto the battlefield does not count as playing a land."
+      ],
+      [
+        0,
+        19050,
+        "Rootwater Alligator",
+        null
+      ],
+      [
+        0,
+        19054,
+        "Spike Hatcher",
+        null
+      ],
+      [
+        0,
+        211,
+        "Duct Crawler",
+        null
+      ],
+      [
+        0,
+        21535,
+        "Slippery Karst",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        21568,
+        "Polluted Mire",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        24061,
+        "Stroke of Genius",
+        null
+      ],
+      [
+        0,
+        274,
+        "Pincher Beetles",
+        null
+      ],
+      [
+        0,
+        275,
+        "Pincher Beetles",
+        null
+      ],
+      [
+        0,
+        29,
+        "Academy Researchers",
+        "You can’t put an Aura card from your hand onto the battlefield this way if that Aura can’t legally enchant Academy Researchers. For example, you can’t put an Aura with “enchant land” or “enchant green creature” onto the battlefield attached to Academy Res"
+      ],
+      [
+        0,
+        38456,
+        "Polluted Mire",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        3872,
+        "Spreading Algae",
+        "This card now has Enchant Swamp, which works exactly like any other Enchant ability. This means it can only be cast targeting a Swamp, and it will be put into its owner’s graveyard if the permanent it’s attached to ever stops being a Swamp."
+      ],
+      [
+        0,
+        42006,
+        "Stroke of Genius",
+        null
+      ],
+      [
+        0,
+        44990,
+        "Tawnos",
+        null
+      ],
+      [
+        0,
+        49252,
+        "Warrior en-Kor",
+        null
+      ],
+      [
+        0,
+        49261,
+        "Hammerhead Shark",
+        null
+      ],
+      [
+        0,
+        49281,
+        "Brush with Death",
+        null
+      ],
+      [
+        0,
+        49308,
+        "Duct Crawler",
+        null
+      ],
+      [
+        0,
+        50678,
+        "Counterspell",
+        null
+      ],
+      [
+        0,
+        50793,
+        "Firefly",
+        null
+      ],
+      [
+        0,
+        50797,
+        "Flowstone Wyvern",
+        null
+      ],
+      [
+        0,
+        50820,
+        "Sandstone Warrior",
+        null
+      ],
+      [
+        0,
+        50865,
+        "Pincher Beetles",
+        null
+      ],
+      [
+        0,
+        50948,
+        "Stalking Stones",
+        null
+      ],
+      [
+        0,
+        51153,
+        "Warrior en-Kor",
+        null
+      ],
+      [
+        0,
+        51157,
+        "Counterspell",
+        null
+      ],
+      [
+        0,
+        51166,
+        "Hammerhead Shark",
+        null
+      ],
+      [
+        0,
+        51169,
+        "Killer Whale",
+        null
+      ],
+      [
+        0,
+        51248,
+        "Flowstone Wyvern",
+        null
+      ],
+      [
+        0,
+        51268,
+        "Sandstone Warrior",
+        null
+      ],
+      [
+        0,
+        51293,
+        "Manabond",
+        null
+      ],
+      [
+        0,
+        51311,
+        "Spike Hatcher",
+        null
+      ],
+      [
+        0,
+        51359,
+        "Stalking Stones",
+        null
+      ],
+      [
+        0,
+        52586,
+        "Ambiguity",
+        null
+      ],
+      [
+        0,
+        52667,
+        "Number Crunch",
+        null
+      ],
+      [
+        0,
+        52781,
+        "Academy Researchers",
+        null
+      ],
+      [
+        0,
+        52783,
+        "Arcane Laboratory",
+        null
+      ],
+      [
+        0,
+        52843,
+        "Stroke of Genius",
+        null
+      ],
+      [
+        0,
+        52844,
+        "Sunder",
+        null
+      ],
+      [
+        0,
+        52866,
+        "Contamination",
+        null
+      ],
+      [
+        0,
+        52894,
+        "Rain of Filth",
+        null
+      ],
+      [
+        0,
+        52977,
+        "Anaconda",
+        null
+      ],
+      [
+        0,
+        52999,
+        "Gaea's Bounty",
+        null
+      ],
+      [
+        0,
+        53019,
+        "Spreading Algae",
+        null
+      ],
+      [
+        0,
+        53068,
+        "Polluted Mire",
+        null
+      ],
+      [
+        0,
+        53072,
+        "Slippery Karst",
+        null
+      ],
+      [
+        0,
+        53075,
+        "Tolarian Academy",
+        null
+      ],
+      [
+        0,
+        53760,
+        "Killer Whale",
+        null
+      ],
+      [
+        0,
+        53779,
+        "Stroke of Genius",
+        null
+      ],
+      [
+        0,
+        54003,
+        "Tolarian Academy",
+        null
+      ],
+      [
+        0,
+        55105,
+        "Warrior en-Kor",
+        null
+      ],
+      [
+        0,
+        55186,
+        "Stalking Stones",
+        null
+      ],
+      [
+        0,
+        55199,
+        "Counterspell",
+        null
+      ],
+      [
+        0,
+        6651,
+        "Polluted Mire",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        6652,
+        "Slippery Karst",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        7948,
+        "Pincher Beetles",
+        null
+      ],
+      [
+        0,
+        7950,
+        "Polluted Mire",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        7970,
+        "Slippery Karst",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        8044,
+        "Killer Whale",
+        null
+      ],
+      [
+        0,
+        8107,
+        "Polluted Mire",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        8109,
+        "Slippery Karst",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        8448,
+        "Slippery Karst",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        8609,
+        "Stroke of Genius",
+        null
+      ],
+      [
+        0,
+        8787,
+        "Polluted Mire",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        8791,
+        "Slippery Karst",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        8925,
+        "Stroke of Genius",
+        null
+      ],
+      [
+        0,
+        9117,
+        "Polluted Mire",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ],
+      [
+        0,
+        9124,
+        "Slippery Karst",
+        "Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not."
+      ]
+    ]
+  }
+}

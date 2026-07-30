@@ -1,0 +1,24 @@
+{
+  "q_id": 94,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT a.account_id, c.client_id, c.birth_date, d.A11,\n       (SELECT MAX(d3.A11) FROM client c3 JOIN district d3 ON c3.district_id = d3.district_id WHERE c3.gender = 'F') \n       - (SELECT MIN(d2.A11) FROM client c2 JOIN district d2 ON c2.district_id = d2.district_id WHERE c2.gender = 'F') AS gap\nFROM client c\nJOIN district d ON c.district_id = d.district_id\nJOIN disp dp ON c.client_id = dp.client_id\nJOIN account a ON dp.account_id = a.account_id\nWHERE c.gender = 'F'\n  AND d.A11 = (SELECT MIN(d2.A11) FROM client c2 JOIN district d2 ON c2.district_id = d2.district_id WHERE c2.gender = 'F')\nORDER BY c.birth_date ASC\nLIMIT 1",
+  "result": {
+    "columns": [
+      "A11",
+      "account_id",
+      "birth_date",
+      "client_id",
+      "gap"
+    ],
+    "rows": [
+      [
+        8110,
+        3214,
+        "1916-10-27",
+        3888,
+        4431
+      ]
+    ]
+  }
+}

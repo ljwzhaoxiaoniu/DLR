@@ -1,0 +1,16 @@
+{
+  "q_id": 1331,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT i.amount FROM income i JOIN member m ON i.link_to_member = m.member_id WHERE m.position = 'Vice President'",
+  "result": {
+    "columns": [
+      "amount"
+    ],
+    "rows": [
+      [
+        50
+      ]
+    ]
+  }
+}

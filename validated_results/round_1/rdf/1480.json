@@ -1,0 +1,58 @@
+{
+  "q_id": 1480,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT substr(ym.Date, 5, 2) AS Month, SUM(ym.Consumption) AS TotalConsumption FROM yearmonth ym JOIN customers c ON ym.CustomerID = c.CustomerID WHERE c.Segment = 'SME' AND ym.Date BETWEEN '201301' AND '201312' GROUP BY substr(ym.Date, 5, 2) ORDER BY TotalConsumption DESC",
+  "result": {
+    "columns": [
+      "Month",
+      "TotalConsumption"
+    ],
+    "rows": [
+      [
+        "01",
+        6082.13
+      ],
+      [
+        "02",
+        5942841.29
+      ],
+      [
+        "03",
+        85783641.75
+      ],
+      [
+        "04",
+        126047776.92
+      ],
+      [
+        "05",
+        125616906.33
+      ],
+      [
+        "06",
+        121345577.66
+      ],
+      [
+        "07",
+        125091828.27
+      ],
+      [
+        "08",
+        119405639.28
+      ],
+      [
+        "09",
+        124865094.62
+      ],
+      [
+        "10",
+        122404069.91
+      ],
+      [
+        "11",
+        27817185.49
+      ]
+    ]
+  }
+}

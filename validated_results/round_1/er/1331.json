@@ -1,0 +1,16 @@
+{
+  "q_id": 1331,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT amount FROM income WHERE link_to_member = 'recD078PnS3x2doBe'",
+  "result": {
+    "columns": [
+      "amount"
+    ],
+    "rows": [
+      [
+        50
+      ]
+    ]
+  }
+}

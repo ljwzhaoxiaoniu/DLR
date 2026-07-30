@@ -1,0 +1,16 @@
+{
+  "q_id": 537,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT COUNT(*) FROM posts JOIN users ON posts.OwnerUserId = users.Id WHERE users.DisplayName = 'csgillespie'",
+  "result": {
+    "columns": [
+      "COUNT(*)"
+    ],
+    "rows": [
+      [
+        121
+      ]
+    ]
+  }
+}

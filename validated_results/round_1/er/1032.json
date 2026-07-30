@@ -1,0 +1,18 @@
+{
+  "q_id": 1032,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT l.name AS league_name, COUNT(m.id) AS match_count FROM Match m JOIN League l ON m.league_id = l.id GROUP BY m.league_id ORDER BY match_count DESC LIMIT 1",
+  "result": {
+    "columns": [
+      "league_name",
+      "match_count"
+    ],
+    "rows": [
+      [
+        "Spain LIGA BBVA",
+        3040
+      ]
+    ]
+  }
+}

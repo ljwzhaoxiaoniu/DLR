@@ -1,0 +1,16 @@
+{
+  "q_id": 98,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT a.account_id FROM loan l JOIN account a ON l.account_id = a.account_id WHERE strftime('%Y', l.date) = '1997' AND a.frequency = 'POPLATEK TYDNE' AND l.amount = (SELECT MIN(l2.amount) FROM loan l2 JOIN account a2 ON l2.account_id = a2.account_id WHERE strftime('%Y', l2.date) = '1997' AND a2.frequency = 'POPLATEK TYDNE') LIMIT 50",
+  "result": {
+    "columns": [
+      "account_id"
+    ],
+    "rows": [
+      [
+        176
+      ]
+    ]
+  }
+}

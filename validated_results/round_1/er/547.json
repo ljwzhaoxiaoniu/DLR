@@ -1,0 +1,16 @@
+{
+  "q_id": 547,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT COUNT(*) FROM posts p JOIN users u ON p.OwnerUserId = u.Id WHERE u.Age > 65 AND p.Score >= 20",
+  "result": {
+    "columns": [
+      "COUNT(*)"
+    ],
+    "rows": [
+      [
+        1
+      ]
+    ]
+  }
+}

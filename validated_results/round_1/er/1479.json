@@ -1,0 +1,18 @@
+{
+  "q_id": 1479,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT SUBSTR(y.Date, 1, 4) AS year, SUM(y.Consumption) AS total_consumption FROM yearmonth y JOIN customers c ON y.CustomerID = c.CustomerID WHERE c.Currency = 'CZK' GROUP BY year ORDER BY total_consumption DESC LIMIT 1",
+  "result": {
+    "columns": [
+      "total_consumption",
+      "year"
+    ],
+    "rows": [
+      [
+        2992757755.72,
+        "2013"
+      ]
+    ]
+  }
+}

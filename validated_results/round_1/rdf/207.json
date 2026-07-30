@@ -1,0 +1,28 @@
+{
+  "q_id": 207,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT DISTINCT a.element FROM bond b JOIN connected c ON b.bond_id = c.bond_id JOIN atom a ON a.atom_id = c.atom_id WHERE b.bond_type = '='",
+  "result": {
+    "columns": [
+      "element"
+    ],
+    "rows": [
+      [
+        "c"
+      ],
+      [
+        "ca"
+      ],
+      [
+        "n"
+      ],
+      [
+        "o"
+      ],
+      [
+        "s"
+      ]
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "q_id": 1531,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT t.CustomerID, c.Currency, SUM(t.Price) / SUM(t.Amount) AS AvgPricePerItem FROM transactions_1k t JOIN customers c ON t.CustomerID = c.CustomerID WHERE t.CustomerID = (SELECT CustomerID FROM transactions_1k GROUP BY CustomerID ORDER BY SUM(Price) DESC LIMIT 1) GROUP BY t.CustomerID",
+  "result": {
+    "columns": [
+      "AvgPricePerItem",
+      "Currency",
+      "CustomerID"
+    ],
+    "rows": [
+      [
+        24.277577,
+        "CZK",
+        19182
+      ]
+    ]
+  }
+}

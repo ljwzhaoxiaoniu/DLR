@@ -1,0 +1,2020 @@
+{
+  "q_id": 23,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT s.School, s.Street, s.City, s.State, s.Zip, f.\"Enrollment (K-12)\", f.\"Enrollment (Ages 5-17)\", (f.\"Enrollment (K-12)\" - f.\"Enrollment (Ages 5-17)\") AS diff\nFROM frpm f\nJOIN schools s ON f.CDSCode = s.CDSCode\nWHERE (f.\"Enrollment (K-12)\" - f.\"Enrollment (Ages 5-17)\") > 30\nORDER BY diff DESC\nLIMIT 200",
+  "result": {
+    "columns": [
+      "City",
+      "Enrollment (Ages 5-17)",
+      "Enrollment (K-12)",
+      "School",
+      "State",
+      "Street",
+      "Zip",
+      "diff"
+    ],
+    "rows": [
+      [
+        "Anaheim",
+        563,
+        717,
+        "Gilbert High (Continuation)",
+        "CA",
+        "1800 Ball Road",
+        "92804-5516",
+        154
+      ],
+      [
+        "Antioch",
+        2554,
+        2659,
+        "Deer Valley High",
+        "CA",
+        "4700 Lone Tree Way",
+        "94531-8486",
+        105
+      ],
+      [
+        "Antioch",
+        304,
+        433,
+        "Prospects High (Alternative)",
+        "CA",
+        "820 West Second Street",
+        "94509-1145",
+        129
+      ],
+      [
+        "Apple Valley",
+        2123,
+        2263,
+        "Apple Valley High",
+        "CA",
+        "11837 Navajo Road",
+        "92308-7653",
+        140
+      ],
+      [
+        "Atwater",
+        1708,
+        1820,
+        "Atwater High",
+        "CA",
+        "2201 Fruitland Avenue",
+        "95301-0835",
+        112
+      ],
+      [
+        "Bakersfield",
+        2025,
+        2124,
+        "West High",
+        "CA",
+        "1200 New Stine Road",
+        "93309-3534",
+        99
+      ],
+      [
+        "Bakersfield",
+        914,
+        1101,
+        "Kern County Community",
+        "CA",
+        "1300 17th Street City Centre",
+        "93301",
+        187
+      ],
+      [
+        "Bell",
+        3147,
+        3256,
+        "Bell Senior High",
+        "CA",
+        "4328 Bell Avenue",
+        "90201-2528",
+        109
+      ],
+      [
+        "Brentwood",
+        229,
+        331,
+        "Independence High",
+        "CA",
+        "929 Second Street",
+        "94513-1137",
+        102
+      ],
+      [
+        "Brentwood",
+        2396,
+        2520,
+        "Liberty High",
+        "CA",
+        "850 Second Street",
+        "94513-1132",
+        124
+      ],
+      [
+        "Buena Park",
+        135,
+        309,
+        "Hope",
+        "CA",
+        "7901 Knott Avenue",
+        "90620-2469",
+        174
+      ],
+      [
+        "Burbank",
+        743,
+        1075,
+        "Options for Youth-Burbank Charter",
+        "CA",
+        "1610 West Burbank Boulevard",
+        "91506-1311",
+        332
+      ],
+      [
+        "Calexico",
+        2847,
+        2981,
+        "Calexico High",
+        "CA",
+        "1030 Encinas Avenue",
+        "92231-2560",
+        134
+      ],
+      [
+        "Camarillo",
+        323,
+        425,
+        "Frontier High",
+        "CA",
+        "545 Airport Way",
+        "93010-8581",
+        102
+      ],
+      [
+        "Carmichael",
+        4718,
+        5051,
+        "Visions In Education",
+        "CA",
+        "5030 El Camino Avenue",
+        "95608-4650",
+        333
+      ],
+      [
+        "Carmichael",
+        558,
+        776,
+        "Options for Youth-San Juan",
+        "CA",
+        "5825 Windmill Way",
+        "95608-1300",
+        218
+      ],
+      [
+        "Cathedral City",
+        1741,
+        1841,
+        "Cathedral City High",
+        "CA",
+        "69250 Dinah Shore Drive",
+        "92234-4713",
+        100
+      ],
+      [
+        "Ceres",
+        1614,
+        1717,
+        "Ceres High",
+        "CA",
+        "2320 Central Avenue",
+        "95307-2502",
+        103
+      ],
+      [
+        "Chula Vista",
+        178,
+        305,
+        "MAAC Community Charter",
+        "CA",
+        "1385 Third Avenue",
+        "91911-4302",
+        127
+      ],
+      [
+        "Chula Vista",
+        224,
+        350,
+        "Palomar High",
+        "CA",
+        "480 Palomar Street",
+        "91911-3098",
+        126
+      ],
+      [
+        "Chula Vista",
+        2977,
+        3079,
+        "Eastlake High",
+        "CA",
+        "1120 Eastlake Parkway",
+        "91915-2102",
+        102
+      ],
+      [
+        "Chula Vista",
+        339,
+        510,
+        null,
+        "CA",
+        "1130 Fifth Avenue",
+        "91911-2812",
+        171
+      ],
+      [
+        "Clovis",
+        2784,
+        2973,
+        "Clovis High",
+        "CA",
+        "1055 Fowler Avenue",
+        "93611-2062",
+        189
+      ],
+      [
+        "Colton",
+        1840,
+        1963,
+        "Colton High",
+        "CA",
+        "777 West Valley Boulevard",
+        "92324-2251",
+        123
+      ],
+      [
+        "Corona",
+        629,
+        750,
+        "Lee V. Pollard High",
+        "CA",
+        "185 Magnolia Avenue",
+        "92879-3329",
+        121
+      ],
+      [
+        "Costa Mesa",
+        1834,
+        2750,
+        "Access County Community",
+        "CA",
+        "200 Kalmus Drive",
+        "92628-9050",
+        916
+      ],
+      [
+        "Costa Mesa",
+        307,
+        438,
+        "Orange County Special Education",
+        "CA",
+        "200 Kalmus Drive",
+        "92628-9050",
+        131
+      ],
+      [
+        "Dana Point",
+        2614,
+        2716,
+        "Dana Hills High",
+        "CA",
+        "33333 Golden Lantern",
+        "92629-1840",
+        102
+      ],
+      [
+        "Danville",
+        2049,
+        2182,
+        "San Ramon Valley High",
+        "CA",
+        "501 Danville Boulevard",
+        "94526-2404",
+        133
+      ],
+      [
+        "El Cajon",
+        1620,
+        1720,
+        "El Cajon Valley High",
+        "CA",
+        "1035 East Madison Avenue",
+        "92021-6226",
+        100
+      ],
+      [
+        "El Cajon",
+        2365,
+        2478,
+        "Granite Hills High",
+        "CA",
+        "1719 East Madison Avenue",
+        "92019-1052",
+        113
+      ],
+      [
+        "El Cajon",
+        327,
+        773,
+        "Diego Valley Charter",
+        "CA",
+        "511 North 2nd Street",
+        "92021-6449",
+        446
+      ],
+      [
+        "Escondido",
+        2366,
+        2493,
+        "Escondido High",
+        "CA",
+        "1535 North Broadway",
+        "92026-2015",
+        127
+      ],
+      [
+        "Fairfield",
+        231,
+        358,
+        "Solano County Special Education",
+        "CA",
+        "Golden Hills Education Center 2460 Clay Bank Road, Building 8",
+        "94533-1615",
+        127
+      ],
+      [
+        "Fallbrook",
+        2032,
+        2183,
+        "Fallbrook High",
+        "CA",
+        "2400 South Stage Coach Lane",
+        "92028-4429",
+        151
+      ],
+      [
+        "Fontana",
+        2433,
+        2536,
+        "Fontana High",
+        "CA",
+        "9453 Citrus Avenue",
+        "92335-5510",
+        103
+      ],
+      [
+        "Fontana",
+        343,
+        496,
+        "Citrus High (Continuation)",
+        "CA",
+        "10760 Cypress",
+        "92337-7422",
+        153
+      ],
+      [
+        "Fresno",
+        1707,
+        1805,
+        "McLane High",
+        "CA",
+        "2727 North Cedar Avenue",
+        "93703-2016",
+        98
+      ],
+      [
+        "Fresno",
+        267,
+        459,
+        "Crescent View West Charter",
+        "CA",
+        "1901 East Shields Avenue, Suite 130",
+        "93726-5309",
+        192
+      ],
+      [
+        "Fresno",
+        339,
+        564,
+        "Fresno County Special Education Local Plan",
+        "CA",
+        "1111 Van Ness Avenue",
+        "93721-2002",
+        225
+      ],
+      [
+        "Fresno",
+        4039,
+        4160,
+        "Central High East Campus",
+        "CA",
+        "3535 North Cornelia Avenue",
+        "93722-7020",
+        121
+      ],
+      [
+        "Fresno",
+        406,
+        572,
+        "Ambassador Phillip V. Sanchez Public Charter",
+        "CA",
+        "5659 East Kings Canyon Road, Suite 101",
+        "93727-4641",
+        166
+      ],
+      [
+        "Fresno",
+        430,
+        588,
+        "Crescent View South Charter",
+        "CA",
+        "1901 East Shields Avenue, Suite 169",
+        "93726-5318",
+        158
+      ],
+      [
+        "Fullerton",
+        409,
+        587,
+        "La Sierra High (Alternative)",
+        "CA",
+        "951 North State College Boulevard",
+        "92831",
+        178
+      ],
+      [
+        "Glendale",
+        55,
+        163,
+        "College View",
+        "CA",
+        "440 West Lomita Avenue",
+        "91204-1512",
+        108
+      ],
+      [
+        "Glendora",
+        2496,
+        2597,
+        "Glendora High",
+        "CA",
+        "1600 East Foothill Boulevard",
+        "91741-3024",
+        101
+      ],
+      [
+        "Granada Hills",
+        70,
+        175,
+        "Jane Addams Continuation",
+        "CA",
+        "16341 Donmetz Street",
+        "91344-3773",
+        105
+      ],
+      [
+        "Grass Valley",
+        222,
+        1831,
+        "John Muir Charter Schools",
+        "CA",
+        "12338 McCourtney Road",
+        "95949-9756",
+        1609
+      ],
+      [
+        "Harbor City",
+        2474,
+        2596,
+        "Nathaniel Narbonne Senior High",
+        "CA",
+        "24300 Western Avenue",
+        "90710-1742",
+        122
+      ],
+      [
+        "Hemet",
+        2211,
+        2334,
+        "Hemet High",
+        "CA",
+        "41701 Stetson Avenue",
+        "92544-7518",
+        123
+      ],
+      [
+        "Hemet",
+        365,
+        480,
+        "Alessandro High",
+        "CA",
+        "831 East Devonshire Avenue",
+        "92543-3052",
+        115
+      ],
+      [
+        "Hesperia",
+        924,
+        1439,
+        "Alta Vista Public",
+        "CA",
+        "11988 Hesperia Road, Suite B",
+        "92345-1426",
+        515
+      ],
+      [
+        "Highland",
+        416,
+        584,
+        "San Andreas High",
+        "CA",
+        "3232 East Pacific Street",
+        "92346-2499",
+        168
+      ],
+      [
+        "Huntington Beach",
+        2367,
+        2560,
+        "Edison High",
+        "CA",
+        "21400 Magnolia",
+        "92646-6306",
+        193
+      ],
+      [
+        "Inglewood",
+        1,
+        660,
+        "New Opportunities Charter",
+        "CA",
+        "110 South La Brea Avenue Suite 305A",
+        "90301-1768",
+        659
+      ],
+      [
+        "La Mesa",
+        2274,
+        2394,
+        "Grossmont High",
+        "CA",
+        "1100 Murray Drive",
+        "91944-1043",
+        120
+      ],
+      [
+        "La Quinta",
+        208,
+        318,
+        "Summit High (Continuation)",
+        "CA",
+        "43-330 Palm Royale Drive",
+        "92253-8170",
+        110
+      ],
+      [
+        "Lancaster",
+        1110,
+        1990,
+        "Desert Sands Charter",
+        "CA",
+        "44130 20th Street West",
+        "93534-4045",
+        880
+      ],
+      [
+        "Lancaster",
+        2190,
+        2304,
+        "Eastside High",
+        "CA",
+        "3200 East Avenue J-8",
+        "93535-5827",
+        114
+      ],
+      [
+        "Lancaster",
+        659,
+        771,
+        "Desert Winds Continuation High",
+        "CA",
+        "415 East Kettering Street",
+        "93535-2503",
+        112
+      ],
+      [
+        "Lawndale",
+        1,
+        723,
+        "Family First Charter",
+        "CA",
+        "4953 Marine Avenue",
+        "90260-1250",
+        722
+      ],
+      [
+        "Long Beach",
+        3247,
+        3367,
+        "Jordan High",
+        "CA",
+        "6500 Atlantic Avenue",
+        "90805-2304",
+        120
+      ],
+      [
+        "Long Beach",
+        618,
+        991,
+        "Educational Partnership High",
+        "CA",
+        "1794 Cedar Avenue",
+        "90813-1770",
+        373
+      ],
+      [
+        "Los Angeles",
+        1032,
+        2185,
+        "Los Angeles Unified Alternative Education",
+        "CA",
+        "333 South Beaudry Avenue, Floor 18",
+        "90017-5108",
+        1153
+      ],
+      [
+        "Los Angeles",
+        1107,
+        1214,
+        "Edward R. Roybal Learning Center",
+        "CA",
+        "1200 West Colton Street",
+        "90026-5816",
+        107
+      ],
+      [
+        "Los Angeles",
+        1318,
+        1422,
+        "Los Angeles Senior High",
+        "CA",
+        "4650 West Olympic Boulevard",
+        "90019-1831",
+        104
+      ],
+      [
+        "Los Angeles",
+        139,
+        280,
+        "Alfonso B. Perez Special Education Center",
+        "CA",
+        "4540 Michigan Avenue",
+        "90022-1130",
+        141
+      ],
+      [
+        "Los Angeles",
+        1557,
+        1684,
+        "West Adams Preparatory High",
+        "CA",
+        "1500 West Washington Boulevard",
+        "90007-1257",
+        127
+      ],
+      [
+        "Los Angeles",
+        1574,
+        2025,
+        "City of Angels",
+        "CA",
+        "221 South Eastman Avenue",
+        "90063-2423",
+        451
+      ],
+      [
+        "Los Angeles",
+        1684,
+        1838,
+        "Alain Leroy Locke College Preparatory Academy",
+        "CA",
+        "325 East 111th Street",
+        "90061-3003",
+        154
+      ],
+      [
+        "Los Angeles",
+        1696,
+        1795,
+        "Theodore Roosevelt Senior High",
+        "CA",
+        "456 South Mathews Street",
+        "90033-4350",
+        99
+      ],
+      [
+        "Los Angeles",
+        181,
+        411,
+        "The Education Corps",
+        "CA",
+        "2824 South Main Street",
+        "90007-3334",
+        230
+      ],
+      [
+        "Los Angeles",
+        186,
+        566,
+        "Central High",
+        "CA",
+        "716 East 14th Street",
+        "90021-2114",
+        380
+      ],
+      [
+        "Los Angeles",
+        2000,
+        2109,
+        "Venice Senior High",
+        "CA",
+        "13000 Venice Boulevard",
+        "90066-3512",
+        109
+      ],
+      [
+        "Los Angeles",
+        202,
+        337,
+        "Youth Opportunities Unlimited",
+        "CA",
+        "915 West Manchester Avenue",
+        "90044-4915",
+        135
+      ],
+      [
+        "Los Angeles",
+        2042,
+        2158,
+        "John C. Fremont Senior High",
+        "CA",
+        "7676 South San Pedro Street",
+        "90003-2348",
+        116
+      ],
+      [
+        "Los Angeles",
+        23,
+        178,
+        "Benjamin Banneker Career and Transition Center",
+        "CA",
+        "14024 South San Pedro Street",
+        "90061-2659",
+        155
+      ],
+      [
+        "Los Angeles",
+        385,
+        614,
+        "Assurance Learning Academy",
+        "CA",
+        "5701 South Western Avenue",
+        "90062-2714",
+        229
+      ],
+      [
+        "Los Angeles",
+        39,
+        212,
+        "Joseph Pomeroy Widney High",
+        "CA",
+        "2302 South Gramercy Place",
+        "90018-1323",
+        173
+      ],
+      [
+        "Los Angeles",
+        391,
+        1652,
+        "YouthBuild Charter School of California",
+        "CA",
+        "155 West Washington Boulevard, Suite 517",
+        "90015-3582",
+        1261
+      ],
+      [
+        "Los Angeles",
+        754,
+        1049,
+        "Soledad Enrichment Action Charter High",
+        "CA",
+        "222 North Virgil Avenue",
+        "90004-3622",
+        295
+      ],
+      [
+        "Madera",
+        2076,
+        2179,
+        "Madera High",
+        "CA",
+        "200 South L Street",
+        "93637-4650",
+        103
+      ],
+      [
+        "Madera",
+        2701,
+        2832,
+        "Madera South High",
+        "CA",
+        "755 West Pecan Avenue",
+        "93637",
+        131
+      ],
+      [
+        "McClellan",
+        601,
+        730,
+        "Community Collaborative Charter",
+        "CA",
+        "5715 Skvarla Avenue",
+        "95652-2424",
+        129
+      ],
+      [
+        "Modesto",
+        15,
+        276,
+        "Stanislaus Alternative Charter",
+        "CA",
+        "1120 13th Street, Suite C",
+        "95354-0908",
+        261
+      ],
+      [
+        "Modesto",
+        1754,
+        1872,
+        "Fred C. Beyer High",
+        "CA",
+        "1717 Sylvan Avenue",
+        "95355-1399",
+        118
+      ],
+      [
+        "Modesto",
+        457,
+        573,
+        "Robert Elliott Alternative Education Center",
+        "CA",
+        "1440 Sunrise Avenue",
+        "95350-4643",
+        116
+      ],
+      [
+        "Montclair",
+        2931,
+        3034,
+        "Montclair High",
+        "CA",
+        "4725 Benito Street",
+        "91763-2705",
+        103
+      ],
+      [
+        "Montebello",
+        2701,
+        2821,
+        "Montebello High",
+        "CA",
+        "2100 West Cleveland Avenue",
+        "90640-4032",
+        120
+      ],
+      [
+        "Montebello",
+        428,
+        528,
+        "Vail High (Continuation)",
+        "CA",
+        "1230 South Vail Avenue",
+        "90640-6312",
+        100
+      ],
+      [
+        "Moreno Valley",
+        2230,
+        2350,
+        "Moreno Valley High",
+        "CA",
+        "23300 Cottonwood Avenue",
+        "92553-3437",
+        120
+      ],
+      [
+        "Moreno Valley",
+        3157,
+        3262,
+        "Rancho Verde High",
+        "CA",
+        "17750 Lasselle Street",
+        "92551-6300",
+        105
+      ],
+      [
+        "Murrieta",
+        3354,
+        3456,
+        "Vista Murrieta High",
+        "CA",
+        "28251 Clinton Keith Road",
+        "92563-2465",
+        102
+      ],
+      [
+        "National City",
+        2613,
+        2761,
+        "Sweetwater High",
+        "CA",
+        "2900 Highland Avenue",
+        "91950-7415",
+        148
+      ],
+      [
+        "Newhall",
+        2217,
+        2326,
+        "William S. Hart High",
+        "CA",
+        "24825 North Newhall Avenue",
+        "91321-1576",
+        109
+      ],
+      [
+        "North Hills",
+        2368,
+        2477,
+        "James Monroe High",
+        "CA",
+        "9229 Haskell Avenue",
+        "91343-3114",
+        109
+      ],
+      [
+        "Oakland",
+        87,
+        240,
+        "Dewey Academy",
+        "CA",
+        "1111 2nd Avenue",
+        "94606-2285",
+        153
+      ],
+      [
+        "Oceanside",
+        226,
+        1193,
+        "SIATech",
+        "CA",
+        "2611 Temple Heights Drive, Suite A",
+        "92056-3582",
+        967
+      ],
+      [
+        "Oceanside",
+        2958,
+        3076,
+        "El Camino High",
+        "CA",
+        "400 Rancho del Oro Drive",
+        "92057-8316",
+        118
+      ],
+      [
+        "Ontario",
+        3400,
+        3530,
+        "Chaffey High",
+        "CA",
+        "1245 North Euclid Avenue",
+        "91762-1997",
+        130
+      ],
+      [
+        "Oxnard",
+        2093,
+        2197,
+        "Rio Mesa High",
+        "CA",
+        "545 Central Avenue",
+        "93030-1045",
+        104
+      ],
+      [
+        "Oxnard",
+        2404,
+        2531,
+        "Channel Islands High",
+        "CA",
+        "1400 Raiders Way",
+        "93033-5699",
+        127
+      ],
+      [
+        "Oxnard",
+        306,
+        457,
+        "Condor High",
+        "CA",
+        "309 South K St",
+        "93030-5212",
+        151
+      ],
+      [
+        "Oxnard",
+        626,
+        951,
+        "Vista Real Charter High",
+        "CA",
+        "401 South A Street, Suite 3",
+        "93030-5278",
+        325
+      ],
+      [
+        "Palmdale",
+        2684,
+        2835,
+        "Palmdale High",
+        "CA",
+        "2137 East Avenue R",
+        "93550-5415",
+        151
+      ],
+      [
+        "Palmdale",
+        2844,
+        2998,
+        "Highland High",
+        "CA",
+        "39055 25th Street West",
+        "93551-4164",
+        154
+      ],
+      [
+        "Palmdale",
+        2916,
+        3064,
+        "William J. (Pete) Knight High",
+        "CA",
+        "37423 70th Street East",
+        "93552-4800",
+        148
+      ],
+      [
+        "Palmdale",
+        635,
+        797,
+        "R. Rex Parris High",
+        "CA",
+        "38801 Clock Tower Plaza Drive",
+        "93550-3346",
+        162
+      ],
+      [
+        "Palmdale",
+        701,
+        1161,
+        "Antelope Valley Learning Academy",
+        "CA",
+        "1601 Palmdale Boulevard, Suite C",
+        "93550-4840",
+        460
+      ],
+      [
+        "Pasadena",
+        1000,
+        1379,
+        "Opportunities for Learning - Baldwin Park",
+        "CA",
+        "320 North Halstead Street Suite 220",
+        "91107-3147",
+        379
+      ],
+      [
+        "Pasadena",
+        1232,
+        1682,
+        "Opportunities for Learning - Santa Clarita",
+        "CA",
+        "320 North Halstead Street, Suite 200",
+        "91107-3151",
+        450
+      ],
+      [
+        "Pasadena",
+        159,
+        316,
+        "Learning Works",
+        "CA",
+        "90 North Daisy Avenue",
+        "91107-3704",
+        157
+      ],
+      [
+        "Pasadena",
+        1684,
+        2598,
+        "Opportunities For Learning - Baldwin Park II",
+        "CA",
+        "320 North Halstead Street Suite 220",
+        "91107-3147",
+        914
+      ],
+      [
+        "Perris",
+        217,
+        316,
+        "Val Verde High",
+        "CA",
+        "972 West Morgan Street",
+        "92571-3103",
+        99
+      ],
+      [
+        "Perris",
+        2305,
+        2428,
+        "Perris High",
+        "CA",
+        "175 East Nuevo Road",
+        "92571-2910",
+        123
+      ],
+      [
+        "Pico Rivera",
+        2663,
+        2772,
+        "El Rancho High",
+        "CA",
+        "6501 South Passons Boulevard",
+        "90660-3373",
+        109
+      ],
+      [
+        "Pittsburg",
+        2937,
+        3061,
+        "Pittsburg Senior High",
+        "CA",
+        "1750 Harbor Street",
+        "94565-4615",
+        124
+      ],
+      [
+        "Pomona",
+        1669,
+        1819,
+        "Garey High",
+        "CA",
+        "321 West Lexington Avenue",
+        "91766-5254",
+        150
+      ],
+      [
+        "Porterville",
+        1849,
+        1953,
+        "Porterville High",
+        "CA",
+        "465 West Olive Avenue",
+        "93257-3331",
+        104
+      ],
+      [
+        "Poway",
+        94,
+        228,
+        "Abraxas Continuation High",
+        "CA",
+        "12450 Glenoak Road",
+        "92064-3299",
+        134
+      ],
+      [
+        "Quartz Hill",
+        3015,
+        3133,
+        "Quartz Hill High",
+        "CA",
+        "6040 West Avenue L",
+        "93536-4501",
+        118
+      ],
+      [
+        "Redwood City",
+        1996,
+        2135,
+        "Sequoia High",
+        "CA",
+        "1201 Brewster Avenue",
+        "94062-1378",
+        139
+      ],
+      [
+        "Reseda",
+        31,
+        231,
+        "Joaquin Miller Career and Transition Center",
+        "CA",
+        "8218 Vanalden Avenue",
+        "91335-1138",
+        200
+      ],
+      [
+        "Reseda",
+        3101,
+        3241,
+        "Grover Cleveland Charter High",
+        "CA",
+        "8140 Vanalden Avenue",
+        "91335-1136",
+        140
+      ],
+      [
+        "Reseda",
+        46,
+        189,
+        "Diane S. Leichman Special Education Center",
+        "CA",
+        "19034 Gault Street",
+        "91335-3910",
+        143
+      ],
+      [
+        "Rialto",
+        152,
+        263,
+        "Milor Continuation High",
+        "CA",
+        "266 West Randall",
+        "92376-6926",
+        111
+      ],
+      [
+        "Rialto",
+        2356,
+        2456,
+        "Eisenhower Senior High",
+        "CA",
+        "1321 North Lilac Avenue",
+        "92376-3201",
+        100
+      ],
+      [
+        "Riverside",
+        2018,
+        2137,
+        "La Sierra High",
+        "CA",
+        "4145 La Sierra Avenue",
+        "92505-2938",
+        119
+      ],
+      [
+        "Riverside",
+        73,
+        175,
+        "Gateway College and Career Academy",
+        "CA",
+        "4800 Magnolia Avenue",
+        "92506-1201",
+        102
+      ],
+      [
+        "Riverside, CA 92501",
+        124,
+        464,
+        "Come Back Kids",
+        "CA",
+        "3939 13th Street",
+        "92501-3505",
+        340
+      ],
+      [
+        "Rosemead",
+        1700,
+        1827,
+        "Rosemead High",
+        "CA",
+        "9063 East Mission Drive",
+        "91770-4411",
+        127
+      ],
+      [
+        "Sacramento",
+        117,
+        226,
+        "Rio Cazadero High (Continuation)",
+        "CA",
+        "7825 Grandstaff Drive",
+        "95823-4897",
+        109
+      ],
+      [
+        "Sacramento",
+        1359,
+        1461,
+        "Valley High",
+        "CA",
+        "6300 Ehrhardt Avenue",
+        "95823-5637",
+        102
+      ],
+      [
+        "Sacramento",
+        1643,
+        1772,
+        "Luther Burbank High",
+        "CA",
+        "3500 Florin Road",
+        "95823-1767",
+        129
+      ],
+      [
+        "Sacramento",
+        2,
+        104,
+        "Laurel Ruff Transition",
+        "CA",
+        "5325 Garfield Avenue",
+        "95841-3103",
+        102
+      ],
+      [
+        "Sacramento",
+        3,
+        207,
+        "Highlands Community Charter",
+        "CA",
+        "1333 Grand Avenue",
+        "95838-3654",
+        204
+      ],
+      [
+        "Sacramento",
+        339,
+        475,
+        "Capital City Independent Study",
+        "CA",
+        "7222 24th Street",
+        "95823-4978",
+        136
+      ],
+      [
+        "Sacramento",
+        414,
+        517,
+        "Elwood J. Keema High",
+        "CA",
+        "1281 North Avenue",
+        "95838-3661",
+        103
+      ],
+      [
+        "Sacramento",
+        492,
+        698,
+        "SAVA: Sacramento Academic and Vocational Academy",
+        "CA",
+        "5330 Power Inn Road, Suite D",
+        "95820-6757",
+        206
+      ],
+      [
+        "Salinas",
+        271,
+        430,
+        "El Puente",
+        "CA",
+        "20 Sherwood Place",
+        "93906-4010",
+        159
+      ],
+      [
+        "San Bernardino",
+        1293,
+        1532,
+        "San Bernardino County Special Education",
+        "CA",
+        "601 North E Street",
+        "92415-0020",
+        239
+      ],
+      [
+        "San Bernardino",
+        2497,
+        2596,
+        "Arroyo Valley High",
+        "CA",
+        "1881 West Baseline Street",
+        "92411-1650",
+        99
+      ],
+      [
+        "San Bernardino",
+        360,
+        507,
+        "Options for Youth-San Bernardino",
+        "CA",
+        "985-A South E Street",
+        "92408",
+        147
+      ],
+      [
+        "San Bernardino",
+        424,
+        539,
+        "Sierra High",
+        "CA",
+        "570 East Ninth Street",
+        "92410-3898",
+        115
+      ],
+      [
+        "San Bruno",
+        1,
+        445,
+        "Five Keys Charter (SF Sheriff's)",
+        "CA",
+        "1 Moreland Drive",
+        "94066-1670",
+        444
+      ],
+      [
+        "San Clemente",
+        2929,
+        3036,
+        "San Clemente High",
+        "CA",
+        "700 Avenido Pico",
+        "92673-5681",
+        107
+      ],
+      [
+        "San Diego",
+        1690,
+        2187,
+        "Charter School of San Diego",
+        "CA",
+        "10170 Huennekens Street",
+        "92121-2964",
+        497
+      ],
+      [
+        "San Diego",
+        2287,
+        2460,
+        "San Ysidro High",
+        "CA",
+        "5353 Airway Road",
+        "92154-4806",
+        173
+      ],
+      [
+        "San Diego",
+        484,
+        874,
+        "Diego Hills Charter",
+        "CA",
+        "4585 College Avenue",
+        "92115-4011",
+        390
+      ],
+      [
+        "San Diego",
+        575,
+        759,
+        "Audeo Charter",
+        "CA",
+        "10170 Huennekens Street",
+        "92121-2964",
+        184
+      ],
+      [
+        "San Diego",
+        671,
+        1077,
+        "San Diego County Community",
+        "CA",
+        "6401 Linda Vista Road, Room 216",
+        "92111-7399",
+        406
+      ],
+      [
+        "San Diego",
+        7,
+        485,
+        "TRACE",
+        "CA",
+        "2555 Camino Del Rio South, Suite 150",
+        "92108-3710",
+        478
+      ],
+      [
+        "San Fernando",
+        2267,
+        2370,
+        "San Fernando Senior High",
+        "CA",
+        "11133 O'Melveny Avenue",
+        "91340-4426",
+        103
+      ],
+      [
+        "San Francisco",
+        1,
+        159,
+        "Five Keys Adult School (SF Sheriff's)",
+        "CA",
+        "70 Oak Grove",
+        "94107-1019",
+        158
+      ],
+      [
+        "San Francisco",
+        151,
+        396,
+        null,
+        "CA",
+        "555 Franklin Street",
+        "94102-5207",
+        245
+      ],
+      [
+        "San Francisco",
+        252,
+        367,
+        "S.F. International High",
+        "CA",
+        "1050 York Street",
+        "94110-3420",
+        115
+      ],
+      [
+        "San Francisco",
+        33,
+        1424,
+        "Five Keys Independence HS (SF Sheriff's)",
+        "CA",
+        "70 Oak Grove",
+        "94107-1019",
+        1391
+      ],
+      [
+        "San Francisco",
+        4,
+        103,
+        "Gateway to College",
+        "CA",
+        "50 Phelan Avenue Science Hall, Room 127",
+        "94112-1821",
+        99
+      ],
+      [
+        "San Francisco",
+        867,
+        995,
+        "Mission High",
+        "CA",
+        "3750 18th Street",
+        "94114-2614",
+        128
+      ],
+      [
+        "San Gabriel",
+        767,
+        1030,
+        "Options for Youth San Gabriel",
+        "CA",
+        "405 South San Gabriel Boulevard, Suite A",
+        "91776-1966",
+        263
+      ],
+      [
+        "San Jacinto",
+        2268,
+        2389,
+        "San Jacinto High",
+        "CA",
+        "500 Idyllwild Drive",
+        "92583-2615",
+        121
+      ],
+      [
+        "San Jose",
+        156,
+        275,
+        "Broadway High",
+        "CA",
+        "4825 Speak Lane",
+        "95118-3769",
+        119
+      ],
+      [
+        "San Jose",
+        165,
+        339,
+        "Calero High",
+        "CA",
+        "420 Calero Avenue",
+        "95123-4240",
+        174
+      ],
+      [
+        "San Jose",
+        2,
+        890,
+        "Escuela Popular/Center for Training and Careers, Family Learning",
+        "CA",
+        "149 North White Road",
+        "95127-1612",
+        888
+      ],
+      [
+        "San Jose",
+        46,
+        339,
+        "San Jose Conservation Corps Charter",
+        "CA",
+        "1560 Berger Drive",
+        "95112-2703",
+        293
+      ],
+      [
+        "San Jose",
+        994,
+        1297,
+        "Santa Clara County Special Education",
+        "CA",
+        "1290 Ridder Park Drive, MC271",
+        "95131-2304",
+        303
+      ],
+      [
+        "San Pablo",
+        149,
+        290,
+        "Vista High (Alternative)",
+        "CA",
+        "2625 Barnard Road",
+        "94806-2703",
+        141
+      ],
+      [
+        "San Pedro",
+        2542,
+        2668,
+        "San Pedro Senior High",
+        "CA",
+        "1001 West 15th Street",
+        "90731-3925",
+        126
+      ],
+      [
+        "Santa Ana",
+        1761,
+        1864,
+        "Century High",
+        "CA",
+        "1401 South Grand Avenue",
+        "92705-4408",
+        103
+      ],
+      [
+        "Santa Ana",
+        2112,
+        2263,
+        "Valley High",
+        "CA",
+        "1801 South Greenville Street",
+        "92704-4005",
+        151
+      ],
+      [
+        "Santa Ana",
+        2593,
+        2741,
+        "Santa Ana High",
+        "CA",
+        "520 West Walnut",
+        "92701-5559",
+        148
+      ],
+      [
+        "Santa Clarita",
+        335,
+        494,
+        "Bowman (Jereann) High (Continuation)",
+        "CA",
+        "21508 Centre Pointe Parkway",
+        "91350-2947",
+        159
+      ],
+      [
+        "Santa Clarita",
+        627,
+        1187,
+        "Mission View Public",
+        "CA",
+        "26334 Citrus Street",
+        "91355-5323",
+        560
+      ],
+      [
+        "Santa Cruz",
+        463,
+        582,
+        "Santa Cruz County Community",
+        "CA",
+        "400 Encinal Street",
+        "95060-2115",
+        119
+      ],
+      [
+        "Santa Maria",
+        1970,
+        2080,
+        "Ernest Righetti High",
+        "CA",
+        "941 East Foster Road",
+        "93455-3318",
+        110
+      ],
+      [
+        "Santa Maria",
+        2424,
+        2569,
+        "Santa Maria High",
+        "CA",
+        "901 South Broadway",
+        "93454-6603",
+        145
+      ],
+      [
+        "Santa Maria",
+        2612,
+        2741,
+        "Pioneer Valley High",
+        "CA",
+        "675 Panther Drive",
+        "93454-9700",
+        129
+      ],
+      [
+        "Santa Maria",
+        276,
+        391,
+        "Delta High",
+        "CA",
+        "4893 Bethany Lane",
+        "93455-4880",
+        115
+      ],
+      [
+        "Santa Rosa",
+        293,
+        457,
+        "Sonoma County Special Education",
+        "CA",
+        "5340 Skylane Boulevard",
+        "95403-8246",
+        164
+      ],
+      [
+        "Simi Valley",
+        2092,
+        2201,
+        "Simi Valley High",
+        "CA",
+        "5400 Cochran Street",
+        "93063-3547",
+        109
+      ],
+      [
+        "Simi Valley",
+        3021,
+        3121,
+        "California Virtual Academy @ San Diego",
+        "CA",
+        "50 Moreland Road",
+        "93065-1800",
+        100
+      ],
+      [
+        "Spring Valley",
+        1525,
+        1657,
+        "Monte Vista High",
+        "CA",
+        "3230 Sweetwater Springs Boulevard",
+        "91977-6934",
+        132
+      ],
+      [
+        "Stockton",
+        23,
+        140,
+        "San Joaquin Building Futures Academy",
+        "CA",
+        "3100 Monte Diablo Avenue",
+        "95203-1108",
+        117
+      ],
+      [
+        "Stockton",
+        867,
+        1025,
+        "San Joaquin County Community",
+        "CA",
+        "2707 Transworld Drive",
+        "95206-3948",
+        158
+      ],
+      [
+        "Sun Valley",
+        2786,
+        2929,
+        "John H. Francis Polytechnic",
+        "CA",
+        "12431 Roscoe Boulevard",
+        "91352-3723",
+        143
+      ],
+      [
+        "Sylmar",
+        1951,
+        2065,
+        "Sylmar Charter High",
+        "CA",
+        "13050 Borden Avenue",
+        "91342-4251",
+        114
+      ],
+      [
+        "Temecula",
+        2623,
+        2722,
+        "Temecula Valley High",
+        "CA",
+        "31555 Rancho Vista Road",
+        "92592-3516",
+        99
+      ],
+      [
+        "Temecula",
+        3129,
+        3237,
+        "Chaparral High",
+        "CA",
+        "27215 Nicolas Road",
+        "92591-7348",
+        108
+      ],
+      [
+        "Union City",
+        3800,
+        3912,
+        "James Logan High",
+        "CA",
+        "1800 H Street",
+        "94587-3321",
+        112
+      ],
+      [
+        "Valencia",
+        3049,
+        3177,
+        "Valencia High",
+        "CA",
+        "27801 North Dickason Drive",
+        "91355-1208",
+        128
+      ],
+      [
+        "Van Nuys",
+        2548,
+        2662,
+        "Van Nuys Senior High",
+        "CA",
+        "6535 Cedros Avenue",
+        "91411-1506",
+        114
+      ],
+      [
+        "Van Nuys",
+        48,
+        157,
+        "Jack London Continuation",
+        "CA",
+        "12924 Oxnard Street",
+        "91401-4104",
+        109
+      ],
+      [
+        "Van Nuys",
+        79,
+        216,
+        "Will Rogers Continuation",
+        "CA",
+        "14711 Gilmore St",
+        "91411-1595",
+        137
+      ],
+      [
+        "Victorville",
+        1162,
+        1458,
+        "Mojave River Academy",
+        "CA",
+        "16519 Victor Street, Suite 404",
+        "92395-3968",
+        296
+      ],
+      [
+        "Victorville",
+        1756,
+        2373,
+        "Options for Youth-Victorville Charter",
+        "CA",
+        "15048 Bear Valley Road",
+        "92392-9235",
+        617
+      ],
+      [
+        "Victorville",
+        1911,
+        2013,
+        "Victor Valley High",
+        "CA",
+        "16500 Mojave Drive",
+        "92395-3822",
+        102
+      ],
+      [
+        "Visalia",
+        418,
+        551,
+        "Crescent Valley Public Charter",
+        "CA",
+        "309 West Main Street, Suite 110",
+        "93291-6257",
+        133
+      ],
+      [
+        "Visalia",
+        766,
+        974,
+        "Special Education",
+        "CA",
+        "6200 South Mooney Boulevard",
+        "93277",
+        208
+      ],
+      [
+        "Whittier",
+        229,
+        338,
+        "Sierra Vista High (Alternative)",
+        "CA",
+        "9401 South Painter Avenue",
+        "90605-2729",
+        109
+      ],
+      [
+        "Whittier",
+        410,
+        613,
+        "Frontier High (Continuation)",
+        "CA",
+        "9401 South Painter Avenue",
+        "90605-2729",
+        203
+      ]
+    ]
+  }
+}

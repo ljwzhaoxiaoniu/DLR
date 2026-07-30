@@ -1,0 +1,20 @@
+{
+  "q_id": 349,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT c.name, c.artist, c.isPromo FROM cards c JOIN rulings r ON c.uuid = r.uuid GROUP BY c.uuid ORDER BY COUNT(r.uuid) DESC LIMIT 1",
+  "result": {
+    "columns": [
+      "artist",
+      "isPromo",
+      "name"
+    ],
+    "rows": [
+      [
+        "Chase Stone",
+        1,
+        "Teferi's Protection"
+      ]
+    ]
+  }
+}

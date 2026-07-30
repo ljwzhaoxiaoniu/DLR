@@ -1,0 +1,3508 @@
+{
+  "q_id": 24,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT frpm.`School Name` FROM frpm JOIN satscores ON frpm.CDSCode = satscores.cds WHERE (CAST(frpm.`Free Meal Count (K-12)` AS REAL) / frpm.`Enrollment (K-12)`) > 0.1 AND satscores.NumGE1500 > 0",
+  "result": {
+    "columns": [
+      "School Name"
+    ],
+    "rows": [
+      [
+        "APEX Academy"
+      ],
+      [
+        "ARISE High"
+      ],
+      [
+        "Abraham Lincoln High"
+      ],
+      [
+        "Abraham Lincoln Senior High"
+      ],
+      [
+        "Academies of Education and Empowerment at Carson High"
+      ],
+      [
+        "Academy for Academic Excellence"
+      ],
+      [
+        "Academy of Arts and Sciences"
+      ],
+      [
+        "Academy of Careers and Exploration"
+      ],
+      [
+        "Academy of Environmental & Social Policy (ESP) at Roosevelt High"
+      ],
+      [
+        "Academy of Medical Arts at Carson High"
+      ],
+      [
+        "Academy of the Redwoods"
+      ],
+      [
+        "Adelanto High"
+      ],
+      [
+        "Adolfo Camarillo High"
+      ],
+      [
+        "Adrian Wilcox High"
+      ],
+      [
+        "Alain Leroy Locke College Prep Academy"
+      ],
+      [
+        "Alameda High"
+      ],
+      [
+        "Alameda Science and Technology Institute"
+      ],
+      [
+        "Albany High"
+      ],
+      [
+        "Alexander Hamilton Senior High"
+      ],
+      [
+        "Alhambra High"
+      ],
+      [
+        "Alhambra Senior High"
+      ],
+      [
+        "Alisal High"
+      ],
+      [
+        "Alliance Cindy and Bill Simon Technology Academy High"
+      ],
+      [
+        "Alliance College-Ready Academy High 16"
+      ],
+      [
+        "Alliance Collins Family College-Ready High"
+      ],
+      [
+        "Alliance Dr. Olga Mohan High"
+      ],
+      [
+        "Alliance Environmental Science and Technology High"
+      ],
+      [
+        "Alliance Gertz-Ressler Richard Merkin 6-12 Complex"
+      ],
+      [
+        "Alliance Health Services Academy High"
+      ],
+      [
+        "Alliance Judy Ivie Burton Technology Academy High"
+      ],
+      [
+        "Alliance Marc & Eva Stern Math and Science"
+      ],
+      [
+        "Alliance Media Arts and Entertainment Design High"
+      ],
+      [
+        "Alliance Ouchi-O'Donovan 6-12 Complex"
+      ],
+      [
+        "Alliance Patti And Peter Neuwirth Leadership Academy"
+      ],
+      [
+        "Alliance Renee and Meyer Luskin Academy High"
+      ],
+      [
+        "Alliance Tennenbaum Family Technology High"
+      ],
+      [
+        "Alta Loma High"
+      ],
+      [
+        "Alta Vista Alternative High"
+      ],
+      [
+        "Alternatives in Action"
+      ],
+      [
+        "Amador High"
+      ],
+      [
+        "American Canyon High"
+      ],
+      [
+        "American High"
+      ],
+      [
+        "American Indian Public High"
+      ],
+      [
+        "Anaheim High"
+      ],
+      [
+        "Analy High"
+      ],
+      [
+        "Anderson High"
+      ],
+      [
+        "Anderson Valley Junior-Senior High"
+      ],
+      [
+        "Anderson W. Clark Magnet High"
+      ],
+      [
+        "Andrew P. Hill High"
+      ],
+      [
+        "Angelo Rodriguez High"
+      ],
+      [
+        "Animo College Preparatory Academy"
+      ],
+      [
+        "Animo Inglewood Charter High"
+      ],
+      [
+        "Animo Jackie Robinson High"
+      ],
+      [
+        "Animo Leadership High"
+      ],
+      [
+        "Animo Pat Brown"
+      ],
+      [
+        "Animo Ralph Bunche High"
+      ],
+      [
+        "Animo South Los Angeles Charter"
+      ],
+      [
+        "Animo Venice Charter High"
+      ],
+      [
+        "Animo Watts College Preparatory Academy"
+      ],
+      [
+        "Ann Sobrato High"
+      ],
+      [
+        "Antelope High"
+      ],
+      [
+        "Antelope Valley High"
+      ],
+      [
+        "Antioch High"
+      ],
+      [
+        "Anzar High"
+      ],
+      [
+        "Apple Valley High"
+      ],
+      [
+        "Applied Technology Center"
+      ],
+      [
+        "Aptos High"
+      ],
+      [
+        "Aragon High"
+      ],
+      [
+        "Arcadia High"
+      ],
+      [
+        "Arcata High"
+      ],
+      [
+        "Argonaut High"
+      ],
+      [
+        "Arleta High"
+      ],
+      [
+        "Arlington High"
+      ],
+      [
+        "Armijo High"
+      ],
+      [
+        "Arnold O. Beckman High"
+      ],
+      [
+        "Arroyo Grande High"
+      ],
+      [
+        "Arroyo High"
+      ],
+      [
+        "Arroyo High"
+      ],
+      [
+        "Arroyo Valley High"
+      ],
+      [
+        "Artesia High"
+      ],
+      [
+        "Arthur A. Benjamin Health Professions High"
+      ],
+      [
+        "Arvin High"
+      ],
+      [
+        "Asawa (Ruth) San Francisco School of the Arts, A Public School."
+      ],
+      [
+        "Aspire Alexander Twilight Secondary Academy"
+      ],
+      [
+        "Aspire Benjamin Holt College Preparatory Academy"
+      ],
+      [
+        "Aspire Golden State College Preparatory Academy"
+      ],
+      [
+        "Aspire Langston Hughes Academy"
+      ],
+      [
+        "Aspire Lionel Wilson College Preparatory Academy"
+      ],
+      [
+        "Aspire Pacific Academy"
+      ],
+      [
+        "Atascadero High"
+      ],
+      [
+        "Atwater High"
+      ],
+      [
+        "Audeo Charter"
+      ],
+      [
+        "Augustus F. Hawkins High B Community Health Advocates"
+      ],
+      [
+        "Augustus F. Hawkins High C Responsible Indigenous Social Entrepreneurship"
+      ],
+      [
+        "Avalon K-12"
+      ],
+      [
+        "Avenal High"
+      ],
+      [
+        "Azusa High"
+      ],
+      [
+        "Bakersfield High"
+      ],
+      [
+        "Balboa High"
+      ],
+      [
+        "Baldwin Park High"
+      ],
+      [
+        "Banning High"
+      ],
+      [
+        "Barstow High"
+      ],
+      [
+        "Bassett Senior High"
+      ],
+      [
+        "Bay Area Technology"
+      ],
+      [
+        "Bear Creek High"
+      ],
+      [
+        "Bear River High"
+      ],
+      [
+        "Beaumont Senior High"
+      ],
+      [
+        "Bell Gardens High"
+      ],
+      [
+        "Bell Senior High"
+      ],
+      [
+        "Bella Vista High"
+      ],
+      [
+        "Bellflower High"
+      ],
+      [
+        "Belmont SH-LA Teacher Preparatory Academy"
+      ],
+      [
+        "Belmont Senior High"
+      ],
+      [
+        "Benicia High"
+      ],
+      [
+        "Benjamin Franklin Senior High"
+      ],
+      [
+        "Berkeley High"
+      ],
+      [
+        "Big Bear High"
+      ],
+      [
+        "Biggs High"
+      ],
+      [
+        "Birmingham Community Charter High"
+      ],
+      [
+        "Bishop Union High"
+      ],
+      [
+        "Bitney College Preparatory High"
+      ],
+      [
+        "Blair High"
+      ],
+      [
+        "Bloomington High"
+      ],
+      [
+        "Bolsa Grande High"
+      ],
+      [
+        "Bonita High"
+      ],
+      [
+        "Bonita Vista Senior High"
+      ],
+      [
+        "Borrego Springs High"
+      ],
+      [
+        "Branham High"
+      ],
+      [
+        "Brawley High"
+      ],
+      [
+        "Brea-Olinda High"
+      ],
+      [
+        "Bret Harte Union High"
+      ],
+      [
+        "Bright Star Secondary Charter Academy"
+      ],
+      [
+        "Buchanan High"
+      ],
+      [
+        "Buena High"
+      ],
+      [
+        "Buena Park High"
+      ],
+      [
+        "Buhach Colony High"
+      ],
+      [
+        "Bullard High"
+      ],
+      [
+        "Burbank High"
+      ],
+      [
+        "Burroughs High"
+      ],
+      [
+        "Burroughs High"
+      ],
+      [
+        "Burton (Phillip and Sala) Academic High"
+      ],
+      [
+        "C. K. McClatchy High"
+      ],
+      [
+        "CHAMPS - Charter HS of Arts-Multimedia & Performing"
+      ],
+      [
+        "CORE Butte Charter"
+      ],
+      [
+        "Cabrillo High"
+      ],
+      [
+        "Cabrillo High"
+      ],
+      [
+        "Cajon High"
+      ],
+      [
+        "Calaveras High"
+      ],
+      [
+        "Calexico High"
+      ],
+      [
+        "California Academy of Mathematics and Science"
+      ],
+      [
+        "California City High"
+      ],
+      [
+        "California Connections Academy @ Ripon"
+      ],
+      [
+        "California High"
+      ],
+      [
+        "California Military Institute"
+      ],
+      [
+        "California Virtual Academy @ Los Angeles"
+      ],
+      [
+        "California Virtual Academy @ San Diego"
+      ],
+      [
+        "Calipatria High"
+      ],
+      [
+        "Calistoga Junior-Senior High"
+      ],
+      [
+        "Camino Nuevo Charter High"
+      ],
+      [
+        "Canoga Park Senior High"
+      ],
+      [
+        "Canyon High"
+      ],
+      [
+        "Canyon Springs High"
+      ],
+      [
+        "Capistrano Connections Academy"
+      ],
+      [
+        "Capistrano Valley High"
+      ],
+      [
+        "Capuchino High"
+      ],
+      [
+        "Carlmont High"
+      ],
+      [
+        "Carlsbad High"
+      ],
+      [
+        "Carpinteria Senior High"
+      ],
+      [
+        "Carson Senior High"
+      ],
+      [
+        "Caruthers High"
+      ],
+      [
+        "Casa Grande High"
+      ],
+      [
+        "Casa Roble Fundamental High"
+      ],
+      [
+        "Castle Park Senior High"
+      ],
+      [
+        "Castlemont High"
+      ],
+      [
+        "Castro Valley High"
+      ],
+      [
+        "Cathedral City High"
+      ],
+      [
+        "Centennial High"
+      ],
+      [
+        "Centennial High"
+      ],
+      [
+        "Centennial High"
+      ],
+      [
+        "Center High"
+      ],
+      [
+        "Central City Value"
+      ],
+      [
+        "Central High East Campus"
+      ],
+      [
+        "Central Union High"
+      ],
+      [
+        "Central Valley High"
+      ],
+      [
+        "Central Valley High"
+      ],
+      [
+        "Century High"
+      ],
+      [
+        "Ceres High"
+      ],
+      [
+        "Cerritos High"
+      ],
+      [
+        "Cesar Chavez High"
+      ],
+      [
+        "Cesar E. Chavez High"
+      ],
+      [
+        "Cesar E. Chavez Learning Academies-Academy of Scientific Exploration (ASE)"
+      ],
+      [
+        "Cesar E. Chavez Learning Academies-Arts,Theatre, Entertainment (ArTES)"
+      ],
+      [
+        "Cesar E. Chavez Learning Academies-Social Justice Humanitas Academy"
+      ],
+      [
+        "Cesar E. Chavez Learning Academies-Teacher Preparation Academy"
+      ],
+      [
+        "Chaffey High"
+      ],
+      [
+        "Channel Islands High"
+      ],
+      [
+        "Chaparral High"
+      ],
+      [
+        "Charter Community School Home Study Academy"
+      ],
+      [
+        "Charter Oak High"
+      ],
+      [
+        "Charter School of San Diego"
+      ],
+      [
+        "Chatsworth Charter High"
+      ],
+      [
+        "Chester Junior/Senior High"
+      ],
+      [
+        "Chico High"
+      ],
+      [
+        "Chino High"
+      ],
+      [
+        "Chino Hills High"
+      ],
+      [
+        "Chowchilla Union High"
+      ],
+      [
+        "Christopher High"
+      ],
+      [
+        "Chula Vista Senior High"
+      ],
+      [
+        "Citrus Hill High"
+      ],
+      [
+        "Citrus Valley High"
+      ],
+      [
+        "City Arts and Tech High"
+      ],
+      [
+        "City Honors College Preparatory Academy"
+      ],
+      [
+        "City of Angels"
+      ],
+      [
+        "Clairemont High"
+      ],
+      [
+        "Claremont High"
+      ],
+      [
+        "Clayton Valley Charter High"
+      ],
+      [
+        "Clear Lake High"
+      ],
+      [
+        "Cloverdale High"
+      ],
+      [
+        "Clovis East High"
+      ],
+      [
+        "Clovis High"
+      ],
+      [
+        "Clovis North High"
+      ],
+      [
+        "Clovis West High"
+      ],
+      [
+        "Coachella Valley High"
+      ],
+      [
+        "Coalinga High"
+      ],
+      [
+        "Coast Union High"
+      ],
+      [
+        "Coleman Tech Charter High"
+      ],
+      [
+        "Colfax High"
+      ],
+      [
+        "Coliseum College Prep Academy"
+      ],
+      [
+        "College Park High"
+      ],
+      [
+        "College Prep High"
+      ],
+      [
+        "Colony High"
+      ],
+      [
+        "Colton High"
+      ],
+      [
+        "Colusa High"
+      ],
+      [
+        "Communication and Technology at Diego Rivera Learning Complex"
+      ],
+      [
+        "Compton High"
+      ],
+      [
+        "Concord High"
+      ],
+      [
+        "Connecting Waters Charter"
+      ],
+      [
+        "Contreras Learning Center-Academic Leadership Community"
+      ],
+      [
+        "Contreras Learning Center-Los Angeles School of Global Studies"
+      ],
+      [
+        "Contreras Learning Center-School of Social Justice"
+      ],
+      [
+        "Corcoran High"
+      ],
+      [
+        "Cordova High"
+      ],
+      [
+        "Corning High"
+      ],
+      [
+        "Corona High"
+      ],
+      [
+        "Costa Mesa High"
+      ],
+      [
+        "Cosumnes Oaks High"
+      ],
+      [
+        "Covina High"
+      ],
+      [
+        "Crawford High"
+      ],
+      [
+        "Crenshaw Arts-Technology Charter High"
+      ],
+      [
+        "Crenshaw Science, Technology, Engineering, Math and Medicine Magnet"
+      ],
+      [
+        "Crescenta Valley High"
+      ],
+      [
+        "Culver City High"
+      ],
+      [
+        "Cypress High"
+      ],
+      [
+        "Da Vinci Design"
+      ],
+      [
+        "Da Vinci Science"
+      ],
+      [
+        "Dana Hills High"
+      ],
+      [
+        "Daniel Pearl Journalism & Communications Magnet"
+      ],
+      [
+        "David Starr Jordan Senior High"
+      ],
+      [
+        "Davis Senior High"
+      ],
+      [
+        "De Anza Senior High"
+      ],
+      [
+        "Deer Valley High"
+      ],
+      [
+        "Dehesa Charter"
+      ],
+      [
+        "Del Campo High"
+      ],
+      [
+        "Del Mar High"
+      ],
+      [
+        "Del Norte High"
+      ],
+      [
+        "Delano High"
+      ],
+      [
+        "Delhi High"
+      ],
+      [
+        "Delta Charter"
+      ],
+      [
+        "Delta High"
+      ],
+      [
+        "Denair High"
+      ],
+      [
+        "Desert Hot Springs High"
+      ],
+      [
+        "Desert Mirage High"
+      ],
+      [
+        "Design Science Early College High"
+      ],
+      [
+        "Diamond Ranch High"
+      ],
+      [
+        "Dinuba High"
+      ],
+      [
+        "Discovery Charter Preparatory No. 2"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "District Office"
+      ],
+      [
+        "Dixon High"
+      ],
+      [
+        "Dominguez High"
+      ],
+      [
+        "Don Antonio Lugo High"
+      ],
+      [
+        "Dos Palos High"
+      ],
+      [
+        "Dos Pueblos Senior High"
+      ],
+      [
+        "Downey High"
+      ],
+      [
+        "Downtown Business High"
+      ],
+      [
+        "Dozier-Libbey Medical High"
+      ],
+      [
+        "Dr. Maya Angelou Community High"
+      ],
+      [
+        "Dr. T. J. Owens Gilroy Early College Academy"
+      ],
+      [
+        "Duarte High"
+      ],
+      [
+        "Durham High"
+      ],
+      [
+        "Eagle Rock High"
+      ],
+      [
+        "Early College High"
+      ],
+      [
+        "East Bakersfield High"
+      ],
+      [
+        "East Bay Arts High"
+      ],
+      [
+        "East Los Angeles Performing Arts Academy at Esteban E. Torres High No. 1"
+      ],
+      [
+        "East Los Angeles Renaissance Academy at Esteban E. Torres High No. 2"
+      ],
+      [
+        "East Nicolaus High"
+      ],
+      [
+        "East Palo Alto Academy"
+      ],
+      [
+        "East Union High"
+      ],
+      [
+        "East Valley Senior High"
+      ],
+      [
+        "Eastlake High"
+      ],
+      [
+        "Eastside High"
+      ],
+      [
+        "Edgewood High"
+      ],
+      [
+        "Edison High"
+      ],
+      [
+        "Edison High"
+      ],
+      [
+        "Edward R. Roybal Learning Center"
+      ],
+      [
+        "Eisenhower Senior High"
+      ],
+      [
+        "El Cajon Valley High"
+      ],
+      [
+        "El Camino Fundamental High"
+      ],
+      [
+        "El Camino High"
+      ],
+      [
+        "El Camino High"
+      ],
+      [
+        "El Camino High"
+      ],
+      [
+        "El Camino Real Charter High"
+      ],
+      [
+        "El Capitan High"
+      ],
+      [
+        "El Cerrito Senior High"
+      ],
+      [
+        "El Diamante High"
+      ],
+      [
+        "El Dorado High"
+      ],
+      [
+        "El Dorado High"
+      ],
+      [
+        "El Modena High"
+      ],
+      [
+        "El Molino High"
+      ],
+      [
+        "El Monte High"
+      ],
+      [
+        "El Rancho High"
+      ],
+      [
+        "El Toro High"
+      ],
+      [
+        "Eleanor Roosevelt High"
+      ],
+      [
+        "Elise P. Buckingham Charter Magnet High"
+      ],
+      [
+        "Elizabeth Learning Center"
+      ],
+      [
+        "Elk Grove High"
+      ],
+      [
+        "Elsie Allen High"
+      ],
+      [
+        "Elsinore High"
+      ],
+      [
+        "Emery Secondary"
+      ],
+      [
+        "Encina Preparatory High"
+      ],
+      [
+        "Encinal High"
+      ],
+      [
+        "Encore Jr./Sr. High School for the Performing and Visual Arts"
+      ],
+      [
+        "Engineering and Technology Academy at Esteban E. Torres High No. 3"
+      ],
+      [
+        "Enterprise High"
+      ],
+      [
+        "Environmental Charter High"
+      ],
+      [
+        "Envision Academy for Arts & Technology"
+      ],
+      [
+        "Erma Duncan Polytechnical High"
+      ],
+      [
+        "Ernest Righetti High"
+      ],
+      [
+        "Escalon High"
+      ],
+      [
+        "Escondido Charter High"
+      ],
+      [
+        "Escondido High"
+      ],
+      [
+        "Esparto High"
+      ],
+      [
+        "Esperanza High"
+      ],
+      [
+        "Estancia High"
+      ],
+      [
+        "Etiwanda High"
+      ],
+      [
+        "Etna Union High"
+      ],
+      [
+        "Eureka Senior High"
+      ],
+      [
+        "Everest Public High"
+      ],
+      [
+        "Everett Alvarez High"
+      ],
+      [
+        "Evergreen Valley High"
+      ],
+      [
+        "Excelsior Charter"
+      ],
+      [
+        "Exeter Union High"
+      ],
+      [
+        "FAME Public Charter"
+      ],
+      [
+        "Fairfax Senior High"
+      ],
+      [
+        "Fairfield High"
+      ],
+      [
+        "Fall River Junior-Senior High"
+      ],
+      [
+        "Fallbrook High"
+      ],
+      [
+        "Farmersville High"
+      ],
+      [
+        "Felicitas and Gonzalo Mendez High"
+      ],
+      [
+        "Ferndale High"
+      ],
+      [
+        "Fillmore Senior High"
+      ],
+      [
+        "Firebaugh High"
+      ],
+      [
+        "Florin High"
+      ],
+      [
+        "Fontana A. B. Miller High"
+      ],
+      [
+        "Fontana High"
+      ],
+      [
+        "Foothill High"
+      ],
+      [
+        "Foothill High"
+      ],
+      [
+        "Foothill High"
+      ],
+      [
+        "Foothill High"
+      ],
+      [
+        "Foothill Technology High"
+      ],
+      [
+        "Forest Charter"
+      ],
+      [
+        "Foresthill High"
+      ],
+      [
+        "Fort Bragg High"
+      ],
+      [
+        "Fortuna Union High"
+      ],
+      [
+        "Foshay Learning Center"
+      ],
+      [
+        "Fountain Valley High"
+      ],
+      [
+        "Fowler High"
+      ],
+      [
+        "Francisco Bravo Medical Magnet High"
+      ],
+      [
+        "Franklin High"
+      ],
+      [
+        "Franklin High"
+      ],
+      [
+        "Frazier Mountain High"
+      ],
+      [
+        "Fred C. Beyer High"
+      ],
+      [
+        "Frederick Douglass Academy High"
+      ],
+      [
+        "Freedom High"
+      ],
+      [
+        "Fremont Academy of Engineering and Design"
+      ],
+      [
+        "Fremont High"
+      ],
+      [
+        "Fremont High"
+      ],
+      [
+        "Fresno High"
+      ],
+      [
+        "Frontier High"
+      ],
+      [
+        "Fullerton Union High"
+      ],
+      [
+        "Futures High"
+      ],
+      [
+        "Gabrielino High"
+      ],
+      [
+        "Gahr (Richard) High"
+      ],
+      [
+        "Galileo High"
+      ],
+      [
+        "Galt High"
+      ],
+      [
+        "Ganesha High"
+      ],
+      [
+        "Garden Grove High"
+      ],
+      [
+        "Gardena Senior High"
+      ],
+      [
+        "Garey High"
+      ],
+      [
+        "Gateway High"
+      ],
+      [
+        "George Washington Carver School of Arts and Science"
+      ],
+      [
+        "George Washington Preparatory High"
+      ],
+      [
+        "Gilroy High"
+      ],
+      [
+        "Gladstone High"
+      ],
+      [
+        "Glen A. Wilson High"
+      ],
+      [
+        "Glendale High"
+      ],
+      [
+        "Glendora High"
+      ],
+      [
+        "Golden Sierra Junior Senior High"
+      ],
+      [
+        "Golden Valley High"
+      ],
+      [
+        "Golden Valley High"
+      ],
+      [
+        "Golden Valley High"
+      ],
+      [
+        "Golden West High"
+      ],
+      [
+        "Gompers Preparatory Academy"
+      ],
+      [
+        "Gonzales High"
+      ],
+      [
+        "Gorman Learning Center"
+      ],
+      [
+        "Grace M. Davis High"
+      ],
+      [
+        "Granada High"
+      ],
+      [
+        "Granada Hills Charter High"
+      ],
+      [
+        "Grand Terrace High School at the Ray Abril Jr. Educational Complex"
+      ],
+      [
+        "Granite Hills High"
+      ],
+      [
+        "Granite Hills High"
+      ],
+      [
+        "Granite Hills High"
+      ],
+      [
+        "Grant Union High"
+      ],
+      [
+        "Green Design at Diego Rivera Learning Complex"
+      ],
+      [
+        "Greenfield High"
+      ],
+      [
+        "Gridley High"
+      ],
+      [
+        "Grossmont High"
+      ],
+      [
+        "Grossmont Middle College High"
+      ],
+      [
+        "Grove"
+      ],
+      [
+        "Grover Cleveland Charter High"
+      ],
+      [
+        "Guajome Park Academy Charter"
+      ],
+      [
+        "Guidance Charter"
+      ],
+      [
+        "Gunderson High"
+      ],
+      [
+        "Gustine High"
+      ],
+      [
+        "Half Moon Bay High"
+      ],
+      [
+        "Hallmark Charter"
+      ],
+      [
+        "Hamilton High"
+      ],
+      [
+        "Hamilton High"
+      ],
+      [
+        "Hanford High"
+      ],
+      [
+        "Hanford West High"
+      ],
+      [
+        "Harbor High"
+      ],
+      [
+        "Harbor Teacher Preparation Academy"
+      ],
+      [
+        "Harmony Magnet Academy"
+      ],
+      [
+        "Hawthorne High"
+      ],
+      [
+        "Hawthorne Math and Science Academy"
+      ],
+      [
+        "Hayward High"
+      ],
+      [
+        "Healdsburg High"
+      ],
+      [
+        "Health Careers Academy"
+      ],
+      [
+        "Health Sciences High"
+      ],
+      [
+        "Hector G. Godinez"
+      ],
+      [
+        "Helen Bernstein High"
+      ],
+      [
+        "Helix High"
+      ],
+      [
+        "Hemet High"
+      ],
+      [
+        "Henry High"
+      ],
+      [
+        "Henry J. Kaiser High"
+      ],
+      [
+        "Herbert Hoover High"
+      ],
+      [
+        "Herbert Hoover High"
+      ],
+      [
+        "Hercules High"
+      ],
+      [
+        "Heritage High"
+      ],
+      [
+        "Heritage High"
+      ],
+      [
+        "Heritage Peak Charter"
+      ],
+      [
+        "Hesperia High"
+      ],
+      [
+        "High Tech High Chula Vista"
+      ],
+      [
+        "High Tech High International"
+      ],
+      [
+        "High Tech High Media Arts"
+      ],
+      [
+        "High Tech High North County"
+      ],
+      [
+        "High Tech High"
+      ],
+      [
+        "High Tech LA"
+      ],
+      [
+        "Highland High"
+      ],
+      [
+        "Highland High"
+      ],
+      [
+        "Highlands High"
+      ],
+      [
+        "Hillsdale High"
+      ],
+      [
+        "Hilltop Senior High"
+      ],
+      [
+        "Hilmar High"
+      ],
+      [
+        "Hiram W. Johnson High"
+      ],
+      [
+        "Hollywood Senior High"
+      ],
+      [
+        "Holtville High"
+      ],
+      [
+        "Homestead High"
+      ],
+      [
+        "Hoopa Valley High"
+      ],
+      [
+        "Hoover High"
+      ],
+      [
+        "Horizon Charter"
+      ],
+      [
+        "Hueneme High"
+      ],
+      [
+        "Hughson High"
+      ],
+      [
+        "Humanitas Academy of Art and Technology at Esteban E. Torres High No. 4"
+      ],
+      [
+        "Humanities and Arts (HARTS) Academy of Los Angeles"
+      ],
+      [
+        "Humphreys College Academy of Business, Law and Education"
+      ],
+      [
+        "Huntington Beach High"
+      ],
+      [
+        "Huntington Park Senior High"
+      ],
+      [
+        "Impact Academy of Arts & Technology"
+      ],
+      [
+        "Imperial High"
+      ],
+      [
+        "Independence High"
+      ],
+      [
+        "Independence High"
+      ],
+      [
+        "Independence High"
+      ],
+      [
+        "Inderkum High"
+      ],
+      [
+        "Indian Springs High"
+      ],
+      [
+        "Indio High"
+      ],
+      [
+        "Inglewood High"
+      ],
+      [
+        "Insight @ Los Angeles"
+      ],
+      [
+        "Inspire School of Arts and Sciences"
+      ],
+      [
+        "International Polytechnic High"
+      ],
+      [
+        "International Studies Academy"
+      ],
+      [
+        "International Studies Learning Center at Legacy High School Complex"
+      ],
+      [
+        "Irvine High"
+      ],
+      [
+        "Ivy Academia"
+      ],
+      [
+        "James A. Garfield Senior High"
+      ],
+      [
+        "James C. Enochs High"
+      ],
+      [
+        "James Lick High"
+      ],
+      [
+        "James Logan High"
+      ],
+      [
+        "James Monroe High"
+      ],
+      [
+        "Jefferson High"
+      ],
+      [
+        "Jesse M. Bethel High"
+      ],
+      [
+        "John A. Rowland High"
+      ],
+      [
+        "John C. Fremont Senior High"
+      ],
+      [
+        "John C. Kimball High"
+      ],
+      [
+        "John F. Kennedy High"
+      ],
+      [
+        "John F. Kennedy High"
+      ],
+      [
+        "John F. Kennedy High"
+      ],
+      [
+        "John F. Kennedy High"
+      ],
+      [
+        "John F. Kennedy High"
+      ],
+      [
+        "John H. Francis Polytechnic"
+      ],
+      [
+        "John H. Glenn High"
+      ],
+      [
+        "John H. Pitman High"
+      ],
+      [
+        "John Marshall Senior High"
+      ],
+      [
+        "John Muir High"
+      ],
+      [
+        "John Swett High"
+      ],
+      [
+        "John W. North High"
+      ],
+      [
+        "Jordan High"
+      ],
+      [
+        "Joseph A. Gregori High"
+      ],
+      [
+        "Julian Charter"
+      ],
+      [
+        "Jurupa Hills High"
+      ],
+      [
+        "Jurupa Valley High"
+      ],
+      [
+        "KIPP King Collegiate High"
+      ],
+      [
+        "KIPP San Jose Collegiate"
+      ],
+      [
+        "Katella High"
+      ],
+      [
+        "Kearny Digital Media & Design"
+      ],
+      [
+        "Kearny Eng, Innov & Design"
+      ],
+      [
+        "Kearny International Business"
+      ],
+      [
+        "Kearny SCT"
+      ],
+      [
+        "Kelseyville High"
+      ],
+      [
+        "Kennedy High"
+      ],
+      [
+        "Kerman High"
+      ],
+      [
+        "Kern Valley High"
+      ],
+      [
+        "King City High"
+      ],
+      [
+        "King-Chavez Community High"
+      ],
+      [
+        "King/Drew Medical Magnet High"
+      ],
+      [
+        "Kingsburg High"
+      ],
+      [
+        "LIFE Academy"
+      ],
+      [
+        "La Habra High"
+      ],
+      [
+        "La Jolla High"
+      ],
+      [
+        "La Mirada High"
+      ],
+      [
+        "La Puente High"
+      ],
+      [
+        "La Quinta High"
+      ],
+      [
+        "La Quinta High"
+      ],
+      [
+        "La Serna High"
+      ],
+      [
+        "La Sierra High"
+      ],
+      [
+        "Laguna Creek High"
+      ],
+      [
+        "Laguna Hills High"
+      ],
+      [
+        "Lakeside High"
+      ],
+      [
+        "Lakewood High"
+      ],
+      [
+        "Lancaster High"
+      ],
+      [
+        "Las Plumas High"
+      ],
+      [
+        "Lassen High"
+      ],
+      [
+        "Lathrop High"
+      ],
+      [
+        "Lawndale High"
+      ],
+      [
+        "Le Grand High"
+      ],
+      [
+        "Leadership High"
+      ],
+      [
+        "Leadership Public Schools - Hayward"
+      ],
+      [
+        "Leadership Public Schools - San Jose"
+      ],
+      [
+        "Leadership Public Schools: Richmond"
+      ],
+      [
+        "Lemoore High"
+      ],
+      [
+        "Lemoore Middle College High"
+      ],
+      [
+        "Lennox Mathematics, Science and Technology Academy"
+      ],
+      [
+        "Leuzinger High"
+      ],
+      [
+        "Liberty High"
+      ],
+      [
+        "Liberty High"
+      ],
+      [
+        "Liberty High"
+      ],
+      [
+        "Liberty Ranch High"
+      ],
+      [
+        "Lighthouse Community Charter High"
+      ],
+      [
+        "Lincoln (Abraham) High"
+      ],
+      [
+        "Lincoln High"
+      ],
+      [
+        "Lincoln High"
+      ],
+      [
+        "Lincoln High"
+      ],
+      [
+        "Linda Esperanza Marquez High A Huntington Park Institute of Applied Medicine"
+      ],
+      [
+        "Linda Esperanza Marquez High B LIBRA Academy"
+      ],
+      [
+        "Linda Esperanza Marquez High C School of Social Justice"
+      ],
+      [
+        "Linden High"
+      ],
+      [
+        "Lindhurst High"
+      ],
+      [
+        "Lindsay Senior High"
+      ],
+      [
+        "Littlerock High"
+      ],
+      [
+        "Live Oak High"
+      ],
+      [
+        "Live Oak High"
+      ],
+      [
+        "Livermore High"
+      ],
+      [
+        "Livingston High"
+      ],
+      [
+        "Loara High"
+      ],
+      [
+        "Lodi High"
+      ],
+      [
+        "Lompoc High"
+      ],
+      [
+        "Los Altos High"
+      ],
+      [
+        "Los Altos High"
+      ],
+      [
+        "Los Amigos High"
+      ],
+      [
+        "Los Angeles Academy of Arts & Enterprise Charter"
+      ],
+      [
+        "Los Angeles Center for Enriched Studies"
+      ],
+      [
+        "Los Angeles International Charter High"
+      ],
+      [
+        "Los Angeles Leadership Academy"
+      ],
+      [
+        "Los Angeles River at Sonia Sotomayor Learning Academies"
+      ],
+      [
+        "Los Angeles Senior High"
+      ],
+      [
+        "Los Banos High"
+      ],
+      [
+        "Los Molinos High"
+      ],
+      [
+        "Los Osos High"
+      ],
+      [
+        "Lowell High"
+      ],
+      [
+        "Lower Lake High"
+      ],
+      [
+        "Luther Burbank High"
+      ],
+      [
+        "Lynwood High"
+      ],
+      [
+        "Madera High"
+      ],
+      [
+        "Madera South High"
+      ],
+      [
+        "Madison High"
+      ],
+      [
+        "Magnolia High"
+      ],
+      [
+        "Magnolia Science Academy 2"
+      ],
+      [
+        "Magnolia Science Academy 3"
+      ],
+      [
+        "Magnolia Science Academy 4"
+      ],
+      [
+        "Magnolia Science Academy"
+      ],
+      [
+        "Making Waves Academy"
+      ],
+      [
+        "Mammoth High"
+      ],
+      [
+        "Manteca High"
+      ],
+      [
+        "Manual Arts Senior High"
+      ],
+      [
+        "Mar Vista Senior High"
+      ],
+      [
+        "Marco Antonio Firebaugh High"
+      ],
+      [
+        "Maria Carrillo High"
+      ],
+      [
+        "Marina High"
+      ],
+      [
+        "Marina High"
+      ],
+      [
+        "Mariposa County High"
+      ],
+      [
+        "Mark Keppel High"
+      ],
+      [
+        "Marshall (Thurgood) High"
+      ],
+      [
+        "Marshall Fundamental"
+      ],
+      [
+        "Martin Luther King Jr. High"
+      ],
+      [
+        "Marysville Charter Academy for the Arts"
+      ],
+      [
+        "Marysville High"
+      ],
+      [
+        "Math, Science, & Technology Magnet Academy at Roosevelt High"
+      ],
+      [
+        "Maxwell Jr/Sr High"
+      ],
+      [
+        "Mayfair High"
+      ],
+      [
+        "Maywood Academy High"
+      ],
+      [
+        "McFarland High"
+      ],
+      [
+        "McKinleyville High"
+      ],
+      [
+        "McLane High"
+      ],
+      [
+        "Mendocino High"
+      ],
+      [
+        "Mendota High"
+      ],
+      [
+        "Menlo-Atherton High"
+      ],
+      [
+        "Merced High"
+      ],
+      [
+        "Merrill F. West High"
+      ],
+      [
+        "Mesa Verde High"
+      ],
+      [
+        "MetWest High"
+      ],
+      [
+        "Middle College High"
+      ],
+      [
+        "Middle College High"
+      ],
+      [
+        "Middle College High"
+      ],
+      [
+        "Middle College High"
+      ],
+      [
+        "Middle College High"
+      ],
+      [
+        "Middletown High"
+      ],
+      [
+        "Millennium Charter"
+      ],
+      [
+        "Millikan High"
+      ],
+      [
+        "Mills High"
+      ],
+      [
+        "Milpitas High"
+      ],
+      [
+        "Minarets Charter High"
+      ],
+      [
+        "Minarets High"
+      ],
+      [
+        "Mira Loma High"
+      ],
+      [
+        "Mira Mesa High"
+      ],
+      [
+        "Mira Monte High"
+      ],
+      [
+        "Mission Bay High"
+      ],
+      [
+        "Mission High"
+      ],
+      [
+        "Mission Hills High"
+      ],
+      [
+        "Mission Oak High"
+      ],
+      [
+        "Mission Viejo High"
+      ],
+      [
+        "Mission Vista High"
+      ],
+      [
+        "Modesto High"
+      ],
+      [
+        "Modoc High"
+      ],
+      [
+        "Monache High"
+      ],
+      [
+        "Monrovia High"
+      ],
+      [
+        "Montclair High"
+      ],
+      [
+        "Monte Vista High"
+      ],
+      [
+        "Montebello High"
+      ],
+      [
+        "Monterey High"
+      ],
+      [
+        "Monterey Trail High"
+      ],
+      [
+        "Montgomery High"
+      ],
+      [
+        "Montgomery Senior High"
+      ],
+      [
+        "Moorpark High"
+      ],
+      [
+        "Moreno Valley High"
+      ],
+      [
+        "Morningside High"
+      ],
+      [
+        "Morro Bay High"
+      ],
+      [
+        "Morse High"
+      ],
+      [
+        "Mount Miguel High"
+      ],
+      [
+        "Mount Pleasant High"
+      ],
+      [
+        "Mountain Empire High"
+      ],
+      [
+        "Mountain Park"
+      ],
+      [
+        "Mountain View High"
+      ],
+      [
+        "Mountain View High"
+      ],
+      [
+        "Mt. Carmel High"
+      ],
+      [
+        "Mt. Diablo High"
+      ],
+      [
+        "Mt. Eden High"
+      ],
+      [
+        "Mt. Everest Academy"
+      ],
+      [
+        "Mt. Shasta High"
+      ],
+      [
+        "Mt. Whitney High"
+      ],
+      [
+        "Murrieta Mesa High"
+      ],
+      [
+        "Murrieta Valley High"
+      ],
+      [
+        "NOVA Academy - Coachella"
+      ],
+      [
+        "Napa High"
+      ],
+      [
+        "Nathaniel Narbonne Senior High"
+      ],
+      [
+        "Natomas Charter"
+      ],
+      [
+        "Natomas High"
+      ],
+      [
+        "Natomas Pacific Pathways Prep"
+      ],
+      [
+        "Needles High"
+      ],
+      [
+        "Nevada Union High"
+      ],
+      [
+        "New Designs Charter"
+      ],
+      [
+        "New Millennium Secondary"
+      ],
+      [
+        "New Technology High"
+      ],
+      [
+        "New Technology High"
+      ],
+      [
+        "Newark Memorial High"
+      ],
+      [
+        "Newbury Park High"
+      ],
+      [
+        "Newport Harbor High"
+      ],
+      [
+        "Nipomo High"
+      ],
+      [
+        "Nogales High"
+      ],
+      [
+        "Norco High"
+      ],
+      [
+        "Nordhoff High"
+      ],
+      [
+        "Norte Vista High"
+      ],
+      [
+        "North High"
+      ],
+      [
+        "North High"
+      ],
+      [
+        "North Hollywood Senior High"
+      ],
+      [
+        "North Monterey County High"
+      ],
+      [
+        "North Salinas High"
+      ],
+      [
+        "North Tahoe High"
+      ],
+      [
+        "Northcoast Preparatory and Performing Arts Academy"
+      ],
+      [
+        "Northridge Academy High"
+      ],
+      [
+        "Northview High"
+      ],
+      [
+        "Norwalk High"
+      ],
+      [
+        "Nova Academy"
+      ],
+      [
+        "Novato High"
+      ],
+      [
+        "Nuview Bridge Early College High"
+      ],
+      [
+        "O'Connell (John) High"
+      ],
+      [
+        "OCCS:CHEP/PCHS"
+      ],
+      [
+        "OCSA"
+      ],
+      [
+        "Oak Grove High"
+      ],
+      [
+        "Oak Hills High"
+      ],
+      [
+        "Oakdale High"
+      ],
+      [
+        "Oakland Charter High"
+      ],
+      [
+        "Oakland High"
+      ],
+      [
+        "Oakland Military Institute, College Preparatory Academy"
+      ],
+      [
+        "Oakland Technical High"
+      ],
+      [
+        "Oakland Unity High"
+      ],
+      [
+        "Oakmont High"
+      ],
+      [
+        "Ocean Grove Charter"
+      ],
+      [
+        "Ocean View High"
+      ],
+      [
+        "Oceana High"
+      ],
+      [
+        "Oceanside High"
+      ],
+      [
+        "Olympian High"
+      ],
+      [
+        "Ontario High"
+      ],
+      [
+        "Opportunities For Learning - Baldwin Park II"
+      ],
+      [
+        "Opportunities for Learning - Baldwin Park"
+      ],
+      [
+        "Opportunities for Learning - Santa Clarita"
+      ],
+      [
+        "Options for Youth San Gabriel"
+      ],
+      [
+        "Options for Youth-Burbank Charter"
+      ],
+      [
+        "Options for Youth-San Bernardino"
+      ],
+      [
+        "Options for Youth-San Juan"
+      ],
+      [
+        "Options for Youth-Victorville Charter"
+      ],
+      [
+        "Orange Cove High"
+      ],
+      [
+        "Orange Glen High"
+      ],
+      [
+        "Orange High"
+      ],
+      [
+        "Orcutt Academy Charter"
+      ],
+      [
+        "Orestimba High"
+      ],
+      [
+        "Orland High"
+      ],
+      [
+        "Orosi High"
+      ],
+      [
+        "Oroville High"
+      ],
+      [
+        "Orthopaedic Hospital"
+      ],
+      [
+        "Oscar De La Hoya Animo Charter High"
+      ],
+      [
+        "Otay Ranch Senior High"
+      ],
+      [
+        "Oxford Academy"
+      ],
+      [
+        "Oxnard High"
+      ],
+      [
+        "PUC CA Academy for Liberal Studies Early College High"
+      ],
+      [
+        "PUC Early College Academy for Leaders and Scholars (ECALS)"
+      ],
+      [
+        "PUC Lakeview Charter High"
+      ],
+      [
+        "Pacheco High"
+      ],
+      [
+        "Pacific Grove High"
+      ],
+      [
+        "Pacific High"
+      ],
+      [
+        "Pacifica High"
+      ],
+      [
+        "Pacifica High"
+      ],
+      [
+        "Pajaro Valley High"
+      ],
+      [
+        "Palisades Charter High"
+      ],
+      [
+        "Palm Desert High"
+      ],
+      [
+        "Palm Springs High"
+      ],
+      [
+        "Palmdale High"
+      ],
+      [
+        "Palo Verde High"
+      ],
+      [
+        "Paloma Valley High"
+      ],
+      [
+        "Palomares Academy of Health Science"
+      ],
+      [
+        "Panorama High"
+      ],
+      [
+        "Paradise Senior High"
+      ],
+      [
+        "Paramount Academy"
+      ],
+      [
+        "Paramount High"
+      ],
+      [
+        "Parlier High"
+      ],
+      [
+        "Pasadena High"
+      ],
+      [
+        "Paso Robles High"
+      ],
+      [
+        "Patriot High"
+      ],
+      [
+        "Patterson High"
+      ],
+      [
+        "Performing Arts Community at Diego Rivera Learning Complex"
+      ],
+      [
+        "Perris High"
+      ],
+      [
+        "Petaluma High"
+      ],
+      [
+        "Peter Johansen High"
+      ],
+      [
+        "Phineas Banning Senior High"
+      ],
+      [
+        "Piedmont Hills High"
+      ],
+      [
+        "Pierce High"
+      ],
+      [
+        "Piner High"
+      ],
+      [
+        "Pinole Valley High"
+      ],
+      [
+        "Pioneer High"
+      ],
+      [
+        "Pioneer High"
+      ],
+      [
+        "Pioneer High"
+      ],
+      [
+        "Pioneer Valley High"
+      ],
+      [
+        "Pittsburg Senior High"
+      ],
+      [
+        "Placer High"
+      ],
+      [
+        "Pleasant Grove High"
+      ],
+      [
+        "Pleasant Valley High"
+      ],
+      [
+        "Point Arena High"
+      ],
+      [
+        "Point Loma High"
+      ],
+      [
+        "Polytechnic High"
+      ],
+      [
+        "Polytechnic High"
+      ],
+      [
+        "Pomona High"
+      ],
+      [
+        "Ponderosa High"
+      ],
+      [
+        "Port of Los Angeles High"
+      ],
+      [
+        "Porterville High"
+      ],
+      [
+        "Portola Junior/Senior High"
+      ],
+      [
+        "Potter Valley High"
+      ],
+      [
+        "Poway High"
+      ],
+      [
+        "Preuss School UCSD"
+      ],
+      [
+        "Prospect High"
+      ],
+      [
+        "Public Service Community at Diego Rivera Learning Complex"
+      ],
+      [
+        "Quartz Hill High"
+      ],
+      [
+        "Quincy Junior/Senior High"
+      ],
+      [
+        "REALM Charter High"
+      ],
+      [
+        "RFK Community Schools- for the Visual Arts and Humanities"
+      ],
+      [
+        "RFK Community Schools-Ambassador-Global Leadership"
+      ],
+      [
+        "RFK Community Schools-Los Angeles High School of the Arts"
+      ],
+      [
+        "RFK Community Schools-New Open World Academy K-12"
+      ],
+      [
+        "RFK Community Schools-UCLA Community K-12"
+      ],
+      [
+        "Ramon C. Cortines School of Visual and Performing Arts"
+      ],
+      [
+        "Ramona High"
+      ],
+      [
+        "Ramona High"
+      ],
+      [
+        "Rancho Alamitos High"
+      ],
+      [
+        "Rancho Buena Vista High"
+      ],
+      [
+        "Rancho Cotate High"
+      ],
+      [
+        "Rancho Cucamonga High"
+      ],
+      [
+        "Rancho Dominguez Preparatory"
+      ],
+      [
+        "Rancho Verde High"
+      ],
+      [
+        "Red Bluff High"
+      ],
+      [
+        "Redlands East Valley High"
+      ],
+      [
+        "Redlands Senior High"
+      ],
+      [
+        "Redondo Union High"
+      ],
+      [
+        "Redwood Academy of Ukiah"
+      ],
+      [
+        "Redwood High"
+      ],
+      [
+        "Reedley High"
+      ],
+      [
+        "Renaissance Arts Academy"
+      ],
+      [
+        "Renaissance High School for the Arts"
+      ],
+      [
+        "Reseda Senior High"
+      ],
+      [
+        "Rialto High"
+      ],
+      [
+        "Richmond High"
+      ],
+      [
+        "Ridgeview High"
+      ],
+      [
+        "Rim of the World Senior High"
+      ],
+      [
+        "Rio Americano High"
+      ],
+      [
+        "Rio Linda High"
+      ],
+      [
+        "Rio Mesa High"
+      ],
+      [
+        "Rio Vista High"
+      ],
+      [
+        "Ripon High"
+      ],
+      [
+        "River City High"
+      ],
+      [
+        "River Springs Charter"
+      ],
+      [
+        "River Valley High"
+      ],
+      [
+        "Riverbank High"
+      ],
+      [
+        "Riverdale High"
+      ],
+      [
+        "Riverside Preparatory"
+      ],
+      [
+        "Robert F. Kennedy High"
+      ],
+      [
+        "Robert Fulton College Preparatory"
+      ],
+      [
+        "Ronald E. McNair High"
+      ],
+      [
+        "Roosevelt High"
+      ],
+      [
+        "Rosamond High"
+      ],
+      [
+        "Roseland Charter"
+      ],
+      [
+        "Rosemead High"
+      ],
+      [
+        "Rosemont High"
+      ],
+      [
+        "Roseville High"
+      ],
+      [
+        "Royal High"
+      ],
+      [
+        "Ruben S. Ayala High"
+      ],
+      [
+        "Rubidoux High"
+      ],
+      [
+        "S.F. International High"
+      ],
+      [
+        "SOAR High (Students On Academic Rise)"
+      ],
+      [
+        "STEM Academy at Bernstein High"
+      ],
+      [
+        "Sacramento Charter High"
+      ],
+      [
+        "Saddleback High"
+      ],
+      [
+        "Saint Helena High"
+      ],
+      [
+        "Salinas High"
+      ],
+      [
+        "San Benito High"
+      ],
+      [
+        "San Bernardino High"
+      ],
+      [
+        "San Clemente High"
+      ],
+      [
+        "San Diego Business/Leadership"
+      ],
+      [
+        "San Diego Early/Middle College"
+      ],
+      [
+        "San Diego International Studies"
+      ],
+      [
+        "San Diego MVP Arts"
+      ],
+      [
+        "San Diego Metro Career and Tech"
+      ],
+      [
+        "San Diego SCPA"
+      ],
+      [
+        "San Diego Science and Technology"
+      ],
+      [
+        "San Dimas High"
+      ],
+      [
+        "San Fernando Senior High"
+      ],
+      [
+        "San Francisco Flex Academy"
+      ],
+      [
+        "San Gabriel High"
+      ],
+      [
+        "San Gorgonio High"
+      ],
+      [
+        "San Jacinto High"
+      ],
+      [
+        "San Jacinto Valley Academy"
+      ],
+      [
+        "San José High"
+      ],
+      [
+        "San Juan High"
+      ],
+      [
+        "San Juan Hills High"
+      ],
+      [
+        "San Leandro High"
+      ],
+      [
+        "San Lorenzo High"
+      ],
+      [
+        "San Lorenzo Valley High"
+      ],
+      [
+        "San Luis Obispo High"
+      ],
+      [
+        "San Marcos High"
+      ],
+      [
+        "San Marcos Senior High"
+      ],
+      [
+        "San Marin High"
+      ],
+      [
+        "San Mateo High"
+      ],
+      [
+        "San Pasqual Academy"
+      ],
+      [
+        "San Pasqual High"
+      ],
+      [
+        "San Pedro Senior High"
+      ],
+      [
+        "San Rafael High"
+      ],
+      [
+        "San Ysidro High"
+      ],
+      [
+        "Sanger High"
+      ],
+      [
+        "Santa Ana High"
+      ],
+      [
+        "Santa Barbara Senior High"
+      ],
+      [
+        "Santa Clara High"
+      ],
+      [
+        "Santa Clarita Valley International"
+      ],
+      [
+        "Santa Cruz High"
+      ],
+      [
+        "Santa Fe High"
+      ],
+      [
+        "Santa Maria High"
+      ],
+      [
+        "Santa Monica High"
+      ],
+      [
+        "Santa Paula High"
+      ],
+      [
+        "Santa Rosa Academy"
+      ],
+      [
+        "Santa Rosa High"
+      ],
+      [
+        "Santa Susana High"
+      ],
+      [
+        "Santa Teresa High"
+      ],
+      [
+        "Santa Ynez Valley Union High"
+      ],
+      [
+        "Santana High"
+      ],
+      [
+        "Santee Education Complex"
+      ],
+      [
+        "Santiago High"
+      ],
+      [
+        "Santiago High"
+      ],
+      [
+        "Savanna High"
+      ],
+      [
+        "School of Arts and Enterprise"
+      ],
+      [
+        "School of Business and Tourism at Contreras Learning Complex"
+      ],
+      [
+        "School of Engineering & Sciences"
+      ],
+      [
+        "School of History and Dramatic Arts at Sonia Sotomayor Learning Academies"
+      ],
+      [
+        "Schurr High"
+      ],
+      [
+        "Science, Technology, Engineering, Arts and Mathematics at Legacy High School Complex"
+      ],
+      [
+        "Scripps Ranch High"
+      ],
+      [
+        "Seaside High"
+      ],
+      [
+        "Segerstrom High"
+      ],
+      [
+        "Selma High"
+      ],
+      [
+        "Sequoia High"
+      ],
+      [
+        "Serra High"
+      ],
+      [
+        "Serrano High"
+      ],
+      [
+        "Shadow Hills High"
+      ],
+      [
+        "Shafter High"
+      ],
+      [
+        "Shasta High"
+      ],
+      [
+        "Sheldon High"
+      ],
+      [
+        "Sherman Oaks Center for Enriched Studies"
+      ],
+      [
+        "Sierra High"
+      ],
+      [
+        "Sierra High"
+      ],
+      [
+        "Sierra Pacific High"
+      ],
+      [
+        "Sierra Vista High"
+      ],
+      [
+        "Silver Creek High"
+      ],
+      [
+        "Silver Valley High"
+      ],
+      [
+        "Silverado High"
+      ],
+      [
+        "Simi Valley High"
+      ],
+      [
+        "Six Rivers Charter High"
+      ],
+      [
+        "Skyline High"
+      ],
+      [
+        "Social Justice Leadership Academy at Esteban E. Torres High No. 5"
+      ],
+      [
+        "Soledad High"
+      ],
+      [
+        "Sonoma Valley High"
+      ],
+      [
+        "Sonora High"
+      ],
+      [
+        "Sonora High"
+      ],
+      [
+        "Soquel High"
+      ],
+      [
+        "South East High"
+      ],
+      [
+        "South El Monte High"
+      ],
+      [
+        "South Fork Junior - Senior High"
+      ],
+      [
+        "South Gate Senior High"
+      ],
+      [
+        "South High"
+      ],
+      [
+        "South High"
+      ],
+      [
+        "South Hills High"
+      ],
+      [
+        "South Pasadena Senior High"
+      ],
+      [
+        "South San Francisco High"
+      ],
+      [
+        "South Sutter Charter"
+      ],
+      [
+        "South Tahoe High"
+      ],
+      [
+        "Southwest High"
+      ],
+      [
+        "Southwest Senior High"
+      ],
+      [
+        "Stagg Senior High"
+      ],
+      [
+        "Steele Canyon High"
+      ],
+      [
+        "Stockdale High"
+      ],
+      [
+        "Stockton Collegiate International Secondary"
+      ],
+      [
+        "Stockton Unified Early College Academy"
+      ],
+      [
+        "Strathmore High"
+      ],
+      [
+        "Student Empowerment Academy"
+      ],
+      [
+        "Sultana High"
+      ],
+      [
+        "Summerville High"
+      ],
+      [
+        "Summit High"
+      ],
+      [
+        "Summit Preparatory Charter High"
+      ],
+      [
+        "Summit Public School: Rainier"
+      ],
+      [
+        "Summit Public School: Tahoma"
+      ],
+      [
+        "Sun Valley High"
+      ],
+      [
+        "Sunny Hills High"
+      ],
+      [
+        "Sunnyside High"
+      ],
+      [
+        "Susan Miller Dorsey Senior High"
+      ],
+      [
+        "Sutter High"
+      ],
+      [
+        "Sweetwater High"
+      ],
+      [
+        "Sylmar Senior High"
+      ],
+      [
+        "Synergy Quantum Academy"
+      ],
+      [
+        "Taft Union High"
+      ],
+      [
+        "Tahoe Truckee High"
+      ],
+      [
+        "Tahquitz High"
+      ],
+      [
+        "Tehachapi High"
+      ],
+      [
+        "Temecula Valley High"
+      ],
+      [
+        "Temescal Canyon High"
+      ],
+      [
+        "Temple City High"
+      ],
+      [
+        "Tennyson High"
+      ],
+      [
+        "Terra Linda High"
+      ],
+      [
+        "Terra Nova High"
+      ],
+      [
+        "The High School at Moorpark College"
+      ],
+      [
+        "The MET"
+      ],
+      [
+        "Theodore Roosevelt Senior High"
+      ],
+      [
+        "Thirty-Second Street USC Performing Arts"
+      ],
+      [
+        "Thomas Downey High"
+      ],
+      [
+        "Thomas Jefferson Senior High"
+      ],
+      [
+        "Thousand Oaks High"
+      ],
+      [
+        "Tokay High"
+      ],
+      [
+        "Tomales High"
+      ],
+      [
+        "Torrance High"
+      ],
+      [
+        "Tracy High"
+      ],
+      [
+        "Tranquillity High"
+      ],
+      [
+        "Trinity High"
+      ],
+      [
+        "Troy High"
+      ],
+      [
+        "Tulare Union High"
+      ],
+      [
+        "Tulare Western High"
+      ],
+      [
+        "Turlock High"
+      ],
+      [
+        "Tustin High"
+      ],
+      [
+        "Twentynine Palms High"
+      ],
+      [
+        "Ukiah High"
+      ],
+      [
+        "Ulysses S. Grant Senior High"
+      ],
+      [
+        "Union Mine High"
+      ],
+      [
+        "University City High"
+      ],
+      [
+        "University High"
+      ],
+      [
+        "University Preparatory Academy Charter"
+      ],
+      [
+        "University Preparatory High"
+      ],
+      [
+        "University Preparatory"
+      ],
+      [
+        "University Preparatory"
+      ],
+      [
+        "University Senior High"
+      ],
+      [
+        "Upland High"
+      ],
+      [
+        "Vacaville High"
+      ],
+      [
+        "Valencia High"
+      ],
+      [
+        "Valhalla High"
+      ],
+      [
+        "Vallejo High"
+      ],
+      [
+        "Valley Academy of Arts and Sciences"
+      ],
+      [
+        "Valley Alternative Magnet"
+      ],
+      [
+        "Valley Center High"
+      ],
+      [
+        "Valley Charter High"
+      ],
+      [
+        "Valley High"
+      ],
+      [
+        "Valley High"
+      ],
+      [
+        "Valley Oaks Charter"
+      ],
+      [
+        "Valley View High"
+      ],
+      [
+        "Van Nuys Senior High"
+      ],
+      [
+        "Vanden High"
+      ],
+      [
+        "Vasquez High"
+      ],
+      [
+        "Vaughn Next Century Learning Center"
+      ],
+      [
+        "Venice Senior High"
+      ],
+      [
+        "Ventura High"
+      ],
+      [
+        "Venture Academy"
+      ],
+      [
+        "Verdugo Hills Senior High"
+      ],
+      [
+        "Victor Valley High"
+      ],
+      [
+        "View Park Preparatory Accelerated High"
+      ],
+      [
+        "Villa Park High"
+      ],
+      [
+        "Village Academy High School at Indian Hill"
+      ],
+      [
+        "Vintage High"
+      ],
+      [
+        "Visalia Charter Independent Study"
+      ],
+      [
+        "Visions In Education"
+      ],
+      [
+        "Vista High (Alternative)"
+      ],
+      [
+        "Vista High"
+      ],
+      [
+        "Vista Murrieta High"
+      ],
+      [
+        "Vista del Lago High"
+      ],
+      [
+        "Visual and Performing Arts at Legacy High School Complex"
+      ],
+      [
+        "WESM Health/Sports Medicine"
+      ],
+      [
+        "Wallenberg (Raoul) Traditional High"
+      ],
+      [
+        "Wallis Annenberg High"
+      ],
+      [
+        "Warren High"
+      ],
+      [
+        "Wasco High"
+      ],
+      [
+        "Washington (George) High"
+      ],
+      [
+        "Washington High"
+      ],
+      [
+        "Washington High"
+      ],
+      [
+        "Waterford High"
+      ],
+      [
+        "Watsonville High"
+      ],
+      [
+        "Weber Institute"
+      ],
+      [
+        "Weed High"
+      ],
+      [
+        "West Adams Preparatory High"
+      ],
+      [
+        "West Campus"
+      ],
+      [
+        "West Covina High"
+      ],
+      [
+        "West High"
+      ],
+      [
+        "West High"
+      ],
+      [
+        "West Hills High"
+      ],
+      [
+        "West Shores High"
+      ],
+      [
+        "West Valley High"
+      ],
+      [
+        "West Valley High"
+      ],
+      [
+        "Western High"
+      ],
+      [
+        "Westlake High"
+      ],
+      [
+        "Westminster High"
+      ],
+      [
+        "Westmont High"
+      ],
+      [
+        "Westmoor High"
+      ],
+      [
+        "Weston Ranch High"
+      ],
+      [
+        "Wheatland Union High"
+      ],
+      [
+        "Whitmore Charter High"
+      ],
+      [
+        "Whitney (Gretchen) High"
+      ],
+      [
+        "Whitney High"
+      ],
+      [
+        "Whittier High"
+      ],
+      [
+        "Will C. Wood High"
+      ],
+      [
+        "William & Marian Ghidotti High"
+      ],
+      [
+        "William C. Overfelt High"
+      ],
+      [
+        "William Howard Taft Charter High"
+      ],
+      [
+        "William J. (Pete) Knight High"
+      ],
+      [
+        "William S. Hart High"
+      ],
+      [
+        "William Workman High"
+      ],
+      [
+        "Williams Junior/Senior High"
+      ],
+      [
+        "Willits High"
+      ],
+      [
+        "Willow Glen High"
+      ],
+      [
+        "Willows High"
+      ],
+      [
+        "Wilmer Amina Carter High"
+      ],
+      [
+        "Wilson High"
+      ],
+      [
+        "Windsor High"
+      ],
+      [
+        "Winters High"
+      ],
+      [
+        "Woodbridge High"
+      ],
+      [
+        "Woodcreek High"
+      ],
+      [
+        "Woodlake High"
+      ],
+      [
+        "Woodland Senior High"
+      ],
+      [
+        "Woodrow Wilson Senior High"
+      ],
+      [
+        "Woodside High"
+      ],
+      [
+        "Yerba Buena High"
+      ],
+      [
+        "Ygnacio Valley High"
+      ],
+      [
+        "Yosemite High"
+      ],
+      [
+        "Yreka High"
+      ],
+      [
+        "Yuba City High"
+      ],
+      [
+        "Yucaipa High"
+      ],
+      [
+        "Yucca Valley High"
+      ]
+    ]
+  }
+}

@@ -1,0 +1,283 @@
+{
+  "q_id": 724,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT s.superhero_name FROM superhero s JOIN colour ec ON s.eye_colour_id = ec.id JOIN colour hc ON s.hair_colour_id = hc.id WHERE ec.colour = 'Blue' AND hc.colour = 'Blond'",
+  "result": {
+    "columns": [
+      "superhero_name"
+    ],
+    "rows": [
+      [
+        "Adam Monroe"
+      ],
+      [
+        "Adam Strange"
+      ],
+      [
+        "Agent 13"
+      ],
+      [
+        "Alan Scott"
+      ],
+      [
+        "Angel"
+      ],
+      [
+        "Animal Man"
+      ],
+      [
+        "Ant-Man II"
+      ],
+      [
+        "Ant-Man"
+      ],
+      [
+        "Anti-Venom"
+      ],
+      [
+        "Aquababy"
+      ],
+      [
+        "Aquaman"
+      ],
+      [
+        "Arachne"
+      ],
+      [
+        "Archangel"
+      ],
+      [
+        "Batgirl VI"
+      ],
+      [
+        "Binary"
+      ],
+      [
+        "Black Canary II"
+      ],
+      [
+        "Black Canary"
+      ],
+      [
+        "Black Widow II"
+      ],
+      [
+        "Boom-Boom"
+      ],
+      [
+        "Booster Gold"
+      ],
+      [
+        "Box III"
+      ],
+      [
+        "Bullseye"
+      ],
+      [
+        "Cannonball"
+      ],
+      [
+        "Captain America"
+      ],
+      [
+        "Captain Britain"
+      ],
+      [
+        "Captain Mar-vell"
+      ],
+      [
+        "Captain Marvel"
+      ],
+      [
+        "Cat"
+      ],
+      [
+        "Claire Bennet"
+      ],
+      [
+        "Cypher"
+      ],
+      [
+        "Dagger"
+      ],
+      [
+        "Dash"
+      ],
+      [
+        "Dazzler"
+      ],
+      [
+        "Doctor Fate"
+      ],
+      [
+        "Elle Bishop"
+      ],
+      [
+        "Emma Frost"
+      ],
+      [
+        "Enchantress"
+      ],
+      [
+        "Flash II"
+      ],
+      [
+        "Franklin Richards"
+      ],
+      [
+        "Genesis"
+      ],
+      [
+        "Green Lantern"
+      ],
+      [
+        "Harley Quinn"
+      ],
+      [
+        "Havok"
+      ],
+      [
+        "Hawkeye"
+      ],
+      [
+        "Human Torch"
+      ],
+      [
+        "Husk"
+      ],
+      [
+        "Invisible Woman"
+      ],
+      [
+        "Iron Fist"
+      ],
+      [
+        "James Bond (Craig)"
+      ],
+      [
+        "James Bond"
+      ],
+      [
+        "Jennifer Kale"
+      ],
+      [
+        "John Constantine"
+      ],
+      [
+        "Kick-Ass"
+      ],
+      [
+        "Killer Frost"
+      ],
+      [
+        "Longshot"
+      ],
+      [
+        "Luke Skywalker"
+      ],
+      [
+        "Magog"
+      ],
+      [
+        "Meltdown"
+      ],
+      [
+        "Mister Zsasz"
+      ],
+      [
+        "Mockingbird"
+      ],
+      [
+        "Moonstone"
+      ],
+      [
+        "Mr Immortal"
+      ],
+      [
+        "Mr Incredible"
+      ],
+      [
+        "Namora"
+      ],
+      [
+        "Namorita"
+      ],
+      [
+        "Niki Sanders"
+      ],
+      [
+        "Ozymandias"
+      ],
+      [
+        "Penance II"
+      ],
+      [
+        "Power Girl"
+      ],
+      [
+        "Pyro"
+      ],
+      [
+        "Question"
+      ],
+      [
+        "Rip Hunter"
+      ],
+      [
+        "Ronin"
+      ],
+      [
+        "Saturn Girl"
+      ],
+      [
+        "Scarlet Spider"
+      ],
+      [
+        "Sentry"
+      ],
+      [
+        "Spider-Gwen"
+      ],
+      [
+        "Star-Lord"
+      ],
+      [
+        "Stargirl"
+      ],
+      [
+        "Supergirl"
+      ],
+      [
+        "Thor Girl"
+      ],
+      [
+        "Thor"
+      ],
+      [
+        "Thunderstrike"
+      ],
+      [
+        "Trickster"
+      ],
+      [
+        "Ultragirl"
+      ],
+      [
+        "Valkyrie"
+      ],
+      [
+        "Warbird"
+      ],
+      [
+        "White Queen"
+      ],
+      [
+        "Wonder Girl"
+      ],
+      [
+        "Yellowjacket"
+      ]
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "q_id": 719,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT COUNT(*) FROM superhero s JOIN hero_power hp ON s.id = hp.hero_id JOIN superpower sp ON hp.power_id = sp.id WHERE sp.power_name = 'Super Strength' AND s.height_cm > 200",
+  "result": {
+    "columns": [
+      "COUNT(*)"
+    ],
+    "rows": [
+      [
+        56
+      ]
+    ]
+  }
+}

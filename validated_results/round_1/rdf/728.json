@@ -1,0 +1,90 @@
+{
+  "q_id": 728,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT c.colour AS eye_color, COUNT(s.id) AS superhero_count FROM superhero s JOIN colour c ON s.eye_colour_id = c.id JOIN publisher p ON s.publisher_id = p.id WHERE p.publisher_name = 'Marvel Comics' GROUP BY c.colour ORDER BY superhero_count DESC",
+  "result": {
+    "columns": [
+      "eye_color",
+      "superhero_count"
+    ],
+    "rows": [
+      [
+        "Amber",
+        1
+      ],
+      [
+        "Black",
+        11
+      ],
+      [
+        "Blue",
+        126
+      ],
+      [
+        "Blue/White",
+        1
+      ],
+      [
+        "Brown",
+        89
+      ],
+      [
+        "Gold",
+        2
+      ],
+      [
+        "Green",
+        40
+      ],
+      [
+        "Green/Blue",
+        1
+      ],
+      [
+        "Grey",
+        4
+      ],
+      [
+        "Hazel",
+        3
+      ],
+      [
+        "No Colour",
+        47
+      ],
+      [
+        "Purple",
+        2
+      ],
+      [
+        "Red",
+        31
+      ],
+      [
+        "Silver",
+        1
+      ],
+      [
+        "Violet",
+        1
+      ],
+      [
+        "White",
+        12
+      ],
+      [
+        "White/Red",
+        1
+      ],
+      [
+        "Yellow",
+        13
+      ],
+      [
+        "Yellow/Blue",
+        1
+      ]
+    ]
+  }
+}

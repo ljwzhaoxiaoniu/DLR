@@ -1,0 +1,26 @@
+{
+  "q_id": 850,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT r.name AS race_name, c.name AS circuit_name FROM races r JOIN circuits c ON r.circuitId = c.circuitId WHERE c.country = 'Germany' GROUP BY r.name ORDER BY r.name",
+  "result": {
+    "columns": [
+      "circuit_name",
+      "race_name"
+    ],
+    "rows": [
+      [
+        "Nürburgring",
+        "European Grand Prix"
+      ],
+      [
+        "Nürburgring",
+        "German Grand Prix"
+      ],
+      [
+        "Nürburgring",
+        "Luxembourg Grand Prix"
+      ]
+    ]
+  }
+}

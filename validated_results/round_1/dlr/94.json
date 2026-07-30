@@ -1,0 +1,26 @@
+{
+  "q_id": 94,
+  "ok": true,
+  "error": null,
+  "sql": "WITH female_salary AS (\n    SELECT c.client_id, c.birth_date, c.gender, d.A11 as avg_salary\n    FROM client c\n    JOIN district d ON c.district_id = d.district_id\n    WHERE c.gender = 'F'\n),\nmin_max_salary AS (\n    SELECT MIN(avg_salary) as min_avg, MAX(avg_salary) as max_avg\n    FROM female_salary\n),\noldest_lowest AS (\n    SELECT fs.client_id, fs.birth_date, fs.avg_salary\n    FROM female_salary fs\n    CROSS JOIN min_max_salary mms\n    WHERE fs.avg_salary = mms.min_avg\n    ORDER BY fs.birth_date ASC\n    LIMIT 1\n)\nSELECT \n    ol.client_id,\n    ol.birth_date,\n    ol.avg_salary as lowest_avg_salary,\n    mms.max_avg as highest_avg_salary,\n    (mms.max_avg - ol.avg_salary) as gap,\n    a.account_id\nFROM oldest_lowest ol\nCROSS JOIN min_max_salary mms\nJOIN disp d ON ol.client_id = d.client_id\nJOIN account a ON d.account_id = a.account_id",
+  "result": {
+    "columns": [
+      "account_id",
+      "birth_date",
+      "client_id",
+      "gap",
+      "highest_avg_salary",
+      "lowest_avg_salary"
+    ],
+    "rows": [
+      [
+        3214,
+        "1916-10-27",
+        3888,
+        4431,
+        12541,
+        8110
+      ]
+    ]
+  }
+}
