@@ -1,7 +1,7 @@
-## 老脚本 gap: 49 个文件（token 偏低，仅 input+output）
+## 老脚本 gap: 28 个文件（token 偏低）
 
-> 7/20 前的 run 无 agent_stats.csv
-> 已重跑归 83→49
+> 仅 input+output，缺 cache/reasoning
+> 已归 83→28
 
 | 题号 | 数据集 | ER | DLR | RDF |
 |------|--------|-----|------|-----|
@@ -44,6 +44,3 @@
 | q1479 | debit_card | ⚠️ | ✅ | ⚠️ |
 | q1480 | debit_card | ⚠️ | ✅ | ⚠️ |
 | q1525 | debit_card | ✅ | ⚠️ | ⚠️ |
-
-- ✅ = 完整 token（含 cache/reasoning）
-- ⚠️ = 老脚本 token（偏低）
