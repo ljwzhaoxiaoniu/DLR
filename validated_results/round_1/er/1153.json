@@ -1,7 +1,0 @@
-{
-  "q_id": 1153,
-  "ok": false,
-  "error": "You can only execute one statement at a time.",
-  "sql": "SELECT Diagnosis FROM Patient WHERE ID = 30609; SELECT DISTINCT Date FROM Laboratory WHERE ID = 30609 ORDER BY Date;",
-  "result": null
-}

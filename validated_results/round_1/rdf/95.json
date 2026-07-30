@@ -1,7 +1,0 @@
-{
-  "q_id": 95,
-  "ok": false,
-  "error": "no such column: a.account_id",
-  "sql": "SELECT a.account_id",
-  "result": null
-}
