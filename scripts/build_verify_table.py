@@ -143,8 +143,8 @@ out.append("> **数据来源**: `validated_results/round_1/*/agent_stats.csv`（
 out.append("> **⚠️ 标记**: CSV 实际 verdict 与 results.md 不一致的题。")
 out.append("> **旧格式 pair**（仅 token，无 strict/judge/result）: 7-8, 9-10, 17-18, 21-22, 31-32, 33-34, 37-38, 39-40, 41-42, 61-62, 63-64, 67-68, 69-70, 73-74, 75-76, 77-78, 83-84, 85-86, 89-90")
 out.append("")
-out.append("| 专题 | 题号 | ER-strict | ER-judge | ER-result | ER-token | DLR-strict | DLR-judge | DLR-result | DLR-token | RDF-strict | RDF-judge | RDF-result | RDF-token | 备注 |")
-out.append("|------|------|-----------|----------|-----------|----------|------------|-----------|------------|----------|------------|-----------|------------|----------|------|")
+out.append("| 专题 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 备注 |")
+out.append("|------|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|------|")
 
 for db in db_order:
     for qid in by_db.get(db, []):
@@ -182,9 +182,11 @@ for db in db_order:
         rdf_t_s = f"{rdf_t:,}" if rdf_t else "—"
 
         out.append(
-            f"| {db_short.get(db, db)} | q{qid} | {er_s} | {er_j} | {er_r} | {er_t_s} "
-            f"| {dlr_s} | {dlr_j} | {dlr_r} | {dlr_t_s} "
-            f"| {rdf_s} | {rdf_j} | {rdf_r} | {rdf_t_s} | {note} |"
+            f"| {db_short.get(db, db)} | q{qid} | {er_s} | {er_j} "
+            f"| {dlr_s} | {dlr_j} "
+            f"| {rdf_s} | {rdf_j} "
+            f"| {er_r} | {dlr_r} | {rdf_r} "
+            f"| {er_t_s} | {dlr_t_s} | {rdf_t_s} | {note} |"
         )
 
 with open(OUT_PATH, "w", encoding="utf-8") as f:
