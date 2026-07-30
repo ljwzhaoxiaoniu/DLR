@@ -133,22 +133,9 @@
 | financial | q92 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 104,583 | 219,771 | 86,875 |  | 三范式全CORRECT |
 | financial | q93 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 89,663 | 89,698 | 61,037 |  | 三范式strict PASS |
 | financial | q94 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 126,170 | 86,847 | 113,012 | question修正(条件互斥) | 🔴AND歧义:最老且最低薪资条件互斥；question明确执行顺序后DLR strict PASS |
-| financial | q95 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 316,559 | 20,001 | 95,570 | gold bug(只实现最年轻丢掉最高薪资) | 重跑后DLR CORRECT |
+| financial | q95 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 316,559 | 80,320 | 95,570 | gold bug(只实现最年轻丢掉最高薪资) | 重跑后DLR CORRECT |
 | financial | q98 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 72,786 | 88,830 | 86,224 |  | 三范式strict PASS |
 | financial | q99 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 65,185 | 43,858 | 81,656 |  | 三范式judge全翻 |
 | financial | q100 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 56,335 | 76,136 | 57,070 |  | DLR建模修复后148K→89K strict PASS(-40%) |
 | financial | q112 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 47,188 | 66,742 | 50,503 |  | 三范式strict PASS |
 | financial | q115 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 54,014 | 54,264 | 54,263 |  | ER手动翻盘(结果40%=gold) |
----
-
-## 汇总统计
-
-| 指标 | ER | DLR | RDF |
-|------|----|----|-----|
-| CORRECT | 122/132 | 128/132 | 117/132 |
-| Strict PASS | 43/132 | 46/132 | 40/132 |
-| 平均 token | 75,548 | 58,303 | 61,532 |
-| 中位 token | 59,979 | 46,332 | 50,847 |
-| **总计** | **367/396** | | |
-
-> 基于 CSV 实际数据（含 q95 DLR 重跑翻盘）。
