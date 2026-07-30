@@ -1,0 +1,16 @@
+{
+  "q_id": 1317,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT COUNT(*) FROM attendance a JOIN event e ON a.link_to_event = e.event_id JOIN member m ON a.link_to_member = m.member_id WHERE e.event_name = \"Women's Soccer\" AND m.t_shirt_size = 'Medium'",
+  "result": {
+    "columns": [
+      "COUNT(*)"
+    ],
+    "rows": [
+      [
+        7
+      ]
+    ]
+  }
+}

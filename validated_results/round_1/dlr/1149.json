@@ -1,0 +1,20 @@
+{
+  "q_id": 1149,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT COUNT(CASE WHEN SEX = 'M' AND Admission = '+' THEN ID END) AS male_inpatient, COUNT(CASE WHEN SEX = 'M' AND Admission = '-' THEN ID END) AS male_outpatient, ROUND(100.0 * COUNT(CASE WHEN SEX = 'M' AND Admission = '+' THEN ID END) / NULLIF(COUNT(CASE WHEN SEX = 'M' AND Admission = '-' THEN ID END), 0), 2) AS percentage FROM Patient",
+  "result": {
+    "columns": [
+      "male_inpatient",
+      "male_outpatient",
+      "percentage"
+    ],
+    "rows": [
+      [
+        89,
+        107,
+        83.18
+      ]
+    ]
+  }
+}

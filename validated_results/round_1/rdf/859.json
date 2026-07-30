@@ -1,0 +1,16 @@
+{
+  "q_id": 859,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT q.q1 FROM qualifying q JOIN drivers d ON q.driverId = d.driverId WHERE q.raceId = 354 AND d.forename = 'Bruno' AND d.surname = 'Senna'",
+  "result": {
+    "columns": [
+      "q1"
+    ],
+    "rows": [
+      [
+        "1:23.796"
+      ]
+    ]
+  }
+}

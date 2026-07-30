@@ -1,0 +1,28 @@
+{
+  "q_id": 846,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT d.driverRef FROM qualifying q JOIN drivers d ON q.driverId = d.driverId WHERE q.raceId = 20 ORDER BY q.q1 DESC LIMIT 5",
+  "result": {
+    "columns": [
+      "driverRef"
+    ],
+    "rows": [
+      [
+        "davidson"
+      ],
+      [
+        "fisichella"
+      ],
+      [
+        "sato"
+      ],
+      [
+        "sutil"
+      ],
+      [
+        "vettel"
+      ]
+    ]
+  }
+}

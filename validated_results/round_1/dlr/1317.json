@@ -1,0 +1,16 @@
+{
+  "q_id": 1317,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT COUNT(DISTINCT a.link_to_member) AS count_medium\nFROM attendance a\nJOIN event e ON a.link_to_event = e.event_id\nJOIN member m ON a.link_to_member = m.member_id\nWHERE e.event_name = \"Women's Soccer\"\n  AND m.t_shirt_size = 'Medium'",
+  "result": {
+    "columns": [
+      "count_medium"
+    ],
+    "rows": [
+      [
+        7
+      ]
+    ]
+  }
+}

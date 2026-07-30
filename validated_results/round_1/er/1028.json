@@ -1,0 +1,18 @@
+{
+  "q_id": 1028,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT T.team_long_name, COUNT(*) AS win_count FROM Match M JOIN League L ON M.league_id = L.id JOIN Team T ON M.away_team_api_id = T.team_api_id WHERE L.name = 'Scotland Premier League' AND M.season = '2009/2010' AND M.away_team_goal > M.home_team_goal GROUP BY T.team_long_name ORDER BY win_count DESC LIMIT 1",
+  "result": {
+    "columns": [
+      "team_long_name",
+      "win_count"
+    ],
+    "rows": [
+      [
+        "Rangers",
+        11
+      ]
+    ]
+  }
+}

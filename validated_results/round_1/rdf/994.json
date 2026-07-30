@@ -1,0 +1,20 @@
+{
+  "q_id": 994,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT c.name, c.nationality, SUM(cr.points) AS total_points FROM races r JOIN constructorResults cr ON r.raceId = cr.raceId JOIN constructors c ON cr.constructorId = c.constructorId WHERE r.name = 'Monaco Grand Prix' AND r.year BETWEEN 1980 AND 2010 GROUP BY c.constructorId, c.name, c.nationality ORDER BY total_points DESC LIMIT 1",
+  "result": {
+    "columns": [
+      "name",
+      "nationality",
+      "total_points"
+    ],
+    "rows": [
+      [
+        "McLaren",
+        "British",
+        218.5
+      ]
+    ]
+  }
+}

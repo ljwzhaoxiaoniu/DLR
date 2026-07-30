@@ -1,0 +1,16 @@
+{
+  "q_id": 1150,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT 100.0 * SUM(CASE WHEN strftime('%Y', Birthday) > '1930' THEN 1 ELSE 0 END) / COUNT(*) AS percentage FROM Patient WHERE SEX = 'F';",
+  "result": {
+    "columns": [
+      "percentage"
+    ],
+    "rows": [
+      [
+        94.037146
+      ]
+    ]
+  }
+}
