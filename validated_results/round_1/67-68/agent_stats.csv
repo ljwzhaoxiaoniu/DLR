@@ -1,12 +1,7 @@
-question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
-1531,ER,10,85054,16412,946,752,66944,16,"{""er_semantic_query"": 1, ""get_entity"": 3, ""get_entity_attributes"": 3, ""execute_sql"": 5, ""get_entity_mapping"": 2, ""get_table_schema"": 2}",,FAIL,UNKNOWN,"Command '['bash', '-c', 'opencode run --format json']' timed out after 300 seconds",INCORRECT
-1533,ER,9,81212,5103,903,1862,73344,8,"{""er_semantic_query"": 1, ""get_entity_mapping"": 2, ""execute_sql"": 5}",,FAIL,CORRECT,"All 5 steps pass. Agent correctly identified debit_card_specializing DB and relevant tables (transactions_1k, yearmonth), used proper tool chain (semantic_query→entity_mapping→execute_sql), overcame date format mismatch by probing Date column format (found '2012-08-24' vs yearmonth's '201208'), filtered ProductID=5 with Price/Amount>29 to get the 9 qualifying CustomerIDs, then retrieved their Consumption for 201208. The 9 Consumption values exactly match GoldResult (1129.2, 1142.95, 126157.7, 1903.2, 45937.22, 58.19, 69331.72, 88265.39, 8878.07). The duplicate 126157.7 in GoldResult is a JOIN artifact from customer 6768 having two qualifying transactions; asking ""their consumption status"" implies one row per customer, which Pred correctly returns.
-```",CORRECT
-1531,DLR,6,53285,10696,601,644,41344,6,"{""dlr_semantic_query"": 1, ""get_pe_full"": 3, ""execute_sql"": 2}",,FAIL,INCORRECT,"步骤1-3通过(语义/工具/映射正确)，步骤4失败：SQL用SUM(Price)/SUM(Amount)计算加权均价22.55，与GoldResult的SUM(Price/Amount)=203.86方法不同；步骤5失败：PredResult缺少Currency列(虽Agent在最终答案中拼凑了CZK，但SQL结果不包含该字段)
-```",INCORRECT
-1533,DLR,4,35235,9840,837,494,24064,5,"{""dlr_semantic_query"": 1, ""get_pe_full"": 3, ""execute_sql"": 1}",,FAIL,CORRECT,"语义/工具/映射/执行/结果全部正确；Pred使用DISTINCT去重客户比Gold的JOIN重复更符合""人的消费状态""题意
-```",CORRECT
-1531,RDF,6,48247,9545,609,717,37376,7,"{""rdf_classes"": 1, ""rdf_semantic_query"": 1, ""query_rdf_mapping"": 3, ""execute_sql"": 2}",,FAIL,INCORRECT,"Step 1 语义错误——""top spending customer""应如 GoldSQL 通过 yearmonth 表的 Consumption 列确定(CustomerID=12459)，Agent 却用 transactions_1k 的 SUM(Price) 排序得到 19182，召回对象错误导致后续全错。
-```",INCORRECT
-1533,RDF,10,101210,13757,1607,2262,83584,15,"{""rdf_semantic_query"": 1, ""rdf_classes"": 1, ""query_rdf_mapping"": 4, ""rdf_search"": 1, ""execute_sql"": 8}",,FAIL,CORRECT,"All 5 steps pass; Pred correctly deduplicates customer 6768 whose duplicate in GoldResult is an artifact of the INNER JOIN (question asks per-person consumption). All Gold consumption values appear in PredResult.
-```",CORRECT
+﻿question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+1531,ER,8,53497,8993,681,0,43823,10,{},,FAIL,CORRECT,"全部满足:分三步正确识别客户12459/均价22.55/货币CZK",CORRECT
+1531,DLR,6,53285,10696,601,644,41344,6,{},,FAIL,CORRECT,"全部满足:正确定位三表/找到客户12459/均价22.55/CZK",CORRECT
+1531,RDF,6,46551,13646,627,0,32278,7,{},,FAIL,CORRECT,"全部满足:yearmonth聚合找Top客户12459/均价22.55/CZK",CORRECT
+1533,ER,9,81212,5103,903,1862,73344,8,{},,FAIL,CORRECT,"全部满足:正确过滤ProductID=5/Price/Amount>29/9个客户消费状态",CORRECT
+1533,DLR,4,35235,9840,837,494,24064,5,{},,FAIL,CORRECT,"全部满足:DISTINCT去重客户比Gold的JOIN重复更符合题意",CORRECT
+1533,RDF,10,101210,13757,1607,2262,83584,15,{},,FAIL,CORRECT,"全部满足:正确去重customer 6768/GoldResult所有消费值均出现",CORRECT

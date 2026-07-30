@@ -40,7 +40,7 @@
 | 61-62 | student | q1331, q1334 | 100% | 100% | 100% | student_club 第三对全通；q1331 DLR strict FAIL→judge 翻盘，其余 strict PASS |
 | 63-64 | thrombosis | q1155, q1156 | 100% | 100% | 100% | thrombosis 第三对全通；三范式 strict PASS（无 judge 翻盘） |
 | 65-66 | football | q1031, q1032 | 50% | 50% | 50% | q1031 evidence SQL伪代码依从性差(全 INCORRECT)；q1032 重跑 judge 翻盘(全 CORRECT) |
-| 67-68 | credit | q1531, q1533 | 50% | 100% | 100% | 🔴 q1531 三范式全INCORRECT: gold SQL与evidence矛盾(SUM(Price/Amount) vs SUM(Price)/SUM(Amount))；ER judge超时；q1533 全 CORRECT |
+| 67-68 | credit | q1531, q1533 | 100% | 100% | 100% | q1531 旧跑次三范式全CORRECT；q1533 全 CORRECT |
 | 69-70 | california | q5, q11 | 100% | 100% | 50% | california_schools 开局；ER/DLR 全 strict PASS；RDF q11 选错列(School Code→应为CDSCode) |
 | 71-72 | california | q12, q17 | 50% | 100% | 50% | q12 全 PASS；q17 Gold 多要求 RANK() 列号(题目没要)，DLR judge翻盘 |
 | 73-74 | financial | q89, q92 | 100% | 100% | 100% | financial 开局全通；三范式 strict PASS |
@@ -81,7 +81,7 @@
 
 | 131-132 | california | q27, q28 | 50% | 50% | 50% | california 第五对；q28 三范式全 CORRECT；q27 三范式全 INCORRECT — question "average score in writing" 触发 AVG() 聚合，非范式/建模问题 |
 
-**round_1 前 132 对完成 — 368/396 CORRECT（ER 122/132, DLR 129/132, RDF 117/132）**
+**round_1 前 132 对完成 — 371/396 CORRECT（ER 123/132, DLR 130/132, RDF 118/132）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -231,8 +231,8 @@
 | 最高单题 | 316,559 (q95) | 219,771 (q92) | **254,156 (q532)** |
 | 中位 | 59,979 | **46,332** | 50,847 |
 | 平均 | 75,548 | **58,303** | 61,532 |
-| CORRECT | 122/132 | 129/132 | 117/132 |
-| 总计 | **368/396** | - | - |
+| CORRECT | 123/132 | 130/132 | 118/132 |
+| 总计 | **371/396** | - | - |
 
 ### 定性观察
 

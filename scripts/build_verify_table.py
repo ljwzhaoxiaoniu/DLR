@@ -151,7 +151,7 @@ q_dataset_notes = {
     1482: "gold bug(分母应为2013)",
     1490: "gold bug(两轮修正)",
     1529: "gold笛卡尔积bug(已修正cache)",
-    1531: "gold bug(SUM(Price/Amount)→SUM(Price)/SUM(Amount))",
+    1531: "数据集无矛盾(evidence/gold SQL/gold cache均为SUM(Price)/SUM(Amount)=22.55);旧跑次已CORRECT",
     1505: "gold语义偏差(COUNT(*)非客户数)",
     1525: "gold同1505缺陷",
     1526: "gold返回NULL(子查询无匹配)",
@@ -191,7 +191,7 @@ q_obs_notes = {
     1525: "gold同q1505缺陷:COUNT(CustomerID)计交易次非客户数",
     1526: "gold返回NULL(子查询无匹配)；DLR/RDF绕过缺陷正确给出-5.8152",
     1529: "gold笛卡尔积bug:transactions_1k×yearmonth ON CustomerID致SUM(Price)膨胀20倍；LLM复合问题理解缺陷(两句自然语言合并)",
-    1531: "gold SQL与evidence自相矛盾:evidence写SUM(Price)/SUM(Amount)但gold用SUM(Price/Amount)；DLR唯一按evidence执行",
+    1531: "旧跑次三范式全CORRECT(ER 53K/DLR 53K/RDF 47K)",
     # === student_club ===
     1312: "student_club开局；ER/RDF judge翻盘，DLR strict PASS",
     1317: "student_club开局全通",

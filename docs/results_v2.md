@@ -35,8 +35,8 @@
 | debit_card | q1526 | FAIL | CORRECT | — | — | — | — | CORRECT | — | — | 116,689 | — | — | gold返回NULL(子查询无匹配) | gold返回NULL(子查询无匹配)；DLR/RDF绕过缺陷正确给出-5.8152 |
 | debit_card | q1528 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 10,344 | 12,468 | 9,097 |  |  |
 | debit_card | q1529 | PASS |  | FAIL | CORRECT | — | — | CORRECT | 1529 | — | 19,591 | — | — | gold笛卡尔积bug(已修正cache) | ⚠️DLR |
-| debit_card | q1531 | FAIL | UNKNOWN | — | — | — | — | INCORRECT | — | — | 85,054 | — | — | gold bug(SUM(Price/Amount)→SUM(Price)/SUM(Amount)) | gold SQL与evidence自相矛盾:evidence写SUM(Price)/SUM(Amount)但gold用SUM(Price/Amount)；DLR唯一按evidence执行 |
-| debit_card | q1533 | FAIL | CORRECT | — | — | — | — | ""get_pe_full"": 3 | — | — | 81,212 | — | — |  |  |
+| debit_card | q1531 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 53,497 | 53,285 | 46,551 | 数据集无矛盾(evidence/gold SQL/gold cache均为SUM(Price)/SUM(Amount)=22.55);旧跑次已CORRECT | 旧跑次三范式全CORRECT(ER 53K/DLR 53K/RDF 47K) |
+| debit_card | q1533 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 81,212 | 35,235 | 101,210 |  |  |
 | student_club | q1312 | FAIL | CORRECT | — | — | FAIL | CORRECT | 1312 | — | 1317 | — | — | — |  | ⚠️ER ⚠️RDF |
 | student_club | q1317 | — | — | PASS |  | PASS |  | — | CORRECT | CORRECT | — | 9,742 | 8,430 |  | student_club开局全通 |
 | student_club | q1322 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 43,936 | 31,509 | 35,443 |  | 三范式judge翻盘 |
