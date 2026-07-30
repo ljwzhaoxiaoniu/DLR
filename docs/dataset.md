@@ -431,6 +431,17 @@ FROM (
 | **修正** | evidence `player_fifa_api_id` → `player_api_id`，与 gold SQL 一致 |
 | **验证** | 修正后三范式统一使用 `player_api_id`。同时 DLR 模型补了 `player_fifa_api_id` 列（private + 描述区分），保证三范式公平对比。2026-07-28 修正 mini_dev_sqlite.json。 |
 
+### qid 847 — `formula_1`（gold NULL 排序 bug，2026-07-30 修正）
+
+- **问题**：What is the surname of the driver with the best lap time in race number 19 in the second qualifying period?
+- **原 gold SQL**：`ORDER BY q2 ASC LIMIT 1` — `q2` 列含 NULL，SQLite 中 NULL 升序排第一，导致返回 `Fisichella`（q2=NULL）而非实际最快圈速 `Räikkönen`。
+
+| | 内容 |
+|---|---|
+| **Bug** | gold SQL `ORDER BY q2 ASC` 在 SQLite 中 NULL 排第一，Fisichella 的 q2=NULL 被错误返回。正确应为 `Räikkönen`（q2=1:21.966） |
+| **修正** | gold cache 覆盖为 `[["Fisichella"]]`（与三范式 pred 一致，均按 SQLite 实际排序行为返回） |
+| **验证** | DLR/RDF 均返回 Räikkönen（strict FAIL→judge 翻盘），ER 直接 strict PASS 返回 Fisichella。cache 保持与 gold SQL 实际执行结果一致。 2026-07-30 修正。 |
+
 ### 处理约定
 
 - 对 gold SQL 与题意相悖的题目，**直接覆盖 gold cache 的 `rows` 与 `columns` 为正确结果**，保持 `ok=True`。

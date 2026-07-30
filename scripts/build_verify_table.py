@@ -144,6 +144,7 @@ q_dataset_notes = {
     17: "gold过度要求RANK()列",
     726: "gold过度要求RANK()列",
     23: "evidence公式触发ABS()→自然语言修正",
+    847: "gold NULL排序bug(Fisichella应为Räikkönen)",
 }
 # 备注: 测试观察 + 建模发现 (不含系统修复记录)
 q_obs_notes = {

@@ -65,7 +65,7 @@
 | 111-112 | card_games | q366, q368 | 100% | 100% | 100% | card_games 第六对全通；q368 三范式 strict PASS；q366 DLR 建模修复后 110K→36K strict PASS |
 | 113-114 | codebase | q555, q557 | 100% | 100% | 100% | codebase 第五对全通；三范式 strict PASS（零 judge） |
 | 115-116 | student | q1340, q1344 | 100% | 100% | 100% | student_club 第五对全通；ER+RDF strict PASS；DLR q1340 judge 翻盘 |
-| 117-118 | thrombosis | q1164, q1166 | 100% | 100% | 100% | thrombosis 第五对全通；q1164 三范式 strict PASS；q1166 evidence 修正 + 三范式 Diagnosis 列描述区分后全 CORRECT |
+| 117-118 | thrombosis | q1164, q1166 | 100% | 100% | 50% | thrombosis 第五对；q1164 三范式 strict PASS；q1166 DLR CORRECT，ER+RDF INCORRECT（CSV 实际 verdict，pair 表原写 100% 有误） |
 
 | 119-120 | toxicology | q212, q213 | 100% | 100% | 100% | toxicology 第五对全通；q213 ER/DLR strict PASS, RDF 手动翻盘；q212 三范式 judge 全翻（tied minimum） |
 
@@ -81,7 +81,7 @@
 
 | 131-132 | california | q27, q28 | 50% | 50% | 50% | california 第五对；q28 三范式全 CORRECT；q27 三范式全 INCORRECT — question "average score in writing" 触发 AVG() 聚合，非范式/建模问题 |
 
-**round_1 前 132 对完成 — 374/396 CORRECT（ER 124/132, DLR 130/132, RDF 120/132）**
+**round_1 前 132 对完成 — 372/396 CORRECT（ER 123/132, DLR 130/132, RDF 119/132）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -231,8 +231,8 @@
 | 最高单题 | 316,559 (q95) | 219,771 (q92) | **254,156 (q532)** |
 | 中位 | 59,979 | **46,332** | 50,847 |
 | 平均 | 75,548 | **58,303** | 61,532 |
-| CORRECT | 124/132 | 130/132 | 120/132 |
-| 总计 | **374/396** | - | - |
+| CORRECT | 123/132 | 130/132 | 119/132 |
+| 总计 | **372/396** | - | - |
 
 ### 定性观察
 

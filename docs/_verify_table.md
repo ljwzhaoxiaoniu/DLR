@@ -56,7 +56,7 @@
 | thrombosis | q1157 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 54,114 | 41,491 | 52,667 |  |  |
 | thrombosis | q1162 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 28,614 | 32,648 | 36,698 |  |  |
 | thrombosis | q1164 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 52,462 | 52,132 | 36,101 |  |  |
-| thrombosis | q1166 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | INCORRECT | INCORRECT | CORRECT | INCORRECT | 48,084 | 41,830 | 37,609 |  | ⚠️ER ⚠️RDF |
+| thrombosis | q1166 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | INCORRECT | INCORRECT | CORRECT | INCORRECT | 48,084 | 41,830 | 37,609 |  | ⚠️ER |
 | football | q1025 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
 | football | q1028 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
 | football | q1029 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 8,290 | 9,454 | 7,101 | gold ASC/DESC颠倒 |  |
@@ -69,7 +69,7 @@
 | football | q1039 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 66,799 | 73,707 | 54,226 |  |  |
 | formula_1 | q724 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
 | formula_1 | q846 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 68,563 | 33,606 | 32,960 |  |  |
-| formula_1 | q847 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 44,477 | 33,238 | 32,514 |  |  |
+| formula_1 | q847 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 44,477 | 33,238 | 32,514 | gold NULL排序bug(Fisichella应为Räikkönen) |  |
 | formula_1 | q850 | FAIL | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 45,188 | 41,934 | 76,224 |  |  |
 | formula_1 | q854 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 63,486 | 59,238 | 36,067 |  |  |
 | formula_1 | q857 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |

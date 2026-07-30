@@ -56,7 +56,7 @@
 | thrombosis | q1157 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 54,114 | 41,491 | 52,667 |  |  |
 | thrombosis | q1162 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 28,614 | 32,648 | 36,698 |  |  |
 | thrombosis | q1164 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 52,462 | 52,132 | 36,101 |  |  |
-| thrombosis | q1166 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | INCORRECT | INCORRECT | CORRECT | INCORRECT | 48,084 | 41,830 | 37,609 |  | ⚠️ER ⚠️RDF |
+| thrombosis | q1166 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | INCORRECT | INCORRECT | CORRECT | INCORRECT | 48,084 | 41,830 | 37,609 |  | ⚠️ER |
 | football | q1025 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
 | football | q1028 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
 | football | q1029 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 8,290 | 9,454 | 7,101 | gold ASC/DESC颠倒 |  |
@@ -69,7 +69,7 @@
 | football | q1039 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 66,799 | 73,707 | 54,226 |  |  |
 | formula_1 | q724 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
 | formula_1 | q846 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 68,563 | 33,606 | 32,960 |  |  |
-| formula_1 | q847 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 44,477 | 33,238 | 32,514 |  |  |
+| formula_1 | q847 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 44,477 | 33,238 | 32,514 | gold NULL排序bug(Fisichella应为Räikkönen) |  |
 | formula_1 | q850 | FAIL | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 45,188 | 41,934 | 76,224 |  |  |
 | formula_1 | q854 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 63,486 | 59,238 | 36,067 |  |  |
 | formula_1 | q857 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
@@ -147,9 +147,11 @@
 |------|------|----------|-----------|------|
 | q1166 | ER | strict=FAIL, judge=INCORRECT, result=INCORRECT | 100% (CORRECT) | pair 117-118 写的"全 CORRECT"有误 |
 | q1166 | RDF | strict=FAIL, judge=INCORRECT, result=INCORRECT | 100% (CORRECT) | 同上 |
+| q1505 | ER | 原 CSV=INCORRECT(judge超时,token=0) | 100% (CORRECT) | pair note写"手动翻盘"但CSV未同步 -> ✅已修正CSV为CORRECT |
 
-**影响**: pair 117-118 应为 `100% | 100% | 50%`（q1164 全对 + q1166 DLR 对），而非 `100% | 100% | 100%`。
-修正后总计: ER=123/132, DLR=130/132, RDF=119/132, Total=372/396。
+**影响**:
+- pair 117-118: 应为 `100% | 100% | 50%`（q1164 全对 + q1166 DLR 对），而非 `100% | 100% | 100%`。修正后 ER=123, RDF=119, Total=372。
+- pair 17-18: q1505 CSV 已同步为 CORRECT（手动翻盘），与 pair 表一致。
 
 ---
 
@@ -157,10 +159,10 @@
 
 | 指标 | ER | DLR | RDF |
 |------|----|----|-----|
-| CORRECT | 124/132 | 130/132 | 120/132 |
+| CORRECT | 123/132 | 130/132 | 119/132 |
 | Strict PASS | 43/132 | 46/132 | 40/132 |
 | 平均 token | 75,548 | 58,303 | 61,532 |
 | 中位 token | 59,979 | 46,332 | 50,847 |
-| **总计** | **374/396** | | |
+| **总计** | **372/396** | | |
 
-> ⚠️ 此统计基于 CSV 实际数据。若修正 q1166 不一致，则 ER=123, RDF=119, Total=372。
+> 基于 CSV 实际数据（含 q1166 归档错误修正）。
