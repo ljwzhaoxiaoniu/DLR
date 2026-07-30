@@ -98,8 +98,8 @@
 | codebase | q557 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 59,209 | 61,472 | 51,605 |  | 三范式strict PASS |
 | card_games | q340 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 50,870 | 33,440 | 27,685 |  | 三范式strict PASS(DLR 33K/ER 51K/RDF 28K) |
 | card_games | q341 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 95,200 | 58,978 | 30,310 | gold typo | ER大宽表陷阱:cards表78列全暴露→SQL逻辑错误；DLR private_attributes隐藏非核心列避噪 |
-| card_games | q344 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 79,428 | 45,284 | 36,160 | evidence缺印刷版本约束 | 🔴语义建模盲区——领域知识:同名卡多印刷版本，gold用id三范式选name |
-| card_games | q345 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 82,853 | 44,608 | 46,531 |  |  |
+| card_games | q344 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 79,428 | 45,284 | 36,160 | evidence缺印刷版本约束 | ER 79K(DLR 1.8x)：cards 78列宽表全暴露，ER两次跑54K→79K均>DLR；🔴语义建模盲区——领域知识:同名卡多印刷版本，gold用id三范式选name |
+| card_games | q345 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 82,853 | 44,608 | 46,531 |  | ER 83K(DLR 1.9x)：cards 78列宽表+list_all_tables兜底，两次跑80K→83K均>DLR |
 | card_games | q346 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 64,089 | 74,484 | 45,578 |  | 三范式strict PASS |
 | card_games | q347 | FAIL | CORRECT | FAIL | CORRECT | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 144,494 | 105,495 | 36,459 |  | RDF扁平漏JOIN:看到cards.text就满足，漏掉rulings表；ER/DLR通过mapping/get_pe_full看到rulings FK |
 | card_games | q349 | FAIL | CORRECT | FAIL | CORRECT | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 16,159 | 10,202 | 12,825 | gold bug(答非所问) | 🔴DLR独胜：gold答非所问，ER/RDF照gold路径错；DLR独立语义推理出正确查询逻辑(10K) |
