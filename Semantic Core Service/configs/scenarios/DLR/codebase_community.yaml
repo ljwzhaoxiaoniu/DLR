@@ -8,11 +8,17 @@ databases:
 logical_entities:
 - logical_entity_id: LOGICAL.User
   biz_name: User
-  description: Community user
+  description: 'Community user — DisplayName, Reputation, Age, Location, UpVotes, CreationDate, LastAccessDate; identified by Id'
   public_attributes:
   - attr_id: LOGICAL.User.UserID
     biz_name: UserID
-    description: '用户ID: Stack Overflow 用户唯一标识符'
+    description: '用户ID: Stack Overflow 用户唯一标识符 (users.Id)'
+  - attr_id: LOGICAL.User.DisplayName
+    biz_name: DisplayName
+    description: '显示名称 (users.DisplayName)'
+  - attr_id: LOGICAL.User.LastAccessDate
+    biz_name: LastAccessDate
+    description: '最后访问日期 (users.LastAccessDate)'
   physical_entities:
   - physical_entity_id: PHYSICAL.User
     physical_table_name: users
@@ -23,12 +29,10 @@ logical_entities:
     R: null
     C:
       LOGICAL.User.UserID: codebase_community.users.Id
+      LOGICAL.User.DisplayName: codebase_community.users.DisplayName
+      LOGICAL.User.LastAccessDate: codebase_community.users.LastAccessDate
     S: User master
     private_attributes:
-    - attr_id: codebase_community.users.DisplayName
-      biz_name: DisplayName
-      physical_column_id: codebase_community.users.DisplayName
-      description: '显示名称: 用户显示名称'
     - attr_id: codebase_community.users.Reputation
       biz_name: Reputation
       physical_column_id: codebase_community.users.Reputation
@@ -46,16 +50,16 @@ logical_entities:
       biz_name: CreationDate
       physical_column_id: codebase_community.users.CreationDate
       description: '注册日期: 用户注册日期'
-    - attr_id: codebase_community.users.LastAccessDate
-      biz_name: LastAccessDate
-      physical_column_id: codebase_community.users.LastAccessDate
 - logical_entity_id: LOGICAL.Post
   biz_name: Post
-  description: User questions or articles
+  description: 'User questions or articles — Title, OwnerUserId, Score, ViewCount, Tags; identified by Id'
   public_attributes:
   - attr_id: LOGICAL.Post.PostID
     biz_name: PostID
-    description: '帖子ID: 帖子唯一标识符'
+    description: '帖子ID: 帖子唯一标识符 (posts.Id)'
+  - attr_id: LOGICAL.Post.OwnerUserId
+    biz_name: OwnerUserId
+    description: '作者ID (posts.OwnerUserId)'
   physical_entities:
   - physical_entity_id: PHYSICAL.Post
     physical_table_name: posts
@@ -66,15 +70,12 @@ logical_entities:
     R: null
     C:
       LOGICAL.Post.PostID: codebase_community.posts.Id
+      LOGICAL.Post.OwnerUserId: codebase_community.posts.OwnerUserId
     S: Post content and statistics
     private_attributes:
     - attr_id: codebase_community.posts.Title
       biz_name: Title
       physical_column_id: codebase_community.posts.Title
-    - attr_id: codebase_community.posts.OwnerUserId
-      biz_name: OwnerUserId
-      physical_column_id: codebase_community.posts.OwnerUserId
-      description: '作者ID: 帖子作者的用户ID'
     - attr_id: codebase_community.posts.Score
       biz_name: Score
       physical_column_id: codebase_community.posts.Score
