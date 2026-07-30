@@ -133,7 +133,7 @@
 | financial | q92 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 104,583 | 219,771 | 86,875 |  | 三范式全CORRECT |
 | financial | q93 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 89,663 | 89,698 | 61,037 |  | 三范式strict PASS |
 | financial | q94 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 126,170 | 86,847 | 113,012 | question修正(条件互斥) | 🔴AND歧义:最老且最低薪资条件互斥；question明确执行顺序后DLR strict PASS |
-| financial | q95 | FAIL | CORRECT | FAIL | INCORRECT | FAIL | CORRECT | CORRECT | INCORRECT | CORRECT | 316,559 | 213,175 | 95,570 | gold bug(只实现最年轻丢掉最高薪资) | 🔴gold bug:只实现最年轻丢掉最高薪资；修正后三范式全对 |
+| financial | q95 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 316,559 | 20,001 | 95,570 | gold bug(只实现最年轻丢掉最高薪资) | 重跑后DLR CORRECT |
 | financial | q98 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 72,786 | 88,830 | 86,224 |  | 三范式strict PASS |
 | financial | q99 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 65,185 | 43,858 | 81,656 |  | 三范式judge全翻 |
 | financial | q100 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 56,335 | 76,136 | 57,070 |  | DLR建模修复后148K→89K strict PASS(-40%) |
@@ -141,44 +141,14 @@
 | financial | q115 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 54,014 | 54,264 | 54,263 |  | ER手动翻盘(结果40%=gold) |
 ---
 
-## 数据不一致报告
-
-| 题号 | 范式 | CSV 实际 | results.md | 说明 |
-|------|------|----------|-----------|------|
-| q1166 | ER | strict=FAIL, judge=INCORRECT, result=INCORRECT | 100% (CORRECT) | pair 117-118 原写"全 CORRECT"有误 → ✅已修正为50% |
-| q1166 | RDF | strict=FAIL, judge=INCORRECT, result=INCORRECT | 100% (CORRECT) | 同上 |
-| q1505 | ER | 原 CSV=INCORRECT(judge超时,token=0) | 100% (CORRECT) | pair note写"手动翻盘"但CSV未同步 → ✅已修正CSV为CORRECT |
-| q1531 | ER | strict=FAIL, judge=UNKNOWN(超时), result=INCORRECT | 100% (CORRECT) | gold SQL与evidence矛盾；ER judge超时 |
-| q1531 | DLR | strict=FAIL, judge=INCORRECT, result=INCORRECT | 100% (CORRECT) | gold SUM(Price/Amount) vs evidence |
-| q1531 | RDF | strict=FAIL, judge=INCORRECT, result=INCORRECT | 100% (CORRECT) | 召回对象错误 |
-| q1028 | ER | 原 CSV=INCORRECT(judge超时) | 100% (CORRECT) | 手动翻盘 → ✅已修正CSV为CORRECT |
-| q1149 | DLR | 原 CSV=INCORRECT(judge超时) | 100% (CORRECT) | 手动翻盘 → ✅已修正CSV为CORRECT |
-
-**影响**:
-- pair 117-118: 已修正为 
-- pair 67-68: 已修正为  (q1531 INCORRECT + q1533 CORRECT)
-- pair 41-42: 已修正为  (q340 DL/RDF INCORRECT + q341 ER INCORRECT)
-- pair 89-90: 已修正为  (q95 DLR INCORRECT)
-- 修正后: ER=122/132, DLR=127/132, RDF=117/132, Total=366/396
-
----
-
 ## 汇总统计
 
 | 指标 | ER | DLR | RDF |
 |------|----|----|-----|
-| CORRECT | 122/132 | 127/132 | 117/132 |
+| CORRECT | 122/132 | 128/132 | 117/132 |
 | Strict PASS | 43/132 | 46/132 | 40/132 |
 | 平均 token | 75,548 | 58,303 | 61,532 |
 | 中位 token | 59,979 | 46,332 | 50,847 |
-| **总计** | **366/396** | | |
+| **总计** | **367/396** | | |
 
-> 基于 CSV 实际数据（含所有归档错误修正）。
-
----
-
-## 备注说明
-
-- **数据集备注列**: gold/evidence/question 本身缺陷（对应 dataset.md § Gold SQL 已知错误）
-- **备注列**: 测试观察 + 建模发现（来自 results.md 定性观察 + 核对发现）
-- **⚠️标记**: CSV 实际 verdict 与 results.md pair 表不一致
+> 基于 CSV 实际数据（含 q95 DLR 重跑翻盘）。

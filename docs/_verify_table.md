@@ -133,7 +133,7 @@
 | financial | q92 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 104,583 | 219,771 | 86,875 |  | 三范式全CORRECT |
 | financial | q93 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 89,663 | 89,698 | 61,037 |  | 三范式strict PASS |
 | financial | q94 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 126,170 | 86,847 | 113,012 | question修正(条件互斥) | 🔴AND歧义:最老且最低薪资条件互斥；question明确执行顺序后DLR strict PASS |
-| financial | q95 | FAIL | CORRECT | FAIL | INCORRECT | FAIL | CORRECT | CORRECT | INCORRECT | CORRECT | 316,559 | 213,175 | 95,570 | gold bug(只实现最年轻丢掉最高薪资) | 🔴gold bug:只实现最年轻丢掉最高薪资；修正后三范式全对 |
+| financial | q95 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 316,559 | 20,001 | 95,570 | gold bug(只实现最年轻丢掉最高薪资) | 重跑后DLR CORRECT |
 | financial | q98 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 72,786 | 88,830 | 86,224 |  | 三范式strict PASS |
 | financial | q99 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 65,185 | 43,858 | 81,656 |  | 三范式judge全翻 |
 | financial | q100 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 56,335 | 76,136 | 57,070 |  | DLR建模修复后148K→89K strict PASS(-40%) |

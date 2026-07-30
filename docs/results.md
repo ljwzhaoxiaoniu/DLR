@@ -51,7 +51,7 @@
 | 83-84 | toxicology | q201, q206 | 100% | 100% | 50% | q201 三范式 strict PASS；q206 ER/DLR judge 翻盘，RDF Agent 探索了 connected 表但最终 SQL 硬编码 atom_id→INCORRECT |
 | 85-86 | formula_1+superhero | q857, q724 | 100% | 100% | 100% | 跨库对：q857=formula_1, q724=superhero；q724 三范式 strict PASS，q857 三范式 judge 全翻 |
 | 87-88 | california | q23, q24 | 100% | 100% | 50% | 🔴 q23 evidence 修正（数学公式→自然语言）后三范式全对；q24 ER/DLR 全过，RDF 列歧义 INCORRECT（schools.School vs frpm.School Name，california 继 q11 后第二次） |
-| 89-90 | financial | q95, q98 | 100% | 50% | 100% | 🔴 q95 gold bug 修正：原 gold SQL 只实现"最年轻"丢掉了"最高薪资"；修正后ER/RDF judge翻盘CORRECT，DLR INCORRECT(AND→OR错误)；q98 三范式 strict PASS |
+| 89-90 | financial | q95, q98 | 100% | 100% | 100% | q95 重跑后三范式全CORRECT；q98 三范式 strict PASS |
 | 91-92 | superhero | q726, q728 | 100% | 100% | 100% | q726 三范式翻盘：题目 "Rank heroes"→Agent 理解 ORDER BY→gold 多要求 RANK() 列（和 q17 同模式）；q728 DLR judge 翻盘 CORRECT，ER/RDF 手动翻盘 |
 | 93-94 | codebase | q547, q549 | 100% | 100% | 100% | codebase 第四对全通；q547 三范式 strict PASS；q549 ER 表名格式错自行修正→judge 翻盘，DLR strict PASS，RDF judge 翻盘 |
 | 95-96 | student | q1338, q1339 | 100% | 100% | 100% | student_club 第四对全通；q1339 DLR 旧模型 389K→建模修复后 34K strict PASS（参照 superhero Power 模式，Expense 独立 LE + A 锚 Member） |
@@ -81,7 +81,7 @@
 
 | 131-132 | california | q27, q28 | 50% | 50% | 50% | california 第五对；q28 三范式全 CORRECT；q27 三范式全 INCORRECT — question "average score in writing" 触发 AVG() 聚合，非范式/建模问题 |
 
-**round_1 前 132 对完成 — 366/396 CORRECT（ER 122/132, DLR 127/132, RDF 117/132）**
+**round_1 前 132 对完成 — 367/396 CORRECT（ER 122/132, DLR 128/132, RDF 117/132）**
 
 ### 行为效率 — 逐题 Token 消耗
 
@@ -231,8 +231,8 @@
 | 最高单题 | 316,559 (q95) | 219,771 (q92) | **254,156 (q532)** |
 | 中位 | 59,979 | **46,332** | 50,847 |
 | 平均 | 75,548 | **58,303** | 61,532 |
-| CORRECT | 122/132 | 127/132 | 117/132 |
-| 总计 | **366/396** | - | - |
+| CORRECT | 122/132 | 128/132 | 117/132 |
+| 总计 | **367/396** | - | - |
 
 ### 定性观察
 

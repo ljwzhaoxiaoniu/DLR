@@ -33,13 +33,16 @@ for pair_dir in os.listdir(BASE):
     if "q_id" in rows[0]:
         # 新格式: paradigm,q_id,db_id,strict_match,judge_verdict,judge_reason,verdict,...,total_tokens
         for r in rows:
-            qid = int(r["q_id"])
+            try:
+                qid = int(r["q_id"])
+            except (ValueError, KeyError):
+                continue
             par = r["paradigm"].strip().lower()
             csv_data.setdefault(qid, {})[par] = {
                 "strict": r["strict_match"].strip(),
                 "judge": r["judge_verdict"].strip(),
                 "result": r["verdict"].strip(),
-                "token": int(r["total_tokens"]),
+                "token": int(r["total_tokens"]) if r.get("total_tokens","").strip().isdigit() else 0,
                 "db": r["db_id"].strip(),
             }
     elif "question_id" in rows[0]:
@@ -282,7 +285,7 @@ q_obs_notes = {
     92: "三范式全CORRECT",
     93: "三范式strict PASS",
     94: "🔴AND歧义:最老且最低薪资条件互斥；question明确执行顺序后DLR strict PASS",
-    95: "🔴gold bug:只实现最年轻丢掉最高薪资；修正后三范式全对",
+    95: "重跑后DLR CORRECT",
     98: "三范式strict PASS",
     99: "三范式judge全翻",
     100: "DLR建模修复后148K→89K strict PASS(-40%)",
