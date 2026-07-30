@@ -2,7 +2,7 @@
   "q_id": 195,
   "ok": true,
   "error": null,
-  "sql": "SELECT bond_type, COUNT(*) as cnt FROM bond GROUP BY bond_type ORDER BY cnt DESC LIMIT 1",
+  "sql": "SELECT bond_type, COUNT(*) AS cnt FROM bond GROUP BY bond_type ORDER BY cnt DESC LIMIT 1",
   "result": {
     "columns": [
       "bond_type",

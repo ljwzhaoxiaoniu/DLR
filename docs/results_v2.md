@@ -108,8 +108,8 @@
 | card_games | q358 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 75,681 | 32,909 | 51,641 |  | 三范式均缺DISTINCT |
 | card_games | q366 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 49,239 | 36,324 | 60,841 |  |  |
 | card_games | q368 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 42,655 | 32,962 | 36,478 |  | 三范式strict PASS |
-| toxicology | q195 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 40,714 | 31,353 | 26,530 |  |  |
-| toxicology | q197 | FAIL | INCORRECT | PASS | CORRECT | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 57,143 | 47,527 | 37,140 |  | ER JOIN膨胀:molecule→bond致氧计数被bond条数放大(2.16→69.28)；DLR PAS桥独立计算DISTINCT molecule_id避开fan-out |
+| toxicology | q195 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 34,216 | 30,923 | 32,314 |  |  |
+| toxicology | q197 | FAIL | INCORRECT | PASS | CORRECT | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 57,780 | 34,878 | 52,623 |  | ER JOIN膨胀:molecule→bond致氧计数被bond条数放大(2.16→69.28)；DLR PAS桥独立计算DISTINCT molecule_id避开fan-out |
 | toxicology | q198 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 35,998 | 35,893 | 50,610 | evidence笛卡尔积(去笛卡尔积修正) |  |
 | toxicology | q200 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 76,256 | 31,804 | 25,992 |  | ER 76K(3x DLR/RDF)：大宽表+多FK探索开销；DLR PAS直连/RDF SPARQL精准谓词均高效 |
 | toxicology | q201 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 29,179 | 33,423 | 37,098 |  | 三范式均30K左右，均衡高效 |
