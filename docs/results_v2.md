@@ -90,8 +90,8 @@
 | codebase | q532 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 55,456 | 134,647 | 254,156 |  | 三范式全CORRECT |
 | codebase | q533 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 36,896 | 31,686 | 49,225 | evidence缺DATE() | 🔴evidence错误:LastAccessDate>'2014-09-01'未用DATE()；三范式照做得5146 vs gold 4941 |
 | codebase | q537 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 36,101 | 49,688 | 50,853 |  | 三范式strict PASS |
-| codebase | q539 | — | — | — | — | — | — | — | — | — | — | — | — |  | 三范式strict PASS |
-| codebase | q544 | — | — | — | — | — | — | — | — | — | — | — | — |  | 三范式strict PASS |
+| codebase | q539 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 52,150 | 79,768 | 68,731 |  | 三范式strict PASS |
+| codebase | q544 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 56,254 | 51,592 | 35,689 |  | 三范式strict PASS |
 | codebase | q547 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 60,473 | 52,782 | 53,148 |  | 三范式strict PASS |
 | codebase | q549 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 66,788 | 51,179 | 33,150 |  | ER表名格式错自行修正→judge翻盘；DLR strict PASS，RDF judge翻盘 |
 | codebase | q555 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 46,479 | 50,639 | 100,051 |  | 三范式strict PASS |
@@ -128,8 +128,8 @@
 | california | q26 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 217,255 | 69,814 | 95,363 | gold bug(Free Meal→FRPM Count)待修正 | 🔴gold bug:Free Meal→FRPM Count(题目说free or reduced)；DLR+RDF judge翻盘 |
 | california | q27 | FAIL | INCORRECT | FAIL | INCORRECT | FAIL | INCORRECT | INCORRECT | INCORRECT | INCORRECT | 220,572 | 183,770 | 220,435 | average歧义(列名+question双触发AVG) | 🔴average歧义:列名AvgScrWrite+question'average'双触发AVG()→三范式全INCORRECT；LLM语义联想非形式符号 |
 | california | q28 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 79,930 | 78,232 | 107,454 |  | 三范式judge翻盘全CORRECT |
-| financial | q89 | — | — | — | — | — | — | — | — | — | — | — | — |  | financial开局全通 |
-| financial | q92 | — | — | — | — | — | — | — | — | — | — | — | — |  | 三范式全CORRECT |
+| financial | q89 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 157,511 | 71,207 | 81,125 |  | financial开局全通 |
+| financial | q92 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 104,583 | 219,771 | 86,875 |  | 三范式全CORRECT |
 | financial | q93 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 89,663 | 89,698 | 61,037 |  | 三范式strict PASS |
 | financial | q94 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 126,170 | 86,847 | 113,012 | question修正(条件互斥) | 🔴AND歧义:最老且最低薪资条件互斥；question明确执行顺序后DLR strict PASS |
 | financial | q95 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT ```" | CORRECT ```" | CORRECT | 75,835 | 80,320 | 95,570 | gold bug(只实现最年轻丢掉最高薪资) | ⚠️ER ⚠️DLR |

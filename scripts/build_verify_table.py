@@ -26,7 +26,7 @@ def parse_csv_robust(path):
     # First line is always the header
     merged = [lines[0]] if lines else []
     for line in lines[1:]:
-        is_new_row = bool(re.match(r'^("?er"?|"?dlr"?|"?rdf"?|\d+),', line))
+        is_new_row = bool(re.match(r'^("?er"?|"?dlr"?|"?rdf"?|"?\d+"?),', line))
         if is_new_row:
             merged.append(line)
         else:
