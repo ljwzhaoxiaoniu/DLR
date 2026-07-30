@@ -1,8 +1,7 @@
-## 老脚本 run 覆盖的 77 个文件（token 偏低，仅 input+output）
+## 老脚本 gap: 37 个文件，13 题
 
-> 7/20 前的 run 无 agent_stats.csv，token 只计了 input+output，缺 cache_read+reasoning
-> 今晚重跑: 195/197/198/200/344/345/533/537/719/723 + 1152/1153/1322/1323后处理
-> 77 → 剩余约40个⚠️
+> 判定标准：(qid, paradigm) 在所有 outputs 中均无 agent_stats.csv
+> 即 7/20 前的老脚本 run，仅有 03_reports（input+output），缺完整 token 拆项
 
 | 题号 | 数据集 | ER | DLR | RDF |
 |------|--------|-----|------|-----|
@@ -20,5 +19,5 @@
 | q1480 | debit_card | ⚠️ | ⚠️ | ⚠️ |
 | q1525 | debit_card | ✅ | ⚠️ | ⚠️ |
 
-- ⚠️ = 老脚本 run，token 偏低
-- ✅ = 新脚本 run，token 完整
+- ⚠️ = 老脚本
+- ✅ = 已有 agent_stats
