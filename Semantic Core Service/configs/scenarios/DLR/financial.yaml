@@ -71,7 +71,7 @@ logical_entities:
           - {attr_id: financial.card.issued, biz_name: issued, physical_column_id: financial.card.issued, description: 'Card issue date'}
   - logical_entity_id: LOGICAL.District
     biz_name: District
-    description: "Demographic district — district name (A2), region (A3), inhabitants, average salary, unemployment rates, crime statistics; clients reside here and accounts are located here"
+    description: "Demographic district — district name (A2), region (A3), inhabitants, average salary (A11), unemployment rates (A12/A13), crime statistics (A15)"
     public_attributes:
       - {attr_id: LOGICAL.District.DistrictID, biz_name: DistrictID}
       - {attr_id: LOGICAL.District.DistrictName, biz_name: DistrictName, description: 'District name (column A2), e.g. Sokolov, Praha'}
