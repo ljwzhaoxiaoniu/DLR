@@ -129,7 +129,7 @@
 | california | q27 | FAIL | INCORRECT | FAIL | INCORRECT | FAIL | INCORRECT | INCORRECT | INCORRECT | INCORRECT | 220,572 | 183,770 | 220,435 | average歧义(列名+question双触发AVG) | 🔴三范式全败(均~200K)：列名AvgScrWrite+question"average"双重触发AVG()，LLM语义锚定太强，非范式可解 |
 | california | q28 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 79,930 | 78,232 | 107,454 |  |  |
 | financial | q89 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 157,511 | 71,207 | 81,125 |  | ER 158K(2x DLR/RDF)：financial多表FK链(YAML全暴露)→Agent探索路径长；DLR RDF均更聚焦 |
-| financial | q92 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 104,583 | 219,771 | 86,875 |  | DLR 220K(2.5x RDF)：7次SQL迭代+3次PE探索——PAS桥对简单单表查询过度引导实体间跳转(district↔client↔account)，反不如RDF语义查询直定位district(87K)；ER虽误加JOIN仅2次SQL(105K) |
+| financial | q92 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 104,583 | 219,771 | 86,875 |  | DLR 220K(2.5x RDF)：跑于旧模型——A11当时是private裸列名无描述，Agent需3次get_pe_full+7次SQL试错；后ed16b15将A11→AvgSalary升public精准命中 |
 | financial | q93 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 89,663 | 89,698 | 61,037 |  | 三范式strict PASS |
 | financial | q94 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 126,170 | 86,847 | 113,012 | question修正(条件互斥) | 🔴AND歧义:最老且最低薪资条件互斥；DLR strict PASS |
 | financial | q95 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 75,835 | 80,320 | 95,570 | gold bug(只实现最年轻丢掉最高薪资) |  |
