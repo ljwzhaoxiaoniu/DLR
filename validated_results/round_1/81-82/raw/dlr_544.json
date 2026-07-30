@@ -1,0 +1,16 @@
+{
+  "q_id": 544,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT u.DisplayName FROM posts p JOIN users u ON p.LastEditorUserId = u.Id WHERE p.Title = 'Examples for teaching: Correlation does not mean causation'",
+  "result": {
+    "columns": [
+      "DisplayName"
+    ],
+    "rows": [
+      [
+        "Abhilash"
+      ]
+    ]
+  }
+}

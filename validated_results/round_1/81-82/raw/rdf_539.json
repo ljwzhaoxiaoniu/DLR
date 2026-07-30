@@ -1,0 +1,16 @@
+{
+  "q_id": 539,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT DisplayName FROM users WHERE Id = 8",
+  "result": {
+    "columns": [
+      "DisplayName"
+    ],
+    "rows": [
+      [
+        "csgillespie"
+      ]
+    ]
+  }
+}
