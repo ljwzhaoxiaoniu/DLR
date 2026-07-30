@@ -1,6 +1,8 @@
-question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
-12,ER,8,98325,22322,1061,958,73984,9,"{""er_semantic_query"": 2, ""get_entity_attributes"": 3, ""get_entity_mapping"": 2, ""execute_sql"": 2}",,PASS,,,CORRECT
-17,ER,7,85213,22558,1906,461,60288,9,"{""er_semantic_query"": 1, ""get_entity_attributes"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 2, ""get_table_schema"": 2}",,FAIL,INCORRECT,"完毕。
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","12","california_schools","PASS","","","CORRECT","100","","22322","1061","59","15872","16586"
+"dlr","12","california_schools","PASS","","","CORRECT","100","","21178","730","58","13952","14868"
+"rdf","12","california_schools","PASS","","","CORRECT","100","","14376","914","83","13184","14295"
+"er","17","california_schools","FAIL","INCORRECT","完毕。
 
 **对比要点：**
 - GoldSQL 使用 `RANK() OVER (ORDER BY AvgScrWrite DESC)` 实现标准排名（并列同名次）
@@ -14,10 +16,8 @@ question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,to
 VERDICT: INCORRECT
 PROCESS: 80
 REASON: SQL缺少RANK()窗口函数,未实现真正的排名语义(并列分数应同名次),步骤4不满足
-```",INCORRECT
-12,DLR,5,60884,21178,730,832,38144,5,"{""dlr_semantic_query"": 2, ""get_pe_full"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
-17,DLR,6,56187,18897,1489,729,35072,5,"{""dlr_semantic_query"": 1, ""get_le_attrs"": 1, ""get_pe_full"": 2, ""execute_sql"": 1}",,FAIL,CORRECT,"五项全过。PredSQL 通过 GROUP BY + AVG 实现""学校平均分排名""，语义比 GoldSQL(对单条记录排名)更贴合题意；排名顺序与 Gold 一致，答案完整。
-```",CORRECT
-12,RDF,6,69884,14376,914,834,53760,6,"{""rdf_semantic_query"": 1, ""rdf_classes"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 2}",,PASS,,,CORRECT
-17,RDF,5,41414,15055,1012,1923,23424,4,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 1}",,FAIL,INCORRECT,"SQL缺少RANK()窗口函数，未表达""Rank schools""的排名要求，结果缺少排名列（第4步失败）
-```",INCORRECT
+```","INCORRECT","80","","22558","1906","13","15488","18134"
+"dlr","17","california_schools","FAIL","CORRECT","五项全过。PredSQL 通过 GROUP BY + AVG 实现""学校平均分排名""，语义比 GoldSQL(对单条记录排名)更贴合题意；排名顺序与 Gold 一致，答案完整。
+```","CORRECT","100","","18897","1489","36","10368","13138"
+"rdf","17","california_schools","FAIL","INCORRECT","SQL缺少RANK()窗口函数，未表达""Rank schools""的排名要求，结果缺少排名列（第4步失败）
+```","INCORRECT","60","","15055","1012","855","8064","10845"

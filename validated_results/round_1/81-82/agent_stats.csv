@@ -1,7 +1,7 @@
-question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
-539,ER,7,52150,14290,399,341,37120,6,"{""er_semantic_query"": 1, ""get_entity_mapping"": 2, ""execute_sql"": 3}",,PASS,,,CORRECT
-544,ER,7,56254,14470,479,601,40704,7,"{""er_semantic_query"": 1, ""get_entity_mapping"": 2, ""execute_sql"": 4}",,PASS,,,CORRECT
-539,DLR,9,79768,17535,412,381,61440,9,"{""dlr_semantic_query"": 1, ""get_le_attrs"": 1, ""get_pe_full"": 3, ""recall_pas"": 1, ""get_pas"": 1, ""get_le_children"": 1, ""execute_sql"": 1}",,PASS,,,CORRECT
-544,DLR,6,51592,16596,420,400,34176,8,"{""dlr_semantic_query"": 3, ""get_le_attrs"": 2, ""get_pe_full"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
-539,RDF,9,68731,9208,502,525,58496,8,"{""rdf_semantic_query"": 2, ""query_rdf_mapping"": 2, ""rdf_search"": 1, ""execute_sql"": 3}",,PASS,,,CORRECT
-544,RDF,5,35689,2362,324,363,32640,4,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","539","codebase_community","PASS","","","CORRECT","100","","14290","399","24","8064","8429"
+"dlr","539","codebase_community","PASS","","","CORRECT","100","","17535","412","27","10112","10615"
+"rdf","539","codebase_community","PASS","","","CORRECT","100","","9208","502","103","8576","8978"
+"er","544","codebase_community","PASS","","","CORRECT","100","","14470","479","1","8576","8883"
+"dlr","544","codebase_community","PASS","","","CORRECT","100","","16596","420","24","9728","10193"
+"rdf","544","codebase_community","PASS","","","CORRECT","100","","2362","324","24","7680","8150"

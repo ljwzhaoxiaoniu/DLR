@@ -1,5 +1,10 @@
-question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
-1493,ER,5,36552,14176,452,548,21376,6,"{""er_semantic_query"": 1, ""get_entity"": 2, ""get_entity_attributes"": 2, ""execute_sql"": 1}",,FAIL,CORRECT,"全部步骤通过，SQL正确计算百分比66.62%与GoldResult 66.623008语义等价，仅精度差异
-```",CORRECT
-1493,DLR,6,54977,17586,537,630,36224,7,"{""dlr_semantic_query"": 1, ""get_pe_full"": 3, ""execute_sql"": 3}",,PASS,,,CORRECT
-1493,RDF,7,78468,19025,708,1135,57600,5,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 1, ""execute_sql"": 3}",,PASS,,,CORRECT
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","1493","debit_card_specializing","FAIL","CORRECT","全部步骤通过，SQL正确计算百分比66.62%与GoldResult 66.623008语义等价，仅精度差异
+```","CORRECT","100","","14176","452","70","7424","36552"
+"dlr","1493","debit_card_specializing","PASS","","","CORRECT","100","","17586","537","100","9984","54977"
+"rdf","1493","debit_card_specializing","PASS","","","CORRECT","100","","19025","708","114","12544","78468"
+"er","1498","debit_card_specializing","PASS","","","CORRECT","100","","13291","412","517","20608","34828"
+"dlr","1498","debit_card_specializing","FAIL","CORRECT","SQL语义正确(按月聚合取最高消费)，结果值51787161.74与GoldResult一致，工具调用链正确，最终答案匹配。
+```","CORRECT","100","","9100","518","282","22400","32300"
+"rdf","1498","debit_card_specializing","FAIL","CORRECT","SQL 正确聚合2012年各月消费并取最大值，最终答案 51787161.74 与 GoldResult 一致。
+```","CORRECT","100","","14586","616","682","39680","55564"
