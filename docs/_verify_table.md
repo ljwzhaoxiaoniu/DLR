@@ -13,52 +13,52 @@
 | debit_card | q1476 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 73,221 | 61,770 | 69,729 |  |  |
 | debit_card | q1479 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 43,712 | 43,397 | 45,318 |  |  |
 | debit_card | q1480 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 50,260 | 59,145 | 65,519 |  |  |
-| debit_card | q1481 | — | — | — | — | — | — | — | — | — | — | — | — | gold bug(未过滤最低消费客户) |  |
-| debit_card | q1482 | — | — | — | — | — | — | — | — | — | — | — | — | gold bug(分母应为2013) |  |
-| debit_card | q1483 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
-| debit_card | q1484 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
+| debit_card | q1481 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 230,002 | 195,482 | 120,958 | gold bug(未过滤最低消费客户) |  |
+| debit_card | q1482 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 46,942 | 54,712 | 65,209 | gold bug(分母应为2013) |  |
+| debit_card | q1483 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 44,551 | 33,927 | 170,885 |  |  |
+| debit_card | q1484 | FAIL | CORRECT | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 41,164 | 39,184 | 71,763 |  |  |
 | debit_card | q1486 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 62,200 | 72,659 | 75,962 |  |  |
 | debit_card | q1490 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 105,687 | 80,806 | 108,118 | gold bug(两轮修正) |  |
 | debit_card | q1493 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 36,552 | 54,977 | 78,468 |  |  |
 | debit_card | q1498 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 34,828 | 32,300 | 55,564 |  |  |
 | debit_card | q1500 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 12,809 | 14,273 | 24,543 |  |  |
 | debit_card | q1501 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 14,500 | 19,962 | 16,182 |  |  |
-| debit_card | q1505 | — | — | — | — | — | — | — | — | — | — | — | — | gold语义偏差(COUNT(*)非客户数) |  |
-| debit_card | q1506 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
+| debit_card | q1505 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | — | 34,566 | 37,544 | gold语义偏差(COUNT(*)非客户数) |  |
+| debit_card | q1506 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 57,614 | 87,096 | 102,344 |  |  |
 | debit_card | q1507 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 8,521 | 9,925 | 7,644 |  |  |
 | debit_card | q1509 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 8,403 | 10,503 | 12,599 |  |  |
-| debit_card | q1514 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
-| debit_card | q1515 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
+| debit_card | q1514 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 62,465 | 69,134 | 45,594 |  |  |
+| debit_card | q1515 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 46,645 | 43,077 | 50,827 |  |  |
 | debit_card | q1521 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 12,264 | 11,224 | 8,434 |  |  |
 | debit_card | q1524 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 12,837 | 12,487 | 14,332 |  |  |
 | debit_card | q1525 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 54,895 | 61,104 | 102,319 | gold同1505缺陷 |  |
 | debit_card | q1526 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 116,689 | 85,371 | 60,522 | gold返回NULL(子查询无匹配) |  |
 | debit_card | q1528 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 10,344 | 12,468 | 9,097 |  |  |
 | debit_card | q1529 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 19,591 | 16,721 | 12,210 | gold笛卡尔积bug(已修正cache) |  |
-| debit_card | q1531 | — | — | — | — | — | — | — | — | — | — | — | — | gold bug(SUM(Price/Amount)→SUM(Price)/SUM(Amount)) |  |
-| debit_card | q1533 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
+| debit_card | q1531 | FAIL | UNKNOWN | FAIL | INCORRECT | FAIL | INCORRECT | INCORRECT | INCORRECT | INCORRECT | 85,054 | 53,285 | 48,247 | gold bug(SUM(Price/Amount)→SUM(Price)/SUM(Amount)) | ⚠️ER ⚠️DLR ⚠️RDF |
+| debit_card | q1533 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 81,212 | 35,235 | 101,210 |  |  |
 | student_club | q1312 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 7,847 | 9,000 | 7,702 |  |  |
 | student_club | q1317 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 8,915 | 9,742 | 8,430 |  |  |
 | student_club | q1322 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 43,936 | 31,509 | 35,443 |  |  |
 | student_club | q1323 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 104,100 | 69,207 | 36,549 |  |  |
-| student_club | q1331 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
-| student_club | q1334 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
+| student_club | q1331 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 73,821 | 32,563 | 77,279 |  |  |
+| student_club | q1334 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 55,114 | 48,875 | 42,503 |  |  |
 | student_club | q1338 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 82,444 | 94,553 | 84,515 |  |  |
 | student_club | q1339 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 145,494 | 34,001 | 84,865 |  |  |
 | student_club | q1340 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 78,516 | 33,630 | 51,922 |  |  |
 | student_club | q1344 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 61,185 | 39,130 | 27,522 |  |  |
-| thrombosis | q1149 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
-| thrombosis | q1150 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
+| thrombosis | q1149 | FAIL | CORRECT | FAIL | UNKNOWN | FAIL | CORRECT | CORRECT | INCORRECT | CORRECT | 36,998 | 32,309 | 50,686 |  | ⚠️DLR |
+| thrombosis | q1150 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 59,539 | 41,067 | 68,233 |  |  |
 | thrombosis | q1152 | FAIL | CORRECT | PASS | INCORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 68,893 | 40,351 | 27,409 | gold ratio方向反(门诊/住院→住院/门诊) |  |
 | thrombosis | q1153 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 99,754 | 39,790 | 31,537 |  |  |
-| thrombosis | q1155 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
-| thrombosis | q1156 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
+| thrombosis | q1155 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 84,434 | 56,704 | 114,981 |  |  |
+| thrombosis | q1156 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 67,961 | 33,329 | 28,520 |  |  |
 | thrombosis | q1157 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 54,114 | 41,491 | 52,667 |  |  |
 | thrombosis | q1162 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 28,614 | 32,648 | 36,698 |  |  |
 | thrombosis | q1164 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 52,462 | 52,132 | 36,101 |  |  |
 | thrombosis | q1166 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | INCORRECT | INCORRECT | CORRECT | INCORRECT | 48,084 | 41,830 | 37,609 |  | ⚠️ER |
-| football | q1025 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
-| football | q1028 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
+| football | q1025 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 95,251 | 33,757 | 31,916 |  |  |
+| football | q1028 | FAIL | UNKNOWN | FAIL | CORRECT | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 56,628 | 53,979 | 78,157 |  | ⚠️ER |
 | football | q1029 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 8,290 | 9,454 | 7,101 | gold ASC/DESC颠倒 |  |
 | football | q1030 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 10,380 | 9,200 | 9,411 |  |  |
 | football | q1031 | FAIL |  | FAIL |  | FAIL |  | INCORRECT | INCORRECT | INCORRECT | 11,043 | 12,355 | 13,832 | evidence伪代码(SUBTRACT(DATETIME,birthday)) |  |
@@ -67,17 +67,17 @@
 | football | q1036 | PASS |  | PASS |  | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 42,628 | 38,193 | 65,053 |  | RDF缺DISTINCT |
 | football | q1037 | FAIL | INCORRECT | FAIL | CORRECT | FAIL |  | INCORRECT | CORRECT | INCORRECT | 96,538 | 50,536 | 35,882 |  | ER/RDF JOIN键错 |
 | football | q1039 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 66,799 | 73,707 | 54,226 |  |  |
-| formula_1 | q724 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
+| formula_1 | q724 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 37,230 | 43,001 | 30,272 |  |  |
 | formula_1 | q846 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 68,563 | 33,606 | 32,960 |  |  |
 | formula_1 | q847 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 44,477 | 33,238 | 32,514 | gold NULL排序bug(Fisichella应为Räikkönen) |  |
 | formula_1 | q850 | FAIL | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 45,188 | 41,934 | 76,224 |  |  |
 | formula_1 | q854 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 63,486 | 59,238 | 36,067 |  |  |
-| formula_1 | q857 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
+| formula_1 | q857 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 54,217 | 60,127 | 78,188 |  |  |
 | formula_1 | q859 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 46,706 | 53,110 | 50,833 |  |  |
 | formula_1 | q861 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 38,425 | 44,531 | 43,901 |  |  |
 | formula_1 | q862 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 34,834 | 33,632 | 42,598 |  |  |
 | formula_1 | q865 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 48,155 | 34,326 | 30,044 |  |  |
-| superhero | q717 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
+| superhero | q717 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 45,433 | 44,113 | 28,504 |  |  |
 | superhero | q719 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 90,494 | 36,282 | 28,825 |  |  |
 | superhero | q723 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 29,068 | 35,981 | 29,175 |  |  |
 | superhero | q726 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 59,696 | 65,984 | 65,196 | gold过度要求RANK()列 |  |
@@ -86,9 +86,9 @@
 | superhero | q732 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 46,469 | 55,585 | 37,962 |  |  |
 | superhero | q733 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 28,920 | 45,089 | 28,642 |  |  |
 | superhero | q736 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 44,949 | 34,647 | 36,874 |  |  |
-| superhero | q994 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
-| codebase | q531 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
-| codebase | q532 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
+| superhero | q994 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 80,923 | 54,656 | 121,849 |  |  |
+| codebase | q531 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 36,525 | 39,782 | 48,961 |  |  |
+| codebase | q532 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 55,456 | 134,647 | 254,156 |  |  |
 | codebase | q533 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 36,896 | 31,686 | 49,225 | evidence缺DATE() |  |
 | codebase | q537 | PASS | CORRECT | PASS | CORRECT | PASS | CORRECT | CORRECT | CORRECT | CORRECT | 36,101 | 49,688 | 50,853 |  |  |
 | codebase | q539 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 8,429 | 10,615 | 8,978 |  |  |
@@ -97,12 +97,12 @@
 | codebase | q549 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 66,788 | 51,179 | 33,150 |  |  |
 | codebase | q555 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 46,479 | 50,639 | 100,051 |  |  |
 | codebase | q557 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 59,209 | 61,472 | 51,605 |  |  |
-| card_games | q340 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
-| card_games | q341 | — | — | — | — | — | — | — | — | — | — | — | — | gold typo |  |
+| card_games | q340 | FAIL | CORRECT | FAIL | INCORRECT | FAIL | INCORRECT | CORRECT | INCORRECT | INCORRECT | 44,437 | 45,208 | 41,201 |  | ⚠️DLR ⚠️RDF |
+| card_games | q341 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 95,200 | 58,978 | 30,310 | gold typo |  |
 | card_games | q344 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 53,625 | 34,288 | 52,270 | evidence缺印刷版本约束 |  |
 | card_games | q345 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 80,004 | 45,722 | 41,161 |  |  |
-| card_games | q346 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
-| card_games | q347 | — | — | — | — | — | — | — | — | — | — | — | — |  | RDF扁平漏JOIN |
+| card_games | q346 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 64,089 | 74,484 | 45,578 |  |  |
+| card_games | q347 | FAIL | CORRECT | FAIL | CORRECT | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 144,494 | 105,495 | 36,459 |  | RDF扁平漏JOIN |
 | card_games | q349 | FAIL | CORRECT | FAIL | CORRECT | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 16,159 | 10,202 | 12,825 | gold bug(答非所问) |  |
 | card_games | q352 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 16,188 | 17,845 | 11,863 | gold bug(分母错) |  |
 | card_games | q356 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 72,445 | 32,929 | 27,525 |  |  |
@@ -113,14 +113,14 @@
 | toxicology | q197 | FAIL | INCORRECT | PASS | CORRECT | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 57,143 | 47,527 | 37,140 |  |  |
 | toxicology | q198 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 35,998 | 35,893 | 50,610 | evidence笛卡尔积(去笛卡尔积修正) |  |
 | toxicology | q200 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 76,256 | 31,804 | 25,992 |  |  |
-| toxicology | q201 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
-| toxicology | q206 | — | — | — | — | — | — | — | — | — | — | — | — |  | RDF探索≠答案 |
+| toxicology | q201 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 29,179 | 33,423 | 37,098 |  |  |
+| toxicology | q206 | FAIL | CORRECT | FAIL | CORRECT | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 57,597 | 40,861 | 50,559 |  | RDF探索≠答案 |
 | toxicology | q207 | FAIL | CORRECT | PASS | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 53,325 | 43,279 | 37,239 | gold SQL bug(分子级关联vs原子级) |  |
 | toxicology | q208 | FAIL | CORRECT | FAIL | CORRECT | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 69,775 | 41,900 | 92,819 |  | RDF语义理解错 |
 | toxicology | q212 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 49,124 | 41,968 | 29,231 |  |  |
 | toxicology | q213 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 115,275 | 41,431 | 35,318 |  |  |
-| california | q5 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
-| california | q11 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
+| california | q5 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 67,294 | 35,885 | 37,623 |  |  |
+| california | q11 | PASS |  | PASS |  | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 87,085 | 57,929 | 60,690 |  |  |
 | california | q12 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 16,586 | 14,868 | 14,295 |  |  |
 | california | q17 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | INCORRECT | INCORRECT | CORRECT | INCORRECT | 18,134 | 13,138 | 10,845 | gold过度要求RANK()列 |  |
 | california | q23 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 30,608 | 69,561 | 48,607 | evidence公式触发ABS()→自然语言修正 |  |
@@ -129,12 +129,12 @@
 | california | q26 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 217,255 | 69,814 | 95,363 | gold bug(Free Meal→FRPM Count)待修正 |  |
 | california | q27 | FAIL | INCORRECT | FAIL | INCORRECT | FAIL | INCORRECT | INCORRECT | INCORRECT | INCORRECT | 220,572 | 183,770 | 220,435 | average歧义(列名+question双触发AVG) |  |
 | california | q28 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 79,930 | 78,232 | 107,454 |  |  |
-| financial | q89 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
-| financial | q92 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
-| financial | q93 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
-| financial | q94 | — | — | — | — | — | — | — | — | — | — | — | — | question修正(条件互斥) |  |
-| financial | q95 | — | — | — | — | — | — | — | — | — | — | — | — | gold bug(只实现最年轻丢掉最高薪资) |  |
-| financial | q98 | — | — | — | — | — | — | — | — | — | — | — | — |  |  |
+| financial | q89 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 157,511 | 71,207 | 81,125 |  |  |
+| financial | q92 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 104,583 | 219,771 | 86,875 |  |  |
+| financial | q93 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 89,663 | 89,698 | 61,037 |  |  |
+| financial | q94 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 126,170 | 86,847 | 113,012 | question修正(条件互斥) |  |
+| financial | q95 | FAIL | CORRECT | FAIL | INCORRECT | FAIL | CORRECT | CORRECT | INCORRECT | CORRECT | 316,559 | 213,175 | 95,570 | gold bug(只实现最年轻丢掉最高薪资) | ⚠️DLR |
+| financial | q98 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 72,786 | 88,830 | 86,224 |  |  |
 | financial | q99 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 65,185 | 43,858 | 81,656 |  |  |
 | financial | q100 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 56,335 | 76,136 | 57,070 |  |  |
 | financial | q112 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 47,188 | 66,742 | 50,503 |  |  |

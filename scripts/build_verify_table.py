@@ -31,15 +31,31 @@ for pair_dir in os.listdir(BASE):
     if not rows:
         continue
     if "q_id" in rows[0]:
+        # 新格式: paradigm,q_id,db_id,strict_match,judge_verdict,judge_reason,verdict,...,total_tokens
         for r in rows:
             qid = int(r["q_id"])
-            par = r["paradigm"].strip()
+            par = r["paradigm"].strip().lower()
             csv_data.setdefault(qid, {})[par] = {
                 "strict": r["strict_match"].strip(),
                 "judge": r["judge_verdict"].strip(),
                 "result": r["verdict"].strip(),
                 "token": int(r["total_tokens"]),
                 "db": r["db_id"].strip(),
+            }
+    elif "question_id" in rows[0]:
+        # 旧格式: question_id,paradigm,steps,tokens_total,...,strict_match,judge_verdict,judge_reason,verdict
+        for r in rows:
+            try:
+                qid = int(r["question_id"])
+            except (ValueError, KeyError):
+                continue
+            par = r["paradigm"].strip().lower()
+            csv_data.setdefault(qid, {})[par] = {
+                "strict": r.get("strict_match", "").strip(),
+                "judge": r.get("judge_verdict", "").strip(),
+                "result": r.get("verdict", "").strip(),
+                "token": int(r["tokens_total"]) if r.get("tokens_total","").strip().isdigit() else 0,
+                "db": r.get("db_id", "").strip(),
             }
 
 # 2. Parse results.md for verdicts + tokens
