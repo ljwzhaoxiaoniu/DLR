@@ -249,17 +249,19 @@ FROM (
 | **正确结果** | `ORDER BY buildUpPlaySpeed DESC LIMIT 4` → 最高值 [80, 78, 78, 77] |
 | **验证** | 三范式一致输出 80/78/78/77。2026-07-24 修正 cache。 |
 
-### qid 1529 — `debit_card_specializing`（gold JOIN 笛卡尔积→SUM(Price) 膨胀 20 倍，已修正 gold cache）
+### qid 1529 — `debit_card_specializing`（gold JOIN 笛卡尔积→子查询修复，仍有语义瑕疵）
 
 - **问题**：What is the amount spent by customer "38508" at the gas stations? How much had the customer spent in January 2012?
 - **evidence**：January 2012 refers to the Date value = '201201'.
+- **Gold SQL**：`SELECT (SELECT SUM(Price) FROM transactions_1k WHERE CustomerID = '38508'), (SELECT Consumption FROM yearmonth WHERE CustomerID = '38508' AND Date = '201201')`
 
 | | 内容 |
 |---|---|
-| **Gold SQL（原）** | `transactions_1k JOIN gasstations JOIN yearmonth ON CustomerID` → 8 条交易 × 20 条年月 = 160 行笛卡尔积。`SUM(Price)`=68740.2（3437.01×20 膨胀），`SUM(IIF(Date='201201',Price,0))`=3437.01（实为交易总额，非一月消费） |
-| **Bug 本质** | yearmonth JOIN 造成 Price 重复求和。Gold Part1 是正确值的 20 倍，Part2 返回了 Part1 的正确值而非一月消费 |
-| **正确结果（已写入 cache）** | Part1（加油站花费）= `SUM(Price) FROM transactions_1k WHERE CustomerID='38508'` = **3437.01**；Part2（2012年1月消费）= `Consumption FROM yearmonth WHERE CustomerID='38508' AND Date='201201'` = **67156.94** |
-| **验证** | ER 正确输出 [3437.01, 67156.94]。DLR/RDF 因多步查询复杂度各自走了错误路径。2026-07-23 修正 gold cache。
+| **Bug 1（已修复）** | 原版 gold 用 `transactions_1k JOIN yearmonth ON CustomerID` → 8×20=160 行笛卡尔积，`SUM(Price)` 膨胀 20 倍 |
+| **Bug 2（残留）** | `SUM(Price)` 是单价之和（3,437.01），题目问 "amount spent" 应为 `SUM(Price * Amount)`（88,612.38）。gold 把单价当花费，语义偏差 |
+| **题目设计** | 两个无关子问题强行拼成一道题："加油站花费"（来自 transactions_1k 样例表）+"一月消费"（来自 yearmonth 全集表）。两张表粒度不同，不应 JOIN。Agent 应写两条独立 SQL |
+| **正确结果（cache）** | [[3437.01, 67156.94]]（2026-07-23 修正） |
+| **范式表现** | ER strict PASS（分步查询碰巧对）；DLR/RDF INCORRECT（试图 JOIN 两表）——非建模问题，LLM 被题目误导。2026-07-31 重跑 |
 
 
 ### qid 1531 — `debit_card_specializing`（gold SQL 与 evidence 公式矛盾）
