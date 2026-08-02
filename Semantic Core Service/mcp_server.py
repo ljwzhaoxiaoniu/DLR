@@ -47,12 +47,29 @@ def _ensure_services():
     """Lazy-load and return (graph_db, vector_db, query_service).
 
     Also triggers paradigm-specific tool registration.
+    Thread-safe: uses lock to prevent concurrent initialization.
     """
     global _graph_db, _vector_db, _query_service
 
-    if _graph_db is not None:
+    # Fast path: already initialized and ready
+    if (_graph_db is not None and _vector_db is not None and _query_service is not None
+            and getattr(_vector_db, '_initialized', False)):
         _ensure_paradigm_tools()
         return _graph_db, _vector_db, _query_service
+
+    # Init lock to prevent concurrent initialization
+    import threading
+    _init_lock = getattr(_ensure_services, '_lock', None)
+    if _init_lock is None:
+        _init_lock = threading.Lock()
+        _ensure_services._lock = _init_lock
+
+    with _init_lock:
+        # Double-check inside lock
+        if (_graph_db is not None and _vector_db is not None and _query_service is not None
+                and getattr(_vector_db, '_initialized', False)):
+            _ensure_paradigm_tools()
+            return _graph_db, _vector_db, _query_service
 
     from db.graph_db import GraphDB
     from db.vector_db import VectorDB
@@ -312,6 +329,10 @@ def _execute_sql(sql: str, database_url: str) -> dict:
 
     Agent 必须先通过 MCP 映射工具拿到 database_url, 再调用本工具.
     SELECT * 必须带 LIMIT;结果超 200 行截断(truncated=true).
+
+    ⚠️ SQLite 整数除法: 整数/整数 会截断小数部分(如 3/2=1 而非 1.5).
+    需要浮点结果时务必 CAST(x AS REAL) 或乘以 1.0.
+    AVG() 内置函数不受影响(自动返回浮点).
     """
     import re
     import sqlite3
@@ -532,7 +553,12 @@ def dlr_semantic_query(question: str, top_k: int = 3, threshold: float = 0.5, db
     results = vector_db.search(question, top_k=max(top_k * 3, 20), db=db or None)
     le_results = [r for r in results if r["type"] == "logical_entity"]
     le_results.sort(key=lambda x: x.get("score", 0), reverse=True)
-    le_results = [r for r in le_results if r.get("score", 0) >= threshold][:top_k]
+    # 优先取 >= threshold 的，不足 top_k 时补满（threshold 防噪声，不限制数量）
+    above = [r for r in le_results if r.get("score", 0) >= threshold]
+    if len(above) >= top_k:
+        le_results = above[:top_k]
+    else:
+        le_results = (above + [r for r in le_results if r not in above])[:top_k]
 
     structures = []
     for r in le_results:
@@ -573,7 +599,11 @@ def _recall_pe(question: str, top_k: int = 3, threshold: float = 0.5, db: str = 
     results = vector_db.search(question, top_k=max(top_k * 3, 20), db=db or None)
     pe_results = [r for r in results if r["type"] == "entity"]
     pe_results.sort(key=lambda x: x.get("score", 0), reverse=True)
-    pe_results = [r for r in pe_results if r.get("score", 0) >= threshold][:top_k]
+    above = [r for r in pe_results if r.get("score", 0) >= threshold]
+    if len(above) >= top_k:
+        pe_results = above[:top_k]
+    else:
+        pe_results = (above + [r for r in pe_results if r not in above])[:top_k]
     return {
         "success": True,
         "results": [
@@ -791,9 +821,13 @@ def _get_pe_full(pe_id: str) -> dict:
     - C_column: mapping from LE logical attributes to physical column names.
     - S_semantic4arcs: human-readable description of what this PE represents.
 
-    **Multi-PE query pattern**: when you need data from multiple PEs of the same LE
+    **Multi-PE query pattern (same LE)**: when you need data from multiple PEs of the same LE
     (e.g. filter by Date in YearMonth, get ProductID from Transaction), check if both
     have the same A_anchor.key — if yes, JOIN them on that key.
+
+    **Cross-LE query pattern**: if your query needs data from PEs that belong to DIFFERENT LEs
+    (e.g. Superhero.name + Attribute.attribute_value), do NOT guess the JOIN. Use
+    path_le_le(from_le, to_le) to discover the PAS bridge and its A_attribute JOIN key.
 
     Returns: {success, physical_entity_id, entity, attributes, arcs, database_url}
     """

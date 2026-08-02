@@ -7,7 +7,7 @@ databases:
 logical_entities:
 - logical_entity_id: LOGICAL.Superhero
   biz_name: Superhero
-  description: 超级英雄本体，集成了所有 1:1 维度查表（颜色/种族/性别/出版商/阵营），碎片化物理表对 Agent 透明
+  description: 超级英雄本体(Superhero/hero/character)，集成了所有 1:1 维度查表（颜色/eye colour/种族/race/性别/gender/出版商/publisher/阵营/alignment），碎片化物理表对 Agent 透明。Each superhero has a unique name (superhero_name), height, weight, and links to colour/race/gender/publisher/alignment tables.
   public_attributes:
   - {attr_id: LOGICAL.Superhero.HeroID, biz_name: HeroID, description: '英雄ID: 超级英雄唯一标识符'}
   - {attr_id: LOGICAL.Superhero.HeroName, biz_name: HeroName, description: '英雄代号: 如 "Batman", "Spider-Man"'}

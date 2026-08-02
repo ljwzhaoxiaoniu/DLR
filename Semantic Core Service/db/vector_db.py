@@ -33,8 +33,9 @@ class VectorDB:
         return cls._instances[db_path]
 
     def __init__(self, db_path: str = str(VECTOR_DB_PATH)):
-        if hasattr(self, 'index'):
+        if hasattr(self, '_initialized') and self._initialized:
             return
+        self._initialized = False
         self.db_path = db_path
         self.index = None
         self.id_map = []  # 存储id到向量索引的映射
@@ -42,6 +43,7 @@ class VectorDB:
         self.embedding_model = None
         self._init_db()
         self._init_embedding_model()
+        self._initialized = True
 
     def _init_db(self):
         """初始化向量数据库"""

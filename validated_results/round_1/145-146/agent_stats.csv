@@ -1,0 +1,4 @@
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+1042,ER,7,84025,9840,1227,766,72192,10,"{""er_semantic_query"": 2, ""get_entity"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 2, ""get_table_schema"": 2}",,PASS,,,CORRECT
+1042,DLR,6,62283,3304,944,563,57472,9,"{""dlr_semantic_query"": 3, ""get_le_attrs"": 1, ""get_le"": 1, ""get_pe_full"": 2, ""path_le_le"": 1, ""execute_sql"": 1}",,PASS,,,CORRECT
+1042,RDF,4,34716,3201,578,473,30464,4,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT
