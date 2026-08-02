@@ -25,15 +25,36 @@
 
 ## 2. DLR 建模规则 — 多表聚合场景
 
-> **适用场景**：一个业务概念对应一张主表 + 多张碎片化维度表/子表，需要聚合成统一的业务视图。核心原则：**一个 LE = 一个真实业务概念**，通过 PE 的聚合实现"碎表集中"——这是 DLR 区分于 ER/RDF 的核心优势。但聚合密度高的前提是每个 PE 的锚定键和关键属性暴露给 LE（public），否则 Agent 找不到落脚点。
+> **适用场景**：一个业务概念对应一张主表 + 多张碎片化维度表/子表，需要聚合成统一的业务视图。核心原则：**一个 LE = 一个有业务生命周期的真实业务概念**，由若干物理对象（PE）构成。通过 PE 聚合实现"碎表集中"——这是 DLR 区分于 ER/RDF 的核心优势。
 >
-> 从 superhero + debit_card 建模修复总结（2026-07-25）。
+> 从 superhero + debit_card + financial 建模实践总结（2026-08-02）。
+
+### 2.0 第一原则：LE 必须有业务对象生命周期
+
+**LE 代表业务世界中一个有独立生命周期（创建→存续→终结）、独立业务身份的对象**，由若干物理对象（PE）构成。判定标准：
+
+| 问题 | 例子 | 判定 |
+|------|------|------|
+| 有业务生命周期？有独立身份？ | Loan（批准→运行→结清）、Transaction（逐笔发生）、Account（开户→销户） | **→ LE** |
+| 纯连接表？无业务意义？ | disp（account_id + client_id，无"授权关系"的独立生命） | **→ PE** |
+| 维表/查找表？1:1 查属性？ | colour, gender, district 等维度表 | **→ PE** |
+
+**反例**：`LOGICAL.AccountRelation`（disp 表）——它只是 account↔client 的连接表，没有"授权"的独立生命周期，不应为 LE，应下沉为 Account 的 PE。
+
+**正例**：`LOGICAL.Loan`、`LOGICAL.Transaction`、`LOGICAL.PermanentOrder`——虽然物理 FK 指向 Account（N:1），但各自有独立业务生命周期和查询语境，保留为 LE 是正确的。
 
 ### 2.1 PE 聚合规则：ARCS 还是 PAS？
 
 问题：物理表何时作为 PE 并入同一个 LE（ARCS），何时拆为独立 LE（PAS）？
 
-**规则 1：FK 在主表上的 1:1 维度查表 → ARCS，PE 直挂主 LE**
+**判断流程**：
+```
+物理表 → 有业务生命周期？ 
+         ├─ 否 → 纯 junction/维表？FK 在主表上？→ ARCS，PE 挂主 LE（规则 1）
+         └─ 是 → 独立 LE + PAS（规则 2）
+```
+
+**规则 1：纯关联/维度表（无业务生命周期）→ ARCS，PE 直挂主 LE**
 
 ```
 superhero 表有 eye_colour_id, race_id, gender_id, …
@@ -44,7 +65,16 @@ superhero 表有 eye_colour_id, race_id, gender_id, …
 
 这是 DLR "碎表集中"的核心优势——物理上碎片化的维度表对 Agent 透明，Agent 看到的是一棵完整的业务实体树。
 
-**规则 2：Junction 表（多对多）→ 拆为独立 LE，PAS 关联**
+```
+financial: disp（纯 junction, client↔account）
+         ↓ FK account_id 在 disp 上 → ARCS 挂 Account 下
+    PHYSICAL.Disp + PHYSICAL.Card → PE under LOGICAL.Account
+         ↓ Agent 不再需要导航 Account→AccountRelation→Client 的两次跳转
+```
+
+**规则 2：有业务生命周期的对象 → 独立 LE + PAS**
+
+即使物理 FK 指向其他表（N:1），只要对象有独立业务意义，就拆为独立 LE：
 
 ```
 superhero ──N:1── hero_power ──1:N── superpower
@@ -53,7 +83,14 @@ superhero ──N:1── hero_power ──1:N── superpower
 → PAS: Superhero ──possesses──→ Power  (A: HeroID, 1:N / N:1)
 ```
 
-特征：主表被 junction 表**引用**（`hero_power.hero_id → superhero.id`），不是主表主动指向 junction。这种反向引用必须拆独立 LE。PAS 提供语义层关联，两面都可导航。
+```
+financial: Account ──N:1── Loan ──1:1── Account
+                  ↑ FK account_id 在 loan 上, 但 loan 有独立业务生命周期
+→ LOGICAL.Loan (独立 LE) ✓  —— 不是纯 junction, 保留为 LE
+→ PAS: Account ──HasLoan──→ Loan
+```
+
+特征：主表被 junction 表**引用**（`hero_power.hero_id → superhero.id`），或有业务生命周期（Loan/Transaction/PermanentOrder）。拆为独立 LE，PAS 提供语义关联，两面都可导航。
 
 ### 2.2 PAS 锚定键规则
 
@@ -95,19 +132,38 @@ DLR 的 LE-PE 双层模型可以将这类表**吸收为 PE**，挂到有业务�
 
 ### 2.5 案例：financial
 
-**物理设计**：`disp` 是 client↔account 的纯 junction 表，`district` 是统计维表（A2-A16 魔鬼数字列）。旧 DLR 建模把 disp 提升为独立 LE `AccountRelation`，District 又设为孤立 LE，三条 PAS 绕了 Agent 两跳还找不到北。
+**旧建模（错误）**：
 
-**问题**：
-- `disp` 被建模为独立 `LOGICAL.AccountRelation`——它没有业务意义，Agent 绕路
+```
+LOGICAL.Account   LOGICAL.Client   LOGICAL.AccountRelation   LOGICAL.District   LOGICAL.Loan   LOGICAL.Transaction   LOGICAL.PermanentOrder
+                         ↑ 7 个 LE, 其中 AccountRelation 是纯 junction 无生命周期
+```
+
+问题：
+- `disp` 被建模为独立 `LOGICAL.AccountRelation`——纯 junction 表，无业务生命周期，Agent 绕路
 - `District` 无 PAS 连接到 Client/Account，虽 FK 存在但语义路由断链
-- A* 列全为魔鬼数字（A11=平均工资），无描述无法召回
+- A* 魔鬼数字列（A11-A15）description 不足，`Amount` 等核心度量藏在 private
+- Loan/Transaction/PermanentOrder 虽保留为 LE 正确（各有业务生命周期），但 `amount`、`status` 等核心度量列全在 private——Agent 要翻 PE 才能发现
 
-**修复**：
-- `DistrictID` 升为 Client 和 Account 的 public attribute，补 PAS `Client→District` 和 `District→Account`
-- A11-A15 补英文 description
-- 后续可进一步将 disp 吸收为 Account 的 PE
+**新建模（正确）**：
 
-**效果**：Agent 现在能从 Client 直接导航到 District，q94 的 gap 计算全部取对（4431）。
+```
+LOGICAL.Account                    LOGICAL.Client     LOGICAL.District     LOGICAL.Loan      LOGICAL.Transaction   LOGICAL.PermanentOrder
+  ├ PE: account (master)            └ PE: client        └ PE: district       └ PE: loan         └ PE: trans            └ PE: order
+  ├ PE: disp (ARCS, N:1, A: account_id)                                        amount → public    amount → public        amount → public
+  └ PE: card (ARCS, N:1, A: disp_id)                                           status → public    balance → public
+
+PAS: Client ──Holds──→ Account (A: ClientID, via disp.client_id)
+PAS: Account ──HasLoan──→ Loan / ──Generates──→ Transaction / ──HasOrder──→ PermanentOrder
+PAS: Client ──ResidesIn──→ District (A: DistrictID)
+                       6 个 LE (消解 AccountRelation), 10 个 PE, 5 条 PAS
+```
+
+改进：
+- `disp` 从独立 LE 下沉为 Account PE——Agent 不再绕路
+- Loan/Transaction/PermanentOrder **保留为 LE**——各有批准→结清、逐笔发生、创建→执行的生命周期
+- `amount`/`status`/`balance` 等核心度量升 public——Agent 一次 `get_pe_full` 看到关键列
+- 消除 `Account→AccountRelation→Client` 的中间跳，Client↔Account 直连
 
 ### 2.6 案例：superhero
 
@@ -199,12 +255,12 @@ PAS: Budget ──funds──→ Expense        (A: Budget)
 
 ### 2.9 检查清单
 
-1. 每个 LE 在实体世界有对应概念吗？（没有则拆；纯 junction 表下沉为 PE）
-2. FK 在主表上（→ ARCS）还是被引用（→ PAS）？
-3. PAS 的 `A` 锚定键在源 LE 端有 public_attributes 条目吗？
-4. junction PE 的连接键升为所属 LE 的 public 了吗？
-5. 业务核心度量列在 public_attributes 中可找到吗？
-6. 所有属性都有 description 吗？
+0. **LE 有业务对象生命周期吗？**（纯 junction 下沉为 PE；有生命周期则保留 LE + PAS）——**第一原则**
+1. FK 在主表上（→ ARCS）还是被引用（→ PAS）？
+2. PAS 的 `A` 锚定键在源 LE 端有 public_attributes 条目吗？
+3. junction PE 的连接键升为所属 LE 的 public 了吗？
+4. **业务核心度量列（金额/状态/日期/数量）在 public_attributes 中可找到吗？**
+5. 所有属性都有 description 吗？魔鬼数字列是否通过 description 声明了语义？
 7. **PE 的 A_anchor 有逻辑意义吗？**（纯 junction FK → 换锚点或升级为独立 LE + PAS）**[规则 6]**
 8. **有没有独立业务概念被埋在某 LE 下？**（如 Expense 埋 EventFinance、Power 埋 HeroFeature）→ 拆为独立 LE + 直接 PAS **[规则 7]**
 9. **LE description 够丰富吗？**（3-5 词不够——至少包含该 LE 下所有关键字段名和业务语义）**[规则 8]**
@@ -359,7 +415,7 @@ Agent 写 SQL → execute_sql → Final Answer
 | Tool | 参数 | 语义 |
 |------|------|------|
 | `er_semantic_query` | `question, top_k=20, db?` | 语义召回 → 实体（扁平，候选带 db） |
-| `list_entities` / `list_relations` | — | 列出实体 / 关系 |
+| ~~`list_entities`~~ / ~~`list_relations`~~ | — | **已禁用** — 全量枚举绕过语义召回 |
 | `get_entity` / `get_entity_attributes` / `get_entity_relations` | `entity_id` | 实体详情 / 属性 / 关系 |
 | `get_entity_mapping` | `entity_id` | 物理映射（database_url + 表 + 字段） |
 | `find_shortest_path` | `from_id, to_id` | 两实体最短路径 |
@@ -373,13 +429,13 @@ Agent 写 SQL → execute_sql → Final Answer
 |------|------|------|
 | `dlr_semantic_query` | `question, top_k, threshold, db?` | 语义召回 → LE-PE 结构体 |
 | `recall_pe` / `recall_pas` | `question, top_k, threshold, db?` | 召回 PE / PAS |
-| `list_le(keyword)` / `list_pe` / `list_pas` | — | 列表 |
+| ~~`list_le`~~ / ~~`list_pe`~~ / ~~`list_pas`~~ | — | **已禁用** — 全量枚举，此前 list_le/list_pe 已移除，list_pas 2026-08-02 禁用 |
 | `get_le` / `get_le_attrs` / `get_le_children` / `get_le_pas` | `le_id` | LE 详情/属性/子PE/PAS |
 | **`get_pe_full`** ★ | `pe_id` | **PE 详情+属性+ARCS+database_url 一次调用** |
 | `get_pe_parent` / `get_pas` / `get_pas_by_le` | id | 导航 |
 | `path_le_le` / `path_pe_pe` | 两 id | 最短路径 |
 | `is_le` / `is_pe` / `is_arcs` / `is_same_le` | id | 判定 |
-| `schema` | — | 完整 schema |
+| ~~`schema`~~ | — | **已禁用** — 全量 dump LE+PE+PAS（q116 实测 37KB） |
 
 ### RDF 工具（7 + 1 共享）
 
@@ -387,7 +443,7 @@ Agent 写 SQL → execute_sql → Final Answer
 |------|------|------|
 | `rdf_semantic_query` | `question, top_k=20, db?` | 语义召回 → 类 |
 | `query_rdf_mapping` | `class_uri` | R2RML 映射（列+JOIN+database_url） |
-| `rdf_classes` / `rdf_predicates` | — | 列出类 / 谓词 |
+| ~~`rdf_classes`~~ / ~~`rdf_predicates`~~ | — | **已禁用** — 全量枚举 class/predicate URI |
 | `rdf_search` | `q, limit` | 文本搜索三元组 |
 | `rdf_serialize` | `format` | 序列化（W3C） |
 | `rdf_sparql` | `query` | SPARQL（W3C） |
