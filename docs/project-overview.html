@@ -482,9 +482,106 @@
   </p>
 </section>
 
-<!-- ════════════════ Slide 6: Agent 归一 ════════════════ -->
+<!-- ════════════════ Slide 6: 语义服务底座 ════════════════ -->
 <section class="slide">
   <div class="section-label">评测方法 · 二</div>
+  <h2 class="section-title">语义服务底座：<em>一套数据</em>，三套建模，同构存储</h2>
+
+  <p style="font-size:17px;color:var(--ink-2);max-width:720px;margin-bottom:28px">
+    评测的前提是：同一批 SQLite 数据库能同时被三个范式以<b>同构方式</b>服务——
+    这需要一套工程底座将建模配置编译为可查询的语义存储。
+  </p>
+
+  <!-- Architecture flow -->
+  <div class="arch" style="margin-bottom:24px;gap:6px">
+    <div class="arch__label" style="font-size:12px">┌──────────── 建模配置层 ────────────┐</div>
+    <div class="arch__row" style="gap:12px">
+      <div class="arch__box arch__box--er" style="min-width:120px;font-size:13px">
+        <strong>ER · 11 套 YAML</strong>
+        <small>BizEntity / Attribute / Relation</small>
+      </div>
+      <div class="arch__box arch__box--dlr" style="min-width:120px;font-size:13px">
+        <strong>DLR · 11 套 YAML</strong>
+        <small>LE / PE / PAS / ARCS</small>
+      </div>
+      <div class="arch__box arch__box--rdf" style="min-width:120px;font-size:13px">
+        <strong>RDF · 11 套 TTL</strong>
+        <small>rr:TriplesMap / R2RML</small>
+      </div>
+    </div>
+    <div class="arch__label" style="font-size:12px;margin-top:8px">↓ ConfigLoader 统一解析 ↓</div>
+    <div class="arch__label" style="font-size:12px">┌──────────── 同构存储层 ────────────┐</div>
+    <div class="arch__row" style="gap:32px">
+      <div class="arch__box" style="text-align:center">
+        <strong>Kuzu 图数据库</strong>
+        <small>节点 = 实体/LE/类<br>边 = 关系/PAS/predicate</small>
+      </div>
+      <div class="arch__box" style="text-align:center">
+        <strong>FAISS 向量库</strong>
+        <small>实体/LE/TriplesMap<br>语义描述 → embedding</small>
+      </div>
+      <div class="arch__box" style="text-align:center">
+        <strong>Sqlite 直连</strong>
+        <small>数据库路径映射<br>execute_sql 透传执行</small>
+      </div>
+    </div>
+    <div class="arch__label" style="font-size:12px;margin-top:8px">↓ 三范式 MCP Server（端口隔离）↓</div>
+    <div class="arch__row" style="gap:8px">
+      <div class="arch__box arch__box--er" style="font-size:12px;min-width:100px">
+        <strong>ER</strong><small>28765/28767</small>
+      </div>
+      <div class="arch__box arch__box--dlr" style="font-size:12px;min-width:100px">
+        <strong>DLR</strong><small>28775/28777</small>
+      </div>
+      <div class="arch__box arch__box--rdf" style="font-size:12px;min-width:100px">
+        <strong>RDF</strong><small>28785/28787</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-top:20px">
+    <div class="card">
+      <h3>📐 建模配置 → 存储</h3>
+      <p style="font-size:14px">
+        33 套 YAML/TTL 配置文件（ER 11 + DLR 11 + RDF 11），
+        由统一的 <code>ConfigLoader</code> 解析，分别写入 Kuzu 图数据库（实体节点+关系边）
+        和 FAISS 向量索引（语义描述 embedding）。
+        三范式共享完全相同的底层数据库路径。
+      </p>
+    </div>
+    <div class="card">
+      <h3>🌐 可视化 + API + MCP</h3>
+      <p style="font-size:14px">
+        每个范式提供独立的 Web 可视化页面（ER/DLR/RDF 三套静态 HTML），
+        REST API 查询接口，以及 MCP 工具服务。
+        Agent 通过 MCP 协议连接，工具签名由该范式的建模决定——
+        <strong>范式差异被 MCP 工具层屏蔽</strong>，Agent 不需要知道自己用的是哪种范式。
+      </p>
+    </div>
+    <div class="card">
+      <h3>📊 工程规模</h3>
+      <div style="font-size:13px;line-height:2;margin-top:8px">
+        <div>Semantic Core Service <span style="float:right;font-weight:700">~2,800 行 Python</span></div>
+        <div style="color:var(--ink-2)">YAML 配置（33 套） <span style="float:right;font-weight:700">~22,400 行</span></div>
+        <div style="color:var(--ink-2)">TTL R2RML（11 库） <span style="float:right;font-weight:700">~2,700 行</span></div>
+        <div style="color:var(--ink-2)">可视化 HTML/JS <span style="float:right;font-weight:700">~2,700 行</span></div>
+        <div style="color:var(--ink-2)">评测脚本 Shell/Python <span style="float:right;font-weight:700">~1,500 行</span></div>
+        <div style="border-top:1px solid var(--border);margin-top:4px;padding-top:4px;font-weight:700">
+          建模+服务+评测 <span style="float:right;color:var(--dlr)">~32,000 行</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p style="color:var(--muted);font-size:14px;margin-top:20px;text-align:center">
+    33 套配置文件 = 11 个数据库 × 3 种范式，全部手动建模完成。<br>
+    <strong>同构存储 + MCP 工具隔离</strong> 是评测公平性的保证：同一批原始数据，三种建模表达，一个 Agent 来测。
+  </p>
+</section>
+
+<!-- ════════════════ Slide 7: Agent 归一 ════════════════ -->
+<section class="slide">
+  <div class="section-label">评测方法 · 三</div>
   <h2 class="section-title">Agent 归一：<em>同一套框架</em>，建模是唯一变量</h2>
 
   <div class="arch" style="margin-top:28px;gap:8px">
