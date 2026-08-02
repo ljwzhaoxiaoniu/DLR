@@ -418,6 +418,19 @@
       </p>
     </div>
   </div>
+
+  <div class="card" style="margin-top:24px;border-left:3px solid var(--dlr)">
+    <h3>🎯 LE-PE 解耦的业务意义</h3>
+    <p style="font-size:15px;margin-top:6px">
+      DLR 的建模工作被拆成两层：<strong>业务人员</strong>定义 LE 和关键 PE 属性（想清楚"这个业务概念有哪些核心度量"），
+      <strong>IT 人员</strong>一次性完成 PE 到物理表的 ARCS 锚定。
+      此后业务人员调整建模只需在 LE/PE 概念层操作，不需要触碰底层表结构。<br>
+      <span style="font-size:13px;color:var(--ink-2);margin-top:6px;display:block">
+      vs <span style="color:var(--er);font-weight:600">ER</span>：建模即定义物理实体和关系——业务人员必须理解表结构才能建模，本质是 IT 视角<br>
+      vs <span style="color:var(--rdf);font-weight:600">RDF</span>：需要专门的 W3C/R2RML/SPARQL 知识——维护成本高，非专业人员难以参与
+      </span>
+    </p>
+  </div>
 </section>
 
 <!-- ════════════════ Slide 5: 评测集 + 技术框架 ════════════════ -->
