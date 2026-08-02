@@ -2,7 +2,7 @@
 "er","207","toxicology","FAIL","CORRECT","手动翻盘: judge超时(300s)。ER SQL通过connected表UNION atom_id+atom_id2两端，精确定位参与双键的原子，结果[c,ca,n,o,s]正确。Gold SQL有bug——仅通过molecule_id关联bond，召回了含双键分子中所有原子而非参与双键的原子。","CORRECT","100","","14296","565","576","37888","53325"
 "er","208","toxicology","FAIL","CORRECT","SQL语义正确，定位到atom/molecule表，过滤element='h'后按label分组计数取最大值，结果label为""-""与GoldResult一致，多余cnt列不扣分
 ```","CORRECT","100","","16175","501","619","52480","69775"
-"dlr","207","toxicology","PASS","CORRECT","","CORRECT","100","","2885","384","330","39680","43279"
+"dlr","207","toxicology","PASS","","","CORRECT","100","","2885","384","330","39680","43279"
 "dlr","208","toxicology","FAIL","CORRECT","语义正确(atom/molecule表)、工具调用链正确(semantic_query→get_pe_full→execute_sql)、SQL逻辑等价且执行成功、最终答案""-""与GoldResult一致(额外cnt列不扣分)
 ```","CORRECT","100","","8966","340","850","31744","41900"
 "rdf","207","toxicology","FAIL","CORRECT","手动翻盘: judge超时(300s)。RDF SQL通过connected表atom_id端定位参与双键的原子，结果[c,ca,n,o,s]与ER/DLR一致且正确。Gold SQL有bug——仅通过molecule_id关联bond，召回了含双键分子中所有原子而非参与双键的原子。","CORRECT","100","","9699","393","523","26624","37239"

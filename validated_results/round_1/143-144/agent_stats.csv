@@ -1,0 +1,7 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","1168","thrombosis_prediction","FAIL","CORRECT","PredSQL 定位最小 Birthday=SJS 患者(125619),最晚实验室日期 1986-01-07、入院年龄 69,调用链走 semantic_query→映射工具→execute_sql 且 database_url 来自 get_entity 映射,执行成功,Agent 最终回答与 GoldResult 一致(PredResult 仅列序不同)。","CORRECT","100","","8849","1094","1066","81536","92545"
+"er","1169","thrombosis_prediction","FAIL","CORRECT","语义定位 Laboratory/Patient 正确，SQL 与 Gold 计算逻辑完全一致（UA≤8.0&M / UA≤6.5&F），执行返回 0.206 即 Gold 0.205668 三位四舍五入所得，答案值按题意加工一致。","CORRECT","100","","4661","1577","1358","86528","94124"
+"rdf","1168","thrombosis_prediction","FAIL","CORRECT","5/5步通过——SJS患者、Laboratory/Patient、min(Birthday)语义与工具链正确，SQL表达题意并执行成功（列顺序差异不扣分），最终答案1986-01-07与69与GoldResult一致。","CORRECT","100","","8176","1718","668","92288","102850"
+"rdf","1169","thrombosis_prediction","PASS","","","CORRECT","100","","1873","563","486","44160","47082"
+"DLR","1168","","FAIL","CORRECT","语义召回定位到 Patient/Laboratory(thrombosis_prediction),映射来自 get_pe_full(LabDate→Laboratory.Date、`First Date`/Birthday/Diagnosis 均在映射中),database_url 取自 PE 映射;SQL 表达题意并执行成功,PredResult [[69,""1986-01-07""]] 与 GoldResult [[""1986-01-07"",69]] 值一致(仅列序不同),最终回答也正确。","CORRECT","","","11264","1689","1208","108416","122577"
+"DLR","1169","","PASS","","","CORRECT","","","4587","769","1099","46336","52791"

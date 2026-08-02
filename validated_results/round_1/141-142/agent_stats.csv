@@ -1,0 +1,7 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","563","codebase_community","PASS","","","CORRECT","100","","3192","1272","415","73472","78351"
+"er","565","codebase_community","PASS","","","CORRECT","100","","3713","765","642","55168","60288"
+"dlr","563","codebase_community","PASS","","","CORRECT","100","","2550","767","679","65536","69532"
+"dlr","565","codebase_community","PASS","","","CORRECT","100","","2121","783","707","45440","49051"
+"rdf","563","codebase_community","PASS","","","CORRECT","100","","2048","760","326","45824","48958"
+"rdf","565","codebase_community","FAIL","CORRECT","全部五步通过：召回 comments/posts 正确，工具链 semantic_query→query_rdf_mapping→execute_sql 合规，SQL 使用的字段(PostId/UserId/CreationDate/ClosedDate)及 database_url 均来自映射返回；实际数据 ClosedDate='2013-07-12 13:59:45.0' 非空，按题意(非空=well-finished)Pred 的 ""yes"" 与 Gold 的 ""well-finished"" 语义一致，答案正确。","CORRECT","100","","1991","757","354","38016","41118"

@@ -1,0 +1,7 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","1346","student_club","PASS","","","CORRECT","100","","5897","743","867","93824","101331"
+"er","1350","student_club","PASS","","","CORRECT","100","","3544","1320","743","82816","88423"
+"dlr","1346","student_club","PASS","","","CORRECT","100","","1215","258","148","32512","34133"
+"dlr","1350","student_club","PASS","","","CORRECT","100","","4552","1770","1758","161280","169360"
+"rdf","1346","student_club","PASS","","","CORRECT","100","","2648","554","429","47232","50863"
+"rdf","1350","student_club","PASS","","","CORRECT","100","","2132","1169","924","83328","87553"

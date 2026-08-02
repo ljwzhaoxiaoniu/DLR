@@ -1,4 +1,7 @@
 question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,error,strict_match,judge_verdict,judge_reason,verdict
+1040,ER,4,33430,2188,520,642,30080,4,"{""er_semantic_query"": 1, ""get_entity_mapping"": 2, ""execute_sql"": 1}",,FAIL,INCORRECT,"语义定位+工具链均正确，但Pred按player_fifa_api_id JOIN+按player_name分组，与Gold的player_api_id分组不同，Top-10名单缺Naldo、多Sami Hyypiae",INCORRECT
+1040,DLR,4,40540,3360,641,827,35712,4,"{""dlr_semantic_query"": 1, ""get_pe_full"": 2, ""execute_sql"": 1}",,FAIL,CORRECT,"DLR ARCS锚定键引导正确JOIN(player_api_id)，SQL正确，Top-10结果与Gold语义一致",CORRECT
+1040,RDF,4,34368,1780,830,1038,30720,5,"{""rdf_semantic_query"": 2, ""query_rdf_mapping"": 2, ""execute_sql"": 1}",,FAIL,CORRECT,"RDF mapping+SQL正确，Top-10与Gold一致",CORRECT
 1042,ER,7,84025,9840,1227,766,72192,10,"{""er_semantic_query"": 2, ""get_entity"": 2, ""get_entity_mapping"": 2, ""execute_sql"": 2, ""get_table_schema"": 2}",,PASS,,,CORRECT
 1042,DLR,6,62283,3304,944,563,57472,9,"{""dlr_semantic_query"": 3, ""get_le_attrs"": 1, ""get_le"": 1, ""get_pe_full"": 2, ""path_le_le"": 1, ""execute_sql"": 1}",,PASS,,,CORRECT
 1042,RDF,4,34716,3201,578,473,30464,4,"{""rdf_semantic_query"": 1, ""query_rdf_mapping"": 2, ""execute_sql"": 1}",,PASS,,,CORRECT

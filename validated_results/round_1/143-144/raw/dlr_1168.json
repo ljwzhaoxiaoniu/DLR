@@ -1,0 +1,18 @@
+{
+  "q_id": 1168,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT MAX(l.Date) AS lab_completed_date, (CAST(substr(p.`First Date`,1,4) AS INTEGER) - CAST(substr(p.Birthday,1,4) AS INTEGER)) AS age_at_arrival FROM Patient p LEFT JOIN Laboratory l ON p.ID = l.ID WHERE p.Diagnosis = 'SJS' AND p.Birthday = (SELECT MIN(Birthday) FROM Patient WHERE Diagnosis = 'SJS')",
+  "result": {
+    "columns": [
+      "age_at_arrival",
+      "lab_completed_date"
+    ],
+    "rows": [
+      [
+        69,
+        "1986-01-07"
+      ]
+    ]
+  }
+}

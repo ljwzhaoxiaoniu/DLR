@@ -1,0 +1,16 @@
+{
+  "q_id": 1169,
+  "ok": true,
+  "error": null,
+  "sql": "SELECT SUM(CASE WHEN L.UA <= 8.0 AND P.SEX = 'M' THEN 1 ELSE 0 END) * 1.0 / NULLIF(SUM(CASE WHEN L.UA <= 6.5 AND P.SEX = 'F' THEN 1 ELSE 0 END), 0) AS ratio FROM Laboratory L JOIN Patient P ON L.ID = P.ID",
+  "result": {
+    "columns": [
+      "ratio"
+    ],
+    "rows": [
+      [
+        0.205668
+      ]
+    ]
+  }
+}
