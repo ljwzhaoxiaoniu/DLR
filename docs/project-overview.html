@@ -628,7 +628,7 @@
   </p>
 </section>
 
-<!-- ════════════════ Slide 7: 结果 ════════════════ -->
+<!-- ════════════════ Slide 8: 结果 ════════════════ -->
 <section class="slide">
   <div class="section-label">结果</div>
   <h2 class="section-title">DLR 全面领先：<em>正确率更高，Token 更少</em></h2>
@@ -679,7 +679,7 @@
   </div>
 </section>
 
-<!-- ════════════════ Slide 8: 为什么赢 ════════════════ -->
+<!-- ════════════════ Slide 9: 为什么赢 ════════════════ -->
 <section class="slide">
   <div class="section-label">定性分析</div>
   <h2 class="section-title">DLR <em>为什么赢</em>——三个关键机制</h2>
@@ -741,99 +741,184 @@
   </div>
 </section>
 
-<!-- ════════════════ Slide 9: ER/RDF 失效案例 ════════════════ -->
+<!-- ════════════════ Slide 9: ER vs DLR ════════════════ -->
 <section class="slide">
-  <div class="section-label">案例分析</div>
-  <h2 class="section-title">ER 与 RDF <em>从哪里开始失效</em></h2>
+  <div class="section-label">案例分析 · 一</div>
+  <h2 class="section-title">ER vs DLR：<em>结构引导</em> 决定正确与效率</h2>
 
   <div class="grid-2" style="margin-top:24px">
-    <!-- ER column -->
+    <!-- Left col: correctness -->
     <div>
-      <div style="font-size:13px;font-weight:700;color:var(--er);margin-bottom:12px;letter-spacing:0.05em">ER 失效模式</div>
+      <div style="font-size:13px;font-weight:700;color:var(--critical);margin-bottom:12px;letter-spacing:0.05em">ER 答错了，DLR 答对了</div>
 
-      <div class="card" style="margin-bottom:16px;border-left:3px solid var(--er)">
-        <h4 style="font-size:15px">大宽表：cards 表 78 列全暴露</h4>
-        <p style="font-size:13px;margin-top:4px">
-          <strong>q341</strong> — card_games 的 cards 表 78 列全部以 BizAttribute 列出，
-          Agent 在列海中迷失，SQL 逻辑错误 →
-          <span style="color:var(--critical)">ER INCORRECT (95K)</span><br>
-          DLR：private_attributes 屏蔽非业务列，Agent 只看到核心属性 →
-          <span style="color:var(--good)">DLR CORRECT (59K)</span>
-        </p>
-        <p style="font-size:12px;color:var(--ink-2);margin-top:4px">
-          q345 同理：78 列宽表 + list_all_tables 兜底 → ER 60K 探索
+      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--er)">
+        <h4 style="font-size:14px">q25 · 列歧义：PE 属性归属消解</h4>
+        <p style="font-size:12px;margin-top:4px">
+          california_schools 中 <code>schools.School</code> 和 <code>frpm.School Name</code> 在 ER 全互联 FK 网中视觉权重相等，Agent 选错 →
+          <span style="color:var(--critical)">ER INCORRECT (102K)</span><br>
+          DLR：SchoolName 归属 FRPM PE，语义路由直接命中 →
+          <span style="color:var(--good)">DLR CORRECT (47K)，独胜</span>
         </p>
       </div>
 
-      <div class="card" style="margin-bottom:16px;border-left:3px solid var(--er)">
-        <h4 style="font-size:15px">碎表聚合：Expense 跨 4 张表</h4>
-        <p style="font-size:13px;margin-top:4px">
-          <strong>q1339</strong> — student_club 的 Expense 分散在多个子表中，
-          ER 需逐表探索 →
-          <span style="color:var(--ink-2)">ER 25 步 (92K)</span><br>
-          DLR：Expense 独立 LE + Budget/Income/General 三个 PE 聚合在一个 LE 下，
-          PAS 一步定位 →
-          <span style="color:var(--good)">DLR 4 步 (15K)</span>，仅 ER 的 1/6
+      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--er)">
+        <h4 style="font-size:14px">q1037 · JOIN 键选错</h4>
+        <p style="font-size:12px;margin-top:4px">
+          football 多表 JOIN，ER 全互联 FK 导致 Agent 选错关联路径 →
+          <span style="color:var(--critical)">ER INCORRECT (97K)</span><br>
+          DLR：PAS 桥显式编码 JOIN 键（A_attribute），Agent 精准匹配 →
+          <span style="color:var(--good)">DLR CORRECT (51K)</span>
         </p>
       </div>
 
       <div class="card" style="border-left:3px solid var(--er)">
-        <h4 style="font-size:15px">JOIN 膨胀：多对多 fan-out 污染聚合</h4>
-        <p style="font-size:13px;margin-top:4px">
-          <strong>q197</strong> — toxicology 的 molecule → bond (1:N) JOIN 后
-          COUNT 被 bond 条数放大 (氧计数 2.16→69.28) →
+        <h4 style="font-size:14px">q197 · JOIN fan-out 污染聚合</h4>
+        <p style="font-size:12px;margin-top:4px">
+          toxicology 的 molecule→bond (1:N) JOIN 后 COUNT 被 bond 条数放大→
           <span style="color:var(--critical)">ER INCORRECT (57K)</span><br>
-          DLR：PAS 语义桥走 bond → connected → atom 精确路径，DISTINCT molecule_id 避开 fan-out →
-          <span style="color:var(--good)">DLR CORRECT (35K)</span>
+          DLR：PAS 桥走 bond→connected→atom 精确路径，DISTINCT molecule_id 避开 fan-out →
+          <span style="color:var(--good)">DLR CORRECT (48K)</span>
         </p>
       </div>
     </div>
 
-    <!-- RDF column -->
+    <!-- Right col: token efficiency -->
     <div>
-      <div style="font-size:13px;font-weight:700;color:var(--rdf);margin-bottom:12px;letter-spacing:0.05em">RDF 失效模式</div>
+      <div style="font-size:13px;font-weight:700;color:var(--er);margin-bottom:12px;letter-spacing:0.05em">都对，但 DLR 省得多</div>
 
-      <div class="card" style="margin-bottom:16px;border-left:3px solid var(--rdf)">
-        <h4 style="font-size:15px">扁平陷阱：triple 无属性归属</h4>
-        <p style="font-size:13px;margin-top:4px">
-          <strong>q1529</strong> — transactions_1k 和 yearmonth 的字段在 SPARQL 中视觉权重完全相等，
-          Agent 被 Date/Amount 列吸引走 transactions_1k，忽略 yearmonth 独有的 Consumption 字段 →
-          <span style="color:var(--critical)">RDF INCORRECT × 3</span><br>
-          DLR：LE.Consumption 的 public 属性显式归属 → Agent 直接选对数据源 →
-          <span style="color:var(--good)">DLR CORRECT (86K)</span>
+      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--er)">
+        <h4 style="font-size:14px">q1339 · 碎表聚合</h4>
+        <p style="font-size:12px;margin-top:4px">
+          student_club Expense 分散在多个子表，ER 逐表探索→
+          <span style="color:var(--ink-2)">ER 25 步 (145K)</span><br>
+          DLR：Expense 独立 LE + 3 PE 聚合，PAS 一步定位→
+          <span style="color:var(--good)">DLR 4 步 (34K)</span> — <strong>4.3×</strong> ER
         </p>
       </div>
 
-      <div class="card" style="margin-bottom:16px;border-left:3px solid var(--rdf)">
-        <h4 style="font-size:15px">列歧义：同名不同义无法区分</h4>
-        <p style="font-size:13px;margin-top:4px">
-          <strong>q25</strong> — california_schools 中 schools.School 和 frpm.School Name 在 RDF 中同为 predicate，
-          无上下文区分 →
-          <span style="color:var(--critical)">ER INCORRECT + RDF INCORRECT</span><br>
-          DLR：PE 属性归属到具体 LE，不同表的同名列自然隔离 →
-          <span style="color:var(--good)">DLR CORRECT，独胜</span>
-        </p>
-        <p style="font-size:12px;color:var(--ink-2);margin-top:4px">
-          q11 (CDSCode vs School Code)、q24 (schools.School vs frpm.School Name) 同理
+      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--er)">
+        <h4 style="font-size:14px">q1481 · 嵌套子查询路径膨胀</h4>
+        <p style="font-size:12px;margin-top:4px">
+          debit_card 多条件过滤，ER 子查询路径膨胀→
+          <span style="color:var(--ink-2)">ER 230K</span><br>
+          DLR：PAS 精准定位→
+          <span style="color:var(--good)">DLR 75K</span> — <strong>3.1×</strong> ER
         </p>
       </div>
 
-      <div class="card" style="border-left:3px solid var(--rdf)">
-        <h4 style="font-size:15px">⚠️ RDF Token 偏低的真相</h4>
-        <p style="font-size:13px;margin-top:4px">
-          当前 RDF 的 R2RML 映射<strong>仅针对题目用到的列进行了形式化建模</strong>——
-          这解释了它的平均 token (52K) 低于 ER (61K)。如果像 ER 一样对所有列完整建模，
-          triple 膨胀后的 SPARQL 嵌套将使 token 和正确率都急剧恶化。
-          <br><span style="color:var(--muted);font-size:12px">
-          例：q532 仅多表 OPTIONAL 嵌套即达 197K (6× DLR)；全量建模下这种膨胀将是常态。
-        </span>
+      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--er)">
+        <h4 style="font-size:14px">q866 · LE 分层避免冗余探索</h4>
+        <p style="font-size:12px;margin-top:4px">
+          formula_1 lap time→driver url，ER 全量暴露→9 次 SQL + list_all_tables→
+          <span style="color:var(--ink-2)">ER 186K</span><br>
+          DLR：LE 分层 1 次语义查询锁定 lapTimes+drivers→
+          <span style="color:var(--good)">DLR 94K</span> — <strong>2.0×</strong> ER
+        </p>
+      </div>
+
+      <div class="card" style="border-left:3px solid var(--er)">
+        <h4 style="font-size:14px">q1025 · PAS 直达多表 JOIN</h4>
+        <p style="font-size:12px;margin-top:4px">
+          football 多表探索，ER 全量遍历→
+          <span style="color:var(--ink-2)">ER 95K</span><br>
+          DLR：PAS 篮桥一步到位→
+          <span style="color:var(--good)">DLR 33K</span> — <strong>2.9×</strong> ER
         </p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ════════════════ Slide 10: 结构化 → 非结构化 ════════════════ -->
+<!-- ════════════════ Slide 10: RDF vs DLR ════════════════ -->
+<section class="slide">
+  <div class="section-label">案例分析 · 二</div>
+  <h2 class="section-title">RDF vs DLR：<em>信息层级</em> 决定 Agent 注意力落点</h2>
+
+  <div class="grid-2" style="margin-top:24px">
+    <!-- Left col: correctness -->
+    <div>
+      <div style="font-size:13px;font-weight:700;color:var(--critical);margin-bottom:12px;letter-spacing:0.05em">RDF 答错了，DLR 答对了</div>
+
+      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--rdf)">
+        <h4 style="font-size:14px">q25 · 列歧义：flat triple 无属性归属</h4>
+        <p style="font-size:12px;margin-top:4px">
+          <code>schools.School</code> 和 <code>frpm.School Name</code> 在 RDF 中同为 predicate，Agent 无法判断该用哪个→
+          <span style="color:var(--critical)">RDF INCORRECT (51K)</span><br>
+          DLR：PE 属性归属自然隔离同名列→
+          <span style="color:var(--good)">DLR CORRECT (47K)，独胜</span>
+        </p>
+      </div>
+
+      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--rdf)">
+        <h4 style="font-size:14px">q1529 · 扁平陷阱：被无关表吸走</h4>
+        <p style="font-size:12px;margin-top:4px">
+          transactions_1k 的 Date/Amount 和 yearmonth 的 Consumption 在 triple 海洋中视觉权重相等，Agent 被吸向 transactions_1k→
+          <span style="color:var(--critical)">RDF INCORRECT</span><br>
+          DLR：LE.Consumption public 属性显式归属 → Agent 直接选对表→
+          <span style="color:var(--good)">DLR CORRECT</span>
+        </p>
+      </div>
+
+      <div class="card" style="border-left:3px solid var(--rdf)">
+        <h4 style="font-size:14px">q206 · 找到表但弃用：信息无层级</h4>
+        <p style="font-size:12px;margin-top:4px">
+          RDF 找到了 connected 表，但 attribute、relation、元数据在 triple 中视觉权重相等，
+          Agent 最终跳过 connected 用 molecule 级凑合→
+          <span style="color:var(--critical)">RDF INCORRECT (51K)</span><br>
+          DLR：ARCS + PAS 结构呈现了锚定键和 JOIN 路径→
+          <span style="color:var(--good)">DLR CORRECT (41K)</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Right col: token efficiency -->
+    <div>
+      <div style="font-size:13px;font-weight:700;color:var(--rdf);margin-bottom:12px;letter-spacing:0.05em">都对，但 DLR 省得多</div>
+
+      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--rdf)">
+        <h4 style="font-size:14px">q532 · SPARQL OPTIONAL 嵌套膨胀</h4>
+        <p style="font-size:12px;margin-top:4px">
+          codebase 多表查询，RDF 无 FK 引导→SPARQL 多表 OPTIONAL 嵌套→
+          <span style="color:var(--ink-2)">RDF 197K</span><br>
+          DLR：PAS 直达→
+          <span style="color:var(--good)">DLR 34K</span> — <strong>5.8×</strong> RDF
+        </p>
+      </div>
+
+      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--rdf)">
+        <h4 style="font-size:14px">q866 · flat triple 无属性归属</h4>
+        <p style="font-size:12px;margin-top:4px">
+          lap time→driver url，RDF 找不到 driver.url 在哪个表→11 次 SQL 疯狂试探→
+          <span style="color:var(--ink-2)">RDF 211K</span><br>
+          DLR：LE 分层 + path_le_le PAS 桥→
+          <span style="color:var(--good)">DLR 94K</span> — <strong>2.2×</strong> RDF
+        </p>
+      </div>
+
+      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--rdf)">
+        <h4 style="font-size:14px">q730 · PAS 桥 vs 无引导</h4>
+        <p style="font-size:12px;margin-top:4px">
+          superhero hero→power，RDF 无结构引导→
+          <span style="color:var(--ink-2)">RDF 83K</span><br>
+          DLR：PAS 桥一步定位 hero→power→
+          <span style="color:var(--good)">DLR 38K</span> — <strong>2.2×</strong> RDF
+        </p>
+      </div>
+
+      <div class="card" style="border-left:3px solid var(--rdf)">
+        <h4 style="font-size:14px">q1483 · SPARQL 冗余嵌套</h4>
+        <p style="font-size:12px;margin-top:4px">
+          debit_card 多条件，RDF SPARQL 嵌套→
+          <span style="color:var(--ink-2)">RDF 171K</span><br>
+          DLR：PAS 精准→
+          <span style="color:var(--good)">DLR 34K</span> — <strong>5.0×</strong> RDF
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ Slide 12: 结构化 → 非结构化 ════════════════ -->
 <section class="slide">
   <div class="section-label">路线图</div>
   <h2 class="section-title">从 <em>结构化</em> 到 <em>非结构化</em></h2>
@@ -869,7 +954,7 @@
   </div>
 </section>
 
-<!-- ════════════════ Slide 11: 收尾 ════════════════ -->
+<!-- ════════════════ Slide 13: 收尾 ════════════════ -->
 <section class="slide slide--end">
   <div class="section-label">现状</div>
   <h2 class="hero" style="margin-bottom:24px">
