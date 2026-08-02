@@ -410,17 +410,25 @@
       </p>
     </div>
     <div class="card">
-      <h3>Junction 表下沉 + LE-PE 解耦意义</h3>
+      <h3>Junction 表下沉</h3>
       <p>
-        纯关联表（多对多 junction）下沉为 PE，Agent 不再看到中间件，只看到业务对象。<br>
-        <strong>更深层的意义</strong>：DLR 将建模拆为两层——<strong>业务人员</strong>定义 LE 和关键属性，
-        <strong>IT</strong> 一次性完成 PE→物理表 ARCS 锚定，此后建模维护在概念层操作，不碰表结构。<br>
-        <span style="font-size:13px;color:var(--ink-2);margin-top:4px;display:block">
-        vs <span style="color:var(--er);font-weight:600">ER</span>：建模=定义物理实体，业务人员被迫理解表结构<br>
-        vs <span style="color:var(--rdf);font-weight:600">RDF</span>：需 W3C/R2RML/SPARQL 专业知识，非 IT 难以参与
-        </span>
+        纯关联表（多对多 junction）不需要独立 LE——直接作为 PE 挂到业务 LE 下，
+        连接键升为 public。Agent 不再看到 disp、hero_power 等中间件，
+        只看到有意义的业务对象。
       </p>
     </div>
+  </div>
+
+  <div class="card" style="margin-top:24px;border-left:3px solid var(--dlr)">
+    <h3>🎯 LE-PE 解耦的业务意义</h3>
+    <p style="font-size:15px;margin-top:6px">
+      DLR 将建模拆为两层：<strong>业务人员</strong>定义 LE 和关键 PE 属性（"这个业务概念有哪些核心度量"），
+      <strong>IT 人员</strong>一次性完成 PE→物理表的 ARCS 锚定。此后建模维护完全在概念层，不碰底层表结构。<br>
+      <span style="font-size:13px;color:var(--ink-2);margin-top:6px;display:block">
+      vs <span style="color:var(--er);font-weight:600">ER</span>：建模即定义物理实体和关系，业务人员被迫理解表结构——本质是 IT 视角<br>
+      vs <span style="color:var(--rdf);font-weight:600">RDF</span>：需 W3C/R2RML/SPARQL 专业知识，非 IT 难以参与
+      </span>
+    </p>
   </div>
 </section>
 
