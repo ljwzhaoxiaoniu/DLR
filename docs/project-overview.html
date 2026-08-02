@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DLR Proj — 语义建模范式对比研究</title>
+<style>
+  :root {
+    --surface: #fcfcfb;
+    --page: #f9f9f7;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --grid: #e1e0d9;
+    --baseline: #c3c2b7;
+    --border: rgba(11,11,11,0.08);
+    --dlr: #2a78d6;
+    --er: #008300;
+    --rdf: #e87ba4;
+    --good: #0ca30c;
+    --warn: #fab219;
+    --critical: #d03b3b;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--page);
+    scroll-behavior: smooth;
+    scroll-snap-type: y proximity;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      --surface: #1a1a19;
+      --page: #0d0d0d;
+      --ink: #ffffff;
+      --ink-2: #c3c2b7;
+      --muted: #898781;
+      --grid: #2c2c2a;
+      --baseline: #383835;
+      --border: rgba(255,255,255,0.08);
+      --dlr: #3987e5;
+      --er: #008300;
+      --rdf: #d55181;
+    }
+  }
+  :root[data-theme="dark"] {
+    --surface: #1a1a19;
+    --page: #0d0d0d;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255,255,255,0.08);
+    --dlr: #3987e5;
+    --er: #008300;
+    --rdf: #d55181;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--page); }
+
+  /* ── Slide ── */
+  .slide {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 80px 10vw;
+    scroll-snap-align: start;
+    position: relative;
+  }
+  .slide--cover { align-items: center; text-align: center; }
+  .slide--cover .slide__body { max-width: 800px; }
+
+  /* ── Typography ── */
+  .hero {
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+  .hero span { color: var(--dlr); }
+  .deck { font-size: clamp(18px, 2.2vw, 24px); color: var(--ink-2); margin-top: 20px; max-width: 640px; }
+  .section-label {
+    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--dlr); margin-bottom: 16px;
+  }
+  .section-title {
+    font-size: clamp(28px, 4vw, 48px); font-weight: 750;
+    letter-spacing: -0.015em; line-height: 1.25; margin-bottom: 32px;
+  }
+  .section-title em { font-style: normal; color: var(--dlr); }
+
+  /* ── Grid layouts ── */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+  }
+  .card h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+  .card p  { font-size: 16px; color: var(--ink-2); line-height: 1.55; }
+  .card--dlr  { border-left: 4px solid var(--dlr); }
+  .card--er   { border-left: 4px solid var(--er); }
+  .card--rdf  { border-left: 4px solid var(--rdf); }
+
+  /* ── Stat tiles ── */
+  .stat-row { display: flex; flex-wrap: wrap; gap: 32px; justify-content: center; }
+  .stat {
+    text-align: center; min-width: 140px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 28px 32px;
+  }
+  .stat__value {
+    font-size: clamp(36px, 5vw, 56px); font-weight: 800;
+    letter-spacing: -0.02em; line-height: 1.1;
+  }
+  .stat__label { font-size: 14px; color: var(--ink-2); margin-top: 8px; }
+  .stat__note  { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .stat--dlr  .stat__value { color: var(--dlr); }
+  .stat--er   .stat__value { color: var(--er); }
+  .stat--rdf  .stat__value { color: var(--rdf); }
+
+  /* ── Bar comparison ── */
+  .bar-group { display: flex; flex-direction: column; gap: 18px; margin-top: 24px; }
+  .bar-row { display: flex; align-items: center; gap: 16px; }
+  .bar-row__label {
+    width: 64px; font-size: 14px; font-weight: 700; text-align: right; flex-shrink: 0;
+  }
+  .bar-row__track { flex: 1; height: 36px; background: var(--grid); border-radius: 6px; overflow: hidden; position: relative; }
+  .bar-row__fill {
+    height: 100%; border-radius: 6px; display: flex; align-items: center;
+    padding-left: 12px; font-size: 14px; font-weight: 700; color: #fff;
+  }
+  .bar-row__fill--dlr { background: var(--dlr); }
+  .bar-row__fill--er  { background: var(--er); }
+  .bar-row__fill--rdf { background: var(--rdf); }
+  .bar-row__delta {
+    width: 80px; font-size: 13px; color: var(--ink-2); flex-shrink: 0;
+  }
+  .bar-row__delta--win { color: var(--good); font-weight: 700; }
+
+  /* ── Pipeline ── */
+  .pipeline { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: center; margin-top: 24px; }
+  .pipeline__step {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px 24px; text-align: center; min-width: 160px;
+  }
+  .pipeline__step .num { font-size: 32px; font-weight: 800; color: var(--dlr); }
+  .pipeline__step .label { font-size: 14px; color: var(--ink-2); margin-top: 4px; }
+  .pipeline__arrow { font-size: 24px; color: var(--muted); }
+
+  /* ── Architecture diagram ── */
+  .arch {
+    display: flex; flex-direction: column; gap: 12px; align-items: center;
+    font-size: 15px; margin-top: 24px;
+  }
+  .arch__row {
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap; justify-content: center;
+  }
+  .arch__box {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 18px 28px; text-align: center;
+  }
+  .arch__box--agent  { border-color: var(--muted); }
+  .arch__box--dlr    { border-color: var(--dlr); border-width: 2px; }
+  .arch__box--er     { border-color: var(--er); }
+  .arch__box--rdf    { border-color: var(--rdf); }
+  .arch__box strong  { display: block; font-size: 17px; margin-bottom: 4px; }
+  .arch__box small   { font-size: 12px; color: var(--ink-2); }
+  .arch__label       { font-size: 13px; color: var(--muted); text-align: center; }
+
+  /* ── Insight cards ── */
+  .insight { display: flex; gap: 16px; align-items: flex-start; }
+  .insight__icon {
+    width: 48px; height: 48px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; background: var(--dlr); color: #fff;
+  }
+  .insight h4 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .insight p  { font-size: 15px; color: var(--ink-2); line-height: 1.5; }
+
+  /* ── Paths (non-structured data) ── */
+  .path-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 28px; text-align: center;
+  }
+  .path-card h4 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .path-card p  { font-size: 14px; color: var(--ink-2); line-height: 1.5; }
+  .path-card .tag {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 12px; font-weight: 700; margin-top: 12px;
+  }
+  .tag--done   { background: #c1e6c6; color: #006300; }
+  .tag--wip    { background: #fff6cc; color: #8a6d00; }
+  .tag--explore{ background: #e0bbe4; color: #4a3aa7; }
+
+  /* ── Footer ── */
+  .slide--end { text-align: center; }
+  .slide--end .hero { font-size: clamp(28px, 4vw, 40px); }
+
+  /* ── Theme toggle ── */
+  .theme-toggle {
+    position: fixed; top: 20px; right: 20px; z-index: 999;
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    font-size: 18px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; color: var(--ink);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .slide { padding: 60px 6vw; }
+    .section-title { font-size: 26px; }
+    .pipeline { flex-direction: column; }
+    .pipeline__arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" title="切换深色/浅色">☀</button>
+
+<!-- ════════════════ Slide 1: 封面 ════════════════ -->
+<section class="slide slide--cover">
+  <div class="section-label">语义建模范式对比研究</div>
+  <h1 class="hero">DLR Proj<br><span>解耦逻辑表达</span> 建模范式</h1>
+  <p class="deck">
+    三种语义建模范式 —— ER（数据库建模标准基线）、RDF（W3C R2RML 标准基线）、
+    <strong>DLR（原创 LE-PE 双层模型 + PAS 语义路由）</strong> ——
+    在同一数据集上同构对比，探讨"什么样的语义建模能让 Agent 真正理解数据"。
+  </p>
+  <div class="stat-row" style="margin-top:40px">
+    <div class="stat stat--dlr">
+      <div class="stat__value">98.7%</div>
+      <div class="stat__label">DLR 正确率</div>
+    </div>
+    <div class="stat stat--er">
+      <div class="stat__value">92.7%</div>
+      <div class="stat__label">ER 正确率</div>
+    </div>
+    <div class="stat stat--rdf">
+      <div class="stat__value">90.0%</div>
+      <div class="stat__label">RDF 正确率</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ Slide 2: 背景与问题 ════════════════ -->
+<section class="slide">
+  <div class="section-label">背景</div>
+  <h2 class="section-title">现有建模并非为 <em>Agent 语义理解</em> 而设计</h2>
+
+  <div class="grid-2" style="margin-top:28px">
+    <div class="card card--er">
+      <h3>ER 实体-关系模型</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:8px">1976 年 · Peter Chen</p>
+      <p>
+        设计初衷是<strong>面向数据库设计</strong>——帮人画 ER 图、建表、定外键。
+        实体、属性、关系这些概念服务于 schema 设计阶段的工程师，
+        并不是为了让 LLM Agent 理解数据含义而构建的。
+      </p>
+    </div>
+    <div class="card card--rdf">
+      <h3>RDF / R2RML</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:8px">W3C 语义网标准</p>
+      <p>
+        设计初衷是<strong>面向形式化推理</strong>——在 LLM 出现之前，
+        通过 SPARQL 和逻辑推理引擎在知识图谱上进行符号推理。
+        flat triple 模型没有属性归属概念，Agent 从三元组中无法判断哪个字段更重要。
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:24px">
+    <div class="card">
+      <h3>🔍 语义穿刺项目很多，但缺少什么？</h3>
+      <p>
+        Text-to-SQL、KG-enhanced LLM、Schema Linking 等方向都在探索"语义"，
+        但大多止步于单点改进或特定 benchmark 的数字提升。
+        <strong>缺少一套系统的工程化评测框架</strong>——
+        能够同构对比不同建模范式，将建模质量从 Agent 能力中剥离出来单独衡量。
+      </p>
+    </div>
+    <div class="card card--dlr">
+      <h3>🎯 本项目做了两件事</h3>
+      <p>
+        <strong>1. 提出 DLR</strong>——LE-PE 双层解耦模型，设计目标就是对 Agent 友好：
+        逻辑层说人话，物理层锚定真实数据，PAS 语义路由在概念之间导航。<br>
+        <strong>2. 构建了一套工程化评测框架</strong>——三范式同构对比、Agent 归一化、
+        四阶段流水线（含 LLM Judge），让"哪种建模范式更好"变成一个可量化、可复现的工程问题。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ Slide 3: 三范式同框 ════════════════ -->
+<section class="slide">
+  <div class="section-label">三种范式</div>
+  <h2 class="section-title">同一套数据，<em>三种建模哲学</em></h2>
+  <div class="grid-3" style="margin-top:32px">
+    <div class="card card--er">
+      <h3>ER 范式</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px">数据库建模标准基线</p>
+      <p>
+        经典实体-关系模型：BizEntity 是业务实体，BizAttribute 是属性，
+        BizRelation 是实体间关联。Agent 通过实体→属性→关系的层级探索来定位数据。
+      </p>
+      <p style="font-size:13px;color:var(--muted);margin-top:12px">
+        核心模型：BizEntity / BizAttribute / BizRelation<br>
+        MCP 工具：11 + execute_sql
+      </p>
+    </div>
+    <div class="card card--dlr">
+      <h3>★ DLR 范式</h3>
+      <p style="font-size:13px;color:var(--dlr);margin-bottom:12px">原创 LE-PE 双层解耦模型</p>
+      <p>
+        逻辑实体（LE）承载业务概念及其自然语言描述，
+        物理实体（PE）锚定真实表列，通过 ARCS 挂在 LE 下。
+        PAS 在 LE 之间建立带方向的谓词桥，
+        碎表/关联表作为 PE 聚合到 LE，Agent 只看业务对象。
+      </p>
+      <p style="font-size:13px;color:var(--muted);margin-top:12px">
+        核心模型：LE / PE / PAS / ARCS<br>
+        MCP 工具：21 + execute_sql
+      </p>
+    </div>
+    <div class="card card--rdf">
+      <h3>RDF 范式</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px">W3C R2RML 标准基线</p>
+      <p>
+        W3C 标准 R2RML 映射：TriplesMap 将表映射为三元组，
+        SPARQL 查询语义。标准完备但扁平 triple 模型无属性归属，
+        JOIN 通过 joinCondition 显式列名表达。
+      </p>
+      <p style="font-size:13px;color:var(--muted);margin-top:12px">
+        核心模型：rr:TriplesMap + rdflib SPARQL<br>
+        MCP 工具：7 + execute_sql
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ Slide 4: DLR 核心机制 ════════════════ -->
+<section class="slide">
+  <div class="section-label">DLR 机制</div>
+  <h2 class="section-title">LE-PE 双层解耦：<em>ARCS</em> 纵向锚定 + <em>PAS</em> 横向路由</h2>
+
+  <div class="arch" style="margin-top:28px">
+    <!-- LE row -->
+    <div class="arch__row">
+      <div class="arch__box arch__box--dlr" style="min-width:180px">
+        <strong>LE: Customer</strong>
+        <small>业务概念 · 客户</small>
+      </div>
+      <div style="font-size:13px;color:var(--dlr);font-weight:700">
+        ← PAS "generates" 1:N →
+      </div>
+      <div class="arch__box arch__box--dlr" style="min-width:180px">
+        <strong>LE: Consumption</strong>
+        <small>业务概念 · 消费行为</small>
+      </div>
+    </div>
+    <!-- ARCS arrows down -->
+    <div class="arch__label">↓ ARCS（锚定键+列映射+语义补注）&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓ ARCS</div>
+    <!-- PE row -->
+    <div class="arch__row">
+      <div class="arch__box arch__box--dlr" style="opacity:0.85;min-width:140px">
+        <strong>PE: Customer</strong>
+        <small>customers 表</small>
+      </div>
+      <div style="width:120px"></div>
+      <div class="arch__box arch__box--dlr" style="opacity:0.85;min-width:140px">
+        <strong>PE: YearMonth</strong>
+        <small>yearmonth 表</small>
+      </div>
+      <div class="arch__box arch__box--dlr" style="opacity:0.85;min-width:140px">
+        <strong>PE: Transaction</strong>
+        <small>transactions_1k 表</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:36px">
+    <div class="card">
+      <h3>ARCS：LE ↔ PE 纵向锚定</h3>
+      <p>
+        <strong>ARCS</strong>（Anchor-Row-Column-Semantic）将物理实体锚定到逻辑实体。
+        一个 LE 可聚合多个 PE——碎表对 Agent 透明，Agent 看到的是一棵完整的业务实体树。
+        A=锚定键、R=行过滤、C=列映射、S=语义补注。
+      </p>
+    </div>
+    <div class="card">
+      <h3>PAS：LE ↔ LE 横向路由</h3>
+      <p>
+        <strong>PAS</strong>（Predicate-Attribute-Semantic）是逻辑实体之间的语义路由。
+        带方向的谓词桥（如 Customer <em>generates</em> Consumption），
+        Agent 沿 PAS 在业务概念之间导航，如同在概念图上行走。
+      </p>
+    </div>
+    <div class="card">
+      <h3>public / private 属性分层</h3>
+      <p>
+        <strong>public</strong>：业务核心度量列（如 Consumption、Spending），Agent 在 LE 层直接可见<br>
+        <strong>private</strong>：内部 ID、技术字段，留在 PE 层，不暴露给 Agent，避免噪音干扰<br>
+        PAS 的锚定键必须在源 LE 端有 public_attributes 条目，否则 Agent 断头。
+      </p>
+    </div>
+    <div class="card">
+      <h3>Junction 表下沉</h3>
+      <p>
+        纯关联表（多对多 junction）不需要独立 LE——直接作为 PE 挂到业务 LE 下，
+        连接键升为 public。Agent 不再看到 disp、hero_power 等中间件，
+        只看到有意义的业务对象。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ Slide 5: 评测集 + 技术框架 ════════════════ -->
+<section class="slide">
+  <div class="section-label">评测方法 · 一</div>
+  <h2 class="section-title">评测集与 <em>四阶段</em> 技术框架</h2>
+
+  <div class="grid-2" style="margin-top:24px;align-items:start">
+    <div>
+      <div class="card" style="margin-bottom:20px">
+        <h3>📦 评测集：mini_dev 0703</h3>
+        <p style="font-size:15px">
+          <strong>11 个 SQLite 数据库</strong>，覆盖金融（debit_card）、体育（football、formula_1）、
+          医疗（thrombosis）、教育（california_schools）、娱乐（card_games、superhero）等真实业务场景。
+        </p>
+        <p style="font-size:15px;margin-top:8px">
+          <strong>500 道 NL2SQL 题目</strong>，每题含 question（自然语言问题）、evidence（参考提示）、
+          gold SQL + gold result（标准答案）。目前已评测 <strong>150 题</strong>（30.0%）。
+        </p>
+      </div>
+      <p style="font-size:14px;color:var(--muted);text-align:center">
+        题目覆盖简单查询、多表 JOIN、聚合统计、嵌套子查询等典型 SQL 场景。
+        数据集虽有部分 gold SQL 缺陷，已逐一校验修正，不影响评测公平性。
+      </p>
+    </div>
+    <div>
+      <div class="pipeline" style="flex-direction:column;gap:12px;margin-top:0">
+        <div class="pipeline__step" style="display:flex;gap:16px;align-items:center;text-align:left;min-width:auto">
+          <div class="num">①</div>
+          <div>
+            <div style="font-weight:700;font-size:15px">Agent 跑题</div>
+            <div style="font-size:12px;color:var(--muted)">三范式并行，各自独立 MCP 工具集<br>bash eval_run.sh EDR</div>
+          </div>
+        </div>
+        <div class="pipeline__step" style="display:flex;gap:16px;align-items:center;text-align:left;min-width:auto">
+          <div class="num">②</div>
+          <div>
+            <div style="font-weight:700;font-size:15px">提取 SQL → 执行 → 标准化</div>
+            <div style="font-size:12px;color:var(--muted)">从 Agent trace 中提取 SQL<br>在对应 SQLite 中执行，结果归一化</div>
+          </div>
+        </div>
+        <div class="pipeline__step" style="display:flex;gap:16px;align-items:center;text-align:left;min-width:auto">
+          <div class="num">③</div>
+          <div>
+            <div style="font-weight:700;font-size:15px">strict 初判</div>
+            <div style="font-size:12px;color:var(--muted)">结果集逐行比对 gold cache<br>脚本秒级，给出 PASS / FAIL</div>
+          </div>
+        </div>
+        <div class="pipeline__step" style="display:flex;gap:16px;align-items:center;text-align:left;min-width:auto">
+          <div class="num">④</div>
+          <div>
+            <div style="font-weight:700;font-size:15px">LLM Judge 语义仲裁</div>
+            <div style="font-size:12px;color:var(--muted)">只判 strict FAIL 的行，增量可断点续跑<br>五环节审视：语义→工具→映射→SQL→结果</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p style="color:var(--muted);font-size:14px;margin-top:20px;text-align:center">
+    strict 结果精确匹配 → 快速筛出确定正确的题；LLM Judge 语义仲裁 → 处理结果格式差异（多行/单行、列序等），<br>
+    同时在仲裁过程中审视 Agent 的完整推理链路，这正是"语义建模对 LLM 的引导"这一命题的核心观察窗口。
+  </p>
+</section>
+
+<!-- ════════════════ Slide 6: Agent 归一 ════════════════ -->
+<section class="slide">
+  <div class="section-label">评测方法 · 二</div>
+  <h2 class="section-title">Agent 归一：<em>同一套框架</em>，建模是唯一变量</h2>
+
+  <div class="arch" style="margin-top:28px;gap:8px">
+    <div class="arch__row">
+      <div class="arch__box arch__box--agent" style="min-width:180px">
+        <strong>OpenCode Agent</strong>
+        <small>同一套推理引擎</small>
+      </div>
+    </div>
+    <div class="arch__label">← 三范式共享 — 只有这一层是"公用的" →</div>
+    <div class="arch__row" style="gap:20px">
+      <div style="text-align:center;font-size:13px;color:var(--ink-2)">
+        <div style="font-weight:700">同一份 AGENTS.md</div>
+        <div style="font-size:11px;color:var(--muted)">Agent 规则、防作弊逻辑<br>三范式完全相同</div>
+      </div>
+      <div style="text-align:center;font-size:13px;color:var(--ink-2)">
+        <div style="font-weight:700">同一个 execute_sql</div>
+        <div style="font-size:11px;color:var(--muted)">共享工具，只读透传<br>任何范式都能调</div>
+      </div>
+      <div style="text-align:center;font-size:13px;color:var(--ink-2)">
+        <div style="font-weight:700">同一套 Judge 标准</div>
+        <div style="font-size:11px;color:var(--muted)">相同的 LLM Judge prompt<br>相同的五环节仲裁逻辑</div>
+      </div>
+    </div>
+    <div class="arch__label" style="margin-top:12px">↓ 同一套语义服务（Semantic Core Service）↓</div>
+    <div class="arch__row" style="gap:0">
+      <div class="arch__box arch__box--er" style="border-radius:10px 0 0 10px;border-right:none">
+        <strong>ER 工具集</strong>
+        <small>11 个 MCP 工具</small>
+      </div>
+      <div class="arch__box arch__box--dlr" style="border-radius:0">
+        <strong>DLR 工具集</strong>
+        <small>21 个 MCP 工具</small>
+      </div>
+      <div class="arch__box arch__box--rdf" style="border-radius:0 10px 10px 0;border-left:none">
+        <strong>RDF 工具集</strong>
+        <small>7 个 MCP 工具</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:36px">
+    <div class="card">
+      <h3>🔒 变量隔离</h3>
+      <p>
+        Agent 推理引擎、AGENTS.md 规则、execute_sql 透传、LLM Judge 仲裁逻辑 ——
+        <strong>全部共享</strong>。每次评测，Agent 只连一个范式的 MCP Server，
+        看到的工具签名由该范式的建模决定。范式差异被 MCP 工具层屏蔽，
+        Agent 不需要"知道"自己用的是哪种范式。
+      </p>
+    </div>
+    <div class="card">
+      <h3>🎯 建模是唯一自变量</h3>
+      <p>
+        同一道题、同一个 Agent、同一套基础设施，唯一的差异是：
+        <strong>数据用 ER / DLR / RDF 哪种范式建模</strong>。
+        这意味着 Agent 的正确率差异、Token 消耗差异、工具调用路径差异，
+        都可以归因于建模范式的优劣——不存在"Agent 对这个范式更熟"的混淆因素。
+      </p>
+    </div>
+  </div>
+
+  <p style="color:var(--muted);font-size:14px;margin-top:20px;text-align:center">
+    不是比"谁 SQL 写得好"，而是在测：<strong>同样一个 Agent，拿到不同范式描述的数据后，<br>理解数据的准确率和效率差多少？</strong>
+  </p>
+</section>
+
+<!-- ════════════════ Slide 7: 结果 ════════════════ -->
+<section class="slide">
+  <div class="section-label">结果</div>
+  <h2 class="section-title">DLR 全面领先：<em>正确率更高，Token 更少</em></h2>
+
+  <div class="stat-row" style="margin-bottom:36px">
+    <div class="stat stat--dlr">
+      <div class="stat__value">148/150</div>
+      <div class="stat__label">DLR CORRECT</div>
+      <div class="stat__note">98.7%</div>
+    </div>
+    <div class="stat stat--er">
+      <div class="stat__value">139/150</div>
+      <div class="stat__label">ER CORRECT</div>
+      <div class="stat__note">92.7%</div>
+    </div>
+    <div class="stat stat--rdf">
+      <div class="stat__value">135/150</div>
+      <div class="stat__label">RDF CORRECT</div>
+      <div class="stat__note">90.0%</div>
+    </div>
+  </div>
+
+  <p style="font-size:13px;color:var(--muted);margin-bottom:16px;text-align:center">
+    平均 Token 消耗对比（越低越好，已排除早期伪优势 run）
+  </p>
+  <div class="bar-group" style="max-width:640px;margin:0 auto">
+    <div class="bar-row">
+      <div class="bar-row__label">DLR</div>
+      <div class="bar-row__track">
+        <div class="bar-row__fill bar-row__fill--dlr" style="width:80%">50,346</div>
+      </div>
+      <div class="bar-row__delta bar-row__delta--win">−20.6% vs ER</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-row__label">ER</div>
+      <div class="bar-row__track">
+        <div class="bar-row__fill bar-row__fill--er" style="width:100%">63,391</div>
+      </div>
+      <div class="bar-row__delta">基线</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-row__label">RDF</div>
+      <div class="bar-row__track">
+        <div class="bar-row__fill bar-row__fill--rdf" style="width:85%">53,782</div>
+      </div>
+      <div class="bar-row__delta">−15.2% vs ER</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ Slide 8: 为什么赢 ════════════════ -->
+<section class="slide">
+  <div class="section-label">定性分析</div>
+  <h2 class="section-title">DLR <em>为什么赢</em>——三个关键机制</h2>
+  <div class="grid-2" style="margin-top:28px">
+    <div class="card">
+      <div class="insight">
+        <div class="insight__icon">🔗</div>
+        <div>
+          <h4>PAS 语义桥：一步定位</h4>
+          <p>
+            ER 需要 Agent 自己探索实体→属性→关系的多跳路径；
+            DLR 通过 PAS 谓词桥直接告诉 Agent"客户产生消费行为"，
+            从问题到数据一步到位。
+            <br><small style="color:var(--er)">例：q1338 DLR 7K token 一击命中，ER 需 79K 多轮探索。</small>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="insight">
+        <div class="insight__icon">🎯</div>
+        <div>
+          <h4>public 属性归属：过滤噪音</h4>
+          <p>
+            RDF flat triple 模型下两张表的字段视觉权重相等，
+            Agent 容易被无关列吸引。DLR 的 public_attributes
+            只暴露业务核心度量，屏蔽魔鬼数字和内部 ID。
+            <br><small style="color:var(--rdf)">例：q1529 RDF 选错表走 transactions_1k，DLR LE.Consumption 属性直接引导走 yearmonth。</small>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="insight">
+        <div class="insight__icon">🗜️</div>
+        <div>
+          <h4>PE 聚合：去掉虚构实体</h4>
+          <p>
+            纯 junction 表（多对多关联）不需要独立 LE —— 直接作为 PE 挂到业务 LE 下，
+            连接键升为 public。Agent 不再看到 disp、hero_power 等中间件，
+            只看到有意义的业务对象，消除 ER 中多出来的"维度实体"。
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="insight">
+        <div class="insight__icon">🏗️</div>
+        <div>
+          <h4>LE 概念层：Agent 看到的是业务，不是表</h4>
+          <p>
+            LE 的描述是自然语言——"客户是进行消费行为的个人或组织"——
+            而非 "customers 表有 CustomerID, Name, Segment 列"。
+            LLM 在自然语言空间里推理，LE 的表达与 LLM 的理解模式天然对齐。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ Slide 9: ER/RDF 失效案例 ════════════════ -->
+<section class="slide">
+  <div class="section-label">案例分析</div>
+  <h2 class="section-title">ER 与 RDF <em>从哪里开始失效</em></h2>
+
+  <div class="grid-2" style="margin-top:24px">
+    <!-- ER column -->
+    <div>
+      <div style="font-size:13px;font-weight:700;color:var(--er);margin-bottom:12px;letter-spacing:0.05em">ER 失效模式</div>
+
+      <div class="card" style="margin-bottom:16px;border-left:3px solid var(--er)">
+        <h4 style="font-size:15px">大宽表：cards 表 78 列全暴露</h4>
+        <p style="font-size:13px;margin-top:4px">
+          <strong>q341</strong> — card_games 的 cards 表 78 列全部以 BizAttribute 列出，
+          Agent 在列海中迷失，SQL 逻辑错误 →
+          <span style="color:var(--critical)">ER INCORRECT (95K)</span><br>
+          DLR：private_attributes 屏蔽非业务列，Agent 只看到核心属性 →
+          <span style="color:var(--good)">DLR CORRECT (59K)</span>
+        </p>
+        <p style="font-size:12px;color:var(--ink-2);margin-top:4px">
+          q345 同理：78 列宽表 + list_all_tables 兜底 → ER 60K 探索
+        </p>
+      </div>
+
+      <div class="card" style="margin-bottom:16px;border-left:3px solid var(--er)">
+        <h4 style="font-size:15px">碎表聚合：Expense 跨 4 张表</h4>
+        <p style="font-size:13px;margin-top:4px">
+          <strong>q1339</strong> — student_club 的 Expense 分散在多个子表中，
+          ER 需逐表探索 →
+          <span style="color:var(--ink-2)">ER 25 步 (92K)</span><br>
+          DLR：Expense 独立 LE + Budget/Income/General 三个 PE 聚合在一个 LE 下，
+          PAS 一步定位 →
+          <span style="color:var(--good)">DLR 4 步 (15K)</span>，仅 ER 的 1/6
+        </p>
+      </div>
+
+      <div class="card" style="border-left:3px solid var(--er)">
+        <h4 style="font-size:15px">JOIN 膨胀：多对多 fan-out 污染聚合</h4>
+        <p style="font-size:13px;margin-top:4px">
+          <strong>q197</strong> — toxicology 的 molecule → bond (1:N) JOIN 后
+          COUNT 被 bond 条数放大 (氧计数 2.16→69.28) →
+          <span style="color:var(--critical)">ER INCORRECT (57K)</span><br>
+          DLR：PAS 语义桥走 bond → connected → atom 精确路径，DISTINCT molecule_id 避开 fan-out →
+          <span style="color:var(--good)">DLR CORRECT (35K)</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- RDF column -->
+    <div>
+      <div style="font-size:13px;font-weight:700;color:var(--rdf);margin-bottom:12px;letter-spacing:0.05em">RDF 失效模式</div>
+
+      <div class="card" style="margin-bottom:16px;border-left:3px solid var(--rdf)">
+        <h4 style="font-size:15px">扁平陷阱：triple 无属性归属</h4>
+        <p style="font-size:13px;margin-top:4px">
+          <strong>q1529</strong> — transactions_1k 和 yearmonth 的字段在 SPARQL 中视觉权重完全相等，
+          Agent 被 Date/Amount 列吸引走 transactions_1k，忽略 yearmonth 独有的 Consumption 字段 →
+          <span style="color:var(--critical)">RDF INCORRECT × 3</span><br>
+          DLR：LE.Consumption 的 public 属性显式归属 → Agent 直接选对数据源 →
+          <span style="color:var(--good)">DLR CORRECT (86K)</span>
+        </p>
+      </div>
+
+      <div class="card" style="margin-bottom:16px;border-left:3px solid var(--rdf)">
+        <h4 style="font-size:15px">列歧义：同名不同义无法区分</h4>
+        <p style="font-size:13px;margin-top:4px">
+          <strong>q25</strong> — california_schools 中 schools.School 和 frpm.School Name 在 RDF 中同为 predicate，
+          无上下文区分 →
+          <span style="color:var(--critical)">ER INCORRECT + RDF INCORRECT</span><br>
+          DLR：PE 属性归属到具体 LE，不同表的同名列自然隔离 →
+          <span style="color:var(--good)">DLR CORRECT，独胜</span>
+        </p>
+        <p style="font-size:12px;color:var(--ink-2);margin-top:4px">
+          q11 (CDSCode vs School Code)、q24 (schools.School vs frpm.School Name) 同理
+        </p>
+      </div>
+
+      <div class="card" style="border-left:3px solid var(--rdf)">
+        <h4 style="font-size:15px">⚠️ RDF Token 偏低的真相</h4>
+        <p style="font-size:13px;margin-top:4px">
+          当前 RDF 的 R2RML 映射<strong>仅针对题目用到的列进行了形式化建模</strong>——
+          这解释了它的平均 token (52K) 低于 ER (61K)。如果像 ER 一样对所有列完整建模，
+          triple 膨胀后的 SPARQL 嵌套将使 token 和正确率都急剧恶化。
+          <br><span style="color:var(--muted);font-size:12px">
+          例：q532 仅多表 OPTIONAL 嵌套即达 197K (6× DLR)；全量建模下这种膨胀将是常态。
+        </span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ Slide 10: 结构化 → 非结构化 ════════════════ -->
+<section class="slide">
+  <div class="section-label">路线图</div>
+  <h2 class="section-title">从 <em>结构化</em> 到 <em>非结构化</em></h2>
+  <p style="font-size:17px;color:var(--ink-2);max-width:680px;margin-bottom:36px">
+    语义建模要回答的问题是通用的——"让 Agent 理解数据意味着什么"。
+    当前从结构化数据（关系数据库）起步，非结构化数据的语义建模有三条并行路径。
+  </p>
+
+  <div class="grid-3">
+    <div class="path-card">
+      <h4>🧩 Agent Skill 目录</h4>
+      <p>
+        通过 AGENTS.md + Skill 目录，在 Agent 框架（OpenCode）内承接动态的非结构化知识——文档约定、业务规则、操作流程。
+      </p>
+      <div class="tag tag--done">已启用</div>
+    </div>
+    <div class="path-card">
+      <h4>🔍 RAG 检索增强</h4>
+      <p>
+        文档、手册、知识库等非结构化文本，通过向量检索 + 上下文注入，
+        覆盖"查到即答"的检索场景。
+      </p>
+      <div class="tag tag--wip">可接入</div>
+    </div>
+    <div class="path-card">
+      <h4>🔬 语义建模挂载</h4>
+      <p>
+        非结构化数据能否像结构化数据一样，通过语义建模层统一描述？
+        概念抽取、关系标注、与结构化 LE-PE 的对齐——目前处于探讨阶段。
+      </p>
+      <div class="tag tag--explore">探索中</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ Slide 11: 收尾 ════════════════ -->
+<section class="slide slide--end">
+  <div class="section-label">现状</div>
+  <h2 class="hero" style="margin-bottom:24px">
+    150 题已验证<br>
+    <span>441/450</span> CORRECT
+  </h2>
+  <p class="deck">
+    DLR 148/150 (98.7%) · ER 139/150 (92.7%) · RDF 135/150 (90.0%))
+  </p>
+  <p class="deck" style="margin-top:16px;font-size:16px;color:var(--ink-2)">
+    DLR 仅剩 2 道 INCORRECT（q27+q1031），均为 LLM Agent 语义理解极限（evidence 伪代码 / "average" 歧义），非建模问题。
+  </p>
+  <p style="margin-top:40px;font-size:14px;color:var(--muted)">
+    数据集：mini_dev 0703（11 库 500 题 NL2SQL） ·
+    评测流水线：四阶段（Agent → SQL → strict → LLM Judge） ·
+    存储：Kuzu 图数据库 + FAISS 向量库 ·
+    技术栈：Python / FastAPI / MCP / OpenCode Agent
+  </p>
+</section>
+
+<!-- ════════════════ 附录一：工程工作量 ════════════════ -->
+<section class="slide">
+  <div class="section-label">附录一</div>
+  <h2 class="section-title">工程工作量统计</h2>
+
+  <div class="grid-3" style="margin-top:24px">
+    <div class="card">
+      <h3>📁 代码规模</h3>
+      <div style="font-size:14px;line-height:2;margin-top:8px">
+        <div>Python <span style="float:right;font-weight:700">9,794 行</span></div>
+        <div style="color:var(--ink-2)">YAML 配置（33 套场景） <span style="float:right;font-weight:700">22,356 行</span></div>
+        <div style="color:var(--ink-2)">TTL R2RML（11 库） <span style="float:right;font-weight:700">2,710 行</span></div>
+        <div style="color:var(--ink-2)">HTML / JS 可视化 <span style="float:right;font-weight:700">2,691 行</span></div>
+        <div style="color:var(--ink-2)">Shell 脚本 <span style="float:right;font-weight:700">256 行</span></div>
+        <div style="border-top:1px solid var(--border);margin-top:4px;padding-top:4px;font-weight:700">
+          合计 <span style="float:right;color:var(--dlr)">~38,000 行</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🔧 工程结构</h3>
+      <div style="font-size:14px;line-height:2;margin-top:8px">
+        <div>Git 提交 <span style="float:right;font-weight:700">324 commits</span></div>
+        <div style="color:var(--ink-2)">工程实现 <span style="float:right;font-weight:700">7.13 – 7.31</span></div>
+        <div style="color:var(--ink-2)">贡献者 <span style="float:right;font-weight:700">1 人</span></div>
+        <div style="color:var(--ink-2);margin-top:8px">Semantic Core Service</div>
+        <div style="color:var(--muted);font-size:12px">Python × MCP × Kuzu × FAISS</div>
+        <div style="color:var(--ink-2);margin-top:4px">Evaluation Pipeline</div>
+        <div style="color:var(--muted);font-size:12px">四阶段脚本 + LLM Judge</div>
+        <div style="color:var(--ink-2);margin-top:4px">OC Agent Service</div>
+        <div style="color:var(--muted);font-size:12px">AGENTS.md + 三范式配置</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📊 评测产出</h3>
+      <div style="font-size:14px;line-height:2;margin-top:8px">
+        <div>已评测题次 <span style="float:right;font-weight:700">450</span></div>
+        <div style="color:var(--ink-2)">150 题 × 3 范式</div>
+        <div style="color:var(--ink-2);margin-top:4px">Agent 运行次数 <span style="float:right;font-weight:700">~1,000 次</span></div>
+        <div style="color:var(--ink-2)">Raw trace 文件 <span style="float:right;font-weight:700">~1,000 个</span></div>
+        <div style="color:var(--ink-2)">文档（docs/ <span style="float:right;font-weight:700">7 篇</span></div>
+        <div style="color:var(--ink-2);margin-top:4px">数据集审查</div>
+        <div style="color:var(--muted);font-size:12px">发现并修正 7+ gold SQL 缺陷</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:28px">
+    <div class="card">
+      <h3>🪙 API Token 消耗</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px">
+        详见 <code>docs/amount-2026-07.csv</code>（LongCat）+
+        <code>docs/amount-2026-07-01_2026-08-01.csv</code>（DeepSeek）
+      </p>
+      <div style="display:flex;gap:24px">
+        <div style="flex:1">
+          <div style="font-size:12px;color:var(--muted)">LongCat（7月）</div>
+          <div style="font-size:13px;line-height:1.8;margin-top:4px">
+            <div>Input miss <span style="float:right">36.0M</span></div>
+            <div>Cache hit <span style="float:right">1,298.7M</span></div>
+            <div>Output <span style="float:right">7.3M</span></div>
+            <div>Requests <span style="float:right">17,086</span></div>
+            <div style="border-top:1px solid var(--border);font-weight:700;margin-top:4px;padding-top:4px">
+              合计 <span style="float:right;color:var(--dlr)">1,342M</span>
+            </div>
+          </div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:12px;color:var(--muted)">DeepSeek（7–8月）</div>
+          <div style="font-size:13px;line-height:1.8;margin-top:4px">
+            <div>Input miss <span style="float:right">6.5M</span></div>
+            <div>Cache hit <span style="float:right">1,765.6M</span></div>
+            <div>Output <span style="float:right">3.7M</span></div>
+            <div>Requests <span style="float:right">8,273</span></div>
+            <div style="border-top:1px solid var(--border);font-weight:700;margin-top:4px;padding-top:4px">
+              合计 <span style="float:right;color:var(--dlr)">1,776M</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding-top:8px;border-top:2px solid var(--dlr);text-align:center;font-weight:700;font-size:15px;color:var(--dlr)">
+        总计 ~3.12B tokens · ~25,000 API 请求
+      </div>
+    </div>
+    <div class="card">
+      <h3>📋 评测结果 Token（Agent 侧）</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px">
+        Agent 完成 132 题的推理消耗（不含 Judge），详见 <code>docs/results_v2.md</code>
+      </p>
+      <div class="bar-group" style="margin-top:8px;gap:10px">
+        <div class="bar-row">
+          <div class="bar-row__label">DLR</div>
+          <div class="bar-row__track" style="height:28px">
+            <div class="bar-row__fill bar-row__fill--dlr" style="width:80%;font-size:12px">7,552K</div>
+          </div>
+          <div class="bar-row__delta bar-row__delta--win" style="font-size:12px">−19.0%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-row__label">ER</div>
+          <div class="bar-row__track" style="height:28px">
+            <div class="bar-row__fill bar-row__fill--er" style="width:100%;font-size:12px">9,509K</div>
+          </div>
+          <div class="bar-row__delta" style="font-size:12px">基线</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-row__label">RDF</div>
+          <div class="bar-row__track" style="height:28px">
+            <div class="bar-row__fill bar-row__fill--rdf" style="width:85%;font-size:12px">8,067K</div>
+          </div>
+          <div class="bar-row__delta" style="font-size:12px">−15.4%</div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:8px">
+        Agent 总消耗 25,128K tokens（三范式合计 150 题）
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ 附录二：项目历程 ════════════════ -->
+<section class="slide">
+  <div class="section-label">附录二</div>
+  <h2 class="section-title">项目历程</h2>
+
+  <div style="display:flex;gap:0;margin-top:32px;overflow-x:auto;font-size:14px;line-height:1.6">
+    <div style="flex:1;min-width:150px;padding:20px;border-right:1px solid var(--border)">
+      <div style="font-size:28px;font-weight:800;color:var(--dlr);margin-bottom:8px">1月</div>
+      <div style="font-weight:700;margin-bottom:6px">X 航项目</div>
+      <div style="color:var(--ink-2);font-size:13px">
+        <span style="color:var(--dlr);font-weight:600">首次探索 ER</span><br>
+        实体-关系模型的<br>
+        语义化表达能力
+      </div>
+    </div>
+    <div style="flex:1;min-width:150px;padding:20px;border-right:1px solid var(--border)">
+      <div style="font-size:28px;font-weight:800;color:var(--dlr);margin-bottom:8px">3–4月</div>
+      <div style="font-weight:700;margin-bottom:6px">X 网项目</div>
+      <div style="color:var(--ink-2);font-size:13px">
+        同时实践 ER + W3C R2RML<br>
+        发现两种范式的差异与局限<br>
+        <span style="color:var(--dlr);font-weight:600">形成 DLR 构想：<br>逻辑-物理双层解耦</span>
+      </div>
+    </div>
+    <div style="flex:1;min-width:150px;padding:20px;border-right:1px solid var(--border)">
+      <div style="font-size:28px;font-weight:800;color:var(--dlr);margin-bottom:8px">5月</div>
+      <div style="font-weight:700;margin-bottom:6px">复盘总结</div>
+      <div style="color:var(--ink-2);font-size:13px">
+        复盘 X 航 + X 网两个项目<br>
+        结合业界洞察<br>
+        <span style="color:var(--dlr);font-weight:600">探索如何屏蔽<br>Agent 影响</span>
+      </div>
+    </div>
+    <div style="flex:1;min-width:150px;padding:20px;border-right:1px solid var(--border)">
+      <div style="font-size:28px;font-weight:800;color:var(--dlr);margin-bottom:8px">6月</div>
+      <div style="font-weight:700;margin-bottom:6px">继续探索</div>
+      <div style="color:var(--ink-2);font-size:13px">
+        在复盘总结基础上<br>
+        <span style="color:var(--dlr);font-weight:600">选定评测数据集<br>和评测方案</span><br>
+        mini_dev 0703<br>
+        四阶段管线 + LLM Judge
+      </div>
+    </div>
+    <div style="flex:1;min-width:150px;padding:20px">
+      <div style="font-size:28px;font-weight:800;color:var(--dlr);margin-bottom:8px">7月</div>
+      <div style="font-weight:700;margin-bottom:6px">成型落地</div>
+      <div style="color:var(--ink-2);font-size:13px">
+        DLR 构想工程化成型<br>
+        <span style="color:var(--dlr);font-weight:600">30 亿 token</span><br>
+        <span style="color:var(--dlr);font-weight:600">300+ 次提交</span><br>
+        <span style="color:var(--dlr);font-weight:600">3 万行代码</span><br>
+        三范式 + 132 题评测
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:40px;text-align:center">
+    <p style="font-size:15px;color:var(--ink-2);line-height:1.7">
+      <strong>1–6 月</strong>：从业务项目中提炼问题，形成理论构想，组装基础设施<br>
+      <strong>7 月</strong>：集中工程落地——三范式语义服务 + 四阶段评测管线 + 132 题完整验证
+    </p>
+  </div>
+</section>
+
+<script>
+  function toggleTheme() {
+    const root = document.documentElement;
+    const btn = document.querySelector('.theme-toggle');
+    if (root.getAttribute('data-theme') === 'dark') {
+      root.removeAttribute('data-theme');
+      btn.textContent = '☀';
+    } else {
+      root.setAttribute('data-theme', 'dark');
+      btn.textContent = '🌙';
+    }
+  }
+</script>
+</body>
+</html>
