@@ -942,8 +942,8 @@ _DLR_TOOL_FUNCS = {
     "dlr_semantic_query": dlr_semantic_query,
     "recall_pe": _recall_pe,
     "recall_pas": _recall_pas,
-    # 列表层（list_le/list_pe 已移除 — 暴力枚举绕过 semantic_query，触发过度探索）
-    "list_pas": _list_pas,
+    # 列表层（list_le/list_pe/list_pas/schema 已移除 — 暴力枚举绕过 semantic_query，触发过度探索）
+    # "list_pas": _list_pas,
     # LE 查询
     "get_le": _get_le,
     "get_le_attrs": _get_le_attrs,
@@ -964,7 +964,7 @@ _DLR_TOOL_FUNCS = {
     "is_arcs": _is_arcs,
     "is_same_le": _is_same_le,
     # 统计层
-    "schema": _schema,
+    # "schema": _schema,  # 已禁用：全量 dump 绕过 PAS/ARCS 导航
 }
 
 
@@ -973,8 +973,8 @@ _ER_TOOL_FUNCS = {
     # 语义入口
     "er_semantic_query": er_semantic_query,
     # 实体图谱导航
-    "list_entities": list_entities,
-    "list_relations": list_relations,
+    # "list_entities": list_entities,  # 已禁用：全量 dump
+    # "list_relations": list_relations,  # 已禁用：全量 dump
     "get_entity": get_entity,
     "get_entity_attributes": get_entity_attributes,
     "get_entity_relations": get_entity_relations,
@@ -1047,8 +1047,8 @@ _RDF_TOOL_FUNCS = {
     # 映射查询(对标 ER 的 get_entity_mapping / DLR 的 get_pe_full)
     "query_rdf_mapping": _query_rdf_mapping,
     # 图探索
-    "rdf_classes": _rdf_classes,
-    "rdf_predicates": _rdf_predicates,
+    # "rdf_classes": _rdf_classes,  # 已禁用：全量 dump
+    # "rdf_predicates": _rdf_predicates,  # 已禁用：全量 dump
     "rdf_search": _rdf_search,
     # rdf_triples_for_class 已移除 — 永远返回空,误导 Agent
     # 序列化
