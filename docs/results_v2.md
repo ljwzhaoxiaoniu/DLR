@@ -27,57 +27,58 @@
 > | 指标 | ER | DLR | RDF |
 > |------|----|-----|-----|
 > | CORRECT | 139/150 (92.7%) | **148/150 (98.7%)** | 135/150 (90.0%) |
-> | strict PASS | 70/150 (46.7%) | **73/150 (48.7%)** | 65/150 (43.3%) |
-> | 平均 token | 64,583 | **53,463** (−17.2% vs ER) | 54,096 (−16.2% vs ER) |
+> | strict PASS | 70/150 (46.7%) | **72/150 (48.0%)** | 66/150 (44.0%) |
+> | 平均 token | 63,391 | **50,346** (−20.6% vs ER) | 53,782 (−15.2% vs ER) |
+> | 中位 token | 55,114 | **43,279** | 46,527 |
 
 | 专题 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 数据集备注 | 备注 |
 |------|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|----------|------|
-| debit_card | q1471 | FAIL | CORRECT | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 42,421 | **42,041** | 61,762 |  | RDF唯一strict PASS |
-| debit_card | q1472 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **53,755** | 71,029 | 128,238 |  | RDF 128K→SPARQL冗余嵌套 |
-| debit_card | q1473 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 59,592 | 43,327 | **28,355** |  |  |
-| debit_card | q1476 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 49,249 | **46,208** | 98,442 |  | RDF 98K→SPARQL冗余 |
-| debit_card | q1479 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 43,712 | **43,397** | 101,068 |  | RDF 101K→SPARQL冗余 |
-| debit_card | q1480 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 50,260 | 36,425 | **27,664** |  |  |
+| debit_card | q1471 | FAIL | CORRECT | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 60,262 | **39,078** | 61,468 |  | RDF唯一strict PASS |
+| debit_card | q1472 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **286,969** | 94,317 | 183,400 |  | RDF 128K→SPARQL冗余嵌套 |
+| debit_card | q1473 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 35,825 | 72,766 | **94,395** |  |  |
+| debit_card | q1476 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 73,221 | **61,770** | 69,729 |  | RDF 98K→SPARQL冗余 |
+| debit_card | q1479 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 43,712 | **43,397** | 45,318 |  | RDF 101K→SPARQL冗余 |
+| debit_card | q1480 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 50,260 | 59,145 | **65,519** |  |  |
 | debit_card | q1481 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 230,002 | **74,821** | 112,247 | gold bug(未过滤最低消费客户) | ER 230K极高→嵌套子查询路径膨胀；DLR 75K→PAS精准 |
 | debit_card | q1482 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **46,942** | 56,468 | 110,413 | gold bug(分母应为2013) | RDF 110K→SPARQL冗余 |
 | debit_card | q1483 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 44,551 | **33,927** | 170,885 |  | RDF 171K(5x DLR)→SPARQL冗余嵌套 |
 | debit_card | q1484 | FAIL | CORRECT | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 41,164 | **39,184** | 60,725 |  |  |
-| debit_card | q1486 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | **62,200** | 113,827 | 77,100 |  | DLR 114K偏高→重试；DLR strict PASS→PAS单步定位 |
-| debit_card | q1490 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **54,488** | 102,516 | 93,410 | gold bug(两轮修正) | gold bug两轮修正→三范式均反复探索 |
-| debit_card | q1493 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | **36,552** | 44,333 | 66,199 |  |  |
-| debit_card | q1498 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 34,828 | 33,505 | **29,178** |  | DLR三次误用MAX(Consumption)而非SUM→GROUP BY→MAX→LLM聚合语义盲区 |
-| debit_card | q1500 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 118,035 | **107,280** | 158,025 |  | ARCS(DLR独创概念)→三表JOIN；RDF 158K最高→SPARQL无锚定键概念 |
-| debit_card | q1501 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 153,328 | 147,662 | **100,653** |  | 高成本题→三范式均>100K |
+| debit_card | q1486 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | **62,200** | 72,659 | 75,962 |  | DLR 114K偏高→重试；DLR strict PASS→PAS单步定位 |
+| debit_card | q1490 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **105,687** | 80,806 | 108,118 | gold bug(两轮修正) | gold bug两轮修正→三范式均反复探索 |
+| debit_card | q1493 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | **36,552** | 54,977 | 78,468 |  |  |
+| debit_card | q1498 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 34,828 | 32,300 | **55,564** |  | DLR三次误用MAX(Consumption)而非SUM→GROUP BY→MAX→LLM聚合语义盲区 |
+| debit_card | q1500 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 12,809 | **14,273** | 24,543 |  | ARCS(DLR独创概念)→三表JOIN；RDF 158K最高→SPARQL无锚定键概念 |
+| debit_card | q1501 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 14,500 | 19,962 | **16,182** |  | 高成本题→三范式均>100K |
 | debit_card | q1505 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **35,834** | 43,115 | 65,513 | gold语义偏差(COUNT(*)非客户数) | gold COUNT(*)计人次→三范式用COUNT(DISTINCT)更忠实 |
 | debit_card | q1506 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 57,614 | 60,086 | **46,527** |  |  |
-| debit_card | q1507 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 37,159 | **33,634** | 33,760 |  |  |
-| debit_card | q1509 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | **36,451** | 37,094 | 64,631 |  | RDF 65K→SPARQL冗余 |
+| debit_card | q1507 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 8,521 | **9,925** | 7,644 |  |  |
+| debit_card | q1509 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | **8,403** | 10,503 | 12,599 |  | RDF 65K→SPARQL冗余 |
 | debit_card | q1514 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 62,465 | 67,172 | **45,594** |  |  |
 | debit_card | q1515 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 46,645 | **43,077** | 50,827 |  |  |
-| debit_card | q1521 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 29,243 | 43,894 | **27,982** |  |  |
-| debit_card | q1524 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 89,050 | 123,025 | **67,717** |  | ER全互联FK反而误导Agent→按需暴露优于全量；DLR 123K偏高 |
-| debit_card | q1525 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **54,895** | 61,104 | 79,322 | gold同1505缺陷 |  |
+| debit_card | q1521 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 12,264 | 11,224 | **8,434** |  |  |
+| debit_card | q1524 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 12,837 | 12,487 | **14,332** |  | ER全互联FK反而误导Agent→按需暴露优于全量；DLR 123K偏高 |
+| debit_card | q1525 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **54,895** | 61,104 | 102,319 | gold同1505缺陷 |  |
 | debit_card | q1526 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 116,689 | 85,371 | **60,522** | gold返回NULL(子查询无匹配) | ER 117K→gold NULL导致多轮重试；DLR/RDF绕过缺陷 |
-| debit_card | q1528 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 78,950 | 97,956 | **56,564** |  |  |
-| debit_card | q1529 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **81,442** | 85,677 | 90,094 | gold笛卡尔积bug(已修正cache) | ★RDF INCORRECT→扁平triple无属性归属，被transactions_1k吸走忽略yearmonth.Consumption；DLR strict PASS→LE public属性Consumption正确引导 |
+| debit_card | q1528 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 10,344 | 12,468 | **9,097** |  |  |
+| debit_card | q1529 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **19,591** | 16,721 | 12,210 | gold笛卡尔积bug(已修正cache) | ★RDF INCORRECT→扁平triple无属性归属，被transactions_1k吸走忽略yearmonth.Consumption；DLR strict PASS→LE public属性Consumption正确引导 |
 | debit_card | q1531 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 38,393 | 33,805 | **30,900** | 数据集无矛盾(evidence/gold SQL/gold cache均为SUM(Price)/SUM(Amount)=22.55) |  |
 | debit_card | q1533 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 48,735 | **35,235** | 40,489 |  | DLR最低→PAS语义桥精准定位 |
-| student_club | q1312 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 49,351 | **40,382** | 47,942 |  |  |
-| student_club | q1317 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 38,963 | **34,492** | 37,558 |  |  |
+| student_club | q1312 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 7,847 | **9,000** | 7,702 |  |  |
+| student_club | q1317 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 8,915 | **9,742** | 8,430 |  |  |
 | student_club | q1322 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 43,936 | **31,509** | 35,443 |  |  |
-| student_club | q1323 | PASS | | PASS | | PASS | | CORRECT | CORRECT | CORRECT | 104,100 | 51,642 | **28,111** |  | ER偏高→多表探索；DLR→PAS直达 |
+| student_club | q1323 | PASS | | PASS | | PASS | | CORRECT | CORRECT | CORRECT | 104,100 | 69,207 | **36,549** |  | ER偏高→多表探索；DLR→PAS直达 |
 | student_club | q1331 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 73,821 | **32,563** | 77,279 |  | DLR 33K(ER的44%)→LE public属性直接命中目标列 |
 | student_club | q1334 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 55,114 | 48,875 | **42,503** |  |  |
-| student_club | q1338 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 79,177 | **7,255** | 84,515 |  | DLR 7K极低→PAS+public属性一击命中；ER/RDF需多轮探索 |
-| student_club | q1339 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 92,433 | **14,929** | 75,856 |  | DLR 15K(ER的1/6)→Expense独立LE+PAS 4步；ER需25步探索→碎表聚合 |
-| student_club | q1340 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 52,963 | **33,630** | 45,518 |  | DLR 34K(ER的64%)→LE public属性暴露关键列名 |
+| student_club | q1338 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 82,444 | **94,553** | 84,515 |  | DLR 7K极低→PAS+public属性一击命中；ER/RDF需多轮探索 |
+| student_club | q1339 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 145,494 | **34,001** | 84,865 |  | DLR 15K(ER的1/6)→Expense独立LE+PAS 4步；ER需25步探索→碎表聚合 |
+| student_club | q1340 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 78,516 | **33,630** | 51,922 |  | DLR 34K(ER的64%)→LE public属性暴露关键列名 |
 | student_club | q1344 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 61,185 | 39,130 | **27,522** |  |  |
-| student_club | q1346 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 103,071 | 112,104 | **58,878** |  | q1346 查 Carlo Jacobs 电话；三范式 strict PASS |
-| student_club | q1350 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | **86,683** | 91,389 | 79,538 |  | q1350 expense→budget→event_status；三范式 strict PASS |
+| student_club | q1346 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 101,331 | 34,133 | **50,863** |  | q1346 查 Carlo Jacobs 电话；三范式 strict PASS |
+| student_club | q1350 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | **88,423** | 169,360 | 87,553 |  | q1350 expense→budget→event_status；三范式 strict PASS |
 | thrombosis | q1149 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 36,998 | 32,309 | **28,505** |  |  |
 | thrombosis | q1150 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 59,539 | 31,879 | **26,391** |  |  |
 | thrombosis | q1152 | FAIL | CORRECT | PASS | | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 68,893 | 40,351 | **27,409** | gold ratio方向反(门诊/住院→住院/门诊) | gold ratio方向反→DLR/RDF正确算出0.76 |
-| thrombosis | q1153 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 99,754 | 37,227 | **31,537** |  | ER 100K→多表JOIN探索；DLR→PAS精准 |
+| thrombosis | q1153 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 99,754 | 39,790 | **31,537** |  | ER 100K→多表JOIN探索；DLR→PAS精准 |
 | thrombosis | q1155 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 84,434 | **56,704** | 114,981 |  | RDF 115K→SPARQL多条件FILTER+OPTIONAL膨胀 |
 | thrombosis | q1156 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 67,961 | 33,329 | **28,520** |  |  |
 | thrombosis | q1157 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 54,114 | **41,491** | 52,667 |  |  |
@@ -88,33 +89,33 @@
 | thrombosis | q1169 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | **94,124** | 52,791 | 47,082 |  | q1169 UA异常男女比例；建模重构后DLR 53K逼近RDF 47K |
 | football | q1025 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 95,251 | 32,834 | **31,916** |  | ER 95K→多表探索；DLR→PAS直达 |
 | football | q1028 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 56,628 | **35,513** | 54,205 |  | ER INCORRECT→tie→judge UNKNOWN |
-| football | q1029 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 36,434 | 33,257 | **26,171** | gold ASC/DESC颠倒 |  |
-| football | q1030 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 33,328 | **33,059** | 37,527 |  |  |
-| football | q1031 | FAIL |  | FAIL |  | FAIL |  | INCORRECT | INCORRECT | INCORRECT | 63,578 | 45,199 | **27,704** | evidence伪代码(SUBTRACT(DATETIME,birthday)) | ★三范式全INCORRECT→evidence伪代码对LLM无效 |
-| football | q1032 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 64,320 | **32,502** | 32,715 |  |  |
+| football | q1029 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 8,290 | 9,454 | **7,101** | gold ASC/DESC颠倒 |  |
+| football | q1030 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 10,380 | **9,200** | 9,411 |  |  |
+| football | q1031 | FAIL |  | FAIL |  | FAIL |  | INCORRECT | INCORRECT | INCORRECT | 11,043 | 12,355 | **13,832** | evidence伪代码(SUBTRACT(DATETIME,birthday)) | ★三范式全INCORRECT→evidence伪代码对LLM无效 |
+| football | q1032 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 15,042 | **8,959** | 9,801 |  |  |
 | football | q1035 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 106,247 | **38,318** | 48,529 |  | ER 106K→多表探索；DLR→PAS直达 |
-| football | q1036 | PASS |  | PASS |  | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 42,628 | **36,331** | 65,053 |  | RDF INCORRECT→缺DISTINCT |
+| football | q1036 | PASS |  | PASS |  | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 42,628 | **38,193** | 65,053 |  | RDF INCORRECT→缺DISTINCT |
 | football | q1037 | FAIL | INCORRECT | FAIL | CORRECT | FAIL |  | INCORRECT | CORRECT | INCORRECT | 96,538 | 50,536 | **35,882** |  | ★ER+RDF INCORRECT→JOIN键选错；DLR PAS桥精准匹配→优势题 |
 | football | q1039 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 66,799 | 73,707 | **54,226** |  |  |
 | football | q1040 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 33,430 | **40,540** | 34,368 |  | ER GROUP BY player_name聚合错误→缺Naldo/多Hyypiae；DLR+RDF judge翻盘；ER唯一INCORRECT |
 | football | q1042 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 84,025 | 62,283 | **34,716** | ⚡execute_sql描述+SQLite除法警告 | ★工具描述驱动修复：一行CAST AS REAL提示→三范式全PASS（旧版全INCORRECT）；参见定性观察
 | superhero | q724 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 37,230 | 43,001 | **30,272** |  |  |
-| formula_1 | q846 | PASS | | PASS | | PASS | | CORRECT | CORRECT | CORRECT | 68,563 | 33,606 | **28,437** |  |  |
-| formula_1 | q847 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 44,477 | 33,238 | **28,697** | gold NULL排序bug(Fisichella应为Räikkönen) | gold NULL排序bug→DLR/RDF返回正确 |
-| formula_1 | q850 | FAIL | CORRECT | PASS | | PASS | | CORRECT | CORRECT | CORRECT | 45,188 | 41,934 | **35,048** |  |  |
-| formula_1 | q854 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 63,486 | 52,380 | **36,067** |  |  |
+| formula_1 | q846 | PASS | | PASS | | PASS | | CORRECT | CORRECT | CORRECT | 68,563 | 33,606 | **32,960** |  |  |
+| formula_1 | q847 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 44,477 | 33,238 | **32,514** | gold NULL排序bug(Fisichella应为Räikkönen) | gold NULL排序bug→DLR/RDF返回正确 |
+| formula_1 | q850 | FAIL | CORRECT | PASS | | PASS | | CORRECT | CORRECT | CORRECT | 45,188 | 41,934 | **76,224** |  |  |
+| formula_1 | q854 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 63,486 | 59,238 | **36,067** |  |  |
 | formula_1 | q857 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **54,217** | 60,127 | 78,188 |  |  |
-| formula_1 | q859 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 38,281 | 53,029 | **35,543** |  |  |
+| formula_1 | q859 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 46,706 | 53,029 | **50,833** |  |  |
 | formula_1 | q861 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **38,425** | 44,531 | 43,901 |  | evidence未区分两个同名number列 |
-| formula_1 | q862 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 34,834 | **33,632** | 36,839 |  |  |
+| formula_1 | q862 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 34,834 | **33,632** | 42,598 |  |  |
 | formula_1 | q865 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 48,155 | 34,235 | **30,044** |  |  |
 | formula_1 | q866 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 185,860 | **93,840** | 211,122 | ⚡结构引导实证 | ★DLR最优→LE分层避免RDF 11次SQL+ER 9次SQL；参见定性观察"q866结构引导实证" |
 | formula_1 | q868 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 62,372 | 66,254 | **32,173** |  | RDF一骑绝尘→扁平结构直接races JOIN circuits |
 | superhero | q717 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 44,528 | 44,113 | **28,504** |  |  |
-| superhero | q719 | PASS | | PASS | | PASS | | CORRECT | CORRECT | CORRECT | 29,488 | 36,084 | **28,825** |  |  |
+| superhero | q719 | PASS | | PASS | | PASS | | CORRECT | CORRECT | CORRECT | 90,494 | 36,282 | **28,825** |  |  |
 | superhero | q723 | PASS | | PASS | | PASS | | CORRECT | CORRECT | CORRECT | **29,068** | 35,981 | 29,175 |  |  |
-| superhero | q726 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 47,557 | 65,984 | **39,654** | gold过度要求RANK()列 | gold过度要求RANK()列→三范式ORDER BY正确 |
-| superhero | q728 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **36,838** | 54,075 | 52,604 |  |  |
+| superhero | q726 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 59,696 | 65,984 | **65,196** | gold过度要求RANK()列 | gold过度要求RANK()列→三范式ORDER BY正确 |
+| superhero | q728 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **46,561** | 54,075 | 52,604 |  |  |
 | superhero | q730 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 84,532 | **37,591** | 83,411 |  | DLR 38K(ER/RDF的1/2)→PAS桥一步定位hero→power |
 | superhero | q732 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 46,469 | 55,585 | **37,962** |  |  |
 | superhero | q733 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 28,920 | 45,089 | **28,642** |  |  |
@@ -124,32 +125,32 @@
 | formula_1 | q994 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 80,923 | 54,656 | **29,100** |  | ER 81K→YAML大宽表探索；RDF→SPARQL精准 |
 | codebase | q531 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 36,525 | 31,518 | **26,650** |  |  |
 | codebase | q532 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 55,456 | **34,233** | 197,057 |  | ★RDF 197K(6x DLR)→SPARQL多表OPTIONAL嵌套膨胀，无FK引导；DLR 34K→PAS直达 |
-| codebase | q533 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 27,226 | 31,287 | **12,591** | evidence缺DATE() | evidence缺DATE()→三范式照做 |
-| codebase | q537 | PASS | | PASS | | PASS | | CORRECT | CORRECT | CORRECT | 33,989 | 33,914 | **27,365** |  |  |
+| codebase | q533 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 36,896 | 31,686 | **49,225** | evidence缺DATE() | evidence缺DATE()→三范式照做 |
+| codebase | q537 | PASS | | PASS | | PASS | | CORRECT | CORRECT | CORRECT | 36,101 | 49,688 | **50,853** |  |  |
 | codebase | q539 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | **52,150** | 79,768 | 68,731 |  |  |
 | codebase | q544 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 56,254 | 51,592 | **35,689** |  |  |
 | codebase | q547 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 60,473 | **52,782** | 53,148 |  |  |
-| codebase | q549 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 46,327 | 51,179 | **33,150** |  |  |
+| codebase | q549 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 66,788 | 51,179 | **33,150** |  |  |
 | codebase | q555 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | **46,479** | 50,639 | 100,051 |  | RDF 100K→SPARQL OPTIONAL嵌套膨胀 |
 | codebase | q557 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 59,209 | 61,472 | **51,605** |  |  |
 | codebase | q563 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 78,351 | 69,532 | **48,958** |  | q563 comment→FavoriteCount；RDF 最低 49K |
 | codebase | q565 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 60,288 | **49,051** | 41,118 |  | q565 comment→closed→well-finished；RDF pred yes→judge翻盘 |
 | card_games | q340 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 33,104 | 32,581 | **27,478** |  |  |
 | card_games | q341 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 95,200 | 58,978 | **30,310** | gold typo | ★ER INCORRECT→cards 78列大宽表→SQL逻辑错误；DLR private_attributes避噪 |
-| card_games | q344 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **12,991** | 34,288 | 13,338 | evidence缺印刷版本约束 | 同名卡多印刷版本→三范式选name非id；语义建模不注入领域知识 |
-| card_games | q345 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 59,786 | 44,608 | **41,161** |  | ER偏高→78列宽表+list_all_tables兜底 |
+| card_games | q344 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **53,625** | 34,288 | 52,270 | evidence缺印刷版本约束 | 同名卡多印刷版本→三范式选name非id；语义建模不注入领域知识 |
+| card_games | q345 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 80,004 | 45,722 | **41,161** |  | ER偏高→78列宽表+list_all_tables兜底 |
 | card_games | q346 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 64,089 | 74,484 | **45,578** |  |  |
 | card_games | q347 | FAIL | CORRECT | FAIL | CORRECT | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 144,494 | 105,495 | **36,459** |  | ★RDF INCORRECT→扁平漏JOIN；ER/DLR通过mapping/get_pe_full看到rulings FK |
-| card_games | q349 | FAIL | CORRECT | FAIL | CORRECT | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 87,205 | **43,995** | 53,523 | gold bug(答非所问) | ★RDF INCORRECT→gold答非所问；DLR独立语义推理→独胜 |
-| card_games | q352 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 67,392 | 32,414 | **27,168** | gold bug(分母错) | gold分母错→DLR strict PASS |
+| card_games | q349 | FAIL | CORRECT | FAIL | CORRECT | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 16,159 | **10,202** | 12,825 | gold bug(答非所问) | ★RDF INCORRECT→gold答非所问；DLR独立语义推理→独胜 |
+| card_games | q352 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 16,188 | 17,845 | **11,863** | gold bug(分母错) | gold分母错→DLR strict PASS |
 | card_games | q356 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 72,445 | 32,929 | **27,525** |  | ER 72K→全量YAML探索；DLR→PAS精准 |
 | card_games | q358 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 75,681 | **32,909** | 51,641 |  | 三范式均缺DISTINCT |
 | card_games | q366 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 49,239 | **36,324** | 60,841 |  |  |
 | card_games | q368 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 42,655 | **32,962** | 36,478 |  |  |
-| toxicology | q195 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 40,714 | 30,269 | **25,581** |  |  |
-| toxicology | q197 | FAIL | INCORRECT | PASS | | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 57,143 | **34,862** | 37,140 |  | ★ER INCORRECT→molecule→bond JOIN膨胀→氧计数放大(2.16→69.28)；DLR PAS桥DISTINCT molecule_id避开fan-out |
-| toxicology | q198 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 35,987 | 33,619 | **29,929** | evidence笛卡尔积(去笛卡尔积修正) |  |
-| toxicology | q200 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 35,557 | 31,804 | **25,992** |  |  |
+| toxicology | q195 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 40,714 | 31,353 | **26,530** |  |  |
+| toxicology | q197 | FAIL | INCORRECT | PASS | | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 57,143 | **47,527** | 37,140 |  | ★ER INCORRECT→molecule→bond JOIN膨胀→氧计数放大(2.16→69.28)；DLR PAS桥DISTINCT molecule_id避开fan-out |
+| toxicology | q198 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 35,987 | 35,893 | **50,610** | evidence笛卡尔积(去笛卡尔积修正) |  |
+| toxicology | q200 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 76,256 | 31,804 | **25,992** |  |  |
 | toxicology | q201 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | **29,179** | 33,423 | 37,098 |  |  |
 | toxicology | q206 | FAIL | CORRECT | FAIL | CORRECT | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 57,597 | **40,861** | 50,559 |  | ★RDF INCORRECT→找到connected表但最终SQL弃用→attribute和relation同为predicate无信息层级 |
 | toxicology | q207 | FAIL | CORRECT | PASS | | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 53,325 | 43,279 | **37,239** | gold SQL bug(分子级关联vs原子级) | gold SQL bug(分子级关联)→三范式用bond→connected→atom精确定位 |
@@ -162,14 +163,14 @@
 | california | q32 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 127,270 | 100,507 | **91,756** |  | q32 SOC=66 FRPM top5；RDF 最低 92K |
 | california | q5 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 67,294 | **35,885** | 37,623 |  |  |
 | california | q11 | PASS |  | PASS |  | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 87,085 | **57,929** | 60,690 |  | ★RDF INCORRECT→列歧义:CDSCode vs School Code→RDF选错 |
-| california | q12 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 98,325 | **60,884** | 69,884 |  |  |
-| california | q17 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | INCORRECT | INCORRECT | CORRECT | INCORRECT | 85,213 | 56,187 | **41,414** | gold过度要求RANK()列 | ★ER+RDF INCORRECT→gold过度要求RANK()列号；DLR语义推理绕过→独胜 |
-| california | q23 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 115,584 | 87,028 | **38,490** | evidence公式触发ABS()→自然语言修正 | evidence公式触发ABS()→三范式多次重跑 |
-| california | q24 | FAIL | CORRECT | PASS |  | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 59,301 | **41,050** | 50,417 |  | ★RDF INCORRECT→列歧义:schools.School vs frpm.School Name |
-| california | q25 | FAIL | INCORRECT | PASS |  | FAIL | INCORRECT | INCORRECT | CORRECT | INCORRECT | 6,393 | 46,950 | **6,267** |  | ★ER+RDF INCORRECT→选错satscores.dname；DLR独胜→PE属性归属消解列名歧义 |
-| california | q26 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 6,443 | 15,433 | **6,180** | gold bug(Free Meal→FRPM Count)待修正 | ★ER INCORRECT→gold错列Free Meal→Agent偏离；DLR+RDF避开 |
-| california | q27 | FAIL | INCORRECT | FAIL | INCORRECT | FAIL | INCORRECT | INCORRECT | INCORRECT | INCORRECT | 99,894 | **26,790** | 59,407 | average歧义(列名+question双触发AVG) | ★三范式全INCORRECT→AvgScrWrite+question average双重触发AVG()→LLM语义锚定 |
-| california | q28 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 79,930 | 78,120 | **61,759** |  |  |
+| california | q12 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 16,586 | **14,868** | 14,295 |  |  |
+| california | q17 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | INCORRECT | INCORRECT | CORRECT | INCORRECT | 18,134 | 13,138 | **10,845** | gold过度要求RANK()列 | ★ER+RDF INCORRECT→gold过度要求RANK()列号；DLR语义推理绕过→独胜 |
+| california | q23 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 30,608 | 69,561 | **48,607** | evidence公式触发ABS()→自然语言修正 | evidence公式触发ABS()→三范式多次重跑 |
+| california | q24 | FAIL | CORRECT | PASS |  | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 18,975 | **29,109** | 14,707 |  | ★RDF INCORRECT→列歧义:schools.School vs frpm.School Name |
+| california | q25 | FAIL | INCORRECT | PASS |  | FAIL | INCORRECT | INCORRECT | CORRECT | INCORRECT | 101,558 | 46,950 | **50,841** |  | ★ER+RDF INCORRECT→选错satscores.dname；DLR独胜→PE属性归属消解列名歧义 |
+| california | q26 | FAIL | INCORRECT | FAIL | CORRECT | FAIL | CORRECT | INCORRECT | CORRECT | CORRECT | 217,255 | 69,814 | **95,363** | gold bug(Free Meal→FRPM Count)待修正 | ★ER INCORRECT→gold错列Free Meal→Agent偏离；DLR+RDF避开 |
+| california | q27 | FAIL | INCORRECT | FAIL | INCORRECT | FAIL | INCORRECT | INCORRECT | INCORRECT | INCORRECT | 220,572 | **183,770** | 220,435 | average歧义(列名+question双触发AVG) | ★三范式全INCORRECT→AvgScrWrite+question average双重触发AVG()→LLM语义锚定 |
+| california | q28 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 79,930 | 78,232 | **107,454** |  |  |
 | financial | q89 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 157,511 | **71,207** | 81,125 |  | ER 158K→financial多表FK链全暴露→探索路径长；DLR→PAS聚焦 |
 | financial | q92 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 104,583 | 120,828 | **86,875** |  | DLR偏高→4次语义搜索+2次PE探索；RDF→语义查询一次直定位 |
 | financial | q93 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 89,663 | 89,698 | **61,037** |  |  |
@@ -189,13 +190,13 @@
 
 | 指标 | ER | DLR | RDF |
 |------|----|----|-----|
-| CORRECT | 134/144 | **142/144** | 129/144 |
-| strict PASS | 68/144 | **71/144** | 64/144 |
-| 总 token | 9,203K | **7,612K** | 7,689K |
-| 平均 | 63,912 | **52,864** | 53,406 |
-| 中位 | 56,968 | **43,877** | 41,414 |
-| 最低 | 6,393 | 7,255 | **6,180** |
-| 最高 | 230,002 | 147,662 | **197,057** |
+| CORRECT | 139/150 | **148/150** | 135/150 |
+| strict PASS | 70/150 | **72/150** | 66/150 |
+| 总 token | 9,509K | **7,552K** | 8,067K |
+| 平均 | 63,391 | **50,346** | 53,782 |
+| 中位 | 55,114 | **43,279** | 46,527 |
+| 最低 | 6,443 | 8,959 | **6,180** |
+| 最高 | 286,969 | 219,771 | **254,156** |
 | 总计 | **405/432** | — | — |
 
 ### 定性观察
