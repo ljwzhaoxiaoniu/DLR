@@ -4,6 +4,25 @@
 > **数据来源**: `validated_results/round_1/*/agent_stats.csv` + `results.md` token 表。
 > **⚠️ 标记**: CSV 实际 verdict 与 results.md 不一致的题。
 
+## 评测进度
+
+> mini_dev 全量 500 题，当前已评测 132 题。已评测按专题分布：
+
+| 数据库 | 全量 | 已评 | 剩余 | 进度 |
+|--------|------|------|------|------|
+| debit_card_specializing | 30 | 30 | 0 | 100% ✅ |
+| card_games | 52 | 12 | 40 | 23.1% |
+| california_schools | 30 | 10 | 20 | 33.3% |
+| financial | 32 | 10 | 22 | 31.3% |
+| toxicology | 40 | 10 | 30 | 25.0% |
+| student_club | 48 | 10 | 38 | 20.8% |
+| codebase_community | 49 | 10 | 39 | 20.4% |
+| thrombosis_prediction | 50 | 10 | 40 | 20.0% |
+| european_football_2 | 51 | 10 | 41 | 19.6% |
+| superhero | 52 | 10 | 42 | 19.2% |
+| formula_1 | 66 | 10 | 56 | 15.2% |
+| **合计** | **500** | **132** | **368** | **26.4%** |
+
 > **总结**：共测试 132 题 × 3 范式 = **396 题次**。
 > | 指标 | ER | DLR | RDF |
 > |------|----|-----|-----|

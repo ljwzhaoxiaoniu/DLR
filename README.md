@@ -2,7 +2,7 @@
 
 > **DLR（解耦逻辑表达）是一种原创的语义建模范式**：LE-PE 双层模型 + PAS 语义路由，将逻辑概念层与物理数据层解耦，
 > 使 LLM Agent 能够用自然语言理解和查询关系数据库。
-> 项目同时实现 **ER**（自研基线）与 **RDF**（W3C R2RML 标准基线），在 mini_dev 500 题 NL2SQL 上进行三范式同构对比评测，
+> 项目同时实现 **ER**（数据库建模标准基线）与 **RDF**（W3C R2RML 标准基线），在 mini_dev 500 题 NL2SQL 上进行三范式同构对比评测，
 > 论证 DLR 建模对 LLM 的引导优势。
 
 ## 📚 文档导航
@@ -14,16 +14,16 @@
 | [数据集说明](docs/dataset.md) | mini_dev 0703：11 库 500 题、下载、任务格式、实测特征 |
 | [Agent 说明](docs/agent.md) | OpenCode + MCP 架构、AGENTS.md 规则、防作弊、db 锁库行为 |
 | [评测流水线](docs/evaluation.md) | 四阶段流水线、Prompt 铁律、双通道判定、公平性、已知问题 |
-| [评测结果](docs/results.md) | round_1 滚动更新（312/330 CORRECT, pair 1-110）：正确率、行为效率、定性观察 |
+| [评测结果](docs/results_v2.md) | 132 题 × 3 范式逐题校验表（371/396 CORRECT）：strict/judge/result/token |
 
 ## 架构
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                    OC 评测执行层                                   │
-│  OC Agent (OpenCode) ── 500 个自然语言任务 ── MCP 连接到指定范式     │
+│  OC Agent (OpenCode) ── 500 个自然语言任务 ── 每个 Agent 实例连一种范式 │
 └─────────────────────┬────────────────────────────────────────────┘
-                      │ MCP (SSE)  （每次连一个范式）
+                      │ MCP (SSE)  三范式并行，进程/存储隔离
 ┌─────────────────────▼────────────────────────────────────────────┐
 │                 语义查询层 (Semantic Core Service)                 │
 │  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐             │
@@ -44,10 +44,10 @@
 | 范式 | 角色 | Web 端口 | MCP 工具数 | 核心模型 |
 |------|------|---------|-----------|----------|
 | **★ DLR** | 原创核心 | 28775 | 21+1 | LE / PE / PAS / ARCS |
-| **ER** | 自研基线 | 28765 | 11+1 | BizEntity / BizAttribute / BizRelation |
-| **RDF** | W3C 对照基线 | 28785 | 7+1 | rr:TriplesMap + rdflib SPARQL |
+| **ER** | 数据库建模标准基线 | 28765 | 11+1 | BizEntity / BizAttribute / BizRelation |
+| **RDF** | W3C R2RML 标准基线 | 28785 | 7+1 | rr:TriplesMap + rdflib SPARQL |
 
-每次评测只启用一种范式连接，Agent 强制路径：`*_semantic_query`（首跳全局召回定位库 → 锁库传 `db`）→ 映射工具（`get_pe_full` / `get_entity_mapping` / `query_rdf_mapping`）→ 共享 `execute_sql`（只读薄透传）→ `Final Answer`。
+三范式并行评测，进程/存储/MCP 工具全隔离。每个 Agent 实例只连接一种范式，强制路径：`*_semantic_query`（首跳全局召回定位库 → 锁库传 `db`）→ 映射工具（`get_pe_full` / `get_entity_mapping` / `query_rdf_mapping`）→ 共享 `execute_sql`（只读薄透传）→ `Final Answer`。
 
 ## 快速开始
 
@@ -90,7 +90,7 @@ python parse_agent_stats.py --paradigm ALL                         # 汇总 toke
 
 ```text
 DLR Proj/
-├── README.md / docs/                # 入口 + 六个专题文档
+├── README.md / docs/                # 入口 + 专题文档
 ├── config.json                      # 全局配置(路径/端口/API/评测参数)
 ├── Semantic Core Service/           # 语义服务
 │   ├── main.py                      # CLI: build / serve / query / reset (ALL)
