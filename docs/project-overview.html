@@ -790,9 +790,9 @@
 
     <!-- Right col: token efficiency -->
     <div>
-      <div style="font-size:13px;font-weight:700;color:var(--er);margin-bottom:12px;letter-spacing:0.05em">都对，但 DLR 省得多</div>
+      <div style="font-size:13px;font-weight:700;color:var(--dlr);margin-bottom:12px;letter-spacing:0.05em">都对，但 DLR 省得多</div>
 
-      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--er)">
+      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--dlr)">
         <h4 style="font-size:14px">q1339 · 碎表聚合</h4>
         <p style="font-size:12px;margin-top:4px">
           student_club Expense 分散在多个子表，ER 逐表探索→
@@ -802,7 +802,7 @@
         </p>
       </div>
 
-      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--er)">
+      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--dlr)">
         <h4 style="font-size:14px">q1481 · 嵌套子查询路径膨胀</h4>
         <p style="font-size:12px;margin-top:4px">
           debit_card 多条件过滤，ER 子查询路径膨胀→
@@ -812,7 +812,7 @@
         </p>
       </div>
 
-      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--er)">
+      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--dlr)">
         <h4 style="font-size:14px">q866 · LE 分层避免冗余探索</h4>
         <p style="font-size:12px;margin-top:4px">
           formula_1 lap time→driver url，ER 全量暴露→9 次 SQL + list_all_tables→
@@ -822,7 +822,7 @@
         </p>
       </div>
 
-      <div class="card" style="border-left:3px solid var(--er)">
+      <div class="card" style="border-left:3px solid var(--dlr)">
         <h4 style="font-size:14px">q1025 · PAS 直达多表 JOIN</h4>
         <p style="font-size:12px;margin-top:4px">
           football 多表探索，ER 全量遍历→
@@ -879,9 +879,9 @@
 
     <!-- Right col: token efficiency -->
     <div>
-      <div style="font-size:13px;font-weight:700;color:var(--rdf);margin-bottom:12px;letter-spacing:0.05em">都对，但 DLR 省得多</div>
+      <div style="font-size:13px;font-weight:700;color:var(--dlr);margin-bottom:12px;letter-spacing:0.05em">都对，但 DLR 省得多</div>
 
-      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--rdf)">
+      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--dlr)">
         <h4 style="font-size:14px">q532 · SPARQL OPTIONAL 嵌套膨胀</h4>
         <p style="font-size:12px;margin-top:4px">
           codebase 多表查询，RDF 无 FK 引导→SPARQL 多表 OPTIONAL 嵌套→
@@ -891,7 +891,7 @@
         </p>
       </div>
 
-      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--rdf)">
+      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--dlr)">
         <h4 style="font-size:14px">q866 · flat triple 无属性归属</h4>
         <p style="font-size:12px;margin-top:4px">
           lap time→driver url，RDF 找不到 driver.url 在哪个表→11 次 SQL 疯狂试探→
@@ -901,7 +901,7 @@
         </p>
       </div>
 
-      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--rdf)">
+      <div class="card" style="margin-bottom:12px;border-left:3px solid var(--dlr)">
         <h4 style="font-size:14px">q730 · PAS 桥 vs 无引导</h4>
         <p style="font-size:12px;margin-top:4px">
           superhero hero→power，RDF 无结构引导→
@@ -911,7 +911,7 @@
         </p>
       </div>
 
-      <div class="card" style="border-left:3px solid var(--rdf)">
+      <div class="card" style="border-left:3px solid var(--dlr)">
         <h4 style="font-size:14px">q1483 · SPARQL 冗余嵌套</h4>
         <p style="font-size:12px;margin-top:4px">
           debit_card 多条件，RDF SPARQL 嵌套→
