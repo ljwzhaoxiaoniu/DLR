@@ -725,6 +725,7 @@
             纯 junction 表（多对多关联）不需要独立 LE —— 直接作为 PE 挂到业务 LE 下，
             连接键升为 public。Agent 不再看到 disp、hero_power 等中间件，
             只看到有意义的业务对象，消除 ER 中多出来的"维度实体"。
+            <br><small style="color:var(--er)">例：q1339 DLR 34K 4步完成，ER 需 145K 25步探索碎表。</small>
           </p>
         </div>
       </div>
@@ -738,6 +739,7 @@
             LE 的描述是自然语言——"客户是进行消费行为的个人或组织"——
             而非 "customers 表有 CustomerID, Name, Segment 列"。
             LLM 在自然语言空间里推理，LE 的表达与 LLM 的理解模式天然对齐。
+            <br><small style="color:var(--er)">例：q25 DLR 独胜——LE 描述区分 DistrictName 归属，ER/RDF 均选错列。</small>
           </p>
         </div>
       </div>
