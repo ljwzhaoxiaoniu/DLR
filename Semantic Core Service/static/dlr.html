@@ -720,9 +720,9 @@
             physics: {
                 enabled: true,
                 solver: 'barnesHut',
-                barnesHut: { gravitationalConstant: -1800, centralGravity: 0.15,
-                             springLength: 120, springConstant: 0.04, damping: 0.4 },
-                stabilization: { iterations: 80, fit: true }
+                barnesHut: { gravitationalConstant: -3000, centralGravity: 0.3,
+                             springLength: 80, springConstant: 0.01, damping: 0.3 },
+                stabilization: { iterations: 30, fit: true }
             },
             layout: { improvedLayout: true, hierarchical: false }
         };
@@ -731,10 +731,6 @@
             SemanticVis.state.network = new vis.Network(container, data, options);
             SemanticVis.state.network.once('stabilizationIterationsDone', function() {
                 SemanticVis.state.network.setOptions({ physics: { enabled: false } });
-                SemanticVis.state.network.moveTo({
-                    position: { x: 0, y: 0 }, offset: { x: 0, y: 0 }, scale: 0.5,
-                    animation: { duration: 300, easingFunction: 'easeInOutQuad' }
-                });
             });
             SemanticVis.state.network.on('click', function(params) {
                 if (params.nodes.length > 0) {

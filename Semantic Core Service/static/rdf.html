@@ -386,10 +386,9 @@ function initNetwork() {
         physics: {
             enabled: true,
             solver: 'barnesHut',
-            barnesHut: { gravitationalConstant: -800, centralGravity: 0.15,
-                springLength: 150, springConstant: 0.04, damping: 0.6 },
-            maxVelocity: 15,
-            stabilization: { iterations: 80, fit: true },
+            barnesHut: { gravitationalConstant: -2000, centralGravity: 0.3,
+                         springLength: 100, springConstant: 0.01, damping: 0.3 },
+            stabilization: { iterations: 30, fit: true }
         },
         layout: { improvedLayout: true, hierarchical: false },
         interaction: { hover: true, tooltipDelay: 200 },
@@ -397,13 +396,8 @@ function initNetwork() {
 
     RDFVis.state.network = new vis.Network(container, data, options);
 
-    /* stop physics once settled + zoom-to-fit (same pattern as ER / DLR) */
     RDFVis.state.network.once('stabilizationIterationsDone', () => {
         RDFVis.state.network.setOptions({ physics: { enabled: false } });
-        RDFVis.state.network.moveTo({
-            position: { x: 0, y: 0 }, offset: { x: 0, y: 0 }, scale: 0.5,
-            animation: { duration: 300, easingFunction: 'easeInOutQuad' }
-        });
     });
 
     RDFVis.state.network.on('click', params => {
