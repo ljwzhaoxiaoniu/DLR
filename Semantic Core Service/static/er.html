@@ -64,7 +64,7 @@
         </div>
         <div class="right-panel">
             <div class="header">
-                <h1>语义元数据关系图谱</h1>
+                <h1>ER 映射关系图谱</h1>
                 <div class="stats" id="stats">等待数据...</div>
             </div>
             <div id="network" class="network"></div>
@@ -101,9 +101,16 @@ async function loadData() {
         const data = await res.json();
         SemanticVis.state.entities = data.entities || [];
         SemanticVis.state.relations = data.relations || [];
+        // 统计属性总数
+        let totalAttrs = 0;
+        SemanticVis.state.entities.forEach(e => {
+            const attrs = e.attributes || {};
+            totalAttrs += Object.keys(attrs).length;
+        });
         document.getElementById('stats').textContent =
-            '实体数：' + SemanticVis.state.entities.length +
-            ' | 关系数：' + SemanticVis.state.relations.length;
+            '实体：' + SemanticVis.state.entities.length +
+            ' | 属性：' + totalAttrs +
+            ' | 关系：' + SemanticVis.state.relations.length;
         return true;
     } catch (error) {
         document.getElementById('stats').textContent = '加载失败：' + error.message;

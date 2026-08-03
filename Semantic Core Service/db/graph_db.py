@@ -594,7 +594,11 @@ class GraphDB:
             return []
 
     def get_all_entities(self) -> List[Dict[str, Any]]:
-        """List all BizEntities (ER) or PhysicalEntities (DLR)."""
+        """List all BizEntities (ER) or PhysicalEntities (DLR).
+
+        For ER, also batch-loads BizAttributes via HAS_ATTRIBUTE so the
+        visualization frontend can render attribute mini-nodes and detail panels.
+        """
         try:
             if self.mapping_type == "dlr":
                 table = "PhysicalEntity"
@@ -614,6 +618,27 @@ class GraphDB:
                     "source_table": r[2], "description": r[3],
                     "type": r[4][0] if r[4] else table,
                 })
+
+            # ER: batch-load attributes for all entities in one query (avoid N+1)
+            if self.mapping_type != "dlr":
+                from collections import defaultdict
+                attr_result = self.conn.execute("""
+                    MATCH (e:BizEntity)-[:HAS_ATTRIBUTE]->(a:BizAttribute)
+                    RETURN e.entity_id, a.name, a.description,
+                           a.physical_column_id, a.data_type
+                """)
+                entity_attrs = defaultdict(dict)
+                for ar in attr_result.get_all():
+                    eid, name, desc, pcol, dtype = ar
+                    entity_attrs[eid][name] = {
+                        "name": name,
+                        "description": desc or "",
+                        "physical_column_id": pcol or "",
+                        "data_type": dtype or "",
+                    }
+                for e in entities:
+                    e["attributes"] = entity_attrs.get(e["entity_id"], {})
+
             return entities
         except Exception as e:
             logger.error(f"[GraphDB] 查询所有实体失败: {e}")

@@ -240,7 +240,7 @@
 
         <div class="right-panel">
             <div class="header">
-                <h1>语义元数据关系图谱</h1>
+                <h1>DLR 映射关系图谱</h1>
                 <div class="stats" id="stats">等待数据...</div>
             </div>
             <div id="network" class="network"></div>
@@ -342,11 +342,13 @@
             const leCount = SemanticVis.state.logicalEntities.length;
             const peCount = SemanticVis.state.entities.length;
             const pasCount = SemanticVis.state.pasRelations.length;
+            const arcsCount = Object.keys(SemanticVis.state.inherits).length;
 
             document.getElementById('stats').textContent =
                 (leCount > 0 ? 'LE:' + leCount + ' | ' : '') +
                 'PE:' + peCount + ' | ' +
-                'PAS:' + pasCount;
+                'PAS:' + pasCount + ' | ' +
+                'ARCS:' + arcsCount;
 
             return true;
         } catch (error) {
