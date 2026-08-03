@@ -474,12 +474,13 @@ Agent 写 SQL → execute_sql → Final Answer
 **三范式可视化截图：**
 
 ER — 扁平实体+关系图：
-![ER 可视化](https://raw.gitcode.com/user-images/assets/10360544/5c2b3bfb-acb8-463b-a5a8-0cf7026ac437/image.png)
 
-![ER 可视化 2](https://raw.gitcode.com/user-images/assets/10360544/6c684b8a-36a9-417d-a4d4-f98748d5a3ce/image.png)
+![ER 可视化](https://raw.gitcode.com/user-images/assets/10360544/b1245627-aa2f-4b54-9d68-1c9a24919d86/image.png 'image.png')
 
 DLR — LE/PE 双层 + PAS 语义路由 + INHERITS：
-![DLR 可视化](https://raw.gitcode.com/user-images/assets/10360544/fb65f5f9-7135-4796-8b15-e127f10d941a/image.png)
+
+![DLR 可视化](https://raw.gitcode.com/user-images/assets/10360544/d9e5a122-6a46-4eca-8f60-7cc2697e9ce6/image.png 'image.png')
 
 RDF — TriplesMap 映射 + JOIN 关系：
-![RDF 可视化](https://raw.gitcode.com/user-images/assets/10360544/5a98b0b2-1141-45e2-9c99-3d159028305e/image.png)
+
+![RDF 可视化](https://raw.gitcode.com/user-images/assets/10360544/991cdea4-acdf-40c3-9768-eb7565a2c7ff/image.png 'image.png')
