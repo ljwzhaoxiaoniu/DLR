@@ -444,6 +444,20 @@ FROM (
 | **修正** | gold cache 覆盖为 `[["Fisichella"]]`（与三范式 pred 一致，均按 SQLite 实际排序行为返回） |
 | **验证** | DLR/RDF 均返回 Räikkönen（strict FAIL→judge 翻盘），ER 直接 strict PASS 返回 Fisichella。cache 保持与 gold SQL 实际执行结果一致。 2026-07-30 修正。 |
 
+### qid 218 — `toxicology`（Gold SQL 未正确判定"不含氟"，2026-08-02 修正）
+
+- **问题**：What percentage of carcinogenic-type molecules does not contain fluorine?
+- **原 evidence**：`label = '+' mean molecules are carcinogenic; contain fluorine refers to element = 'f'; percentage = DIVIDE(SUM(element = 'f') * 100, COUNT(molecule_id)) where label = '+'; Should consider the distinct atoms when counting;`
+- **原 Gold SQL**：`CASE WHEN T1.element <> 'f' THEN T2.molecule_id ELSE NULL END` — 只要分子有任一非氟原子（对有机分子恒真）→152/152=100%
+
+| | 内容 |
+|---|---|
+| **Bug** | Gold SQL 用 `element <> 'f'` 判定"不含氟"——对有机分子恒成立（总有碳/氢等非氟原子）。正确语义应为 `molecule_id NOT IN (SELECT molecule_id FROM atom WHERE element='f')`。实测 TR450 含 1 个氟原子，正确结果 151/152=99.34% |
+| **Gold 原值** | 100%（152/152，恒等式） |
+| **正确结果** | 99.34%（151/152，只有 TR450 含氟） |
+| **Evidence 问题** | `SUM(element='f')` 计算氟原子占比而非分子占比，与 question "does not contain fluorine（分子级）" 冲突——也需修正 |
+| **验证** | ER/DLR/RDF 三范式独立算出 99.34%（DLR 精确 151/152），SQLite 直跑确认 TR450 是唯一含氟致癌分子。2026-08-02 修正 mini_dev_sqlite.json + gold cache。 |
+
 ### 处理约定
 
 - 对 gold SQL 与题意相悖的题目，**直接覆盖 gold cache 的 `rows` 与 `columns` 为正确结果**，保持 `ok=True`。

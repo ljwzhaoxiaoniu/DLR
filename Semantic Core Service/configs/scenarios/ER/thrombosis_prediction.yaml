@@ -111,8 +111,7 @@ entities:
     data_type: date
   - attr_id: thrombosis_prediction.Patient.Description
     biz_name: Description
-    description: 'the first date when a patient data was recorded. null or empty:
-      not recorded. format: date'
+    description: 'Patient condition notes: detailed description or suspected diagnosis (e.g. RA susp., PSS, SLE)'
     physical_column_id: thrombosis_prediction.Patient.Description
     data_type: date
   - attr_id: thrombosis_prediction.Patient.First Date

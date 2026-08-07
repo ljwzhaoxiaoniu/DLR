@@ -233,6 +233,7 @@
   <a href="#s2" title="第二页"></a>
   <a href="#s3" title="第三页"></a>
   <a href="#s4" title="第四页"></a>
+  <a href="#s5" title="第五页"></a>
 </nav>
 
 <!-- ════════════════ 第一页：连接主义 × 符号主义 ════════════════ -->
@@ -528,8 +529,80 @@
   </div>
 </section>
 
+<!-- ════════════════ 第五页：案例分析 ════════════════ -->
+<section class="slide" id="s5">
+  <div class="section-label">案例分析</div>
+  <h2 class="section-title">RDF 为什么输——<em>两个典型案例</em></h2>
+
+  <!-- q11 -->
+  <div class="card" style="margin-bottom:24px;border-left:4px solid var(--rdf)">
+    <h3 style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:13px;color:var(--muted);font-weight:400">q11 · california_schools</span>
+      <span style="font-size:14px;color:var(--critical);font-weight:700">列歧义：短名撞车</span>
+    </h3>
+    <p style="font-size:14px;color:var(--ink-2);margin:8px 0">
+      "Please list the <strong>codes</strong> of the schools with total enrollment over 500."
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;font-size:13px">
+      <div style="background:var(--grid);padding:12px;border-radius:8px">
+        <strong>schools 表</strong> (17K行 · 49列)<br>
+        CDSCode, School, District, County...<br>
+        <span style="color:var(--muted)">❌ 没有 Enrollment</span>
+      </div>
+      <div style="background:var(--grid);padding:12px;border-radius:8px">
+        <strong>frpm 表</strong> (10K行 · 29列)<br>
+        CDSCode, <span style="color:var(--critical);font-weight:700">School Code</span>, Enrollment (K-12)...<br>
+        <span style="color:var(--good)">✅ Enrollment 在这里</span>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--ink-2);margin-top:12px">
+      <strong>陷阱</strong>：正确答案是 <code>schools.CDSCode</code>，但 RDF 扁平 triple 中
+      <code>frpm."School Code"</code> 字面更匹配 "codes" → Agent 被列名吸走选错列。
+      ER 有实体-属性归属：Agent 知道 "学校编码" 来自 schools 实体而非 frpm 的属性。
+      <br><strong>结果</strong>：ER PASS | DLR PASS | <span style="color:var(--critical);font-weight:700">RDF INCORRECT</span>
+    </p>
+  </div>
+
+  <!-- q1529 -->
+  <div class="card" style="border-left:4px solid var(--rdf)">
+    <h3 style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:13px;color:var(--muted);font-weight:400">q1529 · debit_card_specializing</span>
+      <span style="font-size:14px;color:var(--critical);font-weight:700">扁平陷阱：被无关表吸走</span>
+    </h3>
+    <p style="font-size:14px;color:var(--ink-2);margin:8px 0">
+      "How much spent by customer '38508' <strong>at gas stations</strong>? How much spent <strong>in January 2012</strong>?"
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;font-size:13px">
+      <div style="background:var(--grid);padding:12px;border-radius:8px">
+        <strong>transactions_1k</strong> (1K行 · 9列)<br>
+        Date, Amount, Price, CustomerID...<br>
+        <span style="color:var(--muted)">⚠️ 交易流水样本，非全集</span>
+      </div>
+      <div style="background:var(--grid);padding:12px;border-radius:8px">
+        <strong>yearmonth</strong> (383K行 · 3列)<br>
+        CustomerID, Date, <span style="color:var(--dlr);font-weight:700">Consumption</span><br>
+        <span style="color:var(--good)">✅ 月度消费全集</span>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--ink-2);margin-top:12px">
+      <strong>陷阱</strong>：两个子问题分属两张表——"加油站花费"→ transactions_1k，"一月消费"→ yearmonth。
+      RDF 扁平 triple 中所有字段权重相等，Agent 被 transactions_1k 的 Date/Amount 吸走，
+      忽略 yearmonth.Consumption。ER 有实体层级区分表功能，Agent 分别查询。
+      <br><strong>结果</strong>：ER PASS | DLR PASS | <span style="color:var(--critical);font-weight:700">RDF INCORRECT</span>
+    </p>
+  </div>
+
+  <div class="card" style="margin-top:24px;text-align:center;border-left:3px solid var(--dlr)">
+    <p style="font-size:14px;color:var(--ink-2)">
+      <strong>共同根因</strong>：RDF 扁平 triple 模型 <strong>无属性归属</strong>——所有列/表在三元组海洋中视觉权重相等，
+      Agent 无法区分哪个字段属于哪个实体、哪个表是关键、哪个是噪声。<br>
+      ER/DLR 的实体-属性层级结构提供了 <strong>"谁属于谁"的架构信号</strong>，引导 Agent 做出正确选择。
+    </p>
+  </div>
+</section>
+
 <!-- ════════════════ 尾页 ════════════════ -->
-<section class="slide slide--end" id="s5">
+<section class="slide slide--end" id="s6">
   <h1 class="hero">
     连接主义 <span class="fusion">+</span> 符号主义<br>
     <span class="fusion">= Agent 企业落地</span>

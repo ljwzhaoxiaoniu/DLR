@@ -13,6 +13,10 @@ Semantic Core Service/log/
 /storage/
 /log/
 
+# Agent 生成物（非项目代码）
+tmp_scripts/
+config.json
+
 # bench 数据仓库（太大，不入版本控制）
 MINIDEV_sqlite/
 

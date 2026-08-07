@@ -111,6 +111,31 @@ PAS: Superhero ──BelongsTo──→ HeroDimension
 - 金额、数量、日期等查询高频列必须在 LE 层设为 public
 - 辅助列（ID 派生、内部编码等）可留在 PE 层 private
 
+### 2.4 DLR 结构谱系：不是越复杂越好
+
+**DLR 的核心不是"多拆 LE 用 PAS 连接"，而是用最简结构编码 JOIN 语义。**
+
+一个场景的 LE 数量取决于两个变量：表的数量 × 每张表的业务独立性。不恰当的多 LE 拆分是负优化——Agent 被迫在跨 LE PAS 导航上浪费 token。
+
+| 极端 | 结构 | 本质 | Agent 负担 |
+|------|------|------|-----------|
+| 每表一个 LE + PAS 互连 | 变种 ER | 逐实体发现→逐关系导航 | 最高 |
+| 所有表压入一个 LE + ARCS | 变种 RDF | 一次看全，直接选列 | 最低 |
+| **DLR 最优解** | **1 LE = 有业务生命周期的概念 + 附属 PE 通过 ARCS 共享锚定键** | — | — |
+
+**thrombosis_prediction 案例（2026-08-02）**：
+
+```
+旧模型：3 张表 → 3 个 LE (Patient/Lab/Exam) → 2 条 PAS
+新模型：3 张表 → 1 个 LE (Patient) + 3 个 PE (PatientMaster/LabResults/ExamFindings) → 0 条 PAS
+```
+
+- 旧模型：Agent 搜"uric acid"时，LaboratoryTest LE 的描述不含关键词，semantic_query→recall_pe 反复重试，q1169 DLR 消耗 217K tokens（RDF 的 5 倍）
+- 根因：三张表共享 `ID` 作为唯一键，Lab 和 Exam 无独立业务生命周期，拆 LE 是过度设计
+- 新模型：三个 PE 共享 `PatientID` 锚定键，ARCS 隐式编码了 `JOIN ON ID`，Agent 在单个 LE 上下文中即可发现所有列
+
+**教训**：DLR 的 ARCS 的价值是**结构化 JOIN 语义**——通过共享锚定键让 Agent 看到 PE 就知道怎么连。这个能力在"碎表集中"（多个 PE 压入一个 LE）时最明显。当场景简单到只需要一个 LE 时，DLR 的表现上限是 RDF 的检索效率 + 内置的 JOIN 语义，而不是在两者之间做无意义的权衡。
+
 ### 2.4 规则 5：纯关联表下沉为 PE
 
 **物理数据设计常引入纯粹的关联表（junction table）来表达多对多关系**——如 `disp`（client↔account）、`hero_power`（hero↔power）。这类表没有独立业务意义，只是关系型数据库的工程手段。

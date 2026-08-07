@@ -1,22 +1,62 @@
 mapping_type: dlr
 version: '2.0'
 scenario_name: dlr_thrombosis
-description: 'DLR paradigm - Thrombosis prediction scenario: on-demand fields, 3 PEs
-  aggregated into 3 LEs, lab and clinical exams decoupled'
+description: 'DLR paradigm - Thrombosis prediction: 3 tables, 1 LE (Patient) with 3 PEs via ARCS'
 databases:
   thrombosis_prediction: sqlite:///MINIDEV_sqlite/dev_databases/thrombosis_prediction/thrombosis_prediction.sqlite
 logical_entities:
 - logical_entity_id: LOGICAL.Patient
   biz_name: Patient
-  description: Patient demographics and diagnosis — SEX, Birthday, Diagnosis, Admission, Description
+  description: 'Patient medical records: demographics, primary diagnosis, laboratory test results (biochemistry markers including UA/uric acid, HGB/hemoglobin, PLT/platelet, LDH, GPT, ALB, blood lipids, glucose), and clinical examination findings (thrombosis degree, coagulation markers RVVT/KCT/LAC, antibodies ANA/aCL, symptoms)'
   public_attributes:
+  # ── Patient master (demographics) ──
   - {attr_id: LOGICAL.Patient.PatientID, biz_name: PatientID, description: 'Patient ID: unique identifier'}
   - {attr_id: LOGICAL.Patient.SEX, biz_name: SEX, description: 'Gender: M (male) / F (female)'}
-  - {attr_id: LOGICAL.Patient.Diagnosis, biz_name: Diagnosis, description: 'Primary diagnosis: e.g. SLE, DVT, PE'}
-  - {attr_id: LOGICAL.Patient.Admission, biz_name: Admission, description: 'Admission type: + (inpatient), - (outpatient), etc.'}
-  - {attr_id: LOGICAL.Patient.Description, biz_name: Description, description: 'Visit date: YYYY-MM-DD format'}
+  - {attr_id: LOGICAL.Patient.Birthday, biz_name: Birthday, description: 'Date of birth'}
+  - {attr_id: LOGICAL.Patient.PrimaryDiagnosis, biz_name: PrimaryDiagnosis, description: 'Primary diagnosis: e.g. SLE, DVT, PE'}
+  - {attr_id: LOGICAL.Patient.Admission, biz_name: Admission, description: 'Admission type: + (inpatient), - (outpatient)'}
+  - {attr_id: LOGICAL.Patient.ConditionNotes, biz_name: ConditionNotes, description: 'Patient condition notes: detailed description or suspected diagnosis (e.g. RA susp., PSS, SLE)'}
+  - {attr_id: LOGICAL.Patient.FirstDate, biz_name: FirstDate, description: 'Date when patient first came to the hospital'}
+  # ── Laboratory (biochemistry) ──
+  - {attr_id: LOGICAL.Patient.LabDate, biz_name: LabDate, description: 'Laboratory test date'}
+  - {attr_id: LOGICAL.Patient.UA, biz_name: UA, description: 'Uric acid level'}
+  - {attr_id: LOGICAL.Patient.HGB, biz_name: HGB, description: 'Hemoglobin level'}
+  - {attr_id: LOGICAL.Patient.PLT, biz_name: PLT, description: 'Platelet count'}
+  - {attr_id: LOGICAL.Patient.LDH, biz_name: LDH, description: 'Lactate dehydrogenase level'}
+  - {attr_id: LOGICAL.Patient.GOT, biz_name: GOT, description: 'AST glutamic oxaloacetic transaminase'}
+  - {attr_id: LOGICAL.Patient.GPT, biz_name: GPT, description: 'ALT glutamic pyruvic transaminase'}
+  - {attr_id: LOGICAL.Patient.ALB, biz_name: ALB, description: 'Albumin level'}
+  - {attr_id: LOGICAL.Patient.TCHO, biz_name: TCHO, description: 'Total cholesterol'}
+  - {attr_id: LOGICAL.Patient.TG, biz_name: TG, description: 'Triglyceride level'}
+  - {attr_id: LOGICAL.Patient.GLU, biz_name: GLU, description: 'Blood glucose level'}
+  - {attr_id: LOGICAL.Patient.WBC, biz_name: WBC, description: 'White blood cell count'}
+  - {attr_id: LOGICAL.Patient.RBC, biz_name: RBC, description: 'Red blood cell count'}
+  - {attr_id: LOGICAL.Patient.IGG, biz_name: IGG, description: 'Immunoglobulin G level'}
+  - {attr_id: LOGICAL.Patient.IGA, biz_name: IGA, description: 'Immunoglobulin A level'}
+  - {attr_id: LOGICAL.Patient.IGM, biz_name: IGM, description: 'Immunoglobulin M level'}
+  - {attr_id: LOGICAL.Patient.CRP, biz_name: CRP, description: 'C-reactive protein'}
+  - {attr_id: LOGICAL.Patient.CPK, biz_name: CPK, description: 'Creatinine phosphokinase'}
+  - {attr_id: LOGICAL.Patient.CRE, biz_name: CRE, description: 'Creatinine level'}
+  - {attr_id: LOGICAL.Patient.UN, biz_name: UN, description: 'Urea nitrogen level'}
+  - {attr_id: LOGICAL.Patient.TBIL, biz_name: TBIL, description: 'Total bilirubin'}
+  - {attr_id: LOGICAL.Patient.FG, biz_name: FG, description: 'Fibrinogen level'}
+  - {attr_id: LOGICAL.Patient.PT, biz_name: PT, description: 'Prothrombin time'}
+  # ── Examination (clinical) ──
+  - {attr_id: LOGICAL.Patient.ExamDate, biz_name: ExamDate, description: 'Clinical examination date'}
+  - {attr_id: LOGICAL.Patient.Thrombosis, biz_name: Thrombosis, description: 'Thrombosis degree: 0 (negative), 1 (most severe), 2 (severe), 3 (mild)'}
+  - {attr_id: LOGICAL.Patient.RVVT, biz_name: RVVT, description: 'Coagulation marker RVVT: + (positive), - (negative)'}
+  - {attr_id: LOGICAL.Patient.KCT, biz_name: KCT, description: 'Coagulation marker KCT: + (positive), - (negative)'}
+  - {attr_id: LOGICAL.Patient.LAC, biz_name: LAC, description: 'Coagulation marker LAC: + (positive), - (negative)'}
+  - {attr_id: LOGICAL.Patient.ANA, biz_name: ANA, description: 'Anti-nuclear antibody level'}
+  - {attr_id: LOGICAL.Patient.ANAPattern, biz_name: ANAPattern, description: 'Pattern observed in ANA examination'}
+  - {attr_id: LOGICAL.Patient.aCLIgG, biz_name: aCLIgG, description: 'Anti-cardiolipin antibody IgG concentration'}
+  - {attr_id: LOGICAL.Patient.aCLIgM, biz_name: aCLIgM, description: 'Anti-cardiolipin antibody IgM concentration'}
+  - {attr_id: LOGICAL.Patient.aCLIgA, biz_name: aCLIgA, description: 'Anti-cardiolipin antibody IgA concentration'}
+  - {attr_id: LOGICAL.Patient.Symptoms, biz_name: Symptoms, description: 'Other symptoms observed during examination'}
+  - {attr_id: LOGICAL.Patient.ExamDiagnosis, biz_name: ExamDiagnosis, description: 'Diagnosis noted during this specific exam, may include comorbidities (e.g. SLE+Psy), differs from PrimaryDiagnosis which is the main diagnosis'}
   physical_entities:
-  - physical_entity_id: PHYSICAL.Patient
+  # ── PE 1: Patient master ──
+  - physical_entity_id: PHYSICAL.PatientMaster
     physical_table_name: Patient
     physical_table_id: thrombosis_prediction.Patient
     A:
@@ -26,29 +66,15 @@ logical_entities:
     C:
       LOGICAL.Patient.PatientID: thrombosis_prediction.Patient.ID
       LOGICAL.Patient.SEX: thrombosis_prediction.Patient.SEX
-      LOGICAL.Patient.Diagnosis: thrombosis_prediction.Patient.Diagnosis
+      LOGICAL.Patient.Birthday: thrombosis_prediction.Patient.Birthday
+      LOGICAL.Patient.PrimaryDiagnosis: thrombosis_prediction.Patient.Diagnosis
       LOGICAL.Patient.Admission: thrombosis_prediction.Patient.Admission
-      LOGICAL.Patient.Description: thrombosis_prediction.Patient.Description
-    S: Patient master index
-    private_attributes:
-    - attr_id: thrombosis_prediction.Patient.Birthday
-      biz_name: Birthday
-      physical_column_id: thrombosis_prediction.Patient.Birthday
-    - attr_id: thrombosis_prediction.Patient.`First Date`
-      biz_name: First_Date
-      physical_column_id: thrombosis_prediction.Patient.`First Date`
-- logical_entity_id: LOGICAL.LaboratoryTest
-  biz_name: LaboratoryTest
-  description: Biochemical test results
-  public_attributes:
-  - attr_id: LOGICAL.LaboratoryTest.Patient
-    biz_name: Patient
-    description: '患者ID: 患者唯一标识，关联 Patient 表'
-  - attr_id: LOGICAL.LaboratoryTest.TestDate
-    biz_name: TestDate
-    description: '检查日期: 实验室检查的日期'
-  physical_entities:
-  - physical_entity_id: PHYSICAL.Laboratory
+      LOGICAL.Patient.ConditionNotes: thrombosis_prediction.Patient.Description
+      LOGICAL.Patient.FirstDate: thrombosis_prediction.Patient.`First Date`
+    S: Patient demographics and primary diagnosis (master table)
+    private_attributes: []
+  # ── PE 2: Laboratory test results ──
+  - physical_entity_id: PHYSICAL.LabResults
     physical_table_name: Laboratory
     physical_table_id: thrombosis_prediction.Laboratory
     A:
@@ -56,43 +82,68 @@ logical_entities:
       key: ID
     R: null
     C:
-      LOGICAL.LaboratoryTest.Patient: thrombosis_prediction.Laboratory.ID
-      LOGICAL.LaboratoryTest.TestDate: thrombosis_prediction.Laboratory.Date
-    S: Biochemistry records
+      LOGICAL.Patient.PatientID: thrombosis_prediction.Laboratory.ID
+      LOGICAL.Patient.LabDate: thrombosis_prediction.Laboratory.Date
+      LOGICAL.Patient.UA: thrombosis_prediction.Laboratory.UA
+      LOGICAL.Patient.HGB: thrombosis_prediction.Laboratory.HGB
+      LOGICAL.Patient.PLT: thrombosis_prediction.Laboratory.PLT
+      LOGICAL.Patient.LDH: thrombosis_prediction.Laboratory.LDH
+      LOGICAL.Patient.GOT: thrombosis_prediction.Laboratory.GOT
+      LOGICAL.Patient.GPT: thrombosis_prediction.Laboratory.GPT
+      LOGICAL.Patient.ALB: thrombosis_prediction.Laboratory.ALB
+      LOGICAL.Patient.TCHO: thrombosis_prediction.Laboratory.`T-CHO`
+      LOGICAL.Patient.TG: thrombosis_prediction.Laboratory.TG
+      LOGICAL.Patient.GLU: thrombosis_prediction.Laboratory.GLU
+      LOGICAL.Patient.WBC: thrombosis_prediction.Laboratory.WBC
+      LOGICAL.Patient.RBC: thrombosis_prediction.Laboratory.RBC
+      LOGICAL.Patient.IGG: thrombosis_prediction.Laboratory.IGG
+      LOGICAL.Patient.IGA: thrombosis_prediction.Laboratory.IGA
+      LOGICAL.Patient.IGM: thrombosis_prediction.Laboratory.IGM
+      LOGICAL.Patient.CRP: thrombosis_prediction.Laboratory.CRP
+      LOGICAL.Patient.CPK: thrombosis_prediction.Laboratory.CPK
+      LOGICAL.Patient.CRE: thrombosis_prediction.Laboratory.CRE
+      LOGICAL.Patient.UN: thrombosis_prediction.Laboratory.UN
+      LOGICAL.Patient.TBIL: thrombosis_prediction.Laboratory.`T-BIL`
+      LOGICAL.Patient.FG: thrombosis_prediction.Laboratory.FG
+      LOGICAL.Patient.PT: thrombosis_prediction.Laboratory.PT
+    S: Laboratory test results (biochemistry, blood, urine) — N:1 per patient
     private_attributes:
-    - attr_id: thrombosis_prediction.Laboratory.HGB
-      biz_name: HGB
-      physical_column_id: thrombosis_prediction.Laboratory.HGB
-    - attr_id: thrombosis_prediction.Laboratory.PLT
-      biz_name: PLT
-      physical_column_id: thrombosis_prediction.Laboratory.PLT
-    - attr_id: thrombosis_prediction.Laboratory.UA
-      biz_name: UA
-      physical_column_id: thrombosis_prediction.Laboratory.UA
-    - attr_id: thrombosis_prediction.Laboratory.LDH
-      biz_name: LDH
-      physical_column_id: thrombosis_prediction.Laboratory.LDH
-    - attr_id: thrombosis_prediction.Laboratory.`T-CHO`
-      biz_name: T_CHO
-      physical_column_id: thrombosis_prediction.Laboratory.`T-CHO`
-    - attr_id: thrombosis_prediction.Laboratory.GPT
-      biz_name: GPT
-      physical_column_id: thrombosis_prediction.Laboratory.GPT
-    - attr_id: thrombosis_prediction.Laboratory.ALB
-      biz_name: ALB
-      physical_column_id: thrombosis_prediction.Laboratory.ALB
-    - attr_id: thrombosis_prediction.Laboratory.IGG
-      biz_name: IGG
-      physical_column_id: thrombosis_prediction.Laboratory.IGG
-    - attr_id: thrombosis_prediction.Laboratory.IGM
-      biz_name: IGM
-      physical_column_id: thrombosis_prediction.Laboratory.IGM
-    - attr_id: thrombosis_prediction.Laboratory.IGA
-      biz_name: IGA
-      physical_column_id: thrombosis_prediction.Laboratory.IGA
-    - attr_id: thrombosis_prediction.Laboratory.CRP
-      biz_name: CRP
-      physical_column_id: thrombosis_prediction.Laboratory.CRP
+    - attr_id: thrombosis_prediction.Laboratory.ALP
+      biz_name: ALP
+      physical_column_id: thrombosis_prediction.Laboratory.ALP
+    - attr_id: thrombosis_prediction.Laboratory.TP
+      biz_name: TP
+      physical_column_id: thrombosis_prediction.Laboratory.TP
+    - attr_id: thrombosis_prediction.Laboratory.HCT
+      biz_name: HCT
+      physical_column_id: thrombosis_prediction.Laboratory.HCT
+    - attr_id: thrombosis_prediction.Laboratory.APTT
+      biz_name: APTT
+      physical_column_id: thrombosis_prediction.Laboratory.APTT
+    - attr_id: thrombosis_prediction.Laboratory.PIC
+      biz_name: PIC
+      physical_column_id: thrombosis_prediction.Laboratory.PIC
+    - attr_id: thrombosis_prediction.Laboratory.TAT
+      biz_name: TAT
+      physical_column_id: thrombosis_prediction.Laboratory.TAT
+    - attr_id: thrombosis_prediction.Laboratory.TAT2
+      biz_name: TAT2
+      physical_column_id: thrombosis_prediction.Laboratory.TAT2
+    - attr_id: thrombosis_prediction.Laboratory.`U-PRO`
+      biz_name: UPRO
+      physical_column_id: thrombosis_prediction.Laboratory.`U-PRO`
+    - attr_id: thrombosis_prediction.Laboratory.RA
+      biz_name: RA
+      physical_column_id: thrombosis_prediction.Laboratory.RA
+    - attr_id: thrombosis_prediction.Laboratory.RF
+      biz_name: RF
+      physical_column_id: thrombosis_prediction.Laboratory.RF
+    - attr_id: thrombosis_prediction.Laboratory.C3
+      biz_name: C3
+      physical_column_id: thrombosis_prediction.Laboratory.C3
+    - attr_id: thrombosis_prediction.Laboratory.C4
+      biz_name: C4
+      physical_column_id: thrombosis_prediction.Laboratory.C4
     - attr_id: thrombosis_prediction.Laboratory.RNP
       biz_name: RNP
       physical_column_id: thrombosis_prediction.Laboratory.RNP
@@ -102,55 +153,23 @@ logical_entities:
     - attr_id: thrombosis_prediction.Laboratory.SC170
       biz_name: SC170
       physical_column_id: thrombosis_prediction.Laboratory.SC170
+    - attr_id: thrombosis_prediction.Laboratory.SSA
+      biz_name: SSA
+      physical_column_id: thrombosis_prediction.Laboratory.SSA
     - attr_id: thrombosis_prediction.Laboratory.SSB
       biz_name: SSB
       physical_column_id: thrombosis_prediction.Laboratory.SSB
     - attr_id: thrombosis_prediction.Laboratory.CENTROMEA
       biz_name: CENTROMEA
       physical_column_id: thrombosis_prediction.Laboratory.CENTROMEA
-    - attr_id: thrombosis_prediction.Laboratory.`T-BIL`
-      biz_name: T_BIL
-      physical_column_id: thrombosis_prediction.Laboratory.`T-BIL`
-    - attr_id: thrombosis_prediction.Laboratory.UN
-      biz_name: UN
-      physical_column_id: thrombosis_prediction.Laboratory.UN
-    - attr_id: thrombosis_prediction.Laboratory.CRE
-      biz_name: CRE
-      physical_column_id: thrombosis_prediction.Laboratory.CRE
-    - attr_id: thrombosis_prediction.Laboratory.WBC
-      biz_name: WBC
-      physical_column_id: thrombosis_prediction.Laboratory.WBC
-    - attr_id: thrombosis_prediction.Laboratory.FG
-      biz_name: FG
-      physical_column_id: thrombosis_prediction.Laboratory.FG
-    - attr_id: thrombosis_prediction.Laboratory.RBC
-      biz_name: RBC
-      physical_column_id: thrombosis_prediction.Laboratory.RBC
-    - attr_id: thrombosis_prediction.Laboratory.PT
-      biz_name: PT
-      physical_column_id: thrombosis_prediction.Laboratory.PT
-    - attr_id: thrombosis_prediction.Laboratory.CPK
-      biz_name: CPK
-      physical_column_id: thrombosis_prediction.Laboratory.CPK
-    - attr_id: thrombosis_prediction.Laboratory.GOT
-      biz_name: GOT
-      physical_column_id: thrombosis_prediction.Laboratory.GOT
-    - attr_id: thrombosis_prediction.Laboratory.GLU
-      biz_name: GLU
-      physical_column_id: thrombosis_prediction.Laboratory.GLU
-    - attr_id: thrombosis_prediction.Laboratory.TG
-      biz_name: TG
-      physical_column_id: thrombosis_prediction.Laboratory.TG
-- logical_entity_id: LOGICAL.ClinicalExamination
-  biz_name: ClinicalExamination
-  description: Physical exams and coagulation assessment
-  public_attributes:
-  - attr_id: LOGICAL.ClinicalExamination.Patient
-    biz_name: Patient
-  - attr_id: LOGICAL.ClinicalExamination.ExamDate
-    biz_name: ExamDate
-  physical_entities:
-  - physical_entity_id: PHYSICAL.Examination
+    - attr_id: thrombosis_prediction.Laboratory.DNA
+      biz_name: DNA
+      physical_column_id: thrombosis_prediction.Laboratory.DNA
+    - attr_id: thrombosis_prediction.Laboratory.`DNA-II`
+      biz_name: DNAII
+      physical_column_id: thrombosis_prediction.Laboratory.`DNA-II`
+  # ── PE 3: Clinical examination findings ──
+  - physical_entity_id: PHYSICAL.ExamFindings
     physical_table_name: Examination
     physical_table_id: thrombosis_prediction.Examination
     A:
@@ -158,65 +177,19 @@ logical_entities:
       key: ID
     R: null
     C:
-      LOGICAL.ClinicalExamination.Patient: thrombosis_prediction.Examination.ID
-      LOGICAL.ClinicalExamination.ExamDate: thrombosis_prediction.Examination.`Examination
-        Date`
-    S: Clinical exam - thrombosis, antibodies
-    private_attributes:
-    - attr_id: thrombosis_prediction.Examination.Thrombosis
-      biz_name: Thrombosis
-      physical_column_id: thrombosis_prediction.Examination.Thrombosis
-    - attr_id: thrombosis_prediction.Examination.RVVT
-      biz_name: RVVT
-      physical_column_id: thrombosis_prediction.Examination.RVVT
-    - attr_id: thrombosis_prediction.Examination.KCT
-      biz_name: KCT
-      physical_column_id: thrombosis_prediction.Examination.KCT
-    - attr_id: thrombosis_prediction.Examination.LAC
-      biz_name: LAC
-      physical_column_id: thrombosis_prediction.Examination.LAC
-    - attr_id: thrombosis_prediction.Examination.`ANA Pattern`
-      biz_name: ANA_Pattern
-      physical_column_id: thrombosis_prediction.Examination.`ANA Pattern`
-    - attr_id: thrombosis_prediction.Examination.`aCL IgM`
-      biz_name: aCL_IgM
-      physical_column_id: thrombosis_prediction.Examination.`aCL IgM`
-    - attr_id: thrombosis_prediction.Examination.`aCL IgG`
-      biz_name: aCL_IgG
-      physical_column_id: thrombosis_prediction.Examination.`aCL IgG`
-    - attr_id: thrombosis_prediction.Examination.`aCL IgA`
-      biz_name: aCL_IgA
-      physical_column_id: thrombosis_prediction.Examination.`aCL IgA`
-    - attr_id: thrombosis_prediction.Examination.Symptoms
-      biz_name: Symptoms
-      physical_column_id: thrombosis_prediction.Examination.Symptoms
-    - attr_id: thrombosis_prediction.Examination.Diagnosis
-      biz_name: Diagnosis
-      physical_column_id: thrombosis_prediction.Examination.Diagnosis
-      description: 'Examination diagnosis: diagnosis noted during this specific exam, may include comorbidities (e.g. SLE+Psy), differs from Patient.Diagnosis which is the primary diagnosis'
-    - attr_id: thrombosis_prediction.Examination.ANA
-      biz_name: ANA
-      physical_column_id: thrombosis_prediction.Examination.ANA
-pas_relations:
-- relation_id: LOGICAL.Patient_TO_LOGICAL.LaboratoryTest
-  relation_name: HasLabTest
-  P:
-    forward:
-      verb: has
-      cardinality: 1:N
-    reverse:
-      verb: belongs to
-      cardinality: '1:1'
-  A: PatientID
-  S: 1 patient has N lab tests
-- relation_id: LOGICAL.Patient_TO_LOGICAL.ClinicalExamination
-  relation_name: HasClinicalExam
-  P:
-    forward:
-      verb: has
-      cardinality: 1:N
-    reverse:
-      verb: belongs to
-      cardinality: '1:1'
-  A: PatientID
-  S: 1 patient has N clinical exams
+      LOGICAL.Patient.PatientID: thrombosis_prediction.Examination.ID
+      LOGICAL.Patient.ExamDate: thrombosis_prediction.Examination.`Examination Date`
+      LOGICAL.Patient.Thrombosis: thrombosis_prediction.Examination.Thrombosis
+      LOGICAL.Patient.RVVT: thrombosis_prediction.Examination.RVVT
+      LOGICAL.Patient.KCT: thrombosis_prediction.Examination.KCT
+      LOGICAL.Patient.LAC: thrombosis_prediction.Examination.LAC
+      LOGICAL.Patient.ANA: thrombosis_prediction.Examination.ANA
+      LOGICAL.Patient.ANAPattern: thrombosis_prediction.Examination.`ANA Pattern`
+      LOGICAL.Patient.aCLIgG: thrombosis_prediction.Examination.`aCL IgG`
+      LOGICAL.Patient.aCLIgM: thrombosis_prediction.Examination.`aCL IgM`
+      LOGICAL.Patient.aCLIgA: thrombosis_prediction.Examination.`aCL IgA`
+      LOGICAL.Patient.Symptoms: thrombosis_prediction.Examination.Symptoms
+      LOGICAL.Patient.ExamDiagnosis: thrombosis_prediction.Examination.Diagnosis
+    S: Clinical examination findings (thrombosis, coagulation, antibodies) — N:1 per patient
+    private_attributes: []
+pas_relations: []

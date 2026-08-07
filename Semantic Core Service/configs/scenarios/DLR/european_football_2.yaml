@@ -33,6 +33,36 @@ logical_entities:
   - attr_id: LOGICAL.Player.Date
     biz_name: date
     description: '日期: FIFA数据记录日期'
+  - attr_id: LOGICAL.Player.HeadingAccuracy
+    biz_name: heading_accuracy
+    description: 'Heading accuracy: head ball precision score'
+  - attr_id: LOGICAL.Player.SprintSpeed
+    biz_name: sprint_speed
+    description: 'Sprint speed: sprinting speed score'
+  - attr_id: LOGICAL.Player.Finishing
+    biz_name: finishing
+    description: 'Finishing: shot finishing ability score'
+  - attr_id: LOGICAL.Player.Dribbling
+    biz_name: dribbling
+    description: 'Dribbling: ball control while running score'
+  - attr_id: LOGICAL.Player.BallControl
+    biz_name: ball_control
+    description: 'Ball control: overall ball handling score'
+  - attr_id: LOGICAL.Player.Crossing
+    biz_name: crossing
+    description: 'Crossing: cross pass accuracy score'
+  - attr_id: LOGICAL.Player.ShortPassing
+    biz_name: short_passing
+    description: 'Short passing: short distance pass accuracy score'
+  - attr_id: LOGICAL.Player.LongShots
+    biz_name: long_shots
+    description: 'Long shots: long distance shooting score'
+  - attr_id: LOGICAL.Player.FreeKickAccuracy
+    biz_name: free_kick_accuracy
+    description: 'Free kick accuracy: free kick precision score'
+  - attr_id: LOGICAL.Player.Jumping
+    biz_name: jumping
+    description: 'Jumping: jumping height/ability score'
   physical_entities:
   - physical_entity_id: PHYSICAL.Player
     physical_table_name: Player
@@ -65,6 +95,16 @@ logical_entities:
       LOGICAL.Player.OverallRating: european_football_2.Player_Attributes.overall_rating
       LOGICAL.Player.Potential: european_football_2.Player_Attributes.potential
       LOGICAL.Player.Date: european_football_2.Player_Attributes.date
+      LOGICAL.Player.HeadingAccuracy: european_football_2.Player_Attributes.heading_accuracy
+      LOGICAL.Player.SprintSpeed: european_football_2.Player_Attributes.sprint_speed
+      LOGICAL.Player.Finishing: european_football_2.Player_Attributes.finishing
+      LOGICAL.Player.Dribbling: european_football_2.Player_Attributes.dribbling
+      LOGICAL.Player.BallControl: european_football_2.Player_Attributes.ball_control
+      LOGICAL.Player.Crossing: european_football_2.Player_Attributes.crossing
+      LOGICAL.Player.ShortPassing: european_football_2.Player_Attributes.short_passing
+      LOGICAL.Player.LongShots: european_football_2.Player_Attributes.long_shots
+      LOGICAL.Player.FreeKickAccuracy: european_football_2.Player_Attributes.free_kick_accuracy
+      LOGICAL.Player.Jumping: european_football_2.Player_Attributes.jumping
     S: Player FIFA attributes — overall_rating, potential, and skill ratings tracked by date
     private_attributes:
     - attr_id: european_football_2.Player_Attributes.preferred_foot
@@ -77,42 +117,12 @@ logical_entities:
     - attr_id: european_football_2.Player_Attributes.defensive_work_rate
       biz_name: defensive_work_rate
       physical_column_id: european_football_2.Player_Attributes.defensive_work_rate
-    - attr_id: european_football_2.Player_Attributes.crossing
-      biz_name: crossing
-      physical_column_id: european_football_2.Player_Attributes.crossing
-    - attr_id: european_football_2.Player_Attributes.finishing
-      biz_name: finishing
-      physical_column_id: european_football_2.Player_Attributes.finishing
-    - attr_id: european_football_2.Player_Attributes.heading_accuracy
-      biz_name: heading_accuracy
-      physical_column_id: european_football_2.Player_Attributes.heading_accuracy
-    - attr_id: european_football_2.Player_Attributes.short_passing
-      biz_name: short_passing
-      physical_column_id: european_football_2.Player_Attributes.short_passing
     - attr_id: european_football_2.Player_Attributes.volleys
       biz_name: volleys
       physical_column_id: european_football_2.Player_Attributes.volleys
-    - attr_id: european_football_2.Player_Attributes.dribbling
-      biz_name: dribbling
-      physical_column_id: european_football_2.Player_Attributes.dribbling
     - attr_id: european_football_2.Player_Attributes.curve
       biz_name: curve
       physical_column_id: european_football_2.Player_Attributes.curve
-    - attr_id: european_football_2.Player_Attributes.free_kick_accuracy
-      biz_name: free_kick_accuracy
-      physical_column_id: european_football_2.Player_Attributes.free_kick_accuracy
-    - attr_id: european_football_2.Player_Attributes.long_shots
-      biz_name: long_shots
-      physical_column_id: european_football_2.Player_Attributes.long_shots
-    - attr_id: european_football_2.Player_Attributes.sprint_speed
-      biz_name: sprint_speed
-      physical_column_id: european_football_2.Player_Attributes.sprint_speed
-    - attr_id: european_football_2.Player_Attributes.jumping
-      biz_name: jumping
-      physical_column_id: european_football_2.Player_Attributes.jumping
-    - attr_id: european_football_2.Player_Attributes.ball_control
-      biz_name: ball_control
-      physical_column_id: european_football_2.Player_Attributes.ball_control
 - logical_entity_id: LOGICAL.Team
   biz_name: Team
   description: Football team — team_long_name, team_short_name, team_fifa_api_id; tactical attributes (buildUpPlay speed/passing, chanceCreation, defence) tracked by date
@@ -249,6 +259,9 @@ logical_entities:
   - attr_id: LOGICAL.Match.Date
     biz_name: date
     description: '日期: 比赛日期'
+  - attr_id: LOGICAL.Match.LeagueID
+    biz_name: league_id
+    description: 'League ID: FK to League, the league this match belongs to'
   physical_entities:
   - physical_entity_id: PHYSICAL.Match
     physical_table_name: Match
@@ -265,12 +278,9 @@ logical_entities:
       LOGICAL.Match.AwayGoal: european_football_2.Match.away_team_goal
       LOGICAL.Match.Season: european_football_2.Match.season
       LOGICAL.Match.Date: european_football_2.Match.date
+      LOGICAL.Match.LeagueID: european_football_2.Match.league_id
     S: Match records — home/away team FK, goals, season, date
     private_attributes:
-    - attr_id: european_football_2.Match.league_id
-      biz_name: league_id
-      physical_column_id: european_football_2.Match.league_id
-      description: '联赛ID: FK→League，所属联赛'
     - attr_id: european_football_2.Match.country_id
       biz_name: country_id
       physical_column_id: european_football_2.Match.country_id

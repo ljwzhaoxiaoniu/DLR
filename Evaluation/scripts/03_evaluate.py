@@ -109,6 +109,8 @@ def main():
             strict_ok = True
             verdict = "CORRECT"
             process_score = "100"
+            judge_v = ""          # strict PASS 则清空旧 judge(避免上一轮残留)
+            judge_reason = ""
             n_strict += 1
         else:
             strict_ok = False
