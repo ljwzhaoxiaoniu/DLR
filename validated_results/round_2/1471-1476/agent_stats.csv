@@ -1,0 +1,7 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","1471","debit_card_specializing","PASS","","","CORRECT","100","","1838","655","312","54144","56949"
+"er","1476","debit_card_specializing","PASS","","","CORRECT","100","","6830","904","972","44672","53378"
+"dlr","1471","debit_card_specializing","PASS","","","CORRECT","100","","1199","393","260","28544","30396"
+"dlr","1476","debit_card_specializing","PASS","","","CORRECT","100","","2959","706","1184","40064","44913"
+"rdf","1471","debit_card_specializing","PASS","","","CORRECT","100","","1510","395","432","29312","31649"
+"rdf","1476","debit_card_specializing","PASS","","","CORRECT","100","","2228","803","870","40704","44605"
