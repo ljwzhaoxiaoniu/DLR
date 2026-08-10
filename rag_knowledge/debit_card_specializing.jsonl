@@ -73,5 +73,10 @@
     "kid": 15,
     "knowledge": "Composite Metric Calculation: For multi-step calculations (e.g., difference in minimum average consumption of specific groups), calculate aggregation values for sub-groups first, then perform comparison or difference operations.",
     "source_qids": [1481]
+  },
+  {
+    "kid": 16,
+    "knowledge": "Gas consumption refers to the total monthly spending customers make at gas stations on fuel and convenience store purchases, measured in CZK. It is an aggregated business metric per customer per month, not tied to any specific product or fuel type. 'Gas' in this context means the gas station business, not a product category.",
+    "source_qids": [1480]
   }
 ]

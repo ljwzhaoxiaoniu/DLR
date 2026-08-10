@@ -1,0 +1,4 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","1480","debit_card_specializing","PASS","","","CORRECT","100","","1283","1035","928","55936","59182"
+"dlr","1480","debit_card_specializing","PASS","","","CORRECT","100","","3020","967","1004","42368","47359"
+"rdf","1480","debit_card_specializing","FAIL","CORRECT","调用链走 semantic_query→search_evidence→get_rdf_mapping→execute_sql 正道，SQL 基于映射返回的 yearmonth/customers 表和真实 database_url，按 2013 年 SME 客户按月份聚合消费取最大值，结果为 201304，Gold 的峰值月 ""04"" 即包含其中，答案值一致。","CORRECT","100","","2421","1093","560","57984","62058"
