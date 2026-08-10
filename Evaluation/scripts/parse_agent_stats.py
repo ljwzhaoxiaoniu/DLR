@@ -13,8 +13,10 @@ from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-LOG_DIR = ROOT / "Evaluation" / "outputs" / "01_logs"
-OUT_BASE = ROOT / "Evaluation" / "outputs"
+CFG = json.load(open(ROOT / "config.json", encoding="utf-8")) if (ROOT / "config.json").exists() else {}
+_EVAL_OUT = CFG.get("eval", {}).get("output_dir", "Evaluation/outputs")
+LOG_DIR = ROOT / _EVAL_OUT / "01_logs"
+OUT_BASE = ROOT / _EVAL_OUT
 
 
 def parse_ndjson(path):

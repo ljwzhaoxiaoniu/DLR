@@ -20,12 +20,13 @@ Usage:
 import os
 import shutil
 import sys
+import json
 from pathlib import Path
 from typing import Optional
 
 import click
 
-from utils.logger import logger, reset_log_file_for_build
+from utils.logger import logger, reset_log_file_for_build, reset_log_file_for_evidence
 from config import BASE_DIR, SCENARIOS_DIR, SQLITE_DIR, paradigm_storage
 from mapping.config_loader import ConfigLoader
 from mapping.physical_scanner import PhysicalScanner
@@ -102,8 +103,9 @@ def cli():
 # ---------------------------------------------------------------------------
 PARADIGM = click.option(
     "--paradigm",
-    required=True,
-    type=click.Choice(["ER", "DLR", "RDF", "ALL"], case_sensitive=False),
+    required=False,
+    default="none",
+    type=click.Choice(["ER", "DLR", "RDF", "ALL", "none"], case_sensitive=False),
     help="建模范式 (ER / DLR / RDF / ALL=三个一起跑)",
 )
 
@@ -113,8 +115,20 @@ PARADIGM = click.option(
 # ---------------------------------------------------------------------------
 @cli.command()
 @PARADIGM
-def build(paradigm):
-    """构建知识库: 将范式下所有预设合并写入 Kuzu + FAISS"""
+@click.option("--evidence", default=None, type=str,
+              help="Build evidence RAG indexes: ALL or topic name (e.g. financial)")
+def build(paradigm, evidence):
+    """构建知识库: 将范式下所有预设合并写入 Kuzu + FAISS.
+
+    --evidence ALL  额外构建所有 topic 的 evidence 索引
+    --evidence financial  只构建 financial 的 evidence 索引
+    """
+    # Evidence-only mode (no paradigm build needed)
+    if evidence is not None:
+        _build_evidence(evidence)
+        if not paradigm or paradigm.lower() == "none":
+            return
+
     paradigm = paradigm.lower()
     if paradigm == "all":
         for p in ["er", "dlr", "rdf"]:
@@ -201,6 +215,67 @@ def _build_one(paradigm: str):
     click.echo(f"\n{'='*50}")
     click.echo(f"Build Summary: [OK] {ok_count} / [FAIL] {fail_count} / Total {len(preset_files)}")
     click.echo(f"存储位置: {storage['graph']}  +  {storage['vector']}")
+
+
+# ---------------------------------------------------------------------------
+# Evidence RAG helpers
+# ---------------------------------------------------------------------------
+
+def _build_evidence(target: str):
+    """Build evidence indexes from rag_knowledge/*.jsonl."""
+    reset_log_file_for_evidence("build", target)
+    from db.evidence_db import EvidenceDB
+    knowledge_dir = BASE_DIR.parent / "rag_knowledge"
+
+    if target.lower() == "all":
+        topics = sorted(p.stem for p in knowledge_dir.glob("*.jsonl"))
+    else:
+        topics = [target]
+
+    if not topics:
+        click.echo("[EVIDENCE] No topics found")
+        return
+
+    db = EvidenceDB(BASE_DIR.parent / "Semantic Core Service" / "storage" / "evidence")
+    for db_id in topics:
+        path = knowledge_dir / f"{db_id}.jsonl"
+        if not path.exists():
+            click.echo(f"[EVIDENCE] Not found: {path}")
+            continue
+        records = []
+        for line in open(path, encoding="utf-8"):
+            line = line.strip()
+            if not line:
+                continue
+            obj = json.loads(line)
+            text = obj.get("evidence", "").strip()
+            if text:
+                records.append({"qid": obj["qid"], "question": obj["question"], "text": text})
+        if records:
+            db.build_index(db_id, records)
+            click.echo(f"[EVIDENCE] Built: {db_id} ({len(records)} records)")
+        else:
+            click.echo(f"[EVIDENCE] No records: {db_id}")
+
+    click.echo("[EVIDENCE] Done")
+
+
+def _reset_evidence(target: str):
+    """Clear evidence indexes."""
+    reset_log_file_for_evidence("reset", target)
+    from db.evidence_db import EvidenceDB
+    evidence_dir = BASE_DIR.parent / "Semantic Core Service" / "storage" / "evidence"
+    db = EvidenceDB(evidence_dir)
+
+    if target.lower() == "all":
+        count = db.clear_all()
+        click.echo(f"[EVIDENCE] Cleared all ({count} topics)")
+    else:
+        ok = db.clear(target)
+        if ok:
+            click.echo(f"[EVIDENCE] Cleared: {target}")
+        else:
+            click.echo(f"[EVIDENCE] Not found: {target}")
 
 
 # ---------------------------------------------------------------------------
@@ -435,6 +510,9 @@ def serve(paradigm, host, port):
       DLR web/api/mcp = 28775/28776/28777
       RDF web/api/mcp = 28785/28786/28787
     """
+    if paradigm == "none":
+        click.echo("[ERROR] serve 必须指定 --paradigm")
+        return
     paradigm = paradigm.lower()
     if paradigm == "all":
         _serve_all(host)
@@ -493,8 +571,19 @@ def _serve_all(host: str):
 # ---------------------------------------------------------------------------
 @cli.command()
 @PARADIGM
-def reset(paradigm):
-    """清除范式的 Graph / 向量数据"""
+@click.option("--evidence", default=None, type=str,
+              help="Clear evidence RAG indexes: ALL or topic name (e.g. financial)")
+def reset(paradigm, evidence):
+    """清除范式的 Graph / 向量数据.
+
+    --evidence ALL  清除所有 topic 的 evidence 索引
+    --evidence financial  只清除 financial 的 evidence 索引
+    """
+    if evidence is not None:
+        _reset_evidence(evidence)
+        if paradigm == "none":
+            return
+
     paradigm = paradigm.lower()
     if paradigm == "all":
         for p in ["er", "dlr", "rdf"]:
@@ -502,6 +591,9 @@ def reset(paradigm):
             click.echo(f"# 重置范式: {p.upper()}")
             click.echo(f"{'#'*50}")
             _reset_one(p)
+        return
+    elif paradigm == "none":
+        click.echo("[ERROR] --evidence 只能独立使用，构建范式时需指定 --paradigm")
         return
     _reset_one(paradigm)
 

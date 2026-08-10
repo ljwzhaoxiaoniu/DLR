@@ -4,9 +4,11 @@ import json, sqlite3, math
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+CFG = json.load(open(ROOT / "config.json", encoding="utf-8")) if (ROOT / "config.json").exists() else {}
+_EVAL_OUT = CFG.get("eval", {}).get("output_dir", "Evaluation/outputs")
 MINI = ROOT / "MINIDEV_sqlite" / "mini_dev_sqlite.json"
 DB_DIR = ROOT / "MINIDEV_sqlite" / "dev_databases"
-OUT_DIR = ROOT / "Evaluation" / "outputs"
+OUT_DIR = ROOT / _EVAL_OUT
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 def norm(v):

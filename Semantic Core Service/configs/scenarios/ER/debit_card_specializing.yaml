@@ -17,7 +17,7 @@ entities:
     data_type: integer
   - attr_id: debit_card_specializing.customers.Segment
     biz_name: client segment
-    description: client segment
+    description: 'client segment: SME=Small and Medium Enterprise, LAM=Large Account Manager, KAM=Key Account Manager'
     physical_column_id: debit_card_specializing.customers.Segment
     data_type: text
   - attr_id: debit_card_specializing.customers.Currency
@@ -42,12 +42,12 @@ entities:
     data_type: integer
   - attr_id: debit_card_specializing.gasstations.Country
     biz_name: Country
-    description: ''
+    description: 'Country: CZE=Czech Republic, SVK=Slovakia'
     physical_column_id: debit_card_specializing.gasstations.Country
     data_type: text
   - attr_id: debit_card_specializing.gasstations.Segment
     biz_name: chain segment
-    description: chain segment
+    description: 'chain segment: Indicates whether the gas station is a discount or premium station'
     physical_column_id: debit_card_specializing.gasstations.Segment
     data_type: text
 - entity_id: debit_card_specializing.products
@@ -67,7 +67,7 @@ entities:
     data_type: text
 - entity_id: debit_card_specializing.transactions_1k
   biz_name: transactions_1k
-  description: 'transactions_1k: Transaction ID; Date; Time'
+  description: 'transactions_1k: Records individual transaction details including Transaction ID, Date, Time, Customer, Card, Gas Station, Product, Amount and Price'
   physical_table_id: debit_card_specializing.transactions_1k
   attributes:
   - attr_id: debit_card_specializing.transactions_1k.TransactionID
@@ -77,12 +77,12 @@ entities:
     data_type: integer
   - attr_id: debit_card_specializing.transactions_1k.Date
     biz_name: Date
-    description: 'Date. format: date'
+    description: 'Date. format: date (YYYY-MM-DD, e.g., 2012-08-24)'
     physical_column_id: debit_card_specializing.transactions_1k.Date
     data_type: date
   - attr_id: debit_card_specializing.transactions_1k.Time
     biz_name: Time
-    description: Time
+    description: 'Time of transaction (HH:MM:SS format, accurate to second)'
     physical_column_id: debit_card_specializing.transactions_1k.Time
     data_type: text
   - attr_id: debit_card_specializing.transactions_1k.CustomerID
@@ -117,7 +117,7 @@ entities:
     data_type: real
 - entity_id: debit_card_specializing.yearmonth
   biz_name: yearmonth
-  description: 'yearmonth: Customer ID; Date; monthly spending amount'
+  description: 'yearmonth: Monthly aggregated data containing Customer ID, Date (YYYYMM format), and monthly spending amount'
   physical_table_id: debit_card_specializing.yearmonth
   attributes:
   - attr_id: debit_card_specializing.yearmonth.CustomerID
@@ -127,7 +127,7 @@ entities:
     data_type: integer
   - attr_id: debit_card_specializing.yearmonth.Date
     biz_name: Date
-    description: Date
+    description: 'Date in YYYYMM format (e.g., 201208 for August 2012). First 4 digits represent year, 5th-6th digits represent month'
     physical_column_id: debit_card_specializing.yearmonth.Date
     data_type: text
   - attr_id: debit_card_specializing.yearmonth.Consumption

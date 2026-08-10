@@ -20,6 +20,8 @@ sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="repla
 OPENCODE = shutil.which("opencode") or "opencode"
 
 ROOT = Path(__file__).resolve().parents[2]
+CFG = json.load(open(ROOT / "config.json", encoding="utf-8")) if (ROOT / "config.json").exists() else {}
+_EVAL_OUT = CFG.get("eval", {}).get("output_dir", "Evaluation/outputs")
 AGENT_DIR = ROOT / "OC-based Agent Service"
 MINI = ROOT / "MINIDEV_sqlite" / "mini_dev_sqlite.json"
 GOLD = json.load(open(ROOT / "Evaluation" / "outputs" / "00_golden_cache.json", encoding="utf-8"))

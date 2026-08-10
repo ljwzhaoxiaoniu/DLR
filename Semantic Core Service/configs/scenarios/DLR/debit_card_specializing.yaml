@@ -112,7 +112,7 @@ logical_entities:
     description: 'Gas station unique identifier'
   - attr_id: LOGICAL.GasStation.Country
     biz_name: Country
-    description: 'Country code, e.g. CZE=Czech Republic'
+    description: 'Country code: CZE=Czech Republic, SVK=Slovakia'
   - attr_id: LOGICAL.GasStation.ChainID
     biz_name: ChainID
     description: 'Chain ID: gas station chain brand identifier'
@@ -133,6 +133,7 @@ logical_entities:
     - attr_id: debit_card_specializing.gasstations.Segment
       biz_name: Segment
       physical_column_id: debit_card_specializing.gasstations.Segment
+      description: 'Chain segment: indicates discount or premium station type'
 - logical_entity_id: LOGICAL.Product
   biz_name: Product
   description: Products sold at gas stations

@@ -25,10 +25,11 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -W)"
 ROOT="$(cd "$SCRIPT_DIR/../.." && pwd -W)"
 TIMEOUT=$(python -c "import json; c=json.load(open('$ROOT/config.json')); print(c.get('eval',{}).get('timeout_per_question',300))" 2>/dev/null || echo 300)
+EVAL_OUT=$(python -c "import json; c=json.load(open('$ROOT/config.json')); print(c.get('eval',{}).get('output_dir','Evaluation/outputs'))" 2>/dev/null || echo "Evaluation/outputs")
 
 [ -z "$RUN_ID" ] && RUN_ID="$(date +%m%d_%H%M)_${QID1}-${QID2}_$(echo $PARADIGM | tr 'a-z' 'A-Z' | head -c1)"
 
-LOG_ROOT="$ROOT/Evaluation/outputs/01_logs"
+LOG_ROOT="$ROOT/$EVAL_OUT/01_logs"
 OUTPUT_DIR="$LOG_ROOT/$RUN_ID/$PARADIGM"
 AGENT_DIR="$ROOT/OC-based Agent Service/oc_$PARADIGM"
 

@@ -1,0 +1,77 @@
+[
+  {
+    "kid": 1,
+    "knowledge": "Year Filtering Logic: To filter data for a specific year (e.g., 2012), use the condition BETWEEN '201201' AND '201212' or compare the extracted year value.",
+    "source_qids": [1472, 1473, 1476, 1481]
+  },
+  {
+    "kid": 2,
+    "knowledge": "Date Standardization: Date formats like '2012/8/24' should be standardized to the '2012-08-24' format for querying.",
+    "source_qids": [1514, 1515, 1521, 1524, 1525, 1526]
+  },
+  {
+    "kid": 3,
+    "knowledge": "Ratio Calculation: The ratio of A to B is calculated as count(A) / count(B) or sum(A) / sum(B).",
+    "source_qids": [1471]
+  },
+  {
+    "kid": 4,
+    "knowledge": "Percentage Calculation: To calculate the percentage of a part relative to a total, use the formula (Count of Part / Total Count) * 100%.",
+    "source_qids": [1490, 1493, 1525]
+  },
+  {
+    "kid": 5,
+    "knowledge": "Growth Rate Calculation: Percentage increase/decrease rate = (New Value - Old Value) / Old Value * 100%. (Note: Specific contexts may vary denominator).",
+    "source_qids": [1482, 1526]
+  },
+  {
+    "kid": 6,
+    "knowledge": "Difference Calculation: The difference between two values is calculated using subtraction.",
+    "source_qids": [1476, 1481, 1484, 1486]
+  },
+  {
+    "kid": 7,
+    "knowledge": "Average Calculation: Average consumption or spending = Sum(value) / Count() or Sum(value) / Month Count (e.g., dividing by 12 for annual average).",
+    "source_qids": [1473, 1481, 1531]
+  },
+  {
+    "kid": 8,
+    "knowledge": "Unit Price Calculation: Price per unit = Total Price / Total Amount.",
+    "source_qids": [1531, 1533]
+  },
+  {
+    "kid": 9,
+    "knowledge": "Extremum Query Logic: To find the 'least' or 'most' records, sort by the specified field (ASC/DESC) and retrieve the first result (LIMIT 1).",
+    "source_qids": [1472, 1479, 1498, 1531]
+  },
+  {
+    "kid": 10,
+    "knowledge": "Time Range Filtering: To query data within a specific time range (e.g., 8:00-9:00), use the condition Time BETWEEN '08:00:00' AND '09:00:00'.",
+    "source_qids": [1521]
+  },
+  {
+    "kid": 11,
+    "knowledge": "Threshold Comparison Filtering: To query data for 'more than X' or 'over X', use the WHERE column > X syntax.",
+    "source_qids": [1490, 1493, 1505, 1533]
+  },
+  {
+    "kid": 12,
+    "knowledge": "Transaction Location Join: To find the country or gas station where a transaction occurred, join with the 'gasstations' table via GasStation ID to obtain the 'Country' field.",
+    "source_qids": [1501, 1506, 1509]
+  },
+  {
+    "kid": 13,
+    "knowledge": "Year-over-Year Comparison Logic: Comparing data between two years (e.g., 2012 vs 2013) requires aggregating data for both periods separately and then joining or comparing the results.",
+    "source_qids": [1482, 1526]
+  },
+  {
+    "kid": 14,
+    "knowledge": "Peak Query Logic: Finding a 'peak month' involves aggregating data by month and identifying the month with the maximum value.",
+    "source_qids": [1480]
+  },
+  {
+    "kid": 15,
+    "knowledge": "Composite Metric Calculation: For multi-step calculations (e.g., difference in minimum average consumption of specific groups), calculate aggregation values for sub-groups first, then perform comparison or difference operations.",
+    "source_qids": [1481]
+  }
+]

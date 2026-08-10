@@ -67,4 +67,16 @@ def reset_log_file_for_build(paradigm: str):
     return log_path
 
 
-__all__ = ["logger", "reset_log_file_for_paradigm", "reset_log_file_for_build"]
+def reset_log_file_for_evidence(action: str, target: str = "ALL"):
+    """Switch to an evidence-specific log file.
+
+    Creates ``log/evidence_{action}_{target}_{timestamp}.log``.
+    """
+    from datetime import datetime
+    ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    log_path = LOG_DIR / f"evidence_{action}_{target}_{ts}.log"
+    _switch_file_sink(str(log_path))
+    return log_path
+
+
+__all__ = ["logger", "reset_log_file_for_paradigm", "reset_log_file_for_build", "reset_log_file_for_evidence"]

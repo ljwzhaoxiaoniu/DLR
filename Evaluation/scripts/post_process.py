@@ -1,31 +1,44 @@
 # -*- coding: utf-8 -*-
-"""评测后处理 — 产出整理到 validated_results/round_1/.
+"""评测后处理 — 产出整理到 validated_results/round_2/.
 
-命名: round_1/1-2/(q1471+q1472), round_1/3-4/(q1473+q1476), ...
+命名: round_2/1471-1472/(按题号), round_2/1471/(单题)
 
 用法:
-    python post_process.py --run-id 0718_0059_1471-1472_EDR --pair 1
-    python post_process.py --run-id 0718_0126_1473-1474_EDR --pair 2
+    python post_process.py --run-id xxx --qids 1471,1472
+    python post_process.py --run-id xxx --qids 1471
 """
+
 import argparse
 import csv
+import json
 import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT_BASE = ROOT / "Evaluation" / "outputs"
-VALIDATED = ROOT / "validated_results" / "round_1"
+CFG = json.load(open(ROOT / "config.json", encoding="utf-8")) if (ROOT / "config.json").exists() else {}
+_EVAL_OUT = CFG.get("eval", {}).get("output_dir", "Evaluation/outputs")
+OUT_BASE = ROOT / _EVAL_OUT
+_EVAL_ROUND = CFG.get("eval", {}).get("round", "round_1")
+VALIDATED = ROOT / "validated_results" / _EVAL_ROUND
 
 
 def main():
-    ap = argparse.ArgumentParser(description="评测后处理 → validated_results/round_1/")
+    ap = argparse.ArgumentParser(description=f"评测后处理 → validated_results/{_EVAL_ROUND}/")
     ap.add_argument("--run-id", required=True, help="Stage 1 run_id")
-    ap.add_argument("--pair", required=True, type=int, help="题对编号(1=题1-2, 2=题3-4, ...)")
+    ap.add_argument("--qids", required=True, help="题号，逗号分隔 (如 1471,1472)")
     args = ap.parse_args()
 
     run_id = args.run_id
-    pair = args.pair
-    q_label = f"{pair*2-1}-{pair*2}"  # 1→1-2, 2→3-4, ...
+    qids = [int(x.strip()) for x in args.qids.split(",") if x.strip()]
+
+    if not qids:
+        print("[ERR] --qids 不能为空")
+        return
+
+    if len(qids) == 1:
+        q_label = str(qids[0])
+    else:
+        q_label = f"{min(qids)}-{max(qids)}"
 
     VALIDATED.mkdir(parents=True, exist_ok=True)
     target = VALIDATED / q_label
@@ -39,13 +52,12 @@ def main():
 
     copied = 0
     for p in ["er", "dlr", "rdf"]:
-        # 按范式子目录取日志(曾因遍历全部子目录+先到先得,把 dlr 日志复制成三份范式文件)
         p_dir = src_logs / p
         if not p_dir.is_dir():
             print(f"[WARN] 缺范式日志目录: {p_dir}")
             continue
         for qf in sorted(p_dir.glob("*.json")):
-            if qf.stem.isdigit():
+            if qf.stem.isdigit() and int(qf.stem) in qids:
                 dest = raw_dir / f"{p}_{qf.stem}.json"
                 if not dest.exists():
                     shutil.copy2(qf, dest)
@@ -58,9 +70,8 @@ def main():
         print(f"[ERR] reports 不存在: {reports_dir}")
         return
 
-    # 读 run 目录 agent_stats(parse_agent_stats.py 产出:含 reasoning/cache_read/total tokens)
     stats_csv = OUT_BASE / run_id / "agent_stats.csv"
-    stats_map = {}  # (paradigm, q_id) -> row
+    stats_map = {}
     if stats_csv.exists():
         with open(stats_csv, encoding="utf-8") as f:
             for r in csv.DictReader(f):
@@ -77,9 +88,10 @@ def main():
         with open(csv_path, encoding="utf-8-sig") as f:
             for r in csv.DictReader(f):
                 qid = int(r["q_id"])
+                if qid not in qids:
+                    continue
                 row = {
-                    "paradigm": p,
-                    "q_id": qid,
+                    "paradigm": p, "q_id": qid,
                     "db_id": r.get("db_id", ""),
                     "strict_match": r.get("strict_match", ""),
                     "judge_verdict": r.get("judge_verdict", ""),
@@ -90,7 +102,6 @@ def main():
                     "input_tokens": r.get("input_tokens", ""),
                     "output_tokens": r.get("output_tokens", ""),
                 }
-                # 合并 token 列(parse_agent_stats.py 产出: tokens_reasoning/tokens_cache_read/tokens_total)
                 st = stats_map.get((p, qid), {})
                 row["reasoning_tokens"] = st.get("tokens_reasoning", "")
                 row["cache_read_tokens"] = st.get("tokens_cache_read", "")

@@ -30,7 +30,8 @@ _cfg_eval = CFG.get("eval", {})
 
 MINIDEV_REL = _cfg_paths.get("minidev_dir", "MINIDEV_sqlite")
 MINI = ROOT / MINIDEV_REL / "mini_dev_sqlite.json"
-OUT_DIR = ROOT / "Evaluation" / "outputs" / "01_logs"
+_EVAL_OUT = _cfg_eval.get("output_dir", "Evaluation/outputs")
+OUT_DIR = ROOT / _EVAL_OUT / "01_logs"
 AGENT_DIR = ROOT / "OC-based Agent Service"
 
 PARADIGM_DIR = {"er": "oc_er", "dlr": "oc_dlr", "rdf": "oc_rdf"}
@@ -69,11 +70,11 @@ def run_one(q, paradigm, timeout=300):
         return out_path, True, 0.0  # 续跑跳过
 
     prompt = (
-        "CRITICAL: MCP tools only. Skip list_mcp_resource* — go straight to semantic_query->mapping->sqlite3. "
-        "Use get_pe_full(DLR) or get_entity_mapping(ER) for complete info in one call. "
+        "CRITICAL: MCP tools only. Skip list_mcp_resource* — go straight to semantic_query → search_evidence → mapping → sqlite3. "
+        "Use get_pe_mapping(DLR) / get_entity_mapping(ER) / get_rdf_mapping(RDF) for complete info in one call. "
         "NO glob/read/bash to find databases. "
         "End with: Final Answer: <result> | Evidence SQL: <sql>. "
-        f"Question: {q['question']} Evidence: {q.get('evidence', '')}"
+        f"Question: {q['question']}"
     )
     session_title = f"eval_{paradigm}_{qid}"
     cmd = [

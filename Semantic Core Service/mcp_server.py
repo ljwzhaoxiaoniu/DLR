@@ -24,13 +24,14 @@ from typing import Optional
 from fastmcp import FastMCP
 
 from utils.logger import logger
-from config import SCENARIOS_DIR, SQLITE_DIR
+from config import SCENARIOS_DIR, SQLITE_DIR, STORAGE_DIR
 
 # ---------------------------------------------------------------------------
 # Lazy-loaded singletons
 # ---------------------------------------------------------------------------
 _graph_db = None
 _vector_db = None
+_evidence_db = None
 _query_service = None
 _mapping_type = "er"
 _config_data = {}
@@ -695,7 +696,88 @@ def _get_le_children(le_id: str) -> dict:
     return {"success": True, "logical_entity_id": le_id, "children": children}
 
 
+def _ensure_evidence_db():
+    """Lazy-load EvidenceDB singleton."""
+    global _evidence_db
+    if _evidence_db is None:
+        from db.evidence_db import EvidenceDB
+        _evidence_db = EvidenceDB(STORAGE_DIR / "evidence")
+        loaded = _evidence_db.load_all()
+        logger.info(f"[EvidenceDB] Loaded {loaded} topic indexes")
+    return _evidence_db
+
+
+# ── Shared Evidence RAG tools (one per paradigm, identical internals) ──────────
+
+def _search_evidence(namespace: str, question: str, top_k: int = 3) -> dict:
+    """Search domain knowledge (evidence) for a question within a topic namespace.
+
+    Call this after semantic_query to retrieve domain rules that help interpret
+    columns, formulas, and business logic.
+
+    namespace = db name from semantic_query result (e.g. 'financial', 'superhero').
+    """
+    db = _ensure_evidence_db()
+    results = db.search(question, namespace=namespace, top_k=top_k)
+    return {
+        "success": True,
+        "namespace": namespace,
+        "count": len(results),
+        "results": [
+            {"qid": r["qid"], "text": r["text"], "question": r["question"], "score": r["score"]}
+            for r in results
+        ],
+    }
+
+
+def dlr_search_evidence(namespace: str, question: str, top_k: int = 3) -> dict:
+    """[DLR] Search domain evidence for a topic. namespace = db name from dlr_semantic_query result."""
+    return _search_evidence(namespace, question, top_k)
+
+
+def er_search_evidence(namespace: str, question: str, top_k: int = 3) -> dict:
+    """[ER] Search domain evidence for a topic. namespace = db name from er_semantic_query result."""
+    return _search_evidence(namespace, question, top_k)
+
+
+def rdf_search_evidence(namespace: str, question: str, top_k: int = 3) -> dict:
+    """[RDF] Search domain evidence for a topic. namespace = db name from rdf_semantic_query result."""
+    return _search_evidence(namespace, question, top_k)
+
+
 def _resolve_database_url(physical_table_id: str = "") -> str:
+    """Resolve SQLite database file path from config.
+
+    Returns the absolute path to the .sqlite/.db file (without sqlite:/// prefix)
+    so it can be passed directly to sqlite3 CLI.
+    """
+    # 兼容两种格式: 单文件模式 nested {"databases": {...}} / 范式模式 flat {prefix: url}
+    databases = _config_data.get("databases", _config_data)
+
+    def _resolve_url(url: str) -> str:
+        """Convert a sqlite:/// URL to an absolute file path."""
+        if url.startswith("sqlite:///"):
+            rel = url[len("sqlite:///"):]
+            base_dir = Path(__file__).parent
+            candidate = (base_dir / rel).resolve()
+            if candidate.exists():
+                return str(candidate)
+            project_root = base_dir.parent
+            candidate2 = (project_root / rel).resolve()
+            if candidate2.exists():
+                return str(candidate2)
+            return str(candidate)
+        return url
+
+    if "." in physical_table_id:
+        prefix = physical_table_id.split(".")[0]
+        if prefix in databases:
+            return _resolve_url(databases[prefix])
+
+    for url in databases.values():
+        if url.startswith("sqlite:///"):
+            return _resolve_url(url)
+    return ""
     """Resolve SQLite database file path from config.
 
     Returns the absolute path to the .sqlite/.db file (without sqlite:/// prefix)
@@ -972,39 +1054,33 @@ def _schema() -> dict:
 
 # Mapping of tool name → plain function for DLR tools (23 个纯 CLI 风格)
 _DLR_TOOL_FUNCS = {
-    # 召回层(主入口是 dlr_semantic_query;recall_pe/recall_pas 为辅助按类型召回)
+    # 核心链路 4 工具 (387 runs 统计 + RAG 新增)
     "dlr_semantic_query": dlr_semantic_query,
-    "recall_pe": _recall_pe,
-    "recall_pas": _recall_pas,
-    # 列表层（list_le/list_pe/list_pas/schema 已移除 — 暴力枚举绕过 semantic_query，触发过度探索）
-    # "list_pas": _list_pas,
-    # LE 查询
-    "get_le": _get_le,
+    "dlr_search_evidence": dlr_search_evidence,
+    "get_pe_mapping": _get_pe_full,
     "get_le_attrs": _get_le_attrs,
-    "get_le_children": _get_le_children,
-    "get_le_pas": _get_le_pas,
-    # PE 查询(get_pe/get_pe_attrs/get_pe_arcs 已合并入 get_pe_full)
-    "get_pe_full": _get_pe_full,  # PE+属性+ARCS+database_url 一次调用
-    "get_pe_parent": _get_pe_parent,
-    # PAS 导航
-    "get_pas": _get_pas,
-    "get_pas_by_le": _get_pas_by_le,
-    # 路径层
-    "path_le_le": _path_le_le,
-    "path_pe_pe": _path_pe_pe,
-    # 判断层
-    "is_le": _is_le,
-    "is_pe": _is_pe,
-    "is_arcs": _is_arcs,
-    "is_same_le": _is_same_le,
-    # 统计层
-    # "schema": _schema,  # 已禁用：全量 dump 绕过 PAS/ARCS 导航
+    # 以下已禁注册 (Agent 探索过度，统计 <5% 使用率)
+    # "recall_pe": _recall_pe,
+    # "recall_pas": _recall_pas,
+    # "get_le": _get_le,
+    # "get_le_children": _get_le_children,
+    # "get_le_pas": _get_le_pas,
+    # "get_pe_parent": _get_pe_parent,
+    # "get_pas": _get_pas,
+    # "get_pas_by_le": _get_pas_by_le,
+    # "path_le_le": _path_le_le,
+    # "path_pe_pe": _path_pe_pe,
+    # "is_le": _is_le,
+    # "is_pe": _is_pe,
+    # "is_arcs": _is_arcs,
+    # "is_same_le": _is_same_le,
 }
 
 
 # ER 范式专属工具集(原模块级 @mcp.tool() 注册,现改为动态注册)
 _ER_TOOL_FUNCS = {
     # 语义入口
+    "er_search_evidence": er_search_evidence,
     "er_semantic_query": er_semantic_query,
     # 实体图谱导航
     # "list_entities": list_entities,  # 已禁用：全量 dump
@@ -1077,9 +1153,10 @@ def _register_dlr_tools():
 
 _RDF_TOOL_FUNCS = {
     # 语义召回(对标 ER 的 semantic_query / DLR 的 recall_*)
+    "rdf_search_evidence": rdf_search_evidence,
     "rdf_semantic_query": rdf_semantic_query,
     # 映射查询(对标 ER 的 get_entity_mapping / DLR 的 get_pe_full)
-    "query_rdf_mapping": _query_rdf_mapping,
+    "get_rdf_mapping": _query_rdf_mapping,
     # 图探索
     # "rdf_classes": _rdf_classes,  # 已禁用：全量 dump
     # "rdf_predicates": _rdf_predicates,  # 已禁用：全量 dump
