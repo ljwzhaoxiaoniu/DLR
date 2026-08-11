@@ -547,8 +547,8 @@ def dlr_semantic_query(question: str, top_k: int = 3, threshold: float = 0.5, db
     db: 可选,数据库名过滤. 首次调用留空做全局召回,用于判断问题属于哪个数据库;
     从返回的 structures[].db 确定目标库后,后续召回类调用必须传入该 db,避免跨库串扰.
 
-    返回: {success, data:{structures:[{logical_entity_id, name, description, db, physical_entities:[{physical_entity_id, pe_name, db}]}]}}
-    不含 physical_table_id / database_url / 属性字段.
+    返回: {success, data:{structures:[{logical_entity_id, name, description, db, physical_entities:[{physical_entity_id, pe_name, db}], public_attributes:[{name, description}]}]}}
+    不含 physical_table_id / database_url.
     """
     gdb, vector_db, _ = _ensure_services()
     results = vector_db.search(question, top_k=max(top_k * 3, 20), db=db or None)
@@ -575,12 +575,17 @@ def dlr_semantic_query(question: str, top_k: int = 3, threshold: float = 0.5, db
                     "pe_name": pe.get("name", ""),
                     "db": (pe.get("physical_table_id") or "").split(".", 1)[0],
                 })
+        attrs = gdb.get_logical_entity_attributes(le_id)
         structures.append({
             "logical_entity_id": le_id,
             "name": r["name"],
             "description": r.get("description", ""),
             "db": r.get("db", ""),
             "physical_entities": pes,
+            "public_attributes": [
+                {"name": a["name"], "description": a.get("description", "")}
+                for a in attrs
+            ],
         })
 
     max_score = max((r.get("score", 0.0) for r in le_results), default=0.0)
@@ -709,7 +714,7 @@ def _ensure_evidence_db():
 
 # ── Shared Evidence RAG tools (one per paradigm, identical internals) ──────────
 
-def _search_evidence(namespace: str, question: str, top_k: int = 3) -> dict:
+def _search_evidence(namespace: str, question: str, top_k: int = 5) -> dict:
     """Search domain knowledge (evidence) for a question within a topic namespace.
 
     Call this after semantic_query to retrieve domain rules that help interpret
@@ -730,18 +735,18 @@ def _search_evidence(namespace: str, question: str, top_k: int = 3) -> dict:
     }
 
 
-def dlr_search_evidence(namespace: str, question: str, top_k: int = 3) -> dict:
-    """[DLR] Search domain evidence for a topic. namespace = db name from dlr_semantic_query result."""
+def dlr_search_evidence(namespace: str, question: str, top_k: int = 5) -> dict:
+    """[DLR] Search domain evidence for a topic. namespace = db name from dlr_semantic_query result. Use English for the question parameter."""
     return _search_evidence(namespace, question, top_k)
 
 
-def er_search_evidence(namespace: str, question: str, top_k: int = 3) -> dict:
-    """[ER] Search domain evidence for a topic. namespace = db name from er_semantic_query result."""
+def er_search_evidence(namespace: str, question: str, top_k: int = 5) -> dict:
+    """[ER] Search domain evidence for a topic. namespace = db name from er_semantic_query result. Use English for the question parameter."""
     return _search_evidence(namespace, question, top_k)
 
 
-def rdf_search_evidence(namespace: str, question: str, top_k: int = 3) -> dict:
-    """[RDF] Search domain evidence for a topic. namespace = db name from rdf_semantic_query result."""
+def rdf_search_evidence(namespace: str, question: str, top_k: int = 5) -> dict:
+    """[RDF] Search domain evidence for a topic. namespace = db name from rdf_semantic_query result. Use English for the question parameter."""
     return _search_evidence(namespace, question, top_k)
 
 

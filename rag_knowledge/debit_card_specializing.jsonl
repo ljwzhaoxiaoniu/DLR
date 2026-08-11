@@ -16,8 +16,8 @@
   },
   {
     "kid": 4,
-    "knowledge": "Percentage Calculation: To calculate the percentage of a part relative to a total, use the formula (Count of Part / Total Count) * 100%.",
-    "source_qids": [1490, 1493, 1525]
+    "knowledge": "Percentage Calculation: To calculate the percentage of a part relative to a total, use (Count of Part / Total Count) * 100%. When computing customer-level percentages, the denominator must include ALL customers in the target group — count from the customer master table directly or use LEFT JOIN, never INNER JOIN (which silently drops customers without matching records). When the condition involves a threshold on an aggregated measure (e.g., 'consumed more than X'), first compute the per-customer aggregate via SUM with GROUP BY, then apply the threshold on the aggregated result — do not compare individual rows to the threshold before aggregation.",
+    "source_qids": [1490, 1493, 1525, 1481]
   },
   {
     "kid": 5,
@@ -76,7 +76,17 @@
   },
   {
     "kid": 16,
-    "knowledge": "Gas consumption refers to the total monthly spending customers make at gas stations on fuel and convenience store purchases, measured in CZK. It is an aggregated business metric per customer per month, not tied to any specific product or fuel type. 'Gas' in this context means the gas station business, not a product category.",
-    "source_qids": [1480]
+    "knowledge": "Gas consumption refers to the total monthly spending customers make at gas stations on fuel and convenience store purchases, measured in CZK. It is an aggregated business metric per customer per month, not tied to any specific product or fuel type. 'Gas' in this context means the gas station business, not a product category. In this domain, 'consumption' means the monthly aggregated spending amount per customer — a pre-computed total summarizing all purchases within a calendar month. Unit price (what a single item costs at point of sale) is a different concept; consumption is the monthly sum across all items and transactions.",
+    "source_qids": [1480, 1472, 1473, 1481, 1490, 1531]
+  },
+  {
+    "kid": 17,
+    "knowledge": "SME, LAM, and KAM are customer segment classifications. SME = Small and Medium Enterprises (business clients). LAM = mass-market retail customers. KAM = Key Account Managers (large corporate clients).",
+    "source_qids": [1486, 1490, 1493, 1498]
+  },
+  {
+    "kid": 18,
+    "knowledge": "CZK (Czech Koruna) and EUR (Euro) are billing currencies. CZK is the local Czech currency and the dominant payment method. EUR is the euro, used by a minority of customers.",
+    "source_qids": [1486, 1526]
   }
 ]

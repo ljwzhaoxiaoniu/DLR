@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import rdflib
-from rdflib.namespace import RDF
+from rdflib.namespace import RDF, RDFS
 
 from models.physical_models import PhysicalTable
 from models.semantic_models import BizAttribute, BizEntity, BizRelation
@@ -250,7 +250,7 @@ class RDFSemanticMapper(SemanticMapperABC):
                 continue
             if tname == "sqlite_sequence":
                 continue  # 与主解析循环一致:跳过 SQLite 元数据表
-            col_names = []
+            col_descs = []
             for pom in g.objects(tm, RR.predicateObjectMap):
                 om = _first(g, pom, RR.objectMap)
                 if om is None:
@@ -259,7 +259,11 @@ class RDFSemanticMapper(SemanticMapperABC):
                     continue
                 col = _first(g, om, RR.column)
                 if col:
-                    col_names.append(str(col))
+                    comment = _first(g, pom, RDFS.comment) or ""
+                    if comment:
+                        col_descs.append(f"{str(col)}({str(comment)})")
+                    else:
+                        col_descs.append(str(col))
             for pom in g.objects(tm, RR.predicateObjectMap):
                 om = _first(g, pom, RR.objectMap)
                 if om is None:
@@ -270,8 +274,8 @@ class RDFSemanticMapper(SemanticMapperABC):
                 parent_lt = _first(g, parent_tm, RR.logicalTable)
                 if parent_lt:
                     parent_tbl = str(_first(g, parent_lt, RR.tableName))
-                    col_names.append(f"->{parent_tbl}")
-            model._rdf_vec_texts[entity_key] = f"{db_name} {tname} {' '.join(col_names)}"
+                    col_descs.append(f"->{parent_tbl}")
+            model._rdf_vec_texts[entity_key] = f"{db_name} {tname}: {' '.join(col_descs)}"
 
         return model
 

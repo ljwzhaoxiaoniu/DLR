@@ -48,6 +48,7 @@ for (( i=0; i<${#PARADIGMS}; i++ )); do
     if [ "$MODE" = "parallel" ]; then
         bash "$SCRIPT_DIR/run_parallel.sh" "$PARADIGM" "$QID1" "$QID2" --run-id "$RUN_ID" &
         PIDS+=($!)
+        sleep $(python -c "import random; print(round(random.uniform(10,30),1))")  # 随机错峰防 Kuzu 锁冲突
     else
         bash "$SCRIPT_DIR/run_serial.sh" "$PARADIGM" "$QID1" "$QID2" --run-id "$RUN_ID"
     fi

@@ -166,11 +166,11 @@
     "db_id": "debit_card_specializing",
     "ok": true,
     "columns": [
-      "CAST(SUM(IIF(T2.Consumption > 46.73, 1, 0)) AS FLOAT) * 100 / COUNT(T1.CustomerID)"
+      "pct"
     ],
     "rows": [
       [
-        98.38709732
+        98.387097
       ]
     ],
     "error": null

@@ -243,14 +243,28 @@ def _build_evidence(target: str):
             click.echo(f"[EVIDENCE] Not found: {path}")
             continue
         records = []
-        for line in open(path, encoding="utf-8"):
-            line = line.strip()
-            if not line:
-                continue
-            obj = json.loads(line)
-            text = obj.get("evidence", "").strip()
-            if text:
-                records.append({"qid": obj["qid"], "question": obj["question"], "text": text})
+        raw = open(path, encoding="utf-8").read().strip()
+        if raw.startswith("["):
+            # JSON 数组格式: [{kid, knowledge, source_qids}]
+            chunks = json.loads(raw)
+            for c in chunks:
+                text = c.get("knowledge", "").strip()
+                if text:
+                    records.append({
+                        "qid": c["source_qids"][0],
+                        "question": f"[kid={c['kid']}] {text[:80]}...",
+                        "text": text,
+                    })
+        else:
+            # JSONL 格式: 每行一个 {qid, question, evidence}
+            for line in raw.split("\n"):
+                line = line.strip()
+                if not line:
+                    continue
+                obj = json.loads(line)
+                text = obj.get("evidence", "").strip()
+                if text:
+                    records.append({"qid": obj["qid"], "question": obj["question"], "text": text})
         if records:
             db.build_index(db_id, records)
             click.echo(f"[EVIDENCE] Built: {db_id} ({len(records)} records)")

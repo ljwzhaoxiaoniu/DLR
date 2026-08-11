@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
-"""评测后处理 — 产出整理到 validated_results/round_2/.
-
-命名: round_2/1471-1472/(按题号), round_2/1471/(单题)
+"""评测后处理 — 一步归档到 v3_final 扁平结构.
 
 用法:
-    python post_process.py --run-id xxx --qids 1471,1472
-    python post_process.py --run-id xxx --qids 1471
+    python post_process.py --run-id xxx --qids 1481,1482
+
+输出:
+    validated_results/v3_final/
+    ├── raw/
+    │   ├── 1481-1482_er_1481.json    # {pair}_{p}_{qid}.json
+    │   └── ...
+    └── 1481-1482/
+        └── agent_stats.csv
 """
 
 import argparse
@@ -18,14 +23,15 @@ ROOT = Path(__file__).resolve().parents[2]
 CFG = json.load(open(ROOT / "config.json", encoding="utf-8")) if (ROOT / "config.json").exists() else {}
 _EVAL_OUT = CFG.get("eval", {}).get("output_dir", "Evaluation/outputs")
 OUT_BASE = ROOT / _EVAL_OUT
-_EVAL_ROUND = CFG.get("eval", {}).get("round", "round_1")
+_EVAL_ROUND = CFG.get("eval", {}).get("round", "v3_final")
 VALIDATED = ROOT / "validated_results" / _EVAL_ROUND
+RAW_DIR = VALIDATED / "raw"
 
 
 def main():
     ap = argparse.ArgumentParser(description=f"评测后处理 → validated_results/{_EVAL_ROUND}/")
     ap.add_argument("--run-id", required=True, help="Stage 1 run_id")
-    ap.add_argument("--qids", required=True, help="题号，逗号分隔 (如 1471,1472)")
+    ap.add_argument("--qids", required=True, help="题号，逗号分隔 (如 1481,1482)")
     args = ap.parse_args()
 
     run_id = args.run_id
@@ -35,17 +41,12 @@ def main():
         print("[ERR] --qids 不能为空")
         return
 
-    if len(qids) == 1:
-        q_label = str(qids[0])
-    else:
-        q_label = f"{min(qids)}-{max(qids)}"
+    pair_label = str(qids[0]) if len(qids) == 1 else f"{min(qids)}-{max(qids)}"
 
     VALIDATED.mkdir(parents=True, exist_ok=True)
-    target = VALIDATED / q_label
-    raw_dir = target / "raw"
-    raw_dir.mkdir(parents=True, exist_ok=True)
+    RAW_DIR.mkdir(parents=True, exist_ok=True)
 
-    # 1. 复制 Stage 1 raw 日志
+    # 1. 复制 raw 日志到 v3_final/raw/{pair}_{p}_{qid}.json
     src_logs = OUT_BASE / "01_logs" / run_id
     if not src_logs.exists():
         src_logs = OUT_BASE / run_id / "01_logs"
@@ -58,13 +59,16 @@ def main():
             continue
         for qf in sorted(p_dir.glob("*.json")):
             if qf.stem.isdigit() and int(qf.stem) in qids:
-                dest = raw_dir / f"{p}_{qf.stem}.json"
+                dest = RAW_DIR / f"{pair_label}_{p}_{qf.stem}.json"
                 if not dest.exists():
                     shutil.copy2(qf, dest)
                     copied += 1
-    print(f"[OK] 复制 {copied} 个 raw 日志 → {raw_dir}")
+    print(f"[OK] 复制 {copied} 个 raw 日志 → {RAW_DIR}")
 
-    # 2. 合并三范式 report CSV + parse_agent_stats token 数据
+    # 2. 生成 per-pair agent_stats.csv
+    pair_dir = VALIDATED / pair_label
+    pair_dir.mkdir(parents=True, exist_ok=True)
+
     reports_dir = OUT_BASE / run_id / "03_reports"
     if not reports_dir.exists():
         print(f"[ERR] reports 不存在: {reports_dir}")
@@ -108,14 +112,142 @@ def main():
                 row["total_tokens"] = st.get("tokens_total", "")
                 rows.append(row)
 
-    out_csv = target / "agent_stats.csv"
+    out_csv = pair_dir / "agent_stats.csv"
     with open(out_csv, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields, quoting=csv.QUOTE_ALL, extrasaction="ignore")
         w.writeheader()
         w.writerows(rows)
-    print(f"[OK] 汇总 CSV: {len(rows)} rows → {out_csv}")
+    print(f"[OK] agent_stats.csv: {len(rows)} rows → {out_csv}")
 
-    print(f"\n[DONE] {target}")
+    print(f"\n[DONE] {pair_dir}")
+    print(f"  raw → {RAW_DIR}/{pair_label}_*.json")
+
+    # 3. 更新 docs/results_v3.md
+    update_results_md(pair_label, rows, VALIDATED)
+
+
+def update_results_md(pair_label, new_rows, validated_dir):
+    """从 v3_final 全量数据重建 results_v3.md 的明细表和统计."""
+    md_path = ROOT / "docs" / "results_v3.md"
+    if not md_path.exists():
+        print("[WARN] results_v3.md 不存在，跳过")
+        return
+
+    # 收集所有 per-pair agent_stats.csv
+    all_rows = []
+    for pair_dir in sorted(validated_dir.glob("*")):
+        csv_path = pair_dir / "agent_stats.csv"
+        if not csv_path.is_file():
+            continue
+        with open(csv_path, encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                all_rows.append(r)
+
+    # 同 qid+paradigm 去重（后出现的覆盖）
+    dedup = {}
+    for r in all_rows:
+        dedup[(r["q_id"], r["paradigm"])] = r
+    for r in new_rows:
+        dedup[(str(r["q_id"]), r["paradigm"])] = {**r, "q_id": str(r["q_id"])}
+    all_rows = list(dedup.values())
+
+    # 统计
+    qids = sorted(set(int(r["q_id"]) for r in all_rows))
+    n = len(qids)
+    total_runs = len(all_rows)
+
+    def stat(p):
+        rows_p = [r for r in all_rows if r["paradigm"] == p]
+        correct = sum(1 for r in rows_p if r["verdict"] == "CORRECT")
+        strict = sum(1 for r in rows_p if r["strict_match"] == "PASS")
+        tokens = [int(r.get("total_tokens", 0) or 0) for r in rows_p]
+        avg_tok = sum(tokens) / len(tokens) if tokens else 0
+        return correct, strict, avg_tok
+
+    er_c, er_s, er_tok = stat("er")
+    dlr_c, dlr_s, dlr_tok = stat("dlr")
+    rdf_c, rdf_s, rdf_tok = stat("rdf")
+    dlr_vs_er = (dlr_tok - er_tok) / er_tok * 100 if er_tok else 0
+    rdf_vs_er = (rdf_tok - er_tok) / er_tok * 100 if er_tok else 0
+
+    # 明细行
+    detail_lines = []
+    for qid in sorted(set(int(r["q_id"]) for r in all_rows)):
+        q_rows = {r["paradigm"]: r for r in all_rows if int(r["q_id"]) == qid}
+        er_r = q_rows.get("er", {})
+        dlr_r = q_rows.get("dlr", {})
+        rdf_r = q_rows.get("rdf", {})
+
+        def strict_judge(p):
+            s = p.get("strict_match", "")
+            j = p.get("judge_verdict", "")
+            if s == "PASS":
+                return "PASS", ""
+            return "FAIL", j
+
+        er_sj, er_j = strict_judge(er_r)
+        dlr_sj, dlr_j = strict_judge(dlr_r)
+        rdf_sj, rdf_j = strict_judge(rdf_r)
+
+        er_t = int(er_r.get("total_tokens", 0) or 0)
+        dlr_t = int(dlr_r.get("total_tokens", 0) or 0)
+        rdf_t = int(rdf_r.get("total_tokens", 0) or 0)
+        min_t = min(er_t, dlr_t, rdf_t) if er_t and dlr_t and rdf_t else 0
+
+        def tok_str(val):
+            s = f"{val:,}"
+            return f"**{s}**" if val == min_t and val > 0 else s
+
+        detail_lines.append(
+            f"| q{qid} | {er_sj} | {er_j} | {dlr_sj} | {dlr_j} | {rdf_sj} | {rdf_j} | "
+            f"{er_r.get('verdict','')} | {dlr_r.get('verdict','')} | {rdf_r.get('verdict','')} | "
+            f"{tok_str(er_t)} | {tok_str(dlr_t)} | {tok_str(rdf_t)} | |"
+        )
+
+    # 重建 MD
+    md_text = md_path.read_text(encoding="utf-8")
+    import re
+
+    # 替换明细表：### debit_card_specializing 之后到 > **Token 之前
+    header = "| 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 备注 |"
+    sep    = "|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|------|"
+    detail_block = header + "\n" + sep + "\n" + "\n".join(detail_lines)
+    md_text = re.sub(
+        r"(### debit_card_specializing\n\n).*?(\n> \*\*Token)",
+        r"\1" + detail_block + r"\2",
+        md_text, flags=re.DOTALL
+    )
+
+    # 替换进度表
+    md_text = re.sub(r'\|\s*debit_card_specializing\s*\|\s*\d+\s*\|\s*\d+\s*\|\s*\d+\s*\|',
+                     f'| debit_card_specializing | 30 | {n} | {30-n} |', md_text)
+    md_text = re.sub(r'进度 \| [\d.]+%', f'进度 | {n/30*100:.1f}%', md_text)
+
+    # 替换总结数字
+    md_text = re.sub(r'共测试 \d+ 题', f'共测试 {n} 题', md_text)
+    md_text = re.sub(r'\*\*\d+ 题次\*\*', f'**{total_runs} 题次**', md_text)
+
+    # 替换汇总表 — 整行替换，加 ^\n 锚点防止匹配明细行
+    dlr_vs_er_pct = (dlr_tok - er_tok) / er_tok * 100 if er_tok else 0
+    rdf_vs_er_pct = (rdf_tok - er_tok) / er_tok * 100 if er_tok else 0
+    md_text = re.sub(
+        r'(\n\| CORRECT \|).*(\|)',
+        rf'\1 {er_c}/{n} ({er_c/n*100:.1f}%) | **{dlr_c}/{n} ({dlr_c/n*100:.1f}%)** | {rdf_c}/{n} ({rdf_c/n*100:.1f}%) \2',
+        md_text
+    )
+    md_text = re.sub(
+        r'(\n\| strict PASS \|).*(\|)',
+        rf'\1 {er_s}/{n} ({er_s/n*100:.1f}%) | {dlr_s}/{n} ({dlr_s/n*100:.1f}%) | {rdf_s}/{n} ({rdf_s/n*100:.1f}%) \2',
+        md_text
+    )
+    md_text = re.sub(
+        r'(\n\| 平均 token \|).*(\|)',
+        rf'\1 {er_tok:,.0f} | **{dlr_tok:,.0f}** ({dlr_vs_er_pct:+.1f}% vs ER) | {rdf_tok:,.0f} ({rdf_vs_er_pct:+.1f}% vs ER) \2',
+        md_text
+    )
+
+    md_path.write_text(md_text, encoding="utf-8")
+    print(f"[OK] 更新 {md_path}  ({n}题/{total_runs}题次, DLR:{dlr_tok:,.0f}tok {dlr_vs_er:+.1f}% vs ER)")
 
 
 if __name__ == "__main__":
