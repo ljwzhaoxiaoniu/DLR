@@ -1,52 +1,47 @@
-{"qid": 340, "question": "How many cards that have incredibly powerful foils.", "evidence": "incredibly poweful foils refers to cardKingdomFoilId is not null AND cardKingdomId is not null"}
-{"qid": 341, "question": "What are the borderless cards available without powerful foils?", "evidence": "borderless' refers to borderColor; powerful foils refers to cardKingdomFoilId paired with cardKingdomId AND cardKingdomId is not null"}
-{"qid": 344, "question": "List all the mythic rarity print cards banned in gladiator format.", "evidence": "mythic rarity printing refers to rarity = 'mythic'; card banned refers to status = 'Banned'; in gladiator format refers to format = 'gladiator'; A card may have multiple printings with the same name but different ids — return each printing's id;"}
-{"qid": 345, "question": "For artifact type of cards that do not have multiple faces on the same card, state its legalities status for vintage play format.", "evidence": "Artifact type of cards refers to types = 'Artifact'; card does not have multiple faces on the same card refers to side is NULL'; vintage play format refers to format = 'vintage';"}
-{"qid": 346, "question": "List all the card id and artist with unknown power which are legal for commander play format.", "evidence": "unknown power refers to power = '*' or POWER IS NULL; commander play format refers to format = 'commander'; legal for commander play format refers to format = 'commander' where status = 'Legal'"}
-{"qid": 347, "question": "Find all cards illustrated by Stephen Daniel and describe the text of the ruling of these cards. State if these cards have missing or degraded properties and values.", "evidence": "cards have missing or degraded properties and value refers to hasContentWarning = 1; 'Stephen Daniele' is artist; Find all cards refers to return card id"}
-{"qid": 349, "question": "Name the card and artist with the most ruling information. Also state if the card is a promotional printing.", "evidence": "with the most ruling information refers to Max(count(rulings.uuid)); the card is the promotional printing refers to isPromo = 1;"}
-{"qid": 352, "question": "Calculate the percentage of the cards availabe in Chinese Simplified.", "evidence": "Chinese Simplified' is the language; percentage = Divide(Sum(id where language = 'Chinese Simplified'), Count(id)) *100"}
-{"qid": 356, "question": "How many cards have infinite power?", "evidence": "infinite power refers to power = '*';"}
-{"qid": 358, "question": "What is the border color of card \"Ancestor's Chosen\"?", "evidence": "name of card  = 'Ancestor''s Chosen' ;"}
-{"qid": 366, "question": "What is the rule of playing card \"Benalish Knight\"?", "evidence": "Benalish Knight' is the name of card; rule of playing card refers to format;"}
-{"qid": 368, "question": "What is the percentage of borderless cards?", "evidence": "borderless card refers to borderColor = 'borderless'; percentage = Divide(Count (id) where borderColor = 'borderless', Count(id)) *100"}
-{"qid": 371, "question": "What is the percentage of cards whose language is French among the Story Spotlight cards?", "evidence": "Story Spotlight card refers to isStorySpotlight = 1; French is the language; Percentage = Divide(Count(id) where language = 'French' and isStorySpotlight = 1, Count(id) where isStorySpotlight = 1)*100"}
-{"qid": 377, "question": "How many cards with original type of \"Summon - Angel\" have subtype other than \"Angel\"?", "evidence": "subtype other than Angel refers to subtypes is not 'Angel';"}
-{"qid": 379, "question": "What are the cards belong to duel deck a? List the ID.", "evidence": "duel deck a refers to duelDeck = a;"}
-{"qid": 383, "question": "How many of the banned cards are white border?", "evidence": "banned card refers to status = 'Banned'; white border refers to borderColor = 'white';"}
-{"qid": 391, "question": "Among the Artifact cards, which are black color and comes with foreign languague translation?", "evidence": "Artifact card refers to originalType = 'Artifact'; black color refers to colors = 'B'; foreign language refers to language in foreign_data"}
-{"qid": 397, "question": "What is the mana cost of cards with a normal layout, a 2003 frame version, with a black border color, and available in paper and mtgo?", "evidence": "available in paper and mtgo refers to availability = 'mtgo,paper'; frameVersion = 2003;borderColor = 'black'"}
-{"qid": 402, "question": "What is the percentage of Story Spotlight cards that do not have a text box? List them by their ID.", "evidence": "Story Spotlight cards that do not have a text box refers to isStorylight = 1 and isTextless = 0; Percentage = DIVIDE(SUM(count(id) where isStorylight = 1 AND isTextless = 0 ), SUM(count(id))) * 100"}
-{"qid": 405, "question": "How many Brazilian Portuguese translated sets are inside the Commander block?", "evidence": "Commander block refer to block = 'Commander'; sets refer to code = setCode; Portuguese refer to language = 'Portuguese (Brasil)'"}
-{"qid": 407, "question": "Lists all types of cards in German.", "evidence": "German refer to language; all types refer to the subtypes, supertypes; subtypes is not null AND supertypes is not null"}
-{"qid": 408, "question": "How many unknown power cards contain info about the triggered ability", "evidence": "unknown power cards refers to power is null or power = '*';contain info about the triggered ability refers to text contains 'triggered ability'"}
-{"qid": 409, "question": "Indicates the number of cards with pre-modern format, ruling text \"This is a triggered mana ability.\" that do not have multiple faces.", "evidence": "pre-modern format refers to format = 'premodern' ;do not have multiple faces refers to side IS NULL"}
-{"qid": 412, "question": "What is the foreign name of the card in French of type Creature, normal layout and black border color, by artist Matthew D. Wilson?", "evidence": "in French refers to language = 'French'; black border color refers to borderColor = 'black'"}
-{"qid": 414, "question": "What language is the set of 180 cards that belongs to the Ravnica block translated into?", "evidence": "set of 180 cards refers to baseSetSize = 180"}
-{"qid": 415, "question": "What percentage of cards with format commander and legal status do not have a content warning?", "evidence": "do not have a content warning refers to hasContentWarning = 0; percentage refers to DIVIDE(COUNT(hasContentWarning = 0),COUNT(ID))*100 where format = 'commander' AND Status = 'legal';"}
-{"qid": 416, "question": "What percentage of cards without power are in French?", "evidence": "in French refers to language = 'French'; cards without power refers to power IS NULL OR power = '*'; percentage = DIVIDE(COUNT(language = 'French' and power is NULL or power = '*'), COUNT( power is NULL or power = '*'))*100"}
-{"qid": 422, "question": "What is the language of the card with the multiverse number 149934?", "evidence": "multiverse number 149934 refers to multiverseid = 149934;"}
-{"qid": 424, "question": "What proportion of cards do not have a text box with a normal layout?", "evidence": "do not have a text box refers to isTextless = 1; proportion refers to DIVIDE(COUNT(Textless = 1 and layout = 'normal'),COUNT(Textless))*100"}
-{"qid": 427, "question": "What languages are available in the set known as Archenemy on the magic card market and having the code ARC?", "evidence": "known as Archenemy refers to mcmName = 'Archenemy'; having the code ARC refers to setCode = 'ARC'"}
-{"qid": 440, "question": "Which foreign language used by \"A Pedra Fellwar\"?", "evidence": "\"A Pedra Fellwar\" refers to name = 'A Pedra Fellwar'"}
-{"qid": 459, "question": "Which card costs more converted mana, \"Serra Angel\" or \"Shrine Keeper\"?", "evidence": "\"Serra Angel\" refers to name = 'Serra Angel'; \"Shrine Keeper\" refers to name = 'Shrine Keeper'; card costs more converted mana when the value of convertedManaCost is greater"}
-{"qid": 462, "question": "What's the Italian name of the set of cards with \"Ancestor's Chosen\" is in?", "evidence": "Italian is a language which refers to language = 'Italian'; with \"Ancestor's Chosen\" in the card set refers to name = 'Ancestor''s Chosen'"}
-{"qid": 465, "question": "For the set of cards with \"Ancestor's Chosen\" in it, is there a Korean version of it?", "evidence": "set of cards with \"Ancestor''s Chosen\" in it refers to name = 'Ancestor''s Chosen'; Korean version refers to language = 'Korean'"}
-{"qid": 466, "question": "Among the cards in the set \"Hauptset Zehnte Edition\", how many of them are designed by Adam Rex?", "evidence": "card set \"Hauptset Zehnte Edition\" refers to translation = 'Hauptset Zehnte Edition'; designed by Adam refers to artist = 'Adam Rex'"}
-{"qid": 468, "question": "What is the Simplified Chinese translation of the name of the set \"Eighth Edition\"?", "evidence": "Eighth Edition is the name of card set which refers to name = 'Eighth Edition'; Simplified Chinese refers to language = 'Chinese Simplified'; translation of the name refers to translation"}
-{"qid": 469, "question": "Did the set of cards with \"Angel of Mercy\" appear on Magic: The Gathering Online?", "evidence": "card set \"Angel of Mercy\" refers to name = 'Angel of Mercy'; appear on Magic: The Gathering Online refers to mtgoCode is NOT NULL and vice versa"}
-{"qid": 472, "question": "Among the sets in the block \"Ice Age\", how many of them have an Italian translation?", "evidence": "sets in the block \"Ice Age\" refers to block = 'Ice Age'; Italian translation refers to language = 'Italian' and translation is not null"}
-{"qid": 473, "question": "Is the set of cards with Adarkar Valkyrie only available outside the United States?", "evidence": "card set Adarkar Valkyrie refers to name = 'Adarkar Valkyrie'; isForeignOnly = 1 means only available outside the United States;"}
-{"qid": 474, "question": "Among the sets of cards that have an Italian translation, how many of them have a base set number of under 100?", "evidence": "Italian translation refers to language = 'Italian'; have a translation means translation is not null; base set number of under 100 refers to baseSetSize < 10"}
-{"qid": 477, "question": "Which of these artists have designed a card in the set Coldsnap, Jeremy Jarvis, Aaron Miller or Chippy?", "evidence": "card set Coldsnap refers to name = 'Coldsnap'; Jeremy Jarvis, Aaron Miller or Chippy are the name of artists which refers to artist IN ('Jeremy Jarvis', 'Aaron Miller','Chippy');"}
-{"qid": 479, "question": "Among the cards with converted mana cost higher than 5 in the set Coldsnap, how many of them have unknown power?", "evidence": "card set Coldsnap refers to name = 'Coldsnap'; converted mana cost higher than 5 refers to convertedManaCost > 5; unknown power refers to power = '*' or T1.power is null"}
-{"qid": 480, "question": "What is the Italian flavor text of the card \"Ancestor's Chosen\"?", "evidence": "Italian refers to language = 'Italian'; flavor text refers to flavorText; \"Ancestor''s Chosen\" refers to name = 'Ancestor''s Chosen'"}
-{"qid": 483, "question": "Please list the Italian text ruling of all the cards in the set Coldsnap.", "evidence": "card set Coldsnap refers to name = 'Coldsnap'; Italian refers to language = 'Italian'"}
-{"qid": 484, "question": "Please list the Italian names of the cards in the set Coldsnap with the highest converted mana cost.", "evidence": "card set Coldsnap refers to name = 'Coldsnap'; Italian refers to language = 'Italian'; highest converted mana cost refers to MAX(convertedManaCost)"}
-{"qid": 486, "question": "What is the percentage of the cards with a converted mana cost of 7 in the set Coldsnap?", "evidence": "converted mana cost of 7 refers to convertedManaCost = 7; card set Coldsnap refers to name = 'Coldsnap'; percentage = DIVIDE(SUM(convertedManaCost = 7), SUM(convertedManaCost))*100"}
-{"qid": 487, "question": "What is the percentage of incredibly powerful cards in the set Coldsnap?", "evidence": "card set Coldsnap refers to name = 'Coldsnap'; foil is incredibly powerful refers to cardKingdomFoilId is not null AND cardKingdomId is not null; the percentage of incredibly powerful cards in the set refers to DIVIDE(SUM(incredibly powerful), SUM(name = 'Coldsnap'))*100"}
-{"qid": 518, "question": "Which of the play format has the highest number of banned status? Indicate the play format and the names of all the card meet the condition.", "evidence": "play format refers to format; banned status refers to status = 'Banned'; the highest number of banned status refers to MAX(COUNT(status = 'Banned'))"}
-{"qid": 522, "question": "Which cards are ranked 1st on EDHRec? List all of the cards name and its banned play format.", "evidence": "ranked 1st on EDHRec refers to edhrecRank = 1; banned refers to status = 'Banned'; play format refers to format; cards name refers to name"}
-{"qid": 528, "question": "List the names of all the cards in the set Hour of Devastation and find the formats in which these cards are legal.", "evidence": "the set Hour of Devastation refers to set.name = 'Hour of Devastation'; names of all the cards in the set refers to cards.name; legal cards refers to status = 'Legal'; the formats refers to format"}
-{"qid": 529, "question": "Find and list the names of sets which doesn't have Japanese translation but have Korean translation.", "evidence": "names of sets refers to name; doesn't have Japanese translation refers to language not like '%Japanese%'; have Korean translation refers to language = 'Korean'"}
-{"qid": 530, "question": "List all the frame styles and cards Allen Williams worked on and find any banned cards if there are any.", "evidence": "frame styles refers to frameVersion; cards Allen Williams worked on refers to artist = 'Allen Williams'; banned cards refers to status = 'Banned'"}
+[
+  {
+    "kid": 21,
+    "knowledge": "Multiple Printings: The same card (same name) can have multiple printing versions, each with a different uuid. When a question asks about 'versions', 'printings', or 'different' cards of the same name, use uuid to distinguish individual printings. The cards.id field is a row identifier, not a card identity — use name for card identity, uuid for specific printings.",
+    "source_qids": [344, 345, 347, 356, 383, 391, 397, 402, 408, 409, 424]
+  },
+  {
+    "kid": 22,
+    "knowledge": "Foil Cards: 'Incredibly powerful foils' or 'powerful foils' refers to cards that have BOTH a Card Kingdom foil ID and a Card Kingdom ID (both columns non-null). A card with only one of these is not considered a powerful foil.",
+    "source_qids": [340, 341, 487]
+  },
+  {
+    "kid": 23,
+    "knowledge": "Power & Toughness Values: 'Infinite power' means the power column has the value '*'. 'Unknown power' or 'without power' means power is NULL or '*' (the value is not a numeric stat). Same logic applies to toughness — 'infinite toughness' refers to toughness = '*'.",
+    "source_qids": [356, 408, 416, 479]
+  },
+  {
+    "kid": 24,
+    "knowledge": "Colors: Card colors are stored in the 'colors' column (e.g., 'B' = black, 'W' = white, 'R' = red, 'G' = green, 'U' = blue). The 'colorIdentity' column indicates the colors in the card's mana cost and rules text. When a question mentions a specific color, search in the 'colors' column.",
+    "source_qids": [340, 358, 368, 383, 397, 402, 409, 416, 469]
+  },
+  {
+    "kid": 25,
+    "knowledge": "Artifact Type & Rarity: 'Artifact type' can appear in either the 'types' column or the 'originalType' column — check both when filtering for Artifacts. 'Mythic rarity' refers to rarity = 'mythic'. 'Rare' refers to rarity = 'rare'. 'Uncommon' refers to rarity = 'uncommon'. 'Common' refers to rarity = 'common'.",
+    "source_qids": [344, 345, 377, 391]
+  },
+  {
+    "kid": 26,
+    "knowledge": "Legality & Play Formats: Card legality in play formats (e.g., 'commander', 'vintage', 'gladiator', 'premodern') is stored in the legalities table. Each row is one card-format pair. 'Banned' means status = 'Banned', 'Legal' means status = 'Legal'. A card may be legal in one format and banned in another.",
+    "source_qids": [344, 346, 366, 409, 415, 518, 522, 528]
+  },
+  {
+    "kid": 27,
+    "knowledge": "Sets & Blocks: Card sets are stored in the 'sets' table and grouped by 'block' (e.g., 'Commander', 'Ice Age'). The cards.setCode column links to sets.code. baseSetSize is the number of cards in a set. A set's block can span multiple sets.",
+    "source_qids": [405, 414, 427, 472, 474]
+  },
+  {
+    "kid": 28,
+    "knowledge": "Foreign Languages: Non-English card versions are stored in the 'foreign_data' table (per individual card) and 'set_translations' table (per set). Languages include 'Chinese Simplified', 'French', 'German', 'Italian', 'Portuguese (Brasil)', 'Korean', 'Japanese', 'Spanish', 'Russian'. When a question asks about a specific language version, join the appropriate table.",
+    "source_qids": [352, 371, 391, 407, 412, 427, 462, 465, 468]
+  },
+  {
+    "kid": 29,
+    "knowledge": "Text Search: When looking for cards with specific rules text (e.g., 'triggered ability', 'flying', 'haste'), use LIKE '%phrase%' on the 'text' column. The 'originalText' column contains the original printed text before errata.",
+    "source_qids": [346, 479]
+  }
+]

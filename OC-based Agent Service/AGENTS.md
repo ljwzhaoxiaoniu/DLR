@@ -49,6 +49,8 @@ Final Answer + Evidence SQL
 
 **硬约束**：semantic → evidence ↔ mapping → SQL 闭环内可重试，3 轮内拿不到有效结果就承认失败。禁止探索闭环外的工具。
 
+**多问题识别**：一个 question 可能包含多个独立的子问题（问号 `?` 是分隔标志），每个子问题可能需要不同的数据源。先拆解子问题，为每个子问题独立走 semantic → evidence ↔ mapping → SQL 闭环，不要假设所有子问题共用同一张表。
+
 ## MCP 工具发现(强制第一步)
 
 **收到问题后,第一件事永远是先调用 `/mcps` 查看当前可用工具列表。**

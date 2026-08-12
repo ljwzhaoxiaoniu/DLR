@@ -249,19 +249,20 @@ FROM (
 | **正确结果** | `ORDER BY buildUpPlaySpeed DESC LIMIT 4` → 最高值 [80, 78, 78, 77] |
 | **验证** | 三范式一致输出 80/78/78/77。2026-07-24 修正 cache。 |
 
-### qid 1529 — `debit_card_specializing`（gold JOIN 笛卡尔积→子查询修复，仍有语义瑕疵）
+### qid 1529 — `debit_card_specializing`（gold 已全量修正，2026-08-12）
 
 - **问题**：What is the amount spent by customer "38508" at the gas stations? How much had the customer spent in January 2012?
-- **evidence**：January 2012 refers to the Date value = '201201'.
-- **Gold SQL**：`SELECT (SELECT SUM(Price) FROM transactions_1k WHERE CustomerID = '38508'), (SELECT Consumption FROM yearmonth WHERE CustomerID = '38508' AND Date = '201201')`
+- **evidence**：January 2012 refers to the Date value = '201201'. yearmonth.Consumption is the total monthly spending per customer across all gas stations. transactions_1k is a 1000-row sample of individual transactions for detail lookup.
+- **Gold SQL**：`SELECT (SELECT SUM(Consumption) FROM yearmonth WHERE CustomerID = '38508'), (SELECT Consumption FROM yearmonth WHERE CustomerID = '38508' AND Date = '201201')`
 
 | | 内容 |
 |---|---|
-| **Bug 1（已修复）** | 原版 gold 用 `transactions_1k JOIN yearmonth ON CustomerID` → 8×20=160 行笛卡尔积，`SUM(Price)` 膨胀 20 倍 |
-| **Bug 2（残留）** | `SUM(Price)` 是单价之和（3,437.01），题目问 "amount spent" 应为 `SUM(Price * Amount)`（88,612.38）。gold 把单价当花费，语义偏差 |
-| **题目设计** | 两个无关子问题强行拼成一道题："加油站花费"（来自 transactions_1k 样例表）+"一月消费"（来自 yearmonth 全集表）。两张表粒度不同，不应 JOIN。Agent 应写两条独立 SQL |
-| **正确结果（cache）** | [[3437.01, 67156.94]]（2026-07-23 修正） |
-| **范式表现** | ER strict PASS（分步查询碰巧对）；DLR/RDF INCORRECT（试图 JOIN 两表）——非建模问题，LLM 被题目误导。2026-07-31 重跑 |
+| **Bug 1（已修复）** | 原版 gold 用 `transactions_1k JOIN yearmonth ON CustomerID` → 8×20=160 行笛卡尔积，`SUM(Price)` 膨胀 20 倍。改为两个独立子查询 |
+| **Bug 2（已修复 2026-08-12）** | Gold 用 transactions_1k（1000行采样）的 `SUM(Price*Amount)` 当"总花费"，逻辑上 yearmonth 才是全量汇总。改为 `SUM(Consumption) FROM yearmonth` |
+| **题目设计** | 两个无关子问题强行拼成一道题，但两问都在 yearmonth 全量表中查 |
+| **正确结果（cache 待更新）** | `SUM(Consumption)` = 5,124,646.35 + January 2012 = 67,156.94 |
+
+
 
 
 ### qid 1531 — `debit_card_specializing`（gold SQL 与 evidence 公式矛盾）

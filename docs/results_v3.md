@@ -26,15 +26,15 @@ semantic → evidence ↔ mapping → SQL (ReAct 闭环)
 
 | 数据库 | 全量 | 已评 | 剩余 | 进度 |
 |--------|------|------|------|------|
-| debit_card_specializing | 30 | 18 | 12 | 46.7% |
+| debit_card_specializing | 30 | 30 | 0 | 73.3% |
 
-> **总结**：共测试 18 题 × 3 范式 = **54 题次**。
+> **总结**：共测试 30 题 × 3 范式 = **90 题次**。
 
 | 指标 | ER | DLR | RDF |
 |------|----|-----|-----|
-| CORRECT | 17/18 (94.4%) | **18/18 (100.0%)** | 16/18 (88.9%) |
-| strict PASS | 12/18 (66.7%) | 12/18 (66.7%) | 10/18 (55.6%) |
-| 平均 token | 86,582 | **58,501** (-32.4% vs ER) | 61,648 (-28.8% vs ER) |
+| CORRECT | 28/30 (93.3%) | **30/30 (100.0%)** | 28/30 (93.3%) |
+| strict PASS | 15/30 (50.0%) | 17/30 (56.7%) | 15/30 (50.0%) |
+| 平均 token | 74,893 (+29.1% vs DLR) | **58,009** | 83,701 (+44.3% vs DLR) |
 
 ---
 
@@ -48,8 +48,8 @@ semantic → evidence ↔ mapping → SQL (ReAct 闭环)
 | q1472 | FAIL | CORRECT | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | **53,090** | 62,565 | 80,595 | |
 | q1473 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 49,286 | **41,587** | 44,011 | |
 | q1476 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 53,378 | 44,913 | **44,605** | |
-| q1479 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **51,582** | 80,154 | 75,005 | |
-| q1480 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 59,182 | **47,359** | 62,058 | |
+| q1479 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 51,582 | **49,183** | 75,005 | |
+| q1480 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 39,936 | **34,944** | 42,597 | |
 | q1481 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 82,750 | **64,348** | 105,866 | |
 | q1482 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 71,609 | **35,038** | 64,035 | |
 | q1483 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 67,965 | 41,343 | **32,567** | |
@@ -59,8 +59,20 @@ semantic → evidence ↔ mapping → SQL (ReAct 闭环)
 | q1493 | FAIL | INCORRECT | PASS |  | FAIL | INCORRECT | INCORRECT | CORRECT | INCORRECT | 84,348 | **43,912** | 54,980 | |
 | q1498 | PASS |  | PASS |  | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | 40,575 | **33,011** | 41,165 | |
 | q1500 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 296,925 | **91,009** | 137,947 | |
-| q1501 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 284,472 | 240,304 | **101,920** | |
+| q1501 | FAIL | INCORRECT | PASS |  | PASS |  | INCORRECT | CORRECT | CORRECT | **139,390** | 203,402 | 662,935 | |
 | q1505 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 52,222 | **33,583** | 54,202 | |
-| q1506 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 65,276 | 54,094 | **32,518** | |
+| q1506 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 65,276 | 35,255 | **32,518** | |
+| q1507 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 71,141 | **36,083** | 40,133 | |
+| q1509 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 55,515 | **46,550** | 49,526 | |
+| q1514 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 53,602 | **45,882** | 52,963 | |
+| q1515 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 81,216 | 97,934 | **55,719** | |
+| q1521 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 42,742 | 58,250 | **32,219** | |
+| q1524 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 104,345 | **64,345** | 290,219 | |
+| q1525 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 60,680 | 91,095 | **45,442** | |
+| q1526 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 79,796 | 90,476 | **64,627** | |
+| q1528 | FAIL | CORRECT | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 67,498 | 74,599 | **63,801** | |
+| q1529 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 68,754 | 38,731 | **34,419** | |
+| q1531 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 67,268 | **38,547** | 60,394 | |
+| q1533 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 100,080 | 103,879 | **70,366** | |
 > **Token = input_tokens + output_tokens**
 > **数据来源**: `validated_results/v3_final/agent_stats.csv`

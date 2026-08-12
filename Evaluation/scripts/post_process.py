@@ -141,6 +141,14 @@ def update_results_md(pair_label, new_rows, validated_dir):
             continue
         with open(csv_path, encoding="utf-8") as f:
             for r in csv.DictReader(f):
+                # 兼容 parse_agent_stats.py 旧格式
+                if "question_id" in r and "q_id" not in r:
+                    r["q_id"] = r["question_id"]
+                if "tokens_total" in r and "total_tokens" not in r:
+                    r["total_tokens"] = r["tokens_total"]
+                # 统一 paradigm 为小写
+                if "paradigm" in r:
+                    r["paradigm"] = r["paradigm"].lower()
                 all_rows.append(r)
 
     # 同 qid+paradigm 去重（后出现的覆盖）
@@ -148,6 +156,7 @@ def update_results_md(pair_label, new_rows, validated_dir):
     for r in all_rows:
         dedup[(r["q_id"], r["paradigm"])] = r
     for r in new_rows:
+        r["paradigm"] = r["paradigm"].lower()
         dedup[(str(r["q_id"]), r["paradigm"])] = {**r, "q_id": str(r["q_id"])}
     all_rows = list(dedup.values())
 
@@ -228,8 +237,8 @@ def update_results_md(pair_label, new_rows, validated_dir):
     md_text = re.sub(r'\*\*\d+ 题次\*\*', f'**{total_runs} 题次**', md_text)
 
     # 替换汇总表 — 整行替换，加 ^\n 锚点防止匹配明细行
-    dlr_vs_er_pct = (dlr_tok - er_tok) / er_tok * 100 if er_tok else 0
-    rdf_vs_er_pct = (rdf_tok - er_tok) / er_tok * 100 if er_tok else 0
+    er_vs_dlr_pct = (er_tok - dlr_tok) / dlr_tok * 100 if dlr_tok else 0
+    rdf_vs_dlr_pct = (rdf_tok - dlr_tok) / dlr_tok * 100 if dlr_tok else 0
     md_text = re.sub(
         r'(\n\| CORRECT \|).*(\|)',
         rf'\1 {er_c}/{n} ({er_c/n*100:.1f}%) | **{dlr_c}/{n} ({dlr_c/n*100:.1f}%)** | {rdf_c}/{n} ({rdf_c/n*100:.1f}%) \2',
@@ -242,12 +251,12 @@ def update_results_md(pair_label, new_rows, validated_dir):
     )
     md_text = re.sub(
         r'(\n\| 平均 token \|).*(\|)',
-        rf'\1 {er_tok:,.0f} | **{dlr_tok:,.0f}** ({dlr_vs_er_pct:+.1f}% vs ER) | {rdf_tok:,.0f} ({rdf_vs_er_pct:+.1f}% vs ER) \2',
+        rf'\1 {er_tok:,.0f} ({er_vs_dlr_pct:+.1f}% vs DLR) | **{dlr_tok:,.0f}** | {rdf_tok:,.0f} ({rdf_vs_dlr_pct:+.1f}% vs DLR) \2',
         md_text
     )
 
     md_path.write_text(md_text, encoding="utf-8")
-    print(f"[OK] 更新 {md_path}  ({n}题/{total_runs}题次, DLR:{dlr_tok:,.0f}tok {dlr_vs_er:+.1f}% vs ER)")
+    print(f"[OK] 更新 {md_path}  ({n}题/{total_runs}题次, DLR:{dlr_tok:,.0f}tok, ER +{er_vs_dlr_pct:.1f}%, RDF +{rdf_vs_dlr_pct:.1f}%)")
 
 
 if __name__ == "__main__":

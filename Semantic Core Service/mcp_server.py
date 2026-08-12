@@ -541,7 +541,7 @@ def _rdf_sparql(query: str) -> dict:
 # ===================================================================
 
 # Plain function definitions (no decorator) — registered in _register_dlr_tools()
-def dlr_semantic_query(question: str, top_k: int = 3, threshold: float = 0.5, db: str = "") -> dict:
+def dlr_semantic_query(question: str, top_k: int = 10, threshold: float = 0.5, db: str = "") -> dict:
     """[DLR] 语义召回 → 返回结构体(LE-PE 复合,无物理表/字段).
 
     db: 可选,数据库名过滤. 首次调用留空做全局召回,用于判断问题属于哪个数据库;
@@ -570,10 +570,12 @@ def dlr_semantic_query(question: str, top_k: int = 3, threshold: float = 0.5, db
         for pe_id in child_pe_ids:
             pe = gdb.get_physical_entity_by_id(pe_id)
             if pe:
+                pe_semantic = pe.get("arcs", {}).get("S_semantic4arcs", "") or pe.get("description", "")
                 pes.append({
                     "physical_entity_id": pe_id,
                     "pe_name": pe.get("name", ""),
                     "db": (pe.get("physical_table_id") or "").split(".", 1)[0],
+                    "description": pe_semantic,
                 })
         attrs = gdb.get_logical_entity_attributes(le_id)
         structures.append({

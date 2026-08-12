@@ -14,12 +14,12 @@ entities:
   attributes:
   - attr_id: card_games.cards.id
     biz_name: id
-    description: ''
+    description: 'Unique id for the card printing'
     physical_column_id: card_games.cards.id
     data_type: integer
   - attr_id: card_games.cards.artist
     biz_name: artist
-    description: ''
+    description: 'The name of the artist that illustrated the card art.'
     physical_column_id: card_games.cards.artist
     data_type: text
   - attr_id: card_games.cards.asciiName
@@ -29,22 +29,22 @@ entities:
     data_type: text
   - attr_id: card_games.cards.availability
     biz_name: availability
-    description: ''
+    description: 'A list of the card''s available printing types.'
     physical_column_id: card_games.cards.availability
     data_type: text
   - attr_id: card_games.cards.borderColor
     biz_name: borderColor
-    description: ''
+    description: 'The border color of the card: ''black'', ''white'', ''borderless''.'
     physical_column_id: card_games.cards.borderColor
     data_type: text
   - attr_id: card_games.cards.cardKingdomFoilId
     biz_name: cardKingdomFoilId
-    description: ''
+    description: 'The foil listing ID on Card Kingdom marketplace. Non-null when the card has a foil version available.'
     physical_column_id: card_games.cards.cardKingdomFoilId
     data_type: text
   - attr_id: card_games.cards.cardKingdomId
     biz_name: cardKingdomId
-    description: ''
+    description: 'The listing ID on Card Kingdom marketplace.'
     physical_column_id: card_games.cards.cardKingdomId
     data_type: text
   - attr_id: card_games.cards.colorIdentity
@@ -59,22 +59,22 @@ entities:
     data_type: text
   - attr_id: card_games.cards.colors
     biz_name: colors
-    description: ''
+    description: 'The colors of the card. e.g. ''B'' refers to black color.'
     physical_column_id: card_games.cards.colors
     data_type: text
   - attr_id: card_games.cards.convertedManaCost
     biz_name: convertedManaCost
-    description: ''
+    description: 'The converted mana cost of the card. used to compare which card costs more.'
     physical_column_id: card_games.cards.convertedManaCost
     data_type: real
   - attr_id: card_games.cards.duelDeck
     biz_name: duelDeck
-    description: ''
+    description: 'The duel deck identifier. e.g. ''duel deck a'' refers to duelDeck = a.'
     physical_column_id: card_games.cards.duelDeck
     data_type: text
   - attr_id: card_games.cards.edhrecRank
     biz_name: edhrecRank
-    description: ''
+    description: 'The rank on EDHRec. ranked 1st on EDHRec refers to edhrecRank = 1.'
     physical_column_id: card_games.cards.edhrecRank
     data_type: integer
   - attr_id: card_games.cards.faceConvertedManaCost
@@ -94,7 +94,7 @@ entities:
     data_type: text
   - attr_id: card_games.cards.flavorText
     biz_name: flavorText
-    description: ''
+    description: 'The flavor text of the card.'
     physical_column_id: card_games.cards.flavorText
     data_type: text
   - attr_id: card_games.cards.frameEffects
@@ -104,7 +104,7 @@ entities:
     data_type: text
   - attr_id: card_games.cards.frameVersion
     biz_name: frameVersion
-    description: ''
+    description: 'The frame version. e.g. frameVersion = 2003.'
     physical_column_id: card_games.cards.frameVersion
     data_type: text
   - attr_id: card_games.cards.hand
@@ -119,7 +119,7 @@ entities:
     data_type: integer
   - attr_id: card_games.cards.hasContentWarning
     biz_name: hasContentWarning
-    description: ''
+    description: 'Indicates if the card has missing or degraded properties and values. 1 means has warning.'
     physical_column_id: card_games.cards.hasContentWarning
     data_type: integer
   - attr_id: card_games.cards.hasFoil
@@ -154,7 +154,7 @@ entities:
     data_type: integer
   - attr_id: card_games.cards.isPromo
     biz_name: isPromo
-    description: ''
+    description: 'Indicates if the card is a promotional printing. 1 means it is promo.'
     physical_column_id: card_games.cards.isPromo
     data_type: integer
   - attr_id: card_games.cards.isReprint
@@ -174,12 +174,12 @@ entities:
     data_type: integer
   - attr_id: card_games.cards.isStorySpotlight
     biz_name: isStorySpotlight
-    description: ''
+    description: 'Indicates if the card is a Story Spotlight card. 1 means it is story spotlight.'
     physical_column_id: card_games.cards.isStorySpotlight
     data_type: integer
   - attr_id: card_games.cards.isTextless
     biz_name: isTextless
-    description: ''
+    description: 'Indicates if the card does not have a text box. 1 means it is textless.'
     physical_column_id: card_games.cards.isTextless
     data_type: integer
   - attr_id: card_games.cards.isTimeshifted
@@ -194,7 +194,7 @@ entities:
     data_type: text
   - attr_id: card_games.cards.layout
     biz_name: layout
-    description: ''
+    description: 'The layout of the card. e.g. ''normal''.'
     physical_column_id: card_games.cards.layout
     data_type: text
   - attr_id: card_games.cards.leadershipSkills
@@ -249,12 +249,12 @@ entities:
     data_type: text
   - attr_id: card_games.cards.multiverseId
     biz_name: multiverseId
-    description: ''
+    description: 'The multiverse id of the card.'
     physical_column_id: card_games.cards.multiverseId
     data_type: text
   - attr_id: card_games.cards.name
     biz_name: name
-    description: ''
+    description: 'The name of the card.'
     physical_column_id: card_games.cards.name
     data_type: text
   - attr_id: card_games.cards.number
@@ -274,7 +274,7 @@ entities:
     data_type: text
   - attr_id: card_games.cards.originalType
     biz_name: originalType
-    description: ''
+    description: 'The original type of the card. e.g. ''Artifact'', ''Summon - Angel''.'
     physical_column_id: card_games.cards.originalType
     data_type: text
   - attr_id: card_games.cards.otherFaceIds
@@ -284,7 +284,7 @@ entities:
     data_type: text
   - attr_id: card_games.cards.power
     biz_name: power
-    description: ''
+    description: 'The power value of the card. ''*'' means infinite power. NULL or ''*'' means unknown power.'
     physical_column_id: card_games.cards.power
     data_type: text
   - attr_id: card_games.cards.printings
@@ -304,7 +304,7 @@ entities:
     data_type: text
   - attr_id: card_games.cards.rarity
     biz_name: rarity
-    description: ''
+    description: 'The rarity of the card. e.g. ''mythic''.'
     physical_column_id: card_games.cards.rarity
     data_type: text
   - attr_id: card_games.cards.scryfallId
@@ -324,22 +324,22 @@ entities:
     data_type: text
   - attr_id: card_games.cards.setCode
     biz_name: setCode
-    description: ''
+    description: 'The set code for the card. links to sets.code.'
     physical_column_id: card_games.cards.setCode
     data_type: text
   - attr_id: card_games.cards.side
     biz_name: side
-    description: ''
+    description: 'The side of the card. ''card does not have multiple faces on the same card'' refers to side is NULL.'
     physical_column_id: card_games.cards.side
     data_type: text
   - attr_id: card_games.cards.subtypes
     biz_name: subtypes
-    description: ''
+    description: 'The subtypes of the card. e.g. ''Angel''.'
     physical_column_id: card_games.cards.subtypes
     data_type: text
   - attr_id: card_games.cards.supertypes
     biz_name: supertypes
-    description: ''
+    description: 'The supertypes of the card.'
     physical_column_id: card_games.cards.supertypes
     data_type: text
   - attr_id: card_games.cards.tcgplayerProductId
@@ -349,7 +349,7 @@ entities:
     data_type: text
   - attr_id: card_games.cards.text
     biz_name: text
-    description: ''
+    description: 'The rules text of the card. Search for specific phrases like ''triggered ability'' within this field.'
     physical_column_id: card_games.cards.text
     data_type: text
   - attr_id: card_games.cards.toughness
@@ -364,12 +364,12 @@ entities:
     data_type: text
   - attr_id: card_games.cards.types
     biz_name: types
-    description: ''
+    description: 'The types of the card. e.g. ''Artifact''.'
     physical_column_id: card_games.cards.types
     data_type: text
   - attr_id: card_games.cards.uuid
     biz_name: uuid
-    description: ''
+    description: 'Unique identifier for a specific card printing.'
     physical_column_id: card_games.cards.uuid
     data_type: text
   - attr_id: card_games.cards.variations
@@ -395,12 +395,12 @@ entities:
     data_type: integer
   - attr_id: card_games.foreign_data.flavorText
     biz_name: flavorText
-    description: ''
+    description: 'The foreign flavor text of the card.'
     physical_column_id: card_games.foreign_data.flavorText
     data_type: text
   - attr_id: card_games.foreign_data.language
     biz_name: language
-    description: 'Foreign language: e.g. Chinese Simplified, Japanese, German, French'
+    description: 'The foreign language of card. e.g. ''Chinese Simplified'', ''French'', ''German'', ''Italian'', ''Portuguese (Brasil)''.'
     physical_column_id: card_games.foreign_data.language
     data_type: text
   - attr_id: card_games.foreign_data.multiverseid
@@ -410,12 +410,12 @@ entities:
     data_type: integer
   - attr_id: card_games.foreign_data.name
     biz_name: name
-    description: ''
+    description: 'The foreign name of the card.'
     physical_column_id: card_games.foreign_data.name
     data_type: text
   - attr_id: card_games.foreign_data.text
     biz_name: text
-    description: ''
+    description: 'The foreign text ruling of the card.'
     physical_column_id: card_games.foreign_data.text
     data_type: text
   - attr_id: card_games.foreign_data.type
@@ -440,12 +440,12 @@ entities:
     data_type: integer
   - attr_id: card_games.legalities.format
     biz_name: format
-    description: ''
+    description: 'The play format. e.g. ''commander'', ''vintage'', ''gladiator'', ''premodern''.'
     physical_column_id: card_games.legalities.format
     data_type: text
   - attr_id: card_games.legalities.status
     biz_name: status
-    description: ''
+    description: 'The status of the card in the format. ''Banned'', ''Legal''.'
     physical_column_id: card_games.legalities.status
     data_type: text
   - attr_id: card_games.legalities.uuid
@@ -466,12 +466,12 @@ entities:
     data_type: integer
   - attr_id: card_games.sets.baseSetSize
     biz_name: baseSetSize
-    description: ''
+    description: 'The number of cards in the set.'
     physical_column_id: card_games.sets.baseSetSize
     data_type: integer
   - attr_id: card_games.sets.block
     biz_name: block
-    description: ''
+    description: 'The block name the set was in. e.g. ''Commander'', ''Ice Age''.'
     physical_column_id: card_games.sets.block
     data_type: text
   - attr_id: card_games.sets.booster
@@ -481,7 +481,7 @@ entities:
     data_type: text
   - attr_id: card_games.sets.code
     biz_name: code
-    description: ''
+    description: 'The set code. e.g. ''ARC''.'
     physical_column_id: card_games.sets.code
     data_type: text
   - attr_id: card_games.sets.isFoilOnly
@@ -491,7 +491,7 @@ entities:
     data_type: integer
   - attr_id: card_games.sets.isForeignOnly
     biz_name: isForeignOnly
-    description: ''
+    description: 'Indicates if the set is only available outside the United States.'
     physical_column_id: card_games.sets.isForeignOnly
     data_type: integer
   - attr_id: card_games.sets.isNonFoilOnly
@@ -526,17 +526,17 @@ entities:
     data_type: integer
   - attr_id: card_games.sets.mcmName
     biz_name: mcmName
-    description: ''
+    description: 'The name of the set on the magic card market. e.g. ''Archenemy''.'
     physical_column_id: card_games.sets.mcmName
     data_type: text
   - attr_id: card_games.sets.mtgoCode
     biz_name: mtgoCode
-    description: ''
+    description: 'The code for Magic: The Gathering Online.'
     physical_column_id: card_games.sets.mtgoCode
     data_type: text
   - attr_id: card_games.sets.name
     biz_name: name
-    description: ''
+    description: 'The name of the set. e.g. ''Coldsnap'', ''Eighth Edition''.'
     physical_column_id: card_games.sets.name
     data_type: text
   - attr_id: card_games.sets.parentCode
@@ -577,7 +577,7 @@ entities:
     data_type: integer
   - attr_id: card_games.set_translations.language
     biz_name: language
-    description: ''
+    description: 'The language of the translation. e.g. ''Italian'', ''Chinese Simplified''.'
     physical_column_id: card_games.set_translations.language
     data_type: text
   - attr_id: card_games.set_translations.setCode
@@ -587,7 +587,7 @@ entities:
     data_type: text
   - attr_id: card_games.set_translations.translation
     biz_name: translation
-    description: ''
+    description: 'The translated name of the set. e.g. ''Hauptset Zehnte Edition''.'
     physical_column_id: card_games.set_translations.translation
     data_type: text
 - entity_id: card_games.rulings
@@ -608,7 +608,7 @@ entities:
     data_type: date
   - attr_id: card_games.rulings.text
     biz_name: text
-    description: ''
+    description: 'The text of the ruling.'
     physical_column_id: card_games.rulings.text
     data_type: text
   - attr_id: card_games.rulings.uuid

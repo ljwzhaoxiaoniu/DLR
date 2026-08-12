@@ -81,12 +81,17 @@
   },
   {
     "kid": 17,
-    "knowledge": "SME, LAM, and KAM are customer segment classifications. SME = Small and Medium Enterprises (business clients). LAM = mass-market retail customers. KAM = Key Account Managers (large corporate clients).",
-    "source_qids": [1486, 1490, 1493, 1498]
+    "knowledge": "CZK (Czech Koruna) and EUR (Euro) are billing currencies. CZK is the local Czech currency and the dominant payment method. EUR is the euro, used by a minority of customers.",
+    "source_qids": [1486, 1526]
   },
   {
     "kid": 18,
-    "knowledge": "CZK (Czech Koruna) and EUR (Euro) are billing currencies. CZK is the local Czech currency and the dominant payment method. EUR is the euro, used by a minority of customers.",
-    "source_qids": [1486, 1526]
+    "knowledge": "Customer Nationality & Individual Spending: A customer's 'nationality' in this domain means the country where the gas station is located (where the transaction occurred), not a field directly stored on the customer record. When a question asks about a customer who 'spent' or 'paid' a specific exact amount (e.g., 548.4), this refers to a single transaction's price amount, not the monthly aggregated consumption total. Single transaction price and monthly consumption are different concepts — one is a point-in-time purchase amount, the other is a month-level sum across all purchases.",
+    "source_qids": [1524]
+  },
+  {
+    "kid": 19,
+    "knowledge": "Data Granularity: yearmonth stores the total monthly spending per customer across all gas stations (full aggregated data, 383K rows). transactions_1k is a 1000-row sample of individual purchase records for transaction-level detail (specific time, product, price, gas station). When a question asks about a customer's total spending or monthly consumption, use yearmonth. When it asks about a specific transaction detail (exact time, specific product, price per item), use transactions_1k sample. The two tables are at different granularities — yearmonth is pre-aggregated monthly summaries, transactions_1k is raw transaction event samples.",
+    "source_qids": [1529, 1531]
   }
 ]
