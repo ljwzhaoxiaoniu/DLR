@@ -1,7 +1,0 @@
-mapping_type: "rdf"
-version: "1.0"
-scenario_name: rdf_codebase_community
-database: "codebase_community"
-ttl_path: "codebase_community.ttl"
-databases:
-  codebase_community: "sqlite:///../MINIDEV_sqlite/dev_databases/codebase_community/codebase_community.sqlite"

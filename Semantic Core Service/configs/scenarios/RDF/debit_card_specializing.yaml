@@ -1,7 +1,0 @@
-mapping_type: "rdf"
-version: "1.0"
-scenario_name: rdf_debit_card_specializing
-database: "debit_card_specializing"
-ttl_path: "debit_card_specializing.ttl"
-databases:
-  debit_card_specializing: "sqlite:///../MINIDEV_sqlite/dev_databases/debit_card_specializing/debit_card_specializing.sqlite"

@@ -1,7 +1,0 @@
-mapping_type: "rdf"
-version: "1.0"
-scenario_name: rdf_toxicology
-database: "toxicology"
-ttl_path: "toxicology.ttl"
-databases:
-  toxicology: "sqlite:///../MINIDEV_sqlite/dev_databases/toxicology/toxicology.sqlite"

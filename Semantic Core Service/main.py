@@ -42,6 +42,7 @@ def _resolve_preset(preset: str, paradigm: str):
 
     Returns (config_path, config_data, mapper) or (None, None, None).
     Storage is paradigm-level, resolved separately via paradigm_storage().
+    For RDF paradigm, TTL files are auto-detected without requiring a YAML wrapper.
     """
     base = SCENARIOS_DIR / paradigm
     config_path = None
@@ -50,6 +51,22 @@ def _resolve_preset(preset: str, paradigm: str):
         if candidate.exists():
             config_path = candidate
             break
+
+    # RDF: auto-detect TTL files without a YAML wrapper
+    if config_path is None and paradigm == "rdf":
+        ttl_candidate = base / f"{preset}.ttl"
+        if ttl_candidate.exists():
+            config_path = ttl_candidate
+            click.echo(f"[LOAD] {config_path.relative_to(SCENARIOS_DIR)}  (auto-detected TTL)")
+            db_path = f"sqlite:///../MINIDEV_sqlite/dev_databases/{preset}/{preset}.sqlite"
+            config_data = {
+                "mapping_type": "rdf",
+                "ttl_path": f"{preset}.ttl",
+                "scenario_name": f"rdf_{preset}",
+                "databases": {preset: db_path},
+            }
+            mapper = get_mapper("rdf")
+            return config_path, config_data, mapper
 
     if config_path is None:
         click.echo(f"[MISS] not found: {base}/{preset}.yaml")
@@ -69,14 +86,24 @@ def _resolve_preset(preset: str, paradigm: str):
 
 
 def _scan_paradigm_dir(paradigm: str):
-    """Return all YAML file paths under SCENARIOS_DIR / paradigm/."""
+    """Return all preset file paths under SCENARIOS_DIR / paradigm/.
+
+    For RDF paradigm, this includes standalone .ttl files (no YAML wrapper needed).
+    """
     base = SCENARIOS_DIR / paradigm
     if not base.exists():
         click.echo(f"[MISS] paradigm dir not found: {base}")
         return []
     files = sorted(base.glob("*.yaml")) + sorted(base.glob("*.yml"))
+    # RDF: also scan standalone TTL files (auto-detected by _resolve_preset)
+    if paradigm == "rdf":
+        ttl_files = sorted(base.glob("*.ttl"))
+        seen = {f.stem for f in files}
+        for ttl in ttl_files:
+            if ttl.stem not in seen:
+                files.append(ttl)
     if not files:
-        click.echo(f"[WARN] no YAML in: {base}")
+        click.echo(f"[WARN] no config files in: {base}")
     return files
 
 

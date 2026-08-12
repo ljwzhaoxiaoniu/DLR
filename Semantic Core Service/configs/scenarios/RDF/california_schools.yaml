@@ -1,7 +1,0 @@
-mapping_type: "rdf"
-version: "1.0"
-scenario_name: rdf_california_schools
-database: "california_schools"
-ttl_path: "california_schools.ttl"
-databases:
-  california_schools: "sqlite:///../MINIDEV_sqlite/dev_databases/california_schools/california_schools.sqlite"

@@ -1,7 +1,0 @@
-mapping_type: "rdf"
-version: "1.0"
-scenario_name: rdf_formula_1
-database: "formula_1"
-ttl_path: "formula_1.ttl"
-databases:
-  formula_1: "sqlite:///../MINIDEV_sqlite/dev_databases/formula_1/formula_1.sqlite"

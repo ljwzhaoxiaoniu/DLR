@@ -1,7 +1,0 @@
-mapping_type: "rdf"
-version: "1.0"
-scenario_name: rdf_financial
-database: "financial"
-ttl_path: "financial.ttl"
-databases:
-  financial: "sqlite:///../MINIDEV_sqlite/dev_databases/financial/financial.sqlite"

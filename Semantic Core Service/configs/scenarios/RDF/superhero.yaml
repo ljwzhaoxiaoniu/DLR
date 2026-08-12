@@ -1,7 +1,0 @@
-mapping_type: "rdf"
-version: "1.0"
-scenario_name: rdf_superhero
-database: "superhero"
-ttl_path: "superhero.ttl"
-databases:
-  superhero: "sqlite:///../MINIDEV_sqlite/dev_databases/superhero/superhero.sqlite"
