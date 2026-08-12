@@ -207,8 +207,9 @@ def update_results_md(pair_label, new_rows, validated_dir):
             s = f"{val:,}"
             return f"**{s}**" if val == min_t and val > 0 else s
 
+        db_name = er_r.get("db_id", dlr_r.get("db_id", rdf_r.get("db_id", "")))
         detail_lines.append(
-            f"| q{qid} | {er_sj} | {er_j} | {dlr_sj} | {dlr_j} | {rdf_sj} | {rdf_j} | "
+            f"| {db_name} | q{qid} | {er_sj} | {er_j} | {dlr_sj} | {dlr_j} | {rdf_sj} | {rdf_j} | "
             f"{er_r.get('verdict','')} | {dlr_r.get('verdict','')} | {rdf_r.get('verdict','')} | "
             f"{tok_str(er_t)} | {tok_str(dlr_t)} | {tok_str(rdf_t)} | |"
         )
@@ -217,12 +218,12 @@ def update_results_md(pair_label, new_rows, validated_dir):
     md_text = md_path.read_text(encoding="utf-8")
     import re
 
-    # 替换明细表：### debit_card_specializing 之后到 > **Token 之前
-    header = "| 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 备注 |"
-    sep    = "|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|------|"
+    # 替换明细表：第一个 ### 到 > **Token 之前
+    header = "| 数据库 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 备注 |"
+    sep    = "|------|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|------|"
     detail_block = header + "\n" + sep + "\n" + "\n".join(detail_lines)
     md_text = re.sub(
-        r"(### debit_card_specializing\n\n).*?(\n> \*\*Token)",
+        r"(### \w+\n\n).*?(\n> \*\*Token)",
         r"\1" + detail_block + r"\2",
         md_text, flags=re.DOTALL
     )

@@ -1,0 +1,8 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","340","card_games","PASS","","","CORRECT","100","","3478","587","441","52736","57242"
+"er","341","card_games","FAIL","CORRECT","PredSQL 条件 `NOT (cardKingdomFoilId IS NOT NULL AND cardKingdomId IS NOT NULL)` 与 GoldSQL `(cardKingdomFoilId IS NULL OR cardKingdomId IS NULL)` 逻辑等价，borderColor/borderless 映射正确，工具链 semantic_query→get_entity_mapping→get_entity_attributes→er_search_evidence→execute_sql 走正道且 database_url 来自映射，SQL 执行成功返回 52 张符合条件的无强力闪卡名单，按题意直接回答了问题（名字即题意答案，id/name 仅表现层差异，不扣分）。","CORRECT","100","","7739","1036","623","61696","71094"
+"dlr","340","card_games","PASS","","","CORRECT","100","","3192","352","454","31104","35102"
+"dlr","341","card_games","FAIL","CORRECT","五步全部通过——召回定位 cards 表，调用链走 semantic_query→映射→evidence→execute_sql 正道，database_url 为真实库路径，WHERE 谓词 NOT(两列非空) 与 Gold 的 (foil IS NULL OR id IS NULL) 逻辑等价且执行成功，最终按名字返回 52 张 borderless 非强闪卡，与 Gold 同集合、仅列选取不同且按题意去重，符合结果等价。","CORRECT","100","","4974","1464","2174","56192","64804"
+"rdf","340","card_games","PASS","","","CORRECT","100","","2422","534","673","40960","44589"
+"rdf","341","card_games","FAIL","CORRECT","全部五步通过——语义召回 cards 表、调用链走 semantic_query→get_rdf_mapping(返回 cardKingdomFoilId/cardKingdomId/borderColor 及真实 database_url)→execute_sql，PredSQL 的 NOT(双非空) 与 Gold 的 (IS NULL OR IS NULL) 德摩根等价且执行成功，返回按 name 去重的 52 张卡名正确回答""有哪些卡""（id 与 name 仅为表示形式差异，qid344 证据亦指示卡身份用 name）。
+```","CORRECT","100","","3725","1365","1428","51200","57718"
