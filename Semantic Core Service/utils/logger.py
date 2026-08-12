@@ -5,15 +5,15 @@ from config import LOG_LEVEL, LOG_FILE, LOG_DIR
 # 移除默认的日志处理器
 logger.remove()
 
-# 添加控制台日志
+# 添加控制台日志 — 仅 WARNING+ ，避免噪音淹没报错
 logger.add(
     sys.stdout,
-    level=LOG_LEVEL,
+    level="WARNING",
     format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
     enqueue=True
 )
 
-# 添加文件日志
+# 添加文件日志 — 正常级别，记录完整过程
 logger.add(
     LOG_FILE,
     level=LOG_LEVEL,
