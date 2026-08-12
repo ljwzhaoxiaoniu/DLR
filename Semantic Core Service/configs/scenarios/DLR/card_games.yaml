@@ -8,14 +8,14 @@ databases:
 logical_entities:
 - logical_entity_id: LOGICAL.Card
   biz_name: Card
-  description: Individual card entity
+  description: Individual card entity with attributes, printings, and game mechanics
   public_attributes:
   - attr_id: LOGICAL.Card.CardID
     biz_name: CardID
-    description: 'UUID: 卡牌全局唯一标识符'
+    description: The globally unique identifier for the card (UUID). Same card name may have multiple printings with different UUIDs.
   - attr_id: LOGICAL.Card.PrintID
     biz_name: PrintID
-    description: '打印ID: 卡牌整数主键，每张卡的具体印刷版本有唯一ID（同名卡的不同印刷版本用这个区分）'
+    description: The integer primary key for a specific printing version. Different printings of the same card name have different IDs.
   physical_entities:
   - physical_entity_id: PHYSICAL.Card
     physical_table_name: cards
@@ -32,86 +32,103 @@ logical_entities:
     - attr_id: card_games.cards.id
       biz_name: id
       physical_column_id: card_games.cards.id
-      description: '卡牌ID: 卡牌整数主键'
+      description: 'Unique identifier for a specific card printing.'
     - attr_id: card_games.cards.name
       biz_name: name
       physical_column_id: card_games.cards.name
-      description: '卡牌名称: 卡牌名称'
+      description: 'The name of the card.'
     - attr_id: card_games.cards.setCode
       biz_name: setCode
       physical_column_id: card_games.cards.setCode
-      description: '系列代码: 卡牌所属系列的代码'
+      description: 'The set code the card belongs to. Links to sets.code.'
     - attr_id: card_games.cards.borderColor
       biz_name: borderColor
       physical_column_id: card_games.cards.borderColor
-      description: '边框颜色: 卡牌边框颜色，borderless=无边框'
+      description: 'The border color of the card: black, white, borderless.'
     - attr_id: card_games.cards.rarity
       biz_name: rarity
       physical_column_id: card_games.cards.rarity
-      description: '稀有度: 卡牌稀有度'
+      description: 'The rarity of the card: common, uncommon, rare, mythic.'
     - attr_id: card_games.cards.convertedManaCost
       biz_name: convertedManaCost
       physical_column_id: card_games.cards.convertedManaCost
+      description: 'The converted mana cost of the card. Used to compare which card costs more.'
     - attr_id: card_games.cards.power
       biz_name: power
       physical_column_id: card_games.cards.power
+      description: 'The power value of the card. Special value ''*'' means infinite power.'
     - attr_id: card_games.cards.artist
       biz_name: artist
       physical_column_id: card_games.cards.artist
-      description: '画师: 卡牌插画画师名称'
+      description: 'The name of the artist that illustrated the card art.'
     - attr_id: card_games.cards.frameVersion
       biz_name: frameVersion
       physical_column_id: card_games.cards.frameVersion
+      description: 'The card frame version (e.g., 2003, 2015).'
     - attr_id: card_games.cards.layout
       biz_name: layout
       physical_column_id: card_games.cards.layout
+      description: 'The layout of the card (e.g., normal, split, flip, transform).'
     - attr_id: card_games.cards.types
       biz_name: types
       physical_column_id: card_games.cards.types
+      description: 'The types of the card (e.g., Artifact, Creature, Enchantment).'
     - attr_id: card_games.cards.originalType
       biz_name: originalType
       physical_column_id: card_games.cards.originalType
+      description: 'The original printed type of the card before errata.'
     - attr_id: card_games.cards.colors
       biz_name: colors
       physical_column_id: card_games.cards.colors
+      description: 'The colors of the card. B=Black, W=White, R=Red, G=Green, U=Blue.'
     - attr_id: card_games.cards.subtypes
       biz_name: subtypes
       physical_column_id: card_games.cards.subtypes
+      description: 'The subtypes of the card (e.g., Angel, Goblin, Equipment).'
     - attr_id: card_games.cards.supertypes
       biz_name: supertypes
       physical_column_id: card_games.cards.supertypes
+      description: 'The supertypes of the card (e.g., Legendary, Basic, Snow).'
     - attr_id: card_games.cards.hasContentWarning
       biz_name: hasContentWarning
       physical_column_id: card_games.cards.hasContentWarning
+      description: 'Indicates missing or degraded card properties. 1 = has content warning.'
     - attr_id: card_games.cards.isPromo
       biz_name: isPromo
       physical_column_id: card_games.cards.isPromo
+      description: 'Indicates promotional printing. 1 = promo card.'
     - attr_id: card_games.cards.isStorySpotlight
       biz_name: isStorySpotlight
       physical_column_id: card_games.cards.isStorySpotlight
+      description: 'Indicates a Story Spotlight card. 1 = story spotlight.'
     - attr_id: card_games.cards.isTextless
       biz_name: isTextless
       physical_column_id: card_games.cards.isTextless
+      description: 'Indicates the card has no text box. 1 = textless.'
     - attr_id: card_games.cards.edhrecRank
       biz_name: edhrecRank
       physical_column_id: card_games.cards.edhrecRank
+      description: 'The rank on EDHRec. Rank 1 means most popular.'
     - attr_id: card_games.cards.availability
       biz_name: availability
       physical_column_id: card_games.cards.availability
+      description: 'A list of available printing types for this card.'
     - attr_id: card_games.cards.cardKingdomFoilId
       biz_name: cardKingdomFoilId
       physical_column_id: card_games.cards.cardKingdomFoilId
-      description: 'CK闪卡ID: CardKingdom 平台闪卡ID，NULL=无闪卡版本'
+      description: 'The foil listing ID on Card Kingdom marketplace. Non-null when card has a foil version.'
     - attr_id: card_games.cards.cardKingdomId
       biz_name: cardKingdomId
       physical_column_id: card_games.cards.cardKingdomId
-      description: 'CK普通卡ID: CardKingdom 平台普通卡ID，NULL=无该平台版本'
+      description: 'The listing ID on Card Kingdom marketplace.'
     - attr_id: card_games.cards.side
       biz_name: side
       physical_column_id: card_games.cards.side
+      description: 'Which face of a double-faced card. NULL = single-faced card.'
     - attr_id: card_games.cards.duelDeck
       biz_name: duelDeck
       physical_column_id: card_games.cards.duelDeck
+      description: 'The duel deck identifier (e.g., a, b, c).'
 - logical_entity_id: LOGICAL.CardExtension
   biz_name: CardExtension
   description: Card extensions — format legality (commander/modern/legacy etc.) with status, official rulings (text/date), and foreign language translations; linked to card via uuid
@@ -178,11 +195,11 @@ logical_entities:
       physical_column_id: card_games.foreign_data.multiverseid
 - logical_entity_id: LOGICAL.CardSet
   biz_name: CardSet
-  description: Card expansion sets
+  description: Card expansion sets grouped by block
   public_attributes:
   - attr_id: LOGICAL.CardSet.SetID
     biz_name: SetID
-    description: '系列代码: 系列代码'
+    description: 'The set code (e.g., ARC, CMD).'
   physical_entities:
   - physical_entity_id: PHYSICAL.Set
     physical_table_name: sets
@@ -193,27 +210,32 @@ logical_entities:
     R: null
     C:
       LOGICAL.CardSet.SetID: card_games.sets.code
-    S: Set information
+    S: Set information — set name, block, size, and marketplace identifiers
     private_attributes:
     - attr_id: card_games.sets.name
       biz_name: name
       physical_column_id: card_games.sets.name
-      description: '系列名称: 卡牌系列名称'
+      description: 'The name of the set (e.g., Coldsnap, Eighth Edition).'
     - attr_id: card_games.sets.block
       biz_name: block
       physical_column_id: card_games.sets.block
+      description: 'The block name the set belongs to (e.g., Commander, Ice Age).'
     - attr_id: card_games.sets.baseSetSize
       biz_name: baseSetSize
       physical_column_id: card_games.sets.baseSetSize
+      description: 'The number of cards in the set.'
     - attr_id: card_games.sets.mcmName
       biz_name: mcmName
       physical_column_id: card_games.sets.mcmName
+      description: 'The name of the set on the Magic Card Market (e.g., Archenemy).'
     - attr_id: card_games.sets.mtgoCode
       biz_name: mtgoCode
       physical_column_id: card_games.sets.mtgoCode
+      description: 'The code for Magic: The Gathering Online.'
     - attr_id: card_games.sets.isForeignOnly
       biz_name: isForeignOnly
       physical_column_id: card_games.sets.isForeignOnly
+      description: 'Indicates the set is only available outside the United States.'
 - logical_entity_id: LOGICAL.SetTranslation
   biz_name: SetTranslation
   description: Set translations
