@@ -140,7 +140,7 @@ logical_entities:
     description: 'Format name: e.g. commander, modern, legacy, vintage, pauper, duel, premodern, penny'
   - attr_id: LOGICAL.CardExtension.LegalStatus
     biz_name: status
-    description: 'Legality status: Legal, Banned, Restricted'
+    description: 'The legality status of the card in this format: Legal, Banned, or Restricted.'
   - attr_id: LOGICAL.CardExtension.Language
     biz_name: language
     description: 'Foreign language: e.g. Chinese Simplified, Japanese, German, French'

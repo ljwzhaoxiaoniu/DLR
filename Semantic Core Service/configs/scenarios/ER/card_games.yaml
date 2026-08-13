@@ -445,7 +445,7 @@ entities:
     data_type: text
   - attr_id: card_games.legalities.status
     biz_name: status
-    description: 'The status of the card in the format. ''Banned'', ''Legal''.'
+    description: 'The legality status of the card in this format: Legal, Banned, or Restricted.'
     physical_column_id: card_games.legalities.status
     data_type: text
   - attr_id: card_games.legalities.uuid

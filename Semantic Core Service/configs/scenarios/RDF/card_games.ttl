@@ -123,7 +123,9 @@
     rr:subjectMap [ rr:template "http://example.org/card_games/{id}" ; rr:class ex:legalities ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/format> ; rr:objectMap [ rr:column "format" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/status> ; rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/status> ; rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ] ;
+        rdfs:label "Status"@en ;
+        rdfs:comment "The legality status of the card in this format: Legal, Banned, or Restricted."@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/uuid> ; rr:objectMap [ rr:column "uuid" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/refers_to_cards> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/card_games/cards> ; rr:joinCondition [ rr:child "uuid" ; rr:parent "uuid" ] ] ] .
 
