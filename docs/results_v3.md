@@ -47,9 +47,9 @@ semantic → evidence ↔ mapping → SQL (ReAct 闭环)
 |------|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|------|
 | card_games | q340 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 57,242 | **35,102** | 44,589 | |
 | card_games | q341 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 71,094 | 64,804 | **57,718** | |
-| card_games | q344 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 58,984 | 72,893 | **43,856** | ER=1652单独重跑(1643批撞库锁) |
-| card_games | q345 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 48,616 | 54,207 | **32,702** | status描述三范式统一后重跑(题面its歧义) |
-| card_games | q346 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 127,138 | **79,939** | 105,758 | ER=统一描述后重跑strict PASS |
+| card_games | q344 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 58,984 | 72,893 | **43,856** | |
+| card_games | q345 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 48,616 | 54,207 | **32,702** | its单数歧义诱导取众数：集合题面+枚举式status描述→Agent报"最频繁状态"；三范式status描述不一致是共因 |
+| card_games | q346 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 127,138 | **79,939** | 105,758 | 3万行列明细题：判口径为明细✓/GROUP_CONCAT全值✓/仅COUNT✗ |
 | card_games | q347 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 148,837 | **79,125** | 83,490 | |
 | debit_card_specializing | q1471 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 56,949 | **30,396** | 31,649 | |
 | debit_card_specializing | q1472 | FAIL | CORRECT | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | **53,090** | 62,565 | 80,595 | |
