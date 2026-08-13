@@ -34,8 +34,8 @@ semantic → evidence ↔ mapping → SQL (ReAct 闭环)
 | 指标 | ER | DLR | RDF |
 |------|----|-----|-----|
 | CORRECT | 34/36 (94.4%) | **36/36 (100.0%)** | 34/36 (94.4%) |
-| strict PASS | 16/36 (44.4%) | 19/36 (52.8%) | 16/36 (44.4%) |
-| 平均 token | 82,156 (+39.1% vs DLR) | **59,065** | 79,976 (+35.4% vs DLR) |
+| strict PASS | 17/36 (47.2%) | 19/36 (52.8%) | 16/36 (44.4%) |
+| 平均 token | 76,630 (+29.7% vs DLR) | **59,065** | 79,976 (+35.4% vs DLR) |
 
 ---
 
@@ -49,7 +49,7 @@ semantic → evidence ↔ mapping → SQL (ReAct 闭环)
 | card_games | q341 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 71,094 | 64,804 | **57,718** | |
 | card_games | q344 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 58,984 | 72,893 | **43,856** | ER=1652单独重跑(1643批撞库锁) |
 | card_games | q345 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 48,616 | 54,207 | **32,702** | status描述三范式统一后重跑(题面its歧义) |
-| card_games | q346 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 326,071 | **79,939** | 105,758 | ER=0812旧配置GROUP_CONCAT; DLR/RDF=统一描述后 |
+| card_games | q346 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 127,138 | **79,939** | 105,758 | ER=统一描述后重跑strict PASS |
 | card_games | q347 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 148,837 | **79,125** | 83,490 | |
 | debit_card_specializing | q1471 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 56,949 | **30,396** | 31,649 | |
 | debit_card_specializing | q1472 | FAIL | CORRECT | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | **53,090** | 62,565 | 80,595 | |
