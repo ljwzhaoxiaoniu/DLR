@@ -533,7 +533,7 @@ def _serve_one(paradigm: str, host: str, port: int):
     app = _build_serve_app(paradigm)
     access_host = "localhost" if host == "0.0.0.0" else host
     logger.info(f"[SERVE] {paradigm.upper()} -> http://{access_host}:{port}/  (API / MCP /mcp/sse)")
-    uvicorn.run(app, host=host, port=port, log_level="info")
+    uvicorn.run(app, host=host, port=port, log_level="warning", access_log=False)
 
 
 # ---------------------------------------------------------------------------
@@ -583,8 +583,26 @@ def _serve_all(host: str):
             **({"creationflags": 0x00000200} if sys.platform == "win32" else {}),
         )
         procs.append((p, port, proc))
-    click.echo(f"{'='*50}\n")
-    click.echo("3 个服务已全部拉起. Ctrl-C 全部退出.\n")
+    click.echo(f"{'='*50}")
+
+    # 等待服务真正启动（轮询 /mcp/sse 端点）
+    import time, urllib.request
+    for p, port, proc in procs:
+        url = f"http://localhost:{port}/mcp/sse"
+        click.echo(f"  等待 {p.upper()} :{port} 启动", nl=False)
+        for _ in range(60):  # 最多等 30s
+            time.sleep(0.5)
+            try:
+                r = urllib.request.urlopen(url, timeout=1)
+                if r.status == 200:
+                    click.echo(" ✓")
+                    break
+            except Exception:
+                pass
+        else:
+            click.echo(" ✗ (超时)")
+
+    click.echo("\n3 个服务已全部拉起. Ctrl-C 全部退出.\n")
 
     try:
         while True:

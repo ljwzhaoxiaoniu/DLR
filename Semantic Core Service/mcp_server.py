@@ -331,6 +331,11 @@ def _execute_sql(sql: str, database_url: str) -> dict:
     Agent 必须先通过 MCP 映射工具拿到 database_url, 再调用本工具.
     SELECT * 必须带 LIMIT;结果超 200 行截断(truncated=true).
 
+    💡 大结果集技巧: "List all" 类需要完整明细的大结果集,
+    用 GROUP_CONCAT(col1 || ':' || col2, '; ') 将全部值打包为一个字符串
+    (GROUP_CONCAT 不受行截断影响), 再用 COUNT(*) 核验完整性.
+    不要用 substr 分页逐块读取长字符串 — 会撑爆上下文.
+
     ⚠️ SQLite 整数除法: 整数/整数 会截断小数部分(如 3/2=1 而非 1.5).
     需要浮点结果时务必 CAST(x AS REAL) 或乘以 1.0.
     AVG() 内置函数不受影响(自动返回浮点).
@@ -1098,7 +1103,7 @@ _ER_TOOL_FUNCS = {
     "get_entity_mapping": get_entity_mapping,
     "find_shortest_path": find_shortest_path,
     # 表结构
-    "list_all_tables": list_all_tables,
+    # "list_all_tables": list_all_tables,  # 已禁用：全量 dump，Agent 应通过 semantic_query 发现表
     "get_table_schema": get_table_schema,
     # 统计
     "summary": summary,
