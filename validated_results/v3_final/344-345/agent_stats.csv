@@ -1,0 +1,8 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
+"er","344","card_games","FAIL","CORRECT","召回定位 card_games.cards/legalities 正确，走 semantic_query→映射→execute_sql 正道，首次带库名 SQL 失败后自查 sqlite_master 纠正重试成功，Pred 的 5 个 id(17983/18058/29523/38736/38737) 与 GoldResult 完全一致，多余 name/uuid 列不扣分。","CORRECT","100","","3687","882","783","53632","58984"
+"dlr","344","card_games","PASS","","","CORRECT","100","","9224","950","639","62080","72893"
+"rdf","344","card_games","FAIL","CORRECT","调用链语义查询→映射→证据→映射→execute_sql 走正道，database_url 与字段均来自映射，SQL 表达题意且执行成功，PredResult 完整含全部 GoldResult id(17983/18058/29523/38736/38737)，最终答案与 Gold 一致。","CORRECT","100","","2166","673","953","40064","43856"
+"er","345","card_games","FAIL","CORRECT","调用链走正道 semantic_query→get_entity_mapping→execute_sql，PredSQL 用映射字段正确表达题意（types='Artifact' AND side IS NULL AND format='vintage'）且执行成功，Agent 回答中的 Legal/Restricted/Banned 三个状态与 GoldResult 完全一致，额外附带的计数不扣分。","CORRECT","100","","3332","713","1819","42752","48616"
+"dlr","345","card_games","FAIL","CORRECT","五步全过——召回 card_games、走 semantic_query→get_pe_mapping→execute_sql 正道，mapping 返回真实 database_url，SQL 用 types='Artifact' AND side IS NULL AND format='vintage' 正确表达题意且执行成功，PredResult 含全部三个 vintage 状态(Banned/Restricted/Legal)，与 GoldResult 一致，多余计数列不扣分。","CORRECT","100","","4824","930","1093","47360","54207"
+"rdf","345","card_games","FAIL","CORRECT","调用链 semantic_query→get_rdf_mapping→execute_sql 走正道，映射字段(cards.types/side、legalities.format/status)与 database_url 均来自映射返回，SQL 成功执行且返回 status 集合 {Banned, Legal, Restricted} 与 GoldResult 完全一致，COUNT 列属多余信息不扣分。
+```","CORRECT","100","","1976","565","593","29568","32702"
