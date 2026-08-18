@@ -35,11 +35,6 @@
     "source_qids": [405, 414, 427, 472, 474]
   },
   {
-    "kid": 28,
-    "knowledge": "Foreign Languages: Non-English card versions are stored in the 'foreign_data' table (per individual card) and 'set_translations' table (per set). Languages include 'Chinese Simplified', 'French', 'German', 'Italian', 'Portuguese (Brasil)', 'Korean', 'Japanese', 'Spanish', 'Russian'. When a question asks about a specific language version, join the appropriate table.",
-    "source_qids": [352, 371, 391, 407, 412, 427, 462, 465, 468]
-  },
-  {
     "kid": 29,
     "knowledge": "Text Search: When looking for cards with specific rules text (e.g., 'triggered ability', 'flying', 'haste'), use LIKE '%phrase%' on the 'text' column. The 'originalText' column contains the original printed text before errata.",
     "source_qids": [346, 479]

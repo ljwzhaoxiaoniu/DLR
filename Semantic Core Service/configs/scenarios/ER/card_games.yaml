@@ -400,7 +400,7 @@ entities:
     data_type: text
   - attr_id: card_games.foreign_data.language
     biz_name: language
-    description: 'The foreign language of card. e.g. ''Chinese Simplified'', ''French'', ''German'', ''Italian'', ''Portuguese (Brasil)''.'
+    description: 'Foreign language: e.g. Chinese Simplified, French, German, Italian, Portuguese (Brasil), Korean, Japanese, Spanish, Russian.'
     physical_column_id: card_games.foreign_data.language
     data_type: text
   - attr_id: card_games.foreign_data.multiverseid

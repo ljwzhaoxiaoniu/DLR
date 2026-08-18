@@ -109,7 +109,7 @@
     rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/flavorText> ; rr:objectMap [ rr:column "flavorText" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/language> ; rr:objectMap [ rr:column "language" ; rr:datatype xsd:string ] ;
         rdfs:label "Language"@en ;
-        rdfs:comment "Foreign language: e.g. Chinese Simplified, Japanese, German, French"@en ] ;
+        rdfs:comment "Foreign language: e.g. Chinese Simplified, French, German, Italian, Portuguese (Brasil), Korean, Japanese, Spanish, Russian."@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/multiverseid> ; rr:objectMap [ rr:column "multiverseid" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/name> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/text> ; rr:objectMap [ rr:column "text" ; rr:datatype xsd:string ] ] ;

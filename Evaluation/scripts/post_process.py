@@ -179,6 +179,17 @@ def update_results_md(pair_label, new_rows, validated_dir):
     dlr_vs_er = (dlr_tok - er_tok) / er_tok * 100 if er_tok else 0
     rdf_vs_er = (rdf_tok - er_tok) / er_tok * 100 if er_tok else 0
 
+    # 重建 MD（先读旧文件，保留已有备注）
+    md_text = md_path.read_text(encoding="utf-8")
+    import re
+
+    # 旧明细行备注：按 qid 提取（脚本不覆盖人工写的备注）
+    old_remarks = {}
+    for line in md_text.splitlines():
+        parts = [c.strip() for c in line.split("|")]
+        if len(parts) >= 16 and parts[2].startswith("q") and parts[2][1:].isdigit():
+            old_remarks[parts[2]] = parts[15]
+
     # 明细行
     detail_lines = []
     for qid in sorted(set(int(r["q_id"]) for r in all_rows)):
@@ -208,15 +219,12 @@ def update_results_md(pair_label, new_rows, validated_dir):
             return f"**{s}**" if val == min_t and val > 0 else s
 
         db_name = er_r.get("db_id", dlr_r.get("db_id", rdf_r.get("db_id", "")))
+        remark = old_remarks.get(f"q{qid}", "")
         detail_lines.append(
             f"| {db_name} | q{qid} | {er_sj} | {er_j} | {dlr_sj} | {dlr_j} | {rdf_sj} | {rdf_j} | "
             f"{er_r.get('verdict','')} | {dlr_r.get('verdict','')} | {rdf_r.get('verdict','')} | "
-            f"{tok_str(er_t)} | {tok_str(dlr_t)} | {tok_str(rdf_t)} | |"
+            f"{tok_str(er_t)} | {tok_str(dlr_t)} | {tok_str(rdf_t)} | {remark} |"
         )
-
-    # 重建 MD
-    md_text = md_path.read_text(encoding="utf-8")
-    import re
 
     # 替换明细表：第一个 ### 到 > **Token 之前
     header = "| 数据库 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 备注 |"
@@ -228,10 +236,7 @@ def update_results_md(pair_label, new_rows, validated_dir):
         md_text, flags=re.DOTALL
     )
 
-    # 替换进度表
-    md_text = re.sub(r'\|\s*debit_card_specializing\s*\|\s*\d+\s*\|\s*\d+\s*\|\s*\d+\s*\|',
-                     f'| debit_card_specializing | 30 | {n} | {30-n} |', md_text)
-    md_text = re.sub(r'进度 \| [\d.]+%', f'进度 | {n/30*100:.1f}%', md_text)
+    # 进度表不再由脚本自动改（多数据库后旧正则失效），手动维护
 
     # 替换总结数字
     md_text = re.sub(r'共测试 \d+ 题', f'共测试 {n} 题', md_text)
