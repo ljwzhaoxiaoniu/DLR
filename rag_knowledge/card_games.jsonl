@@ -1,42 +1,11 @@
 [
   {
-    "kid": 21,
-    "knowledge": "Multiple Printings: The same card (same name) can have multiple printing versions, each with a different uuid. When a question asks about 'versions', 'printings', or 'different' cards of the same name, use uuid to distinguish individual printings. The cards.id field is a row identifier, not a card identity — use name for card identity, uuid for specific printings.",
-    "source_qids": [344, 345, 347, 356, 383, 391, 397, 402, 408, 409, 424]
-  },
-  {
     "kid": 22,
     "knowledge": "Foil Cards: 'Incredibly powerful foils' or 'powerful foils' refers to cards that have BOTH a Card Kingdom foil ID and a Card Kingdom ID (both columns non-null). A card with only one of these is not considered a powerful foil.",
-    "source_qids": [340, 341, 487]
-  },
-  {
-    "kid": 23,
-    "knowledge": "Power & Toughness Values: 'Infinite power' means the power column has the value '*'. 'Unknown power' or 'without power' means power is NULL or '*' (the value is not a numeric stat). Same logic applies to toughness — 'infinite toughness' refers to toughness = '*'.",
-    "source_qids": [356, 408, 416, 479]
-  },
-  {
-    "kid": 24,
-    "knowledge": "Colors: Card colors are stored in the 'colors' column (e.g., 'B' = black, 'W' = white, 'R' = red, 'G' = green, 'U' = blue). The 'colorIdentity' column indicates the colors in the card's mana cost and rules text. When a question mentions a specific color, search in the 'colors' column.",
-    "source_qids": [340, 358, 368, 383, 397, 402, 409, 416, 469]
-  },
-  {
-    "kid": 25,
-    "knowledge": "Artifact Type & Rarity: 'Artifact type' can appear in either the 'types' column or the 'originalType' column — check both when filtering for Artifacts. 'Mythic rarity' refers to rarity = 'mythic'. 'Rare' refers to rarity = 'rare'. 'Uncommon' refers to rarity = 'uncommon'. 'Common' refers to rarity = 'common'.",
-    "source_qids": [344, 345, 377, 391]
-  },
-  {
-    "kid": 26,
-    "knowledge": "Legality & Play Formats: Card legality in play formats (e.g., 'commander', 'vintage', 'gladiator', 'premodern') is stored in the legalities table. Each row is one card-format pair. 'Banned' means status = 'Banned', 'Legal' means status = 'Legal'. A card may be legal in one format and banned in another.",
-    "source_qids": [344, 346, 366, 409, 415, 518, 522, 528]
-  },
-  {
-    "kid": 27,
-    "knowledge": "Sets & Blocks: Card sets are stored in the 'sets' table and grouped by 'block' (e.g., 'Commander', 'Ice Age'). The cards.setCode column links to sets.code. baseSetSize is the number of cards in a set. A set's block can span multiple sets.",
-    "source_qids": [405, 414, 427, 472, 474]
-  },
-  {
-    "kid": 29,
-    "knowledge": "Text Search: When looking for cards with specific rules text (e.g., 'triggered ability', 'flying', 'haste'), use LIKE '%phrase%' on the 'text' column. The 'originalText' column contains the original printed text before errata.",
-    "source_qids": [346, 479]
+    "source_qids": [
+      340,
+      341,
+      487
+    ]
   }
 ]
