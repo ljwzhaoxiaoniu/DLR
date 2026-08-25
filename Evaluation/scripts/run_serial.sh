@@ -61,8 +61,8 @@ while IFS='|' read -r QID QUESTION EVIDENCE; do
 
     echo "[RUN] q$QID"
 
+    # v3 RAG: 纯 question，evidence 不注入（Agent 通过 search_evidence 主动检索）
     PROMPT="Question: $QUESTION"
-    [ -n "$EVIDENCE" ] && PROMPT="$PROMPT | Evidence: $EVIDENCE"
 
     cd "$AGENT_DIR" || exit 1
     timeout "$TIMEOUT" opencode run --format json --title "eval_${PARADIGM}_${QID}" "$PROMPT" < /dev/null > "$OUT_FILE" 2>&1

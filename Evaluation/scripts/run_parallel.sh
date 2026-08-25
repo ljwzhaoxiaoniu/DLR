@@ -61,8 +61,8 @@ run_one() {
     local OUT_FILE="$OUTPUT_DIR/${QID}.json"
     [ -f "$OUT_FILE" ] && return 0
 
+    # v3 RAG: 纯 question，evidence 不注入（Agent 通过 search_evidence 主动检索）
     local PROMPT="Question: $QUESTION"
-    [ -n "$EVIDENCE" ] && PROMPT="$PROMPT | Evidence: $EVIDENCE"
 
     cd "$AGENT_DIR" || return 1
     timeout "$TIMEOUT" opencode run --format json --title "eval_${PARADIGM}_${QID}" "$PROMPT" < /dev/null > "$OUT_FILE" 2>"$OUTPUT_DIR/${QID}.err"
