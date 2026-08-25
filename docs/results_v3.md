@@ -34,8 +34,8 @@ semantic → evidence ↔ mapping → SQL (ReAct 闭环)
 | 指标 | ER | DLR | RDF |
 |------|----|-----|-----|
 | CORRECT | 36/38 (94.7%) | **38/38 (100.0%)** | 36/38 (94.7%) |
-| strict PASS | 18/38 (47.4%) | 19/38 (50.0%) | 16/38 (42.1%) |
-| 平均 token | 77,392 (+30.3% vs DLR) | **59,383** | 79,075 (+33.2% vs DLR) |
+| strict PASS | 18/38 (47.4%) | 19/38 (50.0%) | 17/38 (44.7%) |
+| 平均 token | 77,907 (+31.2% vs DLR) | **59,383** | 79,189 (+33.4% vs DLR) |
 
 ---
 
@@ -52,7 +52,7 @@ semantic → evidence ↔ mapping → SQL (ReAct 闭环)
 | card_games | q346 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 127,138 | **79,939** | 105,758 | 3万行列明细题：判口径为明细✓/GROUP_CONCAT全值✓/仅COUNT✗ |
 | card_games | q347 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 148,837 | **79,125** | 83,490 |  |
 | card_games | q349 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 77,676 | 68,964 | **34,438** |  |
-| card_games | q352 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 104,509 | **61,254** | 91,264 | 百分比题1:N分母陷阱：JOIN后行计数虚增分母，分母须取父表集合 |
+| card_games | q352 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 124,064 | **61,254** | 95,606 | 百分比分母陷阱：分母须取父表集合(cards)；JOIN行计数与语言表行数均为错解 |
 | debit_card_specializing | q1471 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 56,949 | **30,396** | 31,649 |  |
 | debit_card_specializing | q1472 | FAIL | CORRECT | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | **53,090** | 62,565 | 80,595 |  |
 | debit_card_specializing | q1473 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 49,286 | **41,587** | 44,011 |  |

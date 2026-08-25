@@ -3,6 +3,6 @@
 "dlr","349","card_games","FAIL","CORRECT","五个条件全过——召回定位 cards/rulings 正确，调用链走 semantic_query→get_pe_mapping→execute_sql，database_url 取自映射未编造，PredSQL(HAVING count=MAX 且 isPromo=1)表达题意并执行成功，PredResult 与 AgentFinalAnswer 均与 GoldResult 一致(仅列序不同，值相同)。","CORRECT","100","","4142","873","4173","59776","68964"
 "rdf","349","card_games","FAIL","CORRECT","全链路符合正道，最终答案 Teferi's Protection/Chase Stone/isPromo=1 与 GoldResult 一致，多余行数列不扣分。
 ```","CORRECT","100","","2310","492","660","30976","34438"
-"er","352","card_games","PASS","","","CORRECT","100","","4444","1400","2665","96000","104509"
+"er","352","card_games","PASS","","","CORRECT","100","","8162","1347","4987","109568","124064"
 "dlr","352","card_games","FAIL","CORRECT","语义召回 foreign_data/cards 正确，工具链走 semantic_query→get_pe_mapping→execute_sql 且映射字段来自映射返回，SQL 正确执行，最终 35.38%（=20106/56822*100 取两位）与 GoldResult 35.384 一致。","CORRECT","100","","10425","651","2050","48128","61254"
-"rdf","352","card_games","FAIL","CORRECT","语义定位 card_games 的 cards/foreign_data、调用链 semantic_query→search_evidence→get_rdf_mapping→execute_sql、映射字段(language/uuid)均正确；PredSQL 20106/56822*100=35.384…，PredResult 35.38 为其四舍五入，按题意可直接加工得到，与 GoldResult 一致。","CORRECT","100","","2711","1223","1954","85376","91264"
+"rdf","352","card_games","PASS","","","CORRECT","100","","4745","1273","4724","84864","95606"
