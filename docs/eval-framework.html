@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>本体建模效果评测框架 — 内部工程实践分享</title>
+<style>
+  :root {
+    --surface: #fcfcfb;
+    --page: #f9f9f7;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --grid: #e1e0d9;
+    --baseline: #c3c2b7;
+    --border: rgba(11,11,11,0.08);
+    --accent: #2a78d6;
+    --er: #008300;
+    --rdf: #e87ba4;
+    --good: #0ca30c;
+    --warn: #fab219;
+    --critical: #d03b3b;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 18px; line-height: 1.6;
+    color: var(--ink); background: var(--page);
+    scroll-behavior: smooth;
+    scroll-snap-type: y proximity;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      --surface: #1a1a19; --page: #0d0d0d; --ink: #fff;
+      --ink-2: #c3c2b7; --muted: #898781; --grid: #2c2c2a;
+      --baseline: #383835;
+      --border: rgba(255,255,255,0.08); --accent: #3987e5;
+      --er: #00a300; --rdf: #d55181;
+    }
+  }
+  :root[data-theme="dark"] {
+    --surface: #1a1a19; --page: #0d0d0d; --ink: #fff;
+    --ink-2: #c3c2b7; --muted: #898781; --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255,255,255,0.08); --accent: #3987e5;
+    --er: #00a300; --rdf: #d55181;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--page); }
+
+  /* ── Slide ── */
+  .slide {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+    padding: 80px 10vw; scroll-snap-align: start; position: relative;
+  }
+  .slide--cover { align-items: center; text-align: center; }
+  .slide--cover .slide__body { max-width: 880px; }
+
+  /* ── Typography ── */
+  .hero {
+    font-size: clamp(36px, 5.5vw, 64px); font-weight: 800;
+    letter-spacing: -0.02em; line-height: 1.15; color: var(--ink);
+  }
+  .hero .acc { color: var(--accent); }
+  .deck { font-size: clamp(16px, 2vw, 22px); color: var(--ink-2); margin-top: 20px; max-width: 720px; }
+  .section-label {
+    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--accent); margin-bottom: 16px;
+  }
+  .section-title {
+    font-size: clamp(26px, 3.8vw, 44px); font-weight: 750;
+    letter-spacing: -0.015em; line-height: 1.25; margin-bottom: 32px;
+  }
+  .section-title em { font-style: normal; color: var(--accent); }
+
+  /* ── Grid ── */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 32px;
+  }
+  .card h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+  .card p  { font-size: 15px; color: var(--ink-2); line-height: 1.55; }
+  .card ul  { font-size: 15px; color: var(--ink-2); line-height: 1.6; padding-left: 20px; }
+  .card--er  { border-left: 4px solid var(--er); }
+  .card--rdf { border-left: 4px solid var(--rdf); }
+  .card--acc { border-left: 4px solid var(--accent); }
+  .card--warn{ border-left: 4px solid var(--warn); }
+  .card--good{ border-left: 4px solid var(--good); }
+
+  /* ── Problem cards ── */
+  .prob { display: flex; gap: 20px; align-items: flex-start; }
+  .prob__num {
+    flex-shrink: 0; width: 52px; height: 52px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 800; color: #fff; background: var(--accent);
+  }
+  .prob h4 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .prob .issue { font-size: 13.5px; color: var(--ink-2); line-height: 1.5; margin-bottom: 8px; }
+  .prob .fix {
+    font-size: 13.5px; font-weight: 700; line-height: 1.5;
+    padding: 8px 12px; border-radius: 8px; background: var(--grid);
+  }
+  .prob .fix .step { color: var(--accent); }
+
+  /* ── Insight cards ── */
+  .insight { display: flex; gap: 16px; align-items: flex-start; }
+  .insight__icon {
+    width: 48px; height: 48px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; background: var(--accent); color: #fff;
+  }
+  .insight__icon--er { background: var(--er); }
+  .insight__icon--rdf { background: var(--rdf); }
+  .insight h4 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .insight p  { font-size: 14.5px; color: var(--ink-2); line-height: 1.5; }
+
+  /* ── Stat tiles ── */
+  .stat-row { display: flex; flex-wrap: wrap; gap: 32px; justify-content: center; }
+  .stat {
+    text-align: center; min-width: 150px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 28px 32px;
+  }
+  .stat__value { font-size: clamp(32px, 4.5vw, 52px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+  .stat__label { font-size: 14px; color: var(--ink-2); margin-top: 8px; }
+  .stat__note  { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .stat--er  .stat__value { color: var(--er); }
+  .stat--rdf .stat__value { color: var(--rdf); }
+
+  /* ── Bar comparison ── */
+  .bar-group { display: flex; flex-direction: column; gap: 18px; margin-top: 24px; }
+  .bar-row { display: flex; align-items: center; gap: 16px; }
+  .bar-row__label { width: 56px; font-size: 14px; font-weight: 700; text-align: right; flex-shrink: 0; }
+  .bar-row__track { flex: 1; height: 36px; background: var(--grid); border-radius: 6px; overflow: hidden; position: relative; }
+  .bar-row__fill { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-left: 12px; font-size: 14px; font-weight: 700; color: #fff; }
+  .bar-row__fill--er  { background: var(--er); }
+  .bar-row__fill--rdf { background: var(--rdf); }
+  .bar-row__delta { width: 110px; font-size: 13px; color: var(--ink-2); flex-shrink: 0; }
+  .bar-row__delta--win { color: var(--good); font-weight: 700; }
+
+  /* ── Dual panel ── */
+  .dual-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 28px; }
+  @media (max-width: 768px) { .dual-panel { grid-template-columns: 1fr; } }
+  .dual-panel__left, .dual-panel__right {
+    padding: 36px; display: flex; flex-direction: column; justify-content: center;
+  }
+  .dual-panel__left  { background: var(--surface); border-radius: 16px 0 0 16px; border: 1px solid var(--border); border-right: none; }
+  .dual-panel__right { background: var(--surface); border-radius: 0 16px 16px 0; border: 1px solid var(--border); border-left: none; border-top: 1px solid var(--border); }
+  @media (max-width: 768px) {
+    .dual-panel__left  { border-radius: 16px 16px 0 0; border-right: 1px solid var(--border); }
+    .dual-panel__right { border-radius: 0 0 16px 16px; border-left: 1px solid var(--border); }
+  }
+  .dual-panel h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+  .dual-panel--er h3 { color: var(--er); }
+  .dual-panel--rdf h3 { color: var(--rdf); }
+  .dual-panel .sub { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .dual-panel p { font-size: 14.5px; color: var(--ink-2); line-height: 1.6; margin-bottom: 6px; }
+  .dual-panel code { background: var(--grid); padding: 1px 6px; border-radius: 4px; font-size: 13px; }
+
+  /* ── Arch diagram ── */
+  .arch { display: flex; flex-direction: column; gap: 10px; align-items: center; font-size: 15px; margin-top: 24px; }
+  .arch__row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; justify-content: center; }
+  .arch__box {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 24px; text-align: center;
+  }
+  .arch__box--acc  { border-color: var(--accent); border-width: 2px; }
+  .arch__box--er   { border-color: var(--er); }
+  .arch__box--rdf  { border-color: var(--rdf); }
+  .arch__box strong { display: block; font-size: 16px; margin-bottom: 4px; }
+  .arch__box small  { font-size: 12px; color: var(--ink-2); }
+  .arch__label { font-size: 13px; color: var(--muted); text-align: center; }
+
+  /* ── Pipeline ── */
+  .pipeline-v { display: flex; flex-direction: column; gap: 14px; margin-top: 24px; }
+  .pipe-step {
+    display: flex; gap: 18px; align-items: flex-start;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px 26px; text-align: left;
+  }
+  .pipe-step .num {
+    flex-shrink: 0; font-size: 26px; font-weight: 800; color: var(--accent); line-height: 1.2;
+  }
+  .pipe-step h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .pipe-step p  { font-size: 13.5px; color: var(--ink-2); line-height: 1.55; }
+
+  /* ── Tags ── */
+  .tag {
+    display: inline-block; padding: 3px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 700; margin-top: 12px;
+  }
+  .tag--er   { background: #e2f2e2; color: var(--er); }
+  .tag--rdf  { background: #fdeaf1; color: #c14f7d; }
+  .tag--note { background: var(--grid); color: var(--ink-2); }
+  .tag--warn { background: #fff3d6; color: #8a6d00; }
+  @media (prefers-color-scheme: dark) {
+    .tag--er   { background: #123212; color: #4cd964; }
+    .tag--rdf  { background: #3a1a28; color: #e87ba4; }
+    .tag--warn { background: #3a2f10; color: #fab219; }
+  }
+  :root[data-theme="dark"] .tag--er   { background: #123212; color: #4cd964; }
+  :root[data-theme="dark"] .tag--rdf  { background: #3a1a28; color: #e87ba4; }
+  :root[data-theme="dark"] .tag--warn { background: #3a2f10; color: #fab219; }
+
+  /* ── Story / quote ── */
+  .story-beat {
+    display: flex; gap: 16px; align-items: flex-start;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 24px;
+  }
+  .story-beat__mark { font-size: 20px; flex-shrink: 0; line-height: 1.4; }
+  .story-beat h4 { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+  .story-beat p  { font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
+  .quote {
+    background: var(--accent); color: #fff; border-radius: 16px;
+    padding: 28px 36px; text-align: center; margin-top: 24px;
+  }
+  .quote p { font-size: clamp(15px, 2vw, 19px); font-weight: 600; line-height: 1.5; color: #fff; }
+  .quote .who { display: block; margin-top: 8px; font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 400; }
+
+  /* ── Split table (evidence 分流) ── */
+  .split2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 24px; }
+  @media (max-width: 768px) { .split2 { grid-template-columns: 1fr; gap: 16px; } }
+  .split2__col {
+    background: var(--surface); border: 1px solid var(--border); padding: 28px;
+  }
+  .split2__col:first-child { border-radius: 14px 0 0 14px; border-right: none; }
+  .split2__col:last-child  { border-radius: 0 14px 14px 0; }
+  @media (max-width: 768px) { .split2__col:first-child, .split2__col:last-child { border-radius: 14px; border: 1px solid var(--border); } }
+  .split2__col h4 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+  .split2__col p  { font-size: 14px; color: var(--ink-2); line-height: 1.55; }
+  .split2__col .eg {
+    margin-top: 12px; padding: 12px 14px; border-radius: 8px;
+    background: var(--grid); font-size: 13px; color: var(--ink-2);
+    font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  }
+  .split2__col--model h4 { color: var(--er); }
+  .split2__col--rag h4 { color: var(--rdf); }
+
+  /* ── Flow loop (RAG 闭环) ── */
+  .flow { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 24px; }
+  .flow__box {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px 22px; text-align: center; min-width: 170px;
+  }
+  .flow__box strong { display: block; font-size: 15px; margin-bottom: 3px; }
+  .flow__box small  { font-size: 12px; color: var(--ink-2); }
+  .flow__box--rag  { border-color: var(--rdf); border-width: 2px; }
+  .flow__box--mid  { border-color: var(--accent); border-width: 2px; }
+  .flow__box--model{ border-color: var(--er); border-width: 2px; }
+  .flow__arrow { font-size: 22px; color: var(--muted); }
+
+  /* ── Case table ── */
+  .case-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 24px; }
+  .case-table th {
+    text-align: left; font-size: 13px; color: var(--muted); font-weight: 700;
+    padding: 10px 14px; border-bottom: 2px solid var(--baseline);
+  }
+  .case-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--ink-2); vertical-align: top; }
+  .case-table tr:last-child td { border-bottom: none; }
+  .case-table td:first-child { font-weight: 700; color: var(--ink); white-space: nowrap; }
+  .case-table .win  { color: var(--good); font-weight: 700; }
+  .case-table .lose { color: var(--critical); font-weight: 700; }
+
+  /* ── Small notes ── */
+  .note-row { margin-top: 20px; font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .note-row strong { color: var(--ink-2); }
+
+  /* ── Theme toggle ── */
+  .theme-toggle {
+    position: fixed; top: 20px; right: 20px; z-index: 999;
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    font-size: 18px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; color: var(--ink);
+  }
+
+  /* ── Page dots ── */
+  .page-dots {
+    position: fixed; right: 16px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 8px; z-index: 998;
+  }
+  .page-dots a {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--grid); border: 1px solid var(--border);
+    transition: all 0.2s; display: block;
+  }
+  .page-dots a.active { background: var(--accent); border-color: var(--accent); }
+  .page-dots a:hover  { background: var(--muted); }
+
+  @media (max-width: 768px) {
+    .slide { padding: 56px 6vw; }
+    .section-title { font-size: 24px; }
+    .page-dots { display: none; }
+    .flow { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" title="切换深色/浅色">☀</button>
+
+<nav class="page-dots">
+  <a href="#s1"  title="封面" class="active"></a>
+  <a href="#s2"  title="背景"></a>
+  <a href="#s3"  title="总体架构"></a>
+  <a href="#s3b" title="项目架构"></a>
+  <a href="#s4"  title="第一步 · Agent"></a>
+  <a href="#s5"  title="第二步 · 底座"></a>
+  <a href="#s6"  title="第三步 · 选取"></a>
+  <a href="#s7"  title="第三步 · 改造"></a>
+  <a href="#s8"  title="第三步 · evidence"></a>
+  <a href="#s9"  title="第三步 · SOP"></a>
+  <a href="#s10" title="第四步 · 防作弊"></a>
+  <a href="#s11" title="流水线"></a>
+  <a href="#s12" title="人机驱动"></a>
+  <a href="#s13" title="投入产出"></a>
+  <a href="#s14" title="第五步 · 观察"></a>
+  <a href="#s15" title="第六步 · 下一步"></a>
+  <a href="#s16" title="附注 · 案例库"></a>
+</nav>
+
+<!-- ════════════════ S1: 封面 ════════════════ -->
+<section class="slide slide--cover" id="s1">
+  <div class="section-label">内部工程实践分享</div>
+  <h1 class="hero">本体建模效果评测框架</h1>
+  <p class="deck">
+    基于 opencode 基线化与双范式对照的标准化评测方案——<br>
+    把"哪种语义建模更能引导 Agent"变成一个<span style="color:var(--accent);font-weight:600">可量化、可复现</span>的工程问题。
+  </p>
+  <div style="margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+    <span class="tag tag--er" style="margin:0">ER 92.0%</span>
+    <span class="tag tag--rdf" style="margin:0">RDF 89.3%</span>
+    <span class="tag tag--note" style="margin:0">150 题 · 同条件对照</span>
+  </div>
+  <p style="margin-top:32px;font-size:14px;color:var(--muted)">
+    一句话定位：这不是 NL2SQL 评测——不给库，考察建模对 Agent 从理解问题到定位数据的全程引导
+  </p>
+</section>
+
+<!-- ════════════════ S2: 背景 ════════════════ -->
+<section class="slide" id="s2">
+  <div class="section-label">背景</div>
+  <h2 class="section-title">先回答一个问题：<em>评测为什么重要</em></h2>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="insight">
+        <div class="insight__icon">🎯</div>
+        <div>
+          <h4>方案选型</h4>
+          <p>ER、RDF、本体……选谁？没有对照数据就是拍脑袋。语义建模工作量大，投入前需要一个客观依据。</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="insight">
+        <div class="insight__icon">🔬</div>
+        <div>
+          <h4>能力归因</h4>
+          <p>效果提升来自 Agent 变强还是建模变好？混在一起无法归因，也就无法迭代。</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="insight">
+        <div class="insight__icon">💰</div>
+        <div>
+          <h4>资源投向</h4>
+          <p>建模是一次性投入、长期收益——值不值得？需要可量化的收益证明。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card--acc" style="margin-top:24px">
+    <h3>⚖️ 核心逻辑：控制变量法</h3>
+    <p>
+      屏蔽大模型随机性、提示词技巧等干扰，将所有表现差异<span style="color:var(--accent);font-weight:700">唯归因于"语义底座的组织结构"</span>。
+    </p>
+  </div>
+</section>
+
+<!-- ════════════════ S3: 总体架构 ════════════════ -->
+<section class="slide" id="s3">
+  <div class="section-label">总体架构</div>
+  <h2 class="section-title">评测要成立，先解决<em>四个问题</em></h2>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="prob">
+        <div class="prob__num">01</div>
+        <div>
+          <h4>Agent 是变量</h4>
+          <p class="issue">大模型随机性、提示词技巧、工具用法差异，会淹没范式信号。</p>
+          <div class="fix">解法：基线化 Agent + 上层 SOP/Skill 拉齐能力下限<span class="step">（第一步）</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="prob">
+        <div class="prob__num">02</div>
+        <div>
+          <h4>信息不对齐</h4>
+          <p class="issue">两种范式若描述详略不一，测的是"谁写得全"，而非"谁组织得好"。</p>
+          <div class="fix">解法：统一语义底座，唯一变量 = 关联结构<span class="step">（第二步 · 约束）</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="prob">
+        <div class="prob__num">03</div>
+        <div>
+          <h4>任务空间不具代表性</h4>
+          <p class="issue">太简单测不出引导力差异；领域单一结论不普适；对错无法判定评测不成立。</p>
+          <div class="fix">解法：利用 NL2SQL 数据集满足约束<span class="step">（第三步 · 落实）</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="prob">
+        <div class="prob__num">04</div>
+        <div>
+          <h4>过程不可信</h4>
+          <p class="issue">Agent 绕过底座直连库、多跑取最好、判定靠感觉。</p>
+          <div class="fix">解法：防作弊环境 + 全链路审计 + 人机闭环<span class="step">（第四步）</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="note-row" style="text-align:center">
+    四个问题的解法拼起来，就是整个项目的架构 ↓
+  </p>
+</section>
+
+<!-- ════════════════ S3b: 项目架构 ════════════════ -->
+<section class="slide" id="s3b">
+  <div class="section-label">项目架构</div>
+  <h2 class="section-title">整个项目长什么样：<em>六层架构</em></h2>
+
+  <div class="arch" style="gap:6px;margin-top:16px">
+
+    <div class="arch__label" style="font-size:11px">┌──────────── 评测驱动层 · Evaluation Pipeline ────────────┐</div>
+    <div class="arch__row" style="gap:8px">
+      <div class="arch__box" style="padding:10px 14px"><strong style="font-size:14px">① 跑题</strong><small>opencode 会话</small></div>
+      <div class="arch__box" style="padding:10px 14px"><strong style="font-size:14px">② 提取·执行</strong><small>双通道模板</small></div>
+      <div class="arch__box" style="padding:10px 14px"><strong style="font-size:14px">③ Strict 初判</strong><small>gold cache 比对</small></div>
+      <div class="arch__box" style="padding:10px 14px"><strong style="font-size:14px">④ LLM Judge</strong><small>五环节仲裁</small></div>
+      <div class="arch__box" style="padding:10px 14px"><strong style="font-size:14px">🗄 NDJSON 审计</strong><small>run_id 目录 · 归档</small></div>
+    </div>
+
+    <div class="arch__label" style="font-size:11px">↑ 驱动：每题 × 每范式，独立 agent 会话</div>
+
+    <div class="arch__label" style="font-size:11px">┌──────────── Agent 层 · opencode 归一 ────────────┐</div>
+    <div class="arch__row" style="gap:8px">
+      <div class="arch__box arch__box--er" style="padding:10px 14px"><strong style="font-size:14px">oc_er 会话</strong><small>agents.md · SOP/Skill</small></div>
+      <div class="arch__box arch__box--rdf" style="padding:10px 14px"><strong style="font-size:14px">oc_rdf 会话</strong><small>agents.md · SOP/Skill</small></div>
+      <div class="arch__box" style="padding:10px 14px"><strong style="font-size:14px">统一规则</strong><small>强制 /mcps · ReAct 闭环</small></div>
+    </div>
+
+    <div class="arch__label" style="font-size:11px">↑ MCP：一次只连一个范式的工具集（防作弊隔离）</div>
+
+    <div class="arch__label" style="font-size:11px">┌──────────── 服务层 · Semantic Core Service ────────────┐</div>
+    <div class="arch__row" style="gap:8px">
+      <div class="arch__box arch__box--er" style="padding:10px 14px"><strong style="font-size:14px">ER MCP Server</strong><small>端口 28765 / 28767</small></div>
+      <div class="arch__box arch__box--acc" style="padding:10px 14px"><strong style="font-size:14px">execute_sql</strong><small>唯一只读透传</small></div>
+      <div class="arch__box arch__box--rdf" style="padding:10px 14px"><strong style="font-size:14px">RDF MCP Server</strong><small>端口 28785 / 28787</small></div>
+    </div>
+
+    <div class="arch__label" style="font-size:11px">↑ 三类查询：图 / 向量 / SQLite 直连</div>
+
+    <div class="arch__label" style="font-size:11px">┌──────────── 语义存储层 · ConfigLoader 统一解析 ────────────┐</div>
+    <div class="arch__row" style="gap:8px">
+      <div class="arch__box arch__box--er" style="padding:10px 14px"><strong style="font-size:14px">ER YAML × 11</strong><small>实体/属性/关系</small></div>
+      <div class="arch__box" style="padding:10px 14px"><strong style="font-size:14px">Kuzu 图库</strong><small>实体为节点 · 关系为边</small></div>
+      <div class="arch__box" style="padding:10px 14px"><strong style="font-size:14px">FAISS 向量</strong><small>语义描述 embedding</small></div>
+      <div class="arch__box" style="padding:10px 14px"><strong style="font-size:14px">SQLite 直连</strong><small>数据库路径映射</small></div>
+      <div class="arch__box arch__box--rdf" style="padding:10px 14px"><strong style="font-size:14px">RDF TTL × 11</strong><small>TriplesMap 映射</small></div>
+    </div>
+
+    <div class="arch__label" style="font-size:11px">↑ 知识 + 数据底座</div>
+
+    <div class="arch__row" style="gap:8px">
+      <div class="arch__box arch__box--rdf" style="padding:10px 14px"><strong style="font-size:14px">RAG 知识库</strong><small>术语/公式 · 双范式共享 · search_evidence</small></div>
+      <div class="arch__box" style="padding:10px 14px"><strong style="font-size:14px">mini_dev 数据集</strong><small>11 库 500 题 · question+evidence+gold · gold cache 已修正 20+ 处</small></div>
+    </div>
+  </div>
+
+  <p class="note-row" style="text-align:center">
+    一套数据、两层建模、一次只测一个范式——评测层把会话、判定与归档全部自动化，任何数字可回溯到原始 trace。
+  </p>
+</section>
+
+<!-- ════════════════ S4: 第一步 基线化 Agent ════════════════ -->
+<section class="slide" id="s4">
+  <div class="section-label">第一步</div>
+  <h2 class="section-title">基线化 Agent：<em>Agent 不是变量</em></h2>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="insight">
+        <div class="insight__icon">🧩</div>
+        <div>
+          <h4>轻量构建 + 启发式引导</h4>
+          <p>
+            统一 opencode 框架 + agents.md，不动底层代码。<br>
+            注入自然语言规则——"强制 /mcps 发现工具"、ReAct 闭环
+            <code style="font-size:13px">semantic → evidence ↔ mapping → SQL</code>——
+            <strong>引导而非死板工作流</strong>，确保所有实验中 Agent 的"智商底座"完全一致。
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="insight">
+        <div class="insight__icon">🛡️</div>
+        <div>
+          <h4>上层 SOP 与领域 Skill（能力拉齐）</h4>
+          <p>
+            复杂困难题（多表 JOIN 膨胀、SQLite 整数除法陷阱）仅靠底层图检索，
+            可能触发 LLM 思维盲区——引入上层 SOP 指导，
+            <strong>拉齐 Agent 解决困难问题的下限</strong>，避免能力瓶颈掩盖范式效能。<br>
+            载体：领域 Markdown（Skill）+ MCP 工具描述层提示。<br>
+            公平性：通用业务 SOP 对双范式同等开放，不含任何范式 API 偏向。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card--warn" style="margin-top:24px">
+    <h3>🚫 防背答案铁律</h3>
+    <p>
+      知识/Skill 只写<strong>领域事实本身</strong>，禁止写对着题面的操作指令；Schema 指引不进知识层——
+      否则知识库会退化成答案缓存，评测也就失效了。
+    </p>
+  </div>
+</section>
+
+<!-- ════════════════ S5: 第二步 统一语义底座 ════════════════ -->
+<section class="slide" id="s5">
+  <div class="section-label">第二步 · 约束</div>
+  <h2 class="section-title">统一语义底座：<em>五条约束</em></h2>
+
+  <div class="dual-panel dual-panel--er">
+    <div class="dual-panel__left">
+      <h3>约束一 · ER 范式</h3>
+      <div class="sub">数据库建模标准基线</div>
+      <p>YAML 配置：<code>BizEntity</code> / <code>BizAttribute</code> / <code>BizRelation</code></p>
+      <p>关联用 <code>from → to</code> 扁平表达</p>
+    </div>
+    <div class="dual-panel__right dual-panel--rdf">
+      <h3>约束一 · RDF 范式</h3>
+      <div class="sub">W3C 语义网标准基线</div>
+      <p>W3C R2RML <code>.ttl</code> 配置：<code>rr:TriplesMap</code></p>
+      <p>关联用 <code>rr:joinCondition</code> 编码</p>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:20px">
+    <div class="card">
+      <h3>约束二 · 描述逐字一致</h3>
+      <p>字段语义注释（ER description ↔ RDF rdfs:label/comment）内容严格对齐。</p>
+    </div>
+    <div class="card">
+      <h3>约束三 · 知识等价</h3>
+      <p>Agent 看到的领域 RAG 知识库完全等价——同一份知识，双范式共享。</p>
+    </div>
+    <div class="card">
+      <h3>约束四 · 唯一变量</h3>
+      <p>唯一的区别在于关联关系表达与 Entity 归属层级，纯粹考验"信息组织结构"对 LLM 的引导效能。</p>
+    </div>
+    <div class="card card--acc">
+      <h3>约束五 · 裸问</h3>
+      <p>
+        不给 db_id、不给 evidence——语义路由与知识发现成为被考察的建模能力。<br>
+        <strong style="color:var(--accent)">这是语义建模评测区别于 NL2SQL 评测的根本</strong>：
+        NL2SQL 给定库写 SQL；语义建模评测要求 Agent 靠语义底座自己定位数据。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ S6: 第三步 ① 选取 ════════════════ -->
+<section class="slide" id="s6">
+  <div class="section-label">第三步 · 落实 ①</div>
+  <h2 class="section-title">利用数据集满足约束 · <em>选取：BIRD mini_dev 0703</em></h2>
+
+  <div class="grid-4">
+    <div class="card">
+      <h3>📋 权威标注</h3>
+      <p style="font-size:13.5px">每题带 question + evidence（出题人规则）+ gold SQL + difficulty 分级——对错可判定、难度可分层。</p>
+    </div>
+    <div class="card">
+      <h3>🌍 领域多样</h3>
+      <p style="font-size:13.5px">11 库 10 领域（金融 / 体育 / 医疗 / 教育 / 娱乐 / 化学 / 技术 / 零售 / 游戏）——结论需跨业务形态验证。</p>
+    </div>
+    <div class="card">
+      <h3>⛰️ 难度覆盖</h3>
+      <p style="font-size:13.5px">简单查询 → 多表 JOIN → 聚合统计 → 嵌套子查询——引导力在困难题上才分得出高下。</p>
+    </div>
+    <div class="card">
+      <h3>⚙️ 规模可控</h3>
+      <p style="font-size:13.5px">500 题 + SQLite 单机直连——跑得完、成本可控、可复现。</p>
+    </div>
+  </div>
+
+  <div class="card card--acc" style="margin-top:24px">
+    <h3>🔑 关键改造 · 不给 db_id <span class="tag tag--note" style="margin:0 0 0 8px;vertical-align:middle">落实约束五</span></h3>
+    <p style="font-size:15px">
+      BIRD 官方设定是"给定库写 SQL"——那是纯 NL2SQL 能力测验。本框架不给库：
+      语义层负责从问题定位数据库，"语义路由"成为被考察的建模能力。<br>
+      <strong style="color:var(--accent)">这一步改造把任务从 NL2SQL 转变成语义建模评测</strong>——这是本框架与 NL2SQL benchmark 的根本区别。
+    </p>
+  </div>
+</section>
+
+<!-- ════════════════ S7: 第三步 ② 改造 ════════════════ -->
+<section class="slide" id="s7">
+  <div class="section-label">第三步 · 落实 ②</div>
+  <h2 class="section-title">改造成"<em>模仿本体</em>"的建模 <span style="font-size:16px;color:var(--muted);font-weight:400">（满足约束一/二/四）</span></h2>
+
+  <div class="dual-panel">
+    <div class="dual-panel__left">
+      <h3 style="color:var(--muted)">改造前 · 裸表</h3>
+      <div class="sub">原始数据集只有骨架</div>
+      <p><code>customers</code> 表：CustomerID, Name, Segment, Currency…</p>
+      <p><code>yearmonth</code> 表：CustomerID, Date, Consumption</p>
+      <p style="margin-top:10px;color:var(--muted);font-size:13.5px">Agent 看到的只是一堆列名——列的含义、归属、陷阱，全靠猜。</p>
+    </div>
+    <div class="dual-panel__right">
+      <h3 style="color:var(--er)">改造后 · 本体化的数据</h3>
+      <div class="sub">ER 的实体/属性/关系 · RDF 的 TriplesMap</div>
+      <p><strong>BizEntity Customer</strong>（进行消费行为的客户）</p>
+      <p>· Segment：客户分层（SME / LAM / KAM）</p>
+      <p>· 描述补注："name 不唯一，同名多卡"</p>
+      <p>· 描述补注："power 三态：数字 / NULL / '*'=无限"</p>
+      <p style="margin-top:10px;color:var(--er);font-weight:600;font-size:13.5px">Agent 面对的是业务概念 + 语义描述，而非裸表。</p>
+    </div>
+  </div>
+
+  <div class="note-row">
+    <strong>改造三件事</strong>：① 逐库将原始表结构建模为两套范式配置；② 每个字段补自然语言语义描述（值域、同名列消歧、数据特征）；
+    ③ 双范式描述逐字一致，唯一差异 = 关联结构。
+  </div>
+</section>
+
+<!-- ════════════════ S8: 第三步 ③ evidence 分流 ════════════════ -->
+<section class="slide" id="s8">
+  <div class="section-label">第三步 · 落实 ③</div>
+  <h2 class="section-title">evidence 分流利用：<em>数据 + 知识</em>的闭环 <span style="font-size:16px;color:var(--muted);font-weight:400">（满足约束五/二/三）</span></h2>
+
+  <p style="font-size:15px;color:var(--ink-2)">
+    数据集每题的 evidence（出题人规则）<strong>不直接交给 Agent</strong>（裸问），而是拆解分流：
+  </p>
+
+  <div class="split2">
+    <div class="split2__col split2__col--model">
+      <h4>→ 模型 description</h4>
+      <p><strong>数据语义</strong>：值域、列含义、同名列消歧</p>
+      <div class="eg">"power 三态：数字 / NULL / '*' = 无限"</div>
+    </div>
+    <div class="split2__col split2__col--rag">
+      <h4>→ 领域知识库（RAG）</h4>
+      <p><strong>出题人规则</strong>：术语定义、计算公式</p>
+      <div class="eg">"percentage = 有该属性项数 / 总项数 × 100"</div>
+    </div>
+  </div>
+
+  <p style="font-size:14.5px;color:var(--ink-2);margin-top:16px">
+    把<strong>"白送的提示"变成"Agent 必须自己找到的知识"</strong>——检索行为本身，成为建模引导力的观测窗口。
+  </p>
+
+  <div class="flow">
+    <div class="flow__box flow__box--rag">
+      <strong>RAG 知识库</strong>
+      <small>知识是什么 · 定义/公式/规则</small>
+    </div>
+    <div class="flow__arrow">→</div>
+    <div class="flow__box flow__box--mid">
+      <strong>Agent 推理</strong>
+      <small>检索知识 · 引导查询</small>
+    </div>
+    <div class="flow__arrow">→</div>
+    <div class="flow__box flow__box--model">
+      <strong>模型底座</strong>
+      <small>数据是什么 · 在哪/值域/归属</small>
+    </div>
+    <div class="flow__arrow" style="transform:scaleX(-1)">→</div>
+    <div class="arch__label" style="width:100%;text-align:center">检索与映射互相验证：semantic → evidence ↔ mapping → SQL</div>
+  </div>
+
+  <div class="card card--acc" style="margin-top:20px">
+    <h3>🔁 RAG 是本体建模"数据 + 知识"的闭环</h3>
+    <p style="font-size:14.5px">
+      本体建模不只是静态结构，而是两件套——模型层描述"数据是什么"，RAG 知识库描述"知识是什么"。
+      Agent 在闭环内检索知识 → 引导查询数据 → 检索与映射互相验证，数据与知识联动，才构成完整的本体建模。
+    </p>
+  </div>
+</section>
+
+<!-- ════════════════ S9: 第三步 ④ SOP 翻盘故事 ════════════════ -->
+<section class="slide" id="s9">
+  <div class="section-label">第三步 · 落实 ④</div>
+  <h2 class="section-title">高难度题 → SOP 统一落地：<em>一个翻盘故事</em></h2>
+
+  <div class="grid-2">
+    <div>
+      <div class="story-beat">
+        <div class="story-beat__mark">❌</div>
+        <div>
+          <h4>全灭：q1042 football 双范式全 INCORRECT</h4>
+          <p>题面要算比率，Agent 写出了 3/2——SQLite 的整数除法把 1.5 截成了 1。双范式栽在同一个坑里。</p>
+        </div>
+      </div>
+      <div class="story-beat" style="margin-top:12px">
+        <div class="story-beat__mark">🔍</div>
+        <div>
+          <h4>归因：不是建模缺陷</h4>
+          <p>是 Agent <strong>不知道 SQLite 的除法会取整</strong>。LLM 不是不会写 SQL，是不知道这个工具坑。</p>
+        </div>
+      </div>
+      <div class="story-beat" style="margin-top:12px">
+        <div class="story-beat__mark">✅</div>
+        <div>
+          <h4>修复：工具层加一行警告</h4>
+          <p><code style="font-size:12.5px">execute_sql</code> 工具描述加一行：
+          "⚠️ 整数/整数截断小数，需 CAST AS REAL 或 *1.0"</p>
+        </div>
+      </div>
+      <div class="story-beat" style="margin-top:12px">
+        <div class="story-beat__mark">🏆</div>
+        <div>
+          <h4>翻盘：重跑双范式全 PASS</h4>
+          <p>一行提示，问题消失——没有改任何建模配置。</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card card--acc">
+        <h3>📐 SOP 如何统一</h3>
+        <ul>
+          <li>利用 difficulty 标注定位困难题，失败模式（JOIN 膨胀、整数除法、百分比分母陷阱）系统收集</li>
+          <li>沉淀为<strong>一份</strong>通用业务 SOP，写入 Skill/工具层——不是每范式各写一套</li>
+          <li>同一份 SOP 对双范式同等开放，无范式 API 偏向——<strong>统一 = 一份共享、两边可用</strong></li>
+          <li>效果：拉齐下限，不泄露任何题目答案</li>
+        </ul>
+      </div>
+      <div class="card card--good" style="margin-top:16px">
+        <h3>🧹 数据治理（满足约束的前提）</h3>
+        <p style="font-size:13.5px">
+          实测发现 <strong>20+ 处 gold SQL 缺陷</strong>（分子分母颠倒、JOIN 键写错、NULL 排序陷阱、答非所问），
+          逐一独立重放验证后修正 gold cache。数据不干净，范式对照无意义——治理流程本身是框架的一部分。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote">
+    <p>"看似建模问题，实则是 SOP/工具层 UX 问题——不把变量控制死，你就不知道锅该甩给谁。"</p>
+    <span class="who">—— q1042 翻盘给我们的最大教训</span>
+  </div>
+</section>
+
+<!-- ════════════════ S10: 第四步 防作弊 ════════════════ -->
+<section class="slide" id="s10">
+  <div class="section-label">第四步</div>
+  <h2 class="section-title">评测工程 · <em>防作弊环境</em></h2>
+
+  <div class="card card--acc" style="margin-bottom:24px">
+    <h3>⚖️ 前置说明</h3>
+    <p style="font-size:15px">
+      双范式底座最终都归一化到<strong>引导 Agent 生成 SQL</strong>——统一的 execute_sql 透传执行；
+      比的是语义底座对 SQL 生成路径的引导效能，<strong>不是比"写 SQL 还是写 SPARQL"</strong>。
+    </p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>🙈 隔离范式预知</h3>
+      <p style="font-size:13.5px">
+        每次开局强制 <code>/mcps</code> 查看可用工具，不预知挂载哪种范式——
+        MCP 按范式自动注册工具子集，Agent 靠工具签名（如 <code>er_semantic_query</code> / <code>rdf_semantic_query</code>）适应，而非被告知。
+      </p>
+    </div>
+    <div class="card">
+      <h3>🚪 执行通道归一</h3>
+      <p style="font-size:13.5px">
+        execute_sql MCP 是<strong>唯一只读薄透传通道</strong>：元数据（表结构/列/JOIN）走 MCP，数据查询走 SQL——
+        Agent 没有数据库直连能力，绕过底座无从谈起。
+      </p>
+    </div>
+    <div class="card">
+      <h3>🔒 双向堵漏 · 防走捷径</h3>
+      <p style="font-size:13.5px">
+        <strong>架构级 · opencode deny 列表</strong>：直连库、文件读写等能绕过底座的工具路径，在权限层直接拒绝——后门堵死，捷径没有通道。<br><br>
+        <strong>提示级 · agents.md 提示词</strong>：规则写死"禁止凭空猜测数据库名/表名/字段名，必须从 MCP 工具返回结果提取"——前门管住，捷径行为被约束。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ S11: 第四步 流水线 ════════════════ -->
+<section class="slide" id="s11">
+  <div class="section-label">第四步</div>
+  <h2 class="section-title"><em>四阶段流水线</em>：跑题 → 解析 → Strict → Judge</h2>
+
+  <div class="pipeline-v">
+    <div class="pipe-step">
+      <div class="num">①</div>
+      <div>
+        <h4>跑题 · 全迹审计落盘</h4>
+        <p>opencode 以 NDJSON 落盘每步 trace（工具调用/参数/返回），run_id 统一目录——任何数字可回溯到原始 trace，可复现、可审计。</p>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="num">②</div>
+      <div>
+        <h4>解析 · 双通道模板 <span class="tag tag--note" style="margin:0 0 0 6px;vertical-align:middle">防 LLM 偷懒</span></h4>
+        <p>
+          Final Answer 必输出"答案通道 + Evidence SQL 通道"，解析只从 SQL 通道提取；
+          Evidence SQL 单独执行必须直接返回答案值，计算必须写进 SQL。
+          解析失败/多 SQL/无 SQL 明确定义为 EXEC FAIL，不静默丢弃；
+          结果归一化（行序/列序/NULL/浮点格式），产出可 diff 的标准形态。
+        </p>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="num">③</div>
+      <div>
+        <h4>Strict 初判 · 秒级确定性门</h4>
+        <p>gold cache 逐行精确比对，脚本秒级 PASS/FAIL。定位："确定对"的快筛器，不是裁判——把 LLM Judge 算力集中在歧义样本。</p>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="num">④</div>
+      <div>
+        <h4>LLM Judge · 语义仲裁（五环节）</h4>
+        <p>
+          只判 strict FAIL 的行，增量断点续跑。五环节审视：语义理解 → 工具调用 → 映射选择 → SQL → 结果——
+          <strong>审链路而非只看答案</strong>，这是观察"建模如何引导 Agent"的核心窗口。<br>
+          证据边界：Agent 不见 evidence，Judge 可见 gold 作仲裁参照。判定口径固化：明细 ✓ / GROUP_CONCAT 全值 ✓ / 仅 COUNT ✗。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ S12: 第四步 人机驱动 ════════════════ -->
+<section class="slide" id="s12">
+  <div class="section-label">第四步</div>
+  <h2 class="section-title"><em>人机驱动</em>：机器跑量，人做归因</h2>
+
+  <div class="dual-panel">
+    <div class="dual-panel__left">
+      <h3 style="color:var(--accent)">🤖 机器做</h3>
+      <div class="sub">全自动，零人工</div>
+      <p>跑量全自动（150 题 × 双范式）</p>
+      <p>strict 秒级判定</p>
+      <p>增量 judge 断点续跑</p>
+    </div>
+    <div class="dual-panel__right">
+      <h3 style="color:var(--er)">👤 人做三件事</h3>
+      <div class="sub">机器给不出答案的部分</div>
+      <p>① <strong>数据集治理</strong>：gold SQL 缺陷、evidence 伪代码——识别修正，剥离非范式噪声</p>
+      <p>② <strong>翻盘归因</strong>：INCORRECT 根因归类四类（数据集缺陷 / SOP 缺失 / 建模结构 / LLM 极限），决定"修哪一层"——q1042 即此闭环产物</p>
+      <p>③ <strong>口径裁决与定稿</strong>：翻盘口径固化文档，归档三级对齐（raw → CSV → 汇总），单题定稿防数字漂移</p>
+    </div>
+  </div>
+
+  <div class="card card--acc" style="margin-top:20px">
+    <h3>📊 评测产出 · 双指标体系</h3>
+    <p style="font-size:14.5px">
+      <strong>CORRECT（效果）+ token/步数（效率）</strong>，共同刻画"引导效能"——汇总为 agent_stats（正确率、平均 token、步数分布）。
+      <span style="color:var(--ink-2)">"看似建模问题，实则是 SOP/工具层 UX 问题"的判断，只有在这个闭环里才被识别。</span>
+    </p>
+  </div>
+</section>
+
+<!-- ════════════════ S13: 工程投入产出量化 ════════════════ -->
+<section class="slide" id="s13">
+  <div class="section-label">投入与产出</div>
+  <h2 class="section-title">阶段性观察之前：<em>先量化这活儿的工程量</em></h2>
+
+  <div class="stat-row" style="margin-bottom:28px">
+    <div class="stat">
+      <div class="stat__value">22,000+</div>
+      <div class="stat__label">行代码与配置</div>
+      <div class="stat__note">Python + 22 套建模配置 + 可视化</div>
+    </div>
+    <div class="stat">
+      <div class="stat__value">384</div>
+      <div class="stat__label">Git 提交</div>
+      <div class="stat__note">7–8 月集中落地 · 1 人</div>
+    </div>
+    <div class="stat">
+      <div class="stat__value">~30 亿</div>
+      <div class="stat__label">tokens 工程累计</div>
+      <div class="stat__note">~2.7 万次 API 请求</div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>📁 代码规模</h3>
+      <div style="font-size:14px;line-height:2">
+        <div>Python <span style="float:right;font-weight:700">11,912 行</span></div>
+        <div style="color:var(--ink-2)">ER 建模配置（YAML × 11） <span style="float:right;font-weight:700">5,457 行</span></div>
+        <div style="color:var(--ink-2)">RDF 建模配置（TTL × 11） <span style="float:right;font-weight:700">1,644 行</span></div>
+        <div style="color:var(--ink-2)">可视化 HTML/JS <span style="float:right;font-weight:700">2,852 行</span></div>
+        <div style="color:var(--ink-2)">Shell 脚本 <span style="float:right;font-weight:700">259 行</span></div>
+        <div style="border-top:1px solid var(--border);margin-top:4px;padding-top:4px;font-weight:700">
+          合计 <span style="float:right;color:var(--accent)">~22,100 行</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🔧 工程结构</h3>
+      <div style="font-size:14px;line-height:2">
+        <div>贡献者 <span style="float:right;font-weight:700">1 人</span></div>
+        <div style="color:var(--ink-2);margin-top:6px">Semantic Core Service</div>
+        <div style="color:var(--muted);font-size:12px">Python × MCP × Kuzu × FAISS</div>
+        <div style="color:var(--ink-2);margin-top:4px">Evaluation Pipeline</div>
+        <div style="color:var(--muted);font-size:12px">四阶段脚本 + LLM Judge</div>
+        <div style="color:var(--ink-2);margin-top:4px">Agent Service</div>
+        <div style="color:var(--muted);font-size:12px">agents.md + opencode 配置</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📊 评测产出</h3>
+      <div style="font-size:14px;line-height:2">
+        <div>已评测题次 <span style="float:right;font-weight:700">300</span></div>
+        <div style="color:var(--ink-2)">150 题 × 2 范式</div>
+        <div style="color:var(--ink-2);margin-top:4px">Agent 运行 <span style="float:right;font-weight:700">~700 次</span></div>
+        <div style="color:var(--muted);font-size:12px">含验证与重跑</div>
+        <div style="color:var(--ink-2);margin-top:4px">数据集审查</div>
+        <div style="color:var(--muted);font-size:12px">发现并修正 20+ gold SQL 缺陷</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="note-row" style="text-align:center">
+    成本提示：strict 秒级筛 PASS、LLM Judge 只审歧义样本、增量断点续跑——500 题全量跑得完、跑得起。
+  </p>
+</section>
+
+<!-- ════════════════ S14: 第五步 阶段性观察 ════════════════ -->
+<section class="slide" id="s14">
+  <div class="section-label">第五步</div>
+  <h2 class="section-title">阶段性观察：<em>150 题实证</em> <span style="font-size:15px;color:var(--muted);font-weight:400">（小规模验证，不是重点）</span></h2>
+
+  <div class="stat-row" style="margin-bottom:28px">
+    <div class="stat stat--er">
+      <div class="stat__value">92.0%</div>
+      <div class="stat__label">ER CORRECT</div>
+      <div class="stat__note">138/150</div>
+    </div>
+    <div class="stat stat--rdf">
+      <div class="stat__value">89.3%</div>
+      <div class="stat__label">RDF CORRECT</div>
+      <div class="stat__note">134/150</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="align-items:start">
+    <div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px">平均 token（越低越好）</p>
+      <div class="bar-group" style="margin-top:0">
+        <div class="bar-row">
+          <div class="bar-row__label">ER</div>
+          <div class="bar-row__track">
+            <div class="bar-row__fill bar-row__fill--er" style="width:100%">70,620</div>
+          </div>
+          <div class="bar-row__delta">基线</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-row__label">RDF</div>
+          <div class="bar-row__track">
+            <div class="bar-row__fill bar-row__fill--rdf" style="width:84%">59,219</div>
+          </div>
+          <div class="bar-row__delta bar-row__delta--win">−16.1% vs ER</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card card--er" style="margin-bottom:14px;padding:22px">
+        <h3 style="font-size:17px">ER 画像：信息全，但噪音大</h3>
+        <p style="font-size:13.5px">全互联 FK 网误导 JOIN 路径（q1037 选错键、q197 fan-out 污染聚合）；token 膨胀（q1339 145K/25 步）。</p>
+      </div>
+      <div class="card card--rdf" style="padding:22px">
+        <h3 style="font-size:17px">RDF 画像：扁平高效，但无层级</h3>
+        <p style="font-size:13.5px">SPARQL 嵌套膨胀（q532 197K）；无属性归属致列歧义（q1529/q25 被无关列吸走）。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-row">
+    <strong>一个实证</strong>：q1042 整数除法 → 工具层一行修复 → 双范式全 PASS ·
+    <strong>非范式问题剥离</strong>：gold SQL bug、evidence 伪代码已识别修正，不归因于建模范式 ·
+    <strong>⚠ 批次口径</strong>：150 题为同条件对照批次（逐题同条件，对照结论稳健）；裸问/RAG 自主检索自新批次起生效并验证 ·
+    <strong>方法论警示</strong>：重跑翻盘 = 有偏重采样；单题配置调优有天花板；评测结论区分"系统能力差异"与"采样噪声"。
+  </div>
+</section>
+
+<!-- ════════════════ S15: 第六步 下一步 ════════════════ -->
+<section class="slide" id="s15">
+  <div class="section-label">第六步</div>
+  <h2 class="section-title">下一步：<em>三件事</em></h2>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>🏃 完成 500 题全量</h3>
+      <p style="font-size:14px">
+        含裸问/RAG 强化设计的批次验证；过程中积累对方案调优有指导意义的经验（描述形态、知识措辞、SOP 触发时机等）。
+      </p>
+    </div>
+    <div class="card">
+      <h3>📚 知识分层边界的实测积累</h3>
+      <p style="font-size:14px">
+        哪些知识应该放语义映射的 description、哪些放实体关联的 RAG 知识库、哪些放 SOP——三层分工的边界，通过实测进一步积累。
+      </p>
+    </div>
+    <div class="card card--acc">
+      <h3>🔭 探索更好的语义建模模型</h3>
+      <p style="font-size:14px">
+        ER 信息全但噪音大，RDF 扁平高效但无结构层级——<strong>两个范式其实都有硬伤</strong>。
+        探索是否存在更好的信息组织结构（按需暴露 + 结构化层级方向），避开两者的缺陷。
+      </p>
+    </div>
+  </div>
+
+  <div class="quote">
+    <p>让"哪种建模范式更好"不再靠体感。</p>
+    <span class="who">—— 这个框架要交付的东西</span>
+  </div>
+</section>
+
+<!-- ════════════════ S16: 附注 案例库 ════════════════ -->
+<section class="slide" id="s16">
+  <div class="section-label">附注</div>
+  <h2 class="section-title">案例库 <span style="font-size:15px;color:var(--muted);font-weight:400">（ER/RDF 口径，备问用）</span></h2>
+
+  <div style="overflow-x:auto">
+    <table class="case-table">
+      <thead>
+        <tr><th>案例</th><th>范式结果</th><th>要点</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>q1529</td><td><span class="win">ER PASS</span> / <span class="lose">RDF INCORRECT</span></td><td>扁平无归属，被无关表吸走</td></tr>
+        <tr><td>q25</td><td><span class="lose">双 INCORRECT</span></td><td>列歧义共同失败模式</td></tr>
+        <tr><td>q1037</td><td><span class="lose">ER INCORRECT</span></td><td>FK 全互联误导 JOIN 路径</td></tr>
+        <tr><td>q197</td><td><span class="lose">ER INCORRECT</span></td><td>fan-out 污染聚合</td></tr>
+        <tr><td>q1042</td><td><span class="win">工具层修复 → 双 PASS</span></td><td>SQLite 整数除法翻盘故事</td></tr>
+        <tr><td>q866</td><td>token：ER 186K vs RDF 211K</td><td>SPARQL 试探膨胀</td></tr>
+        <tr><td>q532</td><td>RDF 197K</td><td>OPTIONAL 嵌套膨胀</td></tr>
+        <tr><td>q1339</td><td>ER 145K（25 步）</td><td>逐表探索路径膨胀</td></tr>
+        <tr><td>q1481</td><td>ER 230K</td><td>子查询路径膨胀</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="note-row" style="text-align:center">
+    数据集：BIRD mini_dev 0703（11 库 500 题 NL2SQL）· 双范式：ER（YAML）/ RDF（W3C R2RML）·
+    评测：四阶段流水线 + LLM Judge · 技术栈：opencode / MCP / Python
+  </p>
+</section>
+
+<script>
+  function toggleTheme() {
+    const root = document.documentElement;
+    const btn = document.querySelector('.theme-toggle');
+    if (root.getAttribute('data-theme') === 'dark') {
+      root.removeAttribute('data-theme'); btn.textContent = '☀';
+    } else {
+      root.setAttribute('data-theme', 'dark'); btn.textContent = '🌙';
+    }
+  }
+
+  const dots = document.querySelectorAll('.page-dots a');
+  const slides = document.querySelectorAll('.slide[id]');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        dots.forEach(d => d.classList.remove('active'));
+        const dot = document.querySelector('.page-dots a[href="#' + e.target.id + '"]');
+        if (dot) dot.classList.add('active');
+      }
+    });
+  }, { threshold: 0.5 });
+  slides.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
