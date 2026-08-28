@@ -48,7 +48,7 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 
 | 数据库 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 备注 |
 |------|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|------|
-| debit_card_specializing | q1471 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 70,324 | 60,188 | **55,661** |  |
-| debit_card_specializing | q1472 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 85,178 | **75,081** | 100,776 |  |
+| debit_card_specializing | q1471 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 70,324 | 60,188 | **55,661** | 三通道一次对齐无分歧：Ch1 首跳三范式全中 debit_card，Ch2 单发命中(0.72)，Ch3 前置读 skills；简单题未暴露通道差异 |
+| debit_card_specializing | q1472 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 85,178 | **75,081** | 100,776 | Ch1 首跳跨库漂移（LAM/consumption 语义过泛）：ER 首库 card_games、RDF 首库 formula_1，仅 DLR 首中；LAM=segment 消歧主力是 Ch2 知识（相似度仅 0.53 仍命中，DLR 3 次含 1 次空 namespace 落空）；Ch3 半程救场式读 skills；RDF 无表级描述代价最大：rdf_search×3 + 2 次 LIMIT 探测，8 步 100,776 tok，DLR 6 步 75,081 最省 |
 > **Token = input_tokens + output_tokens**
 > **数据来源**: `validated_results/v3_final/agent_stats.csv`
