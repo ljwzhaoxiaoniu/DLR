@@ -15,7 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CFG = json.load(open(ROOT / "config.json", encoding="utf-8")) if (ROOT / "config.json").exists() else {}
 _EVAL_OUT = CFG.get("eval", {}).get("output_dir", "Evaluation/outputs")
-GOLD = json.load(open(ROOT / "Evaluation" / "outputs" / "00_golden_cache.json", encoding="utf-8"))
+GOLD = json.load(open(ROOT / _EVAL_OUT / "00_golden_cache.json", encoding="utf-8"))
 GOLD_MAP = {x["q_id"]: x for x in GOLD}
 QUESTIONS = {q["question_id"]: q for q in json.load(open(ROOT / "MINIDEV_sqlite" / "mini_dev_sqlite.json", encoding="utf-8"))}
 OUT_BASE = ROOT / _EVAL_OUT
@@ -48,10 +48,14 @@ def load_trace(paradigm, qid, run_id=""):
 
 
 def llm_judge(question, evidence, gold_res, pred_res, gold_sql, pred_sql, db_id,
-              trace="", final_answer="", pred_path="", log_path=""):
+              trace="", final_answer="", pred_path="", log_path="", qid=""):
     """opencode run 仲裁(规则在 oc_judge/AGENTS.md). 返回 (verdict, process, reason)."""
-    # Prompt 只传数据(与评测 Agent 同一铁律)
+    # Prompt 只传数据(与评测 Agent 同一铁律); 知识层路径供 judge 查争议/口径
+    know_path = ROOT / "rag_knowledge" / f"{db_id}.jsonl"
+    skill_path = ROOT / "OC-based Agent Service" / "skills" / f"{db_id}.md"
+    dispute_path = JUDGE_CWD / "disputes.md"
     prompt = (
+        f"QID: {qid}\n"
         f"Q: {question}\n"
         f"Evidence: {evidence}\n"
         f"DB: {db_id}\n"
@@ -62,7 +66,10 @@ def llm_judge(question, evidence, gold_res, pred_res, gold_sql, pred_sql, db_id,
         f"AgentToolTrace: {trace[:400]}\n"
         f"AgentFinalAnswer: {final_answer[:200]}\n"
         f"PredJsonPath: {pred_path}\n"
-        f"AgentLogPath: {log_path}"
+        f"AgentLogPath: {log_path}\n"
+        f"KnowledgePath: {know_path}\n"
+        f"SkillPath: {skill_path if skill_path.exists() else '无'}\n"
+        f"DisputePath: {dispute_path}"
     )
     try:
         # 用命令名走 PATH(不要用 shutil.which 解析出的 Windows .CMD 路径,
@@ -147,7 +154,8 @@ def main():
             q.get("SQL", ""), r.get("sql", ""), gold["db_id"],
             trace=trace, final_answer=fa,
             pred_path=str(pf),
-            log_path=str((LOG_DIR / run_id / a.paradigm / f"{qid}.json") if run_id else (LOG_DIR / a.paradigm / f"{qid}.json")))
+            log_path=str((LOG_DIR / run_id / a.paradigm / f"{qid}.json") if run_id else (LOG_DIR / a.paradigm / f"{qid}.json")),
+            qid=qid)
 
         r["judge_verdict"] = v
         r["judge_reason"] = reason

@@ -1,9 +1,0 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"er","1493","debit_card_specializing","FAIL","INCORRECT","前四步(语义/工具/映射/SQL执行)均通过，但结果错误——Pred 分母取全量 customers 32461 得 37.61%，Gold 分母是 201202 当月记录数 18324 得 66.62%，二者不可由题意直接等价加工，失败在第5步结果正确性。","INCORRECT","80","","2606","1174","1208","79360","84348"
-"er","1498","debit_card_specializing","PASS","","","CORRECT","100","","1337","784","694","37760","40575"
-"dlr","1493","debit_card_specializing","PASS","","","CORRECT","100","","2086","584","1050","40192","43912"
-"dlr","1498","debit_card_specializing","PASS","","","CORRECT","100","","1711","614","734","29952","33011"
-"rdf","1493","debit_card_specializing","FAIL","INCORRECT","语义/工具/映射均正确(定位 yearmonth 与 customers,走 semantic_query→search_evidence→get_rdf_mapping→execute_sql,字段均来自映射),但第 4 步失败——分母取客户主表全部 32461 人而非 201202 当月消费客户(yearmonth 过滤后 COUNT≈18326,Gold 分母),导致结果 37.61% 与 Gold 66.62% 不一致;第 5 步结果亦不符。
-```","INCORRECT","60","","2973","934","897","50176","54980"
-"rdf","1498","debit_card_specializing","FAIL","INCORRECT","定位/工具链/映射正确(语义召回 yearmonth,数据库_url 来自映射),但 SQL 表达题意错误:题意是""2012 年各月中消费总额最高的月份"",Pred 只算 MAX(Consumption)=445279.69,未按月分组求和,结果与 Gold 51787161.74 不一致,失败在 SQL 执行正确性一步。
-```","INCORRECT","60","","1563","464","866","38272","41165"

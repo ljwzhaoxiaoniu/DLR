@@ -14,7 +14,9 @@
 | [数据集说明](docs/dataset.md) | mini_dev 0703：11 库 500 题、下载、任务格式、实测特征 |
 | [Agent 说明](docs/agent.md) | OpenCode + MCP 架构、AGENTS.md 规则、防作弊、db 锁库行为 |
 | [评测流水线](docs/evaluation.md) | 四阶段流水线、Prompt 铁律、双通道判定、公平性、已知问题 |
-| [评测结果](docs/results_v2.md) | 132 题 × 3 范式逐题校验表（371/396 CORRECT）：strict/judge/result/token |
+| [评测结果 v2](docs/results_v2.md) / [v3](docs/results_v3.md) | v2 150 题基线（ER 92.0% / DLR 98.7% / RDF 89.3%）；v3 RAG 逐题校验表 |
+| [三通道设计](docs/3-channel-design.md) | Ch1 MCP 语义层 / Ch2 RAG 证据 / Ch3 SOP 技能，并行锚定协议（v3 当前架构） |
+| [RAG 知识库](docs/rag-evidence.md) | rag_knowledge 两种格式、知识写法铁律、索引重建 |
 
 ## 架构
 
@@ -43,7 +45,7 @@
 
 | 范式 | 角色 | Web 端口 | MCP 工具数 | 核心模型 |
 |------|------|---------|-----------|----------|
-| **★ DLR** | 原创核心 | 28775 | 21+1 | LE / PE / PAS / ARCS |
+| **★ DLR** | 原创核心 | 28775 | 4 注册（23 定义） | LE / PE / PAS / ARCS |
 | **ER** | 数据库建模标准基线 | 28765 | 11+1 | BizEntity / BizAttribute / BizRelation |
 | **RDF** | W3C R2RML 标准基线 | 28785 | 7+1 | rr:TriplesMap + rdflib SPARQL |
 

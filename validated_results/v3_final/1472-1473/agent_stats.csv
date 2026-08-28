@@ -1,7 +1,0 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"dlr","1472","debit_card_specializing","FAIL","CORRECT","语义定位到 yearmonth/customers，调用链走 semantic_query→映射→execute_sql，SQL 按题意取 2012 年 LAM 段 Consumption 最小的客户，PredResult 含答案 47273（多余 0.74 列不扣分），与 GoldResult 一致。","CORRECT","100","","9815","763","403","51584","62565"
-"er","1472","debit_card_specializing","FAIL","CORRECT","语义定位到 debit_card_specializing 的 yearmonth/customers，映射工具返回 database_url 与字段后执行 SQL，BETWEEN '201201' AND '201212' 正确表达 2012 年，结果 47273 与 GoldResult 一致（多余 total 列不扣分）。","CORRECT","100","","9285","895","798","42112","53090"
-"rdf","1472","debit_card_specializing","PASS","","","CORRECT","100","","9083","1107","1029","69376","80595"
-"dlr","1473","debit_card_specializing","PASS","","","CORRECT","100","","1869","623","823","38272","41587"
-"er","1473","debit_card_specializing","PASS","","","CORRECT","100","","8276","733","597","39680","49286"
-"rdf","1473","debit_card_specializing","PASS","","","CORRECT","100","","6626","790","883","35712","44011"

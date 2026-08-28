@@ -50,7 +50,7 @@ logical_entities:
     description: 'Customer ID: FK to customers table'
   - attr_id: LOGICAL.Consumption.Date
     biz_name: Date
-    description: 'Date: year-month in YYYYMM format, e.g. 201301 = January 2013'
+    description: 'Date: in yearmonth table = year-month YYYYMM (201301 = January 2013); in transactions_1k table = calendar date YYYY-MM-DD (2013-01-13). Slash-form dates in questions (2012/8/24) mean calendar date'
   - attr_id: LOGICAL.Consumption.Consumption
     biz_name: Consumption
     description: 'Monthly spending amount (CZK): total customer spending in this month'

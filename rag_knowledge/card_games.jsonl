@@ -2,10 +2,106 @@
   {
     "kid": 22,
     "knowledge": "Foil Cards: 'Incredibly powerful foils' or 'powerful foils' refers to cards that have BOTH a Card Kingdom foil ID and a Card Kingdom ID (both columns non-null). A card with only one of these is not considered a powerful foil.",
-    "source_qids": [
-      340,
-      341,
-      487
-    ]
+    "source_qids": [340, 341, 487]
+  },
+  {
+    "kid": 31,
+    "knowledge": "Power & Toughness Values: 'Infinite power' means power column has the value '*'. 'Unknown power' or 'without power' means power IS NULL OR power = '*' (the value is not a numeric stat). Same logic applies to toughness — 'infinite toughness' refers to toughness = '*'.",
+    "source_qids": [346, 356, 408, 416, 479]
+  },
+  {
+    "kid": 32,
+    "knowledge": "Border Color: 'Borderless cards' refers to borderColor = 'borderless'. 'White border' refers to borderColor = 'white'. 'Black border' refers to borderColor = 'black'.",
+    "source_qids": [341, 368, 383, 397, 412]
+  },
+  {
+    "kid": 33,
+    "knowledge": "Card Flags — Promo: 'Promotional printing' means isPromo = 1. Story Spotlight: 'Story Spotlight cards' refers to isStorySpotlight = 1. Textless: 'Does not have a text box' refers to isTextless = 1. Content Warning: 'Cards have missing or degraded properties and values' refers to hasContentWarning = 1. Duel Deck: 'Duel deck a' refers to duelDeck = 'a'.",
+    "source_qids": [347, 349, 371, 379, 402, 415, 424]
+  },
+  {
+    "kid": 34,
+    "knowledge": "Multiple Faces: 'Card does not have multiple faces on the same card' refers to side IS NULL. The 'side' column indicates which face of a double-faced card — NULL means single-faced.",
+    "source_qids": [345, 409]
+  },
+  {
+    "kid": 35,
+    "knowledge": "Artifact & Type Filtering: 'Artifact type' can appear in either the 'types' column or the 'originalType' column — check both when filtering for Artifacts. 'Original type of Summon - Angel' refers to originalType = 'Summon - Angel'. 'Subtype other than Angel' means subtypes != 'Angel'.",
+    "source_qids": [345, 377, 391]
+  },
+  {
+    "kid": 36,
+    "knowledge": "Rarity Values: 'Mythic rarity' refers to rarity = 'mythic'. 'Rare' means rarity = 'rare'. 'Uncommon' means rarity = 'uncommon'. 'Common' means rarity = 'common'.",
+    "source_qids": [344, 345]
+  },
+  {
+    "kid": 37,
+    "knowledge": "Play Formats & Legal Status: Play formats ('commander', 'vintage', 'gladiator', 'premodern', 'duel', 'penny') are stored in the legalities table, column 'format'. Legal status is stored in 'status' column: 'Banned', 'Legal', or 'Restricted'. 'Banned cards' means status = 'Banned'. 'Legal for X format' means format = 'X' AND status = 'Legal'. Each row is one card-format pair — a card can be Legal in one format and Banned in another.",
+    "source_qids": [344, 345, 346, 366, 383, 409, 415, 518, 522, 528]
+  },
+  {
+    "kid": 38,
+    "knowledge": "Sets & Blocks: Card sets are in the 'sets' table, identified by 'code' column. 'Block' groups multiple sets (e.g., 'Commander', 'Ice Age'). 'Base set size' / 'set of N cards' refers to baseSetSize = N. 'Set known as X on magic card market' refers to mcmName = 'X'. 'Appear on Magic: The Gathering Online' means mtgoCode IS NOT NULL. 'Only available outside the US' means isForeignOnly = 1. Cards link to sets via cards.setCode = sets.code.",
+    "source_qids": [405, 414, 427, 462, 465, 468, 469, 472, 473, 474, 477, 479, 483, 484, 486, 487, 528, 529]
+  },
+  {
+    "kid": 39,
+    "knowledge": "Languages & Translations: Languages include: 'Chinese Simplified', 'French', 'German', 'Italian', 'Portuguese (Brasil)', 'Korean', 'Japanese', 'Spanish', 'Russian'. Card-level translations are in 'foreign_data' table (columns: language, name, flavorText, text, multiverseid), linked via uuid. Set-level translations are in 'set_translations' table (columns: language, translation), linked via setCode. When a question asks about a specific language version, determine whether it's card-level or set-level and join accordingly.",
+    "source_qids": [352, 371, 391, 405, 407, 412, 416, 422, 427, 440, 462, 465, 468, 472, 480, 483, 484, 529]
+  },
+  {
+    "kid": 40,
+    "knowledge": "EDHRec Ranking: 'Ranked 1st on EDHRec' refers to edhrecRank = 1.",
+    "source_qids": [522]
+  },
+  {
+    "kid": 41,
+    "knowledge": "Multiverse ID: 'Card with the multiverse number X' refers to multiverseId = X. This is on the 'cards' table (not foreign_data.multiverseid).",
+    "source_qids": [422]
+  },
+  {
+    "kid": 42,
+    "knowledge": "Availability: 'Available in paper and mtgo' refers to availability = 'mtgo,paper'.",
+    "source_qids": [397]
+  },
+  {
+    "kid": 43,
+    "knowledge": "Frame Version: '2003 frame version' refers to frameVersion = '2003'.",
+    "source_qids": [397]
+  },
+  {
+    "kid": 44,
+    "knowledge": "Layout: 'Normal layout' refers to layout = 'normal'.",
+    "source_qids": [397, 412, 424]
+  },
+  {
+    "kid": 45,
+    "knowledge": "Artist: Filter cards by artist using the 'artist' column (e.g., 'Stephen Daniel' should be searched as 'Stephen Daniele', 'Allen Williams' as artist = 'Allen Williams').",
+    "source_qids": [347, 466, 477, 530]
+  },
+  {
+    "kid": 46,
+    "knowledge": "Rulings: Card rulings are in the 'rulings' table (columns: text, date, uuid). 'Card with the most ruling information' means MAX(COUNT(rulings.uuid)) grouped by card. 'Text ruling' refers to rulings.text. 'Ruling text containing X' means rulings.text LIKE '%X%'.",
+    "source_qids": [347, 349, 409, 483]
+  },
+  {
+    "kid": 47,
+    "knowledge": "Converted Mana Cost: 'Converted mana cost higher than N' refers to convertedManaCost > N. 'Highest converted mana cost' means MAX(convertedManaCost). Used to compare which card costs more mana.",
+    "source_qids": [459, 479, 484, 486]
+  },
+  {
+    "kid": 48,
+    "knowledge": "Color Filtering: Colors are stored in the 'colors' column. 'B' = Black, 'W' = White, 'R' = Red, 'G' = Green, 'U' = Blue. 'Black color' means colors = 'B'. The 'colorIdentity' column is different — it indicates colors in mana cost and rules text.",
+    "source_qids": [340, 358, 391, 397]
+  },
+  {
+    "kid": 49,
+    "knowledge": "Percentage Calculation: 'Percentage of X in Y' = COUNT(DISTINCT uuid WHERE X) * 100.0 / COUNT(DISTINCT uuid WHERE Y). When the denominator is a subset (e.g., 'percentage of French among Story Spotlight cards'), the denominator uses the subset condition (isStorySpotlight = 1). Card percentages use COUNT(DISTINCT uuid) on the cards table, not JOIN-based counting (JOINs inflate row counts via one-to-many relationships).",
+    "source_qids": [352, 368, 371, 402, 415, 416, 424, 486, 487]
+  },
+  {
+    "kid": 50,
+    "knowledge": "Multiple Printings: The same card name can have multiple printing versions, each with a different uuid. The 'id' column is a row identifier, not a card identity — use 'name' for card identity, 'uuid' for specific printings. When a question asks for 'list card ids' or 'print cards', return each printing's id (not just distinct card names).",
+    "source_qids": [344, 345, 347, 356, 383, 391, 397, 402, 408, 424]
   }
 ]

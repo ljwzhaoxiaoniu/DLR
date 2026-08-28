@@ -25,31 +25,76 @@
 
 ---
 
-## 数据查询流程（ReAct 闭环）
+## 三通道并行锚定流程
 
-核心链：**semantic → evidence ↔ mapping → SQL**。evidence 和 mapping 可以交替调用——有时先看映射再搜 evidence 更准，有时 evidence 里的列名需要映射验证。
+拿到 question 后，**第一步同时启动三条通道**（并行，不是串行）：
 
-### Step 1：语义召回
-`xxx_semantic_query(question)` — 不传 db，全局召回定位数据库 + 业务对象
-→ 获取 `db` 字段，如果召回不对就换 query 重试
+```
+    问题文本
+      │
+      ├── Ch1: 语义召回 → xxx_semantic_query(question) → 候选实体+DB
+      ├── Ch2: 证据检索 → xxx_search_evidence(question)   → 术语→列/值映射
+      └── Ch3: 领域技能 → 读 skills/{db}.md               → 难题模式+处理建议
+      │
+      ▼
+交叉验证 → 锚定实体/列 → 映射 → SQL → 按 SOP 验证 → Final Answer
+```
 
-### Step 2：evidence ↔ mapping（交替进行）
-- `xxx_search_evidence(namespace=db, question)` — 检索领域规则
-- `get_*_mapping`（通过 `/mcps` 确认范式对应的映射工具）— 获取表/列/JOIN + database_url
+| 通道 | 工具 | 回答什么 |
+|------|------|----------|
+| Ch1 语义 | `xxx_semantic_query` → `get_*_mapping` | 这个领域有哪些实体/属性/关系？ |
+| Ch2 证据 | `xxx_search_evidence` | 问题中用词对应什么列/值？ |
+| Ch3 技能 | 读 `skills/{db}.md` | 这种题容易怎么错？ |
 
-**两者顺序不固定**：可以先 mapping 拿列名再搜 evidence，也可以先搜 evidence 再对着 mapping 验证。但不要跳出这个闭环去探索无关实体/关系。
+### Step 1：并行发出（三通道同时）
 
-### Step 3：执行查询
-`execute_sql(sql, database_url)` — 只读 SELECT
+拿到 question 后**同时**执行：
+1. `/mcps` — 确认可用 MCP 工具列表
+2. `xxx_semantic_query(question)` — Ch1 语义召回，不传 db 全局召回
+3. `xxx_search_evidence(question)` — Ch2 证据检索
+4. 从 Ch1 返回的 `db` 读 `skills/{db}.md` — Ch3 领域技能
+
+### Step 2：交叉验证 & 锚定
+
+```
+┌─ 3 通道指向同一实体/列 → 直接映射+SQL
+├─ 2 通道一致，1 无信号 → 用一致的 2 条验证后行动
+├─ 仅 1 通道有信号 → 换 query 重试（Ch1 换问法 / Ch2 换检索词）
+└─ 全哑 → 用 Ch1 逐表探索
+```
+
+**交叉验证不是多数投票**——两个通道有噪声但指向同一点时互相验证；Ch2 返回列名可以选出 Ch1 多个候选中的正确实体。
+
+### Step 3：映射 + SQL（Ch3 介入）
+
+Ch3 在**映射之后、写 SQL 之前**介入：对照 `skills/{db}.md` 中的难题模式，检查当前 SQL 是否有对应的陷阱（如百分比分母 JOIN 虚增、同名多版本、LIMIT 1 取众数）。
 
 ### Step 4：得出结论
-Final Answer + Evidence SQL
+
+Final Answer + Evidence SQL + 标注来源（MCP 工具名 / RAG kid / 领域技能名称）
 
 ---
 
-**硬约束**：semantic → evidence ↔ mapping → SQL 闭环内可重试，3 轮内拿不到有效结果就承认失败。禁止探索闭环外的工具。
+**硬约束**：三通道锚定 + SQL 闭环内可重试，3 轮内拿不到有效结果就承认失败。禁止探索闭环外的工具。
 
-**多问题识别**：一个 question 可能包含多个独立的子问题（问号 `?` 是分隔标志），每个子问题可能需要不同的数据源。先拆解子问题，为每个子问题独立走 semantic → evidence ↔ mapping → SQL 闭环，不要假设所有子问题共用同一张表。
+**Ch3 按需加载（两条触发路径）**：
+- **预防**：题面含百分比/比率/极值/排序/同名多版本等已知陷阱模式时，写 SQL 前读 `skills/{db}.md`
+- **救场**：同一题的 SQL 连续 2 次报错、执行为空、或结果与题面语义/数量级矛盾时，立即读 `skills/{db}.md`，按对应模式逐步自查、修正 SQL 后重试
+
+Skill 文件给的是方法模板（坑 + 步骤 + SQL 模板），最终值必须自己执行 SQL 得到，不抄模板里的示例值。
+
+**Ch3 文件访问约束**：
+
+Ch3 只允许读取 `skills/` 目录下的文件，且**严格限定**为：
+- **唯一允许的路径**：`skills/{db}.md`，其中 `{db}` 必须来自 Ch1 `xxx_semantic_query` 返回的 `db` 字段（如 `card_games`、`debit_card_specializing`）
+- **禁止行为**：
+  - 禁止扫描 `skills/` 目录列出所有文件
+  - 禁止读取 `skills/` 下非 `{db}.md` 的文件
+  - 禁止读取项目其他目录的任何文件（docs/、rag_knowledge/、Semantic Core Service/ 等）
+  - 禁止写入或修改任何文件
+- **文件不存在时**：`skills/{db}.md` 不存在 → 该领域暂无技能，跳过 Ch3，仅用 Ch1+Ch2 锚定
+
+**多问题识别**：一个 question 可能包含多个独立的子问题（问号 `?` 是分隔标志），先拆解子问题，每个子问题独立走三通道闭环。
 
 ## MCP 工具发现(强制第一步)
 

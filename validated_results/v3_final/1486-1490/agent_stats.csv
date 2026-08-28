@@ -1,7 +1,0 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens"
-"er","1486","debit_card_specializing","PASS","","","CORRECT","","","4048","700","716","36736","42200"
-"er","1490","debit_card_specializing","FAIL","CORRECT","语义、工具链、映射、SQL 均正确，PredResult 98.39 即 GoldResult 98.387097 按题意四舍五入，属直接加工可得，结果一致。","CORRECT","","","2993","1493","1247","82688","88421"
-"dlr","1486","debit_card_specializing","PASS","","","CORRECT","","","3969","459","662","27520","32610"
-"dlr","1490","debit_card_specializing","FAIL","CORRECT","语义/工具/映射/执行均正确，PredSQL 按客户汇总消费后与 46.73 阈值比较、LEFT JOIN 保留全部 LAM 客户为分母，与 Gold 同构，PredResult 98.39 即 Gold 98.387097 四舍五入两位，答案一致。","CORRECT","","","3096","620","1216","31744","36676"
-"rdf","1486","debit_card_specializing","PASS","","","CORRECT","","","3492","406","428","27648","31974"
-"rdf","1490","debit_card_specializing","FAIL","CORRECT","召回定位正确（customers/yearmonth、Segment='LAM'），工具链走 semantic_query→evidence→mapping→execute_sql 正道，SQL 语义与题意一致（3599/3658*100=98.387，Pred 仅四舍五入到 98.39），与 GoldResult 一致。","CORRECT","","","2458","1240","1483","69632","74813"

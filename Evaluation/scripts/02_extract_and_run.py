@@ -15,7 +15,7 @@ _EVAL_OUT = CFG.get("eval", {}).get("output_dir", "Evaluation/outputs")
 DB_DIR = ROOT / "MINIDEV_sqlite" / "dev_databases"
 LOG_DIR = ROOT / _EVAL_OUT / "01_logs"
 OUT_BASE = ROOT / _EVAL_OUT
-GOLD = json.load(open(ROOT / "Evaluation" / "outputs" / "00_golden_cache.json", encoding="utf-8"))
+GOLD = json.load(open(ROOT / _EVAL_OUT / "00_golden_cache.json", encoding="utf-8"))
 GOLD_MAP = {x["q_id"]: x for x in GOLD}
 
 

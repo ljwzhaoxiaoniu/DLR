@@ -75,9 +75,11 @@ DLR Proj/
 - 任务字段中 question/evidence **不含 `|` 字符**（500 条实测零冲突），评测脚本以 `|` 作字段分隔安全。
 - **本项目设定：Agent 不拿到 `db_id`**（区别于 BIRD 官方"给定库写 SQL"设定）——语义层负责从问题定位数据库（语义路由），见 [Agent 说明](agent.md)。`db_id` 仅用于 Stage 2 重放定库与 Golden 缓存。
 
-## Gold SQL 已知错误（已修正）
+## 已知缺陷清单（2026-08-27 起保持原始）
 
-mini_dev 数据集的 gold SQL **在部分题目中与题意 / evidence 相悖**，导致其执行结果不是"题意正确答案"。本项目 gold cache（`Evaluation/outputs/00_golden_cache.json`）已对发现的错误条目**直接覆盖为正确结果**，并在此记录。
+**政策反转（2026-08-27）**：数据集（mini_dev_sqlite.json / gold.sql / golden cache）**恢复原始版、保持不修正**。此前对 gold cache / evidence 的修正已回滚——缺陷不靠改数据解决，而由知识层消化（Ch2 rag_knowledge 聚合修正 + Ch3 skills 避坑），Agent 按语义正确口径作答，judge 按争议目录裁决（`Evaluation/oc_judge/disputes.md`，QID -> 裁定口径，判定时 GoldResult 作废）。
+
+本节保留**逐题缺陷分析**作为知识层与裁决的依据（"正确结果"列即 disputes.md 的裁定值）。历史修正记录中的"已修正/已写入 cache"表述为 2026-08-27 前的旧政策，现已回滚。
 
 > 核对方法：分别取 `mini_dev_sqlite.json` 的 `SQL` 字段与 `mini_dev_sqlite_gold.sql`（按行号顺序对应 500 题）逐字对比 → 相忠实执行；再用 SQLite 直跑 gold SQL 并与 evidence 公式比语义。下两题两源 SQL **逐字一致**，判定为数据集本身的 gold SQL 错误，非 Stage 0 引入。
 
@@ -229,26 +231,6 @@ FROM (
 | **正确结果（已写入 cache）** | CustomerID=6718 → yearmonth 聚合 2012/2013 → **-5.8152** |
 | **三范式一致** | ER/DLR/RDF 均输出 -5.8152。2026-07-23 修正 gold cache。
 
-
-- **问题**：What is the ratio of outpatient to inpatient followed up treatment among all the 'SLE' diagnosed patient?
-
-| | 内容 |
-|---|---|
-| **Gold SQL** | `SUM(CASE WHEN Admission='+' THEN 1.0 ELSE 0 END) / SUM(CASE WHEN Admission='-' THEN 1 ELSE 0 END)` = 110/84 = **1.3095** |
-| **Bug** | 题目写"ratio of outpatient to inpatient"（门诊/住院 = 84/110 = 0.7636），Gold 和 evidence 都计算了 B/A（住院/门诊）。Gold cache 和 evidence 均已修正（门诊/住院 = 84/110 = **0.7636**），Gold 计算了 B/A |
-| **正确结果** | `CAST(SUM(CASE WHEN Admission='-' THEN 1.0 ELSE 0 END) AS REAL) / SUM(CASE WHEN Admission='+' THEN 1 ELSE 0 END)` = **0.7636** |
-| **验证** | DLR/RDF 均正确算出 0.76；ER 初始 strict PASS 因公式反了撞上错误 Gold。修正后 DLR strict PASS。2026-07-24 修正 cache。 |
-
-
-- **问题**：What are the speed in which attacks are put together of the top 4 teams with the highest build Up Play Speed?
-
-| | 内容 |
-|---|---|
-| **Gold SQL** | `ORDER BY buildUpPlaySpeed ASC LIMIT 4` → 最低值 [20, 20, 20, 23] |
-| **Bug** | 题目要求 "highest"，应取 DESC。Gold 用 ASC 取了最低的 4 个 |
-| **正确结果** | `ORDER BY buildUpPlaySpeed DESC LIMIT 4` → 最高值 [80, 78, 78, 77] |
-| **验证** | 三范式一致输出 80/78/78/77。2026-07-24 修正 cache。 |
-
 ### qid 1529 — `debit_card_specializing`（gold 已全量修正，2026-08-12）
 
 - **问题**：What is the amount spent by customer "38508" at the gas stations? How much had the customer spent in January 2012?
@@ -262,9 +244,6 @@ FROM (
 | **题目设计** | 两个无关子问题强行拼成一道题，但两问都在 yearmonth 全量表中查 |
 | **正确结果（cache 待更新）** | `SUM(Consumption)` = 5,124,646.35 + January 2012 = 67,156.94 |
 
-
-
-
 ### qid 1531 — `debit_card_specializing`（gold SQL 与 evidence 公式矛盾）
 
 - **问题**：Who is the top spending customer and how much is the average price per single item purchased by this customer? What currency was being used?
@@ -276,7 +255,6 @@ FROM (
 | **Bug 本质** | evidence 定义 avg = Total(price)/Total(amount) = SUM(Price)/SUM(Amount)，但 Gold SQL 用 `SUM(Price/Amount)`——两种算法结果不同（22.55 vs 203.86）。**Agent 按 evidence 执行，Gold 却按另一种算法评判。** |
 | **正确结果（与 evidence 一致）** | `SUM(Price)/SUM(Amount) FROM transactions_1k WHERE CustomerID = (SELECT CustomerID FROM yearmonth ORDER BY Consumption DESC LIMIT 1)` = **22.55**（CustomerID 12459, CZK） |
 | **验证** | DLR 三范式中唯一路由到 yearmonth.Consumption 找到 CustomerID 12459；ER 走 transactions_1k 得 CustomerID 13665（avg 5762 离谱）；RDF 未触及 yearmonth。**2026-07-29 修正**：evidence `Total(price)/Total(amount) = SUM(Price)/SUM(Amount)` 是正确的加权平均，gold SQL `SUM(Price/Amount)` 是求和而非平均。已修正 gold SQL → `SUM(Price)/SUM(Amount)`，cache 更新为 22.545。 |
-
 
 ### qid 94 — `financial`（gold SQL 逻辑错误：锁区不锁人 + cache 列序反转）
 
@@ -332,27 +310,7 @@ FROM (
 
 > **financial 已发现 2 个 gold/evidence bug**：q94 条件互斥（最老≠最低工资区）、q95 gold 只实现一半条件（丢掉了 highest salary）。
 
-
-- **问题**：What is the ratio of outpatient to inpatient followed up treatment among all the 'SLE' diagnosed patient?
-
-| | 内容 |
-|---|---|
-| **Gold SQL** | `SUM(CASE WHEN Admission='+' THEN 1.0 ELSE 0 END) / SUM(CASE WHEN Admission='-' THEN 1 ELSE 0 END)` = 110/84 = **1.3095** |
-| **Bug** | 题目写"ratio of outpatient to inpatient"（门诊/住院 = 84/110 = 0.7636），Gold 和 evidence 都计算了 B/A（住院/门诊）。Gold cache 和 evidence 均已修正（门诊/住院 = 84/110 = **0.7636**），Gold 计算了 B/A |
-| **正确结果** | `CAST(SUM(CASE WHEN Admission='-' THEN 1.0 ELSE 0 END) AS REAL) / SUM(CASE WHEN Admission='+' THEN 1 ELSE 0 END)` = **0.7636** |
-| **验证** | DLR/RDF 均正确算出 0.76；ER 初始 strict PASS 因公式反了撞上错误 Gold。修正后 DLR strict PASS。2026-07-24 修正 cache。 |
-
-
-- **问题**：What are the speed in which attacks are put together of the top 4 teams with the highest build Up Play Speed?
-
-| | 内容 |
-|---|---|
-| **Gold SQL** | `ORDER BY buildUpPlaySpeed ASC LIMIT 4` → 最低值 [20, 20, 20, 23] |
-| **Bug** | 题目要求 "highest"，应取 DESC。Gold 用 ASC 取了最低的 4 个 |
-| **正确结果** | `ORDER BY buildUpPlaySpeed DESC LIMIT 4` → 最高值 [80, 78, 78, 77] |
-| **验证** | 三范式一致输出 80/78/78/77。2026-07-24 修正 cache。 |
-
-### qid 344 — `card_games`（evidence 缺少领域知识，2026-07-24 修正）
+### qid 344 - `card_games`（evidence 缺少领域知识，2026-07-24 修正）
 
 - **问题**：List all the mythic rarity print cards banned in gladiator format.
 - **原 evidence**：`mythic rarity printing refers to rarity = 'mythic'; card banned refers to status = 'Banned'; in gladiator format refers to format = 'gladiator'`
@@ -360,8 +318,9 @@ FROM (
 | | 内容 |
 |---|---|
 | **Bug** | evidence 只给了过滤条件，未说明同名卡有多个印刷版本（不同 id）。三范式全选了 name 只得 2 个名字，Gold 用 id 得 5 个。换上 longcat 和 deepseek-v4pro 均无效 |
-| **修正** | 补充 "A card may have multiple printings with the same name but different ids — return each printing's id" |
-| **验证** | 修正后三范式一致输出 5 个 id。2026-07-24 修正 evidence。
+| **修正** | 补充 "A card may have multiple printings with the same name but different ids - return each printing's id" |
+| **验证** | 修正后三范式一致输出 5 个 id。2026-07-24 修正 evidence。 |
+
 
 ### qid 533 — `codebase_community`（evidence 引导错误，2026-07-24 修正）
 
@@ -386,7 +345,6 @@ FROM (
 | **验证** | 修正后三范式一次全对，无一用 ABS。2026-07-27 修正 mini_dev_sqlite.json。 |
 
 > **和 q1031 同一根因**：SQL 伪代码（`age = SUBTRACT(DATETIME(), birthday)`）和数学公式（`Diff = A - B`）对 LLM 都不如一句人话。给 Agent 的 evidence 必须翻译成自然语言。
-
 
 ### qid 198 — `toxicology`（evidence 公式错误导致 gold 同样出错，2026-07-24 修正）
 
@@ -459,11 +417,13 @@ FROM (
 | **Evidence 问题** | `SUM(element='f')` 计算氟原子占比而非分子占比，与 question "does not contain fluorine（分子级）" 冲突——也需修正 |
 | **验证** | ER/DLR/RDF 三范式独立算出 99.34%（DLR 精确 151/152），SQLite 直跑确认 TR450 是唯一含氟致癌分子。2026-08-02 修正 mini_dev_sqlite.json + gold cache。 |
 
-### 处理约定
+### 处理约定（2026-08-27 起）
 
-- 对 gold SQL 与题意相悖的题目，**直接覆盖 gold cache 的 `rows` 与 `columns` 为正确结果**，保持 `ok=True`。
-- 尚未对全 500 题做系统性证据核对；后续若再发现 gold 错误，按同等格式追加到此节并修正 cache。
-- 本节所述"正确结果"均在 SQLite 中独立重放验证，并与三范式 Agent 的 pred 交叉比对一致。
+- **不修数据**：gold SQL / evidence / question 保持原始。新发现缺陷只追加本节分析（q/缺陷/正确口径/验证），不改数据集。
+- **裁决唯一权威** = `Evaluation/oc_judge/disputes.md`（按 QID 检索）；本节是它的分析底稿。judge 命中裁决条目时 GoldResult 作废，按裁定核对 Pred。
+- **统计口径**：正式结果中正常题/缺陷题分栏，避免数据集缺陷污染三范式对比。
+- 本节"正确结果"均在 SQLite 中独立重放验证，并与三范式 Agent 的 pred 交叉比对一致。
+- 缺陷题解法归属：evidence 薄弱/误导 -> Ch2 rag_knowledge 修正；SQL 层陷阱 -> Ch3 skills 模式；gold 本身错 -> Agent 按题面语义答 + judge 裁决。
 
 ## SQLite 元数据注意事项
 

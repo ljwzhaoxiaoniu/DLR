@@ -7,6 +7,7 @@ Agent 层负责把自然语言问题变成"语义查询 → 物理映射 → SQL
 ```
 OC-based Agent Service/
 ├── AGENTS.md                 # 唯一的 Agent 行为规则入口（三范式共用）
+├── skills/{db}.md            # Ch3 领域技能（难题模式 + SOP + fewshot，Agent 按需读取）
 ├── oc_er/opencode.json       # → localhost:28765/mcp/sse
 ├── oc_dlr/opencode.json      # → localhost:28775/mcp/sse
 └── oc_rdf/opencode.json      # → localhost:28785/mcp/sse
@@ -25,14 +26,17 @@ OC-based Agent Service/
 | 数据查询流程 | Step 1 语义召回（首跳全局 → 锁库后传 `db`）→ Step 2 物理映射（拿 `database_url`）→ Step 3 `execute_sql` → Step 4 结论 |
 | 回答规范 | 证据驱动，引用工具名 + 字段 |
 | Final Answer 模板 | `Final Answer: <结果>` + `Evidence SQL: <SQL>`（评测流水线双通道校验依赖此格式） |
+| 三通道并行锚定 | 拿到 question 后同时发 Ch1 语义召回 / Ch2 证据检索 / Ch3 领域技能，交叉验证后锚定实体再写 SQL（见 3-channel-design.md） |
+| Ch3 触发 | 预防（题面含陷阱模式）+ 救场（SQL 连续 2 次失败/结果可疑时回读 skills 自查）；文件访问限定 skills/{db}.md（db 来自 Ch1 返回） |
 
-> **Prompt 铁律**（2026-07-18 确立）：评测脚本的 Prompt 只传 `Question | Evidence`，**所有**行为规则只写 AGENTS.md，禁止在脚本里塞工具推荐/禁令/输出格式。见 [evaluation.md](evaluation.md)。
+> **Prompt 铁律**（2026-07-18 确立，2026-08-25 修订）：评测脚本的 Prompt 只传 `Question: ...`（纯 question，不注入 evidence），**所有**行为规则只写 AGENTS.md，禁止在脚本里塞工具推荐/禁令/输出格式。evidence 的领域知识由 Agent 经 Ch2 `search_evidence` 主动检索。见 [evaluation.md](evaluation.md)。
 
 ## 3. 防作弊架构（架构级，非提示级）
 
 | 层级 | 机制 | 效果 |
 |------|------|------|
 | **opencode.json** | `permission: {bash, task, read, glob, grep: "deny"}` | Agent 只有 MCP 工具，无文件系统/子代理后门 |
+| **Ch3 读取豁免（⚠️ 待解决）** | 三通道设计要求 Agent 读 `skills/{db}.md`，与 `read: "deny"` 冲突 | 需放开 read 或改 MCP 工具下发；解决前 Ch3 实际不可用 |
 | **execute_sql MCP** | 薄透传服务（`sql` + `database_url`，只读），200 行硬截断 | SQL 执行的唯一正经路径；`database_url` 必须来自映射工具返回 |
 | **MCP 范式隔离** | 服务端按 `_mapping_type` 注册工具子集 | Agent 只能看到当前范式的工具 |
 | **第一跳信息屏蔽** | `*_semantic_query` 不返回物理表/字段/database_url | 物理信息必须经第二跳映射工具按需获取 |

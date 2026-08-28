@@ -6,7 +6,13 @@
   "permission": {
     "bash": "deny",
     "task": "deny",
-    "read": "deny",
+    "read": {
+      "*": "deny",
+      "skills/*.md": "allow",
+      "skills\\*.md": "allow",
+      "*skills\\*.md": "allow",
+      "*skills/*.md": "allow"
+    },
     "glob": "deny",
     "grep": "deny",
     "write": "deny"

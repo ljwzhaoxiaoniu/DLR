@@ -84,7 +84,11 @@ def main():
     rows = []
     fields = ["paradigm", "q_id", "db_id", "strict_match", "judge_verdict", "judge_reason",
               "verdict", "process_score", "error", "input_tokens", "output_tokens",
-              "reasoning_tokens", "cache_read_tokens", "total_tokens"]
+              "reasoning_tokens", "cache_read_tokens", "total_tokens",
+              "steps", "tool_calls_detail",
+              "ch1_calls", "ch1_db_hit", "ch1_first_dbs",
+              "ch2_calls", "ch2_hits", "ch2_top",
+              "ch3_calls", "ch3_hit"]
     for p in ["er", "dlr", "rdf"]:
         csv_path = reports_dir / f"{p}.csv"
         if not csv_path.exists():
@@ -110,6 +114,16 @@ def main():
                 row["reasoning_tokens"] = st.get("tokens_reasoning", "")
                 row["cache_read_tokens"] = st.get("tokens_cache_read", "")
                 row["total_tokens"] = st.get("tokens_total", "")
+                row["steps"] = st.get("steps", "")
+                row["tool_calls_detail"] = st.get("tool_calls_detail", "")
+                row["ch1_calls"] = st.get("ch1_calls", "")
+                row["ch1_db_hit"] = st.get("ch1_db_hit", "")
+                row["ch1_first_dbs"] = st.get("ch1_first_dbs", "")
+                row["ch2_calls"] = st.get("ch2_calls", "")
+                row["ch2_hits"] = st.get("ch2_hits", "")
+                row["ch2_top"] = st.get("ch2_top", "")
+                row["ch3_calls"] = st.get("ch3_calls", "")
+                row["ch3_hit"] = st.get("ch3_hit", "")
                 rows.append(row)
 
     out_csv = pair_dir / "agent_stats.csv"
