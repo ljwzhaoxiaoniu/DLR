@@ -37,8 +37,8 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 | 指标 | ER | DLR | RDF |
 |------|----|-----|-----|
 | CORRECT | 2/2 (100.0%) | **2/2 (100.0%)** | 2/2 (100.0%) |
-| strict PASS | 1/2 (50.0%) | 1/2 (50.0%) | 2/2 (100.0%) |
-| 平均 token | 156,648 (+142.5% vs DLR) | **64,592** | 76,575 (+18.6% vs DLR) |
+| strict PASS | 1/2 (50.0%) | 1/2 (50.0%) | 1/2 (50.0%) |
+| 平均 token | 77,751 (+15.0% vs DLR) | **67,634** | 78,218 (+15.6% vs DLR) |
 
 ---
 
@@ -48,7 +48,7 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 
 | 数据库 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 备注 |
 |------|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|------|
-| debit_card_specializing | q1471 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 57,119 | 60,313 | **54,621** |  |
-| debit_card_specializing | q1472 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 256,178 | **68,871** | 98,529 |  |
+| debit_card_specializing | q1471 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 70,324 | 60,188 | **55,661** |  |
+| debit_card_specializing | q1472 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 85,178 | **75,081** | 100,776 |  |
 > **Token = input_tokens + output_tokens**
 > **数据来源**: `validated_results/v3_final/agent_stats.csv`
