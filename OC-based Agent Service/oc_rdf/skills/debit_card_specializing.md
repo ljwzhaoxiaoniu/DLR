@@ -18,3 +18,9 @@ When the table's row semantics and a formula disagree, trust the table and the q
 "Gas consumption" is the `Consumption` column of `yearmonth` -- there is no separate gas/energy category column, do not go looking for one. Peak month = the month with the highest total consumption: filter customers to `Segment = 'SME'`, filter `Date` to 2013, aggregate per month, order by total descending, take the top one. The month is the 5th-6th characters of `Date` (YYYYMM).
 
 Answer-format check (do this after running SQL): the question asks for the **month**. Return the two-digit month alone (e.g. `04`), not the full year-month string (e.g. `201304`). Align the result format to exactly the unit the question asks for.
+
+## When asked: "What is the difference in the annual average consumption of the customers with the least amount of consumption paid in CZK for 2013 between SME and LAM, LAM and KAM, and KAM and SME?"
+
+Per customer, sum 2013 CZK consumption. Then, **per segment**, pick the customer(s) with the lowest 2013 total. "Annual average consumption" here = the average of those customers' 2013 totals -- the year total is already the annual value, so do **not** divide by 12. Dividing by 12 turns it into a monthly figure and is wrong for this question (a "monthly" question says monthly explicitly, as in the SME 2013 monthly-average question).
+
+Output the three differences in the question's order: SME minus LAM, LAM minus KAM, KAM minus SME.
