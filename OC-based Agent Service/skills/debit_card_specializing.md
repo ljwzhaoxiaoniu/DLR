@@ -12,3 +12,9 @@ You may have retrieved this formula from Ch2: `Average Monthly consumption = AVG
 - Customers here do not all have 12 months of records (many have only a few months of rows), so dividing by 12 lands on the data under no reading
 
 When the table's row semantics and a formula disagree, trust the table and the question's own words.
+
+## When asked: "What was the gas consumption peak month for SME customers in 2013?"
+
+"Gas consumption" is the `Consumption` column of `yearmonth` -- there is no separate gas/energy category column, do not go looking for one. Peak month = the month with the highest total consumption: filter customers to `Segment = 'SME'`, filter `Date` to 2013, aggregate per month, order by total descending, take the top one. The month is the 5th-6th characters of `Date` (YYYYMM).
+
+Answer-format check (do this after running SQL): the question asks for the **month**. Return the two-digit month alone (e.g. `04`), not the full year-month string (e.g. `201304`). Align the result format to exactly the unit the question asks for.
