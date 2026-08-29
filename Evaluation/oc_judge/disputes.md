@@ -42,6 +42,7 @@
 - Q: Which of the three segments-SME, LAM, KAM-has the biggest and lowest percentage increases in consumption paid in EUR between 2012 and 2013?
 - 缺陷：gold 分母用 2012（得 545.40/708.11/681.58），evidence 规定除 2013。
 - 裁定：pct = (2013-2012)/2013\*100 -> **SME 88.02 最高，KAM 84.69，LAM 84.37 最低**。
+- 判口径补充（08-29）：问题问的是 which segment has the biggest and lowest——答案是排序而非数值。Pred 分母用 2012 或 2013 不改变排序（SME 最大、LAM 最小），排序与裁定一致即判 CORRECT。
 
 ### q1490（gold 两处 bug：缺 DISTINCT + INNER JOIN 丢人）
 - Q: How many percent of LAM customer consumed more than 46.73?

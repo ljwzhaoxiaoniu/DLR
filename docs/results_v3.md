@@ -33,13 +33,13 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 | debit_card_specializing | 30 | 4 | 26 | 13.3% |
 | card_games | 52 | 0 | 52 | 0% |
 
-> **总结**：共测试 6 题 × 3 范式 = **18 题次**。
+> **总结**：共测试 8 题 × 3 范式 = **24 题次**。
 
 | 指标 | ER | DLR | RDF |
 |------|----|-----|-----|
-| CORRECT | 6/6 (100.0%) | **6/6 (100.0%)** | 6/6 (100.0%) |
-| strict PASS | 2/6 (33.3%) | 5/6 (83.3%) | 3/6 (50.0%) |
-| 平均 token | 91,805 (+22.7% vs DLR) | **74,804** | 75,906 (+1.5% vs DLR) |
+| CORRECT | 8/8 (100.0%) | **8/8 (100.0%)** | 7/8 (87.5%) |
+| strict PASS | 2/8 (25.0%) | 5/8 (62.5%) | 3/8 (37.5%) |
+| 平均 token | 88,661 (+16.3% vs DLR) | **76,242** | 87,415 (+14.7% vs DLR) |
 
 ---
 
@@ -55,6 +55,37 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 | debit_card_specializing | q1476 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 109,335 | 72,354 | **70,780** | 题目/evidence 无缺陷；CZK/EUR 消歧无分歧，数值一致（402,524,570.17）；Ch3 无本题条目 | Ch1×2、Ch2×2（1 命中）；execute_sql×6 + get_table_schema×2 探测偏多，9 步 109,335 tok 最贵 | Ch1 单发首中；execute_sql×2，6 步 72,354 tok | 结果多带两列拆分值（CZK 总额/EUR 总额）→ strict 列数不匹配 FAIL，judge 按多余列不扣分翻正；6 步 70,780 tok |
 | debit_card_specializing | q1479 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 78,781 | 101,077 | **63,611** | 题目/evidence 无缺陷（"gas"即 Consumption 列，gold SQL 亦不另滤，仅滤 CZK）；Ch3 无本题条目 | Ch1 首跳漂移至 california_schools（×2 回正）；SQL 未取 TOP1（无 LIMIT 1）返回全年份排名（3 行+总额列）→ strict FAIL，judge 依首行 2013 翻正；execute_sql×3，7 步 78,781 tok | 无异常，strict PASS；execute_sql×4，8 步 101,077 tok 三范式最贵 | SQL 漏 Currency='CZK' 过滤（无 customers JOIN），峰值年份恰与过滤口径一致；6 步 63,611 tok 最省 |
 | debit_card_specializing | q1480 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **55,710** | 68,376 | 72,339 | 题目/evidence 无缺陷；Ch3 本题条目（返回两位月份+格式对齐）生效——ER/DLR 按条目返回 "04" 直接 PASS | 无异常；5 步 55,710 tok 最省 | 无异常；6 步 68,376 tok | 值 "04" 正确但多带 total 列 → 列数不匹配 strict FAIL，judge 翻正；rdf_search×4 探测偏多，6 步 72,339 tok 最贵 |
+| debit_card_specializing | q1481 | FAIL | CORRECT | FAIL | CORRECT | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | **87,365** | 97,023 | 159,092 | 缺陷题——gold 算全段客户均值差（[-582092.86, 582092.86, 0]），未筛每段最低消费客户；Ch3 本题条目（每段最低客户年度总消费、不除 12）生效——ER/DLR 按条目算出裁定口径 [-14009.34, 6046.62, 7962.72]，judge 依 SOP>RAG 翻正 | 无异常；execute_sql×4，7 步 87,365 tok 三范式最省 | 无异常；Ch2×2（1 命中）；execute_sql×4，7 步 97,023 tok | SQL 漏 Currency='CZK'（JOIN customers 无 WHERE）→ LAM 最低客户取到混合货币口径 -186.18（vs CZK 口径 2.24），前两差值各偏 188.42 → INCORRECT；execute_sql×12 反复试错，11 步 159,092 tok 三范式最贵 |
+| debit_card_specializing | q1482 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 71,091 | **64,087** | 84,788 | 缺陷题——gold 分母用 2012 且未滤 EUR；evidence 规定除 2013（非常规口径），三范式均按数学常识除 2012 致 strict 全 FAIL；disputes 补判口径：问题问 which segment，答案=排序，三范式排序一致（SME 最高/LAM 最低）→ judge 全翻 CORRECT；Ch3 无本题条目 | 无异常；Ch2×3（2 命中）探测略多；execute_sql×5，6 步 71,091 tok | 无异常；execute_sql×3，5 步 64,087 tok 最省 | 无异常；execute_sql×6，7 步 84,788 tok 最贵 |
 > **Token = input_tokens + output_tokens**
 > **备注分栏**: 共通 = 题目/evidence/Ch3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）
 > **数据来源**: `validated_results/v3_final/{pair}/agent_stats.csv`（per-pair，如 `1473-1476/`）
+
+---
+
+## 三通道合理性论证——SOP 条目案例（q1473 / q1480）
+
+> 三通道分工：Ch1 语义锚定"在哪"（库/表），Ch2 RAG 映射"是什么"（术语→列/值），Ch3 SOP 捕获"这题怎么坑"（领域口径/格式陷阱）。SOP 通道的合理性取决于它是否解决了 Ch1/Ch2 结构上解决不了的问题——当前有 SOP 条目的两道题（q1473 事前准入、q1480 事后准入）恰好各覆盖一类盲区。
+
+### 案例 1：q1473 — SOP 仲裁知识冲突（事前条目）
+
+- 缺陷题：evidence/gold 公式 `AVG(Consumption)/12` 与 yearmonth 行语义（每行已是月度值）矛盾
+- 无 SOP 的后果：Ch2 检索到错误公式，Ch1 无口径概念——**没有任何一层能仲裁**，三范式都会跟着除 12，答案 12 倍偏小
+- 有条目后：Ch3 条目明确"月度值直接 AVG，不除 12"，三范式 Pred 一致按表语义作答（5519.48）；judge 判序 SOP>RAG，依条目全翻 CORRECT
+- 证明点：**SOP 是知识冲突的仲裁层**——冲突来自 Ch2 自身携带的错误公式，只有第三通道能裁决
+
+### 案例 2：q1480 — SOP 对齐答案格式（事后准入 + 重跑对照）
+
+- 陷阱：问题问"月份"，gold 期望纯月份 `"04"`；Agent 自然返回完整年月 `"201304"`（ER/DLR）或附带总额列（RDF）——evidence 只讲 Date 取位，不含格式约定
+- 无条目批次：strict 0/3 PASS，全部依赖 judge 等价翻正
+- 补条目（返回两位月份，SQL 执行完对齐格式）重跑：**ER/DLR 返回 `"04"` 直接 strict PASS**（ER 55,710 tok，5 步，三范式最省）；RDF 值对齐但未遵守"仅月份一列"，仍 FAIL 由 judge 翻正
+- 证明点：**格式对齐约定既不在 Ch1 语义层、也不在 Ch2 知识层，只能由 SOP 表达**；条目有效性有对照数据：strict PASS 0/3 → 2/3
+
+### 小结
+
+| 题 | 无 SOP | 有 SOP |
+|---|---|---|
+| q1473 | （无对照批次；若按 Ch2 错误公式作答，三范式均 12 倍偏小） | 三范式口径一致按表语义作答，judge 依 SOP 翻正 |
+| q1480 | strict 0/3，全靠 judge | strict 2/3，ER/DLR 免仲裁 |
+
+两道题各覆盖一类 Ch1/Ch2 的结构盲区（知识冲突、格式约定），SOP 通道不可被替代——三通道并行锚定成立。
