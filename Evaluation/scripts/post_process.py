@@ -197,12 +197,12 @@ def update_results_md(pair_label, new_rows, validated_dir):
     md_text = md_path.read_text(encoding="utf-8")
     import re
 
-    # 旧明细行备注：按 qid 提取（脚本不覆盖人工写的备注）
+    # 旧明细行备注：按 qid 提取四栏（共通/ER/DLR/RDF，脚本不覆盖人工写的备注）
     old_remarks = {}
     for line in md_text.splitlines():
         parts = [c.strip() for c in line.split("|")]
-        if len(parts) >= 16 and parts[2].startswith("q") and parts[2][1:].isdigit():
-            old_remarks[parts[2]] = parts[15]
+        if len(parts) >= 19 and parts[2].startswith("q") and parts[2][1:].isdigit():
+            old_remarks[parts[2]] = parts[15:19]
 
     # 明细行
     detail_lines = []
@@ -233,16 +233,16 @@ def update_results_md(pair_label, new_rows, validated_dir):
             return f"**{s}**" if val == min_t and val > 0 else s
 
         db_name = er_r.get("db_id", dlr_r.get("db_id", rdf_r.get("db_id", "")))
-        remark = old_remarks.get(f"q{qid}", "")
+        common_rk, er_rk, dlr_rk, rdf_rk = old_remarks.get(f"q{qid}", ["", "", "", ""])
         detail_lines.append(
             f"| {db_name} | q{qid} | {er_sj} | {er_j} | {dlr_sj} | {dlr_j} | {rdf_sj} | {rdf_j} | "
             f"{er_r.get('verdict','')} | {dlr_r.get('verdict','')} | {rdf_r.get('verdict','')} | "
-            f"{tok_str(er_t)} | {tok_str(dlr_t)} | {tok_str(rdf_t)} | {remark} |"
+            f"{tok_str(er_t)} | {tok_str(dlr_t)} | {tok_str(rdf_t)} | {common_rk} | {er_rk} | {dlr_rk} | {rdf_rk} |"
         )
 
     # 替换明细表：第一个 ### 到 > **Token 之前
-    header = "| 数据库 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 备注 |"
-    sep    = "|------|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|------|"
+    header = "| 数据库 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 共通 | ER-备注 | DLR-备注 | RDF-备注 |"
+    sep    = "|------|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|------|--------|--------|--------|"
     detail_block = header + "\n" + sep + "\n" + "\n".join(detail_lines)
     md_text = re.sub(
         r"(### \w+\n\n).*?(\n> \*\*Token)",

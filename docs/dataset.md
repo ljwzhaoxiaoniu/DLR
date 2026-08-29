@@ -83,6 +83,33 @@ DLR Proj/
 
 > 核对方法：分别取 `mini_dev_sqlite.json` 的 `SQL` 字段与 `mini_dev_sqlite_gold.sql`（按行号顺序对应 500 题）逐字对比 → 相忠实执行；再用 SQLite 直跑 gold SQL 并与 evidence 公式比语义。下两题两源 SQL **逐字一致**，判定为数据集本身的 gold SQL 错误，非 Stage 0 引入。
 
+
+### qid 1473 — `debit_card_specializing`（2026-08-28 新发现，软修复消化）
+
+- **问题**：What was the average monthly consumption of customers in SME for the year 2013?
+- **evidence**：Average Monthly consumption = AVG(Consumption) / 12; Year 2013 can be presented as Between 201301 And 201312; The first 4 strings of the Date values in the yearmonth table can represent year.
+
+| | 内容 |
+|---|---|
+| **数据集 gold SQL 做的事** | `AVG(T2.Consumption) / 12` —— evidence 公式与 gold SQL 互相一致地错 |
+| **错误结果（原 gold rows）** | `[[459.956264]]` |
+| **Bug 本质** | yearmonth 每行已是"客户-月"预聚合值，`AVG` 即月均；再除 12 是双重除法。且 2013 年 SME 客户人均仅 8.0 个月记录（178,337 行 / 22,274 客户），"/12"连"除以月数"都凑不上 |
+| **题意正确答案** | `AVG(Consumption)` = **5519.4752**（三范式 Pred 一致 + SQLite 独立重放） |
+| **消化路径（软修复，数据保持原始）** | Ch3 skill 模式4（月均/年均口径，禁双重除法）+ judge 判序 SOP>RAG（`oc_judge/AGENTS.md`，2026-08-28 定）。v3 实测（run 0828_1455）：三范式 strict FAIL 后 judge 全翻 CORRECT |
+
+**正确的 SQL**（按题意：yearmonth 粒度 = 客户-月，月均一步 AVG）：
+
+```sql
+SELECT AVG(y.Consumption) AS avg_monthly_consumption
+FROM yearmonth y JOIN customers c ON y.CustomerID = c.CustomerID
+WHERE c.Segment = 'SME' AND SUBSTR(y.Date, 1, 4) = '2013';
+-- 结果: 5519.475171（gold 459.956264 = 该值 / 12）
+```
+
+> **备注**：
+> - v2（evidence 注入）时代三范式 strict PASS 是**假阳性**——Agent 照抄注入公式，撞上同样照抄公式的 gold，两端对齐掩盖了缺陷；纯 question 模式下三范式按数据语义作答，缺陷才显形。
+> - 附带发现知识层内部矛盾：rag_knowledge kid7（"dividing by 12 for annual average"）与 kid16/19（月度粒度事实）冲突，ER/RDF judge 采信 kid7 曾判 INCORRECT，judge 判序补定 SOP>RAG 后统一翻正。kid7 的 /12 子句待 debit_card 跑完统一清理。
+
 ### qid 1481 — `debit_card_specializing`
 
 - **问题**：What is the difference in the annual average consumption of the customers with the *least amount of consumption* in each segment paid in CZK for 2013 between SME and LAM, LAM and KAM, and KAM and SME?

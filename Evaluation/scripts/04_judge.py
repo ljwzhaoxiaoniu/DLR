@@ -99,6 +99,7 @@ def llm_judge(question, evidence, gold_res, pred_res, gold_sql, pred_sql, db_id,
         verdict = v_m.group(1).upper() if v_m else "UNKNOWN"
         process = p_m.group(1) if p_m else ("100" if verdict == "CORRECT" else "")
         reason = r_m.group(1).strip() if r_m else reply[:200]
+        reason = reason.strip().rstrip("`").strip()  # 剥掉 LLM 输出尾随的 code fence 残渣
         return verdict, process, reason
     except Exception as e:
         return "UNKNOWN", "", str(e)[:200]

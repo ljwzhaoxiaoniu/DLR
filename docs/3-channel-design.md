@@ -130,6 +130,7 @@ Final Answer + Evidence SQL + 标注信息来源（MCP 工具名 / RAG kid / SOP
 - **SOP ≠ 诊断流程（Digi-Onto）→ 解题防坑建议**。DLR 的数据集题面简单、无复杂业务逻辑，SOP 聚焦"这种题容易错在哪"。
 - **三通道并行，不是串行**。ReACT 循环中三个通道同时发出，交叉验证后才进入 SQL 构造阶段。
 - **Ch2 不可匮乏**。search_evidence 返回空 → Ch1+Ch3 两条通道各自有噪声 → 交叉不到同一点。Ch2 的术语密度决定锚定质量。
-- **Skill 写法 = 一个个具体问题 + 怎么做 + fewshot**。fewshot 只给方法模板（坑、步骤、SQL 结构），**禁止写任何题目的最终结果值**——模板要求 Agent 自己执行 SQL 才能得值，写值就是背答案。评测元信息（gold 对错、evidence 缺陷）不进 skills，只进 docs/dataset.md。
+- **Skill 写法 = 一个个具体问题 + 怎么做（纯文字，用英文，与题面语言一致）**。条目事后准入：agent 搞不定/结果不确定/题目错误才进 skills--头疼医头的基础上略微聚合，n=1 不预写通用规则；没有条目的题 = 干净实验组，只考 Ch1 description + Ch2 RAG。**不写任何 SQL 成品/few-shot 模板（2026-08-28 修订，旧版允许方法模板已删）**：表和聚合的选择是解释（skill 的活），查询结构是执行（agent 从 Ch1 映射自建，是被测能力）；模板挖空题面即答案 95%（judge 实录：技能少样本模板即本题原句）。评测元信息（gold 对错、evidence 缺陷）不进 skills，只进 docs/dataset.md。
 - **Skill 累积闭环**：每道翻盘/失败的题，根因归类 → 已有模式则补充案例，新坑则新增模式。
+- **软修复 = SOP 高维覆盖（2026-08-28 定）**：知识层内部冲突（kid 聚合碎片 vs SOP 模式）不改数据、不改 kid，由 Ch3 按题目模式给出高维指引覆盖低层碎片--SOP 不参与 kid 聚类，只按“这种题容易怎么错”组织；judge 判序显式定：disputes > SkillPath(SOP) > KnowledgePath(rag) > evidence 字面（oc_judge/AGENTS.md）。首例 q1473：kid7 的 /12 模板与 kid16/19 粒度事实矛盾，skill 模式4 覆盖后三范式 judge 统一翻正。
 - **数据集保持原始（2026-08-27 起）**：不修 gold SQL / evidence，已知缺陷题（docs/dataset.md 清单）由知识层消化——Ch2 聚合时修正错误 evidence、Ch3 模式化指引避开陷阱。Agent 按语义正确口径作答；strict 对原始 gold 必挂，胜负落在 judge 仲裁（judge 拿原始 evidence，evidence 支持题面语义的题可翻）。**统计口径：正常题/缺陷题分栏**，避免数据集缺陷污染三范式对比。这才是本体要解决的问题：在不完美的数据与表述上建立语义秩序，而非迁就数据修数据。
