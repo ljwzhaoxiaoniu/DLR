@@ -24,3 +24,11 @@ Answer-format check (do this after running SQL): the question asks for the **mon
 Per customer, sum 2013 CZK consumption. Then, **per segment**, pick the customer(s) with the lowest 2013 total. "Annual average consumption" here = the average of those customers' 2013 totals -- the year total is already the annual value, so do **not** divide by 12. Dividing by 12 turns it into a monthly figure and is wrong for this question (a "monthly" question says monthly explicitly, as in the SME 2013 monthly-average question).
 
 Output the three differences in the question's order: SME minus LAM, LAM minus KAM, KAM minus SME.
+
+## When asked: "Which year recorded the most consumption of gas paid in CZK?"
+
+Word-sense disambiguation: "gas" here does not mean the GasStation entity / `gasstations` table itself. "Consumption of gas" = the spending recorded in the `Consumption` column of `yearmonth` (gas-station business spending). Anchor on `yearmonth`, not on `gasstations`.
+
+"paid in CZK" is a currency filter that lives on the `customers` table (`Currency` column) -- join `customers` and filter `Currency = 'CZK'`.
+
+Per-year aggregation: the year is the first 4 characters of `Date` (YYYYMM). Sum `Consumption` per year, order descending, take the top year.
