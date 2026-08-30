@@ -32,3 +32,16 @@ Word-sense disambiguation: "gas" here does not mean the GasStation entity / `gas
 "paid in CZK" is a currency filter that lives on the `customers` table (`Currency` column) -- join `customers` and filter `Currency = 'CZK'`.
 
 Per-year aggregation: the year is the first 4 characters of `Date` (YYYYMM). Sum `Consumption` per year, order descending, take the top year.
+
+## When asked: "How many percent of LAM customer consumed more than 46.73?"
+
+"Percent of customers" is counted **per customer**, not per customer-month record. One customer = one unit in both numerator and denominator, matched to the same caliber:
+
+- Numerator: customers whose **total consumption** (aggregated across their records) exceeds the threshold.
+- Denominator: **all** customers of the segment -- use LEFT JOIN from `customers`, so customers with no consumption records still count. INNER JOIN silently drops them and shrinks the denominator.
+
+Do not copy a record-level formula if you retrieved one: counting customer-month records (or a record-count numerator over a customer-count denominator) mixes calibers and is wrong for a "percent of customers" question.
+
+## When asked: "Is it true that more SMEs pay in Czech koruna than in euros? If so, how many more?"
+
+Answer with the single difference value the question asks for: count of SME customers with `Currency = 'CZK'` minus count with `Currency = 'EUR'` -- one column, one row. Do not also return the two counts themselves; the question asks "how many more", not "how many of each".
