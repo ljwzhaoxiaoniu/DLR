@@ -30,16 +30,16 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 
 | 数据库 | 全量 | 已评 | 剩余 | 进度 |
 |--------|------|------|------|------|
-| debit_card_specializing | 30 | 10 | 20 | 33.3% |
+| debit_card_specializing | 30 | 12 | 18 | 40.0% |
 | card_games | 52 | 0 | 52 | 0% |
 
-> **总结**：共测试 10 题 × 3 范式 = **30 题次**。
+> **总结**：共测试 12 题 × 3 范式 = **36 题次**。
 
 | 指标 | ER | DLR | RDF |
 |------|----|-----|-----|
-| CORRECT | 10/10 (100.0%) | **10/10 (100.0%)** | 9/10 (90.0%) |
-| strict PASS | 4/10 (40.0%) | 6/10 (60.0%) | 4/10 (40.0%) |
-| 平均 token | 85,336 (+20.4% vs DLR) | **70,855** | 80,985 (+14.3% vs DLR) |
+| CORRECT | 12/12 (100.0%) | **12/12 (100.0%)** | 11/12 (91.7%) |
+| strict PASS | 5/12 (41.7%) | **7/12 (58.3%)** | 5/12 (41.7%) |
+| 平均 token | 82,696 (+20.0% vs DLR) | **68,925** | 77,060 (+11.8% vs DLR) |
 
 ---
 
@@ -59,6 +59,8 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 | debit_card_specializing | q1482 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 71,091 | **64,087** | 84,788 | 缺陷题——gold 分母用 2012 且未滤 EUR；evidence 规定除 2013（非常规口径），三范式均按数学常识除 2012 致 strict 全 FAIL；disputes 补判口径：问题问 which segment，答案=排序，三范式排序一致（SME 最高/LAM 最低）→ judge 全翻 CORRECT；Ch3 无本题条目 | 无异常；Ch2×3（2 命中）探测略多；execute_sql×5，6 步 71,091 tok | 无异常；execute_sql×3，5 步 64,087 tok 最省 | 无异常；execute_sql×6，7 步 84,788 tok 最贵 |
 | debit_card_specializing | q1483 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 89,939 | 59,145 | **55,272** | 题目/evidence 无缺陷；Ch3 无本题条目 | execute_sql×3 + get_table_schema×1 探测偏多，8 步 89,939 tok 三范式最贵 | 无异常；execute_sql×2，5 步 59,145 tok | 无异常；execute_sql 仅 1 次，5 步 55,272 tok 最省 |
 | debit_card_specializing | q1484 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 67,681 | 68,072 | **65,684** | 题目/evidence 无缺陷；Ch3 无本题条目 | 无异常；6 步 67,681 tok | 无异常；Ch2×2 全命中；execute_sql×2，6 步 68,072 tok | 无异常；Ch1×2；execute_sql×2，6 步 65,684 tok 最省 |
+| debit_card_specializing | q1486 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 66,580 | 59,278 | **57,478** | 题目/evidence 无缺陷；Ch3 本题条目（差值单列收口）生效--三范式均只返回 diff=23505 单列，strict 全 PASS 免仲裁 | 无异常；Ch1×2；execute_sql×2，6 步 66,580 tok | 无异常；execute_sql 仅 1 次，5 步 59,278 tok | 无异常；execute_sql×2，5 步 57,478 tok 最省 |
+| debit_card_specializing | q1490 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 72,417 | **59,271** | 57,400 | 缺陷题--gold 两处 bug（数 customer-month 记录非客户、INNER JOIN 丢 47 无记录客户）；Ch3 本题条目（percent of customers 口径：客户总消费聚合+LEFT JOIN）与 agent 自发行为一致（3599/3658=98.39），未按 evidence 记录口径 -> strict 全 FAIL，judge 依 disputes 全翻 CORRECT；条目生效后 DLR/RDF 重跑（token 从 74,908/88,580 降至 59,271/57,400），ER 行为与条目一致未重跑 | 无异常；Ch1×2 回正后直锚，execute_sql×2，6 步 72,417 tok | 无异常；Ch1 单发首中；execute_sql×2，5 步 59,271 tok | 无异常；execute_sql×2，5 步 57,400 tok |
 > **Token = input_tokens + output_tokens**
 > **备注分栏**: 共通 = 题目/evidence/Ch3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）
 > **数据来源**: `validated_results/v3_final/{pair}/agent_stats.csv`（per-pair，如 `1473-1476/`）
