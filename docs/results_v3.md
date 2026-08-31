@@ -30,16 +30,16 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 
 | 数据库 | 全量 | 已评 | 剩余 | 进度 |
 |--------|------|------|------|------|
-| debit_card_specializing | 30 | 26 | 4 | 86.7% |
+| debit_card_specializing | 30 | 28 | 2 | 93.3% |
 | card_games | 52 | 0 | 52 | 0% |
 
-> **总结**：共测试 26 题 × 3 范式 = **78 题次**。
+> **总结**：共测试 28 题 × 3 范式 = **84 题次**。
 
 | 指标 | ER | DLR | RDF |
 |------|----|-----|-----|
-| CORRECT | 26/26 (100.0%) | **26/26 (100.0%)** | 25/26 (96.2%) |
-| strict PASS | 10/26 (38.5%) | 13/26 (50.0%) | 12/26 (46.2%) |
-| 平均 token | 83,691 (+8.6% vs DLR) | **77,056** | 75,200 (-2.4% vs DLR) |
+| CORRECT | 28/28 (100.0%) | **28/28 (100.0%)** | 27/28 (96.4%) |
+| strict PASS | 10/28 (35.7%) | 13/28 (46.4%) | 12/28 (42.9%) |
+| 平均 token | 83,194 (+8.4% vs DLR) | **76,726** | 74,519 (-2.9% vs DLR) |
 
 ---
 
@@ -73,8 +73,10 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 | debit_card_specializing | q1515 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 92,593 | 79,901 | **73,520** | 题目/evidence 无缺陷；Ch3 无本题条目，纯 Ch1+Ch2 解出 | 多带 CustomerID 列→ 列形状 strict FAIL，judge 按多余列不扣分翻正；7 步 92,593 tok 三范式最贵 | 无异常；6 步 79,901 tok | 无异常；6 步 73,520 tok 最省 |
 | debit_card_specializing | q1521 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 73,360 | 101,743 | **58,064** | 题目/evidence 无缺陷（时段 8:00-9:00 + CZE + 日期格式提示）；Ch3 无本题条目——三范式 strict 全 PASS 免仲裁 | 无异常；6 步 73,360 tok | 无异常；7 步 101,743 tok 最贵 | execute_sql 仅 1 次，5 步 58,064 tok 最省 |
 | debit_card_specializing | q1524 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 63,136 | 90,562 | **60,962** | 题目/evidence 无缺陷；"nationality"=加油站所在国（kid18 领域约定，非客户表字段）、"spent 548.4"=单笔交易价格；Ch3 无本题条目，Ch2 命中 kid18 解出 | 多带 CustomerID 列→ 列形状 strict FAIL，judge 按多余列不扣分翻正；5 步 63,136 tok | 无异常；7 步 90,562 tok | execute_sql 仅 1 次，5 步 60,962 tok 最省 |
-| debit_card_specializing | q1525 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **62,147** | 65,656 | 75,884 | 缺陷题——gold 计交易人次得 1.65%，"percentage of the customers" 应计客户数（7/259=2.70%）；Ch3 本题条目（客户口径）生效——三范式均 COUNT DISTINCT 得 2.70%，judge 依 disputes+SkillPath 全翻 CORRECT | execute_sql×3，5 步 62,147 tok 最省 | execute_sql 仅 1 次，5 步 65,656 tok | execute_sql×3，6 步 75,884 tok |  |
-| debit_card_specializing | q1526 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 130,044 | 151,450 | **93,781** | 缺陷题——gold 子查询多 JOIN gasstations 无匹配返回 NULL；Ch3 本题条目（paid 634.8=单笔交易价格定位客户；decrease rate 用该客户 2012/2013 年度消费合计）生效——三范式均得 -5.8152（ER/DLR 以 -581.52% 同值换算），judge 依 disputes 全翻 CORRECT | execute_sql×7 探测多，9 步 130,044 tok | execute_sql×7，9 步 151,450 tok 三范式最贵 | execute_sql×3，7 步 93,781 tok 最省 |  |
+| debit_card_specializing | q1525 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **62,147** | 65,656 | 75,884 | 缺陷题——gold 计交易人次得 1.65%，"percentage of the customers" 应计客户数（7/259=2.70%）；Ch3 本题条目（客户口径）生效——三范式均 COUNT DISTINCT 得 2.70%，judge 依 disputes+SkillPath 全翻 CORRECT | execute_sql×3，5 步 62,147 tok 最省 | execute_sql 仅 1 次，5 步 65,656 tok | execute_sql×3，6 步 75,884 tok |
+| debit_card_specializing | q1526 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 130,044 | 151,450 | **93,781** | 缺陷题——gold 子查询多 JOIN gasstations 无匹配返回 NULL；Ch3 本题条目（paid 634.8=单笔交易价格定位客户；decrease rate 用该客户 2012/2013 年度消费合计）生效——三范式均得 -5.8152（ER/DLR 以 -581.52% 同值换算），judge 依 disputes 全翻 CORRECT | execute_sql×7 探测多，9 步 130,044 tok | execute_sql×7，9 步 151,450 tok 三范式最贵 | execute_sql×3，7 步 93,781 tok 最省 |
+| debit_card_specializing | q1528 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 89,360 | 82,877 | **70,687** | 题目/evidence 无缺陷（evidence 为空仅 2 题之一；"premium" 是 gasstations.Segment 值域，非客户段位）；Ch3 无本题条目——三范式答案一致 35.68%（314/880），strict FAIL 为列名/格式差，judge 全翻 CORRECT | execute_sql×3，7 步 89,360 tok 三范式最贵 | Ch2×2 全命中；6 步 82,877 tok | Ch2×2 全命中；6 步 70,687 tok 最省 |  |
+| debit_card_specializing | q1529 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 64,119 | 61,979 | **60,665** | 缺陷题——gold 笛卡尔积 JOIN（8×20=160 行）+ 采样表当全量；Ch3 本题条目（总花费=客户全量月度消费合计，非采样单笔价格）生效——三范式均取 yearmonth 全量口径（5,124,646.35 / 2012-01 67,156.94），judge 依 disputes 全翻 CORRECT | execute_sql 仅 1 次，5 步 64,119 tok 最省 | execute_sql×2，5 步 61,979 tok | execute_sql 仅 1 次，5 步 60,665 tok |  |
 > **Token = input_tokens + output_tokens**
 > **备注分栏**: 共通 = 题目/evidence/Ch3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）
 > **数据来源**: `validated_results/v3_final/{pair}/agent_stats.csv`（per-pair，如 `1473-1476/`）

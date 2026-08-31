@@ -82,3 +82,9 @@ Countries of gas stations are reached through the transaction records -> `gassta
 
 "consumption decrease rate" = (total consumption of 2012 - total consumption of 2013) / total consumption of 2012, computed from that customer's annual consumption totals. Annual totals are the sums of the customer's monthly consumption values in each year -- use monthly consumption figures, not per-transaction prices.
 
+## When asked: "What is the amount spent by customer "38508" at the gas stations? How much had the customer spent in January 2012?"
+
+"Amount spent by a customer" is that customer's total consumption across all gas stations -- a full-data monthly-total question, not a sample-transaction question. The transaction sample covers only four days and cannot stand in for the customer's total spending.
+
+"Spent in January 2012" is the same customer's monthly total for that month (201201). Both parts are read from the customer's monthly totals, never from per-transaction prices of the sample.
+
