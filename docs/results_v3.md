@@ -30,16 +30,16 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 
 | 数据库 | 全量 | 已评 | 剩余 | 进度 |
 |--------|------|------|------|------|
-| debit_card_specializing | 30 | 12 | 18 | 40.0% |
+| debit_card_specializing | 30 | 14 | 16 | 46.7% |
 | card_games | 52 | 0 | 52 | 0% |
 
-> **总结**：共测试 12 题 × 3 范式 = **36 题次**。
+> **总结**：共测试 14 题 × 3 范式 = **42 题次**。
 
 | 指标 | ER | DLR | RDF |
 |------|----|-----|-----|
-| CORRECT | 12/12 (100.0%) | **12/12 (100.0%)** | 11/12 (91.7%) |
-| strict PASS | 5/12 (41.7%) | **7/12 (58.3%)** | 5/12 (41.7%) |
-| 平均 token | 82,696 (+20.0% vs DLR) | **68,925** | 77,060 (+11.8% vs DLR) |
+| CORRECT | 14/14 (100.0%) | **14/14 (100.0%)** | 13/14 (92.9%) |
+| strict PASS | 6/14 (42.9%) | 8/14 (57.1%) | 6/14 (42.9%) |
+| 平均 token | 83,669 (+15.7% vs DLR) | **72,341** | 77,391 (+7.0% vs DLR) |
 
 ---
 
@@ -60,17 +60,19 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 | debit_card_specializing | q1483 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 89,939 | 59,145 | **55,272** | 题目/evidence 无缺陷；Ch3 无本题条目 | execute_sql×3 + get_table_schema×1 探测偏多，8 步 89,939 tok 三范式最贵 | 无异常；execute_sql×2，5 步 59,145 tok | 无异常；execute_sql 仅 1 次，5 步 55,272 tok 最省 |
 | debit_card_specializing | q1484 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 67,681 | 68,072 | **65,684** | 题目/evidence 无缺陷；Ch3 无本题条目 | 无异常；6 步 67,681 tok | 无异常；Ch2×2 全命中；execute_sql×2，6 步 68,072 tok | 无异常；Ch1×2；execute_sql×2，6 步 65,684 tok 最省 |
 | debit_card_specializing | q1486 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 66,580 | 59,278 | **57,478** | 题目/evidence 无缺陷；Ch3 本题条目（差值单列收口）生效--三范式均只返回 diff=23505 单列，strict 全 PASS 免仲裁 | 无异常；Ch1×2；execute_sql×2，6 步 66,580 tok | 无异常；execute_sql 仅 1 次，5 步 59,278 tok | 无异常；execute_sql×2，5 步 57,478 tok 最省 |
-| debit_card_specializing | q1490 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 72,417 | **59,271** | 57,400 | 缺陷题--gold 两处 bug（数 customer-month 记录非客户、INNER JOIN 丢 47 无记录客户）；Ch3 本题条目（percent of customers 口径：客户总消费聚合+LEFT JOIN）与 agent 自发行为一致（3599/3658=98.39），未按 evidence 记录口径 -> strict 全 FAIL，judge 依 disputes 全翻 CORRECT；条目生效后 DLR/RDF 重跑（token 从 74,908/88,580 降至 59,271/57,400），ER 行为与条目一致未重跑 | 无异常；Ch1×2 回正后直锚，execute_sql×2，6 步 72,417 tok | 无异常；Ch1 单发首中；execute_sql×2，5 步 59,271 tok | 无异常；execute_sql×2，5 步 57,400 tok |
+| debit_card_specializing | q1490 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 72,417 | 59,271 | **57,400** | 缺陷题--gold 两处 bug（数 customer-month 记录非客户、INNER JOIN 丢 47 无记录客户）；Ch3 本题条目（percent of customers 口径：客户总消费聚合+LEFT JOIN）与 agent 自发行为一致（3599/3658=98.39），未按 evidence 记录口径 -> strict 全 FAIL，judge 依 disputes 全翻 CORRECT；条目生效后 DLR/RDF 重跑（token 从 74,908/88,580 降至 59,271/57,400），ER 行为与条目一致未重跑 | 无异常；Ch1×2 回正后直锚，execute_sql×2，6 步 72,417 tok | 无异常；Ch1 单发首中；execute_sql×2，5 步 59,271 tok | 无异常；execute_sql×2，5 步 57,400 tok |
+| debit_card_specializing | q1493 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **72,816** | 111,790 | 90,440 | 缺陷题--gold 分母数 Feb2012 有记录客户（18,324，得 66.62%）而非全部客户，分子相同（12,208）；"percentage of customers" 语义应含全部客户（32,461，37.61%），属 q1490 已裁同型缺陷；Ch2 检索命中 q1490 泛化知识（客户级分母须含全部客户、先聚合后过阈值），三范式全部自发按客户口径 LEFT JOIN 作答，strict 全 FAIL，judge 依知识层口径全翻 CORRECT；Ch3 无本题条目 | 无异常；Ch1 单发首中、Ch2 单发命中；execute_sql×2，6 步 72,816 tok 最省 | 验证性查询偏多--execute_sql×5（客户数/日期分布探查+分子复核），8 步 111,790 tok 三范式最贵 | rdf_search×1 结构探测；execute_sql×4，7 步 90,440 tok |
+| debit_card_specializing | q1498 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 106,199 | 73,887 | **68,312** | 题目/evidence 无缺陷（"highest monthly consumption"=按月 SUM 聚合取最大月总消费，gold 51,787,161.74）；Ch3 本题条目（辖域消歧：whole-year 无主语问 highest monthly = 按月 SUM 后取最大，禁 MAX(Consumption) 裸行值，附与 q1471 行级 AVG 的对照句）生效--三范式 strict 全 PASS 免仲裁 | 条目前已按月 SUM 答对（6 步 69,703 tok）；条目后重跑验证性查询偏多--execute_sql×5，9 步 106,199 tok 三范式最贵 | 条目前三范式唯一失分--MAX(Consumption) 取单客户月账单值（445,279.69）未按月聚合，INCORRECT（Ch3 最近邻 q1471 行级条目方向相反强化误读）；条目后重跑 GROUP BY 月+SUM DESC LIMIT 1 = 51,787,161.74 strict PASS，6 步 73,887 tok | 无异常；条目前后均答对，6 步 68,312 tok 最省 |
 > **Token = input_tokens + output_tokens**
 > **备注分栏**: 共通 = 题目/evidence/Ch3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）
 > **数据来源**: `validated_results/v3_final/{pair}/agent_stats.csv`（per-pair，如 `1473-1476/`）
 
 ---
 
-## 三通道合理性论证——SOP 条目案例（q1473 / q1480）
+## 三通道合理性论证——SOP 条目案例
 
-> 三通道分工：Ch1 语义锚定"在哪"（库/表），Ch2 RAG 映射"是什么"（术语→列/值），Ch3 SOP 捕获"这题怎么坑"（领域口径/格式陷阱）。SOP 通道的合理性取决于它是否解决了 Ch1/Ch2 结构上解决不了的问题——当前有 SOP 条目的题覆盖三类盲区：
-> **① 知识冲突/污染**（Ch2 自身携带错误公式，需第三通道仲裁）→ q1473、q1481；**② 格式约定**（Ch1/Ch2 都不含答案格式约束）→ q1480；**③ 跨域词义偏导**（Ch1/Ch2 都把题面词义匹配到错误业务域，需更高阶通道消歧）→ q1479。
+> 三通道分工：Ch1 语义锚定"在哪"（库/表），Ch2 RAG 映射"是什么"（术语→列/值），Ch3 SOP 捕获"这题怎么坑"（领域口径/格式陷阱）。SOP 通道的合理性取决于它是否解决了 Ch1/Ch2 结构上解决不了的问题——当前有 SOP 条目的题覆盖四类盲区：
+> **① 知识冲突/污染**（Ch2 自身携带错误公式，需第三通道仲裁）→ q1473、q1481；**② 格式约定**（Ch1/Ch2 都不含答案格式约束）→ q1480；**③ 跨域词义偏导**（Ch1/Ch2 都把题面词义匹配到错误业务域，需更高阶通道消歧）→ q1479；**④ 量词辖域歧义**（题面量词辖域两读均自洽，Ch1/Ch2 信息全对也无法裁定）→ q1498。
 
 ### 案例 1：q1473 — SOP 仲裁知识冲突（事前条目）
 
@@ -98,6 +100,13 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 - 补条目（gas 指 yearmonth.Consumption 的加油站业务消费，锚 yearmonth 不锚 gasstations；CZK 过滤在 customers.Currency）重跑验证：**DLR 101,077→72,474 tok（-28%），验库探索消失（execute_sql 4→1）；RDF 53,184 tok 且 SQL 首次带上 CZK 过滤**（旧批次完全漏 JOIN 侥幸 PASS）；ER 65,235（-17%）。副作用：条目"Sum+top"引导使三范式均多带 total 列 → strict 全 FAIL（旧 2/3 PASS），judge 全翻——净效果 token 全降、SQL 语义更准
 - 证明点：**SOP 是更高阶的消歧层**——Ch1/Ch2 都在"gas"的跨域双语义里偏导，只有 Ch3 能声明"本题的 gas 属于哪个业务域"；消歧修复了锚定与过滤，代价仅是 gold 单列 vs 多带列的格式差（judge 可救）
 
+### 案例 5：q1498 — SOP 消解量词辖域歧义（事后准入，INCORRECT→strict 全 PASS 对照）
+
+- 歧义证据：题面 "highest monthly consumption in the year 2012" 无主语无量词约束，两种读法在 schema 内均自洽——行级读法（单客户月账单，MAX(Consumption)=445,279.69）vs 月总量读法（按日历月 SUM 后取最大=51,787,161.74，gold 口径）。三范式 Ch1 信息逐字对齐（列级 Consumption 描述相同、表级均为 monthly 措辞），答对与否与信息量不相关：RDF 零列级语义照样按月 SUM 答对，DLR 语义最富反而取 MAX 裸行值失分
+- Ch2 无聚合粒度知识（top5 全为日期/过滤条目）；Ch3 最近邻反向放大歧义——q1471 条目（"every row is already a monthly value"，行级 AVG 口径）与题面表面孪生，DLR 顺其行级语义写 MAX(Consumption)；ER/RDF 读同一文件却迁移了 q1480 条目的按月聚合模式。同型知识下，单样本分不清"迁移成功"与"抽签运气"
+- 补条目（辖域消歧：whole-year 无主语问 highest monthly = 按月 SUM 后取最大月总量，禁 MAX(Consumption) 裸行值；附与 q1471 行级 AVG 的对照句画清边界）三范式重跑：**strict 全 PASS 免仲裁**——DLR GROUP BY 月+SUM DESC LIMIT 1 = 51,787,161.74；ER 106,199 tok（验证性查询×5 偏多），DLR 73,887，RDF 68,312 最省
+- 证明点：**辖域歧义不是信息缺口而是裁定缺口**——Ch1/Ch2 信息全对（行粒度事实准确）仍无法裁定题面量词辖域，只有 per-question SOP 能声明"本题的 monthly 指谁"；且每题一节机制在歧义题上可被最近邻反向带偏，条目必须写成对比句（画清辖域边界）才能稳定消歧
+
 ### 小结
 
 | 题 | 盲区类型 | 无 SOP | 有 SOP |
@@ -106,5 +115,6 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 | q1480 | 格式约定 | strict 0/3，全靠 judge | strict 2/3，ER/DLR 免仲裁 |
 | q1481 | 知识污染 | 三范式全 INCORRECT（kid7 污染） | ER/DLR 翻 CORRECT（RDF 另因漏 CZK 过滤 INCORRECT） |
 | q1479 | 跨域词义偏导 | Ch1/Ch2 双双偏导 gas→加油站域，DLR 验库补信息 101K tok | 消歧生效：token 三范式全降（DLR -28%），RDF 补齐 CZK 过滤 |
+| q1498 | 量词辖域歧义 | Ch1/Ch2 信息全对仍 1/3 落错读法（DLR 取 MAX 裸行值 INCORRECT，被 q1471 行级条目同向强化） | 三范式 strict 全 PASS 免仲裁（DLR 445,279.69→月总量口径） |
 
-四道题覆盖三类 Ch1/Ch2 的结构盲区（知识冲突/污染、格式约定、跨域词义偏导），SOP 通道不可被替代——三通道并行锚定成立。
+五道题覆盖四类 Ch1/Ch2 的结构盲区（知识冲突/污染、格式约定、跨域词义偏导、量词辖域歧义），SOP 通道不可被替代——三通道并行锚定成立。
