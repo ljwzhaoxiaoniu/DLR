@@ -72,3 +72,13 @@ Countries of gas stations are reached through the transaction records -> `gassta
 
 "have a monthly consumption of over 1000" is a month-by-month condition -- a customer qualifies if at least one of their months exceeds 1000. The counted unit is the customer.
 
+## When asked: "What is the percentage of the customers who used EUR in 2012/8/25?"
+
+"percentage of the customers" counts customers, not transactions: one customer = one unit in both numerator and denominator, on the same day's data. Numerator = distinct customers who used EUR that day; denominator = distinct customers with transactions that day. A customer with several transactions that day still counts once.
+
+## When asked: "For the customer who paid 634.8 in 2012/8/25, what was the consumption decrease rate from Year 2012 to 2013?"
+
+"paid 634.8" identifies the customer through a single transaction's price amount on that date -- it is a transaction-level condition, not a monthly total.
+
+"consumption decrease rate" = (total consumption of 2012 - total consumption of 2013) / total consumption of 2012, computed from that customer's annual consumption totals. Annual totals are the sums of the customer's monthly consumption values in each year -- use monthly consumption figures, not per-transaction prices.
+
