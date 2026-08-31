@@ -45,3 +45,11 @@ Do not copy a record-level formula if you retrieved one: counting customer-month
 ## When asked: "Is it true that more SMEs pay in Czech koruna than in euros? If so, how many more?"
 
 Answer with the single difference value the question asks for: count of SME customers with `Currency = 'CZK'` minus count with `Currency = 'EUR'` -- one column, one row. Do not also return the two counts themselves; the question asks "how many more", not "how many of each".
+
+## When asked: "What is the highest monthly consumption in the year 2012?"
+
+One row of `yearmonth` = one customer, one month, that customer's monthly total. "Highest monthly consumption" asked about a whole year -- no customer named, no segment filter -- means the highest **month total**: sum `Consumption` across all customers per calendar month, then take the max. The month is the 5th-6th characters of `Date` (YYYYMM).
+
+Do not use `MAX(Consumption)` on raw rows: that returns one customer's single-month bill, not a month's total.
+
+Contrast with the SME 2013 average-monthly question: there "monthly consumption" is the row value itself and the question averages over customers, so plain `AVG` works. The difference is who the question is about -- that one names a segment and averages customers; this one asks for the peak of the whole dataset, so rows must first be aggregated per calendar month.
