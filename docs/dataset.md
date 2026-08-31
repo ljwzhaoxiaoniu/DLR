@@ -203,6 +203,22 @@ FROM (
 > **备注**：q1490 ER/DLR 能得出 98.39% 是在将 opencode 底层 LLM 从 longcat 切换为 deepseek-pro 之后。旧模型（longcat）下三范式全错——ER 用 AVG、DLR 走 transactions_1k、RDF 走 transactions_1k——多次重跑均无法收敛到正确答案。模型能力是这道题 ER/DLR 翻盘的关键变量。
 ```
 
+### qid 1500/1501 — `debit_card_specializing`（gold 代理 JOIN：样本外月份，2026-08-31 新发现）
+
+- **问题**：q1500 "Please list the product description of the products consumed in September, 2013." / q1501 "Please list the countries of the gas stations with transactions taken place in June, 2013."
+- **evidence**：只给日期格式提示（"September 2013 refers to 201309；yearmonth 的 Date 前 4 位为年、第 5-6 位为月"），不含代理路线说明
+- **Gold SQL**：`transactions_1k JOIN yearmonth ON CustomerID ... WHERE yearmonth.Date='201309'/'201306'`（圈该月有记录的客户，再取其全部历史交易）
+
+| | 内容 |
+|---|---|
+| **缺陷本质** | `transactions_1k` 是 1000 行采样表，`Date` 仅覆盖 2012-08-23~26 四天；题面月份（2013-09 / 2013-06）在采样表**零交易**。gold 用 yearmonth 圈客户 + CustomerID 代理 JOIN，把客户 2012-08 的历史购买归因到题面月份——时间语义相悖（“9 月被消费的产品”实际是“8 月买的、客户 9 月有月度记录的产品”） |
+| **语义正确结果** | 空列表（两题均无样本外交易；三范式 R0 无条目轮一致得出） |
+| **gold 结果** | q1500 全部 27 种产品 / q1501 CZE+SVK |
+| **消化路径（软修复）** | Ch3 skills 本题条目（样本窗口事实 + 空集即真话 + 禁代理路线 + 路径自寻），judge 判序 SkillPath(SOP) > evidence 字面统一翻正（无条目轮 judge 分裂 5/6 INCORRECT）。disputes 无需补条目——SkillPath 已覆盖 |
+| **实测** | 0831_1628 修剪版条目：6/6 CORRECT；token 对照与三轮验证见 results_v3.md 案例 7 |
+
+```
+
 ### qid 1505 — `debit_card_specializing`（待确认：gold COUNT(*) vs COUNT(DISTINCT)）
 
 - **问题**：Among the customers who paid in euro, how many of them have a monthly consumption of over 1000?

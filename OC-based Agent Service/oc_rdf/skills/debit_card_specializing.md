@@ -27,11 +27,9 @@ Output the three differences in the question's order: SME minus LAM, LAM minus K
 
 ## When asked: "Which year recorded the most consumption of gas paid in CZK?"
 
-Word-sense disambiguation: "gas" here does not mean the GasStation entity / `gasstations` table itself. "Consumption of gas" = the spending recorded in the `Consumption` column of `yearmonth` (gas-station business spending). Anchor on `yearmonth`, not on `gasstations`.
+Word-sense disambiguation: "consumption of gas" here means customers' spending at gas stations (the gas-station business), not the gas stations themselves -- it is an amount, not a station. Where exactly that amount is recorded, and where the currency filter lives, find from your own schema/mapping knowledge.
 
-"paid in CZK" is a currency filter that lives on the `customers` table (`Currency` column) -- join `customers` and filter `Currency = 'CZK'`.
-
-Per-year aggregation: the year is the first 4 characters of `Date` (YYYYMM). Sum `Consumption` per year, order descending, take the top year.
+Per-year aggregation: the year is the first 4 characters of `Date` (YYYYMM). Sum the consumption per year, order descending, take the top year.
 
 ## When asked: "How many percent of LAM customer consumed more than 46.73?"
 
@@ -53,3 +51,18 @@ One row of `yearmonth` = one customer, one month, that customer's monthly total.
 Do not use `MAX(Consumption)` on raw rows: that returns one customer's single-month bill, not a month's total.
 
 Contrast with the SME 2013 average-monthly question: there "monthly consumption" is the row value itself and the question averages over customers, so plain `AVG` works. The difference is who the question is about -- that one names a segment and averages customers; this one asks for the peak of the whole dataset, so rows must first be aggregated per calendar month.
+
+## When asked: "Please list the product description of the products consumed in September, 2013."
+
+`transactions_1k` is a 1000-row sample of individual purchases, and its `Date` column covers only 2012-08-23 through 2012-08-26 -- four days. Any month outside that window has zero transactions in the database, so for September 2013 the truthful answer is an **empty list**: no products were consumed that month. Verify the coverage once (min/max of the sample's dates), then answer empty and stop -- do not loop trying other date formats or join paths.
+
+Do NOT use the proxy route "gate customers by `yearmonth.Date = '201309'`, then join their transactions": that attributes those customers' August-2012 sample purchases to September 2013, which contradicts the question's time semantics.
+
+Granularity rule: product / price / station / time-of-day detail questions anchor on `transactions_1k` and its own `Date`; monthly total / monthly consumption questions anchor on `yearmonth.Date` (YYYYMM). In a detail question, the transaction table's own date is the only correct time filter -- a customer-level monthly gate is a different caliber, not a substitute.
+
+## When asked: "Please list the countries of the gas stations with transactions taken place in June, 2013."
+
+Same sample-window fact: `transactions_1k` covers only 2012-08-23~26, so no transactions took place in June 2013, and the truthful answer is an **empty list** of countries. Check the date coverage once, answer empty, stop.
+
+Countries of gas stations are reached through the transaction records -> `gasstations` join (find the join route yourself from your own schema/mapping knowledge). Do NOT use a proxy route that starts from `yearmonth` customers: `yearmonth` is a monthly summary on the customer side, not a transaction source -- a station question cannot be answered from it. If the question's month falls outside the transaction sample's window, the result for that month is empty, and that is the answer -- verify the coverage once, then stop.
+
