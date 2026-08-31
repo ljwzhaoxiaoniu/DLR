@@ -49,10 +49,10 @@
 - 缺陷：gold 数的是 customer-month 记录（59530），且 INNER JOIN 丢 47 个无记录客户（分母 3611）。
 - 裁定：按客户总消费聚合、LEFT JOIN 含全部 3658 个 LAM 客户 -> **98.39**（3599/3658）。
 
-### q1505（待裁决）
+### q1505（已裁决 2026-08-31，同 q1525 客户口径）
 - Q: Among the customers who paid in euro, how many of them have a monthly consumption of over 1000?
-- 争议：gold COUNT(\*)=2730（人次）vs COUNT(DISTINCT CustomerID)=391（客户数），"them=customers" 语义倾向后者，未正式裁决。
-- 判法：暂按 gold 五步判，REASON 注明争议。
+- 缺陷：gold COUNT(*) 计 customer-month 记录（2730 人次），"how many of them"（them=customers）应计客户数。
+- 裁定：任一月消费 > 1000 的 EUR 客户去重计数 -> **391**（COUNT DISTINCT CustomerID）；skills 本题条目同口径，判序 SOP>RAG。
 
 ### q1525（gold 数交易次数非客户数）
 - Q: What is the percentage of the customers who used EUR in 2012/8/25?

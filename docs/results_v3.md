@@ -30,16 +30,16 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 
 | 数据库 | 全量 | 已评 | 剩余 | 进度 |
 |--------|------|------|------|------|
-| debit_card_specializing | 30 | 16 | 14 | 53.3% |
+| debit_card_specializing | 30 | 18 | 12 | 60.0% |
 | card_games | 52 | 0 | 52 | 0% |
 
-> **总结**：共测试 16 题 × 3 范式 = **48 题次**。
+> **总结**：共测试 18 题 × 3 范式 = **54 题次**。
 
 | 指标 | ER | DLR | RDF |
 |------|----|-----|-----|
-| CORRECT | 16/16 (100.0%) | **16/16 (100.0%)** | 15/16 (93.8%) |
-| strict PASS | 7/16 (43.8%) | 8/16 (50.0%) | 6/16 (37.5%) |
-| 平均 token | 84,514 (+18.7% vs DLR) | **71,176** | 74,410 (+4.5% vs DLR) |
+| CORRECT | 18/18 (100.0%) | **18/18 (100.0%)** | 17/18 (94.4%) |
+| strict PASS | 7/18 (38.9%) | 8/18 (44.4%) | 7/18 (38.9%) |
+| 平均 token | 85,062 (+18.0% vs DLR) | **72,112** | 73,711 (+2.2% vs DLR) |
 
 ---
 
@@ -65,6 +65,8 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 | debit_card_specializing | q1498 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 106,199 | 73,887 | **68,312** | 题目/evidence 无缺陷（"highest monthly consumption"辖域两读，gold 口径=按月 SUM 聚合取最大月总消费 51,787,161.74）；Ch3 本题条目（辖域消歧：whole-year 无主语问 highest monthly = 按月 SUM 后取最大月总量，禁 MAX(Consumption) 裸行值）生效--三范式按月聚合 strict 全 PASS 免仲裁 | 验证性查询偏多--execute_sql×5，9 步 106,199 tok 三范式最贵 | 无异常；GROUP BY 月+SUM DESC LIMIT 1，execute_sql×2，6 步 73,887 tok | 无异常；6 步 68,312 tok 最省 |
 | debit_card_specializing | q1500 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 98,086 | 59,532 | **43,554** | 缺陷题——transactions_1k 仅覆盖 2012-08-23~26，题面问的 2013-09 样本外零交易，语义正答=空列表；gold 走 yearmonth(201309) 圈客户代理 JOIN 其历史交易（时间语义相悖）；Ch3 本题条目（样本窗口事实+空集即真话+禁代理）生效——三范式验一次覆盖即答空集，judge 依 SkillPath 全翻 CORRECT | 8 步 98,086 tok 三范式最贵（3 次 SQL 验证覆盖）；返回空列表 | 自行读弧确认路由后 1 次 SQL 收口，5 步 59,532 tok | 4 步 43,554 tok 最省；返回空列表 |
 | debit_card_specializing | q1501 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **45,585** | 47,565 | 45,795 | 同 q1500 缺陷型（201306 样本外月份，gold 代理 JOIN 得 CZE/SVK）；Ch3 本题条目（同窗口事实+空集+禁代理+路径自寻）生效——三范式 4~5 步收敛答空集；DLR 自行经 PE 弧确认站点侧入口，judge 依 SkillPath 全翻 CORRECT | 4 步 45,585 tok 三范式最省；返回空列表 | 4 步 47,565 tok，execute_sql 仅 1 次 | 4 步 45,795 tok；返回空列表 |
+| debit_card_specializing | q1505 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **55,695** | 62,142 | 64,240 | 缺陷题——gold COUNT(*) 计 customer-month 记录（2730 人次），"how many of them"（them=customers）应计客户数；Ch3 本题条目（计数量词=客户，任一月>1000 即合格）生效——三范式均 COUNT DISTINCT 得 391，judge 依 disputes 裁定+SkillPath 全翻 CORRECT | execute_sql 仅 1 次，5 步 55,695 tok 最省 | execute_sql 仅 1 次，5 步 62,142 tok | execute_sql 仅 1 次，5 步 64,240 tok |
+| debit_card_specializing | q1506 | FAIL | CORRECT | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 123,188 | 97,057 | **72,000** | 题目/evidence 无缺陷；Ch3 无本题条目，纯 Ch1+Ch2 解出 | GROUP_CONCAT 聚合为 1 行→ 列形状不匹配 strict FAIL，judge 按多余列/等价值翻正；execute_sql×5，9 步 123,188 tok 三范式最贵 | GROUP_CONCAT 聚合为 1 行→ strict FAIL，judge 翻正；execute_sql×4，7 步 97,057 tok | 逐行返回 21 个描述与 gold 完全一致 strict PASS 免仲裁；6 步 72,000 tok 最省 |
 > **Token = input_tokens + output_tokens**
 > **备注分栏**: 共通 = 题目/evidence/Ch3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）
 > **数据来源**: `validated_results/v3_final/{pair}/agent_stats.csv`（per-pair，如 `1473-1476/`）

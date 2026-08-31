@@ -66,3 +66,9 @@ Same sample-window fact: `transactions_1k` covers only 2012-08-23~26, so no tran
 
 Countries of gas stations are reached through the transaction records -> `gasstations` join (find the join route yourself from your own schema/mapping knowledge). Do NOT use a proxy route that starts from `yearmonth` customers: `yearmonth` is a monthly summary on the customer side, not a transaction source -- a station question cannot be answered from it. If the question's month falls outside the transaction sample's window, the result for that month is empty, and that is the answer -- verify the coverage once, then stop.
 
+## When asked: "Among the customers who paid in euro, how many of them have a monthly consumption of over 1000?"
+
+"how many of them" counts **customers**, not records: a customer with several months above 1000 still counts once. Count each qualifying customer exactly one time.
+
+"have a monthly consumption of over 1000" is a month-by-month condition -- a customer qualifies if at least one of their months exceeds 1000. The counted unit is the customer.
+
