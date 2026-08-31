@@ -1,0 +1,20 @@
+"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens","steps","tool_calls_detail","ch1_calls","ch1_db_hit","ch1_first_dbs","ch2_calls","ch2_hits","ch2_top","ch3_calls","ch3_hit"
+"er","1493","debit_card_specializing","FAIL","CORRECT","Pred 全程走正道（semantic_query→search_evidence→read skill→get_entity_mapping→execute_sql），映射与 database_url 均来自映射返回；口径上按客户级聚合（per-customer SUM > 528.3）且 LEFT JOIN customers 全量分母（32461）→ 37.61%，与知识层 kid=4（source_qids 含 1493）及 skill「LAM customer consumed more than 46.73」SOP 完全一致；gold 66.62% 是行级 IIF + 仅含 201202 有记录客户的口径，属 q1490 已裁的缺陷类型，Pred 偏离正确。[争议候选]","CORRECT","100","","9705","1114","2093","59904","72816","6","{""er_semantic_query"": 1, ""er_search_evidence"": 1, ""get_entity_mapping"": 2, ""execute_sql"": 2}","1","1","debit_card_specializing,student_club,financial","1","1","1524:0.6844","1","1"
+"er","1498","debit_card_specializing","PASS","","","CORRECT","100","","3131","1049","1651","63872","69703","6","{""er_search_evidence"": 2, ""er_semantic_query"": 2, ""get_entity_mapping"": 1, ""execute_sql"": 2}","2","1","debit_card_specializing,formula_1,european_football_2","2","1","1482:0.6334","1","1"
+"dlr","1493","debit_card_specializing","FAIL","CORRECT","五步全过：召回 yearmonth/customers 正确，调用链 semantic_query→search_evidence→get_pe_mapping→execute_sql 走正道，SQL 字段来自映射、database_url 为真实路径且执行成功；Pred 按客户聚合消费、LEFT JOIN 客户主表作分母（12208/32461=37.61%），忠实题面""percentage of customers""口径，与知识层 kid=4（source_qids 含 1493：先聚合再过阈值、分母须含全部客户）完全一致；gold 按 Feb 记录行计数（66.62%）属 q1490 同类""记录数当客户数""口径缺陷。REASON 注明 gold/evidence 可疑。[争议候选]","CORRECT","100","","11166","1382","2730","96512","111790","8","{""dlr_semantic_query"": 1, ""dlr_search_evidence"": 1, ""get_pe_mapping"": 2, ""execute_sql"": 5}","1","1","debit_card_specializing,student_club,financial","1","1","1524:0.6844","1","1"
+"dlr","1498","debit_card_specializing","FAIL","INCORRECT","召回/工具/映射正确(step1-3)；第4步失败——""highest monthly consumption""按证据与SKILL peak-month SOP应按月SUM聚合取最大月总消费(gold 51,787,161.74)，PredSQL MAX(Consumption)取单条记录445,279.69未按月聚合，结果不符gold。","INCORRECT","60","","10162","540","921","58112","69735","6","{""dlr_semantic_query"": 1, ""dlr_search_evidence"": 1, ""get_pe_mapping"": 1, ""execute_sql"": 2}","1","1","debit_card_specializing,california_schools,formula_1","1","1","1482:0.6369","1","1"
+"rdf","1493","debit_card_specializing","FAIL","CORRECT","**冲突定位**：GoldResult 66.623008 = 12208/18324（分子同为 12208，分母是 Feb2012 有记录的客户数），Pred 37.6082% = 12208/32461（全部客户）。唯一差异是分母口径。
+
+**裁决依据**：
+- 题面问 ""percentage of **customers**""——客户级百分比，非记录级。
+- 知识层 `kid=4` 明确：客户级百分比分母须含目标组**全部客户**，从客户主表直接计数或 LEFT JOIN，禁 INNER JOIN（会丢无记录客户）。这正是 q1490 已裁决的同型缺陷（gold 数 customer-month 记录当分母）。
+- Pred 完全按此口径：`LEFT JOIN customers`，分母 `COUNT(*) FROM customers`=32461，分子=Feb2012 消费>528.3 的客户 12208，结果自洽 37.6082%。
+- 工具链正道：semantic_query → 读 skill → rdf_search_evidence → get_rdf_mapping（customers/yearmonth 列与关系均来自映射，database_url 未编造）→ execute_sql，SQL 执行成功。
+
+**五步判定**：语义正确（yearmonth/customers 定位准确）、工具正道、映射合规、SQL 正确执行、最终答案自洽 → 全通过。gold 的口径与题面语义相悖（记录级分母），以知识层为准判 Pred CORRECT。
+
+```
+VERDICT: CORRECT
+PROCESS: 100
+REASON: gold 分母用 Feb2012 记录数(18324)属记录级口径，题面""percentage of customers""应客户级分母=全部客户(32461)；Pred 走知识层 kid4/q1490 口径（LEFT JOIN 主表，12208/32461=37.6082%）自洽且工具链正道，五步全通过。[争议候选]","CORRECT","100","","10183","1041","2928","76288","90440","7","{""rdf_search"": 1, ""rdf_semantic_query"": 2, ""rdf_search_evidence"": 1, ""get_rdf_mapping"": 2, ""execute_sql"": 4}","2","1","debit_card_specializing,student_club,financial","1","1","1524:0.7307","1","1"
+"rdf","1498","debit_card_specializing","PASS","","","CORRECT","100","","9463","771","1121","56960","68315","6","{""rdf_semantic_query"": 2, ""rdf_search_evidence"": 1, ""get_rdf_mapping"": 1, ""execute_sql"": 2}","2","1","debit_card_specializing,formula_1,student_club","1","1","1514:0.6054","1","1"
