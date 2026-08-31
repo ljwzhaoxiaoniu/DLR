@@ -88,3 +88,17 @@ Countries of gas stations are reached through the transaction records -> `gassta
 
 "Spent in January 2012" is the same customer's monthly total for that month (201201). Both parts are read from the customer's monthly totals, never from per-transaction prices of the sample.
 
+## When asked: "Who is the top spending customer and how much is the average price per single item purchased by this customer? What currency was being used?"
+
+"Top spending customer" is decided by the customer's total consumption across all gas stations (full monthly totals), not by summing the four-day transaction sample.
+
+"Average price per single item" = Total(price) / Total(amount): sum the prices, sum the amounts, divide the sums. Do NOT average per-row price/amount ratios.
+
+Currency is the customer's billing currency.
+
+## When asked: "For all the people who paid more than 29.00 per unit of product id No.5. Give their consumption status in the August of 2012."
+
+"Paid more than 29.00 per unit" is a unit-price condition: unit price = Price / Amount. The threshold applies to the division result -- a raw price over 29 is NOT the same condition.
+
+"Consumption status in August 2012" is each qualifying person's monthly consumption value for 201208, one value per person.
+
