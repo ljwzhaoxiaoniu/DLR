@@ -30,16 +30,16 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 
 | 数据库 | 全量 | 已评 | 剩余 | 进度 |
 |--------|------|------|------|------|
-| debit_card_specializing | 30 | 22 | 8 | 73.3% |
+| debit_card_specializing | 30 | 24 | 6 | 80.0% |
 | card_games | 52 | 0 | 52 | 0% |
 
-> **总结**：共测试 22 题 × 3 范式 = **66 题次**。
+> **总结**：共测试 24 题 × 3 范式 = **72 题次**。
 
 | 指标 | ER | DLR | RDF |
 |------|----|-----|-----|
-| CORRECT | 22/22 (100.0%) | **22/22 (100.0%)** | 21/22 (95.5%) |
-| strict PASS | 9/22 (40.9%) | 11/22 (50.0%) | 10/22 (45.5%) |
-| 平均 token | 83,967 (+15.9% vs DLR) | **72,457** | 75,750 (+4.5% vs DLR) |
+| CORRECT | 24/24 (100.0%) | **24/24 (100.0%)** | 23/24 (95.8%) |
+| strict PASS | 10/24 (41.7%) | 13/24 (54.2%) | 12/24 (50.0%) |
+| 平均 token | 82,657 (+11.1% vs DLR) | **74,432** | 74,397 (-0.0% vs DLR) |
 
 ---
 
@@ -69,8 +69,10 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 | debit_card_specializing | q1506 | FAIL | CORRECT | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 123,188 | 97,057 | **72,000** | 题目/evidence 无缺陷；Ch3 无本题条目，纯 Ch1+Ch2 解出 | GROUP_CONCAT 聚合为 1 行→ 列形状不匹配 strict FAIL，judge 按多余列/等价值翻正；execute_sql×5，9 步 123,188 tok 三范式最贵 | GROUP_CONCAT 聚合为 1 行→ strict FAIL，judge 翻正；execute_sql×4，7 步 97,057 tok | 逐行返回 21 个描述与 gold 完全一致 strict PASS 免仲裁；6 步 72,000 tok 最省 |
 | debit_card_specializing | q1507 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **57,315** | 81,801 | 103,864 | 题目/evidence 无缺陷（evidence 为空仅 2 题之一，纯 Ch1+Ch2 解出；chain no. 11 无歧义） | GROUP_CONCAT 聚合为 1 行→ 列形状 strict FAIL，judge 按等价值翻正；5 步 57,315 tok 最省 | 逐行返回 distinct 时间与 gold 一致 strict PASS 免仲裁；6 步 81,801 tok | GROUP_CONCAT 聚合为 1 行→ strict FAIL，judge 翻正；Ch1×2 后回正，8 步 103,864 tok 最贵 |
 | debit_card_specializing | q1509 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 86,066 | **67,951** | 74,136 | 题目/evidence 无缺陷（CZE 条件 + 2012/1/1 后对全样本恒真，即全部 CZE 交易）；Ch3 无本题条目，纯 Ch1+Ch2 解出——三范式 strict 全 PASS 免仲裁 | 无异常；7 步 86,066 tok | execute_sql×4 偏多但全 PASS；5 步 67,951 tok 最省 | 无异常；6 步 74,136 tok |
-| debit_card_specializing | q1514 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 80,197 | **66,386** | 88,172 | 题目/evidence 无缺陷（日期格式转换提示）；Ch3 无本题条目，纯 Ch1+Ch2 解出 | 无异常；execute_sql×5 探测略多，7 步 80,197 tok | 返回 3 行重复 CZK（无 DISTINCT）→ 行数与 gold 不符 strict FAIL，judge 按值等价翻正；5 步 66,386 tok | 无异常；7 步 88,172 tok |  |
-| debit_card_specializing | q1515 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 92,593 | 79,901 | **73,520** | 题目/evidence 无缺陷；Ch3 无本题条目，纯 Ch1+Ch2 解出 | 多带 CustomerID 列→ 列形状 strict FAIL，judge 按多余列不扣分翻正；7 步 92,593 tok 三范式最贵 | 无异常；6 步 79,901 tok | 无异常；6 步 73,520 tok 最省 |  |
+| debit_card_specializing | q1514 | PASS |  | FAIL | CORRECT | PASS |  | CORRECT | CORRECT | CORRECT | 80,197 | **66,386** | 88,172 | 题目/evidence 无缺陷（日期格式转换提示）；Ch3 无本题条目，纯 Ch1+Ch2 解出 | 无异常；execute_sql×5 探测略多，7 步 80,197 tok | 返回 3 行重复 CZK（无 DISTINCT）→ 行数与 gold 不符 strict FAIL，judge 按值等价翻正；5 步 66,386 tok | 无异常；7 步 88,172 tok |
+| debit_card_specializing | q1515 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 92,593 | 79,901 | **73,520** | 题目/evidence 无缺陷；Ch3 无本题条目，纯 Ch1+Ch2 解出 | 多带 CustomerID 列→ 列形状 strict FAIL，judge 按多余列不扣分翻正；7 步 92,593 tok 三范式最贵 | 无异常；6 步 79,901 tok | 无异常；6 步 73,520 tok 最省 |
+| debit_card_specializing | q1521 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 73,360 | 101,743 | **58,064** | 题目/evidence 无缺陷（时段 8:00-9:00 + CZE + 日期格式提示）；Ch3 无本题条目——三范式 strict 全 PASS 免仲裁 | 无异常；6 步 73,360 tok | 无异常；7 步 101,743 tok 最贵 | execute_sql 仅 1 次，5 步 58,064 tok 最省 |  |
+| debit_card_specializing | q1524 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 63,136 | 90,562 | **60,962** | 题目/evidence 无缺陷；"nationality"=加油站所在国（kid18 领域约定，非客户表字段）、"spent 548.4"=单笔交易价格；Ch3 无本题条目，Ch2 命中 kid18 解出 | 多带 CustomerID 列→ 列形状 strict FAIL，judge 按多余列不扣分翻正；5 步 63,136 tok | 无异常；7 步 90,562 tok | execute_sql 仅 1 次，5 步 60,962 tok 最省 |  |
 > **Token = input_tokens + output_tokens**
 > **备注分栏**: 共通 = 题目/evidence/Ch3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）
 > **数据来源**: `validated_results/v3_final/{pair}/agent_stats.csv`（per-pair，如 `1473-1476/`）
