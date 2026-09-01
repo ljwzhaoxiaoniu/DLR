@@ -21,6 +21,7 @@ storage/{er,dlr,rdf}/graph/（Kuzu） + storage/{er,dlr,rdf}/vector/vector.pkl�
 - 三范式**物理隔离**（各自 Kuzu + 各自 vector.pkl），范式内 11 个库合并存储；
 - 每条向量记录的 metadata 带 `db` 字段（所属数据库名），支撑召回锁库（见 §4）；
 - 构建入口：`python main.py build --paradigm ALL`，逐 preset 调 `mapper.parse()` + `build_service.build()`，先 `clear()` 一次再全量重写。
+- **配置层溯源**：ER YAML 基于 `dev_tables.json`（数据集原生表/列描述）聚合+必要语义补充而来；DLR YAML、RDF R2RML 均以 ER 为基础生成——三范式语义层同源，Ch1/Ch2 非必要不增加（准入纪律见 docs/3-channel-design.md 原则）。
 
 ## 1. ER 范式（自研基线）
 

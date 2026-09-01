@@ -102,3 +102,11 @@ Currency is the customer's billing currency.
 
 "Consumption status in August 2012" is each qualifying person's monthly consumption value for 201208, one value per person.
 
+## When asked: "For all the transactions happened during 8:00-9:00 in 2012/8/26, how many happened in CZE?"
+
+"Transactions" in this domain are gas-station purchase records: individual purchases, each with an exact date and time of day. The same word also names bank-account money transfers in other databases -- a question about purchases in a specific hour, in a station's country, is about gas-station purchase records, never bank transfers.
+
+"During 8:00-9:00" filters on the purchase's own time of day on that date; each purchase record carries its exact time.
+
+"Happened in CZE" is the country of the gas station where the purchase took place (CZE = Czech Republic, SVK = Slovakia) -- a station property, not a customer or payment property.
+
