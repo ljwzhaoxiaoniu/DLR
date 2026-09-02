@@ -17,6 +17,8 @@
 | 归档 | `validated_results/v2_final/` | `validated_results/v3_final/` |
 | 知识库 | 无 | `rag_knowledge/*.jsonl` (11 topics) + `skills/*.md` |
 
+> **DLR 工具 20→4**：按 387 runs 使用率统计收敛为核心链路 4 工具——`dlr_semantic_query`（Ch1 语义入口）/ `dlr_search_evidence`（Ch2 RAG）/ `get_pe_mapping`（LE→PE 映射）/ `get_le_attrs`（LE 属性）；其余 14 个探索类工具（`recall_*`/`path_*`/`is_*` 等）使用率 <5% 且诱发过度探索，v3 停止注册（`execute_sql` 三范式共用，不计入）。
+
 ### Agent 流程（三通道，见 3-channel-design.md）
 
 ```
@@ -33,13 +35,15 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 | debit_card_specializing | 30 | 30 | 0 | 100.0% |
 | card_games | 52 | 0 | 52 | 0% |
 
-> **总结**：共测试 30 题 × 3 范式 = **90 题次**。
+> **总结**：共测试 30 题 × 3 范式 = **90 题次**；其中缺陷题 12/30（40%，gold/evidence 自带口径错误——COUNT 记录数当客户数、采样表当全量、矛盾公式、笛卡尔积 JOIN 等，明细见逐题表）——三范式 strict FAIL 后由 judge 依知识层翻正，**evidence 在本框架中是被裁决对象而非金标准**（判序链 disputes > SkillPath(SOP) > KnowledgePath > evidence 字面，evidence 字面排最末）。
 
 | 指标 | ER | DLR | RDF |
 |------|----|-----|-----|
 | CORRECT | 29/30 (96.7%) | **30/30 (100.0%)** | 29/30 (96.7%) |
 | strict PASS | 10/30 (33.3%) | 13/30 (43.3%) | 12/30 (40.0%) |
 | 平均 token | 85,764 (+16.5% vs DLR) | **73,642** | 76,704 (+4.2% vs DLR) |
+
+> **口径**：上表仅覆盖 debit_card_specializing 30 题（card_games 52 题未评），勿外推为全数据集结论。
 
 ---
 
@@ -49,7 +53,7 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 
 | 数据库 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 共通 | ER-备注 | DLR-备注 | RDF-备注 |
 |------|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|------|--------|--------|--------|
-| debit_card_specializing | q1471 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 75,889 | **45,156** | 65,446 | 题目/evidence 无缺陷；Ch3 无本题条目；EUR/CZK 比值口径无分歧 | strict FAIL 为 4 位舍入差（Pred 0.0657 vs gold 0.065728），judge 按舍入级翻正 | execute_sql 仅 1 次，4 步 45,156 tok 三范式最省 |  |
+| debit_card_specializing | q1471 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 75,889 | **45,156** | 65,446 | 题目/evidence 无缺陷；Ch3 无本题条目；EUR/CZK 比值口径无分歧 | strict FAIL 为 4 位舍入差（Pred 0.0657 = gold 0.065728 舍入至 4 位小数的同值，非不同数），judge 按舍入级翻正 | execute_sql 仅 1 次，4 步 45,156 tok 三范式最省 |  |
 | debit_card_specializing | q1472 | FAIL | CORRECT | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 155,128 | **104,772** | 107,120 | 题目 LAM/consumption 语义过泛（LAM=segment 歧义）；Ch3 本题无条目，纯 Ch1+Ch2 解出 | Ch1 漂移至 card_games；Ch2×5 反复探测（top 0.60），execute_sql×8，11 步 155,128 tok 三范式最贵 | Ch1 唯一首中；Ch2×2 全命中；8 步 104,772 tok | Ch1 漂移至 formula_1 后 3 次 query 才回正；Ch2×2、rdf_search×2，9 步 107,120 tok |
 | debit_card_specializing | q1473 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 75,987 | **57,091** | 76,141 | 缺陷题——evidence/gold 公式 AVG/12 与 yearmonth 月度粒度矛盾（双重除法，2013 SME 人均仅 8.0 个月记录）；三范式 Pred 一致按数据语义作答致 strict 全 FAIL；Ch3 本题条目口径=AVG 不除 12，judge 依此全翻 CORRECT | Ch1 单发首中；Ch2 单发命中（top=1473 未带偏）；execute_sql×3，7 步 75,987 tok | Ch1×2、Ch2×2（1 命中）；execute_sql 仅 1 次，5 步 57,091 tok 三范式最少 | Ch1×2、Ch2 单发命中（top=1482）；execute_sql×3，7 步 76,141 tok |
 | debit_card_specializing | q1476 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 109,335 | 72,354 | **70,780** | 题目/evidence 无缺陷；CZK/EUR 消歧无分歧，数值一致（402,524,570.17）；Ch3 无本题条目 | Ch1×2、Ch2×2（1 命中）；execute_sql×6 + get_table_schema×2 探测偏多，9 步 109,335 tok 最贵 | Ch1 单发首中；execute_sql×2，6 步 72,354 tok | 结果多带两列拆分值（CZK 总额/EUR 总额）→ strict 列数不匹配 FAIL，judge 按多余列不扣分翻正；6 步 70,780 tok |
@@ -87,8 +91,9 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 
 ## 三通道合理性论证——SOP 条目案例
 
-> 三通道分工：Ch1 语义锚定"在哪"（库/表），Ch2 RAG 映射"是什么"（术语→列/值），Ch3 SOP 捕获"这题怎么坑"（领域口径/格式陷阱），且消费者不止 3 个 Agent——judge 事后仲裁也读同一文件（判序 disputes > SkillPath(SOP) > KnowledgePath > evidence 字面）。SOP 通道的合理性取决于它是否解决了 Ch1/Ch2 结构上解决不了的问题——当前 9 题有 SOP 条目：6 题覆盖四类盲区，3 题（q1490/q1500/q1501）为非盲区形态（Ch2 泛化知识已含口径 / 行为本已对，条目价值=收敛+仲裁锚点）：
-> **① 知识冲突/污染**（Ch2 自身携带错误公式，需第三通道仲裁）→ q1473、q1481；**② 格式约定**（Ch1/Ch2 都不含答案格式约束，含值的格式与列的形状）→ q1480、q1486；**③ 跨域词义偏导**（Ch1/Ch2 都把题面词义匹配到错误业务域，需更高阶通道消歧）→ q1479；**④ 量词辖域歧义**（题面量词辖域两读均自洽，Ch1/Ch2 信息全对也无法裁定）→ q1498；**非盲区形态**（Ch2 泛化知识已含正确口径，条目价值=收敛+仲裁锚点而非纠错）→ q1490、q1500、q1501。
+> 三通道分工：Ch1 语义锚定"在哪"（库/表），Ch2 RAG 映射"是什么"（术语→列/值），Ch3 SOP 捕获"这题怎么坑"（领域口径/格式陷阱），且消费者不止 3 个 Agent——judge 事后仲裁也读同一文件（判序 disputes > SkillPath(SOP) > KnowledgePath > evidence 字面）。SOP 通道的合理性取决于它是否解决了 Ch1/Ch2 结构上解决不了的问题——当前 16 题有 SOP 条目：9 题为案例 1-7 的对照分析题（6 题覆盖四类盲区，3 题 q1490/q1500/q1501 为非盲区形态：Ch2 泛化知识已含口径 / 行为本已对，条目价值=收敛+仲裁锚点），7 题为收官批次新增（q1505/q1521/q1525/q1526/q1529/q1531/q1533，逐题表现见逐题表）：
+> **① 知识冲突/污染**（Ch2 自身携带错误公式，需第三通道仲裁）→ q1473、q1481；**② 格式约定**（Ch1/Ch2 都不含答案格式约束，含值的格式与列的形状）→ q1480、q1486；**③ 跨域词义偏导**（Ch1/Ch2 都把题面词义匹配到错误业务域，需更高阶通道消歧）→ q1479、q1521（"transactions" 字面撞 financial 的建模级召回冲突消歧首例）；**④ 量词辖域歧义**（题面量词辖域两读均自洽，Ch1/Ch2 信息全对也无法裁定）→ q1498、q1505、q1525（计数单位=客户，非 customer-month 记录/交易人次）；**④ 同型的业务口径辖域**（单笔价格定位/全量月度合计/总和相除/单价比——题面业务词两种读法在 schema 内均自洽）→ q1526、q1529、q1531、q1533；**非盲区形态**（Ch2 泛化知识已含正确口径，条目价值=收敛+仲裁锚点而非纠错）→ q1490、q1500、q1501。
+> 新增 7 题全部落入既有盲区类型（③/④ 的延伸形态，无新类别）——四类盲区框架经 16 题检验收敛成立；其中 q1521/q1526/q1533 含重跑对照（DLR 101,743→71,421 / 151,450→106,411 / 156,572→89,505 tok，判序置顶+条目生效的合并效果，归因不拆分），其余 4 题条目先于首跑就位、无对照批次。
 
 ### 案例 1：q1473 — SOP 仲裁知识冲突（事前条目）
 
@@ -115,7 +120,7 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 ### 案例 4：q1479 — SOP 消解跨域词义偏导（词义裁定与路径处分的分层验证）
 
 - 偏导证据：题面 "consumption of gas" 中 gas 被 Ch1 语义召回匹配到 **GasStation 实体（加油站）**而非消费记录（DLR 返回 Top1=GasStation、Top2 才是 Consumption；ER 返回 Top2=gasstations 表、yearmonth 排第 5）；Ch2 连锁反应——agent 顺 gas 词义猜 namespace=gas_consumption 落空重试；Customer 实体（Currency 所在）不进召回前列，agent 用 2 条验库 SQL 补信息，DLR 8 步 101,077 tok 三范式最贵
-- 条目 v1（含路径处方：锚 yearmonth 不锚 gasstations + join customers 滤 CZK）重跑：**DLR 101,077' + AR + '72,474 tok（-28%），验库探索消失（execute_sql 4' + AR + '1）；RDF 53,184 tok 且 SQL 首次带上 CZK 过滤**（旧批次完全漏 JOIN 侥幸 PASS）；ER 65,235（-17%）。副作用："Sum+top"引导使三范式均多带 total 列 ' + AR + ' strict 全 FAIL，judge 全翻——处方版条目的降幅里混着"词义裁定"与"免费路由"两笔账，分不开
+- 条目 v1（含路径处方：锚 yearmonth 不锚 gasstations + join customers 滤 CZK）重跑：**DLR 101,077→72,474 tok（-28%），验库探索消失（execute_sql 4→1）；RDF 53,184 tok 且 SQL 首次带上 CZK 过滤**（旧批次完全漏 JOIN 侥幸 PASS）；ER 65,235（-17%）。副作用："Sum+top"引导使三范式均多带 total 列 → strict 全 FAIL，judge 全翻——处方版条目的降幅里混着"词义裁定"与"免费路由"两笔账，分不开
 - 条目 v2（08-31 无路径处方原则后修剪：只留"gas=消费额非站点"词义裁定，路由改为自行从 schema/mapping 找）重跑：**token 全升（ER 102,417 / DLR 91,418 / RDF 70,924）——处方移除后路径发现回归范式层，这是三范式各自路由能力的真实成本**；三范式仍全部自行路由 yearmonth JOIN customers 且带 CZK 过滤；ER 仅返回年份列 strict PASS（优于旧批多带列）；**DLR 7 步内自行经 PE mapping（YearMonth/Customer 弧）锚定，execute_sql 仅 1 次**
 - 证明点：**词义裁定与路径发现是两个层**——gas 偏导（跨域词义）是 Ch1/Ch2 的结构盲区，必须由 Ch3 裁定；但"锚哪张表、JOIN 谁"是各范式表征层的被测能力，写进 SOP 等于把 DLR 的弧结构免费发给 ER/RDF、抹平范式差异（q1500/q1501 三轮对照同证）。分层后 DLR 弧路由优势显现：1 次 SQL 收口 vs ER 3 次 + schema 探测
 
@@ -138,10 +143,12 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 - 陷阱：`transactions_1k` 采样表仅覆盖 2012-08-23~26 四天；两题问 2013-09 / 2013-06，样本外月份零交易——语义正答=**空列表**。gold 走 yearmonth 圈客户代理 JOIN 其历史交易（把 8 月购买归因到 9 月，时间语义相悖），evidence 只给日期格式提示、不给出题人意图的代理路线
 - 无条目观察轮（0831_1430）：三范式全部自行探明覆盖范围、答空集（**行为本已对**），但 judge 分裂 5/6 INCORRECT（引 evidence 字面压过知识层，判序倒置）/ 1/6 CORRECT（识别 gold 缺陷标 [争议候选]）；RDF q1501 空集死胡同 28 次 SQL / 794,008 tok / 600s 超时——**空集不信任是 Q/E/G 口径冲突，结构层管不了**
 - 条目 v1（含弧句路径处方）重跑：6/6 全翻 CORRECT、token 全降——但弧句对 DLR 是冗余负担（其 PE mapping 的 A 锚弧/S 语义本就携带该事实），且把结构推导免费发给 ER/RDF
-- 条目 v2（修剪：只留窗口事实+空集即真话+禁代理，路径自寻）重跑：**DLR q1501 47,565 tok 为三轮最低（v1 76,241，-38%）；RDF 794,008' + AR + '45,795（-94%，超时消失）；ER 45,585；q1500 同降（DLR 59,532 / RDF 43,554 / ER 98,086）**；6/6 CORRECT，judge 全部引用 SkillPath 裁定统一翻正；DLR 自行经 PE 弧确认站点侧入口后 1 次 SQL 收口
+- 条目 v2（修剪：只留窗口事实+空集即真话+禁代理，路径自寻）重跑：**DLR q1501 47,565 tok 为三轮最低（v1 76,241，-38%）；RDF 794,008→45,795（-94%，超时消失）；ER 45,585；q1500 同降（DLR 59,532 / RDF 43,554 / ER 98,086）**；6/6 CORRECT，judge 全部引用 SkillPath 裁定统一翻正；DLR 自行经 PE 弧确认站点侧入口后 1 次 SQL 收口
 - 证明点：**非盲区题条目的三重价值 + 无路径处方原则**——agent 行为本已对时，条目价值=judge 仲裁锚（分裂判定统一）+ 空集收敛（死胡同消失）+ 口径显式化；路径处方必须从 Ch3 移除（DLR 弧结构天然携带路由事实，SOP 代写抹平范式差异且对 DLR 是干扰——v1/v2 三轮对照与案例 4 的 q1479 v1/v2 共同确立该原则）
 
 ### 小结
+
+> 仅列案例 1-7 的 9 个对照分析题；收官批次新增 7 题条目（q1505/q1521/q1525/q1526/q1529/q1531/q1533）见逐题表，其中 q1521/q1526/q1533 的重跑对照数据在逐题表备注与论证段。
 
 | 题 | 盲区类型 | 无 SOP | 有 SOP |
 |---|---|---|---|
@@ -154,4 +161,4 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 | q1490 | 非盲区形态 | 行为本已对（Ch2 kid4 泛化口径），DLR 74,908/RDF 88,580 tok | 行为不变口径一致，DLR -21%/RDF -35% tok，judge 依 disputes 翻正 |
 | q1500/q1501 | 非盲区形态（空集裁定） | 行为本已对（三范式答空集），judge 分裂 5/6 INCORRECT，RDF 794K 超时 | 6/6 依 SkillPath 翻正；路径自寻后 token 全降（DLR -70%/RDF -94%），DLR 弧路由 1 次 SQL 收口 |
 
-九题七个案例覆盖四类 Ch1/Ch2 结构盲区（知识冲突/污染、格式约定、跨域词义偏导、量词辖域歧义）加非盲区形态三例（q1490/q1500/q1501：收敛+仲裁锚点）——盲区题证明 SOP 不可替代，非盲区题证明条目在无坑可避时仍有收敛价值；无路径处方原则（Ch3 只做题目理解层裁定，路径发现归范式表征层）经 q1479 v1/v2 与 q1500/q1501 三轮对照确立，三通道并行锚定成立。
+七个案例（9 个对照分析题）覆盖四类 Ch1/Ch2 结构盲区（知识冲突/污染、格式约定、跨域词义偏导、量词辖域歧义）加非盲区形态三例（q1490/q1500/q1501：收敛+仲裁锚点）——盲区题证明 SOP 不可替代，非盲区题证明条目在无坑可避时仍有收敛价值；收官批次新增 7 题条目全部落入既有类型（③/④ 延伸形态），16 题整体检验下四类盲区框架收敛成立；无路径处方原则（Ch3 只做题目理解层裁定，路径发现归范式表征层）经 q1479 v1/v2 与 q1500/q1501 三轮对照确立，三通道并行锚定成立。
