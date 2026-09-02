@@ -1,16 +1,4 @@
-"paradigm","q_id","db_id","strict_match","judge_verdict","judge_reason","verdict","process_score","error","input_tokens","output_tokens","reasoning_tokens","cache_read_tokens","total_tokens","steps","tool_calls_detail","ch1_calls","ch1_db_hit","ch1_first_dbs","ch2_calls","ch2_hits","ch2_top","ch3_calls","ch3_hit"
-"er","1526","debit_card_specializing","FAIL","INCORRECT","前4步全通过（语义定位6718/工具链/映射/SQL执行均正确），第5步结果正确性不满足——Pred -581.524267 是比率×100的百分比，与已裁决裁定值 -5.8152 差100倍，非合理舍入或同值换序","INCORRECT","80","","12485","1542","2739","112384","129150","9","{""er_search_evidence"": 3, ""er_semantic_query"": 2, ""get_entity_mapping"": 3, ""execute_sql"": 4}","2","1","debit_card_specializing,student_club,financial","3","2","1482:0.6777","1","1"
-"dlr","1526","debit_card_specializing","FAIL","CORRECT","命中争议目录 q1526（gold JOIN 致 NULL，裁定已作废）；Pred 定位 CustomerID=6718 正确，(2012-2013)/2012 得 -5.8152，Pred 以百分比 -581.52% 表示，与裁定同值，五步全过。","CORRECT","100","","7092","1436","2651","95232","106411","7","{""dlr_semantic_query"": 1, ""dlr_search_evidence"": 1, ""get_pe_mapping"": 3, ""execute_sql"": 4}","1","1","debit_card_specializing,student_club,financial","1","1","1482:0.6968","1","1"
-"rdf","1526","debit_card_specializing","FAIL","CORRECT","**命中争议目录 q1526**：gold 子查询多 JOIN 返回 NULL，裁定 = `(2012-2013)/2012`，CustomerID=6718 → **-5.8152**。
-
-核对 Pred 过程（AgentLog 验证）：
-- **Step1 语义**：召回 yearmonth/customers/transactions_1k，正确 ✓
-- **Step2 工具**：rdf_semantic_query → rdf_search_evidence → get_rdf_mapping → execute_sql，走正道 ✓
-- **Step3 映射**：只用映射返回的 yearmonth(Date/Consumption/CustomerID)，database_url 来自映射 ✓
-- **Step4 SQL**：`(SUM(2012)-SUM(2013))*100/SUM(2012)` 执行成功 ✓
-- **Step5 结果**：6718 的 2012=158,447.52、2013=1,079,858.3 → (158447.52−1079858.3)/158447.52 = **-5.8152**。Pred 的 -581.524267 恰为比率×100 的百分比表示，同值（知识层 kid=5 公式明确 `*100%`，Agent 已检索引用），与裁定公式、口径完全一致，非撞 gold 错误口径。
-
-```
-VERDICT: CORRECT
-PROCESS: 100
-REASON: 命中争议 q1526（gold JOIN gasstations 返回 NULL，作废）；Pred 走正道以 transactions_1k 定位 634.8/2012-08-25 -> CustomerID 6718，按裁定 (2012-2013)/2012 全量 yearmonth 得 -5.8152；Pred 的 -581.524267 为 ×100 百分比表示，与裁定同值（kid=5 公式授权 *100%），五步全过。","CORRECT","100","","6073","1458","2863","103552","113946","8","{""rdf_semantic_query"": 2, ""rdf_search"": 1, ""rdf_search_evidence"": 1, ""get_rdf_mapping"": 3, ""execute_sql"": 4}","2","1","debit_card_specializing,student_club,formula_1","1","1","1482:0.6777","1","1"
+question_id,paradigm,steps,tokens_total,tokens_in,tokens_out,tokens_reasoning,tokens_cache_read,tool_calls_total,tool_calls_detail,ch1_calls,ch1_db_hit,ch1_first_dbs,ch2_calls,ch2_hits,ch2_top,ch3_calls,ch3_hit,error,strict_match,judge_verdict,judge_reason,verdict
+1526,er,9,129150,12485,1542,2739,112384,12,"{""er_search_evidence"": 3, ""er_semantic_query"": 2, ""get_entity_mapping"": 3, ""execute_sql"": 4}",2,1,"debit_card_specializing,student_club,financial",3,2,1482:0.6777,1,1,,FAIL,CORRECT,命中争议目录 q1526；Pred -581.524267(=×100%口径)与裁定 -581.52% 一致，客户定位(6718)、公式(2012-2013)/2012 及工具链(semantic_query→mapping→execute_sql)均走正道,CORRECT
+1526,dlr,7,106411,7092,1436,2651,95232,9,"{""dlr_semantic_query"": 1, ""dlr_search_evidence"": 1, ""get_pe_mapping"": 3, ""execute_sql"": 4}",1,1,"debit_card_specializing,student_club,financial",1,1,1482:0.6968,1,1,,FAIL,CORRECT,命中争议目录 q1526（gold 子查询 JOIN 无匹配返回 NULL 作废）；Pred 用 yearmonth 求 (2012-2013)/2012，CustomerID=6718，结果 -581.52% 与裁定 -5.8152×100%（kid5 公式授权百分比表示）等价；过程走 semantic_query→get_pe_mapping→execute_sql 正道，库表字段均来自映射。,CORRECT
+1526,rdf,8,113946,6073,1458,2863,103552,11,"{""rdf_semantic_query"": 2, ""rdf_search"": 1, ""rdf_search_evidence"": 1, ""get_rdf_mapping"": 3, ""execute_sql"": 4}",2,1,"debit_card_specializing,student_club,formula_1",1,1,1482:0.6777,1,1,,FAIL,CORRECT,命中 disputes.md q1526 已裁决条目（gold JOIN 返回 NULL 作废），Pred 按 kid5 公式对 CustomerID=6718 计算下降率 -581.52%，与裁定一致，五步全过。,CORRECT

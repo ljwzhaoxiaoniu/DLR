@@ -62,7 +62,7 @@
 ### q1526（gold 子查询多 JOIN 返回 NULL）
 - Q: For the customer who paid 634.8 in 2012/8/25, what was the consumption decrease rate from Year 2012 to 2013?
 - 缺陷：gold JOIN gasstations 无匹配 -> NULL。
-- 裁定：(2012-2013)/2012，CustomerID=6718 -> **-5.8152**。
+- 裁定：(2012-2013)/2012，CustomerID=6718 -> **-5.8152（比率）= -581.52%（百分比表示，等价——kid5 公式授权 *100%）**。
 
 ### q1529（gold 笛卡尔积膨胀 + 采样表当全量）
 - Q: What is the amount spent by customer "38508" at the gas stations? How much had the customer spent in January 2012?
