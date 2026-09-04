@@ -41,7 +41,7 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 |------|----|-----|-----|
 | CORRECT | 30/30 (100.0%) | **30/30 (100.0%)** | 29/30 (96.7%) |
 | strict PASS | 10/30 (33.3%) | 13/30 (43.3%) | 12/30 (40.0%) |
-| 平均 token | 85,764 (+16.5% vs DLR) | **73,642** | 76,704 (+4.2% vs DLR) |
+| 平均 token | 86,216 (+15.9% vs DLR) | **74,375** | 75,739 (+1.8% vs DLR) |
 
 > **口径**：上表仅覆盖 debit_card_specializing 30 题（card_games 52 题未评），勿外推为全数据集结论。
 
@@ -59,7 +59,7 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 | debit_card_specializing | q1476 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 109,335 | 72,354 | **70,780** | 题目/evidence 无缺陷；CZK/EUR 消歧无分歧，数值一致（402,524,570.17）；Ch3 无本题条目 | Ch1×2、Ch2×2（1 命中）；execute_sql×6 + get_table_schema×2 探测偏多，9 步 109,335 tok 最贵 | Ch1 单发首中；execute_sql×2，6 步 72,354 tok | 结果多带两列拆分值（CZK 总额/EUR 总额）→ strict 列数不匹配 FAIL，judge 按多余列不扣分翻正；6 步 70,780 tok |
 | debit_card_specializing | q1479 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 102,417 | 91,418 | **70,924** | 题目/evidence 无缺陷（"gas"即消费额而非站点实体）；Ch3 本题条目（gas=消费额非站点的词义裁定，路径自寻）生效——三范式自行路由 yearmonth JOIN customers 且带 CZK 过滤；ER 仅返回年份列 strict PASS，DLR/RDF 多带金额列 judge 翻正 | 首跳漂 california_schools 后自纠回正；execute_sql×3 + get_table_schema×1，8 步 102,417 tok 三范式最贵 | 自行经 PE mapping（YearMonth/Customer 弧）锚定路由，execute_sql 仅 1 次，7 步 91,418 tok | 无异常；execute_sql×2，6 步 70,924 tok 最省 |
 | debit_card_specializing | q1480 | PASS |  | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **55,710** | 68,376 | 72,339 | 题目/evidence 无缺陷；Ch3 本题条目（返回两位月份+格式对齐）生效——ER/DLR 按条目返回 "04" 直接 PASS | 无异常；5 步 55,710 tok 最省 | 无异常；6 步 68,376 tok | 值 "04" 正确但多带 total 列 → 列数不匹配 strict FAIL，judge 翻正；rdf_search×4 探测偏多，6 步 72,339 tok 最贵 |
-| debit_card_specializing | q1481 | FAIL | CORRECT | FAIL | CORRECT | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | **87,365** | 97,023 | 159,092 | 缺陷题——gold 算全段客户均值差（[-582092.86, 582092.86, 0]），未筛每段最低消费客户；Ch3 本题条目（每段最低客户年度总消费、不除 12）生效——ER/DLR 按条目算出裁定口径 [-14009.34, 6046.62, 7962.72]，judge 依 SOP>RAG 翻正 | 无异常；execute_sql×4，7 步 87,365 tok 三范式最省 | 无异常；Ch2×2（1 命中）；execute_sql×4，7 步 97,023 tok | SQL 漏 Currency='CZK'（JOIN customers 无 WHERE）→ LAM 最低客户取到混合货币口径 -186.18（vs CZK 口径 2.24），前两差值各偏 188.42 → INCORRECT；execute_sql×12 反复试错，11 步 159,092 tok 三范式最贵 |
+| debit_card_specializing | q1481 | FAIL | CORRECT | FAIL | CORRECT | FAIL | INCORRECT | CORRECT | CORRECT | INCORRECT | **100,924** | 119,001 | 130,122 | 缺陷题——gold 算全段客户均值差（[-582092.86, 582092.86, 0]），未筛每段最低消费客户；Ch3 本题条目（每段最低客户年度总消费、不除 12；09-04 补负值提示：年总额可为负=退款/冲正合法数据，不过滤不复核）生效——ER/DLR 按条目算出裁定口径 [-14009.34, 6046.62, 7962.72]，judge 依裁定翻正 | 条目负值提示后重跑（09-04）：负值核验循环消失，7 步 100,924 tok（旧 87,365）；重跑对照见案例 3 | 条目负值提示后重跑（09-04）：7 步 119,001 tok（旧 97,023）；两轮均 CORRECT 稳定 | SQL 漏 Currency='CZK'（JOIN customers 无 WHERE）→ LAM 最低客户取到混合货币口径 -186.18（vs CZK 口径 2.24），前两差值各偏 188.42 → INCORRECT；三轮实录 0829 丢 CZK→0902 带 CZK CORRECT→0904 丢 CZK，同一知识层下 CZK 谓词编译为单轮方差（条目第一句即 "sum 2013 CZK consumption"，非知识缺口）；负值提示后 8 步 130,122 tok（旧 159,092，-18%） |
 | debit_card_specializing | q1482 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 71,091 | **64,087** | 84,788 | 缺陷题——gold 分母用 2012 且未滤 EUR；evidence 规定除 2013（非常规口径），三范式均按数学常识除 2012 致 strict 全 FAIL；disputes 补判口径：问题问 which segment，答案=排序，三范式排序一致（SME 最高/LAM 最低）→ judge 全翻 CORRECT；Ch3 无本题条目 | 无异常；Ch2×3（2 命中）探测略多；execute_sql×5，6 步 71,091 tok | 无异常；execute_sql×3，5 步 64,087 tok 最省 | 无异常；execute_sql×6，7 步 84,788 tok 最贵 |
 | debit_card_specializing | q1483 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 89,939 | 59,145 | **55,272** | 题目/evidence 无缺陷；Ch3 无本题条目 | execute_sql×3 + get_table_schema×1 探测偏多，8 步 89,939 tok 三范式最贵 | 无异常；execute_sql×2，5 步 59,145 tok | 无异常；execute_sql 仅 1 次，5 步 55,272 tok 最省 |
 | debit_card_specializing | q1484 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 67,681 | 68,072 | **65,684** | 题目/evidence 无缺陷；Ch3 无本题条目 | 无异常；6 步 67,681 tok | 无异常；Ch2×2 全命中；execute_sql×2，6 步 68,072 tok | 无异常；Ch1×2；execute_sql×2，6 步 65,684 tok 最省 |
@@ -116,6 +116,7 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 - 陷阱：Ch2 检索命中 RAG 库 kid7 的 "/12 子句"（"dividing by 12 for annual average"），把"每段最低客户的年度总消费均值"错成 ÷12 的月值（首跑 ER/DLR 答案恰为裁定值 ÷12，RDF 600s 超时）——三范式全 INCORRECT
 - 补条目（每段取最低客户、年度总消费不除 12）重跑：**ER/DLR 算出裁定口径 [-14009.34, 6046.62, 7962.72] 直接翻 CORRECT**；RDF 仍 INCORRECT，但错误类型已切换为"漏 CZK 过滤"（范式自身行为，非知识污染）
 - 证明点：**SOP 能修复知识污染级的整体失败**（不只是格式微调）——判定结果 INCORRECT→CORRECT 的对照，比 q1480 的 strict FAIL→PASS 更强；且 judge 判序 SOP>RAG 使条目在与 RAG 知识冲突时稳定获胜
+- **有效性→效率的补强（09-04 负值提示 A/B）**：SOP 有效≠高效——条目判对口径但没裁负值（数据库含 152 行负消费=退款语义，三通道均未记载），agent 两轮各烧 6-8 步「负值 suspicious→分布核验→复核来源」循环（RDF 0902 轮 305K tok，reasoning ×6.6）。条目补一句「年总额可为负，负值即答案，不过滤不当异常不复核」重跑：核验循环消失，RDF 8 步 130,122 tok（**-57%**）、ER 100,924 / DLR 119,001 同降。**边界同轮显形：CZK 谓词提示治不了**——三轮 RDF 丢 CZK→带 CZK→丢 CZK（条目第一句即 "sum 2013 CZK consumption"，非知识缺口），单轮编译方差属 agent 架构层。知识提示的边际收益递减是设计使然：若每维提示都能无差别覆盖底层能力，三通道+ReACT 就退化为查表——**提示收敛「想不通」的成本，架构承载「写不写得对」的能力，二者不可互相替代，后者正是被测对象**
 
 ### 案例 4：q1479 — SOP 消解跨域词义偏导（词义裁定与路径处分的分层验证）
 
@@ -154,7 +155,7 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 |---|---|---|---|
 | q1473 | 知识冲突 | （无对照批次；若按 Ch2 错误公式作答，三范式均 12 倍偏小） | 三范式口径一致按表语义作答，judge 依 SOP 翻正 |
 | q1480 | 格式约定 | strict 0/3，全靠 judge | strict 2/3，ER/DLR 免仲裁 |
-| q1481 | 知识污染 | 三范式全 INCORRECT（kid7 污染） | ER/DLR 翻 CORRECT（RDF 另因漏 CZK 过滤 INCORRECT） |
+| q1481 | 知识污染 | 三范式全 INCORRECT（kid7 污染） | ER/DLR 翻 CORRECT（RDF 另因漏 CZK 过滤 INCORRECT）；负值提示后 RDF tok -57%（核验循环消失，CZK 方差仍在=架构层） |
 | q1479 | 跨域词义偏导 | Ch1/Ch2 双双偏导 gas→加油站域，DLR 验库补信息 101K tok | 消歧生效：token 三范式全降（DLR -28%），RDF 补齐 CZK 过滤 |
 | q1498 | 量词辖域歧义 | Ch1/Ch2 信息全对仍 1/3 落错读法（DLR 取 MAX 裸行值 INCORRECT，被 q1473 行级条目同向强化） | 三范式 strict 全 PASS 免仲裁（DLR 445,279.69→月总量口径） |
 | q1486 | 格式约定（列形状） | strict 1/3（DLR/RDF 多带拆分两列 FAIL，judge 翻正） | 三范式单列 diff=23505，strict 3/3 免仲裁；ER -20%/RDF -21% tok |

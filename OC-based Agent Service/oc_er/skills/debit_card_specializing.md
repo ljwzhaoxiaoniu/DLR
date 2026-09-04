@@ -23,6 +23,10 @@ Answer-format check (do this after running SQL): the question asks for the **mon
 
 Per customer, sum 2013 CZK consumption. Then, **per segment**, pick the customer(s) with the lowest 2013 total. "Annual average consumption" here = the average of those customers' 2013 totals -- the year total is already the annual value, so do **not** divide by 12. Dividing by 12 turns it into a monthly figure and is wrong for this question (a "monthly" question says monthly explicitly, as in the SME 2013 monthly-average question).
 
+A per-customer 2013 total can be negative: a few monthly rows are negative (refunds/chargebacks) and are valid data. If a segment's lowest total is negative, that is the answer -- do not filter negatives out, treat them as anomalies, or re-verify where they came from.
+
+Output the three differences in the question's order: SME minus LAM, LAM minus KAM, KAM minus SME.
+
 Output the three differences in the question's order: SME minus LAM, LAM minus KAM, KAM minus SME.
 
 ## When asked: "Which year recorded the most consumption of gas paid in CZK?"
