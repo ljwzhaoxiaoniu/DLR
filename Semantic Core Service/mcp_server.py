@@ -171,7 +171,7 @@ def _get_tool_names() -> set:
 # Shared + ER tools (registered at module import)
 # ===================================================================
 
-def er_semantic_query(question: str, top_k: int = 20, db: str = "") -> dict:
+def er_semantic_query(question: str, top_k: int = 10, db: str = "") -> dict:
     """[ER] 语义召回 → 返回实体(扁平结构,无物理表/字段).
 
     db: 可选,数据库名过滤. 首次调用留空做全局召回,用于判断问题属于哪个数据库;
@@ -440,7 +440,7 @@ def _query_rdf_mapping(class_uri: str) -> dict:
     return result
 
 
-def rdf_semantic_query(question: str, top_k: int = 20, db: str = "") -> dict:
+def rdf_semantic_query(question: str, top_k: int = 10, db: str = "") -> dict:
     """[RDF] 语义召回 → 返回类(URI 本体结构,无 R2RML 映射/字段).
 
     db: 可选,数据库名过滤. 首次调用留空做全局召回,用于判断问题属于哪个数据库;

@@ -100,7 +100,7 @@ RDF 不走自己的 Kuzu schema——`mapping/rdf.py` 把 R2RML 解析成 **ER �
 |---|---|---|
 | TriplesMap 的 `rr:class`（subjectMap） | BizEntity.entity_id = **class IRI**（如 `http://example.org/customers`，非表名！），name = IRI 末段 | ER 用 `db.table` 作 entity_id |
 | — | BizEntity.description = `"[RDF] R2RML class {class_node}"`（结构性占位，非语义） | ER 是表级语义描述 |
-| 每个 `rr:column` 的 predicateObjectMap | BizAttribute：attr_id = `db.table.col`，name = predicate URI 末段（=列名），**description = None——`rdfs:comment` 不进图**（rdf.py:183） | ER 属性描述进图 |
+| 每个 `rr:column` 的 predicateObjectMap | BizAttribute：attr_id = `db.table.col`，name = predicate URI 末段（=列名），**description = rdfs:comment**（rdf.py，09-10 公平性补齐） | ER 属性描述进图 |
 | 每个 `referencingObjectMap` | 边 `RELATED_TO`：name = `refers_to_x`，description = `"[RDF] referencingObjectMap -> {parent_table}"`，端点 = class IRI | 同 ER 边表 |
 
 ### 3.2 进了向量库（RDF 分支的关键机制：实体向量文本被融合文本覆盖）
@@ -111,8 +111,8 @@ RDF 不走自己的 Kuzu schema——`mapping/rdf.py` 把 R2RML 解析成 **ER �
   "{db} {table}: col1(comment1) col2(comment2) ... ->parent_table1 ->parent_table2"
   ```
 
-  ——每列拼成 `列名(rdfs:comment)`，引用对象映射拼成 `->父表名`。**这就是"列融合代偿"**：RDF 图里没有属性描述，就把整表列+注释压进一条实体向量，保证 FAISS 按自然语言问题能召回物理表。
-- **属性向量**：`"{predicate 末段}"`（description=None → 只有列名，无 comment）。
+  ——每列拼成 `列名(rdfs:comment)`，引用对象映射拼成 `->父表名`。**这就是"列融合代偿"**：RDF 的召回入口是 class（单条实体向量），把整表列+注释压进这条入口向量保证按自然语言问题可召回物理表；列级 comment（09-10 起）另走属性向量。
+- **属性向量**：`"{predicate 末段} {rdfs:comment}"`（09-10 补齐：comment 进属性向量，与 ER 同模板）
 - **关系向量**：同 ER 四段模板（name/from/to/description 用上面的 RDF 口径）。
 
 ### 3.3 第三条表面：serve 期 rdflib 映射定义图（不走 Kuzu/FAISS）
@@ -123,7 +123,7 @@ RDF 不走自己的 Kuzu schema——`mapping/rdf.py` 把 R2RML 解析成 **ER �
 
 | 通路 | 内容 | 时机 |
 |---|---|---|
-| build 期 Kuzu + FAISS | 实体（class IRI + 结构占位描述）、属性（无描述）、关系（结构占位）、实体融合向量（列+comment） | `main.py build` |
+| build 期 Kuzu + FAISS | 实体（class IRI + 结构占位描述）、属性（rdfs:comment，09-10 补齐）、关系（结构占位）、实体融合向量（列+comment） | `main.py build` |
 | serve 期 rdflib 图 | 完整 R2RML：rr:column、rdfs:label、rdfs:comment、joinCondition、subjectMap | 服务启动加载 |
 
 ---
@@ -134,7 +134,7 @@ RDF 不走自己的 Kuzu schema——`mapping/rdf.py` 把 R2RML 解析成 **ER �
 |---|---|---|
 | ER | 每实体 1 条（表名+表级描述）+ 每列 1 条（列名+列级描述）+ 每关系 1 条（四段）；全库 975 = 75+798+102 | **不聚合，三层独立** |
 | DLR | 每 LE 1 条（name+description+**全部 public attrs 拼入**）+ 每 PE 1 条（name+S）+ PE 属性每条 1 条 + 每 PAS 1 条（编译句） | **LE 层聚合**；PE 层不聚合 |
-| RDF | 每实体 1 条**融合文本**（db table: 列(comment)… ->父表）+ 每列 1 条（仅列名、无描述）+ 每关系 1 条；全库 974 = 75+798+101 | **实体层聚合**（列融合代偿）；属性不聚合 |
+| RDF | 每实体 1 条**融合文本**（db table: 列(comment)… ->父表）+ 每列 1 条（列名+comment，09-10 补齐）+ 每关系 1 条；全库 974 = 75+798+101 | **实体层聚合**（列融合代偿）；属性不聚合 |
 
 **DLR 同列双条目**：同一物理列若同时被 C 映射且列在 private_attributes 中，向量库出现两条——C 继承条目带 LE 业务文本、private 条目带 CSV 原文（如 debit_card `customers.Segment`：`Customer segment: SME=Small Business…` + `client segment`）。继承+私有并存是 DLR 既有设计：业务语义与物理原文各占一个召回面。
 
@@ -143,16 +143,16 @@ RDF 不走自己的 Kuzu schema——`mapping/rdf.py` 把 R2RML 解析成 **ER �
 | | ER | DLR | RDF |
 |---|---|---|---|
 | 图-实体节点 | BizEntity（db.table 为 id） | LogicalEntity + PhysicalEntity 双层 | BizEntity（class IRI 为 id，复用 ER 表） |
-| 图-属性描述 | ✅ yaml 原文 | LE=业务语义；PE private=CSV 原文（C 映射列复用 LE 文本） | ❌ 不进图（Kuzu 描述为空，comment 在 rdflib 图） |
+| 图-属性描述 | ✅ yaml 原文 | LE=业务语义；PE private=CSV 原文（C 映射列复用 LE 文本） | ✅ rdfs:comment（09-10 起进 Kuzu；此前仅 rdflib 图） |
 | 图-关系 | RELATED_TO（dataset FK） | INHERITS + PAS_RELATED_TO（ARCS 的 C 以 JSON 挂节点属性） | RELATED_TO（referencingObjectMap，结构占位描述） |
 | 向量-实体 | `name + description` | LE：`name + description + public attrs 全拼`；PE：`name + S` | `db table: 列(comment)… ->父表…` 融合文本 |
-| 向量-属性 | `name + description` | `name + description`（C 列=LE 文本，private=CSV 原文） | `列名`（无描述） |
+| 向量-属性 | `name + description` | `name + description`（C 列=LE 文本，private=CSV 原文） | `列名 + comment`（09-10 起与 ER 同模板） |
 | 向量-关系 | `name + 两端实体名 + description` | PAS 编译句（双向谓词 + A 关联 + S） | 同 ER 四段模板（结构占位） |
-| 列级物理描述来源（09-10 后） | CSV column_description + value_description 原文 | private 同上；LE 层保留业务语义 | rdfs:comment 同上（进 rdflib 图 + 融合向量） |
+| 列级物理描述来源（09-10 后） | CSV column_description + value_description 原文 | private 同上；LE 层保留业务语义 | rdfs:comment 同上（rdflib 图 + 融合向量 + 属性向量/Kuzu） |
 
 ## 6. 与 09-10 配置重写的关系
 
-三范式物理层描述统一为数据集 CSV 原文后，上表的口径即当前生效状态：ER 的图/向量全带 CSV 原文；DLR 的 PE private 层带 CSV 原文、LE 业务层保留建模语义（分层不变）；RDF 的 CSV 原文走 rdflib 图 + 实体融合向量两条通路、Kuzu 属性描述仍为空（R2RML 结构性缺失，靠列融合代偿——这是 RDF 范式固有的被测形态，未做工程抹平）。
+三范式物理层描述统一为数据集 CSV 原文后，上表的口径即当前生效状态：ER 的图/向量全带 CSV 原文；DLR 的 PE private 层带 CSV 原文、LE 业务层保留建模语义（分层不变）；RDF 的 CSV 原文走 rdflib 图 + 实体融合向量 + 属性向量（rdfs:comment，09-10 补齐进 Kuzu 与 FAISS）三条通路。
 
 ## 7. 召回面与公平性（2026-09-10 定调）
 
@@ -170,8 +170,8 @@ RDF 不走自己的 Kuzu schema——`mapping/rdf.py` 把 R2RML 解析成 **ER �
 
 1. **入口面 = 各范式语义面**：ER 召回实体、DLR 召回 LE、RDF 召回 class——agent 拿到的正是各范式顶层导航对象，与后续范式工具链（get_entity_mapping / ARCS·PAS / get_rdf_mapping）无缝衔接。
 2. **列级文本三范式各有通路**：ER 靠属性向量 fallback、DLR 靠 LE 融合、RDF 靠列融合——通路机制不同（08-27 定的「向量文本组成各按范式形态」），但每个范式都有从题面术语到列级语义的召回路径，无一方被剥夺。
-3. **索引层同词同义**：09-10 配置重写后物理层描述统一为 CSV 原文；待办①（RDF 属性向量补 comment）完成后，三范式 per-attribute 索引文本完全对称。
-4. **旋钮对称**：db 过滤、VectorDB 检索机制三范式共享；top_k 统一对齐 10（待办②）。
+3. **索引层同词同义**：09-10 配置重写后物理层描述统一为 CSV 原文；待办①（RDF 属性向量补 comment）已完成（rdf.py），rebuild 后三范式 per-attribute 索引文本完全对称。
+4. **旋钮对称**：db 过滤、VectorDB 检索机制三范式共享；top_k 已统一对齐 10（er/rdf 20→10，dlr 保持，待办②完成，生效需重启 serve）。
 
 ### 7.3 保留的形态差异（被测变量，不抹平）
 
@@ -179,4 +179,4 @@ RDF 不走自己的 Kuzu schema——`mapping/rdf.py` 把 R2RML 解析成 **ER �
 - DLR 的 14 个探索类工具已禁注册（recall_pe/path_*/is_* 等，v3 决策：使用率 <5% 且诱发过度探索）
 - RDF 的 SPARQL 通道定位为逃生舱：R2RML 只做映射内省、从不物化数据三元组，SPARQL 功能域与 get_rdf_mapping/rdf_search 重叠；归档 30 题 0 次使用是理性冗余（详见待办③）
 
-相关待办见 memory `todo-fairness-optimization`：① RDF 入库补 comment、② top_k 对齐 10、③ SPARQL 定位、④ 验证、⑤ 本节文档同步。
+相关待办见 memory `todo-fairness-optimization`：① RDF 入库补 comment（✅ 09-10 代码已改，待 rebuild）、② top_k 对齐 10（✅ 代码已改，待重启）、③ SPARQL 定位、④ 验证、⑤ 文档同步（✅）。

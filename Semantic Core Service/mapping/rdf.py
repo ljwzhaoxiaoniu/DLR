@@ -177,10 +177,12 @@ class RDFSemanticMapper(SemanticMapperABC):
 
                 col_id = f"{db_name}.{table_name}.{col_str}"
                 pcol = physical_column_map.get(col_id)
+                # rdfs:comment → 属性描述（三范式 per-attribute 索引同词同义，2026-09-10 公平性定调）
+                comment = _first(g, pom, RDFS.comment)
                 biz_attributes.append(BizAttribute(
                     attr_id=col_id,
                     name=predicate,
-                    description=None,
+                    description=str(comment) if comment else None,
                     physical_column_id=col_id,
                     data_type=pcol.data_type if pcol else None,
                 ))
