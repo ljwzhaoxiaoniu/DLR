@@ -180,3 +180,19 @@ RDF 不走自己的 Kuzu schema——`mapping/rdf.py` 把 R2RML 解析成 **ER �
 - RDF 的 SPARQL 通道定位为逃生舱：R2RML 只做映射内省、从不物化数据三元组，SPARQL 功能域与 get_rdf_mapping/rdf_search 重叠；归档 30 题 0 次使用是理性冗余（详见待办③）
 
 相关待办见 memory `todo-fairness-optimization`：① RDF 入库补 comment（✅ 09-10 代码已改，待 rebuild）、② top_k 对齐 10（✅ 代码已改，待重启）、③ SPARQL 定位、④ 验证、⑤ 文档同步（✅）。
+
+## 8. 数字核账（可复现，2026-09-10 实测）
+
+```bash
+# 全量校验：pkl 元数据 / PE 唯一性 / INHERITS 单挂 / 锁库召回
+cd "Semantic Core Service"
+python "tool&test/verify_db_recall.py"    # 预期 RESULT: ALL PASS
+```
+
+| 范式 | 全库总向量 | debit_card_specializing | 构成 |
+|---|---|---|---|
+| ER | 975 | 27 | 5 实体 + 21 属性 + 1 关系 |
+| DLR | 953 | 35 | 4 LE + 5 PE + 23 属性（C 继承 16 + private 7，同列双条目见 §4）+ 3 PAS |
+| RDF | 974 | 27 | 5 实体 + 21 属性 + 1 关系 |
+
+（ER/RDF 与 DLR 的库级差 = 各范式结构互换算：ER/RDF 实体+关系 ↔ DLR LE+PE+PAS。）

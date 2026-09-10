@@ -41,7 +41,7 @@ OC-based Agent Service/
 | **MCP 范式隔离** | 服务端按 `_mapping_type` 注册工具子集 | Agent 只能看到当前范式的工具 |
 | **第一跳信息屏蔽** | `*_semantic_query` 不返回物理表/字段/database_url | 物理信息必须经第二跳映射工具按需获取 |
 
-Agent 强制路径：`*_semantic_query`（首跳全局/锁库召回）→ 映射工具（`get_pe_full` / `get_entity_mapping` / `query_rdf_mapping`）→ `execute_sql` → `Final Answer`。
+Agent 强制路径：`*_semantic_query`（首跳全局/锁库召回）→ 映射工具（`get_pe_mapping` / `get_entity_mapping` / `get_rdf_mapping`）→ `execute_sql` → `Final Answer`。
 
 > **2026-07-20 防作弊加固**：实测发现 er_1472 用 `task` 子代理 grep 磁盘溢出文件绕过 MCP。已将评测 Agent 的 `opencode.json` deny 列表从 `bash` 扩展为 `bash/task/read/glob/grep`，Judge 保留 `read`（需读预测文件）。跑满 3 pair 后零违规。
 

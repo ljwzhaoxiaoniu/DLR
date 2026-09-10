@@ -20,8 +20,8 @@
        (Kuzu+FAISS)    (search_         (skills/*.md)
        dlr_semantic     evidence)
        _query
-       recall_pe/recall_pas
-       get_pe_full/get_le_attrs
+       get_pe_mapping
+       get_le_attrs
               │             │             │
               ▼             ▼             ▼
        数据结构全貌   术语→列/值的    难题模式+处理建议
@@ -32,7 +32,7 @@
                     交叉验证 → 锚定实体
                             │
                             ▼
-                      get_pe_full / get_entity_mapping
+                      get_pe_mapping / get_entity_mapping / get_rdf_mapping
                             │
                             ▼
                       execute_sql → 按 SOP 验证 → Final Answer
@@ -41,7 +41,7 @@
 | 维度 | Ch1 MCP 语义层 | Ch2 RAG 证据 | Ch3 SOP 技能 |
 |------|---------------|-------------|-------------|
 | **存储** | YAML/TTL 模型 description | `rag_knowledge/*.jsonl` | `OC-based Agent Service/skills/*.md` |
-| **工具** | `dlr_semantic_query`、`recall_pe`、`get_pe_full` | `search_evidence` | 文件系统读取 (`Read` → `AGENTS.md`) |
+| **工具** | `dlr_semantic_query`、`get_pe_mapping`、`get_le_attrs`（v3 起为 4 核心工具集，探索类已禁注册） | `search_evidence` | 文件系统读取 (`Read` → `AGENTS.md`) |
 | **回答什么** | 这个领域有哪些结构？ | 这个问题用词对应什么列/值？ | 这种题有什么坑？ |
 | **产出** | 实体ID + 属性列表 + DB 路径 | 术语→列/值的映射 | 验证规则 + 反模式 |
 | **独特价值** | 全貌 + 结构完整性 | 弥合 NL→模型语言鸿沟 | 知道"容易错在哪" |

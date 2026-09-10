@@ -2,7 +2,7 @@
 
 > **DLR（Decoupled Logic Representation，解耦逻辑表达）是本项目原创的语义建模范式**：LE-PE 双层模型 + PAS 语义路由，将逻辑概念层与物理数据层解耦。项目同时实现 ER 与 RDF 两条基线，三范式同构对比评测。
 >
-> 配置文件到 Kuzu/FAISS 的字段级写入链路见深度篇：[yaml-to-storage.md](yaml-to-storage.md)。
+> 配置文件到 Kuzu/FAISS 的字段级写入链路见深度篇：[semantic-layer-build.md](semantic-layer-build.md)。
 
 ## 1. 范式定位
 
@@ -187,7 +187,7 @@ PAS: Client ──ResidesIn──→ District (A: DistrictID)
 改进：
 - `disp` 从独立 LE 下沉为 Account PE——Agent 不再绕路
 - Loan/Transaction/PermanentOrder **保留为 LE**——各有批准→结清、逐笔发生、创建→执行的生命周期
-- `amount`/`status`/`balance` 等核心度量升 public——Agent 一次 `get_pe_full` 看到关键列
+- `amount`/`status`/`balance` 等核心度量升 public——Agent 一次 `get_pe_mapping` 看到关键列
 - 消除 `Account→AccountRelation→Client` 的中间跳，Client↔Account 直连
 
 ### 2.6 案例：superhero
@@ -219,7 +219,7 @@ LOGICAL.Superhero                          LOGICAL.Power           LOGICAL.Attri
 ```
 
 改进：
-- 拆掉 3 个虚构 LE，维度 PE 直挂 Superhero——Agent 一次 `get_pe_full` 看到完整业务结构
+- 拆掉 3 个虚构 LE，维度 PE 直挂 Superhero——Agent 一次 `get_pe_mapping` 看到完整业务结构
 - hero_power/superpower 拆为独立 Power LE——PAS 表达多对多，语义清晰
 - 所有列补 description，`colour.colour`、`power_name` 不再裸奔
 
@@ -349,7 +349,7 @@ configs/scenarios/DLR/*.yaml
 DLRScenarioModel (LogicalEntity / PhysicalEntity / PAS / ARCS)
     ▼ BuildService.build()
 Kuzu (LE-PE 双层 + INHERITS + PAS) + FAISS
-    ▼ MCP 工具暴露 (dlr_semantic_query / recall_pe / recall_pas / ...)
+    ▼ MCP 工具暴露 (dlr_semantic_query / get_pe_mapping / get_le_attrs / ...)
 Agent → 语义路由 → execute_sql 查证据
 ```
 
@@ -422,7 +422,7 @@ Agent 写 SQL → execute_sql → Final Answer
 11 库合并索引存在跨库召回污染（实测 q1472 曾把 Agent 带进错误的库）。机制：
 
 - 构建时每条向量写入 `db` 元数据；`VectorDB.search(query, top_k, db=None)` 传 db 时全量检索后过滤；
-- 5 个召回工具（`er/dlr/rdf_semantic_query`、`recall_pe`、`recall_pas`）支持可选 `db` 参数，候选统一带 `db` 字段；
+- 3 个召回工具（`er/dlr/rdf_semantic_query`）支持可选 `db` 参数，候选统一带 `db` 字段（v3 起 DLR 探索类召回工具已禁注册）；
 - **Agent 不预先知道 db_id**：首跳全局召回，从候选 db 分布判断归属库（= 语义路由定位库），锁库后传 `db` 防漂移（规则见 `OC-based Agent Service/AGENTS.md` Step 1）。
 
 ## 7. MCP 工具
@@ -432,14 +432,14 @@ Agent 写 SQL → execute_sql → Final Answer
 | 范式 | 入口 | 返回容器 | 第二跳映射工具 |
 |------|------|---------|---------------|
 | ER | `er_semantic_query` | `data.entities[]`（entity_id, name, description, db） | `get_entity_mapping(entity_id)` |
-| DLR | `dlr_semantic_query` | `data.structures[]`（LE-PE 复合, db） | `get_pe_full(pe_id)` ★ |
-| RDF | `rdf_semantic_query` | `data.classes[]`（class_uri, name, description, db） | `query_rdf_mapping(class_uri)` |
+| DLR | `dlr_semantic_query` | `data.structures[]`（LE-PE 复合, db） | `get_pe_mapping(pe_id)` ★ |
+| RDF | `rdf_semantic_query` | `data.classes[]`（class_uri, name, description, db） | `get_rdf_mapping(class_uri)` |
 
 ### ER 工具（11 + 1 共享）
 
 | Tool | 参数 | 语义 |
 |------|------|------|
-| `er_semantic_query` | `question, top_k=20, db?` | 语义召回 → 实体（扁平，候选带 db） |
+| `er_semantic_query` | `question, top_k=10, db?` | 语义召回 → 实体（扁平，候选带 db） |
 | ~~`list_entities`~~ / ~~`list_relations`~~ | — | **已禁用** — 全量枚举绕过语义召回 |
 | `get_entity` / `get_entity_attributes` / `get_entity_relations` | `entity_id` | 实体详情 / 属性 / 关系 |
 | `get_entity_mapping` | `entity_id` | 物理映射（database_url + 表 + 字段） |
@@ -448,15 +448,15 @@ Agent 写 SQL → execute_sql → Final Answer
 | `get_table_schema` | `table_id` | 任意物理表结构 |
 | `summary` | — | 知识库摘要 |
 
-### DLR 工具（21 + 1 共享）
+### DLR 工具（21 + 1 共享；⚠ 2026-09-01 起实际注册核心 4 个：`dlr_semantic_query` / `dlr_search_evidence` / `get_pe_mapping` / `get_le_attrs`，下表其余为历史清单）
 
 | Tool | 参数 | 语义 |
 |------|------|------|
 | `dlr_semantic_query` | `question, top_k, threshold, db?` | 语义召回 → LE-PE 结构体 |
-| `recall_pe` / `recall_pas` | `question, top_k, threshold, db?` | 召回 PE / PAS |
+| ~~`recall_pe`~~ / ~~`recall_pas`~~ | — | **已禁注册（2026-09-01）** — 使用率 <5% 且诱发过度探索；DLR 收敛为 4 核心工具 |
 | ~~`list_le`~~ / ~~`list_pe`~~ / ~~`list_pas`~~ | — | **已禁用** — 全量枚举，此前 list_le/list_pe 已移除，list_pas 2026-08-02 禁用 |
 | `get_le` / `get_le_attrs` / `get_le_children` / `get_le_pas` | `le_id` | LE 详情/属性/子PE/PAS |
-| **`get_pe_full`** ★ | `pe_id` | **PE 详情+属性+ARCS+database_url 一次调用** |
+| **`get_pe_mapping`** ★ | `pe_id` | **PE 详情+属性+ARCS+database_url 一次调用**（原 get_pe_full） |
 | `get_pe_parent` / `get_pas` / `get_pas_by_le` | id | 导航 |
 | `path_le_le` / `path_pe_pe` | 两 id | 最短路径 |
 | `is_le` / `is_pe` / `is_arcs` / `is_same_le` | id | 判定 |
@@ -466,7 +466,7 @@ Agent 写 SQL → execute_sql → Final Answer
 
 | Tool | 参数 | 语义 |
 |------|------|------|
-| `rdf_semantic_query` | `question, top_k=20, db?` | 语义召回 → 类 |
+| `rdf_semantic_query` | `question, top_k=10, db?` | 语义召回 → 类 |
 | `query_rdf_mapping` | `class_uri` | R2RML 映射（列+JOIN+database_url） |
 | ~~`rdf_classes`~~ / ~~`rdf_predicates`~~ | — | **已禁用** — 全量枚举 class/predicate URI |
 | `rdf_search` | `q, limit` | 文本搜索三元组 |
