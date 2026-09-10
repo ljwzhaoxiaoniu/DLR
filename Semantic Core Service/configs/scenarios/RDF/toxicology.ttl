@@ -6,22 +6,26 @@
 
 # R2RML — database: toxicology
 # URL: sqlite:///MINIDEV_sqlite\dev_databases\toxicology/toxicology.sqlite
-# Tables: 4  ForeignKeys: 5 formal + 0 heuristic = 5 total
-# Source: PRAGMA foreign_key_list + column-name→PK matching
+# Tables: 4  ForeignKeys: 5 formal = 5 total
+# Source: dev_tables.json foreign_keys (aligned with ER yaml)
 
 # === Table: toxicology.atom (pk=atom_id) ===
 <http://example.org/tm/toxicology/atom> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "atom" ] ;
     rr:subjectMap [ rr:template "http://example.org/toxicology/{atom_id}" ; rr:class ex:atom ] ;
+
+
+
+
     rr:predicateObjectMap [ rr:predicate <http://example.org/atom/atom_id> ; rr:objectMap [ rr:column "atom_id" ; rr:datatype xsd:string ] ;
-        rdfs:label "原子ID"@zh ;
-        rdfs:comment "原子的唯一标识符"@zh ] ;
+        rdfs:label "atom id"@en ;
+        rdfs:comment "the unique id of atoms"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/atom/molecule_id> ; rr:objectMap [ rr:column "molecule_id" ; rr:datatype xsd:string ] ;
-        rdfs:label "所属分子ID"@zh ;
-        rdfs:comment "该原子所属分子的唯一标识，关联 molecule 表"@zh ] ;
+        rdfs:label "molecule id"@en ;
+        rdfs:comment "identifying the molecule to which the atom belongs. commonsense evidence: TRXXX_i represents ith atom of molecule TRXXX"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/atom/element> ; rr:objectMap [ rr:column "element" ; rr:datatype xsd:string ] ;
-        rdfs:label "元素符号"@zh ;
-        rdfs:comment "化学元素符号，如 o 表示氧、c 表示碳、h 表示氢、n 表示氮等"@zh ] ;
+        rdfs:label "element"@en ;
+        rdfs:comment "the element of the toxicology.  cl: chlorine  c: carbon  h: hydrogen  o: oxygen  s: sulfur  n: nitrogen  p: phosphorus  na: sodium  br: bromine  f: fluorine  i: iodine  sn: Tin  pb: lead  te: tellurium  ca: Calcium"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/atom/refers_to_molecule> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/toxicology/molecule> ; rr:joinCondition [ rr:child "molecule_id" ; rr:parent "molecule_id" ] ;
         rdfs:label "属于分子"@zh ;
         rdfs:comment "FK：atom.molecule_id → molecule.molecule_id，一个分子包含多个原子"@zh ] ] .
@@ -30,32 +34,40 @@
 <http://example.org/tm/toxicology/bond> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "bond" ] ;
     rr:subjectMap [ rr:template "http://example.org/toxicology/{bond_id}" ; rr:class ex:bond ] ;
+
+
+
+
     rr:predicateObjectMap [ rr:predicate <http://example.org/bond/bond_id> ; rr:objectMap [ rr:column "bond_id" ; rr:datatype xsd:string ] ;
-        rdfs:label "化学键ID"@zh ;
-        rdfs:comment "化学键的唯一标识符"@zh ] ;
+        rdfs:label "bond_id"@en ;
+        rdfs:comment "unique id representing bonds. TRxxx_A1_A2: TRXXX refers to which molecule A1 and A2 refers to which atom"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/bond/molecule_id> ; rr:objectMap [ rr:column "molecule_id" ; rr:datatype xsd:string ] ;
-        rdfs:label "所属分子ID"@zh ;
-        rdfs:comment "该化学键所属分子的唯一标识，关联 molecule 表"@zh ] ;
+        rdfs:label "molecule_id"@en ;
+        rdfs:comment "identifying the molecule in which the bond appears"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/bond/bond_type> ; rr:objectMap [ rr:column "bond_type" ; rr:datatype xsd:string ] ;
-        rdfs:label "键类型"@zh ;
-        rdfs:comment "化学键类型：- 表示单键、= 表示双键、# 表示三键"@zh ] ;
+        rdfs:label "bond_type"@en ;
+        rdfs:comment "type of the bond. commonsense evidence: -: single bond '=': double bond '#': triple bond"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/bond/refers_to_molecule> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/toxicology/molecule> ; rr:joinCondition [ rr:child "molecule_id" ; rr:parent "molecule_id" ] ;
         rdfs:label "属于分子"@zh ;
         rdfs:comment "FK：bond.molecule_id → molecule.molecule_id，一个分子包含多个化学键"@zh ] ] .
 
-# === Table: toxicology.connected (pk=atom_id2) ===
+# === Table: toxicology.connected (pk=atom_id+atom_id2) ===
 <http://example.org/tm/toxicology/connected> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "connected" ] ;
     rr:subjectMap [ rr:template "http://example.org/toxicology/{atom_id2}" ; rr:class ex:connected ] ;
+
+
+
+
     rr:predicateObjectMap [ rr:predicate <http://example.org/connected/atom_id> ; rr:objectMap [ rr:column "atom_id" ; rr:datatype xsd:string ] ;
-        rdfs:label "原子1 ID"@zh ;
-        rdfs:comment "连接中第一个原子的ID"@zh ] ;
+        rdfs:label "atom id"@en ;
+        rdfs:comment "id of the first atom"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/connected/atom_id2> ; rr:objectMap [ rr:column "atom_id2" ; rr:datatype xsd:string ] ;
-        rdfs:label "原子2 ID"@zh ;
-        rdfs:comment "连接中第二个原子的ID"@zh ] ;
+        rdfs:label "atom id 2"@en ;
+        rdfs:comment "id of the second atom"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/connected/bond_id> ; rr:objectMap [ rr:column "bond_id" ; rr:datatype xsd:string ] ;
-        rdfs:label "化学键ID"@zh ;
-        rdfs:comment "该连接对应的化学键ID"@zh ] ;
+        rdfs:label "bond id"@en ;
+        rdfs:comment "bond id representing bond between two atoms"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/connected/refers_to_bond> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/toxicology/bond> ; rr:joinCondition [ rr:child "bond_id" ; rr:parent "bond_id" ] ;
         rdfs:label "对应化学键"@zh ;
         rdfs:comment "FK：connected.bond_id → bond.bond_id"@zh ] ] ;
@@ -68,10 +80,10 @@
 <http://example.org/tm/toxicology/molecule> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "molecule" ] ;
     rr:subjectMap [ rr:template "http://example.org/toxicology/{molecule_id}" ; rr:class ex:molecule ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/molecule/molecule_id> ; rr:objectMap [ rr:column "molecule_id" ; rr:datatype xsd:string ] ;
-        rdfs:label "分子ID"@zh ;
-        rdfs:comment "分子的唯一标识符"@zh ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/molecule/label> ; rr:objectMap [ rr:column "label" ; rr:datatype xsd:string ] ;
-        rdfs:label "致癌性标签"@zh ;
-        rdfs:comment "该分子是否具有致癌性（carcinogenic or not）"@zh ] .
 
+    rr:predicateObjectMap [ rr:predicate <http://example.org/molecule/molecule_id> ; rr:objectMap [ rr:column "molecule_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "molecule id"@en ;
+        rdfs:comment "unique id of molecule. \"+\" --> this molecule / compound is carcinogenic '-' this molecule is not / compound carcinogenic"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/molecule/label> ; rr:objectMap [ rr:column "label" ; rr:datatype xsd:string ] ;
+        rdfs:label "label"@en ;
+        rdfs:comment "whether this molecule is carcinogenic or not"@en ] .

@@ -7,280 +7,286 @@ databases:
 entities:
 - entity_id: european_football_2.Player_Attributes
   biz_name: Player_Attributes
-  description: 'Player_Attributes: the unique id for players; the id of the player
-    fifa api; the id of the player api'
+  description: 'Player_Attributes: the unique id for players; the id of the player fifa api; the id of the player api'
   physical_table_id: european_football_2.Player_Attributes
   attributes:
   - attr_id: european_football_2.Player_Attributes.id
     biz_name: id
-    description: ''
+    description: the unique id for players
     physical_column_id: european_football_2.Player_Attributes.id
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.player_fifa_api_id
-    biz_name: player_fifa_api_id
-    description: ''
+    biz_name: player federation international football association api id
+    description: the id of the player fifa api
     physical_column_id: european_football_2.Player_Attributes.player_fifa_api_id
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.player_api_id
-    biz_name: player_api_id
-    description: ''
+    biz_name: player api id
+    description: the id of the player api
     physical_column_id: european_football_2.Player_Attributes.player_api_id
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.date
     biz_name: date
-    description: ''
+    description: date. e.g. 2016-02-18 00:00:00
     physical_column_id: european_football_2.Player_Attributes.date
     data_type: text
   - attr_id: european_football_2.Player_Attributes.overall_rating
     biz_name: overall_rating
-    description: ''
+    description: 'the overall rating of the player. commonsense reasoning: The rating is between 0-100 which is calculated
+      by FIFA. Higher overall rating means the player has a stronger overall strength.'
     physical_column_id: european_football_2.Player_Attributes.overall_rating
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.potential
     biz_name: potential
-    description: ''
+    description: 'potential of the player. commonsense reasoning: The potential score is between 0-100 which is calculated
+      by FIFA. Higher potential score means that the player has more potential'
     physical_column_id: european_football_2.Player_Attributes.potential
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.preferred_foot
-    biz_name: preferred_foot
-    description: ''
+    biz_name: preferred foot
+    description: the player's preferred foot when attacking. right/ left
     physical_column_id: european_football_2.Player_Attributes.preferred_foot
     data_type: text
   - attr_id: european_football_2.Player_Attributes.attacking_work_rate
-    biz_name: attacking_work_rate
-    description: ''
+    biz_name: attacking work rate
+    description: "the player's attacking work rate. commonsense reasoning: \x95 high: implies that the player is going to\
+      \ be in all of your attack moves \x95 medium: implies that the player will select the attack actions he will join in\
+      \ \x95 low: remain in his position while the team attacks"
     physical_column_id: european_football_2.Player_Attributes.attacking_work_rate
     data_type: text
   - attr_id: european_football_2.Player_Attributes.defensive_work_rate
     biz_name: defensive_work_rate
-    description: ''
+    description: "the player's defensive work rate. commonsense reasoning: \x95 high: remain in his position and defense while\
+      \ the team attacks \x95 medium: implies that the player will select the defensive actions he will join in \x95 low:\
+      \ implies that the player is going to be in all of your attack moves instead of defensing"
     physical_column_id: european_football_2.Player_Attributes.defensive_work_rate
     data_type: text
   - attr_id: european_football_2.Player_Attributes.crossing
     biz_name: crossing
-    description: ''
+    description: 'the player''s crossing score. commonsense reasoning: Cross is a long pass into the opponent''s goal towards
+      the header of sixth-yard teammate. The crossing score is between 0-100 which measures the tendency/frequency of crosses
+      in the box. Higher potential score means that the player performs better in crossing actions.'
     physical_column_id: european_football_2.Player_Attributes.crossing
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.finishing
     biz_name: finishing
-    description: ''
+    description: the player's finishing rate. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.finishing
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.heading_accuracy
-    biz_name: heading_accuracy
-    description: ''
+    biz_name: heading accuracy
+    description: the player's heading accuracy. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.heading_accuracy
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.short_passing
-    biz_name: short_passing
-    description: ''
+    biz_name: short passing
+    description: the player's short passing score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.short_passing
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.volleys
     biz_name: volleys
-    description: ''
+    description: the player's volley score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.volleys
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.dribbling
     biz_name: dribbling
-    description: ''
+    description: the player's dribbling score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.dribbling
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.curve
     biz_name: curve
-    description: ''
+    description: the player's curve score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.curve
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.free_kick_accuracy
-    biz_name: free_kick_accuracy
-    description: ''
+    biz_name: free kick accuracy
+    description: the player's free kick accuracy. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.free_kick_accuracy
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.long_passing
-    biz_name: long_passing
-    description: ''
+    biz_name: long passing
+    description: the player's long passing score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.long_passing
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.ball_control
-    biz_name: ball_control
-    description: ''
+    biz_name: ball control
+    description: the player's ball control score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.ball_control
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.acceleration
     biz_name: acceleration
-    description: ''
+    description: the player's acceleration score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.acceleration
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.sprint_speed
-    biz_name: sprint_speed
-    description: ''
+    biz_name: sprint speed
+    description: the player's sprint speed. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.sprint_speed
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.agility
     biz_name: agility
-    description: ''
+    description: the player's agility. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.agility
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.reactions
     biz_name: reactions
-    description: ''
+    description: the player's reactions score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.reactions
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.balance
     biz_name: balance
-    description: ''
+    description: the player's balance score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.balance
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.shot_power
-    biz_name: shot_power
-    description: ''
+    biz_name: shot power
+    description: the player's shot power. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.shot_power
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.jumping
     biz_name: jumping
-    description: ''
+    description: the player's jumping score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.jumping
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.stamina
     biz_name: stamina
-    description: ''
+    description: the player's stamina score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.stamina
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.strength
     biz_name: strength
-    description: ''
+    description: the player's strength score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.strength
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.long_shots
-    biz_name: long_shots
-    description: ''
+    biz_name: long shots
+    description: the player's long shots score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.long_shots
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.aggression
     biz_name: aggression
-    description: ''
+    description: the player's aggression score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.aggression
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.interceptions
     biz_name: interceptions
-    description: ''
+    description: the player's interceptions score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.interceptions
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.positioning
     biz_name: positioning
-    description: ''
+    description: the player's positioning score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.positioning
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.vision
     biz_name: vision
-    description: ''
+    description: the player's vision score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.vision
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.penalties
     biz_name: penalties
-    description: ''
+    description: the player's penalties score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.penalties
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.marking
     biz_name: marking
-    description: ''
+    description: the player's markingscore. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.marking
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.standing_tackle
-    biz_name: standing_tackle
-    description: ''
+    biz_name: standing tackle
+    description: the player's standing tackle score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.standing_tackle
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.sliding_tackle
-    biz_name: sliding_tackle
-    description: ''
+    biz_name: sliding tackle
+    description: the player's sliding tackle score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.sliding_tackle
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.gk_diving
-    biz_name: gk_diving
-    description: ''
+    biz_name: goalkeep diving
+    description: the player's goalkeep diving score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.gk_diving
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.gk_handling
-    biz_name: gk_handling
-    description: ''
+    biz_name: goalkeep handling
+    description: the player's goalkeep diving score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.gk_handling
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.gk_kicking
-    biz_name: gk_kicking
-    description: ''
+    biz_name: goalkeep kicking
+    description: the player's goalkeep kicking score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.gk_kicking
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.gk_positioning
-    biz_name: gk_positioning
-    description: ''
+    biz_name: goalkeep positioning
+    description: the player's goalkeep positioning score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.gk_positioning
     data_type: integer
   - attr_id: european_football_2.Player_Attributes.gk_reflexes
-    biz_name: gk_reflexes
-    description: ''
+    biz_name: goalkeep reflexes
+    description: the player's goalkeep reflexes score. 0-100 which is calculated by FIFA
     physical_column_id: european_football_2.Player_Attributes.gk_reflexes
     data_type: integer
 - entity_id: european_football_2.Player
   biz_name: Player
-  description: 'Player: the unique id for players; the id of the player api; player
-    name'
+  description: 'Player: the unique id for players; the id of the player api; player name'
   physical_table_id: european_football_2.Player
   attributes:
   - attr_id: european_football_2.Player.id
     biz_name: id
-    description: ''
+    description: the unique id for players
     physical_column_id: european_football_2.Player.id
     data_type: integer
   - attr_id: european_football_2.Player.player_api_id
-    biz_name: player_api_id
-    description: ''
+    biz_name: player api id
+    description: the id of the player api
     physical_column_id: european_football_2.Player.player_api_id
     data_type: integer
   - attr_id: european_football_2.Player.player_name
-    biz_name: player_name
-    description: ''
+    biz_name: player name
+    description: player name
     physical_column_id: european_football_2.Player.player_name
     data_type: text
   - attr_id: european_football_2.Player.player_fifa_api_id
-    biz_name: player_fifa_api_id
-    description: ''
+    biz_name: player federation international football association api id
+    description: the id of the player fifa api
     physical_column_id: european_football_2.Player.player_fifa_api_id
     data_type: integer
   - attr_id: european_football_2.Player.birthday
     biz_name: birthday
-    description: ''
+    description: 'the player''s birthday. e.g. 1992-02-29 00:00:00 commonsense reasoning: Player A is older than player B
+      means that A''s birthday is earlier than B''s'
     physical_column_id: european_football_2.Player.birthday
     data_type: text
   - attr_id: european_football_2.Player.height
     biz_name: height
-    description: ''
+    description: the player's height
     physical_column_id: european_football_2.Player.height
     data_type: integer
   - attr_id: european_football_2.Player.weight
     biz_name: weight
-    description: ''
+    description: the player's weight
     physical_column_id: european_football_2.Player.weight
     data_type: integer
 - entity_id: european_football_2.League
   biz_name: League
-  description: 'League: the unique id for leagues; the unique id for countries; league
-    name'
+  description: 'League: the unique id for leagues; the unique id for countries; league name'
   physical_table_id: european_football_2.League
   attributes:
   - attr_id: european_football_2.League.id
     biz_name: id
-    description: ''
+    description: the unique id for leagues
     physical_column_id: european_football_2.League.id
     data_type: integer
   - attr_id: european_football_2.League.country_id
-    biz_name: country_id
-    description: ''
+    biz_name: country id
+    description: the unique id for countries
     physical_column_id: european_football_2.League.country_id
     data_type: integer
   - attr_id: european_football_2.League.name
     biz_name: name
-    description: ''
+    description: league name
     physical_column_id: european_football_2.League.name
     data_type: text
 - entity_id: european_football_2.Country
@@ -290,174 +296,176 @@ entities:
   attributes:
   - attr_id: european_football_2.Country.id
     biz_name: id
-    description: ''
+    description: the unique id for countries
     physical_column_id: european_football_2.Country.id
     data_type: integer
   - attr_id: european_football_2.Country.name
     biz_name: name
-    description: ''
+    description: country name
     physical_column_id: european_football_2.Country.name
     data_type: text
 - entity_id: european_football_2.Team
   biz_name: Team
-  description: 'Team: the unique id for teams; the id of the team api; the id of the
-    team fifa api'
+  description: 'Team: the unique id for teams; the id of the team api; the id of the team fifa api'
   physical_table_id: european_football_2.Team
   attributes:
   - attr_id: european_football_2.Team.id
     biz_name: id
-    description: ''
+    description: the unique id for teams
     physical_column_id: european_football_2.Team.id
     data_type: integer
   - attr_id: european_football_2.Team.team_api_id
-    biz_name: team_api_id
-    description: ''
+    biz_name: team api id
+    description: the id of the team api
     physical_column_id: european_football_2.Team.team_api_id
     data_type: integer
   - attr_id: european_football_2.Team.team_fifa_api_id
-    biz_name: team_fifa_api_id
-    description: ''
+    biz_name: team federation international football association api id
+    description: the id of the team fifa api
     physical_column_id: european_football_2.Team.team_fifa_api_id
     data_type: integer
   - attr_id: european_football_2.Team.team_long_name
-    biz_name: team_long_name
-    description: ''
+    biz_name: team long name
+    description: the team's long name
     physical_column_id: european_football_2.Team.team_long_name
     data_type: text
   - attr_id: european_football_2.Team.team_short_name
-    biz_name: team_short_name
-    description: ''
+    biz_name: team short name
+    description: the team's short name
     physical_column_id: european_football_2.Team.team_short_name
     data_type: text
 - entity_id: european_football_2.Team_Attributes
   biz_name: Team_Attributes
-  description: 'Team_Attributes: the unique id for teams; the id of the team fifa
-    api; the id of the team api'
+  description: 'Team_Attributes: the unique id for teams; the id of the team fifa api; the id of the team api'
   physical_table_id: european_football_2.Team_Attributes
   attributes:
   - attr_id: european_football_2.Team_Attributes.id
     biz_name: id
-    description: ''
+    description: the unique id for teams
     physical_column_id: european_football_2.Team_Attributes.id
     data_type: integer
   - attr_id: european_football_2.Team_Attributes.team_fifa_api_id
-    biz_name: team_fifa_api_id
-    description: ''
+    biz_name: team federation international football association api id
+    description: the id of the team fifa api
     physical_column_id: european_football_2.Team_Attributes.team_fifa_api_id
     data_type: integer
   - attr_id: european_football_2.Team_Attributes.team_api_id
-    biz_name: team_api_id
-    description: ''
+    biz_name: team api id
+    description: the id of the team api
     physical_column_id: european_football_2.Team_Attributes.team_api_id
     data_type: integer
   - attr_id: european_football_2.Team_Attributes.date
     biz_name: date
-    description: ''
+    description: Date. e.g. 2010-02-22 00:00:00
     physical_column_id: european_football_2.Team_Attributes.date
     data_type: text
   - attr_id: european_football_2.Team_Attributes.buildUpPlaySpeed
-    biz_name: buildUpPlaySpeed
-    description: ''
+    biz_name: build Up Play Speed
+    description: the speed in which attacks are put together. the score which is between 1-00 to measure the team's attack
+      speed
     physical_column_id: european_football_2.Team_Attributes.buildUpPlaySpeed
     data_type: integer
   - attr_id: european_football_2.Team_Attributes.buildUpPlaySpeedClass
-    biz_name: buildUpPlaySpeedClass
-    description: ''
+    biz_name: build Up Play Speed Class
+    description: "the speed class. commonsense reasoning: \x95 Slow: 1-33 \x95 Balanced: 34-66 \x95 Fast: 66-100"
     physical_column_id: european_football_2.Team_Attributes.buildUpPlaySpeedClass
     data_type: text
   - attr_id: european_football_2.Team_Attributes.buildUpPlayDribbling
-    biz_name: buildUpPlayDribbling
-    description: ''
+    biz_name: build Up Play Dribbling
+    description: the tendency/ frequency of dribbling
     physical_column_id: european_football_2.Team_Attributes.buildUpPlayDribbling
     data_type: integer
   - attr_id: european_football_2.Team_Attributes.buildUpPlayDribblingClass
-    biz_name: buildUpPlayDribblingClass
-    description: ''
+    biz_name: build Up Play Dribbling Class
+    description: "the dribbling class. commonsense reasoning: \x95 Little: 1-33 \x95 Normal: 34-66 \x95 Lots: 66-100"
     physical_column_id: european_football_2.Team_Attributes.buildUpPlayDribblingClass
     data_type: text
   - attr_id: european_football_2.Team_Attributes.buildUpPlayPassing
-    biz_name: buildUpPlayPassing
-    description: ''
+    biz_name: build Up Play Passing
+    description: affects passing distance and support from teammates
     physical_column_id: european_football_2.Team_Attributes.buildUpPlayPassing
     data_type: integer
   - attr_id: european_football_2.Team_Attributes.buildUpPlayPassingClass
-    biz_name: buildUpPlayPassingClass
-    description: ''
+    biz_name: build Up Play Passing Class
+    description: "the passing class. commonsense reasoning: \x95 Short: 1-33 \x95 Mixed: 34-66 \x95 Long: 66-100"
     physical_column_id: european_football_2.Team_Attributes.buildUpPlayPassingClass
     data_type: text
   - attr_id: european_football_2.Team_Attributes.buildUpPlayPositioningClass
-    biz_name: buildUpPlayPositioningClass
-    description: ''
+    biz_name: build Up Play Positioning Class
+    description: A team's freedom of movement in the 1st two thirds of the pitch. Organised / Free Form
     physical_column_id: european_football_2.Team_Attributes.buildUpPlayPositioningClass
     data_type: text
   - attr_id: european_football_2.Team_Attributes.chanceCreationPassing
-    biz_name: chanceCreationPassing
-    description: ''
+    biz_name: chance Creation Passing
+    description: Amount of risk in pass decision and run support
     physical_column_id: european_football_2.Team_Attributes.chanceCreationPassing
     data_type: integer
   - attr_id: european_football_2.Team_Attributes.chanceCreationPassingClass
-    biz_name: chanceCreationPassingClass
-    description: ''
+    biz_name: chance Creation Passing Class
+    description: "the chance creation passing class. commonsense reasoning: \x95 Safe: 1-33 \x95 Normal: 34-66 \x95 Risky:\
+      \ 66-100"
     physical_column_id: european_football_2.Team_Attributes.chanceCreationPassingClass
     data_type: text
   - attr_id: european_football_2.Team_Attributes.chanceCreationCrossing
-    biz_name: chanceCreationCrossing
-    description: ''
+    biz_name: chance Creation Crossing
+    description: The tendency / frequency of crosses into the box
     physical_column_id: european_football_2.Team_Attributes.chanceCreationCrossing
     data_type: integer
   - attr_id: european_football_2.Team_Attributes.chanceCreationCrossingClass
-    biz_name: chanceCreationCrossingClass
-    description: ''
+    biz_name: chance Creation Crossing Class
+    description: "the chance creation crossing class. commonsense reasoning: \x95 Little: 1-33 \x95 Normal: 34-66 \x95 Lots:\
+      \ 66-100"
     physical_column_id: european_football_2.Team_Attributes.chanceCreationCrossingClass
     data_type: text
   - attr_id: european_football_2.Team_Attributes.chanceCreationShooting
-    biz_name: chanceCreationShooting
-    description: ''
+    biz_name: chance Creation Shooting
+    description: The tendency / frequency of shots taken
     physical_column_id: european_football_2.Team_Attributes.chanceCreationShooting
     data_type: integer
   - attr_id: european_football_2.Team_Attributes.chanceCreationShootingClass
-    biz_name: chanceCreationShootingClass
-    description: ''
+    biz_name: chance Creation Shooting Class
+    description: "the chance creation shooting class. commonsense reasoning: \x95 Little: 1-33 \x95 Normal: 34-66 \x95 Lots:\
+      \ 66-100"
     physical_column_id: european_football_2.Team_Attributes.chanceCreationShootingClass
     data_type: text
   - attr_id: european_football_2.Team_Attributes.chanceCreationPositioningClass
-    biz_name: chanceCreationPositioningClass
-    description: ''
+    biz_name: chance Creation Positioning Class
+    description: "A team\x92s freedom of movement in the final third of the pitch. Organised / Free Form"
     physical_column_id: european_football_2.Team_Attributes.chanceCreationPositioningClass
     data_type: text
   - attr_id: european_football_2.Team_Attributes.defencePressure
-    biz_name: defencePressure
-    description: ''
+    biz_name: defence Pressure
+    description: Affects how high up the pitch the team will start pressuring
     physical_column_id: european_football_2.Team_Attributes.defencePressure
     data_type: integer
   - attr_id: european_football_2.Team_Attributes.defencePressureClass
-    biz_name: defencePressureClass
-    description: ''
+    biz_name: defence Pressure Class
+    description: "the defence pressure class. commonsense reasoning: \x95 Deep: 1-33 \x95 Medium: 34-66 \x95 High: 66-100"
     physical_column_id: european_football_2.Team_Attributes.defencePressureClass
     data_type: text
   - attr_id: european_football_2.Team_Attributes.defenceAggression
-    biz_name: defenceAggression
-    description: ''
+    biz_name: defence Aggression
+    description: "Affect the team\x92s approach to tackling the ball possessor"
     physical_column_id: european_football_2.Team_Attributes.defenceAggression
     data_type: integer
   - attr_id: european_football_2.Team_Attributes.defenceAggressionClass
-    biz_name: defenceAggressionClass
-    description: ''
+    biz_name: defence Aggression Class
+    description: "the defence aggression class. commonsense reasoning: \x95 Contain: 1-33 \x95 Press: 34-66 \x95 Double: 66-100"
     physical_column_id: european_football_2.Team_Attributes.defenceAggressionClass
     data_type: text
   - attr_id: european_football_2.Team_Attributes.defenceTeamWidth
-    biz_name: defenceTeamWidth
-    description: ''
+    biz_name: defence Team Width
+    description: Affects how much the team will shift to the ball side
     physical_column_id: european_football_2.Team_Attributes.defenceTeamWidth
     data_type: integer
   - attr_id: european_football_2.Team_Attributes.defenceTeamWidthClass
-    biz_name: defenceTeamWidthClass
-    description: ''
+    biz_name: defence Team Width Class
+    description: "the defence team width class. commonsense reasoning: \x95 Narrow: 1-33 \x95 Normal: 34-66 \x95 Wide: 66-100"
     physical_column_id: european_football_2.Team_Attributes.defenceTeamWidthClass
     data_type: text
   - attr_id: european_football_2.Team_Attributes.defenceDefenderLineClass
-    biz_name: defenceDefenderLineClass
-    description: ''
+    biz_name: defence Defender Line Class
+    description: Affects the shape and strategy of the defence. Cover/ Offside Trap
     physical_column_id: european_football_2.Team_Attributes.defenceDefenderLineClass
     data_type: text
 - entity_id: european_football_2.Match
@@ -467,577 +475,578 @@ entities:
   attributes:
   - attr_id: european_football_2.Match.id
     biz_name: id
-    description: ''
+    description: the unique id for matches
     physical_column_id: european_football_2.Match.id
     data_type: integer
   - attr_id: european_football_2.Match.country_id
-    biz_name: country_id
-    description: ''
+    biz_name: country id
+    description: country id
     physical_column_id: european_football_2.Match.country_id
     data_type: integer
   - attr_id: european_football_2.Match.league_id
-    biz_name: league_id
-    description: ''
+    biz_name: league id
+    description: league id
     physical_column_id: european_football_2.Match.league_id
     data_type: integer
   - attr_id: european_football_2.Match.season
     biz_name: season
-    description: ''
+    description: the season of the match
     physical_column_id: european_football_2.Match.season
     data_type: text
   - attr_id: european_football_2.Match.stage
     biz_name: stage
-    description: ''
+    description: the stage of the match
     physical_column_id: european_football_2.Match.stage
     data_type: integer
   - attr_id: european_football_2.Match.date
     biz_name: date
-    description: ''
+    description: the date of the match. e.g. 2008-08-17 00:00:00
     physical_column_id: european_football_2.Match.date
     data_type: text
   - attr_id: european_football_2.Match.match_api_id
-    biz_name: match_api_id
-    description: ''
+    biz_name: match api id
+    description: the id of the match api
     physical_column_id: european_football_2.Match.match_api_id
     data_type: integer
   - attr_id: european_football_2.Match.home_team_api_id
-    biz_name: home_team_api_id
-    description: ''
+    biz_name: home team api id
+    description: the id of the home team api
     physical_column_id: european_football_2.Match.home_team_api_id
     data_type: integer
   - attr_id: european_football_2.Match.away_team_api_id
-    biz_name: away_team_api_id
-    description: ''
+    biz_name: away team api id
+    description: the id of the away team api
     physical_column_id: european_football_2.Match.away_team_api_id
     data_type: integer
   - attr_id: european_football_2.Match.home_team_goal
-    biz_name: home_team_goal
-    description: ''
+    biz_name: home team goal
+    description: the goal of the home team
     physical_column_id: european_football_2.Match.home_team_goal
     data_type: integer
   - attr_id: european_football_2.Match.away_team_goal
-    biz_name: away_team_goal
-    description: ''
+    biz_name: away team goal
+    description: the goal of the away team
     physical_column_id: european_football_2.Match.away_team_goal
     data_type: integer
   - attr_id: european_football_2.Match.home_player_X1
     biz_name: home_player_X1
-    description: ''
+    description: home_player_X1
     physical_column_id: european_football_2.Match.home_player_X1
     data_type: integer
   - attr_id: european_football_2.Match.home_player_X2
     biz_name: home_player_X2
-    description: ''
+    description: home_player_X2
     physical_column_id: european_football_2.Match.home_player_X2
     data_type: integer
   - attr_id: european_football_2.Match.home_player_X3
     biz_name: home_player_X3
-    description: ''
+    description: home_player_X3
     physical_column_id: european_football_2.Match.home_player_X3
     data_type: integer
   - attr_id: european_football_2.Match.home_player_X4
     biz_name: home_player_X4
-    description: ''
+    description: home_player_X4
     physical_column_id: european_football_2.Match.home_player_X4
     data_type: integer
   - attr_id: european_football_2.Match.home_player_X5
     biz_name: home_player_X5
-    description: ''
+    description: home_player_X5
     physical_column_id: european_football_2.Match.home_player_X5
     data_type: integer
   - attr_id: european_football_2.Match.home_player_X6
     biz_name: home_player_X6
-    description: ''
+    description: home_player_X6
     physical_column_id: european_football_2.Match.home_player_X6
     data_type: integer
   - attr_id: european_football_2.Match.home_player_X7
     biz_name: home_player_X7
-    description: ''
+    description: home_player_X7
     physical_column_id: european_football_2.Match.home_player_X7
     data_type: integer
   - attr_id: european_football_2.Match.home_player_X8
     biz_name: home_player_X8
-    description: ''
+    description: home_player_X8
     physical_column_id: european_football_2.Match.home_player_X8
     data_type: integer
   - attr_id: european_football_2.Match.home_player_X9
     biz_name: home_player_X9
-    description: ''
+    description: home_player_X9
     physical_column_id: european_football_2.Match.home_player_X9
     data_type: integer
   - attr_id: european_football_2.Match.home_player_X10
     biz_name: home_player_X10
-    description: ''
+    description: home_player_X10
     physical_column_id: european_football_2.Match.home_player_X10
     data_type: integer
   - attr_id: european_football_2.Match.home_player_X11
     biz_name: home_player_X11
-    description: ''
+    description: home_player_X11
     physical_column_id: european_football_2.Match.home_player_X11
     data_type: integer
   - attr_id: european_football_2.Match.away_player_X1
     biz_name: away_player_X1
-    description: ''
+    description: away_player_X1
     physical_column_id: european_football_2.Match.away_player_X1
     data_type: integer
   - attr_id: european_football_2.Match.away_player_X2
     biz_name: away_player_X2
-    description: ''
+    description: away_player_X2
     physical_column_id: european_football_2.Match.away_player_X2
     data_type: integer
   - attr_id: european_football_2.Match.away_player_X3
     biz_name: away_player_X3
-    description: ''
+    description: away_player_X3
     physical_column_id: european_football_2.Match.away_player_X3
     data_type: integer
   - attr_id: european_football_2.Match.away_player_X4
     biz_name: away_player_X4
-    description: ''
+    description: away_player_X4
     physical_column_id: european_football_2.Match.away_player_X4
     data_type: integer
   - attr_id: european_football_2.Match.away_player_X5
     biz_name: away_player_X5
-    description: ''
+    description: away_player_X5
     physical_column_id: european_football_2.Match.away_player_X5
     data_type: integer
   - attr_id: european_football_2.Match.away_player_X6
     biz_name: away_player_X6
-    description: ''
+    description: away_player_X6
     physical_column_id: european_football_2.Match.away_player_X6
     data_type: integer
   - attr_id: european_football_2.Match.away_player_X7
     biz_name: away_player_X7
-    description: ''
+    description: away_player_X7
     physical_column_id: european_football_2.Match.away_player_X7
     data_type: integer
   - attr_id: european_football_2.Match.away_player_X8
     biz_name: away_player_X8
-    description: ''
+    description: away_player_X8
     physical_column_id: european_football_2.Match.away_player_X8
     data_type: integer
   - attr_id: european_football_2.Match.away_player_X9
     biz_name: away_player_X9
-    description: ''
+    description: away_player_X9
     physical_column_id: european_football_2.Match.away_player_X9
     data_type: integer
   - attr_id: european_football_2.Match.away_player_X10
     biz_name: away_player_X10
-    description: ''
+    description: away_player_X10
     physical_column_id: european_football_2.Match.away_player_X10
     data_type: integer
   - attr_id: european_football_2.Match.away_player_X11
     biz_name: away_player_X11
-    description: ''
+    description: away_player_X11
     physical_column_id: european_football_2.Match.away_player_X11
     data_type: integer
   - attr_id: european_football_2.Match.home_player_Y1
     biz_name: home_player_Y1
-    description: ''
+    description: home_player_Y1
     physical_column_id: european_football_2.Match.home_player_Y1
     data_type: integer
   - attr_id: european_football_2.Match.home_player_Y2
     biz_name: home_player_Y2
-    description: ''
+    description: home_player_Y2
     physical_column_id: european_football_2.Match.home_player_Y2
     data_type: integer
   - attr_id: european_football_2.Match.home_player_Y3
     biz_name: home_player_Y3
-    description: ''
+    description: home_player_Y3
     physical_column_id: european_football_2.Match.home_player_Y3
     data_type: integer
   - attr_id: european_football_2.Match.home_player_Y4
     biz_name: home_player_Y4
-    description: ''
+    description: home_player_Y4
     physical_column_id: european_football_2.Match.home_player_Y4
     data_type: integer
   - attr_id: european_football_2.Match.home_player_Y5
     biz_name: home_player_Y5
-    description: ''
+    description: home_player_Y5
     physical_column_id: european_football_2.Match.home_player_Y5
     data_type: integer
   - attr_id: european_football_2.Match.home_player_Y6
     biz_name: home_player_Y6
-    description: ''
+    description: home_player_Y6
     physical_column_id: european_football_2.Match.home_player_Y6
     data_type: integer
   - attr_id: european_football_2.Match.home_player_Y7
     biz_name: home_player_Y7
-    description: ''
+    description: home_player_Y7
     physical_column_id: european_football_2.Match.home_player_Y7
     data_type: integer
   - attr_id: european_football_2.Match.home_player_Y8
     biz_name: home_player_Y8
-    description: ''
+    description: home_player_Y8
     physical_column_id: european_football_2.Match.home_player_Y8
     data_type: integer
   - attr_id: european_football_2.Match.home_player_Y9
     biz_name: home_player_Y9
-    description: ''
+    description: home_player_Y9
     physical_column_id: european_football_2.Match.home_player_Y9
     data_type: integer
   - attr_id: european_football_2.Match.home_player_Y10
     biz_name: home_player_Y10
-    description: ''
+    description: home_player_Y10
     physical_column_id: european_football_2.Match.home_player_Y10
     data_type: integer
   - attr_id: european_football_2.Match.home_player_Y11
     biz_name: home_player_Y11
-    description: ''
+    description: home_player_Y11
     physical_column_id: european_football_2.Match.home_player_Y11
     data_type: integer
   - attr_id: european_football_2.Match.away_player_Y1
     biz_name: away_player_Y1
-    description: ''
+    description: away_player_Y1
     physical_column_id: european_football_2.Match.away_player_Y1
     data_type: integer
   - attr_id: european_football_2.Match.away_player_Y2
     biz_name: away_player_Y2
-    description: ''
+    description: away_player_Y2
     physical_column_id: european_football_2.Match.away_player_Y2
     data_type: integer
   - attr_id: european_football_2.Match.away_player_Y3
     biz_name: away_player_Y3
-    description: ''
+    description: away_player_Y3
     physical_column_id: european_football_2.Match.away_player_Y3
     data_type: integer
   - attr_id: european_football_2.Match.away_player_Y4
     biz_name: away_player_Y4
-    description: ''
+    description: away_player_Y4
     physical_column_id: european_football_2.Match.away_player_Y4
     data_type: integer
   - attr_id: european_football_2.Match.away_player_Y5
     biz_name: away_player_Y5
-    description: ''
+    description: away_player_Y5
     physical_column_id: european_football_2.Match.away_player_Y5
     data_type: integer
   - attr_id: european_football_2.Match.away_player_Y6
     biz_name: away_player_Y6
-    description: ''
+    description: away_player_Y6
     physical_column_id: european_football_2.Match.away_player_Y6
     data_type: integer
   - attr_id: european_football_2.Match.away_player_Y7
     biz_name: away_player_Y7
-    description: ''
+    description: away_player_Y7
     physical_column_id: european_football_2.Match.away_player_Y7
     data_type: integer
   - attr_id: european_football_2.Match.away_player_Y8
     biz_name: away_player_Y8
-    description: ''
+    description: away_player_Y8
     physical_column_id: european_football_2.Match.away_player_Y8
     data_type: integer
   - attr_id: european_football_2.Match.away_player_Y9
     biz_name: away_player_Y9
-    description: ''
+    description: away_player_Y9
     physical_column_id: european_football_2.Match.away_player_Y9
     data_type: integer
   - attr_id: european_football_2.Match.away_player_Y10
     biz_name: away_player_Y10
-    description: ''
+    description: away_player_Y10
     physical_column_id: european_football_2.Match.away_player_Y10
     data_type: integer
   - attr_id: european_football_2.Match.away_player_Y11
     biz_name: away_player_Y11
-    description: ''
+    description: away_player_Y11
     physical_column_id: european_football_2.Match.away_player_Y11
     data_type: integer
   - attr_id: european_football_2.Match.home_player_1
     biz_name: home_player_1
-    description: ''
+    description: home_player_1
     physical_column_id: european_football_2.Match.home_player_1
     data_type: integer
   - attr_id: european_football_2.Match.home_player_2
     biz_name: home_player_2
-    description: ''
+    description: home_player_2
     physical_column_id: european_football_2.Match.home_player_2
     data_type: integer
   - attr_id: european_football_2.Match.home_player_3
     biz_name: home_player_3
-    description: ''
+    description: home_player_3
     physical_column_id: european_football_2.Match.home_player_3
     data_type: integer
   - attr_id: european_football_2.Match.home_player_4
     biz_name: home_player_4
-    description: ''
+    description: home_player_4
     physical_column_id: european_football_2.Match.home_player_4
     data_type: integer
   - attr_id: european_football_2.Match.home_player_5
     biz_name: home_player_5
-    description: ''
+    description: home_player_5
     physical_column_id: european_football_2.Match.home_player_5
     data_type: integer
   - attr_id: european_football_2.Match.home_player_6
     biz_name: home_player_6
-    description: ''
+    description: home_player_6
     physical_column_id: european_football_2.Match.home_player_6
     data_type: integer
   - attr_id: european_football_2.Match.home_player_7
     biz_name: home_player_7
-    description: ''
+    description: home_player_7
     physical_column_id: european_football_2.Match.home_player_7
     data_type: integer
   - attr_id: european_football_2.Match.home_player_8
     biz_name: home_player_8
-    description: ''
+    description: home_player_8
     physical_column_id: european_football_2.Match.home_player_8
     data_type: integer
   - attr_id: european_football_2.Match.home_player_9
     biz_name: home_player_9
-    description: ''
+    description: home_player_9
     physical_column_id: european_football_2.Match.home_player_9
     data_type: integer
   - attr_id: european_football_2.Match.home_player_10
     biz_name: home_player_10
-    description: ''
+    description: home_player_10
     physical_column_id: european_football_2.Match.home_player_10
     data_type: integer
   - attr_id: european_football_2.Match.home_player_11
     biz_name: home_player_11
-    description: ''
+    description: home_player_11
     physical_column_id: european_football_2.Match.home_player_11
     data_type: integer
   - attr_id: european_football_2.Match.away_player_1
     biz_name: away_player_1
-    description: ''
+    description: away_player_1
     physical_column_id: european_football_2.Match.away_player_1
     data_type: integer
   - attr_id: european_football_2.Match.away_player_2
     biz_name: away_player_2
-    description: ''
+    description: away_player_2
     physical_column_id: european_football_2.Match.away_player_2
     data_type: integer
   - attr_id: european_football_2.Match.away_player_3
     biz_name: away_player_3
-    description: ''
+    description: away_player_3
     physical_column_id: european_football_2.Match.away_player_3
     data_type: integer
   - attr_id: european_football_2.Match.away_player_4
     biz_name: away_player_4
-    description: ''
+    description: away_player_4
     physical_column_id: european_football_2.Match.away_player_4
     data_type: integer
   - attr_id: european_football_2.Match.away_player_5
     biz_name: away_player_5
-    description: ''
+    description: away_player_5
     physical_column_id: european_football_2.Match.away_player_5
     data_type: integer
   - attr_id: european_football_2.Match.away_player_6
     biz_name: away_player_6
-    description: ''
+    description: away_player_6
     physical_column_id: european_football_2.Match.away_player_6
     data_type: integer
   - attr_id: european_football_2.Match.away_player_7
     biz_name: away_player_7
-    description: ''
+    description: away_player_7
     physical_column_id: european_football_2.Match.away_player_7
     data_type: integer
   - attr_id: european_football_2.Match.away_player_8
     biz_name: away_player_8
-    description: ''
+    description: away_player_8
     physical_column_id: european_football_2.Match.away_player_8
     data_type: integer
   - attr_id: european_football_2.Match.away_player_9
     biz_name: away_player_9
-    description: ''
+    description: away_player_9
     physical_column_id: european_football_2.Match.away_player_9
     data_type: integer
   - attr_id: european_football_2.Match.away_player_10
     biz_name: away_player_10
-    description: ''
+    description: away_player_10
     physical_column_id: european_football_2.Match.away_player_10
     data_type: integer
   - attr_id: european_football_2.Match.away_player_11
     biz_name: away_player_11
-    description: ''
+    description: away_player_11
     physical_column_id: european_football_2.Match.away_player_11
     data_type: integer
   - attr_id: european_football_2.Match.goal
     biz_name: goal
-    description: ''
+    description: the goal of the match
     physical_column_id: european_football_2.Match.goal
     data_type: text
   - attr_id: european_football_2.Match.shoton
-    biz_name: shoton
-    description: ''
+    biz_name: shot on
+    description: 'the shot on goal of the match. commonsense reasoning: A shot on goal is a shot that enters the goal or would
+      have entered the goal if it had not been blocked by the goalkeeper or another defensive player.'
     physical_column_id: european_football_2.Match.shoton
     data_type: text
   - attr_id: european_football_2.Match.shotoff
-    biz_name: shotoff
-    description: ''
+    biz_name: shot off
+    description: the shot off goal of the match, which is the opposite of shot on
     physical_column_id: european_football_2.Match.shotoff
     data_type: text
   - attr_id: european_football_2.Match.foulcommit
-    biz_name: foulcommit
-    description: ''
+    biz_name: foul commit
+    description: the fouls occurred in the match
     physical_column_id: european_football_2.Match.foulcommit
     data_type: text
   - attr_id: european_football_2.Match.card
     biz_name: card
-    description: ''
+    description: the cards given in the match
     physical_column_id: european_football_2.Match.card
     data_type: text
   - attr_id: european_football_2.Match.cross
     biz_name: cross
-    description: ''
+    description: Balls sent into the opposition team's area from a wide position in the match
     physical_column_id: european_football_2.Match.cross
     data_type: text
   - attr_id: european_football_2.Match.corner
     biz_name: corner
-    description: ''
+    description: Ball goes out of play for a corner kick in the match
     physical_column_id: european_football_2.Match.corner
     data_type: text
   - attr_id: european_football_2.Match.possession
     biz_name: possession
-    description: ''
+    description: The duration from a player taking over the ball in the match
     physical_column_id: european_football_2.Match.possession
     data_type: text
   - attr_id: european_football_2.Match.B365H
     biz_name: B365H
-    description: ''
+    description: B365H
     physical_column_id: european_football_2.Match.B365H
     data_type: real
   - attr_id: european_football_2.Match.B365D
     biz_name: B365D
-    description: ''
+    description: B365D
     physical_column_id: european_football_2.Match.B365D
     data_type: real
   - attr_id: european_football_2.Match.B365A
     biz_name: B365A
-    description: ''
+    description: B365A
     physical_column_id: european_football_2.Match.B365A
     data_type: real
   - attr_id: european_football_2.Match.BWH
     biz_name: BWH
-    description: ''
+    description: BWH
     physical_column_id: european_football_2.Match.BWH
     data_type: real
   - attr_id: european_football_2.Match.BWD
     biz_name: BWD
-    description: ''
+    description: BWD
     physical_column_id: european_football_2.Match.BWD
     data_type: real
   - attr_id: european_football_2.Match.BWA
     biz_name: BWA
-    description: ''
+    description: BWA
     physical_column_id: european_football_2.Match.BWA
     data_type: real
   - attr_id: european_football_2.Match.IWH
     biz_name: IWH
-    description: ''
+    description: IWH
     physical_column_id: european_football_2.Match.IWH
     data_type: real
   - attr_id: european_football_2.Match.IWD
     biz_name: IWD
-    description: ''
+    description: IWD
     physical_column_id: european_football_2.Match.IWD
     data_type: real
   - attr_id: european_football_2.Match.IWA
     biz_name: IWA
-    description: ''
+    description: IWA
     physical_column_id: european_football_2.Match.IWA
     data_type: real
   - attr_id: european_football_2.Match.LBH
     biz_name: LBH
-    description: ''
+    description: LBH
     physical_column_id: european_football_2.Match.LBH
     data_type: real
   - attr_id: european_football_2.Match.LBD
     biz_name: LBD
-    description: ''
+    description: LBD
     physical_column_id: european_football_2.Match.LBD
     data_type: real
   - attr_id: european_football_2.Match.LBA
     biz_name: LBA
-    description: ''
+    description: LBA
     physical_column_id: european_football_2.Match.LBA
     data_type: real
   - attr_id: european_football_2.Match.PSH
     biz_name: PSH
-    description: ''
+    description: PSH
     physical_column_id: european_football_2.Match.PSH
     data_type: real
   - attr_id: european_football_2.Match.PSD
     biz_name: PSD
-    description: ''
+    description: PSD
     physical_column_id: european_football_2.Match.PSD
     data_type: real
   - attr_id: european_football_2.Match.PSA
     biz_name: PSA
-    description: ''
+    description: PSA
     physical_column_id: european_football_2.Match.PSA
     data_type: real
   - attr_id: european_football_2.Match.WHH
     biz_name: WHH
-    description: ''
+    description: WHH
     physical_column_id: european_football_2.Match.WHH
     data_type: real
   - attr_id: european_football_2.Match.WHD
     biz_name: WHD
-    description: ''
+    description: WHD
     physical_column_id: european_football_2.Match.WHD
     data_type: real
   - attr_id: european_football_2.Match.WHA
     biz_name: WHA
-    description: ''
+    description: WHA
     physical_column_id: european_football_2.Match.WHA
     data_type: real
   - attr_id: european_football_2.Match.SJH
     biz_name: SJH
-    description: ''
+    description: SJH
     physical_column_id: european_football_2.Match.SJH
     data_type: real
   - attr_id: european_football_2.Match.SJD
     biz_name: SJD
-    description: ''
+    description: SJD
     physical_column_id: european_football_2.Match.SJD
     data_type: real
   - attr_id: european_football_2.Match.SJA
     biz_name: SJA
-    description: ''
+    description: SJA
     physical_column_id: european_football_2.Match.SJA
     data_type: real
   - attr_id: european_football_2.Match.VCH
     biz_name: VCH
-    description: ''
+    description: VCH
     physical_column_id: european_football_2.Match.VCH
     data_type: real
   - attr_id: european_football_2.Match.VCD
     biz_name: VCD
-    description: ''
+    description: VCD
     physical_column_id: european_football_2.Match.VCD
     data_type: real
   - attr_id: european_football_2.Match.VCA
     biz_name: VCA
-    description: ''
+    description: VCA
     physical_column_id: european_football_2.Match.VCA
     data_type: real
   - attr_id: european_football_2.Match.GBH
     biz_name: GBH
-    description: ''
+    description: GBH
     physical_column_id: european_football_2.Match.GBH
     data_type: real
   - attr_id: european_football_2.Match.GBD
     biz_name: GBD
-    description: ''
+    description: GBD
     physical_column_id: european_football_2.Match.GBD
     data_type: real
   - attr_id: european_football_2.Match.GBA
     biz_name: GBA
-    description: ''
+    description: GBA
     physical_column_id: european_football_2.Match.GBA
     data_type: real
   - attr_id: european_football_2.Match.BSH
     biz_name: BSH
-    description: ''
+    description: BSH
     physical_column_id: european_football_2.Match.BSH
     data_type: real
   - attr_id: european_football_2.Match.BSD
     biz_name: BSD
-    description: ''
+    description: BSD
     physical_column_id: european_football_2.Match.BSD
     data_type: real
   - attr_id: european_football_2.Match.BSA
     biz_name: BSA
-    description: ''
+    description: BSA
     physical_column_id: european_football_2.Match.BSA
     data_type: real
 relations:

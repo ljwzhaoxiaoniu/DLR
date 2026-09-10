@@ -1,8 +1,8 @@
 mapping_type: dlr
 version: '2.0'
 scenario_name: dlr_formula_1
-description: 'DLR paradigm - F1 racing scenario: on-demand fields, 11 PEs aggregated
-  into 8 LEs, driver/constructor race data multi-view decoupling'
+description: 'DLR paradigm - F1 racing scenario: on-demand fields, 11 PEs aggregated into 8 LEs, driver/constructor race data
+  multi-view decoupling'
 databases:
   formula_1: sqlite:///MINIDEV_sqlite/dev_databases/formula_1/formula_1.sqlite
 logical_entities:
@@ -25,32 +25,37 @@ logical_entities:
     S: Driver master data
     private_attributes:
     - attr_id: formula_1.drivers.driverRef
-      biz_name: driverRef
+      biz_name: driver reference name
       physical_column_id: formula_1.drivers.driverRef
-      description: 'Driver reference name (URL-friendly)'
+      description: driver reference name
     - attr_id: formula_1.drivers.nationality
       biz_name: nationality
       physical_column_id: formula_1.drivers.nationality
+      description: nationality of drivers
     - attr_id: formula_1.drivers.forename
       biz_name: forename
       physical_column_id: formula_1.drivers.forename
+      description: forename
     - attr_id: formula_1.drivers.surname
       biz_name: surname
       physical_column_id: formula_1.drivers.surname
-      description: 'Surname: driver last name'
+      description: surname
     - attr_id: formula_1.drivers.dob
-      biz_name: dob
+      biz_name: date of birth
       physical_column_id: formula_1.drivers.dob
+      description: date of birth
     - attr_id: formula_1.drivers.number
       biz_name: number
       physical_column_id: formula_1.drivers.number
-      description: 'Driver number: permanent race car number of the driver, e.g. 44=Hamilton, 33=Verstappen'
+      description: number
     - attr_id: formula_1.drivers.code
       biz_name: code
       physical_column_id: formula_1.drivers.code
+      description: abbreviated code for drivers. if "null" or empty, it means it doesn't have code
     - attr_id: formula_1.drivers.url
       biz_name: url
       physical_column_id: formula_1.drivers.url
+      description: the introduction website of the drivers
 - logical_entity_id: LOGICAL.Circuit
   biz_name: Circuit
   public_attributes:
@@ -72,28 +77,49 @@ logical_entities:
     - attr_id: formula_1.circuits.name
       biz_name: name
       physical_column_id: formula_1.circuits.name
+      description: full name of circuit
     - attr_id: formula_1.circuits.country
       biz_name: country
       physical_column_id: formula_1.circuits.country
+      description: country of circuit
     - attr_id: formula_1.circuits.circuitRef
-      biz_name: circuitRef
+      biz_name: circuit reference name
       physical_column_id: formula_1.circuits.circuitRef
+      description: circuit reference name
     - attr_id: formula_1.circuits.location
       biz_name: location
       physical_column_id: formula_1.circuits.location
+      description: location of circuit
     - attr_id: formula_1.circuits.lat
-      biz_name: lat
+      biz_name: latitude
       physical_column_id: formula_1.circuits.lat
+      description: latitude of location of circuit
     - attr_id: formula_1.circuits.lng
-      biz_name: lng
+      biz_name: longitude
       physical_column_id: formula_1.circuits.lng
+      description: 'longitude of location of circuit. commonsense evidence: Location coordinates: (lat, lng)'
+    - attr_id: formula_1.circuits.alt
+      biz_name: alt
+      physical_column_id: formula_1.circuits.alt
+      description: alt. not useful
+    - attr_id: formula_1.circuits.url
+      biz_name: url
+      physical_column_id: formula_1.circuits.url
+      description: url
 - logical_entity_id: LOGICAL.Race
   biz_name: Race
-  description: 'F1 race event — year, race name, date, circuit; drivers compete with qualifying results, race results (position, time, laps), and lap times'
+  description: F1 race event — year, race name, date, circuit; drivers compete with qualifying results, race results (position,
+    time, laps), and lap times
   public_attributes:
-  - {attr_id: LOGICAL.Race.RaceID, biz_name: RaceID, description: 'Race ID: unique identifier'}
-  - {attr_id: LOGICAL.Race.Year, biz_name: Year, description: 'Year: race season year'}
-  - {attr_id: LOGICAL.Race.Name, biz_name: Name, description: 'Race name: e.g. Bahrain Grand Prix'}
+  - attr_id: LOGICAL.Race.RaceID
+    biz_name: RaceID
+    description: 'Race ID: unique identifier'
+  - attr_id: LOGICAL.Race.Year
+    biz_name: Year
+    description: 'Year: race season year'
+  - attr_id: LOGICAL.Race.Name
+    biz_name: Name
+    description: 'Race name: e.g. Bahrain Grand Prix'
   physical_entities:
   - physical_entity_id: PHYSICAL.Race
     physical_table_name: races
@@ -107,7 +133,27 @@ logical_entities:
       LOGICAL.Race.Year: formula_1.races.year
       LOGICAL.Race.Name: formula_1.races.name
     S: Race master record
-    private_attributes: []
+    private_attributes:
+    - attr_id: formula_1.races.round
+      biz_name: round
+      physical_column_id: formula_1.races.round
+      description: round
+    - attr_id: formula_1.races.circuitId
+      biz_name: Circuit Id
+      physical_column_id: formula_1.races.circuitId
+      description: circuit Id
+    - attr_id: formula_1.races.date
+      biz_name: date
+      physical_column_id: formula_1.races.date
+      description: duration time
+    - attr_id: formula_1.races.time
+      biz_name: time
+      physical_column_id: formula_1.races.time
+      description: time of the location
+    - attr_id: formula_1.races.url
+      biz_name: url
+      physical_column_id: formula_1.races.url
+      description: introduction of races
 - logical_entity_id: LOGICAL.DriverRaceData
   biz_name: DriverRaceData
   description: 'Driver performance in a race: qualifying + race results + lap times'
@@ -132,26 +178,43 @@ logical_entities:
     S: Qualifying results
     private_attributes:
     - attr_id: formula_1.qualifying.qualifyId
-      biz_name: qualifyId
+      biz_name: qualify Id
       physical_column_id: formula_1.qualifying.qualifyId
+      description: "the unique identification number identifying qualifying. How does F1 Sprint qualifying work? Sprint qualifying\
+        \ is essentially a short-form Grand Prix \x96 a race that is one-third the number of laps of the main event on Sunday.\
+        \ However, the drivers are battling for positions on the grid for the start of Sunday's race."
     - attr_id: formula_1.qualifying.number
       biz_name: number
       physical_column_id: formula_1.qualifying.number
-      description: 'Qualifying position: final grid position (1=pole, 2=second...), NOT driver number'
+      description: number
     - attr_id: formula_1.qualifying.position
       biz_name: position
       physical_column_id: formula_1.qualifying.position
+      description: position or track of circuit
     - attr_id: formula_1.qualifying.q1
-      biz_name: q1
+      biz_name: qualifying 1
       physical_column_id: formula_1.qualifying.q1
-      description: 'Q1 time: qualifying Q1 lap time (ms)'
+      description: 'time in qualifying 1. in minutes / seconds / ... commonsense evidence: Q1 lap times determine pole position
+        and the order of the front 10 positions on the grid. The slowest driver in Q1 starts 10th, the next starts ninth and
+        so on. All 20 F1 drivers participate in the first period, called Q1, with each trying to set the fastest time possible.
+        Those in the top 15 move on to the next period of qualifying, called Q2. The five slowest drivers are eliminated and
+        will start the race in the last five positions on the grid.'
     - attr_id: formula_1.qualifying.q2
-      biz_name: q2
+      biz_name: qualifying 2
       physical_column_id: formula_1.qualifying.q2
-      description: 'Q2 time: qualifying Q2 lap time (ms), NULL=did not advance to Q2'
+      description: 'time in qualifying 2. in minutes / seconds / ... commonsense evidence: only top 15 in the q1 has the record
+        of q2 Q2 is slightly shorter but follows the same format. Drivers try to put down their best times to move on to Q1
+        as one of the 10 fastest cars. The five outside of the top 10 are eliminated and start the race from 11th to 15th
+        based on their best lap time.'
     - attr_id: formula_1.qualifying.q3
-      biz_name: q3
+      biz_name: qualifying 3
       physical_column_id: formula_1.qualifying.q3
+      description: 'time in qualifying 3. in minutes / seconds / ... commonsense evidence: only top 10 in the q2 has the record
+        of q3'
+    - attr_id: formula_1.qualifying.constructorId
+      biz_name: constructor id
+      physical_column_id: formula_1.qualifying.constructorId
+      description: constructor Id
   - physical_entity_id: PHYSICAL.Result
     physical_table_name: results
     physical_table_id: formula_1.results
@@ -165,48 +228,72 @@ logical_entities:
     S: Race results
     private_attributes:
     - attr_id: formula_1.results.resultId
-      biz_name: resultId
+      biz_name: Result ID
       physical_column_id: formula_1.results.resultId
+      description: the unique identification number identifying race result
     - attr_id: formula_1.results.constructorId
-      biz_name: constructorId
+      biz_name: constructor Id
       physical_column_id: formula_1.results.constructorId
+      description: the identification number identifying which constructors
     - attr_id: formula_1.results.number
       biz_name: number
       physical_column_id: formula_1.results.number
-      description: 'Race finishing position: final race result, NOT driver number'
+      description: number
     - attr_id: formula_1.results.grid
       biz_name: grid
       physical_column_id: formula_1.results.grid
+      description: the number identifying the area where cars are set into a grid formation in order to start the race.
     - attr_id: formula_1.results.position
       biz_name: position
       physical_column_id: formula_1.results.position
+      description: The finishing position or track of circuits
     - attr_id: formula_1.results.positionOrder
-      biz_name: positionOrder
+      biz_name: position order
       physical_column_id: formula_1.results.positionOrder
+      description: the finishing order of positions
     - attr_id: formula_1.results.points
       biz_name: points
       physical_column_id: formula_1.results.points
+      description: points
     - attr_id: formula_1.results.laps
       biz_name: laps
       physical_column_id: formula_1.results.laps
+      description: lap number
     - attr_id: formula_1.results.time
       biz_name: time
       physical_column_id: formula_1.results.time
+      description: 'finish time. commonsense evidence: 1. if the value exists, it means the driver finished the race. 2. Only
+        the time of the champion shows in the format of "minutes: seconds.millionsecond", the time of the other drivers shows
+        as "seconds.millionsecond" , which means their actual time is the time of the champion adding the value in this cell.'
     - attr_id: formula_1.results.fastestLap
-      biz_name: fastestLap
+      biz_name: fastest lap
       physical_column_id: formula_1.results.fastestLap
+      description: fastest lap number
     - attr_id: formula_1.results.fastestLapTime
-      biz_name: fastestLapTime
+      biz_name: fastest Lap Time
       physical_column_id: formula_1.results.fastestLapTime
+      description: fastest Lap Time. faster (smaller in the value) "fastestLapTime" leads to higher rank (smaller is higher
+        rank)
     - attr_id: formula_1.results.fastestLapSpeed
-      biz_name: fastestLapSpeed
+      biz_name: fastest Lap Speed
       physical_column_id: formula_1.results.fastestLapSpeed
+      description: fastest Lap Speed. (km / h)
     - attr_id: formula_1.results.rank
       biz_name: rank
       physical_column_id: formula_1.results.rank
+      description: starting rank positioned by fastest lap speed
     - attr_id: formula_1.results.statusId
-      biz_name: statusId
+      biz_name: status Id
       physical_column_id: formula_1.results.statusId
+      description: status ID. its category description appear in the table status
+    - attr_id: formula_1.results.positionText
+      biz_name: position text
+      physical_column_id: formula_1.results.positionText
+      description: position text. not quite useful
+    - attr_id: formula_1.results.milliseconds
+      biz_name: milliseconds
+      physical_column_id: formula_1.results.milliseconds
+      description: the actual finishing time of drivers in milliseconds. the actual finishing time of drivers
   - physical_entity_id: PHYSICAL.LapTime
     physical_table_name: lapTimes
     physical_table_id: formula_1.lapTimes
@@ -222,15 +309,19 @@ logical_entities:
     - attr_id: formula_1.lapTimes.lap
       biz_name: lap
       physical_column_id: formula_1.lapTimes.lap
+      description: lap number
     - attr_id: formula_1.lapTimes.position
       biz_name: position
       physical_column_id: formula_1.lapTimes.position
+      description: position or track of circuits
     - attr_id: formula_1.lapTimes.time
       biz_name: time
       physical_column_id: formula_1.lapTimes.time
+      description: lap time. in minutes / seconds / ...
     - attr_id: formula_1.lapTimes.milliseconds
       biz_name: milliseconds
       physical_column_id: formula_1.lapTimes.milliseconds
+      description: milliseconds
 - logical_entity_id: LOGICAL.DriverStandings
   biz_name: DriverStandings
   public_attributes:
@@ -252,17 +343,25 @@ logical_entities:
     S: Driver season standings
     private_attributes:
     - attr_id: formula_1.driverStandings.driverStandingsId
-      biz_name: driverStandingsId
+      biz_name: driver Standings Id
       physical_column_id: formula_1.driverStandings.driverStandingsId
+      description: the unique identification number identifying driver standing records
     - attr_id: formula_1.driverStandings.points
       biz_name: points
       physical_column_id: formula_1.driverStandings.points
+      description: how many points acquired in each race
     - attr_id: formula_1.driverStandings.position
       biz_name: position
       physical_column_id: formula_1.driverStandings.position
+      description: position or track of circuits
     - attr_id: formula_1.driverStandings.wins
       biz_name: wins
       physical_column_id: formula_1.driverStandings.wins
+      description: wins
+    - attr_id: formula_1.driverStandings.positionText
+      biz_name: position text
+      physical_column_id: formula_1.driverStandings.positionText
+      description: position text. same with position, not quite useful
 - logical_entity_id: LOGICAL.PitStop
   biz_name: PitStop
   public_attributes:
@@ -286,15 +385,23 @@ logical_entities:
     - attr_id: formula_1.pitStops.stop
       biz_name: stop
       physical_column_id: formula_1.pitStops.stop
+      description: stop number
     - attr_id: formula_1.pitStops.lap
       biz_name: lap
       physical_column_id: formula_1.pitStops.lap
+      description: lap number
     - attr_id: formula_1.pitStops.time
       biz_name: time
       physical_column_id: formula_1.pitStops.time
+      description: time. exact time
     - attr_id: formula_1.pitStops.duration
       biz_name: duration
       physical_column_id: formula_1.pitStops.duration
+      description: duration time. seconds/
+    - attr_id: formula_1.pitStops.milliseconds
+      biz_name: milliseconds
+      physical_column_id: formula_1.pitStops.milliseconds
+      description: milliseconds
 - logical_entity_id: LOGICAL.Constructor
   biz_name: Constructor
   public_attributes:
@@ -316,17 +423,20 @@ logical_entities:
     - attr_id: formula_1.constructors.name
       biz_name: name
       physical_column_id: formula_1.constructors.name
-      description: 'Constructor name: full team name'
+      description: full name of the constructor
     - attr_id: formula_1.constructors.nationality
       biz_name: nationality
       physical_column_id: formula_1.constructors.nationality
-      description: 'Nationality: team country of origin'
+      description: nationality of the constructor
     - attr_id: formula_1.constructors.constructorRef
-      biz_name: constructorRef
+      biz_name: Constructor Reference name
       physical_column_id: formula_1.constructors.constructorRef
+      description: Constructor Reference name
     - attr_id: formula_1.constructors.url
       biz_name: url
       physical_column_id: formula_1.constructors.url
+      description: 'the introduction website of the constructor. commonsense evidence: How to find out the detailed introduction
+        of the constructor: through its url'
 - logical_entity_id: LOGICAL.ConstructorRaceData
   biz_name: ConstructorRaceData
   public_attributes:
@@ -348,11 +458,17 @@ logical_entities:
     S: Constructor race results
     private_attributes:
     - attr_id: formula_1.constructorResults.constructorResultsId
-      biz_name: constructorResultsId
+      biz_name: constructor Results Id
       physical_column_id: formula_1.constructorResults.constructorResultsId
+      description: constructor Results Id
     - attr_id: formula_1.constructorResults.points
       biz_name: points
       physical_column_id: formula_1.constructorResults.points
+      description: points
+    - attr_id: formula_1.constructorResults.status
+      biz_name: status
+      physical_column_id: formula_1.constructorResults.status
+      description: status
   - physical_entity_id: PHYSICAL.ConstructorStanding
     physical_table_name: constructorStandings
     physical_table_id: formula_1.constructorStandings
@@ -366,17 +482,25 @@ logical_entities:
     S: Constructor season standings
     private_attributes:
     - attr_id: formula_1.constructorStandings.constructorStandingsId
-      biz_name: constructorStandingsId
+      biz_name: constructor Standings Id
       physical_column_id: formula_1.constructorStandings.constructorStandingsId
+      description: unique identification of the constructor standing records
     - attr_id: formula_1.constructorStandings.points
       biz_name: points
       physical_column_id: formula_1.constructorStandings.points
+      description: how many points acquired in each race
     - attr_id: formula_1.constructorStandings.position
       biz_name: position
       physical_column_id: formula_1.constructorStandings.position
+      description: position or track of circuits
     - attr_id: formula_1.constructorStandings.wins
       biz_name: wins
       physical_column_id: formula_1.constructorStandings.wins
+      description: wins
+    - attr_id: formula_1.constructorStandings.positionText
+      biz_name: position text
+      physical_column_id: formula_1.constructorStandings.positionText
+      description: position text. same with position, not quite useful
 pas_relations:
 - relation_id: LOGICAL.Circuit_TO_LOGICAL.Race
   relation_name: Hosts

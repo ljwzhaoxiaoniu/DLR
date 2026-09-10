@@ -7,28 +7,27 @@ databases:
 entities:
 - entity_id: codebase_community.badges
   biz_name: badges
-  description: 'badges: the badge id; the unique id of the user; the badge name the
-    user obtained'
+  description: 'badges: the badge id; the unique id of the user; the badge name the user obtained'
   physical_table_id: codebase_community.badges
   attributes:
   - attr_id: codebase_community.badges.Id
     biz_name: Id
-    description: ''
+    description: the badge id
     physical_column_id: codebase_community.badges.Id
     data_type: integer
   - attr_id: codebase_community.badges.UserId
-    biz_name: UserId
-    description: ''
+    biz_name: User Id
+    description: the unique id of the user
     physical_column_id: codebase_community.badges.UserId
     data_type: integer
   - attr_id: codebase_community.badges.Name
     biz_name: Name
-    description: ''
+    description: the badge name the user obtained
     physical_column_id: codebase_community.badges.Name
     data_type: text
   - attr_id: codebase_community.badges.Date
     biz_name: Date
-    description: ''
+    description: the date that the user obtained the badge
     physical_column_id: codebase_community.badges.Date
     data_type: datetime
 - entity_id: codebase_community.comments
@@ -38,373 +37,371 @@ entities:
   attributes:
   - attr_id: codebase_community.comments.Id
     biz_name: Id
-    description: ''
+    description: the comment Id
     physical_column_id: codebase_community.comments.Id
     data_type: integer
   - attr_id: codebase_community.comments.PostId
-    biz_name: PostId
-    description: ''
+    biz_name: Post Id
+    description: the unique id of the post
     physical_column_id: codebase_community.comments.PostId
     data_type: integer
   - attr_id: codebase_community.comments.Score
     biz_name: Score
-    description: ''
+    description: 'rating score. commonsense evidence: The score is from 0 to 100. The score more than 60 refers that the comment
+      is a positive comment. The score less than 60 refers that the comment is a negative comment.'
     physical_column_id: codebase_community.comments.Score
     data_type: integer
   - attr_id: codebase_community.comments.Text
     biz_name: Text
-    description: ''
+    description: the detailed content of the comment
     physical_column_id: codebase_community.comments.Text
     data_type: text
   - attr_id: codebase_community.comments.CreationDate
-    biz_name: CreationDate
-    description: ''
+    biz_name: Creation Date
+    description: the creation date of the comment
     physical_column_id: codebase_community.comments.CreationDate
     data_type: datetime
   - attr_id: codebase_community.comments.UserId
-    biz_name: UserId
-    description: ''
+    biz_name: User Id
+    description: the id of the user who post the comment
     physical_column_id: codebase_community.comments.UserId
     data_type: integer
   - attr_id: codebase_community.comments.UserDisplayName
-    biz_name: UserDisplayName
-    description: ''
+    biz_name: User Display Name
+    description: user's display name
     physical_column_id: codebase_community.comments.UserDisplayName
     data_type: text
 - entity_id: codebase_community.postHistory
   biz_name: postHistory
-  description: 'postHistory: the post history id; the id of the post history type;
-    the unique id of the post'
+  description: 'postHistory: the post history id; the id of the post history type; the unique id of the post'
   physical_table_id: codebase_community.postHistory
   attributes:
   - attr_id: codebase_community.postHistory.Id
     biz_name: Id
-    description: ''
+    description: the post history id
     physical_column_id: codebase_community.postHistory.Id
     data_type: integer
   - attr_id: codebase_community.postHistory.PostHistoryTypeId
-    biz_name: PostHistoryTypeId
-    description: ''
+    biz_name: Post History Type Id
+    description: the id of the post history type
     physical_column_id: codebase_community.postHistory.PostHistoryTypeId
     data_type: integer
   - attr_id: codebase_community.postHistory.PostId
-    biz_name: PostId
-    description: ''
+    biz_name: Post Id
+    description: the unique id of the post
     physical_column_id: codebase_community.postHistory.PostId
     data_type: integer
   - attr_id: codebase_community.postHistory.RevisionGUID
-    biz_name: RevisionGUID
-    description: ''
+    biz_name: Revision GUID
+    description: the revision globally unique id of the post
     physical_column_id: codebase_community.postHistory.RevisionGUID
     data_type: text
   - attr_id: codebase_community.postHistory.CreationDate
-    biz_name: CreationDate
-    description: ''
+    biz_name: Creation Date
+    description: the creation date of the post
     physical_column_id: codebase_community.postHistory.CreationDate
     data_type: datetime
   - attr_id: codebase_community.postHistory.UserId
-    biz_name: UserId
-    description: ''
+    biz_name: User Id
+    description: the user who post the post
     physical_column_id: codebase_community.postHistory.UserId
     data_type: integer
   - attr_id: codebase_community.postHistory.Text
     biz_name: Text
-    description: ''
+    description: the detailed content of the post
     physical_column_id: codebase_community.postHistory.Text
     data_type: text
   - attr_id: codebase_community.postHistory.Comment
     biz_name: Comment
-    description: ''
+    description: comments of the post
     physical_column_id: codebase_community.postHistory.Comment
     data_type: text
   - attr_id: codebase_community.postHistory.UserDisplayName
-    biz_name: UserDisplayName
-    description: ''
+    biz_name: User Display Name
+    description: user's display name
     physical_column_id: codebase_community.postHistory.UserDisplayName
     data_type: text
 - entity_id: codebase_community.postLinks
   biz_name: postLinks
-  description: 'postLinks: the post link id; the creation date of the post link; the
-    post id'
+  description: 'postLinks: the post link id; the creation date of the post link; the post id'
   physical_table_id: codebase_community.postLinks
   attributes:
   - attr_id: codebase_community.postLinks.Id
     biz_name: Id
-    description: ''
+    description: the post link id
     physical_column_id: codebase_community.postLinks.Id
     data_type: integer
   - attr_id: codebase_community.postLinks.CreationDate
-    biz_name: CreationDate
-    description: ''
+    biz_name: Creation Date
+    description: the creation date of the post link
     physical_column_id: codebase_community.postLinks.CreationDate
     data_type: datetime
   - attr_id: codebase_community.postLinks.PostId
-    biz_name: PostId
-    description: ''
+    biz_name: Post Id
+    description: the post id
     physical_column_id: codebase_community.postLinks.PostId
     data_type: integer
   - attr_id: codebase_community.postLinks.RelatedPostId
-    biz_name: RelatedPostId
-    description: ''
+    biz_name: Related Post Id
+    description: the id of the related post
     physical_column_id: codebase_community.postLinks.RelatedPostId
     data_type: integer
   - attr_id: codebase_community.postLinks.LinkTypeId
-    biz_name: LinkTypeId
-    description: ''
+    biz_name: Link Type Id
+    description: the id of the link type
     physical_column_id: codebase_community.postLinks.LinkTypeId
     data_type: integer
 - entity_id: codebase_community.posts
   biz_name: posts
-  description: 'posts: the post id; the id of the post type; the accepted answer id
-    of the post'
+  description: 'posts: the post id; the id of the post type; the accepted answer id of the post'
   physical_table_id: codebase_community.posts
   attributes:
   - attr_id: codebase_community.posts.Id
     biz_name: Id
-    description: ''
+    description: the post id
     physical_column_id: codebase_community.posts.Id
     data_type: integer
   - attr_id: codebase_community.posts.PostTypeId
-    biz_name: PostTypeId
-    description: ''
+    biz_name: Post Type Id
+    description: the id of the post type
     physical_column_id: codebase_community.posts.PostTypeId
     data_type: integer
   - attr_id: codebase_community.posts.AcceptedAnswerId
-    biz_name: AcceptedAnswerId
-    description: ''
+    biz_name: Accepted Answer Id
+    description: the accepted answer id of the post
     physical_column_id: codebase_community.posts.AcceptedAnswerId
     data_type: integer
   - attr_id: codebase_community.posts.CreaionDate
-    biz_name: CreaionDate
-    description: ''
+    biz_name: Creation Date
+    description: the creation date of the post
     physical_column_id: codebase_community.posts.CreaionDate
     data_type: datetime
   - attr_id: codebase_community.posts.Score
     biz_name: Score
-    description: ''
+    description: the score of the post
     physical_column_id: codebase_community.posts.Score
     data_type: integer
   - attr_id: codebase_community.posts.ViewCount
-    biz_name: ViewCount
-    description: ''
+    biz_name: View Count
+    description: 'the view count of the post. commonsense evidence: Higher view count means the post has higher popularity'
     physical_column_id: codebase_community.posts.ViewCount
     data_type: integer
   - attr_id: codebase_community.posts.Body
     biz_name: Body
-    description: ''
+    description: the body of the post
     physical_column_id: codebase_community.posts.Body
     data_type: text
   - attr_id: codebase_community.posts.OwnerUserId
-    biz_name: OwnerUserId
-    description: ''
+    biz_name: Owner User Id
+    description: the id of the owner user
     physical_column_id: codebase_community.posts.OwnerUserId
     data_type: integer
   - attr_id: codebase_community.posts.LasActivityDate
-    biz_name: LasActivityDate
-    description: ''
+    biz_name: Last Activity Date
+    description: the last activity date
     physical_column_id: codebase_community.posts.LasActivityDate
     data_type: datetime
   - attr_id: codebase_community.posts.Title
     biz_name: Title
-    description: ''
+    description: the title of the post
     physical_column_id: codebase_community.posts.Title
     data_type: text
   - attr_id: codebase_community.posts.Tags
     biz_name: Tags
-    description: ''
+    description: the tag of the post
     physical_column_id: codebase_community.posts.Tags
     data_type: text
   - attr_id: codebase_community.posts.AnswerCount
-    biz_name: AnswerCount
-    description: ''
+    biz_name: Answer Count
+    description: the total number of answers of the post
     physical_column_id: codebase_community.posts.AnswerCount
     data_type: integer
   - attr_id: codebase_community.posts.CommentCount
-    biz_name: CommentCount
-    description: ''
+    biz_name: Comment Count
+    description: the total number of comments of the post
     physical_column_id: codebase_community.posts.CommentCount
     data_type: integer
   - attr_id: codebase_community.posts.FavoriteCount
-    biz_name: FavoriteCount
-    description: ''
+    biz_name: Favorite Count
+    description: 'the total number of favorites of the post. commonsense evidence: more favorite count refers to more valuable
+      posts.'
     physical_column_id: codebase_community.posts.FavoriteCount
     data_type: integer
   - attr_id: codebase_community.posts.LastEditorUserId
-    biz_name: LastEditorUserId
-    description: ''
+    biz_name: Last Editor User Id
+    description: the id of the last editor
     physical_column_id: codebase_community.posts.LastEditorUserId
     data_type: integer
   - attr_id: codebase_community.posts.LastEditDate
-    biz_name: LastEditDate
-    description: ''
+    biz_name: Last Edit Date
+    description: the last edit date
     physical_column_id: codebase_community.posts.LastEditDate
     data_type: datetime
   - attr_id: codebase_community.posts.CommunityOwnedDate
-    biz_name: CommunityOwnedDate
-    description: ''
+    biz_name: Community Owned Date
+    description: the community owned date
     physical_column_id: codebase_community.posts.CommunityOwnedDate
     data_type: datetime
   - attr_id: codebase_community.posts.ParentId
     biz_name: ParentId
-    description: ''
+    description: 'the id of the parent post. commonsense evidence: If the parent id is null, the post is the root post. Otherwise,
+      the post is the child post of other post.'
     physical_column_id: codebase_community.posts.ParentId
     data_type: integer
   - attr_id: codebase_community.posts.ClosedDate
-    biz_name: ClosedDate
-    description: ''
+    biz_name: Closed Date
+    description: 'the closed date of the post. commonsense evidence: if ClosedDate is null or empty, it means this post is
+      not well-finished if CloseDate is not null or empty, it means this post has well-finished.'
     physical_column_id: codebase_community.posts.ClosedDate
     data_type: datetime
   - attr_id: codebase_community.posts.OwnerDisplayName
-    biz_name: OwnerDisplayName
-    description: ''
+    biz_name: Owner Display Name
+    description: the display name of the post owner
     physical_column_id: codebase_community.posts.OwnerDisplayName
     data_type: text
   - attr_id: codebase_community.posts.LastEditorDisplayName
-    biz_name: LastEditorDisplayName
-    description: ''
+    biz_name: Last Editor Display Name
+    description: the display name of the last editor
     physical_column_id: codebase_community.posts.LastEditorDisplayName
     data_type: text
 - entity_id: codebase_community.tags
   biz_name: tags
-  description: 'tags: the tag id; the name of the tag; the count of posts that contain
-    this tag'
+  description: 'tags: the tag id; the name of the tag; the count of posts that contain this tag'
   physical_table_id: codebase_community.tags
   attributes:
   - attr_id: codebase_community.tags.Id
     biz_name: Id
-    description: ''
+    description: the tag id
     physical_column_id: codebase_community.tags.Id
     data_type: integer
   - attr_id: codebase_community.tags.TagName
-    biz_name: TagName
-    description: ''
+    biz_name: Tag Name
+    description: the name of the tag
     physical_column_id: codebase_community.tags.TagName
     data_type: text
   - attr_id: codebase_community.tags.Count
     biz_name: Count
-    description: ''
+    description: the count of posts that contain this tag. more counts --> this tag is more popular
     physical_column_id: codebase_community.tags.Count
     data_type: integer
   - attr_id: codebase_community.tags.ExcerptPostId
-    biz_name: ExcerptPostId
-    description: ''
+    biz_name: Excerpt Post Id
+    description: the excerpt post id of the tag
     physical_column_id: codebase_community.tags.ExcerptPostId
     data_type: integer
   - attr_id: codebase_community.tags.WikiPostId
-    biz_name: WikiPostId
-    description: ''
+    biz_name: Wiki Post Id
+    description: the wiki post id of the tag
     physical_column_id: codebase_community.tags.WikiPostId
     data_type: integer
 - entity_id: codebase_community.users
   biz_name: users
-  description: 'users: the user id; the user''s reputation; the creation date of the
-    user account'
+  description: 'users: the user id; the user''s reputation; the creation date of the user account'
   physical_table_id: codebase_community.users
   attributes:
   - attr_id: codebase_community.users.Id
     biz_name: Id
-    description: ''
+    description: the user id
     physical_column_id: codebase_community.users.Id
     data_type: integer
   - attr_id: codebase_community.users.Reputation
     biz_name: Reputation
-    description: ''
+    description: 'the user''s reputation. commonsense evidence: The user with higher reputation has more influence.'
     physical_column_id: codebase_community.users.Reputation
     data_type: integer
   - attr_id: codebase_community.users.CreationDate
-    biz_name: CreationDate
-    description: ''
+    biz_name: Creation Date
+    description: the creation date of the user account
     physical_column_id: codebase_community.users.CreationDate
     data_type: datetime
   - attr_id: codebase_community.users.DisplayName
-    biz_name: DisplayName
-    description: ''
+    biz_name: Display Name
+    description: the user's display name
     physical_column_id: codebase_community.users.DisplayName
     data_type: text
   - attr_id: codebase_community.users.LastAccessDate
-    biz_name: LastAccessDate
-    description: ''
+    biz_name: Last Access Date
+    description: the last access date of the user account
     physical_column_id: codebase_community.users.LastAccessDate
     data_type: datetime
   - attr_id: codebase_community.users.WebsiteUrl
-    biz_name: WebsiteUrl
-    description: ''
+    biz_name: Website Url
+    description: the website url of the user account
     physical_column_id: codebase_community.users.WebsiteUrl
     data_type: text
   - attr_id: codebase_community.users.Location
     biz_name: Location
-    description: ''
+    description: user's location
     physical_column_id: codebase_community.users.Location
     data_type: text
   - attr_id: codebase_community.users.AboutMe
-    biz_name: AboutMe
-    description: ''
+    biz_name: About Me
+    description: the self introduction of the user
     physical_column_id: codebase_community.users.AboutMe
     data_type: text
   - attr_id: codebase_community.users.Views
     biz_name: Views
-    description: ''
+    description: the number of views
     physical_column_id: codebase_community.users.Views
     data_type: integer
   - attr_id: codebase_community.users.UpVotes
     biz_name: UpVotes
-    description: ''
+    description: the number of upvotes
     physical_column_id: codebase_community.users.UpVotes
     data_type: integer
   - attr_id: codebase_community.users.DownVotes
     biz_name: DownVotes
-    description: ''
+    description: the number of downvotes
     physical_column_id: codebase_community.users.DownVotes
     data_type: integer
   - attr_id: codebase_community.users.AccountId
-    biz_name: AccountId
-    description: ''
+    biz_name: Account Id
+    description: the unique id of the account
     physical_column_id: codebase_community.users.AccountId
     data_type: integer
   - attr_id: codebase_community.users.Age
     biz_name: Age
-    description: ''
+    description: "user's age. \x95 teenager: 13-18 \x95 adult: 19-65 \x95 elder: > 65"
     physical_column_id: codebase_community.users.Age
     data_type: integer
   - attr_id: codebase_community.users.ProfileImageUrl
-    biz_name: ProfileImageUrl
-    description: ''
+    biz_name: Profile Image Url
+    description: the profile image url
     physical_column_id: codebase_community.users.ProfileImageUrl
     data_type: text
 - entity_id: codebase_community.votes
   biz_name: votes
-  description: 'votes: the vote id; the id of the post that is voted; the id of the
-    vote type'
+  description: 'votes: the vote id; the id of the post that is voted; the id of the vote type'
   physical_table_id: codebase_community.votes
   attributes:
   - attr_id: codebase_community.votes.Id
     biz_name: Id
-    description: ''
+    description: the vote id
     physical_column_id: codebase_community.votes.Id
     data_type: integer
   - attr_id: codebase_community.votes.PostId
-    biz_name: PostId
-    description: ''
+    biz_name: Post Id
+    description: the id of the post that is voted
     physical_column_id: codebase_community.votes.PostId
     data_type: integer
   - attr_id: codebase_community.votes.VoteTypeId
-    biz_name: VoteTypeId
-    description: ''
+    biz_name: Vote Type Id
+    description: the id of the vote type
     physical_column_id: codebase_community.votes.VoteTypeId
     data_type: integer
   - attr_id: codebase_community.votes.CreationDate
-    biz_name: CreationDate
-    description: ''
+    biz_name: Creation Date
+    description: the creation date of the vote
     physical_column_id: codebase_community.votes.CreationDate
     data_type: date
   - attr_id: codebase_community.votes.UserId
-    biz_name: UserId
-    description: ''
+    biz_name: User Id
+    description: the id of the voter
     physical_column_id: codebase_community.votes.UserId
     data_type: integer
   - attr_id: codebase_community.votes.BountyAmount
-    biz_name: BountyAmount
-    description: ''
+    biz_name: Bounty Amount
+    description: the amount of bounty
     physical_column_id: codebase_community.votes.BountyAmount
     data_type: integer
 relations:

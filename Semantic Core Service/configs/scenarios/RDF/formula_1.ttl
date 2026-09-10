@@ -6,34 +6,68 @@
 
 # R2RML — database: formula_1
 # URL: sqlite:///MINIDEV_sqlite\dev_databases\formula_1/formula_1.sqlite
-# Tables: 13  ForeignKeys: 19 formal + 0 heuristic = 19 total
-# Source: PRAGMA foreign_key_list + column-name→PK matching
+# Tables: 13  ForeignKeys: 19 formal = 19 total
+# Source: dev_tables.json foreign_keys (aligned with ER yaml)
 
 # === Table: formula_1.circuits (pk=circuitId) ===
 <http://example.org/tm/formula_1/circuits> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "circuits" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{circuitId}" ; rr:class ex:circuits ] ;
+
+
+
+
     rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/circuitId> ; rr:objectMap [ rr:column "circuitId" ; rr:datatype xsd:string ] ;
-        rdfs:label "Circuit ID"@en ;
-        rdfs:comment "Unique F1 circuit identifier"@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/circuitRef> ; rr:objectMap [ rr:column "circuitRef" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/name> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/location> ; rr:objectMap [ rr:column "location" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/country> ; rr:objectMap [ rr:column "country" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/lat> ; rr:objectMap [ rr:column "lat" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/lng> ; rr:objectMap [ rr:column "lng" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/alt> ; rr:objectMap [ rr:column "alt" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/url> ; rr:objectMap [ rr:column "url" ; rr:datatype xsd:string ] ] .
+        rdfs:label "circuit Id"@en ;
+        rdfs:comment "unique identification number of the circuit"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/circuitRef> ; rr:objectMap [ rr:column "circuitRef" ; rr:datatype xsd:string ] ;
+        rdfs:label "circuit reference name"@en ;
+        rdfs:comment "circuit reference name"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/name> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ;
+        rdfs:label "name"@en ;
+        rdfs:comment "full name of circuit"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/location> ; rr:objectMap [ rr:column "location" ; rr:datatype xsd:string ] ;
+        rdfs:label "location"@en ;
+        rdfs:comment "location of circuit"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/country> ; rr:objectMap [ rr:column "country" ; rr:datatype xsd:string ] ;
+        rdfs:label "country"@en ;
+        rdfs:comment "country of circuit"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/lat> ; rr:objectMap [ rr:column "lat" ; rr:datatype xsd:string ] ;
+        rdfs:label "latitude"@en ;
+        rdfs:comment "latitude of location of circuit"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/lng> ; rr:objectMap [ rr:column "lng" ; rr:datatype xsd:string ] ;
+        rdfs:label "longitude"@en ;
+        rdfs:comment "longitude of location of circuit. commonsense evidence: Location coordinates: (lat, lng)"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/alt> ; rr:objectMap [ rr:column "alt" ; rr:datatype xsd:string ] ;
+        rdfs:label "alt"@en ;
+        rdfs:comment "alt. not useful"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/circuits/url> ; rr:objectMap [ rr:column "url" ; rr:datatype xsd:string ] ;
+        rdfs:label "url"@en ;
+        rdfs:comment "url"@en ] .
 
 # === Table: formula_1.constructorResults (pk=constructorResultsId) ===
 <http://example.org/tm/formula_1/constructorResults> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "constructorResults" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{constructorResultsId}" ; rr:class ex:constructorResults ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorResults/constructorResultsId> ; rr:objectMap [ rr:column "constructorResultsId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorResults/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorResults/constructorId> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorResults/points> ; rr:objectMap [ rr:column "points" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorResults/status> ; rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorResults/constructorResultsId> ; rr:objectMap [ rr:column "constructorResultsId" ; rr:datatype xsd:string ] ;
+        rdfs:label "constructor Results Id"@en ;
+        rdfs:comment "constructor Results Id"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorResults/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ;
+        rdfs:label "race Id"@en ;
+        rdfs:comment "race id"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorResults/constructorId> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ;
+        rdfs:label "constructor Id"@en ;
+        rdfs:comment "constructor id"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorResults/points> ; rr:objectMap [ rr:column "points" ; rr:datatype xsd:string ] ;
+        rdfs:label "points"@en ;
+        rdfs:comment "points"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorResults/status> ; rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ] ;
+        rdfs:label "status"@en ;
+        rdfs:comment "status"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/constructorResults/refers_to_constructors> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/constructors> ; rr:joinCondition [ rr:child "constructorId" ; rr:parent "constructorId" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/constructorResults/refers_to_races> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/races> ; rr:joinCondition [ rr:child "raceId" ; rr:parent "raceId" ] ] ] .
 
@@ -41,13 +75,31 @@
 <http://example.org/tm/formula_1/constructorStandings> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "constructorStandings" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{constructorStandingsId}" ; rr:class ex:constructorStandings ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/constructorStandingsId> ; rr:objectMap [ rr:column "constructorStandingsId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/constructorId> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/points> ; rr:objectMap [ rr:column "points" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/position> ; rr:objectMap [ rr:column "position" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/positionText> ; rr:objectMap [ rr:column "positionText" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/wins> ; rr:objectMap [ rr:column "wins" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/constructorStandingsId> ; rr:objectMap [ rr:column "constructorStandingsId" ; rr:datatype xsd:string ] ;
+        rdfs:label "constructor Standings Id"@en ;
+        rdfs:comment "unique identification of the constructor standing records"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ;
+        rdfs:label "race id"@en ;
+        rdfs:comment "id number identifying which races"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/constructorId> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ;
+        rdfs:label "constructor id"@en ;
+        rdfs:comment "id number identifying which id"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/points> ; rr:objectMap [ rr:column "points" ; rr:datatype xsd:string ] ;
+        rdfs:label "points"@en ;
+        rdfs:comment "how many points acquired in each race"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/position> ; rr:objectMap [ rr:column "position" ; rr:datatype xsd:string ] ;
+        rdfs:label "position"@en ;
+        rdfs:comment "position or track of circuits"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/positionText> ; rr:objectMap [ rr:column "positionText" ; rr:datatype xsd:string ] ;
+        rdfs:label "position text"@en ;
+        rdfs:comment "position text. same with position, not quite useful"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/wins> ; rr:objectMap [ rr:column "wins" ; rr:datatype xsd:string ] ;
+        rdfs:label "wins"@en ;
+        rdfs:comment "wins"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/refers_to_constructors> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/constructors> ; rr:joinCondition [ rr:child "constructorId" ; rr:parent "constructorId" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/constructorStandings/refers_to_races> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/races> ; rr:joinCondition [ rr:child "raceId" ; rr:parent "raceId" ] ] ] .
 
@@ -55,29 +107,55 @@
 <http://example.org/tm/formula_1/constructors> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "constructors" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{constructorId}" ; rr:class ex:constructors ] ;
+
+
+
+
     rr:predicateObjectMap [ rr:predicate <http://example.org/constructors/constructorId> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ;
-        rdfs:label "Constructor ID"@en ;
-        rdfs:comment "Unique F1 team identifier"@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/constructors/constructorRef> ; rr:objectMap [ rr:column "constructorRef" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "constructor Id"@en ;
+        rdfs:comment "the unique identification number identifying constructors"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructors/constructorRef> ; rr:objectMap [ rr:column "constructorRef" ; rr:datatype xsd:string ] ;
+        rdfs:label "Constructor Reference name"@en ;
+        rdfs:comment "Constructor Reference name"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/constructors/name> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ;
-        rdfs:label "Constructor name"@en ;
-        rdfs:comment "Full team name"@en ] ;
+        rdfs:label "name"@en ;
+        rdfs:comment "full name of the constructor"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/constructors/nationality> ; rr:objectMap [ rr:column "nationality" ; rr:datatype xsd:string ] ;
-        rdfs:label "Nationality"@en ;
-        rdfs:comment "Team country of origin"@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/constructors/url> ; rr:objectMap [ rr:column "url" ; rr:datatype xsd:string ] ] .
+        rdfs:label "nationality"@en ;
+        rdfs:comment "nationality of the constructor"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/constructors/url> ; rr:objectMap [ rr:column "url" ; rr:datatype xsd:string ] ;
+        rdfs:label "url"@en ;
+        rdfs:comment "the introduction website of the constructor. commonsense evidence: How to find out the detailed introduction of the constructor: through its url"@en ] .
 
 # === Table: formula_1.driverStandings (pk=driverStandingsId) ===
 <http://example.org/tm/formula_1/driverStandings> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "driverStandings" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{driverStandingsId}" ; rr:class ex:driverStandings ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/driverStandingsId> ; rr:objectMap [ rr:column "driverStandingsId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/points> ; rr:objectMap [ rr:column "points" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/position> ; rr:objectMap [ rr:column "position" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/positionText> ; rr:objectMap [ rr:column "positionText" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/wins> ; rr:objectMap [ rr:column "wins" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/driverStandingsId> ; rr:objectMap [ rr:column "driverStandingsId" ; rr:datatype xsd:string ] ;
+        rdfs:label "driver Standings Id"@en ;
+        rdfs:comment "the unique identification number identifying driver standing records"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ;
+        rdfs:label "constructor Reference name"@en ;
+        rdfs:comment "id number identifying which races"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ;
+        rdfs:label "driverId"@en ;
+        rdfs:comment "id number identifying which drivers"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/points> ; rr:objectMap [ rr:column "points" ; rr:datatype xsd:string ] ;
+        rdfs:label "points"@en ;
+        rdfs:comment "how many points acquired in each race"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/position> ; rr:objectMap [ rr:column "position" ; rr:datatype xsd:string ] ;
+        rdfs:label "position"@en ;
+        rdfs:comment "position or track of circuits"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/positionText> ; rr:objectMap [ rr:column "positionText" ; rr:datatype xsd:string ] ;
+        rdfs:label "position text"@en ;
+        rdfs:comment "position text. same with position, not quite useful"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/wins> ; rr:objectMap [ rr:column "wins" ; rr:datatype xsd:string ] ;
+        rdfs:label "wins"@en ;
+        rdfs:comment "wins"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/refers_to_drivers> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/drivers> ; rr:joinCondition [ rr:child "driverId" ; rr:parent "driverId" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/driverStandings/refers_to_races> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/races> ; rr:joinCondition [ rr:child "raceId" ; rr:parent "raceId" ] ] ] .
 
@@ -85,47 +163,96 @@
 <http://example.org/tm/formula_1/drivers> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "drivers" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{driverId}" ; rr:class ex:drivers ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ;
-        rdfs:label "Driver ID"@en ;
-        rdfs:comment "Unique F1 driver identifier"@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/driverRef> ; rr:objectMap [ rr:column "driverRef" ; rr:datatype xsd:string ] ;
-        rdfs:label "Driver ref"@en ;
-        rdfs:comment "Driver reference name (URL-friendly)"@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/number> ; rr:objectMap [ rr:column "number" ; rr:datatype xsd:string ] ;
-        rdfs:comment "Driver number: permanent race car number, NOT qualifying position"@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/code> ; rr:objectMap [ rr:column "code" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/forename> ; rr:objectMap [ rr:column "forename" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/surname> ; rr:objectMap [ rr:column "surname" ; rr:datatype xsd:string ] ;
-        rdfs:label "Surname"@en ;
-        rdfs:comment "Driver last name"@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/dob> ; rr:objectMap [ rr:column "dob" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/nationality> ; rr:objectMap [ rr:column "nationality" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/url> ; rr:objectMap [ rr:column "url" ; rr:datatype xsd:string ] ] .
 
-# === Table: formula_1.lapTimes (pk=lap) ===
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ;
+        rdfs:label "driver ID"@en ;
+        rdfs:comment "the unique identification number identifying each driver"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/driverRef> ; rr:objectMap [ rr:column "driverRef" ; rr:datatype xsd:string ] ;
+        rdfs:label "driver reference name"@en ;
+        rdfs:comment "driver reference name"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/number> ; rr:objectMap [ rr:column "number" ; rr:datatype xsd:string ] ;
+        rdfs:label "number"@en ;
+        rdfs:comment "number"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/code> ; rr:objectMap [ rr:column "code" ; rr:datatype xsd:string ] ;
+        rdfs:label "code"@en ;
+        rdfs:comment "abbreviated code for drivers. if \"null\" or empty, it means it doesn't have code"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/forename> ; rr:objectMap [ rr:column "forename" ; rr:datatype xsd:string ] ;
+        rdfs:label "forename"@en ;
+        rdfs:comment "forename"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/surname> ; rr:objectMap [ rr:column "surname" ; rr:datatype xsd:string ] ;
+        rdfs:label "surname"@en ;
+        rdfs:comment "surname"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/dob> ; rr:objectMap [ rr:column "dob" ; rr:datatype xsd:string ] ;
+        rdfs:label "date of birth"@en ;
+        rdfs:comment "date of birth"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/nationality> ; rr:objectMap [ rr:column "nationality" ; rr:datatype xsd:string ] ;
+        rdfs:label "nationality"@en ;
+        rdfs:comment "nationality of drivers"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/drivers/url> ; rr:objectMap [ rr:column "url" ; rr:datatype xsd:string ] ;
+        rdfs:label "url"@en ;
+        rdfs:comment "the introduction website of the drivers"@en ] .
+
+# === Table: formula_1.lapTimes (pk=raceId+driverId+lap) ===
 <http://example.org/tm/formula_1/lapTimes> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "lapTimes" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{lap}" ; rr:class ex:lapTimes ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/lap> ; rr:objectMap [ rr:column "lap" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/position> ; rr:objectMap [ rr:column "position" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/time> ; rr:objectMap [ rr:column "time" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/milliseconds> ; rr:objectMap [ rr:column "milliseconds" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ;
+        rdfs:label "race ID"@en ;
+        rdfs:comment "the identification number identifying race"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ;
+        rdfs:label "driver ID"@en ;
+        rdfs:comment "the identification number identifying each driver"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/lap> ; rr:objectMap [ rr:column "lap" ; rr:datatype xsd:string ] ;
+        rdfs:label "lap"@en ;
+        rdfs:comment "lap number"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/position> ; rr:objectMap [ rr:column "position" ; rr:datatype xsd:string ] ;
+        rdfs:label "position"@en ;
+        rdfs:comment "position or track of circuits"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/time> ; rr:objectMap [ rr:column "time" ; rr:datatype xsd:string ] ;
+        rdfs:label "time"@en ;
+        rdfs:comment "lap time. in minutes / seconds / ..."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/milliseconds> ; rr:objectMap [ rr:column "milliseconds" ; rr:datatype xsd:string ] ;
+        rdfs:label "milliseconds"@en ;
+        rdfs:comment "milliseconds"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/refers_to_drivers> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/drivers> ; rr:joinCondition [ rr:child "driverId" ; rr:parent "driverId" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/lapTimes/refers_to_races> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/races> ; rr:joinCondition [ rr:child "raceId" ; rr:parent "raceId" ] ] ] .
 
-# === Table: formula_1.pitStops (pk=stop) ===
+# === Table: formula_1.pitStops (pk=raceId+driverId+stop) ===
 <http://example.org/tm/formula_1/pitStops> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "pitStops" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{stop}" ; rr:class ex:pitStops ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/stop> ; rr:objectMap [ rr:column "stop" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/lap> ; rr:objectMap [ rr:column "lap" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/time> ; rr:objectMap [ rr:column "time" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/duration> ; rr:objectMap [ rr:column "duration" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/milliseconds> ; rr:objectMap [ rr:column "milliseconds" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ;
+        rdfs:label "race ID"@en ;
+        rdfs:comment "the identification number identifying race"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ;
+        rdfs:label "driver ID"@en ;
+        rdfs:comment "the identification number identifying each driver"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/stop> ; rr:objectMap [ rr:column "stop" ; rr:datatype xsd:string ] ;
+        rdfs:label "stop"@en ;
+        rdfs:comment "stop number"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/lap> ; rr:objectMap [ rr:column "lap" ; rr:datatype xsd:string ] ;
+        rdfs:label "lap"@en ;
+        rdfs:comment "lap number"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/time> ; rr:objectMap [ rr:column "time" ; rr:datatype xsd:string ] ;
+        rdfs:label "time"@en ;
+        rdfs:comment "time. exact time"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/duration> ; rr:objectMap [ rr:column "duration" ; rr:datatype xsd:string ] ;
+        rdfs:label "duration"@en ;
+        rdfs:comment "duration time. seconds/"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/milliseconds> ; rr:objectMap [ rr:column "milliseconds" ; rr:datatype xsd:string ] ;
+        rdfs:label "milliseconds"@en ;
+        rdfs:comment "milliseconds"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/refers_to_drivers> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/drivers> ; rr:joinCondition [ rr:child "driverId" ; rr:parent "driverId" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/pitStops/refers_to_races> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/races> ; rr:joinCondition [ rr:child "raceId" ; rr:parent "raceId" ] ] ] .
 
@@ -133,24 +260,37 @@
 <http://example.org/tm/formula_1/qualifying> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "qualifying" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{qualifyId}" ; rr:class ex:qualifying ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/qualifyId> ; rr:objectMap [ rr:column "qualifyId" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/qualifyId> ; rr:objectMap [ rr:column "qualifyId" ; rr:datatype xsd:string ] ;
+        rdfs:label "qualify Id"@en ;
+        rdfs:comment "the unique identification number identifying qualifying. How does F1 Sprint qualifying work? Sprint qualifying is essentially a short-form Grand Prix  a race that is one-third the number of laps of the main event on Sunday. However, the drivers are battling for positions on the grid for the start of Sunday's race."@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ;
-        rdfs:label "Race ID"@en ;
-        rdfs:comment "FK to races table"@en ] ;
+        rdfs:label "race Id"@en ;
+        rdfs:comment "the identification number identifying each race"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ;
-        rdfs:label "Driver ID"@en ;
-        rdfs:comment "FK to drivers table"@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/constructorId> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "driver Id"@en ;
+        rdfs:comment "the identification number identifying each driver"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/constructorId> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ;
+        rdfs:label "constructor id"@en ;
+        rdfs:comment "constructor Id"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/number> ; rr:objectMap [ rr:column "number" ; rr:datatype xsd:string ] ;
-        rdfs:comment "Qualifying position: final grid position (1=pole), NOT driver number"@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/position> ; rr:objectMap [ rr:column "position" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "number"@en ;
+        rdfs:comment "number"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/position> ; rr:objectMap [ rr:column "position" ; rr:datatype xsd:string ] ;
+        rdfs:label "position"@en ;
+        rdfs:comment "position or track of circuit"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/q1> ; rr:objectMap [ rr:column "q1" ; rr:datatype xsd:string ] ;
-        rdfs:label "Q1 time"@en ;
-        rdfs:comment "Qualifying Q1 lap time (ms)"@en ] ;
+        rdfs:label "qualifying 1"@en ;
+        rdfs:comment "time in qualifying 1. in minutes / seconds / ... commonsense evidence: Q1 lap times determine pole position and the order of the front 10 positions on the grid. The slowest driver in Q1 starts 10th, the next starts ninth and so on. All 20 F1 drivers participate in the first period, called Q1, with each trying to set the fastest time possible. Those in the top 15 move on to the next period of qualifying, called Q2. The five slowest drivers are eliminated and will start the race in the last five positions on the grid."@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/q2> ; rr:objectMap [ rr:column "q2" ; rr:datatype xsd:string ] ;
-        rdfs:label "Q2 time"@en ;
-        rdfs:comment "Qualifying Q2 lap time (ms), NULL=did not advance"@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/q3> ; rr:objectMap [ rr:column "q3" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "qualifying 2"@en ;
+        rdfs:comment "time in qualifying 2. in minutes / seconds / ... commonsense evidence: only top 15 in the q1 has the record of q2 Q2 is slightly shorter but follows the same format. Drivers try to put down their best times to move on to Q1 as one of the 10 fastest cars. The five outside of the top 10 are eliminated and start the race from 11th to 15th based on their best lap time."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/q3> ; rr:objectMap [ rr:column "q3" ; rr:datatype xsd:string ] ;
+        rdfs:label "qualifying 3"@en ;
+        rdfs:comment "time in qualifying 3. in minutes / seconds / ... commonsense evidence: only top 10 in the q2 has the record of q3"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/refers_to_constructors> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/constructors> ; rr:joinCondition [ rr:child "constructorId" ; rr:parent "constructorId" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/refers_to_drivers> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/drivers> ; rr:joinCondition [ rr:child "driverId" ; rr:parent "driverId" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/qualifying/refers_to_races> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/races> ; rr:joinCondition [ rr:child "raceId" ; rr:parent "raceId" ] ] ] .
@@ -159,22 +299,34 @@
 <http://example.org/tm/formula_1/races> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "races" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{raceId}" ; rr:class ex:races ] ;
+
+
+
+
     rr:predicateObjectMap [ rr:predicate <http://example.org/races/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ;
-        rdfs:label "Race ID"@en ;
-        rdfs:comment "Unique F1 race identifier"@en ] ;
+        rdfs:label "race ID"@en ;
+        rdfs:comment "the unique identification number identifying the race"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/races/year> ; rr:objectMap [ rr:column "year" ; rr:datatype xsd:string ] ;
-        rdfs:label "Year"@en ;
-        rdfs:comment "Race season year"@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/races/round> ; rr:objectMap [ rr:column "round" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "year"@en ;
+        rdfs:comment "year"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/races/round> ; rr:objectMap [ rr:column "round" ; rr:datatype xsd:string ] ;
+        rdfs:label "round"@en ;
+        rdfs:comment "round"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/races/circuitId> ; rr:objectMap [ rr:column "circuitId" ; rr:datatype xsd:string ] ;
-        rdfs:label "Circuit ID"@en ;
-        rdfs:comment "FK to circuits table"@en ] ;
+        rdfs:label "Circuit Id"@en ;
+        rdfs:comment "circuit Id"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/races/name> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ;
-        rdfs:label "Race name"@en ;
-        rdfs:comment "Grand Prix name, e.g. Monaco Grand Prix"@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/races/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/races/time> ; rr:objectMap [ rr:column "time" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/races/url> ; rr:objectMap [ rr:column "url" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "name"@en ;
+        rdfs:comment "name of the race"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/races/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ;
+        rdfs:label "date"@en ;
+        rdfs:comment "duration time"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/races/time> ; rr:objectMap [ rr:column "time" ; rr:datatype xsd:string ] ;
+        rdfs:label "time"@en ;
+        rdfs:comment "time of the location"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/races/url> ; rr:objectMap [ rr:column "url" ; rr:datatype xsd:string ] ;
+        rdfs:label "url"@en ;
+        rdfs:comment "introduction of races"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/races/refers_to_circuits> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/circuits> ; rr:joinCondition [ rr:child "circuitId" ; rr:parent "circuitId" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/races/refers_to_seasons> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/seasons> ; rr:joinCondition [ rr:child "year" ; rr:parent "year" ] ] ] .
 
@@ -182,25 +334,64 @@
 <http://example.org/tm/formula_1/results> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "results" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{resultId}" ; rr:class ex:results ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/resultId> ; rr:objectMap [ rr:column "resultId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/constructorId> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/resultId> ; rr:objectMap [ rr:column "resultId" ; rr:datatype xsd:string ] ;
+        rdfs:label "Result ID"@en ;
+        rdfs:comment "the unique identification number identifying race result"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/raceId> ; rr:objectMap [ rr:column "raceId" ; rr:datatype xsd:string ] ;
+        rdfs:label "race ID"@en ;
+        rdfs:comment "the identification number identifying the race"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/driverId> ; rr:objectMap [ rr:column "driverId" ; rr:datatype xsd:string ] ;
+        rdfs:label "driver ID"@en ;
+        rdfs:comment "the identification number identifying the driver"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/constructorId> ; rr:objectMap [ rr:column "constructorId" ; rr:datatype xsd:string ] ;
+        rdfs:label "constructor Id"@en ;
+        rdfs:comment "the identification number identifying which constructors"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/results/number> ; rr:objectMap [ rr:column "number" ; rr:datatype xsd:string ] ;
-        rdfs:comment "Race finishing position: final race result, NOT driver number"@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/grid> ; rr:objectMap [ rr:column "grid" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/position> ; rr:objectMap [ rr:column "position" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/positionText> ; rr:objectMap [ rr:column "positionText" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/positionOrder> ; rr:objectMap [ rr:column "positionOrder" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/points> ; rr:objectMap [ rr:column "points" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/laps> ; rr:objectMap [ rr:column "laps" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/time> ; rr:objectMap [ rr:column "time" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/milliseconds> ; rr:objectMap [ rr:column "milliseconds" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/fastestLap> ; rr:objectMap [ rr:column "fastestLap" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/rank> ; rr:objectMap [ rr:column "rank" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/fastestLapTime> ; rr:objectMap [ rr:column "fastestLapTime" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/fastestLapSpeed> ; rr:objectMap [ rr:column "fastestLapSpeed" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/results/statusId> ; rr:objectMap [ rr:column "statusId" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "number"@en ;
+        rdfs:comment "number"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/grid> ; rr:objectMap [ rr:column "grid" ; rr:datatype xsd:string ] ;
+        rdfs:label "grid"@en ;
+        rdfs:comment "the number identifying the area where cars are set into a grid formation in order to start the race."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/position> ; rr:objectMap [ rr:column "position" ; rr:datatype xsd:string ] ;
+        rdfs:label "position"@en ;
+        rdfs:comment "The finishing position or track of circuits"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/positionText> ; rr:objectMap [ rr:column "positionText" ; rr:datatype xsd:string ] ;
+        rdfs:label "position text"@en ;
+        rdfs:comment "position text. not quite useful"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/positionOrder> ; rr:objectMap [ rr:column "positionOrder" ; rr:datatype xsd:string ] ;
+        rdfs:label "position order"@en ;
+        rdfs:comment "the finishing order of positions"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/points> ; rr:objectMap [ rr:column "points" ; rr:datatype xsd:string ] ;
+        rdfs:label "points"@en ;
+        rdfs:comment "points"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/laps> ; rr:objectMap [ rr:column "laps" ; rr:datatype xsd:string ] ;
+        rdfs:label "laps"@en ;
+        rdfs:comment "lap number"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/time> ; rr:objectMap [ rr:column "time" ; rr:datatype xsd:string ] ;
+        rdfs:label "time"@en ;
+        rdfs:comment "finish time. commonsense evidence: 1. if the value exists, it means the driver finished the race. 2. Only the time of the champion shows in the format of \"minutes: seconds.millionsecond\", the time of the other drivers shows as \"seconds.millionsecond\" , which means their actual time is the time of the champion adding the value in this cell."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/milliseconds> ; rr:objectMap [ rr:column "milliseconds" ; rr:datatype xsd:string ] ;
+        rdfs:label "milliseconds"@en ;
+        rdfs:comment "the actual finishing time of drivers in milliseconds. the actual finishing time of drivers"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/fastestLap> ; rr:objectMap [ rr:column "fastestLap" ; rr:datatype xsd:string ] ;
+        rdfs:label "fastest lap"@en ;
+        rdfs:comment "fastest lap number"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/rank> ; rr:objectMap [ rr:column "rank" ; rr:datatype xsd:string ] ;
+        rdfs:label "rank"@en ;
+        rdfs:comment "starting rank positioned by fastest lap speed"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/fastestLapTime> ; rr:objectMap [ rr:column "fastestLapTime" ; rr:datatype xsd:string ] ;
+        rdfs:label "fastest Lap Time"@en ;
+        rdfs:comment "fastest Lap Time. faster (smaller in the value) \"fastestLapTime\" leads to higher rank (smaller is higher rank)"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/fastestLapSpeed> ; rr:objectMap [ rr:column "fastestLapSpeed" ; rr:datatype xsd:string ] ;
+        rdfs:label "fastest Lap Speed"@en ;
+        rdfs:comment "fastest Lap Speed. (km / h)"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/results/statusId> ; rr:objectMap [ rr:column "statusId" ; rr:datatype xsd:string ] ;
+        rdfs:label "status Id"@en ;
+        rdfs:comment "status ID. its category description appear in the table status"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/results/refers_to_status> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/status> ; rr:joinCondition [ rr:child "statusId" ; rr:parent "statusId" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/results/refers_to_constructors> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/constructors> ; rr:joinCondition [ rr:child "constructorId" ; rr:parent "constructorId" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/results/refers_to_drivers> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/formula_1/drivers> ; rr:joinCondition [ rr:child "driverId" ; rr:parent "driverId" ] ] ] ;
@@ -210,13 +401,25 @@
 <http://example.org/tm/formula_1/seasons> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "seasons" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{year}" ; rr:class ex:seasons ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/seasons/year> ; rr:objectMap [ rr:column "year" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/seasons/url> ; rr:objectMap [ rr:column "url" ; rr:datatype xsd:string ] ] .
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/seasons/year> ; rr:objectMap [ rr:column "year" ; rr:datatype xsd:string ] ;
+        rdfs:label "race ID"@en ;
+        rdfs:comment "the unique identification number identifying the race"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/seasons/url> ; rr:objectMap [ rr:column "url" ; rr:datatype xsd:string ] ;
+        rdfs:label "url"@en ;
+        rdfs:comment "website link of season race introduction"@en ] .
 
 # === Table: formula_1.status (pk=statusId) ===
 <http://example.org/tm/formula_1/status> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "status" ] ;
     rr:subjectMap [ rr:template "http://example.org/formula_1/{statusId}" ; rr:class ex:status ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/status/statusId> ; rr:objectMap [ rr:column "statusId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/status/status> ; rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ] ] .
 
+    rr:predicateObjectMap [ rr:predicate <http://example.org/status/statusId> ; rr:objectMap [ rr:column "statusId" ; rr:datatype xsd:string ] ;
+        rdfs:label "status ID"@en ;
+        rdfs:comment "the unique identification number identifying status"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/status/status> ; rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ] ;
+        rdfs:label "status"@en ;
+        rdfs:comment "full name of status"@en ] .

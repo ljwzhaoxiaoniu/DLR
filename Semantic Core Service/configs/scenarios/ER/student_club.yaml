@@ -11,38 +11,38 @@ entities:
   physical_table_id: student_club.event
   attributes:
   - attr_id: student_club.event.event_id
-    biz_name: event_id
-    description: ''
+    biz_name: event id
+    description: A unique identifier for the event
     physical_column_id: student_club.event.event_id
     data_type: text
   - attr_id: student_club.event.event_name
-    biz_name: event_name
-    description: ''
+    biz_name: event name
+    description: event name
     physical_column_id: student_club.event.event_name
     data_type: text
   - attr_id: student_club.event.event_date
-    biz_name: event_date
-    description: ''
+    biz_name: event date
+    description: The date the event took place or is scheduled to take place. e.g. 2020-03-10T12:00:00
     physical_column_id: student_club.event.event_date
     data_type: text
   - attr_id: student_club.event.type
     biz_name: type
-    description: ''
+    description: The kind of event, such as game, social, election
     physical_column_id: student_club.event.type
     data_type: text
   - attr_id: student_club.event.notes
     biz_name: notes
-    description: ''
+    description: A free text field for any notes about the event
     physical_column_id: student_club.event.notes
     data_type: text
   - attr_id: student_club.event.location
     biz_name: location
-    description: ''
+    description: Address where the event was held or is to be held or the name of such a location
     physical_column_id: student_club.event.location
     data_type: text
   - attr_id: student_club.event.status
     biz_name: status
-    description: ''
+    description: One of three values indicating if the event is in planning, is opened, or is closed. Open/ Closed/ Planning
     physical_column_id: student_club.event.status
     data_type: text
 - entity_id: student_club.major
@@ -51,23 +51,23 @@ entities:
   physical_table_id: student_club.major
   attributes:
   - attr_id: student_club.major.major_id
-    biz_name: major_id
-    description: ''
+    biz_name: major id
+    description: A unique identifier for each major
     physical_column_id: student_club.major.major_id
     data_type: text
   - attr_id: student_club.major.major_name
-    biz_name: major_name
-    description: ''
+    biz_name: major name
+    description: major name
     physical_column_id: student_club.major.major_name
     data_type: text
   - attr_id: student_club.major.department
     biz_name: department
-    description: ''
+    description: The name of the department that offers the major
     physical_column_id: student_club.major.department
     data_type: text
   - attr_id: student_club.major.college
     biz_name: college
-    description: ''
+    description: The name college that houses the department that offers the major
     physical_column_id: student_club.major.college
     data_type: text
 - entity_id: student_club.zip_code
@@ -76,33 +76,34 @@ entities:
   physical_table_id: student_club.zip_code
   attributes:
   - attr_id: student_club.zip_code.zip_code
-    biz_name: zip_code
-    description: ''
+    biz_name: zip code
+    description: The ZIP code itself. A five-digit number identifying a US post office.
     physical_column_id: student_club.zip_code.zip_code
     data_type: integer
   - attr_id: student_club.zip_code.type
     biz_name: type
-    description: ''
+    description: 'The kind of ZIP code. commonsense evidence: � Standard: the normal codes with which most people are familiar
+      � PO Box: zip codes have post office boxes � Unique: zip codes that are assigned to individual organizations.'
     physical_column_id: student_club.zip_code.type
     data_type: text
   - attr_id: student_club.zip_code.city
     biz_name: city
-    description: ''
+    description: The city to which the ZIP pertains
     physical_column_id: student_club.zip_code.city
     data_type: text
   - attr_id: student_club.zip_code.county
     biz_name: county
-    description: ''
+    description: The county to which the ZIP pertains
     physical_column_id: student_club.zip_code.county
     data_type: text
   - attr_id: student_club.zip_code.state
     biz_name: state
-    description: ''
+    description: The name of the state to which the ZIP pertains
     physical_column_id: student_club.zip_code.state
     data_type: text
   - attr_id: student_club.zip_code.short_state
-    biz_name: short_state
-    description: ''
+    biz_name: short state
+    description: The abbreviation of the state to which the ZIP pertains
     physical_column_id: student_club.zip_code.short_state
     data_type: text
 - entity_id: student_club.attendance
@@ -111,13 +112,13 @@ entities:
   physical_table_id: student_club.attendance
   attributes:
   - attr_id: student_club.attendance.link_to_event
-    biz_name: link_to_event
-    description: ''
+    biz_name: link to event
+    description: The unique identifier of the event which was attended. References the Event table
     physical_column_id: student_club.attendance.link_to_event
     data_type: text
   - attr_id: student_club.attendance.link_to_member
-    biz_name: link_to_member
-    description: ''
+    biz_name: link to member
+    description: The unique identifier of the member who attended the event. References the Member table
     physical_column_id: student_club.attendance.link_to_member
     data_type: text
 - entity_id: student_club.budget
@@ -126,38 +127,44 @@ entities:
   physical_table_id: student_club.budget
   attributes:
   - attr_id: student_club.budget.budget_id
-    biz_name: budget_id
-    description: ''
+    biz_name: budget id
+    description: A unique identifier for the budget entry
     physical_column_id: student_club.budget.budget_id
     data_type: text
   - attr_id: student_club.budget.category
     biz_name: category
-    description: ''
+    description: The area for which the amount is budgeted, such as, advertisement, food, parking
     physical_column_id: student_club.budget.category
     data_type: text
   - attr_id: student_club.budget.spent
     biz_name: spent
-    description: ''
+    description: The total amount spent in the budgeted category for an event.. the unit is dollar. This is summarized from
+      the Expense table
     physical_column_id: student_club.budget.spent
     data_type: real
   - attr_id: student_club.budget.remaining
     biz_name: remaining
-    description: ''
+    description: 'A value calculated as the amount budgeted minus the amount spent. the unit is dollar commonsense evidence:
+      If the remaining < 0, it means that the cost has exceeded the budget.'
     physical_column_id: student_club.budget.remaining
     data_type: real
   - attr_id: student_club.budget.amount
     biz_name: amount
-    description: ''
+    description: 'The amount budgeted for the specified category and event. the unit is dollar commonsense evidence: some
+      computation like: amount = spent + remaining'
     physical_column_id: student_club.budget.amount
     data_type: integer
   - attr_id: student_club.budget.event_status
-    biz_name: event_status
-    description: ''
+    biz_name: event status
+    description: "the status of the event. Closed / Open/ Planning commonsense evidence: \x95 Closed: It means that the event\
+      \ is closed. The spent and the remaining won't change anymore. \x95 Open: It means that the event is already opened.\
+      \ The spent and the remaining will change with new expenses. \x95 Planning: The event is not started yet but is planning.\
+      \ The spent and the remaining won't change at this stage."
     physical_column_id: student_club.budget.event_status
     data_type: text
   - attr_id: student_club.budget.link_to_event
-    biz_name: link_to_event
-    description: ''
+    biz_name: link to event
+    description: The unique identifier of the event to which the budget line applies.. References the Event table
     physical_column_id: student_club.budget.link_to_event
     data_type: text
 - entity_id: student_club.expense
@@ -166,38 +173,39 @@ entities:
   physical_table_id: student_club.expense
   attributes:
   - attr_id: student_club.expense.expense_id
-    biz_name: expense_id
-    description: ''
+    biz_name: expense id
+    description: unique id of income
     physical_column_id: student_club.expense.expense_id
     data_type: text
   - attr_id: student_club.expense.expense_description
-    biz_name: expense_description
-    description: ''
+    biz_name: expense description
+    description: A textual description of what the money was spend for
     physical_column_id: student_club.expense.expense_description
     data_type: text
   - attr_id: student_club.expense.expense_date
-    biz_name: expense_date
-    description: ''
+    biz_name: expense date
+    description: The date the expense was incurred. e.g. YYYY-MM-DD
     physical_column_id: student_club.expense.expense_date
     data_type: text
   - attr_id: student_club.expense.cost
     biz_name: cost
-    description: ''
+    description: The dollar amount of the expense. the unit is dollar
     physical_column_id: student_club.expense.cost
     data_type: real
   - attr_id: student_club.expense.approved
     biz_name: approved
-    description: ''
+    description: A true or false value indicating if the expense was approved. true/ false
     physical_column_id: student_club.expense.approved
     data_type: text
   - attr_id: student_club.expense.link_to_member
-    biz_name: link_to_member
-    description: ''
+    biz_name: link to member
+    description: The member who incurred the expense
     physical_column_id: student_club.expense.link_to_member
     data_type: text
   - attr_id: student_club.expense.link_to_budget
-    biz_name: link_to_budget
-    description: ''
+    biz_name: link to budget
+    description: The unique identifier of the record in the Budget table that indicates the expected total expenditure for
+      a given category and event.. References the Budget table
     physical_column_id: student_club.expense.link_to_budget
     data_type: text
 - entity_id: student_club.income
@@ -206,33 +214,33 @@ entities:
   physical_table_id: student_club.income
   attributes:
   - attr_id: student_club.income.income_id
-    biz_name: income_id
-    description: ''
+    biz_name: income id
+    description: A unique identifier for each record of income
     physical_column_id: student_club.income.income_id
     data_type: text
   - attr_id: student_club.income.date_received
-    biz_name: date_received
-    description: ''
+    biz_name: date received
+    description: the date that the fund received
     physical_column_id: student_club.income.date_received
     data_type: text
   - attr_id: student_club.income.amount
     biz_name: amount
-    description: ''
+    description: amount of funds. the unit is dollar
     physical_column_id: student_club.income.amount
     data_type: integer
   - attr_id: student_club.income.source
     biz_name: source
-    description: ''
+    description: A value indicating where the funds come from such as dues, or the annual university allocation
     physical_column_id: student_club.income.source
     data_type: text
   - attr_id: student_club.income.notes
     biz_name: notes
-    description: ''
+    description: A free-text value giving any needed details about the receipt of funds
     physical_column_id: student_club.income.notes
     data_type: text
   - attr_id: student_club.income.link_to_member
-    biz_name: link_to_member
-    description: ''
+    biz_name: link to member
+    description: link to member
     physical_column_id: student_club.income.link_to_member
     data_type: text
 - entity_id: student_club.member
@@ -241,48 +249,50 @@ entities:
   physical_table_id: student_club.member
   attributes:
   - attr_id: student_club.member.member_id
-    biz_name: member_id
-    description: ''
+    biz_name: member id
+    description: unique id of member
     physical_column_id: student_club.member.member_id
     data_type: text
   - attr_id: student_club.member.first_name
-    biz_name: first_name
-    description: ''
+    biz_name: first name
+    description: member's first name
     physical_column_id: student_club.member.first_name
     data_type: text
   - attr_id: student_club.member.last_name
-    biz_name: last_name
-    description: ''
+    biz_name: last name
+    description: 'member''s last name. commonsense evidence: full name is first_name + last_name. e.g. A member''s first name
+      is Angela and last name is Sanders. Thus, his/her full name is Angela Sanders.'
     physical_column_id: student_club.member.last_name
     data_type: text
   - attr_id: student_club.member.email
     biz_name: email
-    description: ''
+    description: member's email
     physical_column_id: student_club.member.email
     data_type: text
   - attr_id: student_club.member.position
     biz_name: position
-    description: ''
+    description: The position the member holds in the club
     physical_column_id: student_club.member.position
     data_type: text
   - attr_id: student_club.member.t_shirt_size
     biz_name: t_shirt_size
-    description: ''
+    description: 'The size of tee shirt that member wants when shirts are ordered. commonsense evidence: usually the student
+      ordered t-shirt with lager size has bigger body shape'
     physical_column_id: student_club.member.t_shirt_size
     data_type: text
   - attr_id: student_club.member.phone
     biz_name: phone
-    description: ''
+    description: The best telephone at which to contact the member
     physical_column_id: student_club.member.phone
     data_type: text
   - attr_id: student_club.member.zip
     biz_name: zip
-    description: ''
+    description: the zip code of the member's hometown
     physical_column_id: student_club.member.zip
     data_type: integer
   - attr_id: student_club.member.link_to_major
-    biz_name: link_to_major
-    description: ''
+    biz_name: link to major
+    description: The unique identifier of the major of the member. References the Major table
     physical_column_id: student_club.member.link_to_major
     data_type: text
 relations:

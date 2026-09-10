@@ -7,17 +7,37 @@ databases:
 logical_entities:
 - logical_entity_id: LOGICAL.Superhero
   biz_name: Superhero
-  description: 超级英雄本体(Superhero/hero/character)，集成了所有 1:1 维度查表（颜色/eye colour/种族/race/性别/gender/出版商/publisher/阵营/alignment），碎片化物理表对 Agent 透明。Each superhero has a unique name (superhero_name), height, weight, and links to colour/race/gender/publisher/alignment tables.
+  description: 超级英雄本体(Superhero/hero/character)，集成了所有 1:1 维度查表（颜色/eye colour/种族/race/性别/gender/出版商/publisher/阵营/alignment），碎片化物理表对
+    Agent 透明。Each superhero has a unique name (superhero_name), height, weight, and links to colour/race/gender/publisher/alignment
+    tables.
   public_attributes:
-  - {attr_id: LOGICAL.Superhero.HeroID, biz_name: HeroID, description: '英雄ID: 超级英雄唯一标识符'}
-  - {attr_id: LOGICAL.Superhero.HeroName, biz_name: HeroName, description: '英雄代号: 如 "Batman", "Spider-Man"'}
-  - {attr_id: LOGICAL.Superhero.EyeColour, biz_name: EyeColour, description: '眼睛颜色: 如 Blue, Brown, Gold, Red, Green'}
-  - {attr_id: LOGICAL.Superhero.PublisherName, biz_name: PublisherName, description: '出版商名称: 如 Marvel Comics, DC Comics'}
-  - {attr_id: LOGICAL.Superhero.Race, biz_name: Race, description: '种族: 如 Human, Kryptonian, Mutant'}
-  - {attr_id: LOGICAL.Superhero.Gender, biz_name: Gender, description: '性别: Male / Female'}
-  - {attr_id: LOGICAL.Superhero.Alignment, biz_name: Alignment, description: '阵营: Good / Bad / Neutral'}
-  - {attr_id: LOGICAL.Superhero.Height_cm, biz_name: Height_cm, description: '身高(cm)'}
-  - {attr_id: LOGICAL.Superhero.Weight_kg, biz_name: Weight_kg, description: '体重(kg)'}
+  - attr_id: LOGICAL.Superhero.HeroID
+    biz_name: HeroID
+    description: '英雄ID: 超级英雄唯一标识符'
+  - attr_id: LOGICAL.Superhero.HeroName
+    biz_name: HeroName
+    description: '英雄代号: 如 "Batman", "Spider-Man"'
+  - attr_id: LOGICAL.Superhero.EyeColour
+    biz_name: EyeColour
+    description: '眼睛颜色: 如 Blue, Brown, Gold, Red, Green'
+  - attr_id: LOGICAL.Superhero.PublisherName
+    biz_name: PublisherName
+    description: '出版商名称: 如 Marvel Comics, DC Comics'
+  - attr_id: LOGICAL.Superhero.Race
+    biz_name: Race
+    description: '种族: 如 Human, Kryptonian, Mutant'
+  - attr_id: LOGICAL.Superhero.Gender
+    biz_name: Gender
+    description: '性别: Male / Female'
+  - attr_id: LOGICAL.Superhero.Alignment
+    biz_name: Alignment
+    description: '阵营: Good / Bad / Neutral'
+  - attr_id: LOGICAL.Superhero.Height_cm
+    biz_name: Height_cm
+    description: 身高(cm)
+  - attr_id: LOGICAL.Superhero.Weight_kg
+    biz_name: Weight_kg
+    description: 体重(kg)
   physical_entities:
   - physical_entity_id: PHYSICAL.Superhero
     physical_table_name: superhero
@@ -34,37 +54,40 @@ logical_entities:
     S: Hero master — 主记录, FK→colour/race/gender/publisher/alignment
     private_attributes:
     - attr_id: superhero.superhero.full_name
-      biz_name: full_name
+      biz_name: full name
       physical_column_id: superhero.superhero.full_name
-      description: '全名: 超级英雄的真实姓名'
+      description: 'the full name of the superhero. commonsense evidence: The full name of a person typically consists of
+        their given name, also known as their first name or personal name, and their surname, also known as their last name
+        or family name. For example, if someone''s given name is "John" and their surname is "Smith," their full name would
+        be "John Smith."'
     - attr_id: superhero.superhero.eye_colour_id
-      biz_name: eye_colour_id
+      biz_name: eye colour id
       physical_column_id: superhero.superhero.eye_colour_id
-      description: 'FK→colour.id: 眼睛颜色ID'
+      description: the id of the superhero's eye color
     - attr_id: superhero.superhero.hair_colour_id
-      biz_name: hair_colour_id
+      biz_name: hair colour id
       physical_column_id: superhero.superhero.hair_colour_id
-      description: 'FK→colour.id: 头发颜色ID'
+      description: the id of the superhero's hair color
     - attr_id: superhero.superhero.skin_colour_id
-      biz_name: skin_colour_id
+      biz_name: skin colour id
       physical_column_id: superhero.superhero.skin_colour_id
-      description: 'FK→colour.id: 皮肤颜色ID'
+      description: the id of the superhero's skin color
     - attr_id: superhero.superhero.race_id
-      biz_name: race_id
+      biz_name: race id
       physical_column_id: superhero.superhero.race_id
-      description: 'FK→race.id: 种族ID'
+      description: the id of the superhero's race
     - attr_id: superhero.superhero.gender_id
-      biz_name: gender_id
+      biz_name: gender id
       physical_column_id: superhero.superhero.gender_id
-      description: 'FK→gender.id: 性别ID'
+      description: the id of the superhero's gender
     - attr_id: superhero.superhero.publisher_id
-      biz_name: publisher_id
+      biz_name: publisher id
       physical_column_id: superhero.superhero.publisher_id
-      description: 'FK→publisher.id: 出版商ID'
+      description: the id of the publisher
     - attr_id: superhero.superhero.alignment_id
-      biz_name: alignment_id
+      biz_name: alignment id
       physical_column_id: superhero.superhero.alignment_id
-      description: 'FK→alignment.id: 阵营ID (Good/Bad/Neutral)'
+      description: the id of the superhero's alignment
   - physical_entity_id: PHYSICAL.Colour
     physical_table_name: colour
     physical_table_id: superhero.colour
@@ -127,7 +150,8 @@ logical_entities:
     private_attributes: []
 - logical_entity_id: LOGICAL.Power
   biz_name: Power
-  description: Superpowers — e.g. Super Strength, Agility, Flight, Telepathy, Energy Blast; linked to heroes via hero_power junction table (many-to-many)
+  description: Superpowers — e.g. Super Strength, Agility, Flight, Telepathy, Energy Blast; linked to heroes via hero_power
+    junction table (many-to-many)
   public_attributes:
   - attr_id: LOGICAL.Power.PowerID
     biz_name: PowerID
@@ -151,9 +175,11 @@ logical_entities:
     S: Junction 表 — hero_id→superhero.id + power_id→superpower.id, 1 英雄可有 N 条记录
     private_attributes:
     - attr_id: superhero.hero_power.power_id
-      biz_name: power_id
+      biz_name: power id
       physical_column_id: superhero.hero_power.power_id
-      description: 'FK→superpower.id: 超能力ID'
+      description: 'the id of the power Maps to superpower(id). commonsense evidence: In general, a superhero''s attributes
+        provide the foundation for their abilities and help to define who they are, while their powers are the specific abilities
+        that they use to fight crime and protect others.'
   - physical_entity_id: PHYSICAL.Superpower
     physical_table_name: superpower
     physical_table_id: superhero.superpower
@@ -168,7 +194,8 @@ logical_entities:
     private_attributes: []
 - logical_entity_id: LOGICAL.Attribute
   biz_name: Attribute
-  description: Hero attributes with numeric values — Intelligence, Strength, Speed, Agility, Durability, Power, Combat; linked to heroes via hero_attribute junction table (many-to-many)
+  description: Hero attributes with numeric values — Intelligence, Strength, Speed, Agility, Durability, Power, Combat; linked
+    to heroes via hero_attribute junction table (many-to-many)
   public_attributes:
   - attr_id: LOGICAL.Attribute.AttrID
     biz_name: AttrID
@@ -196,9 +223,9 @@ logical_entities:
     S: Junction 表 — hero_id→superhero.id + attribute_id→attribute.id, 含属性值
     private_attributes:
     - attr_id: superhero.hero_attribute.attribute_id
-      biz_name: attribute_id
+      biz_name: attribute id
       physical_column_id: superhero.hero_attribute.attribute_id
-      description: 'FK→attribute.id: 属性ID'
+      description: the id of the attribute Maps to attribute(id)
   - physical_entity_id: PHYSICAL.Attribute
     physical_table_name: attribute
     physical_table_id: superhero.attribute

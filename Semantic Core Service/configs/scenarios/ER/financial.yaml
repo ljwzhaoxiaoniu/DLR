@@ -7,8 +7,7 @@ databases:
 entities:
 - entity_id: financial.account
   biz_name: account
-  description: 'account: the id of the account; location of branch; frequency of the
-    acount'
+  description: 'account: the id of the account; location of branch; frequency of the acount'
   physical_table_id: financial.account
   attributes:
   - attr_id: financial.account.account_id
@@ -28,7 +27,7 @@ entities:
     data_type: text
   - attr_id: financial.account.date
     biz_name: date
-    description: 'the creation date of the account. in the form YYMMDD. format: date'
+    description: the creation date of the account. in the form YYMMDD
     physical_column_id: financial.account.date
     data_type: date
 - entity_id: financial.card
@@ -48,14 +47,13 @@ entities:
     data_type: integer
   - attr_id: financial.card.type
     biz_name: type
-    description: "type of credit card. \"junior\": junior class of credit card; \n\
-      \"classic\": standard class of credit card; \n\"gold\": high-level credit card"
+    description: 'type of credit card. "junior": junior class of credit card; "classic": standard class of credit card; "gold":
+      high-level credit card'
     physical_column_id: financial.card.type
     data_type: text
   - attr_id: financial.card.issued
     biz_name: issued
-    description: 'the date when the credit card issued. in the form YYMMDD. format:
-      date'
+    description: the date when the credit card issued. in the form YYMMDD
     physical_column_id: financial.card.issued
     data_type: date
 - entity_id: financial.client
@@ -70,12 +68,12 @@ entities:
     data_type: integer
   - attr_id: financial.client.gender
     biz_name: gender
-    description: "F：female \nM：male"
+    description: gender. F：female M：male
     physical_column_id: financial.client.gender
     data_type: text
   - attr_id: financial.client.birth_date
     biz_name: birth_date
-    description: 'birth date. format: date'
+    description: birth date
     physical_column_id: financial.client.birth_date
     data_type: date
   - attr_id: financial.client.district_id
@@ -85,8 +83,7 @@ entities:
     data_type: integer
 - entity_id: financial.disp
   biz_name: disp
-  description: 'disp: unique number of identifying this row of record; id number of
-    client; id number of account'
+  description: 'disp: unique number of identifying this row of record; id number of client; id number of account'
   physical_table_id: financial.disp
   attributes:
   - attr_id: financial.disp.disp_id
@@ -106,11 +103,8 @@ entities:
     data_type: integer
   - attr_id: financial.disp.type
     biz_name: type
-    description: 'type of disposition. "OWNER" : "USER" : "DISPONENT"
-
-      commonsense evidence:
-
-      the account can only have the right to issue permanent orders or apply for loans'
+    description: 'type of disposition. "OWNER" : "USER" : "DISPONENT" commonsense evidence: the account can only have the
+      right to issue permanent orders or apply for loans'
     physical_column_id: financial.disp.type
     data_type: text
 - entity_id: financial.district
@@ -135,7 +129,7 @@ entities:
     data_type: text
   - attr_id: financial.district.A4
     biz_name: number of inhabitants
-    description: ''
+    description: number of inhabitants
     physical_column_id: financial.district.A4
     data_type: text
   - attr_id: financial.district.A5
@@ -160,7 +154,7 @@ entities:
     data_type: integer
   - attr_id: financial.district.A9
     biz_name: A9
-    description: not useful
+    description: A9. not useful
     physical_column_id: financial.district.A9
     data_type: integer
   - attr_id: financial.district.A10
@@ -200,8 +194,8 @@ entities:
     data_type: integer
 - entity_id: financial.loan
   biz_name: loan
-  description: 'loan: the id number identifying the loan data; the id number identifying
-    the account; the date when the loan is approved'
+  description: 'loan: the id number identifying the loan data; the id number identifying the account; the date when the loan
+    is approved'
   physical_table_id: financial.loan
   attributes:
   - attr_id: financial.loan.loan_id
@@ -216,7 +210,7 @@ entities:
     data_type: integer
   - attr_id: financial.loan.date
     biz_name: date
-    description: 'the date when the loan is approved. format: date'
+    description: the date when the loan is approved
     physical_column_id: financial.loan.date
     data_type: date
   - attr_id: financial.loan.amount
@@ -236,19 +230,13 @@ entities:
     data_type: real
   - attr_id: financial.loan.status
     biz_name: status
-    description: 'repayment status. ''A'' stands for contract finished, no problems;
-
-      ''B'' stands for contract finished, loan not paid;
-
-      ''C'' stands for running contract, OK so far;
-
-      ''D'' stands for running contract, client in debt'
+    description: repayment status. 'A' stands for contract finished, no problems; 'B' stands for contract finished, loan not
+      paid; 'C' stands for running contract, OK so far; 'D' stands for running contract, client in debt
     physical_column_id: financial.loan.status
     data_type: text
 - entity_id: financial.order
   biz_name: order
-  description: 'order: identifying the unique order; id number of account; bank of
-    the recipient'
+  description: 'order: identifying the unique order; id number of account; bank of the recipient'
   physical_table_id: financial.order
   attributes:
   - attr_id: financial.order.order_id
@@ -278,13 +266,8 @@ entities:
     data_type: real
   - attr_id: financial.order.k_symbol
     biz_name: characterization of the payment
-    description: 'purpose of the payment. "POJISTNE" stands for insurance payment
-
-      "SIPO" stands for household payment
-
-      "LEASING" stands for leasing
-
-      "UVER" stands for loan payment'
+    description: purpose of the payment. "POJISTNE" stands for insurance payment "SIPO" stands for household payment "LEASING"
+      stands for leasing "UVER" stands for loan payment
     physical_column_id: financial.order.k_symbol
     data_type: text
 - entity_id: financial.trans
@@ -299,32 +282,23 @@ entities:
     data_type: integer
   - attr_id: financial.trans.account_id
     biz_name: account_id
-    description: ''
+    description: account_id
     physical_column_id: financial.trans.account_id
     data_type: integer
   - attr_id: financial.trans.date
     biz_name: date of transaction
-    description: 'date of transaction. format: date'
+    description: date of transaction
     physical_column_id: financial.trans.date
     data_type: date
   - attr_id: financial.trans.type
     biz_name: +/- transaction
-    description: '+/- transaction. "PRIJEM" stands for credit
-
-      "VYDAJ" stands for withdrawal'
+    description: +/- transaction. "PRIJEM" stands for credit "VYDAJ" stands for withdrawal
     physical_column_id: financial.trans.type
     data_type: text
   - attr_id: financial.trans.operation
     biz_name: mode of transaction
-    description: 'mode of transaction. "VYBER KARTOU": credit card withdrawal
-
-      "VKLAD": credit in cash
-
-      "PREVOD Z UCTU" :collection from another bank
-
-      "VYBER": withdrawal in cash
-
-      "PREVOD NA UCET": remittance to another bank'
+    description: 'mode of transaction. "VYBER KARTOU": credit card withdrawal "VKLAD": credit in cash "PREVOD Z UCTU" :collection
+      from another bank "VYBER": withdrawal in cash "PREVOD NA UCET": remittance to another bank'
     physical_column_id: financial.trans.operation
     data_type: text
   - attr_id: financial.trans.amount
@@ -339,29 +313,19 @@ entities:
     data_type: integer
   - attr_id: financial.trans.k_symbol
     biz_name: characterization of the transaction
-    description: '"POJISTNE": stands for insurrance payment
-
-      "SLUZBY": stands for payment for statement
-
-      "UROK": stands for interest credited
-
-      "SANKC. UROK": sanction interest if negative balance
-
-      "SIPO": stands for household
-
-      "DUCHOD": stands for old-age pension
-
-      "UVER": stands for loan payment'
+    description: 'characterization of the transaction. "POJISTNE": stands for insurrance payment "SLUZBY": stands for payment
+      for statement "UROK": stands for interest credited "SANKC. UROK": sanction interest if negative balance "SIPO": stands
+      for household "DUCHOD": stands for old-age pension "UVER": stands for loan payment'
     physical_column_id: financial.trans.k_symbol
     data_type: text
   - attr_id: financial.trans.bank
     biz_name: bank of the partner
-    description: each bank has unique two-letter code
+    description: bank of the partner. each bank has unique two-letter code
     physical_column_id: financial.trans.bank
     data_type: text
   - attr_id: financial.trans.account
     biz_name: account of the partner
-    description: ''
+    description: account of the partner
     physical_column_id: financial.trans.account
     data_type: integer
 relations:

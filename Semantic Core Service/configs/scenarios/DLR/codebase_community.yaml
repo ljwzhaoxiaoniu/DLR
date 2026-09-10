@@ -1,24 +1,25 @@
 mapping_type: dlr
 version: '2.0'
 scenario_name: dlr_codebase
-description: 'DLR paradigm - Open source community scenario: on-demand fields, 8 PEs
-  aggregated into 6 LEs, post interaction multi-view decoupling'
+description: 'DLR paradigm - Open source community scenario: on-demand fields, 8 PEs aggregated into 6 LEs, post interaction
+  multi-view decoupling'
 databases:
   codebase_community: sqlite:///MINIDEV_sqlite/dev_databases/codebase_community/codebase_community.sqlite
 logical_entities:
 - logical_entity_id: LOGICAL.User
   biz_name: User
-  description: 'Community user — DisplayName, Reputation, Age, Location, UpVotes, CreationDate, LastAccessDate; identified by Id'
+  description: Community user — DisplayName, Reputation, Age, Location, UpVotes, CreationDate, LastAccessDate; identified
+    by Id
   public_attributes:
   - attr_id: LOGICAL.User.UserID
     biz_name: UserID
     description: '用户ID: Stack Overflow 用户唯一标识符 (users.Id)'
   - attr_id: LOGICAL.User.DisplayName
     biz_name: DisplayName
-    description: '显示名称 (users.DisplayName)'
+    description: 显示名称 (users.DisplayName)
   - attr_id: LOGICAL.User.LastAccessDate
     biz_name: LastAccessDate
-    description: '最后访问日期 (users.LastAccessDate)'
+    description: 最后访问日期 (users.LastAccessDate)
   physical_entities:
   - physical_entity_id: PHYSICAL.User
     physical_table_name: users
@@ -36,30 +37,57 @@ logical_entities:
     - attr_id: codebase_community.users.Reputation
       biz_name: Reputation
       physical_column_id: codebase_community.users.Reputation
-      description: '声望值: 用户声望值'
+      description: 'the user''s reputation. commonsense evidence: The user with higher reputation has more influence.'
     - attr_id: codebase_community.users.Age
       biz_name: Age
       physical_column_id: codebase_community.users.Age
+      description: "user's age. \x95 teenager: 13-18 \x95 adult: 19-65 \x95 elder: > 65"
     - attr_id: codebase_community.users.Location
       biz_name: Location
       physical_column_id: codebase_community.users.Location
+      description: user's location
     - attr_id: codebase_community.users.UpVotes
       biz_name: UpVotes
       physical_column_id: codebase_community.users.UpVotes
+      description: the number of upvotes
     - attr_id: codebase_community.users.CreationDate
-      biz_name: CreationDate
+      biz_name: Creation Date
       physical_column_id: codebase_community.users.CreationDate
-      description: '注册日期: 用户注册日期'
+      description: the creation date of the user account
+    - attr_id: codebase_community.users.WebsiteUrl
+      biz_name: Website Url
+      physical_column_id: codebase_community.users.WebsiteUrl
+      description: the website url of the user account
+    - attr_id: codebase_community.users.AboutMe
+      biz_name: About Me
+      physical_column_id: codebase_community.users.AboutMe
+      description: the self introduction of the user
+    - attr_id: codebase_community.users.Views
+      biz_name: Views
+      physical_column_id: codebase_community.users.Views
+      description: the number of views
+    - attr_id: codebase_community.users.DownVotes
+      biz_name: DownVotes
+      physical_column_id: codebase_community.users.DownVotes
+      description: the number of downvotes
+    - attr_id: codebase_community.users.AccountId
+      biz_name: Account Id
+      physical_column_id: codebase_community.users.AccountId
+      description: the unique id of the account
+    - attr_id: codebase_community.users.ProfileImageUrl
+      biz_name: Profile Image Url
+      physical_column_id: codebase_community.users.ProfileImageUrl
+      description: the profile image url
 - logical_entity_id: LOGICAL.Post
   biz_name: Post
-  description: 'User questions or articles — Title, OwnerUserId, Score, ViewCount, Tags; identified by Id'
+  description: User questions or articles — Title, OwnerUserId, Score, ViewCount, Tags; identified by Id
   public_attributes:
   - attr_id: LOGICAL.Post.PostID
     biz_name: PostID
     description: '帖子ID: 帖子唯一标识符 (posts.Id)'
   - attr_id: LOGICAL.Post.OwnerUserId
     biz_name: OwnerUserId
-    description: '作者ID (posts.OwnerUserId)'
+    description: 作者ID (posts.OwnerUserId)
   physical_entities:
   - physical_entity_id: PHYSICAL.Post
     physical_table_name: posts
@@ -76,38 +104,82 @@ logical_entities:
     - attr_id: codebase_community.posts.Title
       biz_name: Title
       physical_column_id: codebase_community.posts.Title
+      description: the title of the post
     - attr_id: codebase_community.posts.Score
       biz_name: Score
       physical_column_id: codebase_community.posts.Score
-      description: '得分: 帖子得分（赞-踩）'
+      description: the score of the post
     - attr_id: codebase_community.posts.ViewCount
-      biz_name: ViewCount
+      biz_name: View Count
       physical_column_id: codebase_community.posts.ViewCount
-      description: '查看次数: 帖子查看次数'
+      description: 'the view count of the post. commonsense evidence: Higher view count means the post has higher popularity'
     - attr_id: codebase_community.posts.AnswerCount
-      biz_name: AnswerCount
+      biz_name: Answer Count
       physical_column_id: codebase_community.posts.AnswerCount
+      description: the total number of answers of the post
     - attr_id: codebase_community.posts.CommentCount
-      biz_name: CommentCount
+      biz_name: Comment Count
       physical_column_id: codebase_community.posts.CommentCount
+      description: the total number of comments of the post
     - attr_id: codebase_community.posts.FavoriteCount
-      biz_name: FavoriteCount
+      biz_name: Favorite Count
       physical_column_id: codebase_community.posts.FavoriteCount
+      description: 'the total number of favorites of the post. commonsense evidence: more favorite count refers to more valuable
+        posts.'
     - attr_id: codebase_community.posts.Tags
       biz_name: Tags
       physical_column_id: codebase_community.posts.Tags
+      description: the tag of the post
     - attr_id: codebase_community.posts.Body
       biz_name: Body
       physical_column_id: codebase_community.posts.Body
-    - attr_id: codebase_community.posts.CreationDate
-      biz_name: CreationDate
-      physical_column_id: codebase_community.posts.CreationDate
+      description: the body of the post
+    - attr_id: codebase_community.posts.CreaionDate
+      biz_name: Creation Date
+      physical_column_id: codebase_community.posts.CreaionDate
+      description: the creation date of the post
     - attr_id: codebase_community.posts.ClosedDate
-      biz_name: ClosedDate
+      biz_name: Closed Date
       physical_column_id: codebase_community.posts.ClosedDate
+      description: 'the closed date of the post. commonsense evidence: if ClosedDate is null or empty, it means this post
+        is not well-finished if CloseDate is not null or empty, it means this post has well-finished.'
     - attr_id: codebase_community.posts.LastEditorUserId
-      biz_name: LastEditorUserId
+      biz_name: Last Editor User Id
       physical_column_id: codebase_community.posts.LastEditorUserId
+      description: the id of the last editor
+    - attr_id: codebase_community.posts.PostTypeId
+      biz_name: Post Type Id
+      physical_column_id: codebase_community.posts.PostTypeId
+      description: the id of the post type
+    - attr_id: codebase_community.posts.AcceptedAnswerId
+      biz_name: Accepted Answer Id
+      physical_column_id: codebase_community.posts.AcceptedAnswerId
+      description: the accepted answer id of the post
+    - attr_id: codebase_community.posts.LasActivityDate
+      biz_name: Last Activity Date
+      physical_column_id: codebase_community.posts.LasActivityDate
+      description: the last activity date
+    - attr_id: codebase_community.posts.LastEditDate
+      biz_name: Last Edit Date
+      physical_column_id: codebase_community.posts.LastEditDate
+      description: the last edit date
+    - attr_id: codebase_community.posts.CommunityOwnedDate
+      biz_name: Community Owned Date
+      physical_column_id: codebase_community.posts.CommunityOwnedDate
+      description: the community owned date
+    - attr_id: codebase_community.posts.ParentId
+      biz_name: ParentId
+      physical_column_id: codebase_community.posts.ParentId
+      description: 'the id of the parent post. commonsense evidence: If the parent id is null, the post is the root post.
+        Otherwise, the post is the child post of other post.'
+    - attr_id: codebase_community.posts.OwnerDisplayName
+      biz_name: Owner Display Name
+      physical_column_id: codebase_community.posts.OwnerDisplayName
+      description: the display name of the post owner
+    - attr_id: codebase_community.posts.LastEditorDisplayName
+      biz_name: Last Editor Display Name
+      physical_column_id: codebase_community.posts.LastEditorDisplayName
+      description: the display name of the last editor
 - logical_entity_id: LOGICAL.PostInteraction
   biz_name: PostInteraction
   description: Comments, edit history, links
@@ -129,18 +201,28 @@ logical_entities:
     - attr_id: codebase_community.comments.Id
       biz_name: Id
       physical_column_id: codebase_community.comments.Id
+      description: the comment Id
     - attr_id: codebase_community.comments.UserId
-      biz_name: UserId
+      biz_name: User Id
       physical_column_id: codebase_community.comments.UserId
+      description: the id of the user who post the comment
     - attr_id: codebase_community.comments.Text
       biz_name: Text
       physical_column_id: codebase_community.comments.Text
+      description: the detailed content of the comment
     - attr_id: codebase_community.comments.Score
       biz_name: Score
       physical_column_id: codebase_community.comments.Score
+      description: 'rating score. commonsense evidence: The score is from 0 to 100. The score more than 60 refers that the
+        comment is a positive comment. The score less than 60 refers that the comment is a negative comment.'
     - attr_id: codebase_community.comments.CreationDate
-      biz_name: CreationDate
+      biz_name: Creation Date
       physical_column_id: codebase_community.comments.CreationDate
+      description: the creation date of the comment
+    - attr_id: codebase_community.comments.UserDisplayName
+      biz_name: User Display Name
+      physical_column_id: codebase_community.comments.UserDisplayName
+      description: user's display name
   - physical_entity_id: PHYSICAL.PostHistory
     physical_table_name: postHistory
     physical_table_id: codebase_community.postHistory
@@ -153,20 +235,37 @@ logical_entities:
     S: Edit history
     private_attributes:
     - attr_id: codebase_community.postHistory.PostHistoryTypeId
-      biz_name: PostHistoryTypeId
+      biz_name: Post History Type Id
       physical_column_id: codebase_community.postHistory.PostHistoryTypeId
+      description: the id of the post history type
     - attr_id: codebase_community.postHistory.UserId
-      biz_name: UserId
+      biz_name: User Id
       physical_column_id: codebase_community.postHistory.UserId
+      description: the user who post the post
     - attr_id: codebase_community.postHistory.Comment
       biz_name: Comment
       physical_column_id: codebase_community.postHistory.Comment
+      description: comments of the post
     - attr_id: codebase_community.postHistory.Text
       biz_name: Text
       physical_column_id: codebase_community.postHistory.Text
+      description: the detailed content of the post
     - attr_id: codebase_community.postHistory.CreationDate
-      biz_name: CreationDate
+      biz_name: Creation Date
       physical_column_id: codebase_community.postHistory.CreationDate
+      description: the creation date of the post
+    - attr_id: codebase_community.postHistory.Id
+      biz_name: Id
+      physical_column_id: codebase_community.postHistory.Id
+      description: the post history id
+    - attr_id: codebase_community.postHistory.RevisionGUID
+      biz_name: Revision GUID
+      physical_column_id: codebase_community.postHistory.RevisionGUID
+      description: the revision globally unique id of the post
+    - attr_id: codebase_community.postHistory.UserDisplayName
+      biz_name: User Display Name
+      physical_column_id: codebase_community.postHistory.UserDisplayName
+      description: user's display name
   - physical_entity_id: PHYSICAL.PostLink
     physical_table_name: postLinks
     physical_table_id: codebase_community.postLinks
@@ -181,12 +280,19 @@ logical_entities:
     - attr_id: codebase_community.postLinks.Id
       biz_name: Id
       physical_column_id: codebase_community.postLinks.Id
+      description: the post link id
     - attr_id: codebase_community.postLinks.RelatedPostId
-      biz_name: RelatedPostId
+      biz_name: Related Post Id
       physical_column_id: codebase_community.postLinks.RelatedPostId
+      description: the id of the related post
     - attr_id: codebase_community.postLinks.CreationDate
-      biz_name: CreationDate
+      biz_name: Creation Date
       physical_column_id: codebase_community.postLinks.CreationDate
+      description: the creation date of the post link
+    - attr_id: codebase_community.postLinks.LinkTypeId
+      biz_name: Link Type Id
+      physical_column_id: codebase_community.postLinks.LinkTypeId
+      description: the id of the link type
 - logical_entity_id: LOGICAL.Tag
   biz_name: Tag
   description: Post tags
@@ -208,12 +314,19 @@ logical_entities:
     - attr_id: codebase_community.tags.Id
       biz_name: Id
       physical_column_id: codebase_community.tags.Id
+      description: the tag id
     - attr_id: codebase_community.tags.ExcerptPostId
-      biz_name: ExcerptPostId
+      biz_name: Excerpt Post Id
       physical_column_id: codebase_community.tags.ExcerptPostId
+      description: the excerpt post id of the tag
     - attr_id: codebase_community.tags.WikiPostId
-      biz_name: WikiPostId
+      biz_name: Wiki Post Id
       physical_column_id: codebase_community.tags.WikiPostId
+      description: the wiki post id of the tag
+    - attr_id: codebase_community.tags.Count
+      biz_name: Count
+      physical_column_id: codebase_community.tags.Count
+      description: the count of posts that contain this tag. more counts --> this tag is more popular
 - logical_entity_id: LOGICAL.Badge
   biz_name: Badge
   description: User badges
@@ -235,12 +348,15 @@ logical_entities:
     - attr_id: codebase_community.badges.Id
       biz_name: Id
       physical_column_id: codebase_community.badges.Id
+      description: the badge id
     - attr_id: codebase_community.badges.Name
       biz_name: Name
       physical_column_id: codebase_community.badges.Name
+      description: the badge name the user obtained
     - attr_id: codebase_community.badges.Date
       biz_name: Date
       physical_column_id: codebase_community.badges.Date
+      description: the date that the user obtained the badge
 - logical_entity_id: LOGICAL.Vote
   biz_name: Vote
   description: User votes on posts
@@ -265,15 +381,19 @@ logical_entities:
     - attr_id: codebase_community.votes.Id
       biz_name: Id
       physical_column_id: codebase_community.votes.Id
+      description: the vote id
     - attr_id: codebase_community.votes.VoteTypeId
-      biz_name: VoteTypeId
+      biz_name: Vote Type Id
       physical_column_id: codebase_community.votes.VoteTypeId
+      description: the id of the vote type
     - attr_id: codebase_community.votes.BountyAmount
-      biz_name: BountyAmount
+      biz_name: Bounty Amount
       physical_column_id: codebase_community.votes.BountyAmount
+      description: the amount of bounty
     - attr_id: codebase_community.votes.CreationDate
-      biz_name: CreationDate
+      biz_name: Creation Date
       physical_column_id: codebase_community.votes.CreationDate
+      description: the creation date of the vote
 pas_relations:
 - relation_id: LOGICAL.User_TO_LOGICAL.Post
   relation_name: Posts

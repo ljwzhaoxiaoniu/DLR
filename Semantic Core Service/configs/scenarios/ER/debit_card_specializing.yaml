@@ -7,71 +7,70 @@ databases:
 entities:
 - entity_id: debit_card_specializing.customers
   biz_name: customers
-  description: 'customers: customer master data - customer identification, client
-    segment (SME/LAM/KAM), and billing currency (CZK/EUR)'
+  description: 'customers: customer master data - customer identification, client segment (SME/LAM/KAM), and billing currency
+    (CZK/EUR)'
   physical_table_id: debit_card_specializing.customers
   attributes:
   - attr_id: debit_card_specializing.customers.CustomerID
     biz_name: CustomerID
-    description: 'Customer ID: unique identifier for the customer'
+    description: identification of the customer
     physical_column_id: debit_card_specializing.customers.CustomerID
     data_type: integer
   - attr_id: debit_card_specializing.customers.Segment
     biz_name: client segment
-    description: 'Customer segment: SME=Small Business, LAM=Local, KAM=Key Account'
+    description: client segment
     physical_column_id: debit_card_specializing.customers.Segment
     data_type: text
   - attr_id: debit_card_specializing.customers.Currency
     biz_name: Currency
-    description: 'Currency: CZK=Czech Koruna, EUR=Euro'
+    description: Currency
     physical_column_id: debit_card_specializing.customers.Currency
     data_type: text
 - entity_id: debit_card_specializing.gasstations
   biz_name: gasstations
-  description: 'gasstations: gas station master data - Gas Station ID, Chain ID, chain
-    segment (discount/premium), and country (CZE/SVK)'
+  description: 'gasstations: gas station master data - Gas Station ID, Chain ID, chain segment (discount/premium), and country
+    (CZE/SVK)'
   physical_table_id: debit_card_specializing.gasstations
   attributes:
   - attr_id: debit_card_specializing.gasstations.GasStationID
     biz_name: Gas Station ID
-    description: Gas station unique identifier
+    description: Gas Station ID
     physical_column_id: debit_card_specializing.gasstations.GasStationID
     data_type: integer
   - attr_id: debit_card_specializing.gasstations.ChainID
     biz_name: Chain ID
-    description: 'Chain ID: gas station chain brand identifier'
+    description: Chain ID
     physical_column_id: debit_card_specializing.gasstations.ChainID
     data_type: integer
   - attr_id: debit_card_specializing.gasstations.Country
     biz_name: Country
-    description: 'Country code: CZE=Czech Republic, SVK=Slovakia'
+    description: Country
     physical_column_id: debit_card_specializing.gasstations.Country
     data_type: text
   - attr_id: debit_card_specializing.gasstations.Segment
     biz_name: chain segment
-    description: 'Chain segment: indicates discount or premium station type'
+    description: chain segment
     physical_column_id: debit_card_specializing.gasstations.Segment
     data_type: text
 - entity_id: debit_card_specializing.products
   biz_name: products
-  description: 'products: product dictionary - Product ID and product name/description
-    of items sold at gas stations'
+  description: 'products: product dictionary - Product ID and product name/description of items sold at gas stations'
   physical_table_id: debit_card_specializing.products
   attributes:
   - attr_id: debit_card_specializing.products.ProductID
     biz_name: Product ID
-    description: Product unique identifier
+    description: Product ID
     physical_column_id: debit_card_specializing.products.ProductID
     data_type: integer
   - attr_id: debit_card_specializing.products.Description
     biz_name: Description
-    description: Product name/description
+    description: Description
     physical_column_id: debit_card_specializing.products.Description
     data_type: text
 - entity_id: debit_card_specializing.transactions_1k
   biz_name: transactions_1k
-  description: 'transactions_1k: Records individual transaction details including
-    Transaction ID, Date, Time, Customer, Card, Gas Station, Product, Amount and Price'
+  description: 'transactions_1k: Records individual transaction details including Transaction ID, Date, Time, Customer, Card,
+    Gas Station, Product, Amount and Price'
   physical_table_id: debit_card_specializing.transactions_1k
   attributes:
   - attr_id: debit_card_specializing.transactions_1k.TransactionID
@@ -81,17 +80,17 @@ entities:
     data_type: integer
   - attr_id: debit_card_specializing.transactions_1k.Date
     biz_name: Date
-    description: 'Date: calendar date YYYY-MM-DD (e.g., 2012-08-24)'
+    description: Date
     physical_column_id: debit_card_specializing.transactions_1k.Date
     data_type: date
   - attr_id: debit_card_specializing.transactions_1k.Time
     biz_name: Time
-    description: Transaction time in HH:MM:SS format
+    description: Time
     physical_column_id: debit_card_specializing.transactions_1k.Time
     data_type: text
   - attr_id: debit_card_specializing.transactions_1k.CustomerID
     biz_name: Customer ID
-    description: 'Customer ID: unique identifier for the customer'
+    description: Customer ID
     physical_column_id: debit_card_specializing.transactions_1k.CustomerID
     data_type: integer
   - attr_id: debit_card_specializing.transactions_1k.CardID
@@ -101,44 +100,43 @@ entities:
     data_type: integer
   - attr_id: debit_card_specializing.transactions_1k.GasStationID
     biz_name: Gas Station ID
-    description: Gas station unique identifier
+    description: Gas Station ID
     physical_column_id: debit_card_specializing.transactions_1k.GasStationID
     data_type: integer
   - attr_id: debit_card_specializing.transactions_1k.ProductID
     biz_name: Product ID
-    description: Product unique identifier
+    description: Product ID
     physical_column_id: debit_card_specializing.transactions_1k.ProductID
     data_type: integer
   - attr_id: debit_card_specializing.transactions_1k.Amount
     biz_name: Amount
-    description: 'Quantity: number of items purchased in this transaction'
+    description: Amount
     physical_column_id: debit_card_specializing.transactions_1k.Amount
     data_type: integer
   - attr_id: debit_card_specializing.transactions_1k.Price
     biz_name: Price
-    description: Unit price per item (CZK)
+    description: 'Price. commonsense evidence: total price = Amount x Price'
     physical_column_id: debit_card_specializing.transactions_1k.Price
     data_type: real
 - entity_id: debit_card_specializing.yearmonth
   biz_name: yearmonth
-  description: 'yearmonth: Monthly customer consumption (spending) summary containing
-    Customer ID, Date (YYYYMM format), and monthly consumption amount'
+  description: 'yearmonth: Monthly customer consumption (spending) summary containing Customer ID, Date (YYYYMM format), and
+    monthly consumption amount'
   physical_table_id: debit_card_specializing.yearmonth
   attributes:
   - attr_id: debit_card_specializing.yearmonth.CustomerID
     biz_name: Customer ID
-    description: 'Customer ID: unique identifier for the customer'
+    description: Customer ID
     physical_column_id: debit_card_specializing.yearmonth.CustomerID
     data_type: integer
   - attr_id: debit_card_specializing.yearmonth.Date
     biz_name: Date
-    description: 'Date: year-month in YYYYMM format (201301 = January 2013). First
-      4 digits = year, chars 5-6 = month'
+    description: Date
     physical_column_id: debit_card_specializing.yearmonth.Date
     data_type: text
   - attr_id: debit_card_specializing.yearmonth.Consumption
     biz_name: Consumption
-    description: 'Monthly spending amount (CZK): total customer spending in this month'
+    description: consumption
     physical_column_id: debit_card_specializing.yearmonth.Consumption
     data_type: real
 relations:
@@ -147,18 +145,3 @@ relations:
   from_entity_attr_id: debit_card_specializing.yearmonth.CustomerID
   to_entity_attr_id: debit_card_specializing.customers.CustomerID
   description: yearmonth.CustomerID -> customers.CustomerID
-- relation_id: debit_card_specializing.transactions_1k_TO_customers
-  biz_name: transactions_1k_to_customers
-  from_entity_attr_id: debit_card_specializing.transactions_1k.CustomerID
-  to_entity_attr_id: debit_card_specializing.customers.CustomerID
-  description: transactions_1k.CustomerID -> customers.CustomerID
-- relation_id: debit_card_specializing.transactions_1k_TO_gasstations
-  biz_name: transactions_1k_to_gasstations
-  from_entity_attr_id: debit_card_specializing.transactions_1k.GasStationID
-  to_entity_attr_id: debit_card_specializing.gasstations.GasStationID
-  description: transactions_1k.GasStationID -> gasstations.GasStationID
-- relation_id: debit_card_specializing.transactions_1k_TO_products
-  biz_name: transactions_1k_to_products
-  from_entity_attr_id: debit_card_specializing.transactions_1k.ProductID
-  to_entity_attr_id: debit_card_specializing.products.ProductID
-  description: transactions_1k.ProductID -> products.ProductID

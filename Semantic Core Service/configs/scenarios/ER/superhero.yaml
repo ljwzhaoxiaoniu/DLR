@@ -7,18 +7,24 @@ databases:
 entities:
 - entity_id: superhero.alignment
   biz_name: alignment
-  description: 'alignment: the unique identifier of the alignment; the alignment of
-    the superhero'
+  description: 'alignment: the unique identifier of the alignment; the alignment of the superhero'
   physical_table_id: superhero.alignment
   attributes:
   - attr_id: superhero.alignment.id
     biz_name: id
-    description: ''
+    description: the unique identifier of the alignment
     physical_column_id: superhero.alignment.id
     data_type: integer
   - attr_id: superhero.alignment.alignment
     biz_name: alignment
-    description: ''
+    description: "the alignment of the superhero. commonsense evidence: Alignment refers to a character's moral and ethical\
+      \ stance and can be used to describe the overall attitude or behavior of a superhero. Some common alignments for superheroes\
+      \ include: Good: These superheroes are typically kind, selfless, and dedicated to protecting others and upholding justice.\
+      \ Examples of good alignments include Superman, Wonder Woman, and Spider-Man. Neutral: These superheroes may not always\
+      \ prioritize the greater good, but they are not necessarily evil either. They may act in their own self-interest or\
+      \ make decisions based on their own moral code. Examples of neutral alignments include the Hulk and Deadpool. \x95 Bad:\
+      \ These superheroes are typically selfish, manipulative, and willing to harm others in pursuit of their own goals. Examples\
+      \ of evil alignments include Lex Luthor and the Joker."
     physical_column_id: superhero.alignment.alignment
     data_type: text
 - entity_id: superhero.attribute
@@ -28,28 +34,29 @@ entities:
   attributes:
   - attr_id: superhero.attribute.id
     biz_name: id
-    description: ''
+    description: the unique identifier of the attribute
     physical_column_id: superhero.attribute.id
     data_type: integer
   - attr_id: superhero.attribute.attribute_name
-    biz_name: attribute_name
-    description: ''
+    biz_name: attribute name
+    description: 'the attribute. commonsense evidence: A superhero''s attribute is a characteristic or quality that defines
+      who they are and what they are capable of. This could be a physical trait, such as superhuman strength or the ability
+      to fly, or a personal trait, such as extraordinary intelligence or exceptional bravery.'
     physical_column_id: superhero.attribute.attribute_name
     data_type: text
 - entity_id: superhero.colour
   biz_name: colour
-  description: 'colour: the unique identifier of the color; the color of the superhero''s
-    skin/eye/hair/etc'
+  description: 'colour: the unique identifier of the color; the color of the superhero''s skin/eye/hair/etc'
   physical_table_id: superhero.colour
   attributes:
   - attr_id: superhero.colour.id
     biz_name: id
-    description: ''
+    description: the unique identifier of the color
     physical_column_id: superhero.colour.id
     data_type: integer
   - attr_id: superhero.colour.colour
     biz_name: colour
-    description: ''
+    description: the color of the superhero's skin/eye/hair/etc
     physical_column_id: superhero.colour.colour
     data_type: text
 - entity_id: superhero.gender
@@ -59,28 +66,27 @@ entities:
   attributes:
   - attr_id: superhero.gender.id
     biz_name: id
-    description: ''
+    description: the unique identifier of the gender
     physical_column_id: superhero.gender.id
     data_type: integer
   - attr_id: superhero.gender.gender
     biz_name: gender
-    description: ''
+    description: the gender of the superhero
     physical_column_id: superhero.gender.gender
     data_type: text
 - entity_id: superhero.publisher
   biz_name: publisher
-  description: 'publisher: the unique identifier of the publisher; the name of the
-    publisher'
+  description: 'publisher: the unique identifier of the publisher; the name of the publisher'
   physical_table_id: superhero.publisher
   attributes:
   - attr_id: superhero.publisher.id
     biz_name: id
-    description: ''
+    description: the unique identifier of the publisher
     physical_column_id: superhero.publisher.id
     data_type: integer
   - attr_id: superhero.publisher.publisher_name
     biz_name: publisher_name
-    description: ''
+    description: the name of the publisher
     physical_column_id: superhero.publisher.publisher_name
     data_type: text
 - entity_id: superhero.race
@@ -90,78 +96,82 @@ entities:
   attributes:
   - attr_id: superhero.race.id
     biz_name: id
-    description: ''
+    description: the unique identifier of the race
     physical_column_id: superhero.race.id
     data_type: integer
   - attr_id: superhero.race.race
     biz_name: race
-    description: ''
+    description: 'the race of the superhero. commonsense evidence: In the context of superheroes, a superhero''s race would
+      refer to the particular group of people that the superhero belongs to base on these physical characteristics'
     physical_column_id: superhero.race.race
     data_type: text
 - entity_id: superhero.superhero
   biz_name: superhero
-  description: 'superhero: the unique identifier of the superhero; the name of the
-    superhero; the full name of the superhero'
+  description: 'superhero: the unique identifier of the superhero; the name of the superhero; the full name of the superhero'
   physical_table_id: superhero.superhero
   attributes:
   - attr_id: superhero.superhero.id
     biz_name: id
-    description: ''
+    description: the unique identifier of the superhero
     physical_column_id: superhero.superhero.id
     data_type: integer
   - attr_id: superhero.superhero.superhero_name
-    biz_name: superhero_name
-    description: ''
+    biz_name: superhero name
+    description: the name of the superhero
     physical_column_id: superhero.superhero.superhero_name
     data_type: text
   - attr_id: superhero.superhero.full_name
-    biz_name: full_name
-    description: ''
+    biz_name: full name
+    description: 'the full name of the superhero. commonsense evidence: The full name of a person typically consists of their
+      given name, also known as their first name or personal name, and their surname, also known as their last name or family
+      name. For example, if someone''s given name is "John" and their surname is "Smith," their full name would be "John Smith."'
     physical_column_id: superhero.superhero.full_name
     data_type: text
   - attr_id: superhero.superhero.gender_id
-    biz_name: gender_id
-    description: ''
+    biz_name: gender id
+    description: the id of the superhero's gender
     physical_column_id: superhero.superhero.gender_id
     data_type: integer
   - attr_id: superhero.superhero.eye_colour_id
-    biz_name: eye_colour_id
-    description: ''
+    biz_name: eye colour id
+    description: the id of the superhero's eye color
     physical_column_id: superhero.superhero.eye_colour_id
     data_type: integer
   - attr_id: superhero.superhero.hair_colour_id
-    biz_name: hair_colour_id
-    description: ''
+    biz_name: hair colour id
+    description: the id of the superhero's hair color
     physical_column_id: superhero.superhero.hair_colour_id
     data_type: integer
   - attr_id: superhero.superhero.skin_colour_id
-    biz_name: skin_colour_id
-    description: ''
+    biz_name: skin colour id
+    description: the id of the superhero's skin color
     physical_column_id: superhero.superhero.skin_colour_id
     data_type: integer
   - attr_id: superhero.superhero.race_id
-    biz_name: race_id
-    description: ''
+    biz_name: race id
+    description: the id of the superhero's race
     physical_column_id: superhero.superhero.race_id
     data_type: integer
   - attr_id: superhero.superhero.publisher_id
-    biz_name: publisher_id
-    description: ''
+    biz_name: publisher id
+    description: the id of the publisher
     physical_column_id: superhero.superhero.publisher_id
     data_type: integer
   - attr_id: superhero.superhero.alignment_id
-    biz_name: alignment_id
-    description: ''
+    biz_name: alignment id
+    description: the id of the superhero's alignment
     physical_column_id: superhero.superhero.alignment_id
     data_type: integer
   - attr_id: superhero.superhero.height_cm
-    biz_name: height_cm
-    description: ''
+    biz_name: height cm
+    description: 'the height of the superhero. commonsense evidence: The unit of height is centimeter. If the height_cm is
+      NULL or 0, it means the height of the superhero is missing.'
     physical_column_id: superhero.superhero.height_cm
     data_type: integer
   - attr_id: superhero.superhero.weight_kg
-    biz_name: weight_kg
-    description: ''
+    biz_name: weight kg
+    description: 'the weight of the superhero. commonsense evidence: The unit of weight is kilogram. If the weight_kg is NULL
+      or 0, it means the weight of the superhero is missing.'
     physical_column_id: superhero.superhero.weight_kg
     data_type: integer
 - entity_id: superhero.hero_attribute
@@ -174,34 +184,36 @@ entities:
   physical_table_id: superhero.hero_attribute
   attributes:
   - attr_id: superhero.hero_attribute.hero_id
-    biz_name: hero_id
-    description: ''
+    biz_name: hero id
+    description: the id of the hero Maps to superhero(id)
     physical_column_id: superhero.hero_attribute.hero_id
     data_type: integer
   - attr_id: superhero.hero_attribute.attribute_id
-    biz_name: attribute_id
-    description: ''
+    biz_name: attribute id
+    description: the id of the attribute Maps to attribute(id)
     physical_column_id: superhero.hero_attribute.attribute_id
     data_type: integer
   - attr_id: superhero.hero_attribute.attribute_value
-    biz_name: attribute_value
-    description: ''
+    biz_name: attribute value
+    description: 'the attribute value. commonsense evidence: If a superhero has a higher attribute value on a particular attribute,
+      it means that they are more skilled or powerful in that area compared to other superheroes. For example, if a superhero
+      has a higher attribute value for strength, they may be able to lift heavier objects or deliver more powerful punches
+      than other superheroes.'
     physical_column_id: superhero.hero_attribute.attribute_value
     data_type: integer
 - entity_id: superhero.superpower
   biz_name: superpower
-  description: 'superpower: the unique identifier of the superpower; the superpower
-    name'
+  description: 'superpower: the unique identifier of the superpower; the superpower name'
   physical_table_id: superhero.superpower
   attributes:
   - attr_id: superhero.superpower.id
     biz_name: id
-    description: ''
+    description: the unique identifier of the superpower
     physical_column_id: superhero.superpower.id
     data_type: integer
   - attr_id: superhero.superpower.power_name
-    biz_name: power_name
-    description: ''
+    biz_name: power name
+    description: the superpower name
     physical_column_id: superhero.superpower.power_name
     data_type: text
 - entity_id: superhero.hero_power
@@ -214,13 +226,15 @@ entities:
   physical_table_id: superhero.hero_power
   attributes:
   - attr_id: superhero.hero_power.hero_id
-    biz_name: hero_id
-    description: ''
+    biz_name: hero id
+    description: the id of the hero Maps to superhero(id)
     physical_column_id: superhero.hero_power.hero_id
     data_type: integer
   - attr_id: superhero.hero_power.power_id
-    biz_name: power_id
-    description: ''
+    biz_name: power id
+    description: 'the id of the power Maps to superpower(id). commonsense evidence: In general, a superhero''s attributes
+      provide the foundation for their abilities and help to define who they are, while their powers are the specific abilities
+      that they use to fight crime and protect others.'
     physical_column_id: superhero.hero_power.power_id
     data_type: integer
 relations:

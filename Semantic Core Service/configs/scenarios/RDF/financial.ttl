@@ -6,47 +6,95 @@
 
 # R2RML — database: financial
 # URL: sqlite:///MINIDEV_sqlite\dev_databases\financial/financial.sqlite
-# Tables: 8  ForeignKeys: 8 formal + 0 heuristic = 8 total
-# Source: PRAGMA foreign_key_list + column-name→PK matching
+# Tables: 8  ForeignKeys: 8 formal = 8 total
+# Source: dev_tables.json foreign_keys (aligned with ER yaml)
 
 # === Table: financial.account (pk=account_id) ===
 <http://example.org/tm/financial/account> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "account" ] ;
     rr:subjectMap [ rr:template "http://example.org/financial/{account_id}" ; rr:class ex:account ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/account/account_id> ; rr:objectMap [ rr:column "account_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/account/district_id> ; rr:objectMap [ rr:column "district_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/account/frequency> ; rr:objectMap [ rr:column "frequency" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/account/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/account/account_id> ; rr:objectMap [ rr:column "account_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "account id"@en ;
+        rdfs:comment "the id of the account"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/account/district_id> ; rr:objectMap [ rr:column "district_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "location of branch"@en ;
+        rdfs:comment "location of branch"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/account/frequency> ; rr:objectMap [ rr:column "frequency" ; rr:datatype xsd:string ] ;
+        rdfs:label "frequency"@en ;
+        rdfs:comment "frequency of the acount"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/account/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ;
+        rdfs:label "date"@en ;
+        rdfs:comment "the creation date of the account. in the form YYMMDD"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/account/refers_to_district> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/financial/district> ; rr:joinCondition [ rr:child "district_id" ; rr:parent "district_id" ] ] ] .
 
 # === Table: financial.card (pk=card_id) ===
 <http://example.org/tm/financial/card> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "card" ] ;
     rr:subjectMap [ rr:template "http://example.org/financial/{card_id}" ; rr:class ex:card ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/card/card_id> ; rr:objectMap [ rr:column "card_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/card/disp_id> ; rr:objectMap [ rr:column "disp_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/card/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/card/issued> ; rr:objectMap [ rr:column "issued" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/card/card_id> ; rr:objectMap [ rr:column "card_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "credit card id"@en ;
+        rdfs:comment "id number of credit card"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/card/disp_id> ; rr:objectMap [ rr:column "disp_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "disposition id"@en ;
+        rdfs:comment "disposition id"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/card/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ;
+        rdfs:label "type"@en ;
+        rdfs:comment "type of credit card. \"junior\": junior class of credit card; \"classic\": standard class of credit card; \"gold\": high-level credit card"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/card/issued> ; rr:objectMap [ rr:column "issued" ; rr:datatype xsd:string ] ;
+        rdfs:label "issued"@en ;
+        rdfs:comment "the date when the credit card issued. in the form YYMMDD"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/card/refers_to_disp> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/financial/disp> ; rr:joinCondition [ rr:child "disp_id" ; rr:parent "disp_id" ] ] ] .
 
 # === Table: financial.client (pk=client_id) ===
 <http://example.org/tm/financial/client> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "client" ] ;
     rr:subjectMap [ rr:template "http://example.org/financial/{client_id}" ; rr:class ex:client ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/client/client_id> ; rr:objectMap [ rr:column "client_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/client/gender> ; rr:objectMap [ rr:column "gender" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/client/birth_date> ; rr:objectMap [ rr:column "birth_date" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/client/district_id> ; rr:objectMap [ rr:column "district_id" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/client/client_id> ; rr:objectMap [ rr:column "client_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "client_id"@en ;
+        rdfs:comment "the unique number"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/client/gender> ; rr:objectMap [ rr:column "gender" ; rr:datatype xsd:string ] ;
+        rdfs:label "gender"@en ;
+        rdfs:comment "gender. F：female M：male"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/client/birth_date> ; rr:objectMap [ rr:column "birth_date" ; rr:datatype xsd:string ] ;
+        rdfs:label "birth_date"@en ;
+        rdfs:comment "birth date"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/client/district_id> ; rr:objectMap [ rr:column "district_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "location of branch"@en ;
+        rdfs:comment "location of branch"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/client/refers_to_district> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/financial/district> ; rr:joinCondition [ rr:child "district_id" ; rr:parent "district_id" ] ] ] .
 
 # === Table: financial.disp (pk=disp_id) ===
 <http://example.org/tm/financial/disp> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "disp" ] ;
     rr:subjectMap [ rr:template "http://example.org/financial/{disp_id}" ; rr:class ex:disp ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/disp/disp_id> ; rr:objectMap [ rr:column "disp_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/disp/client_id> ; rr:objectMap [ rr:column "client_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/disp/account_id> ; rr:objectMap [ rr:column "account_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/disp/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/disp/disp_id> ; rr:objectMap [ rr:column "disp_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "disposition id"@en ;
+        rdfs:comment "unique number of identifying this row of record"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/disp/client_id> ; rr:objectMap [ rr:column "client_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "client_id"@en ;
+        rdfs:comment "id number of client"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/disp/account_id> ; rr:objectMap [ rr:column "account_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "account_id"@en ;
+        rdfs:comment "id number of account"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/disp/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ;
+        rdfs:label "type"@en ;
+        rdfs:comment "type of disposition. \"OWNER\" : \"USER\" : \"DISPONENT\" commonsense evidence: the account can only have the right to issue permanent orders or apply for loans"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/disp/refers_to_client> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/financial/client> ; rr:joinCondition [ rr:child "client_id" ; rr:parent "client_id" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/disp/refers_to_account> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/financial/account> ; rr:joinCondition [ rr:child "account_id" ; rr:parent "account_id" ] ] ] .
 
@@ -54,66 +102,151 @@
 <http://example.org/tm/financial/district> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "district" ] ;
     rr:subjectMap [ rr:template "http://example.org/financial/{district_id}" ; rr:class ex:district ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/district/district_id> ; rr:objectMap [ rr:column "district_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A2> ; rr:objectMap [ rr:column "A2" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A3> ; rr:objectMap [ rr:column "A3" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A4> ; rr:objectMap [ rr:column "A4" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A5> ; rr:objectMap [ rr:column "A5" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A6> ; rr:objectMap [ rr:column "A6" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A7> ; rr:objectMap [ rr:column "A7" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A8> ; rr:objectMap [ rr:column "A8" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A9> ; rr:objectMap [ rr:column "A9" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A10> ; rr:objectMap [ rr:column "A10" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/district_id> ; rr:objectMap [ rr:column "district_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "location of branch"@en ;
+        rdfs:comment "location of branch"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A2> ; rr:objectMap [ rr:column "A2" ; rr:datatype xsd:string ] ;
+        rdfs:label "district_name"@en ;
+        rdfs:comment "district_name"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A3> ; rr:objectMap [ rr:column "A3" ; rr:datatype xsd:string ] ;
+        rdfs:label "region"@en ;
+        rdfs:comment "region"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A4> ; rr:objectMap [ rr:column "A4" ; rr:datatype xsd:string ] ;
+        rdfs:label "number of inhabitants"@en ;
+        rdfs:comment "number of inhabitants"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A5> ; rr:objectMap [ rr:column "A5" ; rr:datatype xsd:string ] ;
+        rdfs:label "no. of municipalities with inhabitants < 499"@en ;
+        rdfs:comment "municipality < district < region"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A6> ; rr:objectMap [ rr:column "A6" ; rr:datatype xsd:string ] ;
+        rdfs:label "no. of municipalities with inhabitants 500-1999"@en ;
+        rdfs:comment "municipality < district < region"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A7> ; rr:objectMap [ rr:column "A7" ; rr:datatype xsd:string ] ;
+        rdfs:label "no. of municipalities with inhabitants 2000-9999"@en ;
+        rdfs:comment "municipality < district < region"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A8> ; rr:objectMap [ rr:column "A8" ; rr:datatype xsd:string ] ;
+        rdfs:label "no. of municipalities with inhabitants > 10000"@en ;
+        rdfs:comment "municipality < district < region"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A9> ; rr:objectMap [ rr:column "A9" ; rr:datatype xsd:string ] ;
+        rdfs:label "A9"@en ;
+        rdfs:comment "A9. not useful"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A10> ; rr:objectMap [ rr:column "A10" ; rr:datatype xsd:string ] ;
+        rdfs:label "ratio of urban inhabitants"@en ;
+        rdfs:comment "ratio of urban inhabitants"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/district/A11> ; rr:objectMap [ rr:column "A11" ; rr:datatype xsd:string ] ;
-        rdfs:label "Average salary"@en ;
-        rdfs:comment "Average salary in the district"@en ] ;
+        rdfs:label "average salary"@en ;
+        rdfs:comment "average salary"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/district/A12> ; rr:objectMap [ rr:column "A12" ; rr:datatype xsd:string ] ;
-        rdfs:label "Unemployment rate 95"@en ] ;
+        rdfs:label "unemployment rate 1995"@en ;
+        rdfs:comment "unemployment rate 1995"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/district/A13> ; rr:objectMap [ rr:column "A13" ; rr:datatype xsd:string ] ;
-        rdfs:label "Unemployment rate 96"@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A14> ; rr:objectMap [ rr:column "A14" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "unemployment rate 1996"@en ;
+        rdfs:comment "unemployment rate 1996"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A14> ; rr:objectMap [ rr:column "A14" ; rr:datatype xsd:string ] ;
+        rdfs:label "no. of entrepreneurs per 1000 inhabitants"@en ;
+        rdfs:comment "no. of entrepreneurs per 1000 inhabitants"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/district/A15> ; rr:objectMap [ rr:column "A15" ; rr:datatype xsd:string ] ;
-        rdfs:label "Crimes 1995"@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A16> ; rr:objectMap [ rr:column "A16" ; rr:datatype xsd:string ] ] .
+        rdfs:label "no. of committed crimes 1995"@en ;
+        rdfs:comment "no. of committed crimes 1995"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/district/A16> ; rr:objectMap [ rr:column "A16" ; rr:datatype xsd:string ] ;
+        rdfs:label "no. of committed crimes 1996"@en ;
+        rdfs:comment "no. of committed crimes 1996"@en ] .
 
 # === Table: financial.loan (pk=loan_id) ===
 <http://example.org/tm/financial/loan> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "loan" ] ;
     rr:subjectMap [ rr:template "http://example.org/financial/{loan_id}" ; rr:class ex:loan ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/loan/loan_id> ; rr:objectMap [ rr:column "loan_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/loan/account_id> ; rr:objectMap [ rr:column "account_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/loan/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/loan/amount> ; rr:objectMap [ rr:column "amount" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/loan/duration> ; rr:objectMap [ rr:column "duration" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/loan/payments> ; rr:objectMap [ rr:column "payments" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/loan/status> ; rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/loan/loan_id> ; rr:objectMap [ rr:column "loan_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "loan_id"@en ;
+        rdfs:comment "the id number identifying the loan data"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/loan/account_id> ; rr:objectMap [ rr:column "account_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "account_id"@en ;
+        rdfs:comment "the id number identifying the account"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/loan/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ;
+        rdfs:label "date"@en ;
+        rdfs:comment "the date when the loan is approved"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/loan/amount> ; rr:objectMap [ rr:column "amount" ; rr:datatype xsd:string ] ;
+        rdfs:label "amount"@en ;
+        rdfs:comment "approved amount. unit：US dollar"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/loan/duration> ; rr:objectMap [ rr:column "duration" ; rr:datatype xsd:string ] ;
+        rdfs:label "duration"@en ;
+        rdfs:comment "loan duration. unit：month"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/loan/payments> ; rr:objectMap [ rr:column "payments" ; rr:datatype xsd:string ] ;
+        rdfs:label "monthly payments"@en ;
+        rdfs:comment "monthly payments. unit：month"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/loan/status> ; rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ] ;
+        rdfs:label "status"@en ;
+        rdfs:comment "repayment status. 'A' stands for contract finished, no problems; 'B' stands for contract finished, loan not paid; 'C' stands for running contract, OK so far; 'D' stands for running contract, client in debt"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/loan/refers_to_account> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/financial/account> ; rr:joinCondition [ rr:child "account_id" ; rr:parent "account_id" ] ] ] .
 
 # === Table: financial.order (pk=order_id) ===
 <http://example.org/tm/financial/order> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "order" ] ;
     rr:subjectMap [ rr:template "http://example.org/financial/{order_id}" ; rr:class ex:order ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/order/order_id> ; rr:objectMap [ rr:column "order_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/order/account_id> ; rr:objectMap [ rr:column "account_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/order/bank_to> ; rr:objectMap [ rr:column "bank_to" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/order/account_to> ; rr:objectMap [ rr:column "account_to" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/order/amount> ; rr:objectMap [ rr:column "amount" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/order/k_symbol> ; rr:objectMap [ rr:column "k_symbol" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/order/order_id> ; rr:objectMap [ rr:column "order_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "order_id"@en ;
+        rdfs:comment "identifying the unique order"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/order/account_id> ; rr:objectMap [ rr:column "account_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "account_id"@en ;
+        rdfs:comment "id number of account"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/order/bank_to> ; rr:objectMap [ rr:column "bank_to" ; rr:datatype xsd:string ] ;
+        rdfs:label "bank of the recipient"@en ;
+        rdfs:comment "bank of the recipient"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/order/account_to> ; rr:objectMap [ rr:column "account_to" ; rr:datatype xsd:string ] ;
+        rdfs:label "account of the recipient"@en ;
+        rdfs:comment "account of the recipient. each bank has unique two-letter code"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/order/amount> ; rr:objectMap [ rr:column "amount" ; rr:datatype xsd:string ] ;
+        rdfs:label "debited amount"@en ;
+        rdfs:comment "debited amount"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/order/k_symbol> ; rr:objectMap [ rr:column "k_symbol" ; rr:datatype xsd:string ] ;
+        rdfs:label "characterization of the payment"@en ;
+        rdfs:comment "purpose of the payment. \"POJISTNE\" stands for insurance payment \"SIPO\" stands for household payment \"LEASING\" stands for leasing \"UVER\" stands for loan payment"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/order/refers_to_account> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/financial/account> ; rr:joinCondition [ rr:child "account_id" ; rr:parent "account_id" ] ] ] .
 
 # === Table: financial.trans (pk=trans_id) ===
 <http://example.org/tm/financial/trans> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "trans" ] ;
     rr:subjectMap [ rr:template "http://example.org/financial/{trans_id}" ; rr:class ex:trans ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/trans_id> ; rr:objectMap [ rr:column "trans_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/account_id> ; rr:objectMap [ rr:column "account_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/operation> ; rr:objectMap [ rr:column "operation" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/amount> ; rr:objectMap [ rr:column "amount" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/balance> ; rr:objectMap [ rr:column "balance" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/k_symbol> ; rr:objectMap [ rr:column "k_symbol" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/bank> ; rr:objectMap [ rr:column "bank" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/account> ; rr:objectMap [ rr:column "account" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/refers_to_account> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/financial/account> ; rr:joinCondition [ rr:child "account_id" ; rr:parent "account_id" ] ] ] .
 
+    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/trans_id> ; rr:objectMap [ rr:column "trans_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "transaction id"@en ;
+        rdfs:comment "transaction id"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/account_id> ; rr:objectMap [ rr:column "account_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "account_id"@en ;
+        rdfs:comment "account_id"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ;
+        rdfs:label "date of transaction"@en ;
+        rdfs:comment "date of transaction"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ;
+        rdfs:label "+/- transaction"@en ;
+        rdfs:comment "+/- transaction. \"PRIJEM\" stands for credit \"VYDAJ\" stands for withdrawal"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/operation> ; rr:objectMap [ rr:column "operation" ; rr:datatype xsd:string ] ;
+        rdfs:label "mode of transaction"@en ;
+        rdfs:comment "mode of transaction. \"VYBER KARTOU\": credit card withdrawal \"VKLAD\": credit in cash \"PREVOD Z UCTU\" :collection from another bank \"VYBER\": withdrawal in cash \"PREVOD NA UCET\": remittance to another bank"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/amount> ; rr:objectMap [ rr:column "amount" ; rr:datatype xsd:string ] ;
+        rdfs:label "amount of money"@en ;
+        rdfs:comment "amount of money. Unit：USD"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/balance> ; rr:objectMap [ rr:column "balance" ; rr:datatype xsd:string ] ;
+        rdfs:label "balance after transaction"@en ;
+        rdfs:comment "balance after transaction. Unit：USD"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/k_symbol> ; rr:objectMap [ rr:column "k_symbol" ; rr:datatype xsd:string ] ;
+        rdfs:label "characterization of the transaction"@en ;
+        rdfs:comment "characterization of the transaction. \"POJISTNE\": stands for insurrance payment \"SLUZBY\": stands for payment for statement \"UROK\": stands for interest credited \"SANKC. UROK\": sanction interest if negative balance \"SIPO\": stands for household \"DUCHOD\": stands for old-age pension \"UVER\": stands for loan payment"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/bank> ; rr:objectMap [ rr:column "bank" ; rr:datatype xsd:string ] ;
+        rdfs:label "bank of the partner"@en ;
+        rdfs:comment "bank of the partner. each bank has unique two-letter code"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/account> ; rr:objectMap [ rr:column "account" ; rr:datatype xsd:string ] ;
+        rdfs:label "account of the partner"@en ;
+        rdfs:comment "account of the partner"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/trans/refers_to_account> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/financial/account> ; rr:joinCondition [ rr:child "account_id" ; rr:parent "account_id" ] ] ] .

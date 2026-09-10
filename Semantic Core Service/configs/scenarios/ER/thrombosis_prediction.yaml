@@ -7,8 +7,7 @@ databases:
 entities:
 - entity_id: thrombosis_prediction.Examination
   biz_name: Examination
-  description: 'Examination: identification of the patient; Examination Date; anti-Cardiolipin
-    antibody (IgG) concentration'
+  description: 'Examination: identification of the patient; Examination Date; anti-Cardiolipin antibody (IgG) concentration'
   physical_table_id: thrombosis_prediction.Examination
   attributes:
   - attr_id: thrombosis_prediction.Examination.ID
@@ -18,7 +17,7 @@ entities:
     data_type: integer
   - attr_id: thrombosis_prediction.Examination.Examination Date
     biz_name: Examination Date
-    description: 'Examination Date. format: date'
+    description: Examination Date
     physical_column_id: thrombosis_prediction.Examination.Examination Date
     data_type: date
   - attr_id: thrombosis_prediction.Examination.aCL IgG
@@ -48,31 +47,22 @@ entities:
     data_type: integer
   - attr_id: thrombosis_prediction.Examination.Diagnosis
     biz_name: Diagnosis
-    description: 'Examination diagnosis: diagnosis during this exam, may include comorbidities (e.g. SLE+Psy), NOT the primary diagnosis'
+    description: disease names
     physical_column_id: thrombosis_prediction.Examination.Diagnosis
     data_type: text
   - attr_id: thrombosis_prediction.Examination.KCT
     biz_name: measure of degree of coagulation
-    description: 'measure of degree of coagulation. +: positive
-
-
-      -: negative'
+    description: 'measure of degree of coagulation. +: positive -: negative'
     physical_column_id: thrombosis_prediction.Examination.KCT
     data_type: text
   - attr_id: thrombosis_prediction.Examination.RVVT
     biz_name: measure of degree of coagulation
-    description: 'measure of degree of coagulation. +: positive
-
-
-      -: negative'
+    description: 'measure of degree of coagulation. +: positive -: negative'
     physical_column_id: thrombosis_prediction.Examination.RVVT
     data_type: text
   - attr_id: thrombosis_prediction.Examination.LAC
     biz_name: measure of degree of coagulation
-    description: 'measure of degree of coagulation. +: positive
-
-
-      -: negative'
+    description: 'measure of degree of coagulation. +: positive -: negative'
     physical_column_id: thrombosis_prediction.Examination.LAC
     data_type: text
   - attr_id: thrombosis_prediction.Examination.Symptoms
@@ -82,11 +72,8 @@ entities:
     data_type: text
   - attr_id: thrombosis_prediction.Examination.Thrombosis
     biz_name: Thrombosis
-    description: 'degree of thrombosis. 0: negative (no thrombosis)
-
-      1: positive (the most severe one)
-
-      2: positive (severe)3: positive (mild)'
+    description: 'degree of thrombosis. 0: negative (no thrombosis) 1: positive (the most severe one) 2: positive (severe)3:
+      positive (mild)'
     physical_column_id: thrombosis_prediction.Examination.Thrombosis
     data_type: integer
 - entity_id: thrombosis_prediction.Patient
@@ -106,35 +93,34 @@ entities:
     data_type: text
   - attr_id: thrombosis_prediction.Patient.Birthday
     biz_name: Birthday
-    description: 'Birthday. format: date'
+    description: Birthday
     physical_column_id: thrombosis_prediction.Patient.Birthday
     data_type: date
   - attr_id: thrombosis_prediction.Patient.Description
     biz_name: Description
-    description: 'Patient condition notes: detailed description or suspected diagnosis (e.g. RA susp., PSS, SLE)'
+    description: 'the first date when a patient data was recorded. null or empty: not recorded'
     physical_column_id: thrombosis_prediction.Patient.Description
     data_type: date
   - attr_id: thrombosis_prediction.Patient.First Date
     biz_name: First Date
-    description: 'the date when a patient came to the hospital. format: date'
+    description: the date when a patient came to the hospital
     physical_column_id: thrombosis_prediction.Patient.First Date
     data_type: date
   - attr_id: thrombosis_prediction.Patient.Admission
     biz_name: Admission
-    description: patient was admitted to the hospital (+) or followed at the outpatient
-      clinic (-). patient was admitted to the hospital (+) or followed at the outpatient
-      clinic (-)
+    description: patient was admitted to the hospital (+) or followed at the outpatient clinic (-). patient was admitted to
+      the hospital (+) or followed at the outpatient clinic (-)
     physical_column_id: thrombosis_prediction.Patient.Admission
     data_type: text
   - attr_id: thrombosis_prediction.Patient.Diagnosis
     biz_name: Diagnosis
-    description: 'Primary diagnosis: patient main disease (e.g. SLE), this is the diagnosis referred to in queries, differs from Examination.Diagnosis'
+    description: disease names
     physical_column_id: thrombosis_prediction.Patient.Diagnosis
     data_type: text
 - entity_id: thrombosis_prediction.Laboratory
   biz_name: Laboratory
-  description: 'Laboratory: identification of the patient; Date of the laboratory
-    tests (YYMMDD); AST glutamic oxaloacetic transaminase'
+  description: 'Laboratory: identification of the patient; Date of the laboratory tests (YYMMDD); AST glutamic oxaloacetic
+    transaminase'
   physical_table_id: thrombosis_prediction.Laboratory
   attributes:
   - attr_id: thrombosis_prediction.Laboratory.ID
@@ -144,329 +130,217 @@ entities:
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.Date
     biz_name: Date
-    description: 'Date of the laboratory tests (YYMMDD). format: date'
+    description: Date of the laboratory tests (YYMMDD)
     physical_column_id: thrombosis_prediction.Laboratory.Date
     data_type: date
   - attr_id: thrombosis_prediction.Laboratory.GOT
     biz_name: AST glutamic oxaloacetic transaminase
-    description: 'AST glutamic oxaloacetic transaminase. Commonsense evidence:
-
-
-      Normal range: N < 60'
+    description: 'AST glutamic oxaloacetic transaminase. Commonsense evidence: Normal range: N < 60'
     physical_column_id: thrombosis_prediction.Laboratory.GOT
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.GPT
     biz_name: ALT glutamic pyruvic transaminase
-    description: 'ALT glutamic pyruvic transaminase. Commonsense evidence:
-
-
-      Normal range: N < 60'
+    description: 'ALT glutamic pyruvic transaminase. Commonsense evidence: Normal range: N < 60'
     physical_column_id: thrombosis_prediction.Laboratory.GPT
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.LDH
     biz_name: lactate dehydrogenase
-    description: 'lactate dehydrogenase. Commonsense evidence:
-
-
-      Normal range: N < 500'
+    description: 'lactate dehydrogenase. Commonsense evidence: Normal range: N < 500'
     physical_column_id: thrombosis_prediction.Laboratory.LDH
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.ALP
     biz_name: alkaliphophatase
-    description: 'alkaliphophatase. Commonsense evidence:
-
-
-      Normal range: N < 300'
+    description: 'alkaliphophatase. Commonsense evidence: Normal range: N < 300'
     physical_column_id: thrombosis_prediction.Laboratory.ALP
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.TP
     biz_name: total protein
-    description: 'total protein. Commonsense evidence:
-
-
-      Normal range: 6.0 < N < 8.5'
+    description: 'total protein. Commonsense evidence: Normal range: 6.0 < N < 8.5'
     physical_column_id: thrombosis_prediction.Laboratory.TP
     data_type: real
   - attr_id: thrombosis_prediction.Laboratory.ALB
     biz_name: albumin
-    description: 'albumin. Commonsense evidence:
-
-
-      Normal range: 3.5 < N < 5.5'
+    description: 'albumin. Commonsense evidence: Normal range: 3.5 < N < 5.5'
     physical_column_id: thrombosis_prediction.Laboratory.ALB
     data_type: real
   - attr_id: thrombosis_prediction.Laboratory.UA
     biz_name: uric acid
-    description: 'uric acid. Commonsense evidence:
-
-
-      Normal range: N > 8.0 (Male)N > 6.5 (Female)'
+    description: 'uric acid. Commonsense evidence: Normal range: N > 8.0 (Male)N > 6.5 (Female)'
     physical_column_id: thrombosis_prediction.Laboratory.UA
     data_type: real
   - attr_id: thrombosis_prediction.Laboratory.UN
     biz_name: urea nitrogen
-    description: 'urea nitrogen. Commonsense evidence:
-
-
-      Normal range: N < 30'
+    description: 'urea nitrogen. Commonsense evidence: Normal range: N < 30'
     physical_column_id: thrombosis_prediction.Laboratory.UN
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.CRE
     biz_name: creatinine
-    description: 'creatinine. Commonsense evidence:
-
-
-      Normal range: N < 1.5'
+    description: 'creatinine. Commonsense evidence: Normal range: N < 1.5'
     physical_column_id: thrombosis_prediction.Laboratory.CRE
     data_type: real
   - attr_id: thrombosis_prediction.Laboratory.T-BIL
     biz_name: total bilirubin
-    description: 'total bilirubin. Commonsense evidence:
-
-
-      Normal range: N < 2.0'
+    description: 'total bilirubin. Commonsense evidence: Normal range: N < 2.0'
     physical_column_id: thrombosis_prediction.Laboratory.T-BIL
     data_type: real
   - attr_id: thrombosis_prediction.Laboratory.T-CHO
     biz_name: total cholesterol
-    description: 'total cholesterol. Commonsense evidence:
-
-      Normal range: N < 250'
+    description: 'total cholesterol. Commonsense evidence: Normal range: N < 250'
     physical_column_id: thrombosis_prediction.Laboratory.T-CHO
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.TG
     biz_name: triglyceride
-    description: 'triglyceride. Commonsense evidence:
-
-
-      Normal range: N < 200'
+    description: 'triglyceride. Commonsense evidence: Normal range: N < 200'
     physical_column_id: thrombosis_prediction.Laboratory.TG
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.CPK
     biz_name: creatinine phosphokinase
-    description: 'creatinine phosphokinase. Commonsense evidence:
-
-      Normal range: N < 250'
+    description: 'creatinine phosphokinase. Commonsense evidence: Normal range: N < 250'
     physical_column_id: thrombosis_prediction.Laboratory.CPK
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.GLU
     biz_name: blood glucose
-    description: 'blood glucose. Commonsense evidence:
-
-      Normal range: N < 180'
+    description: 'blood glucose. Commonsense evidence: Normal range: N < 180'
     physical_column_id: thrombosis_prediction.Laboratory.GLU
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.WBC
     biz_name: White blood cell
-    description: 'White blood cell. Commonsense evidence:
-
-      Normal range: 3.5 < N < 9.0'
+    description: 'White blood cell. Commonsense evidence: Normal range: 3.5 < N < 9.0'
     physical_column_id: thrombosis_prediction.Laboratory.WBC
     data_type: real
   - attr_id: thrombosis_prediction.Laboratory.RBC
     biz_name: Red blood cell
-    description: 'Red blood cell. Commonsense evidence:
-
-
-      Normal range: 3.5 < N < 6.0'
+    description: 'Red blood cell. Commonsense evidence: Normal range: 3.5 < N < 6.0'
     physical_column_id: thrombosis_prediction.Laboratory.RBC
     data_type: real
   - attr_id: thrombosis_prediction.Laboratory.HGB
     biz_name: Hemoglobin
-    description: 'Hemoglobin. Commonsense evidence:
-
-
-      Normal range: 10 < N < 17'
+    description: 'Hemoglobin. Commonsense evidence: Normal range: 10 < N < 17'
     physical_column_id: thrombosis_prediction.Laboratory.HGB
     data_type: real
   - attr_id: thrombosis_prediction.Laboratory.HCT
     biz_name: Hematoclit
-    description: 'Hematoclit. Commonsense evidence:
-
-      Normal range: 29 < N < 52'
+    description: 'Hematoclit. Commonsense evidence: Normal range: 29 < N < 52'
     physical_column_id: thrombosis_prediction.Laboratory.HCT
     data_type: real
   - attr_id: thrombosis_prediction.Laboratory.PLT
     biz_name: platelet
-    description: 'platelet. Commonsense evidence:
-
-
-      Normal range: 100 < N < 400'
+    description: 'platelet. Commonsense evidence: Normal range: 100 < N < 400'
     physical_column_id: thrombosis_prediction.Laboratory.PLT
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.PT
     biz_name: prothrombin time
-    description: 'prothrombin time. Commonsense evidence:
-
-
-      Normal range: N < 14'
+    description: 'prothrombin time. Commonsense evidence: Normal range: N < 14'
     physical_column_id: thrombosis_prediction.Laboratory.PT
     data_type: real
   - attr_id: thrombosis_prediction.Laboratory.APTT
     biz_name: activated partial prothrombin time
-    description: 'activated partial prothrombin time. Commonsense evidence:
-
-
-      Normal range: N < 45'
+    description: 'activated partial prothrombin time. Commonsense evidence: Normal range: N < 45'
     physical_column_id: thrombosis_prediction.Laboratory.APTT
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.FG
     biz_name: fibrinogen
-    description: 'fibrinogen. Commonsense evidence:
-
-
-      Normal range: 150 < N < 450'
+    description: 'fibrinogen. Commonsense evidence: Normal range: 150 < N < 450'
     physical_column_id: thrombosis_prediction.Laboratory.FG
     data_type: real
   - attr_id: thrombosis_prediction.Laboratory.PIC
     biz_name: PIC
-    description: ''
+    description: PIC
     physical_column_id: thrombosis_prediction.Laboratory.PIC
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.TAT
     biz_name: TAT
-    description: ''
+    description: TAT
     physical_column_id: thrombosis_prediction.Laboratory.TAT
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.TAT2
     biz_name: TAT2
-    description: ''
+    description: TAT2
     physical_column_id: thrombosis_prediction.Laboratory.TAT2
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.U-PRO
     biz_name: proteinuria
-    description: 'proteinuria. Commonsense evidence:
-
-
-      Normal range: 0 < N < 30'
+    description: 'proteinuria. Commonsense evidence: Normal range: 0 < N < 30'
     physical_column_id: thrombosis_prediction.Laboratory.U-PRO
     data_type: text
   - attr_id: thrombosis_prediction.Laboratory.IGG
     biz_name: Ig G
-    description: 'Ig G. Commonsense evidence:
-
-
-      Normal range: 900 < N < 2000'
+    description: 'Ig G. Commonsense evidence: Normal range: 900 < N < 2000'
     physical_column_id: thrombosis_prediction.Laboratory.IGG
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.IGA
     biz_name: Ig A
-    description: 'Ig A. Commonsense evidence:
-
-
-      Normal range: 80 < N < 500'
+    description: 'Ig A. Commonsense evidence: Normal range: 80 < N < 500'
     physical_column_id: thrombosis_prediction.Laboratory.IGA
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.IGM
     biz_name: Ig M
-    description: 'Ig M. Commonsense evidence:
-
-
-      Normal range: 40 < N < 400'
+    description: 'Ig M. Commonsense evidence: Normal range: 40 < N < 400'
     physical_column_id: thrombosis_prediction.Laboratory.IGM
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.CRP
     biz_name: C-reactive protein
-    description: 'C-reactive protein. Commonsense evidence:
-
-
-      Normal range: N= -, +-, or N < 1.0'
+    description: 'C-reactive protein. Commonsense evidence: Normal range: N= -, +-, or N < 1.0'
     physical_column_id: thrombosis_prediction.Laboratory.CRP
     data_type: text
   - attr_id: thrombosis_prediction.Laboratory.RA
     biz_name: Rhuematoid Factor
-    description: 'Rhuematoid Factor. Commonsense evidence:
-
-
-      Normal range: N= -, +-'
+    description: 'Rhuematoid Factor. Commonsense evidence: Normal range: N= -, +-'
     physical_column_id: thrombosis_prediction.Laboratory.RA
     data_type: text
   - attr_id: thrombosis_prediction.Laboratory.RF
     biz_name: RAHA
-    description: 'RAHA. Commonsense evidence:
-
-
-      Normal range: N < 20'
+    description: 'RAHA. Commonsense evidence: Normal range: N < 20'
     physical_column_id: thrombosis_prediction.Laboratory.RF
     data_type: text
   - attr_id: thrombosis_prediction.Laboratory.C3
     biz_name: complement 3
-    description: 'complement 3. Commonsense evidence:
-
-
-      Normal range: N > 35'
+    description: 'complement 3. Commonsense evidence: Normal range: N > 35'
     physical_column_id: thrombosis_prediction.Laboratory.C3
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.C4
     biz_name: complement 4
-    description: 'complement 4. Commonsense evidence:
-
-
-      Normal range: N > 10'
+    description: 'complement 4. Commonsense evidence: Normal range: N > 10'
     physical_column_id: thrombosis_prediction.Laboratory.C4
     data_type: integer
   - attr_id: thrombosis_prediction.Laboratory.RNP
     biz_name: anti-ribonuclear protein
-    description: 'anti-ribonuclear protein. Commonsense evidence:
-
-
-      Normal range: N= -, +-'
+    description: 'anti-ribonuclear protein. Commonsense evidence: Normal range: N= -, +-'
     physical_column_id: thrombosis_prediction.Laboratory.RNP
     data_type: text
   - attr_id: thrombosis_prediction.Laboratory.SM
     biz_name: anti-SM
-    description: 'anti-SM. Commonsense evidence:
-
-
-      Normal range: N= -, +-'
+    description: 'anti-SM. Commonsense evidence: Normal range: N= -, +-'
     physical_column_id: thrombosis_prediction.Laboratory.SM
     data_type: text
   - attr_id: thrombosis_prediction.Laboratory.SC170
     biz_name: anti-scl70
-    description: 'anti-scl70. Commonsense evidence:
-
-
-      Normal range: N= -, +-'
+    description: 'anti-scl70. Commonsense evidence: Normal range: N= -, +-'
     physical_column_id: thrombosis_prediction.Laboratory.SC170
     data_type: text
   - attr_id: thrombosis_prediction.Laboratory.SSA
     biz_name: anti-SSA
-    description: 'anti-SSA. Commonsense evidence:
-
-
-      Normal range: N= -, +-'
+    description: 'anti-SSA. Commonsense evidence: Normal range: N= -, +-'
     physical_column_id: thrombosis_prediction.Laboratory.SSA
     data_type: text
   - attr_id: thrombosis_prediction.Laboratory.SSB
     biz_name: anti-SSB
-    description: 'anti-SSB. Commonsense evidence:
-
-
-      Normal range: N= -, +-'
+    description: 'anti-SSB. Commonsense evidence: Normal range: N= -, +-'
     physical_column_id: thrombosis_prediction.Laboratory.SSB
     data_type: text
   - attr_id: thrombosis_prediction.Laboratory.CENTROMEA
     biz_name: anti-centromere
-    description: 'anti-centromere. Commonsense evidence:
-
-
-      Normal range: N= -, +-'
+    description: 'anti-centromere. Commonsense evidence: Normal range: N= -, +-'
     physical_column_id: thrombosis_prediction.Laboratory.CENTROMEA
     data_type: text
   - attr_id: thrombosis_prediction.Laboratory.DNA
     biz_name: anti-DNA
-    description: 'anti-DNA. Commonsense evidence:
-
-
-      Normal range: N < 8'
+    description: 'anti-DNA. Commonsense evidence: Normal range: N < 8'
     physical_column_id: thrombosis_prediction.Laboratory.DNA
     data_type: text
   - attr_id: thrombosis_prediction.Laboratory.DNA-II
     biz_name: anti-DNA
-    description: 'anti-DNA. Commonsense evidence:
-
-
-      Normal range: N < 8'
+    description: 'anti-DNA. Commonsense evidence: Normal range: N < 8'
     physical_column_id: thrombosis_prediction.Laboratory.DNA-II
     data_type: integer
 relations:

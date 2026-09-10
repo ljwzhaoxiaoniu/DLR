@@ -1,178 +1,414 @@
-mapping_type: "dlr"
-version: "2.1"
+mapping_type: dlr
+version: '2.1'
 scenario_name: dlr_financial
-description: "DLR paradigm - Financial: clients hold accounts via disp (junction absorbed as PE); accounts have loans, transactions, permanent orders; districts with demographic statistics. 6 LE, 10 PE — 2026-08-02 refactor: AccountRelation LE eliminated (pure junction, no business lifecycle)"
+description: 'DLR paradigm - Financial: clients hold accounts via disp (junction absorbed as PE); accounts have loans, transactions,
+  permanent orders; districts with demographic statistics. 6 LE, 10 PE — 2026-08-02 refactor: AccountRelation LE eliminated
+  (pure junction, no business lifecycle)'
 databases:
-  financial: "sqlite:///MINIDEV_sqlite/dev_databases/financial/financial.sqlite"
+  financial: sqlite:///MINIDEV_sqlite/dev_databases/financial/financial.sqlite
 logical_entities:
-  - logical_entity_id: LOGICAL.Account
+- logical_entity_id: LOGICAL.Account
+  biz_name: Account
+  description: Bank account — identified by account_id, located in a district, with open date and statement frequency; holds
+    loans, transactions, permanent orders, client authorizations (disp) and credit cards
+  public_attributes:
+  - attr_id: LOGICAL.Account.AccountID
+    biz_name: AccountID
+  - attr_id: LOGICAL.Account.DistrictID
+    biz_name: DistrictID
+    description: District where the account branch is located
+  - attr_id: LOGICAL.Account.Date
+    biz_name: date
+    description: Account open date
+  - attr_id: LOGICAL.Account.ClientID
+    biz_name: ClientID
+    description: Client who holds this account via disp
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Account
+    physical_table_name: account
+    physical_table_id: financial.account
+    A:
+      cardinality: '1:1'
+      key: account_id
+    R: null
+    C:
+      LOGICAL.Account.AccountID: financial.account.account_id
+      LOGICAL.Account.DistrictID: financial.account.district_id
+      LOGICAL.Account.Date: financial.account.date
+    S: Account master — account_id, district, open date, frequency
+    private_attributes:
+    - attr_id: financial.account.frequency
+      biz_name: frequency
+      physical_column_id: financial.account.frequency
+      description: frequency of the acount
+    - attr_id: financial.account.district_id
+      biz_name: location of branch
+      physical_column_id: financial.account.district_id
+      description: location of branch
+  - physical_entity_id: PHYSICAL.Disp
+    physical_table_name: disp
+    physical_table_id: financial.disp
+    A:
+      cardinality: N:1
+      key: account_id
+    R: null
+    C:
+      LOGICAL.Account.AccountID: financial.disp.account_id
+      LOGICAL.Account.ClientID: financial.disp.client_id
+    S: Client-account authorization (junction) — client_id, account_id, type (OWNER/DISPONENT)
+    private_attributes:
+    - attr_id: financial.disp.disp_id
+      biz_name: disposition id
+      physical_column_id: financial.disp.disp_id
+      description: unique number of identifying this row of record
+    - attr_id: financial.disp.type
+      biz_name: type
+      physical_column_id: financial.disp.type
+      description: 'type of disposition. "OWNER" : "USER" : "DISPONENT" commonsense evidence: the account can only have the
+        right to issue permanent orders or apply for loans'
+  - physical_entity_id: PHYSICAL.CreditCard
+    physical_table_name: card
+    physical_table_id: financial.card
+    A:
+      cardinality: N:1
+      key: disp_id
+    R: null
+    C:
+      LOGICAL.Account.AccountID: financial.card.disp_id
+    S: Credit card information — card_id, type, issued date
+    private_attributes:
+    - attr_id: financial.card.card_id
+      biz_name: credit card id
+      physical_column_id: financial.card.card_id
+      description: id number of credit card
+    - attr_id: financial.card.type
+      biz_name: type
+      physical_column_id: financial.card.type
+      description: 'type of credit card. "junior": junior class of credit card; "classic": standard class of credit card;
+        "gold": high-level credit card'
+    - attr_id: financial.card.issued
+      biz_name: issued
+      physical_column_id: financial.card.issued
+      description: the date when the credit card issued. in the form YYMMDD
+- logical_entity_id: LOGICAL.Client
+  biz_name: Client
+  description: Bank client — gender (M/F), birth_date, district of residence; identified by client_id; holds accounts via
+    disp authorization; often referred to as 'customer' in queries
+  public_attributes:
+  - attr_id: LOGICAL.Client.ClientID
+    biz_name: ClientID
+  - attr_id: LOGICAL.Client.DistrictID
+    biz_name: DistrictID
+    description: District where the client resides
+  - attr_id: LOGICAL.Client.Gender
+    biz_name: gender
+    description: 'Gender: M (male) or F (female)'
+  - attr_id: LOGICAL.Client.BirthDate
+    biz_name: birth_date
+    description: Birth date of the client, YYYY-MM-DD format
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Client
+    physical_table_name: client
+    physical_table_id: financial.client
+    A:
+      cardinality: '1:1'
+      key: client_id
+    R: null
+    C:
+      LOGICAL.Client.ClientID: financial.client.client_id
+      LOGICAL.Client.DistrictID: financial.client.district_id
+      LOGICAL.Client.Gender: financial.client.gender
+      LOGICAL.Client.BirthDate: financial.client.birth_date
+    S: Client master — client_id, gender, birth_date, district
+    private_attributes:
+    - attr_id: financial.client.district_id
+      biz_name: location of branch
+      physical_column_id: financial.client.district_id
+      description: location of branch
+- logical_entity_id: LOGICAL.District
+  biz_name: District
+  description: Demographic district — district name (A2), region (A3), inhabitants (A4), average salary (A11), unemployment
+    rates (A12/A13), crime statistics (A15); clients reside here and accounts are located here
+  public_attributes:
+  - attr_id: LOGICAL.District.DistrictID
+    biz_name: DistrictID
+  - attr_id: LOGICAL.District.DistrictName
+    biz_name: DistrictName
+    description: District name (column A2), e.g. Sokolov, Praha
+  - attr_id: LOGICAL.District.Region
+    biz_name: Region
+    description: Region name (column A3)
+  - attr_id: LOGICAL.District.Inhabitants
+    biz_name: Inhabitants
+    description: Number of inhabitants (column A4)
+  - attr_id: LOGICAL.District.AvgSalary
+    biz_name: AvgSalary
+    description: Average salary (column A11)
+  - attr_id: LOGICAL.District.UnempRate95
+    biz_name: UnempRate95
+    description: Unemployment rate 1995 (column A12)
+  - attr_id: LOGICAL.District.UnempRate96
+    biz_name: UnempRate96
+    description: Unemployment rate 1996 (column A13)
+  - attr_id: LOGICAL.District.Crimes95
+    biz_name: Crimes95
+    description: Number of crimes 1995 (column A15)
+  physical_entities:
+  - physical_entity_id: PHYSICAL.District
+    physical_table_name: district
+    physical_table_id: financial.district
+    A:
+      cardinality: '1:1'
+      key: district_id
+    R: null
+    C:
+      LOGICAL.District.DistrictID: financial.district.district_id
+      LOGICAL.District.DistrictName: financial.district.A2
+      LOGICAL.District.Region: financial.district.A3
+      LOGICAL.District.Inhabitants: financial.district.A4
+      LOGICAL.District.AvgSalary: financial.district.A11
+      LOGICAL.District.UnempRate95: financial.district.A12
+      LOGICAL.District.UnempRate96: financial.district.A13
+      LOGICAL.District.Crimes95: financial.district.A15
+    S: District demographic and economic statistics — A2(name), A3(region), A4(inhabitants), A11(avg salary), A12/A13(unemployment),
+      A15(crimes)
+    private_attributes:
+    - attr_id: financial.district.A5
+      biz_name: no. of municipalities with inhabitants < 499
+      physical_column_id: financial.district.A5
+      description: municipality < district < region
+    - attr_id: financial.district.A6
+      biz_name: no. of municipalities with inhabitants 500-1999
+      physical_column_id: financial.district.A6
+      description: municipality < district < region
+    - attr_id: financial.district.A7
+      biz_name: no. of municipalities with inhabitants 2000-9999
+      physical_column_id: financial.district.A7
+      description: municipality < district < region
+    - attr_id: financial.district.A8
+      biz_name: no. of municipalities with inhabitants > 10000
+      physical_column_id: financial.district.A8
+      description: municipality < district < region
+    - attr_id: financial.district.A9
+      biz_name: A9
+      physical_column_id: financial.district.A9
+      description: A9. not useful
+    - attr_id: financial.district.A10
+      biz_name: ratio of urban inhabitants
+      physical_column_id: financial.district.A10
+      description: ratio of urban inhabitants
+    - attr_id: financial.district.A14
+      biz_name: no. of entrepreneurs per 1000 inhabitants
+      physical_column_id: financial.district.A14
+      description: no. of entrepreneurs per 1000 inhabitants
+    - attr_id: financial.district.A16
+      biz_name: no. of committed crimes 1996
+      physical_column_id: financial.district.A16
+      description: no. of committed crimes 1996
+- logical_entity_id: LOGICAL.Loan
+  biz_name: Loan
+  description: Bank loan contract — amount, approval date, duration (months), monthly payments, status (A=active, B=finished,
+    C=running, D=in debt); belongs to an account; has independent business lifecycle (approval → active → finished/default)
+  public_attributes:
+  - attr_id: LOGICAL.Loan.LoanID
+    biz_name: LoanID
+  - attr_id: LOGICAL.Loan.Account
     biz_name: Account
-    description: "Bank account — identified by account_id, located in a district, with open date and statement frequency; holds loans, transactions, permanent orders, client authorizations (disp) and credit cards"
-    public_attributes:
-      - {attr_id: LOGICAL.Account.AccountID, biz_name: AccountID}
-      - {attr_id: LOGICAL.Account.DistrictID, biz_name: DistrictID, description: 'District where the account branch is located'}
-      - {attr_id: LOGICAL.Account.Date, biz_name: date, description: 'Account open date'}
-      - {attr_id: LOGICAL.Account.ClientID, biz_name: ClientID, description: 'Client who holds this account via disp'}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Account
-        physical_table_name: account
-        physical_table_id: financial.account
-        A: {cardinality: "1:1", key: account_id}
-        R: null
-        C: {LOGICAL.Account.AccountID: financial.account.account_id, LOGICAL.Account.DistrictID: financial.account.district_id, LOGICAL.Account.Date: financial.account.date}
-        S: "Account master — account_id, district, open date, frequency"
-        private_attributes:
-          - {attr_id: financial.account.frequency, biz_name: frequency, physical_column_id: financial.account.frequency, description: 'Statement frequency: monthly, weekly, etc.'}
-          - {attr_id: financial.account.district_id, biz_name: district_id, physical_column_id: financial.account.district_id, description: 'FK to district'}
-      - physical_entity_id: PHYSICAL.Disp
-        physical_table_name: disp
-        physical_table_id: financial.disp
-        A: {cardinality: "N:1", key: account_id}
-        R: null
-        C: {LOGICAL.Account.AccountID: financial.disp.account_id, LOGICAL.Account.ClientID: financial.disp.client_id}
-        S: "Client-account authorization (junction) — client_id, account_id, type (OWNER/DISPONENT)"
-        private_attributes:
-          - {attr_id: financial.disp.disp_id, biz_name: disp_id, physical_column_id: financial.disp.disp_id}
-          - {attr_id: financial.disp.type, biz_name: type, physical_column_id: financial.disp.type, description: 'Authorization type: OWNER or DISPONENT'}
-      - physical_entity_id: PHYSICAL.CreditCard
-        physical_table_name: card
-        physical_table_id: financial.card
-        A: {cardinality: "N:1", key: disp_id}
-        R: null
-        C: {LOGICAL.Account.AccountID: financial.card.disp_id}
-        S: "Credit card information — card_id, type, issued date"
-        private_attributes:
-          - {attr_id: financial.card.card_id, biz_name: card_id, physical_column_id: financial.card.card_id}
-          - {attr_id: financial.card.type, biz_name: type, physical_column_id: financial.card.type, description: 'Card type: classic, junior, gold'}
-          - {attr_id: financial.card.issued, biz_name: issued, physical_column_id: financial.card.issued, description: 'Card issue date'}
-  - logical_entity_id: LOGICAL.Client
-    biz_name: Client
-    description: "Bank client — gender (M/F), birth_date, district of residence; identified by client_id; holds accounts via disp authorization; often referred to as 'customer' in queries"
-    public_attributes:
-      - {attr_id: LOGICAL.Client.ClientID, biz_name: ClientID}
-      - {attr_id: LOGICAL.Client.DistrictID, biz_name: DistrictID, description: 'District where the client resides'}
-      - {attr_id: LOGICAL.Client.Gender, biz_name: gender, description: 'Gender: M (male) or F (female)'}
-      - {attr_id: LOGICAL.Client.BirthDate, biz_name: birth_date, description: 'Birth date of the client, YYYY-MM-DD format'}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Client
-        physical_table_name: client
-        physical_table_id: financial.client
-        A: {cardinality: "1:1", key: client_id}
-        R: null
-        C: {LOGICAL.Client.ClientID: financial.client.client_id, LOGICAL.Client.DistrictID: financial.client.district_id, LOGICAL.Client.Gender: financial.client.gender, LOGICAL.Client.BirthDate: financial.client.birth_date}
-        S: "Client master — client_id, gender, birth_date, district"
-        private_attributes:
-          - {attr_id: financial.client.district_id, biz_name: district_id, physical_column_id: financial.client.district_id, description: 'FK to district'}
-  - logical_entity_id: LOGICAL.District
-    biz_name: District
-    description: "Demographic district — district name (A2), region (A3), inhabitants (A4), average salary (A11), unemployment rates (A12/A13), crime statistics (A15); clients reside here and accounts are located here"
-    public_attributes:
-      - {attr_id: LOGICAL.District.DistrictID, biz_name: DistrictID}
-      - {attr_id: LOGICAL.District.DistrictName, biz_name: DistrictName, description: 'District name (column A2), e.g. Sokolov, Praha'}
-      - {attr_id: LOGICAL.District.Region, biz_name: Region, description: 'Region name (column A3)'}
-      - {attr_id: LOGICAL.District.Inhabitants, biz_name: Inhabitants, description: 'Number of inhabitants (column A4)'}
-      - {attr_id: LOGICAL.District.AvgSalary, biz_name: AvgSalary, description: 'Average salary (column A11)'}
-      - {attr_id: LOGICAL.District.UnempRate95, biz_name: UnempRate95, description: 'Unemployment rate 1995 (column A12)'}
-      - {attr_id: LOGICAL.District.UnempRate96, biz_name: UnempRate96, description: 'Unemployment rate 1996 (column A13)'}
-      - {attr_id: LOGICAL.District.Crimes95, biz_name: Crimes95, description: 'Number of crimes 1995 (column A15)'}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.District
-        physical_table_name: district
-        physical_table_id: financial.district
-        A: {cardinality: "1:1", key: district_id}
-        R: null
-        C: {LOGICAL.District.DistrictID: financial.district.district_id, LOGICAL.District.DistrictName: financial.district.A2, LOGICAL.District.Region: financial.district.A3, LOGICAL.District.Inhabitants: financial.district.A4, LOGICAL.District.AvgSalary: financial.district.A11, LOGICAL.District.UnempRate95: financial.district.A12, LOGICAL.District.UnempRate96: financial.district.A13, LOGICAL.District.Crimes95: financial.district.A15}
-        S: "District demographic and economic statistics — A2(name), A3(region), A4(inhabitants), A11(avg salary), A12/A13(unemployment), A15(crimes)"
-  - logical_entity_id: LOGICAL.Loan
-    biz_name: Loan
-    description: "Bank loan contract — amount, approval date, duration (months), monthly payments, status (A=active, B=finished, C=running, D=in debt); belongs to an account; has independent business lifecycle (approval → active → finished/default)"
-    public_attributes:
-      - {attr_id: LOGICAL.Loan.LoanID, biz_name: LoanID}
-      - {attr_id: LOGICAL.Loan.Account, biz_name: Account}
-      - {attr_id: LOGICAL.Loan.Amount, biz_name: amount, description: 'Loan amount'}
-      - {attr_id: LOGICAL.Loan.Date, biz_name: date, description: 'Loan approval date, YYYY-MM-DD format'}
-      - {attr_id: LOGICAL.Loan.Status, biz_name: status, description: 'Loan status: A=active, B=finished, C=running, D=in debt'}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Loan
-        physical_table_name: loan
-        physical_table_id: financial.loan
-        A: {cardinality: "N:1", key: account_id}
-        R: null
-        C: {LOGICAL.Loan.LoanID: financial.loan.loan_id, LOGICAL.Loan.Account: financial.loan.account_id, LOGICAL.Loan.Amount: financial.loan.amount, LOGICAL.Loan.Date: financial.loan.date, LOGICAL.Loan.Status: financial.loan.status}
-        S: "Loan contract table — amount, date, duration, payments, status"
-        private_attributes:
-          - {attr_id: financial.loan.duration, biz_name: duration, physical_column_id: financial.loan.duration, description: 'Loan duration in months'}
-          - {attr_id: financial.loan.payments, biz_name: payments, physical_column_id: financial.loan.payments, description: 'Monthly payment amount'}
-  - logical_entity_id: LOGICAL.Transaction
-    biz_name: Transaction
-    description: "Bank transaction record — date, type (credit/debit), operation, amount, balance; belongs to an account; independent business concept with temporal sequence"
-    public_attributes:
-      - {attr_id: LOGICAL.Transaction.Account, biz_name: Account}
-      - {attr_id: LOGICAL.Transaction.Amount, biz_name: amount, description: 'Transaction amount'}
-      - {attr_id: LOGICAL.Transaction.Balance, biz_name: balance, description: 'Account balance after transaction'}
-      - {attr_id: LOGICAL.Transaction.Date, biz_name: date, description: 'Transaction date'}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Trans
-        physical_table_name: trans
-        physical_table_id: financial.trans
-        A: {cardinality: "N:1", key: account_id}
-        R: null
-        C: {LOGICAL.Transaction.Account: financial.trans.account_id, LOGICAL.Transaction.Amount: financial.trans.amount, LOGICAL.Transaction.Balance: financial.trans.balance, LOGICAL.Transaction.Date: financial.trans.date}
-        S: "Transaction details — date, type, operation, amount, balance"
-        private_attributes:
-          - {attr_id: financial.trans.trans_id, biz_name: trans_id, physical_column_id: financial.trans.trans_id}
-          - {attr_id: financial.trans.type, biz_name: type, physical_column_id: financial.trans.type, description: 'Transaction type: credit/debit'}
-          - {attr_id: financial.trans.operation, biz_name: operation, physical_column_id: financial.trans.operation, description: 'Operation type: collection, withdrawal, etc.'}
-          - {attr_id: financial.trans.k_symbol, biz_name: k_symbol, physical_column_id: financial.trans.k_symbol}
-          - {attr_id: financial.trans.bank, biz_name: bank, physical_column_id: financial.trans.bank, description: 'Partner bank code'}
-          - {attr_id: financial.trans.account, biz_name: account, physical_column_id: financial.trans.account, description: 'Partner account number'}
-  - logical_entity_id: LOGICAL.PermanentOrder
-    biz_name: PermanentOrder
-    description: "Permanent payment order — bank_to, account_to, amount; belongs to an account; has independent lifecycle (creation → active → cancellation)"
-    public_attributes:
-      - {attr_id: LOGICAL.PermanentOrder.Account, biz_name: Account}
-      - {attr_id: LOGICAL.PermanentOrder.Amount, biz_name: amount, description: 'Order amount'}
-    physical_entities:
-      - physical_entity_id: PHYSICAL.Order
-        physical_table_name: order
-        physical_table_id: financial.order
-        A: {cardinality: "N:1", key: account_id}
-        R: null
-        C: {LOGICAL.PermanentOrder.Account: financial.order.account_id, LOGICAL.PermanentOrder.Amount: financial.order.amount}
-        S: "Permanent payment orders — bank_to, account_to, amount, k_symbol"
-        private_attributes:
-          - {attr_id: financial.order.order_id, biz_name: order_id, physical_column_id: financial.order.order_id}
-          - {attr_id: financial.order.bank_to, biz_name: bank_to, physical_column_id: financial.order.bank_to, description: 'Target bank code'}
-          - {attr_id: financial.order.account_to, biz_name: account_to, physical_column_id: financial.order.account_to, description: 'Target account number'}
-          - {attr_id: financial.order.k_symbol, biz_name: k_symbol, physical_column_id: financial.order.k_symbol}
+  - attr_id: LOGICAL.Loan.Amount
+    biz_name: amount
+    description: Loan amount
+  - attr_id: LOGICAL.Loan.Date
+    biz_name: date
+    description: Loan approval date, YYYY-MM-DD format
+  - attr_id: LOGICAL.Loan.Status
+    biz_name: status
+    description: 'Loan status: A=active, B=finished, C=running, D=in debt'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Loan
+    physical_table_name: loan
+    physical_table_id: financial.loan
+    A:
+      cardinality: N:1
+      key: account_id
+    R: null
+    C:
+      LOGICAL.Loan.LoanID: financial.loan.loan_id
+      LOGICAL.Loan.Account: financial.loan.account_id
+      LOGICAL.Loan.Amount: financial.loan.amount
+      LOGICAL.Loan.Date: financial.loan.date
+      LOGICAL.Loan.Status: financial.loan.status
+    S: Loan contract table — amount, date, duration, payments, status
+    private_attributes:
+    - attr_id: financial.loan.duration
+      biz_name: duration
+      physical_column_id: financial.loan.duration
+      description: loan duration. unit：month
+    - attr_id: financial.loan.payments
+      biz_name: monthly payments
+      physical_column_id: financial.loan.payments
+      description: monthly payments. unit：month
+- logical_entity_id: LOGICAL.Transaction
+  biz_name: Transaction
+  description: Bank transaction record — date, type (credit/debit), operation, amount, balance; belongs to an account; independent
+    business concept with temporal sequence
+  public_attributes:
+  - attr_id: LOGICAL.Transaction.Account
+    biz_name: Account
+  - attr_id: LOGICAL.Transaction.Amount
+    biz_name: amount
+    description: Transaction amount
+  - attr_id: LOGICAL.Transaction.Balance
+    biz_name: balance
+    description: Account balance after transaction
+  - attr_id: LOGICAL.Transaction.Date
+    biz_name: date
+    description: Transaction date
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Trans
+    physical_table_name: trans
+    physical_table_id: financial.trans
+    A:
+      cardinality: N:1
+      key: account_id
+    R: null
+    C:
+      LOGICAL.Transaction.Account: financial.trans.account_id
+      LOGICAL.Transaction.Amount: financial.trans.amount
+      LOGICAL.Transaction.Balance: financial.trans.balance
+      LOGICAL.Transaction.Date: financial.trans.date
+    S: Transaction details — date, type, operation, amount, balance
+    private_attributes:
+    - attr_id: financial.trans.trans_id
+      biz_name: transaction id
+      physical_column_id: financial.trans.trans_id
+      description: transaction id
+    - attr_id: financial.trans.type
+      biz_name: +/- transaction
+      physical_column_id: financial.trans.type
+      description: +/- transaction. "PRIJEM" stands for credit "VYDAJ" stands for withdrawal
+    - attr_id: financial.trans.operation
+      biz_name: mode of transaction
+      physical_column_id: financial.trans.operation
+      description: 'mode of transaction. "VYBER KARTOU": credit card withdrawal "VKLAD": credit in cash "PREVOD Z UCTU" :collection
+        from another bank "VYBER": withdrawal in cash "PREVOD NA UCET": remittance to another bank'
+    - attr_id: financial.trans.k_symbol
+      biz_name: characterization of the transaction
+      physical_column_id: financial.trans.k_symbol
+      description: 'characterization of the transaction. "POJISTNE": stands for insurrance payment "SLUZBY": stands for payment
+        for statement "UROK": stands for interest credited "SANKC. UROK": sanction interest if negative balance "SIPO": stands
+        for household "DUCHOD": stands for old-age pension "UVER": stands for loan payment'
+    - attr_id: financial.trans.bank
+      biz_name: bank of the partner
+      physical_column_id: financial.trans.bank
+      description: bank of the partner. each bank has unique two-letter code
+    - attr_id: financial.trans.account
+      biz_name: account of the partner
+      physical_column_id: financial.trans.account
+      description: account of the partner
+- logical_entity_id: LOGICAL.PermanentOrder
+  biz_name: PermanentOrder
+  description: Permanent payment order — bank_to, account_to, amount; belongs to an account; has independent lifecycle (creation
+    → active → cancellation)
+  public_attributes:
+  - attr_id: LOGICAL.PermanentOrder.Account
+    biz_name: Account
+  - attr_id: LOGICAL.PermanentOrder.Amount
+    biz_name: amount
+    description: Order amount
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Order
+    physical_table_name: order
+    physical_table_id: financial.order
+    A:
+      cardinality: N:1
+      key: account_id
+    R: null
+    C:
+      LOGICAL.PermanentOrder.Account: financial.order.account_id
+      LOGICAL.PermanentOrder.Amount: financial.order.amount
+    S: Permanent payment orders — bank_to, account_to, amount, k_symbol
+    private_attributes:
+    - attr_id: financial.order.order_id
+      biz_name: order_id
+      physical_column_id: financial.order.order_id
+      description: identifying the unique order
+    - attr_id: financial.order.bank_to
+      biz_name: bank of the recipient
+      physical_column_id: financial.order.bank_to
+      description: bank of the recipient
+    - attr_id: financial.order.account_to
+      biz_name: account of the recipient
+      physical_column_id: financial.order.account_to
+      description: account of the recipient. each bank has unique two-letter code
+    - attr_id: financial.order.k_symbol
+      biz_name: characterization of the payment
+      physical_column_id: financial.order.k_symbol
+      description: purpose of the payment. "POJISTNE" stands for insurance payment "SIPO" stands for household payment "LEASING"
+        stands for leasing "UVER" stands for loan payment
 pas_relations:
-  - relation_id: LOGICAL.Client_TO_LOGICAL.Account
-    relation_name: Holds
-    P: {forward: {verb: holds, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
-    A: ClientID
-    S: "1 client holds N accounts — via disp.client_id → client.client_id"
-  - relation_id: LOGICAL.Account_TO_LOGICAL.Loan
-    relation_name: HasLoan
-    P: {forward: {verb: has, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
-    A: Account
-    S: "1 account has N loans — loan.account_id → account.account_id"
-  - relation_id: LOGICAL.Account_TO_LOGICAL.Transaction
-    relation_name: Generates
-    P: {forward: {verb: generates, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
-    A: Account
-    S: "1 account generates N transactions — trans.account_id → account.account_id"
-  - relation_id: LOGICAL.Account_TO_LOGICAL.PermanentOrder
-    relation_name: HasOrder
-    P: {forward: {verb: has, cardinality: '1:N'}, reverse: {verb: belongs to, cardinality: '1:1'}}
-    A: Account
-    S: "1 account has N permanent orders — order.account_id → account.account_id"
-  - relation_id: LOGICAL.Client_TO_LOGICAL.District
-    relation_name: ResidesIn
-    P: {forward: {verb: resides in, cardinality: 'N:1'}, reverse: {verb: contains, cardinality: '1:N'}}
-    A: DistrictID
-    S: "N clients reside in 1 district — client.district_id → district.district_id"
-  - relation_id: LOGICAL.District_TO_LOGICAL.Account
-    relation_name: Contains
-    P: {forward: {verb: contains, cardinality: '1:N'}, reverse: {verb: is located in, cardinality: 'N:1'}}
-    A: DistrictID
-    S: "1 district contains N accounts — account.district_id → district.district_id"
+- relation_id: LOGICAL.Client_TO_LOGICAL.Account
+  relation_name: Holds
+  P:
+    forward:
+      verb: holds
+      cardinality: 1:N
+    reverse:
+      verb: belongs to
+      cardinality: '1:1'
+  A: ClientID
+  S: 1 client holds N accounts — via disp.client_id → client.client_id
+- relation_id: LOGICAL.Account_TO_LOGICAL.Loan
+  relation_name: HasLoan
+  P:
+    forward:
+      verb: has
+      cardinality: 1:N
+    reverse:
+      verb: belongs to
+      cardinality: '1:1'
+  A: Account
+  S: 1 account has N loans — loan.account_id → account.account_id
+- relation_id: LOGICAL.Account_TO_LOGICAL.Transaction
+  relation_name: Generates
+  P:
+    forward:
+      verb: generates
+      cardinality: 1:N
+    reverse:
+      verb: belongs to
+      cardinality: '1:1'
+  A: Account
+  S: 1 account generates N transactions — trans.account_id → account.account_id
+- relation_id: LOGICAL.Account_TO_LOGICAL.PermanentOrder
+  relation_name: HasOrder
+  P:
+    forward:
+      verb: has
+      cardinality: 1:N
+    reverse:
+      verb: belongs to
+      cardinality: '1:1'
+  A: Account
+  S: 1 account has N permanent orders — order.account_id → account.account_id
+- relation_id: LOGICAL.Client_TO_LOGICAL.District
+  relation_name: ResidesIn
+  P:
+    forward:
+      verb: resides in
+      cardinality: N:1
+    reverse:
+      verb: contains
+      cardinality: 1:N
+  A: DistrictID
+  S: N clients reside in 1 district — client.district_id → district.district_id
+- relation_id: LOGICAL.District_TO_LOGICAL.Account
+  relation_name: Contains
+  P:
+    forward:
+      verb: contains
+      cardinality: 1:N
+    reverse:
+      verb: is located in
+      cardinality: N:1
+  A: DistrictID
+  S: 1 district contains N accounts — account.district_id → district.district_id

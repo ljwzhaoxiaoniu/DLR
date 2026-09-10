@@ -6,57 +6,103 @@
 
 # R2RML — database: superhero
 # URL: sqlite:///MINIDEV_sqlite\dev_databases\superhero/superhero.sqlite
-# Tables: 10  ForeignKeys: 11 formal + 0 heuristic = 11 total
-# Source: PRAGMA foreign_key_list + column-name→PK matching
+# Tables: 10  ForeignKeys: 11 formal = 11 total
+# Source: dev_tables.json foreign_keys (aligned with ER yaml)
 
 # === Table: superhero.alignment (pk=id) ===
 <http://example.org/tm/superhero/alignment> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "alignment" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:alignment ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/alignment/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/alignment/alignment> ; rr:objectMap [ rr:column "alignment" ; rr:datatype xsd:string ] ] .
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/alignment/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
+        rdfs:label "id"@en ;
+        rdfs:comment "the unique identifier of the alignment"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/alignment/alignment> ; rr:objectMap [ rr:column "alignment" ; rr:datatype xsd:string ] ;
+        rdfs:label "alignment"@en ;
+        rdfs:comment "the alignment of the superhero. commonsense evidence: Alignment refers to a character's moral and ethical stance and can be used to describe the overall attitude or behavior of a superhero. Some common alignments for superheroes include: Good: These superheroes are typically kind, selfless, and dedicated to protecting others and upholding justice. Examples of good alignments include Superman, Wonder Woman, and Spider-Man. Neutral: These superheroes may not always prioritize the greater good, but they are not necessarily evil either. They may act in their own self-interest or make decisions based on their own moral code. Examples of neutral alignments include the Hulk and Deadpool.  Bad: These superheroes are typically selfish, manipulative, and willing to harm others in pursuit of their own goals. Examples of evil alignments include Lex Luthor and the Joker."@en ] .
 
 # === Table: superhero.attribute (pk=id) ===
 <http://example.org/tm/superhero/attribute> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "attribute" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:attribute ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/attribute/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/attribute/attribute_name> ; rr:objectMap [ rr:column "attribute_name" ; rr:datatype xsd:string ] ] .
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/attribute/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
+        rdfs:label "id"@en ;
+        rdfs:comment "the unique identifier of the attribute"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/attribute/attribute_name> ; rr:objectMap [ rr:column "attribute_name" ; rr:datatype xsd:string ] ;
+        rdfs:label "attribute name"@en ;
+        rdfs:comment "the attribute. commonsense evidence: A superhero's attribute is a characteristic or quality that defines who they are and what they are capable of. This could be a physical trait, such as superhuman strength or the ability to fly, or a personal trait, such as extraordinary intelligence or exceptional bravery."@en ] .
 
 # === Table: superhero.colour (pk=id) ===
 <http://example.org/tm/superhero/colour> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "colour" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:colour ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/colour/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/colour/colour> ; rr:objectMap [ rr:column "colour" ; rr:datatype xsd:string ] ] .
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/colour/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
+        rdfs:label "id"@en ;
+        rdfs:comment "the unique identifier of the color"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/colour/colour> ; rr:objectMap [ rr:column "colour" ; rr:datatype xsd:string ] ;
+        rdfs:label "colour"@en ;
+        rdfs:comment "the color of the superhero's skin/eye/hair/etc"@en ] .
 
 # === Table: superhero.gender (pk=id) ===
 <http://example.org/tm/superhero/gender> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "gender" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:gender ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/gender/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/gender/gender> ; rr:objectMap [ rr:column "gender" ; rr:datatype xsd:string ] ] .
 
-# === Table: superhero.hero_attribute (pk=hero_id) ===
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/gender/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
+        rdfs:label "id"@en ;
+        rdfs:comment "the unique identifier of the gender"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/gender/gender> ; rr:objectMap [ rr:column "gender" ; rr:datatype xsd:string ] ;
+        rdfs:label "gender"@en ;
+        rdfs:comment "the gender of the superhero"@en ] .
+
+# === Table: superhero.hero_attribute (no physical pk) ===
 <http://example.org/tm/superhero/hero_attribute> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "hero_attribute" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{hero_id}" ; rr:class ex:hero_attribute ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/hero_attribute/hero_id> ; rr:objectMap [ rr:column "hero_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/hero_attribute/attribute_id> ; rr:objectMap [ rr:column "attribute_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/hero_attribute/attribute_value> ; rr:objectMap [ rr:column "attribute_value" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/hero_attribute/hero_id> ; rr:objectMap [ rr:column "hero_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "hero id"@en ;
+        rdfs:comment "the id of the hero Maps to superhero(id)"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/hero_attribute/attribute_id> ; rr:objectMap [ rr:column "attribute_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "attribute id"@en ;
+        rdfs:comment "the id of the attribute Maps to attribute(id)"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/hero_attribute/attribute_value> ; rr:objectMap [ rr:column "attribute_value" ; rr:datatype xsd:string ] ;
+        rdfs:label "attribute value"@en ;
+        rdfs:comment "the attribute value. commonsense evidence: If a superhero has a higher attribute value on a particular attribute, it means that they are more skilled or powerful in that area compared to other superheroes. For example, if a superhero has a higher attribute value for strength, they may be able to lift heavier objects or deliver more powerful punches than other superheroes."@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/hero_attribute/refers_to_superhero> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/superhero/superhero> ; rr:joinCondition [ rr:child "hero_id" ; rr:parent "id" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/hero_attribute/refers_to_attribute> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/superhero/attribute> ; rr:joinCondition [ rr:child "attribute_id" ; rr:parent "id" ] ] ] .
 
-# === Table: superhero.hero_power (pk=hero_id) ===
+# === Table: superhero.hero_power (no physical pk) ===
 <http://example.org/tm/superhero/hero_power> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "hero_power" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{hero_id}" ; rr:class ex:hero_power ] ;
+
+
+
+
     rr:predicateObjectMap [ rr:predicate <http://example.org/hero_power/hero_id> ; rr:objectMap [ rr:column "hero_id" ; rr:datatype xsd:string ] ;
-        rdfs:label "英雄ID"@zh ;
-        rdfs:comment "拥有该能力的英雄ID"@zh ] ;
+        rdfs:label "hero id"@en ;
+        rdfs:comment "the id of the hero Maps to superhero(id)"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/hero_power/power_id> ; rr:objectMap [ rr:column "power_id" ; rr:datatype xsd:string ] ;
-        rdfs:label "能力ID"@zh ;
-        rdfs:comment "该英雄拥有的超能力ID"@zh ] ;
+        rdfs:label "power id"@en ;
+        rdfs:comment "the id of the power Maps to superpower(id). commonsense evidence: In general, a superhero's attributes provide the foundation for their abilities and help to define who they are, while their powers are the specific abilities that they use to fight crime and protect others."@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/hero_power/refers_to_superpower> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/superhero/superpower> ; rr:joinCondition [ rr:child "power_id" ; rr:parent "id" ] ;
         rdfs:label "对应能力"@zh ;
         rdfs:comment "FK：hero_power.power_id → superpower.id"@zh ] ] ;
@@ -68,36 +114,76 @@
 <http://example.org/tm/superhero/publisher> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "publisher" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:publisher ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/publisher/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/publisher/publisher_name> ; rr:objectMap [ rr:column "publisher_name" ; rr:datatype xsd:string ] ] .
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/publisher/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
+        rdfs:label "id"@en ;
+        rdfs:comment "the unique identifier of the publisher"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/publisher/publisher_name> ; rr:objectMap [ rr:column "publisher_name" ; rr:datatype xsd:string ] ;
+        rdfs:label "publisher_name"@en ;
+        rdfs:comment "the name of the publisher"@en ] .
 
 # === Table: superhero.race (pk=id) ===
 <http://example.org/tm/superhero/race> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "race" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:race ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/race/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/race/race> ; rr:objectMap [ rr:column "race" ; rr:datatype xsd:string ] ] .
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/race/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
+        rdfs:label "id"@en ;
+        rdfs:comment "the unique identifier of the race"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/race/race> ; rr:objectMap [ rr:column "race" ; rr:datatype xsd:string ] ;
+        rdfs:label "race"@en ;
+        rdfs:comment "the race of the superhero. commonsense evidence: In the context of superheroes, a superhero's race would refer to the particular group of people that the superhero belongs to base on these physical characteristics"@en ] .
 
 # === Table: superhero.superhero (pk=id) ===
 <http://example.org/tm/superhero/superhero> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "superhero" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:superhero ] ;
+
+
+
+
     rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
-        rdfs:label "英雄ID"@zh ;
-        rdfs:comment "超级英雄唯一标识符"@zh ] ;
+        rdfs:label "id"@en ;
+        rdfs:comment "the unique identifier of the superhero"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/superhero_name> ; rr:objectMap [ rr:column "superhero_name" ; rr:datatype xsd:string ] ;
-        rdfs:label "英雄名称"@zh ;
-        rdfs:comment "超级英雄的名称"@zh ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/full_name> ; rr:objectMap [ rr:column "full_name" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/gender_id> ; rr:objectMap [ rr:column "gender_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/eye_colour_id> ; rr:objectMap [ rr:column "eye_colour_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/hair_colour_id> ; rr:objectMap [ rr:column "hair_colour_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/skin_colour_id> ; rr:objectMap [ rr:column "skin_colour_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/race_id> ; rr:objectMap [ rr:column "race_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/publisher_id> ; rr:objectMap [ rr:column "publisher_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/alignment_id> ; rr:objectMap [ rr:column "alignment_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/height_cm> ; rr:objectMap [ rr:column "height_cm" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/weight_kg> ; rr:objectMap [ rr:column "weight_kg" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "superhero name"@en ;
+        rdfs:comment "the name of the superhero"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/full_name> ; rr:objectMap [ rr:column "full_name" ; rr:datatype xsd:string ] ;
+        rdfs:label "full name"@en ;
+        rdfs:comment "the full name of the superhero. commonsense evidence: The full name of a person typically consists of their given name, also known as their first name or personal name, and their surname, also known as their last name or family name. For example, if someone's given name is \"John\" and their surname is \"Smith,\" their full name would be \"John Smith.\""@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/gender_id> ; rr:objectMap [ rr:column "gender_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "gender id"@en ;
+        rdfs:comment "the id of the superhero's gender"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/eye_colour_id> ; rr:objectMap [ rr:column "eye_colour_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "eye colour id"@en ;
+        rdfs:comment "the id of the superhero's eye color"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/hair_colour_id> ; rr:objectMap [ rr:column "hair_colour_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "hair colour id"@en ;
+        rdfs:comment "the id of the superhero's hair color"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/skin_colour_id> ; rr:objectMap [ rr:column "skin_colour_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "skin colour id"@en ;
+        rdfs:comment "the id of the superhero's skin color"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/race_id> ; rr:objectMap [ rr:column "race_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "race id"@en ;
+        rdfs:comment "the id of the superhero's race"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/publisher_id> ; rr:objectMap [ rr:column "publisher_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "publisher id"@en ;
+        rdfs:comment "the id of the publisher"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/alignment_id> ; rr:objectMap [ rr:column "alignment_id" ; rr:datatype xsd:string ] ;
+        rdfs:label "alignment id"@en ;
+        rdfs:comment "the id of the superhero's alignment"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/height_cm> ; rr:objectMap [ rr:column "height_cm" ; rr:datatype xsd:string ] ;
+        rdfs:label "height cm"@en ;
+        rdfs:comment "the height of the superhero. commonsense evidence: The unit of height is centimeter. If the height_cm is NULL or 0, it means the height of the superhero is missing."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/weight_kg> ; rr:objectMap [ rr:column "weight_kg" ; rr:datatype xsd:string ] ;
+        rdfs:label "weight kg"@en ;
+        rdfs:comment "the weight of the superhero. commonsense evidence: The unit of weight is kilogram. If the weight_kg is NULL or 0, it means the weight of the superhero is missing."@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/refers_to_colour> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/superhero/colour> ; rr:joinCondition [ rr:child "skin_colour_id" ; rr:parent "id" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/refers_to_race> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/superhero/race> ; rr:joinCondition [ rr:child "race_id" ; rr:parent "id" ] ] ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/superhero/refers_to_publisher> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/superhero/publisher> ; rr:joinCondition [ rr:child "publisher_id" ; rr:parent "id" ] ] ] ;
@@ -110,10 +196,10 @@
 <http://example.org/tm/superhero/superpower> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "superpower" ] ;
     rr:subjectMap [ rr:template "http://example.org/superhero/{id}" ; rr:class ex:superpower ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/superpower/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
-        rdfs:label "能力ID"@zh ;
-        rdfs:comment "超能力唯一标识符"@zh ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/superpower/power_name> ; rr:objectMap [ rr:column "power_name" ; rr:datatype xsd:string ] ;
-        rdfs:label "能力名称"@zh ;
-        rdfs:comment "超能力的名称"@zh ] .
 
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superpower/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
+        rdfs:label "id"@en ;
+        rdfs:comment "the unique identifier of the superpower"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/superpower/power_name> ; rr:objectMap [ rr:column "power_name" ; rr:datatype xsd:string ] ;
+        rdfs:label "power name"@en ;
+        rdfs:comment "the superpower name"@en ] .

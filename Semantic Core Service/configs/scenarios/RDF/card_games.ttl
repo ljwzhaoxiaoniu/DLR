@@ -6,176 +6,410 @@
 
 # R2RML — database: card_games
 # URL: sqlite:///MINIDEV_sqlite\dev_databases\card_games/card_games.sqlite
-# Tables: 6  ForeignKeys: 4 formal + 0 heuristic = 4 total
-# Source: PRAGMA foreign_key_list + column-name→PK matching
+# Tables: 6  ForeignKeys: 4 formal = 4 total
+# Source: dev_tables.json foreign_keys (aligned with ER yaml)
 
 # === Table: card_games.cards (pk=id) ===
 <http://example.org/tm/card_games/cards> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "cards" ] ;
     rr:subjectMap [ rr:template "http://example.org/card_games/{id}" ; rr:class ex:cards ] ;
+
+
+
+
+
     rr:predicateObjectMap [ rr:predicate <http://example.org/cards/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
-        rdfs:label "卡牌ID"@zh ;
-        rdfs:comment "卡牌唯一标识符"@zh ] ;
+        rdfs:label "unique id number identifying the cards"@en ;
+        rdfs:comment "unique id number identifying the cards"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/cards/artist> ; rr:objectMap [ rr:column "artist" ; rr:datatype xsd:string ] ;
+        rdfs:label "artist"@en ;
         rdfs:comment "The name of the artist that illustrated the card art."@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/asciiName> ; rr:objectMap [ rr:column "asciiName" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/availability> ; rr:objectMap [ rr:column "availability" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/asciiName> ; rr:objectMap [ rr:column "asciiName" ; rr:datatype xsd:string ] ;
+        rdfs:label "ascii Name"@en ;
+        rdfs:comment "The ASCII(opens new window) (Basic/128) code formatted card name with no special unicode characters."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/availability> ; rr:objectMap [ rr:column "availability" ; rr:datatype xsd:string ] ;
+        rdfs:label "availability"@en ;
+        rdfs:comment "A list of the card's available printing types.. \"arena\", \"dreamcast\", \"mtgo\", \"paper\", \"shandalar\""@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/cards/borderColor> ; rr:objectMap [ rr:column "borderColor" ; rr:datatype xsd:string ] ;
-        rdfs:comment "The border color of the card: black, white, borderless."@en ] ;
+        rdfs:label "border Color"@en ;
+        rdfs:comment "The color of the card border.. \"black\", \"borderless\", \"gold\", \"silver\", \"white\""@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/cards/cardKingdomFoilId> ; rr:objectMap [ rr:column "cardKingdomFoilId" ; rr:datatype xsd:string ] ;
-        rdfs:comment "The foil listing ID on Card Kingdom marketplace. Non-null when card has a foil version."@en ] ;
+        rdfs:label "card Kingdom Foil Id"@en ;
+        rdfs:comment "card Kingdom Foil Id. commonsense evidence: cardKingdomFoilId, when paired with cardKingdomId that is not Null, is incredibly powerful."@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/cards/cardKingdomId> ; rr:objectMap [ rr:column "cardKingdomId" ; rr:datatype xsd:string ] ;
-        rdfs:comment "The listing ID on Card Kingdom marketplace."@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/colorIdentity> ; rr:objectMap [ rr:column "colorIdentity" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/colorIndicator> ; rr:objectMap [ rr:column "colorIndicator" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/colors> ; rr:objectMap [ rr:column "colors" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/convertedManaCost> ; rr:objectMap [ rr:column "convertedManaCost" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/duelDeck> ; rr:objectMap [ rr:column "duelDeck" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/edhrecRank> ; rr:objectMap [ rr:column "edhrecRank" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/faceConvertedManaCost> ; rr:objectMap [ rr:column "faceConvertedManaCost" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/faceName> ; rr:objectMap [ rr:column "faceName" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/flavorName> ; rr:objectMap [ rr:column "flavorName" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/flavorText> ; rr:objectMap [ rr:column "flavorText" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/frameEffects> ; rr:objectMap [ rr:column "frameEffects" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/frameVersion> ; rr:objectMap [ rr:column "frameVersion" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/hand> ; rr:objectMap [ rr:column "hand" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/hasAlternativeDeckLimit> ; rr:objectMap [ rr:column "hasAlternativeDeckLimit" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/hasContentWarning> ; rr:objectMap [ rr:column "hasContentWarning" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/hasFoil> ; rr:objectMap [ rr:column "hasFoil" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/hasNonFoil> ; rr:objectMap [ rr:column "hasNonFoil" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isAlternative> ; rr:objectMap [ rr:column "isAlternative" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isFullArt> ; rr:objectMap [ rr:column "isFullArt" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isOnlineOnly> ; rr:objectMap [ rr:column "isOnlineOnly" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isOversized> ; rr:objectMap [ rr:column "isOversized" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isPromo> ; rr:objectMap [ rr:column "isPromo" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isReprint> ; rr:objectMap [ rr:column "isReprint" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isReserved> ; rr:objectMap [ rr:column "isReserved" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isStarter> ; rr:objectMap [ rr:column "isStarter" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isStorySpotlight> ; rr:objectMap [ rr:column "isStorySpotlight" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isTextless> ; rr:objectMap [ rr:column "isTextless" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isTimeshifted> ; rr:objectMap [ rr:column "isTimeshifted" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/keywords> ; rr:objectMap [ rr:column "keywords" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/layout> ; rr:objectMap [ rr:column "layout" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/leadershipSkills> ; rr:objectMap [ rr:column "leadershipSkills" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/life> ; rr:objectMap [ rr:column "life" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/loyalty> ; rr:objectMap [ rr:column "loyalty" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/manaCost> ; rr:objectMap [ rr:column "manaCost" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/mcmId> ; rr:objectMap [ rr:column "mcmId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/mcmMetaId> ; rr:objectMap [ rr:column "mcmMetaId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/mtgArenaId> ; rr:objectMap [ rr:column "mtgArenaId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/mtgjsonV4Id> ; rr:objectMap [ rr:column "mtgjsonV4Id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/mtgoFoilId> ; rr:objectMap [ rr:column "mtgoFoilId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/mtgoId> ; rr:objectMap [ rr:column "mtgoId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/multiverseId> ; rr:objectMap [ rr:column "multiverseId" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "card Kingdom Id"@en ;
+        rdfs:comment "card Kingdom Id. A list of all the colors in the color indicator"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/colorIdentity> ; rr:objectMap [ rr:column "colorIdentity" ; rr:datatype xsd:string ] ;
+        rdfs:label "color Identity"@en ;
+        rdfs:comment "A list of all the colors found in manaCost, colorIndicator, and text"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/colorIndicator> ; rr:objectMap [ rr:column "colorIndicator" ; rr:datatype xsd:string ] ;
+        rdfs:label "color Indicator"@en ;
+        rdfs:comment "A list of all the colors in the color indicator (The symbol prefixed to a card's types)."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/colors> ; rr:objectMap [ rr:column "colors" ; rr:datatype xsd:string ] ;
+        rdfs:label "colors"@en ;
+        rdfs:comment "A list of all the colors in manaCost and colorIndicator.. Some cards may not have values, such as cards with \"Devoid\" in its text."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/convertedManaCost> ; rr:objectMap [ rr:column "convertedManaCost" ; rr:datatype xsd:string ] ;
+        rdfs:label "converted Mana Cost"@en ;
+        rdfs:comment "The converted mana cost of the card. Use the manaValue property.. if value is higher, it means that this card cost more converted mana"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/duelDeck> ; rr:objectMap [ rr:column "duelDeck" ; rr:datatype xsd:string ] ;
+        rdfs:label "duel Deck"@en ;
+        rdfs:comment "The indicator for which duel deck the card is in."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/edhrecRank> ; rr:objectMap [ rr:column "edhrecRank" ; rr:datatype xsd:string ] ;
+        rdfs:label "rec Rank in edh"@en ;
+        rdfs:comment "The card rank on EDHRec"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/faceConvertedManaCost> ; rr:objectMap [ rr:column "faceConvertedManaCost" ; rr:datatype xsd:string ] ;
+        rdfs:label "face Converted Mana Cost"@en ;
+        rdfs:comment "The converted mana cost or mana value for the face for either half or part of the card.. if value is higher, it means that this card cost more converted mana for the face"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/faceName> ; rr:objectMap [ rr:column "faceName" ; rr:datatype xsd:string ] ;
+        rdfs:label "face Name"@en ;
+        rdfs:comment "The name on the face of the card."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/flavorName> ; rr:objectMap [ rr:column "flavorName" ; rr:datatype xsd:string ] ;
+        rdfs:label "flavor Name"@en ;
+        rdfs:comment "The promotional card name printed above the true card name on special cards that has no game function.. The promotional card name printed above the true card name on special cards that has no game function."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/flavorText> ; rr:objectMap [ rr:column "flavorText" ; rr:datatype xsd:string ] ;
+        rdfs:label "flavor Text"@en ;
+        rdfs:comment "The italicized text found below the rules text that has no game function.. The italicized text found below the rules text that has no game function."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/frameEffects> ; rr:objectMap [ rr:column "frameEffects" ; rr:datatype xsd:string ] ;
+        rdfs:label "frame Effects"@en ;
+        rdfs:comment "The visual frame effects.. \"colorshifted\", \"companion\", \"compasslanddfc\", \"devoid\", \"draft\", \"etched\", \"extendedart\", \"fullart\", \"inverted\", \"legendary\", \"lesson\", \"miracle\", \"mooneldrazidfc\", \"nyxtouched\", \"originpwdfc\", \"showcase\", \"snow\", \"sunmoondfc\", \"textless\", \"tombstone\", \"waxingandwaningmoondfc\""@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/frameVersion> ; rr:objectMap [ rr:column "frameVersion" ; rr:datatype xsd:string ] ;
+        rdfs:label "frame Version"@en ;
+        rdfs:comment "The version of the card frame style.. \"1993\", \"1997\", \"2003\", \"2015\", \"future\""@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/hand> ; rr:objectMap [ rr:column "hand" ; rr:datatype xsd:string ] ;
+        rdfs:label "hand"@en ;
+        rdfs:comment "The starting maximum hand size total modifier.. A + or - character precedes an integer. commonsense evidence: positive maximum hand size: +1, +2, .... negative maximum hand size: -1, .... neural maximum hand size: 0...."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/hasAlternativeDeckLimit> ; rr:objectMap [ rr:column "hasAlternativeDeckLimit" ; rr:datatype xsd:string ] ;
+        rdfs:label "has Alternative Deck Limit"@en ;
+        rdfs:comment "If the card allows a value other than 4 copies in a deck.. 0: disallow 1: allow"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/hasContentWarning> ; rr:objectMap [ rr:column "hasContentWarning" ; rr:datatype xsd:string ] ;
+        rdfs:label "has Content Warning"@en ;
+        rdfs:comment "If the card marked by Wizards of the Coast (opens new window) for having sensitive content. See this official article (opens new window) for more information.. 0: doesn't have 1: has sensitve content or Wizards of the Coast commonsense evidence: Cards with this property may have missing or degraded properties and values."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/hasFoil> ; rr:objectMap [ rr:column "hasFoil" ; rr:datatype xsd:string ] ;
+        rdfs:label "has Foil"@en ;
+        rdfs:comment "If the card can be found in foil. 0: cannot be found 1: can be found"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/hasNonFoil> ; rr:objectMap [ rr:column "hasNonFoil" ; rr:datatype xsd:string ] ;
+        rdfs:label "has Non Foil"@en ;
+        rdfs:comment "If the card can be found in non-foil. 0: cannot be found 1: can be found"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isAlternative> ; rr:objectMap [ rr:column "isAlternative" ; rr:datatype xsd:string ] ;
+        rdfs:label "is Alternative"@en ;
+        rdfs:comment "If the card is an alternate variation to an original printing. 0: is not 1: is"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isFullArt> ; rr:objectMap [ rr:column "isFullArt" ; rr:datatype xsd:string ] ;
+        rdfs:label "is Full Art"@en ;
+        rdfs:comment "If the card has full artwork.. 0: doesn't have, 1: has full artwork"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isOnlineOnly> ; rr:objectMap [ rr:column "isOnlineOnly" ; rr:datatype xsd:string ] ;
+        rdfs:label "is Online Only"@en ;
+        rdfs:comment "If the card is only available in online game variations.. 0: is not 1: is"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isOversized> ; rr:objectMap [ rr:column "isOversized" ; rr:datatype xsd:string ] ;
+        rdfs:label "is Oversized"@en ;
+        rdfs:comment "If the card is oversized.. 0: is not 1: is"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isPromo> ; rr:objectMap [ rr:column "isPromo" ; rr:datatype xsd:string ] ;
+        rdfs:label "is Promotion"@en ;
+        rdfs:comment "If the card is a promotional printing.. 0: is not 1: is"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isReprint> ; rr:objectMap [ rr:column "isReprint" ; rr:datatype xsd:string ] ;
+        rdfs:label "is Reprint"@en ;
+        rdfs:comment "If the card has been reprinted.. 0: has not 1: has not been"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isReserved> ; rr:objectMap [ rr:column "isReserved" ; rr:datatype xsd:string ] ;
+        rdfs:label "is Reserved"@en ;
+        rdfs:comment "If the card is on the Magic: The Gathering Reserved List (opens new window). If the card is on the Magic, it will appear in The Gathering Reserved List"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isStarter> ; rr:objectMap [ rr:column "isStarter" ; rr:datatype xsd:string ] ;
+        rdfs:label "is Starter"@en ;
+        rdfs:comment "If the card is found in a starter deck such as Planeswalker/Brawl decks.. 0: is not 1: is"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isStorySpotlight> ; rr:objectMap [ rr:column "isStorySpotlight" ; rr:datatype xsd:string ] ;
+        rdfs:label "is Story Spotlight"@en ;
+        rdfs:comment "If the card is a Story Spotlight card.. 0: is not 1: is"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isTextless> ; rr:objectMap [ rr:column "isTextless" ; rr:datatype xsd:string ] ;
+        rdfs:label "is Text less"@en ;
+        rdfs:comment "If the card does not have a text box.. commonsense evidence: 0: has a text box; 1: doesn't have a text box;"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/isTimeshifted> ; rr:objectMap [ rr:column "isTimeshifted" ; rr:datatype xsd:string ] ;
+        rdfs:label "is Time shifted"@en ;
+        rdfs:comment "If the card is time shifted. commonsense evidence: If the card is \"timeshifted\", a feature of certain sets where a card will have a different frameVersion."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/keywords> ; rr:objectMap [ rr:column "keywords" ; rr:datatype xsd:string ] ;
+        rdfs:label "keywords"@en ;
+        rdfs:comment "A list of keywords found on the card."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/layout> ; rr:objectMap [ rr:column "layout" ; rr:datatype xsd:string ] ;
+        rdfs:label "layout"@en ;
+        rdfs:comment "The type of card layout. For a token card, this will be \"token\""@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/leadershipSkills> ; rr:objectMap [ rr:column "leadershipSkills" ; rr:datatype xsd:string ] ;
+        rdfs:label "leadership Skills"@en ;
+        rdfs:comment "A list of formats the card is legal to be a commander in"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/life> ; rr:objectMap [ rr:column "life" ; rr:datatype xsd:string ] ;
+        rdfs:label "life"@en ;
+        rdfs:comment "The starting life total modifier. A plus or minus character precedes an integer."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/loyalty> ; rr:objectMap [ rr:column "loyalty" ; rr:datatype xsd:string ] ;
+        rdfs:label "loyalty"@en ;
+        rdfs:comment "The starting loyalty value of the card.. Used only on cards with \"Planeswalker\" in its types. empty means unkown"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/manaCost> ; rr:objectMap [ rr:column "manaCost" ; rr:datatype xsd:string ] ;
+        rdfs:label "mana Cost"@en ;
+        rdfs:comment "The mana cost of the card wrapped in brackets for each value.. commonsense evidence: manaCost is unconverted mana cost"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/mcmId> ; rr:objectMap [ rr:column "mcmId" ; rr:datatype xsd:string ] ;
+        rdfs:label "mcmId"@en ;
+        rdfs:comment "mcmId. NOT USEFUL"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/mcmMetaId> ; rr:objectMap [ rr:column "mcmMetaId" ; rr:datatype xsd:string ] ;
+        rdfs:label "mcmMetaId"@en ;
+        rdfs:comment "mcmMetaId. NOT USEFUL"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/mtgArenaId> ; rr:objectMap [ rr:column "mtgArenaId" ; rr:datatype xsd:string ] ;
+        rdfs:label "mtgArenaId"@en ;
+        rdfs:comment "mtgArenaId. NOT USEFUL"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/mtgjsonV4Id> ; rr:objectMap [ rr:column "mtgjsonV4Id" ; rr:datatype xsd:string ] ;
+        rdfs:label "mtgjsonV4Id"@en ;
+        rdfs:comment "mtgjsonV4Id. NOT USEFUL"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/mtgoFoilId> ; rr:objectMap [ rr:column "mtgoFoilId" ; rr:datatype xsd:string ] ;
+        rdfs:label "mtgoFoilId"@en ;
+        rdfs:comment "mtgoFoilId. NOT USEFUL"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/mtgoId> ; rr:objectMap [ rr:column "mtgoId" ; rr:datatype xsd:string ] ;
+        rdfs:label "mtgoId"@en ;
+        rdfs:comment "mtgoId. NOT USEFUL"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/multiverseId> ; rr:objectMap [ rr:column "multiverseId" ; rr:datatype xsd:string ] ;
+        rdfs:label "multiverseId"@en ;
+        rdfs:comment "multiverseId. NOT USEFUL"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/cards/name> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ;
-        rdfs:comment "The name of the card."@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/number> ; rr:objectMap [ rr:column "number" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/originalReleaseDate> ; rr:objectMap [ rr:column "originalReleaseDate" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/originalText> ; rr:objectMap [ rr:column "originalText" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/originalType> ; rr:objectMap [ rr:column "originalType" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/otherFaceIds> ; rr:objectMap [ rr:column "otherFaceIds" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "name"@en ;
+        rdfs:comment "The name of the card.. Cards with multiple faces, like \"Split\" and \"Meld\" cards are given a delimiter."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/number> ; rr:objectMap [ rr:column "number" ; rr:datatype xsd:string ] ;
+        rdfs:label "number"@en ;
+        rdfs:comment "The number of the card"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/originalReleaseDate> ; rr:objectMap [ rr:column "originalReleaseDate" ; rr:datatype xsd:string ] ;
+        rdfs:label "originalReleaseDate"@en ;
+        rdfs:comment "original Release Date. The original release date in ISO 8601(opens new window) format for a promotional card printed outside of a cycle window, such as Secret Lair Drop promotions."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/originalText> ; rr:objectMap [ rr:column "originalText" ; rr:datatype xsd:string ] ;
+        rdfs:label "originalText"@en ;
+        rdfs:comment "original Text. The text on the card as originally printed."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/originalType> ; rr:objectMap [ rr:column "originalType" ; rr:datatype xsd:string ] ;
+        rdfs:label "originalType"@en ;
+        rdfs:comment "original Type. The type of the card as originally printed. Includes any supertypes and subtypes."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/otherFaceIds> ; rr:objectMap [ rr:column "otherFaceIds" ; rr:datatype xsd:string ] ;
+        rdfs:label "otherFaceIds"@en ;
+        rdfs:comment "other Face Ids. A list of card UUID's to this card's counterparts, such as transformed or melded faces."@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/cards/power> ; rr:objectMap [ rr:column "power" ; rr:datatype xsd:string ] ;
-        rdfs:comment "The power value of the card. '*' means infinite power."@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/printings> ; rr:objectMap [ rr:column "printings" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/promoTypes> ; rr:objectMap [ rr:column "promoTypes" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/purchaseUrls> ; rr:objectMap [ rr:column "purchaseUrls" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "power"@en ;
+        rdfs:comment "The power of the card.. commonsense evidence: ∞ means infinite power null or * refers to unknown power"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/printings> ; rr:objectMap [ rr:column "printings" ; rr:datatype xsd:string ] ;
+        rdfs:label "printings"@en ;
+        rdfs:comment "A list of set printing codes the card was printed in, formatted in uppercase."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/promoTypes> ; rr:objectMap [ rr:column "promoTypes" ; rr:datatype xsd:string ] ;
+        rdfs:label "promo Types"@en ;
+        rdfs:comment "A list of promotional types for a card.. \"arenaleague\", \"boosterfun\", \"boxtopper\", \"brawldeck\", \"bundle\", \"buyabox\", \"convention\", \"datestamped\", \"draculaseries\", \"draftweekend\", \"duels\", \"event\", \"fnm\", \"gameday\", \"gateway\", \"giftbox\", \"gilded\", \"godzillaseries\", \"instore\", \"intropack\", \"jpwalker\", \"judgegift\", \"league\", \"mediainsert\", \"neonink\", \"openhouse\", \"planeswalkerstamped\", \"playerrewards\", \"playpromo\", \"premiereshop\", \"prerelease\", \"promopack\", \"release\", \"setpromo\", \"stamped\", \"textured\", \"themepack\", \"thick\", \"tourney\", \"wizardsplaynetwork\""@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/purchaseUrls> ; rr:objectMap [ rr:column "purchaseUrls" ; rr:datatype xsd:string ] ;
+        rdfs:label "purchase Urls"@en ;
+        rdfs:comment "Links that navigate to websites where the card can be purchased."@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/cards/rarity> ; rr:objectMap [ rr:column "rarity" ; rr:datatype xsd:string ] ;
-        rdfs:comment "The rarity of the card: common, uncommon, rare, mythic."@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/scryfallId> ; rr:objectMap [ rr:column "scryfallId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/scryfallIllustrationId> ; rr:objectMap [ rr:column "scryfallIllustrationId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/scryfallOracleId> ; rr:objectMap [ rr:column "scryfallOracleId" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "rarity"@en ;
+        rdfs:comment "The card printing rarity."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/scryfallId> ; rr:objectMap [ rr:column "scryfallId" ; rr:datatype xsd:string ] ;
+        rdfs:label "scryfallId"@en ;
+        rdfs:comment "scryfallId. NOT USEFUL"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/scryfallIllustrationId> ; rr:objectMap [ rr:column "scryfallIllustrationId" ; rr:datatype xsd:string ] ;
+        rdfs:label "scryfallIllustrationId"@en ;
+        rdfs:comment "scryfallIllustrationId. NOT USEFUL"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/scryfallOracleId> ; rr:objectMap [ rr:column "scryfallOracleId" ; rr:datatype xsd:string ] ;
+        rdfs:label "scryfallOracleId"@en ;
+        rdfs:comment "scryfallOracleId. NOT USEFUL"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/cards/setCode> ; rr:objectMap [ rr:column "setCode" ; rr:datatype xsd:string ] ;
-        rdfs:comment "The set code the card belongs to. Links to sets.code."@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/side> ; rr:objectMap [ rr:column "side" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/subtypes> ; rr:objectMap [ rr:column "subtypes" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/supertypes> ; rr:objectMap [ rr:column "supertypes" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/tcgplayerProductId> ; rr:objectMap [ rr:column "tcgplayerProductId" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "Set Code"@en ;
+        rdfs:comment "The set printing code that the card is from."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/side> ; rr:objectMap [ rr:column "side" ; rr:datatype xsd:string ] ;
+        rdfs:label "side"@en ;
+        rdfs:comment "The identifier of the card side.. Used on cards with multiple faces on the same card. commonsense evidence: if this value is empty, then it means this card doesn't have multiple faces on the same card."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/subtypes> ; rr:objectMap [ rr:column "subtypes" ; rr:datatype xsd:string ] ;
+        rdfs:label "subtypes"@en ;
+        rdfs:comment "A list of card subtypes found after em-dash."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/supertypes> ; rr:objectMap [ rr:column "supertypes" ; rr:datatype xsd:string ] ;
+        rdfs:label "super types"@en ;
+        rdfs:comment "A list of card supertypes found before em-dash.. commonsense evidence: list of all types should be the union of subtypes and supertypes"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/tcgplayerProductId> ; rr:objectMap [ rr:column "tcgplayerProductId" ; rr:datatype xsd:string ] ;
+        rdfs:label "tcg player ProductId"@en ;
+        rdfs:comment "tcg player ProductId"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/cards/text> ; rr:objectMap [ rr:column "text" ; rr:datatype xsd:string ] ;
-        rdfs:comment "The rules text of the card. Search for specific phrases like 'triggered ability'."@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/toughness> ; rr:objectMap [ rr:column "toughness" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "text"@en ;
+        rdfs:comment "The rules text of the card."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/toughness> ; rr:objectMap [ rr:column "toughness" ; rr:datatype xsd:string ] ;
+        rdfs:label "toughness"@en ;
+        rdfs:comment "The toughness of the card."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ;
+        rdfs:label "type"@en ;
+        rdfs:comment "The type of the card as visible, including any supertypes and subtypes.. \"Artifact\", \"Card\", \"Conspiracy\", \"Creature\", \"Dragon\", \"Dungeon\", \"Eaturecray\", \"Elemental\", \"Elite\", \"Emblem\", \"Enchantment\", \"Ever\", \"Goblin\", \"Hero\", \"Instant\", \"Jaguar\", \"Knights\", \"Land\", \"Phenomenon\", \"Plane\", \"Planeswalker\", \"Scariest\", \"Scheme\", \"See\", \"Sorcery\", \"Sticker\", \"Summon\", \"Token\", \"Tribal\", \"Vanguard\", \"Wolf\", \"You’ll\", \"instant\""@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/cards/types> ; rr:objectMap [ rr:column "types" ; rr:datatype xsd:string ] ;
-        rdfs:comment "The types of the card (e.g., Artifact, Creature, Enchantment)."@en ] ;
+        rdfs:label "types"@en ;
+        rdfs:comment "A list of all card types of the card, including Un‑sets and gameplay variants."@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/cards/uuid> ; rr:objectMap [ rr:column "uuid" ; rr:datatype xsd:string ] ;
-        rdfs:comment "Unique identifier for a specific card printing. Same card name may have multiple UUIDs for different printings."@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/variations> ; rr:objectMap [ rr:column "variations" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/watermark> ; rr:objectMap [ rr:column "watermark" ; rr:datatype xsd:string ] ] .
+        rdfs:label "uuid"@en ;
+        rdfs:comment "The universal unique identifier (v5) generated by MTGJSON. Each entry is unique.. NOT USEFUL"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/variations> ; rr:objectMap [ rr:column "variations" ; rr:datatype xsd:string ] ;
+        rdfs:label "variations"@en ;
+        rdfs:comment "variations"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/cards/watermark> ; rr:objectMap [ rr:column "watermark" ; rr:datatype xsd:string ] ;
+        rdfs:label "watermark"@en ;
+        rdfs:comment "The name of the watermark on the card."@en ] .
 
 # === Table: card_games.foreign_data (pk=id) ===
 <http://example.org/tm/card_games/foreign_data> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "foreign_data" ] ;
     rr:subjectMap [ rr:template "http://example.org/card_games/{id}" ; rr:class ex:foreign_data ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/flavorText> ; rr:objectMap [ rr:column "flavorText" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
+        rdfs:label "id"@en ;
+        rdfs:comment "unique id number identifying this row of data"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/flavorText> ; rr:objectMap [ rr:column "flavorText" ; rr:datatype xsd:string ] ;
+        rdfs:label "flavor Text"@en ;
+        rdfs:comment "The foreign flavor text of the card."@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/language> ; rr:objectMap [ rr:column "language" ; rr:datatype xsd:string ] ;
-        rdfs:label "Language"@en ;
-        rdfs:comment "Foreign language: e.g. Chinese Simplified, French, German, Italian, Portuguese (Brasil), Korean, Japanese, Spanish, Russian."@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/multiverseid> ; rr:objectMap [ rr:column "multiverseid" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/name> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/text> ; rr:objectMap [ rr:column "text" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/uuid> ; rr:objectMap [ rr:column "uuid" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "language"@en ;
+        rdfs:comment "The foreign language of card."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/multiverseid> ; rr:objectMap [ rr:column "multiverseid" ; rr:datatype xsd:string ] ;
+        rdfs:label "multiverseid"@en ;
+        rdfs:comment "The foreign multiverse identifier of the card."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/name> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ;
+        rdfs:label "name"@en ;
+        rdfs:comment "The foreign name of the card."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/text> ; rr:objectMap [ rr:column "text" ; rr:datatype xsd:string ] ;
+        rdfs:label "text"@en ;
+        rdfs:comment "The foreign text ruling of the card."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ;
+        rdfs:label "type"@en ;
+        rdfs:comment "The foreign type of the card. Includes any supertypes and subtypes."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/uuid> ; rr:objectMap [ rr:column "uuid" ; rr:datatype xsd:string ] ;
+        rdfs:label "uuid"@en ;
+        rdfs:comment "uuid"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/foreign_data/refers_to_cards> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/card_games/cards> ; rr:joinCondition [ rr:child "uuid" ; rr:parent "uuid" ] ] ] .
 
 # === Table: card_games.legalities (pk=id) ===
 <http://example.org/tm/card_games/legalities> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "legalities" ] ;
     rr:subjectMap [ rr:template "http://example.org/card_games/{id}" ; rr:class ex:legalities ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/format> ; rr:objectMap [ rr:column "format" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
+        rdfs:label "id"@en ;
+        rdfs:comment "unique id identifying this legality"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/format> ; rr:objectMap [ rr:column "format" ; rr:datatype xsd:string ] ;
+        rdfs:label "format"@en ;
+        rdfs:comment "format of play. each value refers to different rules to play"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/status> ; rr:objectMap [ rr:column "status" ; rr:datatype xsd:string ] ;
-        rdfs:label "Status"@en ;
-        rdfs:comment "The legality status of the card in this format: Legal, Banned, or Restricted."@en ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/uuid> ; rr:objectMap [ rr:column "uuid" ; rr:datatype xsd:string ] ] ;
+        rdfs:label "status"@en ;
+        rdfs:comment "status. • legal • banned • restricted"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/uuid> ; rr:objectMap [ rr:column "uuid" ; rr:datatype xsd:string ] ;
+        rdfs:label "uuid"@en ;
+        rdfs:comment "uuid"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/legalities/refers_to_cards> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/card_games/cards> ; rr:joinCondition [ rr:child "uuid" ; rr:parent "uuid" ] ] ] .
 
 # === Table: card_games.rulings (pk=id) ===
 <http://example.org/tm/card_games/rulings> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "rulings" ] ;
     rr:subjectMap [ rr:template "http://example.org/card_games/{id}" ; rr:class ex:rulings ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/rulings/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/rulings/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/rulings/text> ; rr:objectMap [ rr:column "text" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/rulings/uuid> ; rr:objectMap [ rr:column "uuid" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/rulings/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
+        rdfs:label "id"@en ;
+        rdfs:comment "unique id identifying this ruling"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/rulings/date> ; rr:objectMap [ rr:column "date" ; rr:datatype xsd:string ] ;
+        rdfs:label "date"@en ;
+        rdfs:comment "date"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/rulings/text> ; rr:objectMap [ rr:column "text" ; rr:datatype xsd:string ] ;
+        rdfs:label "text"@en ;
+        rdfs:comment "description about this ruling"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/rulings/uuid> ; rr:objectMap [ rr:column "uuid" ; rr:datatype xsd:string ] ;
+        rdfs:label "uuid"@en ;
+        rdfs:comment "uuid"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/rulings/refers_to_cards> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/card_games/cards> ; rr:joinCondition [ rr:child "uuid" ; rr:parent "uuid" ] ] ] .
 
 # === Table: card_games.set_translations (pk=id) ===
 <http://example.org/tm/card_games/set_translations> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "set_translations" ] ;
     rr:subjectMap [ rr:template "http://example.org/card_games/{id}" ; rr:class ex:set_translations ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/set_translations/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/set_translations/language> ; rr:objectMap [ rr:column "language" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/set_translations/setCode> ; rr:objectMap [ rr:column "setCode" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/set_translations/translation> ; rr:objectMap [ rr:column "translation" ; rr:datatype xsd:string ] ] ;
+
+
+
+
+
+    rr:predicateObjectMap [ rr:predicate <http://example.org/set_translations/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
+        rdfs:label "id"@en ;
+        rdfs:comment "unique id identifying this set"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/set_translations/language> ; rr:objectMap [ rr:column "language" ; rr:datatype xsd:string ] ;
+        rdfs:label "language"@en ;
+        rdfs:comment "language of this card"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/set_translations/setCode> ; rr:objectMap [ rr:column "setCode" ; rr:datatype xsd:string ] ;
+        rdfs:label "set code"@en ;
+        rdfs:comment "the set code for this set"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/set_translations/translation> ; rr:objectMap [ rr:column "translation" ; rr:datatype xsd:string ] ;
+        rdfs:label "translation"@en ;
+        rdfs:comment "translation of this card"@en ] ;
     rr:predicateObjectMap [ rr:predicate <http://example.org/set_translations/refers_to_sets> ; rr:objectMap [ rr:parentTriplesMap <http://example.org/tm/card_games/sets> ; rr:joinCondition [ rr:child "setCode" ; rr:parent "code" ] ] ] .
 
 # === Table: card_games.sets (pk=id) ===
 <http://example.org/tm/card_games/sets> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "sets" ] ;
     rr:subjectMap [ rr:template "http://example.org/card_games/{id}" ; rr:class ex:sets ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/baseSetSize> ; rr:objectMap [ rr:column "baseSetSize" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/block> ; rr:objectMap [ rr:column "block" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/booster> ; rr:objectMap [ rr:column "booster" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/code> ; rr:objectMap [ rr:column "code" ; rr:datatype xsd:string ] ;
-        rdfs:label "系列代码"@zh ;
-        rdfs:comment "系列代码"@zh ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/isFoilOnly> ; rr:objectMap [ rr:column "isFoilOnly" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/isForeignOnly> ; rr:objectMap [ rr:column "isForeignOnly" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/isNonFoilOnly> ; rr:objectMap [ rr:column "isNonFoilOnly" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/isOnlineOnly> ; rr:objectMap [ rr:column "isOnlineOnly" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/isPartialPreview> ; rr:objectMap [ rr:column "isPartialPreview" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/keyruneCode> ; rr:objectMap [ rr:column "keyruneCode" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/mcmId> ; rr:objectMap [ rr:column "mcmId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/mcmIdExtras> ; rr:objectMap [ rr:column "mcmIdExtras" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/mcmName> ; rr:objectMap [ rr:column "mcmName" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/mtgoCode> ; rr:objectMap [ rr:column "mtgoCode" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/name> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ;
-        rdfs:label "系列名称"@zh ;
-        rdfs:comment "卡牌系列名称"@zh ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/parentCode> ; rr:objectMap [ rr:column "parentCode" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/releaseDate> ; rr:objectMap [ rr:column "releaseDate" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/tcgplayerGroupId> ; rr:objectMap [ rr:column "tcgplayerGroupId" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/totalSetSize> ; rr:objectMap [ rr:column "totalSetSize" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ] .
 
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/id> ; rr:objectMap [ rr:column "id" ; rr:datatype xsd:string ] ;
+        rdfs:label "id"@en ;
+        rdfs:comment "unique id identifying this set"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/baseSetSize> ; rr:objectMap [ rr:column "baseSetSize" ; rr:datatype xsd:string ] ;
+        rdfs:label "base Set Size"@en ;
+        rdfs:comment "The number of cards in the set."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/block> ; rr:objectMap [ rr:column "block" ; rr:datatype xsd:string ] ;
+        rdfs:label "block"@en ;
+        rdfs:comment "The block name the set was in."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/booster> ; rr:objectMap [ rr:column "booster" ; rr:datatype xsd:string ] ;
+        rdfs:label "booster"@en ;
+        rdfs:comment "A breakdown of possibilities and weights of cards in a booster pack."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/code> ; rr:objectMap [ rr:column "code" ; rr:datatype xsd:string ] ;
+        rdfs:label "code"@en ;
+        rdfs:comment "The set code for the set."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/isFoilOnly> ; rr:objectMap [ rr:column "isFoilOnly" ; rr:datatype xsd:string ] ;
+        rdfs:label "is Foil Only"@en ;
+        rdfs:comment "If the set is only available in foil."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/isForeignOnly> ; rr:objectMap [ rr:column "isForeignOnly" ; rr:datatype xsd:string ] ;
+        rdfs:label "is Foreign Only"@en ;
+        rdfs:comment "If the set is available only outside the United States of America."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/isNonFoilOnly> ; rr:objectMap [ rr:column "isNonFoilOnly" ; rr:datatype xsd:string ] ;
+        rdfs:label "is Non Foil Only"@en ;
+        rdfs:comment "If the set is only available in non-foil."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/isOnlineOnly> ; rr:objectMap [ rr:column "isOnlineOnly" ; rr:datatype xsd:string ] ;
+        rdfs:label "is Online Only"@en ;
+        rdfs:comment "If the set is only available in online game variations."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/isPartialPreview> ; rr:objectMap [ rr:column "isPartialPreview" ; rr:datatype xsd:string ] ;
+        rdfs:label "is Partial Preview"@en ;
+        rdfs:comment "If the set is still in preview (spoiled). Preview sets do not have complete data."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/keyruneCode> ; rr:objectMap [ rr:column "keyruneCode" ; rr:datatype xsd:string ] ;
+        rdfs:label "keyrune Code"@en ;
+        rdfs:comment "The matching Keyrune code for set image icons."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/mcmId> ; rr:objectMap [ rr:column "mcmId" ; rr:datatype xsd:string ] ;
+        rdfs:label "magic card market id"@en ;
+        rdfs:comment "The Magic Card Marketset identifier."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/mcmIdExtras> ; rr:objectMap [ rr:column "mcmIdExtras" ; rr:datatype xsd:string ] ;
+        rdfs:label "magic card market ID Extras"@en ;
+        rdfs:comment "The split Magic Card Market set identifier if a set is printed in two sets. This identifier represents the second set's identifier."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/mcmName> ; rr:objectMap [ rr:column "mcmName" ; rr:datatype xsd:string ] ;
+        rdfs:label "magic card market name"@en ;
+        rdfs:comment "magic card market name"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/mtgoCode> ; rr:objectMap [ rr:column "mtgoCode" ; rr:datatype xsd:string ] ;
+        rdfs:label "magic the gathering online code"@en ;
+        rdfs:comment "The set code for the set as it appears on Magic: The Gathering Online. commonsense evidence: if the value is null or empty, then it doesn't appear on Magic: The Gathering Online"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/name> ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ;
+        rdfs:label "name"@en ;
+        rdfs:comment "The name of the set."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/parentCode> ; rr:objectMap [ rr:column "parentCode" ; rr:datatype xsd:string ] ;
+        rdfs:label "parent Code"@en ;
+        rdfs:comment "The parent set code for set variations like promotions, guild kits, etc."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/releaseDate> ; rr:objectMap [ rr:column "releaseDate" ; rr:datatype xsd:string ] ;
+        rdfs:label "release Date"@en ;
+        rdfs:comment "The release date in ISO 8601 format for the set."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/tcgplayerGroupId> ; rr:objectMap [ rr:column "tcgplayerGroupId" ; rr:datatype xsd:string ] ;
+        rdfs:label "tcg player Group Id"@en ;
+        rdfs:comment "The group identifier of the set on TCGplayer"@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/totalSetSize> ; rr:objectMap [ rr:column "totalSetSize" ; rr:datatype xsd:string ] ;
+        rdfs:label "total Set Size"@en ;
+        rdfs:comment "The total number of cards in the set, including promotional and related supplemental products but excluding Alchemy modifications - however those cards are included in the set itself."@en ] ;
+    rr:predicateObjectMap [ rr:predicate <http://example.org/sets/type> ; rr:objectMap [ rr:column "type" ; rr:datatype xsd:string ] ;
+        rdfs:label "type"@en ;
+        rdfs:comment "The expansion type of the set.. \"alchemy\", \"archenemy\", \"arsenal\", \"box\", \"commander\", \"core\", \"draft_innovation\", \"duel_deck\", \"expansion\", \"from_the_vault\", \"funny\", \"masterpiece\", \"masters\", \"memorabilia\", \"planechase\", \"premium_deck\", \"promo\", \"spellbook\", \"starter\", \"token\", \"treasure_chest\", \"vanguard\""@en ] .
