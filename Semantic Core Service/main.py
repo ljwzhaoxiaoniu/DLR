@@ -63,6 +63,7 @@ def _resolve_preset(preset: str, paradigm: str):
                 "mapping_type": "rdf",
                 "ttl_path": f"{preset}.ttl",
                 "scenario_name": f"rdf_{preset}",
+                "database": preset,
                 "databases": {preset: db_path},
             }
             mapper = get_mapper("rdf")
