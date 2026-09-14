@@ -118,9 +118,7 @@ Final Answer + Evidence SQL + 标注信息来源（MCP 工具名 / RAG kid / SOP
 
 ## 开放问题
 
-1. **Ch3 读取权限冲突（⚠️ 跑题验证前必须解决）**：`oc_*/opencode.json` 的 `permission.read: "deny"`（防作弊架构）挡死了 Ch3 读 `skills/{db}.md`。解法二选一：
-   - 放开 read（风险：Agent 可读项目任意文件，需靠 AGENTS.md 约束 + 审计日志兜底）
-   - Ch3 改 MCP 工具下发（`get_skill(db)` 注册进 semantic-core，权限收敛在服务端）
+1. ~~**Ch3 读取权限冲突**~~ ✅ **已解决（2026-08-27）**：`oc_*/opencode.json` 的 `permission.read` 改为**白名单**——`{"*": "deny", "skills/*.md": "allow", "skills\\*.md": "allow"}`（opencode 按 git-worktree 相对路径匹配，两种斜杠都要给）。防作弊其余不变；skills 四份副本需同步（见 [agent.md](agent.md) §3）
 2. **旧 evidence JSONL topic 的迁移**：9 个 topic 仍是逐题 evidence 原文，非聚合格式，需按 card_games 模式重写
 3. ~~gold cache 过渡态~~ ✅ **已切换（2026-08-27 起）**：02/03/04 读 config 的 `eval.output_dir`（现为 `outputs2`），即原始 gold 版 cache
 

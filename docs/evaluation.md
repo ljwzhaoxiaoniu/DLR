@@ -104,7 +104,7 @@ archive/                                        # 历史：round_1 / round_2 / v
 | — | ~~AGENTS.md `/mcps` 指令在 `opencode run` 下不可执行~~ | ⬇️ 降级：opencode 能力限制，模型已适配 fallback，不影响评测 |
 | — | ~~`find_shortest_path` Cypher bug；`rdf_classes` 只返回 TriplesMap~~ | ✅ 2026-07-23 修复：`path_len`→`length(path)`；`classes()` 新增 `rr:class` 收集 |
 | — | ~~04_judge.py emoji 崩溃~~ | ⬇️ 降级：CSV 已正常落盘，仅日志冗余，AGENTS.md 已约束规避 |
-| P2 | ER YAML 缺 FK relations（dev_tables.json 无 FK） | 已手动补 3 条 relation，待 rebuild ER 后重跑验证。根治需 ER 配置生成器读 SQLite PRAGMA |
+| — | ~~ER YAML 缺 FK relations~~ | ✅ 2026-09-10 定调：**ER relations 严格等于 `dev_tables.json` 的 foreign_keys**，不自造（debit_card 曾有 3 条自造关系 transactions_1k→customers/gasstations/products，sqlite/dev_tables 双边均无声明，已剔除）。ER 无生成器，配置手工撰写；RDF 侧由 `generate_r2rml.py` 直读 SQLite PRAGMA FK |
 | P2 | 并行 eval 偶发 Kuzu 锁冲突 | 三范式同时初始化 MCP→争抢 Kuzu 排他锁，部分 Agent 启动即崩溃（database locked）。重跑可恢复 |
 | P2 | Stage 4 LLM Judge 偶发超时 300s | 大日志或网络波动时 judge 无法完成，默认 UNKNOWN→INCORRECT，需手动翻盘 |
 | P2 | RDF serve 进程静默崩溃 | `serve --paradigm ALL` 下 RDF 进程偶发崩溃，端口无监听但无错误日志（复启后正常） |

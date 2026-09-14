@@ -36,7 +36,7 @@ OC-based Agent Service/
 | 层级 | 机制 | 效果 |
 |------|------|------|
 | **opencode.json** | `permission: {bash, task, read, glob, grep: "deny"}` | Agent 只有 MCP 工具，无文件系统/子代理后门 |
-| **Ch3 读取豁免（⚠️ 待解决）** | 三通道设计要求 Agent 读 `skills/{db}.md`，与 `read: "deny"` 冲突 | 需放开 read 或改 MCP 工具下发；解决前 Ch3 实际不可用 |
+| **Ch3 读取豁免（✅ 2026-08-27 已解决）** | 三通道设计要求 Agent 读 `skills/{db}.md`，与 `read: "deny"` 冲突 | 采用**白名单**：`"read": {"*": "deny", "skills/*.md": "allow", "skills\\*.md": "allow"}`（opencode 按 git-worktree 相对路径匹配，**正反斜杠两种写法都要给**）。skills 有 4 份副本——`OC-based Agent Service/skills/` + `oc_{er,dlr,rdf}/skills/`，**改 skills 必须同步全部副本** |
 | **execute_sql MCP** | 薄透传服务（`sql` + `database_url`，只读），200 行硬截断 | SQL 执行的唯一正经路径；`database_url` 必须来自映射工具返回 |
 | **MCP 范式隔离** | 服务端按 `_mapping_type` 注册工具子集 | Agent 只能看到当前范式的工具 |
 | **第一跳信息屏蔽** | `*_semantic_query` 不返回物理表/字段/database_url | 物理信息必须经第二跳映射工具按需获取 |
