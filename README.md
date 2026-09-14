@@ -7,18 +7,37 @@
 
 ## 📚 文档导航
 
+**接手先看这三篇**：运行手册（怎么跑）→ 三范式建模说明（怎么建）→ DLR 建模指南（原创范式怎么建、为什么）。
+
 | 文档 | 内容 |
 |------|------|
-| [三范式建模说明](docs/modeling.md) | DLR/ER/RDF 设计理念、解析链路、存储隔离、MCP 工具表、可视化 |
+| **[运行手册](docs/runbook.md)** | **怎么跑、怎么归档、故障怎么办**——跑题流程与纪律、归档规范、故障手册、命令速查（唯一执行口径） |
+| [三范式建模说明](docs/modeling.md) | **对准测试**：三范式怎么以同等颗粒度使用同一份数据集；ER / DLR / RDF 作业规范；公平性约束与记账；解析链路、存储隔离、MCP 工具表、可视化 |
+| [DLR 建模指南](docs/modeling-guide-dlr.md) | 原创范式的详细版与前置：设计本体（三层/两机制/public 标记位）、建模规则与决策树、七个实战案例、新库接入流程、自检清单 |
 | [配置 → 存储写入链路](docs/semantic-layer-build.md) | 每范式 YAML/TTL → Kuzu/FAISS 的字段级写入对照 + 召回面公平性（透明化深度篇） |
-| [数据集说明](docs/dataset.md) | mini_dev 0703：11 库 500 题、下载、任务格式、已知缺陷清单 |
+| [评测流水线](docs/evaluation.md) | 四阶段流水线**设计**、Prompt 铁律、两段式判定、输出归档 |
 | [Agent 说明](docs/agent.md) | OpenCode + MCP 架构、AGENTS.md 规则、防作弊、db 锁库行为 |
-| [评测流水线](docs/evaluation.md) | 四阶段流水线、Prompt 铁律、双通道判定、公平性、已知问题 |
-| [评测结果 v4](docs/results_v4.md) | v4 逐题校验表（当前基线；post_process 自动重建） |
-| [三通道设计](docs/3-channel-design.md) | Ch1 MCP 语义层 / Ch2 RAG 证据 / Ch3 SOP 技能，并行锚定协议（当前架构） |
+| [三通道设计](docs/3-channel-design.md) | Ch1 MCP 语义层 / Ch2 RAG 证据 / Ch3 SOP 技能，并行锚定协议；知识分层四层准入 |
 | [RAG 知识库](docs/rag-evidence.md) | rag_knowledge 两种格式、知识写法铁律、索引重建 |
+| [数据集说明](docs/dataset.md) | mini_dev 0703：11 库 500 题、下载、任务格式、已知缺陷清单 |
+| [评测结果 v4](docs/results_v4.md) | v4 逐题校验表（当前基线；post_process 自动重建） |
 
 > **历史全在 [`archive/`](archive/)**：v2/v3 基线逐题表、旧评测归档（round_1 / round_2 / v2_final / v3_final）、v2 校验方法论、旧分享提纲与幻灯片、用量导出。`validated_results/` 只放现行基线（当前为 v4_final，首次归档时创建）。
+>
+> **给执行 agent**：仓库级执行约定见 [CLAUDE.md](CLAUDE.md)。
+
+## 📦 交接状态（2026-09-14）
+
+| 项 | 状态 |
+|---|---|
+| **建模范式** | 三范式（DLR 原创 + ER/RDF 基线），11 库配置齐 |
+| **语义层基线** | 数据集原生（09-10 重写）：列级描述 = CSV 原文，三范式同词同义；DLR schema 统一（`PE.attributes` + public 标记位，09-12） |
+| **入库收尾** | 09-13 全量 rebuild + 重启，活库实测：ER 798 属性 / 102 关系；DLR 792 / 72 PE / 49 LE / 35 PAS；RDF 798 / 101 关系 |
+| **评测架构** | 三通道（Ch1 语义 / Ch2 RAG / Ch3 SOP）+ 原始 gold + judge 争议裁决 |
+| **当前基线轮次** | **v4_final**（`config.json eval.round`）；v3 归档（90 题次）已作废移入 `archive/v3_final/` |
+| **已归档** | 0 题（v4 待起跑） |
+| **下一步** | debit_card 30 题在新基线上重跑（15 批 × 2 题 × 3 范式），随后 card_games 52 题 + 其余 9 主题 |
+| **已知问题** | P2：Kuzu 锁冲突 / judge 偶发超时 / RDF serve 静默崩溃；DLR 有意未覆盖 3 表 6 列；`formula_1.constructors.wins` 幽灵列待裁定 |
 
 ## 架构
 
@@ -81,14 +100,23 @@ python main.py serve --paradigm ALL     # 3 进程: ER 28765 / DLR 28775 / RDF 2
 
 ```bash
 cd Evaluation/scripts
-bash eval_run.sh EDR 2 1471 --parallel --workers 6                 # Stage 1: Agent 跑题 → raw NDJSON
-python 02_extract_and_run.py --paradigm er --log-subdir <run_id>   # Stage 2: 提取 SQL → 执行 → norm
-python 03_evaluate.py --paradigm er --log-subdir <run_id>          # Stage 3: strict 初判(脚本秒级)
-python 04_judge.py --paradigm er --log-subdir <run_id>             # Stage 4: LLM 仲裁(增量,可断点续跑)
-python parse_agent_stats.py --paradigm ALL                         # 汇总 token + 工具调用统计
+# Stage 1：一批 = 2 题 × 3 范式（workers 自动 = 范式数 × 题数，无需指定）
+bash eval_run.sh EDR <q1> <q2> --parallel
+
+# Stage 2/3/4：逐范式跑
+for p in er dlr rdf; do
+  $PY 02_extract_and_run.py --paradigm $p --log-subdir <run_id>   # 提取 SQL → 重放 → 标准化
+  $PY 03_evaluate.py        --paradigm $p --log-subdir <run_id>   # strict 初判（秒级）
+  $PY 04_judge.py           --paradigm $p --log-subdir <run_id>   # LLM 仲裁（增量续跑）
+done
+
+$PY parse_agent_stats.py --paradigm ALL --log-subdir <run_id>     # ⚠ 必须 ALL，逐范式会互相覆盖
+$PY post_process.py --run-id <run_id> --qids <q1>,<q2>            # 归档（结果确认后）
 ```
 
-四阶段细节、Prompt 铁律与防作弊设计见 [评测流水线](docs/evaluation.md)。
+`$PY` = `/d/ProgramData/anaconda3/envs/lepe_som/python`（**必须绝对路径**）。
+
+**完整流程、跑题纪律、归档规范与故障处理见 [运行手册](docs/runbook.md)**；四阶段的设计原理与 Prompt 铁律见 [评测流水线](docs/evaluation.md)。
 
 ## 项目结构
 
