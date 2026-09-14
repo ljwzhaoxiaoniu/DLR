@@ -122,7 +122,7 @@ Final Answer + Evidence SQL + 标注信息来源（MCP 工具名 / RAG kid / SOP
    - 放开 read（风险：Agent 可读项目任意文件，需靠 AGENTS.md 约束 + 审计日志兜底）
    - Ch3 改 MCP 工具下发（`get_skill(db)` 注册进 semantic-core，权限收敛在服务端）
 2. **旧 evidence JSONL topic 的迁移**：9 个 topic 仍是逐题 evidence 原文，非聚合格式，需按 card_games 模式重写
-3. **gold cache 过渡态**：`Evaluation/outputs/00_golden_cache.json` 为 08-12 修正版，切"原始 gold + judge 裁决"需重跑 Stage 0
+3. ~~gold cache 过渡态~~ ✅ **已切换（2026-08-27 起）**：02/03/04 读 config 的 `eval.output_dir`（现为 `outputs2`），即原始 gold 版 cache
 
 ## 原则
 

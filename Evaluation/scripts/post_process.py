@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
-"""评测后处理 — 一步归档到 v3_final 扁平结构.
+"""评测后处理 — 一步归档到 validated_results/{eval.round}/ 扁平结构.
 
 用法:
     python post_process.py --run-id xxx --qids 1481,1482
 
-输出:
-    validated_results/v3_final/
+输出（目标轮次由 config.json 的 eval.round 决定，如 v4_final）:
+    validated_results/{round}/
     ├── raw/
     │   ├── 1481-1482_er_1481.json    # {pair}_{p}_{qid}.json
     │   └── ...
     └── 1481-1482/
         └── agent_stats.csv
+
+明细文档同步写 docs/results_{版本}.md（v4_final → docs/results_v4.md）。
 """
 
 import argparse
@@ -23,9 +25,11 @@ ROOT = Path(__file__).resolve().parents[2]
 CFG = json.load(open(ROOT / "config.json", encoding="utf-8")) if (ROOT / "config.json").exists() else {}
 _EVAL_OUT = CFG.get("eval", {}).get("output_dir", "Evaluation/outputs")
 OUT_BASE = ROOT / _EVAL_OUT
-_EVAL_ROUND = CFG.get("eval", {}).get("round", "v3_final")
+_EVAL_ROUND = CFG.get("eval", {}).get("round", "v4_final")
 VALIDATED = ROOT / "validated_results" / _EVAL_ROUND
 RAW_DIR = VALIDATED / "raw"
+# 明细文档名只取主版本号：v4_final → docs/results_v4.md（此前硬编码 results_v3.md，换轮次会写错文件）
+_MD_PATH = ROOT / "docs" / f"results_{_EVAL_ROUND.split('_')[0]}.md"
 
 
 def main():
@@ -46,7 +50,7 @@ def main():
     VALIDATED.mkdir(parents=True, exist_ok=True)
     RAW_DIR.mkdir(parents=True, exist_ok=True)
 
-    # 1. 复制 raw 日志到 v3_final/raw/{pair}_{p}_{qid}.json
+    # 1. 复制 raw 日志到 {round}/raw/{pair}_{p}_{qid}.json
     src_logs = OUT_BASE / "01_logs" / run_id
     if not src_logs.exists():
         src_logs = OUT_BASE / run_id / "01_logs"
@@ -136,15 +140,15 @@ def main():
     print(f"\n[DONE] {pair_dir}")
     print(f"  raw → {RAW_DIR}/{pair_label}_*.json")
 
-    # 3. 更新 docs/results_v3.md
+    # 3. 更新 docs/results_{版本}.md
     update_results_md(pair_label, rows, VALIDATED)
 
 
 def update_results_md(pair_label, new_rows, validated_dir):
-    """从 v3_final 全量数据重建 results_v3.md 的明细表和统计."""
-    md_path = ROOT / "docs" / "results_v3.md"
+    """从 {round} 全量数据重建 results_{版本}.md 的明细表和统计."""
+    md_path = _MD_PATH
     if not md_path.exists():
-        print("[WARN] results_v3.md 不存在，跳过")
+        print(f"[WARN] {md_path.name} 不存在，跳过文档更新（归档 CSV 不受影响）")
         return
 
     # 收集所有 per-pair agent_stats.csv

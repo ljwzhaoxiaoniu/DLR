@@ -79,17 +79,20 @@ CSV 判定列：`strict_match` / `judge_verdict` / `judge_reason` / `verdict` / 
 ## 3. 输出与归档
 
 ```
-Evaluation/outputs/
-├── 00_golden_cache.json
-├── 01_logs/{run_id}/{er,dlr,rdf}/<qid>.json   # Stage 1 NDJSON（保留）
+Evaluation/outputs2/                            # 由 config.json 的 eval.output_dir 决定
+├── 00_golden_cache.json                        # 原始 gold 版（02/03/04 读它）
+├── 01_logs/{run_id}/{er,dlr,rdf}/<qid>.json    # Stage 1 NDJSON（保留）
 └── {run_id}/
     ├── 02_predictions/{er,dlr,rdf}/<qid>.json
     ├── 03_reports/{er,dlr,rdf}.csv + *_summary.json
     └── agent_stats.csv
 
-validated_results/round_N/{q_start}-{q_end}/    # post_process.py 归档
-├── raw/{paradigm}_{qid}.json
-└── agent_stats.csv    # 字段: paradigm,q_id,db_id,strict_match,judge_verdict,judge_reason,verdict,error,input_tokens,output_tokens
+validated_results/{eval.round}/                 # post_process.py 归档（当前 v4_final）
+├── raw/{q1}-{q2}_{paradigm}_{qid}.json         # 扁平存放，pair 前缀命名
+├── {q1}-{q2}/agent_stats.csv                   # 归档粒度 = 运行粒度，不合并
+└── （生成的明细同步进 docs/results_{版本}.md）
+
+archive/                                        # 历史：round_1 / round_2 / v2_final / v3_final
 ```
 
 ## 4. 待修问题
@@ -110,4 +113,4 @@ validated_results/round_N/{q_start}-{q_end}/    # post_process.py 归档
 
 **数据集恢复原始版**：不修 gold SQL / evidence（此前修正已回滚）。缺陷清单与逐题分析见 [dataset.md](dataset.md)；裁决口径见 `Evaluation/oc_judge/disputes.md`。缺陷题由知识层消化（Ch2 聚合修正 + Ch3 SOP 避坑），Agent 按语义正确口径作答，strict 对原始 gold 必 FAIL、胜负落在 judge 仲裁。**统计口径：正常题/缺陷题分栏**。
 
-> ⚠️ 过渡态：`Evaluation/outputs/00_golden_cache.json` 仍是 08-12 修正版（02/03/04 写死读它）。彻底切"原始 gold + judge 裁决"需重跑 Stage 0 重生成 cache。
+> ✅ **已切换（2026-08-27 起）**：02/03/04 读 config.json 的 `eval.output_dir`（现为 `Evaluation/outputs2`），即 **`outputs2/00_golden_cache.json` = 原始 gold 版**（Stage 0 已重生成）。`outputs/00_golden_cache.json`（08-12 修正版）仅作历史留存，链路不再引用。

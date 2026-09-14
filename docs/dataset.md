@@ -215,7 +215,7 @@ FROM (
 | **语义正确结果** | 空列表（两题均无样本外交易；三范式 R0 无条目轮一致得出） |
 | **gold 结果** | q1500 全部 27 种产品 / q1501 CZE+SVK |
 | **消化路径（软修复）** | Ch3 skills 本题条目（样本窗口事实 + 空集即真话 + 禁代理路线 + 路径自寻），judge 判序 SkillPath(SOP) > evidence 字面统一翻正（无条目轮 judge 分裂 5/6 INCORRECT）。disputes 无需补条目——SkillPath 已覆盖 |
-| **实测** | 0831_1628 修剪版条目：6/6 CORRECT；token 对照与三轮验证见 results_v3.md 案例 7 |
+| **实测** | 0831_1628 修剪版条目：6/6 CORRECT；token 对照与三轮验证见 `archive/results_v3.md` 案例 7（旧基线记录，v4 起以 docs/results_v4.md 为准） |
 
 ```
 
