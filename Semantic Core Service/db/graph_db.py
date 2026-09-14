@@ -543,14 +543,20 @@ class GraphDB:
             return []
 
     def get_entity_attributes_with_physical(self, entity_id: str) -> Dict[str, Any]:
-        """Query BizAttributes with physical mapping (ER)."""
+        """Query BizAttributes with physical mapping (ER).
+
+        键 = physical_column_id（实体内唯一）。不能用 name 做键：数据集原生就有
+        同描述的列（thrombosis_prediction 的 Examination.KCT/RVVT/LAC 三列、
+        Laboratory.DNA/DNA-II 两列，CSV 原文描述完全相同），用 name 会互相覆盖
+        导致列在 Agent 面凭空消失。name 保留在 value 里。
+        """
         try:
             result = self.conn.execute("""
                 MATCH (e:BizEntity {entity_id: $id})-[:HAS_ATTRIBUTE]->(a:BizAttribute)
                 RETURN a.name, a.description, a.data_type, a.physical_column_id
             """, parameters={"id": entity_id})
             return {
-                r[0]: {"physical_column": r[3], "data_type": r[2]}
+                (r[3] or r[0]): {"name": r[0], "physical_column": r[3], "data_type": r[2]}
                 for r in result.get_all()
             }
         except Exception as e:
@@ -630,7 +636,9 @@ class GraphDB:
                 entity_attrs = defaultdict(dict)
                 for ar in attr_result.get_all():
                     eid, name, desc, pcol, dtype = ar
-                    entity_attrs[eid][name] = {
+                    # 键用物理列 id：name 可能重名（数据集原生同描述列），
+                    # 用 name 做键会让可视化少列（thrombosis Examination/Laboratory 共 3 列）
+                    entity_attrs[eid][pcol or name] = {
                         "name": name,
                         "description": desc or "",
                         "physical_column_id": pcol or "",
