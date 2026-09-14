@@ -8,16 +8,6 @@ logical_entities:
 - logical_entity_id: LOGICAL.Customer
   biz_name: Customer
   description: Identity and classification of debit card customers
-  public_attributes:
-  - attr_id: LOGICAL.Customer.CustomerID
-    biz_name: CustomerID
-    description: 'Customer ID: unique identifier for the customer'
-  - attr_id: LOGICAL.Customer.Segment
-    biz_name: Segment
-    description: 'Customer segment: SME=Small Business, LAM=Local, KAM=Key Account'
-  - attr_id: LOGICAL.Customer.Currency
-    biz_name: Currency
-    description: 'Currency: CZK=Czech Koruna, EUR=Euro'
   physical_entities:
   - physical_entity_id: PHYSICAL.Customer
     physical_table_name: customers
@@ -26,47 +16,24 @@ logical_entities:
       cardinality: '1:1'
       key: CustomerID
     R: null
-    C:
-      LOGICAL.Customer.CustomerID: debit_card_specializing.customers.CustomerID
-      LOGICAL.Customer.Segment: debit_card_specializing.customers.Segment
-      LOGICAL.Customer.Currency: debit_card_specializing.customers.Currency
     S: Customer master data
-    private_attributes:
-    - attr_id: debit_card_specializing.customers.Segment
-      biz_name: client segment
-      physical_column_id: debit_card_specializing.customers.Segment
-      description: client segment
-    - attr_id: debit_card_specializing.customers.Currency
+    attributes:
+    - column: debit_card_specializing.customers.CustomerID
+      biz_name: CustomerID
+      description: 'Customer ID: unique identifier for the customer'
+      public: true
+    - column: debit_card_specializing.customers.Segment
+      biz_name: Segment
+      description: 'Customer segment: SME=Small Business, LAM=Local, KAM=Key Account'
+      public: true
+    - column: debit_card_specializing.customers.Currency
       biz_name: Currency
-      physical_column_id: debit_card_specializing.customers.Currency
-      description: Currency
+      description: 'Currency: CZK=Czech Koruna, EUR=Euro'
+      public: true
 - logical_entity_id: LOGICAL.Consumption
   biz_name: Consumption
   description: 'Customer consumption records: monthly bills (yearmonth) + transaction details (transactions_1k) — Consumption,
     UnitPrice, Quantity'
-  public_attributes:
-  - attr_id: LOGICAL.Consumption.Customer
-    biz_name: Customer
-    description: 'Customer ID: FK to customers table'
-  - attr_id: LOGICAL.Consumption.Date
-    biz_name: Date
-    description: 'Date: in yearmonth table = year-month YYYYMM (201301 = January 2013); in transactions_1k table = calendar
-      date YYYY-MM-DD (2013-01-13). Slash-form dates in questions (2012/8/24) mean calendar date'
-  - attr_id: LOGICAL.Consumption.Consumption
-    biz_name: Consumption
-    description: 'Monthly spending amount (CZK): total customer spending in this month'
-  - attr_id: LOGICAL.Consumption.UnitPrice
-    biz_name: UnitPrice
-    description: Unit price per item (CZK)
-  - attr_id: LOGICAL.Consumption.Quantity
-    biz_name: Quantity
-    description: 'Quantity: number of items purchased in this transaction'
-  - attr_id: LOGICAL.Consumption.GasStationID
-    biz_name: GasStationID
-    description: 'Gas station ID: FK to gasstations table'
-  - attr_id: LOGICAL.Consumption.ProductID
-    biz_name: ProductID
-    description: 'Product ID: FK to products table'
   physical_entities:
   - physical_entity_id: PHYSICAL.YearMonth
     physical_table_name: yearmonth
@@ -75,12 +42,21 @@ logical_entities:
       cardinality: N:1
       key: CustomerID
     R: null
-    C:
-      LOGICAL.Consumption.Customer: debit_card_specializing.yearmonth.CustomerID
-      LOGICAL.Consumption.Date: debit_card_specializing.yearmonth.Date
-      LOGICAL.Consumption.Consumption: debit_card_specializing.yearmonth.Consumption
     S: Monthly customer spending summary
-    private_attributes: []
+    attributes:
+    - column: debit_card_specializing.yearmonth.CustomerID
+      biz_name: Customer
+      description: 'Customer ID: FK to customers table'
+      public: true
+    - column: debit_card_specializing.yearmonth.Date
+      biz_name: Date
+      description: 'Date: in yearmonth table = year-month YYYYMM (201301 = January 2013); in transactions_1k table = calendar
+        date YYYY-MM-DD (2013-01-13). Slash-form dates in questions (2012/8/24) mean calendar date'
+      public: true
+    - column: debit_card_specializing.yearmonth.Consumption
+      biz_name: Consumption
+      description: 'Monthly spending amount (CZK): total customer spending in this month'
+      public: true
   - physical_entity_id: PHYSICAL.Transaction
     physical_table_name: transactions_1k
     physical_table_id: debit_card_specializing.transactions_1k
@@ -88,40 +64,45 @@ logical_entities:
       cardinality: N:1
       key: CustomerID
     R: null
-    C:
-      LOGICAL.Consumption.Customer: debit_card_specializing.transactions_1k.CustomerID
-      LOGICAL.Consumption.Date: debit_card_specializing.transactions_1k.Date
-      LOGICAL.Consumption.UnitPrice: debit_card_specializing.transactions_1k.Price
-      LOGICAL.Consumption.Quantity: debit_card_specializing.transactions_1k.Amount
-      LOGICAL.Consumption.GasStationID: debit_card_specializing.transactions_1k.GasStationID
-      LOGICAL.Consumption.ProductID: debit_card_specializing.transactions_1k.ProductID
     S: Gas station single transaction details — Price per item, Quantity, GasStation, Product
-    private_attributes:
-    - attr_id: debit_card_specializing.transactions_1k.TransactionID
+    attributes:
+    - column: debit_card_specializing.transactions_1k.CustomerID
+      biz_name: Customer
+      description: 'Customer ID: FK to customers table'
+      public: true
+    - column: debit_card_specializing.transactions_1k.Date
+      biz_name: Date
+      description: 'Date: in yearmonth table = year-month YYYYMM (201301 = January 2013); in transactions_1k table = calendar
+        date YYYY-MM-DD (2013-01-13). Slash-form dates in questions (2012/8/24) mean calendar date'
+      public: true
+    - column: debit_card_specializing.transactions_1k.Price
+      biz_name: UnitPrice
+      description: Unit price per item (CZK)
+      public: true
+    - column: debit_card_specializing.transactions_1k.Amount
+      biz_name: Quantity
+      description: 'Quantity: number of items purchased in this transaction'
+      public: true
+    - column: debit_card_specializing.transactions_1k.GasStationID
+      biz_name: GasStationID
+      description: 'Gas station ID: FK to gasstations table'
+      public: true
+    - column: debit_card_specializing.transactions_1k.ProductID
+      biz_name: ProductID
+      description: 'Product ID: FK to products table'
+      public: true
+    - column: debit_card_specializing.transactions_1k.TransactionID
       biz_name: Transaction ID
-      physical_column_id: debit_card_specializing.transactions_1k.TransactionID
       description: Transaction ID
-    - attr_id: debit_card_specializing.transactions_1k.Time
+    - column: debit_card_specializing.transactions_1k.Time
       biz_name: Time
-      physical_column_id: debit_card_specializing.transactions_1k.Time
       description: Time
-    - attr_id: debit_card_specializing.transactions_1k.CardID
+    - column: debit_card_specializing.transactions_1k.CardID
       biz_name: Card ID
-      physical_column_id: debit_card_specializing.transactions_1k.CardID
       description: Card ID
 - logical_entity_id: LOGICAL.GasStation
   biz_name: GasStation
   description: Fuel service stations
-  public_attributes:
-  - attr_id: LOGICAL.GasStation.GasStationID
-    biz_name: GasStationID
-    description: Gas station unique identifier
-  - attr_id: LOGICAL.GasStation.Country
-    biz_name: Country
-    description: 'Country code: CZE=Czech Republic, SVK=Slovakia'
-  - attr_id: LOGICAL.GasStation.ChainID
-    biz_name: ChainID
-    description: 'Chain ID: gas station chain brand identifier'
   physical_entities:
   - physical_entity_id: PHYSICAL.GasStation
     physical_table_name: gasstations
@@ -130,23 +111,26 @@ logical_entities:
       cardinality: '1:1'
       key: GasStationID
     R: null
-    C:
-      LOGICAL.GasStation.GasStationID: debit_card_specializing.gasstations.GasStationID
-      LOGICAL.GasStation.Country: debit_card_specializing.gasstations.Country
-      LOGICAL.GasStation.ChainID: debit_card_specializing.gasstations.ChainID
     S: Gas station information
-    private_attributes:
-    - attr_id: debit_card_specializing.gasstations.Segment
+    attributes:
+    - column: debit_card_specializing.gasstations.GasStationID
+      biz_name: GasStationID
+      description: Gas station unique identifier
+      public: true
+    - column: debit_card_specializing.gasstations.Country
+      biz_name: Country
+      description: 'Country code: CZE=Czech Republic, SVK=Slovakia'
+      public: true
+    - column: debit_card_specializing.gasstations.ChainID
+      biz_name: ChainID
+      description: 'Chain ID: gas station chain brand identifier'
+      public: true
+    - column: debit_card_specializing.gasstations.Segment
       biz_name: chain segment
-      physical_column_id: debit_card_specializing.gasstations.Segment
       description: chain segment
 - logical_entity_id: LOGICAL.Product
   biz_name: Product
   description: Products sold at gas stations
-  public_attributes:
-  - attr_id: LOGICAL.Product.ProductID
-    biz_name: ProductID
-    description: Product unique identifier
   physical_entities:
   - physical_entity_id: PHYSICAL.Product
     physical_table_name: products
@@ -155,13 +139,14 @@ logical_entities:
       cardinality: '1:1'
       key: ProductID
     R: null
-    C:
-      LOGICAL.Product.ProductID: debit_card_specializing.products.ProductID
     S: Product dictionary
-    private_attributes:
-    - attr_id: debit_card_specializing.products.Description
+    attributes:
+    - column: debit_card_specializing.products.ProductID
+      biz_name: ProductID
+      description: Product unique identifier
+      public: true
+    - column: debit_card_specializing.products.Description
       biz_name: Description
-      physical_column_id: debit_card_specializing.products.Description
       description: Description
 pas_relations:
 - relation_id: LOGICAL.Customer_TO_LOGICAL.Consumption

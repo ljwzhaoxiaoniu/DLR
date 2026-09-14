@@ -69,11 +69,12 @@ class PhysicalRelation:
 
 @dataclass
 class ARCSSatellite:
-    """ARCS 四元组：PE 附着到 LE 的物理触角 (DLR)
+    """ARCS 四元组：物理表 → PE 视图的投影定义 (DLR)
 
-    A - Anchor: 锚定（基数逻辑 + 标识键）
+    连接的是 PE ↔ 物理表（不是 PE ↔ LE；LE 与 PE 是 1:N 容器关系）。
+    A - Anchor: 锚定（基数逻辑 + 标识键；cardinality 从 LE 视角写：1:1 / 1:N）
     R - Row: 行级过滤（划定集合边界）
-    C - Column: 列级映射（逻辑属性→物理字段）
+    C - Column: 列选择与命名（值=物理列；键={LE}.{public 属性名}）
     S - Semantic4arcs: 语义补充（业务语境、枚举翻译、计算公式）
     """
     A_anchor: Dict[str, Any] = field(default_factory=dict)

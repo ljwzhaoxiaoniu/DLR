@@ -44,6 +44,12 @@ class DLRSemanticMapper(SemanticMapperABC):
         all_physical_entities: List[PhysicalEntity] = []
         all_pas_relations: List[PASRelation] = []
 
+        # 物理列索引：补 PE 属性的 data_type（与 er.py 同口径，2026-09-11 三范式物理层对齐）
+        physical_column_map: Dict[str, Any] = {}
+        for t in (physical_tables or []):
+            for col in t.columns:
+                physical_column_map[col.column_id] = col
+
         # First pass: collect logical→physical mapping for cross-LE resolution
         logical_to_children: Dict[str, List[str]] = {}
         for le_config in config.get("logical_entities", []):
@@ -63,18 +69,11 @@ class DLRSemanticMapper(SemanticMapperABC):
                 logger.warning(f"[DLR] 跳过无效逻辑实体: {le_config}")
                 continue
 
-            # Public attributes
+            # 统一属性表（2026-09-12 schema）：PE 的每列一条，public 标记位决定是否透传到 LE 面。
+            # 设计口径：public 不是实体，是 PE 属性上的可见性标记；LE 的 public 面在构建时
+            # 由各 PE 的 public 属性投影而成（标识 = {le_id}.{biz_name}，可推导故不单独存）。
             public_attrs: List[LogicalAttribute] = []
-            for attr_cfg in le_config.get("public_attributes", []):
-                attr_id = attr_cfg.get("attr_id")
-                attr_name = attr_cfg.get("biz_name")
-                if not attr_id or not attr_name:
-                    continue
-                public_attrs.append(LogicalAttribute(
-                    attr_id=attr_id,
-                    name=attr_name,
-                    description=attr_cfg.get("description", ""),
-                ))
+            _seen_pub: Dict[str, LogicalAttribute] = {}
 
             # Physical entities with ARCS
             child_entity_ids: List[str] = []
@@ -84,44 +83,48 @@ class DLRSemanticMapper(SemanticMapperABC):
                     continue
                 child_entity_ids.append(pe_id)
 
+                if "attributes" not in pe_config:
+                    raise ValueError(
+                        f"[DLR] {pe_id} 缺 attributes 字段 —— yaml 是旧 schema"
+                        f"（LE.public_attributes + PE.C/private_attributes）。"
+                        f"请先运行 tmp_scripts/migrate_dlr_schema.py 迁移")
+
+                attrs: List[PhysicalAttribute] = []
+                c_column: Dict[str, str] = {}
+                for attr_cfg in (pe_config.get("attributes") or []):
+                    col_id = attr_cfg.get("column")
+                    if not col_id:
+                        continue
+                    attr_name = attr_cfg.get("biz_name") or col_id
+                    attr_desc = attr_cfg.get("description") or ""
+                    pcol = physical_column_map.get(col_id)
+                    attrs.append(PhysicalAttribute(
+                        attr_id=col_id,
+                        name=attr_name,
+                        description=attr_desc,
+                        physical_column_id=col_id,
+                        data_type=pcol.data_type if pcol else None,
+                    ))
+                    if not attr_cfg.get("public"):
+                        continue
+                    # public → 透传到 LE 面；ARCS.C 由它重建（对外形态与旧 schema 一致）
+                    lid = f"{le_id}.{attr_name}"
+                    c_column[lid] = col_id
+                    if lid not in _seen_pub:
+                        _seen_pub[lid] = LogicalAttribute(
+                            attr_id=lid, name=attr_name, description=attr_desc)
+                    elif _seen_pub[lid].description != attr_desc:
+                        logger.warning(
+                            f"[DLR] 同名 public 属性 {lid} 在多个 PE 上文本不一致，取先出现者："
+                            f"{_seen_pub[lid].description!r} vs {attr_desc!r}")
+
                 # Build ARCS
                 arcs = ARCSSatellite(
                     A_anchor=pe_config.get("A", {}),
                     R_row=pe_config.get("R"),
-                    C_column=pe_config.get("C", {}),
+                    C_column=c_column,
                     S_semantic4arcs=pe_config.get("S"),
                 )
-
-                # Inherited attributes from C mapping
-                inherited_attrs: List[PhysicalAttribute] = []
-                for logical_attr_id, physical_col_id in arcs.C_column.items():
-                    logical_attr = next(
-                        (a for a in public_attrs if a.attr_id == logical_attr_id), None
-                    )
-                    inherited_attrs.append(PhysicalAttribute(
-                        attr_id=physical_col_id,
-                        name=logical_attr.name if logical_attr else logical_attr_id,
-                        description=logical_attr.description if logical_attr else "",
-                        physical_column_id=physical_col_id,
-                        data_type=None,
-                    ))
-
-                # Private attributes
-                private_attrs: List[PhysicalAttribute] = []
-                for attr_cfg in pe_config.get("private_attributes", []):
-                    attr_id = attr_cfg.get("attr_id")
-                    attr_name = attr_cfg.get("biz_name")
-                    if not attr_id or not attr_name:
-                        continue
-                    private_attrs.append(PhysicalAttribute(
-                        attr_id=attr_id,
-                        name=attr_name,
-                        description=attr_cfg.get("description", ""),
-                        physical_column_id=attr_cfg.get("physical_column_id"),
-                        data_type=None,
-                    ))
-
-                all_attrs = inherited_attrs + private_attrs
 
                 pe_name = pe_config.get("physical_table_name", pe_id)
                 all_physical_entities.append(PhysicalEntity(
@@ -129,13 +132,14 @@ class DLRSemanticMapper(SemanticMapperABC):
                     name=pe_name,
                     description=arcs.S_semantic4arcs or "",
                     physical_table_id=pe_config.get("physical_table_id"),
-                    attributes=all_attrs,
+                    attributes=attrs,
                     arcs=arcs,
                 ))
                 logger.info(f"[DLR] 映射物理实体: {pe_id} - {pe_name} "
                             f"(A={arcs.A_anchor}, R={arcs.R_row}, "
-                            f"C映射={len(arcs.C_column)}, 专有属性={len(private_attrs)})")
+                            f"属性={len(attrs)}, 其中 public={len(c_column)})")
 
+            public_attrs = list(_seen_pub.values())
             logical_entities.append(LogicalEntity(
                 logical_entity_id=le_id,
                 name=biz_name,

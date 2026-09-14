@@ -125,6 +125,8 @@ class RDFSemanticMapper(SemanticMapperABC):
 
         biz_entities: List[BizEntity] = []
         biz_relations: List[BizRelation] = []
+        # 缺 rdfs:label 的列块计数（回退 predicate 末段 slug 会让索引文本与 ER 不同名）
+        label_missing = 0
 
         database_url = _resolve_database_url(databases, db_name)
 
@@ -177,11 +179,18 @@ class RDFSemanticMapper(SemanticMapperABC):
 
                 col_id = f"{db_name}.{table_name}.{col_str}"
                 pcol = physical_column_map.get(col_id)
-                # rdfs:comment → 属性描述（三范式 per-attribute 索引同词同义，2026-09-10 公平性定调）
+                # 三范式 per-attribute 索引同词同义（2026-09-10 公平性定调）：
+                #   description ← rdfs:comment（= ER 的列描述原文）
+                #   name        ← rdfs:label（= ER 的 biz_name）；缺失才回退 predicate 末段
+                # label/comment 由 09-10 对齐批（tmp_scripts/align_dlr_rdf_to_er.py）写入 ttl，与 ER 逐字一致；
+                # predicate 末段是 URI slug（Charter_School__Y_N_），不可作索引文本。
                 comment = _first(g, pom, RDFS.comment)
+                label = _first(g, pom, RDFS.label)
+                if label is None:
+                    label_missing += 1
                 biz_attributes.append(BizAttribute(
                     attr_id=col_id,
-                    name=predicate,
+                    name=str(label) if label else predicate,
                     description=str(comment) if comment else None,
                     physical_column_id=col_id,
                     data_type=pcol.data_type if pcol else None,
@@ -216,17 +225,33 @@ class RDFSemanticMapper(SemanticMapperABC):
                 parent_class = _first(g, parent_sm, R2RML_CLASS) if parent_sm else None
                 parent_name = _safe_name(str(parent_class)) if parent_class else parent_table
 
+                # FK 列来自 rr:joinCondition(child/parent)。同一对表可能有多条 FK
+                # （e.g. Match→Player 22 条球员列）——必须进描述，否则 22 条关系的
+                # Kuzu 属性完全相同，MERGE 会塌缩成 1 条边（向量 101 vs 图 72 的根因）。
+                jc = _first(g, om, RR.joinCondition)
+                child_col = str(_first(g, jc, RR.child)) if jc else ""
+                parent_col = str(_first(g, jc, RR.parent)) if jc else ""
+                if child_col:
+                    # 与 ER 关系描述同格式（同词同义）
+                    rel_desc = f"{table_name}.{child_col} -> {parent_table}.{parent_col}"
+                else:
+                    rel_desc = f"[RDF] referencingObjectMap -> {parent_table}"
+
                 # 关系端点也使用 class IRI,与 entity_id 一致
                 parent_class_iri = str(parent_class) if parent_class else f"{db_name}.{parent_table}"
                 biz_relations.append(BizRelation(
-                    relation_id=f"{biz_name}_TO_{parent_name}",
+                    relation_id=f"{db_name}.{biz_name}_TO_{parent_name}",   # 带库前缀，与 ER 同构
                     biz_name=rel_name,
                     from_entity_attr_id=class_iri,
                     to_entity_attr_id=parent_class_iri,
-                    description=f"[RDF] referencingObjectMap -> {parent_table}",
+                    description=rel_desc,
                 ))
 
         logger.info(f"[RDF] parsed: {len(biz_entities)} entities, {len(biz_relations)} relations from {ttl_path}")
+        if label_missing:
+            logger.warning(f"[RDF] {label_missing} 个属性块缺 rdfs:label，已回退 predicate URI 末段（slug）"
+                           f"——索引 name 将与 ER 不同名，请确认 ttl 是否为已对齐版本"
+                           f"（对齐批：tmp_scripts/align_dlr_rdf_to_er.py）")
 
         model = ERScenarioModel(
             mapping_type="rdf",

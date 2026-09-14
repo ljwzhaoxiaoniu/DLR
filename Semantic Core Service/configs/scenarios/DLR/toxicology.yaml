@@ -10,13 +10,6 @@ logical_entities:
   biz_name: Molecule
   description: Chemical molecule — identified by molecule_id, classified by carcinogenicity label (carcinogenic or not); contains
     atoms and bonds
-  public_attributes:
-  - attr_id: LOGICAL.Molecule.MoleculeID
-    biz_name: MoleculeID
-    description: '分子ID: 分子的唯一标识符'
-  - attr_id: LOGICAL.Molecule.Label
-    biz_name: label
-    description: '致癌性标签: 该分子是否具有致癌性（+ 致癌 / - 非致癌）'
   physical_entities:
   - physical_entity_id: PHYSICAL.Molecule
     physical_table_name: molecule
@@ -25,25 +18,20 @@ logical_entities:
       cardinality: '1:1'
       key: molecule_id
     R: null
-    C:
-      LOGICAL.Molecule.MoleculeID: toxicology.molecule.molecule_id
-      LOGICAL.Molecule.Label: toxicology.molecule.label
     S: Molecule master — molecule_id and carcinogenicity label
-    private_attributes: []
+    attributes:
+    - column: toxicology.molecule.molecule_id
+      biz_name: MoleculeID
+      description: '分子ID: 分子的唯一标识符'
+      public: true
+    - column: toxicology.molecule.label
+      biz_name: label
+      description: '致癌性标签: 该分子是否具有致癌性（+ 致癌 / - 非致癌）'
+      public: true
 - logical_entity_id: LOGICAL.Atom
   biz_name: Atom
   description: Atoms composing molecules — element symbol (o, c, h, n, s, etc.), identified by atom_id, belonging to a molecule
     via molecule_id
-  public_attributes:
-  - attr_id: LOGICAL.Atom.AtomID
-    biz_name: AtomID
-    description: '原子ID: 原子的唯一标识符'
-  - attr_id: LOGICAL.Atom.Molecule
-    biz_name: Molecule
-    description: '所属分子ID: 该原子所属分子的唯一标识，关联 molecule 表'
-  - attr_id: LOGICAL.Atom.Element
-    biz_name: element
-    description: '元素符号: 化学元素符号，如 o=氧、c=碳、h=氢、n=氮、s=硫、br=溴、ca=钙、cl=氯、cu=铜、f=氟、p=磷、pb=铅、sn=锡'
   physical_entities:
   - physical_entity_id: PHYSICAL.Atom
     physical_table_name: atom
@@ -52,31 +40,23 @@ logical_entities:
       cardinality: N:1
       key: molecule_id
     R: null
-    C:
-      LOGICAL.Atom.AtomID: toxicology.atom.atom_id
-      LOGICAL.Atom.Molecule: toxicology.atom.molecule_id
-      LOGICAL.Atom.Element: toxicology.atom.element
     S: Atom composition — atom_id, element symbol, and molecule membership
-    private_attributes: []
+    attributes:
+    - column: toxicology.atom.atom_id
+      biz_name: AtomID
+      description: '原子ID: 原子的唯一标识符'
+      public: true
+    - column: toxicology.atom.molecule_id
+      biz_name: Molecule
+      description: '所属分子ID: 该原子所属分子的唯一标识，关联 molecule 表'
+      public: true
+    - column: toxicology.atom.element
+      biz_name: element
+      description: '元素符号: 化学元素符号，如 o=氧、c=碳、h=氢、n=氮、s=硫、br=溴、ca=钙、cl=氯、cu=铜、f=氟、p=磷、pb=铅、sn=锡'
+      public: true
 - logical_entity_id: LOGICAL.Bond
   biz_name: Bond
   description: Chemical bonds — bond_type (= double, - single,
-  public_attributes:
-  - attr_id: LOGICAL.Bond.BondID
-    biz_name: BondID
-    description: '化学键ID: 化学键的唯一标识符'
-  - attr_id: LOGICAL.Bond.Molecule
-    biz_name: Molecule
-    description: '所属分子ID: 该化学键所属分子的唯一标识，关联 molecule 表'
-  - attr_id: LOGICAL.Bond.BondType
-    biz_name: bond_type
-    description: '键类型: = 双键、- 单键、# 三键'
-  - attr_id: LOGICAL.Bond.Atom1
-    biz_name: atom1
-    description: '原子1 ID: 键连接的第一个原子ID，FK→atom'
-  - attr_id: LOGICAL.Bond.Atom2
-    biz_name: atom2
-    description: '原子2 ID: 键连接的第二个原子ID，FK→atom'
   physical_entities:
   - physical_entity_id: PHYSICAL.Bond
     physical_table_name: bond
@@ -85,12 +65,20 @@ logical_entities:
       cardinality: N:1
       key: molecule_id
     R: null
-    C:
-      LOGICAL.Bond.BondID: toxicology.bond.bond_id
-      LOGICAL.Bond.Molecule: toxicology.bond.molecule_id
-      LOGICAL.Bond.BondType: toxicology.bond.bond_type
     S: Bond master — bond_id, bond_type, and molecule membership
-    private_attributes: []
+    attributes:
+    - column: toxicology.bond.bond_id
+      biz_name: BondID
+      description: '化学键ID: 化学键的唯一标识符'
+      public: true
+    - column: toxicology.bond.molecule_id
+      biz_name: Molecule
+      description: '所属分子ID: 该化学键所属分子的唯一标识，关联 molecule 表'
+      public: true
+    - column: toxicology.bond.bond_type
+      biz_name: bond_type
+      description: '键类型: = 双键、- 单键、# 三键'
+      public: true
   - physical_entity_id: PHYSICAL.Connected
     physical_table_name: connected
     physical_table_id: toxicology.connected
@@ -98,12 +86,20 @@ logical_entities:
       cardinality: N:1
       key: bond_id
     R: null
-    C:
-      LOGICAL.Bond.BondID: toxicology.connected.bond_id
-      LOGICAL.Bond.Atom1: toxicology.connected.atom_id
-      LOGICAL.Bond.Atom2: toxicology.connected.atom_id2
     S: Bond-atom junction — each bond connects exactly 2 atoms (atom_id + atom_id2)
-    private_attributes: []
+    attributes:
+    - column: toxicology.connected.bond_id
+      biz_name: BondID
+      description: '化学键ID: 化学键的唯一标识符'
+      public: true
+    - column: toxicology.connected.atom_id
+      biz_name: atom1
+      description: '原子1 ID: 键连接的第一个原子ID，FK→atom'
+      public: true
+    - column: toxicology.connected.atom_id2
+      biz_name: atom2
+      description: '原子2 ID: 键连接的第二个原子ID，FK→atom'
+      public: true
 pas_relations:
 - relation_id: LOGICAL.Molecule_TO_LOGICAL.Atom
   relation_name: Contains

@@ -23,6 +23,82 @@
 
 **命名约束**：LE/PE id（`LOGICAL.*` / `PHYSICAL.*`）不带库前缀，因此**必须全局唯一**——构建期由 `BuildConflictError` 强制（同 id 映射不同物理表 → 中止 build）。历史教训：`PHYSICAL.Card`/`PHYSICAL.Race` 曾跨库重名导致 Kuzu 静默覆盖，已分别改名 `PHYSICAL.CreditCard`（financial）/`PHYSICAL.HeroRace`（superhero）。
 
+## 1.5 DLR 设计模型 —— 三层实体、两个机制、一个标记位
+
+> 2026-09-12 与作者对齐后定稿。§1 给缩写，**本节给设计本体**，§2 是建模操作规则。
+
+### 三层
+
+```
+物理表  ──(ARCS 投影)──▶  PE  ──(LE 1:N 容器)──▶  LE
+  事实源                  业务视图                 业务实体
+```
+
+| 层 | 是什么 | 数据上是否存在 |
+|---|---|---|
+| **物理表** | 数据源原样（列 / 行 / FK） | ✅ 存在 |
+| **PE** | 物理表在**当前业务语境下的视图**：ARCS 圈定行(R)、选列(C)、定锚(A)、注语义(S) | ❌ 视图，不物化 |
+| **LE** | **业务实体**（有独立生命周期），由若干 PE 构成 | ❌ 逻辑对象，不物化 |
+
+**LE 不物化**是关键：LE 没有"实例"这种东西，它的身份由**锚定键动态构成**。因此所有数量关系以**锚定键的取值**为单位，而不是"LE 实例"。
+
+### 两个机制
+
+| 机制 | 连接 | 连接的是 | 携带 |
+|---|---|---|---|
+| **ARCS** | PE ↔ **物理表** | 视图的**投影定义** | A 锚定 / R 行过滤 / C 列选择 / S 语义补注 |
+| **PAS** | LE ↔ LE | **public 属性级**的业务关联 | P 谓词（方向+动词+基数）/ A 寻址坐标 / S 语义补注 |
+
+- `ARCS.A.cardinality` 一律**从 LE 视角**写：`1:1`（每个锚定值 ↔ 本表 1 行 = 实体的身份/属性面）或 `1:N`（每个锚定值 ↔ 本表 N 行 = 实体的明细/事件面）。**不存在 `N:1` 写法。**
+- `ARCS.C` 的**值**是物理列，**键**是 `{LE}.{public 属性名}`——视图说业务话，所以列名取自 LE 面。
+
+### 一个标记位：public
+
+**public 不是实体，是 PE 属性上的可见性标记**（2026-09-12 起 yaml 为此结构）：
+
+```yaml
+attributes:
+- column: db.tbl.col        # 物理列
+  biz_name: ...             # 业务名
+  description: ...          # 文本
+  public: true              # ← 唯一标记位：标记即"透传到 LE 面"
+```
+
+- 标记了的 → 投影成 LE 的 public 面（进 LE 向量，供召回），**同时**是 `PAS.A` 的指认对象
+- 未标记的 → 只在下钻 PE 时可见（`get_pe_mapping`）
+- 同一个业务属性在多张 PE 上物化（共享锚定键）= 同名 public 标记出现多次 → 投影时**去重为一条**
+
+### 三档数量关系（agent 的推理规则）
+
+两个 PE 相连的结果行数 = 两侧 cardinality 相乘：
+
+| 组合 | 语义 |
+|---|---|
+| `1:1 ⋈ 1:1` | 属性 × 属性 |
+| `1:1 ⋈ 1:N` | 实体 ⋈ 明细 —— 正常 |
+| **`1:N ⋈ 1:N`** | **M×N：每个锚定值内部两两配对**。要"按实体汇总再比较"必须先各自聚合到锚定粒度 |
+
+### 闭环：跨 LE 的 PE↔PE 关联一定能走通
+
+`PAS` 连接的是两个 LE 的 **public 属性**（不是 PE，也不是物理列）。于是：
+
+```
+源 PE →（它持有的 public 属性）…LE 内串联… → PAS 坐标属性
+      →PAS→ 目标 LE 坐标属性 → 目标 LE 内串联 → 目标 PE
+```
+
+- `PAS.A` 命名的坐标**落在两侧之一**（多数在目标侧，或落在**桥梁 PE** 上），**不要求在源侧存在**
+- **桥梁 PE** = 同时参与两侧拼接的 PE（如 `hero_power` 持 `hero_id` + `power_id`），它必然挂在某个 LE 下
+- 模型只声明「关联存在 + 起点坐标」，**路径由 agent 找**——模型给的是导航语义，不是执行计划
+
+### 建模义务（可查）
+
+1. 每个 public 属性**至少被该 LE 下某个 PE 持有**（否则空挂 → 闭环断环）
+2. `PAS.A` 必须落在两侧之一的 public 面**名字**上（不是实体名、不是物理列名）
+3. **桥梁 PE 的两侧键要在可见面上**（private 也能走，但会多绕步 —— §2.10 toxicology 教训）
+
+---
+
 ## 2. DLR 建模规则 — 多表聚合场景
 
 > **适用场景**：一个业务概念对应一张主表 + 多张碎片化维度表/子表，需要聚合成统一的业务视图。核心原则：**一个 LE = 一个有业务生命周期的真实业务概念**，由若干物理对象（PE）构成。通过 PE 聚合实现"碎表集中"——这是 DLR 区分于 ER/RDF 的核心优势。
@@ -45,7 +121,8 @@
 
 ### 2.1 PE 聚合规则：ARCS 还是 PAS？
 
-问题：物理表何时作为 PE 并入同一个 LE（ARCS），何时拆为独立 LE（PAS）？
+问题：物理表何时作为 PE **投影**进某个业务实体（ARCS 视图），何时拆为独立 LE（用 PAS 关联）？
+（注意：ARCS 是"物理表 → PE 视图"的投影定义，不决定"并入哪个 LE"——后者是 LE 1:N 容器关系，见 §1.5）
 
 **判断流程**：
 ```
@@ -411,7 +488,7 @@ storage/
 自然语言问题
   ▼ FAISS 召回（TriplesMap 融合文本：db + 表名 + 列名）
 候选类（class_uri）
-  ▼ query_rdf_mapping（SPARQL 解析 R2RML）→ {table, columns, relations, database_url}
+  ▼ get_rdf_mapping（SPARQL 解析 R2RML）→ {table, columns, relations, database_url}
 Agent 写 SQL → execute_sql → Final Answer
 ```
 
@@ -435,7 +512,7 @@ Agent 写 SQL → execute_sql → Final Answer
 | DLR | `dlr_semantic_query` | `data.structures[]`（LE-PE 复合, db） | `get_pe_mapping(pe_id)` ★ |
 | RDF | `rdf_semantic_query` | `data.classes[]`（class_uri, name, description, db） | `get_rdf_mapping(class_uri)` |
 
-### ER 工具（11 + 1 共享）
+### ER 工具（9 + 1 共享；其中 `er_search_evidence` 属 Ch2 证据通道，见 3-channel-design.md）
 
 | Tool | 参数 | 语义 |
 |------|------|------|
@@ -444,11 +521,11 @@ Agent 写 SQL → execute_sql → Final Answer
 | `get_entity` / `get_entity_attributes` / `get_entity_relations` | `entity_id` | 实体详情 / 属性 / 关系 |
 | `get_entity_mapping` | `entity_id` | 物理映射（database_url + 表 + 字段） |
 | `find_shortest_path` | `from_id, to_id` | 两实体最短路径 |
-| `list_all_tables` | `db` | 已注册实体表（支持 db 过滤） |
+| ~~`list_all_tables`~~ | — | **已禁用** — 全量 dump 实体表（Agent 应经 semantic_query 发现表）；`get_table_schema` 仍可查任意物理表 |
 | `get_table_schema` | `table_id` | 任意物理表结构 |
 | `summary` | — | 知识库摘要 |
 
-### DLR 工具（21 + 1 共享；⚠ 2026-09-01 起实际注册核心 4 个：`dlr_semantic_query` / `dlr_search_evidence` / `get_pe_mapping` / `get_le_attrs`，下表其余为历史清单）
+### DLR 工具（4 + 1 共享；⚠ 2026-09-01 起注册核心 4 个：`dlr_semantic_query` / `dlr_search_evidence` / `get_pe_mapping` / `get_le_attrs`，下表其余为已禁注册的历史清单）
 
 | Tool | 参数 | 语义 |
 |------|------|------|
@@ -462,12 +539,12 @@ Agent 写 SQL → execute_sql → Final Answer
 | `is_le` / `is_pe` / `is_arcs` / `is_same_le` | id | 判定 |
 | ~~`schema`~~ | — | **已禁用** — 全量 dump LE+PE+PAS（q116 实测 37KB） |
 
-### RDF 工具（7 + 1 共享）
+### RDF 工具（6 + 1 共享；其中 `rdf_search_evidence` 属 Ch2 证据通道）
 
 | Tool | 参数 | 语义 |
 |------|------|------|
 | `rdf_semantic_query` | `question, top_k=10, db?` | 语义召回 → 类 |
-| `query_rdf_mapping` | `class_uri` | R2RML 映射（列+JOIN+database_url） |
+| `get_rdf_mapping` | `class_uri` | R2RML 映射（列+JOIN+database_url）（原 query_rdf_mapping） |
 | ~~`rdf_classes`~~ / ~~`rdf_predicates`~~ | — | **已禁用** — 全量枚举 class/predicate URI |
 | `rdf_search` | `q, limit` | 文本搜索三元组 |
 | `rdf_serialize` | `format` | 序列化（W3C） |

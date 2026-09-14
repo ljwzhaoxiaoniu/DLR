@@ -10,10 +10,6 @@ logical_entities:
   biz_name: Member
   description: Student club member — first_name, last_name, position, phone, T-shirt size, zip code, and major; the central
     entity for member activities, expenses, and income
-  public_attributes:
-  - attr_id: LOGICAL.Member.MemberID
-    biz_name: MemberID
-    description: '成员ID: 社团成员唯一标识符'
   physical_entities:
   - physical_entity_id: PHYSICAL.Member
     physical_table_name: member
@@ -22,60 +18,41 @@ logical_entities:
       cardinality: '1:1'
       key: member_id
     R: null
-    C:
-      LOGICAL.Member.MemberID: student_club.member.member_id
     S: Member master
-    private_attributes:
-    - attr_id: student_club.member.first_name
+    attributes:
+    - column: student_club.member.member_id
+      biz_name: MemberID
+      description: '成员ID: 社团成员唯一标识符'
+      public: true
+    - column: student_club.member.first_name
       biz_name: first name
-      physical_column_id: student_club.member.first_name
       description: member's first name
-    - attr_id: student_club.member.last_name
+    - column: student_club.member.last_name
       biz_name: last name
-      physical_column_id: student_club.member.last_name
       description: 'member''s last name. commonsense evidence: full name is first_name + last_name. e.g. A member''s first
         name is Angela and last name is Sanders. Thus, his/her full name is Angela Sanders.'
-    - attr_id: student_club.member.position
+    - column: student_club.member.position
       biz_name: position
-      physical_column_id: student_club.member.position
       description: The position the member holds in the club
-    - attr_id: student_club.member.t_shirt_size
+    - column: student_club.member.t_shirt_size
       biz_name: t_shirt_size
-      physical_column_id: student_club.member.t_shirt_size
       description: 'The size of tee shirt that member wants when shirts are ordered. commonsense evidence: usually the student
         ordered t-shirt with lager size has bigger body shape'
-    - attr_id: student_club.member.phone
+    - column: student_club.member.phone
       biz_name: phone
-      physical_column_id: student_club.member.phone
       description: The best telephone at which to contact the member
-    - attr_id: student_club.member.zip
+    - column: student_club.member.zip
       biz_name: zip
-      physical_column_id: student_club.member.zip
       description: the zip code of the member's hometown
-    - attr_id: student_club.member.link_to_major
+    - column: student_club.member.link_to_major
       biz_name: link to major
-      physical_column_id: student_club.member.link_to_major
       description: The unique identifier of the major of the member. References the Major table
-    - attr_id: student_club.member.email
+    - column: student_club.member.email
       biz_name: email
-      physical_column_id: student_club.member.email
       description: member's email
 - logical_entity_id: LOGICAL.Event
   biz_name: Event
   description: Club events — event_name, event_date, type, location, status; has budgets and records member attendance
-  public_attributes:
-  - attr_id: LOGICAL.Event.EventID
-    biz_name: EventID
-    description: 'Event ID: unique identifier'
-  - attr_id: LOGICAL.Event.EventName
-    biz_name: EventName
-    description: Event name
-  - attr_id: LOGICAL.Event.EventDate
-    biz_name: EventDate
-    description: Event date
-  - attr_id: LOGICAL.Event.Type
-    biz_name: Type
-    description: 'Event type: Meeting, fundraiser, etc.'
   physical_entities:
   - physical_entity_id: PHYSICAL.Event
     physical_table_name: event
@@ -84,35 +61,36 @@ logical_entities:
       cardinality: '1:1'
       key: event_id
     R: null
-    C:
-      LOGICAL.Event.EventID: student_club.event.event_id
-      LOGICAL.Event.EventName: student_club.event.event_name
-      LOGICAL.Event.EventDate: student_club.event.event_date
-      LOGICAL.Event.Type: student_club.event.type
     S: Event records
-    private_attributes:
-    - attr_id: student_club.event.notes
+    attributes:
+    - column: student_club.event.event_id
+      biz_name: EventID
+      description: 'Event ID: unique identifier'
+      public: true
+    - column: student_club.event.event_name
+      biz_name: EventName
+      description: Event name
+      public: true
+    - column: student_club.event.event_date
+      biz_name: EventDate
+      description: Event date
+      public: true
+    - column: student_club.event.type
+      biz_name: Type
+      description: 'Event type: Meeting, fundraiser, etc.'
+      public: true
+    - column: student_club.event.notes
       biz_name: notes
-      physical_column_id: student_club.event.notes
       description: A free text field for any notes about the event
-    - attr_id: student_club.event.location
+    - column: student_club.event.location
       biz_name: location
-      physical_column_id: student_club.event.location
       description: Address where the event was held or is to be held or the name of such a location
-    - attr_id: student_club.event.status
+    - column: student_club.event.status
       biz_name: status
-      physical_column_id: student_club.event.status
       description: One of three values indicating if the event is in planning, is opened, or is closed. Open/ Closed/ Planning
 - logical_entity_id: LOGICAL.Attendance
   biz_name: Attendance
   description: Member attendance at events — many-to-many junction linking members to events they attended
-  public_attributes:
-  - attr_id: LOGICAL.Attendance.Event
-    biz_name: Event
-    description: '关联活动ID: 参加的活动ID，关联 event 表'
-  - attr_id: LOGICAL.Attendance.Member
-    biz_name: Member
-    description: '关联成员ID: 参加的成员ID，关联 member 表'
   physical_entities:
   - physical_entity_id: PHYSICAL.Attendance
     physical_table_name: attendance
@@ -121,27 +99,19 @@ logical_entities:
       cardinality: N:1
       key: link_to_event
     R: null
-    C:
-      LOGICAL.Attendance.Event: student_club.attendance.link_to_event
-      LOGICAL.Attendance.Member: student_club.attendance.link_to_member
     S: Member-event many-to-many
-    private_attributes: []
+    attributes:
+    - column: student_club.attendance.link_to_event
+      biz_name: Event
+      description: '关联活动ID: 参加的活动ID，关联 event 表'
+      public: true
+    - column: student_club.attendance.link_to_member
+      biz_name: Member
+      description: '关联成员ID: 参加的成员ID，关联 member 表'
+      public: true
 - logical_entity_id: LOGICAL.Budget
   biz_name: Budget
   description: Event budget tracking — allocated amount, spent, remaining, category, and status per event; funds member expenses
-  public_attributes:
-  - attr_id: LOGICAL.Budget.BudgetID
-    biz_name: BudgetID
-    description: '预算ID: 预算项唯一标识符'
-  - attr_id: LOGICAL.Budget.Event
-    biz_name: Event
-    description: 'Event ID: FK to event table'
-  - attr_id: LOGICAL.Budget.Amount
-    biz_name: Amount
-    description: 'Budget amount: total allocated budget'
-  - attr_id: LOGICAL.Budget.Spent
-    biz_name: Spent
-    description: 'Spent amount: actual expenses charged to this budget'
   physical_entities:
   - physical_entity_id: PHYSICAL.Budget
     physical_table_name: budget
@@ -150,25 +120,33 @@ logical_entities:
       cardinality: N:1
       key: link_to_event
     R: null
-    C:
-      LOGICAL.Budget.BudgetID: student_club.budget.budget_id
-      LOGICAL.Budget.Event: student_club.budget.link_to_event
-      LOGICAL.Budget.Amount: student_club.budget.amount
-      LOGICAL.Budget.Spent: student_club.budget.spent
     S: Event budget item — amount, spent, remaining, category
-    private_attributes:
-    - attr_id: student_club.budget.category
+    attributes:
+    - column: student_club.budget.budget_id
+      biz_name: BudgetID
+      description: '预算ID: 预算项唯一标识符'
+      public: true
+    - column: student_club.budget.link_to_event
+      biz_name: Event
+      description: 'Event ID: FK to event table'
+      public: true
+    - column: student_club.budget.amount
+      biz_name: Amount
+      description: 'Budget amount: total allocated budget'
+      public: true
+    - column: student_club.budget.spent
+      biz_name: Spent
+      description: 'Spent amount: actual expenses charged to this budget'
+      public: true
+    - column: student_club.budget.category
       biz_name: category
-      physical_column_id: student_club.budget.category
       description: The area for which the amount is budgeted, such as, advertisement, food, parking
-    - attr_id: student_club.budget.remaining
+    - column: student_club.budget.remaining
       biz_name: remaining
-      physical_column_id: student_club.budget.remaining
       description: 'A value calculated as the amount budgeted minus the amount spent. the unit is dollar commonsense evidence:
         If the remaining < 0, it means that the cost has exceeded the budget.'
-    - attr_id: student_club.budget.event_status
+    - column: student_club.budget.event_status
       biz_name: event status
-      physical_column_id: student_club.budget.event_status
       description: "the status of the event. Closed / Open/ Planning commonsense evidence: \x95 Closed: It means that the\
         \ event is closed. The spent and the remaining won't change anymore. \x95 Open: It means that the event is already\
         \ opened. The spent and the remaining will change with new expenses. \x95 Planning: The event is not started yet but\
@@ -177,22 +155,6 @@ logical_entities:
   biz_name: Expense
   description: Member expense records — individual spending with cost, expense_date, description, and approval status; incurred
     by members, funded by event budgets
-  public_attributes:
-  - attr_id: LOGICAL.Expense.ExpenseID
-    biz_name: ExpenseID
-    description: '开支ID: 开支记录唯一标识符'
-  - attr_id: LOGICAL.Expense.Member
-    biz_name: Member
-    description: '成员ID: FK→member，花钱的人'
-  - attr_id: LOGICAL.Expense.Budget
-    biz_name: Budget
-    description: '预算ID: FK→budget，所属预算项'
-  - attr_id: LOGICAL.Expense.Cost
-    biz_name: cost
-    description: '金额: 开支金额'
-  - attr_id: LOGICAL.Expense.Date
-    biz_name: expense_date
-    description: '日期: 支出日期 YYYY-MM-DD 格式'
   physical_entities:
   - physical_entity_id: PHYSICAL.Expense
     physical_table_name: expense
@@ -201,30 +163,37 @@ logical_entities:
       cardinality: N:1
       key: link_to_member
     R: null
-    C:
-      LOGICAL.Expense.ExpenseID: student_club.expense.expense_id
-      LOGICAL.Expense.Member: student_club.expense.link_to_member
-      LOGICAL.Expense.Budget: student_club.expense.link_to_budget
-      LOGICAL.Expense.Cost: student_club.expense.cost
-      LOGICAL.Expense.Date: student_club.expense.expense_date
     S: Individual member expense at an event — cost, date, description, approval status
-    private_attributes:
-    - attr_id: student_club.expense.expense_description
+    attributes:
+    - column: student_club.expense.expense_id
+      biz_name: ExpenseID
+      description: '开支ID: 开支记录唯一标识符'
+      public: true
+    - column: student_club.expense.link_to_member
+      biz_name: Member
+      description: '成员ID: FK→member，花钱的人'
+      public: true
+    - column: student_club.expense.link_to_budget
+      biz_name: Budget
+      description: '预算ID: FK→budget，所属预算项'
+      public: true
+    - column: student_club.expense.cost
+      biz_name: cost
+      description: '金额: 开支金额'
+      public: true
+    - column: student_club.expense.expense_date
+      biz_name: expense_date
+      description: '日期: 支出日期 YYYY-MM-DD 格式'
+      public: true
+    - column: student_club.expense.expense_description
       biz_name: expense description
-      physical_column_id: student_club.expense.expense_description
       description: A textual description of what the money was spend for
-    - attr_id: student_club.expense.approved
+    - column: student_club.expense.approved
       biz_name: approved
-      physical_column_id: student_club.expense.approved
       description: A true or false value indicating if the expense was approved. true/ false
 - logical_entity_id: LOGICAL.Income
   biz_name: Income
   description: Funds received by the club — amount, source, date_received, and notes; received by members
-  public_attributes:
-  - attr_id: LOGICAL.Income.IncomeID
-    biz_name: IncomeID
-  - attr_id: LOGICAL.Income.Member
-    biz_name: Member
   physical_entities:
   - physical_entity_id: PHYSICAL.Income
     physical_table_name: income
@@ -233,34 +202,31 @@ logical_entities:
       cardinality: N:1
       key: link_to_member
     R: null
-    C:
-      LOGICAL.Income.IncomeID: student_club.income.income_id
-      LOGICAL.Income.Member: student_club.income.link_to_member
     S: Income records
-    private_attributes:
-    - attr_id: student_club.income.amount
+    attributes:
+    - column: student_club.income.income_id
+      biz_name: IncomeID
+      description: ''
+      public: true
+    - column: student_club.income.link_to_member
+      biz_name: Member
+      description: ''
+      public: true
+    - column: student_club.income.amount
       biz_name: amount
-      physical_column_id: student_club.income.amount
       description: amount of funds. the unit is dollar
-    - attr_id: student_club.income.source
+    - column: student_club.income.source
       biz_name: source
-      physical_column_id: student_club.income.source
       description: A value indicating where the funds come from such as dues, or the annual university allocation
-    - attr_id: student_club.income.date_received
+    - column: student_club.income.date_received
       biz_name: date received
-      physical_column_id: student_club.income.date_received
       description: the date that the fund received
-    - attr_id: student_club.income.notes
+    - column: student_club.income.notes
       biz_name: notes
-      physical_column_id: student_club.income.notes
       description: A free-text value giving any needed details about the receipt of funds
 - logical_entity_id: LOGICAL.Major
   biz_name: Major
   description: Academic major — major_name, department, and college
-  public_attributes:
-  - attr_id: LOGICAL.Major.MajorID
-    biz_name: MajorID
-    description: '专业ID: 专业唯一标识符'
   physical_entities:
   - physical_entity_id: PHYSICAL.Major
     physical_table_name: major
@@ -269,28 +235,24 @@ logical_entities:
       cardinality: '1:1'
       key: major_id
     R: null
-    C:
-      LOGICAL.Major.MajorID: student_club.major.major_id
     S: Major dictionary
-    private_attributes:
-    - attr_id: student_club.major.major_name
+    attributes:
+    - column: student_club.major.major_id
+      biz_name: MajorID
+      description: '专业ID: 专业唯一标识符'
+      public: true
+    - column: student_club.major.major_name
       biz_name: major name
-      physical_column_id: student_club.major.major_name
       description: major name
-    - attr_id: student_club.major.department
+    - column: student_club.major.department
       biz_name: department
-      physical_column_id: student_club.major.department
       description: The name of the department that offers the major
-    - attr_id: student_club.major.college
+    - column: student_club.major.college
       biz_name: college
-      physical_column_id: student_club.major.college
       description: The name college that houses the department that offers the major
 - logical_entity_id: LOGICAL.ZipCode
   biz_name: ZipCode
   description: Zip code geographic information — city, state, and county
-  public_attributes:
-  - attr_id: LOGICAL.ZipCode.Zip
-    biz_name: Zip
   physical_entities:
   - physical_entity_id: PHYSICAL.ZipCode
     physical_table_name: zip_code
@@ -299,30 +261,27 @@ logical_entities:
       cardinality: '1:1'
       key: zip_code
     R: null
-    C:
-      LOGICAL.ZipCode.Zip: student_club.zip_code.zip_code
     S: Zip code dictionary
-    private_attributes:
-    - attr_id: student_club.zip_code.city
+    attributes:
+    - column: student_club.zip_code.zip_code
+      biz_name: Zip
+      description: ''
+      public: true
+    - column: student_club.zip_code.city
       biz_name: city
-      physical_column_id: student_club.zip_code.city
       description: The city to which the ZIP pertains
-    - attr_id: student_club.zip_code.state
+    - column: student_club.zip_code.state
       biz_name: state
-      physical_column_id: student_club.zip_code.state
       description: The name of the state to which the ZIP pertains
-    - attr_id: student_club.zip_code.county
+    - column: student_club.zip_code.county
       biz_name: county
-      physical_column_id: student_club.zip_code.county
       description: The county to which the ZIP pertains
-    - attr_id: student_club.zip_code.type
+    - column: student_club.zip_code.type
       biz_name: type
-      physical_column_id: student_club.zip_code.type
       description: 'The kind of ZIP code. commonsense evidence: � Standard: the normal codes with which most people are familiar
         � PO Box: zip codes have post office boxes � Unique: zip codes that are assigned to individual organizations.'
-    - attr_id: student_club.zip_code.short_state
+    - column: student_club.zip_code.short_state
       biz_name: short state
-      physical_column_id: student_club.zip_code.short_state
       description: The abbreviation of the state to which the ZIP pertains
 pas_relations:
 - relation_id: LOGICAL.Member_TO_LOGICAL.Event

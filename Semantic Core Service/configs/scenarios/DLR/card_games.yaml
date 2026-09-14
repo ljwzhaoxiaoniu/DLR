@@ -9,15 +9,6 @@ logical_entities:
 - logical_entity_id: LOGICAL.Card
   biz_name: Card
   description: Individual card entity with attributes, printings, and game mechanics
-  public_attributes:
-  - attr_id: LOGICAL.Card.CardID
-    biz_name: CardID
-    description: The globally unique identifier for the card (UUID). Same card name may have multiple printings with different
-      UUIDs.
-  - attr_id: LOGICAL.Card.PrintID
-    biz_name: PrintID
-    description: The integer primary key for a specific printing version. Different printings of the same card name have different
-      IDs.
   physical_entities:
   - physical_entity_id: PHYSICAL.Card
     physical_table_name: cards
@@ -26,346 +17,264 @@ logical_entities:
       cardinality: '1:1'
       key: uuid
     R: null
-    C:
-      LOGICAL.Card.CardID: card_games.cards.uuid
-      LOGICAL.Card.PrintID: card_games.cards.id
     S: Card attributes
-    private_attributes:
-    - attr_id: card_games.cards.id
-      biz_name: unique id number identifying the cards
-      physical_column_id: card_games.cards.id
-      description: unique id number identifying the cards
-    - attr_id: card_games.cards.name
+    attributes:
+    - column: card_games.cards.uuid
+      biz_name: CardID
+      description: The globally unique identifier for the card (UUID). Same card name may have multiple printings with different
+        UUIDs.
+      public: true
+    - column: card_games.cards.id
+      biz_name: PrintID
+      description: The integer primary key for a specific printing version. Different printings of the same card name have
+        different IDs.
+      public: true
+    - column: card_games.cards.name
       biz_name: name
-      physical_column_id: card_games.cards.name
       description: The name of the card.. Cards with multiple faces, like "Split" and "Meld" cards are given a delimiter.
-    - attr_id: card_games.cards.setCode
+    - column: card_games.cards.setCode
       biz_name: Set Code
-      physical_column_id: card_games.cards.setCode
       description: The set printing code that the card is from.
-    - attr_id: card_games.cards.borderColor
+    - column: card_games.cards.borderColor
       biz_name: border Color
-      physical_column_id: card_games.cards.borderColor
       description: The color of the card border.. "black", "borderless", "gold", "silver", "white"
-    - attr_id: card_games.cards.rarity
+    - column: card_games.cards.rarity
       biz_name: rarity
-      physical_column_id: card_games.cards.rarity
       description: The card printing rarity.
-    - attr_id: card_games.cards.convertedManaCost
+    - column: card_games.cards.convertedManaCost
       biz_name: converted Mana Cost
-      physical_column_id: card_games.cards.convertedManaCost
       description: The converted mana cost of the card. Use the manaValue property.. if value is higher, it means that this
         card cost more converted mana
-    - attr_id: card_games.cards.power
+    - column: card_games.cards.power
       biz_name: power
-      physical_column_id: card_games.cards.power
       description: 'The power of the card.. commonsense evidence: ∞ means infinite power null or * refers to unknown power'
-    - attr_id: card_games.cards.artist
+    - column: card_games.cards.artist
       biz_name: artist
-      physical_column_id: card_games.cards.artist
       description: The name of the artist that illustrated the card art.
-    - attr_id: card_games.cards.frameVersion
+    - column: card_games.cards.frameVersion
       biz_name: frame Version
-      physical_column_id: card_games.cards.frameVersion
       description: The version of the card frame style.. "1993", "1997", "2003", "2015", "future"
-    - attr_id: card_games.cards.layout
+    - column: card_games.cards.layout
       biz_name: layout
-      physical_column_id: card_games.cards.layout
       description: The type of card layout. For a token card, this will be "token"
-    - attr_id: card_games.cards.types
+    - column: card_games.cards.types
       biz_name: types
-      physical_column_id: card_games.cards.types
       description: A list of all card types of the card, including Un‑sets and gameplay variants.
-    - attr_id: card_games.cards.originalType
+    - column: card_games.cards.originalType
       biz_name: originalType
-      physical_column_id: card_games.cards.originalType
       description: original Type. The type of the card as originally printed. Includes any supertypes and subtypes.
-    - attr_id: card_games.cards.colors
+    - column: card_games.cards.colors
       biz_name: colors
-      physical_column_id: card_games.cards.colors
       description: A list of all the colors in manaCost and colorIndicator.. Some cards may not have values, such as cards
         with "Devoid" in its text.
-    - attr_id: card_games.cards.subtypes
+    - column: card_games.cards.subtypes
       biz_name: subtypes
-      physical_column_id: card_games.cards.subtypes
       description: A list of card subtypes found after em-dash.
-    - attr_id: card_games.cards.supertypes
+    - column: card_games.cards.supertypes
       biz_name: super types
-      physical_column_id: card_games.cards.supertypes
       description: 'A list of card supertypes found before em-dash.. commonsense evidence: list of all types should be the
         union of subtypes and supertypes'
-    - attr_id: card_games.cards.hasContentWarning
+    - column: card_games.cards.hasContentWarning
       biz_name: has Content Warning
-      physical_column_id: card_games.cards.hasContentWarning
       description: 'If the card marked by Wizards of the Coast (opens new window) for having sensitive content. See this official
         article (opens new window) for more information.. 0: doesn''t have 1: has sensitve content or Wizards of the Coast
         commonsense evidence: Cards with this property may have missing or degraded properties and values.'
-    - attr_id: card_games.cards.isPromo
+    - column: card_games.cards.isPromo
       biz_name: is Promotion
-      physical_column_id: card_games.cards.isPromo
       description: 'If the card is a promotional printing.. 0: is not 1: is'
-    - attr_id: card_games.cards.isStorySpotlight
+    - column: card_games.cards.isStorySpotlight
       biz_name: is Story Spotlight
-      physical_column_id: card_games.cards.isStorySpotlight
       description: 'If the card is a Story Spotlight card.. 0: is not 1: is'
-    - attr_id: card_games.cards.isTextless
+    - column: card_games.cards.isTextless
       biz_name: is Text less
-      physical_column_id: card_games.cards.isTextless
       description: 'If the card does not have a text box.. commonsense evidence: 0: has a text box; 1: doesn''t have a text
         box;'
-    - attr_id: card_games.cards.edhrecRank
+    - column: card_games.cards.edhrecRank
       biz_name: rec Rank in edh
-      physical_column_id: card_games.cards.edhrecRank
       description: The card rank on EDHRec
-    - attr_id: card_games.cards.availability
+    - column: card_games.cards.availability
       biz_name: availability
-      physical_column_id: card_games.cards.availability
       description: A list of the card's available printing types.. "arena", "dreamcast", "mtgo", "paper", "shandalar"
-    - attr_id: card_games.cards.cardKingdomFoilId
+    - column: card_games.cards.cardKingdomFoilId
       biz_name: card Kingdom Foil Id
-      physical_column_id: card_games.cards.cardKingdomFoilId
       description: 'card Kingdom Foil Id. commonsense evidence: cardKingdomFoilId, when paired with cardKingdomId that is
         not Null, is incredibly powerful.'
-    - attr_id: card_games.cards.cardKingdomId
+    - column: card_games.cards.cardKingdomId
       biz_name: card Kingdom Id
-      physical_column_id: card_games.cards.cardKingdomId
       description: card Kingdom Id. A list of all the colors in the color indicator
-    - attr_id: card_games.cards.side
+    - column: card_games.cards.side
       biz_name: side
-      physical_column_id: card_games.cards.side
       description: 'The identifier of the card side.. Used on cards with multiple faces on the same card. commonsense evidence:
         if this value is empty, then it means this card doesn''t have multiple faces on the same card.'
-    - attr_id: card_games.cards.duelDeck
+    - column: card_games.cards.duelDeck
       biz_name: duel Deck
-      physical_column_id: card_games.cards.duelDeck
       description: The indicator for which duel deck the card is in.
-    - attr_id: card_games.cards.asciiName
+    - column: card_games.cards.asciiName
       biz_name: ascii Name
-      physical_column_id: card_games.cards.asciiName
       description: The ASCII(opens new window) (Basic/128) code formatted card name with no special unicode characters.
-    - attr_id: card_games.cards.colorIdentity
+    - column: card_games.cards.colorIdentity
       biz_name: color Identity
-      physical_column_id: card_games.cards.colorIdentity
       description: A list of all the colors found in manaCost, colorIndicator, and text
-    - attr_id: card_games.cards.colorIndicator
+    - column: card_games.cards.colorIndicator
       biz_name: color Indicator
-      physical_column_id: card_games.cards.colorIndicator
       description: A list of all the colors in the color indicator (The symbol prefixed to a card's types).
-    - attr_id: card_games.cards.faceConvertedManaCost
+    - column: card_games.cards.faceConvertedManaCost
       biz_name: face Converted Mana Cost
-      physical_column_id: card_games.cards.faceConvertedManaCost
       description: The converted mana cost or mana value for the face for either half or part of the card.. if value is higher,
         it means that this card cost more converted mana for the face
-    - attr_id: card_games.cards.faceName
+    - column: card_games.cards.faceName
       biz_name: face Name
-      physical_column_id: card_games.cards.faceName
       description: The name on the face of the card.
-    - attr_id: card_games.cards.flavorName
+    - column: card_games.cards.flavorName
       biz_name: flavor Name
-      physical_column_id: card_games.cards.flavorName
       description: The promotional card name printed above the true card name on special cards that has no game function..
         The promotional card name printed above the true card name on special cards that has no game function.
-    - attr_id: card_games.cards.flavorText
+    - column: card_games.cards.flavorText
       biz_name: flavor Text
-      physical_column_id: card_games.cards.flavorText
       description: The italicized text found below the rules text that has no game function.. The italicized text found below
         the rules text that has no game function.
-    - attr_id: card_games.cards.frameEffects
+    - column: card_games.cards.frameEffects
       biz_name: frame Effects
-      physical_column_id: card_games.cards.frameEffects
       description: The visual frame effects.. "colorshifted", "companion", "compasslanddfc", "devoid", "draft", "etched",
         "extendedart", "fullart", "inverted", "legendary", "lesson", "miracle", "mooneldrazidfc", "nyxtouched", "originpwdfc",
         "showcase", "snow", "sunmoondfc", "textless", "tombstone", "waxingandwaningmoondfc"
-    - attr_id: card_games.cards.hand
+    - column: card_games.cards.hand
       biz_name: hand
-      physical_column_id: card_games.cards.hand
       description: 'The starting maximum hand size total modifier.. A + or - character precedes an integer. commonsense evidence:
         positive maximum hand size: +1, +2, .... negative maximum hand size: -1, .... neural maximum hand size: 0....'
-    - attr_id: card_games.cards.hasAlternativeDeckLimit
+    - column: card_games.cards.hasAlternativeDeckLimit
       biz_name: has Alternative Deck Limit
-      physical_column_id: card_games.cards.hasAlternativeDeckLimit
       description: 'If the card allows a value other than 4 copies in a deck.. 0: disallow 1: allow'
-    - attr_id: card_games.cards.hasFoil
+    - column: card_games.cards.hasFoil
       biz_name: has Foil
-      physical_column_id: card_games.cards.hasFoil
       description: 'If the card can be found in foil. 0: cannot be found 1: can be found'
-    - attr_id: card_games.cards.hasNonFoil
+    - column: card_games.cards.hasNonFoil
       biz_name: has Non Foil
-      physical_column_id: card_games.cards.hasNonFoil
       description: 'If the card can be found in non-foil. 0: cannot be found 1: can be found'
-    - attr_id: card_games.cards.isAlternative
+    - column: card_games.cards.isAlternative
       biz_name: is Alternative
-      physical_column_id: card_games.cards.isAlternative
       description: 'If the card is an alternate variation to an original printing. 0: is not 1: is'
-    - attr_id: card_games.cards.isFullArt
+    - column: card_games.cards.isFullArt
       biz_name: is Full Art
-      physical_column_id: card_games.cards.isFullArt
       description: 'If the card has full artwork.. 0: doesn''t have, 1: has full artwork'
-    - attr_id: card_games.cards.isOnlineOnly
+    - column: card_games.cards.isOnlineOnly
       biz_name: is Online Only
-      physical_column_id: card_games.cards.isOnlineOnly
       description: 'If the card is only available in online game variations.. 0: is not 1: is'
-    - attr_id: card_games.cards.isOversized
+    - column: card_games.cards.isOversized
       biz_name: is Oversized
-      physical_column_id: card_games.cards.isOversized
       description: 'If the card is oversized.. 0: is not 1: is'
-    - attr_id: card_games.cards.isReprint
+    - column: card_games.cards.isReprint
       biz_name: is Reprint
-      physical_column_id: card_games.cards.isReprint
       description: 'If the card has been reprinted.. 0: has not 1: has not been'
-    - attr_id: card_games.cards.isReserved
+    - column: card_games.cards.isReserved
       biz_name: is Reserved
-      physical_column_id: card_games.cards.isReserved
       description: 'If the card is on the Magic: The Gathering Reserved List (opens new window). If the card is on the Magic,
         it will appear in The Gathering Reserved List'
-    - attr_id: card_games.cards.isStarter
+    - column: card_games.cards.isStarter
       biz_name: is Starter
-      physical_column_id: card_games.cards.isStarter
       description: 'If the card is found in a starter deck such as Planeswalker/Brawl decks.. 0: is not 1: is'
-    - attr_id: card_games.cards.isTimeshifted
+    - column: card_games.cards.isTimeshifted
       biz_name: is Time shifted
-      physical_column_id: card_games.cards.isTimeshifted
       description: 'If the card is time shifted. commonsense evidence: If the card is "timeshifted", a feature of certain
         sets where a card will have a different frameVersion.'
-    - attr_id: card_games.cards.keywords
+    - column: card_games.cards.keywords
       biz_name: keywords
-      physical_column_id: card_games.cards.keywords
       description: A list of keywords found on the card.
-    - attr_id: card_games.cards.leadershipSkills
+    - column: card_games.cards.leadershipSkills
       biz_name: leadership Skills
-      physical_column_id: card_games.cards.leadershipSkills
       description: A list of formats the card is legal to be a commander in
-    - attr_id: card_games.cards.life
+    - column: card_games.cards.life
       biz_name: life
-      physical_column_id: card_games.cards.life
       description: The starting life total modifier. A plus or minus character precedes an integer.
-    - attr_id: card_games.cards.loyalty
+    - column: card_games.cards.loyalty
       biz_name: loyalty
-      physical_column_id: card_games.cards.loyalty
       description: The starting loyalty value of the card.. Used only on cards with "Planeswalker" in its types. empty means
         unkown
-    - attr_id: card_games.cards.manaCost
+    - column: card_games.cards.manaCost
       biz_name: mana Cost
-      physical_column_id: card_games.cards.manaCost
       description: 'The mana cost of the card wrapped in brackets for each value.. commonsense evidence: manaCost is unconverted
         mana cost'
-    - attr_id: card_games.cards.mcmId
+    - column: card_games.cards.mcmId
       biz_name: mcmId
-      physical_column_id: card_games.cards.mcmId
       description: mcmId. NOT USEFUL
-    - attr_id: card_games.cards.mcmMetaId
+    - column: card_games.cards.mcmMetaId
       biz_name: mcmMetaId
-      physical_column_id: card_games.cards.mcmMetaId
       description: mcmMetaId. NOT USEFUL
-    - attr_id: card_games.cards.mtgArenaId
+    - column: card_games.cards.mtgArenaId
       biz_name: mtgArenaId
-      physical_column_id: card_games.cards.mtgArenaId
       description: mtgArenaId. NOT USEFUL
-    - attr_id: card_games.cards.mtgjsonV4Id
+    - column: card_games.cards.mtgjsonV4Id
       biz_name: mtgjsonV4Id
-      physical_column_id: card_games.cards.mtgjsonV4Id
       description: mtgjsonV4Id. NOT USEFUL
-    - attr_id: card_games.cards.mtgoFoilId
+    - column: card_games.cards.mtgoFoilId
       biz_name: mtgoFoilId
-      physical_column_id: card_games.cards.mtgoFoilId
       description: mtgoFoilId. NOT USEFUL
-    - attr_id: card_games.cards.mtgoId
+    - column: card_games.cards.mtgoId
       biz_name: mtgoId
-      physical_column_id: card_games.cards.mtgoId
       description: mtgoId. NOT USEFUL
-    - attr_id: card_games.cards.multiverseId
+    - column: card_games.cards.multiverseId
       biz_name: multiverseId
-      physical_column_id: card_games.cards.multiverseId
       description: multiverseId. NOT USEFUL
-    - attr_id: card_games.cards.number
+    - column: card_games.cards.number
       biz_name: number
-      physical_column_id: card_games.cards.number
       description: The number of the card
-    - attr_id: card_games.cards.originalReleaseDate
+    - column: card_games.cards.originalReleaseDate
       biz_name: originalReleaseDate
-      physical_column_id: card_games.cards.originalReleaseDate
       description: original Release Date. The original release date in ISO 8601(opens new window) format for a promotional
         card printed outside of a cycle window, such as Secret Lair Drop promotions.
-    - attr_id: card_games.cards.originalText
+    - column: card_games.cards.originalText
       biz_name: originalText
-      physical_column_id: card_games.cards.originalText
       description: original Text. The text on the card as originally printed.
-    - attr_id: card_games.cards.otherFaceIds
+    - column: card_games.cards.otherFaceIds
       biz_name: otherFaceIds
-      physical_column_id: card_games.cards.otherFaceIds
       description: other Face Ids. A list of card UUID's to this card's counterparts, such as transformed or melded faces.
-    - attr_id: card_games.cards.printings
+    - column: card_games.cards.printings
       biz_name: printings
-      physical_column_id: card_games.cards.printings
       description: A list of set printing codes the card was printed in, formatted in uppercase.
-    - attr_id: card_games.cards.promoTypes
+    - column: card_games.cards.promoTypes
       biz_name: promo Types
-      physical_column_id: card_games.cards.promoTypes
       description: A list of promotional types for a card.. "arenaleague", "boosterfun", "boxtopper", "brawldeck", "bundle",
         "buyabox", "convention", "datestamped", "draculaseries", "draftweekend", "duels", "event", "fnm", "gameday", "gateway",
         "giftbox", "gilded", "godzillaseries", "instore", "intropack", "jpwalker", "judgegift", "league", "mediainsert", "neonink",
         "openhouse", "planeswalkerstamped", "playerrewards", "playpromo", "premiereshop", "prerelease", "promopack", "release",
         "setpromo", "stamped", "textured", "themepack", "thick", "tourney", "wizardsplaynetwork"
-    - attr_id: card_games.cards.purchaseUrls
+    - column: card_games.cards.purchaseUrls
       biz_name: purchase Urls
-      physical_column_id: card_games.cards.purchaseUrls
       description: Links that navigate to websites where the card can be purchased.
-    - attr_id: card_games.cards.scryfallId
+    - column: card_games.cards.scryfallId
       biz_name: scryfallId
-      physical_column_id: card_games.cards.scryfallId
       description: scryfallId. NOT USEFUL
-    - attr_id: card_games.cards.scryfallIllustrationId
+    - column: card_games.cards.scryfallIllustrationId
       biz_name: scryfallIllustrationId
-      physical_column_id: card_games.cards.scryfallIllustrationId
       description: scryfallIllustrationId. NOT USEFUL
-    - attr_id: card_games.cards.scryfallOracleId
+    - column: card_games.cards.scryfallOracleId
       biz_name: scryfallOracleId
-      physical_column_id: card_games.cards.scryfallOracleId
       description: scryfallOracleId. NOT USEFUL
-    - attr_id: card_games.cards.tcgplayerProductId
+    - column: card_games.cards.tcgplayerProductId
       biz_name: tcg player ProductId
-      physical_column_id: card_games.cards.tcgplayerProductId
       description: tcg player ProductId
-    - attr_id: card_games.cards.text
+    - column: card_games.cards.text
       biz_name: text
-      physical_column_id: card_games.cards.text
       description: The rules text of the card.
-    - attr_id: card_games.cards.toughness
+    - column: card_games.cards.toughness
       biz_name: toughness
-      physical_column_id: card_games.cards.toughness
       description: The toughness of the card.
-    - attr_id: card_games.cards.type
+    - column: card_games.cards.type
       biz_name: type
-      physical_column_id: card_games.cards.type
       description: The type of the card as visible, including any supertypes and subtypes.. "Artifact", "Card", "Conspiracy",
         "Creature", "Dragon", "Dungeon", "Eaturecray", "Elemental", "Elite", "Emblem", "Enchantment", "Ever", "Goblin", "Hero",
         "Instant", "Jaguar", "Knights", "Land", "Phenomenon", "Plane", "Planeswalker", "Scariest", "Scheme", "See", "Sorcery",
         "Sticker", "Summon", "Token", "Tribal", "Vanguard", "Wolf", "You’ll", "instant"
-    - attr_id: card_games.cards.variations
+    - column: card_games.cards.variations
       biz_name: variations
-      physical_column_id: card_games.cards.variations
       description: variations
-    - attr_id: card_games.cards.watermark
+    - column: card_games.cards.watermark
       biz_name: watermark
-      physical_column_id: card_games.cards.watermark
       description: The name of the watermark on the card.
 - logical_entity_id: LOGICAL.CardExtension
   biz_name: CardExtension
   description: Card extensions — format legality (commander/modern/legacy etc.) with status, official rulings (text/date),
     and foreign language translations; linked to card via uuid
-  public_attributes:
-  - attr_id: LOGICAL.CardExtension.Card
-    biz_name: Card
-  - attr_id: LOGICAL.CardExtension.Format
-    biz_name: format
-    description: 'Format name: e.g. commander, modern, legacy, vintage, pauper, duel, premodern, penny'
-  - attr_id: LOGICAL.CardExtension.LegalStatus
-    biz_name: status
-    description: 'The legality status of the card in this format: Legal, Banned, or Restricted.'
-  - attr_id: LOGICAL.CardExtension.Language
-    biz_name: language
-    description: 'Foreign language: e.g. Chinese Simplified, French, German, Italian, Portuguese (Brasil), Korean, Japanese,
-      Spanish, Russian.'
   physical_entities:
   - physical_entity_id: PHYSICAL.Legality
     physical_table_name: legalities
@@ -374,15 +283,22 @@ logical_entities:
       cardinality: N:1
       key: uuid
     R: null
-    C:
-      LOGICAL.CardExtension.Card: card_games.legalities.uuid
-      LOGICAL.CardExtension.Format: card_games.legalities.format
-      LOGICAL.CardExtension.LegalStatus: card_games.legalities.status
     S: Format legalities — format name and legality status per card
-    private_attributes:
-    - attr_id: card_games.legalities.id
+    attributes:
+    - column: card_games.legalities.uuid
+      biz_name: Card
+      description: ''
+      public: true
+    - column: card_games.legalities.format
+      biz_name: format
+      description: 'Format name: e.g. commander, modern, legacy, vintage, pauper, duel, premodern, penny'
+      public: true
+    - column: card_games.legalities.status
+      biz_name: status
+      description: 'The legality status of the card in this format: Legal, Banned, or Restricted.'
+      public: true
+    - column: card_games.legalities.id
       biz_name: id
-      physical_column_id: card_games.legalities.id
       description: unique id identifying this legality
   - physical_entity_id: PHYSICAL.Ruling
     physical_table_name: rulings
@@ -391,21 +307,20 @@ logical_entities:
       cardinality: N:1
       key: uuid
     R: null
-    C:
-      LOGICAL.CardExtension.Card: card_games.rulings.uuid
     S: Rulings
-    private_attributes:
-    - attr_id: card_games.rulings.text
+    attributes:
+    - column: card_games.rulings.uuid
+      biz_name: Card
+      description: ''
+      public: true
+    - column: card_games.rulings.text
       biz_name: text
-      physical_column_id: card_games.rulings.text
       description: description about this ruling
-    - attr_id: card_games.rulings.id
+    - column: card_games.rulings.id
       biz_name: id
-      physical_column_id: card_games.rulings.id
       description: unique id identifying this ruling
-    - attr_id: card_games.rulings.date
+    - column: card_games.rulings.date
       biz_name: date
-      physical_column_id: card_games.rulings.date
       description: date
   - physical_entity_id: PHYSICAL.ForeignData
     physical_table_name: foreign_data
@@ -414,42 +329,38 @@ logical_entities:
       cardinality: N:1
       key: uuid
     R: null
-    C:
-      LOGICAL.CardExtension.Card: card_games.foreign_data.uuid
-      LOGICAL.CardExtension.Language: card_games.foreign_data.language
     S: Foreign translations
-    private_attributes:
-    - attr_id: card_games.foreign_data.name
+    attributes:
+    - column: card_games.foreign_data.uuid
+      biz_name: Card
+      description: ''
+      public: true
+    - column: card_games.foreign_data.language
+      biz_name: language
+      description: 'Foreign language: e.g. Chinese Simplified, French, German, Italian, Portuguese (Brasil), Korean, Japanese,
+        Spanish, Russian.'
+      public: true
+    - column: card_games.foreign_data.name
       biz_name: name
-      physical_column_id: card_games.foreign_data.name
       description: The foreign name of the card.
-    - attr_id: card_games.foreign_data.flavorText
+    - column: card_games.foreign_data.flavorText
       biz_name: flavor Text
-      physical_column_id: card_games.foreign_data.flavorText
       description: The foreign flavor text of the card.
-    - attr_id: card_games.foreign_data.multiverseid
+    - column: card_games.foreign_data.multiverseid
       biz_name: multiverseid
-      physical_column_id: card_games.foreign_data.multiverseid
       description: The foreign multiverse identifier of the card.
-    - attr_id: card_games.foreign_data.id
+    - column: card_games.foreign_data.id
       biz_name: id
-      physical_column_id: card_games.foreign_data.id
       description: unique id number identifying this row of data
-    - attr_id: card_games.foreign_data.text
+    - column: card_games.foreign_data.text
       biz_name: text
-      physical_column_id: card_games.foreign_data.text
       description: The foreign text ruling of the card.
-    - attr_id: card_games.foreign_data.type
+    - column: card_games.foreign_data.type
       biz_name: type
-      physical_column_id: card_games.foreign_data.type
       description: The foreign type of the card. Includes any supertypes and subtypes.
 - logical_entity_id: LOGICAL.CardSet
   biz_name: CardSet
   description: Card expansion sets grouped by block
-  public_attributes:
-  - attr_id: LOGICAL.CardSet.SetID
-    biz_name: SetID
-    description: The set code (e.g., ARC, CMD).
   physical_entities:
   - physical_entity_id: PHYSICAL.Set
     physical_table_name: sets
@@ -458,103 +369,80 @@ logical_entities:
       cardinality: '1:1'
       key: code
     R: null
-    C:
-      LOGICAL.CardSet.SetID: card_games.sets.code
     S: Set information — set name, block, size, and marketplace identifiers
-    private_attributes:
-    - attr_id: card_games.sets.name
+    attributes:
+    - column: card_games.sets.code
+      biz_name: SetID
+      description: The set code (e.g., ARC, CMD).
+      public: true
+    - column: card_games.sets.name
       biz_name: name
-      physical_column_id: card_games.sets.name
       description: The name of the set.
-    - attr_id: card_games.sets.block
+    - column: card_games.sets.block
       biz_name: block
-      physical_column_id: card_games.sets.block
       description: The block name the set was in.
-    - attr_id: card_games.sets.baseSetSize
+    - column: card_games.sets.baseSetSize
       biz_name: base Set Size
-      physical_column_id: card_games.sets.baseSetSize
       description: The number of cards in the set.
-    - attr_id: card_games.sets.mcmName
+    - column: card_games.sets.mcmName
       biz_name: magic card market name
-      physical_column_id: card_games.sets.mcmName
       description: magic card market name
-    - attr_id: card_games.sets.mtgoCode
+    - column: card_games.sets.mtgoCode
       biz_name: magic the gathering online code
-      physical_column_id: card_games.sets.mtgoCode
       description: 'The set code for the set as it appears on Magic: The Gathering Online. commonsense evidence: if the value
         is null or empty, then it doesn''t appear on Magic: The Gathering Online'
-    - attr_id: card_games.sets.isForeignOnly
+    - column: card_games.sets.isForeignOnly
       biz_name: is Foreign Only
-      physical_column_id: card_games.sets.isForeignOnly
       description: If the set is available only outside the United States of America.
-    - attr_id: card_games.sets.id
+    - column: card_games.sets.id
       biz_name: id
-      physical_column_id: card_games.sets.id
       description: unique id identifying this set
-    - attr_id: card_games.sets.booster
+    - column: card_games.sets.booster
       biz_name: booster
-      physical_column_id: card_games.sets.booster
       description: A breakdown of possibilities and weights of cards in a booster pack.
-    - attr_id: card_games.sets.isFoilOnly
+    - column: card_games.sets.isFoilOnly
       biz_name: is Foil Only
-      physical_column_id: card_games.sets.isFoilOnly
       description: If the set is only available in foil.
-    - attr_id: card_games.sets.isNonFoilOnly
+    - column: card_games.sets.isNonFoilOnly
       biz_name: is Non Foil Only
-      physical_column_id: card_games.sets.isNonFoilOnly
       description: If the set is only available in non-foil.
-    - attr_id: card_games.sets.isOnlineOnly
+    - column: card_games.sets.isOnlineOnly
       biz_name: is Online Only
-      physical_column_id: card_games.sets.isOnlineOnly
       description: If the set is only available in online game variations.
-    - attr_id: card_games.sets.isPartialPreview
+    - column: card_games.sets.isPartialPreview
       biz_name: is Partial Preview
-      physical_column_id: card_games.sets.isPartialPreview
       description: If the set is still in preview (spoiled). Preview sets do not have complete data.
-    - attr_id: card_games.sets.keyruneCode
+    - column: card_games.sets.keyruneCode
       biz_name: keyrune Code
-      physical_column_id: card_games.sets.keyruneCode
       description: The matching Keyrune code for set image icons.
-    - attr_id: card_games.sets.mcmId
+    - column: card_games.sets.mcmId
       biz_name: magic card market id
-      physical_column_id: card_games.sets.mcmId
       description: The Magic Card Marketset identifier.
-    - attr_id: card_games.sets.mcmIdExtras
+    - column: card_games.sets.mcmIdExtras
       biz_name: magic card market ID Extras
-      physical_column_id: card_games.sets.mcmIdExtras
       description: The split Magic Card Market set identifier if a set is printed in two sets. This identifier represents
         the second set's identifier.
-    - attr_id: card_games.sets.parentCode
+    - column: card_games.sets.parentCode
       biz_name: parent Code
-      physical_column_id: card_games.sets.parentCode
       description: The parent set code for set variations like promotions, guild kits, etc.
-    - attr_id: card_games.sets.releaseDate
+    - column: card_games.sets.releaseDate
       biz_name: release Date
-      physical_column_id: card_games.sets.releaseDate
       description: The release date in ISO 8601 format for the set.
-    - attr_id: card_games.sets.tcgplayerGroupId
+    - column: card_games.sets.tcgplayerGroupId
       biz_name: tcg player Group Id
-      physical_column_id: card_games.sets.tcgplayerGroupId
       description: The group identifier of the set on TCGplayer
-    - attr_id: card_games.sets.totalSetSize
+    - column: card_games.sets.totalSetSize
       biz_name: total Set Size
-      physical_column_id: card_games.sets.totalSetSize
       description: The total number of cards in the set, including promotional and related supplemental products but excluding
         Alchemy modifications - however those cards are included in the set itself.
-    - attr_id: card_games.sets.type
+    - column: card_games.sets.type
       biz_name: type
-      physical_column_id: card_games.sets.type
       description: The expansion type of the set.. "alchemy", "archenemy", "arsenal", "box", "commander", "core", "draft_innovation",
         "duel_deck", "expansion", "from_the_vault", "funny", "masterpiece", "masters", "memorabilia", "planechase", "premium_deck",
         "promo", "spellbook", "starter", "token", "treasure_chest", "vanguard"
 - logical_entity_id: LOGICAL.SetTranslation
   biz_name: SetTranslation
   description: Set translations
-  public_attributes:
-  - attr_id: LOGICAL.SetTranslation.Set
-    biz_name: Set
-  - attr_id: LOGICAL.SetTranslation.Language
-    biz_name: Language
   physical_entities:
   - physical_entity_id: PHYSICAL.SetTranslation
     physical_table_name: set_translations
@@ -563,18 +451,21 @@ logical_entities:
       cardinality: N:1
       key: setCode
     R: null
-    C:
-      LOGICAL.SetTranslation.Set: card_games.set_translations.setCode
-      LOGICAL.SetTranslation.Language: card_games.set_translations.language
     S: Set translations
-    private_attributes:
-    - attr_id: card_games.set_translations.translation
+    attributes:
+    - column: card_games.set_translations.setCode
+      biz_name: Set
+      description: ''
+      public: true
+    - column: card_games.set_translations.language
+      biz_name: Language
+      description: ''
+      public: true
+    - column: card_games.set_translations.translation
       biz_name: translation
-      physical_column_id: card_games.set_translations.translation
       description: translation of this card
-    - attr_id: card_games.set_translations.id
+    - column: card_games.set_translations.id
       biz_name: id
-      physical_column_id: card_games.set_translations.id
       description: unique id identifying this set
 pas_relations:
 - relation_id: LOGICAL.CardSet_TO_LOGICAL.Card
