@@ -119,12 +119,13 @@ Final Answer + Evidence SQL + 标注信息来源（MCP 工具名 / RAG kid / SOP
 ## 开放问题
 
 1. ~~**Ch3 读取权限冲突**~~ ✅ **已解决（2026-08-27）**：`oc_*/opencode.json` 的 `permission.read` 改为**白名单**——`{"*": "deny", "skills/*.md": "allow", "skills\\*.md": "allow"}`（opencode 按 git-worktree 相对路径匹配，两种斜杠都要给）。防作弊其余不变；skills 四份副本需同步（见 [agent.md](agent.md) §3）
-2. **旧 evidence JSONL topic 的迁移**：9 个 topic 仍是逐题 evidence 原文，非聚合格式，需按 card_games 模式重写
+2. ~~**旧 evidence JSONL topic 的迁移**~~ ❌ **不是欠账（2026-09-14 定调）**：9 个 topic 的逐题原文格式 = **原始组的设计态**（naive 吸收，与 NL2SQL 对照用），**不需要**按 card_games 模式重写。是否把一个 topic 升级为**对照组**（按三范式定义重组：下沉 Ch1 / 保留 Ch2 / 上浮 Ch3）按需决定。两组口径见 [rag-evidence.md](rag-evidence.md)
 3. ~~gold cache 过渡态~~ ✅ **已切换（2026-08-27 起）**：02/03/04 读 config 的 `eval.output_dir`（现为 `outputs2`），即原始 gold 版 cache
 
 ## 原则
 
-- **RAG = evidence 聚合，原则上全留**。清理只针对与 Ch1 模型层完全重复的纯结构描述。
+- **知识库的两组组织哲学（2026-09-14 定调）**：**原始组** = 对数据集的 naive 吸收（数据源级归数据源级、领域共识级吸收 evidence、搞不定的沉淀 SOP）——目的是与 NL2SQL 对照，证明三级通道稳定可行；**对照组** = 按三范式的定义重新组织语义层——目的是验证高效、少积累，让每个领域沉淀自己的行业资产。一个 topic **默认处于原始组状态**，对它做按范式定义的重组后才进入对照组。判定口诀：**"这个数据怎么存"→下沉 Ch1 / "题目这句话查什么列"→保留 Ch2 / "这种题容易怎么错"→上浮 Ch3**。详见 [rag-evidence.md](rag-evidence.md)
+- **RAG = evidence 聚合，原则上全留**（对照组的 Ch2 侧）。清理只针对与 Ch1 模型层完全重复的纯结构描述。
 - **SOP ≠ 诊断流程（Digi-Onto）→ 解题防坑建议**。DLR 的数据集题面简单、无复杂业务逻辑，SOP 聚焦"这种题容易错在哪"。
 - **三通道并行，不是串行**。ReACT 循环中三个通道同时发出，交叉验证后才进入 SQL 构造阶段。
 - **Ch2 不可匮乏**。search_evidence 返回空 → Ch1+Ch3 两条通道各自有噪声 → 交叉不到同一点。Ch2 的术语密度决定锚定质量。
