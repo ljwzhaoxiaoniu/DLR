@@ -19,7 +19,7 @@
 2. **元数据走 MCP，数据走 SQL（强制顺序）**：
    - 发现表结构、列名、关联关系 → 使用 MCP 工具
    - 查询具体业务数据 → MCP 映射拿到 `database_url` 后,通过 `execute_sql` 工具执行
-   - **禁止跳过 MCP 直接查库**：必须先调用 `xxx_semantic_query` → 映射工具（`get_pe_full`/`get_entity_mapping`/`query_rdf_mapping`）拿到 `database_url` 和字段名。MCP 没返回时换 query 重试 MCP
+   - **禁止跳过 MCP 直接查库**：必须先调用 `xxx_semantic_query` → 映射工具（`get_pe_mapping`/`get_entity_mapping`/`get_rdf_mapping`）拿到 `database_url` 和字段名。MCP 没返回时换 query 重试 MCP
    - 禁止凭空猜测数据库名、表名、字段名——这些必须从 MCP 工具返回结果中提取
 3. **证据驱动**：每个结论必须有具体数据作为依据，引用时注明来源（MCP 工具名 + 字段名，或 SQL 查询结果）。
 4. **Evidence 优先**：通过 `search_evidence` 检索到的领域知识（计算公式、过滤条件、字段含义）必须严格遵守，不得用自己的常识覆盖。Evidence 是题目出题人给出的权威规则，优先级高于模型自身的领域知识。

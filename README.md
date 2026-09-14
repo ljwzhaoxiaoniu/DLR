@@ -45,11 +45,11 @@
 
 | 范式 | 角色 | Web 端口 | MCP 工具数 | 核心模型 |
 |------|------|---------|-----------|----------|
-| **★ DLR** | 原创核心 | 28775 | 4 注册（23 定义） | LE / PE / PAS / ARCS |
-| **ER** | 数据库建模标准基线 | 28765 | 11+1 | BizEntity / BizAttribute / BizRelation |
-| **RDF** | W3C R2RML 标准基线 | 28785 | 7+1 | rr:TriplesMap + rdflib SPARQL |
+| **★ DLR** | 原创核心 | 28775 | 4+1（14 探索类已禁注册） | LE / PE / PAS / ARCS |
+| **ER** | 数据库建模标准基线 | 28765 | 9+1（3 全量 dump 已禁） | BizEntity / BizAttribute / BizRelation |
+| **RDF** | W3C R2RML 标准基线 | 28785 | 6+1（2 全量 dump 已禁） | rr:TriplesMap + rdflib SPARQL |
 
-三范式并行评测，进程/存储/MCP 工具全隔离。每个 Agent 实例只连接一种范式，强制路径：`*_semantic_query`（首跳全局召回定位库 → 锁库传 `db`）→ 映射工具（`get_pe_full` / `get_entity_mapping` / `query_rdf_mapping`）→ 共享 `execute_sql`（只读薄透传）→ `Final Answer`。
+三范式并行评测，进程/存储/MCP 工具全隔离。每个 Agent 实例只连接一种范式，强制路径：`*_semantic_query`（首跳全局召回定位库 → 锁库传 `db`）→ 映射工具（`get_pe_mapping` / `get_entity_mapping` / `get_rdf_mapping`）→ 共享 `execute_sql`（只读薄透传）→ `Final Answer`。
 
 ## 快速开始
 

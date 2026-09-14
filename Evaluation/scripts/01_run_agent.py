@@ -66,12 +66,16 @@ def run_one(q, paradigm, timeout=300):
     out_dir = OUT_DIR / paradigm
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / f"{qid}.json"
-    if out_path.exists():
-        return out_path, True, 0.0  # 续跑跳过
+    # 续跑跳过：仅当上一轮成功（有输出且无 .err）——失败/超时也会留下 out_path，
+    # 不加这道判断会把失败静默冻结进归档
+    if out_path.exists() and out_path.stat().st_size > 0 and not (out_dir / f"{qid}.err").exists():
+        return out_path, True, 0.0
 
+    # 范式无关: 不点名任何具体工具（AGENTS.md 要求先 /mcps 自发现），
+    # 也不写死 Ch1→Ch2 的先后（三通道是并行锚定，见 AGENTS.md 核心约束 1）
     prompt = (
-        "CRITICAL: MCP tools only. Skip list_mcp_resource* — go straight to semantic_query → search_evidence → mapping → sqlite3. "
-        "Use get_pe_mapping(DLR) / get_entity_mapping(ER) / get_rdf_mapping(RDF) for complete info in one call. "
+        "CRITICAL: MCP tools only — run /mcps first to discover this paradigm's tools. "
+        "Use semantic recall + evidence search + the mapping tool for metadata, then sqlite3 for data. "
         "NO glob/read/bash to find databases. "
         "End with: Final Answer: <result> | Evidence SQL: <sql>. "
         f"Question: {q['question']}"
