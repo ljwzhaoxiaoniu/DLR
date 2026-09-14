@@ -10,13 +10,15 @@
 | 文档 | 内容 |
 |------|------|
 | [三范式建模说明](docs/modeling.md) | DLR/ER/RDF 设计理念、解析链路、存储隔离、MCP 工具表、可视化 |
-| [配置 → 存储写入链路](docs/yaml-to-storage.md) | 每范式 YAML/TTL 样例 + 字段级 Kuzu/FAISS 写入对照（透明化深度篇） |
-| [数据集说明](docs/dataset.md) | mini_dev 0703：11 库 500 题、下载、任务格式、实测特征 |
+| [配置 → 存储写入链路](docs/semantic-layer-build.md) | 每范式 YAML/TTL → Kuzu/FAISS 的字段级写入对照 + 召回面公平性（透明化深度篇） |
+| [数据集说明](docs/dataset.md) | mini_dev 0703：11 库 500 题、下载、任务格式、已知缺陷清单 |
 | [Agent 说明](docs/agent.md) | OpenCode + MCP 架构、AGENTS.md 规则、防作弊、db 锁库行为 |
 | [评测流水线](docs/evaluation.md) | 四阶段流水线、Prompt 铁律、双通道判定、公平性、已知问题 |
-| [评测结果 v2](docs/results_v2.md) / [v3](docs/results_v3.md) | v2 150 题基线（ER 92.0% / DLR 98.7% / RDF 89.3%）；v3 RAG 逐题校验表 |
-| [三通道设计](docs/3-channel-design.md) | Ch1 MCP 语义层 / Ch2 RAG 证据 / Ch3 SOP 技能，并行锚定协议（v3 当前架构） |
+| [评测结果 v3](docs/results_v3.md) | v3 逐题校验表（当前基线；post_process 自动重建） |
+| [三通道设计](docs/3-channel-design.md) | Ch1 MCP 语义层 / Ch2 RAG 证据 / Ch3 SOP 技能，并行锚定协议（当前架构） |
 | [RAG 知识库](docs/rag-evidence.md) | rag_knowledge 两种格式、知识写法铁律、索引重建 |
+
+> 历史文档（v2 基线逐题表、v2 校验方法论、旧分享提纲与幻灯片、用量导出）在 [`archive/`](archive/)。
 
 ## 架构
 
