@@ -59,23 +59,33 @@ echo "[RUN] $RUN_ID  $PARADIGM  q$QID1 + q$QID2  workers=$WORKERS"
 run_one() {
     local QID=$1 QUESTION=$2 EVIDENCE=$3
     local OUT_FILE="$OUTPUT_DIR/${QID}.json"
-    [ -f "$OUT_FILE" ] && return 0
+    local ERR_FILE="$OUTPUT_DIR/${QID}.err"
+
+    # 续跑跳过：仅当上一轮成功（输出非空 且 无 .err）——失败/超时也会留下 OUT_FILE，
+    # 只判文件存在会把失败静默冻结成"已完成"（与 01_run_agent.py 同口径）
+    if [ -s "$OUT_FILE" ] && [ ! -f "$ERR_FILE" ]; then
+        echo "  [SKIP] q$QID (已成功)"
+        return 0
+    fi
 
     # v3 RAG: 纯 question，evidence 不注入（Agent 通过 search_evidence 主动检索）
     local PROMPT="Question: $QUESTION"
 
     cd "$AGENT_DIR" || return 1
-    timeout "$TIMEOUT" opencode run --format json --title "eval_${PARADIGM}_${QID}" "$PROMPT" < /dev/null > "$OUT_FILE" 2>"$OUTPUT_DIR/${QID}.err"
+    # stderr 单独落盘，不污染 NDJSON；.err 只在失败时保留（成功即删）——是"是否成功"的唯一标记
+    timeout "$TIMEOUT" opencode run --format json --title "eval_${PARADIGM}_${QID}" "$PROMPT" < /dev/null > "$OUT_FILE" 2>"$ERR_FILE"
     local RC=$?
     if [ $RC -eq 0 ]; then
+        rm -f "$ERR_FILE"
         echo "  [OK] q$QID"
         return 0
     elif [ $RC -eq 124 ]; then
         echo "  [TIMEOUT] q$QID"
-        echo "TIMEOUT after ${TIMEOUT}s" > "$OUTPUT_DIR/${QID}.err"
+        echo "TIMEOUT after ${TIMEOUT}s" >> "$ERR_FILE"
         return 1
     else
         echo "  [FAIL] q$QID (rc=$RC)"
+        [ -s "$ERR_FILE" ] || echo "FAILED rc=$RC (no stderr)" > "$ERR_FILE"
         return 1
     fi
 }
@@ -95,8 +105,8 @@ done <<< "$QUESTIONS"
 
 wait
 COMPLETED=$(ls "$OUTPUT_DIR"/*.json 2>/dev/null | wc -l)
-OK=$COMPLETED
-FAIL=$(grep -l "TIMEOUT\|FAIL" "$OUTPUT_DIR"/*.err 2>/dev/null | wc -l)
+# .err 只在失败/超时时存在（成功即删）→ 直接数 .err，不再 grep 内容
+FAIL=$(ls "$OUTPUT_DIR"/*.err 2>/dev/null | wc -l)
 OK=$((COMPLETED - FAIL))
 
 echo ""

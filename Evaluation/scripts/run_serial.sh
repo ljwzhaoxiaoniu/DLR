@@ -54,8 +54,11 @@ FAIL=0
 while IFS='|' read -r QID QUESTION EVIDENCE; do
     [ -z "$QID" ] && continue
     OUT_FILE="$OUTPUT_DIR/${QID}.json"
-    if [ -f "$OUT_FILE" ]; then
-        echo "[SKIP] q$QID (already exists)"
+    ERR_FILE="$OUTPUT_DIR/${QID}.err"
+    # 续跑跳过：仅当上一轮成功（输出非空 且 无 .err）——失败/超时也会留下 OUT_FILE，
+    # 只判文件存在会把失败静默冻结成"已完成"（与 01_run_agent.py 同口径）
+    if [ -s "$OUT_FILE" ] && [ ! -f "$ERR_FILE" ]; then
+        echo "[SKIP] q$QID (已成功)"
         continue
     fi
 
@@ -65,18 +68,21 @@ while IFS='|' read -r QID QUESTION EVIDENCE; do
     PROMPT="Question: $QUESTION"
 
     cd "$AGENT_DIR" || exit 1
-    timeout "$TIMEOUT" opencode run --format json --title "eval_${PARADIGM}_${QID}" "$PROMPT" < /dev/null > "$OUT_FILE" 2>&1
+    # stderr 单独落盘（旧版 2>&1 会把警告混进 NDJSON）；.err 只在失败时保留（成功即删）
+    timeout "$TIMEOUT" opencode run --format json --title "eval_${PARADIGM}_${QID}" "$PROMPT" < /dev/null > "$OUT_FILE" 2>"$ERR_FILE"
     RC=$?
 
     if [ $RC -eq 0 ]; then
+        rm -f "$ERR_FILE"
         echo "  -> OK"
         OK=$((OK+1))
     elif [ $RC -eq 124 ]; then
         echo "  -> TIMEOUT"
-        echo "TIMEOUT after ${TIMEOUT}s" > "$OUTPUT_DIR/${QID}.err"
+        echo "TIMEOUT after ${TIMEOUT}s" >> "$ERR_FILE"
         FAIL=$((FAIL+1))
     else
         echo "  -> FAIL(rc=$RC)"
+        [ -s "$ERR_FILE" ] || echo "FAILED rc=$RC (no stderr)" > "$ERR_FILE"
         FAIL=$((FAIL+1))
     fi
 done <<< "$QUESTIONS"
