@@ -42,6 +42,8 @@
 
 ## 逐题校验表
 
+**原始组**
+
 ### debit_card_specializing
 
 | 数据库 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 共通 | ER-备注 | DLR-备注 | RDF-备注 |
@@ -51,6 +53,10 @@
 > **Token = input + cache_read + reasoning(CoT) + output**（全算消耗，= agent_stats.csv 的 `total_tokens`）
 > **备注分栏**: 共通 = 题目/evidence/Ch3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）
 > **数据来源**: `validated_results/v4_final/{pair}/agent_stats.csv`（per-pair，如 `1471-1472/`）
+
+**对照组（待定）**
+
+待开跑；题量与逐题归档口径待定，届时按组追加。
 
 ---
 
