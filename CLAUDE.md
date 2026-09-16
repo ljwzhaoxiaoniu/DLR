@@ -67,7 +67,7 @@ for p in er dlr rdf; do
   $PY 04_judge.py           --paradigm $p --log-subdir $RID
 done
 $PY parse_agent_stats.py --paradigm ALL --log-subdir $RID   # 必须 ALL
-$PY post_process.py --run-id $RID --qids <q1>,<q2>          # 确认后归档
+$PY post_process.py --run-id $RID --qids <q1>,<q2> [--group original|control]  # 确认后归档（默认原始组）
 ```
 
 ---

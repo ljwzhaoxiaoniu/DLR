@@ -122,10 +122,10 @@ done
 
 ```bash
 cd Evaluation/scripts
-/d/ProgramData/anaconda3/envs/lepe_som/python post_process.py --run-id <run_id> --qids <q1>,<q2>
+/d/ProgramData/anaconda3/envs/lepe_som/python post_process.py --run-id <run_id> --qids <q1>,<q2> [--group original|control]
 ```
 
-一步完成三件事：raw 扁平复制 + per-pair `agent_stats.csv` + 刷新 `docs/results_{版本}.md`。
+一步完成三件事：raw 扁平复制 + per-pair `agent_stats.csv` + 刷新 `docs/results_{版本}.md` **本组**段落。`--group`：`original`=原始组（默认）/ `control`=对照组——同轮次两组同题重跑靠组目录隔离，pair 与 raw 不碰撞、汇总不混算。
 
 ### 目标位置由 `config.json` 决定
 
@@ -133,14 +133,14 @@ cd Evaluation/scripts
 "eval": { "output_dir": "Evaluation/outputs2", "round": "v4_final" }
 ```
 
-- `round` → `validated_results/{round}/`，并派生明细文档名 `docs/results_{版本}.md`（`v4_final` → `results_v4.md`）
+- `round` → `validated_results/{round}/{group}/`，并派生明细文档名 `docs/results_{版本}.md`（`v4_final` → `results_v4.md`）；文档内按组（**原始组**/**对照组**）分段重建
 - **换轮次只改这一个键**
 - 历史归档在 `archive/`（`round_1` / `round_2` / `v2_final` / `v3_final`）——`validated_results/` 只放现行基线
 
 ### 目录形态
 
 ```
-validated_results/v4_final/
+validated_results/v4_final/{group}/         # original=原始组 / control=对照组
 ├── raw/{q1}-{q2}_{paradigm}_{qid}.json     # 扁平，pair 前缀命名
 └── {q1}-{q2}/agent_stats.csv               # 归档粒度 = 运行粒度，不合并（24 列含三通道命中）
 ```
@@ -207,7 +207,7 @@ for p in er dlr rdf; do                             # Stage 2/3/4
   $PY 04_judge.py           --paradigm $p --log-subdir $RID
 done
 $PY parse_agent_stats.py --paradigm ALL --log-subdir $RID
-$PY post_process.py --run-id $RID --qids <q1>,<q2>  # 归档（确认后）
+$PY post_process.py --run-id $RID --qids <q1>,<q2> [--group original|control]  # 归档（确认后）
 
 # 单范式补跑（首字母）
 bash eval_run.sh D <qid> <qid> --parallel           # 只跑 DLR

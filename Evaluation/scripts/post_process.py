@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
-"""评测后处理 — 一步归档到 validated_results/{eval.round}/ 扁平结构.
+"""评测后处理 — 一步归档到 validated_results/{eval.round}/{group}/ 按组结构.
 
 用法:
-    python post_process.py --run-id xxx --qids 1481,1482
+    python post_process.py --run-id xxx --qids 1481,1482 [--group original]
 
-输出（目标轮次由 config.json 的 eval.round 决定，如 v4_final）:
-    validated_results/{round}/
+输出（轮次由 config.json 的 eval.round 决定，如 v4_final；组别默认 original）:
+    validated_results/{round}/{group}/
     ├── raw/
     │   ├── 1481-1482_er_1481.json    # {pair}_{p}_{qid}.json
     │   └── ...
     └── 1481-1482/
         └── agent_stats.csv
 
+组别隔离两组同题重跑：original=原始组 / control=对照组 —— pair 目录与 raw 文件
+分落在组目录下，避免同 qid 二跑碰撞；文档重建只改本组段落，汇总不跨组混算。
 明细文档同步写 docs/results_{版本}.md（v4_final → docs/results_v4.md）。
 """
 
@@ -26,31 +28,35 @@ CFG = json.load(open(ROOT / "config.json", encoding="utf-8")) if (ROOT / "config
 _EVAL_OUT = CFG.get("eval", {}).get("output_dir", "Evaluation/outputs")
 OUT_BASE = ROOT / _EVAL_OUT
 _EVAL_ROUND = CFG.get("eval", {}).get("round", "v4_final")
-VALIDATED = ROOT / "validated_results" / _EVAL_ROUND
-RAW_DIR = VALIDATED / "raw"
 # 明细文档名只取主版本号：v4_final → docs/results_v4.md（此前硬编码 results_v3.md，换轮次会写错文件）
 _MD_PATH = ROOT / "docs" / f"results_{_EVAL_ROUND.split('_')[0]}.md"
+GROUP_LABELS = {"original": "原始组", "control": "对照组"}
 
 
 def main():
-    ap = argparse.ArgumentParser(description=f"评测后处理 → validated_results/{_EVAL_ROUND}/")
+    ap = argparse.ArgumentParser(description=f"评测后处理 → validated_results/{_EVAL_ROUND}/{{group}}/")
     ap.add_argument("--run-id", required=True, help="Stage 1 run_id")
     ap.add_argument("--qids", required=True, help="题号，逗号分隔 (如 1481,1482)")
+    ap.add_argument("--group", choices=list(GROUP_LABELS), default="original",
+                    help="组别：original=原始组（默认）/ control=对照组")
     args = ap.parse_args()
 
     run_id = args.run_id
     qids = [int(x.strip()) for x in args.qids.split(",") if x.strip()]
+    group = args.group
 
     if not qids:
         print("[ERR] --qids 不能为空")
         return
 
+    validated = ROOT / "validated_results" / _EVAL_ROUND / group
+    raw_dir = validated / "raw"
     pair_label = str(qids[0]) if len(qids) == 1 else f"{min(qids)}-{max(qids)}"
 
-    VALIDATED.mkdir(parents=True, exist_ok=True)
-    RAW_DIR.mkdir(parents=True, exist_ok=True)
+    validated.mkdir(parents=True, exist_ok=True)
+    raw_dir.mkdir(parents=True, exist_ok=True)
 
-    # 1. 复制 raw 日志到 {round}/raw/{pair}_{p}_{qid}.json
+    # 1. 复制 raw 日志到 {round}/{group}/raw/{pair}_{p}_{qid}.json
     src_logs = OUT_BASE / "01_logs" / run_id
     if not src_logs.exists():
         src_logs = OUT_BASE / run_id / "01_logs"
@@ -63,14 +69,14 @@ def main():
             continue
         for qf in sorted(p_dir.glob("*.json")):
             if qf.stem.isdigit() and int(qf.stem) in qids:
-                dest = RAW_DIR / f"{pair_label}_{p}_{qf.stem}.json"
+                dest = raw_dir / f"{pair_label}_{p}_{qf.stem}.json"
                 if not dest.exists():
                     shutil.copy2(qf, dest)
                     copied += 1
-    print(f"[OK] 复制 {copied} 个 raw 日志 → {RAW_DIR}")
+    print(f"[OK] 复制 {copied} 个 raw 日志 → {raw_dir}")
 
     # 2. 生成 per-pair agent_stats.csv
-    pair_dir = VALIDATED / pair_label
+    pair_dir = validated / pair_label
     pair_dir.mkdir(parents=True, exist_ok=True)
 
     reports_dir = OUT_BASE / run_id / "03_reports"
@@ -138,20 +144,21 @@ def main():
     print(f"[OK] agent_stats.csv: {len(rows)} rows → {out_csv}")
 
     print(f"\n[DONE] {pair_dir}")
-    print(f"  raw → {RAW_DIR}/{pair_label}_*.json")
+    print(f"  raw → {raw_dir}/{pair_label}_*.json")
 
-    # 3. 更新 docs/results_{版本}.md
-    update_results_md(pair_label, rows, VALIDATED)
+    # 3. 更新 docs/results_{版本}.md 的本组段落
+    update_results_md(group, rows, validated)
 
 
-def update_results_md(pair_label, new_rows, validated_dir):
-    """从 {round} 全量数据重建 results_{版本}.md 的明细表和统计."""
+def update_results_md(group_key, new_rows, validated_dir):
+    """从 {round}/{group} 全量数据重建 results_{版本}.md 中**本组**的明细表与统计."""
+    label = GROUP_LABELS[group_key]
     md_path = _MD_PATH
     if not md_path.exists():
         print(f"[WARN] {md_path.name} 不存在，跳过文档更新（归档 CSV 不受影响）")
         return
 
-    # 收集所有 per-pair agent_stats.csv
+    # 收集本组所有 per-pair agent_stats.csv
     all_rows = []
     for pair_dir in sorted(validated_dir.glob("*")):
         csv_path = pair_dir / "agent_stats.csv"
@@ -169,7 +176,7 @@ def update_results_md(pair_label, new_rows, validated_dir):
                     r["paradigm"] = r["paradigm"].lower()
                 all_rows.append(r)
 
-    # 同 qid+paradigm 去重（后出现的覆盖）
+    # 同 qid+paradigm 组内去重（后出现的覆盖）
     dedup = {}
     for r in all_rows:
         dedup[(r["q_id"], r["paradigm"])] = r
@@ -194,23 +201,25 @@ def update_results_md(pair_label, new_rows, validated_dir):
     er_c, er_s, er_tok = stat("er")
     dlr_c, dlr_s, dlr_tok = stat("dlr")
     rdf_c, rdf_s, rdf_tok = stat("rdf")
-    dlr_vs_er = (dlr_tok - er_tok) / er_tok * 100 if er_tok else 0
-    rdf_vs_er = (rdf_tok - er_tok) / er_tok * 100 if er_tok else 0
+    er_vs_dlr_pct = (er_tok - dlr_tok) / dlr_tok * 100 if dlr_tok else 0
+    rdf_vs_dlr_pct = (rdf_tok - dlr_tok) / dlr_tok * 100 if dlr_tok else 0
 
     # 重建 MD（先读旧文件，保留已有备注）
     md_text = md_path.read_text(encoding="utf-8")
     import re
 
-    # 旧明细行备注：按 qid 提取四栏（共通/ER/DLR/RDF，脚本不覆盖人工写的备注）
+    # 旧明细行备注：只扫**本组段落**，按 qid 提取四栏（共通/ER/DLR/RDF，脚本不覆盖人工写的备注）
     old_remarks = {}
-    for line in md_text.splitlines():
-        parts = [c.strip() for c in line.split("|")]
-        if len(parts) >= 19 and parts[2].startswith("q") and parts[2][1:].isdigit():
-            old_remarks[parts[2]] = parts[15:19]
+    span = re.search(rf"\*\*{label}\*\*\n\n(.*?)\n> \*\*Token", md_text, re.DOTALL)
+    if span:
+        for line in span.group(1).splitlines():
+            parts = [c.strip() for c in line.split("|")]
+            if len(parts) >= 19 and parts[2].startswith("q") and parts[2][1:].isdigit():
+                old_remarks[parts[2]] = parts[15:19]
 
     # 明细行
     detail_lines = []
-    for qid in sorted(set(int(r["q_id"]) for r in all_rows)):
+    for qid in qids:
         q_rows = {r["paradigm"]: r for r in all_rows if int(r["q_id"]) == qid}
         er_r = q_rows.get("er", {})
         dlr_r = q_rows.get("dlr", {})
@@ -244,43 +253,59 @@ def update_results_md(pair_label, new_rows, validated_dir):
             f"{tok_str(er_t)} | {tok_str(dlr_t)} | {tok_str(rdf_t)} | {common_rk} | {er_rk} | {dlr_rk} | {rdf_rk} |"
         )
 
-    # 替换明细表：第一个 ### 到 > **Token 之前
     header = "| 数据库 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 共通 | ER-备注 | DLR-备注 | RDF-备注 |"
     sep    = "|------|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|------|--------|--------|--------|"
     detail_block = header + "\n" + sep + "\n" + "\n".join(detail_lines)
-    md_text = re.sub(
-        r"(### \w+\n\n).*?(\n> \*\*Token)",
-        r"\1" + detail_block + r"\2",
-        md_text, flags=re.DOTALL
-    )
+
+    # 替换本组明细段：**{组}** 到 > **Token 之前
+    detail_pat = rf"(\*\*{label}\*\*\n\n).*?(\n> \*\*Token)"
+    if re.search(detail_pat, md_text, re.DOTALL):
+        md_text = re.sub(
+            detail_pat,
+            lambda m: m.group(1) + detail_block + m.group(2),
+            md_text, flags=re.DOTALL
+        )
+    else:
+        # 本组首次归档：整段创建（替换占位行"待开跑"）
+        ph = f"**{label}**\n\n待开跑"
+        if ph in md_text:
+            notes = (
+                "> **Token = input + cache_read + reasoning(CoT) + output**（全算消耗，= agent_stats.csv 的 `total_tokens`）\n"
+                "> **备注分栏**: 共通 = 题目/evidence/Ch3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）\n"
+                f"> **数据来源**: `validated_results/{_EVAL_ROUND}/{{group}}/{{pair}}/agent_stats.csv`（per-pair，如 `{group_key}/1471-1472/`）\n"
+            )
+            md_text = md_text.replace(ph, f"**{label}**\n\n{detail_block}\n{notes}", 1)
+        else:
+            print(f"[WARN] 未找到 **{label}** 明细锚点，跳过明细更新")
 
     # 进度表不再由脚本自动改（多数据库后旧正则失效），手动维护
 
-    # 替换总结数字
-    md_text = re.sub(r'共测试 \d+ 题', f'共测试 {n} 题', md_text)
-    md_text = re.sub(r'\*\*\d+ 题次\*\*', f'**{total_runs} 题次**', md_text)
+    # 替换本组总结数字（组名锚定，两组互不干扰）
+    md_text = re.sub(
+        rf"(总结（{label}）\*\*：共测试 )\d+( 题 × 3 范式 = \*\*)\d+( 题次\*\*)",
+        rf"\g<1>{n}\g<2>{total_runs}\g<3>",
+        md_text
+    )
 
-    # 替换汇总表 — 整行替换，加 ^\n 锚点防止匹配明细行
-    er_vs_dlr_pct = (er_tok - dlr_tok) / dlr_tok * 100 if dlr_tok else 0
-    rdf_vs_dlr_pct = (rdf_tok - dlr_tok) / dlr_tok * 100 if dlr_tok else 0
+    # 替换本组汇总表行（组别列锚定）
     md_text = re.sub(
-        r'(\n\| CORRECT \|).*(\|)',
-        rf'\1 {er_c}/{n} ({er_c/n*100:.1f}%) | **{dlr_c}/{n} ({dlr_c/n*100:.1f}%)** | {rdf_c}/{n} ({rdf_c/n*100:.1f}%) \2',
+        rf"(\n\| {label} \| CORRECT \|).*(\|)",
+        rf"\1 {er_c}/{n} ({er_c/n*100:.1f}%) | **{dlr_c}/{n} ({dlr_c/n*100:.1f}%)** | {rdf_c}/{n} ({rdf_c/n*100:.1f}%) \2",
         md_text
     )
     md_text = re.sub(
-        r'(\n\| strict PASS \|).*(\|)',
-        rf'\1 {er_s}/{n} ({er_s/n*100:.1f}%) | {dlr_s}/{n} ({dlr_s/n*100:.1f}%) | {rdf_s}/{n} ({rdf_s/n*100:.1f}%) \2',
+        rf"(\n\| {label} \| strict PASS \|).*(\|)",
+        rf"\1 {er_s}/{n} ({er_s/n*100:.1f}%) | {dlr_s}/{n} ({dlr_s/n*100:.1f}%) | {rdf_s}/{n} ({rdf_s/n*100:.1f}%) \2",
         md_text
     )
     md_text = re.sub(
-        r'(\n\| 平均 token \|).*(\|)',
-        rf'\1 {er_tok:,.0f} ({er_vs_dlr_pct:+.1f}% vs DLR) | **{dlr_tok:,.0f}** | {rdf_tok:,.0f} ({rdf_vs_dlr_pct:+.1f}% vs DLR) \2',
+        rf"(\n\| {label} \| 平均 token \|).*(\|)",
+        rf"\1 {er_tok:,.0f} ({er_vs_dlr_pct:+.1f}% vs DLR) | **{dlr_tok:,.0f}** | {rdf_tok:,.0f} ({rdf_vs_dlr_pct:+.1f}% vs DLR) \2",
         md_text
     )
 
     md_path.write_text(md_text, encoding="utf-8")
-    print(f"[OK] 更新 {md_path}  ({n}题/{total_runs}题次, DLR:{dlr_tok:,.0f}tok, ER +{er_vs_dlr_pct:.1f}%, RDF +{rdf_vs_dlr_pct:.1f}%)")
+    print(f"[OK] 更新 {md_path}（{label} {n}题/{total_runs}题次, DLR:{dlr_tok:,.0f}tok, ER +{er_vs_dlr_pct:.1f}%, RDF +{rdf_vs_dlr_pct:.1f}%）")
 
 
 if __name__ == "__main__":
