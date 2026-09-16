@@ -171,16 +171,16 @@ validated_results/v4_final/{group}/         # original=原始组 / control=对�
 | Agent 启动即崩，日志 `database locked` | 三范式同时初始化 MCP → 争抢 Kuzu 排他锁（P2） | 重跑该题即可恢复；降低并发（2 题 × 3 范式已是实测上限） |
 | Stage 4 judge 超时 300s → UNKNOWN → 默认 INCORRECT | 大日志或网络抖动（P2） | **不要直接改 CSV**：先 `cd Evaluation/oc_judge && cat <prompt_file> \| opencode run --format json` 手动验证 → 确认 CORRECT 后改 `03_reports/{p}.csv` 的 `judge_verdict`/`verdict`/`process_score`/`judge_reason` → 重跑 `parse_agent_stats`。多数是 API 偶发抖动，非 Agent 问题 |
 | RDF serve 进程静默崩溃（端口无监听、无错误日志） | `serve --paradigm ALL` 下偶发（P2） | 复启即可 |
-| 首跳 `*_semantic_query` 返回空（`success:true, confidence:0.0`，structures/entities: []） | 全局首跳不分类型混排取前 30 条再按类型过滤——目标实体排名 >30 被截断；属性/PE 命中被丢弃、未反算到实体（P2，q1472 DLR 实证） | 临时：改问法或带 `db` 重试（锁库走全量扫描必中）；根治见下方「召回反算改造」（待排期） |
+| 首跳 `*_semantic_query` 返回空（`success:true, confidence:0.0`，structures/entities: []） | 全局首跳不分类型混排取前 30 条再按类型过滤——目标实体排名 >30 被截断；属性/PE 命中被丢弃、未反算到实体（P2，q1472 DLR 实证） | 临时：改问法或带 `db` 重试（锁库走全量扫描必中）；根治见下方「召回收口位置修正」（待排期） |
 | 续跑时失败的题被当成成功跳过 | 旧版只要输出文件存在就跳过 | 已修（`01_run_agent.py`）：仅当输出非空**且无同名 `.err`** 才跳过 |
 | `parse_agent_stats` 后统计只剩一个范式 | 逐范式跑互相覆盖 | 用 `--paradigm ALL` 一次跑齐 |
 | 归档 CSV 与 raw 对不上 | §5 坑 1 | 查 raw mtime，手动刷新 |
 | 同一题两处归档记录 | §5 坑 2 | 按 §5 坑 2 的修复形状处理 |
 | token 数看着不对 | 口径 | `total = input + cache_read + reasoning(CoT) + output`（全算消耗）；`cache_read` 随步数累积，占比可达 80%+。**差异看 steps，不看单步** |
 
-### 待排期：召回反算改造（首跳空召回的根治，2026-09-16 定设计）
+### 待排期：召回收口位置修正（首跳空召回的根治，2026-09-16 定）
 
-**收口逻辑跟随设计**（ER→实体 / DLR→LE / RDF→class，子层命中向上归属是该范式既有设计），**唯一缺陷是收口在管线里的位置**：现在"先截断、后收口"（取混排 top-30 再按类型过滤）——应改为**"先收口、后截断"**：足够深的召回（不足 10 条加深补足，k 递增/全量扫描，小库成本可忽略）→ 归并去重（分数取 max）→ 排序取前 top_k=10 个顶层对象交付。**两个动作服务两个目的**：截断（检索侧）= 检索经济，按需加深；收口后交付的一致性（三范式都 ≤10 个顶层对象、同构字段）= token 经济 + 幻觉低。缺陷本质 = 截断被错当成收口的输入边界。反算键：DLR PE→LE 走 Kuzu `INHERITS`（`_get_parent_logical_entity` 已有）、PAS 用 metadata `from_le_id/to_le_id`；ER 属性/关系 id（`db.table.column`）前缀可推父实体（`extract_entity_id` 已有）。三范式同构实施。服务代码改动，需停 serve → 改码 → 重启，等排期；改后受影响批次按单轮重跑纪律处理。
+**只改位置，不动收口逻辑与形态差异**：现在"先截断、后收口"（取混排 top-30 再按类型过滤）→ 改为**"先收口、后截断"**——足够深的召回（不足 10 条加深补足；k 递增/全量扫描，~950 条小库成本可忽略）→ 归并去重（分数取 max）→ 排序取前 top_k=10 个顶层对象交付（ER→实体 / DLR→LE / RDF→class）。**两个动作服务两个目的**：截断（检索侧）= 检索经济，按需加深；收口后交付的一致性（三范式都 ≤10 个顶层对象、同构字段）= token 经济 + 幻觉低。缺陷本质 = 截断被错当成收口的输入边界。**不抹平形态差异**——ER 的子层归并与 DLR/RDF 的"只吃顶层"均为各自设计（入口瘦↔融合），属被测变量，本次不动。顺带统一三家空召回语义。服务代码改动，需停 serve → 改码 → 重启，等排期；改后受影响批次按单轮重跑纪律处理。
 
 ### 争议题（已知缺陷题）
 
