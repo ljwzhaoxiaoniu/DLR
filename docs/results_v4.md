@@ -1,6 +1,7 @@
 ## 评测进度 — 语义+RAG+SOP 三通道模式（v4 基线）
 
 > **说明**: v4 = 三通道模式（见 3-channel-design.md）：Agent 不拿 evidence，纯 question 驱动三通道并行锚定——Ch1 语义（MCP 语义层，数据集原生配置）、Ch2 RAG（`search_evidence` 检索）、Ch3 SOP（前置读 `skills/{db}.md`），交叉验证后 mapping -> SQL。
+> **两组口径**：**原始组**充分尊重数据集原有数据；**对照组**为数据源级建模、充分吸收 evidence（该下沉的下沉到数据源、该保留的保留）。定义与现状见 [rag-evidence.md](rag-evidence.md) §两组。
 > **数据来源**: `validated_results/v4_final/{pair}/agent_stats.csv`（per-pair，如 `1471-1472/`）
 > **配置文件**: `config.json` → `eval.output_dir: "Evaluation/outputs2"`, `eval.round: "v4_final"`
 > **文档同步**: `post_process.py` 每次归档自动重建本文件明细表与汇总数字（进度表手动维护）
@@ -20,11 +21,14 @@
 
 ## 评测进度
 
-| 数据库 | 全量 | 已评 | 剩余 | 进度 |
-|--------|------|------|------|------|
-| debit_card_specializing | 30 | 2 | 28 | 6.7% |
+| 组别 | 数据库 | 全量 | 已评 | 剩余 | 进度 |
+|------|--------|------|------|------|------|
+| 原始组 | debit_card_specializing | 30 | 2 | 28 | 6.7% |
+| 对照组 | card_games / debit_card_specializing | 待定 | 0 | — | 待开跑 |
 
-> **总结**：共测试 2 题 × 3 范式 = **6 题次**。
+> 对照组知识库已就绪（card_games 21 条 / debit_card_specializing 19 条，kid 聚合），题量待定。
+
+> **总结（原始组）**：共测试 2 题 × 3 范式 = **6 题次**。
 
 | 指标 | ER | DLR | RDF |
 |------|----|-----|-----|
