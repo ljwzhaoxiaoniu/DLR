@@ -171,7 +171,7 @@ def _get_tool_names() -> set:
 # Shared + ER tools (registered at module import)
 # ===================================================================
 
-def er_semantic_query(question: str, top_k: int = 10, db: str = "") -> dict:
+def er_semantic_query(question: str, top_k: int = 5, db: str = "") -> dict:
     """[ER] 语义召回 → 返回实体(扁平结构,无物理表/字段).
 
     db: 可选,数据库名过滤. 首次调用留空做全局召回,用于判断问题属于哪个数据库;
@@ -179,6 +179,7 @@ def er_semantic_query(question: str, top_k: int = 10, db: str = "") -> dict:
 
     返回: {success, confidence, data:{entities:[{entity_id, name, description, db}]}}
     description 仅业务描述,不带属性字段名.
+    交付口径：先收口后截断——全量召回 → 归并去重（含关系/属性反算）→ 返回前 top_k 个实体.
     """
     _, _, qs = _ensure_services()
     raw = qs.query(question, top_k, db=db or None)
@@ -440,11 +441,12 @@ def _query_rdf_mapping(class_uri: str) -> dict:
     return result
 
 
-def rdf_semantic_query(question: str, top_k: int = 10, db: str = "") -> dict:
+def rdf_semantic_query(question: str, top_k: int = 5, db: str = "") -> dict:
     """[RDF] 语义召回 → 返回类(URI 本体结构,无 R2RML 映射/字段).
 
     db: 可选,数据库名过滤. 首次调用留空做全局召回,用于判断问题属于哪个数据库;
     从返回的 classes[].db 确定目标库后,后续调用必须传入该 db 锁定范围,避免召回漂移到其他库.
+    交付口径：先收口后截断——全量召回 → 归并（class 层）→ 返回前 top_k 个类.
 
     返回: {success, confidence, data:{classes:[{class_uri, name, description, db}]}}
     class_uri 仅为 IRI 标识,不带 physical_table / predicateObjectMap.
@@ -457,7 +459,8 @@ def rdf_semantic_query(question: str, top_k: int = 10, db: str = "") -> dict:
     vector_db = VectorDB(db_path=str(storage["vector"]))
     graph_db = GraphDB(db_path=str(storage["graph"]), mapping_type="rdf")
 
-    search_results = vector_db.search(question, top_k=top_k * 3, db=db or None)
+    # 先收口、后截断（2026-09-16）：全量召回（~975 条小库，成本可忽略）→ 归并 → 交付前 top_k
+    search_results = vector_db.search(question, top_k=len(vector_db.id_map), db=db or None)
     if not search_results:
         return {"success": False, "message": "未找到相关内容", "data": {}, "confidence": 0.0}
 
@@ -479,7 +482,8 @@ def rdf_semantic_query(question: str, top_k: int = 10, db: str = "") -> dict:
                 "db": res.get("db", ""),
             })
 
-    max_score = max((r.get("score", 0.0) for r in search_results), default=0.0)
+    # confidence = 归并后顶层对象（class）分的 max——与 ER/DLR 口径对齐（此前取混排 max）
+    max_score = max((r.get("score", 0.0) for r in entity_results), default=0.0)
     return {
         "success": True,
         "confidence": round(max_score, 4),
@@ -546,17 +550,19 @@ def _rdf_sparql(query: str) -> dict:
 # ===================================================================
 
 # Plain function definitions (no decorator) — registered in _register_dlr_tools()
-def dlr_semantic_query(question: str, top_k: int = 10, threshold: float = 0.5, db: str = "") -> dict:
+def dlr_semantic_query(question: str, top_k: int = 5, threshold: float = 0.5, db: str = "") -> dict:
     """[DLR] 语义召回 → 返回结构体(LE-PE 复合,无物理表/字段).
 
     db: 可选,数据库名过滤. 首次调用留空做全局召回,用于判断问题属于哪个数据库;
     从返回的 structures[].db 确定目标库后,后续召回类调用必须传入该 db,避免跨库串扰.
+    交付口径：先收口后截断——全量召回 → 归并（LE 层）→ 返回前 top_k 个结构体.
 
     返回: {success, data:{structures:[{logical_entity_id, name, description, db, physical_entities:[{physical_entity_id, pe_name, db}], public_attributes:[{name, description}]}]}}
     不含 physical_table_id / database_url.
     """
     gdb, vector_db, _ = _ensure_services()
-    results = vector_db.search(question, top_k=max(top_k * 3, 20), db=db or None)
+    # 先收口、后截断（2026-09-16）：全量召回（~950 条小库，成本可忽略）→ 归并 → 交付前 top_k
+    results = vector_db.search(question, top_k=len(vector_db.id_map), db=db or None)
     le_results = [r for r in results if r["type"] == "logical_entity"]
     le_results.sort(key=lambda x: x.get("score", 0), reverse=True)
     # 优先取 >= threshold 的，不足 top_k 时补满（threshold 防噪声，不限制数量）

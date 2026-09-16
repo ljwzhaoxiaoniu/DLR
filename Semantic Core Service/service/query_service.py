@@ -44,7 +44,9 @@ class QueryService:
         try:
             logger.info(f"[ER] 查询: {question}" + (f" (db={db})" if db else ""))
 
-            search_results = self.vector_db.search(question, top_k=top_k * 3, db=db)
+            # 先收口、后截断（2026-09-16）：全量召回（~975 条小库，成本可忽略）→ 归并去重 →
+            # 交付前 top_k。此前 top_k*3 截断在前，会把顶层实体挤出收口池（空交付根因）
+            search_results = self.vector_db.search(question, top_k=len(self.vector_db.id_map), db=db)
             if not search_results:
                 return self._empty_result("未找到相关内容")
 
@@ -87,8 +89,9 @@ class QueryService:
             if not entity_id_to_score:
                 return self._empty_result("未找到相关实体")
 
-            # Graph expansion
-            entity_ids = list(entity_id_to_score.keys())
+            # Graph expansion（交付面截断：归并后按分数降序取前 top_k）
+            ranked = sorted(entity_id_to_score.items(), key=lambda kv: kv[1], reverse=True)[:top_k]
+            entity_ids = [eid for eid, _ in ranked]
             result_data = self._expand_er(entity_ids, entity_id_to_score, entity_id_to_db)
 
             max_confidence = max(entity_id_to_score.values())
