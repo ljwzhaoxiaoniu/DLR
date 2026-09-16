@@ -79,7 +79,7 @@ $PY post_process.py --run-id $RID --qids <q1>,<q2>          # 确认后归档
 - **`post_process` 不覆盖已有 raw**：整题重跑时旧 raw 会挡住新日志（输出"迁移 0 条"），归档自相矛盾
 - **旧 pair 目录字母序反杀**：单题目录排在前面时旧行会覆盖新行
 - **judge 超时**默认 INCORRECT：不要直接改 CSV，先手动 `opencode run` 验证
-- **token 口径** `total = input + cache_read + output`（cache_read 可占 80%+），**差异看 steps**
+- **token 口径** `total = input + cache_read + reasoning(CoT) + output`（cache_read 可占 80%+），**差异看 steps**
 - **改配置必须 rebuild + 重启**（`skills/*.md` 例外，改文件即生效）；同批次配置必须一致
 
 ---

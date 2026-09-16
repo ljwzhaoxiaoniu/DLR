@@ -175,7 +175,7 @@ validated_results/v4_final/
 | `parse_agent_stats` 后统计只剩一个范式 | 逐范式跑互相覆盖 | 用 `--paradigm ALL` 一次跑齐 |
 | 归档 CSV 与 raw 对不上 | §5 坑 1 | 查 raw mtime，手动刷新 |
 | 同一题两处归档记录 | §5 坑 2 | 按 §5 坑 2 的修复形状处理 |
-| token 数看着不对 | 口径 | `total = input + cache_read + output`（全算消耗）；`cache_read` 随步数累积，占比可达 80%+。**差异看 steps，不看单步** |
+| token 数看着不对 | 口径 | `total = input + cache_read + reasoning(CoT) + output`（全算消耗）；`cache_read` 随步数累积，占比可达 80%+。**差异看 steps，不看单步** |
 
 ### 争议题（已知缺陷题）
 
