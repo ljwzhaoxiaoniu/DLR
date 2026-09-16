@@ -100,7 +100,7 @@ DLR Proj/
 ├── OC-based Agent Service/    # 评测 Agent 层（AGENTS.md + oc_er/oc_dlr/oc_rdf）
 ├── Evaluation/                # 四阶段流水线 + oc_judge + outputs2
 ├── validated_results/         # 现行基线（当前 v4_final）
-├── rag_knowledge/             # Ch2 知识（kid 聚合格式）
+├── rag_knowledge/             # L2 知识（kid 聚合格式）
 └── MINIDEV_sqlite/            # 数据集（gitignored，需下载）
 ```
 

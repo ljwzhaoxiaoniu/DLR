@@ -1,10 +1,10 @@
-# RAG Evidence（Ch2）— 知识库的两组组织哲学
+# RAG Evidence（L2）— 知识库的两组组织哲学
 
 ## 设计
 
 将评测集从"带 evidence 提示的 NL2SQL"升级为"语义检索评测"。Agent 不再直接拿到 evidence，必须通过 `search_evidence` MCP 工具主动检索。
 
-**前提（2026-08-25 起）**：Agent 为纯 question 模式（prompt 不注入 evidence），Ch2 检索是被测能力而非锦上添花。v2 与 v3 早期（40 题）实为 evidence 注入批次，与 v2 同条件。
+**前提（2026-08-25 起）**：Agent 为纯 question 模式（prompt 不注入 evidence），L2 检索是被测能力而非锦上添花。v2 与 v3 早期（40 题）实为 evidence 注入批次，与 v2 同条件。
 
 三范式公平对比 —— 11 个 topic-level collection 数据完全相同，区别在于每个范式携带的语义上下文（DLR 有 LE 层次化 description，ER/RDF 是扁平的表/class 描述）影响 Agent 利用 RAG 的能力。
 
@@ -18,19 +18,19 @@
 |---|---|---|
 | **做法** | **对数据集的 naive 吸收**——材料是什么层级，就放在什么层级 | **按三范式的定义重新组织**语义层 |
 | **分流方式** | 按**材料来源**分层（见下表） | 按**范式定义**分层（LE/PE/public、实体/属性、class/predicate） |
-| **目的** | 与 **NL2SQL 对照**——证明三级语义建模（Ch1/Ch2/Ch3）**稳定且可行** | 验证**高效、少积累**；让每个领域沉淀**自己的行业资产** |
+| **目的** | 与 **NL2SQL 对照**——证明三级语义建模（L1/L2/L3）**稳定且可行** | 验证**高效、少积累**；让每个领域沉淀**自己的行业资产** |
 | **知识加工量** | 最少（不重写、不聚合、不跨题归并） | 高（逐条判定去向 + 聚合 + 消歧 + 修正） |
 | **现状（2026-09-14）** | **9 个 topic**：california_schools / codebase_community / european_football_2 / financial / formula_1 / student_club / superhero / thrombosis_prediction / toxicology —— 逐题原文，**条数 == 该库题数**（30/49/51/32/66/48/52/50/40） | **2 个 topic**：card_games（21 条）/ debit_card_specializing（19 条）—— kid 聚合，**条数远少于题数** |
 
-> **条数差就是证据**：对照组条数 < 题数，因为一部分 evidence **下沉**去了 Ch1、一部分**上浮**去了 Ch3，只有"该留在 Ch2"的才聚合进 kid。
+> **条数差就是证据**：对照组条数 < 题数，因为一部分 evidence **下沉**去了 L1、一部分**上浮**去了 L3，只有"该留在 L2"的才聚合进 kid。
 
 ### 原始组：naive 吸收（按材料来源分层）
 
 | 材料来源 | 去向 | 说明 |
 |---|---|---|
-| **数据源级的** | 吸收到**数据源级** | 数据集自带的 `database_description/*.csv`（列描述、值域）→ 进 Ch1 模型 description |
-| **领域共识级** | 吸收 **evidence** | 出题人写的 evidence 原文 → **照单全收**进 Ch2（逐题一条，不聚合、不消歧、不修正） |
-| **都搞不定的** | **沉淀 SOP** | 前两级消化不掉的 → Ch3 skills 条目 |
+| **数据源级的** | 吸收到**数据源级** | 数据集自带的 `database_description/*.csv`（列描述、值域）→ 进 L1 模型 description |
+| **领域共识级** | 吸收 **evidence** | 出题人写的 evidence 原文 → **照单全收**进 L2（逐题一条，不聚合、不消歧、不修正） |
+| **都搞不定的** | **沉淀 SOP** | 前两级消化不掉的 → L3 skills 条目 |
 
 **原始组的价值**：最大程度贴近数据集原貌，知识加工量≈0——它回答的是"**不额外做知识工程，三级语义建模能不能跑通**"。与 NL2SQL 对照，证明架构本身稳定可行。
 
@@ -40,11 +40,11 @@
 
 ```
 evidence 一条
-   ├─ "这个数据怎么存"（数据语义/值域/同名列消歧）→ 下沉 Ch1（模型 description）
+   ├─ "这个数据怎么存"（数据语义/值域/同名列消歧）→ 下沉 L1（模型 description）
    │      锚定实体时零成本携带，token 与条目数都更少
-   ├─ "题目这句话查什么列"（术语→列/值、出题人公式）→ 保留 Ch2（kid 聚合）
+   ├─ "题目这句话查什么列"（术语→列/值、出题人公式）→ 保留 L2（kid 聚合）
    │      同类术语归并成一条，source_qids 记多题
-   └─ "这种题容易怎么错"（过程性陷阱/跨题模式/本题裁定）→ 上浮 Ch3（SOP 条目）
+   └─ "这种题容易怎么错"（过程性陷阱/跨题模式/本题裁定）→ 上浮 L3（SOP 条目）
           前两级结构上解决不了的，才升到这里
 ```
 
@@ -54,9 +54,9 @@ evidence 一条
 
 ### 判定口诀（分流时逐条问）
 
-1. "这个数据怎么存" → **下沉 Ch1**（模型 description）
-2. "题目这句话查什么列" → **保留 Ch2**（RAG）
-3. "这种题容易怎么错" → **上浮 Ch3**（SOP）
+1. "这个数据怎么存" → **下沉 L1**（模型 description）
+2. "题目这句话查什么列" → **保留 L2**（RAG）
+3. "这种题容易怎么错" → **上浮 L3**（SOP）
 
 ---
 
@@ -64,8 +64,8 @@ evidence 一条
 
 **写领域事实 / 出题人定义本身**（术语→列/值、公式、条件），**禁止对着题面写操作指令**（背答案）；evidence 有错时以修正语义入库。
 
-- **Ch2 是 fixed 的**（2026-09-04 强调，q1481 负值教训）：evidence 里没有的事实**不可事后补进 Ch2**——结果驱动的知识只经 **Ch3** 一个阀门准入
-- **Ch1/Ch2 非必要不增加**：对它们的每次增改都是对评测环境（数据集原生语义）的修改，加多了三范式对比失真
+- **L2 是 fixed 的**（2026-09-04 强调，q1481 负值教训）：evidence 里没有的事实**不可事后补进 L2**——结果驱动的知识只经 **L3** 一个阀门准入
+- **L1/L2 非必要不增加**：对它们的每次增改都是对评测环境（数据集原生语义）的修改，加多了三范式对比失真
 - **不写 SQL 成品 / few-shot 模板**（模板挖空题面即答案 95%）
 - 评测元信息（gold 对错、evidence 缺陷）**不进**知识层，只进 `docs/dataset.md`
 
@@ -142,7 +142,7 @@ rdf_search_evidence(namespace, question, top_k=3)
 ## Agent Workflow
 
 ```
-question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并行]
+question → [L1 semantic_query + L2 search_evidence + L3 skills/{db}.md 并行]
          → 交叉验证锚定 → mapping → SQL → Final Answer
 ```
 
@@ -153,5 +153,5 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
 ## 相关文档
 
 - [tsm-design.md](tsm-design.md) —— 三级语义建模协作协议、边界判断表、知识分层四层准入
-- [modeling.md](modeling.md) —— Ch1 语义层的建模规范（下沉的目的地）
+- [modeling.md](modeling.md) —— L1 语义层的建模规范（下沉的目的地）
 - [runbook.md](runbook.md) —— 索引重建与服务重启的操作口径

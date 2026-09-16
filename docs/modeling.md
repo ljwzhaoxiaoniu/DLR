@@ -51,10 +51,10 @@
 | 字段 | 原用法 | 本项目用法 |
 |------|--------|-----------|
 | `question` | 拼 prompt | **唯一输入** —— prompt 就是裸句 `Question: …` |
-| `evidence` | prompt 注入 | → **Ch2 RAG**（`rag_knowledge/*.jsonl` 聚合，按术语→列/值映射）；Agent 须主动 `search_evidence` |
+| `evidence` | prompt 注入 | → **L2 RAG**（`rag_knowledge/*.jsonl` 聚合，按术语→列/值映射）；Agent 须主动 `search_evidence` |
 | `SQL`（gold） | 评判标准 | → Stage 0 预算成 `00_golden_cache.json`；**保持数据集原始**，缺陷题由 judge 仲裁 |
 | `db_id` | 直接给 Agent | **不给 Agent** —— 定位库是语义层的职责（语义路由），Stage 2 重放定库 |
-| `difficulty` | N/A | → Ch3 SOP 的触发器（简单题不必加载） |
+| `difficulty` | N/A | → L3 SOP 的触发器（简单题不必加载） |
 
 ### Prompt 铁律
 
@@ -253,16 +253,16 @@ db 过滤、VectorDB 检索机制、`top_k`（三范式统一 **10**）、阈值
 
 ### 5.4 知识分层与准入（四层）
 
-> **两组口径（2026-09-14）**：知识库有**原始组**（naive 吸收：数据源级归数据源级 / 领域共识级吸收 evidence / 搞不定的沉淀 SOP）与**对照组**（按三范式定义重组：下沉 Ch1 / 保留 Ch2 / 上浮 Ch3）之分——一个 topic 默认处于原始组状态。见 [rag-evidence.md](rag-evidence.md)。
+> **两组口径（2026-09-14）**：知识库有**原始组**（naive 吸收：数据源级归数据源级 / 领域共识级吸收 evidence / 搞不定的沉淀 SOP）与**对照组**（按三范式定义重组：下沉 L1 / 保留 L2 / 上浮 L3）之分——一个 topic 默认处于原始组状态。见 [rag-evidence.md](rag-evidence.md)。
 
 表/列属性就在物理 schema 里；YAML 的原始依据是 `dev_tables.json` + 语义补充，DLR/R2RML 均以 ER 为基础——**三范式语义层同源**，YAML 只承载"必要的语义说明"。
 
-**Ch1/Ch2 非必要不增加**——对它们的每次增改都是对评测环境（数据集原生语义）的修改，加多了三范式对比失真。**结果驱动的知识只经 Ch3 一个阀门准入**：
+**L1/L2 非必要不增加**——对它们的每次增改都是对评测环境（数据集原生语义）的修改，加多了三范式对比失真。**结果驱动的知识只经 L3 一个阀门准入**：
 
-- 绕路按根因定性：**实体/关系建模造成召回冲突 → Ch3 补业务逻辑消歧条目**（q1521 首例）；纯执行效率问题不构成准入
-- Ch3 条目**事后准入**：agent 搞不定 / 结果不确定 / 题目错误才进；没有条目的题 = 干净实验组
+- 绕路按根因定性：**实体/关系建模造成召回冲突 → L3 补业务逻辑消歧条目**（q1521 首例）；纯执行效率问题不构成准入
+- L3 条目**事后准入**：agent 搞不定 / 结果不确定 / 题目错误才进；没有条目的题 = 干净实验组
 - **不写 SQL 成品 / few-shot 模板**（模板挖空题面即答案 95%）
-- 判定顺序：judge 侧 `disputes > SkillPath(SOP) > KnowledgePath(rag) > evidence 字面`；Agent 侧 = Ch3 严格命中即为最权威，无命中不预设优先级
+- 判定顺序：judge 侧 `disputes > SkillPath(SOP) > KnowledgePath(rag) > evidence 字面`；Agent 侧 = L3 严格命中即为最权威，无命中不预设优先级
 
 ---
 
@@ -357,7 +357,7 @@ Agent 写 SQL → execute_sql → Final Answer
 | DLR | `dlr_semantic_query` | `data.structures[]`（LE-PE 复合, db） | `get_pe_mapping(pe_id)` ★ |
 | RDF | `rdf_semantic_query` | `data.classes[]`（class_uri, name, description, db） | `get_rdf_mapping(class_uri)` |
 
-### ER 工具（9 + 1 共享；`er_search_evidence` 属 Ch2）
+### ER 工具（9 + 1 共享；`er_search_evidence` 属 L2）
 
 | Tool | 参数 | 语义 |
 |------|------|------|
@@ -375,7 +375,7 @@ Agent 写 SQL → execute_sql → Final Answer
 | Tool | 参数 | 语义 |
 |------|------|------|
 | `dlr_semantic_query` | `question, top_k, threshold, db?` | 语义召回 → LE-PE 结构体 |
-| `dlr_search_evidence` | `namespace, question, top_k` | Ch2 证据检索 |
+| `dlr_search_evidence` | `namespace, question, top_k` | L2 证据检索 |
 | **`get_pe_mapping`** ★ | `pe_id` | **PE 详情 + 属性 + ARCS + database_url 一次调用** |
 | `get_le_attrs` | `le_id` | LE 属性（public 面） |
 | ~~`recall_pe`~~ / ~~`recall_pas`~~ / ~~`list_le`~~ / ~~`list_pe`~~ / ~~`list_pas`~~ / ~~`schema`~~ | — | **已禁注册** — 使用率 <5% 且诱发过度探索 |

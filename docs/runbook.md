@@ -56,8 +56,8 @@ python main.py serve --paradigm ALL        # 3 进程：ER 28765 / DLR 28775 / R
 |---|---|---|
 | `configs/scenarios/{ER,DLR}/*.yaml`、`RDF/*.ttl` | ✅ | ✅ |
 | `mapping/*.py`、`models/*.py`、`build_service.py` 等构建链路 | ✅ | ✅ |
-| `AGENTS.md`、`skills/*.md`（Ch3 是实时读取） | ❌ | ❌（skills 改文件即生效） |
-| `rag_knowledge/*.jsonl`（Ch2） | 需 `python main.py build --evidence <topic>` 重建对应索引 | ✅ |
+| `AGENTS.md`、`skills/*.md`（L3 是实时读取） | ❌ | ❌（skills 改文件即生效） |
+| `rag_knowledge/*.jsonl`（L2） | 需 `python main.py build --evidence <topic>` 重建对应索引 | ✅ |
 | 查询层代码（如 `db/graph_db.py` 的读路径） | ❌ | ✅ |
 
 **配置改动后，同批次内必须一致**——改过配置要么重跑整批、要么本批全用旧配置，不允许半批换口径。
@@ -114,7 +114,7 @@ done
 | **归档须确认**（Stage 5） | Stage 1–4 跑完后**不自动归档**，等结果确认无误再 `post_process` |
 | **同批配置一致** | 批内三范式与所有题必须用同一套配置；改过配置则整批重跑 |
 | **缺陷题流程** | 数据集保持原始 → Agent 按语义正确口径作答 → strict 对原始 gold 必 FAIL → judge 依 `oc_judge/disputes.md` / 知识层裁定翻正。**这是设计内路径，不是异常** |
-| **判定顺序** | judge 侧：`disputes > SkillPath(SOP) > KnowledgePath(rag) > evidence 字面`；Agent 侧：Ch3 严格命中即最权威，无命中不预设优先级 |
+| **判定顺序** | judge 侧：`disputes > SkillPath(SOP) > KnowledgePath(rag) > evidence 字面`；Agent 侧：L3 严格命中即最权威，无命中不预设优先级 |
 
 ---
 
@@ -142,19 +142,19 @@ cd Evaluation/scripts
 ```
 validated_results/v4_final/{group}/         # original=原始组 / control=对照组
 ├── raw/{q1}-{q2}_{paradigm}_{qid}.json     # 扁平，pair 前缀命名
-└── {q1}-{q2}/agent_stats.csv               # 归档粒度 = 运行粒度，不合并（24 列含 Ch1/Ch2/Ch3 三级命中）
+└── {q1}-{q2}/agent_stats.csv               # 归档粒度 = 运行粒度，不合并（24 列含 L1/L2/L3 三级命中）
 ```
 
 ### 备注四栏（`results_{版本}.md` 逐题表）
 
 | 栏 | 只写什么 |
 |---|---|
-| **共通** | 题目 / evidence / Ch3 问题（跨范式共同根源）。题目无缺陷时写明"无缺陷" |
+| **共通** | 题目 / evidence / L3 问题（跨范式共同根源）。题目无缺陷时写明"无缺陷" |
 | **ER / DLR / RDF-备注** | 该范式本题的异常、错误及后果（首跳漂移、strict FAIL 原因、探测偏多、token 代价）；空 = 无异常 |
 
-- **Ch3 命中口径**：只有 skill 文件里**存在本题匹配条目**才算命中；命中他题条目属干扰，统一写"Ch3 无本题条目"
+- **L3 命中口径**：只有 skill 文件里**存在本题匹配条目**才算命中；命中他题条目属干扰，统一写"L3 无本题条目"
 - **只写当前结果的客观分析**——不写重跑次数、run_id、前后 token 对比（这些进 commit message 或论证案例区）
-- **Ch3 条目 ↔ 观察对账**：skills 里每个条目题，`results_*.md` 必须有对应观察，且数字（steps / token / execute_sql 次数）与归档 CSV **逐项一致**
+- **L3 条目 ↔ 观察对账**：skills 里每个条目题，`results_*.md` 必须有对应观察，且数字（steps / token / execute_sql 次数）与归档 CSV **逐项一致**
 
 ### ⚠️ 归档三个坑
 

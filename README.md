@@ -18,7 +18,7 @@
 | [配置 → 存储写入链路](docs/semantic-layer-build.md) | 每范式 YAML/TTL → Kuzu/FAISS 的字段级写入对照 + 召回面公平性（透明化深度篇） |
 | [评测流水线](docs/evaluation.md) | 四阶段流水线**设计**、Prompt 铁律、两段式判定、输出归档 |
 | [Agent 说明](docs/agent.md) | OpenCode + MCP 架构、AGENTS.md 规则、防作弊、db 锁库行为 |
-| [三级语义建模设计](docs/tsm-design.md) | 数据源级（Ch1 语义）/ 领域共识级（Ch2 RAG）/ 业务逻辑级（Ch3 SOP），三级并行锚定协议；知识分层四层准入 |
+| [三级语义建模设计](docs/tsm-design.md) | 数据源级（L1 语义）/ 领域共识级（L2 RAG）/ 业务逻辑级（L3 SOP），三级并行锚定协议；知识分层四层准入 |
 | [RAG 知识库](docs/rag-evidence.md) | rag_knowledge 两种格式、知识写法铁律、索引重建 |
 | [数据集说明](docs/dataset.md) | mini_dev 0703：11 库 500 题、下载、任务格式、已知缺陷清单 |
 | [评测结果 v4](docs/results_v4.md) | v4 逐题校验表（当前基线；post_process 自动重建） |

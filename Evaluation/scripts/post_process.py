@@ -33,6 +33,13 @@ _MD_PATH = ROOT / "docs" / f"results_{_EVAL_ROUND.split('_')[0]}.md"
 GROUP_LABELS = {"original": "原始组", "control": "对照组"}
 
 
+def _normalize_ch_keys(d):
+    """兼容旧字段名：ch1_calls → l1_calls 等（2026-09-16 Ch→L 术语统一）."""
+    for k in [k for k in d if k.startswith("ch") and k[2:3] in "123" and k[3:4] == "_"]:
+        d.setdefault("l" + k[2:], d[k])
+    return d
+
+
 def main():
     ap = argparse.ArgumentParser(description=f"评测后处理 → validated_results/{_EVAL_ROUND}/{{group}}/")
     ap.add_argument("--run-id", required=True, help="Stage 1 run_id")
@@ -89,16 +96,16 @@ def main():
     if stats_csv.exists():
         with open(stats_csv, encoding="utf-8") as f:
             for r in csv.DictReader(f):
-                stats_map[(r["paradigm"].lower(), int(r["question_id"]))] = r
+                stats_map[(r["paradigm"].lower(), int(r["question_id"]))] = _normalize_ch_keys(r)
 
     rows = []
     fields = ["paradigm", "q_id", "db_id", "strict_match", "judge_verdict", "judge_reason",
               "verdict", "process_score", "error", "input_tokens", "output_tokens",
               "reasoning_tokens", "cache_read_tokens", "total_tokens",
               "steps", "tool_calls_detail",
-              "ch1_calls", "ch1_db_hit", "ch1_first_dbs",
-              "ch2_calls", "ch2_hits", "ch2_top",
-              "ch3_calls", "ch3_hit"]
+              "l1_calls", "l1_db_hit", "l1_first_dbs",
+              "l2_calls", "l2_hits", "l2_top",
+              "l3_calls", "l3_hit"]
     for p in ["er", "dlr", "rdf"]:
         csv_path = reports_dir / f"{p}.csv"
         if not csv_path.exists():
@@ -126,14 +133,14 @@ def main():
                 row["total_tokens"] = st.get("tokens_total", "")
                 row["steps"] = st.get("steps", "")
                 row["tool_calls_detail"] = st.get("tool_calls_detail", "")
-                row["ch1_calls"] = st.get("ch1_calls", "")
-                row["ch1_db_hit"] = st.get("ch1_db_hit", "")
-                row["ch1_first_dbs"] = st.get("ch1_first_dbs", "")
-                row["ch2_calls"] = st.get("ch2_calls", "")
-                row["ch2_hits"] = st.get("ch2_hits", "")
-                row["ch2_top"] = st.get("ch2_top", "")
-                row["ch3_calls"] = st.get("ch3_calls", "")
-                row["ch3_hit"] = st.get("ch3_hit", "")
+                row["l1_calls"] = st.get("l1_calls", "")
+                row["l1_db_hit"] = st.get("l1_db_hit", "")
+                row["l1_first_dbs"] = st.get("l1_first_dbs", "")
+                row["l2_calls"] = st.get("l2_calls", "")
+                row["l2_hits"] = st.get("l2_hits", "")
+                row["l2_top"] = st.get("l2_top", "")
+                row["l3_calls"] = st.get("l3_calls", "")
+                row["l3_hit"] = st.get("l3_hit", "")
                 rows.append(row)
 
     out_csv = pair_dir / "agent_stats.csv"
@@ -174,6 +181,8 @@ def update_results_md(group_key, new_rows, validated_dir):
                 # 统一 paradigm 为小写
                 if "paradigm" in r:
                     r["paradigm"] = r["paradigm"].lower()
+                # 兼容旧字段名 ch*_ → l*_（2026-09-16 术语统一）
+                _normalize_ch_keys(r)
                 all_rows.append(r)
 
     # 同 qid+paradigm 组内去重（后出现的覆盖）
@@ -271,7 +280,7 @@ def update_results_md(group_key, new_rows, validated_dir):
         if ph in md_text:
             notes = (
                 "> **Token = input + cache_read + reasoning(CoT) + output**（全算消耗，= agent_stats.csv 的 `total_tokens`）\n"
-                "> **备注分栏**: 共通 = 题目/evidence/Ch3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）\n"
+                "> **备注分栏**: 共通 = 题目/evidence/L3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）\n"
                 f"> **数据来源**: `validated_results/{_EVAL_ROUND}/{{group}}/{{pair}}/agent_stats.csv`（per-pair，如 `{group_key}/1471-1472/`）\n"
             )
             md_text = md_text.replace(ph, f"**{label}**\n\n{detail_block}\n{notes}", 1)

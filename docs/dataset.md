@@ -77,7 +77,7 @@ DLR Proj/
 
 ## 已知缺陷清单（2026-08-27 起保持原始）
 
-**政策反转（2026-08-27）**：数据集（mini_dev_sqlite.json / gold.sql / golden cache）**恢复原始版、保持不修正**。此前对 gold cache / evidence 的修正已回滚——缺陷不靠改数据解决，而由知识层消化（Ch2 rag_knowledge 聚合修正 + Ch3 skills 避坑），Agent 按语义正确口径作答，judge 按争议目录裁决（`Evaluation/oc_judge/disputes.md`，QID -> 裁定口径，判定时 GoldResult 作废）。
+**政策反转（2026-08-27）**：数据集（mini_dev_sqlite.json / gold.sql / golden cache）**恢复原始版、保持不修正**。此前对 gold cache / evidence 的修正已回滚——缺陷不靠改数据解决，而由知识层消化（L2 rag_knowledge 聚合修正 + L3 skills 避坑），Agent 按语义正确口径作答，judge 按争议目录裁决（`Evaluation/oc_judge/disputes.md`，QID -> 裁定口径，判定时 GoldResult 作废）。
 
 本节保留**逐题缺陷分析**作为知识层与裁决的依据（"正确结果"列即 disputes.md 的裁定值）。历史修正记录中的"已修正/已写入 cache"表述为 2026-08-27 前的旧政策，现已回滚。
 
@@ -95,7 +95,7 @@ DLR Proj/
 | **错误结果（原 gold rows）** | `[[459.956264]]` |
 | **Bug 本质** | yearmonth 每行已是"客户-月"预聚合值，`AVG` 即月均；再除 12 是双重除法。且 2013 年 SME 客户人均仅 8.0 个月记录（178,337 行 / 22,274 客户），"/12"连"除以月数"都凑不上 |
 | **题意正确答案** | `AVG(Consumption)` = **5519.4752**（三范式 Pred 一致 + SQLite 独立重放） |
-| **消化路径（软修复，数据保持原始）** | Ch3 skill 模式4（月均/年均口径，禁双重除法）+ judge 判序 SOP>RAG（`oc_judge/AGENTS.md`，2026-08-28 定）。v3 实测（run 0828_1455）：三范式 strict FAIL 后 judge 全翻 CORRECT |
+| **消化路径（软修复，数据保持原始）** | L3 skill 模式4（月均/年均口径，禁双重除法）+ judge 判序 SOP>RAG（`oc_judge/AGENTS.md`，2026-08-28 定）。v3 实测（run 0828_1455）：三范式 strict FAIL 后 judge 全翻 CORRECT |
 
 **正确的 SQL**（按题意：yearmonth 粒度 = 客户-月，月均一步 AVG）：
 
@@ -214,7 +214,7 @@ FROM (
 | **缺陷本质** | `transactions_1k` 是 1000 行采样表，`Date` 仅覆盖 2012-08-23~26 四天；题面月份（2013-09 / 2013-06）在采样表**零交易**。gold 用 yearmonth 圈客户 + CustomerID 代理 JOIN，把客户 2012-08 的历史购买归因到题面月份——时间语义相悖（“9 月被消费的产品”实际是“8 月买的、客户 9 月有月度记录的产品”） |
 | **语义正确结果** | 空列表（两题均无样本外交易；三范式 R0 无条目轮一致得出） |
 | **gold 结果** | q1500 全部 27 种产品 / q1501 CZE+SVK |
-| **消化路径（软修复）** | Ch3 skills 本题条目（样本窗口事实 + 空集即真话 + 禁代理路线 + 路径自寻），judge 判序 SkillPath(SOP) > evidence 字面统一翻正（无条目轮 judge 分裂 5/6 INCORRECT）。disputes 无需补条目——SkillPath 已覆盖 |
+| **消化路径（软修复）** | L3 skills 本题条目（样本窗口事实 + 空集即真话 + 禁代理路线 + 路径自寻），judge 判序 SkillPath(SOP) > evidence 字面统一翻正（无条目轮 judge 分裂 5/6 INCORRECT）。disputes 无需补条目——SkillPath 已覆盖 |
 | **实测** | 0831_1628 修剪版条目：6/6 CORRECT；token 对照与三轮验证见 `archive/results_v3.md` 案例 7（旧基线记录，v4 起以 docs/results_v4.md 为准） |
 
 ```
@@ -466,7 +466,7 @@ FROM (
 - **裁决唯一权威** = `Evaluation/oc_judge/disputes.md`（按 QID 检索）；本节是它的分析底稿。judge 命中裁决条目时 GoldResult 作废，按裁定核对 Pred。
 - **统计口径**：正式结果中正常题/缺陷题分栏，避免数据集缺陷污染三范式对比。
 - 本节"正确结果"均在 SQLite 中独立重放验证，并与三范式 Agent 的 pred 交叉比对一致。
-- 缺陷题解法归属：evidence 薄弱/误导 -> Ch2 rag_knowledge 修正；SQL 层陷阱 -> Ch3 skills 模式；gold 本身错 -> Agent 按题面语义答 + judge 裁决。
+- 缺陷题解法归属：evidence 薄弱/误导 -> L2 rag_knowledge 修正；SQL 层陷阱 -> L3 skills 模式；gold 本身错 -> Agent 按题面语义答 + judge 裁决。
 
 ## SQLite 元数据注意事项
 

@@ -1,6 +1,6 @@
 ## 评测进度 — 三级语义建模模式（v4 基线）
 
-> **说明**: v4 = 三级语义建模（见 tsm-design.md）：Agent 不拿 evidence，纯 question 驱动三级并行锚定——数据源级（Ch1 MCP 语义层，数据集原生配置）、领域共识级（Ch2 RAG，`search_evidence` 检索）、业务逻辑级（Ch3 SOP，前置读 `skills/{db}.md`），交叉验证后 mapping -> SQL。
+> **说明**: v4 = 三级语义建模（见 tsm-design.md）：Agent 不拿 evidence，纯 question 驱动三级并行锚定——数据源级（L1 MCP 语义层，数据集原生配置）、领域共识级（L2 RAG，`search_evidence` 检索）、业务逻辑级（L3 SOP，前置读 `skills/{db}.md`），交叉验证后 mapping -> SQL。
 > **两组口径**：**原始组**充分尊重数据集原有数据；**对照组**为数据源级建模、充分吸收 evidence（该下沉的下沉到数据源、该保留的保留）。定义与现状见 [rag-evidence.md](rag-evidence.md) §两组。
 > **数据来源**: `validated_results/v4_final/{group}/{pair}/agent_stats.csv`（per-pair，如 `original/1471-1472/`）
 > **配置文件**: `config.json` → `eval.output_dir: "Evaluation/outputs2"`, `eval.round: "v4_final"`
@@ -10,7 +10,7 @@
 
 | 项 | v4 口径 |
 |---|---|
-| Ch1 列级描述 | 数据集 `*.csv` 原文全量（09-10 重写） |
+| L1 列级描述 | 数据集 `*.csv` 原文全量（09-10 重写） |
 | top_k | 三范式统一 **10** |
 | DLR schema | `PE.attributes:[{column,biz_name,description,public?}]`（09-12 统一） |
 | DLR 属性 data_type / 列 id | 792/792 非空 / 去引号（与 ER 同构） |
@@ -55,7 +55,7 @@
 | debit_card_specializing | q1473 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 43,735 | 47,056 | **43,636** |  |  |  |  |
 | debit_card_specializing | q1476 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 59,242 | 65,386 | **58,606** |  |  |  |  |
 > **Token = input + cache_read + reasoning(CoT) + output**（全算消耗，= agent_stats.csv 的 `total_tokens`）
-> **备注分栏**: 共通 = 题目/evidence/Ch3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）
+> **备注分栏**: 共通 = 题目/evidence/L3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）
 > **数据来源**: `validated_results/v4_final/{group}/{pair}/agent_stats.csv`（per-pair，如 `original/1471-1472/`）
 
 **对照组**

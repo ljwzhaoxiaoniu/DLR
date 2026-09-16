@@ -72,7 +72,7 @@ def run_one(q, paradigm, timeout=300):
         return out_path, True, 0.0
 
     # 范式无关: 不点名任何具体工具（AGENTS.md 要求先 /mcps 自发现），
-    # 也不写死 Ch1→Ch2 的先后（三级并行锚定，见 AGENTS.md 核心约束 1）
+    # 也不写死 L1→L2 的先后（三级并行锚定，见 AGENTS.md 核心约束 1）
     prompt = (
         "CRITICAL: MCP tools only — run /mcps first to discover this paradigm's tools. "
         "Use semantic recall + evidence search + the mapping tool for metadata, then sqlite3 for data. "
