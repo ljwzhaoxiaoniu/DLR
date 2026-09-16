@@ -171,7 +171,7 @@ def _get_tool_names() -> set:
 # Shared + ER tools (registered at module import)
 # ===================================================================
 
-def er_semantic_query(question: str, top_k: int = 5, db: str = "") -> dict:
+def er_semantic_query(question: str, top_k: int = 20, db: str = "") -> dict:
     """[ER] 语义召回 → 返回实体(扁平结构,无物理表/字段).
 
     db: 可选,数据库名过滤. 首次调用留空做全局召回,用于判断问题属于哪个数据库;
@@ -179,7 +179,7 @@ def er_semantic_query(question: str, top_k: int = 5, db: str = "") -> dict:
 
     返回: {success, confidence, data:{entities:[{entity_id, name, description, db}]}}
     description 仅业务描述,不带属性字段名.
-    交付口径：先收口后截断——全量召回 → 归并去重（含关系/属性反算）→ 返回前 top_k 个实体.
+    交付口径：先收口后截断——全量召回 → 归并去重（含关系/属性反算）→ 返回前 top_k 个实体（默认 20）.
     """
     _, _, qs = _ensure_services()
     raw = qs.query(question, top_k, db=db or None)
@@ -441,12 +441,12 @@ def _query_rdf_mapping(class_uri: str) -> dict:
     return result
 
 
-def rdf_semantic_query(question: str, top_k: int = 5, db: str = "") -> dict:
+def rdf_semantic_query(question: str, top_k: int = 30, db: str = "") -> dict:
     """[RDF] 语义召回 → 返回类(URI 本体结构,无 R2RML 映射/字段).
 
     db: 可选,数据库名过滤. 首次调用留空做全局召回,用于判断问题属于哪个数据库;
     从返回的 classes[].db 确定目标库后,后续调用必须传入该 db 锁定范围,避免召回漂移到其他库.
-    交付口径：先收口后截断——全量召回 → 归并（class 层）→ 返回前 top_k 个类.
+    交付口径：先收口后截断——全量召回 → 归并（class 层）→ 返回前 top_k 个类（默认 30，扁平形态条均小）.
 
     返回: {success, confidence, data:{classes:[{class_uri, name, description, db}]}}
     class_uri 仅为 IRI 标识,不带 physical_table / predicateObjectMap.
@@ -555,7 +555,7 @@ def dlr_semantic_query(question: str, top_k: int = 5, threshold: float = 0.5, db
 
     db: 可选,数据库名过滤. 首次调用留空做全局召回,用于判断问题属于哪个数据库;
     从返回的 structures[].db 确定目标库后,后续召回类调用必须传入该 db,避免跨库串扰.
-    交付口径：先收口后截断——全量召回 → 归并（LE 层）→ 返回前 top_k 个结构体.
+    交付口径：先收口后截断——全量召回 → 归并（LE 层）→ 返回前 top_k 个结构体（默认 5）.
 
     返回: {success, data:{structures:[{logical_entity_id, name, description, db, physical_entities:[{physical_entity_id, pe_name, db}], public_attributes:[{name, description}]}]}}
     不含 physical_table_id / database_url.
