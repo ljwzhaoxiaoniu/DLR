@@ -23,19 +23,19 @@
 
 | 组别 | 数据库 | 全量 | 已评 | 剩余 | 进度 |
 |------|--------|------|------|------|------|
-| 原始组 | debit_card_specializing | 30 | 2 | 28 | 6.7% |
+| 原始组 | debit_card_specializing | 30 | 4 | 26 | 13.3% |
 | 对照组 | card_games / debit_card_specializing | 待定 | 0 | — | 待开跑 |
 
 > 对照组知识库已就绪（card_games 21 条 / debit_card_specializing 19 条，kid 聚合），题量待定。
 
-> **总结（原始组）**：共测试 2 题 × 3 范式 = **6 题次**。
+> **总结（原始组）**：共测试 4 题 × 3 范式 = **12 题次**。
 > **总结（对照组）**：共测试 0 题 × 3 范式 = **0 题次**。
 
 | 组别 | 指标 | ER | DLR | RDF |
 |------|------|----|-----|-----|
-| 原始组 | CORRECT | 2/2 (100.0%) | **2/2 (100.0%)** | 2/2 (100.0%) |
-| 原始组 | strict PASS | 2/2 (100.0%) | 1/2 (50.0%) | 1/2 (50.0%) |
-| 原始组 | 平均 token | 82,603 (+38.3% vs DLR) | **59,730** | 57,164 (-4.3% vs DLR) |
+| 原始组 | CORRECT | 4/4 (100.0%) | **4/4 (100.0%)** | 4/4 (100.0%) |
+| 原始组 | strict PASS | 3/4 (75.0%) | 2/4 (50.0%) | 2/4 (50.0%) |
+| 原始组 | 平均 token | 67,046 (+15.6% vs DLR) | **57,976** | 54,142 (-6.6% vs DLR) |
 | 对照组 | CORRECT | — | — | — |
 | 对照组 | strict PASS | — | — | — |
 | 对照组 | 平均 token | — | — | — |
@@ -52,6 +52,8 @@
 |------|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|------|--------|--------|--------|
 | debit_card_specializing | q1471 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | **54,735** | 58,776 | 55,200 |  |  |  |  |
 | debit_card_specializing | q1472 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 110,471 | 60,684 | **59,127** |  |  |  |  |
+| debit_card_specializing | q1473 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 43,735 | 47,056 | **43,636** |  |  |  |  |
+| debit_card_specializing | q1476 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 59,242 | 65,386 | **58,606** |  |  |  |  |
 > **Token = input + cache_read + reasoning(CoT) + output**（全算消耗，= agent_stats.csv 的 `total_tokens`）
 > **备注分栏**: 共通 = 题目/evidence/Ch3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）
 > **数据来源**: `validated_results/v4_final/{group}/{pair}/agent_stats.csv`（per-pair，如 `original/1471-1472/`）
