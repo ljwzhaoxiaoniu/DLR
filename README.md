@@ -38,7 +38,7 @@
 | **当前基线轮次** | **v4_final**（`config.json eval.round`）；v3 归档（90 题次）已作废移入 `archive/v3_final/` |
 | **已归档** | 原始组 4 题（2 批，逐题表见 [results_v4](docs/results_v4.md)） |
 | **下一步** | 原始组 debit_card 剩 26 题（每批 2 题 × 3 范式），随后对照组 / card_games 52 题 + 其余 9 主题 |
-| **已知问题** | P2：Kuzu 锁冲突 / judge 偶发超时 / RDF serve 静默崩溃；DLR 有意未覆盖 3 表 6 列；`formula_1.constructors.wins` 幽灵列待裁定 |
+| **已知问题** | P2：Kuzu 锁冲突 / judge 偶发超时 / RDF serve 静默崩溃 / 首跳召回混排截断（属性命中未按实体反算，见 runbook §6）；DLR 有意未覆盖 3 表 6 列；`formula_1.constructors.wins` 幽灵列待裁定 |
 
 ## 架构
 
