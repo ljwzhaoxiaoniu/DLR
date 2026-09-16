@@ -18,7 +18,7 @@
 |---|---|---|
 | **做法** | **对数据集的 naive 吸收**——材料是什么层级，就放在什么层级 | **按三范式的定义重新组织**语义层 |
 | **分流方式** | 按**材料来源**分层（见下表） | 按**范式定义**分层（LE/PE/public、实体/属性、class/predicate） |
-| **目的** | 与 **NL2SQL 对照**——证明三级通道（Ch1/Ch2/Ch3）**稳定且可行** | 验证**高效、少积累**；让每个领域沉淀**自己的行业资产** |
+| **目的** | 与 **NL2SQL 对照**——证明三级语义建模（Ch1/Ch2/Ch3）**稳定且可行** | 验证**高效、少积累**；让每个领域沉淀**自己的行业资产** |
 | **知识加工量** | 最少（不重写、不聚合、不跨题归并） | 高（逐条判定去向 + 聚合 + 消歧 + 修正） |
 | **现状（2026-09-14）** | **9 个 topic**：california_schools / codebase_community / european_football_2 / financial / formula_1 / student_club / superhero / thrombosis_prediction / toxicology —— 逐题原文，**条数 == 该库题数**（30/49/51/32/66/48/52/50/40） | **2 个 topic**：card_games（21 条）/ debit_card_specializing（19 条）—— kid 聚合，**条数远少于题数** |
 
@@ -32,7 +32,7 @@
 | **领域共识级** | 吸收 **evidence** | 出题人写的 evidence 原文 → **照单全收**进 Ch2（逐题一条，不聚合、不消歧、不修正） |
 | **都搞不定的** | **沉淀 SOP** | 前两级消化不掉的 → Ch3 skills 条目 |
 
-**原始组的价值**：最大程度贴近数据集原貌，知识加工量≈0——它回答的是"**不额外做知识工程，三级通道能不能跑通**"。与 NL2SQL 对照，证明架构本身稳定可行。
+**原始组的价值**：最大程度贴近数据集原貌，知识加工量≈0——它回答的是"**不额外做知识工程，三级语义建模能不能跑通**"。与 NL2SQL 对照，证明架构本身稳定可行。
 
 ### 对照组：按三范式定义重组（按范式定义分层）
 
@@ -146,12 +146,12 @@ question → [Ch1 semantic_query + Ch2 search_evidence + Ch3 skills/{db}.md 并�
          → 交叉验证锚定 → mapping → SQL → Final Answer
 ```
 
-见 [3-channel-design.md](3-channel-design.md)。
+见 [tsm-design.md](tsm-design.md)。
 
 ---
 
 ## 相关文档
 
-- [3-channel-design.md](3-channel-design.md) —— 三通道协作协议、边界判断表、知识分层四层准入
+- [tsm-design.md](tsm-design.md) —— 三级语义建模协作协议、边界判断表、知识分层四层准入
 - [modeling.md](modeling.md) —— Ch1 语义层的建模规范（下沉的目的地）
 - [runbook.md](runbook.md) —— 索引重建与服务重启的操作口径

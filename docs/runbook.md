@@ -142,7 +142,7 @@ cd Evaluation/scripts
 ```
 validated_results/v4_final/{group}/         # original=原始组 / control=对照组
 ├── raw/{q1}-{q2}_{paradigm}_{qid}.json     # 扁平，pair 前缀命名
-└── {q1}-{q2}/agent_stats.csv               # 归档粒度 = 运行粒度，不合并（24 列含三通道命中）
+└── {q1}-{q2}/agent_stats.csv               # 归档粒度 = 运行粒度，不合并（24 列含 Ch1/Ch2/Ch3 三级命中）
 ```
 
 ### 备注四栏（`results_{版本}.md` 逐题表）
@@ -231,6 +231,6 @@ bash eval_run.sh D <qid> <qid> --parallel           # 只跑 DLR
 
 - [evaluation.md](evaluation.md) —— 四阶段流水线的**设计**（为什么这么拆、判定政策、Prompt 铁律）
 - [agent.md](agent.md) —— 评测 Agent 层（opencode + AGENTS.md + 防作弊）
-- [3-channel-design.md](3-channel-design.md) —— 三通道协作协议与知识分层准入
+- [tsm-design.md](tsm-design.md) —— 三级语义建模协作协议与知识分层准入
 - [modeling.md](modeling.md) / [modeling-guide-dlr.md](modeling-guide-dlr.md) —— 建模与配置
 - [dataset.md](dataset.md) —— 数据集与已知缺陷清单

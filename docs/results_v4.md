@@ -1,6 +1,6 @@
-## 评测进度 — 语义+RAG+SOP 三通道模式（v4 基线）
+## 评测进度 — 三级语义建模模式（v4 基线）
 
-> **说明**: v4 = 三通道模式（见 3-channel-design.md）：Agent 不拿 evidence，纯 question 驱动三通道并行锚定——Ch1 语义（MCP 语义层，数据集原生配置）、Ch2 RAG（`search_evidence` 检索）、Ch3 SOP（前置读 `skills/{db}.md`），交叉验证后 mapping -> SQL。
+> **说明**: v4 = 三级语义建模（见 tsm-design.md）：Agent 不拿 evidence，纯 question 驱动三级并行锚定——数据源级（Ch1 MCP 语义层，数据集原生配置）、领域共识级（Ch2 RAG，`search_evidence` 检索）、业务逻辑级（Ch3 SOP，前置读 `skills/{db}.md`），交叉验证后 mapping -> SQL。
 > **两组口径**：**原始组**充分尊重数据集原有数据；**对照组**为数据源级建模、充分吸收 evidence（该下沉的下沉到数据源、该保留的保留）。定义与现状见 [rag-evidence.md](rag-evidence.md) §两组。
 > **数据来源**: `validated_results/v4_final/{group}/{pair}/agent_stats.csv`（per-pair，如 `original/1471-1472/`）
 > **配置文件**: `config.json` → `eval.output_dir: "Evaluation/outputs2"`, `eval.round: "v4_final"`
@@ -64,6 +64,6 @@
 
 ---
 
-## 三通道合理性论证——SOP 条目案例
+## 三级语义建模合理性论证——SOP 条目案例
 
 > 本节在分批跑完后撰写：按 [[archive-discipline]]，案例只在结果确认后写，且每个 SOP 条目题必须有对应观察、数字与归档 CSV 逐项一致。

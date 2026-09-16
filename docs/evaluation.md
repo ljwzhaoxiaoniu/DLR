@@ -6,7 +6,7 @@
 
 **当前版本 v3（纯 question + 知识层 + 争议裁决）**：
 - Agent 只拿 question（不注入 evidence）——2026-08-25 修复 pair 路径注入后生效，q360 起为真纯 question 批次
-- Agent 靠三通道解题：Ch1 MCP 语义层 / Ch2 RAG 知识库（`search_evidence`）/ Ch3 领域技能（`skills/{db}.md`），见 [3-channel-design.md](3-channel-design.md)
+- Agent 靠三级语义建模解题：数据源级（Ch1 MCP 语义层）/ 领域共识级（Ch2 RAG 知识库，`search_evidence`）/ 业务逻辑级（Ch3 领域技能，`skills/{db}.md`），见 [tsm-design.md](tsm-design.md)
 - **数据集保持原始**（2026-08-27）：gold/evidence 不修正，缺陷题由知识层消化 + judge 争议裁决（见 §2 Stage 4）
 - 历史口径：v2 = evidence 注入（150 题基线）；v3 早期 40 题实为注入批次（与 v2 同条件，对比仍公平）
 

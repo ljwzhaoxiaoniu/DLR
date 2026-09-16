@@ -1,9 +1,10 @@
 # DLR Proj — 原创的 Decoupled Logic Representation 建模范式
 
 > **DLR（解耦逻辑表达）是一种原创的语义建模范式**：LE-PE 双层模型 + PAS 语义路由，将逻辑概念层与物理数据层解耦，
-> 使 LLM Agent 能够用自然语言理解和查询关系数据库。
-> 项目同时实现 **ER**（数据库建模标准基线）与 **RDF**（W3C R2RML 标准基线），在 mini_dev 500 题 NL2SQL 上进行三范式同构对比评测，
-> 论证 DLR 建模对 LLM 的引导优势。
+> 使 LLM Agent 能够用自然语言理解和查询关系数据库。DLR 针对的是**数据源级语义建模**。
+> 项目跑在**三级语义建模**（Three-Level Semantic Modeling，TSM：数据源级 / 领域共识级 / 业务逻辑级）框架下——
+> 三范式（DLR 原创 + ER 标准基线 + RDF W3C 基线）的差异只发生在数据源级，
+> 在 mini_dev 500 题 NL2SQL 上进行同构对比评测，论证建模结构对 LLM Agent 的引导效能。
 
 ## 📚 文档导航
 
@@ -17,7 +18,7 @@
 | [配置 → 存储写入链路](docs/semantic-layer-build.md) | 每范式 YAML/TTL → Kuzu/FAISS 的字段级写入对照 + 召回面公平性（透明化深度篇） |
 | [评测流水线](docs/evaluation.md) | 四阶段流水线**设计**、Prompt 铁律、两段式判定、输出归档 |
 | [Agent 说明](docs/agent.md) | OpenCode + MCP 架构、AGENTS.md 规则、防作弊、db 锁库行为 |
-| [三通道设计](docs/3-channel-design.md) | Ch1 MCP 语义层 / Ch2 RAG 证据 / Ch3 SOP 技能，并行锚定协议；知识分层四层准入 |
+| [三级语义建模设计](docs/tsm-design.md) | 数据源级（Ch1 语义）/ 领域共识级（Ch2 RAG）/ 业务逻辑级（Ch3 SOP），三级并行锚定协议；知识分层四层准入 |
 | [RAG 知识库](docs/rag-evidence.md) | rag_knowledge 两种格式、知识写法铁律、索引重建 |
 | [数据集说明](docs/dataset.md) | mini_dev 0703：11 库 500 题、下载、任务格式、已知缺陷清单 |
 | [评测结果 v4](docs/results_v4.md) | v4 逐题校验表（当前基线；post_process 自动重建） |
@@ -26,17 +27,17 @@
 >
 > **给执行 agent**：仓库级执行约定见 [CLAUDE.md](CLAUDE.md)。
 
-## 📦 交接状态（2026-09-14）
+## 📦 交接状态（2026-09-16）
 
 | 项 | 状态 |
 |---|---|
 | **建模范式** | 三范式（DLR 原创 + ER/RDF 基线），11 库配置齐 |
 | **语义层基线** | 数据集原生（09-10 重写）：列级描述 = CSV 原文，三范式同词同义；DLR schema 统一（`PE.attributes` + public 标记位，09-12） |
 | **入库收尾** | 09-13 全量 rebuild + 重启，活库实测：ER 798 属性 / 102 关系；DLR 792 / 72 PE / 49 LE / 35 PAS；RDF 798 / 101 关系 |
-| **评测架构** | 三通道（Ch1 语义 / Ch2 RAG / Ch3 SOP）+ 原始 gold + judge 争议裁决 |
+| **评测架构** | 三级语义建模（数据源级 / 领域共识级 / 业务逻辑级）+ 原始 gold + judge 争议裁决 |
 | **当前基线轮次** | **v4_final**（`config.json eval.round`）；v3 归档（90 题次）已作废移入 `archive/v3_final/` |
-| **已归档** | 0 题（v4 待起跑） |
-| **下一步** | debit_card 30 题在新基线上重跑（15 批 × 2 题 × 3 范式），随后 card_games 52 题 + 其余 9 主题 |
+| **已归档** | 原始组 4 题（2 批，逐题表见 [results_v4](docs/results_v4.md)） |
+| **下一步** | 原始组 debit_card 剩 26 题（每批 2 题 × 3 范式），随后对照组 / card_games 52 题 + 其余 9 主题 |
 | **已知问题** | P2：Kuzu 锁冲突 / judge 偶发超时 / RDF serve 静默崩溃；DLR 有意未覆盖 3 表 6 列；`formula_1.constructors.wins` 幽灵列待裁定 |
 
 ## 架构

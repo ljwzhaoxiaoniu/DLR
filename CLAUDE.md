@@ -4,7 +4,7 @@
 
 ## 项目一句话
 
-**DLR（Decoupled Logic Representation）** 是本项目原创的语义建模范式（LE-PE 双层 + PAS 语义路由），与 **ER**（数据库建模标准基线）、**RDF**（W3C R2RML 标准基线）在 mini_dev 500 题 NL2SQL 上做**三范式同构对比评测**，论证建模结构对 LLM Agent 的引导效能。
+**DLR（Decoupled Logic Representation）** 是本项目原创的**数据源级**语义建模范式（LE-PE 双层 + PAS 语义路由）。评测跑在**三级语义建模**（TSM：数据源级 / 领域共识级 / 业务逻辑级）框架下——与 **ER**（数据库建模标准基线）、**RDF**（W3C R2RML 标准基线）在 mini_dev 500 题 NL2SQL 上做**三范式同构对比评测**（差异只在数据源级），论证建模结构对 LLM Agent 的引导效能。
 
 ```
 OC 评测执行层（opencode + MCP）
@@ -42,7 +42,7 @@ OC 评测执行层（opencode + MCP）
 | 改 Agent 行为规则 | `OC-based Agent Service/AGENTS.md`（**评测 Agent 的唯一规则入口**，不是本文件） |
 | 看数据集缺陷 / 争议裁定 | [docs/dataset.md](docs/dataset.md) + `Evaluation/oc_judge/disputes.md` |
 | 看当前进度 / 结果 | [docs/results_v4.md](docs/results_v4.md) |
-| 三通道（Ch1/Ch2/Ch3）设计 | [docs/3-channel-design.md](docs/3-channel-design.md) |
+| 三级语义建模（数据源级/领域共识级/业务逻辑级）设计 | [docs/tsm-design.md](docs/tsm-design.md) |
 | 历史资料 | `archive/`（v2/v3 基线、旧归档、旧分享页）——**与现逻辑无关，勿据此改现状** |
 
 ---

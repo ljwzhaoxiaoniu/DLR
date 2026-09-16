@@ -36,7 +36,7 @@ def parse_ndjson(path):
     tool_calls = []
     final_answer = ""
     evidence_sql = ""
-    # 三通道命中统计（2026-08-27 起）
+    # 三级命中统计（Ch1/Ch2/Ch3，2026-08-27 起）
     ch1_calls, ch1_dbs = 0, []          # Ch1 semantic_query: 调用次数 + 返回中出现的 db
     ch2_calls, ch2_hits, ch2_top = 0, 0, ""   # Ch2 search_evidence: 调用/非空命中/top kid:score
     ch3_calls, ch3_hit = 0, 0           # Ch3 read skills: 尝试次数/是否读到内容
