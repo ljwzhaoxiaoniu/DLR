@@ -205,6 +205,27 @@ RDF 不走自己的 Kuzu schema——`mapping/rdf.py` 把 R2RML 解析成 **ER �
 - DLR 的 14 个探索类工具已禁注册（recall_pe/path_*/is_* 等，v3 决策：使用率 <5% 且诱发过度探索）
 - RDF 的 SPARQL 通道定位为逃生舱：R2RML 只做映射内省、从不物化数据三元组，SPARQL 功能域与 get_rdf_mapping/rdf_search 重叠；归档 30 题 0 次使用是理性冗余（详见待办③）
 
+### 7.4 召回交付链路（命中 → agent 手里的对象）
+
+共同框架：`search(question, top_k×3, db)` 混排命中 → 按 `type` 分流 → 归并算分 → 剪裁交付。三范式逐步对照（行号为 `service/query_service.py` / `mcp_server.py`）：
+
+| 步骤 | ER | DLR | RDF |
+|---|---|---|---|
+| 召回深度 | 首跳 k=30（MCP 默认 10×3）；锁库后小库全量扫描 | 同（`max(top_k×3,20)`） | 同 |
+| 实体命中 | 计分（同实体取 max） | LE 计分 | class 计分（工具侧去重） |
+| 关系命中 | **反算两端实体，无条件计分**（:69-76） | PAS **丢弃** | **丢弃** |
+| 属性命中 | **反算父实体（id 前缀 `extract_entity_id`），仅当无实体/关系命中时**（:78-85，fallback） | **丢弃**（PE 命中也丢弃） | **丢弃，无 fallback** |
+| 空召回语义 | 无实体分 / max<0.415（`CONFIDENCE_THRESHOLD`）→ `success:false`「未找到相关实体」 | `success:true, confidence:0.0, structures:[]`——无区分语义 | `success:true, confidence=混排 max` 但 `classes:[]`——分非零却无交付 |
+| 组装 | `_expand_er`：实体 + attributes + relations（关系补两端实体名） | LE + 其 PEs（id/name/db/description）+ public_attributes | 仅 class（class_uri/name/description/db） |
+| 剪裁（交付前） | 剥 source_table/database_url/attributes/relations → `{entity_id, name, description, db}` | 剥 physical_table_id/database_url → structures（DLR 交付带 PE 层，为后续 ARCS 映射铺路） | 剥 source_table/database_url → `{class_uri, name, description, db}` |
+| confidence | max(归并后实体分) | max(LE 分) | max(**混排**分)——口径与交付面不一致 |
+
+### 7.5 已知缺口与改造方向（2026-09-16，q1472 DLR 实证）
+
+- **缺口① 首跳混排截断**：首跳不分类型取前 30 条再按类型过滤——目标类型排名 >30 即空交付。q1472 DLR 实证：LE 排名 31–60，该题 PE/属性命中在 30 内却被丢弃 → `confidence 0.0` 空响应；agent 无从区分"无此库"与"没召到"，只能改问法重试（两轮均如此，多烧 2–3 步）
+- **缺口② 反算口径三范式不齐**：ER 有（关系常参与 + 属性 fallback），DLR / RDF 零反算——同一现象在三范式表现不一（公平性记账，与被测变量区分）
+- **改造（2026-09-16 定设计；详见 runbook §6「召回反算改造」）**：MCP 工具层统一封装 **`topK 混排 → 每个命中反算所属实体 → 同实体去重（score=max）→ 只返回实体`**，confidence 随之统一为"归并后实体分的 max"。反算键：ER 属性 id 前缀（`extract_entity_id` 已有）/ 关系两端（metadata 已有）；DLR PE→LE 走 Kuzu `INHERITS`（`_get_parent_logical_entity` 已有）、PAS 用 metadata `from/to_le_id`；RDF 属性→class 用列 id 前缀（`db.table.col`→`db.table`）或 serve 期 rdflib 图。**服务代码改动，需停 serve → 改码 → 重启；改后受影响批次按单轮重跑纪律处理**
+
 相关待办见 memory `todo-fairness-optimization`：① RDF 入库补 comment、② top_k 对齐 10 —— 09-10 落地**且已生效**（rebuild：ER 15:12 / DLR 15:13 / RDF 15:43；serve 三进程重启 15:45），不再挂"待"字；③ SPARQL 定位=逃生舱、④ 验证、⑤ 文档同步（✅）。
 
 09-11 新增五项，代码已改、**待 rebuild + 重启**：⑥ RDF 属性索引 name 走 rdfs:label、⑦ DLR 属性 data_type 补齐、⑧ DLR 列 id 去引号、⑨ RDF 关系 id 带库前缀 + 描述取 `rr:joinCondition`（修图/向量 72 vs 101 的塌缩）、⑩ DLR 同列双条目在构建期显式打日志（口径与账见 §5.1）。
