@@ -30,15 +30,15 @@
 
 | 数据库 | 全量 | 已评 | 剩余 | 进度 |
 |--------|------|------|------|------|
-| debit_card_specializing | 30 | 0 | 30 | 0.0% |
+| debit_card_specializing | 30 | 2 | 28 | 6.7% |
 
-> **总结**：共测试 0 题 × 3 范式 = **0 题次**；归档进行中。
+> **总结**：共测试 2 题 × 3 范式 = **6 题次**。
 
 | 指标 | ER | DLR | RDF |
 |------|----|-----|-----|
-| CORRECT | 0/0 (0.0%) | **0/0 (0.0%)** | 0/0 (0.0%) |
-| strict PASS | 0/0 (0.0%) | 0/0 (0.0%) | 0/0 (0.0%) |
-| 平均 token | 0 (+0.0% vs DLR) | **0** | 0 (+0.0% vs DLR) |
+| CORRECT | 2/2 (100.0%) | **2/2 (100.0%)** | 2/2 (100.0%) |
+| strict PASS | 2/2 (100.0%) | 1/2 (50.0%) | 1/2 (50.0%) |
+| 平均 token | 82,603 (+38.3% vs DLR) | **59,730** | 57,164 (-4.3% vs DLR) |
 
 > **口径**：仅覆盖已归档批次，勿外推为全数据集结论。
 
@@ -50,8 +50,8 @@
 
 | 数据库 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 共通 | ER-备注 | DLR-备注 | RDF-备注 |
 |------|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|------|--------|--------|--------|
-| debit_card_specializing | q0000 | 待归档 | | | | | | | | | 0 | 0 | 0 | 待归档 | | | |
-
+| debit_card_specializing | q1471 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | **54,735** | 58,776 | 55,200 |  |  |  |  |
+| debit_card_specializing | q1472 | PASS |  | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 110,471 | 60,684 | **59,127** |  |  |  |  |
 > **Token = input_tokens + output_tokens**
 > **备注分栏**: 共通 = 题目/evidence/Ch3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）
 > **数据来源**: `validated_results/v4_final/{pair}/agent_stats.csv`（per-pair，如 `1471-1472/`）
