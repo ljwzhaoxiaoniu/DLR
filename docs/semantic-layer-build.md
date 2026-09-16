@@ -222,9 +222,9 @@ RDF 不走自己的 Kuzu schema——`mapping/rdf.py` 把 R2RML 解析成 **ER �
 
 ### 7.5 已知缺口与改造方向（2026-09-16，q1472 DLR 实证）
 
-- **缺口① 首跳混排截断**：首跳不分类型取前 30 条再按类型过滤——目标类型排名 >30 即空交付。q1472 DLR 实证：LE 排名 31–60，该题 PE/属性命中在 30 内却被丢弃 → `confidence 0.0` 空响应；agent 无从区分"无此库"与"没召到"，只能改问法重试（两轮均如此，多烧 2–3 步）
+- **缺口① 首跳混排截断**：首跳不分类型取前 30 条再按类型过滤——目标类型排名 >30 即空交付。q1472 DLR 实证：LE 排名 31–60，该题 PE/属性命中在 30 内却被丢弃 → `confidence 0.0` 空响应；agent 无从区分"无此库"与"没召到"，只能改问法重试（两轮均如此，多烧 2–3 步）。**量化**：顶层类型本就是索引少数派（DLR 49 LE/948≈5.2%、ER 75 实体/975≈7.7%、RDF 75 class/974≈7.7%），混排 top-30 期望只命中 1.6–2.3 条；题面词汇天然偏列/值层（属性与 PE 描述排前排），归零并不罕见
 - **缺口② 反算口径三范式不齐**：ER 有（关系常参与 + 属性 fallback），DLR / RDF 零反算——同一现象在三范式表现不一（公平性记账，与被测变量区分）
-- **改造（2026-09-16 定设计；详见 runbook §6「召回反算改造」）**：MCP 工具层统一封装 **`topK 混排 → 每个命中反算所属实体 → 同实体去重（score=max）→ 只返回实体`**，confidence 随之统一为"归并后实体分的 max"。反算键：ER 属性 id 前缀（`extract_entity_id` 已有）/ 关系两端（metadata 已有）；DLR PE→LE 走 Kuzu `INHERITS`（`_get_parent_logical_entity` 已有）、PAS 用 metadata `from/to_le_id`；RDF 属性→class 用列 id 前缀（`db.table.col`→`db.table`）或 serve 期 rdflib 图。**服务代码改动，需停 serve → 改码 → 重启；改后受影响批次按单轮重跑纪律处理**
+- **改造（2026-09-16 定设计；详见 runbook §6「召回反算改造」）**：MCP 工具层统一封装 **`召回 → 每个命中反算所属实体 → 同实体去重（score=max）→ 排序取前 top_k=10 个实体交付`**。**收口在交付面，不在候选面**：公平保证 = 三范式都以"≤10 个实体"的形态交付给 agent；候选池的深浅只是机制参数（检索深度、是否加深），不参与公平性——此前"混排 top-30 再过滤"的错误正是把公平放在了捞候选这一步。**交付不足 10 条时加深召回补足**（k 递增 / 全量扫描，~950 条小库成本可忽略），而不是把截断后的余量当答案。confidence 统一为"归并后实体分的 max"。反算键：ER 属性 id 前缀（`extract_entity_id` 已有）/ 关系两端（metadata 已有）；DLR PE→LE 走 Kuzu `INHERITS`（`_get_parent_logical_entity` 已有）、PAS 用 metadata `from/to_le_id`；RDF 属性→class 用列 id 前缀（`db.table.col`→`db.table`）或 serve 期 rdflib 图。**服务代码改动，需停 serve → 改码 → 重启；改后受影响批次按单轮重跑纪律处理**
 
 相关待办见 memory `todo-fairness-optimization`：① RDF 入库补 comment、② top_k 对齐 10 —— 09-10 落地**且已生效**（rebuild：ER 15:12 / DLR 15:13 / RDF 15:43；serve 三进程重启 15:45），不再挂"待"字；③ SPARQL 定位=逃生舱、④ 验证、⑤ 文档同步（✅）。
 

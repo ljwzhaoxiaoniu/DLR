@@ -180,7 +180,7 @@ validated_results/v4_final/{group}/         # original=原始组 / control=对�
 
 ### 待排期：召回反算改造（首跳空召回的根治，2026-09-16 定设计）
 
-MCP 工具层统一封装：**`recall topK（混排）→ 每个命中反算所属实体 → 同实体去重（分数取 max）→ 只返回实体`**——属性/PE/关系命中不再被丢弃，而是把实体"顶"上来（q1472 DLR 实证：LE 自身排名 31+，但其 PE/属性在 30 内）。反算键：DLR PE→LE 走 Kuzu `INHERITS`（`_get_parent_logical_entity` 已有）、PAS 用 metadata `from_le_id/to_le_id`；ER 属性/关系 id（`db.table.column`）前缀可推父实体。三范式同构实施。服务代码改动，需停 serve → 改码 → 重启，等排期；改后受影响批次按单轮重跑纪律处理。
+MCP 工具层统一封装：**`召回 → 每个命中反算所属实体 → 同实体去重（分数取 max）→ 排序取前 top_k=10 个实体交付`**——属性/PE/关系命中不再被丢弃，而是把实体"顶"上来（q1472 DLR 实证：LE 自身排名 31+，但其 PE/属性在 30 内）。**收口在交付面**：公平保证 = 三范式都以"≤10 个实体"交付；候选池深浅只是机制参数（不足 10 条时加深召回补足——k 递增/全量扫描，小库成本可忽略），不在捞候选步骤上做公平设计。反算键：DLR PE→LE 走 Kuzu `INHERITS`（`_get_parent_logical_entity` 已有）、PAS 用 metadata `from_le_id/to_le_id`；ER 属性/关系 id（`db.table.column`）前缀可推父实体（`extract_entity_id` 已有）。三范式同构实施。服务代码改动，需停 serve → 改码 → 重启，等排期；改后受影响批次按单轮重跑纪律处理。
 
 ### 争议题（已知缺陷题）
 
