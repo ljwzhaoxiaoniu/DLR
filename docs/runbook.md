@@ -222,7 +222,8 @@ $PY post_process.py --run-id $RID [--group original|control]  # 归档（确认�
 
 # 单范式补跑（首字母）
 bash eval_run.sh D <qid> --parallel                 # 只跑 DLR
-python monitor_runs.py --watch 5                    # 另开终端：实时看 PID/范式/题号/CPU/内存
+python monitor_runs.py --watch 5                    # 实时监控（另开终端）；或双击 monitor_window.cmd 弹独立窗口
+                                                    #   窗口模式 --until-done：跑完自动退出、10s 后自关
 ```
 
 ---

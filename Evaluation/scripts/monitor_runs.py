@@ -100,6 +100,10 @@ def render(rows, now, prev):
 def main():
     ap = argparse.ArgumentParser(description="跑题实时监控（PID | 范式 | 题号 | 启动 | 运行 | CPU% | 内存）")
     ap.add_argument("--watch", type=float, default=0, metavar="SEC", help="刷新的秒数（默认单次快照）")
+    ap.add_argument("--until-done", action="store_true",
+                    help="等到跑题进程出现、跑完全部消失后自动退出（配合自动弹窗/批处理）")
+    ap.add_argument("--wait-first", type=float, default=90, metavar="SEC",
+                    help="--until-done 模式下等待首个跑题进程的秒数（超时退出）")
     ap.add_argument("--demo", action="store_true", help="打印示意表（不采样）")
     a = ap.parse_args()
 
@@ -117,6 +121,9 @@ def main():
         return
 
     prev = None
+    seen = False          # --until-done：是否已经见过跑题进程
+    idle_since = None     # 进程全部消失后的计时起点
+    waited = 0.0
     try:
         while True:
             got = collect()
@@ -129,6 +136,20 @@ def main():
             if not a.watch:
                 break
             prev = {r["pid"]: (r["cpu_s"], now) for r in rows}
+            if a.until_done:
+                if rows:
+                    seen, idle_since = True, None
+                elif seen:
+                    if idle_since is None:
+                        idle_since = now
+                    elif now - idle_since >= 3 * a.watch:  # 连续 3 帧无进程 = 跑完
+                        print("\n  [DONE] 跑题进程已全部结束，监控退出")
+                        break
+                else:
+                    waited += a.watch
+                    if waited >= a.wait_first:
+                        print(f"\n  [EXIT] 等待 {a.wait_first:.0f}s 未见跑题进程，监控退出")
+                        break
             time.sleep(a.watch)
     except KeyboardInterrupt:
         print("\n  [EXIT] 监控退出（跑题不受影响）")
