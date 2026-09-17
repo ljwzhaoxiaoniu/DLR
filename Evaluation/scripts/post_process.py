@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
-"""评测后处理 — 一步归档到 validated_results/{eval.round}/{group}/ 按组结构.
+"""评测后处理 — 一步归档到 validated_results/{eval.round}/{group}/{run_id}/（按 run 归档）.
 
 用法:
-    python post_process.py --run-id xxx --qids 1481,1482 [--group original]
+    python post_process.py --run-id xxx [--group original]
 
 输出（轮次由 config.json 的 eval.round 决定，如 v4_final；组别默认 original）:
     validated_results/{round}/{group}/
-    ├── raw/
-    │   ├── 1481-1482_er_1481.json    # {pair}_{p}_{qid}.json
-    │   └── ...
-    └── 1481-1482/
-        └── agent_stats.csv
+    └── {run_id}/                      # 归档单元 = 运行任务本身
+        ├── raw/
+        │   ├── 1471_er.json           # {qid}_{paradigm}.json——跑了什么就归档什么
+        │   └── ...
+        └── agent_stats.csv            # 该 run 实际跑出的 (题 × 范式) 行
 
-组别隔离两组同题重跑：original=原始组 / control=对照组 —— pair 目录与 raw 文件
-分落在组目录下，避免同 qid 二跑碰撞；文档重建只改本组段落，汇总不跨组混算。
+- 题号与范式**自动发现**（从 03_reports/{er,dlr,rdf}.csv），不传 --qids
+- 组别隔离两组同题重跑：original=原始组 / control=对照组
+- 同题重跑 = 新 run 目录；文档重建按 run_id 排序去重（新的覆盖旧的），
+  旧 run 目录如需"一题一档"由人工删除（脚本发现重复题次会提示）
 明细文档同步写 docs/results_{版本}.md（v4_final → docs/results_v4.md）。
 """
 
@@ -40,57 +42,67 @@ def _normalize_ch_keys(d):
     return d
 
 
+def _discover_run(run_id):
+    """从 run 产物发现实际跑了什么：返回 (paradigms, qids, src_logs, reports_dir)."""
+    reports_dir = OUT_BASE / run_id / "03_reports"
+    src_logs = OUT_BASE / "01_logs" / run_id
+    if not src_logs.exists():
+        src_logs = OUT_BASE / run_id / "01_logs"
+
+    paradigms, qids = [], set()
+    for p in ["er", "dlr", "rdf"]:
+        csv_path = reports_dir / f"{p}.csv"
+        if not csv_path.exists():
+            continue
+        paradigms.append(p)
+        with open(csv_path, encoding="utf-8-sig") as f:
+            for r in csv.DictReader(f):
+                try:
+                    qids.add(int(r["q_id"]))
+                except Exception:
+                    continue
+    return paradigms, sorted(qids), src_logs, reports_dir
+
+
 def main():
-    ap = argparse.ArgumentParser(description=f"评测后处理 → validated_results/{_EVAL_ROUND}/{{group}}/")
-    ap.add_argument("--run-id", required=True, help="Stage 1 run_id")
-    ap.add_argument("--qids", required=True, help="题号，逗号分隔 (如 1481,1482)")
+    ap = argparse.ArgumentParser(
+        description=f"评测后处理（按 run 归档）→ validated_results/{_EVAL_ROUND}/{{group}}/{{run_id}}/")
+    ap.add_argument("--run-id", required=True, help="Stage 1 run_id（归档单元）")
     ap.add_argument("--group", choices=list(GROUP_LABELS), default="original",
                     help="组别：original=原始组（默认）/ control=对照组")
     args = ap.parse_args()
 
     run_id = args.run_id
-    qids = [int(x.strip()) for x in args.qids.split(",") if x.strip()]
     group = args.group
-
-    if not qids:
-        print("[ERR] --qids 不能为空")
-        return
-
     validated = ROOT / "validated_results" / _EVAL_ROUND / group
-    raw_dir = validated / "raw"
-    pair_label = str(qids[0]) if len(qids) == 1 else f"{min(qids)}-{max(qids)}"
+    run_dir = validated / run_id
+    raw_dir = run_dir / "raw"
 
-    validated.mkdir(parents=True, exist_ok=True)
+    paradigms, qids, src_logs, reports_dir = _discover_run(run_id)
+    if not paradigms:
+        print(f"[ERR] 未发现任何 03_reports（{reports_dir}）—— 先跑 Stage 2/3")
+        return
+    print(f"[INFO] run {run_id}: 范式 = {','.join(paradigms)}；题 = {qids}")
+
+    run_dir.mkdir(parents=True, exist_ok=True)
     raw_dir.mkdir(parents=True, exist_ok=True)
 
-    # 1. 复制 raw 日志到 {round}/{group}/raw/{pair}_{p}_{qid}.json
-    src_logs = OUT_BASE / "01_logs" / run_id
-    if not src_logs.exists():
-        src_logs = OUT_BASE / run_id / "01_logs"
-
+    # 1. 复制 raw 日志到 {run_id}/raw/{qid}_{paradigm}.json（该 run 实际跑出的）
     copied = 0
-    for p in ["er", "dlr", "rdf"]:
+    for p in paradigms:
         p_dir = src_logs / p
         if not p_dir.is_dir():
             print(f"[WARN] 缺范式日志目录: {p_dir}")
             continue
         for qf in sorted(p_dir.glob("*.json")):
             if qf.stem.isdigit() and int(qf.stem) in qids:
-                dest = raw_dir / f"{pair_label}_{p}_{qf.stem}.json"
+                dest = raw_dir / f"{qf.stem}_{p}.json"
                 if not dest.exists():
                     shutil.copy2(qf, dest)
                     copied += 1
     print(f"[OK] 复制 {copied} 个 raw 日志 → {raw_dir}")
 
-    # 2. 生成 per-pair agent_stats.csv
-    pair_dir = validated / pair_label
-    pair_dir.mkdir(parents=True, exist_ok=True)
-
-    reports_dir = OUT_BASE / run_id / "03_reports"
-    if not reports_dir.exists():
-        print(f"[ERR] reports 不存在: {reports_dir}")
-        return
-
+    # 2. 生成 {run_id}/agent_stats.csv（该 run 实际跑出的行，无 qid 过滤）
     stats_csv = OUT_BASE / run_id / "agent_stats.csv"
     stats_map = {}
     if stats_csv.exists():
@@ -106,14 +118,13 @@ def main():
               "l1_calls", "l1_db_hit", "l1_first_dbs",
               "l2_calls", "l2_hits", "l2_top",
               "l3_calls", "l3_hit"]
-    for p in ["er", "dlr", "rdf"]:
+    for p in paradigms:
         csv_path = reports_dir / f"{p}.csv"
-        if not csv_path.exists():
-            continue
         with open(csv_path, encoding="utf-8-sig") as f:
             for r in csv.DictReader(f):
-                qid = int(r["q_id"])
-                if qid not in qids:
+                try:
+                    qid = int(r["q_id"])
+                except Exception:
                     continue
                 row = {
                     "paradigm": p, "q_id": qid,
@@ -143,32 +154,45 @@ def main():
                 row["l3_hit"] = st.get("l3_hit", "")
                 rows.append(row)
 
-    out_csv = pair_dir / "agent_stats.csv"
+    out_csv = run_dir / "agent_stats.csv"
     with open(out_csv, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields, quoting=csv.QUOTE_ALL, extrasaction="ignore")
         w.writeheader()
         w.writerows(rows)
     print(f"[OK] agent_stats.csv: {len(rows)} rows → {out_csv}")
+    print(f"\n[DONE] {run_dir}")
 
-    print(f"\n[DONE] {pair_dir}")
-    print(f"  raw → {raw_dir}/{pair_label}_*.json")
+    # 3. 重跑提示：同 (qid, paradigm) 已存在于别的 run 目录（文档取新，旧目录需人工清理）
+    my_keys = {(str(r["q_id"]), r["paradigm"]) for r in rows}
+    dups = []
+    for d in sorted(validated.glob("*")):
+        if d.name == run_id or not (d / "agent_stats.csv").is_file():
+            continue
+        with open(d / "agent_stats.csv", encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                r = _normalize_ch_keys(r)
+                key = (r.get("q_id") or r.get("question_id"), (r.get("paradigm") or "").lower())
+                if key in my_keys:
+                    dups.append(f"{d.name}:{key[0]}/{key[1]}")
+    if dups:
+        print(f"[WARN] 以下题次已存在于其他 run 目录（文档取新，如需一题一档请删除旧目录）:\n        " + "  ".join(sorted(set(dups))))
 
-    # 3. 更新 docs/results_{版本}.md 的本组段落
-    update_results_md(group, rows, validated)
+    # 4. 更新 docs/results_{版本}.md 的本组段落
+    update_results_md(group, validated)
 
 
-def update_results_md(group_key, new_rows, validated_dir):
-    """从 {round}/{group} 全量数据重建 results_{版本}.md 中**本组**的明细表与统计."""
+def update_results_md(group_key, validated_dir):
+    """从 {round}/{group} 全量 run 目录重建 results_{版本}.md 中**本组**的明细表与统计."""
     label = GROUP_LABELS[group_key]
     md_path = _MD_PATH
     if not md_path.exists():
         print(f"[WARN] {md_path.name} 不存在，跳过文档更新（归档 CSV 不受影响）")
         return
 
-    # 收集本组所有 per-pair agent_stats.csv
+    # 收集本组所有 run 目录的 agent_stats.csv（run_id 排序 = 时间排序，新的覆盖旧的）
     all_rows = []
-    for pair_dir in sorted(validated_dir.glob("*")):
-        csv_path = pair_dir / "agent_stats.csv"
+    for run_path in sorted(validated_dir.glob("*")):
+        csv_path = run_path / "agent_stats.csv"
         if not csv_path.is_file():
             continue
         with open(csv_path, encoding="utf-8") as f:
@@ -185,13 +209,10 @@ def update_results_md(group_key, new_rows, validated_dir):
                 _normalize_ch_keys(r)
                 all_rows.append(r)
 
-    # 同 qid+paradigm 组内去重（后出现的覆盖）
+    # 同 qid+paradigm 去重（后出现的覆盖——按 run_id 排序，新 run 覆盖旧 run）
     dedup = {}
     for r in all_rows:
         dedup[(r["q_id"], r["paradigm"])] = r
-    for r in new_rows:
-        r["paradigm"] = r["paradigm"].lower()
-        dedup[(str(r["q_id"]), r["paradigm"])] = {**r, "q_id": str(r["q_id"])}
     all_rows = list(dedup.values())
 
     # 统计
@@ -281,7 +302,7 @@ def update_results_md(group_key, new_rows, validated_dir):
             notes = (
                 "> **Token = input + cache_read + reasoning(CoT) + output**（全算消耗，= agent_stats.csv 的 `total_tokens`）\n"
                 "> **备注分栏**: 共通 = 题目/evidence/L3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）\n"
-                f"> **数据来源**: `validated_results/{_EVAL_ROUND}/{{group}}/{{pair}}/agent_stats.csv`（per-pair，如 `{group_key}/1471-1472/`）\n"
+                f"> **数据来源**: `validated_results/{_EVAL_ROUND}/{{group}}/{{run_id}}/agent_stats.csv`（按 run 归档）\n"
             )
             md_text = md_text.replace(ph, f"**{label}**\n\n{detail_block}\n{notes}", 1)
         else:

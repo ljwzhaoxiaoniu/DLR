@@ -112,7 +112,7 @@ for p in er dlr rdf; do
 done
 
 $PY parse_agent_stats.py --paradigm ALL --log-subdir <run_id>     # ⚠ 必须 ALL，逐范式会互相覆盖
-$PY post_process.py --run-id <run_id> --qids <q1>,<q2>            # 归档（结果确认后）
+$PY post_process.py --run-id <run_id>            # 归档（结果确认后；题目/范式自动发现）
 ```
 
 `$PY` = `/d/ProgramData/anaconda3/envs/lepe_som/python`（**必须绝对路径**）。

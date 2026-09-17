@@ -92,5 +92,5 @@ for (( i=0; i<NPAR; i++ )); do
     esac
     echo "    python 02_extract_and_run.py --paradigm $p --log-subdir $RUN_ID"
 done
-echo "    归档（按需按对拆）: python post_process.py --run-id $RUN_ID --qids <q1,q2>"
+echo "    归档（确认后）: python post_process.py --run-id $RUN_ID"
 echo "========================================="

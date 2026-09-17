@@ -124,10 +124,13 @@ done
 
 ```bash
 cd Evaluation/scripts
-/d/ProgramData/anaconda3/envs/lepe_som/python post_process.py --run-id <run_id> --qids <q1>,<q2> [--group original|control]
+/d/ProgramData/anaconda3/envs/lepe_som/python post_process.py --run-id <run_id> [--group original|control]
 ```
 
-一步完成三件事：raw 扁平复制 + per-pair `agent_stats.csv` + 刷新 `docs/results_{版本}.md` **本组**段落。`--group`：`original`=原始组（默认）/ `control`=对照组——同轮次两组同题重跑靠组目录隔离，pair 与 raw 不碰撞、汇总不混算。
+一步完成三件事：raw 复制 + `agent_stats.csv` + 刷新 `docs/results_{版本}.md` **本组**段落。
+- **归档单元 = run 本身**：题号与范式从 run 产物自动发现（03_reports），**跑了什么就归档什么**——几道题就几道题、哪个范式就哪个范式，不传 `--qids`
+- `--group`：`original`=原始组（默认）/ `control`=对照组——两组分落在组目录下，汇总不混算
+- ⚠ 归档前 outputs2 里该 run 的产物必须在（`01_logs/{run_id}/` + `{run_id}/03_reports` + `{run_id}/agent_stats.csv`）；**清 outputs2 前先归档**
 
 ### 目标位置由 `config.json` 决定
 
@@ -142,9 +145,10 @@ cd Evaluation/scripts
 ### 目录形态
 
 ```
-validated_results/v4_final/{group}/         # original=原始组 / control=对照组
-├── raw/{q1}-{q2}_{paradigm}_{qid}.json     # 扁平，pair 前缀命名
-└── {q1}-{q2}/agent_stats.csv               # 归档粒度 = 运行粒度，不合并（24 列含 L1/L2/L3 三级命中）
+validated_results/{round}/{group}/
+└── {run_id}/                               # 归档单元 = 运行任务本身（run_id 带时间戳，如 0916_1626_1471-1472_EDR）
+    ├── raw/{qid}_{paradigm}.json           # 该 run 实际跑的 题 × 范式
+    └── agent_stats.csv                     # 该 run 实际的 (题 × 范式) 行（24 列含 L1/L2/L3 三级命中）
 ```
 
 ### 备注四栏（`results_{版本}.md` 逐题表）
@@ -160,8 +164,8 @@ validated_results/v4_final/{group}/         # original=原始组 / control=对�
 
 ### ⚠️ 归档三个坑
 
-1. **`post_process` 全对重跑不覆盖 raw**：`post_process.py` 有 `if not dest.exists()` 保护（防单题补跑覆盖同伴日志）→ **整题/全对重跑时旧 raw 会挡住新日志**，输出"迁移 0 条"，导致 CSV 是新的、raw 是旧的。**重跑已有题后必查 `raw/` 文件 mtime 是否等于本次 run**，必要时手动 `cp` 刷新。
-2. **旧 pair 目录必须拆分**：pair 里只有一题重跑时，旧 pair 目录 + 新单题目录并存 = 同题两处记录；且合并是「sorted 目录序 + 后出现覆盖」，**单题目录若字母序在前会反杀新行**（`1493/` < `1493-1498/`）。修复形状：删旧 pair 目录、未重跑题拆为单题目录、重跑题以单题目录为唯一记录。
+1. **同题重跑 = 新 run 目录**：重跑天然产生新 run_id → 新目录，不与旧目录撞 raw/CSV；文档重建按 run_id 排序去重，**新 run 覆盖旧 run** 的数字。脚本发现同 (qid, paradigm) 在旧 run 目录已存在时会 `[WARN]` 提示——要"一题一档"就删旧 run 目录。
+2. **同一 run 重复 `post_process` 幂等**（raw 有 `if not dest.exists()` 保护、CSV 整文件重写）；但**同一 run 内整题补跑后** raw 内容变了，需手动删该题旧 raw 再重跑 `post_process` 刷新。
 3. **翻盘后必须重跑 `parse_agent_stats`**（否则汇总 token 与判定不对应）。
 
 ---
@@ -214,7 +218,7 @@ for p in er dlr rdf; do                             # Stage 2/3/4
   $PY 04_judge.py           --paradigm $p --log-subdir $RID
 done
 $PY parse_agent_stats.py --paradigm ALL --log-subdir $RID
-$PY post_process.py --run-id $RID --qids <q1>,<q2> [--group original|control]  # 归档（确认后）
+$PY post_process.py --run-id $RID [--group original|control]  # 归档（确认后；题目/范式自动发现）
 
 # 单范式补跑（首字母）
 bash eval_run.sh D <qid> --parallel                 # 只跑 DLR
