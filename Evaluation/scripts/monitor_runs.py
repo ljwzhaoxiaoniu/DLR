@@ -18,7 +18,7 @@ import sys
 import time
 from datetime import datetime
 
-COLS = ("PID", "范式", "题号", "启动", "运行", "CPU%", "内存")
+COLS = ("PID", "PARA", "QID", "START", "RUN", "CPU%", "MEM")
 
 
 def fmt_dur(sec):
@@ -37,7 +37,7 @@ def collect():
     try:
         import psutil
     except ImportError:
-        print("[ERR] 缺 psutil —— 先安装: pip install psutil（lepe_som 环境）")
+        print("[ERR] psutil missing -- install: pip install psutil (in lepe_som env)")
         return None
 
     now = time.time()
@@ -75,9 +75,9 @@ def render(rows, now, prev):
     """渲染表格；prev = {pid: (cpu_s, ts)} 用于两帧间 CPU% 换算。"""
     cores = os.cpu_count() or 1
     if rows:
-        print(f"  跑题实时监控  {datetime.now().strftime('%H:%M:%S')}  "
-              f"（{len(rows)} 个运行中进程；Ctrl-C 退出）")
-        head = (f"  {COLS[0]:<7} {COLS[1]:<5} {COLS[2]:<6} {COLS[3]:<9} "
+        print(f"  Eval Run Monitor  {datetime.now().strftime('%H:%M:%S')}  "
+              f"({len(rows)} running; Ctrl-C to quit)")
+        head = (f"  {COLS[0]:<7} {COLS[1]:<6} {COLS[2]:<6} {COLS[3]:<9} "
                 f"{COLS[4]:<8} {COLS[5]:<7} {COLS[6]}")
         print(head)
         print("  " + "-" * (len(head) - 2))
@@ -90,11 +90,11 @@ def render(rows, now, prev):
                 cpu_pct = dcpu / dt / cores * 100
             else:  # 单次快照：给生命周期平均 CPU%
                 cpu_pct = (r["cpu_s"] / runtime / cores * 100) if runtime > 1 else 0.0
-            print(f"  {pid:<7} {r['paradigm']:<5} {r['qid']:<6} "
+            print(f"  {pid:<7} {r['paradigm']:<6} {r['qid']:<6} "
                   f"{datetime.fromtimestamp(r['start']).strftime('%H:%M:%S'):<9} "
                   f"{fmt_dur(runtime):<8} {cpu_pct:>5.1f}%  {r['rss']/1024/1024:>6.0f}MB")
     else:
-        print(f"  跑题实时监控  {datetime.now().strftime('%H:%M:%S')}  —— 无运行中的跑题进程")
+        print(f"  Eval Run Monitor  {datetime.now().strftime('%H:%M:%S')}  -- no eval processes running")
 
 
 def main():
@@ -143,16 +143,16 @@ def main():
                     if idle_since is None:
                         idle_since = now
                     elif now - idle_since >= 3 * a.watch:  # 连续 3 帧无进程 = 跑完
-                        print("\n  [DONE] 跑题进程已全部结束，监控退出")
+                        print("\n  [DONE] all eval processes finished; monitor exiting")
                         break
                 else:
                     waited += a.watch
                     if waited >= a.wait_first:
-                        print(f"\n  [EXIT] 等待 {a.wait_first:.0f}s 未见跑题进程，监控退出")
+                        print(f"\n  [EXIT] no eval process appeared within {a.wait_first:.0f}s; monitor exiting")
                         break
             time.sleep(a.watch)
     except KeyboardInterrupt:
-        print("\n  [EXIT] 监控退出（跑题不受影响）")
+        print("\n  [EXIT] monitor stopped (runs unaffected)")
 
 
 if __name__ == "__main__":
