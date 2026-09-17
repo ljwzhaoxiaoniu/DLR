@@ -74,6 +74,7 @@ cd Evaluation/scripts
 # ── Stage 1：Agent 跑题（三范式并行，6 路封顶）─────────────────
 bash eval_run.sh EDR 1471 1472 --parallel
 bash eval_run.sh EDR 1471 1472 1473 1476 --parallel   # 平铺 N 题（不配对），一个 run
+bash eval_run.sh EDR 1471 1472 --parallel --monitor   # 额外：自动弹监控窗口（标题=run_id，跑完自关）
 #   E=ER D=DLR R=RDF，可组合（EDR / ED / ER / D），固定第 1 位
 #   题号平铺任意个（≥1；单题直接一个题号）；总并发封顶 6 路，每范式 workers = min(题数, 6/范式数)
 #   run_id 形如 0914_1530_1471-1472_EDR（多题时 1471-1472-1473-1476），也写在 01_logs/.last_run_id

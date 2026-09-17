@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # 批量评测入口 — 平铺题号（不配对）
-# 用法: bash eval_run.sh <paradigms> <qid...> [--parallel] [--dry-run]
+# 用法: bash eval_run.sh <paradigms> <qid...> [--parallel] [--monitor] [--dry-run]
 #   paradigms: E=ER, D=DLR, R=RDF, 可组合如 EDR, ED, ER, D（固定第 1 位，不做顺序识别）
 #   qid...: 任意个题号（≥1），平铺不配对——如 `EDR 1471 1472 1473 1476` 就是一个 run
 #   并发上限 6 路（防 Kuzu 锁冲突）：每范式 workers = min(题数, 6/范式数)，由本脚本传入
+#   --monitor: 自动弹出监控窗口（标题=run_id，跑完自退自关）
 # 示例: bash eval_run.sh EDR 1471 1472 --parallel
-#       bash eval_run.sh EDR 1471 1472 1473 1476 --parallel
+#       bash eval_run.sh EDR 1471 1472 1473 1476 --parallel --monitor
 #       bash eval_run.sh ED 1471 1472
 #       bash eval_run.sh EDR 1471 1472 --dry-run   # 只打印计划、不执行
 
@@ -25,9 +26,11 @@ esac
 QIDS=()
 MODE="serial"
 DRY=0
+MONITOR=0
 while [ $# -gt 0 ]; do
     case "$1" in
         --parallel) MODE="parallel" ;;
+        --monitor)  MONITOR=1 ;;
         --dry-run)  DRY=1 ;;
         -*) echo "[ERR] 未知参数: $1"; exit 1 ;;
         *) QIDS+=("$1") ;;
@@ -52,8 +55,9 @@ echo "========================================="
 echo "  RUN: $RUN_ID  ($NQ 题)  mode=$MODE$( [ "$DRY" = 1 ] && echo '  [DRY-RUN]' )"
 echo "========================================="
 
-# 弹监控窗口（标题 = run_id；跑题全部结束后自动退出、10s 后自关）——dry-run 不弹
-if [ "$DRY" != "1" ]; then
+# --monitor：弹监控窗口（标题 = run_id；跑题全部结束后自动退出、10s 后自关）
+# dry-run 不弹；弹窗失败静默跳过，不影响跑批
+if [ "$DRY" != "1" ] && [ "$MONITOR" = "1" ]; then
     WDIR=$(cygpath -w "$SCRIPT_DIR" 2>/dev/null || echo "$SCRIPT_DIR")
     cmd //c start "监控 $RUN_ID" "$WDIR\\monitor_window.cmd" >/dev/null 2>&1 || true
 fi
