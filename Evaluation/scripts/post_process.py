@@ -256,11 +256,16 @@ def update_results_md(group_key, validated_dir):
         rdf_r = q_rows.get("rdf", {})
 
         def strict_judge(p):
+            if not p:  # 该范式本轮未跑 → 显示 —
+                return "—", ""
             s = p.get("strict_match", "")
             j = p.get("judge_verdict", "")
             if s == "PASS":
                 return "PASS", ""
             return "FAIL", j
+
+        def vcell(r):
+            return r.get("verdict", "") if r else "—"
 
         er_sj, er_j = strict_judge(er_r)
         dlr_sj, dlr_j = strict_judge(dlr_r)
@@ -271,7 +276,10 @@ def update_results_md(group_key, validated_dir):
         rdf_t = int(rdf_r.get("total_tokens", 0) or 0)
         min_t = min(er_t, dlr_t, rdf_t) if er_t and dlr_t and rdf_t else 0
 
-        def tok_str(val):
+        def tok_cell(r):
+            if not r:  # 该范式本轮未跑
+                return "—"
+            val = int(r.get("total_tokens", 0) or 0)
             s = f"{val:,}"
             return f"**{s}**" if val == min_t and val > 0 else s
 
@@ -279,8 +287,8 @@ def update_results_md(group_key, validated_dir):
         common_rk, er_rk, dlr_rk, rdf_rk = old_remarks.get(f"q{qid}", ["", "", "", ""])
         detail_lines.append(
             f"| {db_name} | q{qid} | {er_sj} | {er_j} | {dlr_sj} | {dlr_j} | {rdf_sj} | {rdf_j} | "
-            f"{er_r.get('verdict','')} | {dlr_r.get('verdict','')} | {rdf_r.get('verdict','')} | "
-            f"{tok_str(er_t)} | {tok_str(dlr_t)} | {tok_str(rdf_t)} | {common_rk} | {er_rk} | {dlr_rk} | {rdf_rk} |"
+            f"{vcell(er_r)} | {vcell(dlr_r)} | {vcell(rdf_r)} | "
+            f"{tok_cell(er_r)} | {tok_cell(dlr_r)} | {tok_cell(rdf_r)} | {common_rk} | {er_rk} | {dlr_rk} | {rdf_rk} |"
         )
 
     header = "| 数据库 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 共通 | ER-备注 | DLR-备注 | RDF-备注 |"
@@ -312,30 +320,51 @@ def update_results_md(group_key, validated_dir):
 
     # 替换本组总结数字（组名锚定，两组互不干扰）
     md_text = re.sub(
-        rf"(总结（{label}）\*\*：共测试 )\d+( 题 × 3 范式 = \*\*)\d+( 题次\*\*)",
+        rf"(总结（{label}）\*\*：共测试 )\d+( 题 = \*\*)\d+( 题次\*\*)",
         rf"\g<1>{n}\g<2>{total_runs}\g<3>",
         md_text
     )
 
-    # 替换本组汇总表行（组别列锚定）
+    # 汇总表单元：未跑的范式显示 —（本轮可能只跑了部分范式）
+    def present(p):
+        return any(r["paradigm"] == p for r in all_rows)
+
+    def cnt_cell(p, c, bold=False):
+        if not present(p):
+            return "—"
+        s = f"{c}/{n} ({c/n*100:.1f}%)"
+        return f"**{s}**" if bold else s
+
+    def tok_sum_cell(p, tok):
+        if not present(p):
+            return "—"
+        if p == "dlr":
+            return f"**{tok:,.0f}**"
+        if not present("dlr"):
+            return f"{tok:,.0f}"
+        pct = (tok - dlr_tok) / dlr_tok * 100 if dlr_tok else 0
+        return f"{tok:,.0f} ({pct:+.1f}% vs DLR)"
+
     md_text = re.sub(
         rf"(\n\| {label} \| CORRECT \|).*(\|)",
-        rf"\1 {er_c}/{n} ({er_c/n*100:.1f}%) | **{dlr_c}/{n} ({dlr_c/n*100:.1f}%)** | {rdf_c}/{n} ({rdf_c/n*100:.1f}%) \2",
+        rf"\1 {cnt_cell('er', er_c)} | {cnt_cell('dlr', dlr_c, bold=True)} | {cnt_cell('rdf', rdf_c)} \2",
         md_text
     )
     md_text = re.sub(
         rf"(\n\| {label} \| strict PASS \|).*(\|)",
-        rf"\1 {er_s}/{n} ({er_s/n*100:.1f}%) | {dlr_s}/{n} ({dlr_s/n*100:.1f}%) | {rdf_s}/{n} ({rdf_s/n*100:.1f}%) \2",
+        rf"\1 {cnt_cell('er', er_s)} | {cnt_cell('dlr', dlr_s)} | {cnt_cell('rdf', rdf_s)} \2",
         md_text
     )
     md_text = re.sub(
         rf"(\n\| {label} \| 平均 token \|).*(\|)",
-        rf"\1 {er_tok:,.0f} ({er_vs_dlr_pct:+.1f}% vs DLR) | **{dlr_tok:,.0f}** | {rdf_tok:,.0f} ({rdf_vs_dlr_pct:+.1f}% vs DLR) \2",
+        rf"\1 {tok_sum_cell('er', er_tok)} | {tok_sum_cell('dlr', dlr_tok)} | {tok_sum_cell('rdf', rdf_tok)} \2",
         md_text
     )
 
     md_path.write_text(md_text, encoding="utf-8")
-    print(f"[OK] 更新 {md_path}（{label} {n}题/{total_runs}题次, DLR:{dlr_tok:,.0f}tok, ER +{er_vs_dlr_pct:.1f}%, RDF +{rdf_vs_dlr_pct:.1f}%）")
+    parts = ", ".join(f"{p}:{tok:,.0f}" for p, tok in
+                      (("ER", er_tok), ("DLR", dlr_tok), ("RDF", rdf_tok)) if present(p.lower()))
+    print(f"[OK] 更新 {md_path}（{label} {n}题/{total_runs}题次, {parts}）")
 
 
 if __name__ == "__main__":

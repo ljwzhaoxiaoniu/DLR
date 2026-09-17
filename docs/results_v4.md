@@ -28,14 +28,14 @@
 
 > 对照组知识库已就绪（card_games 21 条 / debit_card_specializing 19 条，kid 聚合），题量待定。
 
-> **总结（原始组）**：共测试 0 题 × 3 范式 = **0 题次**。
-> **总结（对照组）**：共测试 0 题 × 3 范式 = **0 题次**。
+> **总结（原始组）**：共测试 2 题 = **2 题次**。
+> **总结（对照组）**：共测试 0 题 = **0 题次**。
 
 | 组别 | 指标 | ER | DLR | RDF |
 |------|------|----|-----|-----|
-| 原始组 | CORRECT | — | — | — |
-| 原始组 | strict PASS | — | — | — |
-| 原始组 | 平均 token | — | — | — |
+| 原始组 | CORRECT | — | **2/2 (100.0%)** | — |
+| 原始组 | strict PASS | — | 2/2 (100.0%) | — |
+| 原始组 | 平均 token | — | **78,762** | — |
 | 对照组 | CORRECT | — | — | — |
 | 对照组 | strict PASS | — | — | — |
 | 对照组 | 平均 token | — | — | — |
@@ -48,7 +48,14 @@
 
 **原始组**
 
-待开跑
+| 数据库 | 题号 | ER-strict | ER-judge | DLR-strict | DLR-judge | RDF-strict | RDF-judge | ER-result | DLR-result | RDF-result | ER-token | DLR-token | RDF-token | 共通 | ER-备注 | DLR-备注 | RDF-备注 |
+|------|------|-----------|----------|------------|----------|------------|----------|-----------|------------|------------|----------|----------|----------|------|--------|--------|--------|
+| debit_card_specializing | q1471 | — |  | PASS |  | — |  | — | CORRECT | — | — | 70,028 | — |  |  |  |  |
+| debit_card_specializing | q1472 | — |  | PASS |  | — |  | — | CORRECT | — | — | 87,496 | — |  |  |  |  |
+> **Token = input + cache_read + reasoning(CoT) + output**（全算消耗，= agent_stats.csv 的 `total_tokens`）
+> **备注分栏**: 共通 = 题目/evidence/L3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）
+> **数据来源**: `validated_results/v4_final/{group}/{run_id}/agent_stats.csv`（按 run 归档）
+
 
 **对照组**
 
