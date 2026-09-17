@@ -47,7 +47,10 @@ def collect():
             info = p.info
             cmd = " ".join(info.get("cmdline") or [])
             name = (info.get("name") or "").lower()
-            if "opencode" not in cmd and "opencode" not in name:
+            # 只认真正的 Agent 进程（opencode / node）——timeout/sh/bash 外壳的命令行里
+            # 也带 --title eval_*，但名字不是 opencode/node，必须排除，保证"一题一行"
+            is_agent = name.startswith("opencode") or (name.startswith("node") and "opencode" in cmd)
+            if not is_agent:
                 continue
             if "eval_" not in cmd:  # 只认跑题进程（--title eval_{paradigm}_{qid}）
                 continue
