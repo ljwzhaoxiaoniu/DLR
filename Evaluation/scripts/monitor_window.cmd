@@ -6,3 +6,4 @@ rem Window title comes from the caller (eval_run.sh via start "<title>"); do not
 echo.
 echo Monitor exited (all eval processes finished). Closing in 10s...
 "%SystemRoot%\System32\timeout.exe" /t 10 >nul
+exit
