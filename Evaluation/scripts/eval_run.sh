@@ -52,6 +52,12 @@ echo "========================================="
 echo "  RUN: $RUN_ID  ($NQ 题)  mode=$MODE$( [ "$DRY" = 1 ] && echo '  [DRY-RUN]' )"
 echo "========================================="
 
+# 弹监控窗口（标题 = run_id；跑题全部结束后自动退出、10s 后自关）——dry-run 不弹
+if [ "$DRY" != "1" ]; then
+    WDIR=$(cygpath -w "$SCRIPT_DIR" 2>/dev/null || echo "$SCRIPT_DIR")
+    cmd //c start "监控 $RUN_ID" "$WDIR\\monitor_window.cmd" >/dev/null 2>&1 || true
+fi
+
 PIDS=()
 for (( i=0; i<NPAR; i++ )); do
     case "${PARADIGMS:$i:1}" in
