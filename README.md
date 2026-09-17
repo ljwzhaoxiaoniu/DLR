@@ -102,7 +102,7 @@ python main.py serve --paradigm ALL     # 3 进程: ER 28765 / DLR 28775 / RDF 2
 ```bash
 cd Evaluation/scripts
 # Stage 1：一批 = 2 题 × 3 范式（workers 自动 = 范式数 × 题数，无需指定）
-bash eval_run.sh EDR <q1> <q2> --parallel
+bash eval_run.sh EDR <q1> <q2> [<q3> ...] --parallel
 
 # Stage 2/3/4：逐范式跑
 for p in er dlr rdf; do

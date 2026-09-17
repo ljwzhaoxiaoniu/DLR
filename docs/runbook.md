@@ -71,11 +71,13 @@ python main.py serve --paradigm ALL        # 3 进程：ER 28765 / DLR 28775 / R
 ```bash
 cd Evaluation/scripts
 
-# ── Stage 1：Agent 跑题（三范式并行，6 路）─────────────────
+# ── Stage 1：Agent 跑题（三范式并行，6 路封顶）─────────────────
 bash eval_run.sh EDR 1471 1472 --parallel
-#   E=ER D=DLR R=RDF，可组合（EDR / ED / ER / D）
-#   workers 自动 = 范式数 × 题数
-#   run_id 形如 0914_1530_1471-1472_EDR，也写在 01_logs/.last_run_id
+bash eval_run.sh EDR 1471 1472 1473 1476 --parallel   # 平铺 N 题（不配对），一个 run
+#   E=ER D=DLR R=RDF，可组合（EDR / ED / ER / D），固定第 1 位
+#   题号平铺任意个（≥1；单题直接一个题号）；总并发封顶 6 路，每范式 workers = min(题数, 6/范式数)
+#   run_id 形如 0914_1530_1471-1472_EDR（多题时 1471-1472-1473-1476），也写在 01_logs/.last_run_id
+#   --dry-run 只打印计划不执行；跑题实时监控：python monitor_runs.py --watch 5（另开终端）
 
 RID=0914_1530_1471-1472_EDR        # ← 换成刚跑出的 run_id
 
@@ -205,7 +207,7 @@ python "tool&test/verify_db_recall.py"              # 构建校验
 
 # 跑一批
 cd Evaluation/scripts
-bash eval_run.sh EDR <q1> <q2> --parallel           # Stage 1
+bash eval_run.sh EDR <q1> <q2> [<q3> ...] --parallel # Stage 1（题号平铺，≥1 个）
 for p in er dlr rdf; do                             # Stage 2/3/4
   $PY 02_extract_and_run.py --paradigm $p --log-subdir $RID
   $PY 03_evaluate.py        --paradigm $p --log-subdir $RID
@@ -215,7 +217,8 @@ $PY parse_agent_stats.py --paradigm ALL --log-subdir $RID
 $PY post_process.py --run-id $RID --qids <q1>,<q2> [--group original|control]  # 归档（确认后）
 
 # 单范式补跑（首字母）
-bash eval_run.sh D <qid> <qid> --parallel           # 只跑 DLR
+bash eval_run.sh D <qid> --parallel                 # 只跑 DLR
+python monitor_runs.py --watch 5                    # 另开终端：实时看 PID/范式/题号/CPU/内存
 ```
 
 ---

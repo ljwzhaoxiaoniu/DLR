@@ -60,7 +60,7 @@ python main.py serve --paradigm ALL
 
 # 跑一批（2 题 × 3 范式 = 6 路，实测上限）
 cd Evaluation/scripts
-bash eval_run.sh EDR <q1> <q2> --parallel
+bash eval_run.sh EDR <q1> <q2> [<q3> ...] --parallel   # 题号平铺（≥1），总并发封顶 6 路
 for p in er dlr rdf; do
   $PY 02_extract_and_run.py --paradigm $p --log-subdir $RID
   $PY 03_evaluate.py        --paradigm $p --log-subdir $RID
