@@ -29,23 +29,35 @@ fi
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -W)"
 ROOT="$(cd "$SCRIPT_DIR/../.." && pwd -W)"
-TIMEOUT=$(python -c "import json; c=json.load(open('$ROOT/config.json')); print(c.get('eval',{}).get('timeout_per_question',300))" 2>/dev/null || echo 300)
-EVAL_OUT=$(python -c "import json; c=json.load(open('$ROOT/config.json')); print(c.get('eval',{}).get('output_dir','Evaluation/outputs'))" 2>/dev/null || echo "Evaluation/outputs")
+# 路径一律走环境变量传给 python（别插进 -c 源码：Windows 路径的反斜杠会被当转义符，
+# 如 ...\tmp\... 的 \t 会变成 Tab；config 里 minidev_dir / output_dir 写相对或绝对都成立）
+TIMEOUT=$(ROOT="$ROOT" python -c "import json,os;print(json.load(open(os.path.join(os.environ['ROOT'],'config.json'),encoding='utf-8')).get('eval',{}).get('timeout_per_question',300))" 2>/dev/null || echo 300)
+LOG_ROOT=$(ROOT="$ROOT" python -c "
+import json, os
+root = os.environ['ROOT']
+c = json.load(open(os.path.join(root, 'config.json'), encoding='utf-8'))
+print(os.path.join(root, c.get('eval',{}).get('output_dir','Evaluation/outputs'), '01_logs'))
+" 2>/dev/null || echo "$ROOT/Evaluation/outputs/01_logs")
 
 [ -z "$RUN_ID" ] && RUN_ID="$(date +%m%d_%H%M)_$(IFS=-; echo "${QIDS[*]}")_$(echo $PARADIGM | tr 'a-z' 'A-Z' | head -c1)"
 
-LOG_ROOT="$ROOT/$EVAL_OUT/01_logs"
 OUTPUT_DIR="$LOG_ROOT/$RUN_ID/$PARADIGM"
 AGENT_DIR="$ROOT/OC-based Agent Service/oc_$PARADIGM"
 
 mkdir -p "$OUTPUT_DIR"
 echo "$RUN_ID" > "$LOG_ROOT/.last_run_id"
 
-# 从数据集取出指定的题
-QUESTIONS=$(python -c "
-import json, sys
+# 从数据集取出指定的题（数据集位置以 config.paths.minidev_dir 为准，相对/绝对路径都成立）
+MINI_JSON=$(ROOT="$ROOT" python -c "
+import json, os
+root = os.environ['ROOT']
+c = json.load(open(os.path.join(root, 'config.json'), encoding='utf-8'))
+print(os.path.join(root, c.get('paths',{}).get('minidev_dir','MINIDEV_sqlite'), 'mini_dev_sqlite.json'))
+" 2>/dev/null || echo "$ROOT/MINIDEV_sqlite/mini_dev_sqlite.json")
+QUESTIONS=$(MINI_JSON="$MINI_JSON" python -c "
+import json, os, sys
 sys.stdout.reconfigure(encoding='utf-8')
-qs = json.load(open('$ROOT/MINIDEV_sqlite/mini_dev_sqlite.json', encoding='utf-8'))
+qs = json.load(open(os.environ['MINI_JSON'], encoding='utf-8'))
 targets = {$(IFS=,; echo "${QIDS[*]}")}
 for q in qs:
     if q['question_id'] in targets:
@@ -56,6 +68,10 @@ for q in qs:
 TASK_FILE="$OUTPUT_DIR/.tasks.txt"
 echo "$QUESTIONS" > "$TASK_FILE"
 TOTAL=$(echo "$QUESTIONS" | grep -c '|')
+if [ "$TOTAL" -eq 0 ]; then
+    echo "[ERR] 题号没匹配到任何题（数据集路径或题号有误）: $MINI_JSON"
+    exit 1
+fi
 WORKERS=$TOTAL  # 默认：每范式 worker = 实际题目数
 if [ -n "$WORKERS_CAP" ] && [ "$WORKERS_CAP" -lt "$WORKERS" ]; then
     WORKERS=$WORKERS_CAP  # 并发上限（eval_run.sh 折算的 6 路总并发）
@@ -104,6 +120,9 @@ while IFS='|' read -r QID QUESTION EVIDENCE; do
     while [ $(jobs -r | wc -l) -ge $WORKERS ]; do
         wait -n 2>/dev/null && DONE=$((DONE+1))
     done
+
+    # 每个 worker 启动前随机错峰 10-30s：MCP/Kuzu 同时初始化会撞 "database is locked"（P2）
+    sleep $(( RANDOM % 21 + 10 ))
 
     run_one "$QID" "$QUESTION" "$EVIDENCE" &
     DONE=$((DONE+1))

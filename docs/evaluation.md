@@ -26,11 +26,12 @@
 cd "Semantic Core Service" && python main.py serve --paradigm ALL
 # 端到端（三范式并行）
 cd Evaluation/scripts
-bash eval_run.sh EDR 1471 1472 --parallel                              # Stage 1
-python 02_extract_and_run.py --paradigm er --log-subdir <run_id>    # ×3 范式
-python 03_evaluate.py --paradigm er --log-subdir <run_id>           # ×3 范式(秒级,纯脚本)
-python 04_judge.py --paradigm er --log-subdir <run_id>              # ×3 范式(仅判 strict FAIL 且未判的行)
-python parse_agent_stats.py --paradigm ALL
+bash eval_run.sh EDR 1471 1472 --parallel     # Stage 1
+bash finish_run.sh <run_id>                   # Stage 2/3/4 + 汇总（等价于下面四条 × 范式）
+#   python 02_extract_and_run.py --paradigm er --log-subdir <run_id>   # ×3 范式
+#   python 03_evaluate.py --paradigm er --log-subdir <run_id>          # ×3 范式(秒级,纯脚本，不算 token)
+#   python 04_judge.py --paradigm er --log-subdir <run_id>             # ×3 范式(仅判 strict FAIL 且未判的行)
+#   python parse_agent_stats.py --log-subdir <run_id>                  # 汇总：token / L1-L3 唯一来源（默认 ALL）
 ```
 
 **为什么拆两段**：strict 初判是纯脚本秒级；LLM 仲裁走 `opencode run`（慢、可能超时）。拆开后 Stage 3 立即出全量初判，Stage 4 独立循环、每题落盘、中断续跑互不拖累。

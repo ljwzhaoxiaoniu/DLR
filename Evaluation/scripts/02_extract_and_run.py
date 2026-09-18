@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CFG = json.load(open(ROOT / "config.json", encoding="utf-8")) if (ROOT / "config.json").exists() else {}
 _EVAL_OUT = CFG.get("eval", {}).get("output_dir", "Evaluation/outputs")
-DB_DIR = ROOT / "MINIDEV_sqlite" / "dev_databases"
+DB_DIR = ROOT / CFG.get("paths", {}).get("minidev_dir", "MINIDEV_sqlite") / "dev_databases"
 LOG_DIR = ROOT / _EVAL_OUT / "01_logs"
 OUT_BASE = ROOT / _EVAL_OUT
 GOLD = json.load(open(ROOT / _EVAL_OUT / "00_golden_cache.json", encoding="utf-8"))

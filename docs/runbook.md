@@ -66,7 +66,8 @@ python main.py serve --paradigm ALL        # 3 进程：ER 28765 / DLR 28775 / R
 
 ## 3. 单批跑题（标准流程）
 
-> 批粒度 = **2 题 × 3 范式 = 6 路并发**（实测上限；再高会触发 Kuzu 锁冲突）。
+> 批粒度 = **2 题 × 3 范式 = 6 路并发**（本机实测上限；再高会触发 Kuzu 锁冲突）。
+> （09-17 备注：另一环境把上限改到 12 路并行实测通过——是否放开由用户定，未放开前按 6 路。）
 
 ```bash
 cd Evaluation/scripts
@@ -80,18 +81,25 @@ bash eval_run.sh EDR 1471 1472 --parallel --monitor   # 额外：自动弹监控
 #   run_id 形如 0914_1530_1471-1472_EDR（多题时 1471-1472-1473-1476），也写在 01_logs/.last_run_id
 #   --dry-run 只打印计划不执行；跑题实时监控：python monitor_runs.py --watch 5（另开终端）
 
-RID=0914_1530_1471-1472_EDR        # ← 换成刚跑出的 run_id
+RID=0914_1530_1471-1472_EDR        # ← 换成刚跑出的 run_id（省略 = 取 01_logs/.last_run_id）
 
-# ── Stage 2/3/4：逐范式提取 → strict 初判 → LLM 仲裁 ────────
+# ── Stage 2/3/4 + 汇总：一条命令收尾 ──────────────────────
+export PY=/d/ProgramData/anaconda3/envs/lepe_som/python
+bash finish_run.sh $RID                    # 02→03→04 逐范式 + parse（范式按日志目录自动发现）
+bash finish_run.sh $RID --group control    # 对照组：只影响最后打印的归档命令
+bash finish_run.sh $RID --paradigms DLR    # 只收单个范式（默认自动发现）
+
+# 等价的手动展开（要单步看输出时用）：
 for p in er dlr rdf; do
-  /d/ProgramData/anaconda3/envs/lepe_som/python 02_extract_and_run.py --paradigm $p --log-subdir $RID
-  /d/ProgramData/anaconda3/envs/lepe_som/python 03_evaluate.py        --paradigm $p --log-subdir $RID
-  /d/ProgramData/anaconda3/envs/lepe_som/python 04_judge.py           --paradigm $p --log-subdir $RID
+  $PY 02_extract_and_run.py --paradigm $p --log-subdir $RID
+  $PY 03_evaluate.py        --paradigm $p --log-subdir $RID
+  $PY 04_judge.py           --paradigm $p --log-subdir $RID
 done
-
-# ── 汇总 ──────────────────────────────────────────────────
-/d/ProgramData/anaconda3/envs/lepe_som/python parse_agent_stats.py --paradigm ALL --log-subdir $RID
+$PY parse_agent_stats.py --log-subdir $RID      # 默认 ALL —— token / L1-L3 的唯一来源，别漏
 ```
+
+> `finish_run.sh` **不归档**——跑完只打印 `post_process` 命令，归档仍须人工确认（硬规则 4）。
+> 归档前 `post_process` 会校验 `agent_stats.csv` 与该 run 的判定同步：缺文件/缺行/判定不一致 → `[ERR]` 退出（归档器只搬 + 校，不生产数据）。judge 翻盘后先重跑 `parse_agent_stats` 再归档。
 
 **Stage 说明**
 
@@ -99,9 +107,9 @@ done
 |---|---|---|---|
 | Stage 1 | `eval_run.sh` → `run_serial.sh`/`run_parallel.sh` | question → `01_logs/{run_id}/{er,dlr,rdf}/<qid>.json`（NDJSON） | **永久保留**，是行为审计与重提取 SQL 的唯一数据源 |
 | Stage 2 | `02_extract_and_run.py` | NDJSON → 提取 `Evidence SQL` → **在 golden db_id 的库上重放** → 标准化 | 不信 Agent 自报结果；跑错库会报错/结果不符 |
-| Stage 3 | `03_evaluate.py` | 结果 vs golden cache → `03_reports/{p}.csv` | 纯脚本、秒级；PASS → CORRECT，FAIL → 待仲裁 |
+| Stage 3 | `03_evaluate.py` | `02_predictions/{p}/*.json` vs golden cache → `03_reports/{p}.csv` | 纯脚本、秒级；PASS → CORRECT，FAIL → 待仲裁。**只判分，不数 token** |
 | Stage 4 | `04_judge.py` | strict FAIL 且未判的行 → 写回 CSV | 走 `opencode run`（慢、可能超时）；增量可断点续跑；`--budget N` 限流 |
-| 汇总 | `parse_agent_stats.py` | tokens + 判定 → `agent_stats.csv` | ⚠️ **必须 `--paradigm ALL` 一次跑齐**——逐范式跑会互相覆盖 |
+| 汇总 | `parse_agent_stats.py` | tokens + 命中 + 判定 → `agent_stats.csv` | **token 的唯一来源**（默认 `--paradigm ALL`）。漏跑 → 归档 `reasoning/cache_read/total/steps/L1-L3` 全空 |
 
 **Paradigm 大小写注意**：`02/03/04` 用小写（`er`），`parse_agent_stats` 用大写（`ER`/`ALL`）。
 
@@ -167,7 +175,7 @@ validated_results/{round}/{group}/
 
 1. **同题重跑 = 新 run 目录**：重跑天然产生新 run_id → 新目录，不与旧目录撞 raw/CSV；文档重建按 run_id 排序去重，**新 run 覆盖旧 run** 的数字。脚本发现同 (qid, paradigm) 在旧 run 目录已存在时会 `[WARN]` 提示——要"一题一档"就删旧 run 目录。
 2. **同一 run 重复 `post_process` 幂等**（raw 有 `if not dest.exists()` 保护、CSV 整文件重写）；但**同一 run 内整题补跑后** raw 内容变了，需手动删该题旧 raw 再重跑 `post_process` 刷新。
-3. **翻盘后必须重跑 `parse_agent_stats`**（否则汇总 token 与判定不对应）。
+3. **翻盘后必须重跑 `parse_agent_stats`** 才能归档 —— 归档读的就是它并进来的判定。09-17 起 `post_process` 归档前会逐行校验（stats 的 verdict vs `03_reports` 的 verdict），不一致或缺行**直接 `[ERR]` 退出**，不会把翻盘前的判定写进基线。
 
 ---
 
@@ -179,8 +187,9 @@ validated_results/{round}/{group}/
 | Stage 4 judge 超时 300s → UNKNOWN → 默认 INCORRECT | 大日志或网络抖动（P2） | **不要直接改 CSV**：先 `cd Evaluation/oc_judge && cat <prompt_file> \| opencode run --format json` 手动验证 → 确认 CORRECT 后改 `03_reports/{p}.csv` 的 `judge_verdict`/`verdict`/`process_score`/`judge_reason` → 重跑 `parse_agent_stats`。多数是 API 偶发抖动，非 Agent 问题 |
 | RDF serve 进程静默崩溃（端口无监听、无错误日志） | `serve --paradigm ALL` 下偶发（P2） | 复启即可 |
 | 首跳 `*_semantic_query` 返回空（`success:true, confidence:0.0`，structures/entities: []） | 全局首跳不分类型混排取前 30 条再按类型过滤——目标实体排名 >30 被截断；属性/PE 命中被丢弃、未反算到实体（P2，q1472 DLR 实证） | 临时：改问法或带 `db` 重试（锁库走全量扫描必中）；根治见下方「召回收口位置修正」（已改码，重启生效） |
-| 续跑时失败的题被当成成功跳过 | 旧版只要输出文件存在就跳过 | 已修（`01_run_agent.py`）：仅当输出非空**且无同名 `.err`** 才跳过 |
-| `parse_agent_stats` 后统计只剩一个范式 | 逐范式跑互相覆盖 | 用 `--paradigm ALL` 一次跑齐 |
+| 续跑时失败的题被当成成功跳过 | 旧版只要输出文件存在就跳过 | 已修（`run_serial.sh`/`run_parallel.sh`）：仅当输出非空**且无同名 `.err`** 才跳过。`01_run_agent.py` 现为转调这两个执行器的薄壳（旧版自己起 opencode，MCP 工具不可见且日志没有 run_id） |
+| 归档里 `input/output` 有值、但 `reasoning/cache_read/total/steps/L1-L3` 全空 | **漏跑 `parse_agent_stats`**（09-17 前 `eval_run.sh` 的"下一步"提示只印 02 和归档，不含它）→ post_process 静默降级 | 09-17 起不再静默：缺 `agent_stats.csv` 或与判定不一致 → `post_process` 直接 `[ERR]` 退出。按提示补跑 `parse_agent_stats.py --log-subdir <run_id>` 再归档 |
+| `parse_agent_stats` 后统计只剩一个范式 | 逐范式跑互相覆盖 | 已修（09-17）：写盘前保留未解析范式的旧行 + 告警；日常仍跑 `parse_agent_stats.py --log-subdir <run_id>`（默认 `--paradigm ALL`） |
 | 归档 CSV 与 raw 对不上 | §5 坑 1 | 查 raw mtime，手动刷新 |
 | 同一题两处归档记录 | §5 坑 2 | 按 §5 坑 2 的修复形状处理 |
 | token 数看着不对 | 口径 | `total = input + cache_read + reasoning(CoT) + output`（全算消耗）；`cache_read` 随步数累积，占比可达 80%+。**差异看 steps，不看单步** |
@@ -213,12 +222,7 @@ python "tool&test/verify_db_recall.py"              # 构建校验
 # 跑一批
 cd Evaluation/scripts
 bash eval_run.sh EDR <q1> <q2> [<q3> ...] --parallel # Stage 1（题号平铺，≥1 个）
-for p in er dlr rdf; do                             # Stage 2/3/4
-  $PY 02_extract_and_run.py --paradigm $p --log-subdir $RID
-  $PY 03_evaluate.py        --paradigm $p --log-subdir $RID
-  $PY 04_judge.py           --paradigm $p --log-subdir $RID
-done
-$PY parse_agent_stats.py --paradigm ALL --log-subdir $RID
+bash finish_run.sh $RID                            # Stage 2/3/4 + 汇总（02→03→04 逐范式 + parse）
 $PY post_process.py --run-id $RID [--group original|control]  # 归档（确认后；题目/范式自动发现）
 
 # 单范式补跑（首字母）

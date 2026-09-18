@@ -33,6 +33,10 @@ _EVAL_ROUND = CFG.get("eval", {}).get("round", "v4_final")
 # 明细文档名只取主版本号：v4_final → docs/results_v4.md（此前硬编码 results_v3.md，换轮次会写错文件）
 _MD_PATH = ROOT / "docs" / f"results_{_EVAL_ROUND.split('_')[0]}.md"
 GROUP_LABELS = {"original": "原始组", "control": "对照组"}
+# parse_agent_stats.py 的列名（v2 时代按 run 归档用的就是它）→ 本脚本归档列名，读旧 CSV 时补齐
+LEGACY_STATS_COLS = {"question_id": "q_id", "tokens_total": "total_tokens",
+                     "tokens_in": "input_tokens", "tokens_out": "output_tokens",
+                     "tokens_reasoning": "reasoning_tokens", "tokens_cache_read": "cache_read_tokens"}
 
 
 def _normalize_ch_keys(d):
@@ -40,6 +44,39 @@ def _normalize_ch_keys(d):
     for k in [k for k in d if k.startswith("ch") and k[2:3] in "123" and k[3:4] == "_"]:
         d.setdefault("l" + k[2:], d[k])
     return d
+
+
+def _check_stats(run_id, paradigms, stats_csv, reports_dir):
+    """归档前**校验** agent_stats.csv 是不是"当前判定"算出来的 —— 不重算。
+
+    判定列是唯一会被事后改动的东西（`04_judge` 翻盘会改写 `03_reports/{p}.csv`）；
+    token / L1-L3 只跟 Stage 1 的 NDJSON 有关，judge 动不了。所以逐行比 verdict 即可：
+    缺文件 / 缺行 / 判定对不上 → 报错退出，让人重跑 parse（归档器不生产数据）。"""
+    if not stats_csv.exists():
+        print(f"[ERR] 缺 {stats_csv}\n      → 先跑：parse_agent_stats.py --log-subdir {run_id}")
+        return False
+
+    stats = {}
+    with open(stats_csv, encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            stats[(r.get("paradigm", "").upper(), str(r.get("question_id", "")))] = (r.get("verdict") or "")
+
+    missing, stale = [], []
+    for p in paradigms:
+        with open(reports_dir / f"{p}.csv", encoding="utf-8-sig") as f:
+            for r in csv.DictReader(f):
+                key = (p.upper(), str(r["q_id"]))
+                if key not in stats:
+                    missing.append(f"{p}:{r['q_id']}（stats 里没有这一行）")
+                elif stats[key] != (r.get("verdict") or ""):
+                    stale.append(f"{p}:{r['q_id']}（stats={stats[key] or '空'} vs 判定={r.get('verdict') or '空'}）")
+    if missing or stale:
+        print(f"[ERR] agent_stats.csv 与判定不同步（缺 {len(missing)} 行 / 过期 {len(stale)} 行）：")
+        for x in (missing + stale)[:6]:
+            print(f"      {x}")
+        print(f"      → 重跑：parse_agent_stats.py --log-subdir {run_id}")
+        return False
+    return True
 
 
 def _discover_run(run_id):
@@ -103,14 +140,17 @@ def main():
     print(f"[OK] 复制 {copied} 个 raw 日志 → {raw_dir}")
 
     # 2. 生成 {run_id}/agent_stats.csv（该 run 实际跑出的行，无 qid 过滤）
+    #    归档前校验它是最新判定算出来的（04_judge 会事后改判定）——不同步就退出、让人重跑 parse
     stats_csv = OUT_BASE / run_id / "agent_stats.csv"
+    if not _check_stats(run_id, paradigms, stats_csv, reports_dir):
+        return
     stats_map = {}
-    if stats_csv.exists():
-        with open(stats_csv, encoding="utf-8") as f:
-            for r in csv.DictReader(f):
-                stats_map[(r["paradigm"].lower(), int(r["question_id"]))] = _normalize_ch_keys(r)
+    with open(stats_csv, encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            stats_map[(r["paradigm"].lower(), int(r["question_id"]))] = _normalize_ch_keys(r)
 
     rows = []
+    n_no_stats = 0
     fields = ["paradigm", "q_id", "db_id", "strict_match", "judge_verdict", "judge_reason",
               "verdict", "process_score", "error", "input_tokens", "output_tokens",
               "reasoning_tokens", "cache_read_tokens", "total_tokens",
@@ -126,6 +166,9 @@ def main():
                     qid = int(r["q_id"])
                 except Exception:
                     continue
+                st = stats_map.get((p, qid), {})
+                if not st:
+                    n_no_stats += 1
                 row = {
                     "paradigm": p, "q_id": qid,
                     "db_id": r.get("db_id", ""),
@@ -135,10 +178,11 @@ def main():
                     "verdict": r.get("verdict", ""),
                     "process_score": r.get("process_score", ""),
                     "error": r.get("error", ""),
-                    "input_tokens": r.get("input_tokens", ""),
-                    "output_tokens": r.get("output_tokens", ""),
+                    # input/output 也取 parse（与 reasoning/cache/total 同源），报告列兜底：
+                    # 同源才不会出现 total ≠ in+out+reasoning+cache（results_*.md 里那条公式）
+                    "input_tokens": st.get("tokens_in", "") or r.get("input_tokens", ""),
+                    "output_tokens": st.get("tokens_out", "") or r.get("output_tokens", ""),
                 }
-                st = stats_map.get((p, qid), {})
                 row["reasoning_tokens"] = st.get("tokens_reasoning", "")
                 row["cache_read_tokens"] = st.get("tokens_cache_read", "")
                 row["total_tokens"] = st.get("tokens_total", "")
@@ -153,6 +197,10 @@ def main():
                 row["l3_calls"] = st.get("l3_calls", "")
                 row["l3_hit"] = st.get("l3_hit", "")
                 rows.append(row)
+
+    if n_no_stats:
+        print(f"[WARN] {n_no_stats} 行在 {stats_csv.name} 里没有对应记录"
+              f" → 这些行的 token 细项与 L1-L3 为空")
 
     out_csv = run_dir / "agent_stats.csv"
     with open(out_csv, "w", newline="", encoding="utf-8") as f:
@@ -197,11 +245,10 @@ def update_results_md(group_key, validated_dir):
             continue
         with open(csv_path, encoding="utf-8") as f:
             for r in csv.DictReader(f):
-                # 兼容 parse_agent_stats.py 旧格式
-                if "question_id" in r and "q_id" not in r:
-                    r["q_id"] = r["question_id"]
-                if "tokens_total" in r and "total_tokens" not in r:
-                    r["total_tokens"] = r["tokens_total"]
+                # 兼容 parse_agent_stats.py 的列名（v2 时代归档就是这套）
+                for old, new in LEGACY_STATS_COLS.items():
+                    if old in r and new not in r:
+                        r[new] = r[old]
                 # 统一 paradigm 为小写
                 if "paradigm" in r:
                     r["paradigm"] = r["paradigm"].lower()

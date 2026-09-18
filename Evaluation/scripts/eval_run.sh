@@ -4,6 +4,7 @@
 #   paradigms: E=ER, D=DLR, R=RDF, 可组合如 EDR, ED, ER, D（固定第 1 位，不做顺序识别）
 #   qid...: 任意个题号（≥1），平铺不配对——如 `EDR 1471 1472 1473 1476` 就是一个 run
 #   并发上限 6 路（防 Kuzu 锁冲突）：每范式 workers = min(题数, 6/范式数)，由本脚本传入
+#   ⚠ 每个 worker 启动前随机错峰 10-30s（run_parallel.sh 内），防 MCP/Kuzu 同时初始化撞锁
 #   --monitor: 自动弹出监控窗口（标题=run_id，跑完自退自关）
 # 示例: bash eval_run.sh EDR 1471 1472 --parallel
 #       bash eval_run.sh EDR 1471 1472 1473 1476 --parallel --monitor
@@ -79,9 +80,9 @@ for (( i=0; i<NPAR; i++ )); do
         continue
     fi
     if [ "$MODE" = "parallel" ]; then
+        # 错峰不在这里做：run_parallel.sh 对**每个 worker** 加 10-30s 随机错峰（防 Kuzu 锁）
         bash "$SCRIPT_DIR/run_parallel.sh" "$PARADIGM" "${QIDS[@]}" --run-id "$RUN_ID" --workers "$WORKERS_CAP" &
         PIDS+=($!)
-        sleep $(python -c "import random; print(round(random.uniform(10,30),1))")  # 随机错峰防 Kuzu 锁冲突
     else
         bash "$SCRIPT_DIR/run_serial.sh" "$PARADIGM" "${QIDS[@]}" --run-id "$RUN_ID"
     fi
@@ -95,12 +96,10 @@ fi
 
 echo "========================================="
 echo "  DONE: $RUN_ID"
-echo "  下一步:"
-for (( i=0; i<NPAR; i++ )); do
-    case "${PARADIGMS:$i:1}" in
-        E) p=er ;; D) p=dlr ;; R) p=rdf ;;
-    esac
-    echo "    python 02_extract_and_run.py --paradigm $p --log-subdir $RUN_ID"
-done
-echo "    归档（确认后）: python post_process.py --run-id $RUN_ID"
+PY="${PY:-python}"   # 项目约定 export PY=<conda 环境的 python 绝对路径>（CLAUDE.md 硬规则 5）
+echo "  下一步（收尾一条命令：02→03→04 逐范式 + parse）："
+echo "    bash finish_run.sh $RUN_ID"
+echo "  归档（确认后；post_process 会校验 stats 与判定是否同步）："
+echo "    $PY post_process.py --run-id $RUN_ID [--group original|control]"
+echo "  （手动分步展开见 docs/runbook.md §3）"
 echo "========================================="

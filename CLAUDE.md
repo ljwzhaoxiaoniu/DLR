@@ -61,12 +61,7 @@ python main.py serve --paradigm ALL
 # 跑一批（2 题 × 3 范式 = 6 路，实测上限）
 cd Evaluation/scripts
 bash eval_run.sh EDR <q1> <q2> [<q3> ...] --parallel   # 题号平铺（≥1），总并发封顶 6 路
-for p in er dlr rdf; do
-  $PY 02_extract_and_run.py --paradigm $p --log-subdir $RID
-  $PY 03_evaluate.py        --paradigm $p --log-subdir $RID
-  $PY 04_judge.py           --paradigm $p --log-subdir $RID
-done
-$PY parse_agent_stats.py --paradigm ALL --log-subdir $RID   # 必须 ALL
+bash finish_run.sh $RID                    # 收尾：02→03→04 逐范式 + parse（范式自动发现；不归档）
 $PY post_process.py --run-id $RID [--group original|control]  # 确认后归档（按 run；题目/范式自动发现）
 ```
 
@@ -75,7 +70,7 @@ $PY post_process.py --run-id $RID [--group original|control]  # 确认后归档�
 ## 容易踩的坑（详见 runbook §5/§6）
 
 - **Kuzu 排他锁**：`build` 前必须停 `serve`；提高并发会引发 `database locked`
-- **`parse_agent_stats` 必须 `--paradigm ALL`**：逐范式跑会互相覆盖
+- **`parse_agent_stats` 归档前会被校验**（09-17 起）：缺 CSV / 与判定不一致 → `post_process` 直接 `[ERR]` 退出（归档器只搬不生产）；**judge 翻盘后必须重跑 parse 再归档**
 - **`post_process` 不覆盖已有 raw**：整题重跑时旧 raw 会挡住新日志（输出"迁移 0 条"），归档自相矛盾
 - **旧 pair 目录字母序反杀**：单题目录排在前面时旧行会覆盖新行
 - **judge 超时**默认 INCORRECT：不要直接改 CSV，先手动 `opencode run` 验证

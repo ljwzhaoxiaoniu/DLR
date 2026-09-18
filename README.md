@@ -105,13 +105,7 @@ cd Evaluation/scripts
 bash eval_run.sh EDR <q1> <q2> [<q3> ...] --parallel
 
 # Stage 2/3/4：逐范式跑
-for p in er dlr rdf; do
-  $PY 02_extract_and_run.py --paradigm $p --log-subdir <run_id>   # 提取 SQL → 重放 → 标准化
-  $PY 03_evaluate.py        --paradigm $p --log-subdir <run_id>   # strict 初判（秒级）
-  $PY 04_judge.py           --paradigm $p --log-subdir <run_id>   # LLM 仲裁（增量续跑）
-done
-
-$PY parse_agent_stats.py --paradigm ALL --log-subdir <run_id>     # ⚠ 必须 ALL，逐范式会互相覆盖
+bash finish_run.sh <run_id>                       # Stage 2/3/4 + 汇总：02→03→04 逐范式 + parse
 $PY post_process.py --run-id <run_id>            # 归档（结果确认后；题目/范式自动发现）
 ```
 

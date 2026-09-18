@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 """Parse opencode NDJSON agent logs → per-question stats CSV.
 
-Extracts: steps, tokens(in/out/total), tool calls(by type), final answer, evidence SQL.
+Extracts: steps, tokens(in/out/total/reasoning/cache_read), tool calls(by type), L1/L2/L3 命中.
+**token 的唯一来源**（03_evaluate 不再自己扫 NDJSON，见 09-17 注释）；
+SQL / Final Answer 的提取在 Stage 2（02_extract_and_run.py），本脚本不重复做。
 
 Usage:
-  python parse_agent_stats.py --paradigm ER --qid 1472
-  python parse_agent_stats.py --paradigm ALL
+  python parse_agent_stats.py --log-subdir <run_id>        # 默认 --paradigm ALL，归档前跑这一条
+  python parse_agent_stats.py --paradigm DLR --qid 1472    # 单题调试（其他行原样保留）
 """
-import json, csv, re, argparse
+import json, csv, argparse
 from collections import Counter
-from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -34,8 +35,6 @@ def parse_ndjson(path):
     steps = 0
     tokens_total = tokens_in = tokens_out = tokens_reasoning = tokens_cache_read = 0
     tool_calls = []
-    final_answer = ""
-    evidence_sql = ""
     # 三级命中统计（L1/L2/L3，2026-08-27 起）
     l1_calls, l1_dbs = 0, []          # L1 semantic_query: 调用次数 + 返回中出现的 db
     l2_calls, l2_hits, l2_top = 0, 0, ""   # L2 search_evidence: 调用/非空命中/top kid:score
@@ -50,7 +49,6 @@ def parse_ndjson(path):
                 continue
             p = obj.get("part", {})
             pt = p.get("type", "")
-            text = p.get("text", "") or ""
 
             if pt == "step-finish":
                 steps += 1
@@ -99,22 +97,6 @@ def parse_ndjson(path):
                         if st.get("status") == "completed":
                             l3_hit = 1
 
-            if "final answer:" in text.lower():
-                m = re.search(r"Final Answer:\s*(.+?)(?:\n|$)", text, re.I)
-                if m:
-                    final_answer = m.group(1).strip()[:200]
-
-            if "evidence sql:" in text.lower():
-                # try inline
-                m = re.search(r"Evidence SQL:\s*(.+?)(?:\n\n|$)", text, re.I)
-                if m:
-                    evidence_sql = m.group(1).strip()[:300]
-                else:
-                    # try fenced code block
-                    m2 = re.search(r"Evidence SQL:\s*```(?:sql)?\s*(.+?)```", text, re.I | re.S)
-                    if m2:
-                        evidence_sql = m2.group(1).strip()[:300]
-
     return {
         "steps": steps,
         "tokens_total": tokens_total,
@@ -131,28 +113,14 @@ def parse_ndjson(path):
         "l2_top": l2_top,
         "l3_calls": l3_calls,
         "l3_hit": l3_hit,
-        "final_answer": final_answer,
-        "evidence_sql": evidence_sql,
     }
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--paradigm", required=True, choices=["ER", "DLR", "RDF", "ALL"])
-    ap.add_argument("--qid", type=int, default=None, help="single question id")
-    ap.add_argument("--log-subdir", default="", help="Stage 1 run-id")
-    a = ap.parse_args()
-
-    # 自动检测最新 run-id
-    run_id = a.log_subdir
-    if not run_id:
-        subdirs = sorted([d for d in LOG_DIR.iterdir() if d.is_dir()], reverse=True)
-        if subdirs:
-            run_id = subdirs[0].name
-
-    paradigms = ["ER", "DLR", "RDF"] if a.paradigm == "ALL" else [a.paradigm]
+def refresh(run_id, paradigms, qid=None):
+    """解析 run 的 NDJSON + 03_reports，写回 {OUT_BASE}/{run_id}/agent_stats.csv。
+    返回 (rows, kept, out_path)。**解析不到任何行时不会清空已有 CSV**（未解析的旧行原样保留），
+    所以 post_process 可以在归档前无条件调用它做闭环刷新。"""
     rows = []
-
     for para in paradigms:
         log_dir = LOG_DIR / run_id / para.lower() if run_id else LOG_DIR / para.lower()
         if not log_dir.exists():
@@ -162,11 +130,19 @@ def main():
         for f in files:
             if not f.stem.isdigit():
                 continue  # 跳过脏文件
-            qid = int(f.stem)
-            if a.qid and qid != a.qid:
+            q = int(f.stem)
+            if qid and q != qid:
                 continue
             stats = parse_ndjson(f)
-            rows.append({"question_id": qid, "paradigm": para, **stats})
+            rows.append({"question_id": q, "paradigm": para, **stats})
+
+    # 单范式解析告警：同一个 run 下还有其他范式日志时提醒没跑齐（旧行会保留，但汇总会缺列）
+    if run_id and len(paradigms) == 1:
+        others = [p for p in ("ER", "DLR", "RDF")
+                  if p not in paradigms and (LOG_DIR / run_id / p.lower()).is_dir()]
+        if others:
+            print(f"[WARN] 本 run 还有 {'/'.join(others)} 的日志，本次只解析了 {paradigms[0]}"
+                  f"（一次刷齐用 --paradigm ALL）")
 
     # load evaluation results for merge
     base = OUT_BASE / run_id if run_id else OUT_BASE
@@ -209,6 +185,17 @@ def main():
     out_name = "agent_stats.csv"
     out_path = out_dir / out_name
 
+    # 保留本次未解析的 (范式, 题号) 旧行：分范式跑 / 单题调试不再冲掉其他行
+    kept = []
+    if out_path.exists():
+        parsed_keys = {(r["paradigm"], str(r["question_id"])) for r in rows}
+        try:
+            with open(out_path, encoding="utf-8") as f:
+                kept = [r for r in csv.DictReader(f)
+                        if (r.get("paradigm", ""), r.get("question_id", "")) not in parsed_keys]
+        except Exception:
+            kept = []
+
     # write CSV (no final_answer/evidence_sql)
     fields = ["question_id", "paradigm", "steps",
               "tokens_total", "tokens_in", "tokens_out", "tokens_reasoning", "tokens_cache_read",
@@ -221,18 +208,42 @@ def main():
     with open(out_path, "w", newline="", encoding="utf-8") as w:
         dw = csv.DictWriter(w, fieldnames=fields, extrasaction='ignore')
         dw.writeheader()
+        for r in kept:
+            dw.writerow(r)
         for r in rows:
             dw.writerow(r)
 
-    print(f"[OK] wrote {len(rows)} rows -> {out_path}")
+    print(f"[OK] wrote {len(rows)} rows"
+          + (f"（另有 {len(kept)} 条本次未解析的旧行原样保留）" if kept else "")
+          + f" -> {out_path}")
+    return rows, kept, out_path
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--paradigm", default="ALL", choices=["ER", "DLR", "RDF", "ALL"],
+                    help="默认 ALL = 一次跑齐；分范式跑会丢其他范式的行（会保留旧行并告警，但别依赖它）")
+    ap.add_argument("--qid", type=int, default=None, help="single question id（调试用）")
+    ap.add_argument("--log-subdir", default="", help="Stage 1 run-id")
+    a = ap.parse_args()
+
+    # 自动检测最新 run-id
+    run_id = a.log_subdir
+    if not run_id:
+        subdirs = sorted([d for d in LOG_DIR.iterdir() if d.is_dir()], reverse=True)
+        if subdirs:
+            run_id = subdirs[0].name
+
+    paradigms = ["ER", "DLR", "RDF"] if a.paradigm == "ALL" else [a.paradigm]
+    rows, _kept, _path = refresh(run_id, paradigms, qid=a.qid)
+
     # summary
-    if rows:
-        for para in paradigms:
-            sub = [r for r in rows if r["paradigm"] == para]
-            if sub:
-                avg_tok = sum(r["tokens_total"] for r in sub) / len(sub)
-                avg_steps = sum(r["steps"] for r in sub) / len(sub)
-                print(f"  {para}: n={len(sub)}, avg_tokens={avg_tok:,.0f}, avg_steps={avg_steps:.1f}")
+    for para in paradigms:
+        sub = [r for r in rows if r["paradigm"] == para]
+        if sub:
+            avg_tok = sum(r["tokens_total"] for r in sub) / len(sub)
+            avg_steps = sum(r["steps"] for r in sub) / len(sub)
+            print(f"  {para}: n={len(sub)}, avg_tokens={avg_tok:,.0f}, avg_steps={avg_steps:.1f}")
 
 
 if __name__ == "__main__":

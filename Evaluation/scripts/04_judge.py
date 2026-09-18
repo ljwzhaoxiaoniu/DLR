@@ -17,13 +17,15 @@ CFG = json.load(open(ROOT / "config.json", encoding="utf-8")) if (ROOT / "config
 _EVAL_OUT = CFG.get("eval", {}).get("output_dir", "Evaluation/outputs")
 GOLD = json.load(open(ROOT / _EVAL_OUT / "00_golden_cache.json", encoding="utf-8"))
 GOLD_MAP = {x["q_id"]: x for x in GOLD}
-QUESTIONS = {q["question_id"]: q for q in json.load(open(ROOT / "MINIDEV_sqlite" / "mini_dev_sqlite.json", encoding="utf-8"))}
+MINI = ROOT / CFG.get("paths", {}).get("minidev_dir", "MINIDEV_sqlite") / "mini_dev_sqlite.json"
+QUESTIONS = {q["question_id"]: q for q in json.load(open(MINI, encoding="utf-8"))}
 OUT_BASE = ROOT / _EVAL_OUT
 LOG_DIR = OUT_BASE / "01_logs"
 JUDGE_CWD = ROOT / "Evaluation" / "oc_judge"
 
+# 本阶段只在 03 的 CSV 上写判定，不自建列（token 列已随 09-17 单一源改造从 03 移除）
 CSV_FIELDS = ["q_id", "db_id", "strict_match", "judge_verdict", "judge_reason",
-              "verdict", "process_score", "sql", "error", "input_tokens", "output_tokens"]
+              "verdict", "process_score", "sql", "error"]
 
 
 def load_trace(paradigm, qid, run_id=""):
@@ -106,8 +108,10 @@ def llm_judge(question, evidence, gold_res, pred_res, gold_sql, pred_sql, db_id,
 
 
 def save(csv_path, rows):
+    # 按 CSV 现有列写回（旧 CSV 可能还带 input_tokens 等历史列，别削掉）；CSV_FIELDS 只兜底空表
+    fields = list(rows[0].keys()) if rows else CSV_FIELDS
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=CSV_FIELDS, quoting=csv.QUOTE_ALL)
+        w = csv.DictWriter(f, fieldnames=fields, quoting=csv.QUOTE_ALL)
         w.writeheader()
         w.writerows(rows)
 

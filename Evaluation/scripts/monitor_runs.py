@@ -74,6 +74,38 @@ def collect():
     return rows, now
 
 
+RUNNERS = ("eval_run.sh", "run_parallel.sh", "run_serial.sh")
+IDLE_GRACE = 45.0   # 连续无 agent 进程的判定窗口下限：必须盖住 10-30s 的错峰空档
+
+
+def runner_alive():
+    """跑题执行器（eval_run.sh / run_parallel.sh / run_serial.sh）是否还在跑。
+
+    只用于**退出判定**（不参与表格显示——表格仍然一题一行只看 agent 进程）：
+    worker 启动前有 10-30s 随机错峰、换题/等 slot 也会有空档，那段时间没有 agent 进程，
+    但批次并没结束。以「执行器是否存活」为准，就不会把空档误判成跑完。
+
+    匹配口径：argv 里有一项**以脚本名结尾**（= 真的把这个脚本当命令跑），
+    不用"命令行整串包含"——否则任何命令行里夹带了脚本名的进程（如 -c 里贴了一段脚本、
+    或编辑器/终端把名字带进参数）都会被误判成执行器。
+    """
+    try:
+        import psutil
+    except ImportError:
+        return False
+    me = os.getpid()
+    try:
+        for p in psutil.process_iter(["pid", "cmdline"]):
+            if p.info.get("pid") == me:
+                continue
+            argv = p.info.get("cmdline") or []
+            if any(a.replace("\\", "/").endswith(RUNNERS) for a in argv if a):
+                return True
+    except Exception:
+        pass
+    return False
+
+
 def render(rows, now, prev):
     """渲染表格；prev = {pid: (cpu_s, ts)} 用于两帧间 CPU% 换算。"""
     cores = os.cpu_count() or 1
@@ -104,9 +136,9 @@ def main():
     ap = argparse.ArgumentParser(description="跑题实时监控（PID | 范式 | 题号 | 启动 | 运行 | CPU% | 内存）")
     ap.add_argument("--watch", type=float, default=0, metavar="SEC", help="刷新的秒数（默认单次快照）")
     ap.add_argument("--until-done", action="store_true",
-                    help="等到跑题进程出现、跑完全部消失后自动退出（配合自动弹窗/批处理）")
+                    help="等到批次结束自动退出（配合自动弹窗/批处理）；判据=执行器已退出且连续 3 帧无 agent 进程")
     ap.add_argument("--wait-first", type=float, default=90, metavar="SEC",
-                    help="--until-done 模式下等待首个跑题进程的秒数（超时退出）")
+                    help="--until-done 模式下、且**没有任何执行器进程**时，等首个跑题进程的秒数（超时退出）")
     ap.add_argument("--demo", action="store_true", help="打印示意表（不采样）")
     a = ap.parse_args()
 
@@ -142,10 +174,13 @@ def main():
             if a.until_done:
                 if rows:
                     seen, idle_since = True, None
+                elif runner_alive():  # 空档（10-30s 错峰 / 换题 / 等 slot）——批次没结束
+                    seen, idle_since = True, None
                 elif seen:
                     if idle_since is None:
                         idle_since = now
-                    elif now - idle_since >= 3 * a.watch:  # 连续 3 帧无进程 = 跑完
+                    # 窗口下限 IDLE_GRACE：即使执行器探测漏判，也不在错峰空档里误退
+                    elif now - idle_since >= max(3 * a.watch, IDLE_GRACE):
                         print("\n  [DONE] all eval processes finished; monitor exiting")
                         break
                 else:

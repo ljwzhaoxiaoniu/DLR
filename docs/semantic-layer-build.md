@@ -232,7 +232,7 @@ RDF 不走自己的 Kuzu schema——`mapping/rdf.py` 把 R2RML 解析成 **ER �
 
 **09-12 schema 统一（DLR）**：`LE.public_attributes + PE.C + PE.private_attributes` 三处合一 → `PE.attributes: [{column, biz_name, description, public?}]`（设计依据见 `docs/modeling.md` §1.5）。**这同时消掉了 5 处同列双条目**：DLR 属性向量 797 → 792、DLR 全库 953 → 948。迁移脚本 `tmp_scripts/migrate_dlr_schema.py`（幂等，可重跑）。回归：792 条唯一无重复、`ARCS.C` 重建与旧 yaml 等价（12 处 id 大小写/拼写改为 `{LE}.{biz_name}` 一致式）、LE public 面 220 条不变、PAS.A 闭环 34/35（口径="落在两侧之一"，此前按"必须在源侧"误判为 15/35）。**待 rebuild 生效。**
 
-另有两项属评测链路（不需要 rebuild，但**重跑基线前必须落地**，否则新旧混跑）：⑪ `Evaluation/scripts/01_run_agent.py` 的 prompt 去掉三范式工具名与 L1→L2 串行配方（改为"先 /mcps 自发现"，与 AGENTS.md 一致），并把"续跑跳过"改为只跳过**成功**的题（失败/超时留下的输出文件不再被当作成功）。
+另有两项属评测链路（不需要 rebuild，但**重跑基线前必须落地**，否则新旧混跑）：⑪ `Evaluation/scripts/01_run_agent.py` 的 prompt 去掉三范式工具名与 L1→L2 串行配方（改为"先 /mcps 自发现"，与 AGENTS.md 一致），并把"续跑跳过"改为只跳过**成功**的题（失败/超时留下的输出文件不再被当作成功）。**（09-17：该文件已改为转调 `run_serial.sh`/`run_parallel.sh` 的薄壳——prompt 与续跑判定的实际位置在 bash 执行器里。）**
 
 ## 8. 数字核账（可复现，2026-09-10 实测）
 

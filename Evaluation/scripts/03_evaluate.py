@@ -5,6 +5,7 @@
   一致   → verdict=CORRECT, process_score=100
   不一致 → 初判 verdict=INCORRECT,留待 04_judge.py 仲裁翻盘
 增量重跑时已有 judge 结果原样保留.
+依赖 Stage 2 的产物(02_predictions/{p}/*.json);**不数 token**——token 由 parse_agent_stats 统一算.
 
 用法:
   python 03_evaluate.py --paradigm er --log-subdir <run_id>
@@ -22,8 +23,11 @@ GOLD_MAP = {x["q_id"]: x for x in GOLD}
 OUT_BASE = ROOT / _EVAL_OUT
 LOG_DIR = OUT_BASE / "01_logs"
 
+# 本阶段只判分，不数 token：token 的唯一来源是 parse_agent_stats.py（step-finish 口径）。
+# 09-17 前 03 自己扫过一遍 NDJSON（任何带 tokens 的 part 都算），与 parse 口径不一，
+# 导致归档 5 个 token 列来自两个源——已删（CSV 里不再有 input_tokens/output_tokens）。
 CSV_FIELDS = ["q_id", "db_id", "strict_match", "judge_verdict", "judge_reason",
-              "verdict", "process_score", "sql", "error", "input_tokens", "output_tokens"]
+              "verdict", "process_score", "sql", "error"]
 
 
 def strict_match(pred_rows, gold_rows):
@@ -43,24 +47,6 @@ def strict_match(pred_rows, gold_rows):
                 pass
             return False
     return True
-
-
-def load_tokens(paradigm, qid, run_id=""):
-    """从 Stage 1 NDJSON 拉取 token 消耗(input/output sum)."""
-    f = (LOG_DIR / run_id / paradigm / f"{qid}.json") if run_id else (LOG_DIR / paradigm / f"{qid}.json")
-    if not f.exists():
-        return 0, 0
-    inp = out = 0
-    for line in f.read_text(encoding="utf-8", errors="replace").splitlines():
-        try:
-            ev = json.loads(line.strip())
-        except:
-            continue
-        tok = (ev.get("part", {}) or {}).get("tokens", {}) or {}
-        if tok:
-            inp += tok.get("input", 0) or 0
-            out += tok.get("output", 0) or 0
-    return inp, out
 
 
 def main():
@@ -90,7 +76,6 @@ def main():
 
     rows = []
     n_strict = 0
-    token_in = token_out = 0
 
     for pf in preds:
         qid = int(pf.stem)
@@ -98,9 +83,6 @@ def main():
             continue
         gold = GOLD_MAP[qid]
         rec = json.load(open(pf, encoding="utf-8"))
-        inp, outp = load_tokens(a.paradigm, qid, run_id)
-        token_in += inp
-        token_out += outp
         prev = existing.get(qid, {})
 
         judge_v = prev.get("judge_verdict", "")
@@ -128,7 +110,6 @@ def main():
             "judge_verdict": judge_v, "judge_reason": judge_reason,
             "verdict": verdict, "process_score": process_score,
             "sql": rec.get("sql", ""), "error": rec.get("error", ""),
-            "input_tokens": inp, "output_tokens": outp,
         })
 
     total = len(rows)
@@ -143,15 +124,14 @@ def main():
         "paradigm": a.paradigm,
         "total": total, "correct": n_correct, "accuracy": round(n_correct / max(total, 1), 4),
         "strict_pass": n_strict, "judge_pending": n_pending,
-        "total_input_tokens": token_in, "total_output_tokens": token_out,
     }
     (report_dir / f"{a.paradigm}_summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
 
     print(f"\n[{a.paradigm.upper()}] strict={n_strict}/{total}  accuracy(含已有judge)={n_correct}/{total}")
     if n_pending:
         print(f"  待仲裁 {n_pending} 题 → python 04_judge.py --paradigm {a.paradigm} --log-subdir {run_id}")
-    print(f"  tokens: input={token_in} output={token_out}")
     print(f"  -> {csv_path}")
+    print(f"  （token 统计不在这里，见 parse_agent_stats.py —— 单一源）")
 
 
 if __name__ == "__main__":
