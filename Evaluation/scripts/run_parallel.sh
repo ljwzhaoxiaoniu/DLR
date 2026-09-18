@@ -121,8 +121,8 @@ while IFS='|' read -r QID QUESTION EVIDENCE; do
         wait -n 2>/dev/null && DONE=$((DONE+1))
     done
 
-    # 每个 worker 启动前随机错峰 10-30s：MCP/Kuzu 同时初始化会撞 "database is locked"（P2）
-    sleep $(( RANDOM % 21 + 10 ))
+    # 每个 worker 启动前随机错峰 5-30s：MCP/Kuzu 同时初始化会撞 "database is locked"（P2）
+    sleep $(( RANDOM % 26 + 5 ))
 
     run_one "$QID" "$QUESTION" "$EVIDENCE" &
     DONE=$((DONE+1))
