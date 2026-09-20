@@ -28,14 +28,14 @@
 
 > 对照组知识库已就绪（card_games 21 条 / debit_card_specializing 19 条，kid 聚合），题量待定。
 
-> **总结（原始组）**：共测试 6 题 = **18 题次**。
+> **总结（原始组）**：共测试 10 题 = **30 题次**。
 > **总结（对照组）**：共测试 0 题 = **0 题次**。
 
 | 组别 | 指标 | ER | DLR | RDF |
 |------|------|----|-----|-----|
-| 原始组 | CORRECT | 6/6 (100.0%) | **6/6 (100.0%)** | 6/6 (100.0%) |
-| 原始组 | strict PASS | 4/6 (66.7%) | 5/6 (83.3%) | 4/6 (66.7%) |
-| 原始组 | 平均 token | 58,512 (-11.0% vs DLR) | **65,751** | 60,263 (-8.3% vs DLR) |
+| 原始组 | CORRECT | 10/10 (100.0%) | **10/10 (100.0%)** | 10/10 (100.0%) |
+| 原始组 | strict PASS | 6/10 (60.0%) | 7/10 (70.0%) | 6/10 (60.0%) |
+| 原始组 | 平均 token | 65,960 (+1.6% vs DLR) | **64,923** | 66,249 (+2.0% vs DLR) |
 | 对照组 | CORRECT | — | — | — |
 | 对照组 | strict PASS | — | — | — |
 | 对照组 | 平均 token | — | — | — |
@@ -56,6 +56,10 @@
 | debit_card_specializing | q1476 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 79,362 | 68,496 | **65,842** |  |  |  |  |
 | debit_card_specializing | q1479 | FAIL | CORRECT | PASS |  | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | **49,126** | 79,077 | 52,136 |  |  |  |  |
 | debit_card_specializing | q1480 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | 62,289 | 50,796 | **48,611** |  |  |  |  |
+| debit_card_specializing | q1481 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 99,661 | **70,292** | 104,310 |  |  |  |  |
+| debit_card_specializing | q1482 | FAIL | CORRECT | FAIL | CORRECT | FAIL | CORRECT | CORRECT | CORRECT | CORRECT | 81,587 | **55,724** | 67,134 |  |  |  |  |
+| debit_card_specializing | q1483 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | **63,477** | 64,207 | 64,721 |  |  |  |  |
+| debit_card_specializing | q1484 | PASS |  | PASS |  | PASS |  | CORRECT | CORRECT | CORRECT | **63,804** | 64,506 | 64,744 |  |  |  |  |
 > **Token = input + cache_read + reasoning(CoT) + output**（全算消耗，= agent_stats.csv 的 `total_tokens`）
 > **备注分栏**: 共通 = 题目/evidence/L3 问题（跨范式共同根源）；ER/DLR/RDF-备注 = 该范式本题的异常、错误及后果（空 = 无异常无特异观察）
 > **数据来源**: `validated_results/v4_final/{group}/{run_id}/agent_stats.csv`（按 run 归档）
