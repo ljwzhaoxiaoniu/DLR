@@ -6,7 +6,7 @@
 
 **当前版本 v3（纯 question + 知识层 + 争议裁决）**：
 - Agent 只拿 question（不注入 evidence）——2026-08-25 修复 pair 路径注入后生效，q360 起为真纯 question 批次
-- Agent 靠三级语义建模解题：数据源级（L1 MCP 语义层）/ 领域共识级（L2 RAG 知识库，`search_evidence`）/ 业务逻辑级（L3 领域技能，`skills/{db}.md`），见 [tsm-design.md](tsm-design.md)
+- Agent 靠三级语义建模解题：数据源级（L1 MCP 语义层）/ 领域共识级（L2 RAG 知识库，`search_evidence`）/ 业务逻辑级（L3 领域技能，`skills/sop.md` 单文件），见 [tsm-design.md](tsm-design.md)
 - **数据集保持原始**（2026-08-27）：gold/evidence 不修正，缺陷题由知识层消化 + judge 争议裁决（见 §2 Stage 4）
 - 历史口径：v2 = evidence 注入（150 题基线）；v3 早期 40 题实为注入批次（与 v2 同条件，对比仍公平）
 
@@ -36,7 +36,7 @@ bash finish_run.sh <run_id>                   # Stage 2/3/4 + 汇总（等价于
 
 **为什么拆两段**：strict 初判是纯脚本秒级；LLM 仲裁走 `opencode run`（慢、可能超时）。拆开后 Stage 3 立即出全量初判，Stage 4 独立循环、每题落盘、中断续跑互不拖累。
 
-**争议题裁决（2026-08-27 起）**：数据集保持原始（gold/evidence 不修正），已知缺陷题的裁决在 `Evaluation/oc_judge/disputes.md`（QID -> 裁定口径/裁定值）。judge prompt 附 QID + 三个知识路径（KnowledgePath = rag_knowledge/{db}.jsonl、SkillPath = skills/{db}.md、DisputePath）。判定顺序：先按 QID 查争议目录（命中则以裁定核对 Pred，该题 GoldResult 作废）；未命中按五步判，发现 evidence 与题面相悖时以题面语义为准并可打 `[争议候选]` 标记。术语/公式口径以知识层（rag_knowledge + skills）为准。新翻盘争议题追加 disputes.md（裁决唯一权威，勿只改 cache）。
+**争议题裁决（2026-08-27 起）**：数据集保持原始（gold/evidence 不修正），已知缺陷题的裁决在 `Evaluation/oc_judge/disputes.md`（QID -> 裁定口径/裁定值）。judge prompt 附 QID + 三个知识路径（KnowledgePath = rag_knowledge/{db}.jsonl、SkillPath = skills/sop.md、DisputePath）。判定顺序：先按 QID 查争议目录（命中则以裁定核对 Pred，该题 GoldResult 作废）；未命中按五步判，发现 evidence 与题面相悖时以题面语义为准并可打 `[争议候选]` 标记。术语/公式口径以知识层（rag_knowledge + skills）为准。新翻盘争议题追加 disputes.md（裁决唯一权威，勿只改 cache）。
 
 ## 2. 关键设计
 

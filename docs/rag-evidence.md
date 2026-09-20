@@ -127,7 +127,7 @@ python main.py serve --paradigm ALL
 - `kid` = 知识条目 id（检索返回的 `qid` 字段即它）；`source_qids` = 人肉元数据，不索引
 - 一条知识对应多题（`source_qids` 数组）；同类术语归并成一条
 
-> **从原始组升级到对照组**：逐条读 evidence → 按"判定口诀"分流（下沉/保留/上浮）→ 只把"保留"的部分按同类归并成 kid → 重建索引。分流出去的部分分别落进 `configs/scenarios/{ER,DLR,RDF}/` 的 description 与 `skills/{db}.md`。
+> **从原始组升级到对照组**：逐条读 evidence → 按"判定口诀"分流（下沉/保留/上浮）→ 只把"保留"的部分按同类归并成 kid → 重建索引。分流出去的部分分别落进 `configs/scenarios/{ER,DLR,RDF}/` 的 description 与 `skills/sop.md`。
 
 ## MCP 工具
 
@@ -142,7 +142,7 @@ rdf_search_evidence(namespace, question, top_k=3)
 ## Agent Workflow
 
 ```
-question → [L1 semantic_query + L2 search_evidence + L3 skills/{db}.md 并行]
+question → [L1 semantic_query + L2 search_evidence + L3 skills/sop.md 并行]
          → 交叉验证锚定 → mapping → SQL → Final Answer
 ```
 

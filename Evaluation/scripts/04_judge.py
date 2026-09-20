@@ -54,7 +54,8 @@ def llm_judge(question, evidence, gold_res, pred_res, gold_sql, pred_sql, db_id,
     """opencode run 仲裁(规则在 oc_judge/AGENTS.md). 返回 (verdict, process, reason)."""
     # Prompt 只传数据(与评测 Agent 同一铁律); 知识层路径供 judge 查争议/口径
     know_path = ROOT / "rag_knowledge" / f"{db_id}.jsonl"
-    skill_path = ROOT / "OC-based Agent Service" / "skills" / f"{db_id}.md"
+    # L3 已合并为单一 sop.md（agent 面入口，见 AGENTS.md）；judge 读同一份，口径才一致
+    skill_path = ROOT / "OC-based Agent Service" / "skills" / "sop.md"
     dispute_path = JUDGE_CWD / "disputes.md"
     prompt = (
         f"QID: {qid}\n"

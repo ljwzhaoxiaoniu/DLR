@@ -15,7 +15,7 @@
 
 ## 核心约束
 
-1. **三级判序**：L3 严格命中（`skills/{db}.md` 某节标题 restate 本题题意）时该节最权威，按其表选择/口径执行；无命中时按 ReACT 方式综合问题原文 + L1 + L2 自行判断，不预设优先级。
+1. **三级判序**：L3 严格命中（`skills/sop.md` 某节标题 restate 本题题意）时该节最权威，按其表选择/口径执行；无命中时按 ReACT 方式综合问题原文 + L1 + L2 自行判断，不预设优先级。
 2. **元数据走 MCP，数据走 SQL（强制顺序）**：
    - 发现表结构、列名、关联关系 → 使用 MCP 工具
    - 查询具体业务数据 → MCP 映射拿到 `database_url` 后,通过 `execute_sql` 工具执行
@@ -35,7 +35,7 @@
       │
       ├── L1 数据源级: 语义召回 → xxx_semantic_query(question) → 候选实体+DB
       ├── L2 领域共识级: 证据检索 → xxx_search_evidence(question) → 术语→列/值映射
-      └── L3 业务逻辑级: 领域技能 → 读 skills/{db}.md → 难题模式+处理建议
+      └── L3 业务逻辑级: 领域技能 → 读 skills/sop.md → 难题模式+处理建议
       │
       ▼
 交叉验证 → 锚定实体/列 → 映射 → SQL → 按 SOP 验证 → Final Answer
@@ -45,15 +45,15 @@
 |------|------|----------|
 | L1 数据源级 | `xxx_semantic_query` → `get_*_mapping` | 这个领域有哪些实体/属性/关系？ |
 | L2 领域共识级 | `xxx_search_evidence` | 问题中用词对应什么列/值？ |
-| L3 业务逻辑级 | 读 `skills/{db}.md` | 这种题容易怎么错？ |
+| L3 业务逻辑级 | 读 `skills/sop.md`（固定路径，不需要 db） | 这种题容易怎么错？ |
 
 ### Step 1：并行发出（三级同时）
 
 拿到 question 后**同时**执行：
 1. `/mcps` — 确认可用 MCP 工具列表
-2. `xxx_semantic_query(question)` — L1 语义召回，不传 db 全局召回
-3. `xxx_search_evidence(question)` — L2 证据检索
-4. 从 L1 返回的 `db` 读 `skills/{db}.md` — L3 领域技能
+2. **优先**读 `skills/sop.md` — L3 业务逻辑级技能（**固定路径，不需要先知道 db**）。里面有 restate 本题的节就按它执行；没有对应节就跳过它，用 L1 + L2 自行判断
+3. `xxx_semantic_query(question)` — L1 语义召回，不传 db 全局召回
+4. `xxx_search_evidence(question)` — L2 证据检索
 
 ### Step 2：交叉验证 & 锚定
 
@@ -68,7 +68,7 @@
 
 ### Step 3：映射 + SQL（L3 介入）
 
-L3 在**映射之后、写 SQL 之前**介入：对照 `skills/{db}.md` 中的难题模式，检查当前 SQL 是否有对应的陷阱（如百分比分母 JOIN 虚增、同名多版本、LIMIT 1 取众数）。
+L3 在**映射之后、写 SQL 之前**介入：对照 `skills/sop.md` 中的难题模式，检查当前 SQL 是否有对应的陷阱（如百分比分母 JOIN 虚增、同名多版本、LIMIT 1 取众数）。
 
 ### Step 4：得出结论
 
@@ -79,21 +79,21 @@ Final Answer + Evidence SQL + 标注来源（MCP 工具名 / RAG kid / 领域技
 **硬约束**：三级锚定 + SQL 闭环内可重试，3 轮内拿不到有效结果就承认失败。禁止探索闭环外的工具。
 
 **L3 按需加载（两条触发路径）**：
-- **预防**：题面含百分比/比率/极值/排序/同名多版本等已知陷阱模式时，写 SQL 前读 `skills/{db}.md`
-- **救场**：同一题的 SQL 连续 2 次报错、执行为空、或结果与题面语义/数量级矛盾时，立即读 `skills/{db}.md`，按对应模式逐步自查、修正 SQL 后重试
+- **预防**：题面含百分比/比率/极值/排序/同名多版本等已知陷阱模式时，写 SQL 前重读 `skills/sop.md` 对照
+- **救场**：同一题的 SQL 连续 2 次报错、执行为空、或结果与题面语义/数量级矛盾时，立即回读 `skills/sop.md`，按对应模式逐步自查、修正 SQL 后重试
 
 Skill 文件按题分节，每节 heading 复述一道题；只有完整 restate 本题题意的那节属于你，其余节与本题无关。节内不含 SQL 成品：查询结构由你从 L1 映射自建，最终值必须自己执行 SQL 得到。
 
 **L3 文件访问约束**：
 
 L3 只允许读取 `skills/` 目录下的文件，且**严格限定**为：
-- **唯一允许的路径**：`skills/{db}.md`，其中 `{db}` 必须来自 L1 `xxx_semantic_query` 返回的 `db` 字段（如 `card_games`、`debit_card_specializing`）
+- **唯一允许的路径**：`skills/sop.md`（固定路径，所有库的条目都在这一份里，**不需要先知道 db**）
 - **禁止行为**：
-  - 禁止扫描 `skills/` 目录列出所有文件
-  - 禁止读取 `skills/` 下非 `{db}.md` 的文件
+  - 禁止扫描 `skills/` 目录列出所有文件（glob / ls / 读目录 都不行）
+  - 禁止读取 `skills/` 下除 `sop.md` 以外的文件
   - 禁止读取项目其他目录的任何文件（docs/、rag_knowledge/、Semantic Core Service/ 等）
   - 禁止写入或修改任何文件
-- **文件不存在时**：`skills/{db}.md` 不存在 → 该领域暂无技能，跳过 L3，仅用 L1+L2 锚定
+- **没有对应节时**：sop.md 里没有 restate 本题的节 → 该题无已知技能，跳过 L3，仅用 L1+L2 锚定（**这是常态，不是异常**：很多题就是没有条目）
 
 **多问题识别**：一个 question 可能包含多个独立的子问题（问号 `?` 是分隔标志），先拆解子问题，每个子问题独立走三级闭环。
 

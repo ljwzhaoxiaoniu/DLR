@@ -45,12 +45,22 @@
 
 | 维度 | 数据源级（L1 MCP 语义层） | 领域共识级（L2 RAG） | 业务逻辑级（L3 SOP） |
 |------|---------------|-------------|-------------|
-| **存储** | YAML/TTL 模型 description | `rag_knowledge/*.jsonl` | `OC-based Agent Service/skills/*.md` |
+| **存储** | YAML/TTL 模型 description | `rag_knowledge/*.jsonl` | `OC-based Agent Service/skills/sop.md`（**合并单文件**，09-18 起） |
 | **工具** | `dlr_semantic_query`、`get_pe_mapping`、`get_le_attrs`（v3 起为 4 核心工具集，探索类已禁注册） | `search_evidence` | 文件系统读取 (`Read` → `AGENTS.md`) |
 | **回答什么** | 这个领域有哪些结构？ | 这个问题用词对应什么列/值？ | 这种题有什么坑？ |
 | **产出** | 实体ID + 属性列表 + DB 路径 | 术语→列/值的映射 | 验证规则 + 反模式 |
 | **独特价值** | 全貌 + 结构完整性 | 弥合 NL→模型语言鸿沟 | 知道"容易错在哪" |
 | **盲区** | NL 术语和列名不对齐时召回不到 | 零散映射，未知实体间关系 | 需要 L1+L2 提供上下文 |
+
+## 分层书写原则：引用下级对象，不越级描述
+
+> **数据源级语义之上，好的语义架构设计 = 上层可以引用下级的对象描述；层层对齐、层层收敛；不要越级描述。**（2026-09-20 用户定）
+
+各层的表述者视角：**L1 = 业务+IT，L2 = 业务+懂 IT 的业务，L3 = 业务**。由此推出：
+
+- **L3（`skills/sop.md`）面向业务语义，不写库表列原名**（`yearmonth`、`Consumption`、`Date`、`transactions_1k` …）。需要指涉某列时，用当前这道题的业务语言说"我要什么数据"——物理映射由 L1/L2 提供，L3 **引用**即可。
+- **数据本身的约定可留**（如"期间记录为 YYYYMM"），**库表结构描述不留**。判断标准：这句话是业务在说需求，还是在描述数据库？
+- 反面教材：q1472 条目曾把"每行 = 某客户某月"写成 `yearmonth.Consumption` 级别的数据源描述——**越级**。（2026-09-20 用户指出"1472 没写好"）
 
 ## 边界判断
 
@@ -80,7 +90,7 @@
 |------|------|
 | L1 | `{paradigm}_semantic_query(question)` — 召回候选实体 + DB |
 | L2 | `search_evidence(namespace=db, question)` — 召回术语映射 |
-| L3 | 读 `skills/{db_id}.md` — 加载领域难题模式 |
+| L3 | 读 `skills/sop.md` — 固定路径，**不需要先知道 db**；命中本节就按它执行，没有就跳过 |
 
 ### Step 2：交叉验证 & 置信度门控
 
@@ -116,7 +126,7 @@ Final Answer + Evidence SQL + 标注信息来源（MCP 工具名 / RAG kid / SOP
 ## v3 → TSM 迁移路径
 
 1. **L2 重建**：card_games RAG 从 1 条 → 覆盖 52 题 evidence 的术语映射（**本次行动**）
-2. **L3 骨架**：11 数据库各建 `skills/{db}.md`，优先填已有翻盘经验的（card_games/debit_card）
+2. **L3 骨架**：~~11 数据库各建 `skills/{db}.md`~~ → **2026-09-18 改为合并单文件 `skills/sop.md`**。原因：L3 入口原先挂在「L1 返回的 db」上（`读 skills/{db}.md`），而 L1 恰恰可能把库排错 —— 要读 SOP 得先选对库、SOP 却正是用来纠正选库的，**死循环**。合并后：固定路径、开局就能读、不需要 db；有 restate 本题的节就按它执行，没有就跳过（常态）。新库条目直接追加到 sop.md 对应库的小节下。旧 `{db}.md` 已随合并**删除**（不留指针文件），仓库内全部引用改指 sop.md，judge 侧同读 sop.md
 3. **AGENTS.md 更新**：三步并行协议 + Skill 加载策略
 4. **纯 question 重跑**：q360 起真正纯 question，三级验证效果
 5. **全量迁移**：按数据库推进，每批重跑后对比 v2/v3 baseline

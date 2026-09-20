@@ -89,7 +89,7 @@ def parse_ndjson(path):
                         if not l2_top:
                             top = res[0]
                             l2_top = f"{top.get('qid', '?')}:{top.get('score', '?')}"
-                # L3: read skills/{db}.md 且 completed = SOP 命中
+                # L3: read skills/*.md（09-18 起统一为 sop.md）且 completed = SOP 读到
                 elif tname == "read":
                     fp = ((st.get("input") or {}).get("filePath", "") or "")
                     if "skills" in fp:

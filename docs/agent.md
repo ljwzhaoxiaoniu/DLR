@@ -7,7 +7,7 @@ Agent 层负责把自然语言问题变成"语义查询 → 物理映射 → SQL
 ```
 OC-based Agent Service/
 ├── AGENTS.md                 # 唯一的 Agent 行为规则入口（三范式共用）
-├── skills/{db}.md            # L3 领域技能（难题模式 + SOP + fewshot，Agent 按需读取）
+├── skills/sop.md             # L3 领域技能（难题模式 + SOP；**合并单文件**，Agent 开局优先读）
 ├── oc_er/opencode.json       # → localhost:28765/mcp/sse
 ├── oc_dlr/opencode.json      # → localhost:28775/mcp/sse
 └── oc_rdf/opencode.json      # → localhost:28785/mcp/sse
@@ -27,7 +27,7 @@ OC-based Agent Service/
 | 回答规范 | 证据驱动，引用工具名 + 字段 |
 | Final Answer 模板 | `Final Answer: <结果>` + `Evidence SQL: <SQL>`（评测流水线双通道校验依赖此格式） |
 | 三级并行锚定 | 拿到 question 后同时发 L1 语义召回 / L2 证据检索 / L3 领域技能，交叉验证后锚定实体再写 SQL（见 tsm-design.md） |
-| L3 触发 | 预防（题面含陷阱模式）+ 救场（SQL 连续 2 次失败/结果可疑时回读 skills 自查）；文件访问限定 skills/{db}.md（db 来自 L1 返回） |
+| L3 触发 | **开局优先读**（固定路径 `skills/sop.md`，不需要先知道 db）+ 预防（题面含陷阱模式）+ 救场（SQL 连续 2 次失败/结果可疑时回读自查）；有对应节就按它执行，没有就跳过（常态） |
 
 > **Prompt 铁律**（2026-07-18 确立，2026-08-25 修订）：评测脚本的 Prompt 只传 `Question: ...`（纯 question，不注入 evidence），**所有**行为规则只写 AGENTS.md，禁止在脚本里塞工具推荐/禁令/输出格式。evidence 的领域知识由 Agent 经 L2 `search_evidence` 主动检索。见 [evaluation.md](evaluation.md)。
 
@@ -36,7 +36,7 @@ OC-based Agent Service/
 | 层级 | 机制 | 效果 |
 |------|------|------|
 | **opencode.json** | `permission: {bash, task, read, glob, grep: "deny"}` | Agent 只有 MCP 工具，无文件系统/子代理后门 |
-| **L3 读取豁免（✅ 2026-08-27 已解决）** | 三级语义建模要求 Agent 读 `skills/{db}.md`，与 `read: "deny"` 冲突 | 采用**白名单**：`"read": {"*": "deny", "skills/*.md": "allow", "skills\\*.md": "allow"}`（opencode 按 git-worktree 相对路径匹配，**正反斜杠两种写法都要给**）。skills 有 4 份副本——`OC-based Agent Service/skills/` + `oc_{er,dlr,rdf}/skills/`，**改 skills 必须同步全部副本** |
+| **L3 读取豁免（✅ 2026-08-27 已解决）** | 三级语义建模要求 Agent 读 `skills/sop.md`，与 `read: "deny"` 冲突 | 采用**白名单**：`"read": {"*": "deny", "skills/*.md": "allow", "skills\\*.md": "allow"}`（opencode 按 git-worktree 相对路径匹配，**正反斜杠两种写法都要给**；`sop.md` 落在 `skills/*.md` 内，无需改配置）。skills 有 4 份副本——`OC-based Agent Service/skills/` + `oc_{er,dlr,rdf}/skills/`，**改 skills 必须同步全部副本** |
 | **execute_sql MCP** | 薄透传服务（`sql` + `database_url`，只读），200 行硬截断 | SQL 执行的唯一正经路径；`database_url` 必须来自映射工具返回 |
 | **MCP 范式隔离** | 服务端按 `_mapping_type` 注册工具子集 | Agent 只能看到当前范式的工具 |
 | **第一跳信息屏蔽** | `*_semantic_query` 不返回物理表/字段/database_url | 物理信息必须经第二跳映射工具按需获取 |
