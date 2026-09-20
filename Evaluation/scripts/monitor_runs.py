@@ -11,9 +11,11 @@
 
 只显示范式 / 题号 / 时间（跳秒）—— 不看 CPU、内存。依赖 psutil，只读采样、零侵入。
 
-批次来自执行器进程 argv（run_parallel.sh <paradigm> <qid...> --run-id X）；题状态来自
-outputs2/01_logs/<run_id>/<paradigm>/：`.err`=失败、非空 `<qid>.json`=成功。找不到执行器
-时（手工起监控）退回按 .last_run_id 的日志目录估算。
+批次来自执行器进程 argv（run_parallel.sh <paradigm> <qid...> --run-id X），同一批次的
+多个执行器进程（父壳 + worker 子壳）合并成一条；题状态来自
+outputs2/01_logs/<run_id>/<paradigm>/：有 agent 进程=RUN；无进程时 `.err` 留存=失败
+（`.err` 起跑就建、成功才删，别把它当"运行中即失败"）、非空 `<qid>.json`=成功。找不到
+执行器时（手工起监控）退回按 .last_run_id 的日志目录估算。
 
 用法:
     python monitor_runs.py                # 单次快照
@@ -118,7 +120,23 @@ def collect_batches():
         if qids:
             batches.append({"run_id": run_id, "paradigm": paradigm, "qids": qids,
                             "start": p.info.get("create_time") or 0.0})
-    return batches, alive
+    return _merge_batches(batches), alive
+
+
+def _merge_batches(batches):
+    """同一批次的多个执行器进程（父壳 + 各 worker 子壳都带 run_parallel.sh 名）合并成一条：
+    qids 取并集、start 取最早——否则一个批次被渲染成 N 块重复。"""
+    merged = {}
+    for b in batches:
+        key = (b["run_id"], b["paradigm"])
+        m = merged.get(key)
+        if m is None:
+            merged[key] = {**b, "qids": sorted(set(b["qids"]))}
+            continue
+        m["qids"] = sorted(set(m["qids"]) | set(b["qids"]))
+        if b.get("start") and (not m.get("start") or b["start"] < m["start"]):
+            m["start"] = b["start"]
+    return sorted(merged.values(), key=lambda x: (x["run_id"], x["paradigm"]))
 
 
 def batches_from_logdir():
@@ -150,6 +168,21 @@ def batches_from_logdir():
     return out
 
 
+def merge_with_logdir(batches):
+    """执行器退出 ≠ 该范式没跑过：把**同一 run**里执行器已退出的范式从日志目录补回来。
+    否则某个范式一跑完，它那一块就从视图里消失（直到全部跑完才整体回退重现身）——
+    2026-09-20 用户实跑观察到的"中间消失了一下"。"""
+    logdir = batches_from_logdir()
+    if not batches:
+        return logdir
+    live = {b["run_id"] for b in batches}
+    known = {(b["run_id"], b["paradigm"]) for b in batches}
+    for b in logdir:
+        if b["run_id"] in live and (b["run_id"], b["paradigm"]) not in known:
+            batches.append(b)
+    return sorted(batches, key=lambda x: (x["run_id"], x["paradigm"]))
+
+
 def question_rows(batch, agents, now, log_root):
     """批次内每题一行：(状态, 题号, 时间)。RUN=在跑 / OK=完成 / FAIL=失败 / WAIT=没开始。"""
     running = {(a["paradigm"], a["qid"]): a for a in agents}
@@ -157,10 +190,12 @@ def question_rows(batch, agents, now, log_root):
     rows = []
     for qid in batch["qids"]:
         json_f, err_f = pdir / f"{qid}.json", pdir / f"{qid}.err"
-        if err_f.exists():
-            rows.append(("FAIL", qid, max(_mtime(err_f) - _mtime(json_f), 0)))
-        elif (batch["paradigm"], qid) in running:
+        # 顺序要紧：.err 是 run_parallel.sh 起跑就用 2> 重定向建出来的、**成功才删**，
+        # 所以"有 .err" ≠ 失败——先问 agent 进程在不在，再看 .err 是否留存下来。
+        if (batch["paradigm"], qid) in running:
             rows.append(("RUN ", qid, now - running[(batch["paradigm"], qid)]["start"]))
+        elif err_f.exists():
+            rows.append(("FAIL", qid, max(_mtime(err_f) - _mtime(json_f), 0)))
         elif json_f.exists() and json_f.stat().st_size > 0:
             # 日志文件全程被追加写：mtime=跑完时刻，ctime=开跑时刻
             try:
@@ -174,12 +209,14 @@ def question_rows(batch, agents, now, log_root):
 
 
 def render(batches, agents, now, log_root=None, watching=False, rows_override=None):
+    """整帧拼成一个字符串返回——调用方一次 write 出去，清屏与重绘之间不留空窗
+    （分多次 print 时，Windows 控制台会看到"闪一下空白"）。"""
     log_root = log_root or LOG_ROOT
-    head = f"  Eval Monitor  {datetime.now().strftime('%H:%M:%S')}"
-    print(head + ("        (Ctrl-C 退出)" if watching else ""))
+    out = [f"  Eval Monitor  {datetime.now().strftime('%H:%M:%S')}"
+           + ("        (Ctrl-C 退出)" if watching else "")]
     if not batches:
-        print("  -- no eval processes running")
-        return
+        out.append("  -- no eval processes running")
+        return "\n".join(out) + "\n"
     for b in batches:
         total = len(b["qids"])
         starts = [s for s in [b.get("start")] if s] + \
@@ -202,13 +239,13 @@ def render(batches, agents, now, log_root=None, watching=False, rows_override=No
             tail = f"{rate:.1f}s/题"
         else:
             eta, tail = "?", "?s/题"
-        print(f"  ==================================================")
-        print(f"  [MONITOR] {b['run_id']}")
-        print(f"  [{b['paradigm'].upper()}] 跑题: {int(done / total * 100) if total else 0:3d}%|{bar}| "
-              f"{done}/{total} [{fmt_dur(elapsed)}<{eta}, {tail}]")
+        out.append("  ==================================================")
+        out.append(f"  [MONITOR] {b['run_id']}")
+        out.append(f"  [{b['paradigm'].upper()}] 跑题: {int(done / total * 100) if total else 0:3d}%|{bar}| "
+                   f"{done}/{total} [{fmt_dur(elapsed)}<{eta}, {tail}]")
         for st, qid, dur in rows:
-            print(f"    [{st}] q{qid}  {fmt_dur(dur) if dur else '--:--'}")
-    print()
+            out.append(f"    [{st}] q{qid}  {fmt_dur(dur) if dur else '--:--'}")
+    return "\n".join(out) + "\n"
 
 
 def runner_alive():
@@ -250,7 +287,7 @@ def main():
                   {"paradigm": "dlr", "qid": 1476, "start": now - 18}]
         rows = [("OK  ", 1471, 62), ("OK  ", 1472, 88),
                 ("RUN ", 1473, 41), ("RUN ", 1476, 18)]
-        render([batch], agents, now, watching=True, rows_override=rows)
+        sys.stdout.write(render([batch], agents, now, watching=True, rows_override=rows))
         return
 
     seen, idle_since, waited = False, None, 0.0
@@ -261,11 +298,12 @@ def main():
                 return
             agents, now = got
             batches, alive = collect_batches()
-            if not batches:
-                batches = batches_from_logdir()
-            if a.watch:
-                sys.stdout.write("\033[2J\033[H")  # 清屏，模拟 top
-            render(batches, agents, now, watching=bool(a.watch))
+            # 跑完的范式按日志补回来（执行器退了 ≠ 该块该消失）
+            batches = merge_with_logdir(batches)
+            frame = render(batches, agents, now, watching=bool(a.watch))
+            # 清屏 + 整帧一次写出（分多次 print 会在 Windows 控制台上闪一下空白）
+            sys.stdout.write(("\033[2J\033[H" if a.watch else "") + frame)
+            sys.stdout.flush()
             if not a.watch:
                 break
             if a.until_done:
