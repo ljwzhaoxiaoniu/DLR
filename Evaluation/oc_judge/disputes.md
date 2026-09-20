@@ -33,6 +33,12 @@
 
 ## debit_card_specializing
 
+### q1473（evidence 公式与表粒度矛盾，gold 照错口径）
+- Q: What was the average monthly consumption of customers in SME for the year 2013?
+- 缺陷：evidence（kid7）`Average Monthly consumption = AVG(Consumption)/12` 与表粒度矛盾——`yearmonth` 每行已是"某客户某月"的月度值，再除 12 等于把月度值当年度值二次摊薄，得 459.956；gold 照该口径取值。
+- 裁定：正确口径 = plain `AVG(Consumption)`（SME ∩ 2013）-> **5519.475171**（SQLite 独立重放，178,337 行）。Pred = 5519.475 = CORRECT；Pred = 459.96（撞 gold 错口径）= INCORRECT。
+- 依据：`skills/sop.md` 本题条目（L3 唯一入口，judge 同读）——"trust the table and the question's own words"。
+
 ### q1481（gold 未过滤"最低消费客户"）
 - Q: What is the difference in the annual average consumption of the customers with the least amount of consumption in each segment paid in CZK for 2013...?
 - 缺陷：gold 算全段客户均值差（[-582092.86, 582092.86, 0]），未先筛每段最低消费客户。

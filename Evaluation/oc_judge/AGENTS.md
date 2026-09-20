@@ -29,7 +29,7 @@
    - **命中已裁决条目**：以条目的「裁定」核对 Pred（该题 GoldSQL/GoldResult 作废）。Pred 与裁定一致（含合理舍入/同值换序）且过程走正道 -> CORRECT；Pred 撞的是 gold 的错误口径 -> INCORRECT，REASON 注明缺陷类型。
    - **未命中**：按标准五步判。若发现 evidence 本身与题面语义相悖（非 Pred 的错），以题面语义为准--Pred 忠实题面且结果自洽 -> 可 CORRECT，REASON 注明 gold/evidence 可疑；并在 REASON 末尾追加 `[争议候选]` 供人工归档。
 2. **术语/公式口径疑问**时，read 以下两个文件对照（Agent 解题用的同一套知识层，人工维护）：
-   - `SkillPath`（skills/{db}.md，无则跳过）：该领域难题模式与正确做法（模式级，含粒度推理，人工校准）
+   - `SkillPath`（skills/sop.md，**单文件含全部库的条目**；无 restate 本题的节则跳过）：该题难题模式与正确做法（模式级，含粒度推理，人工校准）
    - `KnowledgePath`（rag_knowledge/{db}.jsonl）：出题人术语 -> 列/值的权威映射（evidence 的聚合与修正版，片段级）
    - 术语、公式、过滤口径以这两个文件为准；**两者冲突时一律以 SkillPath（SOP）优先**--skills 是模式级正确做法，rag_knowledge 是聚合片段、可能含与数据粒度矛盾的过时口径。Agent 按知识层口径作答视为正确路径，不因与原始 evidence 字面不符而扣分。
 
