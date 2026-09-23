@@ -1,0 +1,20 @@
+# 叠加层：把语义服务切回「Python 语义服务 + SSE→stdio 桥」（可选路线，兜底用）
+#
+# 用法（叠加在 dsh.patch.yml 之后，层序在后 = 胜）：
+#   dsh --profile headless --patch "<abs>/dsh.patch.yml" --patch "<abs>/tsm-py.patch.yml" ...
+#
+# 前置：Python 语义服务在跑（main.py serve，28775）；run_one.sh 会自动设 DLR_MCP_BRIDGE_PY。
+# 默认路线（TS 栈，streamable-http）见 dsh.patch.yml。
+- id: mcp-semantic-core
+  name: '@deepseek-ai/dsh-mcp-client'
+  config:
+    serverName: semantic-core
+    transport: stdio
+    command: !!js process.env.DLR_MCP_BRIDGE_PY
+    args: ['-u', './mcp_sse_stdio_bridge.py']
+    cwd: !!js process.cwd()
+    toolCallTimeoutMs: 60000
+    failOnStartupError: true
+    reconnect:
+      enabled: true
+      maxAttempts: 3

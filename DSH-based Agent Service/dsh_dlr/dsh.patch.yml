@@ -6,8 +6,8 @@
 #   - id 未命中只 warn 不致命 → 每次改动后用 `--dump-config` 核对 stderr；
 #   - 层序：base < headless < profile < $DSH_HOME < 本文件（最后 = 必胜）。
 #
-# DLR 语义服务经 stdio 桥接入（dsh 的 MCP 客户端不支持 SSE；直接 stdio 起
-# mcp_server.py 会在每个会话再开一个 Kuzu 库 → 并发撞锁，见桥脚本注释）。
+# 默认路线：TSM Core Service（TS 栈，streamable-http，端口 28795）——无需桥、无 Python。
+# 兜底路线（Python 语义服务 + SSE→stdio 桥）见 tsm-py.patch.yml。
 # ══════════════════════════════════════════════════════════════════════
 
 # ── 一、改配置（保留行）───────────────────────────────────────────────
@@ -142,16 +142,14 @@
 - id: session-title-llm
   disabled: true
 
-# ── 三、新增：DLR MCP 客户端（stdio 起桥 → 转发到共享 SSE 服务）──────
+# ── 三、新增：DLR MCP 客户端（默认走 TS 栈；Python 兜底见 tsm-py.patch.yml）──
 - insert:
     - id: mcp-semantic-core
       name: '@deepseek-ai/dsh-mcp-client'
       config:
         serverName: semantic-core
-        transport: stdio
-        command: !!js process.env.DLR_MCP_BRIDGE_PY
-        args: ['-u', './mcp_sse_stdio_bridge.py']
-        cwd: !!js process.cwd()
+        transport: streamable-http
+        url: http://127.0.0.1:28795/mcp
         toolCallTimeoutMs: 60000
         failOnStartupError: true
         reconnect:

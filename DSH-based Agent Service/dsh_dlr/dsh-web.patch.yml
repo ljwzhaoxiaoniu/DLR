@@ -83,11 +83,8 @@
             name: '@deepseek-ai/dsh-mcp-client'
             config:
               serverName: semantic-core
-              transport: stdio
-              command: !!js process.env.DLR_MCP_BRIDGE_PY
-              args:
-                - '-u'
-                - 'D:/Code_Proj/DLR Proj/DSH-based Agent Service/dsh_dlr/mcp_sse_stdio_bridge.py'
+              transport: streamable-http     # 默认走 TSM Core Service（TS 栈）
+              url: http://127.0.0.1:28795/mcp
               toolCallTimeoutMs: 60000
               failOnStartupError: true
               reconnect:

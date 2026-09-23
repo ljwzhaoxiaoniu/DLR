@@ -13,8 +13,8 @@
 set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd -W)"
-ROOT="$(cd "$HERE/../.." && pwd -W)"
-SRC="${1:-$ROOT/OC-based Agent Service/skills/sop.md}"
+SVC_DIR="$(cd "$HERE/.." && pwd -W)"
+SRC="${1:-$SVC_DIR/domains/minidev/sop.md}"
 NAME="${2:-sop}"
 DST="$HERE/skills/$NAME/SKILL.md"
 
