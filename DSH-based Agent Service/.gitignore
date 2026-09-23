@@ -1,0 +1,8 @@
+# dsh 运行时数据（$DSH_HOME 指到仓库内，见 run_one.sh）
+.dsh-home/
+# 凭据（复制 .env.example 而来）
+dsh_dlr/.env
+# 运行产物
+*.err
+__pycache__/
+*.pyc

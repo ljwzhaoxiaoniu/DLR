@@ -1,0 +1,159 @@
+# ══════════════════════════════════════════════════════════════════════
+# DLR-only 受限组合（骑在 base + headless 之上，用 --patch 引入）
+#
+# 语义（对安装版源码核实）：
+#   - 按 id 覆写 = 浅赋值；config 是「整块替换」，要保留的字段必须重述；
+#   - id 未命中只 warn 不致命 → 每次改动后用 `--dump-config` 核对 stderr；
+#   - 层序：base < headless < profile < $DSH_HOME < 本文件（最后 = 必胜）。
+#
+# DLR 语义服务经 stdio 桥接入（dsh 的 MCP 客户端不支持 SSE；直接 stdio 起
+# mcp_server.py 会在每个会话再开一个 Kuzu 库 → 并发撞锁，见桥脚本注释）。
+# ══════════════════════════════════════════════════════════════════════
+
+# ── 一、改配置（保留行）───────────────────────────────────────────────
+
+# persona：钉成语义业务助手；删掉 headless 默认的 "coding agent" 与
+# "Your working directory is {{cwd}}."（后者诱导模型去探索文件系统）。
+- id: system-prompt
+  name: '@deepseek-ai/dsh-system-prompt'
+  config:
+    personaPrefix: '你是语义业务助手（DLR 语义建模范式的业务问答 agent），不是通用编程工具，也不是 CLI/coding agent；无论被问"你是谁""你是什么"，都按语义业务助手的职责回答。'
+    personaSuffix: ''
+
+# 模型：沿用 base 的 deepseek-official 路由（口径对齐见 README「与 OC 版差异」）。
+- id: agent-default-model
+  name: '@deepseek-ai/dsh-agent-default-model'
+  config:
+    provider: deepseek-official
+    model: deepseek-flash
+
+# AGENTS.md 加载器：候选只留 AGENTS.md（排除仓库根 CLAUDE.md），关掉 local overlay。
+- id: agent-instructions
+  name: '@deepseek-ai/dsh-agent-instructions'
+  config:
+    maxBytes: 65536
+    instructionFileCandidates: ['AGENTS.md']
+    localInstructionFileCandidates: []
+
+# 技能源：关掉 project/user 默认根，只认 ./skills（相对 cwd，即 dsh_dlr/skills）。
+- id: skill-filesystem
+  name: '@deepseek-ai/dsh-skill-filesystem'
+  config:
+    includeDefaultRoots: false
+    customSkillDirs: ['./skills']
+
+# MCP 结果剪裁：默认 8192 字符对 MCP JSON 偏小，会静默腰斩候选实体 → 抬高。
+- id: tool-result-pruner
+  name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+  config:
+    thresholdChars: 48000
+    headChars: 40000
+    tailChars: 5000
+
+# 会话日志回传：每轮请求会附带 session log，影响 token 口径 → 关。
+- id: session-log-deepseek
+  name: '@deepseek-ai/dsh-session-log-deepseek'
+  config:
+    enabled: false
+
+# ── 二、禁用（能力移除 + 降噪）────────────────────────────────────────
+
+# 2.1 shell / 文件读写 / 搜索（对应 OC 版 permission.bash/write/read/glob/grep = deny）
+- id: tool-bash
+  disabled: true
+- id: tool-pwsh
+  disabled: true
+- id: tool-jobs
+  disabled: true
+- id: tool-fs
+  disabled: true
+- id: tool-fs-search
+  disabled: true
+- id: fs-observation-policy
+  disabled: true
+
+# 2.2 网络
+- id: tool-web
+  disabled: true
+- id: web-search-deepseek
+  disabled: true
+
+# 2.3 任务管理 / 规划 / 子 agent / 工作流
+- id: tool-todo
+  disabled: true
+- id: plan-mode
+  disabled: true
+- id: tool-goal
+  disabled: true
+- id: goal
+  disabled: true
+- id: goal-round-driver
+  disabled: true
+- id: command-goal
+  disabled: true
+- id: tool-subagent
+  disabled: true
+- id: tool-subagent-fork
+  disabled: true
+- id: tool-subagent-control
+  disabled: true
+- id: tool-subagent-list-agents
+  disabled: true
+- id: subagent
+  disabled: true
+- id: subagent-spawn-in-process
+  disabled: true
+- id: subagent-fork-in-process
+  disabled: true
+- id: tool-workflow
+  disabled: true
+- id: workflow-ptc
+  disabled: true
+- id: ptc-runtime
+  disabled: true
+
+# 2.4 headless 下无 UI 可用的斜杠命令
+- id: commands
+  disabled: true
+- id: command-feedback
+  disabled: true
+- id: command-compact
+  disabled: true
+
+# 2.5 MCP resources（本服务只提供 tools，没有 resources）
+- id: mcp-resources
+  disabled: true
+
+# 2.6 spill：超限结果会被换成"预览 + 定位符"，而本组合没有 read 工具取回 → 静默丢数据
+- id: spill-local
+  disabled: true
+- id: spill-policy
+  disabled: true
+
+# 2.7 图片卸载（无图片输入）
+- id: image-offload
+  disabled: true
+
+# 2.8 重复调用提醒（消息注入会改变 Agent 行为；OC 基线无此机制，关掉对齐）
+- id: repeat-tool-reminder
+  disabled: true
+
+# 2.9 首次请求额外一次标题模型调用，污染 token 口径
+- id: session-title-llm
+  disabled: true
+
+# ── 三、新增：DLR MCP 客户端（stdio 起桥 → 转发到共享 SSE 服务）──────
+- insert:
+    - id: mcp-semantic-core
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: semantic-core
+        transport: stdio
+        command: !!js process.env.DLR_MCP_BRIDGE_PY
+        args: ['-u', './mcp_sse_stdio_bridge.py']
+        cwd: !!js process.cwd()
+        toolCallTimeoutMs: 60000
+        failOnStartupError: true
+        reconnect:
+          enabled: true
+          maxAttempts: 3

@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.env
+# 本地模型（ONNX）不随仓库走；由脚本从 hf-mirror 拉取
+models/
+# 本地存储（LanceDB 等构建产物）
+.store/

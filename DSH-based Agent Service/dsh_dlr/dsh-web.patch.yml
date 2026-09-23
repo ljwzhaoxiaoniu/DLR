@@ -1,0 +1,115 @@
+# ══════════════════════════════════════════════════════════════════════
+# DLR-only 的 Web 版组合（骑在 base + web bundle 之上，用 --patch 引入）
+#
+# 与 dsh.patch.yml（headless 版）的关系：
+#   - 共用：桥、sop 技能、AGENTS.md、.env —— 只是「装配面」不同；
+#   - web 的工具归属 **agent preset**，所以核心是新增 preset-dlr；
+#   - web 已在进程级禁用大部分工具行（tool-bash/fs/search/web/todo…），
+#     headless 那串 disable 在这里大半冗余，只补 web 没禁且对 DLR 有影响的；
+#   - 技能目录必须**绝对路径**（web 的 cwd = 你在 UI 里选的工作区）；
+#   - 注册表默认 preset 指到 dlr（新会话默认就是语义业务助手）。
+#
+# 启动：bash dsh_dlr/run_web.sh（不用裸 `dsh web`，否则 DLR_MCP_BRIDGE_PY 没设）
+# ══════════════════════════════════════════════════════════════════════
+
+# ── 一、进程级收尾（web 未禁、且会影响 DLR 会话的）─────────────────
+
+- id: session-log-deepseek
+  name: '@deepseek-ai/dsh-session-log-deepseek'
+  config:
+    enabled: false
+
+- id: spill-local
+  disabled: true
+- id: spill-policy
+  disabled: true
+- id: repeat-tool-reminder
+  disabled: true
+- id: mcp-resources          # 本服务只有 tools，没有 resources
+  disabled: true
+- id: session-title-llm      # 额外一次标题模型调用，污染 token 口径
+  disabled: true
+
+# ── 一·五、目录选择器：钉住 browse 曲面（Windows 修复）──────────────
+# Windows 上 native 曲面会崩（官方已知问题：win32 folder dialog worker exited
+# before reporting a result）。auto 行在本机解析为 native → 换成应用内
+# Miller 分栏浏览器（browse，不弹系统对话框）。
+# 注意两点：① 两张曲面不能同挂（duplicate directoryPicker 会 fail loud）；
+# ② patch 里的 `name` 只是断言、改不了行的插件 → 必须「禁 auto + 新增 browse」。
+- id: directory-picker
+  disabled: true
+- insert:
+    - id: directory-picker-browse
+      name: '@deepseek-ai/dsh-host-directory-picker-browse'
+
+# ── 二、默认 preset → dlr ───────────────────────────────────────────
+- id: agent-preset-registry
+  name: '@deepseek-ai/dsh-agent-preset-registry'
+  config:
+    default: dlr
+
+# ── 三、新增 preset-dlr（照 standard preset 做减法）─────────────────
+- insert:
+    - id: preset-dlr
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: dlr
+        order: 0
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: '你是语义业务助手（DLR 语义建模范式的业务问答 agent），不是通用编程工具，也不是 CLI/coding agent；无论被问"你是谁""你是什么"，都按语义业务助手的职责回答。'
+              complete: true
+              includeRuntimeContext: false
+
+          - id: agent-instructions
+            name: '@deepseek-ai/dsh-agent-instructions'
+            config:
+              maxBytes: 65536
+              instructionFileCandidates: ['AGENTS.md']
+              localInstructionFileCandidates: []
+
+          - id: skill-provider
+            name: '@deepseek-ai/dsh-skill-filesystem'
+            config:
+              includeDefaultRoots: false
+              customSkillDirs:
+                - 'D:/Code_Proj/DLR Proj/DSH-based Agent Service/dsh_dlr/skills'
+          - id: skill-tool
+            name: '@deepseek-ai/dsh-tool-skill'
+
+          - id: mcp-semantic-core
+            name: '@deepseek-ai/dsh-mcp-client'
+            config:
+              serverName: semantic-core
+              transport: stdio
+              command: !!js process.env.DLR_MCP_BRIDGE_PY
+              args:
+                - '-u'
+                - 'D:/Code_Proj/DLR Proj/DSH-based Agent Service/dsh_dlr/mcp_sse_stdio_bridge.py'
+              toolCallTimeoutMs: 60000
+              failOnStartupError: true
+              reconnect:
+                enabled: true
+                maxAttempts: 3
+
+          # 长对话保险（web 是人在环路，可能聊很久）
+          # isolate 必填：preset 服务必须跑在隔离域，缺了会报
+          # "agent preset dlr: Preset services require isolate realms:
+          #  compaction, toolResultPruner"（照 standard preset 同名字段抄）
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 48000
+                  headChars: 40000
+                  tailChars: 5000
