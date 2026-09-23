@@ -10,7 +10,7 @@ description: DLR + 三级语义建模（TSM）的范式认知：DLR 数据源级
 | 级 | 载体 | 回答什么 | 怎么拿到 |
 |---|---|---|---|
 | L1 数据源级 | DLR 语义图谱（LE / PE / ARC） | 这个领域**有什么**：业务概念、落地在哪、怎么连 | `mcp__semantic-core__dlr_semantic_query` → `get_pe_mapping` / `get_le_attrs` |
-| L2 领域共识级 | 领域共识条目（带 `kid`） | 题面用词**怎么算 / 怎么过滤**：术语→列值、公式、口径 | `mcp__semantic-core__dlr_search_consensus` |
+| L2 领域共识级 | 领域共识条目（带 `kid`；基于 L1 schema、**非 workflow**） | 题面用词**怎么算 / 怎么过滤**：术语→列值、公式、口径 | `mcp__semantic-core__dlr_search_consensus` |
 | L3 业务逻辑级 | `sop` 技能 | 这道题**怎么裁**：题干级口径与陷阱 | `skill(name="sop")` |
 
 **判序**（冲突时）：题级仲裁（L3）> 领域共识（L2）> 你自身的常识。L1 只提供结构，不提供口径。

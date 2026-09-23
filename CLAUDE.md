@@ -8,7 +8,8 @@
 
 - **2.0 日常**：`scenarios/<场景>/`（一套完整 TSM 的内容：`sources/{configs=L1, consensus=L2, sop.md=L3}` + `fixtures/`，当前 `birdminidev`）＋ `TSM Core Service/`（TS 语义服务：LanceDB + Neo4j）＋ `DSH-based Agent Service/`（dsh 接入）
 - **评测线**（v4 基线、opencode 四阶段、归档）：在 `dlr-eval-v1.5` 分支 / 另一份检出。本分支**已移除 `OC-based Agent Service/` 与 `Semantic Core Service/`**；`Evaluation/`、`docs/` 中指向它们的引用仅评测线有效
-- **术语（三级标识，定案 2026-09-23）**：L1 = **`dlr`**（DLR 语义图谱）｜ L2 = **`consensus`**（Domain Consensus——刻意**不用 "knowledge"**：它是**领域共识**（约定/口径），区别于传统知识库/KG 的"知识"）｜ L3 = **`sop`**（SOP，题级流程/打法，skill 形态交付）。中文级名：数据源级 / 领域共识级 / 业务逻辑级
+- **术语（三级标识，定案 2026-09-23）**：L1 = **`dlr`**（DLR 语义图谱）｜ L2 = **`consensus`**（Domain Consensus = **场景所需的、基于 L1 schema 的一类「非 workflow」知识**：术语 / 口径 / 背景；工作流与题级打法归 L3。刻意不用 "knowledge" 作名——区别于传统知识库/KG）｜ L3 = **`sop`**（SOP，题级流程/打法，skill 形态交付）。中文级名：数据源级 / 领域共识级 / 业务逻辑级
+- **L2/L3 准入判据**：非 workflow → `consensus`；题级流程/打法/陷阱 → `sop`
 - 源数据里的 `evidence`（BIRD 字段）/ `knowledge`（聚合格式字段）只是**源格式字段名**，不是范式术语（loader 两种都兼容）
 - 2.0 命令速查：
 

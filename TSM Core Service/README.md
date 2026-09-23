@@ -3,8 +3,9 @@
 2.0 线的 TSM 服务：**Neo4j（图）+ LanceDB（向量/共识）+ ONNX（编码器）** 的 TypeScript 实现，
 契约 = MCP 5 工具（L2 工具名与 Python 线不同，见下）。用于插件化（无 Python、无 sidecar）。
 
-> 三级语义建模（TSM）：**L1 = DLR**（语义图谱）｜**L2 = Domain Consensus**（领域共识：基于 L1 schema 的
-> 背景知识与术语，非明细）｜**L3 = SOP**（题级口径）。注意："evidence" 是 BIRD 数据集的字段名，**不是**范式术语。
+> 三级语义建模（TSM）：**L1 = `dlr`**（语义图谱）｜**L2 = `consensus`**（Domain Consensus = 场景所需的、
+> 基于 L1 schema 的一类**非 workflow** 知识：术语/口径/背景，非明细）｜**L3 = `sop`**（题级流程/打法）。
+> 准入判据：非 workflow → consensus；题级流程/打法 → sop。注意："evidence" 是 BIRD 数据集字段名，**不是**范式术语。
 
 ## 目录
 
