@@ -80,7 +80,7 @@ bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 | 宿主 | opencode | dsh |
 | 语义后端 | Python（Kuzu + FAISS） | **TS（LanceDB + Neo4j）** |
 | 规则入口 | `AGENTS.md`（OC 版） | `AGENTS.md`（dsh 版，内容同源、文件独立） |
-| 知识源 | `OC-based Agent Service/skills/sop.md` | `domains/minidev/sop.md`（已拷贝解耦） |
+| 知识源 | `OC-based Agent Service/skills/sop.md`（评测线分支） | `domains/minidev/sop.md`（本分支已拷贝解耦；OC 树在 2.0 已移除） |
 | 评测管线 | `Evaluation/`（四阶段 + judge + 归档） | **无**（2.0 不以评测轮次为目的；要评测需另建） |
 
 两侧唯一的历史血缘是 AGENTS.md 的内容同源；运行时互不依赖。
