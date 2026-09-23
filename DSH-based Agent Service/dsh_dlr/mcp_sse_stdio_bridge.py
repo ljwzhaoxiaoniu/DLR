@@ -1,8 +1,8 @@
 """stdio MCP 前端 → 转发到共享的 DLR SSE 服务（协议翻译桥）。
 
 为什么需要它：
-  1. dsh 的 MCP 客户端只支持 stdio / streamable-http，不支持 SSE —— 而语义服务
-     目前只挂 /mcp/sse（`Semantic Core Service/main.py`）。
+  1. dsh 的 MCP 客户端只支持 stdio / streamable-http，不支持 SSE —— 而 Python 线语义服务
+     只挂 /mcp/sse（`Semantic Core Service/main.py`，在本分支已移除；兜底路线需 1.5 检出）。
   2. 若让 dsh 直接以 stdio 拉起 mcp_server.py，每个会话都会再开一个 Kuzu 库
      （进程独占锁，见 `db/graph_db.py`）→ 并发必然撞锁。
 

@@ -1,0 +1,37 @@
+{
+ "success": true,
+ "namespace": "debit_card_specializing",
+ "count": 5,
+ "results": [
+  {
+   "qid": 1486,
+   "text": "CZK (Czech Koruna) and EUR (Euro) are billing currencies. CZK is the local Czech currency and the dominant payment method. EUR is the euro, used by a minority of customers.",
+   "question": "[kid=17] CZK (Czech Koruna) and EUR (Euro) are billing currencies. CZK is the local Czech...",
+   "score": 0.7548
+  },
+  {
+   "qid": 1524,
+   "text": "Customer Nationality & Individual Spending: A customer's 'nationality' in this domain means the country where the gas station is located (where the transaction occurred), not a field directly stored on the customer record. When a question asks about a customer who 'spent' or 'paid' a specific exact amount (e.g., 548.4), this refers to a single transaction's price amount, not the monthly aggregated consumption total. Single transaction price and monthly consumption are different concepts — one is a point-in-time purchase amount, the other is a month-level sum across all purchases.",
+   "question": "[kid=18] Customer Nationality & Individual Spending: A customer's 'nationality' in this d...",
+   "score": 0.6412
+  },
+  {
+   "qid": 1480,
+   "text": "Gas consumption refers to the total monthly spending customers make at gas stations on fuel and convenience store purchases, measured in CZK. It is an aggregated business metric per customer per month, not tied to any specific product or fuel type. 'Gas' in this context means the gas station business, not a product category. In this domain, 'consumption' means the monthly aggregated spending amount per customer — a pre-computed total summarizing all purchases within a calendar month. Unit price (what a single item costs at point of sale) is a different concept; consumption is the monthly sum across all items and transactions.",
+   "question": "[kid=16] Gas consumption refers to the total monthly spending customers make at gas stati...",
+   "score": 0.6114
+  },
+  {
+   "qid": 1490,
+   "text": "Percentage Calculation: To calculate the percentage of a part relative to a total, use (Count of Part / Total Count) * 100%. When computing customer-level percentages, the denominator must include ALL customers in the target group — count from the customer master table directly or use LEFT JOIN, never INNER JOIN (which silently drops customers without matching records). When the condition involves a threshold on an aggregated measure (e.g., 'consumed more than X'), first compute the per-customer aggregate via SUM with GROUP BY, then apply the threshold on the aggregated result — do not compare individual rows to the threshold before aggregation.",
+   "question": "[kid=4] Percentage Calculation: To calculate the percentage of a part relative to a tota...",
+   "score": 0.5958
+  },
+  {
+   "qid": 1531,
+   "text": "Unit Price Calculation: Price per unit = Total Price / Total Amount.",
+   "question": "[kid=8] Unit Price Calculation: Price per unit = Total Price / Total Amount....",
+   "score": 0.5505
+  }
+ ]
+}

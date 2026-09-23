@@ -17,19 +17,11 @@ import { z } from "zod";
 import { LanceStore } from "../store/lance.js";
 import { Neo4jGraph } from "../graph/queries.js";
 import { dlrSemanticQuery } from "../queries/semanticQuery.js";
-import { searchEvidence } from "../queries/searchEvidence.js";
+import { searchConsensus } from "../queries/searchConsensus.js";
 import { getPeMapping } from "../queries/peMapping.js";
 import { executeSql } from "../queries/executeSql.js";
 
-const ROOT = "D:/Code_Proj/DLR Proj";
-try {
-  process.loadEnvFile(`${ROOT}/TSM Core Service/.env`);
-} catch {
-  /* 用环境变量 */
-}
-
-const STORE_DIR = process.env.TSM_STORE_DIR ?? `${ROOT}/TSM Core Service/.store/lance/dlr`;
-const MODEL_DIR = process.env.TSM_MODEL_DIR ?? `${ROOT}/tmp_scripts/bge-onnx`;
+import { STORE_DIR, MODEL_DIR } from "../config.js";
 const NEO4J_URI = process.env.NEO4J_URI ?? "bolt://localhost:7687";
 const NEO4J_USER = process.env.NEO4J_USER ?? "neo4j";
 const NEO4J_PASSWORD = process.env.NEO4J_PASSWORD ?? "";
@@ -65,9 +57,11 @@ function createServer(): McpServer {
   );
 
   server.registerTool(
-    "dlr_search_evidence",
+    "dlr_search_consensus",
     {
-      description: "[DLR] L2 证据检索：按库（namespace）召回领域共识条目（术语→列/值、公式、口径）。",
+      description:
+        "[DLR] L2 领域共识检索（Domain Consensus）：按库（namespace）召回领域共识条目——" +
+        "基于 L1 schema 的背景知识与术语（术语→列/值、公式、口径），非明细数据。",
       inputSchema: {
         namespace: z.string().describe("库名，如 debit_card_specializing"),
         question: z.string(),
@@ -75,7 +69,7 @@ function createServer(): McpServer {
       },
     },
     async ({ namespace, question, top_k }) => {
-      const r = await searchEvidence(await getStore(), namespace, question, top_k);
+      const r = await searchConsensus(await getStore(), namespace, question, top_k);
       return { content: [{ type: "text", text: JSON.stringify(r) }] };
     },
   );

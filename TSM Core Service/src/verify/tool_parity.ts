@@ -11,19 +11,11 @@ import { LanceStore } from "../store/lance.js";
 import { Neo4jGraph } from "../graph/queries.js";
 import { dlrSemanticQuery } from "../queries/semanticQuery.js";
 
-const ROOT = "D:/Code_Proj/DLR Proj";
-const STORE = `${ROOT}/TSM Core Service/.store/lance/dlr`;
-const MODEL = `${ROOT}/tmp_scripts/bge-onnx`;
-const PY_JSON = `${ROOT}/tmp_scripts/py_semantic_query.json`;
+import { STORE_DIR as STORE, MODEL_DIR as MODEL, FIXTURES_DIR } from "../config.js";
+const PY_JSON = `${FIXTURES_DIR}/py_semantic_query.json`;
 const Q =
   process.argv[2] ??
   "What is the ratio of customers who pay in EUR against customers who pay in CZK?";
-
-try {
-  process.loadEnvFile(`${ROOT}/TSM Core Service/.env`);
-} catch {
-  /* 用环境变量 */
-}
 
 const store = await LanceStore.open(STORE, MODEL);
 const graph = await Neo4jGraph.connect(

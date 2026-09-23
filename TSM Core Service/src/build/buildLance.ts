@@ -13,16 +13,15 @@ import { TextEncoder } from "../embed/encoder.js";
 import { loadDlrScenario, toVectorRows } from "../model/loadDlr.js";
 import type { VectorRow } from "../model/types.js";
 
-const ROOT = "D:/Code_Proj/DLR Proj";
-const YAML_DIR = `${ROOT}/Semantic Core Service/configs/scenarios/DLR`;
+import { YAML_DIR, STORE_DIR as DEFAULT_STORE, MODEL_DIR as DEFAULT_MODEL_DIR } from "../config.js";
 
 function arg(name: string, fallback: string): string {
   const i = process.argv.indexOf(name);
   return i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : fallback;
 }
 
-const STORE = arg("--store", `${ROOT}/TSM Core Service/.store/lance/dlr`);
-const MODEL_DIR = arg("--model", process.env.TSM_MODEL_DIR ?? `${ROOT}/tmp_scripts/bge-onnx`);
+const STORE = arg("--store", DEFAULT_STORE);
+const MODEL_DIR = arg("--model", DEFAULT_MODEL_DIR);
 const TABLE = "entities";
 const WANT_ALL = process.argv.includes("--all");
 const DBS = WANT_ALL

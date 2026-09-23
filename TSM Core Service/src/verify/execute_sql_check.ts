@@ -5,12 +5,12 @@
 import * as fs from "node:fs";
 import { executeSql } from "../queries/executeSql.js";
 
-const ROOT = "D:/Code_Proj/DLR Proj";
+import { ROOT, FIXTURES_DIR } from "../config.js";
 const DB = `${ROOT}/MINIDEV_sqlite/dev_databases/debit_card_specializing/debit_card_specializing.sqlite`;
 const SQL = `SELECT CAST(SUM(CASE WHEN Currency='EUR' THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN Currency='CZK' THEN 1 ELSE 0 END) AS ratio FROM customers`;
 
 const ts = executeSql(SQL, DB);
-const pyPath = `${ROOT}/tmp_scripts/py_execute_sql.json`;
+const pyPath = `${FIXTURES_DIR}/py_execute_sql.json`;
 const py = fs.existsSync(pyPath) ? JSON.parse(fs.readFileSync(pyPath, "utf8")) : null;
 
 console.log("TS:", JSON.stringify(ts));

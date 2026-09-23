@@ -1,5 +1,5 @@
 /**
- * LanceStore —— LanceDB 访问层（多表：entities=DLR 语义向量；evidence=L2 证据）
+ * LanceStore —— LanceDB 访问层（多表：entities=L1 DLR 语义向量；consensus=L2 领域共识）
  *
  * 口径对齐（与 Python db/vector_db.py、db/evidence_db.py 一致）：
  *   query 文本 → TextEncoder（toLowerCase + CLS + L2 归一化）→ cosine 检索（全量精确）。

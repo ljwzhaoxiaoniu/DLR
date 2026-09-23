@@ -7,12 +7,7 @@ import * as fs from "node:fs";
 import { Neo4jGraph } from "../graph/queries.js";
 import { getPeMapping } from "../queries/peMapping.js";
 
-const ROOT = "D:/Code_Proj/DLR Proj";
-try {
-  process.loadEnvFile(`${ROOT}/TSM Core Service/.env`);
-} catch {
-  /* env */
-}
+import { FIXTURES_DIR } from "../config.js";
 const peId = process.argv[2] ?? "PHYSICAL.YearMonth";
 
 const g = await Neo4jGraph.connect(
@@ -23,7 +18,7 @@ const g = await Neo4jGraph.connect(
 const ts = await getPeMapping(g, peId);
 await g.close();
 
-const py = JSON.parse(fs.readFileSync(`${ROOT}/tmp_scripts/py_pe_mapping.json`, "utf8"));
+const py = JSON.parse(fs.readFileSync(`${FIXTURES_DIR}/py_pe_mapping.json`, "utf8"));
 const a = JSON.stringify(ts);
 const b = JSON.stringify(py);
 console.log(`pe_id=${peId}`);

@@ -2,8 +2,8 @@
 # L3 单一真源同步：<源 sop.md> → skills/<技能名>/SKILL.md（加 frontmatter）。
 #
 # 用法: sync_sop.sh [<源文件>] [<技能名>]
-#   默认: domains/minidev/sop.md → skills/sop/SKILL.md（2.0 自己的知识源，与 OC 线已解耦）
-#   换数据集: bash sync_sop.sh "../../domains/birdmini/sop.md" sop
+#   默认: <repo>/scenarios/birdminidev/sources/sop.md → skills/sop/SKILL.md
+#   换场景: bash sync_sop.sh "../../scenarios/birdmini/sources/sop.md" sop
 #
 # 多数据集约定（一个评测集 = 一套完整 TSM：L1 DLR 图谱 + L2 evidence + L3 本文件）：
 #   - 部署出去的技能名**固定为 sop**——"用哪套"发生在 run 配置层（同步哪个源进来），
@@ -14,7 +14,8 @@ set -euo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd -W)"
 SVC_DIR="$(cd "$HERE/.." && pwd -W)"
-SRC="${1:-$SVC_DIR/domains/minidev/sop.md}"
+ROOT="$(cd "$SVC_DIR/.." && pwd -W)"
+SRC="${1:-$ROOT/scenarios/birdminidev/sources/sop.md}"
 NAME="${2:-sop}"
 DST="$HERE/skills/$NAME/SKILL.md"
 

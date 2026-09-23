@@ -11,10 +11,10 @@
 import * as fs from "node:fs";
 import { loadDlrScenario, toVectorRows } from "../model/loadDlr.js";
 
-const ROOT = "D:/Code_Proj/DLR Proj";
+import { YAML_DIR, FIXTURES_DIR } from "../config.js";
 const DB = process.argv[2] ?? "debit_card_specializing";
-const YAML = `${ROOT}/Semantic Core Service/configs/scenarios/DLR/${DB}.yaml`;
-const MANIFEST = `${ROOT}/tmp_scripts/dlr_vector_manifest.json`;
+const YAML = `${YAML_DIR}/${DB}.yaml`;
+const MANIFEST = `${FIXTURES_DIR}/dlr_vector_manifest.json`;
 
 const rows = toVectorRows(loadDlrScenario(YAML));
 const manifest: { id: string; name: string; type: string; db: string; description?: string }[] =

@@ -1,10 +1,11 @@
 # DSH-based Agent Service — DLR 接入 DeepSeek Harness
 
-把 **DLR 这一个范式**接入 dsh（DeepSeek Harness）。与 `OC-based Agent Service/` 并列但**运行时完全独立**
-（OC 只剩知识源血缘，见下）；`Semantic Core Service/`、`Evaluation/` 一律不动。
+把 **DLR 这一个范式**接入 dsh（DeepSeek Harness）。与 `OC-based Agent Service/`（评测线，1.5 分支）运行时
+**完全独立**；`Evaluation/` 属评测线，本分支不动。
 
-**默认后端 = `TSM Core Service/`（TS 栈：LanceDB + Neo4j + MCP，streamable-http）** —— 无 Python、无桥。
-Python 语义服务 + SSE→stdio 桥保留为兜底路线（`PY_ROUTE=1`）。
+**默认后端 = `TSM Core Service/`（TS/Node 栈：LanceDB + Neo4j + MCP，streamable-http）** —— 无 Python、无桥。
+
+三级语义建模（TSM）：**L1 = DLR** ｜ **L2 = Domain Consensus**（领域共识）｜ **L3 = SOP**。
 
 ## 结构
 
@@ -13,17 +14,16 @@ DSH-based Agent Service/
 ├── AGENTS.md                 # dsh 版评测 Agent 规则（独立文件，只与 OC 版内容同源）
 ├── README.md
 ├── .gitignore                # .dsh-home/、.env
-├── domains/
-│   └── minidev/sop.md        # L3 知识源（2.0 自己的真源；与 OC 解耦）
+├── scripts/start_backend.sh  # 一键起后端（Neo4j + TS MCP server，幂等 + 预检）
 ├── .dsh-home/                # 运行时生成（$DSH_HOME；会话日志在此，可取证可删）
 └── dsh_dlr/
     ├── dsh.patch.yml         # ★ 组合真值（headless）：受限组合 + MCP 行（默认 TS）
     ├── dsh-web.patch.yml     # web 组合：preset-dlr + 进程级收尾 + MCP 行（默认 TS）
-    ├── tsm-py.patch.yml      # 叠加层：切回「Python 服务 + SSE→stdio 桥」
+    ├── tsm-py.patch.yml      # 叠加层：切回「Python 服务 + SSE→stdio 桥」（需 1.5 检出）
     ├── mcp_sse_stdio_bridge.py  # 仅 Python 兜底路线用（~20 行）
-    ├── skills/sop/SKILL.md      # 由 sync_sop.sh 从 domains/minidev/sop.md 生成
-    ├── skills/paradigm/SKILL.md # 范式认知（TSM + DLR 结构，与数据集无关）
-    ├── sync_sop.sh           # L3 同步：domains/<数据集>/sop.md → skills/sop/SKILL.md
+    ├── skills/sop/SKILL.md      # L3 部署件（sync_sop.sh 从场景源生成）
+    ├── skills/paradigm/SKILL.md # 范式认知（TSM + DLR 结构，与场景无关）
+    ├── sync_sop.sh           # L3 同步：scenarios/<场景>/sources/sop.md → skills/sop/SKILL.md
     ├── run_one.sh            # 单题运行器（预检 + dsh headless）
     ├── run_web.sh            # Web UI 启动器（预检 + dsh web）
     └── .env.example          # DEEPSEEK_API_KEY → 复制为 .env
@@ -34,63 +34,48 @@ DSH-based Agent Service/
 | 项 | 值 |
 |---|---|
 | dsh | `@deepseek-ai/dsh@0.1.7-alpha.1`（锁死；升级前重跑 `--dump-config` 核行 id） |
-| **语义后端（默认）** | `TSM Core Service/`：`npx tsx src/mcp/server.ts --http 28795`（需 Neo4j 在跑） |
-| Python 兜底 | `Semantic Core Service/`（`main.py serve`，28775）+ 桥；用 `PY_ROUTE=1` 启用 |
-
-## 一次性准备
-
-```bash
-npm install -g @deepseek-ai/dsh@0.1.7-alpha.1
-cp "DSH-based Agent Service/dsh_dlr/.env.example" "DSH-based Agent Service/dsh_dlr/.env"   # 填 key
-bash "DSH-based Agent Service/dsh_dlr/sync_sop.sh"   # 生成 L3 技能（改过源后重跑）
-# 语义后端：见 TSM Core Service/README（模型 / 向量表 / 证据表 / 图 / MCP server）
-```
+| 语义后端 | `TSM Core Service/`（`src/mcp/server.ts --http 28795`，需 Neo4j 在跑） |
+| Neo4j | 本机 `D:\neo4j`（免安装 zip + 便携 JDK）或任意 bolt 端点 |
 
 ## 运行
 
 ```bash
-# 起后端（TS 栈，streamable-http）
-cd "TSM Core Service" && npx tsx src/mcp/server.ts --http 28795 &
+bash "DSH-based Agent Service/scripts/start_backend.sh"        # 起后端（幂等）
 
 # 单题（自动预检后端）
 bash "DSH-based Agent Service/dsh_dlr/run_one.sh" 1471 "What is the ratio of customers who pay in EUR against customers who pay in CZK?"
-PY_ROUTE=1 bash "…/run_one.sh" …   # 兜底：走 Python 服务 + 桥
 
-# Web UI（默认 preset = dlr；进 UI 先选工作区 DSH-based Agent Service）
+# Web 对话（默认 preset = dlr；进 UI 先选工作区 DSH-based Agent Service）
 bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 ```
 
-## 多数据集组织（约定）
+## 场景（scenario = 一套完整 TSM）
 
-**一个评测集 = 一套完整 TSM**：L1 DLR 图谱 + L2 evidence + L3 `sop` 文件（+ 全局共用的 `paradigm` 认知技能）。
+内容在仓库根 `scenarios/<name>/`（当前 `birdminidev`）：
 
-| 层 | 换数据集时 | 载体 |
+| 层 | 换场景时 | 载体 |
 |---|---|---|
-| L1 数据源级 | 重新建模/构建 | `TSM Core Service/`（YAML→LanceDB/Neo4j） |
-| L2 领域共识级 | 换一组 evidence | `rag_knowledge/*.jsonl` → `buildEvidence.ts`（按 namespace 隔离） |
-| L3 业务逻辑级 | 换一个源文件 | `domains/<dataset>/sop.md` → `sync_sop.sh` 生成部署件 |
-| 认知层 | **不动** | `skills/paradigm/SKILL.md` |
+| L1 DLR | 重新建模/构建 | `scenarios/<s>/sources/configs/{ER,DLR,RDF}/*.yaml` → `TSM Core Service` 构建 |
+| L2 Domain Consensus | 换一组共识源 | `scenarios/<s>/sources/consensus/*.jsonl` → `buildConsensus.ts`（namespace 隔离） |
+| L3 SOP | 换一个源文件 | `scenarios/<s>/sources/sop.md` → `sync_sop.sh` 生成部署件 |
+| 认知层 | **不动** | `skills/paradigm/SKILL.md`（与场景无关） |
+| 对照真值 | 随场景 | `scenarios/<s>/fixtures/*.json`（verify 套件用） |
 
 **铁律：部署出去的 L3 技能名永远是 `sop`**——"用哪套"发生在 run 配置层，模型层永远不需要选。
 
-## 与 OC 线的关系
+## MCP 工具面（5 + skill）
 
-| | OC 评测线 | 本树（2.0 / dsh） |
-|---|---|---|
-| 宿主 | opencode | dsh |
-| 语义后端 | Python（Kuzu + FAISS） | **TS（LanceDB + Neo4j）** |
-| 规则入口 | `AGENTS.md`（OC 版） | `AGENTS.md`（dsh 版，内容同源、文件独立） |
-| 知识源 | `OC-based Agent Service/skills/sop.md`（评测线分支） | `domains/minidev/sop.md`（本分支已拷贝解耦；OC 树在 2.0 已移除） |
-| 评测管线 | `Evaluation/`（四阶段 + judge + 归档） | **无**（2.0 不以评测轮次为目的；要评测需另建） |
+`dlr_semantic_query` · `dlr_search_consensus` · `get_pe_mapping` · `get_le_attrs` · `execute_sql`（+ `skill`）
 
-两侧唯一的历史血缘是 AGENTS.md 的内容同源；运行时互不依赖。
+> L2 工具名与 Python 线（1.5）不同：那边仍是 `dlr_search_evidence`（BIRD 遗留命名）。
 
 ## 排障（关键几条）
 
 | 症状 | 查这里 |
 |---|---|
-| 跑题 600s 白跑、无工具调用 | 后端没起来：`run_one.sh` 预检会先拦；TS 栈先起 `--http 28795` |
+| 跑题 600s 白跑、无工具调用 | 后端没起来：`run_one.sh` 预检会先拦；先跑 `scripts/start_backend.sh` |
 | 起 UI 报 `Preset services require isolate realms` | `preset-dlr` 的 compaction 组缺 `isolate`（照 standard preset 抄） |
 | Web 选工作区报错（Windows） | 已钉 `-browse` 曲面（native worker 会崩）；禁 auto + 插 browse，二者不可同挂 |
-| 起 UI 报 `EADDRINUSE 3080` | 旧实例没死透 → 按端口杀：`netstat -ano \| grep :3080` → `taskkill //F //PID <pid>` |
+| 起 UI 报 `EADDRINUSE 3080` | 旧实例没死透 → `netstat -ano \| grep :3080` → `taskkill //F //PID <pid>` |
 | dsh 报工具名不对 | 工具面是 `mcp__semantic-core__*`；升级 dsh 后先 `--dump-config` 核行 id |
+| MCP 握手挂起 | HTTP 模式必须 stateful（见 `TSM Core Service` README 的教训） |

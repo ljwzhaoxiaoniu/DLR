@@ -10,15 +10,12 @@ import * as fs from "node:fs";
 import { TextEncoder } from "../embed/encoder.js";
 import { loadDlrScenario, toVectorRows } from "../model/loadDlr.js";
 
-const ROOT = "D:/Code_Proj/DLR Proj";
+import { ROOT, YAML_DIR, MODEL_DIR } from "../config.js";
 const DB = process.argv[2] ?? "debit_card_specializing";
 const N = Number(process.argv[3] ?? 6);
-const MODEL_DIR = `${ROOT}/tmp_scripts/bge-onnx`;
 const OUT = `${ROOT}/tmp_scripts/embed_node.json`;
 
-const rows = toVectorRows(
-  loadDlrScenario(`${ROOT}/Semantic Core Service/configs/scenarios/DLR/${DB}.yaml`),
-);
+const rows = toVectorRows(loadDlrScenario(`${YAML_DIR}/${DB}.yaml`));
 const take = rows.slice(0, N);
 
 const t0 = Date.now();

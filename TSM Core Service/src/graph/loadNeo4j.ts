@@ -21,14 +21,7 @@ import { parse } from "yaml";
 import type { DlrScenarioYaml } from "../model/types.js";
 import { loadColumnTypes, resolveSqlitePath } from "./physicalSchema.js";
 
-const ROOT = "D:/Code_Proj/DLR Proj";
-const YAML_DIR = `${ROOT}/Semantic Core Service/configs/scenarios/DLR`;
-
-try {
-  process.loadEnvFile(`${ROOT}/TSM Core Service/.env`);
-} catch {
-  /* 无 .env 时用参数/环境变量 */
-}
+import { ROOT, YAML_DIR } from "../config.js";
 function arg(name: string, fallback = ""): string {
   const i = process.argv.indexOf(name);
   return i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : fallback;

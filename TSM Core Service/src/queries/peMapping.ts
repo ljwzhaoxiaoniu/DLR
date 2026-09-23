@@ -10,8 +10,7 @@ import { parse } from "yaml";
 import type { Neo4jGraph } from "../graph/queries.js";
 import { resolveSqlitePath } from "../graph/physicalSchema.js";
 
-const ROOT = "D:/Code_Proj/DLR Proj";
-const YAML_DIR = `${ROOT}/Semantic Core Service/configs/scenarios/DLR`;
+import { ROOT, YAML_DIR } from "../config.js";
 
 /** db 名 → sqlite 绝对路径（扫 DLR 全部 YAML 的 databases 映射，进程内缓存） */
 let dbUrlCache: Map<string, string> | null = null;

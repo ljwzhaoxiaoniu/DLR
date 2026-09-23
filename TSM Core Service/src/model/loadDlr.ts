@@ -1,5 +1,5 @@
 /**
- * DLR YAML → 向量行（与 Python Semantic Core Service 逐字对齐）
+ * DLR YAML → 向量行（与 Python 线 `dlr-eval-v1.5` 的 Semantic Core Service 构建器逐字对齐）
  *
  * 对齐来源：
  *   - mapping/dlr.py            YAML → 模型（public 属性投影到 LE 面、PE name/description 口径）

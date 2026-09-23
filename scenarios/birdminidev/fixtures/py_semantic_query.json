@@ -1,0 +1,170 @@
+{
+ "success": true,
+ "confidence": 0.7208,
+ "data": {
+  "structures": [
+   {
+    "logical_entity_id": "LOGICAL.Customer",
+    "name": "Customer",
+    "description": "Identity and classification of debit card customers",
+    "db": "debit_card_specializing",
+    "physical_entities": [
+     {
+      "physical_entity_id": "PHYSICAL.Customer",
+      "pe_name": "customers",
+      "db": "debit_card_specializing",
+      "description": "Customer master data"
+     }
+    ],
+    "public_attributes": [
+     {
+      "name": "CustomerID",
+      "description": "Customer ID: unique identifier for the customer"
+     },
+     {
+      "name": "Segment",
+      "description": "Customer segment: SME=Small Business, LAM=Local, KAM=Key Account"
+     },
+     {
+      "name": "Currency",
+      "description": "Currency: CZK=Czech Koruna, EUR=Euro"
+     }
+    ]
+   },
+   {
+    "logical_entity_id": "LOGICAL.PermanentOrder",
+    "name": "PermanentOrder",
+    "description": "Permanent payment order — bank_to, account_to, amount; belongs to an account; has independent lifecycle (creation → active → cancellation)",
+    "db": "financial",
+    "physical_entities": [
+     {
+      "physical_entity_id": "PHYSICAL.Order",
+      "pe_name": "order",
+      "db": "financial",
+      "description": "Permanent payment orders — bank_to, account_to, amount, k_symbol"
+     }
+    ],
+    "public_attributes": [
+     {
+      "name": "Account",
+      "description": ""
+     },
+     {
+      "name": "amount",
+      "description": "Order amount"
+     }
+    ]
+   },
+   {
+    "logical_entity_id": "LOGICAL.Income",
+    "name": "Income",
+    "description": "Funds received by the club — amount, source, date_received, and notes; received by members",
+    "db": "student_club",
+    "physical_entities": [
+     {
+      "physical_entity_id": "PHYSICAL.Income",
+      "pe_name": "income",
+      "db": "student_club",
+      "description": "Income records"
+     }
+    ],
+    "public_attributes": [
+     {
+      "name": "IncomeID",
+      "description": ""
+     },
+     {
+      "name": "Member",
+      "description": ""
+     }
+    ]
+   },
+   {
+    "logical_entity_id": "LOGICAL.Loan",
+    "name": "Loan",
+    "description": "Bank loan contract — amount, approval date, duration (months), monthly payments, status (A=active, B=finished, C=running, D=in debt); belongs to an account; has independent business lifecycle (approval → active → finished/default)",
+    "db": "financial",
+    "physical_entities": [
+     {
+      "physical_entity_id": "PHYSICAL.Loan",
+      "pe_name": "loan",
+      "db": "financial",
+      "description": "Loan contract table — amount, date, duration, payments, status"
+     }
+    ],
+    "public_attributes": [
+     {
+      "name": "LoanID",
+      "description": ""
+     },
+     {
+      "name": "Account",
+      "description": ""
+     },
+     {
+      "name": "amount",
+      "description": "Loan amount"
+     },
+     {
+      "name": "date",
+      "description": "Loan approval date, YYYY-MM-DD format"
+     },
+     {
+      "name": "status",
+      "description": "Loan status: A=active, B=finished, C=running, D=in debt"
+     }
+    ]
+   },
+   {
+    "logical_entity_id": "LOGICAL.Consumption",
+    "name": "Consumption",
+    "description": "Customer consumption records: monthly bills (yearmonth) + transaction details (transactions_1k) — Consumption, UnitPrice, Quantity",
+    "db": "debit_card_specializing",
+    "physical_entities": [
+     {
+      "physical_entity_id": "PHYSICAL.YearMonth",
+      "pe_name": "yearmonth",
+      "db": "debit_card_specializing",
+      "description": "Monthly customer spending summary"
+     },
+     {
+      "physical_entity_id": "PHYSICAL.Transaction",
+      "pe_name": "transactions_1k",
+      "db": "debit_card_specializing",
+      "description": "Gas station single transaction details — Price per item, Quantity, GasStation, Product"
+     }
+    ],
+    "public_attributes": [
+     {
+      "name": "Customer",
+      "description": "Customer ID: FK to customers table"
+     },
+     {
+      "name": "Date",
+      "description": "Date: in yearmonth table = year-month YYYYMM (201301 = January 2013); in transactions_1k table = calendar date YYYY-MM-DD (2013-01-13). Slash-form dates in questions (2012/8/24) mean calendar date"
+     },
+     {
+      "name": "Consumption",
+      "description": "Monthly spending amount (CZK): total customer spending in this month"
+     },
+     {
+      "name": "UnitPrice",
+      "description": "Unit price per item (CZK)"
+     },
+     {
+      "name": "Quantity",
+      "description": "Quantity: number of items purchased in this transaction"
+     },
+     {
+      "name": "GasStationID",
+      "description": "Gas station ID: FK to gasstations table"
+     },
+     {
+      "name": "ProductID",
+      "description": "Product ID: FK to products table"
+     }
+    ]
+   }
+  ]
+ }
+}
