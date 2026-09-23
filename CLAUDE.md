@@ -2,6 +2,21 @@
 
 > 本文件是本仓库的**执行约定与索引**。规则只写在这里；具体操作写在下文指向的文档里，**不要在三处重复**。
 
+## 分支说明（2026-09-23 起）
+
+本检出在分支 **`2.0`**：DLR + TSM 的**持续线**（不再是评测轮次）。与 `dlr-eval-v1.5` 已面目全非 → **各自分支演进，不要求跨分支一致**。
+
+- **2.0 日常**：`DSH-based Agent Service/`（dsh 接入 + 领域知识源）+ `TSM Core Service/`（TypeScript 语义服务：LanceDB + Neo4j）
+- **评测线**（v4 基线、opencode 四阶段、归档）：在 `dlr-eval-v1.5` 分支 / 另一份检出。本分支**已移除 `OC-based Agent Service/`**；`Evaluation/`、`docs/` 中指向它的引用仅评测线有效
+- 2.0 命令速查：
+
+```bash
+bash "DSH-based Agent Service/scripts/start_backend.sh"              # 起后端（Neo4j + TS MCP server，幂等）
+bash "DSH-based Agent Service/dsh_dlr/run_one.sh" <qid> "<question>"  # 单题（自动预检）
+bash "DSH-based Agent Service/dsh_dlr/run_web.sh"                    # Web 对话（默认 preset=dlr）
+```
+
+
 ## 项目一句话
 
 **DLR（Decoupled Logic Representation）** 是本项目原创的**数据源级**语义建模范式（LE-PE 双层 + PAS 语义路由）。评测跑在**三级语义建模**（TSM：数据源级 / 领域共识级 / 业务逻辑级）框架下——与 **ER**（数据库建模标准基线）、**RDF**（W3C R2RML 标准基线）在 mini_dev 500 题 NL2SQL 上做**三范式同构对比评测**（差异只在数据源级），论证建模结构对 LLM Agent 的引导效能。
@@ -39,7 +54,7 @@ OC 评测执行层（opencode + MCP）
 | 搞懂评测流水线**为什么**这么设计 | [docs/evaluation.md](docs/evaluation.md) |
 | **给一个新库建模**（ER / DLR / RDF 三件套） | [docs/modeling.md](docs/modeling.md)（对准测试口径）+ [docs/modeling-guide-dlr.md](docs/modeling-guide-dlr.md)（DLR 详细规范） |
 | 搞懂 yaml/ttl 的每个字段**进了图还是进了向量** | [docs/semantic-layer-build.md](docs/semantic-layer-build.md) |
-| 改 Agent 行为规则 | `OC-based Agent Service/AGENTS.md`（**评测 Agent 的唯一规则入口**，不是本文件） |
+| 改 Agent 行为规则（评测线） | `OC-based Agent Service/AGENTS.md`（opencode 评测 Agent 的唯一规则入口；**本分支已移除该目录**）／ 2.0 的规则入口 = `DSH-based Agent Service/AGENTS.md` |
 | 看数据集缺陷 / 争议裁定 | [docs/dataset.md](docs/dataset.md) + `Evaluation/oc_judge/disputes.md` |
 | 看当前进度 / 结果 | [docs/results_v4.md](docs/results_v4.md) |
 | 三级语义建模（数据源级/领域共识级/业务逻辑级）设计 | [docs/tsm-design.md](docs/tsm-design.md) |
@@ -92,7 +107,9 @@ DLR Proj/
 │   ├── mapping/ models/ db/ service/      # 解析器 / 模型 / Kuzu+FAISS / 构建
 │   ├── storage/{er,dlr,rdf}/              # 图 + 向量（范式隔离）
 │   └── tool&test/                         # generate_r2rml.py / verify_db_recall.py
-├── OC-based Agent Service/    # 评测 Agent 层（AGENTS.md + oc_er/oc_dlr/oc_rdf）
+├── DSH-based Agent Service/   # 2.0：DLR 接入 dsh（AGENTS.md + dsh_dlr 组合/技能/启动器 + domains/ 知识源）
+├── TSM Core Service/          # 2.0：TypeScript 语义服务（LanceDB + Neo4j + MCP server）
+├── OC-based Agent Service/    # 评测线（本分支已移除该目录；见 dlr-eval-v1.5）
 ├── Evaluation/                # 四阶段流水线 + oc_judge + outputs2
 ├── validated_results/         # 现行基线（当前 v4_final）
 ├── rag_knowledge/             # L2 知识（kid 聚合格式）
