@@ -8,7 +8,7 @@
 
 - **2.0 日常**：`scenarios/<场景>/`（一套完整 TSM 的内容：`sources/{configs=L1, consensus=L2, sop.md=L3}` + `fixtures/`，当前 `birdminidev`）＋ `TSM Core Service/`（TS 语义服务：LanceDB + Neo4j）＋ `DSH-based Agent Service/`（dsh 接入）
 - **评测线**（v4 基线、opencode 四阶段、归档）：在 `dlr-eval-v1.5` 分支 / 另一份检出。本分支**已移除 `OC-based Agent Service/` 与 `Semantic Core Service/`**；`Evaluation/`、`docs/` 中指向它们的引用仅评测线有效
-- **术语**：L1 = DLR ｜ **L2 = Domain Consensus**（领域共识；"evidence" 是 BIRD 数据集字段名，不是范式术语）｜ L3 = SOP
+- **术语（三级标识，定案 2026-09-23）**：L1 = **`dlr`**（DLR 语义图谱）｜ L2 = **`domain_consensus`**（Domain Consensus，领域共识；"evidence" 是 BIRD 数据集字段名，不是范式术语）｜ L3 = **`sop`**（SOP，题级流程/打法，skill 形态交付）。中文级名：数据源级 / 领域共识级 / 业务逻辑级
 - 2.0 命令速查：
 
 ```bash
