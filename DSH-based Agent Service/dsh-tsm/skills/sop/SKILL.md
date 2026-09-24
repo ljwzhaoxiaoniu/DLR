@@ -112,11 +112,6 @@ The country of a gas station is reached through the purchases that took place at
 
 "have a monthly consumption of over 1000" is a month-by-month condition -- a customer qualifies if at least one of their months exceeds 1000. The counted unit is the customer.
 
-### When asked: "What is the percentage of the customers who used EUR in 2012/8/25?"
-> **类型**：数据集问题 · 难题
-
-"percentage of the customers" counts customers, not purchases: one customer = one unit in both the numerator and the denominator, on the same day's data. Numerator = the distinct customers who used EUR that day; denominator = the distinct customers who bought anything that day. A customer with several purchases that day still counts once.
-
 ### When asked: "For the customer who paid 634.8 in 2012/8/25, what was the consumption decrease rate from Year 2012 to 2013?"
 > **类型**：数据集问题 · 难题
 > **Expected**：-581.5243
@@ -210,6 +205,8 @@ The date 2012/8/25 is stored as `2012-08-25`.
 
 Date reading: "opened after 1991" means the opening year is 1992 or later; "closed before 2000" means a closing date earlier than 2000. Schools that are still open have no closing date -- the condition is an OR, so they qualify through the opening date.
 
+The writing score column is **already a per-school average** -- the word "average" in the question names that column, it is not an instruction to aggregate again. Do not wrap it in AVG(); average the column only if the question asks for an average *across* schools.
+
 Which schools make the list: the ones that **have a writing score**. A school with no score row contributes nothing to "list the school names along with the score". State the row count you are listing.
 
 (The reference lists a larger set that also contains schools with no score at all -- writing score empty -- which is what the "a school without a score contributes nothing" rule trims. Every row of our list is a correct row; the ordering is by school name.)
@@ -222,3 +219,55 @@ Which schools make the list: the ones that **have a writing score**. A school wi
 Difference = `Enrollment (K-12) - Enrollment (Ages 5-17)`. List each qualifying school with its DOC type, for schools whose difference is above that average.
 
 (Our run of this question filtered on the enrollment table's column -- the wrong one; the list was 8 schools short and had 1 that does not qualify. The caliber above is the fix.)
+
+### When asked: "How many students from the ages of 5 to 17 are enrolled at the State Special School school in Fremont for the 2014-2015 academic year?"
+> **类型**：难题
+
+Three things decide this question, and all three are lookups rather than guesses:
+
+- "State Special School" is a **school-level code** (`EdOpsCode = 'SSS'`), carried by the school master -- not a name to search for textually.
+- "for the 2014-2015 academic year": the enrollment table records its own academic year (a `2014-2015` style value); filter on that column rather than on any date field.
+- "students from the ages of 5 to 17" is the enrollment column for that age band (`Enrollment (Ages 5-17)`), not the K-12 figure.
+
+City ("Fremont") is on the school master as well; the answer is one count.
+
+### When asked: "What is the postal street address for the school with the 7th highest Math average? Indicate the school's name."
+> **类型**：难题
+
+"Postal street" and "mailing street" are **synonyms**: the postal street address is the mailing-street column of the school master (`MailStreet`) -- not the physical street, and not the abbreviated form.
+
+"7th highest Math average" = order the Math average scores descending and take the 7th row (`OFFSET 6 LIMIT 1`) -- do not round or group first, and do not use the writing/reading scores. Report that school's name and its mailing street.
+
+### When asked: "What is the complete address of the school with the lowest excellence rate? Indicate the Street, City, Zip and State."
+> **类型**：难题
+
+"Excellence rate" = `NumGE1500 / NumTstTakr` (both on the test-score table, keyed by the school code). "Lowest" = ascending order, take the first row -- the rate is a ratio, so order by the ratio itself, not by a rounded value.
+
+"Complete address" = the four address parts together: physical street, city, state, zip -- all four on the school master. The answer needs the school's four address fields, each named.
+
+### When asked: "Please list the codes of the schools with a total enrollment of over 500."
+> **类型**：难题
+
+"Total enrollment" = **both** enrollment columns added together: K-12 plus ages 5-17. Filtering on either column alone silently changes the answer.
+
+"Codes of the schools" = the school identifier code from the master; list the codes alone, one per row.
+
+### When asked: "Of the schools that offers a magnet program serving a grade span of Kindergarten to 8th grade, how many offers Multiple Provision Types? List the number of cities that offers a Kindergarten to 8th grade span and indicate how many schools are there serving such grade span for each city."
+> **类型**：难题
+
+Three separate lookups, none of them textual:
+
+- "offers a magnet program" = a **flag** on the school record that is on (Magnet = 1), not a program name.
+- "Kindergarten to 8th grade" = a grade-span value (K-8) as it is written in the grade-span column -- match the stored form exactly, and there may be more than one spelling to check once.
+- "Multiple Provision Types" = a provisioning-status value (`Multiple Provision Types`) on the enrollment table's provision column.
+
+Count the qualifying schools first, then list the numbers the question asks for.
+
+The second half is a **separate, wider question**: over the whole database (not only magnet schools), take the **cities** that have schools serving a Kindergarten-to-8th-grade span, and for each such city give the number of schools with that grade span. Two figures come back: the count of qualifying magnet schools from the first half, and the per-city school counts from the second.
+
+### When asked: "List the names of schools with more than 30 difference in enrollements between K-12 and ages 5-17? Please also give the full street adress of the schools."
+> **类型**：难题
+
+"Difference in enrollment" = `Enrollment (K-12)` - `Enrollment (Ages 5-17)`; "more than 30" is a strict lower bound on that difference, and the enrollment values are text that must be read as numbers before subtracting.
+
+**School names come from the school master**, not from the enrollment table: the two tables both carry a school-name column and they disagree on a couple of dozen rows. Address likewise from the master. The answer is a long list (well over a thousand schools) -- report the count together with the list.
