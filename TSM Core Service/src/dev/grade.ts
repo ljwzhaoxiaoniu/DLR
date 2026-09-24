@@ -114,7 +114,7 @@ for (const f of fs.readdirSync(rawDir).filter((x) => x.endsWith(".ndjson")).sort
       continue;
     }
     const type = o.type as string;
-    if (type === "session") sid = String(o.id ?? "");
+    if (type === "session") sid = String(o.sessionId ?? o.id ?? "");
     if (type === "final") final = String(o.text ?? "");
     if (type === "tool_call") {
       tools++;
