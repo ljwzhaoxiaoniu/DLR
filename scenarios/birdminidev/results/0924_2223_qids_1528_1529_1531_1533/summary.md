@@ -1,8 +1,8 @@
 # 跑批结果（tsm grade）
 
-目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0924_2223_qids_1528_1529_1531_1533` ｜ 题数 4 ｜ 生成 2026-09-24T14:25:13.663Z
+目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0924_2223_qids_1528_1529_1531_1533` ｜ 题数 4 ｜ 生成 2026-09-24T15:52:04.218Z
 
-**判定（与 gold 比对）：PASS 2 ｜ FAIL 1 ｜ UNCERTAIN 1 ｜ GOLD_ERR 0**
+**判定（与 gold 比对）：PASS 3 ｜ FAIL 1 ｜ UNCERTAIN 0 ｜ GOLD_ERR 0**
 
 **评定（按 SOP 裁定）：✅ 正确 2 ｜ 🔁 翻盘 2 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0**（翻盘单独计，不并入正确）
 
@@ -14,11 +14,10 @@
 
 | 库 | PASS | FAIL | UNCERTAIN | GOLD_ERR |
 |---|---|---|---|---|
-| debit_card_specializing | 2 | 1 | 1 | 0 |
+| debit_card_specializing | 3 | 1 | 0 | 0 |
 
 ## 非 PASS 明细（前 40）
 
 | qid | 判定 | 评定 | 答案（截） | 期望（截） | 日志 |
 |---|---|---|---|---|---|
 | 1529 | FAIL | 🔁 翻盘 | Customer 38508 has 20 monthly records spanning 201201–201311. **Answer** - **Tot | 68740.2 | 3437.01 | raw/0924_2223_1529_dlr.ndjson |
-| 1531 | UNCERTAIN | 🔁 翻盘 | ## 结论 **L3 命中**：`sop` 技能中存在完整复述本题的一节（"Who is the top spending customer and how m | 12459 | 203.8560787354258 | CZK | raw/0924_2223_1531_dlr.ndjson |

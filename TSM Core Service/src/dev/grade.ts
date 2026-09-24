@@ -12,7 +12,7 @@
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { byQid, goldValues, judge, judgeEmpty } from "./judge.js";
+import { byQid, goldValues, judge, judgeEmpty, queryRows, rowSetOf, sameRowSet, sqliteOf, stripLimit } from "./judge.js";
 import { readRunQuestions, rulingOf, sopByQid, RULINGS, RULING_LABEL } from "./results.js";
 
 const arg = (name: string, fallback = ""): string => {
@@ -39,14 +39,60 @@ for (const ev of readRunQuestions(RUN_DIR)) {
   const db = q?.db_id ?? "-";
   const gold = goldValues(qid, db);
   const v = gold.empty ? judgeEmpty(ev.final) : judge(ev.final, gold.values);
-  const verdict = gold.err ? "GOLD_ERR" : v.verdict;
+  let verdict = gold.err ? "GOLD_ERR" : v.verdict;
+  let precision = v.precision;
+  let sqlMatch = "-";
+  // 结果集比对（列表题判据，**只救回假阴性**）：非 PASS 时拿 agent 最后一条 SQL 与 gold 同库跑，
+  // 行集相同 → 改判 PASS（precision=set）；不同 → 保持原判（留给 SOP 裁；最后一条 SQL 未必是答案 SQL）
+  let sqlShown = ev.lastSql;
+  if (verdict !== "PASS" && !gold.err && ev.sqls.length) {
+    const sqlite = sqliteOf(db);
+    const goldQ = sqlite ? queryRows(sqlite, q?.SQL ?? "") : {};
+    if (sqlite && goldQ.rows?.length) {
+      const G = goldQ.rows;
+      // 判「列表的生成逻辑」：答对整体结果即可，不逐字比对。
+      //   · 答案 SQL 原样跑 / 去掉工具强制的显示 LIMIT 后再跑
+      //   · 与 gold 比「全列同集」，或退一步比「共同列投影同集」（忽略别名/列序/多列少列差异）
+      // 命中则改判 PASS（precision=set），并把命中方式写进 sql_match 留档；不命中保持原判。
+      const noLimit = (s: string) => stripLimit(s) ?? "";
+      for (const s of [...ev.sqls].reverse()) {
+        for (const [sql2, tag] of [
+          [s, "原样"],
+          [noLimit(s), "去LIMIT"],
+        ] as const) {
+          if (!sql2) continue;
+          const a = queryRows(sqlite, sql2);
+          if (!a.rows?.length) continue;
+          if (sameRowSet(rowSetOf(a.rows), rowSetOf(G))) {
+            verdict = "PASS";
+            precision = "set";
+            sqlMatch = tag === "原样" ? "set" : "set(去LIMIT)";
+            sqlShown = s;
+            break;
+          }
+          const common = (goldQ.cols ?? []).filter((c) => (a.cols ?? []).includes(c));
+          if (common.length && sameRowSet(rowSetOf(a.rows, common), rowSetOf(G, common))) {
+            verdict = "PASS";
+            precision = "set";
+            sqlMatch = `set(${tag},共同列[${common.join(",")}])`;
+            sqlShown = s;
+            break;
+          }
+        }
+        if (verdict === "PASS") break;
+      }
+      if (verdict !== "PASS") sqlMatch = "no";
+    }
+  }
   rows.push({
     qid: String(qid),
     db,
     question: q?.question ?? "",
     verdict,
     ruling: rulingOf(verdict, ev.final, SOP.get(String(qid))),
-    precision: v.precision,
+    precision,
+    sql_match: sqlMatch,
+    sql: ev.lastSql.replace(/\s+/g, " ").slice(0, 200),
     answer: ev.final.replace(/\s+/g, " ").slice(0, 160),
     expected: gold.values.slice(0, 4).join(" | ").slice(0, 160),
     steps: String(ev.steps),
@@ -66,10 +112,10 @@ for (const ev of readRunQuestions(RUN_DIR)) {
 
 // ── 产出 ─────────────────────────────────────────────────────────────
 const cols = [
-  "qid", "db", "question", "verdict", "ruling", "precision",
+  "qid", "db", "question", "verdict", "ruling", "precision", "sql_match",
   "steps", "tools", "tool_errors", "tool_trace",
   "tokens_total", "tokens_input", "tokens_cache_read", "tokens_output", "cache_read_pct",
-  "answer", "expected", "log", "session", "gold_err",
+  "answer", "expected", "sql", "log", "session", "gold_err",
 ];
 const csv = [cols.join(","), ...rows.map((r) => cols.map((c) => `"${String(r[c] ?? "").replace(/"/g, '""')}"`).join(","))].join("\n");
 fs.writeFileSync(path.join(RUN_DIR, "questions.csv"), csv);

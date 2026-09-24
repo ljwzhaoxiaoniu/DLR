@@ -1,0 +1,24 @@
+# 跑批结果（tsm grade）
+
+目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0924_2230_db_california_schools` ｜ 题数 30 ｜ 生成 2026-09-24T15:52:08.181Z
+
+**判定（与 gold 比对）：PASS 28 ｜ FAIL 0 ｜ UNCERTAIN 2 ｜ GOLD_ERR 0**
+
+**评定（按 SOP 裁定）：✅ 正确 28 ｜ 🔁 翻盘 1 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 1**（翻盘单独计，不并入正确）
+
+## 过程指标（均值 / 合计）
+
+- 步数均值 **8** ｜ 工具调用均值 **15** ｜ 工具错误均值 **0**
+- token 合计 **5,913,733**（input 666,784 + cache_read 4,824,320 + output 422,629） ｜ cache_read 占 **82%**
+- token 单题均值 **197,124**
+
+| 库 | PASS | FAIL | UNCERTAIN | GOLD_ERR |
+|---|---|---|---|---|
+| california_schools | 28 | 0 | 2 | 0 |
+
+## 非 PASS 明细（前 40）
+
+| qid | 判定 | 评定 | 答案（截） | 期望（截） | 日志 |
+|---|---|---|---|---|---|
+| 27 | UNCERTAIN | 🔁 翻盘 | I have all the evidence I need. Here is the answer. **Semantic anchoring (three  | FAME Public Charter | 505 | null | Envision Academy for Arts | raw/0924_2231_27_dlr.ndjson |
+| 28 | UNCERTAIN | ⚠️ 待仲裁 | ## 结论 **口径锚定**（三级交叉验证）： - **L1**（`dlr_semantic_query`）：命中 `california_schools` 库 | Mountain Oaks | 00 | Castle Rock | 00 | raw/0924_2231_28_dlr.ndjson |

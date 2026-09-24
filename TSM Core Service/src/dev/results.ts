@@ -68,6 +68,8 @@ export interface QEvent {
   tools: number; // tool_call 次数
   toolErrors: number; // tool_result status=error 次数
   trace: { tool: string; input: string }[]; // 工具调用序列（名字 + 参数截 200）
+  lastSql: string; // 最后一条 execute_sql 的完整 SQL（展示用；截 8000）
+  sqls: string[]; // 本轮所有 execute_sql 的 SQL（结果集比对用；倒序试）
   session: string; // dsh 会话 id（可回放）
   tokens: { total: number; input: number; cacheRead: number; output: number };
 }
@@ -83,6 +85,8 @@ export function readRunQuestions(runDir: string): QEvent[] {
     let tools = 0;
     let toolErrors = 0;
     let sid = "";
+    let lastSql = "";
+    const sqls: string[] = [];
     const trace: { tool: string; input: string }[] = [];
     const tk = { total: 0, input: 0, cacheRead: 0, output: 0 };
     for (const line of fs.readFileSync(path.join(rawDir, f), "utf8").split("\n").filter(Boolean)) {
@@ -98,6 +102,11 @@ export function readRunQuestions(runDir: string): QEvent[] {
       if (type === "tool_call") {
         tools++;
         const name = typeof o.tool === "string" ? o.tool : ((o.tool as { name?: string } | undefined)?.name ?? "?");
+        const sql = (o.input as { sql?: unknown } | undefined)?.sql;
+        if (typeof sql === "string" && sql.trim()) {
+          lastSql = sql.slice(0, 8000);
+          if (sqls.length < 60) sqls.push(lastSql);
+        }
         trace.push({
           tool: name.replace("mcp__semantic-core__", ""),
           input: JSON.stringify(o.input ?? {}).replace(/\s+/g, " ").slice(0, 200),
@@ -113,7 +122,7 @@ export function readRunQuestions(runDir: string): QEvent[] {
         tk.output += Number(u.outputTokens) || 0;
       }
     }
-    out.push({ qid, file: f, final, steps, tools, toolErrors, trace, session: sid, tokens: tk });
+    out.push({ qid, file: f, final, steps, tools, toolErrors, trace, lastSql, sqls, session: sid, tokens: tk });
   }
   return out;
 }
@@ -199,13 +208,13 @@ export const RULING_LABEL: Record<string, string> = {
 
 export function rulingOf(verdict: string, final: string, sec?: SopSection): Ruling {
   if (!final.trim()) return "PENDING"; // 跑失败（无 final 文本）：无从比对，不记对也不记错
+  // ① 节里给了可比的 Expected（多个值用 | 分隔）→ 按该口径判，**不论类型**（口径以知识层为准）
+  if (sec?.expect) {
+    const vals = sec.expect.split(/\s*\|\s*/).filter(Boolean);
+    return judge(final, vals).verdict === "PASS" ? "OVERTURNED" : "WRONG";
+  }
   // SOP 已裁定该题有缺陷（数据集问题）→ 按 SOP 口径判，不再由 gold 定夺（gold 对这类题不可信）
   if (sec?.types.includes("数据集问题")) {
-    // ① 节里给了可比的 Expected（多个值用 | 分隔）→ 直接与 agent 答案比
-    if (sec.expect) {
-      const vals = sec.expect.split(/\s*\|\s*/).filter(Boolean);
-      return judge(final, vals).verdict === "PASS" ? "OVERTURNED" : "WRONG";
-    }
     // ② 节裁定为「空 / 无记录」类 → 比 agent 是否也说空（复用 judgeEmpty 的口径识别）
     if (judgeEmpty(sec.body).verdict === "PASS")
       return judgeEmpty(final).verdict === "PASS" ? "OVERTURNED" : "WRONG";

@@ -24,6 +24,8 @@
 <!-- mistakes:begin -->
 | 题号 | 库 | 评定 | 类型 | 问题（截） | 裁定（全文见 [DETAIL.md](DETAIL.md)） |
 |---|---|---|---|---|---|
+| q27 | california_schools | 🔁 翻盘 | 难题 | What is the average score in writing for the schools tha | "Communication number" is the school's phone number -- there is no separate contact table. Date reading: "opened after 1991" means |
+| q28 | california_schools | ⚠️ 待仲裁 | 难题 | Consider the average difference between K-12 enrollment | "Locally funded" is a property of the **school master** (`fundingtype = 'Locally funded'`). The enrollment table carries a similar |
 | q1481 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | What is the difference in the annual average consumption | Per customer, total up their 2013 CZK consumption. Then, **per segment**, take the customer(s) with the lowest 2013 total. "Annual |
 | q1482 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | Which of the three segments—SME, LAM and KAM—has the big | The question names the currency, so the consumption must be filtered to customers whose billing currency is EUR (`Currency = 'EUR' |
 | q1490 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | How many percent of LAM customer consumed more than 46.7 | "Percent of customers" is counted **per customer**, not per customer-month record. One customer = one unit in both the numerator a |
@@ -103,13 +105,13 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 <!-- stats:begin -->
 ![实测结果综合统计](results/stats.svg)
 
-**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 20 ｜ 🔁 翻盘 9 ｜ ❌ 错误 1 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 470　—　**已跑 30 题：正确 29 题**
+**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 48 ｜ 🔁 翻盘 10 ｜ ❌ 错误 1 ｜ ⚠️ 待仲裁 1 ｜ ⬜ 未跑 440　—　**已跑 60 题：正确 58 题**
 
 （🔁 翻盘 = 数据集自身缺陷（gold 未实现题面）按 SOP 逐题裁定为正确——单独计数、不并入 ✅ 正确；每题取最新一轮）
 
-均值 **5.4 步 / 8.3 工具调用 / 每题 57,700 tokens** ｜ 跑题覆盖度 **30/500 题**（1/11 库有产物）
+均值 **6.8 步 / 11.5 工具调用 / 每题 127,412 tokens** ｜ 跑题覆盖度 **60/500 题**（2/11 库有产物）
 
-> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 9 道数据集缺陷题的比对记录）也在这两处可查。
+> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 10 道数据集缺陷题的比对记录）也在这两处可查。
 <!-- stats:end -->
 
 **怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。

@@ -30,7 +30,13 @@ function remarkOf(a: { verdict: string; ruling: string; precision: string; final
   if (!(a.final ?? "").trim()) bits.push("跑失败（无 final 文本）");
   else if (a.verdict === "PASS") {
     bits.push(
-      a.precision === "empty" ? "空结果一致" : a.precision.startsWith("num") ? `数值一致（容差 ${a.precision.slice(4)}）` : "文本一致",
+      a.precision === "empty"
+        ? "空结果一致"
+        : a.precision === "set"
+          ? "结果集一致（与该题 gold 同集）"
+          : a.precision.startsWith("num")
+            ? `数值一致（容差 ${a.precision.slice(4)}）`
+            : "文本一致",
     );
   } else if (a.verdict === "FAIL") bits.push("与 gold 不符");
   else if (a.verdict === "GOLD_ERR") bits.push("gold 自身执行失败");

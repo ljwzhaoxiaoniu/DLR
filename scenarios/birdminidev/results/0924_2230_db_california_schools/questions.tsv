@@ -1,0 +1,30 @@
+5	california_schools	How many schools with an average score in Math greater than 400 in the SAT test are exclusively virtual?
+11	california_schools	Please list the codes of the schools with a total enrollment of over 500.
+12	california_schools	Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?
+17	california_schools	Rank schools by their average score in Writing where the score is greater than 499, showing their charter numbers.
+23	california_schools	List the names of schools with more than 30 difference in enrollements between K-12 and ages 5-17? Please also give the full street adress of the schools.
+24	california_schools	Give the names of the schools with the percent eligible for free meals in K-12 is more than 0.1 and test takers whose test score is greater than or equal to 1500?
+25	california_schools	Name schools in Riverside which the average of average math score for SAT is grater than 400, what is the funding type of these schools?
+26	california_schools	State the names and full communication address of high schools in Monterey which has more than 800 free or reduced price meals for ages 15-17?
+27	california_schools	What is the average score in writing for the schools that were opened after 1991 or closed before 2000? List the school names along with the score. Also, list the communication number of the schools if there is any.
+28	california_schools	Consider the average difference between K-12 enrollment and 15-17 enrollment of schools that are locally funded, list the names and DOC type of schools which has a difference above this average.
+31	california_schools	What is the eligible free rate of the 10th and 11th schools with the highest enrolment for students in grades 1 through 12?
+32	california_schools	What is the eligible free or reduced price meal rate for the top 5 schools in grades 1-12 with the highest free or reduced price meal count of the schools with the ownership code 66?
+37	california_schools	What is the complete address of the school with the lowest excellence rate? Indicate the Street, City, Zip and State.
+36	california_schools	Under whose administration is the school with the highest number of students scoring 1500 or more on the SAT? Indicate their full names.
+39	california_schools	What is the average number of test takers from Fresno schools that opened between 1/1/1980 and 12/31/1980?
+40	california_schools	What is the telephone number for the school with the lowest average score in reading in Fresno Unified?
+41	california_schools	List the names of virtual schools that are among the top 5 in their respective counties based on average reading scores.
+45	california_schools	What is the average writing score of each of the schools managed by Ricci Ulrich? List the schools and the corresponding average writing scores.
+46	california_schools	Which state special schools have the highest number of enrollees from grades 1 through 12?
+47	california_schools	What is the monthly average number of schools that opened in Alameda County under the jurisdiction of the Elementary School District in 1980?
+48	california_schools	What is the ratio of merged Unified School District schools in Orange County to merged Elementary School District schools?
+50	california_schools	What is the postal street address for the school with the 7th highest Math average? Indicate the school's name.
+62	california_schools	What is the total number of non-chartered schools in the county of Los Angeles with a percent (%) of eligible free meals for grades 1 through 12 that is less than 0.18%?
+72	california_schools	How many students from the ages of 5 to 17 are enrolled at the State Special School school in Fremont for the 2014-2015 academic year?
+77	california_schools	Which schools served a grade span of Kindergarten to 9th grade in the county of Los Angeles and what is its Percent (%) Eligible FRPM (Ages 5-17)?
+79	california_schools	Between San Diego and Santa Barbara, which county offers the most number of schools that does not offer physical building? Indicate the amount.
+82	california_schools	What is the grade span offered in the school with the highest longitude?
+83	california_schools	Of the schools that offers a magnet program serving a grade span of Kindergarten to 8th grade, how many offers Multiple Provision Types? List the number of cities that offers a Kindergarten to 8th grade span and indicate how many schools are there serving such grade span for each city.
+85	california_schools	What is the Percent (%) Eligible Free (K-12) in the school administered by an administrator whose first name is Alusine. List the district code of the school.
+87	california_schools	What are the valid e-mail addresses of the administrator of the school located in the San Bernardino county, City of San Bernardino City Unified that opened between 1/1/2009 to 12/31/2010 whose school types are public Intermediate/Middle Schools and Unified Schools?

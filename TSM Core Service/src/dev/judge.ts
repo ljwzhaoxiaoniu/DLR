@@ -87,6 +87,52 @@ export function judge(finalText: string, expected: string[]): { verdict: string;
   return expected.every((e) => Number.isFinite(toNum(e))) ? { verdict: "FAIL", precision: "-" } : { verdict: "UNCERTAIN", precision: "-" };
 }
 
+// ── 结果集比对（列表题判据）──────────────────────────────────────────
+/** 单元格归一：能读成数的按数值规范化（505 与 505.0 同），否则走文本归一 */
+export const cellCanon = (v: unknown): string => {
+  const s = v === null || v === undefined ? "" : String(v);
+  if (/^\s*-?[\d,]+(\.\d+)?\s*$/.test(s)) {
+    const n = toNum(s);
+    if (Number.isFinite(n)) return String(Number(n.toPrecision(12)));
+  }
+  return norm(s);
+};
+/** 结果集规范化为「行字符串 → 计数」的集合（行内列序保持，行序与重复不敏感） */
+const rowsToSet = (rows: Record<string, unknown>[]): Set<string> =>
+  new Set(rows.map((r) => Object.values(r).map(cellCanon).join(" | ")));
+
+/** 在给定 SQLite 上跑一条只读 SQL，返回原始行 + 列名（失败返回 err） */
+export function queryRows(sqlitePath: string, sql: string): { rows?: Record<string, unknown>[]; cols?: string[]; err?: string } {
+  if (!sqlitePath || !fs.existsSync(sqlitePath)) return { err: "SQLite 缺失" };
+  try {
+    const db = new DatabaseSync(sqlitePath, { readOnly: true });
+    try {
+      const rows = db.prepare(sql).all() as Record<string, unknown>[];
+      return { rows, cols: Object.keys(rows[0] ?? {}) };
+    } finally {
+      db.close();
+    }
+  } catch (e) {
+    return { err: String(e).slice(0, 120) };
+  }
+}
+
+/** 行集：默认按全列；给 cols 时只投影这些列（按列名对齐——忽略别名/列序差异） */
+export const rowSetOf = (rows: Record<string, unknown>[], cols?: string[]): Set<string> =>
+  new Set(rows.map((r) => (cols ? cols.map((c) => cellCanon(r[c])) : Object.values(r).map(cellCanon)).join(" | ")));
+
+/** 去掉显示用的尾部 LIMIT（判「生成逻辑」时用） */
+export const stripLimit = (sql: string): string | null => {
+  const m = sql.match(/s+limits+d+(s+offsets+d+)?s*;?s*$/i);
+  return m ? sql.slice(0, m.index) : null;
+};
+
+/** 两结果集是否同集（行序/重复不敏感；行内列序敏感——列序不同即不算同集，宁缺勿滥） */
+export const sameRowSet = (a: Set<string>, b: Set<string>): boolean => a.size === b.size && [...a].every((x) => b.has(x));
+
+/** 某库的 SQLite 路径（结果集比对用；与 goldValues 同源） */
+export const sqliteOf = (db: string): string | undefined => dbPath.get(db);
+
 /** gold 正常执行但零行：看 agent 是否也说「没有」 */
 export function judgeEmpty(finalText: string): { verdict: string; precision: string } {
   const saysEmpty =

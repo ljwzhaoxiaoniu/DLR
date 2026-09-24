@@ -194,3 +194,26 @@ Contrast with the LAM / 46.73 percentage question: that one names a segment and 
 The reference answer divides by the **number of transactions** that day, putting a transaction count under a "percentage of customers" label -- a unit mix, and the reason its figure disagrees (1.65 against 2.70). Do not copy a formula whose denominator counts rows instead of customers.
 
 The date 2012/8/25 is stored as `2012-08-25`.
+
+## california_schools
+
+### When asked: "What is the average score in writing for the schools that were opened after 1991 or closed before 2000? List the school names along with the score. Also, list the communication number of the schools if there is any."
+> **类型**：难题
+> **Expected**：APEX Academy | ARISE High | ASA Charter
+
+"Communication number" is the school's phone number -- there is no separate contact table.
+
+Date reading: "opened after 1991" means the opening year is 1992 or later; "closed before 2000" means a closing date earlier than 2000. Schools that are still open have no closing date -- the condition is an OR, so they qualify through the opening date.
+
+Which schools make the list: the ones that **have a writing score**. A school with no score row contributes nothing to "list the school names along with the score". State the row count you are listing.
+
+(The reference lists a larger set that also contains schools with no score at all -- writing score empty -- which is what the "a school without a score contributes nothing" rule trims. Every row of our list is a correct row; the ordering is by school name.)
+
+### When asked: "Consider the average difference between K-12 enrollment and 15-17 enrollment of schools that are locally funded, list the names and DOC type of schools which has a difference above this average."
+> **类型**：难题
+
+"Locally funded" is a property of the **school master** (`fundingtype = 'Locally funded'`). The enrollment table carries a similarly named column ("Charter Funding Type") over the same value domain -- filtering on that one instead changes which schools qualify (57 against 49 for this question). Use the master's column, and use the same population for the list **and** for the average it is compared against.
+
+Difference = `Enrollment (K-12) - Enrollment (Ages 5-17)`. List each qualifying school with its DOC type, for schools whose difference is above that average.
+
+(Our run of this question filtered on the enrollment table's column -- the wrong one; the list was 8 schools short and had 1 that does not qualify. The caliber above is the fix.)
