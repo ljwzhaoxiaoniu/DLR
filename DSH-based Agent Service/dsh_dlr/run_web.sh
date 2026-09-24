@@ -21,6 +21,15 @@ export PYTHONIOENCODING=utf-8
 # 凭据：把 .env 载入进程环境（dsh 凭据链里「继承环境」优先级最高）
 if [ -f "$HERE/.env" ]; then set -a; . "$HERE/.env"; set +a; fi
 
+# 部署件同步：仓库插件（真源）→ dsh 的 out-of-tree 插件位（$DSH_HOME/profiles/node_modules）
+# 与 sync_sop.sh 同款思路：仓库里编辑，启动器负责把产物放到运行时该在的地方。
+PLUGIN_SRC="$SVC_DIR/plugins/dsh-dlr-status"
+if [ -d "$PLUGIN_SRC" ]; then
+  mkdir -p "$DSH_HOME/profiles/node_modules"
+  rm -rf "$DSH_HOME/profiles/node_modules/dsh-dlr-status"
+  cp -r "$PLUGIN_SRC" "$DSH_HOME/profiles/node_modules/"
+fi
+
 # 预检（不可达只告警：UI 能起，但工具会起不来）
 if ! (cd "$TSM_DIR" && npx tsx src/verify/precheck.ts "$MCP_URL" >/dev/null 2>&1); then
   echo "[WARN] 语义后端不可达（$MCP_URL）——先起：npx tsx \"TSM Core Service/src/mcp/server.ts\" --http 28795" >&2

@@ -62,6 +62,19 @@ export class LanceStore {
     return rows.map((r) => ({ ...r, score: 1 - Number(r._distance ?? 0) })) as LanceHit[];
   }
 
+  /** 各表行数（/status 状态面板用；表不存在即跳过该表） */
+  async tableCounts(names: string[]): Promise<Record<string, number>> {
+    const out: Record<string, number> = {};
+    for (const name of names) {
+      try {
+        out[name] = await (await this.table(name)).countRows();
+      } catch {
+        /* 表缺失：不记为 0，直接不出现 */
+      }
+    }
+    return out;
+  }
+
   /** 全文检索（L2 的"术语字面"一路，hybrid 用） */
   async searchText(
     tableName: string,

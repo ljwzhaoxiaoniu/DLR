@@ -3,7 +3,7 @@
 把 **DLR 这一个范式**接入 dsh（DeepSeek Harness）。与 `OC-based Agent Service/`（评测线，1.5 分支）运行时
 **完全独立**；`Evaluation/` 属评测线，本分支不动。
 
-**默认后端 = `TSM Core Service/`（TS/Node 栈：LanceDB + Neo4j + MCP，streamable-http）** —— 无 Python、无桥。
+**后端 = `TSM Core Service/`（TS/Node 栈：LanceDB + Neo4j + MCP，streamable-http 直连）** —— 无 Python、无桥。
 
 三级语义建模（TSM）：**L1 = DLR** ｜ **L2 = Domain Consensus**（领域共识）｜ **L3 = SOP**。
 
@@ -15,12 +15,11 @@ DSH-based Agent Service/
 ├── README.md
 ├── .gitignore                # .dsh-home/、.env
 ├── scripts/start_backend.sh  # 一键起后端（Neo4j + TS MCP server，幂等 + 预检）
+├── plugins/dsh-dlr-status/   # TSM 状态浮层（浏览器半插件；数据走 TSM Core Service 的 /status）
 ├── .dsh-home/                # 运行时生成（$DSH_HOME；会话日志在此，可取证可删）
 └── dsh_dlr/
     ├── dsh.patch.yml         # ★ 组合真值（headless）：受限组合 + MCP 行（默认 TS）
-    ├── dsh-web.patch.yml     # web 组合：preset-dlr + 进程级收尾 + MCP 行（默认 TS）
-    ├── tsm-py.patch.yml      # 叠加层：切回「Python 服务 + SSE→stdio 桥」（需 1.5 检出）
-    ├── mcp_sse_stdio_bridge.py  # 仅 Python 兜底路线用（~20 行）
+    ├── dsh-web.patch.yml     # web 组合：preset-dlr + 进程级收尾 + MCP 行（TS）
     ├── skills/sop/SKILL.md      # L3 部署件（sync_sop.sh 从场景源生成）
     ├── skills/paradigm/SKILL.md # 范式认知（TSM + DLR 结构，与场景无关）
     ├── sync_sop.sh           # L3 同步：scenarios/<场景>/sources/sop.md → skills/sop/SKILL.md
@@ -47,6 +46,8 @@ bash "DSH-based Agent Service/dsh_dlr/run_one.sh" 1471 "What is the ratio of cus
 
 # Web 对话（默认 preset = dlr；进 UI 先选工作区 DSH-based Agent Service）
 bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
+#   ↑ 右下角浮出 TSM 状态卡：Neo4j / MCP 服务灯 · LE/PE/PA/PAS · 向量行数 · 场景名 · Neo4j Browser 链接
+#     （启动器自动把 plugins/dsh-dlr-status 同步到 $DSH_HOME/profiles/node_modules）
 ```
 
 ## 场景（scenario = 一套完整 TSM）

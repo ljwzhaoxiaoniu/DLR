@@ -2,14 +2,14 @@
 # DLR-only 的 Web 版组合（骑在 base + web bundle 之上，用 --patch 引入）
 #
 # 与 dsh.patch.yml（headless 版）的关系：
-#   - 共用：桥、sop 技能、AGENTS.md、.env —— 只是「装配面」不同；
+#   - 共用：MCP 行、sop 技能、AGENTS.md、.env —— 只是「装配面」不同；
 #   - web 的工具归属 **agent preset**，所以核心是新增 preset-dlr；
 #   - web 已在进程级禁用大部分工具行（tool-bash/fs/search/web/todo…），
 #     headless 那串 disable 在这里大半冗余，只补 web 没禁且对 DLR 有影响的；
 #   - 技能目录必须**绝对路径**（web 的 cwd = 你在 UI 里选的工作区）；
 #   - 注册表默认 preset 指到 dlr（新会话默认就是语义业务助手）。
 #
-# 启动：bash dsh_dlr/run_web.sh（不用裸 `dsh web`，否则 DLR_MCP_BRIDGE_PY 没设）
+# 启动：bash dsh_dlr/run_web.sh（不用裸 `dsh web`；启动器负责预检后端）
 # ══════════════════════════════════════════════════════════════════════
 
 # ── 一、进程级收尾（web 未禁、且会影响 DLR 会话的）─────────────────
@@ -110,3 +110,9 @@
                   thresholdChars: 48000
                   headChars: 40000
                   tailChars: 5000
+
+# ── 四、新增：TSM 状态浮层（浏览器半插件；数据走 TSM Core Service 的 /status）──
+# 包体在仓库 `plugins/dsh-dlr-status/`；运行时需同步到 $DSH_HOME/profiles/node_modules/。
+- insert:
+    - id: dlr-status
+      name: 'dsh-dlr-status'

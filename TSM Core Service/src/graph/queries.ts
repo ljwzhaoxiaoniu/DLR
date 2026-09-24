@@ -23,7 +23,13 @@ export class Neo4jGraph implements GraphQueries {
 
   static async connect(uri: string, user: string, pass: string): Promise<Neo4jGraph> {
     const driver = neo4j.driver(uri, neo4j.auth.basic(user, pass));
-    await driver.verifyConnectivity();
+    try {
+      await driver.verifyConnectivity();
+    } catch (e) {
+      // 连不上就把驱动关掉：「失败不缓存」后每次调用都会重试，不关会攒驱动
+      await driver.close().catch(() => {});
+      throw e;
+    }
     return new Neo4jGraph(driver, driver.session());
   }
 
@@ -82,6 +88,32 @@ export class Neo4jGraph implements GraphQueries {
       physical_column_id: x.get("column_id") as string,
       data_type: (x.get("data_type") as string) ?? null,
     }));
+  }
+
+  /** 全图标签计数（/status 状态面板用；计数返回 Integer，读出时转 number） */
+  async labelCounts(): Promise<Record<string, number>> {
+    const r = await this.session.run(
+      "MATCH (n) UNWIND labels(n) AS label RETURN label AS label, count(*) AS c ORDER BY label",
+    );
+    const out: Record<string, number> = {};
+    for (const x of r.records) {
+      const v = x.get("c") as number | { toNumber(): number };
+      out[x.get("label") as string] = typeof v === "number" ? v : v.toNumber();
+    }
+    return out;
+  }
+
+  /** 全图关系类型计数（/status 用；PAS_RELATED_TO 等） */
+  async relationshipCounts(): Promise<Record<string, number>> {
+    const r = await this.session.run(
+      "MATCH ()-[rel]->() RETURN type(rel) AS type, count(*) AS c ORDER BY type",
+    );
+    const out: Record<string, number> = {};
+    for (const x of r.records) {
+      const v = x.get("c") as number | { toNumber(): number };
+      out[x.get("type") as string] = typeof v === "number" ? v : v.toNumber();
+    }
+    return out;
   }
 
   /** LE → 公开属性（LogicalAttribute） */

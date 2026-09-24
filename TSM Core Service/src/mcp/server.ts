@@ -22,15 +22,33 @@ import { getPeMapping } from "../queries/peMapping.js";
 import { executeSql } from "../queries/executeSql.js";
 
 import { STORE_DIR, MODEL_DIR } from "../config.js";
+import { buildStatus } from "./status.js";
 const NEO4J_URI = process.env.NEO4J_URI ?? "bolt://localhost:7687";
 const NEO4J_USER = process.env.NEO4J_USER ?? "neo4j";
 const NEO4J_PASSWORD = process.env.NEO4J_PASSWORD ?? "";
 
+/** 允许读 /status 的浏览器源（仅 dsh web 的 loopback 写法；可用 TSM_STATUS_ORIGINS 覆盖） */
+const STATUS_ORIGINS = new Set(
+  (process.env.TSM_STATUS_ORIGINS ?? "http://127.0.0.1:3080,http://localhost:3080").split(","),
+);
+
 // ── 懒加载共享上下文（跨会话复用；LanceDB 多读、Neo4j 驱动线程安全）──
+// 失败不缓存：reject 时把缓存复位，下次调用自动重试——这样「Neo4j / MCP 谁先起」
+// 都行，中途断开再拉起也能自愈（否则一个 rejected promise 会一直吐错到进程重启）。
 let storePromise: Promise<LanceStore> | null = null;
 let graphPromise: Promise<Neo4jGraph> | null = null;
-const getStore = () => (storePromise ??= LanceStore.open(STORE_DIR, MODEL_DIR));
-const getGraph = () => (graphPromise ??= Neo4jGraph.connect(NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD));
+const withReset = <T>(reset: () => void, p: Promise<T>): Promise<T> =>
+  p.catch((e) => {
+    reset();
+    throw e;
+  });
+const getStore = () =>
+  (storePromise ??= withReset(() => (storePromise = null), LanceStore.open(STORE_DIR, MODEL_DIR)));
+const getGraph = () =>
+  (graphPromise ??= withReset(
+    () => (graphPromise = null),
+    Neo4jGraph.connect(NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD),
+  ));
 
 /** 每会话一个 McpServer 实例（工具注册相同，底层共享上面的连接） */
 function createServer(): McpServer {
@@ -140,6 +158,18 @@ if (httpIdx >= 0) {
   http
     .createServer(async (req, res) => {
       try {
+        // ── /status：健康 + 资产快照（给 dsh 状态面板；CORS 仅放行 dsh web 源）──
+        if (req.method === "GET" && (req.url === "/status" || req.url?.startsWith("/status?"))) {
+          const origin = req.headers.origin;
+          const headers: Record<string, string> = {
+            "content-type": "application/json; charset=utf-8",
+            "cache-control": "no-store",
+          };
+          if (origin && STATUS_ORIGINS.has(origin)) headers["access-control-allow-origin"] = origin;
+          res.writeHead(200, headers).end(JSON.stringify(await buildStatus({ getStore, getGraph })));
+          return;
+        }
+
         const sid = req.headers["mcp-session-id"] as string | undefined;
         const body = req.method === "POST" ? await readBody(req) : undefined;
         let transport = sid ? transports.get(sid) : undefined;
