@@ -1,4 +1,4 @@
-# 场景：`birdminidev` —— 第一个 NL2SQL 场景（TSM + DLR 怎么用）
+# 场景 1 · NL2SQL（数据集 `birdminidev`）—— TSM + DLR 怎么用
 
 > **定位**：把 TSM（三级语义建模）+ DLR 用到真实 NL2SQL 数据集上的**第一个场景**。
 > **规范与原则**（LE / PE / 库表如何抽象成两层 / 建模规则与自检）在 **[docs/03-design.md](../../docs/03-design.md)**；
