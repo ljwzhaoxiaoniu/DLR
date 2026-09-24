@@ -64,7 +64,12 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 | 真实 FK 未表达（非锚键/非 public/无 PAS） | 47 处（football 26 · superhero 9 · codebase 6 · formula_1 4 · student_club 2） |
 | L2 源格式 | 仅 card_games / debit_card 为**聚合式（已加工）**；**其余 9 库仍是 evidence 原文（418 条待加工）** |
 
-**后续**：① 规则决策——非 public 描述是否必须等于 CSV 原文（或承认"为召回加工的偏离"并记来源）；② 逐库整改（L2 瘦身 / 关系补齐 / 描述归位），用 `tsm build + verify + viz` 自证。
+**已定的规则（2026-09-24）**：
+
+- **L1 不做语义丰富度补充**（公平性）——描述一律回归**数据集原生**；"描述偏离"一律改回；数据集自身的缺陷**不在 L1 修**。
+- **数据集的问题与麻烦交 SOP**：每节标注类型（**数据集问题 / 建模冲突 / 难题 / 其他**），见 [04-application.md](../../docs/04-application.md) §二。
+
+**后续**：逐库整改（L2 瘦身 / 关系补齐 / 描述归位），用 `tsm build + verify + viz` 自证。
 
 ## 六、目录速查
 
