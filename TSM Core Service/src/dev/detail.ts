@@ -25,9 +25,10 @@ const cell = (s: string) => s.replace(/\|/g, "\\|").replace(/\r?\n+/g, " ").trim
 const fmt = (n: number) => n.toLocaleString("en-US");
 
 /** 备注（人话一句）：先说判定怎么来的，再说裁定怎么来的 —— 替代原先晦涩的 `num@1e-9` 精度列 */
-function remarkOf(a: { verdict: string; ruling: string; precision: string }, sec?: SopSection): string {
+function remarkOf(a: { verdict: string; ruling: string; precision: string; final?: string }, sec?: SopSection): string {
   const bits: string[] = [];
-  if (a.verdict === "PASS") {
+  if (!(a.final ?? "").trim()) bits.push("跑失败（无 final 文本）");
+  else if (a.verdict === "PASS") {
     bits.push(
       a.precision === "empty" ? "空结果一致" : a.precision.startsWith("num") ? `数值一致（容差 ${a.precision.slice(4)}）` : "文本一致",
     );
@@ -38,7 +39,7 @@ function remarkOf(a: { verdict: string; ruling: string; precision: string }, sec
   const dsIssue = sec?.types.includes("数据集问题") ?? false;
   if (a.ruling === "OVERTURNED") bits.push(`按 SOP 裁定为正确（${sec?.types.join(" · ") || "数据集问题"}）`);
   else if (a.ruling === "WRONG" && dsIssue) bits.push("违背该题 SOP 口径");
-  else if (a.ruling === "PENDING") bits.push(dsIssue ? "SOP 未给可比口径，待仲裁" : "待仲裁");
+  else if (a.ruling === "PENDING" && (a.final ?? "").trim()) bits.push(dsIssue ? "SOP 未给可比口径，待仲裁" : "待仲裁");
   return bits.join("；");
 }
 
@@ -57,7 +58,7 @@ const demote = (md: string) => {
     .join("\n");
 };
 
-/** 错题（判定非 PASS）：题号 / 库 / 判定 / 评定 / 类型 / 缘由 —— 供 README 首节与 DETAIL 共用 */
+/** 数据集缺陷题（判定非 PASS）：题号 / 库 / 判定 / 评定 / 类型 / 缘由 —— 供 README 首节与 DETAIL 共用 */
 export interface Mistake {
   qid: string;
   db: string;
@@ -123,9 +124,9 @@ export function buildDetail(): Mistake[] {
   }
   const all = [...agg.values()].sort((a, b) => a.db.localeCompare(b.db) || Number(a.qid) - Number(b.qid));
 
-  // ── 错题（非 PASS）── 题 ↔ SOP 裁定的映射 ───────────────────────────
+  // ── 数据集缺陷题（非 PASS，或已按 SOP 翻盘的）── 题 ↔ SOP 裁定的映射 ──
   const mistakes: Mistake[] = all
-    .filter((a) => a.verdict !== "PASS")
+    .filter((a) => a.verdict !== "PASS" || a.ruling === "OVERTURNED")
     .map((a) => {
       const s = sopQ.get(a.qid);
       return {
@@ -187,16 +188,7 @@ export function buildDetail(): Mistake[] {
     "",
     "## 汇总",
     "",
-    "**判定**（与 gold 比对；gold 数据集原生、不修正）",
-    "",
-    "| 判定 | 值 |",
-    "|---|---|",
-    `| PASS（与 gold 一致） | ${tally("PASS")} / ${all.length}（${pct(tally("PASS"))}%） |`,
-    `| UNCERTAIN（抽不出可比对的值） | ${tally("UNCERTAIN")} |`,
-    `| FAIL（与 gold 不符） | ${tally("FAIL")} |`,
-    `| GOLD_ERR（gold 本身执行失败） | ${tally("GOLD_ERR")} |`,
-    "",
-    "**评定**（按 SOP 裁定；🔁 翻盘单独计，不并入 ✅ 正确）",
+    "**评定**（按 SOP 裁定 · **主口径**；🔁 翻盘单独计，不并入 ✅ 正确——数据集错误不记在应用头上）",
     "",
     "| 评定 | 值 |",
     "|---|---|",
@@ -206,6 +198,15 @@ export function buildDetail(): Mistake[] {
     `| ⚠️ 待仲裁 | ${rTally("PENDING")} |`,
     `| **合计正确（正确 + 翻盘）** | **${rightTotal} / ${all.length}（${pct(rightTotal)}%）** |`,
     "",
+    "**判定**（与 gold 原始比对 · 留档；gold 数据集原生、不修正）",
+    "",
+    "| 判定 | 值 |",
+    "|---|---|",
+    `| PASS（与 gold 一致） | ${tally("PASS")} / ${all.length}（${pct(tally("PASS"))}%） |`,
+    `| UNCERTAIN（抽不出可比对的值） | ${tally("UNCERTAIN")} |`,
+    `| FAIL（与 gold 不符） | ${tally("FAIL")} |`,
+    `| GOLD_ERR（gold 本身执行失败） | ${tally("GOLD_ERR")} |`,
+    "",
     "**效率**",
     "",
     "| 指标 | 值 |",
@@ -214,13 +215,13 @@ export function buildDetail(): Mistake[] {
     `| token 最低 / 最高 | ${fmt(tks[0] ?? 0)} / ${fmt(tks[tks.length - 1] ?? 0)} |`,
     `| 步数均值 / 工具调用均值 | ${avg((a) => a.steps)} / ${avg((a) => a.tools)} |`,
     "",
-    "> **口径**：仅覆盖已跑轮次，勿外推为全数据集结论。token = input + cache_read + output（不含 CoT 的 reasoning 分项由 harness 单独计）。",
+    "> **口径**：本文档汇总按**去重题数**计（同题多轮取**最新一轮**的判定/评定）——与 [results/STATS.md](results/STATS.md) 的**按次数**分布会不同（重跑过或跑挂过的题，那边会多计一次）。仅覆盖已跑轮次，勿外推为全数据集结论。token = input + cache_read + output（不含 CoT 的 reasoning 分项由 harness 单独计）。",
     "",
     "## 定性观察",
     "",
     "> 分批跑完后按 SOP 案例撰写：每个 SOP 条目题须有对应观察、数字与归档 CSV 逐项一致（防止「先写结论后找证据」）。",
     "",
-    "## 错题与裁定（SOP 条目缘由）",
+    "## 数据集缺陷与裁定（SOP 条目缘由）",
     "",
     mistakes.length
       ? [

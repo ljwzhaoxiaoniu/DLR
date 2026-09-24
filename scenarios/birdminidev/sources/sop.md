@@ -17,7 +17,7 @@
 > grading: 数据集问题 (dataset issue) tells the grader this question is defective, so an answer
 > that matches **this section's caliber** is scored 🔁 翻盘 (overturned, counted separately from
 > a plain correct) rather than judged against a broken gold.
-> A section may state a comparable answer as `> **裁定期望**：<value>` (several values separated
+> A section may state a comparable answer as `> **Expected**：<value>` (several values separated
 > by `|`); sections whose caliber is "the true answer is an empty result" need no such line.
 
 ## debit_card_specializing
@@ -42,6 +42,7 @@ Answer-format check (after running the query): the question asks for the **month
 
 ### When asked: "What is the difference in the annual average consumption of the customers with the least amount of consumption paid in CZK for 2013 between SME and LAM, LAM and KAM, and KAM and SME?"
 > **类型**：数据集问题 · 难题
+> **Expected**：-14009.34 | 6046.62 | 7962.72
 
 Per customer, total up their 2013 CZK consumption. Then, **per segment**, take the customer(s) with the lowest 2013 total. "Annual average consumption" here = the average of those customers' 2013 totals -- a year total is already an annual value, so do **not** divide by 12. Dividing by 12 turns it into a monthly figure and is wrong for this question (a "monthly" question says monthly explicitly, as in the SME 2013 monthly-average question).
 
@@ -59,7 +60,8 @@ Per-year aggregation: the period is recorded as a year-month code (YYYYMM). Tota
 Answer-format check: the question asks for the **year** -- give the year alone, without a supporting total.
 
 ### When asked: "How many percent of LAM customer consumed more than 46.73?"
-> **类型**：难题
+> **类型**：数据集问题 · 难题
+> **Expected**：98.3871
 
 "Percent of customers" is counted **per customer**, not per customer-month record. One customer = one unit in both the numerator and the denominator, matched to the same caliber:
 
@@ -155,3 +157,21 @@ Currency is the customer's billing currency.
 "who" asks for the **customer**, not an amount: answer with the customer identifier alone -- one value. Do not attach that customer's total as a supporting value; the question asks who, not how much -- just as a "how many more" question is answered by the difference alone.
 
 "Least consumption" is judged on each customer's **whole-year 2012 consumption**, not on any single month's figure: among the customers of that segment, add up each one's monthly consumption across 2012 (the period is recorded as a year-month code, YYYYMM) and pick the lowest yearly total. A yearly total can come out negative -- monthly refunds/chargebacks are legitimate business data -- so if the lowest total is negative, that customer is the answer; do not exclude the negatives.
+
+### When asked: "Which of the three segments—SME, LAM and KAM—has the biggest and lowest percentage increases in consumption paid in EUR between 2012 and 2013?"
+> **类型**：数据集问题
+> **Expected**：SME | LAM
+
+The question names the currency, so the consumption must be filtered to customers whose billing currency is EUR (`Currency = 'EUR'` in the customer master). The reference answer runs the percentage over **every** customer -- it never filters by currency, and its denominator disagrees with the evidence's definition (increase as a share of the later year) -- so the reference figures are not the answer to this question.
+
+Follow the question, not the reference: filter to EUR first. With the filter the ordering is stable -- **SME has the biggest** percentage increase, **LAM the lowest**, KAM in between -- and that ordering holds whichever denominator you take (increase over the previous year, or the evidence's share of the later year; the latter gives roughly 88% / 85% / 84%). The question asks which segments: give the two segment names, plus the percentages you computed.
+
+### When asked: "In February 2012, what percentage of customers consumed more than 528.3?"
+> **类型**：数据集问题
+> **Expected**：37.6082
+
+"Percentage of customers" is counted on the **customer population**: the numerator is the customers whose February 2012 consumption exceeds 528.3, the denominator is **all** customers. A customer with no figure recorded for that month is still one of the "customers" the question asks about -- do not narrow the denominator to the customers who happen to have a record in the window. This is the caliber the dataset itself states for this question family (see the LAM / 46.73 percentage question: "Total no. of ... customers who consumed more than ... / Total no. of ... customers").
+
+A record-scoped formula for this question gives a different number, because it shrinks the denominator to the customers present in the month: do not copy such a formula if you retrieve one. February 2012 is the year-month code `201202`; each customer has one figure for the month, so the threshold applies to that figure.
+
+Same caliber applies to the other "percentage of the customers" questions in this database (e.g. the EUR / 2012-08-25 one): population-wide denominator, not the rows of the scoped window.

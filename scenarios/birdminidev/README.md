@@ -2,10 +2,10 @@
 
 > **定位**：把 TSM（三级语义建模）+ DLR 用到真实 NL2SQL 数据集上的**第一个场景**。
 > **规范与原则**（LE / PE / 库表如何抽象成两层 / 建模规则与自检）在 **[docs/03-design.md](../../docs/03-design.md)**；
-> 本文按用法顺序展开：**数据集介绍（含错题）→ 建模应用思路 → 应用结果 → 处理和使用流程 → 实测结果**。
+> 本文按用法顺序展开：**数据集介绍（含数据集缺陷）→ 建模应用思路 → 应用结果 → 处理和使用流程 → 实测结果**。
 > 场景包规范（目录约定、换场景 checklist）：[docs/04-application.md](../../docs/04-application.md)。
 
-## 一、数据集介绍（含错题）
+## 一、数据集介绍（含数据集缺陷）
 
 ### 原生语义：原来在哪
 
@@ -16,15 +16,20 @@
 | **物理真相** | `<db>.sqlite` 本体 | `PRAGMA table_info / foreign_key_list`——**类型与 FK 以此为准** |
 | **题目与 evidence** | `MINIDEV_sqlite/mini_dev_sqlite.json` | `{question_id, db_id, question, evidence, SQL, difficulty}`；**evidence 是出题人给的提示**——L2/L3 主要由此派生 |
 
-### 错题记录（评测暴露的问题 ↔ SOP 裁定）
+### 数据集缺陷记录（跑题暴露的问题 ↔ SOP 裁定）
 
 > 数据集自身的问题（gold 缺陷 / 样本窗口 / 描述失真）由跑题暴露出来，每题一节 L3 `sop.md` 裁定承载——
 > **数据集的错**在这里，**我们为什么这么答**也在这里（逐题来龙去脉见并列的 [DETAIL.md](DETAIL.md)）。
 
 <!-- mistakes:begin -->
-| 题号 | 库 | 判定 | 评定 | 类型 | 问题（截） | 裁定（全文见 [DETAIL.md](DETAIL.md)） |
-|---|---|---|---|---|---|---|
-| q1500 | debit_card_specializing | UNCERTAIN | 🔁 翻盘 | 数据集问题 | Please list the product description of the products cons | The individual-purchase records are only a **four-day sample**: they cover 2012-08-23 through 2012-08-26, and nothing else. Any mo |
+| 题号 | 库 | 评定 | 类型 | 问题（截） | 裁定（全文见 [DETAIL.md](DETAIL.md)） |
+|---|---|---|---|---|---|
+| q1481 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | What is the difference in the annual average consumption | Per customer, total up their 2013 CZK consumption. Then, **per segment**, take the customer(s) with the lowest 2013 total. "Annual |
+| q1482 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | Which of the three segments—SME, LAM and KAM—has the big | The question names the currency, so the consumption must be filtered to customers whose billing currency is EUR (`Currency = 'EUR' |
+| q1490 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | How many percent of LAM customer consumed more than 46.7 | "Percent of customers" is counted **per customer**, not per customer-month record. One customer = one unit in both the numerator a |
+| q1493 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | In February 2012, what percentage of customers consumed | "Percentage of customers" is counted on the **customer population**: the numerator is the customers whose February 2012 consumptio |
+| q1500 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | Please list the product description of the products cons | The individual-purchase records are only a **four-day sample**: they cover 2012-08-23 through 2012-08-26, and nothing else. Any mo |
+| q1501 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | Please list the countries of the gas stations with trans | Same sample-window fact: the individual-purchase records cover only 2012-08-23~26, so no purchases took place in June 2013, and th |
 <!-- mistakes:end -->
 
 ## 二、建模应用思路（原料 → 三层）
@@ -94,15 +99,13 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 <!-- stats:begin -->
 ![实测结果综合统计](results/stats.svg)
 
-**判定**（与 gold 比对）：合计 7 次（去重 7 题 / 500 题）｜ PASS 6 ｜ UNCERTAIN 1 ｜ FAIL 0 ｜ GOLD_ERR 0 ｜ 302,399 tokens
+**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 11 ｜ 🔁 翻盘 6 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 483　—　**已跑 17 题全部正确**
 
-**评定**（按 SOP 裁定）：✅ 正确 6 ｜ 🔁 翻盘 1 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0（🔁 翻盘单独标注、单独计数，不并入 ✅ 正确）
+（🔁 翻盘 = 数据集自身缺陷（gold 未实现题面）按 SOP 逐题裁定为正确——单独计数、不并入 ✅ 正确；每题取最新一轮）
 
-均值 **4.9 步 / 7.7 工具调用 / 每题 43,200 tokens**
+均值 **5.1 步 / 7.9 工具调用 / 每题 49,674 tokens** ｜ 跑题覆盖度 **17/500 题**（1/11 库有产物）
 
-跑题覆盖度 **7/500 题**（1/11 库有产物）——跑过多少题，与判定/评定无关
-
-> 本块由 `tsm stats` 自动同步。**逐题明细**（判定 / 评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。
+> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 6 道数据集缺陷题的比对记录）也在这两处可查。
 <!-- stats:end -->
 
 **怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。
@@ -113,8 +116,8 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 
 ```
 scenarios/birdminidev/
-├── README.md            # ← 本文（数据集（含错题）→ 建模思路 → 结果 → 流程 → 实测）
-├── DETAIL.md            # 评测明细（逐题校验表 / 跑题覆盖度 / 汇总 / 错题与裁定 / 逐题明细：怎么对的）
+├── README.md            # ← 本文（数据集（含缺陷）→ 建模思路 → 结果 → 流程 → 实测）
+├── DETAIL.md            # 评测明细（逐题校验表 / 跑题覆盖度 / 汇总 / 数据集缺陷与裁定 / 逐题明细：怎么对的）
 ├── results/             # 跑批留档（按轮次：raw 日志 + 判定 CSV + 单轮汇总；stats.svg 综合统计图）
 ├── sources/
 │   ├── configs/{ER,DLR,RDF}/   # L1 建模源（本线消费 DLR；ER/RDF 为评测线遗留）

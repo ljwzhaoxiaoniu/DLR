@@ -123,11 +123,11 @@ export interface SopSection {
   db: string;
   question: string; // 题面（sop.md 逐字复述的问题）
   types: string[]; // 类型标签：数据集问题 / 建模冲突 / 难题 / 其他
-  expect?: string; // 可选 `> **裁定期望**：<值>`（非空类裁定给的可比口径，判「翻盘」用）
+  expect?: string; // 可选 `> **Expected**：<值>`（非空类裁定给的可比口径，判「翻盘」用）
   body: string; // 裁定正文（缘由）
 }
 
-/** 解析 sop.md：`## 库` / `### When asked: "…"` / `> **类型**：…` / `> **裁定期望**：…` / 正文 */
+/** 解析 sop.md：`## 库` / `### When asked: "…"` / `> **类型**：…` / `> **Expected**：…` / 正文 */
 export function parseSop(sopPath: string): SopSection[] {
   if (!fs.existsSync(sopPath)) return [];
   const lines = fs.readFileSync(sopPath, "utf8").split(/\r?\n/);
@@ -154,7 +154,7 @@ export function parseSop(sopPath: string): SopSection[] {
           .filter(Boolean);
         continue;
       }
-      const e = lines[j].match(/^>\s*\*\*裁定期望\*\*：(.+)$/);
+      const e = lines[j].match(/^>\s*\*\*Expected\*\*：(.+)$/);
       if (e) {
         expect = e[1].trim();
         continue;
@@ -198,9 +198,10 @@ export const RULING_LABEL: Record<string, string> = {
 };
 
 export function rulingOf(verdict: string, final: string, sec?: SopSection): Ruling {
-  if (verdict === "PASS") return "CORRECT";
+  if (!final.trim()) return "PENDING"; // 跑失败（无 final 文本）：无从比对，不记对也不记错
+  // SOP 已裁定该题有缺陷（数据集问题）→ 按 SOP 口径判，不再由 gold 定夺（gold 对这类题不可信）
   if (sec?.types.includes("数据集问题")) {
-    // ① 节里给了可比的裁定期望（多个值用 | 分隔）→ 直接与 agent 答案比
+    // ① 节里给了可比的 Expected（多个值用 | 分隔）→ 直接与 agent 答案比
     if (sec.expect) {
       const vals = sec.expect.split(/\s*\|\s*/).filter(Boolean);
       return judge(final, vals).verdict === "PASS" ? "OVERTURNED" : "WRONG";
@@ -208,8 +209,9 @@ export function rulingOf(verdict: string, final: string, sec?: SopSection): Ruli
     // ② 节裁定为「空 / 无记录」类 → 比 agent 是否也说空（复用 judgeEmpty 的口径识别）
     if (judgeEmpty(sec.body).verdict === "PASS")
       return judgeEmpty(final).verdict === "PASS" ? "OVERTURNED" : "WRONG";
-    // ③ 判为数据集问题，但节里没给可比口径 → 待仲裁
-    return "PENDING";
+    // ③ 判为数据集问题，但节里没给可比口径 → 与 gold 一致仍记正确，否则待仲裁
+    return verdict === "PASS" ? "CORRECT" : "PENDING";
   }
+  if (verdict === "PASS") return "CORRECT";
   return verdict === "FAIL" ? "WRONG" : "PENDING";
 }

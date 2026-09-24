@@ -56,17 +56,21 @@ export function goldValues(qid: number, db: string): { values: string[]; empty?:
   }
 }
 
-const NUM_RE = /-?\d[\d,]*(?:\.\d+)?/g;
-const norm = (s: string) => s.toLowerCase().replace(/[\s,]+/g, " ").replace(/[^\w.%\- ]+/g, "").trim();
+/** 负号归一：U+2212 / en-dash / em-dash / 全角减号 → ASCII '-'（模型常写 U+2212；不归一会被文本清洗剥掉，负数变正数） */
+const NEG_RE = /[−–—－]/g;
+const toNum = (s: string) => Number(s.replace(NEG_RE, "-").replace(/,/g, ""));
+const NUM_RE = /[-−–—－]?\d[\d,]*(?:\.\d+)?/g;
+const norm = (s: string) =>
+  s.toLowerCase().replace(NEG_RE, "-").replace(/[\s,]+/g, " ").replace(/[^\w.%\- ]+/g, "").trim();
 
 /** 文本比对（全字符串命中 → 数值逐级容差） */
 export function judge(finalText: string, expected: string[]): { verdict: string; precision: string } {
   if (!expected.length) return { verdict: "GOLD_ERR", precision: "-" };
   const tn = norm(finalText);
   if (expected.every((e) => tn.includes(norm(e)))) return { verdict: "PASS", precision: "text" };
-  const expNums = expected.map((e) => Number(e.replace(/,/g, "")));
+  const expNums = expected.map(toNum);
   if (expNums.every((n) => Number.isFinite(n))) {
-    const cands = (finalText.match(NUM_RE) ?? []).map((s) => Number(s.replace(/,/g, "")));
+    const cands = (finalText.match(NUM_RE) ?? []).map(toNum);
     const REL = [1e-9, 1e-6, 1e-4, 1e-3];
     for (const r of REL) {
       const allHit = expNums.every((e) => cands.some((c) => Math.abs(c - e) <= Math.max(1e-12, Math.abs(e) * r)));
