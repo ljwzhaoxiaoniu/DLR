@@ -2,8 +2,8 @@ mapping_type: dlr
 version: '2.0'
 scenario_name: dlr_student_club
 # 案例说明（原料 → 装载 → 抽象决策）：scenarios/birdminidev/README.md
+# 案例说明（原料 → 装载 → 抽象决策）：scenarios/birdminidev/README.md
 description: 'Student club operations: members, events, attendance, budgets, expenses, incomes, and member majors/zip codes.'
-  majors and zip codes as dimension tables'
 databases:
   student_club: sqlite:///MINIDEV_sqlite/dev_databases/student_club/student_club.sqlite
 logical_entities:

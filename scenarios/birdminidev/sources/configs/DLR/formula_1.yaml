@@ -2,8 +2,8 @@ mapping_type: dlr
 version: '2.0'
 scenario_name: dlr_formula_1
 # 案例说明（原料 → 装载 → 抽象决策）：scenarios/birdminidev/README.md
+# 案例说明（原料 → 装载 → 抽象决策）：scenarios/birdminidev/README.md
 description: 'Formula 1 racing: drivers, constructors, circuits, races, qualifying/results/lap times, standings, and pit stops.'
-  multi-view decoupling'
 databases:
   formula_1: sqlite:///MINIDEV_sqlite/dev_databases/formula_1/formula_1.sqlite
 logical_entities:

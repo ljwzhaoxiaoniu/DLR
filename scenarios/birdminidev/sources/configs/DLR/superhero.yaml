@@ -2,6 +2,7 @@ mapping_type: dlr
 version: '2.0'
 scenario_name: dlr_superhero
 # 案例说明（原料 → 装载 → 抽象决策）：scenarios/birdminidev/README.md
+# 案例说明（原料 → 装载 → 抽象决策）：scenarios/birdminidev/README.md
 description: 'Superhero registry: hero identities with physical attributes, alignments, publishers, and their superpowers.'
 databases:
   superhero: sqlite:///MINIDEV_sqlite/dev_databases/superhero/superhero.sqlite
