@@ -37,7 +37,7 @@
 | **1. 路径解耦** | 消灭硬编码绝对路径：`TSM Core Service/src/config.ts` 的 `ROOT` 改为**包自身位置推导 + env 覆盖**；patch 里的 skills 目录改 env/相对注入；Neo4j 位置改探测 | 仓库挪到任意目录照跑 |
 | **2. 打包** | ✅ **dsh 侧**：`dsh-tsm` bundle（MCP 网关 + preset-dlr + 状态浮层 + **skills 随包**），`dsh plugin --profile {web,headless} add` 一条装 ｜ ✅ **后端 CLI**：`tsm serve｜status｜build｜verify`（运行态/开发态同一入口） ｜ **剩余**：分发（npm 发布或 git 地址） | 另一台有 dsh 的机器按 [run.md](run.md) §8 走通 |
 | **3. 图后端双轨（原"零服务"）** | 默认**进程内**（YAML→内存：零依赖、零锁、零服务；1133 节点的只读查找，四个读方法抽成接口即可）；**保留 Neo4j 兼容**（配 `NEO4J_URI` 即启用：Cypher / Browser / 大图 / 企业已有图库） | 测试机不装 Neo4j 也能跑通验收四连 |
-| **附带：可视化独立成页** | `/viz/dlr` 只读"结构 JSON"——**跟哪个后端无关**（进程内或 Neo4j 皆可）；Neo4j Browser 作为并列入口保留 | 演示不依赖任何图服务 |
+| **附带：可视化独立成页** | ✅ **已落**：`tsm viz`（**开发态**）读 YAML 结构载荷 → 生成**自包含 HTML**（数据 + vis-network 内联，约 830KB 单文件；零服务零端口）；Neo4j Browser 作为并列入口保留 | 演示不依赖任何图服务 |
 
 > dsh 生态口径参考：bundle = npm 包 + `dsh.bundle.patch`（自带要插入的行）+ 可选 `dsh.client`（浏览器半）；安装/更新走 profile 内 pnpm（支持 registry / Git / tarball / **本地绝对路径**）；行级开关 = profile 的 `cordis.patch.yml`。两条路可并存，`--patch` 层优先级最高，正好当"本地覆盖"。
 

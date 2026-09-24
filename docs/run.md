@@ -88,6 +88,8 @@ curl -s http://127.0.0.1:28795/status
 
 ## 7. 纪律
 
+- **运行态 = dsh 宿主 + MCP 面 + 状态面；开发态 = `tsm` CLI**（`tsm build` / `tsm verify` / `tsm viz`）。
+  `tsm viz [--open] [--db <库>]` 生成自包含的 DLR 图谱页（开发态看建模：LE/PE/ARCS/PAS，点击 PE 看列映射），产物在 `TSM Core Service/.store/viz/dlr-graph.html`。
 - **服务由项目主手动启停**；本手册的命令都可**重复执行**（幂等是设计目标）。
 - 改配置（patch / 插件）→ 重启对应宿主；改 `skills/*.md` 的源 → `sync_sop.sh` 后即生效（不用重启）。
 - 临时产物一律进 `tmp_scripts/`，或随用随删。

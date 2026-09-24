@@ -17,11 +17,9 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import neo4j, { type Session } from "neo4j-driver";
-import { parse } from "yaml";
-import type { DlrScenarioYaml } from "../model/types.js";
-import { loadColumnTypes, resolveSqlitePath } from "./physicalSchema.js";
+import { buildBatch, readScenario, type Batch } from "../model/graphData.js";
 
-import { ROOT, YAML_DIR } from "../config.js";
+import { YAML_DIR } from "../config.js";
 function arg(name: string, fallback = ""): string {
   const i = process.argv.indexOf(name);
   return i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : fallback;
@@ -42,99 +40,6 @@ if (DBS.length === 0) {
 if (!PASS) {
   console.error("缺少 Neo4j 密码：填 TSM Core Service/.env 或传 --pass");
   process.exit(1);
-}
-
-const dbFromTableId = (t: string) => t.split(".")[0];
-
-interface Batch {
-  db: string;
-  les: Record<string, unknown>[];
-  las: Record<string, unknown>[];
-  pes: Record<string, unknown>[];
-  pas: Record<string, unknown>[];
-  pasRels: Record<string, unknown>[];
-  inherits: Record<string, unknown>[];
-}
-
-function buildBatch(sc: DlrScenarioYaml, colTypes: Map<string, string>): Batch {
-  const presetDb = Object.keys(sc.databases ?? {})[0] ?? "";
-  const b: Batch = { db: presetDb, les: [], las: [], pes: [], pas: [], pasRels: [], inherits: [] };
-
-  for (const le of sc.logical_entities ?? []) {
-    b.les.push({
-      id: le.logical_entity_id,
-      name: le.biz_name ?? "",
-      description: le.description ?? "",
-      db: presetDb,
-    });
-    const seen = new Map<string, { name: string; description: string }>();
-    for (const pe of le.physical_entities ?? []) {
-      for (const a of pe.attributes ?? []) {
-        if (!a.public) continue;
-        const id = `${le.logical_entity_id}.${a.biz_name || a.column}`;
-        if (!seen.has(id)) seen.set(id, { name: a.biz_name || a.column, description: a.description ?? "" });
-      }
-    }
-    let laOrd = 0;
-    for (const [id, v] of seen) {
-      b.las.push({ id, name: v.name, description: v.description, le_id: le.logical_entity_id, ord: laOrd++ });
-    }
-  }
-
-  for (const le of sc.logical_entities ?? []) {
-    const pes = le.physical_entities ?? [];
-    for (let peOrd = 0; peOrd < pes.length; peOrd++) {
-      const pe = pes[peOrd];
-      const peDb = dbFromTableId(pe.physical_table_id);
-      // C_column 重建（mapping/dlr.py:110-115：仅 public 属性，键为 {le_id}.{biz_name}）
-      const cColumn: Record<string, string> = {};
-      for (const a of pe.attributes ?? []) {
-        if (!a.public) continue;
-        cColumn[`${le.logical_entity_id}.${a.biz_name || a.column}`] = a.column;
-      }
-      b.pes.push({
-        id: pe.physical_entity_id,
-        name: pe.physical_table_name || pe.physical_entity_id,
-        description: pe.S ?? "",
-        table_id: pe.physical_table_id,
-        db: peDb,
-        arcs_a: pe.A ? JSON.stringify(pe.A) : null,
-        arcs_r: pe.R ? JSON.stringify(pe.R) : null,
-        arcs_c: Object.keys(cColumn).length ? JSON.stringify(cColumn) : null,
-        arcs_s: pe.S ?? null,
-      });
-      b.inherits.push({ pe_id: pe.physical_entity_id, le_id: le.logical_entity_id, ord: peOrd });
-      let paOrd = 0;
-      for (const a of pe.attributes ?? []) {
-        b.pas.push({
-          id: a.column,
-          name: a.biz_name || a.column,
-          description: a.description ?? "",
-          column_id: a.column,
-          data_type: colTypes.get(a.column) ?? null,
-          pe_id: pe.physical_entity_id,
-          db: peDb,
-          ord: paOrd++,
-        });
-      }
-    }
-  }
-
-  for (const p of sc.pas_relations ?? []) {
-    const [from, to] = p.relation_id.split("_TO_");
-    const P = p.P ?? {};
-    const fwd = typeof P.forward === "object" ? P.forward : undefined;
-    const rev = typeof P.reverse === "object" ? P.reverse : undefined;
-    b.pasRels.push({
-      id: p.relation_id,
-      name: p.relation_name ?? "",
-      from, to,
-      forward_verb: fwd?.verb ?? "", forward_cardinality: fwd?.cardinality ?? "",
-      reverse_verb: rev?.verb ?? "", reverse_cardinality: rev?.cardinality ?? "",
-      a_attribute: p.A ?? "", s_semantic: p.S ?? "", db: presetDb,
-    });
-  }
-  return b;
 }
 
 async function ensureConstraints(s: Session) {
@@ -195,11 +100,7 @@ try {
       console.warn(`  [skip] 无 YAML: ${dbName}`);
       continue;
     }
-    const sc = parse(fs.readFileSync(p, "utf8")) as DlrScenarioYaml;
-    // data_type：从该库的 SQLite 读（同 physical_scanner.py）
-    const sqliteUrl = sc.databases?.[dbName] ?? Object.values(sc.databases ?? {})[0] ?? "";
-    const sqlitePath = resolveSqlitePath(sqliteUrl, ROOT);
-    const colTypes = sqlitePath && fs.existsSync(sqlitePath) ? loadColumnTypes(sqlitePath) : new Map<string, string>();
+    const { sc, colTypes } = readScenario(dbName);
     const b = buildBatch(sc, colTypes);
     await writeBatch(session, b);
     total.le += b.les.length; total.la += b.las.length; total.pe += b.pes.length;

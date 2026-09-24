@@ -33,7 +33,8 @@ const usage = () => {
   tsm serve  [--http <port> | --stdio]              起 MCP server（默认 --http 28795）
   tsm status [--port <port>]                        打印 /status 快照
   tsm build  [lance|consensus|graph|all] [--wipe]   构建（graph 需 Neo4j 在跑）
-  tsm verify [precheck|parity_dlr|tool_parity|...]  跑 verify 脚本（默认 precheck）`);
+  tsm verify [precheck|parity_dlr|tool_parity|...]  跑 verify 脚本（默认 precheck）
+  tsm viz    [--open] [--db <库名>]                 生成自包含的 DLR 图谱页（开发态）`);
 };
 
 const [cmd, ...rest] = process.argv.slice(2);
@@ -76,6 +77,12 @@ switch (cmd) {
   case "verify": {
     const name = rest[0] ?? "precheck";
     code = await runTs(`verify/${name}.ts`, rest.slice(1));
+    break;
+  }
+
+  case "viz": {
+    // 开发态：生成自包含的 DLR 图谱页（--open 打开；--db 限定单库）
+    code = await runTs("viz/buildViz.ts", rest);
     break;
   }
 
