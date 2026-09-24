@@ -1,5 +1,7 @@
 # 三范式 yaml/ttl → 图结构 & 向量库 全映射
 
+> **⚠ 仅评测线有效**（`dlr-eval-v1.5` / 另一份检出）——2.0 分支仅作参考、不再维护。
+
 > 本文回答一个问题：**每个建模范式的配置文件里，哪些内容进了图结构（Kuzu），哪些内容以什么文本模板拼进了向量库（FAISS）**。
 > 代码依据：`Semantic Core Service/service/build_service.py`、`db/graph_db.py`、`db/vector_db.py`、`mapping/{er,dlr,rdf}.py`、`models/semantic_models.py`（行号以 2026-09-11 工作区为准）。
 

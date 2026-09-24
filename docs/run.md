@@ -1,0 +1,97 @@
+# 运行手册（2.0）
+
+> 操作篇：**起后端 / 跑题 / Web / 状态面 / 排障**。命令都在 Git Bash 下执行（Windows）。
+> 背景见叙事四篇（[01](01-background.md) → [04](04-application.md)）；两棵树的就地说明书：[TSM Core Service](<../TSM Core Service/README.md>)、[DSH-based Agent Service](<../DSH-based Agent Service/README.md>)。
+
+## 0. 全局图
+
+```
+dsh（headless / web）
+   │  MCP（streamable-http :28795，5 工具）
+   ▼
+TSM Core Service（node 进程）：LanceDB（向量）+ ONNX 编码器（进程内）
+   │  bolt :7687
+   ▼
+Neo4j（Browser :7474）
+   │  sqlite:///…
+   ▼
+数据集（MINIDEV_sqlite，gitignored）
+```
+
+**两个进程**：Neo4j + TS MCP server。LanceDB 与编码器是嵌在 MCP 进程里的库，**不是**服务。
+
+## 1. 起后端（幂等）
+
+```bash
+bash "DSH-based Agent Service/scripts/start_backend.sh"
+```
+
+- 判据是**功能性的**：Neo4j 探 `:7474`；MCP server 用**预检**（真连上去列 5 工具）；最后再预检一次当回执。
+- 已在跑的跳过；起不来看它给的日志（`tmp_scripts/neo4j_console.log` / `tsm_mcp.log`）。
+- ⚠ **改过 `TSM Core Service/src/**` 必须重启 MCP server**——tsx 常驻进程不会自动加载，脚本只会说"已在跑"；先杀端口（`netstat -ano | grep :28795` → `taskkill //F //PID <pid>`）再跑脚本。
+- ⚠ Neo4j 是**前台 console 进程**：起它的终端/会话关了，它可能一起走；重跑本脚本即恢复。
+
+## 2. 跑一道题（headless）
+
+```bash
+bash "DSH-based Agent Service/dsh_dlr/run_one.sh" <qid> "<question>"
+```
+
+- 产物：`tmp_scripts/dsh_smoke/<stamp>_<qid>_dlr.ndjson`（`--json` 事件流）+ 同名 `.err`。
+- 自动预检后端；后端不可达**响亮退出**（exit 3），不会烧模型调用。
+- 会话日志：`DSH-based Agent Service/.dsh-home/sessions/<项目目录>/<session-id>/session.v4.jsonl.zstd`（**多帧 zstd**，取证解码器 `tmp_scripts/decode_dsh_log.cjs`）。
+
+## 3. Web 对话
+
+```bash
+bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
+```
+
+- 默认 preset = dlr（语义业务助手）；进 UI 先选工作区 `DSH-based Agent Service`（AGENTS.md 靠它加载）。
+- 启动器会把状态浮层插件同步到 `$DSH_HOME/profiles/node_modules`。
+- 改过 patch / 插件后**必须重启 web**（组合在启动时装配）。
+
+## 4. 状态面
+
+- 右下角常驻 **TSM 状态浮层**（`plugins/dsh-dlr-status`）：Neo4j / MCP 两盏灯 · LE/PE/PA/PAS · 向量行数 · 场景名 · Neo4j Browser 链接；10 秒轮询。
+- 数据源 = MCP server 的 `GET /status`（JSON；CORS 只放行 dsh web 的 loopback 源）：
+
+```bash
+curl -s http://127.0.0.1:28795/status
+```
+
+- Neo4j Browser：http://localhost:7474 —— 账号 `neo4j`，密码在 `TSM Core Service/.env`。
+
+## 5. 工具依赖（Neo4j 挂了会怎样）
+
+| 工具 | 依赖 | Neo4j 停时 |
+|---|---|---|
+| `dlr_semantic_query` · `get_pe_mapping` · `get_le_attrs` | Neo4j | ❌ 不可用 |
+| `dlr_search_consensus` | LanceDB | ✅ 照常 |
+| `execute_sql` | SQLite | ✅ 照常 |
+
+**失败不缓存**：连接失败不会被粘住——Neo4j 恢复后工具**自愈**（无需重启 MCP）。
+
+## 6. 排障表
+
+| 症状 | 查这里 |
+|---|---|
+| 跑题 600s 白跑、无工具调用 | 后端没起：`run_one.sh` 预检会先拦；跑 `start_backend.sh` |
+| 状态卡不出现 | ①启动终端有无插件告警 ②浏览器 console ③是不是没重启 web |
+| 状态卡 Neo4j 红灯 | `curl /status` 看 error；Neo4j 是否在听 `:7474` |
+| 改了 `src/**` 不生效 | MCP server 是常驻进程：杀端口 → `start_backend.sh` |
+| Web 选工作区报错（Windows） | 已钉 `-browse` 曲面（native worker 会崩）；禁 auto + 插 browse，二者不可同挂 |
+| 起 UI 报 `EADDRINUSE 3080` | `netstat -ano \| grep :3080` → `taskkill //F //PID <pid>` |
+| 会话日志"看起来是空的" | **多帧 zstd**：单帧解码只出 header——用 `tmp_scripts/decode_dsh_log.cjs` |
+| 机器内存吃紧 | 常驻约 650MB（Neo4j ~280 + MCP ~330）；不用时关，用时跑幂等脚本 |
+| dsh 报工具名不对 | 工具面是 `mcp__semantic-core__*`；升级 dsh 后先 `--dump-config` 核行 id |
+
+## 7. 纪律
+
+- **服务由项目主手动启停**；本手册的命令都可**重复执行**（幂等是设计目标）。
+- 改配置（patch / 插件）→ 重启对应宿主；改 `skills/*.md` 的源 → `sync_sop.sh` 后即生效（不用重启）。
+- 临时产物一律进 `tmp_scripts/`，或随用随删。
+
+## 相关
+
+- 场景包与考卷：[04-application.md](04-application.md)｜评测：[eval.md](eval.md)｜可移植与扩展边界：[roadmap.md](roadmap.md)

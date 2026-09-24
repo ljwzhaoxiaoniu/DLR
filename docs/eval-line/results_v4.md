@@ -1,5 +1,7 @@
 ## 评测进度 — 三级语义建模模式（v4 基线）
 
+> **⚠ 仅评测线有效**（`dlr-eval-v1.5` / 另一份检出）——2.0 分支仅作参考、不再维护。
+
 > **说明**: v4 = 三级语义建模（见 tsm-design.md）：Agent 不拿 evidence，纯 question 驱动三级并行锚定——数据源级（L1 MCP 语义层，数据集原生配置）、领域共识级（L2 RAG，`search_evidence` 检索）、业务逻辑级（L3 SOP，前置读 `skills/sop.md`），交叉验证后 mapping -> SQL。
 > **两组口径**：**原始组**充分尊重数据集原有数据；**对照组**为数据源级建模、充分吸收 evidence（该下沉的下沉到数据源、该保留的保留）。定义与现状见 [rag-evidence.md](rag-evidence.md) §两组。
 > **数据来源**: `validated_results/v4_final/{group}/{run_id}/agent_stats.csv`（**按 run 归档**——几道题就几道题、哪个范式就哪个范式，如 `original/0916_1626_1471-1472_EDR/`）

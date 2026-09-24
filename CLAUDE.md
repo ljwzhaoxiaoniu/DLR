@@ -53,16 +53,16 @@ opencode 执行层 → Semantic Core Service（Kuzu + FAISS）→ 同一物理�
 
 | 我要… | 看这篇 |
 |---|---|
-| **跑一批题 / 归档 / 故障排查**（评测线） | **[docs/runbook.md](docs/runbook.md)** ← 运行手册，唯一执行口径 |
-| **2.0 日常：起后端 / 跑题 / Web 对话** | 上方「2.0 命令速查」+ `TSM Core Service/README.md`、`DSH-based Agent Service/README.md` |
-| **换场景 / 加数据集** | 两份 README 的「场景（scenario）」小节（`scenarios/<name>/` 约定） |
-| 搞懂评测流水线**为什么**这么设计 | [docs/evaluation.md](docs/evaluation.md) |
-| **给一个新库建模**（ER / DLR / RDF 三件套） | [docs/modeling.md](docs/modeling.md)（对准测试口径）+ [docs/modeling-guide-dlr.md](docs/modeling-guide-dlr.md)（DLR 详细规范） |
-| 搞懂 yaml/ttl 的每个字段**进了图还是进了向量** | [docs/semantic-layer-build.md](docs/semantic-layer-build.md) |
-| 改 Agent 行为规则（评测线） | `OC-based Agent Service/AGENTS.md`（opencode 评测 Agent 的唯一规则入口；**本分支已移除该目录**）／ 2.0 的规则入口 = `DSH-based Agent Service/AGENTS.md` |
-| 看数据集缺陷 / 争议裁定 | [docs/dataset.md](docs/dataset.md) + `Evaluation/oc_judge/disputes.md` |
-| 看当前进度 / 结果 | [docs/results_v4.md](docs/results_v4.md) |
-| 三级语义建模（数据源级/领域共识级/业务逻辑级）设计 | [docs/tsm-design.md](docs/tsm-design.md) |
+| **全貌与读法** | [docs/README.md](docs/README.md)（索引：叙事四篇 + 操作三篇 + eval-line 归档） |
+| 懂"为什么"（背景与主张） | [docs/01-background.md](docs/01-background.md) |
+| 懂概念（三级 / 准入判据 / 分层确权） | [docs/02-concept.md](docs/02-concept.md) |
+| **建模**（DLR 规范 + 自检清单） | [docs/03-design.md](docs/03-design.md) |
+| **场景包 / 换场景** | [docs/04-application.md](docs/04-application.md) |
+| **跑（起后端 / 跑题 / web / 状态面 / 排障）** | [docs/run.md](docs/run.md) |
+| 评测设计（考卷跟场景、考试系统跟 dsh） | [docs/eval.md](docs/eval.md) |
+| 可移植 / 扩展边界（DSL_SQL · OData 参照） | [docs/roadmap.md](docs/roadmap.md) |
+| **评测线**（跑批 / 归档 / 流水线 / 结果 / 数据集缺陷 / 争议 / 三范式口径） | [docs/eval-line/](docs/eval-line/)（runbook · evaluation · results_v4 · dataset · agent · modeling …） |
+| 改 Agent 行为规则 | 2.0 入口 = `DSH-based Agent Service/AGENTS.md`；评测线 = `OC-based Agent Service/AGENTS.md`（**本分支已移除该目录**） |
 | 历史资料 | `archive/`（v2/v3 基线、旧归档、旧分享页）——**与现逻辑无关，勿据此改现状** |
 
 ---
@@ -121,9 +121,9 @@ DLR Proj/                          # 分支 2.0
 │                                #   sources/sop.md               = L3 口径源
 │                                #   fixtures/                    = 对照真值（verify 用）
 ├── TSM Core Service/            # 2.0 语义服务（TS）：LanceDB + Neo4j + MCP server；build=开发态，verify=质量门
-├── DSH-based Agent Service/     # 2.0 宿主接入：组合 patch / 技能 / 启动器 + scripts/start_backend.sh
+├── DSH-based Agent Service/     # 2.0 宿主接入：组合 patch / 技能 / 启动器 / plugins/（状态浮层）
 ├── Evaluation/ · validated_results/   # 评测线（1.5）：四阶段流水线、oc_judge、基线归档
-├── docs/ · README.md            # 文档（多为评测线口径；2.0 看两棵树内 README）
+├── docs/                        # 现行：叙事四篇（01–04）+ 操作三篇 + README 索引；eval-line/ = 评测线归档（只读）
 ├── archive/                     # 历史（v2/v3 归档、旧文档与分享页）——只读参考
 └── MINIDEV_sqlite/              # 数据集（gitignored，需下载）
 ```

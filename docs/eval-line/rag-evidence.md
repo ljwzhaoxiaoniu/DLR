@@ -1,5 +1,7 @@
 # RAG Evidence（L2）— 知识库的两组组织哲学
 
+> **⚠ 仅评测线有效**（`dlr-eval-v1.5` / 另一份检出）——2.0 分支仅作参考、不再维护。
+
 ## 设计
 
 将评测集从"带 evidence 提示的 NL2SQL"升级为"语义检索评测"。Agent 不再直接拿到 evidence，必须通过 `search_evidence` MCP 工具主动检索。
