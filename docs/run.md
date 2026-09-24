@@ -132,8 +132,9 @@ cd "dlr-proj/TSM Core Service" && bash scripts/fetch-model.sh
 ```bash
 cd "dlr-proj/TSM Core Service" && npm install
 npm install -g @deepseek-ai/dsh@0.1.7-alpha.1     # 版本锁死
+npm install -g pnpm                               # dsh plugin 转发给它（装 bundle 必需）
 
-# DLR 的行（MCP 网关 / preset-dlr / 状态浮层）——一条命令装进 profile
+# DLR 的行（MCP 网关 / preset-dlr / 状态浮层 / skills）——一条命令装进 profile
 dsh plugin --profile web add "<新机>/dlr-proj/DSH-based Agent Service/dsh-tsm"
 dsh plugin --profile headless add "<新机>/dlr-proj/DSH-based Agent Service/dsh-tsm"
 ```
