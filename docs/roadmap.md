@@ -34,7 +34,7 @@
 | 步 | 做什么 | 验收 |
 |---|---|---|
 | **1. 路径解耦** | 消灭硬编码绝对路径：`TSM Core Service/src/config.ts` 的 `ROOT` 改为**包自身位置推导 + env 覆盖**；patch 里的 skills 目录改 env/相对注入；Neo4j 位置改探测 | 仓库挪到任意目录照跑 |
-| **2. 打包** | ✅ **dsh 侧已完成**：`dsh-tsm` bundle（MCP 网关 + preset-dlr + 状态浮层），`dsh plugin --profile {web,headless} add` 一条装 ｜ **剩余**：后端做成带 `tsm` bin 的 npm 包（`serve` 运行态 + `build/verify` 开发态）；skills 随包（现靠 `DLR_SKILLS_DIR` 注入） | 另一台有 dsh 的机器按 [run.md](run.md) §8 走通 |
+| **2. 打包** | ✅ **dsh 侧**：`dsh-tsm` bundle（MCP 网关 + preset-dlr + 状态浮层 + **skills 随包**），`dsh plugin --profile {web,headless} add` 一条装 ｜ ✅ **后端 CLI**：`tsm serve｜status｜build｜verify`（运行态/开发态同一入口） ｜ **剩余**：分发（npm 发布或 git 地址） | 另一台有 dsh 的机器按 [run.md](run.md) §8 走通 |
 | **3. 零服务（可选终局）** | 图很小（千级节点），可搬进 dsh 进程做**原生工具**，Neo4j 降为可选后端 | 真"零外部服务" |
 
 > dsh 生态口径参考：bundle = npm 包 + `dsh.bundle.patch`（自带要插入的行）+ 可选 `dsh.client`（浏览器半）；安装/更新走 profile 内 pnpm（支持 registry / Git / tarball / **本地绝对路径**）；行级开关 = profile 的 `cordis.patch.yml`。两条路可并存，`--patch` 层优先级最高，正好当"本地覆盖"。

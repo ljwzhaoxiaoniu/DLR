@@ -39,7 +39,9 @@
   name: '@deepseek-ai/dsh-skill-filesystem'
   config:
     includeDefaultRoots: false
-    customSkillDirs: ['./skills']
+    # 技能目录由 bundle 的 node 半（boot 期）或启动器注入（run_one.sh）；末尾是本机兜底
+    customSkillDirs:
+      - !!js process.env.DLR_SKILLS_DIR || './skills'
 
 # MCP 结果剪裁：默认 8192 字符对 MCP JSON 偏小，会静默腰斩候选实体 → 抬高。
 - id: tool-result-pruner

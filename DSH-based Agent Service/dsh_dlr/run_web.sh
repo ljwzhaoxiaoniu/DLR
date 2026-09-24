@@ -16,8 +16,8 @@ TSM_DIR="$ROOT/TSM Core Service"
 MCP_URL="${TSM_MCP_URL:-http://127.0.0.1:28795/mcp}"
 
 export DSH_HOME="$SVC_DIR/.dsh-home"
-# 技能目录绝对路径（web 的 cwd 是 UI 工作区，不能用相对路径）——注入给 dsh-web.patch.yml
-export DLR_SKILLS_DIR="$HERE/skills"
+# 技能目录绝对路径（web 的 cwd 是 UI 工作区，不能用相对路径）——bundle 内的 skills
+export DLR_SKILLS_DIR="$SVC_DIR/dsh-tsm/skills"
 export PYTHONIOENCODING=utf-8
 
 # 凭据：把 .env 载入进程环境（dsh 凭据链里「继承环境」优先级最高）

@@ -15,14 +15,16 @@ DSH-based Agent Service/
 ├── README.md
 ├── .gitignore                # .dsh-home/、.env
 ├── scripts/start_backend.sh  # 一键起后端（Neo4j + TS MCP server，幂等 + 预检）
-├── dsh-tsm/                  # ★ bundle：MCP 网关 + preset-dlr + TSM 状态浮层（dsh plugin add 安装）
+├── dsh-tsm/                  # ★ bundle（dsh plugin add 安装）：MCP 网关 + preset-dlr + 状态浮层 + skills
+│   ├── cordis.patch.yml      #   顶层行：mcp-semantic-core · dlr-status
+│   ├── presets/dlr.patch.yml #   preset-dlr：persona / AGENTS.md / skills / compaction
+│   ├── skills/               #   paradigm（认知层，场景无关）+ sop（L3 部署件，sync_sop.sh 生成）
+│   └── lib/client.js         #   TSM 状态浮层（浏览器半）
 ├── .dsh-home/                # 运行时生成（$DSH_HOME；会话日志在此，可取证可删）
 └── dsh_dlr/
-    ├── dsh.patch.yml         # ★ 组合真值（headless）：受限组合 + MCP 行（默认 TS）
-    ├── dsh-web.patch.yml     # web 组合：preset-dlr + 进程级收尾 + MCP 行（TS）
-    ├── skills/sop/SKILL.md      # L3 部署件（sync_sop.sh 从场景源生成）
-    ├── skills/paradigm/SKILL.md # 范式认知（TSM + DLR 结构，与场景无关）
-    ├── sync_sop.sh           # L3 同步：scenarios/<场景>/sources/sop.md → skills/sop/SKILL.md
+    ├── dsh.patch.yml         # headless 本地策略：禁用清单 / 模型 / persona / 指令候选
+    ├── dsh-web.patch.yml     # web 本地策略：进程级收尾 / 目录选择器修复 / registry 默认 preset
+    ├── sync_sop.sh           # L3 同步：scenarios/<场景>/sources/sop.md → dsh-tsm/skills/sop/SKILL.md
     ├── run_one.sh            # 单题运行器（预检 + dsh headless）
     ├── run_web.sh            # Web UI 启动器（预检 + dsh web）
     └── .env.example          # DEEPSEEK_API_KEY → 复制为 .env

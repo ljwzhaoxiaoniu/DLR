@@ -2,7 +2,7 @@
 # L3 单一真源同步：<源 sop.md> → skills/<技能名>/SKILL.md（加 frontmatter）。
 #
 # 用法: sync_sop.sh [<源文件>] [<技能名>]
-#   默认: <repo>/scenarios/birdminidev/sources/sop.md → skills/sop/SKILL.md
+#   默认: <repo>/scenarios/birdminidev/sources/sop.md → dsh-tsm/skills/sop/SKILL.md
 #   换场景: bash sync_sop.sh "../../scenarios/birdminidev/sources/sop.md" sop
 #
 # 多数据集约定（一个评测集 = 一套完整 TSM：L1 DLR 图谱 + L2 evidence + L3 本文件）：
@@ -17,7 +17,8 @@ SVC_DIR="$(cd "$HERE/.." && pwd -W)"
 ROOT="$(cd "$SVC_DIR/.." && pwd -W)"
 SRC="${1:-$ROOT/scenarios/birdminidev/sources/sop.md}"
 NAME="${2:-sop}"
-DST="$HERE/skills/$NAME/SKILL.md"
+# 部署目标 = **bundle 内**的技能目录（随包分发；dsh-tsm 的 node 半会把它设为 DLR_SKILLS_DIR）
+DST="$SVC_DIR/dsh-tsm/skills/$NAME/SKILL.md"
 
 [ -f "$SRC" ] || { echo "[ERR] 真源不存在: $SRC" >&2; exit 1; }
 

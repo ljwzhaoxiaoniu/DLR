@@ -34,10 +34,10 @@
             name: '@deepseek-ai/dsh-skill-filesystem'
             config:
               includeDefaultRoots: false
-              # web 的 cwd 是 UI 里选的工作区 → 技能目录必须绝对路径：
-              # 由启动器 run_web.sh 注入 DLR_SKILLS_DIR；末尾保留本机默认（裸跑 `dsh web` 时兜底）
+              # 技能目录必须绝对路径（web 的 cwd 是 UI 里选的工作区）：
+              # 由本 bundle 的 node 半在 boot 期设为 `<包>/skills`；启动器也可显式覆盖。
               customSkillDirs:
-                - !!js process.env.DLR_SKILLS_DIR || 'D:/Code_Proj/DLR Proj/DSH-based Agent Service/dsh_dlr/skills'
+                - !!js process.env.DLR_SKILLS_DIR || 'D:/Code_Proj/DLR Proj/DSH-based Agent Service/dsh-tsm/skills'
           - id: skill-tool
             name: '@deepseek-ai/dsh-tool-skill'
 
