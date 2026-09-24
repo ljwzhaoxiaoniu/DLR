@@ -42,7 +42,7 @@ for (const f of scenarioFiles()) {
   if (p) dbPath.set(db, p);
 }
 
-function goldValues(qid: number, db: string): { values: string[]; err?: string } {
+function goldValues(qid: number, db: string): { values: string[]; empty?: boolean; err?: string } {
   const q = byQid.get(qid);
   const sqlite = dbPath.get(db);
   if (!q) return { values: [], err: "题目不存在" };
@@ -52,7 +52,8 @@ function goldValues(qid: number, db: string): { values: string[]; err?: string }
     try {
       const rows = db2.prepare(String(q.SQL)).all() as Record<string, unknown>[];
       const values = rows.flatMap((r) => Object.values(r).map((v) => String(v)));
-      return { values };
+      // gold 正常执行但**零行** = 合法期望「空结果」（如"9 月有产品被消费吗"→无）
+      return rows.length === 0 ? { values: [], empty: true } : { values };
     } finally {
       db2.close();
     }
@@ -133,7 +134,15 @@ for (const f of fs.readdirSync(rawDir).filter((x) => x.endsWith(".ndjson")).sort
     }
   }
   const gold = goldValues(qid, db);
-  const v = judge(final, gold.values);
+  const v = gold.empty
+    ? (() => {
+        const saysEmpty =
+          /(empty list|no (products?|records?|transactions?|results?|countries|purchases)|none|no data|\bempty\b|为空|没有|无(相符|记录|产品|交易))/i.test(
+            final,
+          );
+        return { verdict: saysEmpty ? "PASS" : "FAIL", precision: "empty" };
+      })()
+    : judge(final, gold.values);
   rows.push({
     qid: String(qid),
     db,
