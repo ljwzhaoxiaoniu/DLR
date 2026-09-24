@@ -34,7 +34,8 @@ const usage = () => {
   tsm status [--port <port>]                        打印 /status 快照
   tsm build  [lance|consensus|graph|all] [--wipe]   构建（graph 需 Neo4j 在跑）
   tsm verify [precheck|parity_dlr|tool_parity|...]  跑 verify 脚本（默认 precheck）
-  tsm viz    [--open] [--db <库名>]                 生成自包含的 DLR 图谱页（开发态）`);
+  tsm viz    [--open] [--db <库名>]                 生成自包含的 DLR 图谱页（开发态）
+  tsm coverage [--db <库名>] [--out <file>]         建模覆盖度对账（数据集原生语义 ↔ L1/L2/L3）`);
 };
 
 const [cmd, ...rest] = process.argv.slice(2);
@@ -83,6 +84,12 @@ switch (cmd) {
   case "viz": {
     // 开发态：生成自包含的 DLR 图谱页（--open 打开；--db 限定单库）
     code = await runTs("viz/buildViz.ts", rest);
+    break;
+  }
+
+  case "coverage": {
+    // 开发态：建模覆盖度对账（数据集原生语义 ↔ L1/L2/L3）
+    code = await runTs("dev/coverage.ts", rest);
     break;
   }
 

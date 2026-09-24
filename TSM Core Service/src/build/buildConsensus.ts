@@ -15,6 +15,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as lancedb from "@lancedb/lancedb";
 import { TextEncoder } from "../embed/encoder.js";
+import { readConsensusSource } from "../model/consensusSource.js";
 import {
   CONSENSUS_DIR as KNOWLEDGE_DIR,
   STORE_DIR as DEFAULT_STORE,
@@ -38,22 +39,9 @@ interface Rec {
   text: string;
 }
 
-/** 与 build_evidence.py:load_topic 同口径 */
+/** 与 build_evidence.py:load_topic 同口径（两种格式见 consensusSource.ts） */
 function loadTopic(file: string, namespace: string): Rec[] {
-  const raw = fs.readFileSync(file, "utf8").trim();
-  if (!raw) return [];
-  if (raw.startsWith("[")) {
-    const items = JSON.parse(raw) as { kid?: number; knowledge?: string }[];
-    return items
-      .map((o) => ({ namespace, qid: Number(o.kid ?? 0), question: "", text: (o.knowledge ?? "").trim() }))
-      .filter((r) => r.text);
-  }
-  return raw
-    .split("\n")
-    .filter((l) => l.trim())
-    .map((l) => JSON.parse(l) as { qid?: number; question?: string; evidence?: string })
-    .map((o) => ({ namespace, qid: Number(o.qid ?? 0), question: o.question ?? "", text: (o.evidence ?? "").trim() }))
-    .filter((r) => r.text);
+  return readConsensusSource(file).map((r) => ({ namespace, ...r }));
 }
 
 const records: Rec[] = [];
