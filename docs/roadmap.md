@@ -10,6 +10,7 @@
 |---|---|---|---|
 | **查询执行** | `execute_sql`——演示级 SQLite 直连 | 扩展成自己的 **`DSL_SQL 服务`**：受控查询 DSL → 各方言 SQL（PG / MySQL / Oracle / 数仓）→ 执行 + 权限下推（视图 / RLS） | **OData**（标准化查询协议：`$filter` / `$select` / `$expand` + `$metadata` 自描述；SAP Gateway、Microsoft Graph 在用） |
 | 连接器 / 方言 | 仅 SQLite | 同上，统一在 DSL_SQL 层解决 | 各数据库驱动 |
+| **图结构后端** | **进程内内存图**（YAML→内存，默认，待做）＋ **Neo4j 兼容样例** | 企业自建连接器（自家图库/图服务），按同一读取接口实现 | 与 `execute_sql`→DSL_SQL 同构 |
 | 行 / 列级权限 | 无（单用户本地） | 权限下推到 DSL_SQL 层 | 数据库 RLS / 视图 |
 | 冷启动建模 | 手写 YAML（样板） | introspect → 草稿 → 评审（可接企业元数据平台） | dbt docs / DataHub |
 | 指标口径对接 | L2 引用即可 | 从 dbt / Cube / LookML 导入为 L2 条目 | MetricFlow |
@@ -35,7 +36,8 @@
 |---|---|---|
 | **1. 路径解耦** | 消灭硬编码绝对路径：`TSM Core Service/src/config.ts` 的 `ROOT` 改为**包自身位置推导 + env 覆盖**；patch 里的 skills 目录改 env/相对注入；Neo4j 位置改探测 | 仓库挪到任意目录照跑 |
 | **2. 打包** | ✅ **dsh 侧**：`dsh-tsm` bundle（MCP 网关 + preset-dlr + 状态浮层 + **skills 随包**），`dsh plugin --profile {web,headless} add` 一条装 ｜ ✅ **后端 CLI**：`tsm serve｜status｜build｜verify`（运行态/开发态同一入口） ｜ **剩余**：分发（npm 发布或 git 地址） | 另一台有 dsh 的机器按 [run.md](run.md) §8 走通 |
-| **3. 零服务（可选终局）** | 图很小（千级节点），可搬进 dsh 进程做**原生工具**，Neo4j 降为可选后端 | 真"零外部服务" |
+| **3. 图后端双轨（原"零服务"）** | 默认**进程内**（YAML→内存：零依赖、零锁、零服务；1133 节点的只读查找，四个读方法抽成接口即可）；**保留 Neo4j 兼容**（配 `NEO4J_URI` 即启用：Cypher / Browser / 大图 / 企业已有图库） | 测试机不装 Neo4j 也能跑通验收四连 |
+| **附带：可视化独立成页** | `/viz/dlr` 只读"结构 JSON"——**跟哪个后端无关**（进程内或 Neo4j 皆可）；Neo4j Browser 作为并列入口保留 | 演示不依赖任何图服务 |
 
 > dsh 生态口径参考：bundle = npm 包 + `dsh.bundle.patch`（自带要插入的行）+ 可选 `dsh.client`（浏览器半）；安装/更新走 profile 内 pnpm（支持 registry / Git / tarball / **本地绝对路径**）；行级开关 = profile 的 `cordis.patch.yml`。两条路可并存，`--patch` 层优先级最高，正好当"本地覆盖"。
 
