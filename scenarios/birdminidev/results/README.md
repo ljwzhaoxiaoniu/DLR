@@ -8,7 +8,7 @@
 ```
 results/
 ├── README.md            # ← 本文（怎么产生、怎么看、怎么更新）
-├── stats.svg            # 综合统计图（tsm stats 生成；场景 README §六 引用同一份）
+├── stats.svg            # 综合统计图（tsm stats 生成；场景 README §五 引用同一份）
 ├── STATS.md             # 跨轮统计文字版（逐轮 / 分库进度 / 效率）
 └── <run_id>/            # 一轮 = 一个目录（如 0924_1559_qids_1473_1480_1500）
     ├── questions.tsv    # 本轮题单（qid / db / question，取自数据集本身）
@@ -39,7 +39,7 @@ results/
 bash "DSH-based Agent Service/scripts/run_batch.sh" --all --jobs 4
 # 2) 判定与汇总（单轮；产出 questions.csv / summary.md）
 cd "TSM Core Service" && tsm grade --run "../scenarios/birdminidev/results/<run_id>"
-# 3) 综合统计 + 明细（跨轮；重算 stats.svg / STATS.md / DETAIL.md，并同步场景 README §一/§六）
+# 3) 综合统计 + 明细（跨轮；重算 stats.svg / STATS.md / DETAIL.md，并同步场景 README §一/§五）
 tsm stats
 ```
 

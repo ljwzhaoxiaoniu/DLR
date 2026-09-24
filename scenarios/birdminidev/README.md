@@ -1,22 +1,13 @@
-# 场景：`birdminidev` —— DLR 建模的应用案例
+# 场景：`birdminidev` —— 第一个 NL2SQL 场景（TSM + DLR 怎么用）
 
-> **定位**：把 TSM + DLR 应用到一份真实数据集上的**案例**。
-> **规范与原则**（LE 是什么 / PE 是什么 / 库表如何抽象成两层 / 建模规则与自检）在 **[docs/03-design.md](../../docs/03-design.md)**；
-> 本文讲**这个案例**：数据集的语义原料原来在哪 → 怎么被装进三层 → 每库的抽象决策 → 怎么运行与自证。
+> **定位**：把 TSM（三级语义建模）+ DLR 用到真实 NL2SQL 数据集上的**第一个场景**。
+> **规范与原则**（LE / PE / 库表如何抽象成两层 / 建模规则与自检）在 **[docs/03-design.md](../../docs/03-design.md)**；
+> 本文按用法顺序展开：**数据集介绍（含错题）→ 建模应用思路 → 应用结果 → 处理和使用流程 → 实测结果**。
 > 场景包规范（目录约定、换场景 checklist）：[docs/04-application.md](../../docs/04-application.md)。
 
-## 一、错题记录（评测暴露的问题 ↔ SOP 裁定）
+## 一、数据集介绍（含错题）
 
-> 判定非 PASS 的题——每题都对应 L3 `sop.md` 的一节裁定：**数据集的错**在这里，**我们为什么这么答**也在
-> 这里（逐题来龙去脉见并列的 [DETAIL.md](DETAIL.md)；全量进度见 §六 综合统计）。
-
-<!-- mistakes:begin -->
-| 题号 | 库 | 判定 | 类型 | 问题（截） | 裁定（全文见 [DETAIL.md](DETAIL.md)） |
-|---|---|---|---|---|---|
-| q1500 | debit_card_specializing | UNCERTAIN | 数据集问题 | Please list the product description of the products cons | The individual-purchase records are only a **four-day sample**: they cover 2012-08-23 through 2012-08-26, and nothing else. Any mo |
-<!-- mistakes:end -->
-
-## 二、数据集原生语义：原来在哪
+### 原生语义：原来在哪
 
 | 原料 | 位置 | 内容 |
 |---|---|---|
@@ -25,7 +16,18 @@
 | **物理真相** | `<db>.sqlite` 本体 | `PRAGMA table_info / foreign_key_list`——**类型与 FK 以此为准** |
 | **题目与 evidence** | `MINIDEV_sqlite/mini_dev_sqlite.json` | `{question_id, db_id, question, evidence, SQL, difficulty}`；**evidence 是出题人给的提示**——L2/L3 主要由此派生 |
 
-## 三、正向装载：原料 → 三层
+### 错题记录（评测暴露的问题 ↔ SOP 裁定）
+
+> 数据集自身的问题（gold 缺陷 / 样本窗口 / 描述失真）由跑题暴露出来，每题一节 L3 `sop.md` 裁定承载——
+> **数据集的错**在这里，**我们为什么这么答**也在这里（逐题来龙去脉见并列的 [DETAIL.md](DETAIL.md)）。
+
+<!-- mistakes:begin -->
+| 题号 | 库 | 判定 | 类型 | 问题（截） | 裁定（全文见 [DETAIL.md](DETAIL.md)） |
+|---|---|---|---|---|---|
+| q1500 | debit_card_specializing | UNCERTAIN | 数据集问题 | Please list the product description of the products cons | The individual-purchase records are only a **four-day sample**: they cover 2012-08-23 through 2012-08-26, and nothing else. Any mo |
+<!-- mistakes:end -->
+
+## 二、建模应用思路（原料 → 三层）
 
 ```
 database_description/*.csv（列说明）─┐
@@ -38,7 +40,9 @@ evidence 的剩余 ────────────────────�
 
 **对账即自证**：`tsm coverage`（开发态）把这三步变成三张对账单——L1 列级/关系级（硬）、L2 残差（启发式）。
 
-## 四、本场景的模型（应用结果）
+**建模原则**：L1 一列一描述、全部取自**数据集原生**（不做语义丰富度补充，保证公平）；数据集的问题与麻烦**不在 L1 修**，交 L3 `sop.md` 承载并打标——口径见 [docs/04-application.md](../../docs/04-application.md) §二。
+
+## 三、应用结果（本场景的模型）
 
 | 库 | LE | PE（表 → LE） | PAS | 表/列 | 抽象决策（要点） |
 |---|---|---|---|---|---|
@@ -55,7 +59,7 @@ evidence 的剩余 ────────────────────�
 | toxicology | 3 | Molecule ← molecule ｜ Atom ← atom ｜ Bond ← bond+connected | 3 | 4/11 | bond+connected 合成一个 LE；Atom/Molecule 各自 |
 | **合计** | **49** | **72 PE** | **35** | 1133 节点 | |
 
-## 五、处理与使用流程（这份数据集怎么跑）
+## 四、处理和使用流程（这份数据集怎么跑）
 
 ```
 ① 建模（一次性）    原料 → L1；evidence 残差 → L2          tsm build
@@ -83,7 +87,7 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 ```
 跑题与排障见 [docs/run.md](../../docs/run.md)；换场景见 [docs/04-application.md](../../docs/04-application.md)；评测（考卷 + 考试系统）见 [docs/eval.md](../../docs/eval.md)。
 
-## 六、实测结果
+## 五、实测结果
 
 > 跑批结果按轮次留档在 [`results/`](results/)：raw 可追溯日志 + 判定明细 + 单轮汇总；综合统计由 `tsm stats` 汇总生成，并同步一份到本节。
 
@@ -101,11 +105,11 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 
 **怎么更新**：跑完一批 → `tsm grade --run <轮次目录>` → `tsm stats`（重算图与本节块）；跑题中遇到的问题按类型补进 `sources/sop.md`。
 
-## 七、目录速查
+## 六、目录速查
 
 ```
 scenarios/birdminidev/
-├── README.md            # ← 本文（案例说明：错题 → 原料 → 装载 → 决策 → 实测）
+├── README.md            # ← 本文（数据集（含错题）→ 建模思路 → 结果 → 流程 → 实测）
 ├── DETAIL.md            # 评测明细（逐题校验表 / 进度 / 汇总 / 错题与裁定 / 逐题明细：怎么对的）
 ├── results/             # 跑批留档（按轮次：raw 日志 + 判定 CSV + 单轮汇总；stats.svg 综合统计图）
 ├── sources/
