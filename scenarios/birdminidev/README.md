@@ -44,7 +44,24 @@ evidence 的剩余 ────────────────────�
 | toxicology | 3 | Molecule ← molecule ｜ Atom ← atom ｜ Bond ← bond+connected | 3 | 4/11 | bond+connected 合成一个 LE；Atom/Molecule 各自 |
 | **合计** | **49** | **72 PE** | **35** | 1133 节点 | |
 
-## 四、怎么运行与自证
+## 四、处理与使用流程（这份数据集怎么跑）
+
+```
+① 建模（一次性）    原料 → L1；evidence 残差 → L2          tsm build
+② 跑题（持续）      单题：dsh headless → 答案 → 与 gold 比对  run_one.sh / 批跑器
+②′ SOP 边跑边更新   每遇「数据集问题 / 建模冲突 / 难题 / 其他」→ sop.md 补节并打标
+③ 复跑              同一批题再跑，验证 SOP 命中后的行为变化
+④ 全量             **500 题跑一轮 → 结果表（对 / 错 / 存疑）**
+⑤ 回归             L1/L2 不退化：tsm verify + tsm coverage
+```
+
+**要点**：
+
+- **SOP 不是预先写全的**——它是"运行暴露问题 → 归类 → 补节 → 打标"的**累积产物**（事后准入）；每节只在该题命中时生效。
+- **判定**：执行 gold SQL 得期望值 ↔ agent 答案（规则判定；数值容差 + 字符串归一；存疑进人工/仲裁清单）。
+- **规模**：500 题 × 单题约 1.5 分钟；并发 N 路时 ≈ 500×1.5/N 分钟（N=6 ≈ 2 小时）。
+
+**开发态命令**：
 
 ```bash
 cd "TSM Core Service"
@@ -53,7 +70,7 @@ tsm verify           # 回归套件（对 fixtures 自证；fixtures = 回归快
 tsm viz --open       # 看结构（LE/PE/ARCS/PAS 图谱页）
 tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 ```
-跑题与排障见 [docs/run.md](../../docs/run.md)；换场景见 [docs/04-application.md](../../docs/04-application.md)。
+跑题与排障见 [docs/run.md](../../docs/run.md)；换场景见 [docs/04-application.md](../../docs/04-application.md)；评测（考卷 + 考试系统）见 [docs/eval.md](../../docs/eval.md)。
 
 ## 五、当前差距（2026-09-24 首份对账，`tsm coverage`）
 

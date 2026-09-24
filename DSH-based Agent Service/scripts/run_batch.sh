@@ -56,17 +56,22 @@ EOF
 TOTAL=$(wc -l < "$RUN_DIR/questions.tsv")
 echo "[batch] 共 $TOTAL 题 → $RUN_DIR（并发 $JOBS）"
 
-# 并行：多开 dsh 进程；每条题一行产物（run_one.sh 自带预检与命名）
+# 并行：多开 dsh 进程（wait -n 控并发，不依赖 jobs 状态）
+RUNNING=0
 DONE=0
 while IFS=$'\t' read -r qid db question; do
   [ -n "${qid:-}" ] || continue
-  while [ "$(jobs -rp | wc -l)" -ge "$JOBS" ]; do sleep 1; done
   (
     SKIP_PRECHECK=1 bash "$DSH_DIR/run_one.sh" "$qid" "$question" "$RAW" >/dev/null 2>&1 \
       || echo "[warn] q$qid 退出码非 0"
   ) &
+  RUNNING=$((RUNNING + 1))
   DONE=$((DONE + 1))
-  [ $((DONE % 25)) -eq 0 ] && echo "[batch] 已派发 $DONE/$TOTAL"
+  if [ "$RUNNING" -ge "$JOBS" ]; then
+    wait -n
+    RUNNING=$((RUNNING - 1))
+  fi
+  [ $((DONE % 10)) -eq 0 ] && echo "[batch] 已派发 $DONE/$TOTAL"
 done < "$RUN_DIR/questions.tsv"
 wait
 echo "[batch] 全部完成：$(ls "$RAW"/*.ndjson 2>/dev/null | wc -l)/$TOTAL 题有产物"
