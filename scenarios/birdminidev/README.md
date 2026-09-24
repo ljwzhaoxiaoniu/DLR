@@ -27,9 +27,13 @@
 | q1481 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | What is the difference in the annual average consumption | Per customer, total up their 2013 CZK consumption. Then, **per segment**, take the customer(s) with the lowest 2013 total. "Annual |
 | q1482 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | Which of the three segments—SME, LAM and KAM—has the big | The question names the currency, so the consumption must be filtered to customers whose billing currency is EUR (`Currency = 'EUR' |
 | q1490 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | How many percent of LAM customer consumed more than 46.7 | "Percent of customers" is counted **per customer**, not per customer-month record. One customer = one unit in both the numerator a |
-| q1493 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | In February 2012, what percentage of customers consumed | "Percentage of customers" is counted on the **customer population**: the numerator is the customers whose February 2012 consumptio |
+| q1493 | debit_card_specializing | ❌ 错误 | 难题 | In February 2012, what percentage of customers consumed | "Percentage of customers" is counted per customer -- one customer = one unit in both the numerator and the denominator -- and **th |
 | q1500 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | Please list the product description of the products cons | The individual-purchase records are only a **four-day sample**: they cover 2012-08-23 through 2012-08-26, and nothing else. Any mo |
 | q1501 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | Please list the countries of the gas stations with trans | Same sample-window fact: the individual-purchase records cover only 2012-08-23~26, so no purchases took place in June 2013, and th |
+| q1525 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | What is the percentage of the customers who used EUR in | "Percentage of customers" = **customers**, not transactions: one customer counts once, in both the numerator and the denominator, |
+| q1526 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | For the customer who paid 634.8 in 2012/8/25, what was t | "paid 634.8" identifies the customer through a single purchase of that amount on that date -- a purchase-level condition, not a mo |
+| q1529 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | What is the amount spent by customer "38508" at the gas | "Amount spent by a customer" is that customer's total consumption across all gas stations -- a question about the customer's month |
+| q1531 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | Who is the top spending customer and how much is the ave | "Top spending customer" is decided by the customer's total consumption across all gas stations (the month-by-month figures), not b |
 <!-- mistakes:end -->
 
 ## 二、建模应用思路（原料 → 三层）
@@ -99,13 +103,13 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 <!-- stats:begin -->
 ![实测结果综合统计](results/stats.svg)
 
-**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 11 ｜ 🔁 翻盘 6 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 483　—　**已跑 17 题全部正确**
+**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 20 ｜ 🔁 翻盘 9 ｜ ❌ 错误 1 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 470　—　**已跑 30 题：正确 29 题**
 
 （🔁 翻盘 = 数据集自身缺陷（gold 未实现题面）按 SOP 逐题裁定为正确——单独计数、不并入 ✅ 正确；每题取最新一轮）
 
-均值 **5.1 步 / 7.9 工具调用 / 每题 49,674 tokens** ｜ 跑题覆盖度 **17/500 题**（1/11 库有产物）
+均值 **5.4 步 / 8.3 工具调用 / 每题 57,700 tokens** ｜ 跑题覆盖度 **30/500 题**（1/11 库有产物）
 
-> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 6 道数据集缺陷题的比对记录）也在这两处可查。
+> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 9 道数据集缺陷题的比对记录）也在这两处可查。
 <!-- stats:end -->
 
 **怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。

@@ -63,22 +63,28 @@ const NUM_RE = /[-−–—－]?\d[\d,]*(?:\.\d+)?/g;
 const norm = (s: string) =>
   s.toLowerCase().replace(NEG_RE, "-").replace(/[\s,]+/g, " ").replace(/[^\w.%\- ]+/g, "").trim();
 
-/** 文本比对（全字符串命中 → 数值逐级容差） */
+/** 文本比对（**逐值判定**：每个期望值各自走「文本命中 或 数值逐级容差」；混合类型期望也能判） */
 export function judge(finalText: string, expected: string[]): { verdict: string; precision: string } {
   if (!expected.length) return { verdict: "GOLD_ERR", precision: "-" };
   const tn = norm(finalText);
-  if (expected.every((e) => tn.includes(norm(e)))) return { verdict: "PASS", precision: "text" };
-  const expNums = expected.map(toNum);
-  if (expNums.every((n) => Number.isFinite(n))) {
-    const cands = (finalText.match(NUM_RE) ?? []).map(toNum);
-    const REL = [1e-9, 1e-6, 1e-4, 1e-3];
-    for (const r of REL) {
-      const allHit = expNums.every((e) => cands.some((c) => Math.abs(c - e) <= Math.max(1e-12, Math.abs(e) * r)));
-      if (allHit) return { verdict: "PASS", precision: `num@${r}` };
-    }
-    return { verdict: "FAIL", precision: "-" };
+  const cands = (finalText.match(NUM_RE) ?? []).map(toNum);
+  const REL = [1e-9, 1e-6, 1e-4, 1e-3];
+
+  const hit = (e: string): { ok: boolean; how: string } => {
+    if (tn.includes(norm(e))) return { ok: true, how: "text" };
+    const n = toNum(e);
+    if (!Number.isFinite(n)) return { ok: false, how: "" };
+    for (const r of REL)
+      if (cands.some((c) => Math.abs(c - n) <= Math.max(1e-12, Math.abs(n) * r))) return { ok: true, how: `num@${r}` };
+    return { ok: false, how: "" };
+  };
+  const hits = expected.map(hit);
+  if (hits.every((h) => h.ok)) {
+    const nums = hits.filter((h) => h.how.startsWith("num")).map((h) => h.how);
+    return { verdict: "PASS", precision: nums.length ? nums[nums.length - 1] : "text" };
   }
-  return { verdict: "UNCERTAIN", precision: "-" };
+  // 期望里全是数值 → 可比对但没对上，记 FAIL；含非数值（文本期望）则抽不出可比对的值 → UNCERTAIN
+  return expected.every((e) => Number.isFinite(toNum(e))) ? { verdict: "FAIL", precision: "-" } : { verdict: "UNCERTAIN", precision: "-" };
 }
 
 /** gold 正常执行但零行：看 agent 是否也说「没有」 */

@@ -118,21 +118,30 @@ The country of a gas station is reached through the purchases that took place at
 "percentage of the customers" counts customers, not purchases: one customer = one unit in both the numerator and the denominator, on the same day's data. Numerator = the distinct customers who used EUR that day; denominator = the distinct customers who bought anything that day. A customer with several purchases that day still counts once.
 
 ### When asked: "For the customer who paid 634.8 in 2012/8/25, what was the consumption decrease rate from Year 2012 to 2013?"
-> **类型**：难题
+> **类型**：数据集问题 · 难题
+> **Expected**：-581.5243
 
-"paid 634.8" identifies the customer through a single purchase of that amount on that date -- a purchase-level condition, not a monthly total.
+"paid 634.8" identifies the customer through a single purchase of that amount on that date -- a purchase-level condition, not a monthly total. The purchase the question names is the unique `Price = 634.8` on 2012-08-25 (customer 6718).
 
-"consumption decrease rate" = (2012 total consumption - 2013 total consumption) / 2012 total consumption, computed from that customer's annual totals. An annual total is the sum of the customer's monthly figures in that year -- use the monthly consumption figures, not individual purchase amounts.
+"consumption decrease rate" = (2012 total consumption - 2013 total consumption) / 2012 total consumption, computed from that customer's annual totals. An annual total is the sum of the customer's monthly figures in that year -- use the monthly consumption figures, not individual purchase amounts. Report it as a percentage (the same quantity x100).
+
+The reference answer looks the customer up by a **different price** (`Price = 1513.12`), so it matches no purchase and returns no value at all. Follow the question's own amount: do not conclude "no such customer" (or adopt the reference's emptiness) from a formula that used another number.
+
+For this customer 2013 is actually **higher** than 2012, so the "decrease rate" comes out negative -- that is the answer, not a data error.
 
 ### When asked: "What is the amount spent by customer "38508" at the gas stations? How much had the customer spent in January 2012?"
 > **类型**：数据集问题
+> **Expected**：5124646.35 | 67156.94
 
 "Amount spent by a customer" is that customer's total consumption across all gas stations -- a question about the customer's monthly figures, not about the purchase sample. The purchase sample covers only four days and cannot stand in for the customer's total spending.
 
 "Spent in January 2012" is the same customer's total for that month (201201). Both parts are read from the customer's month-by-month figures, never from the purchase sample's individual amounts.
 
+The reference answer reads the four-day sample instead, and its first figure is further inflated by a join fan-out (the purchase rows multiply against the customer's monthly rows) -- do not copy either the source or the inflated figure.
+
 ### When asked: "Who is the top spending customer and how much is the average price per single item purchased by this customer? What currency was being used?"
-> **类型**：难题
+> **类型**：数据集问题 · 难题
+> **Expected**：12459 | 22.5452 | CZK
 
 "Top spending customer" is decided by the customer's total consumption across all gas stations (the month-by-month figures), not by adding up the four-day purchase sample.
 
@@ -172,11 +181,21 @@ The question names the currency, so the consumption must be filtered to customer
 Follow the question, not the reference: filter to EUR first. With the filter the ordering is stable -- **SME has the biggest** percentage increase, **LAM the lowest**, KAM in between -- and that ordering holds whichever denominator you take (increase over the previous year, or the evidence's share of the later year; the latter gives roughly 88% / 85% / 84%). The question asks which segments: give the two segment names, plus the percentages you computed.
 
 ### When asked: "In February 2012, what percentage of customers consumed more than 528.3?"
+> **类型**：难题
+
+"Percentage of customers" is counted per customer -- one customer = one unit in both the numerator and the denominator -- and **the scope of "customers" follows the question's own window**: this question is about a single month, so the population is the customers who have a figure for that month (each customer has exactly one figure per month, so the month's rows are exactly that population). A customer with nothing recorded in the month did not "consume more than 528.3" in it. Do not widen the denominator to the whole customer master -- that gives 37.61 for this question instead of 66.62.
+
+Contrast with the LAM / 46.73 percentage question: that one names a segment and carries **no** time window, so its population is the whole segment, customers with no records included (its evidence says so explicitly). Window-scoped and segment-wide percentage questions do not share one denominator -- take the population from the question's own scope. February 2012 is the year-month code `201202`.
+
+### When asked: "What is the percentage of the customers who used EUR in 2012/8/25?"
 > **类型**：数据集问题
-> **Expected**：37.6082
+> **Expected**：2.7027
 
-"Percentage of customers" is counted on the **customer population**: the numerator is the customers whose February 2012 consumption exceeds 528.3, the denominator is **all** customers. A customer with no figure recorded for that month is still one of the "customers" the question asks about -- do not narrow the denominator to the customers who happen to have a record in the window. This is the caliber the dataset itself states for this question family (see the LAM / 46.73 percentage question: "Total no. of ... customers who consumed more than ... / Total no. of ... customers").
+"Percentage of customers" = **customers**, not transactions: one customer counts once, in both the numerator and the denominator, and both are scoped to the question's window.
 
-A record-scoped formula for this question gives a different number, because it shrinks the denominator to the customers present in the month: do not copy such a formula if you retrieve one. February 2012 is the year-month code `201202`; each customer has one figure for the month, so the threshold applies to that figure.
+- Numerator: the customers who paid in EUR that day. The billing currency is a customer attribute, and "used EUR in 2012/8/25" means they actually bought something that day.
+- Denominator: the customers present that day (the ones with a transaction on 2012-08-25).
 
-Same caliber applies to the other "percentage of the customers" questions in this database (e.g. the EUR / 2012-08-25 one): population-wide denominator, not the rows of the scoped window.
+The reference answer divides by the **number of transactions** that day, putting a transaction count under a "percentage of customers" label -- a unit mix, and the reason its figure disagrees (1.65 against 2.70). Do not copy a formula whose denominator counts rows instead of customers.
+
+The date 2012/8/25 is stored as `2012-08-25`.
