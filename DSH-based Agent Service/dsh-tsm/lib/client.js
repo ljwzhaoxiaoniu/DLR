@@ -117,16 +117,31 @@ window.__ModuleLoader__.load({
         vecLine ? row("vectors", React.createElement("span", { style: { opacity: 0.85 } }, vecLine)) : null,
         row(
           "link",
-          React.createElement(
-            "a",
-            {
-              href: browserUrl,
-              target: "_blank",
-              rel: "noreferrer",
-              style: { color: "#58a6ff", textDecoration: "none" },
-            },
-            "Neo4j Browser ↗",
-          ),
+          [
+            React.createElement(
+              "a",
+              {
+                key: "viz",
+                href: "http://127.0.0.1:28795/viz/dlr",
+                target: "_blank",
+                rel: "noreferrer",
+                style: { color: "#58a6ff", textDecoration: "none" },
+              },
+              "图谱 ↗",
+            ),
+            React.createElement("span", { key: "sep", style: { opacity: 0.4, margin: "0 8px" } }, "·"),
+            React.createElement(
+              "a",
+              {
+                key: "neo",
+                href: browserUrl,
+                target: "_blank",
+                rel: "noreferrer",
+                style: { color: "#8b949e", textDecoration: "none" },
+              },
+              "Neo4j ↗",
+            ),
+          ],
         ),
       );
     }

@@ -23,6 +23,7 @@ import { executeSql } from "../queries/executeSql.js";
 
 import { STORE_DIR, MODEL_DIR } from "../config.js";
 import { buildStatus } from "./status.js";
+import { renderVizHtml } from "../viz/buildViz.js";
 const NEO4J_URI = process.env.NEO4J_URI ?? "bolt://localhost:7687";
 const NEO4J_USER = process.env.NEO4J_USER ?? "neo4j";
 const NEO4J_PASSWORD = process.env.NEO4J_PASSWORD ?? "";
@@ -167,6 +168,15 @@ if (httpIdx >= 0) {
           };
           if (origin && STATUS_ORIGINS.has(origin)) headers["access-control-allow-origin"] = origin;
           res.writeHead(200, headers).end(JSON.stringify(await buildStatus({ getStore, getGraph })));
+          return;
+        }
+
+        // ── /viz/dlr：把自包含图谱页端出来（实时渲染；浏览器不能从 http 跳 file://）──
+        if (req.method === "GET" && req.url?.startsWith("/viz/dlr")) {
+          const db = new URL(req.url, "http://localhost").searchParams.get("db") ?? undefined;
+          res
+            .writeHead(200, { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" })
+            .end(renderVizHtml(db));
           return;
         }
 

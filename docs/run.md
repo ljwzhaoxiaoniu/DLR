@@ -60,7 +60,9 @@ bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 curl -s http://127.0.0.1:28795/status
 ```
 
-- Neo4j Browser：http://localhost:7474 —— 账号 `neo4j`，密码在 `TSM Core Service/.env`。
+- **图谱页**：**http://127.0.0.1:28795/viz/dlr**（MCP server 实时渲染；状态卡上的 `图谱 ↗` 指向它）。
+  离线/分享用单文件版：`tsm viz`（产物 `.store/viz/dlr-graph.html`）。
+- Neo4j Browser：http://localhost:7474 —— 账号 `neo4j`，密码在 `TSM Core Service/.env`（状态卡 `Neo4j ↗` 指向它）。
 
 ## 5. 工具依赖（Neo4j 挂了会怎样）
 

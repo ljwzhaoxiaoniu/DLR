@@ -36,51 +36,68 @@ if (!fs.existsSync(VENDOR)) {
   process.exit(1);
 }
 
-const payload = buildPayload(DB);
-const template = fs.readFileSync(TEMPLATE, "utf8");
-const visJs = fs.readFileSync(VENDOR, "utf8");
+/** 渲染自包含页面（供 CLI 写文件；MCP server 的 `GET /viz/dlr` 也直接用它） */
+export function renderVizHtml(db?: string): string {
+  const payload = buildPayload(db);
+  const template = fs.readFileSync(TEMPLATE, "utf8");
+  const visJs = fs.readFileSync(VENDOR, "utf8");
 
-// 1) 外部 CDN → 本地内联
-let html = template.replace(
-  /<script[^>]*src="https:\/\/unpkg\.com\/vis-network[^"]*"[^>]*><\/script>/,
-  `<script>/* vis-network 9.1.9 —— 本地化内联（原 CDN: unpkg） */\n${visJs}\n</script>`,
-);
-if (html === template) console.warn("[warn] 未找到 CDN script 标签，跳过内联（模板可能已改）");
+  // 1) 外部 CDN → 本地内联
+  let html = template.replace(
+    /<script[^>]*src="https:\/\/unpkg\.com\/vis-network[^"]*"[^>]*><\/script>/,
+    `<script>/* vis-network 9.1.9 —— 本地化内联（原 CDN: unpkg） */\n${visJs}\n</script>`,
+  );
+  if (html === template) console.warn("[warn] 未找到 CDN script 标签，跳过内联（模板可能已改）");
 
-// 2) fetch 数据 → 内联数据（保留 fetch 兜底：万一将来由服务端提供时仍可用）
-const fetchBlock = `const res = await fetch('/api/v1/dlr/graph');
+  // 2) fetch 数据 → 内联数据（保留 fetch 兜底：万一将来由服务端提供时仍可用）
+  const fetchBlock = `const res = await fetch('/api/v1/dlr/graph');
             if (!res.ok) throw new Error('HTTP ' + res.status);
             const data = await res.json();`;
-if (!html.includes(fetchBlock)) {
-  console.error("[ERR] 模板里的取数代码与预期不符（改过？）——中止，避免生成半成品");
-  process.exit(1);
+  if (!html.includes(fetchBlock)) {
+    throw new Error("模板里的取数代码与预期不符（改过？）");
+  }
+  html = html.replace(
+    fetchBlock,
+    `const data = window.__DLR_GRAPH__ ?? await (await fetch('/api/v1/dlr/graph')).json();`,
+  );
+
+  // 3) 注入数据（放在 </head> 前，页面主脚本运行时已可用）
+  return html.replace(
+    "</head>",
+    `<script>window.__DLR_GRAPH__ = ${JSON.stringify(payload)};</script>\n</head>`,
+  );
 }
-html = html.replace(
-  fetchBlock,
-  `const data = window.__DLR_GRAPH__ ?? await (await fetch('/api/v1/dlr/graph')).json();`,
-);
 
-// 3) 注入数据（放在 </head> 前，页面主脚本运行时已可用）
-html = html.replace(
-  "</head>",
-  `<script>window.__DLR_GRAPH__ = ${JSON.stringify(payload)};</script>\n</head>`,
-);
+/** 结构计数（CLI 回显用） */
+export function payloadCounts(db?: string) {
+  const p = buildPayload(db);
+  return {
+    LE: p.logical_entities.length,
+    PE: p.physical_entities.length,
+    LA: p.logical_entities.reduce((n, le) => n + le.attributes.length, 0),
+    PA: p.physical_entities.reduce((n, pe) => n + pe.attributes.length, 0),
+    PAS: p.pas_relations.length,
+  };
+}
 
-const outPath = path.resolve(OUT);
-fs.mkdirSync(path.dirname(outPath), { recursive: true });
-fs.writeFileSync(outPath, html);
+// ── CLI：仅当本文件被直接执行（`tsm viz`）时跑；被 server.ts import 时不跑 ──
+const invokedDirectly =
+  !!process.argv[1] && path.resolve(process.argv[1]).replace(/\\/g, "/").endsWith("src/viz/buildViz.ts");
 
-const s = {
-  LE: payload.logical_entities.length,
-  PE: payload.physical_entities.length,
-  PAS: payload.pas_relations.length,
-  LA: payload.logical_entities.reduce((n, le) => n + le.attributes.length, 0),
-  PA: payload.physical_entities.reduce((n, pe) => n + pe.attributes.length, 0),
-};
-console.log(`[viz] ${outPath}  (${(html.length / 1024).toFixed(0)} KB 自包含)`);
-console.log(`      LE ${s.LE} · PE ${s.PE} · LA ${s.LA} · PA ${s.PA} · PAS ${s.PAS}${DB ? `  [db=${DB}]` : ""}`);
+if (invokedDirectly) {
+  const html = renderVizHtml(DB);
+  const outPath = path.resolve(OUT);
+  fs.mkdirSync(path.dirname(outPath), { recursive: true });
+  fs.writeFileSync(outPath, html);
 
-if (OPEN) {
-  const cmd = process.platform === "win32" ? ["cmd", ["/c", "start", "", outPath]] : ["open", [outPath]];
-  spawn(cmd[0] as string, cmd[1] as string[], { detached: true, stdio: "ignore" }).unref();
+  const s = payloadCounts(DB);
+  console.log(`[viz] ${outPath}  (${(html.length / 1024).toFixed(0)} KB 自包含)`);
+  console.log(
+    `      LE ${s.LE} · PE ${s.PE} · LA ${s.LA} · PA ${s.PA} · PAS ${s.PAS}${DB ? `  [db=${DB}]` : ""}`,
+  );
+
+  if (OPEN) {
+    const cmd = process.platform === "win32" ? ["cmd", ["/c", "start", "", outPath]] : ["open", [outPath]];
+    spawn(cmd[0] as string, cmd[1] as string[], { detached: true, stdio: "ignore" }).unref();
+  }
 }
