@@ -53,7 +53,7 @@ bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 
 ## 4. 状态面
 
-- 右下角常驻 **TSM 状态浮层**（`plugins/dsh-dlr-status`）：Neo4j / MCP 两盏灯 · LE/PE/PA/PAS · 向量行数 · 场景名 · Neo4j Browser 链接；10 秒轮询。
+- 右下角常驻 **TSM 状态浮层**（随 `dsh-tsm` bundle 分发）：Neo4j / MCP 两盏灯 · LE/PE/PA/PAS · 向量行数 · 场景名 · Neo4j Browser 链接；10 秒轮询。
 - 数据源 = MCP server 的 `GET /status`（JSON；CORS 只放行 dsh web 的 loopback 源）：
 
 ```bash
@@ -91,6 +91,79 @@ curl -s http://127.0.0.1:28795/status
 - **服务由项目主手动启停**；本手册的命令都可**重复执行**（幂等是设计目标）。
 - 改配置（patch / 插件）→ 重启对应宿主；改 `skills/*.md` 的源 → `sync_sop.sh` 后即生效（不用重启）。
 - 临时产物一律进 `tmp_scripts/`，或随用随删。
+
+## 8. 新机器安装（异地验收清单）
+
+> 目标：在"只有 dsh 的环境"把整套装起来。**dsh 侧已 bundle 化**（DLR 的行 = `dsh-tsm` 一条命令）；**后端仍是独立服务**（clone + npm i + build）。
+
+**0) 代码**（2.0 分支；当前它未推远端，二选一）
+
+```bash
+# A. 从远端（先在这台机器上 push）
+git clone -b 2.0 https://gitcode.com/wei_44/DLR-Proj.git dlr-proj
+# B. 从本机直接克隆（带上 2.0 的本地提交，最快）
+git clone "D:/Code_Proj/DLR Proj" "D:/dlr-proj"
+```
+
+**1) 系统依赖**
+
+| 项 | 说明 |
+|---|---|
+| Node ≥ 22 + npm | 跑服务与 dsh |
+| Git Bash（Windows）/ bash | 所有脚本的宿主 |
+| Neo4j 5.x | 任意 bolt 端点即可：docker 一行 `docker run -d --name tsm-neo4j -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/<密码> neo4j:5`，或本机免安装 zip |
+
+**2) 数据与模型**（都是 gitignored，要单独弄）
+
+```bash
+# 数据集 1.4G：从原机拷（或按 eval-line/dataset.md 下载 mini_dev 解压）
+cp -r "<原机>/MINIDEV_sqlite" "<新机>/dlr-proj/"
+# ONNX 编码器 91M：从镜像拉
+cd "dlr-proj/TSM Core Service" && bash scripts/fetch-model.sh
+```
+
+**3) 两份 .env**（gitignored，从 `.env.example` 复制）
+
+- `TSM Core Service/.env` → `NEO4J_URI / NEO4J_USER / NEO4J_PASSWORD`
+- `DSH-based Agent Service/dsh_dlr/.env` → `DEEPSEEK_API_KEY`
+
+**4) 装依赖 + dsh + bundle**
+
+```bash
+cd "dlr-proj/TSM Core Service" && npm install
+npm install -g @deepseek-ai/dsh@0.1.7-alpha.1     # 版本锁死
+
+# DLR 的行（MCP 网关 / preset-dlr / 状态浮层）——一条命令装进 profile
+dsh plugin --profile web add "<新机>/dlr-proj/DSH-based Agent Service/dsh-tsm"
+dsh plugin --profile headless add "<新机>/dlr-proj/DSH-based Agent Service/dsh-tsm"
+```
+
+**5) 构建（先起 Neo4j）**
+
+```bash
+cd "dlr-proj/TSM Core Service"
+npx tsx src/build/buildLance.ts --all
+npx tsx src/build/buildConsensus.ts
+npx tsx src/graph/loadNeo4j.ts --all --wipe
+```
+
+**6) L3 部署件 + 起后端**
+
+```bash
+cd "../DSH-based Agent Service/dsh_dlr" && bash sync_sop.sh
+cd ../.. && bash "DSH-based Agent Service/scripts/start_backend.sh"
+```
+
+**7) 验收**
+
+| 检查 | 期望 |
+|---|---|
+| `npx tsx src/verify/precheck.ts` | 5 工具 |
+| `curl -s localhost:28795/status` | `ok:true`，LE 49 / PE 72 / PA 792 / PAS 35 |
+| `bash dsh_dlr/run_one.sh 1471 "What is the ratio of customers who pay in EUR against customers who pay in CZK?"` | 答案 **0.0657** |
+| `bash dsh_dlr/run_web.sh` | 右下角状态卡两盏灯全绿 |
+
+> 任何一步不符合期望 = 可移植性问题，回报给本仓库（这正是"路径解耦"要保证的）。
 
 ## 相关
 

@@ -23,13 +23,12 @@ export PYTHONIOENCODING=utf-8
 # 凭据：把 .env 载入进程环境（dsh 凭据链里「继承环境」优先级最高）
 if [ -f "$HERE/.env" ]; then set -a; . "$HERE/.env"; set +a; fi
 
-# 部署件同步：仓库插件（真源）→ dsh 的 out-of-tree 插件位（$DSH_HOME/profiles/node_modules）
-# 与 sync_sop.sh 同款思路：仓库里编辑，启动器负责把产物放到运行时该在的地方。
-PLUGIN_SRC="$SVC_DIR/plugins/dsh-dlr-status"
-if [ -d "$PLUGIN_SRC" ]; then
-  mkdir -p "$DSH_HOME/profiles/node_modules"
-  rm -rf "$DSH_HOME/profiles/node_modules/dsh-dlr-status"
-  cp -r "$PLUGIN_SRC" "$DSH_HOME/profiles/node_modules/"
+# DLR 的行（MCP 网关 / preset-dlr / 状态浮层）随 `dsh-tsm` bundle 分发 —— 装一次即可
+# （link 方式指向仓库目录，改包即时生效）：
+#   dsh plugin --profile web add "$SVC_DIR/dsh-tsm"
+if ! node -e "const b=require('$DSH_HOME/profiles/web/package.json').dsh?.profile?.bundles||[];process.exit(b.includes('dsh-tsm')?0:1)" 2>/dev/null; then
+  echo "[WARN] web profile 未安装 dsh-tsm bundle —— preset-dlr 与状态浮层不会出现" >&2
+  echo "       安装：dsh plugin --profile web add \"$SVC_DIR/dsh-tsm\"" >&2
 fi
 
 # 预检（不可达只告警：UI 能起，但工具会起不来）

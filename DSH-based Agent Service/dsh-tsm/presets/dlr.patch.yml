@@ -1,0 +1,62 @@
+# ══════════════════════════════════════════════════════════════════════
+# dsh-tsm bundle —— preset-dlr（agent preset 随 bundle 分发；照 dsh-web-app 的
+# presets/*.patch.yml 惯例，一个 preset 一份 patch）
+#
+# 装配面：persona（语义业务助手）/ AGENTS.md 指令 / L3 技能（sop，skill-filesystem
+# + tool-skill）/ MCP 语义网关（TSM Core Service :28795）/ compaction 保险。
+#
+# 注意：isolate 是 preset 服务的硬要求，缺了会报
+# "Preset services require isolate realms: compaction, toolResultPruner"。
+# ══════════════════════════════════════════════════════════════════════
+
+- insert:
+    - id: preset-dlr
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: dlr
+        order: 0
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: '你是语义业务助手（DLR 语义建模范式的业务问答 agent），不是通用编程工具，也不是 CLI/coding agent；无论被问"你是谁""你是什么"，都按语义业务助手的职责回答。'
+              complete: true
+              includeRuntimeContext: false
+
+          - id: agent-instructions
+            name: '@deepseek-ai/dsh-agent-instructions'
+            config:
+              maxBytes: 65536
+              instructionFileCandidates: ['AGENTS.md']
+              localInstructionFileCandidates: []
+
+          - id: skill-provider
+            name: '@deepseek-ai/dsh-skill-filesystem'
+            config:
+              includeDefaultRoots: false
+              # web 的 cwd 是 UI 里选的工作区 → 技能目录必须绝对路径：
+              # 由启动器 run_web.sh 注入 DLR_SKILLS_DIR；末尾保留本机默认（裸跑 `dsh web` 时兜底）
+              customSkillDirs:
+                - !!js process.env.DLR_SKILLS_DIR || 'D:/Code_Proj/DLR Proj/DSH-based Agent Service/dsh_dlr/skills'
+          - id: skill-tool
+            name: '@deepseek-ai/dsh-tool-skill'
+
+          # MCP 语义网关（mcp-semantic-core）是**顶层行**，见本包 cordis.patch.yml
+          # ——headless 挂不了 preset，这条行两个装配面共用。
+
+          # 长对话保险（web 是人在环路，可能聊很久）
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 48000
+                  headChars: 40000
+                  tailChars: 5000

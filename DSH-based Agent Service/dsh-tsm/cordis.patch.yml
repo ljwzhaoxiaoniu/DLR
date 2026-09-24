@@ -1,0 +1,30 @@
+# ══════════════════════════════════════════════════════════════════════
+# dsh-tsm bundle —— 主 patch（随包分发；profile 的 dsh.profile.bundles 选中后生效）
+#
+# 分层位置：bundle patch（本文件 + presets/）→ profile 的 cordis.patch.yml
+#           → $DSH_HOME/cordis.patch.yml → 命令行 --patch 叠加层。
+#
+# 这里只放"**属于 DLR / TSM 这套工具**的行"；本地策略（禁用清单、目录选择器
+# 修复、registry 默认 preset）是使用方的选择，留在 dsh_dlr/dsh-web.patch.yml
+# 的 --patch 层（优先级最高，天然当"本地覆盖"）。
+# ══════════════════════════════════════════════════════════════════════
+
+# ── DLR 语义网关：MCP 客户端（TSM Core Service，5 工具）──
+# 顶层行（不是 preset 内）——headless 挂不了 preset，这条行两个装配面共用。
+- insert:
+    - id: mcp-semantic-core
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: semantic-core
+        transport: streamable-http
+        url: http://127.0.0.1:28795/mcp
+        toolCallTimeoutMs: 60000
+        failOnStartupError: true
+        reconnect:
+          enabled: true
+          maxAttempts: 3
+
+# ── TSM 状态浮层（浏览器半在本包 lib/client.js；数据走 TSM Core Service 的 /status）──
+- insert:
+    - id: dlr-status
+      name: 'dsh-tsm'

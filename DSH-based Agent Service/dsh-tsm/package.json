@@ -1,0 +1,17 @@
+{
+  "name": "dsh-tsm",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DLR / TSM 的 dsh 套件（bundle）：MCP 语义网关 + L3 sop 技能 + TSM 状态浮层。装配面 = preset-dlr；后端是独立服务（TSM Core Service）。",
+  "main": "lib/index.js",
+  "exports": {
+    ".": { "default": "./lib/index.js" },
+    "./client": { "default": "./lib/client.js" },
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": { "patch": ["./cordis.patch.yml", "./presets/dlr.patch.yml"] },
+    "client": { "platform": "web", "inject": [] }
+  }
+}

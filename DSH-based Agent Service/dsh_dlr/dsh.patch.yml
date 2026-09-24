@@ -141,16 +141,8 @@
 - id: session-title-llm
   disabled: true
 
-# ── 三、新增：DLR MCP 客户端（TS 栈，streamable-http 直连）──
-- insert:
-    - id: mcp-semantic-core
-      name: '@deepseek-ai/dsh-mcp-client'
-      config:
-        serverName: semantic-core
-        transport: streamable-http
-        url: http://127.0.0.1:28795/mcp
-        toolCallTimeoutMs: 60000
-        failOnStartupError: true
-        reconnect:
-          enabled: true
-          maxAttempts: 3
+# ── 三、DLR 的行从哪来（bundle）─────────────────────────────────────
+# MCP 语义网关（mcp-semantic-core）已随 **`dsh-tsm` bundle** 分发
+# （`DSH-based Agent Service/dsh-tsm/`，顶层行——headless 与 web 两个装配面共用）。
+# 安装：dsh plugin --profile headless add "<abs>/DSH-based Agent Service/dsh-tsm"
+# 本文件自此只保留**本地策略**：上面的禁用清单 / 模型 / persona / 指令候选。

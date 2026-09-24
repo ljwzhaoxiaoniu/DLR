@@ -1,7 +1,7 @@
 // TSM 状态浮层（shell.overlay 座位）——显示两个语义后端服务的健康状况。
 // 手写 bundle：与自带客户端插件同格式（window.__ModuleLoader__.load + factory(require)）。
 window.__ModuleLoader__.load({
-  id: "dsh-dlr-status",
+  id: "dsh-tsm",
   factory: (require) => {
     var module = { exports: {} };
     var exports = module.exports;

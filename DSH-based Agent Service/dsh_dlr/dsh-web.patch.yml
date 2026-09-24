@@ -3,7 +3,7 @@
 #
 # 与 dsh.patch.yml（headless 版）的关系：
 #   - 共用：MCP 行、sop 技能、AGENTS.md、.env —— 只是「装配面」不同；
-#   - web 的工具归属 **agent preset**，所以核心是新增 preset-dlr；
+#   - web 的工具归属 **agent preset**；preset-dlr 已随 `dsh-tsm` bundle 分发（见 §三）；
 #   - web 已在进程级禁用大部分工具行（tool-bash/fs/search/web/todo…），
 #     headless 那串 disable 在这里大半冗余，只补 web 没禁且对 DLR 有影响的；
 #   - 技能目录必须**绝对路径**（web 的 cwd = 你在 UI 里选的工作区）；
@@ -48,73 +48,9 @@
   config:
     default: dlr
 
-# ── 三、新增 preset-dlr（照 standard preset 做减法）─────────────────
-- insert:
-    - id: preset-dlr
-      name: '@deepseek-ai/dsh-agent-preset'
-      config:
-        id: dlr
-        order: 0
-        plugins:
-          - id: persona
-            name: '@deepseek-ai/dsh-persona'
-            config:
-              prefix: '你是语义业务助手（DLR 语义建模范式的业务问答 agent），不是通用编程工具，也不是 CLI/coding agent；无论被问"你是谁""你是什么"，都按语义业务助手的职责回答。'
-              complete: true
-              includeRuntimeContext: false
-
-          - id: agent-instructions
-            name: '@deepseek-ai/dsh-agent-instructions'
-            config:
-              maxBytes: 65536
-              instructionFileCandidates: ['AGENTS.md']
-              localInstructionFileCandidates: []
-
-          - id: skill-provider
-            name: '@deepseek-ai/dsh-skill-filesystem'
-            config:
-              includeDefaultRoots: false
-              # web 的 cwd 是 UI 里选的工作区 → 技能目录必须绝对路径：
-              # 由启动器 run_web.sh 注入 DLR_SKILLS_DIR；末尾保留本机默认（裸跑 `dsh web` 时兜底）
-              customSkillDirs:
-                - !!js process.env.DLR_SKILLS_DIR || 'D:/Code_Proj/DLR Proj/DSH-based Agent Service/dsh_dlr/skills'
-          - id: skill-tool
-            name: '@deepseek-ai/dsh-tool-skill'
-
-          - id: mcp-semantic-core
-            name: '@deepseek-ai/dsh-mcp-client'
-            config:
-              serverName: semantic-core
-              transport: streamable-http     # 默认走 TSM Core Service（TS 栈）
-              url: http://127.0.0.1:28795/mcp
-              toolCallTimeoutMs: 60000
-              failOnStartupError: true
-              reconnect:
-                enabled: true
-                maxAttempts: 3
-
-          # 长对话保险（web 是人在环路，可能聊很久）
-          # isolate 必填：preset 服务必须跑在隔离域，缺了会报
-          # "agent preset dlr: Preset services require isolate realms:
-          #  compaction, toolResultPruner"（照 standard preset 同名字段抄）
-          - id: compaction
-            name: cordis:group
-            group: true
-            isolate:
-              compaction: true
-              toolResultPruner: true
-            config:
-              - id: compaction-basic
-                name: '@deepseek-ai/dsh-compaction-basic'
-              - id: tool-result-pruner
-                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
-                config:
-                  thresholdChars: 48000
-                  headChars: 40000
-                  tailChars: 5000
-
-# ── 四、新增：TSM 状态浮层（浏览器半插件；数据走 TSM Core Service 的 /status）──
-# 包体在仓库 `plugins/dsh-dlr-status/`；运行时需同步到 $DSH_HOME/profiles/node_modules/。
-- insert:
-    - id: dlr-status
-      name: 'dsh-dlr-status'
+# ── 三、DLR / TSM 的行从哪来（bundle）───────────────────────────────
+# preset-dlr（persona · AGENTS.md · sop 技能 · MCP 语义网关 · compaction）与
+# TSM 状态浮层，已随 **`dsh-tsm` bundle** 分发，见 `DSH-based Agent Service/dsh-tsm/`。
+# 安装（本机已装）：
+#   dsh plugin --profile web add "<abs>/DSH-based Agent Service/dsh-tsm"
+# 本文件自此只保留**本地策略**：上面的禁用清单 / 目录选择器修复 / registry 默认 preset。

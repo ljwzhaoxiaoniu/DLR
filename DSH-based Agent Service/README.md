@@ -15,7 +15,7 @@ DSH-based Agent Service/
 ├── README.md
 ├── .gitignore                # .dsh-home/、.env
 ├── scripts/start_backend.sh  # 一键起后端（Neo4j + TS MCP server，幂等 + 预检）
-├── plugins/dsh-dlr-status/   # TSM 状态浮层（浏览器半插件；数据走 TSM Core Service 的 /status）
+├── dsh-tsm/                  # ★ bundle：MCP 网关 + preset-dlr + TSM 状态浮层（dsh plugin add 安装）
 ├── .dsh-home/                # 运行时生成（$DSH_HOME；会话日志在此，可取证可删）
 └── dsh_dlr/
     ├── dsh.patch.yml         # ★ 组合真值（headless）：受限组合 + MCP 行（默认 TS）
@@ -47,7 +47,7 @@ bash "DSH-based Agent Service/dsh_dlr/run_one.sh" 1471 "What is the ratio of cus
 # Web 对话（默认 preset = dlr；进 UI 先选工作区 DSH-based Agent Service）
 bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 #   ↑ 右下角浮出 TSM 状态卡：Neo4j / MCP 服务灯 · LE/PE/PA/PAS · 向量行数 · 场景名 · Neo4j Browser 链接
-#     （启动器自动把 plugins/dsh-dlr-status 同步到 $DSH_HOME/profiles/node_modules）
+#     （前提：dsh-tsm bundle 已装 —— dsh plugin --profile web add "<abs>/DSH-based Agent Service/dsh-tsm"）
 ```
 
 ## 场景（scenario = 一套完整 TSM）
