@@ -100,8 +100,11 @@ for (const f of fs.readdirSync(rawDir).filter((x) => x.endsWith(".ndjson")).sort
   let final = "";
   let steps = 0;
   let tools = 0;
-  let tokens = "";
+  let toolErrors = 0;
+  const trace: string[] = [];
+  const callNames = new Map<string, string>();
   let sid = "";
+  const tk = { total: 0, input: 0, cacheRead: 0, output: 0 };
   for (const line of fs.readFileSync(path.join(rawDir, f), "utf8").split("\n").filter(Boolean)) {
     let o: Record<string, unknown>;
     try {
@@ -112,10 +115,21 @@ for (const f of fs.readdirSync(rawDir).filter((x) => x.endsWith(".ndjson")).sort
     const type = o.type as string;
     if (type === "session") sid = String(o.id ?? "");
     if (type === "final") final = String(o.text ?? "");
-    if (type === "tool_call") tools++;
-    if (type === "step_end") steps++;
-    if (type === "status" && (o.usage as { totalTokens?: number } | undefined)?.totalTokens) {
-      tokens = String((o.usage as { totalTokens?: number }).totalTokens);
+    if (type === "tool_call") {
+      tools++;
+      const name = typeof o.tool === "string" ? o.tool : ((o.tool as { name?: string } | undefined)?.name ?? "?");
+      const short = name.replace("mcp__semantic-core__", "");
+      callNames.set(String(o.callId ?? ""), short);
+      trace.push(short);
+    }
+    if (type === "tool_result" && o.status === "error") toolErrors++;
+    if (type === "status" && o.phase === "step_end") steps++;
+    const u = o.usage as { totalTokens?: number; inputTokens?: number; cacheReadTokens?: number; outputTokens?: number } | undefined;
+    if (type === "status" && u?.totalTokens) {
+      tk.total += Number(u.totalTokens) || 0;
+      tk.input += Number(u.inputTokens) || 0;
+      tk.cacheRead += Number(u.cacheReadTokens) || 0;
+      tk.output += Number(u.outputTokens) || 0;
     }
   }
   const gold = goldValues(qid, db);
@@ -129,7 +143,13 @@ for (const f of fs.readdirSync(rawDir).filter((x) => x.endsWith(".ndjson")).sort
     expected: gold.values.slice(0, 4).join(" | ").slice(0, 160),
     steps: String(steps),
     tools: String(tools),
-    tokens,
+    tool_errors: String(toolErrors),
+    tool_trace: trace.join(" → ").slice(0, 400),
+    tokens_total: String(tk.total),
+    tokens_input: String(tk.input),
+    tokens_cache_read: String(tk.cacheRead),
+    tokens_output: String(tk.output),
+    cache_read_pct: tk.total ? `${Math.round((tk.cacheRead / tk.total) * 100)}%` : "-",
     log: `raw/${f}`,
     session: sid,
     gold_err: gold.err ?? "",
@@ -137,7 +157,12 @@ for (const f of fs.readdirSync(rawDir).filter((x) => x.endsWith(".ndjson")).sort
 }
 
 // ── 产出 ─────────────────────────────────────────────────────────────
-const cols = ["qid", "db", "verdict", "precision", "answer", "expected", "steps", "tools", "tokens", "log", "session", "gold_err"];
+const cols = [
+  "qid", "db", "verdict", "precision",
+  "steps", "tools", "tool_errors", "tool_trace",
+  "tokens_total", "tokens_input", "tokens_cache_read", "tokens_output", "cache_read_pct",
+  "answer", "expected", "log", "session", "gold_err",
+];
 const csv = [cols.join(","), ...rows.map((r) => cols.map((c) => `"${String(r[c] ?? "").replace(/"/g, '""')}"`).join(","))].join("\n");
 fs.writeFileSync(path.join(RUN_DIR, "questions.csv"), csv);
 
@@ -149,12 +174,31 @@ for (const r of rows) {
 }
 const total = rows.length;
 const tally = (v: string) => rows.filter((r) => r.verdict === v).length;
+const num = (s: string) => Number(s) || 0;
+const avg = (f: (r: Record<string, string>) => number) =>
+  total ? Math.round(rows.reduce((n, r) => n + f(r), 0) / total) : 0;
+const sumTk = rows.reduce(
+  (a, r) => ({
+    total: a.total + num(r.tokens_total),
+    input: a.input + num(r.tokens_input),
+    cache: a.cache + num(r.tokens_cache_read),
+    output: a.output + num(r.tokens_output),
+  }),
+  { total: 0, input: 0, cache: 0, output: 0 },
+);
 const summary = [
   `# 跑批结果（tsm grade）`,
   "",
   `目录：\`${RUN_DIR}\` ｜ 题数 ${total} ｜ 生成 ${new Date().toISOString()}`,
   "",
   `**PASS ${tally("PASS")} ｜ FAIL ${tally("FAIL")} ｜ UNCERTAIN ${tally("UNCERTAIN")} ｜ GOLD_ERR ${tally("GOLD_ERR")}**`,
+  "",
+  "## 过程指标（均值 / 合计）",
+  "",
+  `- 步数均值 **${avg((r) => num(r.steps))}** ｜ 工具调用均值 **${avg((r) => num(r.tools))}** ｜ 工具错误均值 **${avg((r) => num(r.tool_errors))}**`,
+  `- token 合计 **${sumTk.total.toLocaleString()}**（input ${sumTk.input.toLocaleString()} + cache_read ${sumTk.cache.toLocaleString()} + output ${sumTk.output.toLocaleString()}）` +
+    (sumTk.total ? ` ｜ cache_read 占 **${Math.round((sumTk.cache / sumTk.total) * 100)}%**` : ""),
+  `- token 单题均值 **${total ? Math.round(sumTk.total / total).toLocaleString() : 0}**`,
   "",
   "| 库 | PASS | FAIL | UNCERTAIN | GOLD_ERR |",
   "|---|---|---|---|---|",
