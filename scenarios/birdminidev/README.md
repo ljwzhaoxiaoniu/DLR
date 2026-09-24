@@ -25,7 +25,7 @@ evidence 的剩余 ────────────────────�
 建模 bug · 数据集 bug · 召回冲突 · 难题拆解 ─▶ L3 `sop`（题级打法与陷阱）
 ```
 
-**对账即自证**：`tsm coverage`（开发态）把这三步变成三张对账单——L1 列级/关系级（硬）、L2 残差（启发式）。见 §五。
+**对账即自证**：`tsm coverage`（开发态）把这三步变成三张对账单——L1 列级/关系级（硬）、L2 残差（启发式）。
 
 ## 三、本场景的模型（应用结果）
 
@@ -72,27 +72,33 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 ```
 跑题与排障见 [docs/run.md](../../docs/run.md)；换场景见 [docs/04-application.md](../../docs/04-application.md)；评测（考卷 + 考试系统）见 [docs/eval.md](../../docs/eval.md)。
 
-## 五、当前差距（2026-09-24 首份对账，`tsm coverage`）
+## 五、实测结果
 
-| 指标 | 结果 |
-|---|---|
-| L1 列覆盖 | **11 库全 0 缺** ✓（表/列已全覆盖） |
-| 非 public 描述偏离 CSV 原文 | 146 处（card_games 41 · football 40 · california 28 …）；formula_1 / toxicology / debit_card 为 0 |
-| 真实 FK 未表达（非锚键/非 public/无 PAS） | 47 处（football 26 · superhero 9 · codebase 6 · formula_1 4 · student_club 2） |
-| L2 源格式 | 仅 card_games / debit_card 为**聚合式（已加工）**；**其余 9 库仍是 evidence 原文（418 条待加工）** |
+> 跑批结果按轮次留档在 [`results/`](results/)：raw 可追溯日志 + 判定明细 + 单轮汇总；综合统计由 `tsm stats` 汇总生成，并同步一份到本节。
 
-**已定的规则（2026-09-24）**：
+<!-- stats:begin -->
+![实测结果综合统计](results/stats.svg)
 
-- **L1 不做语义丰富度补充**（公平性）——描述一律回归**数据集原生**；"描述偏离"一律改回；数据集自身的缺陷**不在 L1 修**。
-- **数据集的问题与麻烦交 SOP**：每节标注类型（**数据集问题 / 建模冲突 / 难题 / 其他**），见 [04-application.md](../../docs/04-application.md) §二。
+| 轮次 | 题数 | PASS | UNCERTAIN | FAIL | GOLD_ERR | tokens |
+|---|---|---|---|---|---|---|
+| 0924_1559_qids_1473_1480_1500 | 3 | 2 | 1 | 0 | 0 | 123,072 |
+| **合计** | **3**（去重 3） | **2** | **1** | **0** | **0** | **123,072** |
 
-**后续**：逐库整改（L2 瘦身 / 关系补齐 / 描述归位），用 `tsm build + verify + viz` 自证。
+均值 **4.7 步 / 8.0 工具调用 / 每题 41,024 tokens** ｜ 进度 **3/500 题**（1/11 库有产物）
+
+> 本块由 `tsm stats` 自动同步；逐轮明细 [results/STATS.md](results/STATS.md)，单轮 [results/<轮次>/summary.md](results/)，逐题含 session 可回放。
+<!-- stats:end -->
+
+**怎么看**：判定口径见 [results/README.md](results/README.md)；逐题明细 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；跨轮统计 `results/STATS.md`。
+
+**怎么更新**：跑完一批 → `tsm grade --run <轮次目录>` → `tsm stats`（重算图与本节块）；跑题中遇到的问题按类型补进 `sources/sop.md`。
 
 ## 六、目录速查
 
 ```
 scenarios/birdminidev/
-├── README.md            # ← 本文（案例说明：原料 → 装载 → 决策 → 自证）
+├── README.md            # ← 本文（案例说明：原料 → 装载 → 决策 → 实测）
+├── results/             # 跑批留档（按轮次：raw 日志 + 判定明细 + 单轮汇总；stats.svg 综合统计图）
 ├── sources/
 │   ├── configs/{ER,DLR,RDF}/   # L1 建模源（本线消费 DLR；ER/RDF 为评测线遗留）
 │   ├── consensus/*.jsonl       # L2 源（11 库；两种格式：聚合式 / 逐题式）

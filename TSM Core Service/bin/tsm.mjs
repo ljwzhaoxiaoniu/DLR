@@ -36,7 +36,8 @@ const usage = () => {
   tsm verify [precheck|parity_dlr|tool_parity|...]  跑 verify 脚本（默认 precheck）
   tsm viz    [--open] [--db <库名>]                 生成自包含的 DLR 图谱页（开发态）
   tsm coverage [--db <库名>] [--out <file>]         建模覆盖度对账（数据集原生语义 ↔ L1/L2/L3）
-  tsm grade    --run <目录>                         跑批结果判定与汇总（run_batch.sh 的产物）`);
+  tsm grade    --run <目录>                         跑批结果判定与汇总（run_batch.sh 的产物）
+  tsm stats    [--no-sync] [--open]                 跨轮实测结果综合统计（图 + 文字 + 同步场景 README）`);
 };
 
 const [cmd, ...rest] = process.argv.slice(2);
@@ -97,6 +98,12 @@ switch (cmd) {
   case "grade": {
     // 开发态：跑批结果判定与汇总（run_batch.sh 的产物目录）
     code = await runTs("dev/grade.ts", rest);
+    break;
+  }
+
+  case "stats": {
+    // 开发态：跨轮实测结果综合统计（图 + 文字版 + 同步场景 README）
+    code = await runTs("dev/stats.ts", rest);
     break;
   }
 
