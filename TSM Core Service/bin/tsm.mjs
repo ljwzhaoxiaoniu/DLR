@@ -37,7 +37,7 @@ const usage = () => {
   tsm viz    [--open] [--db <库名>]                 生成自包含的 DLR 图谱页（开发态）
   tsm coverage [--db <库名>] [--out <file>]         建模覆盖度对账（数据集原生语义 ↔ L1/L2/L3）
   tsm grade    --run <目录>                         跑批结果判定与汇总（run_batch.sh 的产物）
-  tsm stats    [--no-sync] [--open]                 跨轮实测结果综合统计（图 + 文字 + 同步场景 README）`);
+  tsm stats    [--no-sync] [--open]                 综合统计（图/文字）+ 明细文档 DETAIL.md + 同步 README`);
 };
 
 const [cmd, ...rest] = process.argv.slice(2);

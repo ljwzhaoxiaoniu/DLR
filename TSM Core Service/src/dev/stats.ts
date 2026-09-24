@@ -5,7 +5,8 @@
  * 产出：
  *   results/stats.svg   综合统计图（判定分布 / 分库进度 / 逐轮 / 效率指标）
  *   results/STATS.md    同一份统计的文字版
- *   场景 README         标记块 `<!-- stats:begin --> … <!-- stats:end -->` 之间同步一份
+ *   场景 DETAIL.md      评测明细文档（与 README 并列；见 dev/detail.ts）
+ *   场景 README         两个标记块同步：实测结果（stats:）+ 错题记录（mistakes:）
  *
  * 用法: tsm stats [--no-sync] [--open]
  *
@@ -15,6 +16,8 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { spawn } from "node:child_process";
 import { ROOT, SCENARIO } from "../config.js";
+import { listRuns, readRunCsv } from "./results.js";
+import { buildDetail } from "./detail.js";
 
 const NO_SYNC = process.argv.includes("--no-sync");
 const OPEN = process.argv.includes("--open");
@@ -24,6 +27,8 @@ const OUT_SVG = path.join(RESULTS, "stats.svg");
 const OUT_MD = path.join(RESULTS, "STATS.md");
 const MARK_BEGIN = "<!-- stats:begin -->";
 const MARK_END = "<!-- stats:end -->";
+const MK_BEGIN = "<!-- mistakes:begin -->";
+const MK_END = "<!-- mistakes:end -->";
 
 const VERDICTS = ["PASS", "UNCERTAIN", "FAIL", "GOLD_ERR"] as const;
 const COLORS: Record<string, string> = {
@@ -37,40 +42,6 @@ const MUTED = "#656d76";
 const TRACK = "#eaeef2";
 
 // ── 读入：各轮 questions.csv ─────────────────────────────────────────
-/** 极简 CSV 解析（grade 写出的是带引号、双引号转义的规整 CSV） */
-function parseCsv(text: string): Record<string, string>[] {
-  const rows: string[][] = [];
-  let row: string[] = [];
-  let cur = "";
-  let inQ = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (inQ) {
-      if (c === '"') {
-        if (text[i + 1] === '"') {
-          cur += '"';
-          i++;
-        } else inQ = false;
-      } else cur += c;
-    } else if (c === '"') inQ = true;
-    else if (c === ",") {
-      row.push(cur);
-      cur = "";
-    } else if (c === "\n") {
-      row.push(cur);
-      rows.push(row);
-      row = [];
-      cur = "";
-    } else if (c !== "\r") cur += c;
-  }
-  if (cur !== "" || row.length) {
-    row.push(cur);
-    rows.push(row);
-  }
-  const head = rows.shift() ?? [];
-  return rows.filter((r) => r.some((x) => x !== "")).map((r) => Object.fromEntries(head.map((h, i) => [h, r[i] ?? ""])));
-}
-
 interface Row {
   run: string;
   qid: string;
@@ -87,11 +58,7 @@ if (!fs.existsSync(RESULTS)) {
   console.error(`[ERR] 场景 results 不存在：${RESULTS}`);
   process.exit(1);
 }
-const runs = fs
-  .readdirSync(RESULTS, { withFileTypes: true })
-  .filter((d) => d.isDirectory() && fs.existsSync(path.join(RESULTS, d.name, "questions.csv")))
-  .map((d) => d.name)
-  .sort();
+const runs = listRuns(RESULTS);
 if (!runs.length) {
   console.error(`[ERR] ${RESULTS} 下还没有可统计的轮次（先 run_batch.sh + tsm grade）`);
   process.exit(1);
@@ -99,7 +66,7 @@ if (!runs.length) {
 
 const rows: Row[] = [];
 for (const run of runs) {
-  for (const r of parseCsv(fs.readFileSync(path.join(RESULTS, run, "questions.csv"), "utf8"))) {
+  for (const r of readRunCsv(path.join(RESULTS, run))) {
     rows.push({
       run,
       qid: r.qid ?? "",
@@ -293,23 +260,43 @@ const block = [
   "",
   `均值 **${avgOf((r) => r.steps).toFixed(1)} 步 / ${avgOf((r) => r.tools).toFixed(1)} 工具调用 / 每题 ${fmt(Math.round(avgOf((r) => r.tokens)))} tokens** ｜ 进度 **${doneTotal}/${dataset.length} 题**（${dbDone.size}/${dbTotal.size} 库有产物）`,
   "",
-  `> 本块由 \`tsm stats\` 自动同步。**逐轮**统计在 [results/STATS.md](results/STATS.md)；**逐题**明细（判定 / 调用步骤 / 依据与结论）在各轮 [results/](results/) 的 \`review.md\`。`,
+  `> 本块由 \`tsm stats\` 自动同步。**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。`,
 ].join("\n");
+
+// ── 明细文档（DETAIL.md，与 README 并列）+ 错题块 ─────────────────────
+const mistakes = buildDetail();
+console.log(`[stats] 明细文档 → ${path.join(SCENARIO, "DETAIL.md")}（错题 ${mistakes.length} 题）`);
+
+const cell = (s: string) => s.replace(/\|/g, "\\|").replace(/\r?\n+/g, " ").trim();
+const mistakesBlock = mistakes.length
+  ? [
+      "| 题号 | 库 | 判定 | 类型 | 问题（截） | 裁定（全文见 [DETAIL.md](DETAIL.md)） |",
+      "|---|---|---|---|---|---|",
+      ...mistakes.map(
+        (m) =>
+          `| q${m.qid} | ${m.db} | ${m.verdict} | ${m.types.join(" · ") || "—"} | ${cell(m.question.slice(0, 56))} | ${cell(m.rationale.slice(0, 130))} |`,
+      ),
+    ].join("\n")
+  : "（暂无：已跑题判定均为 PASS）";
 
 if (!NO_SYNC) {
   const readmePath = path.join(SCENARIO, "README.md");
-  const text = fs.existsSync(readmePath) ? fs.readFileSync(readmePath, "utf8") : "";
-  const i = text.indexOf(MARK_BEGIN);
-  const j = text.indexOf(MARK_END);
-  if (i < 0 || j < 0) {
-    console.warn(`[stats] README 无 ${MARK_BEGIN} … ${MARK_END} 标记块，跳过同步`);
-  } else {
-    const next = `${text.slice(0, i + MARK_BEGIN.length)}\n${block}\n${text.slice(j)}`;
+  const syncBlock = (begin: string, end: string, content: string, label: string) => {
+    const text = fs.existsSync(readmePath) ? fs.readFileSync(readmePath, "utf8") : "";
+    const i = text.indexOf(begin);
+    const j = text.indexOf(end);
+    if (i < 0 || j < 0) {
+      console.warn(`[stats] README 无 ${begin} … ${end} 标记块，跳过同步（${label}）`);
+      return;
+    }
+    const next = `${text.slice(0, i + begin.length)}\n${content}\n${text.slice(j)}`;
     if (next !== text) {
       fs.writeFileSync(readmePath, next);
-      console.log(`[stats] 已同步 README：${readmePath}`);
+      console.log(`[stats] 已同步 README（${label}）：${readmePath}`);
     }
-  }
+  };
+  syncBlock(MARK_BEGIN, MARK_END, block, "实测结果");
+  syncBlock(MK_BEGIN, MK_END, mistakesBlock, "错题记录");
 }
 
 console.log(`[stats] 轮次 ${runs.length} ｜ 判定 ${rows.length} 次（去重 ${doneTotal} 题）`);

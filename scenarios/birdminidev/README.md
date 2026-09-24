@@ -5,7 +5,18 @@
 > 本文讲**这个案例**：数据集的语义原料原来在哪 → 怎么被装进三层 → 每库的抽象决策 → 怎么运行与自证。
 > 场景包规范（目录约定、换场景 checklist）：[docs/04-application.md](../../docs/04-application.md)。
 
-## 一、数据集原生语义：原来在哪
+## 一、错题记录（评测暴露的问题 ↔ SOP 裁定）
+
+> 判定非 PASS 的题——每题都对应 L3 `sop.md` 的一节裁定：**数据集的错**在这里，**我们为什么这么答**也在
+> 这里（逐题来龙去脉见并列的 [DETAIL.md](DETAIL.md)；全量进度见 §六 综合统计）。
+
+<!-- mistakes:begin -->
+| 题号 | 库 | 判定 | 类型 | 问题（截） | 裁定（全文见 [DETAIL.md](DETAIL.md)） |
+|---|---|---|---|---|---|
+| q1500 | debit_card_specializing | UNCERTAIN | 数据集问题 | Please list the product description of the products cons | The individual-purchase records are only a **four-day sample**: they cover 2012-08-23 through 2012-08-26, and nothing else. Any mo |
+<!-- mistakes:end -->
+
+## 二、数据集原生语义：原来在哪
 
 | 原料 | 位置 | 内容 |
 |---|---|---|
@@ -14,7 +25,7 @@
 | **物理真相** | `<db>.sqlite` 本体 | `PRAGMA table_info / foreign_key_list`——**类型与 FK 以此为准** |
 | **题目与 evidence** | `MINIDEV_sqlite/mini_dev_sqlite.json` | `{question_id, db_id, question, evidence, SQL, difficulty}`；**evidence 是出题人给的提示**——L2/L3 主要由此派生 |
 
-## 二、正向装载：原料 → 三层
+## 三、正向装载：原料 → 三层
 
 ```
 database_description/*.csv（列说明）─┐
@@ -27,7 +38,7 @@ evidence 的剩余 ────────────────────�
 
 **对账即自证**：`tsm coverage`（开发态）把这三步变成三张对账单——L1 列级/关系级（硬）、L2 残差（启发式）。
 
-## 三、本场景的模型（应用结果）
+## 四、本场景的模型（应用结果）
 
 | 库 | LE | PE（表 → LE） | PAS | 表/列 | 抽象决策（要点） |
 |---|---|---|---|---|---|
@@ -44,7 +55,7 @@ evidence 的剩余 ────────────────────�
 | toxicology | 3 | Molecule ← molecule ｜ Atom ← atom ｜ Bond ← bond+connected | 3 | 4/11 | bond+connected 合成一个 LE；Atom/Molecule 各自 |
 | **合计** | **49** | **72 PE** | **35** | 1133 节点 | |
 
-## 四、处理与使用流程（这份数据集怎么跑）
+## 五、处理与使用流程（这份数据集怎么跑）
 
 ```
 ① 建模（一次性）    原料 → L1；evidence 残差 → L2          tsm build
@@ -72,7 +83,7 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 ```
 跑题与排障见 [docs/run.md](../../docs/run.md)；换场景见 [docs/04-application.md](../../docs/04-application.md)；评测（考卷 + 考试系统）见 [docs/eval.md](../../docs/eval.md)。
 
-## 五、实测结果
+## 六、实测结果
 
 > 跑批结果按轮次留档在 [`results/`](results/)：raw 可追溯日志 + 判定明细 + 单轮汇总；综合统计由 `tsm stats` 汇总生成，并同步一份到本节。
 
@@ -83,19 +94,20 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 
 均值 **4.7 步 / 8.0 工具调用 / 每题 41,024 tokens** ｜ 进度 **3/500 题**（1/11 库有产物）
 
-> 本块由 `tsm stats` 自动同步。**逐轮**统计在 [results/STATS.md](results/STATS.md)；**逐题**明细（判定 / 调用步骤 / 依据与结论）在各轮 [results/](results/) 的 `review.md`。
+> 本块由 `tsm stats` 自动同步。**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。
 <!-- stats:end -->
 
-**怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）在 `results/<轮次>/review.md`，机器可读 `questions.csv`（含 `session` 列，可解码回放）；跨轮统计 `results/STATS.md`。
+**怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。
 
 **怎么更新**：跑完一批 → `tsm grade --run <轮次目录>` → `tsm stats`（重算图与本节块）；跑题中遇到的问题按类型补进 `sources/sop.md`。
 
-## 六、目录速查
+## 七、目录速查
 
 ```
 scenarios/birdminidev/
-├── README.md            # ← 本文（案例说明：原料 → 装载 → 决策 → 实测）
-├── results/             # 跑批留档（按轮次：raw 日志 + review.md 逐题明细 + 判定 CSV + 汇总；stats.svg 综合统计图）
+├── README.md            # ← 本文（案例说明：错题 → 原料 → 装载 → 决策 → 实测）
+├── DETAIL.md            # 评测明细（逐题校验表 / 进度 / 汇总 / 错题与裁定 / 逐题明细：怎么对的）
+├── results/             # 跑批留档（按轮次：raw 日志 + 判定 CSV + 单轮汇总；stats.svg 综合统计图）
 ├── sources/
 │   ├── configs/{ER,DLR,RDF}/   # L1 建模源（本线消费 DLR；ER/RDF 为评测线遗留）
 │   ├── consensus/*.jsonl       # L2 源（11 库；两种格式：聚合式 / 逐题式）

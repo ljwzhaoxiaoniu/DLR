@@ -1,23 +1,65 @@
-# 评测明细 — 0924_1559_qids_1473_1480_1500
+# 评测明细 — DLR · birdminidev
 
-> 逐题三栏：**判定**（对/错/存疑）｜ **调用步骤**（工具与参数）｜ **依据与结论**（agent 原文）。
-> 判定口径见 [README](README.md)：PASS/FAIL 由 gold 值比对；UNCERTAIN = 抽不出可比对的值（待仲裁）；GOLD_ERR = gold 本身执行失败。
-> 机器可读：`questions.csv` ｜ 原始事件流：`raw/*.ndjson` ｜ 会话回放：CSV 的 `session` 列。
+> **说明**：question 驱动三级锚定——L1 dsh MCP 语义层（`dlr_semantic_query` 等 5 工具）/ L2 共识（`dlr_search_consensus`）/ L3 SOP（`skill sop`），交叉验证后出 SQL。
+> **判定**：gold SQL 在数据集 SQLite 上执行得期望值 ↔ agent 答案（**数据集原生，不修正**）；数值逐级容差、文本归一化包含。
+> **数据来源**：`results/<轮次>/{questions.csv, raw/*.ndjson}` ｜ 本文件由 `tsm stats` 自动重建（定性观察一节在跑批后按 SOP 案例补写）。
+> **列义**：PASS ｜ FAIL ｜ UNCERTAIN（抽不出可比对的值，待仲裁）｜ GOLD_ERR（gold 本身执行失败）。
 
-**本轮：PASS 2 ｜ UNCERTAIN 1 ｜ FAIL 0 ｜ GOLD_ERR 0** ｜ 3 题 ｜ tokens 合计 123,072（每题均值 41,024）
+## 逐题校验表
 
-| 题号 | 库 | 判定 | 精度 | 步数 | 工具 | tokens | 问题 |
+| 数据库 | 题号 | 判定 | 精度 | 步数 | 工具 | tokens | 轮次 |
 |---|---|---|---|---|---|---|---|
-| 1473 | debit_card_specializing | ✅ PASS | num@0.0001 | 4 | 7 | 33,353 | What was the average monthly consumption of customers in SME for the y |
-| 1480 | debit_card_specializing | ✅ PASS | text | 5 | 8 | 43,870 | What was the gas consumption peak month for SME customers in 2013? |
-| 1500 | debit_card_specializing | ⚠️ UNCERTAIN | - | 5 | 9 | 45,849 | Please list the product description of the products consumed in Septem |
+| debit_card_specializing | q1473 | ✅ PASS | num@0.0001 | 4 | 7 | 33,353 | 0924_1559_qids_1473_1480_1500 |
+| debit_card_specializing | q1480 | ✅ PASS | text | 5 | 8 | 43,870 | 0924_1559_qids_1473_1480_1500 |
+| debit_card_specializing | q1500 | ⚠️ UNCERTAIN | - | 5 | 9 | 45,849 | 0924_1559_qids_1473_1480_1500 |
 
----
+## 评测进度
 
-## 逐题
+> 数据集原生题数（mini_dev 全量），已评 = 去重后的跑过题数。
+
+| 数据库 | 全量 | 已评 | 剩余 | 进度 |
+|---|---|---|---|---|
+| california_schools | 30 | 0 | 30 | 0.0% |
+| card_games | 52 | 0 | 52 | 0.0% |
+| codebase_community | 49 | 0 | 49 | 0.0% |
+| debit_card_specializing | 30 | 3 | 27 | 10.0% |
+| european_football_2 | 51 | 0 | 51 | 0.0% |
+| financial | 32 | 0 | 32 | 0.0% |
+| formula_1 | 66 | 0 | 66 | 0.0% |
+| student_club | 48 | 0 | 48 | 0.0% |
+| superhero | 52 | 0 | 52 | 0.0% |
+| thrombosis_prediction | 50 | 0 | 50 | 0.0% |
+| toxicology | 40 | 0 | 40 | 0.0% |
+| **合计** | **500** | **3** | **497** | **0.6%** |
+
+## 汇总
+
+| 指标 | 值 |
+|---|---|
+| PASS | 2 / 3（66.7%） |
+| UNCERTAIN（待仲裁） | 1 |
+| FAIL | 0 |
+| GOLD_ERR | 0 |
+| token 平均 / 中位 | 41,024 / 43,870 |
+| token 最低 / 最高 | 33,353 / 45,849 |
+| 步数均值 / 工具调用均值 | 5 / 8 |
+
+> **口径**：仅覆盖已跑轮次，勿外推为全数据集结论。token = input + cache_read + output（不含 CoT 的 reasoning 分项由 harness 单独计）。
+
+## 定性观察
+
+> 分批跑完后按 SOP 案例撰写：每个 SOP 条目题须有对应观察、数字与归档 CSV 逐项一致（防止「先写结论后找证据」）。
+
+## 错题与裁定（SOP 条目缘由）
+
+| 题号 | 库 | 判定 | 类型 | 问题（截） | 裁定（sop.md 摘要） |
+|---|---|---|---|---|---|
+| q1500 | debit_card_specializing | ⚠️ UNCERTAIN | 数据集问题 | Please list the product description of the products consumed | The individual-purchase records are only a **four-day sample**: they cover 2012-08-23 through 2012-08-26, and nothing else. Any month outsid |
+
+## 逐题明细（怎么对的）
 
 <details>
-<summary><b>1473</b> · debit_card_specializing · ✅ <b>PASS</b>（num@0.0001）· 4 步 / 7 工具 · 33,353 tok</summary>
+<summary><b>q1473</b> · debit_card_specializing · ✅ <b>PASS</b>（num@0.0001）· 4 步 / 7 工具 · 33,353 tok</summary>
 
 **问题**：What was the average monthly consumption of customers in SME for the year 2013?
 
@@ -39,7 +81,7 @@
 
 **依据与结论**（agent 原文）
 
-## 分析过程
+#### 分析过程
 
 **L3 (sop) 命中**：`sop` 技能中有一节完整复述本题 —— *"What was the average monthly consumption of customers in SME for the year 2013?"*，其裁定口径为：
 
@@ -53,7 +95,7 @@
 - JOIN 依据 ARC `A_anchor`：`yearmonth.CustomerID` → `customers.CustomerID`（N:1）
 - 年份过滤：`Date BETWEEN '201301' AND '201312'`
 
-## 结果
+#### 结果
 
 对 2013 年 SME 客户的 178,337 条"客户-月"消费记录直接取平均：
 
@@ -73,13 +115,13 @@ Evidence SQL: SELECT ROUND(AVG(ym.Consumption), 4) AS avg_monthly_consumption, C
 </details>
 
 <details>
-<summary><b>1480</b> · debit_card_specializing · ✅ <b>PASS</b>（text）· 5 步 / 8 工具 · 43,870 tok</summary>
+<summary><b>q1480</b> · debit_card_specializing · ✅ <b>PASS</b>（text）· 5 步 / 8 工具 · 43,870 tok</summary>
 
 **问题**：What was the gas consumption peak month for SME customers in 2013?
 
 **期望**：`04`
 
-**答案**：`## 结论 **2013 年 SME 客户的燃气消费峰值月份是 2013 年 4 月。** ### 推理链路 1. **L3（'sop' 技能，权威口径）** — SOP 中有完整复述本题的节：*"What was the gas consumption peak month for SME customers in 2013?"*。该节明确规定： - "Gas consumption" 就是这些`
+**答案**：`## 结论 **2013 年 SME 客户的燃气消费峰值月份是 2013 年 4 月。** ### 推理链路 1. **L3（'sop' 技能，权威口径）** — SOP 中有完整复述本题的节：*"What was the gas consumption peak month for SME customers in 2013?"*。该节明确规定：    - "Gas consumption" 就`
 
 **调用步骤**
 
@@ -96,11 +138,11 @@ Evidence SQL: SELECT ROUND(AVG(ym.Consumption), 4) AS avg_monthly_consumption, C
 
 **依据与结论**（agent 原文）
 
-## 结论
+#### 结论
 
 **2013 年 SME 客户的燃气消费峰值月份是 2013 年 4 月。**
 
-### 推理链路
+##### 推理链路
 
 1. **L3（`sop` 技能，权威口径）** — SOP 中有完整复述本题的节：*"What was the gas consumption peak month for SME customers in 2013?"*。该节明确规定：
    - "Gas consumption" 就是这些客户的消费金额本身，**不存在单独的 gas/energy 类目**，不要去找燃料类型；
@@ -116,7 +158,7 @@ Evidence SQL: SELECT ROUND(AVG(ym.Consumption), 4) AS avg_monthly_consumption, C
 
 4. **SQL 执行** — 按 ARC 以 `CustomerID` JOIN，过滤 `Segment='SME'` 且年份 2013，按月求和取最大 → **`04`**（即 201304，合计 126,047,776.92 CZK，高于 5 月的 125,616,906.33）。
 
-### 数据来源
+##### 数据来源
 - L3：`sop` 技能 — "What was the gas consumption peak month for SME customers in 2013?" 节
 - L2：`dlr_search_consensus`（namespace `debit_card_specializing`，qid 16 / 14 / 19）
 - L1 + 映射：`dlr_semantic_query` → `get_pe_mapping`（`PHYSICAL.YearMonth`、`PHYSICAL.Customer`，database_url 取自 PE）
@@ -130,7 +172,7 @@ Evidence SQL: SELECT substr(y.Date, 5, 2) AS peak_month FROM yearmonth y JOIN cu
 </details>
 
 <details>
-<summary><b>1500</b> · debit_card_specializing · ⚠️ <b>UNCERTAIN</b>（-）· 5 步 / 9 工具 · 45,849 tok</summary>
+<summary><b>q1500</b> · debit_card_specializing · ⚠️ <b>UNCERTAIN</b>（-）· 5 步 / 9 工具 · 45,849 tok</summary>
 
 **问题**：Please list the product description of the products consumed in September, 2013.
 
@@ -154,11 +196,11 @@ Evidence SQL: SELECT substr(y.Date, 5, 2) AS peak_month FROM yearmonth y JOIN cu
 
 **依据与结论**（agent 原文）
 
-## 结论
+#### 结论
 
 **September 2013 没有任何产品被消费——结果为空列表。**
 
-### 依据
+##### 依据
 
 **L3（`sop` 技能，本题有精确命中节）** — 技能中 "Please list the product description of the products consumed in September, 2013." 一节明确规定：
 - 个人购买记录（individual-purchase records）只是一个 **四天样本**，覆盖 2012-08-23 ~ 2012-08-26，除此之外没有任何记录
