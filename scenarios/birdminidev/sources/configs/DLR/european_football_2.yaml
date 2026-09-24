@@ -1,7 +1,8 @@
 mapping_type: dlr
 version: '2.0'
 scenario_name: dlr_football
-description: 'DLR paradigm - European football: players with FIFA skill ratings, teams with tactical attributes (buildUpPlay/chanceCreation/defence),
+# 案例说明（原料 → 装载 → 抽象决策）：scenarios/birdminidev/README.md
+description: 'European football: players and teams with FIFA-style skill attributes, leagues, and match results.'
   league matches (home/away goals), and leagues'
 databases:
   european_football_2: sqlite:///MINIDEV_sqlite/dev_databases/european_football_2/european_football_2.sqlite

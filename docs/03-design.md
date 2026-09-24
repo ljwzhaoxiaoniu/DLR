@@ -120,8 +120,11 @@ pas_relations:
 | `A.cardinality` | 从 **LE 视角**写，只有 `1:1` / `1:N` | 写成 `N:1` 是常见笔误（旧文档也写错过） |
 | `A.key` | 是 **LE 属性名**（public 面的名字），不是物理列名 | 写物理列名 → agent 拿不到 JOIN 落脚点 |
 | `P.*.cardinality` | PAS 的基数，与 ARCS 的 cardinality 不是一回事 | 混用会误导 agent 的行数判断 |
+| `description`（文件头，top-level） | 写**业务语义**（这个库是什么领域、有哪些业务对象）——**不写建模元说明**（"N PE 归 M LE"这类归场景 README） | 案例说明见 `scenarios/<名>/README.md` |
 | `description`（LE） | 必须**丰富**（关键字段名 + 业务语义 + 例名），**英文** | 3 词描述在向量空间会被其他库压过 → 走错库 |
 | `description`（PE 属性） | public 列 = **业务语义**；非 public 列 = 数据集描述原文 | — |
+
+> **写入纪律（与"不越级"并列）**：L1 只写**业务语义**——不写题面口径（§4），也不写**建模元说明**（本文是规范；"这个库怎么抽象的"归场景 README：`scenarios/<名>/README.md`）。
 
 ## 3. 建模规则（按顺序决策）
 

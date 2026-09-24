@@ -1,7 +1,8 @@
 mapping_type: dlr
 version: '2.0'
 scenario_name: dlr_california_schools
-description: 'DLR paradigm - California schools scenario: on-demand fields, 3 PEs aggregated into 2 LEs, school performance
+# 案例说明（原料 → 装载 → 抽象决策）：scenarios/birdminidev/README.md
+description: 'California public schools: school profile (location, district, grade span, charter/funding) and academic performance (SAT/ACT scores, FRPM enrollment).'
   multi-view decoupling'
 databases:
   california_schools: sqlite:///MINIDEV_sqlite/dev_databases/california_schools/california_schools.sqlite

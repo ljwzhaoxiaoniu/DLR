@@ -1,7 +1,8 @@
 mapping_type: dlr
 version: '2.0'
 scenario_name: dlr_student_club
-description: 'DLR paradigm - Student club: members attend events, incur expenses funded by event budgets, and receive income;
+# 案例说明（原料 → 装载 → 抽象决策）：scenarios/birdminidev/README.md
+description: 'Student club operations: members, events, attendance, budgets, expenses, incomes, and member majors/zip codes.'
   majors and zip codes as dimension tables'
 databases:
   student_club: sqlite:///MINIDEV_sqlite/dev_databases/student_club/student_club.sqlite

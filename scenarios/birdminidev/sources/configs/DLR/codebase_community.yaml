@@ -1,7 +1,8 @@
 mapping_type: dlr
 version: '2.0'
 scenario_name: dlr_codebase
-description: 'DLR paradigm - Open source community scenario: on-demand fields, 8 PEs aggregated into 6 LEs, post interaction
+# 案例说明（原料 → 装载 → 抽象决策）：scenarios/birdminidev/README.md
+description: 'Software Q&A community: users, posts, comments, tags, badges, and voting activity.'
   multi-view decoupling'
 databases:
   codebase_community: sqlite:///MINIDEV_sqlite/dev_databases/codebase_community/codebase_community.sqlite

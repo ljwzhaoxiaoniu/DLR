@@ -1,7 +1,8 @@
 mapping_type: dlr
 version: '2.0'
 scenario_name: dlr_toxicology
-description: 'DLR paradigm - Toxicology: molecules contain atoms and bonds; bonds connect atoms via the connected junction
+# 案例说明（原料 → 装载 → 抽象决策）：scenarios/birdminidev/README.md
+description: 'Toxicology: molecules, their atoms, and the bonds connecting atoms (carcinogenicity labels on molecules).'
   table; carcinogenicity labels on molecules'
 databases:
   toxicology: sqlite:///MINIDEV_sqlite/dev_databases/toxicology/toxicology.sqlite

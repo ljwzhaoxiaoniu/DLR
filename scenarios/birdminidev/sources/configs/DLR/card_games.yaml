@@ -1,7 +1,8 @@
 mapping_type: dlr
 version: '2.0'
 scenario_name: dlr_card_games
-description: 'DLR paradigm - Card games scenario: on-demand fields, 6 PEs aggregated into 4 LEs, card extension multi-view
+# 案例说明（原料 → 装载 → 抽象决策）：scenarios/birdminidev/README.md
+description: 'Magic: The Gathering card data: card attributes, printings, legalities, rulings, and set membership.'
   decoupling'
 databases:
   card_games: sqlite:///MINIDEV_sqlite/dev_databases/card_games/card_games.sqlite

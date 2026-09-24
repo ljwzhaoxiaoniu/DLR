@@ -1,7 +1,8 @@
 mapping_type: dlr
 version: '2.0'
 scenario_name: dlr_thrombosis
-description: 'DLR paradigm - Thrombosis prediction: 3 tables, 1 LE (Patient) with 3 PEs via ARCS'
+# 案例说明（原料 → 装载 → 抽象决策）：scenarios/birdminidev/README.md
+description: 'Thrombosis prediction: patient master data with laboratory test results and examination findings.'
 databases:
   thrombosis_prediction: sqlite:///MINIDEV_sqlite/dev_databases/thrombosis_prediction/thrombosis_prediction.sqlite
 logical_entities:

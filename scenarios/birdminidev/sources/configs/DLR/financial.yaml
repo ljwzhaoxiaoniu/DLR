@@ -1,7 +1,8 @@
 mapping_type: dlr
 version: '2.1'
 scenario_name: dlr_financial
-description: 'DLR paradigm - Financial: clients hold accounts via disp (junction absorbed as PE); accounts have loans, transactions,
+# 案例说明（原料 → 装载 → 抽象决策）：scenarios/birdminidev/README.md
+description: 'Banking: clients, accounts (with cards and disposition links), districts, loans, transactions, and permanent payment orders.'
   permanent orders; districts with demographic statistics. 6 LE, 10 PE — 2026-08-02 refactor: AccountRelation LE eliminated
   (pure junction, no business lifecycle)'
 databases:

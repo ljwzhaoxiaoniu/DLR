@@ -93,6 +93,22 @@ function coverageForDb(db: string): DbReport {
 
   L.push(`## ${db}`);
   L.push("");
+  // 模型清单（LE / PE 表映射 / PAS）——对照 03-design 的抽象结果
+  const lesAll = (sc.logical_entities ?? []) as Record<string, unknown>[];
+  L.push(
+    `模型清单：**LE ${lesAll.length}**（` +
+      lesAll
+        .map((le) => {
+          const peNames = ((le.physical_entities ?? []) as Record<string, unknown>[]).map(
+            (pe) => String(pe.physical_table_name ?? ""),
+          );
+          return `${String(le.biz_name ?? le.logical_entity_id)} ← ${peNames.join("+")}`;
+        })
+        .join(" ｜ ") +
+      `） ｜ **PAS ${(sc.pas_relations ?? []).length}**`,
+  );
+  L.push(`文件头 description：${String(sc.description ?? "").replace(/\s+/g, " ")}`);
+  L.push("");
   L.push(`SQLite：${tables.length} 表 / ${tables.reduce((n, t) => n + t.columns.length, 0)} 列 ｜ 真实 FK：${fks.length} 条 ｜ CSV 描述目录：${fs.existsSync(descDir) ? "有" : "**缺**"}`);
 
   // L1 索引：表 → {le, pe}

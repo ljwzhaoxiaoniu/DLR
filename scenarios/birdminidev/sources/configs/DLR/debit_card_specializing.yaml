@@ -1,7 +1,8 @@
 mapping_type: dlr
 version: '2.0'
 scenario_name: dlr_debit_card
-description: 'DLR paradigm - Debit card consumption scenario: on-demand fields, 5 PEs aggregated into 4 LEs'
+# 案例说明（原料 → 装载 → 抽象决策）：scenarios/birdminidev/README.md
+description: 'Debit card consumption at gas stations: customer segments, monthly spending bills, individual purchases, stations, and products.'
 databases:
   debit_card_specializing: sqlite:///MINIDEV_sqlite/dev_databases/debit_card_specializing/debit_card_specializing.sqlite
 logical_entities:
