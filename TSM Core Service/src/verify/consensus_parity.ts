@@ -1,7 +1,7 @@
 /**
  * L2 对齐：TS（LanceDB `consensus` 表）vs Python 线真值
  *
- * 真值来源：Python 线工具 `dlr_search_evidence` 的输出（Python 线保留旧工具名，
+ * 真值来源：1.5 线工具 `dlr_search_evidence` 的输出（那边保留旧工具名，
  *   "evidence" 是 BIRD 数据集字段名，非范式术语；TS 线已改名 dlr_search_consensus）。
  * 已知差异：qid 编号口径（TS=kid，Python 旧索引=原始题号），内容与分数应逐位一致。
  *

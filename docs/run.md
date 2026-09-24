@@ -39,7 +39,7 @@ bash "DSH-based Agent Service/dsh_dlr/run_one.sh" <qid> "<question>"
 
 - 产物：`tmp_scripts/dsh_smoke/<stamp>_<qid>_dlr.ndjson`（`--json` 事件流）+ 同名 `.err`。
 - 自动预检后端；后端不可达**响亮退出**（exit 3），不会烧模型调用。
-- 会话日志：`DSH-based Agent Service/.dsh-home/sessions/<项目目录>/<session-id>/session.v4.jsonl.zstd`（**多帧 zstd**，取证解码器 `tmp_scripts/decode_dsh_log.cjs`）。
+- 会话日志：`DSH-based Agent Service/.dsh-home/sessions/<项目目录>/<session-id>/session.v4.jsonl.zstd`（**多帧 zstd**，取证解码器 `DSH-based Agent Service/scripts/decode_session_log.cjs`）。
 
 ## 3. Web 对话
 
@@ -84,7 +84,7 @@ curl -s http://127.0.0.1:28795/status
 | 改了 `src/**` 不生效 | MCP server 是常驻进程：杀端口 → `start_backend.sh` |
 | Web 选工作区报错（Windows） | 已钉 `-browse` 曲面（native worker 会崩）；禁 auto + 插 browse，二者不可同挂 |
 | 起 UI 报 `EADDRINUSE 3080` | `netstat -ano \| grep :3080` → `taskkill //F //PID <pid>` |
-| 会话日志"看起来是空的" | **多帧 zstd**：单帧解码只出 header——用 `tmp_scripts/decode_dsh_log.cjs` |
+| 会话日志"看起来是空的" | **多帧 zstd**：单帧解码只出 header——用 `DSH-based Agent Service/scripts/decode_session_log.cjs` |
 | 机器内存吃紧 | 常驻约 650MB（Neo4j ~280 + MCP ~330）；不用时关，用时跑幂等脚本 |
 | dsh 报工具名不对 | 工具面是 `mcp__semantic-core__*`；升级 dsh 后先 `--dump-config` 核行 id |
 

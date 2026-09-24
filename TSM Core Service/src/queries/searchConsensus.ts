@@ -3,7 +3,7 @@
  *
  * 返回：{success, namespace, count, results:[{qid, text, question, score}]}
  * score 保留 4 位（与 Python 线 round(...,4) 同口径）；namespace 必填（防跨库串扰）。
- * 形状与 Python 线 `dlr_search_evidence` 一致（Python 线保留旧工具名）。
+ * 形状与 1.5 线 `dlr_search_evidence` 一致（那边保留 BIRD 遗留的旧工具名）。
  */
 import type { LanceStore } from "../store/lance.js";
 

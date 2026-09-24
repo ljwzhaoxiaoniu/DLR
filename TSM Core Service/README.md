@@ -52,7 +52,7 @@ npx tsx src/mcp/server.ts --http 28795       # MCP server（dsh 直连；stdio �
 `dlr_semantic_query`（L1 召回）· **`dlr_search_consensus`**（L2 领域共识）· `get_pe_mapping`（第二跳）·
 `get_le_attrs` · `execute_sql`
 
-> ⚠ 与 Python 线的契约差异：L2 工具名 Python 线仍是 `dlr_search_evidence`（BIRD 遗留命名）。
+> ⚠ 与 1.5 线（Python）的契约差异：那边 L2 工具名仍是 `dlr_search_evidence`（BIRD 遗留命名）。
 > 其余 4 个工具同名同构；L2 的**返回形状与分数口径一致**，仅 qid 编号口径不同（kid vs 旧题号）。
 
 ## 验证（`src/verify/`，全部对 `scenarios/*/fixtures/` 自证，零 Python）

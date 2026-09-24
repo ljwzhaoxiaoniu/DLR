@@ -1,18 +1,12 @@
 {
   "name": "tsm-core",
   "version": "1.0.0",
-  "description": "TSM Core Service —— DLR 语义层后端（LanceDB + Neo4j + MCP server）；CLI：tsm serve|status|build|verify",
+  "private": true,
+  "type": "module",
+  "description": "TSM Core Service —— DLR 语义层后端（LanceDB + Neo4j + MCP server）；CLI：tsm serve|status|build|verify|viz",
   "bin": {
     "tsm": "./bin/tsm.mjs"
   },
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
   "dependencies": {
     "@huggingface/transformers": "^4.3.0",
     "@lancedb/lancedb": "^0.39.0",

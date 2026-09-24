@@ -1,5 +1,5 @@
 /**
- * DLR YAML → Neo4j 图（对齐 Python 侧 Kuzu 图 schema 与字段口径）
+ * DLR YAML → Neo4j 图（口径对齐 1.5 线的 Kuzu 图 schema；历史口径见 docs/eval-line/）
  *
  * 节点：LogicalEntity / PhysicalEntity / PhysicalAttribute / LogicalAttribute
  * 关系：HAS_LOGICAL_ATTRIBUTE（LE→LA）/ HAS_PHYSICAL_ATTRIBUTE（PE→PA）

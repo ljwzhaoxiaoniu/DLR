@@ -2,7 +2,7 @@
  * DLR YAML → 结构对象（**单一来源**：图构建 / 可视化页 / 将来的"进程内图后端"共用）
  *
  * 纯映射：只读场景 YAML（+ 可选读 SQLite 取列声明类型），**不连任何服务**。
- *   buildBatch()   —— 扁平批次（loadNeo4j.ts 的写入用；口径对齐 Python/Kuzu 线）
+ *   buildBatch()   —— 扁平批次（loadNeo4j.ts 的写入用；口径对齐 1.5/Kuzu 线）
  *   buildPayload() —— 可视化页的 API 契约（1.5 `/api/v1/dlr/graph` 的形状）
  */
 import * as fs from "node:fs";
