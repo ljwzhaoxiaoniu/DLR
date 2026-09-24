@@ -1,0 +1,175 @@
+/**
+ * tsm grade —— 跑批结果判定与汇总（开发态）
+ *
+ * 输入：一轮跑批目录（`run_batch.sh` 的产物：`raw/<stamp>_<qid>_dlr.ndjson`）
+ * 判定：题目自带 gold SQL 在该库 SQLite 上执行 → 期望值 ↔ 从 final 文本抽候选值比对
+ *      （数值按 [1e-9,1e-6,1e-4,1e-3] 逐级容差；字符串归一化包含）
+ * 产出：`questions.csv`（逐题明细）+ `summary.md`（分库/分判定汇总）+ 控制台概要
+ *
+ * 用法: tsm grade --run <run_dir>
+ */
+import * as fs from "node:fs";
+import * as path from "node:path";
+import { DatabaseSync } from "node:sqlite";
+import { readScenario, scenarioFiles } from "../model/graphData.js";
+import { resolveSqlitePath } from "../graph/physicalSchema.js";
+import { ROOT } from "../config.js";
+
+const arg = (name: string, fallback = ""): string => {
+  const i = process.argv.indexOf(name);
+  return i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : fallback;
+};
+const RUN_DIR = path.resolve(arg("--run"));
+if (!arg("--run")) {
+  console.error("用法: tsm grade --run <run_dir>（run_batch.sh 的产物目录）");
+  process.exit(1);
+}
+
+// ── 期望值：题目自带 gold SQL 在本库 SQLite 上执行 ─────────────────────
+const QJSON = path.join(ROOT, "MINIDEV_sqlite", "mini_dev_sqlite.json");
+const questions: { question_id: number; db_id: string; question: string; SQL: string }[] = JSON.parse(
+  fs.readFileSync(QJSON, "utf8"),
+);
+const byQid = new Map(questions.map((q) => [Number(q.question_id), q]));
+
+/** 库 → sqlite 路径（从场景 YAML 取，与工具链同源） */
+const dbPath = new Map<string, string>();
+for (const f of scenarioFiles()) {
+  const db = f.replace(/\.yaml$/, "");
+  const { sc } = readScenario(db);
+  const url = Object.values(sc.databases ?? {})[0] ?? "";
+  const p = resolveSqlitePath(url, ROOT);
+  if (p) dbPath.set(db, p);
+}
+
+function goldValues(qid: number, db: string): { values: string[]; err?: string } {
+  const q = byQid.get(qid);
+  const sqlite = dbPath.get(db);
+  if (!q) return { values: [], err: "题目不存在" };
+  if (!sqlite || !fs.existsSync(sqlite)) return { values: [], err: "SQLite 缺失" };
+  try {
+    const db2 = new DatabaseSync(sqlite, { readOnly: true });
+    try {
+      const rows = db2.prepare(String(q.SQL)).all() as Record<string, unknown>[];
+      const values = rows.flatMap((r) => Object.values(r).map((v) => String(v)));
+      return { values };
+    } finally {
+      db2.close();
+    }
+  } catch (e) {
+    return { values: [], err: String(e).slice(0, 120) };
+  }
+}
+
+// ── 从 final 文本抽候选值 ─────────────────────────────────────────────
+const NUM_RE = /-?\d[\d,]*(?:\.\d+)?/g;
+const norm = (s: string) => s.toLowerCase().replace(/[\s,]+/g, " ").replace(/[^\w.%\- ]+/g, "").trim();
+
+function judge(finalText: string, expected: string[]): { verdict: string; precision: string } {
+  if (!expected.length) return { verdict: "GOLD_ERR", precision: "-" };
+  const t = finalText;
+  const tn = norm(t);
+  // 全字符串命中（列表/文本型答案）
+  if (expected.every((e) => tn.includes(norm(e)))) return { verdict: "PASS", precision: "text" };
+  // 数值型：期望全部是数值 → 候选逐个匹配
+  const expNums = expected.map((e) => Number(e.replace(/,/g, "")));
+  if (expNums.every((n) => Number.isFinite(n))) {
+    const cands = (t.match(NUM_RE) ?? []).map((s) => Number(s.replace(/,/g, "")));
+    const REL = [1e-9, 1e-6, 1e-4, 1e-3];
+    for (let lvl = 0; lvl < REL.length; lvl++) {
+      const r = REL[lvl];
+      const allHit = expNums.every((e) => cands.some((c) => Math.abs(c - e) <= Math.max(1e-12, Math.abs(e) * r)));
+      if (allHit) return { verdict: "PASS", precision: `num@${r}` };
+    }
+    return { verdict: "FAIL", precision: "-" };
+  }
+  return { verdict: "UNCERTAIN", precision: "-" };
+}
+
+// ── 逐题处理 ─────────────────────────────────────────────────────────
+const rawDir = path.join(RUN_DIR, "raw");
+if (!fs.existsSync(rawDir)) {
+  console.error(`[ERR] 找不到 ${rawDir}`);
+  process.exit(1);
+}
+const rows: Record<string, string>[] = [];
+for (const f of fs.readdirSync(rawDir).filter((x) => x.endsWith(".ndjson")).sort()) {
+  const qid = Number((f.match(/_(\d+)_dlr\.ndjson$/) ?? [])[1] ?? 0);
+  const q = byQid.get(qid);
+  const db = q?.db_id ?? "-";
+  let final = "";
+  let steps = 0;
+  let tools = 0;
+  let tokens = "";
+  let sid = "";
+  for (const line of fs.readFileSync(path.join(rawDir, f), "utf8").split("\n").filter(Boolean)) {
+    let o: Record<string, unknown>;
+    try {
+      o = JSON.parse(line) as Record<string, unknown>;
+    } catch {
+      continue;
+    }
+    const type = o.type as string;
+    if (type === "session") sid = String(o.id ?? "");
+    if (type === "final") final = String(o.text ?? "");
+    if (type === "tool_call") tools++;
+    if (type === "step_end") steps++;
+    if (type === "status" && (o.usage as { totalTokens?: number } | undefined)?.totalTokens) {
+      tokens = String((o.usage as { totalTokens?: number }).totalTokens);
+    }
+  }
+  const gold = goldValues(qid, db);
+  const v = judge(final, gold.values);
+  rows.push({
+    qid: String(qid),
+    db,
+    verdict: gold.err ? "GOLD_ERR" : v.verdict,
+    precision: v.precision,
+    answer: final.replace(/\s+/g, " ").slice(0, 160),
+    expected: gold.values.slice(0, 4).join(" | ").slice(0, 160),
+    steps: String(steps),
+    tools: String(tools),
+    tokens,
+    log: `raw/${f}`,
+    session: sid,
+    gold_err: gold.err ?? "",
+  });
+}
+
+// ── 产出 ─────────────────────────────────────────────────────────────
+const cols = ["qid", "db", "verdict", "precision", "answer", "expected", "steps", "tools", "tokens", "log", "session", "gold_err"];
+const csv = [cols.join(","), ...rows.map((r) => cols.map((c) => `"${String(r[c] ?? "").replace(/"/g, '""')}"`).join(","))].join("\n");
+fs.writeFileSync(path.join(RUN_DIR, "questions.csv"), csv);
+
+const byDb = new Map<string, Record<string, number>>();
+for (const r of rows) {
+  const m = byDb.get(r.db) ?? {};
+  m[r.verdict] = (m[r.verdict] ?? 0) + 1;
+  byDb.set(r.db, m);
+}
+const total = rows.length;
+const tally = (v: string) => rows.filter((r) => r.verdict === v).length;
+const summary = [
+  `# 跑批结果（tsm grade）`,
+  "",
+  `目录：\`${RUN_DIR}\` ｜ 题数 ${total} ｜ 生成 ${new Date().toISOString()}`,
+  "",
+  `**PASS ${tally("PASS")} ｜ FAIL ${tally("FAIL")} ｜ UNCERTAIN ${tally("UNCERTAIN")} ｜ GOLD_ERR ${tally("GOLD_ERR")}**`,
+  "",
+  "| 库 | PASS | FAIL | UNCERTAIN | GOLD_ERR |",
+  "|---|---|---|---|---|",
+  ...[...byDb.entries()].sort().map(([db, m]) => `| ${db} | ${m.PASS ?? 0} | ${m.FAIL ?? 0} | ${m.UNCERTAIN ?? 0} | ${m.GOLD_ERR ?? 0} |`),
+  "",
+  "## 非 PASS 明细（前 40）",
+  "",
+  "| qid | 判定 | 答案（截） | 期望（截） | 日志 |",
+  "|---|---|---|---|---|",
+  ...rows
+    .filter((r) => r.verdict !== "PASS")
+    .slice(0, 40)
+    .map((r) => `| ${r.qid} | ${r.verdict} | ${r.answer.slice(0, 80)} | ${r.expected.slice(0, 60)} | ${r.log} |`),
+].join("\n");
+fs.writeFileSync(path.join(RUN_DIR, "summary.md"), summary);
+
+console.log(summary.split("\n").slice(0, 16).join("\n"));
+console.log(`\n[grade] 明细 → ${path.join(RUN_DIR, "questions.csv")}`);

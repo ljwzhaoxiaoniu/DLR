@@ -34,10 +34,13 @@ OUT_FILE="$OUT_DIR/${STAMP}_${QID}_dlr.ndjson"
 ERR_FILE="$OUT_DIR/${STAMP}_${QID}_dlr.err"
 
 # ── MCP 预检：failOnStartupError 只响亮报错、不中止 harness，先验后端再跑 ──
-(cd "$TSM_DIR" && npx tsx src/verify/precheck.ts "$MCP_URL")
-if [ $? -ne 0 ]; then
-  echo "[ERR] 语义后端不可达: $MCP_URL —— 先起后端：bash \"$ROOT/DSH-based Agent Service/scripts/start_backend.sh\"" >&2
-  exit 3
+# 批跑（run_batch.sh）设 SKIP_PRECHECK=1 跳过——预检一次就够，省掉每题几秒 tsx 启动
+if [ "${SKIP_PRECHECK:-0}" != "1" ]; then
+  (cd "$TSM_DIR" && npx tsx src/verify/precheck.ts "$MCP_URL")
+  if [ $? -ne 0 ]; then
+    echo "[ERR] 语义后端不可达: $MCP_URL —— 先起后端：bash \"$ROOT/DSH-based Agent Service/scripts/start_backend.sh\"" >&2
+    exit 3
+  fi
 fi
 
 cd "$HERE"
