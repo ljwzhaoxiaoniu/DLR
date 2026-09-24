@@ -79,17 +79,14 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 <!-- stats:begin -->
 ![实测结果综合统计](results/stats.svg)
 
-| 轮次 | 题数 | PASS | UNCERTAIN | FAIL | GOLD_ERR | tokens |
-|---|---|---|---|---|---|---|
-| 0924_1559_qids_1473_1480_1500 | 3 | 2 | 1 | 0 | 0 | 123,072 |
-| **合计** | **3**（去重 3） | **2** | **1** | **0** | **0** | **123,072** |
+**合计 3 次判定（去重 3 题 / 500 题）｜ PASS 2 ｜ UNCERTAIN 1 ｜ FAIL 0 ｜ GOLD_ERR 0 ｜ 123,072 tokens**
 
 均值 **4.7 步 / 8.0 工具调用 / 每题 41,024 tokens** ｜ 进度 **3/500 题**（1/11 库有产物）
 
-> 本块由 `tsm stats` 自动同步；逐轮明细 [results/STATS.md](results/STATS.md)，单轮 [results/<轮次>/summary.md](results/)，逐题含 session 可回放。
+> 本块由 `tsm stats` 自动同步。**逐轮**统计在 [results/STATS.md](results/STATS.md)；**逐题**明细（判定 / 调用步骤 / 依据与结论）在各轮 [results/](results/) 的 `review.md`。
 <!-- stats:end -->
 
-**怎么看**：判定口径见 [results/README.md](results/README.md)；逐题明细 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；跨轮统计 `results/STATS.md`。
+**怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）在 `results/<轮次>/review.md`，机器可读 `questions.csv`（含 `session` 列，可解码回放）；跨轮统计 `results/STATS.md`。
 
 **怎么更新**：跑完一批 → `tsm grade --run <轮次目录>` → `tsm stats`（重算图与本节块）；跑题中遇到的问题按类型补进 `sources/sop.md`。
 
@@ -98,7 +95,7 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 ```
 scenarios/birdminidev/
 ├── README.md            # ← 本文（案例说明：原料 → 装载 → 决策 → 实测）
-├── results/             # 跑批留档（按轮次：raw 日志 + 判定明细 + 单轮汇总；stats.svg 综合统计图）
+├── results/             # 跑批留档（按轮次：raw 日志 + review.md 逐题明细 + 判定 CSV + 汇总；stats.svg 综合统计图）
 ├── sources/
 │   ├── configs/{ER,DLR,RDF}/   # L1 建模源（本线消费 DLR；ER/RDF 为评测线遗留）
 │   ├── consensus/*.jsonl       # L2 源（11 库；两种格式：聚合式 / 逐题式）

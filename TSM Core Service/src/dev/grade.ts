@@ -93,7 +93,26 @@ if (!fs.existsSync(rawDir)) {
   console.error(`[ERR] 找不到 ${rawDir}`);
   process.exit(1);
 }
+/** 逐题明细（review.md 用）：判定 + 调用步骤 + 依据与结论（final 原文） */
+interface Detail {
+  qid: string;
+  db: string;
+  question: string;
+  verdict: string;
+  precision: string;
+  steps: number;
+  tools: number;
+  tokens: number;
+  expected: string;
+  empty: boolean;
+  goldErr: string;
+  answer: string;
+  trace: { tool: string; input: string }[];
+  session: string;
+}
+
 const rows: Record<string, string>[] = [];
+const details: Detail[] = [];
 for (const f of fs.readdirSync(rawDir).filter((x) => x.endsWith(".ndjson")).sort()) {
   const qid = Number((f.match(/_(\d+)_dlr\.ndjson$/) ?? [])[1] ?? 0);
   const q = byQid.get(qid);
@@ -103,6 +122,7 @@ for (const f of fs.readdirSync(rawDir).filter((x) => x.endsWith(".ndjson")).sort
   let tools = 0;
   let toolErrors = 0;
   const trace: string[] = [];
+  const toolSteps: { tool: string; input: string }[] = [];
   const callNames = new Map<string, string>();
   let sid = "";
   const tk = { total: 0, input: 0, cacheRead: 0, output: 0 };
@@ -122,6 +142,7 @@ for (const f of fs.readdirSync(rawDir).filter((x) => x.endsWith(".ndjson")).sort
       const short = name.replace("mcp__semantic-core__", "");
       callNames.set(String(o.callId ?? ""), short);
       trace.push(short);
+      toolSteps.push({ tool: short, input: JSON.stringify(o.input ?? {}).replace(/\s+/g, " ").slice(0, 200) });
     }
     if (type === "tool_result" && o.status === "error") toolErrors++;
     if (type === "status" && o.phase === "step_end") steps++;
@@ -143,10 +164,12 @@ for (const f of fs.readdirSync(rawDir).filter((x) => x.endsWith(".ndjson")).sort
         return { verdict: saysEmpty ? "PASS" : "FAIL", precision: "empty" };
       })()
     : judge(final, gold.values);
+  const verdict = gold.err ? "GOLD_ERR" : v.verdict;
   rows.push({
     qid: String(qid),
     db,
-    verdict: gold.err ? "GOLD_ERR" : v.verdict,
+    question: q?.question ?? "",
+    verdict,
     precision: v.precision,
     answer: final.replace(/\s+/g, " ").slice(0, 160),
     expected: gold.values.slice(0, 4).join(" | ").slice(0, 160),
@@ -163,11 +186,27 @@ for (const f of fs.readdirSync(rawDir).filter((x) => x.endsWith(".ndjson")).sort
     session: sid,
     gold_err: gold.err ?? "",
   });
+  details.push({
+    qid: String(qid),
+    db,
+    question: q?.question ?? "",
+    verdict,
+    precision: v.precision,
+    steps,
+    tools,
+    tokens: tk.total,
+    expected: gold.values.slice(0, 8).join(" | "),
+    empty: Boolean(gold.empty),
+    goldErr: gold.err ?? "",
+    answer: final,
+    trace: toolSteps,
+    session: sid,
+  });
 }
 
 // ── 产出 ─────────────────────────────────────────────────────────────
 const cols = [
-  "qid", "db", "verdict", "precision",
+  "qid", "db", "question", "verdict", "precision",
   "steps", "tools", "tool_errors", "tool_trace",
   "tokens_total", "tokens_input", "tokens_cache_read", "tokens_output", "cache_read_pct",
   "answer", "expected", "log", "session", "gold_err",
@@ -224,5 +263,54 @@ const summary = [
 ].join("\n");
 fs.writeFileSync(path.join(RUN_DIR, "summary.md"), summary);
 
+// ── 逐题明细文档（review.md）：判定 / 调用步骤 / 依据与结论 ─────────────
+const ICON: Record<string, string> = { PASS: "✅", FAIL: "❌", UNCERTAIN: "⚠️", GOLD_ERR: "⛔" };
+const cell = (s: string) => s.replace(/\|/g, "\\|").replace(/\r?\n+/g, " ").trim();
+const code = (s: string) => `\`${s.replace(/`/g, "'")}\``;
+const block = (d: Detail): string => {
+  const lines: string[] = [
+    "<details>",
+    `<summary><b>${d.qid}</b> · ${d.db} · ${ICON[d.verdict] ?? ""} <b>${d.verdict}</b>（${d.precision}）· ${d.steps} 步 / ${d.tools} 工具 · ${d.tokens.toLocaleString()} tok</summary>`,
+    "",
+    `**问题**：${d.question}`,
+    "",
+    `**期望**：${d.expected ? code(d.expected) : d.goldErr ? `gold 执行失败（${d.goldErr}）` : "空结果（合法期望）"}`,
+    "",
+    `**答案**：${d.answer.trim() ? code(d.answer.replace(/\s+/g, " ").slice(0, 200)) : "_（无 final 文本）_"}`,
+    "",
+  ];
+  if (d.trace.length) {
+    lines.push("**调用步骤**", "", "| # | 工具 | 参数（截 200） |", "|---|---|---|");
+    d.trace.forEach((t, i) => lines.push(`| ${i + 1} | ${code(t.tool)} | ${code(t.input)} |`));
+    lines.push("");
+  }
+  lines.push("**依据与结论**（agent 原文）", "", d.answer.trim() || "_（无 final 文本）_", "", "</details>", "");
+  return lines.join("\n");
+};
+const review = [
+  `# 评测明细 — ${path.basename(RUN_DIR)}`,
+  "",
+  "> 逐题三栏：**判定**（对/错/存疑）｜ **调用步骤**（工具与参数）｜ **依据与结论**（agent 原文）。",
+  "> 判定口径见 [README](README.md)：PASS/FAIL 由 gold 值比对；UNCERTAIN = 抽不出可比对的值（待仲裁）；GOLD_ERR = gold 本身执行失败。",
+  "> 机器可读：`questions.csv` ｜ 原始事件流：`raw/*.ndjson` ｜ 会话回放：CSV 的 `session` 列。",
+  "",
+  `**本轮：PASS ${tally("PASS")} ｜ UNCERTAIN ${tally("UNCERTAIN")} ｜ FAIL ${tally("FAIL")} ｜ GOLD_ERR ${tally("GOLD_ERR")}** ｜ ${total} 题 ｜ tokens 合计 ${sumTk.total.toLocaleString()}（每题均值 ${total ? Math.round(sumTk.total / total).toLocaleString() : 0}）`,
+  "",
+  "| 题号 | 库 | 判定 | 精度 | 步数 | 工具 | tokens | 问题 |",
+  "|---|---|---|---|---|---|---|---|",
+  ...rows.map(
+    (r) =>
+      `| ${r.qid} | ${r.db} | ${ICON[r.verdict] ?? ""} ${r.verdict} | ${r.precision} | ${r.steps} | ${r.tools} | ${num(r.tokens_total).toLocaleString()} | ${cell(r.question.slice(0, 70))} |`,
+  ),
+  "",
+  "---",
+  "",
+  "## 逐题",
+  "",
+  ...details.map(block),
+].join("\n");
+fs.writeFileSync(path.join(RUN_DIR, "review.md"), review);
+
 console.log(summary.split("\n").slice(0, 16).join("\n"));
 console.log(`\n[grade] 明细 → ${path.join(RUN_DIR, "questions.csv")}`);
+console.log(`[grade] 评测明细 → ${path.join(RUN_DIR, "review.md")}`);

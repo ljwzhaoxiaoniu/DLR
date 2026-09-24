@@ -289,17 +289,11 @@ fs.writeFileSync(OUT_MD, md);
 const block = [
   `![实测结果综合统计](results/stats.svg)`,
   "",
-  "| 轮次 | 题数 | PASS | UNCERTAIN | FAIL | GOLD_ERR | tokens |",
-  "|---|---|---|---|---|---|---|",
-  ...byRun.map(
-    ({ run, rs }) =>
-      `| ${run} | ${rs.length} | ${tally(rs, "PASS")} | ${tally(rs, "UNCERTAIN")} | ${tally(rs, "FAIL")} | ${tally(rs, "GOLD_ERR")} | ${fmt(rs.reduce((n, r) => n + r.tokens, 0))} |`,
-  ),
-  `| **合计** | **${rows.length}**（去重 ${doneTotal}） | **${tally(rows, "PASS")}** | **${tally(rows, "UNCERTAIN")}** | **${tally(rows, "FAIL")}** | **${tally(rows, "GOLD_ERR")}** | **${fmt(sumTk)}** |`,
+  `**合计 ${rows.length} 次判定（去重 ${doneTotal} 题 / ${dataset.length} 题）｜ PASS ${tally(rows, "PASS")} ｜ UNCERTAIN ${tally(rows, "UNCERTAIN")} ｜ FAIL ${tally(rows, "FAIL")} ｜ GOLD_ERR ${tally(rows, "GOLD_ERR")} ｜ ${fmt(sumTk)} tokens**`,
   "",
   `均值 **${avgOf((r) => r.steps).toFixed(1)} 步 / ${avgOf((r) => r.tools).toFixed(1)} 工具调用 / 每题 ${fmt(Math.round(avgOf((r) => r.tokens)))} tokens** ｜ 进度 **${doneTotal}/${dataset.length} 题**（${dbDone.size}/${dbTotal.size} 库有产物）`,
   "",
-  `> 本块由 \`tsm stats\` 自动同步；逐轮明细 [results/STATS.md](results/STATS.md)，单轮 [results/<轮次>/summary.md](results/)，逐题含 session 可回放。`,
+  `> 本块由 \`tsm stats\` 自动同步。**逐轮**统计在 [results/STATS.md](results/STATS.md)；**逐题**明细（判定 / 调用步骤 / 依据与结论）在各轮 [results/](results/) 的 \`review.md\`。`,
 ].join("\n");
 
 if (!NO_SYNC) {

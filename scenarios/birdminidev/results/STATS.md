@@ -1,6 +1,6 @@
 # 实测结果综合统计（tsm stats）
 
-场景 `birdminidev` ｜ 轮次 1 ｜ 判定 3 次（去重 3 题）｜ 生成 2026-09-24T09:05:00.768Z
+场景 `birdminidev` ｜ 轮次 1 ｜ 判定 3 次（去重 3 题）｜ 生成 2026-09-24T09:09:36.167Z
 
 **PASS 2 ｜ UNCERTAIN 1 ｜ FAIL 0 ｜ GOLD_ERR 0**
 

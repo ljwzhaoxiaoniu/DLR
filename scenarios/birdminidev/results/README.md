@@ -14,7 +14,8 @@ results/
     ├── questions.tsv    # 本轮题单（qid / db / question，取自数据集本身）
     ├── raw/             # ★ 可追溯：每题 dsh --json 事件流（+ .err）
     │   └── 0924_1559_1473_dlr.ndjson
-    ├── questions.csv    # 逐题明细：判定 / 精度 / 答案 / 期望 / 步数 / 工具数 / token / 日志路径 / session id
+    ├── questions.csv    # 逐题机器可读明细：判定 / 精度 / 答案 / 期望 / 步数 / 工具数 / token / 日志路径 / session id
+    ├── review.md        # ★ 逐题评测明细：判定 / 期望 vs 答案 / 调用步骤（工具+参数）/ 依据与结论（agent 原文）
     └── summary.md       # 单轮汇总：分库 × 判定 + 非 PASS 明细
 ```
 
@@ -37,7 +38,7 @@ results/
 ```bash
 # 1) 并行跑（多开 dsh 进程；先起后端）
 bash "DSH-based Agent Service/scripts/run_batch.sh" --all --jobs 4
-# 2) 判定与汇总（单轮）
+# 2) 判定与汇总（单轮；产出 questions.csv / review.md / summary.md）
 cd "TSM Core Service" && tsm grade --run "../scenarios/birdminidev/results/<run_id>"
 # 3) 综合统计（跨轮；重算 stats.svg / STATS.md，并把一份同步进场景 README §五）
 tsm stats
