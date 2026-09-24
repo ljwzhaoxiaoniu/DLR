@@ -4,7 +4,8 @@
  * 输入：一轮跑批目录（`run_batch.sh` 的产物：`raw/<stamp>_<qid>_dlr.ndjson`）
  * 判定：题目自带 gold SQL 在该库 SQLite 上执行 → 期望值 ↔ 从 final 文本抽候选值比对
  *      （规则见 `dev/judge.ts`；空 gold = 合法期望）
- * 产出：`questions.csv`（逐题明细）+ `summary.md`（分库/分判定汇总）+ 控制台概要
+ * 评定：SOP 生效时按 SOP 裁定（与 gold 对不上但合 SOP 口径 = 翻盘；见 `dev/results.ts` rulingOf）
+ * 产出：`questions.csv`（逐题明细，判定 + 评定两列）+ `summary.md`（分库/分判定汇总）+ 控制台概要
  *      （跨轮统计与逐题明细文档 → `tsm stats`）
  *
  * 用法: tsm grade --run <run_dir>
@@ -12,7 +13,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { byQid, goldValues, judge, judgeEmpty } from "./judge.js";
-import { readRunQuestions } from "./results.js";
+import { readRunQuestions, rulingOf, sopByQid, RULINGS, RULING_LABEL } from "./results.js";
 
 const arg = (name: string, fallback = ""): string => {
   const i = process.argv.indexOf(name);
@@ -30,6 +31,7 @@ if (!fs.existsSync(rawDir)) {
   console.error(`[ERR] 找不到 ${rawDir}`);
   process.exit(1);
 }
+const SOP = sopByQid(); // L3 源：SOP 生效的题按 SOP 裁定（翻盘）
 const rows: Record<string, string>[] = [];
 for (const ev of readRunQuestions(RUN_DIR)) {
   const qid = Number(ev.qid);
@@ -37,11 +39,13 @@ for (const ev of readRunQuestions(RUN_DIR)) {
   const db = q?.db_id ?? "-";
   const gold = goldValues(qid, db);
   const v = gold.empty ? judgeEmpty(ev.final) : judge(ev.final, gold.values);
+  const verdict = gold.err ? "GOLD_ERR" : v.verdict;
   rows.push({
     qid: String(qid),
     db,
     question: q?.question ?? "",
-    verdict: gold.err ? "GOLD_ERR" : v.verdict,
+    verdict,
+    ruling: rulingOf(verdict, ev.final, SOP.get(String(qid))),
     precision: v.precision,
     answer: ev.final.replace(/\s+/g, " ").slice(0, 160),
     expected: gold.values.slice(0, 4).join(" | ").slice(0, 160),
@@ -62,7 +66,7 @@ for (const ev of readRunQuestions(RUN_DIR)) {
 
 // ── 产出 ─────────────────────────────────────────────────────────────
 const cols = [
-  "qid", "db", "question", "verdict", "precision",
+  "qid", "db", "question", "verdict", "ruling", "precision",
   "steps", "tools", "tool_errors", "tool_trace",
   "tokens_total", "tokens_input", "tokens_cache_read", "tokens_output", "cache_read_pct",
   "answer", "expected", "log", "session", "gold_err",
@@ -78,6 +82,7 @@ for (const r of rows) {
 }
 const total = rows.length;
 const tally = (v: string) => rows.filter((r) => r.verdict === v).length;
+const rTally = (v: string) => rows.filter((r) => r.ruling === v).length;
 const num = (s: string) => Number(s) || 0;
 const avg = (f: (r: Record<string, string>) => number) =>
   total ? Math.round(rows.reduce((n, r) => n + f(r), 0) / total) : 0;
@@ -95,7 +100,9 @@ const summary = [
   "",
   `目录：\`${RUN_DIR}\` ｜ 题数 ${total} ｜ 生成 ${new Date().toISOString()}`,
   "",
-  `**PASS ${tally("PASS")} ｜ FAIL ${tally("FAIL")} ｜ UNCERTAIN ${tally("UNCERTAIN")} ｜ GOLD_ERR ${tally("GOLD_ERR")}**`,
+  `**判定（与 gold 比对）：PASS ${tally("PASS")} ｜ FAIL ${tally("FAIL")} ｜ UNCERTAIN ${tally("UNCERTAIN")} ｜ GOLD_ERR ${tally("GOLD_ERR")}**`,
+  "",
+  `**评定（按 SOP 裁定）：${RULINGS.map((r) => `${RULING_LABEL[r]} ${rTally(r)}`).join(" ｜ ")}**（翻盘单独计，不并入正确）`,
   "",
   "## 过程指标（均值 / 合计）",
   "",
@@ -110,12 +117,12 @@ const summary = [
   "",
   "## 非 PASS 明细（前 40）",
   "",
-  "| qid | 判定 | 答案（截） | 期望（截） | 日志 |",
-  "|---|---|---|---|---|",
+  "| qid | 判定 | 评定 | 答案（截） | 期望（截） | 日志 |",
+  "|---|---|---|---|---|---|",
   ...rows
     .filter((r) => r.verdict !== "PASS")
     .slice(0, 40)
-    .map((r) => `| ${r.qid} | ${r.verdict} | ${r.answer.slice(0, 80)} | ${r.expected.slice(0, 60)} | ${r.log} |`),
+    .map((r) => `| ${r.qid} | ${r.verdict} | ${RULING_LABEL[r.ruling] ?? r.ruling} | ${r.answer.slice(0, 80)} | ${r.expected.slice(0, 60)} | ${r.log} |`),
 ].join("\n");
 fs.writeFileSync(path.join(RUN_DIR, "summary.md"), summary);
 

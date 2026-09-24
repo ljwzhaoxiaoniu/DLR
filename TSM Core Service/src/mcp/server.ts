@@ -79,10 +79,15 @@ function createServer(): McpServer {
     "dlr_search_consensus",
     {
       description:
-        "[DLR] L2 领域共识检索（Domain Consensus）：按库（namespace）召回领域共识条目——" +
-        "基于 L1 schema 的背景知识与术语（术语→列/值、公式、口径），非明细数据。",
+        "[DLR] L2 领域共识检索（Domain Consensus）：召回领域共识条目——" +
+        "基于 L1 schema 的背景知识与术语（术语→列/值、公式、口径），非明细数据。" +
+        "namespace 留空做跨库召回（与 dlr_semantic_query 的 db 留空同口径），命中自带 namespace 与原题 question，" +
+        "用它判断这条共识是否对得上本题；确定目标库后必须传 namespace 避免跨库串扰。",
       inputSchema: {
-        namespace: z.string().describe("库名，如 debit_card_specializing"),
+        namespace: z
+          .string()
+          .default("")
+          .describe("库名，如 debit_card_specializing；留空 = 跨库召回（命中里带 namespace 分辨来源）"),
         question: z.string(),
         top_k: z.number().int().positive().default(5),
       },

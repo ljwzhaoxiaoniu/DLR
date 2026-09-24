@@ -1,8 +1,10 @@
 # 跑批结果（tsm grade）
 
-目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0924_1559_qids_1473_1480_1500` ｜ 题数 3 ｜ 生成 2026-09-24T09:16:44.715Z
+目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0924_1559_qids_1473_1480_1500` ｜ 题数 3 ｜ 生成 2026-09-24T10:31:38.058Z
 
-**PASS 2 ｜ FAIL 0 ｜ UNCERTAIN 1 ｜ GOLD_ERR 0**
+**判定（与 gold 比对）：PASS 2 ｜ FAIL 0 ｜ UNCERTAIN 1 ｜ GOLD_ERR 0**
+
+**评定（按 SOP 裁定）：✅ 正确 2 ｜ 🔁 翻盘 1 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0**（翻盘单独计，不并入正确）
 
 ## 过程指标（均值 / 合计）
 
@@ -16,6 +18,6 @@
 
 ## 非 PASS 明细（前 40）
 
-| qid | 判定 | 答案（截） | 期望（截） | 日志 |
-|---|---|---|---|---|
-| 1500 | UNCERTAIN | ## 结论 **September 2013 没有任何产品被消费——结果为空列表。** ### 依据 **L3（`sop` 技能，本题有精确命中节）** — 技 | Nafta | Nafta | Provoz.nápl. | Natural | raw/0924_1559_1500_dlr.ndjson |
+| qid | 判定 | 评定 | 答案（截） | 期望（截） | 日志 |
+|---|---|---|---|---|---|
+| 1500 | UNCERTAIN | 🔁 翻盘 | ## 结论 **September 2013 没有任何产品被消费——结果为空列表。** ### 依据 **L3（`sop` 技能，本题有精确命中节）** — 技 | Nafta | Nafta | Provoz.nápl. | Natural | raw/0924_1559_1500_dlr.ndjson |

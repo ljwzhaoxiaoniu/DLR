@@ -1,11 +1,13 @@
 /**
- * 跑批结果读取（开发态共享）—— 结果目录 / 逐题 CSV / dsh 事件流 / L3 源
+ * 跑批结果读取（开发态共享）—— 结果目录 / 逐题 CSV / dsh 事件流 / L3 源 / 评定
  *
  * `tsm grade`（判定与汇总）、`tsm stats`（综合统计 + DETAIL.md）共用这一层，
  * 避免各命令把结果目录再解析一遍。
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { SOP_SOURCE } from "../config.js";
+import { judge, judgeEmpty, QUESTIONS } from "./judge.js";
 
 // ── 结果目录 ─────────────────────────────────────────────────────────
 /** 列出 results/ 下有产物的轮次（含 questions.csv 的目录），按名字排序 */
@@ -121,10 +123,11 @@ export interface SopSection {
   db: string;
   question: string; // 题面（sop.md 逐字复述的问题）
   types: string[]; // 类型标签：数据集问题 / 建模冲突 / 难题 / 其他
+  expect?: string; // 可选 `> **裁定期望**：<值>`（非空类裁定给的可比口径，判「翻盘」用）
   body: string; // 裁定正文（缘由）
 }
 
-/** 解析 sop.md：`## 库` / `### When asked: "…"` / `> **类型**：…` / 正文 */
+/** 解析 sop.md：`## 库` / `### When asked: "…"` / `> **类型**：…` / `> **裁定期望**：…` / 正文 */
 export function parseSop(sopPath: string): SopSection[] {
   if (!fs.existsSync(sopPath)) return [];
   const lines = fs.readFileSync(sopPath, "utf8").split(/\r?\n/);
@@ -141,6 +144,7 @@ export function parseSop(sopPath: string): SopSection[] {
     if (!m) continue;
     const body: string[] = [];
     let types: string[] = [];
+    let expect: string | undefined;
     for (let j = i + 1; j < lines.length && !lines[j].startsWith("### ") && !lines[j].startsWith("## "); j++) {
       const t = lines[j].match(/^>\s*\*\*类型\*\*：(.+)$/);
       if (t) {
@@ -150,12 +154,62 @@ export function parseSop(sopPath: string): SopSection[] {
           .filter(Boolean);
         continue;
       }
+      const e = lines[j].match(/^>\s*\*\*裁定期望\*\*：(.+)$/);
+      if (e) {
+        expect = e[1].trim();
+        continue;
+      }
       body.push(lines[j]);
     }
-    out.push({ db, question: m[1].trim(), types, body: body.join("\n").trim() });
+    out.push({ db, question: m[1].trim(), types, expect, body: body.join("\n").trim() });
   }
   return out;
 }
 
 /** 题面归一（比对 sop 标题与数据集原题） */
 export const normQuestion = (s: string) => s.toLowerCase().replace(/\s+/g, " ").replace(/[""]/g, '"').trim();
+
+/** 题面 → 题号 → SOP 节（sop.md 的题面即数据集原题；未命中的题无节） */
+export function sopByQid(sopPath = SOP_SOURCE): Map<string, SopSection> {
+  const byQuestionText = new Map(QUESTIONS.map((q) => [normQuestion(q.question), q]));
+  const out = new Map<string, SopSection>();
+  for (const s of parseSop(sopPath)) {
+    const q = byQuestionText.get(normQuestion(s.question));
+    if (q) out.set(String(q.question_id), s);
+  }
+  return out;
+}
+
+// ── 评定（与「判定」并列的第二维：SOP 生效时按 SOP 裁定） ─────────────
+/**
+ * `verdict` 仍与 gold 比对（数据集原生）；`ruling` 是裁定后的结论：
+ *   CORRECT    与 gold 一致
+ *   OVERTURNED 与 gold 对不上，但答法符合 SOP 裁定口径 —— 翻盘（计正确，**单独标注**）
+ *   WRONG      判错（含「SOP 已给口径而 agent 答法违背它」）
+ *   PENDING    无人裁定 / 抽不出可比对的值
+ */
+export const RULINGS = ["CORRECT", "OVERTURNED", "WRONG", "PENDING"] as const;
+export type Ruling = (typeof RULINGS)[number];
+export const RULING_LABEL: Record<string, string> = {
+  CORRECT: "✅ 正确",
+  OVERTURNED: "🔁 翻盘",
+  WRONG: "❌ 错误",
+  PENDING: "⚠️ 待仲裁",
+};
+
+export function rulingOf(verdict: string, final: string, sec?: SopSection): Ruling {
+  if (verdict === "PASS") return "CORRECT";
+  if (sec?.types.includes("数据集问题")) {
+    // ① 节里给了可比的裁定期望（多个值用 | 分隔）→ 直接与 agent 答案比
+    if (sec.expect) {
+      const vals = sec.expect.split(/\s*\|\s*/).filter(Boolean);
+      return judge(final, vals).verdict === "PASS" ? "OVERTURNED" : "WRONG";
+    }
+    // ② 节裁定为「空 / 无记录」类 → 比 agent 是否也说空（复用 judgeEmpty 的口径识别）
+    if (judgeEmpty(sec.body).verdict === "PASS")
+      return judgeEmpty(final).verdict === "PASS" ? "OVERTURNED" : "WRONG";
+    // ③ 判为数据集问题，但节里没给可比口径 → 待仲裁
+    return "PENDING";
+  }
+  return verdict === "FAIL" ? "WRONG" : "PENDING";
+}

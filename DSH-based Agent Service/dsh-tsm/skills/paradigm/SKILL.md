@@ -46,4 +46,4 @@ description: DLR + 三级语义建模（TSM）的范式认知：DLR 数据源级
 - 把 `public_attributes` 当"真实列"——它只是 LE 级统一名，列名与格式要到 PE 看。
 - 把同一 LE 的多个 PE 当多个概念——它们是同一业务概念的不同落地。
 - 把 L2 的通用公式当铁律——当数据粒度与公式冲突时，以数据为准（`sop` 会点名这类情况）。
-- 跨库串扰——`dlr_search_consensus` 的 `namespace` 必须是对应库名。
+- 跨库串扰——`dlr_search_consensus` 的 `namespace` 留空是**跨库召回**（还没定库时探路用；命中自带 `namespace` 与它派生的原题 `question`，对得上才采信），**定库后必须传库名收口**，别拿别库的共识当本题规则。

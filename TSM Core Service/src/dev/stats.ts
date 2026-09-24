@@ -3,20 +3,21 @@
  *
  * 输入：<场景>/results/<轮>/questions.csv（`tsm grade` 的逐题明细，跨轮汇总）
  * 产出：
- *   results/stats.svg   综合统计图（判定分布 / 分库进度 / 逐轮 / 效率指标）
+ *   results/stats.svg   综合统计图（判定分布 + 评定 / 跑题覆盖度 / 逐轮 / 效率指标）
  *   results/STATS.md    同一份统计的文字版
  *   场景 DETAIL.md      评测明细文档（与 README 并列；见 dev/detail.ts）
  *   场景 README         两个标记块同步：实测结果（stats:）+ 错题记录（mistakes:）
  *
  * 用法: tsm stats [--no-sync] [--open]
  *
- * 口径：分布按「判定次数」计（同题重跑会重复计入）；**进度**按去重题数计。
+ * 口径：分布按「判定次数」计（同题重跑会重复计入）；**跑题覆盖度**按去重题数计；
+ *      **评定**（按 SOP 裁定）是第二维：🔁 翻盘单独计，不并入 ✅ 正确。
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { spawn } from "node:child_process";
 import { ROOT, SCENARIO } from "../config.js";
-import { listRuns, readRunCsv } from "./results.js";
+import { listRuns, readRunCsv, RULINGS, RULING_LABEL } from "./results.js";
 import { buildDetail } from "./detail.js";
 
 const NO_SYNC = process.argv.includes("--no-sync");
@@ -37,6 +38,13 @@ const COLORS: Record<string, string> = {
   FAIL: "#cf222e",
   GOLD_ERR: "#6e7781",
 };
+/** 评定配色：正确沿用绿；🔁 翻盘独立蓝（一眼区别于正确） */
+const RULING_COLOR: Record<string, string> = {
+  CORRECT: "#1a7f37",
+  OVERTURNED: "#0969da",
+  WRONG: "#cf222e",
+  PENDING: "#bf8700",
+};
 const INK = "#1f2328";
 const MUTED = "#656d76";
 const TRACK = "#eaeef2";
@@ -47,6 +55,7 @@ interface Row {
   qid: string;
   db: string;
   verdict: string;
+  ruling: string; // 评定（按 SOP 裁定）
   steps: number;
   tools: number;
   toolErrors: number;
@@ -65,13 +74,18 @@ if (!runs.length) {
 }
 
 const rows: Row[] = [];
+let noRuling = 0; // 旧 CSV 无 ruling 列的行数（提示重跑 grade）
 for (const run of runs) {
   for (const r of readRunCsv(path.join(RESULTS, run))) {
+    const verdict = r.verdict ?? "?";
+    if (!r.ruling) noRuling++;
     rows.push({
       run,
       qid: r.qid ?? "",
       db: r.db ?? "-",
-      verdict: r.verdict ?? "?",
+      verdict,
+      // 旧 CSV 兜底：没有 ruling 列时只认「与 gold 一致」为正确，其余记待仲裁（重跑 grade 可补全）
+      ruling: r.ruling || (verdict === "PASS" ? "CORRECT" : "PENDING"),
       steps: Number(r.steps) || 0,
       tools: Number(r.tools) || 0,
       toolErrors: Number(r.tool_errors) || 0,
@@ -80,17 +94,19 @@ for (const run of runs) {
     });
   }
 }
+if (noRuling) console.warn(`[stats] ${noRuling} 行缺 ruling 列（旧 CSV）——先 tsm grade 重算该轮可补全`);
 
 // ── 汇总 ─────────────────────────────────────────────────────────────
 const num = (s: string | number) => Number(s) || 0;
 const tally = (rs: Row[], v: string) => rs.filter((r) => r.verdict === v).length;
+const rTally = (rs: Row[], v: string) => rs.filter((r) => r.ruling === v).length;
 const byRun = runs.map((run) => ({ run, rs: rows.filter((r) => r.run === run) }));
 const databanks = [...new Set(rows.map((r) => r.db))].sort();
 const sumTk = rows.reduce((n, r) => n + r.tokens, 0);
 const avgOf = (f: (r: Row) => number) => (rows.length ? rows.reduce((n, r) => n + f(r), 0) / rows.length : 0);
 const distinct = (rs: Row[]) => new Set(rs.map((r) => r.qid)).size;
 
-// 进度：数据集原生题数（按库）
+// 跑题覆盖度：数据集原生题数（按库）
 const QJSON = path.join(ROOT, "MINIDEV_sqlite", "mini_dev_sqlite.json");
 const dataset: { question_id: number; db_id: string }[] = JSON.parse(fs.readFileSync(QJSON, "utf8"));
 const dbTotal = new Map<string, number>();
@@ -108,38 +124,74 @@ const PAD = 24;
 const INNER = W - PAD * 2;
 const FONT = "-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif";
 
-/** 判定堆叠条：按 VERDICTS 顺序画分段，返回 [SVG, 末端 x] */
-function stackBar(x: number, y: number, w: number, h: number, rs: Row[]): string {
-  const total = rs.length || 1;
+/** 堆叠条（通用）：按给定分段画，段宽按计数占比 */
+function stackSegs(x: number, y: number, w: number, h: number, segs: { color: string; n: number }[]): string {
+  const total = segs.reduce((a, s) => a + s.n, 0) || 1;
   let cx = x;
-  const segs: string[] = [];
-  for (const v of VERDICTS) {
-    const n = tally(rs, v);
-    if (!n) continue;
-    const sw = (n / total) * w;
-    segs.push(`<rect x="${cx.toFixed(1)}" y="${y}" width="${sw.toFixed(1)}" height="${h}" fill="${COLORS[v]}"/>`);
+  const out: string[] = [];
+  for (const s of segs) {
+    if (!s.n) continue;
+    const sw = (s.n / total) * w;
+    out.push(`<rect x="${cx.toFixed(1)}" y="${y}" width="${sw.toFixed(1)}" height="${h}" fill="${s.color}"/>`);
     if (sw > 34)
-      segs.push(
-        `<text x="${(cx + sw / 2).toFixed(1)}" y="${y + h / 2 + 4}" font-size="11" fill="#fff" text-anchor="middle">${n}</text>`,
+      out.push(
+        `<text x="${(cx + sw / 2).toFixed(1)}" y="${y + h / 2 + 4}" font-size="11" fill="#fff" text-anchor="middle">${s.n}</text>`,
       );
     cx += sw;
   }
-  if (!rs.length) segs.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${TRACK}"/>`);
-  return segs.join("");
+  if (!segs.some((s) => s.n)) out.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${TRACK}"/>`);
+  return out.join("");
 }
 
-/** 彩色图例（判定 → 计数） */
-function legend(x: number, y: number, rs: Row[]): string {
+/** 判定堆叠条（与 gold 比对） */
+const stackBar = (x: number, y: number, w: number, h: number, rs: Row[]) =>
+  stackSegs(
+    x,
+    y,
+    w,
+    h,
+    VERDICTS.map((v) => ({ color: COLORS[v], n: tally(rs, v) })),
+  );
+
+/** 评定堆叠条（按 SOP 裁定；🔁 翻盘独立成色） */
+const rulingBar = (x: number, y: number, w: number, h: number, rs: Row[]) =>
+  stackSegs(
+    x,
+    y,
+    w,
+    h,
+    RULINGS.map((v) => ({ color: RULING_COLOR[v], n: rTally(rs, v) })),
+  );
+
+/** 图例文字宽度估算（CJK 按 12px、其余按 7px） */
+const CJK_RE = /[　-鿿＀-￯]/;
+const labelW = (s: string) => [...s].reduce((n, c) => n + (CJK_RE.test(c) ? 12 : 7), 0);
+
+/** 彩色图例（项 → 计数） */
+function legendOf(x: number, y: number, items: { label: string; color: string }[]): string {
   let cx = x;
   const out: string[] = [];
-  for (const v of VERDICTS) {
-    const label = `${v} ${tally(rs, v)}`;
-    out.push(`<rect x="${cx}" y="${y - 8}" width="9" height="9" rx="2" fill="${COLORS[v]}"/>`);
-    out.push(`<text x="${cx + 14}" y="${y}" font-size="12" fill="${MUTED}">${label}</text>`);
-    cx += 16 + label.length * 7.2;
+  for (const it of items) {
+    out.push(`<rect x="${cx}" y="${y - 8}" width="9" height="9" rx="2" fill="${it.color}"/>`);
+    out.push(`<text x="${cx + 14}" y="${y}" font-size="12" fill="${MUTED}">${it.label}</text>`);
+    cx += 16 + labelW(it.label);
   }
   return out.join("");
 }
+
+const legend = (x: number, y: number, rs: Row[]) =>
+  legendOf(
+    x,
+    y,
+    VERDICTS.map((v) => ({ label: `${v} ${tally(rs, v)}`, color: COLORS[v] })),
+  );
+
+const rulingLegend = (x: number, y: number, rs: Row[]) =>
+  legendOf(
+    x,
+    y,
+    RULINGS.map((v) => ({ label: `${RULING_LABEL[v]} ${rTally(rs, v)}`, color: RULING_COLOR[v] })),
+  );
 
 const parts: string[] = [];
 let y = 36;
@@ -148,19 +200,28 @@ parts.push(
   `<text x="${W - PAD}" y="${y}" font-size="11" fill="${MUTED}" text-anchor="end">生成 ${new Date().toISOString().slice(0, 16).replace("T", " ")} UTC</text>`,
 );
 
-// ① 判定分布（累计；同题重跑重复计入）
+// ① 判定分布（累计；同题重跑重复计入）+ 评定（按 SOP 裁定，第二维）
 y += 34;
 parts.push(`<text x="${PAD}" y="${y}" font-size="13" font-weight="600" fill="${INK}">判定分布</text>`);
-parts.push(`<text x="${PAD + 92}" y="${y}" font-size="11" fill="${MUTED}">累计 ${rows.length} 次判定 · 去重 ${doneTotal} 题</text>`);
+parts.push(`<text x="${PAD + 92}" y="${y}" font-size="11" fill="${MUTED}">与 gold 比对 · 累计 ${rows.length} 次 · 去重 ${doneTotal} 题</text>`);
 y += 14;
 parts.push(stackBar(PAD, y, INNER, 26, rows));
 y += 26 + 18;
 parts.push(legend(PAD, y, rows));
 
-// ② 分库进度（去重题数 / 数据集题数）
+// ①′ 评定（SOP 生效时按 SOP 裁定；翻盘独立成色、单独计数）
+y += 26;
+parts.push(`<text x="${PAD}" y="${y}" font-size="13" font-weight="600" fill="${INK}">评定</text>`);
+parts.push(`<text x="${PAD + 52}" y="${y}" font-size="11" fill="${MUTED}">按 SOP 裁定 · 🔁 翻盘单独计，不并入 ✅ 正确</text>`);
+y += 14;
+parts.push(rulingBar(PAD, y, INNER, 20, rows));
+y += 20 + 18;
+parts.push(rulingLegend(PAD, y, rows));
+
+// ② 跑题覆盖度（跑过多少题；去重题数 / 数据集题数）
 y += 34;
-parts.push(`<text x="${PAD}" y="${y}" font-size="13" font-weight="600" fill="${INK}">分库进度</text>`);
-parts.push(`<text x="${PAD + 66}" y="${y}" font-size="11" fill="${MUTED}">已跑（去重）/ 数据集题数</text>`);
+parts.push(`<text x="${PAD}" y="${y}" font-size="13" font-weight="600" fill="${INK}">跑题覆盖度</text>`);
+parts.push(`<text x="${PAD + 76}" y="${y}" font-size="11" fill="${MUTED}">跑过（去重）/ 数据集题数 · 与判定、评定无关</text>`);
 y += 16;
 const allDbs = [...dbTotal.keys()].sort();
 for (const db of allDbs) {
@@ -208,7 +269,7 @@ for (const line of eff) {
 }
 y += 4;
 parts.push(
-  `<text x="${PAD}" y="${y}" font-size="11" fill="${MUTED}">口径：分布按判定次数（同题重跑重复计入）；进度按去重题数。明细见 results/STATS.md 与各轮 questions.csv。</text>`,
+  `<text x="${PAD}" y="${y}" font-size="11" fill="${MUTED}">口径：判定按次数（同题重跑重复计入）；评定按 SOP 裁定（🔁 翻盘单独计）；跑题覆盖度按去重题数。明细见 results/STATS.md 与各轮 questions.csv。</text>`,
 );
 y += 18;
 
@@ -225,9 +286,11 @@ const md = [
   "",
   `场景 \`${path.basename(SCENARIO)}\` ｜ 轮次 ${runs.length} ｜ 判定 ${rows.length} 次（去重 ${doneTotal} 题）｜ 生成 ${new Date().toISOString()}`,
   "",
-  `**PASS ${tally(rows, "PASS")} ｜ UNCERTAIN ${tally(rows, "UNCERTAIN")} ｜ FAIL ${tally(rows, "FAIL")} ｜ GOLD_ERR ${tally(rows, "GOLD_ERR")}**`,
+  `**判定（与 gold 比对）：PASS ${tally(rows, "PASS")} ｜ UNCERTAIN ${tally(rows, "UNCERTAIN")} ｜ FAIL ${tally(rows, "FAIL")} ｜ GOLD_ERR ${tally(rows, "GOLD_ERR")}**`,
   "",
-  "## 逐轮",
+  `**评定（按 SOP 裁定）：${RULINGS.map((r) => `${RULING_LABEL[r]} ${rTally(rows, r)}`).join(" ｜ ")}**（翻盘单独计，不并入正确）`,
+  "",
+  "## 逐轮 · 判定（与 gold 比对）",
   "",
   "| 轮次 | 题数 | PASS | UNCERTAIN | FAIL | GOLD_ERR | tokens |",
   "|---|---|---|---|---|---|---|",
@@ -236,18 +299,31 @@ const md = [
       `| ${run} | ${rs.length} | ${tally(rs, "PASS")} | ${tally(rs, "UNCERTAIN")} | ${tally(rs, "FAIL")} | ${tally(rs, "GOLD_ERR")} | ${fmt(rs.reduce((n, r) => n + r.tokens, 0))} |`,
   ),
   "",
-  "## 分库进度（去重题数 / 数据集题数）",
+  "## 逐轮 · 评定（按 SOP 裁定；翻盘单独计）",
   "",
-  "| 库 | 已跑 | 数据集 |",
-  "|---|---|---|",
-  ...allDbs.map((db) => `| ${db} | ${dbDone.get(db) ?? 0} | ${dbTotal.get(db) ?? 0} |`),
+  "| 轮次 | 题数 | ✅ 正确 | 🔁 翻盘 | ❌ 错误 | ⚠️ 待仲裁 |",
+  "|---|---|---|---|---|---|",
+  ...byRun.map(
+    ({ run, rs }) =>
+      `| ${run} | ${rs.length} | ${rTally(rs, "CORRECT")} | ${rTally(rs, "OVERTURNED")} | ${rTally(rs, "WRONG")} | ${rTally(rs, "PENDING")} |`,
+  ),
+  "",
+  "## 跑题覆盖度（跑过多少题；去重题数 / 数据集题数）",
+  "",
+  "| 库 | 已跑 | 数据集 | 覆盖 |",
+  "|---|---|---|---|",
+  ...allDbs.map((db) => {
+    const done = dbDone.get(db) ?? 0;
+    const total = dbTotal.get(db) ?? 0;
+    return `| ${db} | ${done} | ${total} | ${total ? ((Math.min(done, total) / total) * 100).toFixed(1) : "0.0"}% |`;
+  }),
   "",
   "## 效率（跨全部判定）",
   "",
   `- 均值 **${avgOf((r) => r.steps).toFixed(1)} 步** / **${avgOf((r) => r.tools).toFixed(1)} 工具调用** ｜ 工具错误均值 ${avgOf((r) => r.toolErrors).toFixed(2)}`,
   `- token 合计 **${fmt(sumTk)}** ｜ 每题均值 **${fmt(Math.round(avgOf((r) => r.tokens)))}** ｜ cache_read 占比 **${cacheShare}%**`,
   "",
-  "> 口径：分布按判定次数（同题重跑重复计入）；进度按去重题数。逐题明细在各轮 `questions.csv`。",
+  "> 口径：分布按判定次数（同题重跑重复计入）；跑题覆盖度按去重题数。**评定**按 SOP 裁定，🔁 翻盘单独计、不并入 ✅ 正确。逐题明细在各轮 `questions.csv`。",
   "",
 ].join("\n");
 fs.writeFileSync(OUT_MD, md);
@@ -256,11 +332,15 @@ fs.writeFileSync(OUT_MD, md);
 const block = [
   `![实测结果综合统计](results/stats.svg)`,
   "",
-  `**合计 ${rows.length} 次判定（去重 ${doneTotal} 题 / ${dataset.length} 题）｜ PASS ${tally(rows, "PASS")} ｜ UNCERTAIN ${tally(rows, "UNCERTAIN")} ｜ FAIL ${tally(rows, "FAIL")} ｜ GOLD_ERR ${tally(rows, "GOLD_ERR")} ｜ ${fmt(sumTk)} tokens**`,
+  `**判定**（与 gold 比对）：合计 ${rows.length} 次（去重 ${doneTotal} 题 / ${dataset.length} 题）｜ PASS ${tally(rows, "PASS")} ｜ UNCERTAIN ${tally(rows, "UNCERTAIN")} ｜ FAIL ${tally(rows, "FAIL")} ｜ GOLD_ERR ${tally(rows, "GOLD_ERR")} ｜ ${fmt(sumTk)} tokens`,
   "",
-  `均值 **${avgOf((r) => r.steps).toFixed(1)} 步 / ${avgOf((r) => r.tools).toFixed(1)} 工具调用 / 每题 ${fmt(Math.round(avgOf((r) => r.tokens)))} tokens** ｜ 进度 **${doneTotal}/${dataset.length} 题**（${dbDone.size}/${dbTotal.size} 库有产物）`,
+  `**评定**（按 SOP 裁定）：✅ 正确 ${rTally(rows, "CORRECT")} ｜ 🔁 翻盘 ${rTally(rows, "OVERTURNED")} ｜ ❌ 错误 ${rTally(rows, "WRONG")} ｜ ⚠️ 待仲裁 ${rTally(rows, "PENDING")}（🔁 翻盘单独标注、单独计数，不并入 ✅ 正确）`,
   "",
-  `> 本块由 \`tsm stats\` 自动同步。**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。`,
+  `均值 **${avgOf((r) => r.steps).toFixed(1)} 步 / ${avgOf((r) => r.tools).toFixed(1)} 工具调用 / 每题 ${fmt(Math.round(avgOf((r) => r.tokens)))} tokens**`,
+  "",
+  `跑题覆盖度 **${doneTotal}/${dataset.length} 题**（${dbDone.size}/${dbTotal.size} 库有产物）——跑过多少题，与判定/评定无关`,
+  "",
+  `> 本块由 \`tsm stats\` 自动同步。**逐题明细**（判定 / 评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。`,
 ].join("\n");
 
 // ── 明细文档（DETAIL.md，与 README 并列）+ 错题块 ─────────────────────
@@ -270,11 +350,11 @@ console.log(`[stats] 明细文档 → ${path.join(SCENARIO, "DETAIL.md")}（错�
 const cell = (s: string) => s.replace(/\|/g, "\\|").replace(/\r?\n+/g, " ").trim();
 const mistakesBlock = mistakes.length
   ? [
-      "| 题号 | 库 | 判定 | 类型 | 问题（截） | 裁定（全文见 [DETAIL.md](DETAIL.md)） |",
-      "|---|---|---|---|---|---|",
+      "| 题号 | 库 | 判定 | 评定 | 类型 | 问题（截） | 裁定（全文见 [DETAIL.md](DETAIL.md)） |",
+      "|---|---|---|---|---|---|---|",
       ...mistakes.map(
         (m) =>
-          `| q${m.qid} | ${m.db} | ${m.verdict} | ${m.types.join(" · ") || "—"} | ${cell(m.question.slice(0, 56))} | ${cell(m.rationale.slice(0, 130))} |`,
+          `| q${m.qid} | ${m.db} | ${m.verdict} | ${RULING_LABEL[m.ruling] ?? m.ruling} | ${m.types.join(" · ") || "—"} | ${cell(m.question.slice(0, 56))} | ${cell(m.rationale.slice(0, 130))} |`,
       ),
     ].join("\n")
   : "（暂无：已跑题判定均为 PASS）";

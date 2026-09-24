@@ -1,34 +1,44 @@
 # 实测结果综合统计（tsm stats）
 
-场景 `birdminidev` ｜ 轮次 1 ｜ 判定 3 次（去重 3 题）｜ 生成 2026-09-24T09:25:11.114Z
+场景 `birdminidev` ｜ 轮次 2 ｜ 判定 7 次（去重 7 题）｜ 生成 2026-09-24T10:42:21.926Z
 
-**PASS 2 ｜ UNCERTAIN 1 ｜ FAIL 0 ｜ GOLD_ERR 0**
+**判定（与 gold 比对）：PASS 6 ｜ UNCERTAIN 1 ｜ FAIL 0 ｜ GOLD_ERR 0**
 
-## 逐轮
+**评定（按 SOP 裁定）：✅ 正确 6 ｜ 🔁 翻盘 1 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0**（翻盘单独计，不并入正确）
+
+## 逐轮 · 判定（与 gold 比对）
 
 | 轮次 | 题数 | PASS | UNCERTAIN | FAIL | GOLD_ERR | tokens |
 |---|---|---|---|---|---|---|
 | 0924_1559_qids_1473_1480_1500 | 3 | 2 | 1 | 0 | 0 | 123,072 |
+| 0924_1837_qids_1471_1472_1476_1479 | 4 | 4 | 0 | 0 | 0 | 179,327 |
 
-## 分库进度（去重题数 / 数据集题数）
+## 逐轮 · 评定（按 SOP 裁定；翻盘单独计）
 
-| 库 | 已跑 | 数据集 |
-|---|---|---|
-| california_schools | 0 | 30 |
-| card_games | 0 | 52 |
-| codebase_community | 0 | 49 |
-| debit_card_specializing | 3 | 30 |
-| european_football_2 | 0 | 51 |
-| financial | 0 | 32 |
-| formula_1 | 0 | 66 |
-| student_club | 0 | 48 |
-| superhero | 0 | 52 |
-| thrombosis_prediction | 0 | 50 |
-| toxicology | 0 | 40 |
+| 轮次 | 题数 | ✅ 正确 | 🔁 翻盘 | ❌ 错误 | ⚠️ 待仲裁 |
+|---|---|---|---|---|---|
+| 0924_1559_qids_1473_1480_1500 | 3 | 2 | 1 | 0 | 0 |
+| 0924_1837_qids_1471_1472_1476_1479 | 4 | 4 | 0 | 0 | 0 |
+
+## 跑题覆盖度（跑过多少题；去重题数 / 数据集题数）
+
+| 库 | 已跑 | 数据集 | 覆盖 |
+|---|---|---|---|
+| california_schools | 0 | 30 | 0.0% |
+| card_games | 0 | 52 | 0.0% |
+| codebase_community | 0 | 49 | 0.0% |
+| debit_card_specializing | 7 | 30 | 23.3% |
+| european_football_2 | 0 | 51 | 0.0% |
+| financial | 0 | 32 | 0.0% |
+| formula_1 | 0 | 66 | 0.0% |
+| student_club | 0 | 48 | 0.0% |
+| superhero | 0 | 52 | 0.0% |
+| thrombosis_prediction | 0 | 50 | 0.0% |
+| toxicology | 0 | 40 | 0.0% |
 
 ## 效率（跨全部判定）
 
-- 均值 **4.7 步** / **8.0 工具调用** ｜ 工具错误均值 1.00
-- token 合计 **123,072** ｜ 每题均值 **41,024** ｜ cache_read 占比 **78%**
+- 均值 **4.9 步** / **7.7 工具调用** ｜ 工具错误均值 0.86
+- token 合计 **302,399** ｜ 每题均值 **43,200** ｜ cache_read 占比 **81%**
 
-> 口径：分布按判定次数（同题重跑重复计入）；进度按去重题数。逐题明细在各轮 `questions.csv`。
+> 口径：分布按判定次数（同题重跑重复计入）；跑题覆盖度按去重题数。**评定**按 SOP 裁定，🔁 翻盘单独计、不并入 ✅ 正确。逐题明细在各轮 `questions.csv`。

@@ -12,8 +12,13 @@
 > own mapping knowledge.
 >
 > Each section opens with a **type tag** -- 数据集问题 (dataset issue) · 建模冲突 (modeling
-> conflict) · 难题 (hard question) · 其他 (other), possibly several. Tags are
-> maintenance/statistics metadata only: they never change how a section is followed.
+> conflict) · 难题 (hard question) · 其他 (other), possibly several. Tags never change how a
+> section is followed; they are maintenance/statistics metadata. One tag does extra duty in
+> grading: 数据集问题 (dataset issue) tells the grader this question is defective, so an answer
+> that matches **this section's caliber** is scored 🔁 翻盘 (overturned, counted separately from
+> a plain correct) rather than judged against a broken gold.
+> A section may state a comparable answer as `> **裁定期望**：<value>` (several values separated
+> by `|`); sections whose caliber is "the true answer is an empty result" need no such line.
 
 ## debit_card_specializing
 

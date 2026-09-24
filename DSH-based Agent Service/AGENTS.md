@@ -58,8 +58,8 @@ MCP server 名为 `semantic-core`，DLR 范式下共注册 5 个工具：
 ```
     问题文本
       │
-      ├── L1 数据源级: 语义召回 → dlr_semantic_query(question) → 候选实体+DB
-      ├── L2 领域共识级: 领域共识检索 → dlr_search_consensus(question) → 术语→列/值映射
+      ├── L1 数据源级: 语义召回（实体路） → dlr_semantic_query(question) → 候选实体+DB
+      ├── L2 领域共识级: 领域共识检索（evidence 路） → dlr_search_consensus(question) → 术语→列/值映射
       └── L3 业务逻辑级: 领域技能 → skill(name="sop") → 难题模式+处理建议
       │
       ▼
@@ -76,8 +76,8 @@ MCP server 名为 `semantic-core`，DLR 范式下共注册 5 个工具：
 
 拿到 question 后**同时**执行：
 1. **优先**加载 `sop` 技能 — 调用 `skill(name="sop")`（L3 业务逻辑级技能，不需要先知道 db）。sop 里有 restate 本题的节就按它执行；没有对应节就跳过它，用 L1 + L2 自行判断
-2. `mcp__semantic-core__dlr_semantic_query(question)` — L1 语义召回，不传 db 全局召回
-3. `mcp__semantic-core__dlr_search_consensus(question)` — L2 领域共识检索
+2. `mcp__semantic-core__dlr_semantic_query(question)` — **实体路**：L1 语义召回，不传 db 全局召回
+3. `mcp__semantic-core__dlr_search_consensus(question)` — **evidence 路**：L2 领域共识检索，不传 namespace 跨库召回
 
 ### Step 2：交叉验证 & 锚定
 
@@ -89,6 +89,8 @@ MCP server 名为 `semantic-core`，DLR 范式下共注册 5 个工具：
 ```
 
 **交叉验证不是多数投票**——两级有噪声但指向同一点时互相验证；L2 返回列名可以选出 L1 多个候选中的正确实体。
+
+**跨库召回怎么读**（两路都留空时）：**实体路**返回每个结构体自带 `db`，**evidence 路**返回每条命中自带 `namespace` 与它派生的原题 `question`——先看命中是不是本题那个库、原题是不是同一件事，**对得上才采信**；定库后两路都收口到该库，别拿别库的条目当本题规则。
 
 ### Step 3：映射 + SQL（L3 介入）
 

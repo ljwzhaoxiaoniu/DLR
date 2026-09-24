@@ -1,52 +1,59 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 529" width="880" height="529" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
-<rect width="880" height="529" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 629" width="880" height="629" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+<rect width="880" height="629" fill="#ffffff"/>
 <text x="24" y="36" font-size="16" font-weight="600" fill="#1f2328">DLR · birdminidev · 实测结果（综合统计）</text>
-<text x="856" y="36" font-size="11" fill="#656d76" text-anchor="end">生成 2026-09-24 09:25 UTC</text>
+<text x="856" y="36" font-size="11" fill="#656d76" text-anchor="end">生成 2026-09-24 10:42 UTC</text>
 <text x="24" y="70" font-size="13" font-weight="600" fill="#1f2328">判定分布</text>
-<text x="116" y="70" font-size="11" fill="#656d76">累计 3 次判定 · 去重 3 题</text>
-<rect x="24.0" y="84" width="554.7" height="26" fill="#1a7f37"/><text x="301.3" y="101" font-size="11" fill="#fff" text-anchor="middle">2</text><rect x="578.7" y="84" width="277.3" height="26" fill="#bf8700"/><text x="717.3" y="101" font-size="11" fill="#fff" text-anchor="middle">1</text>
-<rect x="24" y="120" width="9" height="9" rx="2" fill="#1a7f37"/><text x="38" y="128" font-size="12" fill="#656d76">PASS 2</text><rect x="83.2" y="120" width="9" height="9" rx="2" fill="#bf8700"/><text x="97.2" y="128" font-size="12" fill="#656d76">UNCERTAIN 1</text><rect x="178.4" y="120" width="9" height="9" rx="2" fill="#cf222e"/><text x="192.4" y="128" font-size="12" fill="#656d76">FAIL 0</text><rect x="237.60000000000002" y="120" width="9" height="9" rx="2" fill="#6e7781"/><text x="251.60000000000002" y="128" font-size="12" fill="#656d76">GOLD_ERR 0</text>
-<text x="24" y="162" font-size="13" font-weight="600" fill="#1f2328">分库进度</text>
-<text x="90" y="162" font-size="11" fill="#656d76">已跑（去重）/ 数据集题数</text>
-<text x="24" y="188" font-size="12" fill="#656d76">california_schools</text>
-<rect x="234" y="180" width="548" height="10" rx="3" fill="#eaeef2"/>
-<text x="856" y="189" font-size="12" fill="#656d76" text-anchor="end">0/30</text>
-<text x="24" y="208" font-size="12" fill="#656d76">card_games</text>
-<rect x="234" y="200" width="548" height="10" rx="3" fill="#eaeef2"/>
-<text x="856" y="209" font-size="12" fill="#656d76" text-anchor="end">0/52</text>
-<text x="24" y="228" font-size="12" fill="#656d76">codebase_community</text>
-<rect x="234" y="220" width="548" height="10" rx="3" fill="#eaeef2"/>
-<text x="856" y="229" font-size="12" fill="#656d76" text-anchor="end">0/49</text>
-<text x="24" y="248" font-size="12" fill="#1f2328">debit_card_specializing</text>
-<rect x="234" y="240" width="548" height="10" rx="3" fill="#eaeef2"/>
-<rect x="234" y="240" width="54.8" height="10" rx="3" fill="#0969da"/>
-<text x="856" y="249" font-size="12" fill="#656d76" text-anchor="end">3/30</text>
-<text x="24" y="268" font-size="12" fill="#656d76">european_football_2</text>
-<rect x="234" y="260" width="548" height="10" rx="3" fill="#eaeef2"/>
-<text x="856" y="269" font-size="12" fill="#656d76" text-anchor="end">0/51</text>
-<text x="24" y="288" font-size="12" fill="#656d76">financial</text>
-<rect x="234" y="280" width="548" height="10" rx="3" fill="#eaeef2"/>
-<text x="856" y="289" font-size="12" fill="#656d76" text-anchor="end">0/32</text>
-<text x="24" y="308" font-size="12" fill="#656d76">formula_1</text>
-<rect x="234" y="300" width="548" height="10" rx="3" fill="#eaeef2"/>
-<text x="856" y="309" font-size="12" fill="#656d76" text-anchor="end">0/66</text>
-<text x="24" y="328" font-size="12" fill="#656d76">student_club</text>
-<rect x="234" y="320" width="548" height="10" rx="3" fill="#eaeef2"/>
-<text x="856" y="329" font-size="12" fill="#656d76" text-anchor="end">0/48</text>
-<text x="24" y="348" font-size="12" fill="#656d76">superhero</text>
-<rect x="234" y="340" width="548" height="10" rx="3" fill="#eaeef2"/>
-<text x="856" y="349" font-size="12" fill="#656d76" text-anchor="end">0/52</text>
-<text x="24" y="368" font-size="12" fill="#656d76">thrombosis_prediction</text>
-<rect x="234" y="360" width="548" height="10" rx="3" fill="#eaeef2"/>
-<text x="856" y="369" font-size="12" fill="#656d76" text-anchor="end">0/50</text>
-<text x="24" y="388" font-size="12" fill="#656d76">toxicology</text>
-<rect x="234" y="380" width="548" height="10" rx="3" fill="#eaeef2"/>
-<text x="856" y="389" font-size="12" fill="#656d76" text-anchor="end">0/40</text>
-<text x="24" y="424" font-size="13" font-weight="600" fill="#1f2328">逐轮</text>
-<text x="24" y="454" font-size="11" fill="#1f2328">0924_1559_qids_1473_1480_1500</text>
-<rect x="324.0" y="444" width="254.7" height="14" fill="#1a7f37"/><text x="451.3" y="455" font-size="11" fill="#fff" text-anchor="middle">2</text><rect x="578.7" y="444" width="127.3" height="14" fill="#bf8700"/><text x="642.3" y="455" font-size="11" fill="#fff" text-anchor="middle">1</text>
-<text x="856" y="455" font-size="11" fill="#656d76" text-anchor="end">3 题 · 123,072 tok</text>
-<line x1="24" y1="476" x2="856" y2="476" stroke="#eaeef2"/>
-<text x="24" y="490" font-size="12" fill="#656d76">均值 4.7 步 / 8.0 工具调用 / 每题 41,024 tokens ｜ cache_read 占比 78%</text>
-<text x="24" y="511" font-size="11" fill="#656d76">口径：分布按判定次数（同题重跑重复计入）；进度按去重题数。明细见 results/STATS.md 与各轮 questions.csv。</text>
+<text x="116" y="70" font-size="11" fill="#656d76">与 gold 比对 · 累计 7 次 · 去重 7 题</text>
+<rect x="24.0" y="84" width="713.1" height="26" fill="#1a7f37"/><text x="380.6" y="101" font-size="11" fill="#fff" text-anchor="middle">6</text><rect x="737.1" y="84" width="118.9" height="26" fill="#bf8700"/><text x="796.6" y="101" font-size="11" fill="#fff" text-anchor="middle">1</text>
+<rect x="24" y="120" width="9" height="9" rx="2" fill="#1a7f37"/><text x="38" y="128" font-size="12" fill="#656d76">PASS 6</text><rect x="82" y="120" width="9" height="9" rx="2" fill="#bf8700"/><text x="96" y="128" font-size="12" fill="#656d76">UNCERTAIN 1</text><rect x="175" y="120" width="9" height="9" rx="2" fill="#cf222e"/><text x="189" y="128" font-size="12" fill="#656d76">FAIL 0</text><rect x="233" y="120" width="9" height="9" rx="2" fill="#6e7781"/><text x="247" y="128" font-size="12" fill="#656d76">GOLD_ERR 0</text>
+<text x="24" y="154" font-size="13" font-weight="600" fill="#1f2328">评定</text>
+<text x="76" y="154" font-size="11" fill="#656d76">按 SOP 裁定 · 🔁 翻盘单独计，不并入 ✅ 正确</text>
+<rect x="24.0" y="168" width="713.1" height="20" fill="#1a7f37"/><text x="380.6" y="182" font-size="11" fill="#fff" text-anchor="middle">6</text><rect x="737.1" y="168" width="118.9" height="20" fill="#0969da"/><text x="796.6" y="182" font-size="11" fill="#fff" text-anchor="middle">1</text>
+<rect x="24" y="198" width="9" height="9" rx="2" fill="#1a7f37"/><text x="38" y="206" font-size="12" fill="#656d76">✅ 正确 6</text><rect x="92" y="198" width="9" height="9" rx="2" fill="#0969da"/><text x="106" y="206" font-size="12" fill="#656d76">🔁 翻盘 1</text><rect x="160" y="198" width="9" height="9" rx="2" fill="#cf222e"/><text x="174" y="206" font-size="12" fill="#656d76">❌ 错误 0</text><rect x="228" y="198" width="9" height="9" rx="2" fill="#bf8700"/><text x="242" y="206" font-size="12" fill="#656d76">⚠️ 待仲裁 0</text>
+<text x="24" y="240" font-size="13" font-weight="600" fill="#1f2328">跑题覆盖度</text>
+<text x="100" y="240" font-size="11" fill="#656d76">跑过（去重）/ 数据集题数 · 与判定、评定无关</text>
+<text x="24" y="266" font-size="12" fill="#656d76">california_schools</text>
+<rect x="234" y="258" width="548" height="10" rx="3" fill="#eaeef2"/>
+<text x="856" y="267" font-size="12" fill="#656d76" text-anchor="end">0/30</text>
+<text x="24" y="286" font-size="12" fill="#656d76">card_games</text>
+<rect x="234" y="278" width="548" height="10" rx="3" fill="#eaeef2"/>
+<text x="856" y="287" font-size="12" fill="#656d76" text-anchor="end">0/52</text>
+<text x="24" y="306" font-size="12" fill="#656d76">codebase_community</text>
+<rect x="234" y="298" width="548" height="10" rx="3" fill="#eaeef2"/>
+<text x="856" y="307" font-size="12" fill="#656d76" text-anchor="end">0/49</text>
+<text x="24" y="326" font-size="12" fill="#1f2328">debit_card_specializing</text>
+<rect x="234" y="318" width="548" height="10" rx="3" fill="#eaeef2"/>
+<rect x="234" y="318" width="127.9" height="10" rx="3" fill="#0969da"/>
+<text x="856" y="327" font-size="12" fill="#656d76" text-anchor="end">7/30</text>
+<text x="24" y="346" font-size="12" fill="#656d76">european_football_2</text>
+<rect x="234" y="338" width="548" height="10" rx="3" fill="#eaeef2"/>
+<text x="856" y="347" font-size="12" fill="#656d76" text-anchor="end">0/51</text>
+<text x="24" y="366" font-size="12" fill="#656d76">financial</text>
+<rect x="234" y="358" width="548" height="10" rx="3" fill="#eaeef2"/>
+<text x="856" y="367" font-size="12" fill="#656d76" text-anchor="end">0/32</text>
+<text x="24" y="386" font-size="12" fill="#656d76">formula_1</text>
+<rect x="234" y="378" width="548" height="10" rx="3" fill="#eaeef2"/>
+<text x="856" y="387" font-size="12" fill="#656d76" text-anchor="end">0/66</text>
+<text x="24" y="406" font-size="12" fill="#656d76">student_club</text>
+<rect x="234" y="398" width="548" height="10" rx="3" fill="#eaeef2"/>
+<text x="856" y="407" font-size="12" fill="#656d76" text-anchor="end">0/48</text>
+<text x="24" y="426" font-size="12" fill="#656d76">superhero</text>
+<rect x="234" y="418" width="548" height="10" rx="3" fill="#eaeef2"/>
+<text x="856" y="427" font-size="12" fill="#656d76" text-anchor="end">0/52</text>
+<text x="24" y="446" font-size="12" fill="#656d76">thrombosis_prediction</text>
+<rect x="234" y="438" width="548" height="10" rx="3" fill="#eaeef2"/>
+<text x="856" y="447" font-size="12" fill="#656d76" text-anchor="end">0/50</text>
+<text x="24" y="466" font-size="12" fill="#656d76">toxicology</text>
+<rect x="234" y="458" width="548" height="10" rx="3" fill="#eaeef2"/>
+<text x="856" y="467" font-size="12" fill="#656d76" text-anchor="end">0/40</text>
+<text x="24" y="502" font-size="13" font-weight="600" fill="#1f2328">逐轮</text>
+<text x="24" y="532" font-size="11" fill="#1f2328">0924_1559_qids_1473_1480_1500</text>
+<rect x="324.0" y="522" width="254.7" height="14" fill="#1a7f37"/><text x="451.3" y="533" font-size="11" fill="#fff" text-anchor="middle">2</text><rect x="578.7" y="522" width="127.3" height="14" fill="#bf8700"/><text x="642.3" y="533" font-size="11" fill="#fff" text-anchor="middle">1</text>
+<text x="856" y="533" font-size="11" fill="#656d76" text-anchor="end">3 题 · 123,072 tok</text>
+<text x="24" y="554" font-size="11" fill="#1f2328">0924_1837_qids_1471_1472_1476_1479</text>
+<rect x="324.0" y="544" width="382.0" height="14" fill="#1a7f37"/><text x="515.0" y="555" font-size="11" fill="#fff" text-anchor="middle">4</text>
+<text x="856" y="555" font-size="11" fill="#656d76" text-anchor="end">4 题 · 179,327 tok</text>
+<line x1="24" y1="576" x2="856" y2="576" stroke="#eaeef2"/>
+<text x="24" y="590" font-size="12" fill="#656d76">均值 4.9 步 / 7.7 工具调用 / 每题 43,200 tokens ｜ cache_read 占比 81%</text>
+<text x="24" y="611" font-size="11" fill="#656d76">口径：判定按次数（同题重跑重复计入）；评定按 SOP 裁定（🔁 翻盘单独计）；跑题覆盖度按去重题数。明细见 results/STATS.md 与各轮 questions.csv。</text>
 </svg>
