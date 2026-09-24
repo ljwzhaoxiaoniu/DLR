@@ -6,8 +6,7 @@
 #   - id 未命中只 warn 不致命 → 每次改动后用 `--dump-config` 核对 stderr；
 #   - 层序：base < headless < profile < $DSH_HOME < 本文件（最后 = 必胜）。
 #
-# 默认路线：TSM Core Service（TS 栈，streamable-http，端口 28795）——无需桥、无 Python。
-# 兜底路线（Python 语义服务 + SSE→stdio 桥）见 tsm-py.patch.yml。
+# 后端：TSM Core Service（TS 栈，streamable-http，端口 28795）——无桥、无 Python。
 # ══════════════════════════════════════════════════════════════════════
 
 # ── 一、改配置（保留行）───────────────────────────────────────────────
@@ -142,7 +141,7 @@
 - id: session-title-llm
   disabled: true
 
-# ── 三、新增：DLR MCP 客户端（默认走 TS 栈；Python 兜底见 tsm-py.patch.yml）──
+# ── 三、新增：DLR MCP 客户端（TS 栈，streamable-http 直连）──
 - insert:
     - id: mcp-semantic-core
       name: '@deepseek-ai/dsh-mcp-client'

@@ -3,7 +3,7 @@
 #
 # 用法: sync_sop.sh [<源文件>] [<技能名>]
 #   默认: <repo>/scenarios/birdminidev/sources/sop.md → skills/sop/SKILL.md
-#   换场景: bash sync_sop.sh "../../scenarios/birdmini/sources/sop.md" sop
+#   换场景: bash sync_sop.sh "../../scenarios/birdminidev/sources/sop.md" sop
 #
 # 多数据集约定（一个评测集 = 一套完整 TSM：L1 DLR 图谱 + L2 evidence + L3 本文件）：
 #   - 部署出去的技能名**固定为 sop**——"用哪套"发生在 run 配置层（同步哪个源进来），

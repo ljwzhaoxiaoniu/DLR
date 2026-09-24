@@ -5,7 +5,6 @@
 #   timeout 600 dsh --profile headless --patch <dsh.patch.yml> --json "Question: ..."
 #
 # 用法: bash run_one.sh <qid> "<question>" [out_dir]
-#   PY_ROUTE=1 bash run_one.sh ...    # 切到 Python 兜底路线（需先起 main.py serve）
 # 产物: <out_dir>/<MMDD_HHMM>_<qid>_dlr.ndjson（dsh --json 事件流）+ 同名 .err
 set -uo pipefail
 
@@ -13,16 +12,9 @@ HERE="$(cd "$(dirname "$0")" && pwd -W)"
 SVC_DIR="$(cd "$HERE/.." && pwd -W)"
 ROOT="$(cd "$SVC_DIR/.." && pwd -W)"
 TSM_DIR="$ROOT/TSM Core Service"
-PY_WIN="${PY_WIN:-D:/ProgramData/anaconda3/envs/lepe_som/python.exe}"   # 仅 Python 兜底路线用
 PATCHES=(--patch "$HERE/dsh.patch.yml")
 MCP_URL="${TSM_MCP_URL:-http://127.0.0.1:28795/mcp}"
 TIMEOUT="${TIMEOUT:-600}"
-
-if [ "${PY_ROUTE:-0}" = "1" ]; then
-  PATCHES+=(--patch "$HERE/tsm-py.patch.yml")
-  MCP_URL="${DLR_MCP_UPSTREAM:-http://localhost:28775/mcp/sse}"
-  export DLR_MCP_BRIDGE_PY="$PY_WIN"
-fi
 
 QID="${1:?用法: run_one.sh <qid> \"<question>\" [out_dir]}"
 QUESTION="${2:?用法: run_one.sh <qid> \"<question>\" [out_dir]}"
@@ -41,21 +33,9 @@ OUT_FILE="$OUT_DIR/${STAMP}_${QID}_dlr.ndjson"
 ERR_FILE="$OUT_DIR/${STAMP}_${QID}_dlr.err"
 
 # ── MCP 预检：failOnStartupError 只响亮报错、不中止 harness，先验后端再跑 ──
-if [ "${PY_ROUTE:-0}" = "1" ]; then
-  "$PY_WIN" - "$MCP_URL" <<'PYEOF'
-import asyncio, sys
-from fastmcp import Client
-async def main():
-    async with Client(sys.argv[1]) as c:
-        tools = await c.list_tools()
-        print(f"[precheck] {sys.argv[1]} ok ({len(tools)} tools)")
-asyncio.run(main())
-PYEOF
-else
-  (cd "$TSM_DIR" && npx tsx src/verify/precheck.ts "$MCP_URL")
-fi
+(cd "$TSM_DIR" && npx tsx src/verify/precheck.ts "$MCP_URL")
 if [ $? -ne 0 ]; then
-  echo "[ERR] 语义后端不可达: $MCP_URL —— TS 栈先起 `npx tsx src/mcp/server.ts --http 28795`（Python 路线先起 serve）" >&2
+  echo "[ERR] 语义后端不可达: $MCP_URL —— 先起后端：bash \"$ROOT/DSH-based Agent Service/scripts/start_backend.sh\"" >&2
   exit 3
 fi
 
