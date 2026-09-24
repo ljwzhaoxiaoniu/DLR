@@ -5,15 +5,25 @@
  * 可覆盖：TSM_SCENARIO / TSM_STORE_DIR / TSM_MODEL_DIR（环境变量或 .env）。
  */
 import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 
-export const ROOT = "D:/Code_Proj/DLR Proj";
+/**
+ * 位置解耦：一切路径从**包自身位置**推导——不依赖 cwd、无硬编码盘符。
+ * 仓库挪到任意目录、分体部署（服务与数据分开）都能跑；可用 env 覆盖：
+ *   TSM_SERVICE_DIR（服务目录）· TSM_ROOT（数据/场景的根）
+ */
+const HERE = path.dirname(fileURLToPath(import.meta.url)); // …/TSM Core Service/src
+export const SERVICE_DIR = process.env.TSM_SERVICE_DIR ?? path.resolve(HERE, "..");
 
-// 先加载 .env（TSM_* / NEO4J_* 覆盖项），再读环境变量——被任何模块 import 都生效
+// 先加载服务目录下的 .env（TSM_* / NEO4J_* 覆盖项），再推导其余路径——被任何模块 import 都生效
 try {
-  process.loadEnvFile(path.join(ROOT, "TSM Core Service", ".env"));
+  process.loadEnvFile(path.join(SERVICE_DIR, ".env"));
 } catch {
   /* 无 .env 时用系统环境变量 */
 }
+
+/** 仓库根：默认 = 服务目录的上一级；分体部署时用 TSM_ROOT 指向场景/数据集所在处 */
+export const ROOT = process.env.TSM_ROOT ?? path.resolve(SERVICE_DIR, "..");
 
 /** 场景目录（切换数据集 = 换这个） */
 export const SCENARIO =
@@ -30,6 +40,6 @@ export const FIXTURES_DIR = path.join(SCENARIO, "fixtures");
 
 /** LanceDB 存储（构建产物，gitignored） */
 export const STORE_DIR =
-  process.env.TSM_STORE_DIR ?? path.join(ROOT, "TSM Core Service", ".store", "lance", "dlr");
+  process.env.TSM_STORE_DIR ?? path.join(SERVICE_DIR, ".store", "lance", "dlr");
 /** ONNX 模型目录（scripts/fetch-model.sh 拉取） */
 export const MODEL_DIR = process.env.TSM_MODEL_DIR ?? path.join(ROOT, "tmp_scripts", "bge-onnx");
