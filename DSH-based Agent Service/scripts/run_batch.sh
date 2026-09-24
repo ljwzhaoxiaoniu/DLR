@@ -57,10 +57,17 @@ TOTAL=$(wc -l < "$RUN_DIR/questions.tsv")
 echo "[batch] 共 $TOTAL 题 → $RUN_DIR（并发 $JOBS）"
 
 # 并行：多开 dsh 进程（wait -n 控并发，不依赖 jobs 状态）
+# 内存闸：派发前查空闲物理内存，低于 MIN_FREE_MB 就等（node 一秒内返回，避免再触发系统内存吃紧）
+MIN_FREE_MB="${MIN_FREE_MB:-700}"
+free_mb() { node -e "process.stdout.write(String(Math.round(require('os').freemem()/1048576)))"; }
 RUNNING=0
 DONE=0
 while IFS=$'\t' read -r qid db question; do
   [ -n "${qid:-}" ] || continue
+  while [ "$(free_mb)" -lt "$MIN_FREE_MB" ]; do
+    echo "[batch] 空闲内存不足 ${MIN_FREE_MB}MB，等待 15s…"
+    sleep 15
+  done
   (
     SKIP_PRECHECK=1 bash "$DSH_DIR/run_one.sh" "$qid" "$question" "$RAW" >/dev/null 2>&1 \
       || echo "[warn] q$qid 退出码非 0"
