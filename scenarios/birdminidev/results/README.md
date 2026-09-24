@@ -16,7 +16,7 @@ results/
     └── summary.md       # 汇总：分库 × 判定 + 非 PASS 明细
 ```
 
-对应的**会话日志**在 `DSH-based Agent Service/.dsh-home/sessions/`（按 CSV 里的 `session` id 可回放取证；多帧 zstd，解码器 `scripts/decode_session_log.cjs`）。
+对应的**会话日志**在 `DSH-based Agent Service/.dsh-home/sessions/<cwd-slug>/<session>/session.v4.jsonl.zstd`（`<session>` 即 CSV 里的 `session` 列，可回放取证；多帧 zstd，解码器 `DSH-based Agent Service/scripts/decode_session_log.cjs`）。
 
 ## 判定口径（`tsm grade` v1）
 
