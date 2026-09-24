@@ -24,7 +24,6 @@ OUT_DIR="${3:-$ROOT/tmp_scripts/dsh_smoke}"
 export DSH_HOME="$SVC_DIR/.dsh-home"
 # 技能目录（bundle 内的 skills；bundle 的 node 半也会设，这里显式兜底）
 export DLR_SKILLS_DIR="$SVC_DIR/dsh-tsm/skills"
-export PYTHONIOENCODING=utf-8
 
 # 凭据：把 .env 载入进程环境（dsh 凭据链里「继承环境」优先级最高）
 if [ -f "$HERE/.env" ]; then set -a; . "$HERE/.env"; set +a; fi
