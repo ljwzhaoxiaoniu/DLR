@@ -12,7 +12,7 @@
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { byQid, goldValues, judge, judgeEmpty, queryRows, rowSetOf, sameRowSet, sqliteOf, stripLimit } from "./judge.js";
+import { byQid, goldValues, judge, judgeEmpty, queryRows, queryRowsTimed, rowSetOf, sameRowSet, sqliteOf, stripLimit } from "./judge.js";
 import { readRunQuestions, rulingOf, sopByQid, RULINGS, RULING_LABEL } from "./results.js";
 
 const arg = (name: string, fallback = ""): string => {
@@ -55,13 +55,14 @@ for (const ev of readRunQuestions(RUN_DIR)) {
       //   · 与 gold 比「全列同集」，或退一步比「共同列投影同集」（忽略别名/列序/多列少列差异）
       // 命中则改判 PASS（precision=set），并把命中方式写进 sql_match 留档；不命中保持原判。
       const noLimit = (s: string) => stripLimit(s) ?? "";
-      for (const s of [...ev.sqls].reverse()) {
+      // 只试最后 4 条候选：答案 SQL 一般在末尾；候选中可能藏重查询（超时子进程兜底）
+      for (const s of [...ev.sqls].reverse().slice(0, 4)) {
         for (const [sql2, tag] of [
           [s, "原样"],
           [noLimit(s), "去LIMIT"],
         ] as const) {
           if (!sql2) continue;
-          const a = queryRows(sqlite, sql2);
+          const a = queryRowsTimed(sqlite, sql2);
           if (!a.rows?.length) continue;
           if (sameRowSet(rowSetOf(a.rows), rowSetOf(G))) {
             verdict = "PASS";
@@ -82,6 +83,17 @@ for (const ev of readRunQuestions(RUN_DIR)) {
         if (verdict === "PASS") break;
       }
       if (verdict !== "PASS") sqlMatch = "no";
+    }
+  }
+  // SOP Expected 覆盖（判定只对 gold 算）：答案合节的裁定口径、而该口径与 gold 不同值 → 判定记 FAIL。
+  // 防的是「答案里引用了 gold 的字面值（如"参考结果那是反的"）被全文抽数误记 PASS」。
+  const sec = SOP.get(String(qid));
+  if (verdict === "PASS" && !gold.err && sec?.expect) {
+    const sopVals = sec.expect.split(/\s*\|\s*/).filter(Boolean);
+    const same = sopVals.length === gold.values.length && sopVals.every((x, i) => x === gold.values[i]);
+    if (sopVals.length && !same && judge(ev.final, sopVals).verdict === "PASS") {
+      verdict = "FAIL";
+      precision = "sop";
     }
   }
   rows.push({

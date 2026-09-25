@@ -6,6 +6,7 @@
  * 供 `tsm grade`（逐轮判定）与 `tsm stats`（DETAIL.md 明细）复用。
  */
 import * as fs from "node:fs";
+import { spawnSync } from "node:child_process";
 import * as path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { readScenario, scenarioFiles } from "../model/graphData.js";
@@ -123,7 +124,7 @@ export const rowSetOf = (rows: Record<string, unknown>[], cols?: string[]): Set<
 
 /** 去掉显示用的尾部 LIMIT（判「生成逻辑」时用） */
 export const stripLimit = (sql: string): string | null => {
-  const m = sql.match(/s+limits+d+(s+offsets+d+)?s*;?s*$/i);
+  const m = sql.match(/\s+limit\s+\d+(\s+offset\s+\d+)?\s*;?\s*$/i);
   return m ? sql.slice(0, m.index) : null;
 };
 
@@ -132,6 +133,39 @@ export const sameRowSet = (a: Set<string>, b: Set<string>): boolean => a.size ==
 
 /** 某库的 SQLite 路径（结果集比对用；与 goldValues 同源） */
 export const sqliteOf = (db: string): string | undefined => dbPath.get(db);
+
+/**
+ * 带超时的结果集查询（**子进程执行**）：agent 的候选 SQL 里可能藏重查询（如无索引的
+ * 相关子查询，单条实测 20s+），在主进程同步跑会把 grade 挂死且无法中断 —— 放子进程，
+ * 超时即杀，视为「未命中」。SQL 走 stdin（避免 Windows 下引号被拆）。
+ */
+export function queryRowsTimed(
+  sqlitePath: string,
+  sql: string,
+  timeoutMs = 15000,
+): { rows?: Record<string, unknown>[]; cols?: string[]; err?: string } {
+  if (!sqlitePath || !fs.existsSync(sqlitePath) || !sql.trim()) return { err: "SQLite 缺失" };
+  const script =
+    'const {DatabaseSync}=require("node:sqlite");let s="";' +
+    'process.stdin.on("data",d=>s+=d).on("end",()=>{try{' +
+    'const db=new DatabaseSync(process.argv[1],{readOnly:true});' +
+    'const rows=db.prepare(s).all();db.close();' +
+    'process.stdout.write(JSON.stringify({cols:rows.length?Object.keys(rows[0]):[],rows}));' +
+    '}catch(e){process.stdout.write(JSON.stringify({cols:[],rows:[],err:String(e).slice(0,120)}));}});';
+  const r = spawnSync(process.execPath, ["-e", script, sqlitePath], {
+    input: sql,
+    timeout: timeoutMs,
+    encoding: "utf8",
+    maxBuffer: 256 * 1024 * 1024,
+  });
+  if (r.error || !r.stdout) return { err: r.error ? String(r.error).slice(0, 80) : "无输出" };
+  try {
+    const j = JSON.parse(r.stdout) as { rows?: Record<string, unknown>[]; cols?: string[]; err?: string };
+    return { rows: j.rows ?? [], cols: j.cols ?? [] };
+  } catch {
+    return { err: "解析失败" };
+  }
+}
 
 /** gold 正常执行但零行：看 agent 是否也说「没有」 */
 export function judgeEmpty(finalText: string): { verdict: string; precision: string } {
