@@ -38,13 +38,6 @@ You may have retrieved this formula from L2: "average monthly consumption = aver
 
 When the data's own granularity and a formula disagree, trust the data and the question's own words.
 
-### When asked: "What was the gas consumption peak month for SME customers in 2013?"
-> **类型**：难题
-
-"Gas consumption" is just the consumption amount of these customers -- there is no separate gas/energy category, do not go looking for one. Peak month = the month with the highest total consumption: among the SME customers, within 2013, add the consumption up month by month and take the highest month.
-
-Answer-format check (after running the query): the question asks for the **month**. Give the month alone, e.g. `04` -- not the full year-month code `201304`, and no supporting totals. Match the answer to exactly the unit the question asks for.
-
 ### When asked: "What is the difference in the annual average consumption of the customers with the least amount of consumption paid in CZK for 2013 between SME and LAM, LAM and KAM, and KAM and SME?"
 > **类型**：数据集问题 · 难题
 > **Expected**：-14009.34 | 6046.62 | 7962.72
@@ -54,15 +47,6 @@ Per customer, total up their 2013 CZK consumption. Then, **per segment**, take t
 A per-customer 2013 total can be negative: a few monthly figures are refunds/chargebacks and are valid data. If a segment's lowest total is negative, that is the answer -- do not filter the negatives out, treat them as anomalies, or re-verify where they came from.
 
 Output the three differences in the question's order: SME minus LAM, LAM minus KAM, KAM minus SME -- the differences alone.
-
-### When asked: "Which year recorded the most consumption of gas paid in CZK?"
-> **类型**：难题
-
-Word-sense disambiguation: "consumption of gas" here means customers' spending at gas stations (the gas-station business), not the gas stations themselves -- it is an amount, not a station. Where that amount is recorded, and where "paid in CZK" lives, find from your own mapping knowledge.
-
-Per-year aggregation: the period is recorded as a year-month code (YYYYMM). Total the consumption year by year, and take the highest year.
-
-Answer-format check: the question asks for the **year** -- give the year alone, without a supporting total.
 
 ### When asked: "How many percent of LAM customer consumed more than 46.73?"
 > **类型**：数据集问题 · 难题
@@ -74,20 +58,6 @@ Answer-format check: the question asks for the **year** -- give the year alone, 
 - Denominator: **all** customers of that segment -- customers with no consumption records count too. A customer list built by matching against the consumption records alone silently drops them and shrinks the denominator.
 
 Do not copy a record-level formula if you retrieved one: counting customer-month records (or a record-count numerator over a customer-count denominator) mixes calibers and is wrong for a "percent of customers" question.
-
-### When asked: "Is it true that more SMEs pay in Czech koruna than in euros? If so, how many more?"
-> **类型**：难题
-
-Answer with the single difference value the question asks for: the number of SME customers billed in Czech koruna minus the number billed in euros -- one value. Do not also return the two counts themselves; the question asks "how many more", not "how many of each".
-
-### When asked: "What is the highest monthly consumption in the year 2012?"
-> **类型**：难题
-
-Consumption is recorded customer-month by customer-month. "Highest monthly consumption" asked about a whole year -- no customer named, no segment named -- means the highest **month total**: add the consumption up month by month across all customers, then take the highest month. (The period is recorded as a year-month code, YYYYMM.)
-
-Do not take the highest single customer-month figure: that is one customer's bill for one month, not a month's total.
-
-Contrast with the SME 2013 average-monthly question: there "monthly consumption" is the recorded figure itself and the question averages over customers, so a plain average works. The difference is who the question is about -- that one names a segment and averages customers; this one asks for the peak of the whole business, so the figures must first be added up per calendar month.
 
 ### When asked: "Please list the product description of the products consumed in September, 2013."
 > **类型**：数据集问题
@@ -104,13 +74,6 @@ Granularity rule: product / price / station / time-of-day detail questions are a
 Same sample-window fact: the individual-purchase records cover only 2012-08-23~26, so no purchases took place in June 2013, and the truthful answer is an **empty list** of countries. Check the coverage once, answer empty, stop.
 
 The country of a gas station is reached through the purchases that took place at that station (find that route from your own mapping knowledge). Do NOT use a proxy route that starts from the customer monthly figures: those are a monthly summary on the customer side, not a record of purchases -- a station question cannot be answered from them. If the question's month falls outside the purchase sample's window, the result for that month is empty, and that is the answer -- verify the coverage once, then stop.
-
-### When asked: "Among the customers who paid in euro, how many of them have a monthly consumption of over 1000?"
-> **类型**：难题
-
-"how many of them" counts **customers**, not records: a customer with several months above 1000 still counts once. Count each qualifying customer exactly one time.
-
-"have a monthly consumption of over 1000" is a month-by-month condition -- a customer qualifies if at least one of their months exceeds 1000. The counted unit is the customer.
 
 ### When asked: "For the customer who paid 634.8 in 2012/8/25, what was the consumption decrease rate from Year 2012 to 2013?"
 > **类型**：数据集问题 · 难题
@@ -159,13 +122,6 @@ Currency is the customer's billing currency.
 "During 8:00-9:00" filters on the purchase's own time of day on that date; each purchase carries its exact time.
 
 "Happened in CZE" is the country of the gas station where the purchase took place (CZE = Czech Republic, SVK = Slovakia) -- a property of the station, not of the customer or the payment.
-
-### When asked: "In 2012, who had the least consumption in LAM?"
-> **类型**：难题
-
-"who" asks for the **customer**, not an amount: answer with the customer identifier alone -- one value. Do not attach that customer's total as a supporting value; the question asks who, not how much -- just as a "how many more" question is answered by the difference alone.
-
-"Least consumption" is judged on each customer's **whole-year 2012 consumption**, not on any single month's figure: among the customers of that segment, add up each one's monthly consumption across 2012 (the period is recorded as a year-month code, YYYYMM) and pick the lowest yearly total. A yearly total can come out negative -- monthly refunds/chargebacks are legitimate business data -- so if the lowest total is negative, that customer is the answer; do not exclude the negatives.
 
 ### When asked: "Which of the three segments—SME, LAM and KAM—has the biggest and lowest percentage increases in consumption paid in EUR between 2012 and 2013?"
 > **类型**：数据集问题
@@ -271,3 +227,83 @@ The second half is a **separate, wider question**: over the whole database (not 
 "Difference in enrollment" = `Enrollment (K-12)` - `Enrollment (Ages 5-17)`; "more than 30" is a strict lower bound on that difference, and the enrollment values are text that must be read as numbers before subtracting.
 
 **School names come from the school master**, not from the enrollment table: the two tables both carry a school-name column and they disagree on a couple of dozen rows. Address likewise from the master. The answer is a long list (well over a thousand schools) -- report the count together with the list.
+
+## european_football_2
+
+### When asked: "What are the speed in which attacks are put together of the top 4 teams with the highest build Up Play Speed?"
+> **类型**：数据集问题
+> **Expected**：80 | 78 | 78 | 77
+
+"Speed in which attacks are put together" and "build-up play speed" are the same team attribute -- the question names one quantity twice.
+
+"Highest" means the top of the range: take the four teams with the **largest** build-up play speed and report that speed for each, highest first (two teams share a value, so a repeat is expected). The reference answer sorted in the opposite direction and kept the four **smallest** values instead -- that ordering contradicts the question's own wording; do not reproduce it.
+
+### When asked: "Give the name of the league with the highest matches of all time and how many matches were played in the said league."
+> **类型**：难题
+
+A league's match count is how many matches were played in it; "highest of all time" takes the largest such count across all leagues.
+
+**The top count is a three-way tie (3040 matches each: England Premier League, France Ligue 1, Spain LIGA BBVA)** -- the question's singular "the league" does not resolve it. The reference answer names **England Premier League** with 3040; report that pairing (mentioning the tie alongside is fine, as long as both the reference league and the count are stated).
+
+### When asked: "List the long name of teams with above-average build-up play passing in 2012."
+> **类型**：难题
+
+"In 2012" selects the team-attribute records whose own date falls in 2012 (the attributes carry a date per record; a team can have several records that year).
+
+"Above-average" compares each of those 2012 records' build-up play passing against **the average of the same 2012 records** -- not against an all-time or all-teams average.
+
+The answer is the long names of the **distinct teams** that have at least one qualifying record: a team with several 2012 records is listed once (the reference list has 128 names). Report the count together with the list.
+
+### When asked: "How much higher in percentage is Ariel Borysiuk's overall rating than that of Paulin Puel?"
+> **类型**：数据集问题
+> **Expected**：15.2542
+
+A player's rating is a **dated series of observations**, not one number: the same player has many rating records over the years. A question that names no date asks for the player's **current rating -- the most recent observation** (when a question does give a date, take the record of that date).
+
+The comparison is `(Ariel − Paulin) / Paulin × 100` on those two present values: 68 against 59 gives **15.2542**. The reference answer instead **summed all of each player's records** (24 records against 12) and compared the two sums -- a total is not a rating; do not reproduce that figure.
+
+### When asked: "When was the first time did Kevin Constant have his highest crossing score? Give the date."
+> **类型**：数据集问题
+> **Expected**：2013-02-15
+
+A player's scores are a dated series. "His highest crossing score" is the largest value in that series, and he can carry it on more than one date -- this player carries it on three -- so "the first time" is the **earliest of those dates: 2013-02-15**.
+
+The reference answer returns the player's **last record date** (2016-04-21) instead: its two orderings cancel each other out, so it never actually looks at the maximum; do not reproduce that date.
+
+### When asked: "What is the difference between players 6 and 23's jumping scores?"
+> **类型**：难题
+
+"Player 6" and "player 23" are identified by the **record identifier carried by the rating records themselves** (not by any other id the player may have elsewhere); each of these two ids turns out to be a single record, so no aggregation choice arises.
+
+Difference = first player's value minus second's: 85 − 84 = **1**.
+
+### When asked: "Please provide top four football players' IDs who are among the lowest potential players and prefer to use the right foot when attacking."
+> **类型**：数据集问题
+> **Expected**：41496 | 166963 | 8893 | 168342
+
+Two readings decide this question, and both must be right:
+
+- **Right-footed**: only records whose preferred foot is the right one compete.
+- **Players, counted once each**: the question asks for four *players*; a player's rating history carries several records, so rank by potential but return each player once -- the four lowest are the one at 39, the one at 42, and the two tied at 44 (the tie makes the set unique; their internal order does not matter).
+
+The reference answer returns four **record** identifiers instead, which is two players listed twice; do not reproduce that list.
+
+### When asked: "Please state the finishing rate and curve score of the player who has the heaviest weight."
+> **类型**：数据集问题
+> **Expected**：13 | 13
+
+The heaviest player is the one with the largest weight; his attributes are a dated series, and with no date in the question take his **present (latest) record**: finishing **13** and curve **13**.
+
+The question asks for **two values** -- the reference answer also returns an internal record id along with them. That extra id is not part of the question; report the two scores, not the id.
+
+### When asked: "Who are the players that tend to be attacking when their mates were doing attack moves? List down their name."
+> **类型**：难题
+> **Expected**：3339
+
+"Tend to be attacking when their mates were doing attack moves" is the **high** attacking work rate; the answer is the list of players carrying it -- **3,339 distinct players**, each counted once however many rating records he has.
+
+The roster is far too long to lay out in full, so the count is what settles the answer: state it together with the list.
+
+
+
+

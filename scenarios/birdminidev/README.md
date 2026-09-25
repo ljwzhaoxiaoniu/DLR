@@ -25,17 +25,21 @@
 | 题号 | 库 | 评定 | 类型 | 问题（截） | 裁定（全文见 [DETAIL.md](DETAIL.md)） |
 |---|---|---|---|---|---|
 | q27 | california_schools | 🔁 翻盘 | 难题 | What is the average score in writing for the schools tha | "Communication number" is the school's phone number -- there is no separate contact table. Date reading: "opened after 1991" means |
-| q28 | california_schools | ⚠️ 待仲裁 | 难题 | Consider the average difference between K-12 enrollment | "Locally funded" is a property of the **school master** (`fundingtype = 'Locally funded'`). The enrollment table carries a similar |
 | q1481 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | What is the difference in the annual average consumption | Per customer, total up their 2013 CZK consumption. Then, **per segment**, take the customer(s) with the lowest 2013 total. "Annual |
 | q1482 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | Which of the three segments—SME, LAM and KAM—has the big | The question names the currency, so the consumption must be filtered to customers whose billing currency is EUR (`Currency = 'EUR' |
 | q1490 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | How many percent of LAM customer consumed more than 46.7 | "Percent of customers" is counted **per customer**, not per customer-month record. One customer = one unit in both the numerator a |
-| q1493 | debit_card_specializing | ❌ 错误 | 难题 | In February 2012, what percentage of customers consumed | "Percentage of customers" is counted per customer -- one customer = one unit in both the numerator and the denominator -- and **th |
 | q1500 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | Please list the product description of the products cons | The individual-purchase records are only a **four-day sample**: they cover 2012-08-23 through 2012-08-26, and nothing else. Any mo |
 | q1501 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | Please list the countries of the gas stations with trans | Same sample-window fact: the individual-purchase records cover only 2012-08-23~26, so no purchases took place in June 2013, and th |
 | q1525 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | What is the percentage of the customers who used EUR in | "Percentage of customers" = **customers**, not transactions: one customer counts once, in both the numerator and the denominator, |
 | q1526 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | For the customer who paid 634.8 in 2012/8/25, what was t | "paid 634.8" identifies the customer through a single purchase of that amount on that date -- a purchase-level condition, not a mo |
 | q1529 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | What is the amount spent by customer "38508" at the gas | "Amount spent by a customer" is that customer's total consumption across all gas stations -- a question about the customer's month |
 | q1531 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | Who is the top spending customer and how much is the ave | "Top spending customer" is decided by the customer's total consumption across all gas stations (the month-by-month figures), not b |
+| q1029 | european_football_2 | 🔁 翻盘 | 数据集问题 | What are the speed in which attacks are put together of | "Speed in which attacks are put together" and "build-up play speed" are the same team attribute -- the question names one quantity |
+| q1094 | european_football_2 | 🔁 翻盘 | 数据集问题 | How much higher in percentage is Ariel Borysiuk's overal | A player's rating is a **dated series of observations**, not one number: the same player has many rating records over the years. A |
+| q1107 | european_football_2 | 🔁 翻盘 | 数据集问题 | When was the first time did Kevin Constant have his high | A player's scores are a dated series. "His highest crossing score" is the largest value in that series, and he can carry it on mor |
+| q1124 | european_football_2 | 🔁 翻盘 | 难题 | Who are the players that tend to be attacking when their | "Tend to be attacking when their mates were doing attack moves" is the **high** attacking work rate; the answer is the list of pla |
+| q1135 | european_football_2 | 🔁 翻盘 | 数据集问题 | Please provide top four football players' IDs who are am | Two readings decide this question, and both must be right: - **Right-footed**: only records whose preferred foot is the right one |
+| q1144 | european_football_2 | 🔁 翻盘 | 数据集问题 | Please state the finishing rate and curve score of the p | The heaviest player is the one with the largest weight; his attributes are a dated series, and with no date in the question take h |
 <!-- mistakes:end -->
 
 ## 二、建模应用思路（原料 → 三层）
@@ -105,13 +109,13 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 <!-- stats:begin -->
 ![实测结果综合统计](results/stats.svg)
 
-**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 48 ｜ 🔁 翻盘 10 ｜ ❌ 错误 1 ｜ ⚠️ 待仲裁 1 ｜ ⬜ 未跑 440　—　**已跑 60 题：正确 58 题**
+**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 95 ｜ 🔁 翻盘 16 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 389　—　**已跑 111 题全部正确**
 
 （🔁 翻盘 = 数据集自身缺陷（gold 未实现题面）按 SOP 逐题裁定为正确——单独计数、不并入 ✅ 正确；每题取最新一轮）
 
-均值 **6.8 步 / 11.5 工具调用 / 每题 127,412 tokens** ｜ 跑题覆盖度 **60/500 题**（2/11 库有产物）
+均值 **5.7 步 / 9.2 工具调用 / 每题 86,671 tokens** ｜ 跑题覆盖度 **111/500 题**（3/11 库有产物）
 
-> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 10 道数据集缺陷题的比对记录）也在这两处可查。
+> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 16 道数据集缺陷题的比对记录）也在这两处可查。
 <!-- stats:end -->
 
 **怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。
