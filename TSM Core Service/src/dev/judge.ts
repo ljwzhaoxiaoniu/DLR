@@ -5,13 +5,14 @@
  * 比对：数值按 [1e-9, 1e-6, 1e-4, 1e-3] 逐级容差；字符串归一化包含。
  * 供 `tsm grade`（逐轮判定）与 `tsm stats`（DETAIL.md 明细）复用。
  */
+import * as crypto from "node:crypto";
 import * as fs from "node:fs";
 import { spawnSync } from "node:child_process";
 import * as path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { readScenario, scenarioFiles } from "../model/graphData.js";
 import { resolveSqlitePath } from "../graph/physicalSchema.js";
-import { ROOT } from "../config.js";
+import { CACHE_DIR, ROOT } from "../config.js";
 
 export interface QJson {
   question_id: number;
@@ -37,24 +38,85 @@ for (const f of scenarioFiles()) {
   if (p) dbPath.set(db, p);
 }
 
-/** gold 期望值（空结果 = 合法期望，不是错误） */
-export function goldValues(qid: number, db: string): { values: string[]; empty?: boolean; err?: string } {
+export type GoldVal = { values: string[]; empty?: boolean; err?: string };
+
+// ── gold 期望值缓存（磁盘）─────────────────────────────────────────────
+// 为什么需要：gold SQL 里有很贵的查询——card_games q518 实测单条 ~5 分钟
+// （legalities 42.8 万行无索引全扫 + 逐行 cards(uuid) 索引探测）。grade / stats
+// 每题都要取期望值，重算一次就多付一次，且结果**永远相同**。故缓存到磁盘。
+// 键 = qid + 库 + gold SQL 哈希 + SQLite 的 size/mtime → 题目或数据集一变即自动失效。
+// 关掉：TSM_GOLD_NO_CACHE=1（复算用，验证缓存正确性）。
+const CACHE_FILE = path.join(CACHE_DIR, "gold_values.json");
+const NO_CACHE = process.env.TSM_GOLD_NO_CACHE === "1";
+const SLOW_MS = 2000; // 超过这个耗时就报一句（缓存未命中时可看到是谁在拖）
+
+let cache: Map<string, GoldVal> | null = null;
+let dirty = false;
+
+function keyOf(q: QJson, sqlite: string): string {
+  const st = fs.statSync(sqlite);
+  const h = crypto.createHash("sha1").update(`${q.question_id}|${q.db_id}|${q.SQL}`).digest("hex").slice(0, 16);
+  return `${h}|${st.size}|${Math.round(st.mtimeMs)}`;
+}
+
+function flush(): void {
+  if (!dirty || !cache || NO_CACHE) return;
+  try {
+    fs.mkdirSync(CACHE_DIR, { recursive: true });
+    const tmp = `${CACHE_FILE}.${process.pid}.tmp`;
+    fs.writeFileSync(tmp, JSON.stringify([...cache].map(([key, v]) => ({ key, v }))));
+    fs.renameSync(tmp, CACHE_FILE); // 原子替换：并发进程永不读到半截文件
+    dirty = false;
+  } catch {
+    /* 缓存写不进去不影响判定（下次重算而已） */
+  }
+}
+process.on("exit", flush);
+
+function cacheGet(): Map<string, GoldVal> {
+  if (!cache) {
+    cache = new Map();
+    if (!NO_CACHE) {
+      try {
+        for (const e of JSON.parse(fs.readFileSync(CACHE_FILE, "utf8")) as { key: string; v: GoldVal }[])
+          cache.set(e.key, e.v);
+      } catch {
+        /* 无缓存 / 缓存损坏 → 当作空缓存重建 */
+      }
+    }
+  }
+  return cache;
+}
+
+/** gold 期望值（空结果 = 合法期望，不是错误）；结果带磁盘缓存，见上方说明 */
+export function goldValues(qid: number, db: string): GoldVal {
   const q = byQid.get(qid);
   const sqlite = dbPath.get(db);
   if (!q) return { values: [], err: "题目不存在" };
   if (!sqlite || !fs.existsSync(sqlite)) return { values: [], err: "SQLite 缺失" };
+  const c = cacheGet();
+  const key = keyOf(q, sqlite);
+  const hit = c.get(key);
+  if (hit) return hit;
+  const t0 = performance.now();
+  let v: GoldVal;
   try {
     const db2 = new DatabaseSync(sqlite, { readOnly: true });
     try {
       const rows = db2.prepare(String(q.SQL)).all() as Record<string, unknown>[];
-      const values = rows.flatMap((r) => Object.values(r).map((v) => String(v)));
-      return rows.length === 0 ? { values: [], empty: true } : { values };
+      const values = rows.flatMap((r) => Object.values(r).map((x) => String(x)));
+      v = rows.length === 0 ? { values: [], empty: true } : { values };
     } finally {
       db2.close();
     }
   } catch (e) {
-    return { values: [], err: String(e).slice(0, 120) };
+    v = { values: [], err: String(e).slice(0, 120) };
   }
+  const ms = performance.now() - t0;
+  if (ms > SLOW_MS) console.error(`[gold] q${qid} ${db} ${(ms / 1000).toFixed(1)}s（已缓存）`);
+  c.set(key, v);
+  dirty = true;
+  return v;
 }
 
 /** 负号归一：U+2212 / en-dash / em-dash / 全角减号 → ASCII '-'（模型常写 U+2212；不归一会被文本清洗剥掉，负数变正数） */

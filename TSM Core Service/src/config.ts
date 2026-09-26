@@ -41,5 +41,7 @@ export const FIXTURES_DIR = path.join(SCENARIO, "fixtures");
 /** LanceDB 存储（构建产物，gitignored） */
 export const STORE_DIR =
   process.env.TSM_STORE_DIR ?? path.join(SERVICE_DIR, ".store", "lance", "dlr");
+/** 开发态缓存目录（可重建、可删；如 gold 期望值缓存）——与构建产物分开放 */
+export const CACHE_DIR = process.env.TSM_CACHE_DIR ?? path.join(SERVICE_DIR, ".store", "cache");
 /** ONNX 模型目录（scripts/fetch-model.sh 拉取） */
 export const MODEL_DIR = process.env.TSM_MODEL_DIR ?? path.join(ROOT, "tmp_scripts", "bge-onnx");
