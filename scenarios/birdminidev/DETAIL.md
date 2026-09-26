@@ -15,7 +15,7 @@
 |---|---|---|---|---|
 | california_schools | 30 | 30 | 0 | 100.0% ✅ |
 | card_games | 52 | 52 | 0 | 100.0% ✅ |
-| codebase_community | 49 | 20 | 29 | 40.8% |
+| codebase_community | 49 | 49 | 0 | 100.0% ✅ |
 | debit_card_specializing | 30 | 30 | 0 | 100.0% ✅ |
 | european_football_2 | 51 | 51 | 0 | 100.0% ✅ |
 | financial | 32 | 0 | 32 | 0.0% |
@@ -24,7 +24,7 @@
 | superhero | 52 | 0 | 52 | 0.0% |
 | thrombosis_prediction | 50 | 0 | 50 | 0.0% |
 | toxicology | 40 | 0 | 40 | 0.0% |
-| **合计** | **500** | **183** | **317** | **36.6%** |
+| **合计** | **500** | **212** | **288** | **42.4%** |
 
 ## 汇总
 
@@ -32,26 +32,26 @@
 
 | 评定 | 值 |
 |---|---|
-| ✅ 正确（与 gold 一致） | 155 / 183（84.7%） |
-| 🔁 翻盘（按 SOP 裁定为正确） | 28 |
+| ✅ 正确（与 gold 一致） | 177 / 212（83.5%） |
+| 🔁 翻盘（按 SOP 裁定为正确） | 35 |
 | ❌ 错误 | 0 |
 | ⚠️ 待仲裁 | 0 |
-| **合计正确（正确 + 翻盘）** | **183 / 183（100.0%）** |
+| **合计正确（正确 + 翻盘）** | **212 / 212（100.0%）** |
 
 **判定**（与 gold 原始比对 · 留档；gold 数据集原生、不修正）
 
 | 判定 | 值 |
 |---|---|
-| PASS（与 gold 一致） | 157 / 183（85.8%） |
+| PASS（与 gold 一致） | 180 / 212（84.9%） |
 | UNCERTAIN（抽不出可比对的值） | 10 |
-| FAIL（与 gold 不符） | 16 |
+| FAIL（与 gold 不符） | 22 |
 | GOLD_ERR（gold 本身执行失败） | 0 |
 
 **效率**
 
 | 指标 | 值 |
 |---|---|
-| token 平均 / 中位 | 89,965 / 81,910 |
+| token 平均 / 中位 | 91,242 / 84,428 |
 | token 最低 / 最高 | 33,353 / 282,597 |
 | 步数均值 / 工具调用均值 | 6 / 9 |
 
@@ -69,7 +69,7 @@
 |---|---|---|---|---|---|---|
 | [california_schools](DETAIL/california_schools.md) | 30 | 29 | 1 | 0 | 0 | 122,742 |
 | [card_games](DETAIL/card_games.md) | 52 | 40 | 12 | 0 | 0 | 93,661 |
-| [codebase_community](DETAIL/codebase_community.md) | 20 | 20 | 0 | 0 | 0 | 78,570 |
+| [codebase_community](DETAIL/codebase_community.md) | 49 | 42 | 7 | 0 | 0 | 84,921 |
 | [debit_card_specializing](DETAIL/debit_card_specializing.md) | 30 | 21 | 9 | 0 | 0 | 47,948 |
 | [european_football_2](DETAIL/european_football_2.md) | 51 | 45 | 6 | 0 | 0 | 79,889 |
 
@@ -90,6 +90,13 @@
 | q483 | card_games | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Please list the Italian text ruling of all the cards in the | "The Italian text of a card" is the card's **rules text as printed in Italian** -- one text per card (the text is a long block, so identical |
 | q484 | card_games | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Please list the Italian names of the cards in the set Coldsn | "Highest converted mana cost" in this set is 7, and **twelve cards share it** -- so the answer is twelve names, not one: Devastazione Solare |
 | q529 | card_games | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Find and list the names of sets which doesn't have Japanese | A set "has a translation" in a language when that language's **text is actually present**: every set carries a row per language, and a row w |
+| q584 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Write all the comments left by users who edited the post tit | "The comments left by users who edited the post" are the **notes the editing users left with their edits** -- the short note each edit of th |
+| q595 | codebase_community | ✅ PASS | 🔁 翻盘 | 数据集问题 | Which user have only one post history per post and having at | The question leaves two things unsaid: whether "one post history" counts the **records** a user left or the **kinds** of history entry they |
+| q639 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Based on posts posted by Community, calculate the percentage | The fraction puts **one set of posts** on both sides: the posts that use the R language, among the posts that account posted. That account o |
+| q640 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Calculate the difference in view count from post posted by M | "The posts posted by an author" are the posts that author owns, and a post's view count is the count the post itself records -- counted once |
+| q672 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Among the users located in United Kingdom, how many users wh | The question counts **users**, and "a favorite amount of 4 or more" is a post's own favorite count (not a sum across the user's posts). Of t |
+| q683 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What is the percentage of posts whose owners had a reputatio | "In 2011" scopes the whole question -- the posts of that year, and among them the share whose owner's reputation is over 1000. That year has |
+| q710 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | In posts with 1 comment, how many of the comments have 0 sco | "In posts with 1 comment" picks the posts whose **recorded comment count** is exactly 1 -- not the posts that merely happen to have one comm |
 | q1481 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 · 难题 | What is the difference in the annual average consumption of | Per customer, total up their 2013 CZK consumption. Then, **per segment**, take the customer(s) with the lowest 2013 total. "Annual average c |
 | q1482 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Which of the three segments—SME, LAM and KAM—has the biggest | The question names the currency, so the consumption must be filtered to customers whose billing currency is EUR (`Currency = 'EUR'` in the c |
 | q1490 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 · 难题 | How many percent of LAM customer consumed more than 46.73? | "Percent of customers" is counted **per customer**, not per customer-month record. One customer = one unit in both the numerator and the den |

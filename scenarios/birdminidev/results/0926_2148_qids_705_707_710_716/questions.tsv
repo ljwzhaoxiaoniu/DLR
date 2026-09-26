@@ -1,0 +1,4 @@
+705	codebase_community	Give the user's reputation and up vote number of the user that commented "fine, you win :)".
+707	codebase_community	Among the posts with views ranging from 100 to 150, what is the comment with the highest score?
+710	codebase_community	In posts with 1 comment, how many of the comments have 0 score?
+716	codebase_community	Among the comments with scores between 5 to 10, what is the percentage of the users with 0 up votes?

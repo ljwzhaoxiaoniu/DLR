@@ -37,6 +37,13 @@
 | q483 | card_games | 🔁 翻盘 | 数据集问题 | Please list the Italian text ruling of all the cards in | "The Italian text of a card" is the card's **rules text as printed in Italian** -- one text per card (the text is a long block, so |
 | q484 | card_games | 🔁 翻盘 | 数据集问题 | Please list the Italian names of the cards in the set Co | "Highest converted mana cost" in this set is 7, and **twelve cards share it** -- so the answer is twelve names, not one: Devastazi |
 | q529 | card_games | 🔁 翻盘 | 数据集问题 | Find and list the names of sets which doesn't have Japan | A set "has a translation" in a language when that language's **text is actually present**: every set carries a row per language, a |
+| q584 | codebase_community | 🔁 翻盘 | 数据集问题 | Write all the comments left by users who edited the post | "The comments left by users who edited the post" are the **notes the editing users left with their edits** -- the short note each |
+| q595 | codebase_community | 🔁 翻盘 | 数据集问题 | Which user have only one post history per post and havin | The question leaves two things unsaid: whether "one post history" counts the **records** a user left or the **kinds** of history e |
+| q639 | codebase_community | 🔁 翻盘 | 数据集问题 | Based on posts posted by Community, calculate the percen | The fraction puts **one set of posts** on both sides: the posts that use the R language, among the posts that account posted. That |
+| q640 | codebase_community | 🔁 翻盘 | 数据集问题 | Calculate the difference in view count from post posted | "The posts posted by an author" are the posts that author owns, and a post's view count is the count the post itself records -- co |
+| q672 | codebase_community | 🔁 翻盘 | 数据集问题 | Among the users located in United Kingdom, how many user | The question counts **users**, and "a favorite amount of 4 or more" is a post's own favorite count (not a sum across the user's po |
+| q683 | codebase_community | 🔁 翻盘 | 数据集问题 | What is the percentage of posts whose owners had a reput | "In 2011" scopes the whole question -- the posts of that year, and among them the share whose owner's reputation is over 1000. Tha |
+| q710 | codebase_community | 🔁 翻盘 | 数据集问题 | In posts with 1 comment, how many of the comments have 0 | "In posts with 1 comment" picks the posts whose **recorded comment count** is exactly 1 -- not the posts that merely happen to hav |
 | q1481 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | What is the difference in the annual average consumption | Per customer, total up their 2013 CZK consumption. Then, **per segment**, take the customer(s) with the lowest 2013 total. "Annual |
 | q1482 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | Which of the three segments—SME, LAM and KAM—has the big | The question names the currency, so the consumption must be filtered to customers whose billing currency is EUR (`Currency = 'EUR' |
 | q1490 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | How many percent of LAM customer consumed more than 46.7 | "Percent of customers" is counted **per customer**, not per customer-month record. One customer = one unit in both the numerator a |
@@ -121,13 +128,13 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 <!-- stats:begin -->
 ![实测结果综合统计](results/stats.svg)
 
-**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 155 ｜ 🔁 翻盘 28 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 317　—　**已跑 183 题全部正确**
+**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 177 ｜ 🔁 翻盘 35 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 288　—　**已跑 212 题全部正确**
 
 （🔁 翻盘 = 数据集自身缺陷（gold 未实现题面）按 SOP 逐题裁定为正确——单独计数、不并入 ✅ 正确；每题取最新一轮）
 
-均值 **5.6 步 / 8.9 工具调用 / 每题 89,965 tokens** ｜ 跑题覆盖度 **183/500 题**（5/11 库有产物）
+均值 **5.6 步 / 8.9 工具调用 / 每题 91,242 tokens** ｜ 跑题覆盖度 **212/500 题**（5/11 库有产物）
 
-> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 28 道数据集缺陷题的比对记录）也在这两处可查。
+> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 35 道数据集缺陷题的比对记录）也在这两处可查。
 <!-- stats:end -->
 
 **怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。

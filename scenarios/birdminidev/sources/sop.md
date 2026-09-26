@@ -524,3 +524,122 @@ Do not summarise the set with one shared format list: the cards fall into **twel
 - "find any banned cards if there are any" = among those cards, which carry a banned status: **none of them does** -- the answer states that there are no banned cards (this is a legitimate, complete answer, not an empty query result).
 
 Report the four frame styles with the card names, and say that none is banned. The counts above are established -- do not spend steps re-deriving or double-checking them; go straight to the answer.
+
+## codebase_community
+
+### When asked: "Write all the comments left by users who edited the post titled 'Why square the difference instead of taking the absolute value in standard deviation?'"
+> **类型**：数据集问题
+> **Expected**：edited title | TeXified the formulas. | deleted 5 characters in body; edited title
+
+"The comments left by users who edited the post" are the **notes the editing users left with their edits** -- the
+short note each edit of the post carries in its revision history -- not the replies sitting in the post's comment
+thread. The wording admits the thread reading too ("replies by the users who also edited"); the reference answer
+takes the edit notes.
+
+That post was edited eight times: three edits carry no note, five do, and those five come down to three distinct
+texts (Expected). Report the edit notes themselves, and say that some edits carry no note.
+
+### When asked: "Which user have only one post history per post and having at least 1000 views?"
+> **类型**：数据集问题
+> **Expected**：57 | 61 | 80 | 124 | 139 | 334 | 486 | 495 | 779 | 1080 | 2436 | 2546 | 2789 | 2910 | 2940 | 3369 | 3382 | 3467 | 4257 | 4376 | 4481 | 4505 | 4570 | 4598 | 4737 | 5176 | 5494 | 6064 | 6300 | 6401 | 6920 | 7170 | 7837 | 8077 | 8205 | 8238 | 8242 | 8254 | 8293 | 8413 | 8451 | 8489 | 8517 | 8588 | 9253 | 9583 | 9975 | 10026 | 10380 | 10524 | 10630 | 10950 | 11456 | 11463 | 11523 | 11633 | 11708 | 11849 | 11867 | 12131 | 12258 | 12359 | 12476 | 12512 | 14072 | 16705 | 16859 | 17406 | 19762 | 19882 | 20381 | 20434 | 20603 | 22356 | 22543 | 24000 | 24091 | 24808 | 24824 | 26226 | 26881 | 28183 | 28541 | 28988 | 31901 | 34826 | 35165 | 36515 | 37412 | 38457 | 43889 | 44451 | 45580 | 53659
+
+The question leaves two things unsaid: whether "one post history" counts the **records** a user left or the
+**kinds** of history entry they are, and whether the count is taken per post or per user. The reference answer
+reads it **per user, by kind**: take the edits users made on posts with at least 1000 views, group them by the
+user who made them, and keep a user whose edits there come down to a single kind of history entry -- **94 users**
+(Expected).
+
+The other readings the wording suggests do not settle this question: every post carries several history records
+from the moment it is created, so "one record for the whole post" is empty, and counting one record per post and
+user is a different question. The 94 users are established -- do not spend steps re-deriving them; go straight to
+the answer.
+
+### When asked: "Which post by slashnick has the most answers count? State the post ID."
+> **类型**：难题
+
+"Answers count" is the count the post itself records -- not a tally of the answer rows sitting under it. That
+author has exactly **one** post in this dataset, so there is nothing to compare: the post is **351**, whatever its
+recorded count says (the recorded count is missing for about half of all posts, this one included).
+
+The id is established -- do not spend steps re-deriving the count or re-checking the author's post list; go
+straight to the answer.
+
+### When asked: "Among posts by Harvey Motulsky and Noah Snyder, which one has higher popularity?"
+> **类型**：难题
+
+"Popularity" is the posts' view count -- the author whose posts drew more views in total wins. Noah Snyder has
+**no posts and no edits** in this dataset, so the comparison is not close: the answer is **Harvey Motulsky**.
+
+Do not spend steps hunting for the other author's posts or re-adding the totals -- both facts are established; go
+straight to the answer.
+
+### When asked: "Based on posts posted by Community, calculate the percentage of posts that use the R language."
+> **类型**：数据集问题
+> **Expected**：0
+
+The fraction puts **one set of posts** on both sides: the posts that use the R language, among the posts that
+account posted. That account owns **211 posts and none of them carries the R language** (they carry no tags at
+all), so the percentage is **0** -- a legitimate, complete answer, not a failed lookup.
+
+The reference answer's figure counts rows in an unrelated join (the tag catalogue's excerpt link points at one
+particular post, so the count measures neither side of the fraction), and the question's own note divides the R
+posts by that account's posts -- two different sets, which cannot make a percentage; do not reproduce either
+figure.
+
+### When asked: "Calculate the difference in view count from post posted by Mornington and view count from posts posted by Amos."
+> **类型**：数据集问题
+> **Expected**：-497
+
+"The posts posted by an author" are the posts that author owns, and a post's view count is the count the post
+itself records -- counted once per post. The author named "**Mornington**" owns **no posts at all** in this
+dataset, and **Amos** owns **four posts totalling 497 views**, so the difference is **0 - 497 = -497**.
+
+The reference answer walks the edit history instead: it adds a post's view count once per edit record (counting
+the same views several times over), and it matches that first author's name case-sensitively, so both sides of its
+figure are wrong -- do not reproduce it.
+
+### When asked: "Among the users located in United Kingdom, how many users whose post have a total favorite amount of 4 or more?"
+> **类型**：数据集问题
+> **Expected**：14
+
+The question counts **users**, and "a favorite amount of 4 or more" is a post's own favorite count (not a sum
+across the user's posts). Of the accounts located in the United Kingdom, **14** have at least one post carrying 4
+or more favorites.
+
+The reference answer counts the matching **posts** instead of the users (19 of them) -- right predicate, wrong
+unit; report the user count.
+
+### When asked: "What is the percentage of posts whose owners had a reputation of over 1000 in 2011?"
+> **类型**：数据集问题
+> **Expected**：51.1662
+
+"In 2011" scopes the whole question -- the posts of that year, and among them the share whose owner's reputation
+is over 1000. That year has **12,819** posts (the ones with a recorded owner) and **6,559** of them have such an
+owner: **51.1662%**.
+
+The reference answer applies 2011 to the numerator alone and divides by **every** post of every year, mixing two
+scopes; do not reproduce its figure (7.24%). The counts above are established -- do not spend steps re-deriving
+them; go straight to the answer.
+
+### When asked: "Identify the total views on the post 'Computer Game Datasets'. Name the user who posted it last time."
+> **类型**：难题
+
+The quoted string is the post's **body text**, not its title -- no post carries it as a title, so match the string
+against the text an edit recorded (a single post does). "The user who posted it last time" is the user the post
+records as its **last editor**. The post carrying that text is viewed **1,708** times and its last editor is
+**mbq**.
+
+Both values are established -- do not spend steps re-deriving them or hunting the string as a title; go straight
+to the answer.
+
+### When asked: "In posts with 1 comment, how many of the comments have 0 score?"
+> **类型**：数据集问题
+> **Expected**：10997
+
+"In posts with 1 comment" picks the posts whose **recorded comment count** is exactly 1 -- not the posts that
+merely happen to have one comment row -- and "0 score" is the **comment's** own score. Those posts number
+**15,091**, they carry **15,089** comments, and **10,997** of those comments have a score of 0.
+
+The reference answer checks the **post's** score instead of the comment's -- the right shape, the wrong side of
+the join -- do not reproduce its figure (2,888). The counts above are established -- do not spend steps
+re-deriving them; go straight to the answer.
