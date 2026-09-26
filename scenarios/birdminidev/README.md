@@ -139,7 +139,8 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 ```
 scenarios/birdminidev/
 ├── README.md            # ← 本文（数据集（含缺陷）→ 建模思路 → 结果 → 流程 → 实测）
-├── DETAIL.md            # 评测明细（逐题校验表 / 跑题覆盖度 / 汇总 / 数据集缺陷与裁定 / 逐题明细：怎么对的）
+├── DETAIL.md            # 评测总账（说明 / 跑题覆盖度 / 汇总含 token 中位 / 分库索引 / 数据集缺陷与裁定）
+├── DETAIL/<库>.md       # 分库明细（逐题校验表：题号锚点跳证据块；证据正文；本库缺陷）
 ├── results/             # 跑批留档（按轮次：raw 日志 + 判定 CSV + 单轮汇总；stats.svg 综合统计图）
 ├── sources/
 │   ├── configs/{ER,DLR,RDF}/   # L1 建模源（本线消费 DLR；ER/RDF 为评测线遗留）

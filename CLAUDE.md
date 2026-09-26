@@ -38,14 +38,15 @@ opencode 执行层 → Semantic Core Service（Kuzu + FAISS）→ 同一物理�
 
 | # | 规则 |
 |---|---|
-| 1 | **不执行 `build` / `serve` / `reset`**（评测线 Python 服务）—— 由项目主手动操作（Kuzu 排他锁 + 服务影响所有并发跑题） |
+| 1 | **不执行 `build` / `serve` / `reset`**（评测线 Python 服务）—— 由项目主手动操作（Kuzu 排他锁 + 服务影响所有并发跑题）。**2.0 后端不在此列**：`start_backend.sh`（幂等）由 agent 负责启停，卡死时杀进程再拉起（见 [docs/run.md](docs/run.md)） |
 | 2 | **不自行重跑**任何题 —— 默认单轮；任何重跑/多跑/方差验证，先列方案（跑谁、几轮、为什么）等确认 |
-| 3 | **批间停下报数** —— 跑完一批报告结果，等确认再跑下一批 |
+| 3 | **批间停下报数** —— 2.0 一批 **5 题**，跑完报告结果，等确认再跑下一批 |
 | 4 | **归档须确认** —— Stage 1–4 跑完不自动归档，等结果确认再 `post_process` |
 | 5 | **Python 用绝对路径** `/d/ProgramData/anaconda3/envs/lepe_som/python`，禁止裸 `python`（2.0 默认不用 Python；仅兜底路线/评测线） |
 | 6 | **临时文件只进 `tmp_scripts/`**，或随用随删 —— 禁止写盘根 / 仓库散落 |
 | 7 | **`opencode run` 必须在 Git Bash 下执行**（评测线；Python subprocess 启动会让 MCP 工具不可见） |
 | 8 | **判定口径以知识层为准**：术语/公式以 L2 领域共识（`scenarios/<场景>/sources/consensus`）+ L3 `skills/sop.md` 为准；冲突时按 `disputes > SkillPath(SOP) > KnowledgePath(共识) > 源字段字面` |
+| 9 | **SOP 加节有三档准入**：① 数据集错误 ② 无 SOP 跑不对 ③ 无 SOP 时 >15W —— 新库**先裸跑取基线**，只给 ①②③ 写节，**每题最多两遍**；节必须钉**实测事实与陷阱**并附"不必再核、直接作答"（[docs/02-concept.md](docs/02-concept.md) §二 / [docs/04-application.md](docs/04-application.md) §二） |
 
 ---
 
@@ -120,6 +121,9 @@ DLR Proj/                          # 分支 2.0
 │                                #   sources/consensus/           = L2 Domain Consensus 源
 │                                #   sources/sop.md               = L3 口径源
 │                                #   fixtures/                    = 对照真值（verify 用）
+│                                #   results/<轮次>/              = 跑批留档（questions.csv + raw/）
+│                                #   DETAIL.md                    = 评测总账（覆盖度/汇总/分库索引/缺陷裁定）
+│                                #   DETAIL/<库>.md               = 逐题校验表 + 证据正文（按库拆）
 ├── TSM Core Service/            # 2.0 语义服务（TS）：LanceDB + Neo4j + MCP server；build=开发态，verify=质量门
 ├── DSH-based Agent Service/     # 2.0 宿主接入：组合 patch / 技能 / 启动器 / plugins/（状态浮层）
 ├── Evaluation/ · validated_results/   # 评测线（1.5）：四阶段流水线、oc_judge、基线归档
