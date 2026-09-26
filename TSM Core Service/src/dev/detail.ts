@@ -159,7 +159,69 @@ export function buildDetail(): Mistake[] {
   const dbDone = new Map<string, number>();
   for (const a of all) dbDone.set(a.db, (dbDone.get(a.db) ?? 0) + 1);
 
-  // ── 组装 ─────────────────────────────────────────────────────────────
+  // ── 分库分组（明细按库拆分：DETAIL/<库>.md）────────────────────────
+  const byDb = new Map<string, Agg[]>();
+  for (const a of all) byDb.set(a.db, [...(byDb.get(a.db) ?? []), a]);
+  const dbNames = [...byDb.keys()].sort();
+  const dbMedian = (rows: Agg[]): number => {
+    const t = rows.map((a) => a.tokens).sort((x, y) => x - y);
+    return t.length ? t[Math.floor(t.length / 2)] : 0;
+  };
+  /** 主文档的分库索引（一行一库，指向 DETAIL/<库>.md） */
+  const indexRows = dbNames.map((db) => {
+    const rows = byDb.get(db)!;
+    const rt = (v: string) => rows.filter((a) => a.ruling === v).length;
+    return `| [${db}](DETAIL/${db}.md) | ${rows.length} | ${rt("CORRECT")} | ${rt("OVERTURNED")} | ${rt("WRONG")} | ${rt("PENDING")} | ${fmt(dbMedian(rows))} |`;
+  });
+
+  /** 逐题明细块（分库文件内；`id` 供校验表锚点跳转） */
+  const blockOf = (a: Agg): string => {
+    const g = goldValues(Number(a.qid), a.db);
+    const expected = g.err ? `gold 执行失败（${g.err}）` : g.empty ? "空结果（合法期望）" : g.values.slice(0, 8).join(" | ");
+    const lines: string[] = [
+      `<details id="q${a.qid}">`,
+      `<summary><b>q${a.qid}</b> · ${a.db} · ${ICON[a.verdict] ?? ""} <b>${a.verdict}</b>${a.ruling !== "CORRECT" ? ` · ${RULING_LABEL[a.ruling] ?? a.ruling}` : ""} · ${a.steps} 步 / ${a.tools} 工具 · ${fmt(a.tokens)} tok${a.runs.length > 1 ? ` · ${a.runs.length} 轮` : ""} · ${cell(remarkOf(a, sopQ.get(a.qid)))}</summary>`,
+      "",
+      `**问题**：${a.question}`,
+      "",
+      `**期望**：\`${expected.replace(/`/g, "'")}\``,
+      "",
+      `**答案**：${a.final.trim() ? `\`${cell(a.final).slice(0, 200).replace(/`/g, "'")}\`` : "_（无 final 文本）_"}`,
+      "",
+    ];
+    if (a.trace.length) {
+      lines.push("**调用步骤**", "", "| # | 工具 | 参数（截 200） |", "|---|---|---|");
+      a.trace.forEach((t, i) => lines.push(`| ${i + 1} | \`${t.tool}\` | \`${t.input.replace(/`/g, "'")}\` |`));
+      lines.push("");
+    }
+    lines.push("**依据与结论**（agent 原文）", "", demote(a.final.trim()) || "_（无 final 文本）_", "", "</details>", "");
+    return lines.join("\n");
+  };
+
+  /** 校验表（分库文件内；题号锚点到明细块） */
+  const tableOf = (rows: Agg[]): string[] => [
+    "| 题号 | 判定 | 评定 | 步数 | 工具 | tokens | 轮次 | 备注 |",
+    "|---|---|---|---|---|---|---|---|",
+    ...rows.map(
+      (a) =>
+        `| [q${a.qid}](#q${a.qid}) | ${ICON[a.verdict] ?? ""} ${a.verdict} | ${RULING_LABEL[a.ruling] ?? a.ruling} | ${a.steps} | ${a.tools} | ${fmt(a.tokens)} | ${a.runs.length > 1 ? `${a.runs.length} 轮（最新 ${a.runDir}）` : a.runDir} | ${cell(remarkOf(a, sopQ.get(a.qid)))} |`,
+    ),
+  ];
+
+  /** 缺陷与裁定表（主文档带库列；分库文件不带） */
+  const mistakeTableOf = (rows: Mistake[], withDb: boolean): string =>
+    rows.length
+      ? [
+          `| 题号 | ${withDb ? "库 | " : ""}判定 | 评定 | 类型 | 问题（截） | 裁定（sop.md 摘要） |`,
+          `|---|---|${withDb ? "---|" : ""}---|---|---|---|`,
+          ...rows.map(
+            (m) =>
+              `| q${m.qid} | ${withDb ? `${m.db} | ` : ""}${ICON[m.verdict] ?? ""} ${m.verdict} | ${RULING_LABEL[m.ruling] ?? m.ruling} | ${m.types.join(" · ") || "—"} | ${cell(m.question.slice(0, 60))} | ${cell(m.rationale.slice(0, 140))} |`,
+          ),
+        ].join("\n")
+      : "（暂无）";
+
+  // ── 组装：主文档 = 总账（覆盖度 / 汇总 / 分库索引 / 缺陷裁定） ────────
   const md: string[] = [
     `# 评测明细 — DLR · ${path.basename(SCENARIO)}`,
     "",
@@ -168,15 +230,7 @@ export function buildDetail(): Mistake[] {
     "> **评定**：SOP 生效时按 SOP 裁定——与 gold 对不上但答法合 SOP 口径 = **翻盘**（计正确，但**单独标注、单独计数，不并入 PASS**）。",
     "> **数据来源**：`results/<轮次>/{questions.csv, raw/*.ndjson}` ｜ 本文件由 `tsm stats` 自动重建（定性观察一节在跑批后按 SOP 案例补写）。",
     "> **列义**：判定 PASS ｜ FAIL ｜ UNCERTAIN（抽不出可比对的值）｜ GOLD_ERR（gold 本身执行失败）；评定 ✅ 正确 ｜ 🔁 翻盘 ｜ ❌ 错误 ｜ ⚠️ 待仲裁；**备注** = 这一行的判定依据 + 裁定依据（人话一句）。",
-    "",
-    "## 逐题校验表",
-    "",
-    "| 数据库 | 题号 | 判定 | 评定 | 步数 | 工具 | tokens | 轮次 | 备注 |",
-    "|---|---|---|---|---|---|---|---|---|",
-    ...all.map(
-      (a) =>
-        `| ${a.db} | q${a.qid} | ${ICON[a.verdict] ?? ""} ${a.verdict} | ${RULING_LABEL[a.ruling] ?? a.ruling} | ${a.steps} | ${a.tools} | ${fmt(a.tokens)} | ${a.runs.length > 1 ? `${a.runs.length} 轮（最新 ${a.runDir}）` : a.runDir} | ${cell(remarkOf(a, sopQ.get(a.qid)))} |`,
-    ),
+    "> **本文档 = 总账**：覆盖度 / 汇总 / 数据集缺陷与裁定；**逐题校验表与证据正文按库拆分**，见下方分库索引。",
     "",
     "## 跑题覆盖度（跑过多少题）",
     "",
@@ -227,44 +281,46 @@ export function buildDetail(): Mistake[] {
     "",
     "> 分批跑完后按 SOP 案例撰写：每个 SOP 条目题须有对应观察、数字与归档 CSV 逐项一致（防止「先写结论后找证据」）。",
     "",
+    "## 分库明细（逐题校验表 + 证据正文）",
+    "",
+    "> 每题一行台账（题号锚点跳到该题证据块）+ 每题一段正文（命中口径 / 执行 SQL / 结论）。",
+    "",
+    "| 数据库 | 已跑 | ✅ 正确 | 🔁 翻盘 | ❌ 错误 | ⚠️ 待仲裁 | token 中位 |",
+    "|---|---|---|---|---|---|---|",
+    ...indexRows,
+    "",
     "## 数据集缺陷与裁定（SOP 条目缘由）",
     "",
-    mistakes.length
-      ? [
-          "| 题号 | 库 | 判定 | 评定 | 类型 | 问题（截） | 裁定（sop.md 摘要） |",
-          "|---|---|---|---|---|---|---|",
-          ...mistakes.map(
-            (m) =>
-              `| q${m.qid} | ${m.db} | ${ICON[m.verdict] ?? ""} ${m.verdict} | ${RULING_LABEL[m.ruling] ?? m.ruling} | ${m.types.join(" · ") || "—"} | ${cell(m.question.slice(0, 60))} | ${cell(m.rationale.slice(0, 140))} |`,
-          ),
-        ].join("\n")
-      : "（暂无：所有已跑题判定均为 PASS）",
+    mistakeTableOf(mistakes, true),
     "",
-    "## 逐题明细（怎么对的）",
-    "",
-    ...all.map((a) => {
-      const g = goldValues(Number(a.qid), a.db);
-      const expected = g.err ? `gold 执行失败（${g.err}）` : g.empty ? "空结果（合法期望）" : g.values.slice(0, 8).join(" | ");
-      const lines: string[] = [
-        "<details>",
-        `<summary><b>q${a.qid}</b> · ${a.db} · ${ICON[a.verdict] ?? ""} <b>${a.verdict}</b>${a.ruling !== "CORRECT" ? ` · ${RULING_LABEL[a.ruling] ?? a.ruling}` : ""} · ${a.steps} 步 / ${a.tools} 工具 · ${fmt(a.tokens)} tok${a.runs.length > 1 ? ` · ${a.runs.length} 轮` : ""} · ${cell(remarkOf(a, sopQ.get(a.qid)))}</summary>`,
-        "",
-        `**问题**：${a.question}`,
-        "",
-        `**期望**：\`${expected.replace(/`/g, "'")}\``,
-        "",
-        `**答案**：${a.final.trim() ? `\`${cell(a.final).slice(0, 200).replace(/`/g, "'")}\`` : "_（无 final 文本）_"}`,
-        "",
-      ];
-      if (a.trace.length) {
-        lines.push("**调用步骤**", "", "| # | 工具 | 参数（截 200） |", "|---|---|---|");
-        a.trace.forEach((t, i) => lines.push(`| ${i + 1} | \`${t.tool}\` | \`${t.input.replace(/`/g, "'")}\` |`));
-        lines.push("");
-      }
-      lines.push("**依据与结论**（agent 原文）", "", demote(a.final.trim()) || "_（无 final 文本）_", "", "</details>", "");
-      return lines.join("\n");
-    }),
   ];
+
+  // ── 分库文件：DETAIL/<库>.md（逐题校验表 + 证据正文 + 本库缺陷） ──────
+  const DETAIL_DIR = path.join(SCENARIO, "DETAIL");
+  fs.mkdirSync(DETAIL_DIR, { recursive: true });
+  for (const db of dbNames) {
+    const rows = byDb.get(db)!;
+    const rt = (v: string) => rows.filter((a) => a.ruling === v).length;
+    const content = [
+      `# 评测明细 · ${db} — ${path.basename(SCENARIO)}`,
+      "",
+      `> 本库已跑 **${rows.length}** 题：✅ ${rt("CORRECT")} ｜ 🔁 ${rt("OVERTURNED")} ｜ ❌ ${rt("WRONG")} ｜ ⚠️ ${rt("PENDING")} ｜ token 中位 **${fmt(dbMedian(rows))}**`,
+      "> 总账（覆盖度 / 汇总 / 数据集缺陷与裁定）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。",
+      "",
+      "## 逐题校验表",
+      "",
+      ...tableOf(rows),
+      "",
+      "## 本库数据集缺陷与裁定",
+      "",
+      mistakeTableOf(mistakes.filter((m) => m.db === db), false),
+      "",
+      "## 逐题明细（怎么对的）",
+      "",
+      ...rows.map(blockOf),
+    ];
+    fs.writeFileSync(path.join(DETAIL_DIR, `${db}.md`), content.join("\n"));
+  }
 
   const outPath = path.join(SCENARIO, "DETAIL.md");
   fs.writeFileSync(outPath, md.join("\n"));
