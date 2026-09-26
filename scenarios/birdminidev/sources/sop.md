@@ -302,3 +302,225 @@ The roster is far too long to lay out in full, so the count is what settles the 
 
 
 
+
+## card_games
+
+### When asked: "List all the mythic rarity print cards banned in gladiator format."
+> **类型**：数据集问题
+> **Expected**：17983 | 18058 | 29523 | 38736 | 38737
+
+A card here is a **printing**: one card name can exist as several printings, each with its own id. The question asks for the cards themselves, so return **each printing's id** -- five printings qualify. Collapsing the list to card names loses three of them (the same two names cover all five).
+
+### When asked: "Name the card and artist with the most ruling information. Also state if the card is a promotional printing."
+> **类型**：数据集问题
+> **Expected**：Teferi's Protection | Chase Stone
+
+"Ruling information" is the card's rulings: count the rulings attached to each card and take the largest -- **Teferi's Protection**, illustrated by **Chase Stone** (27 rulings) -- and it **is** a promotional printing, so say so.
+
+The reference answer looks for the artist owning the most promotional printings instead and never touches the rulings; do not follow that reading.
+
+### When asked: "Calculate the percentage of the cards availabe in Chinese Simplified."
+> **类型**：数据集问题
+> **Expected**：35.38
+
+"Percentage of the cards" puts **cards** on both sides of the fraction: the cards that have a Chinese Simplified printing, divided by all the cards -- each card counted once. A card carries one row per language, so the denominator is the number of cards, not the number of language rows: 20106 of 56822 = **35.38**.
+
+The reference answer divides by the number of card-language rows, mixing the two units; its figure (8.77) is not this question's percentage.
+
+### When asked: "What are the borderless cards available without powerful foils?"
+> **类型**：数据集问题
+> **Expected**：52
+
+"Powerful foils" are the printings listed by the card marketplace **both** as a card and as a foil -- one of the two being present is not enough. "Without powerful foils" therefore keeps every borderless printing where the two are not simultaneously present: **72 printings, which is 52 distinct card names** (a name covers all of its printings).
+
+The reference answer checks the same field twice (missing the five printings that carry only the other identifier), so its list is short by those; do not reproduce that filter.
+
+### When asked: "For artifact type of cards that do not have multiple faces on the same card, state its legalities status for vintage play format."
+> **类型**：难题
+
+Three lookups decide this question:
+
+- "artifact type of cards" = the card's type is artifact (a plain artifact).
+- "do not have multiple faces on the same card" = a **single-faced** card (a card that turns over carries a second face; a single-faced card has none).
+- "legalities status for vintage" = the status the card carries in the vintage format -- legal, restricted or banned.
+
+The answer is the statuses these cards carry in vintage, each with how many cards carry it -- all three occur: **legal (2812 cards), restricted (151), banned (14)**.
+
+### When asked: "List all the card id and artist with unknown power which are legal for commander play format."
+> **类型**：难题
+
+Three lookups decide this question:
+
+- "unknown power" = the power is missing or is recorded as `*` (both count as unknown).
+- "legal for commander" = the card's status in the commander format is legal.
+- "card id" = the printing's own integer identifier (each printing separately), and the artist is the illustrator -- one row per qualifying printing.
+
+The answer is a very long list of (id, artist) rows: report the count together with the list.
+
+### When asked: "What is the rule of playing card "Benalish Knight"?"
+> **类型**：数据集问题
+> **Expected**：Flash | First strike
+
+"The rule of playing card X" asks for the card's **rules text** -- the abilities printed on it. For Benalish Knight those are **flash** (it may be cast any time an instant could be) and **first strike** (it deals its combat damage before creatures without it); state the abilities.
+
+The reference answer lists the **formats** the card can be played in instead, which answers a different question ("where may this card be played"); the question's own wording decides, so do not follow that reading.
+
+### When asked: "How many of the banned cards are white border?"
+> **类型**：数据集问题 · 难题
+> **Expected**：89
+
+"Banned cards" counts **cards**: a card banned in several formats is still one card, so count each card once -- 89 white-bordered cards are banned. Counting card-format rows instead (258) treats one card as several and mixes the units.
+
+### When asked: "Among the Artifact cards, which are black color and comes with foreign languague translation?"
+> **类型**：难题
+
+Three lookups decide this question -- and the first one is the trap:
+
+- "Artifact cards" = the card's **original type** is Artifact (a card's current type line can differ from what it was originally printed as); eight cards qualify.
+- "black color" = the card's color is black **alone** (a card that is black among other colors is not "black color").
+- "comes with foreign language translation" = the card has a foreign-language printing on record.
+
+The answer is those cards' names.
+
+### When asked: "What is the mana cost of cards with a normal layout, a 2003 frame version, with a black border color, and available in paper and mtgo?"
+> **类型**：难题
+
+Four filters, each stated in the question's own terms:
+
+- "normal layout" = the card's layout is normal (single-faced, standard frame).
+- "a 2003 frame version" = the frame version is the 2003 one.
+- "black border color" = the border is black.
+- "available in paper and mtgo" = the availability combines both media, **paper and mtgo together** (a card available in only one of them does not qualify).
+
+The answer is the mana costs of the qualifying printings -- a very long, repetitive list: report the distinct values with the count of printings.
+
+### When asked: "What is the percentage of Story Spotlight cards that do not have a text box? List them by their ID."
+> **类型**：数据集问题
+
+A card "does not have a text box" when it is **textless**. Check the Story Spotlight cards for that: **none of them is textless**, so the percentage is nil and the requested ID list is an **empty list** -- the truthful answer is that there are no such cards.
+
+The reference answer selects the opposite (Story Spotlight cards that *have* a text box) and reports a small percentage from them; its filter is inverted relative to the question, so do not report its figure or its IDs.
+
+### When asked: "Lists all types of cards in German."
+> **类型**：数据集问题 · 难题
+> **Expected**：2149
+
+"Types of cards **in German**" asks for the type names as they read in German -- the German-language type strings recorded for German printings. Collect the distinct ones: **2149** (plus the empty one). A list that long cannot be laid out in full, so report the distinct values with the count.
+
+The reference answer instead reads "types" as the subtype-and-supertype pair of the cards that have a German printing, and returns those English pairs; that is a different quantity from the German type names the question asks for.
+
+### When asked: "How many unknown power cards contain info about the triggered ability"
+> **类型**：难题
+
+Two lookups decide this question:
+
+- "unknown power cards" = the cards whose power is missing **or** recorded as `*` (both count as unknown).
+- "contain info about the triggered ability" = the card's **rulings** mention a triggered ability (match that phrase in the ruling text).
+
+Count the cards once each: **1382**.
+
+### When asked: "What is the foreign name of the card in French of type Creature, normal layout and black border color, by artist Matthew D. Wilson?"
+> **类型**：难题
+
+Four filters, then one hop:
+
+- "type Creature" = the card's type line is exactly Creature (a compound type line such as "Creature — Human" is a different value).
+- "normal layout" = the layout is normal; "black border color" = the border is black; the artist is the one named.
+- "the foreign name ... in French" = read the French name from the card's foreign-language record.
+
+Fifty printings qualify (42 distinct French names); report the names.
+
+### When asked: "What percentage of cards without power are in French?"
+> **类型**：数据集问题 · 难题
+> **Expected**：47.96
+
+"Cards without power" = the cards whose power is missing or recorded as `*`. "In French" = the card has a French printing. The percentage puts **cards** on both sides -- of the 31053 such cards, 14892 have a French version: **47.96** -- so a card with several language rows still counts once.
+
+The reference answer divides by the number of card-language rows, mixing the units (its 12.98 is not this question's percentage).
+
+### When asked: "What percentage of cards with format commander and legal status do not have a content warning?"
+> **类型**：难题
+
+- "format commander and legal status" = the card's status in the commander format is legal.
+- "do not have a content warning" = the card's content-warning marker is off.
+- The percentage is taken over those commander-legal entries: every one of them has the marker off, so the answer is **100**.
+
+### When asked: "What proportion of cards do not have a text box with a normal layout?"
+> **类型**：难题
+
+"Cards do not have a text box" = the card is **textless**; "with a normal layout" = the layout is normal. The figure is those cards over **all** cards, 115 of 56822: **0.2024** -- the expected value is on the per-hundred scale (0.002024 x 100), so report 0.2024 as the reference's answer does.
+
+### When asked: "What's the Italian name of the set of cards with "Ancestor's Chosen" is in?"
+> **类型**：难题
+
+A card name can appear in **several sets** (reprints), and a set's name is **localised**: the set carries a translation per language rather than one name.
+
+Find every set that contains the card, then give each such set's **Italian** translation -- the answer is those translated set names (two of them).
+
+### When asked: "For the set of cards with "Ancestor's Chosen" in it, is there a Korean version of it?"
+> **类型**：难题
+
+Same fact: the card lives in **several sets**, and a set's name is localised per language. So ask it of each set that contains the card: does that set carry a **Korean** name?
+
+Yes -- the answer is yes, and naming which set is Korean (with its Korean name) makes the answer complete.
+
+### When asked: "Among the cards in the set "Hauptset Zehnte Edition", how many of them are designed by Adam Rex?"
+> **类型**：难题
+
+"Hauptset Zehnte Edition" is a set's **German** name -- identify the set by that translation (sets are named per language), then count the cards in it whose designer (artist) is Adam Rex: **12**.
+
+### When asked: "Among the sets in the block "Ice Age", how many of them have an Italian translation?"
+> **类型**：难题
+
+"Sets in the block" = the sets whose block is Ice Age (five of them). "Have an Italian translation" means the set actually **carries Italian text**: the translation table lists a language row per set, and a row whose translation is empty is a placeholder, not a translation -- count only the sets whose Italian text is present.
+
+One set qualifies (its Italian name is Ondata Glaciale); a language row with no text does not make a second.
+
+### When asked: "Please list the Italian text ruling of all the cards in the set Coldsnap."
+> **类型**：数据集问题
+> **Expected**：149
+
+"The Italian text of a card" is the card's **rules text as printed in Italian** -- one text per card (the text is a long block, so identical texts collapse). The set holds 155 cards: **149 of them carry an Italian text**, the remaining six (the Snow-Covered basic lands and Krovikan Scoundrel) have none.
+
+The list is far too long to lay out in full: report the count together with the list.
+
+### When asked: "Please list the Italian names of the cards in the set Coldsnap with the highest converted mana cost."
+> **类型**：数据集问题
+> **Expected**：Devastazione Solare | Requisire | Jokulmorder | Gufo Gelopiuma | Araldo di Leshrac | Inchioda Anima | Cavalcacieli di Tresserhorn | Furia dell'Orda | Drago Geloscaglia | Cavalca Allosauro | Wurm Panglaciale | Garza Zol, Regina della Peste
+
+"Highest converted mana cost" in this set is 7, and **twelve cards share it** -- so the answer is twelve names, not one: Devastazione Solare (Sunscour), Requisire (Commandeer), Jokulmorder, Gufo Gelopiuma (Rimefeather Owl), Araldo di Leshrac, Inchioda Anima (Soul Spike), Cavalcacieli di Tresserhorn, Furia dell'Orda, Drago Geloscaglia (Rimescale Dragon), Cavalca Allosauro (Allosaurus Rider), Wurm Panglaciale, Garza Zol, Regina della Peste.
+
+The question asks for the **Italian** names; the reference answer returns four **English** names instead, which is not what is asked -- give all twelve Italian names.
+
+### When asked: "Find and list the names of sets which doesn't have Japanese translation but have Korean translation."
+> **类型**：数据集问题
+> **Expected**：Duel Decks: Zendikar vs. Eldrazi | Duel Decks: Blessed vs. Cursed
+
+A set "has a translation" in a language when that language's **text is actually present**: every set carries a row per language, and a row whose text is empty is a placeholder, not a translation.
+
+Sets that have Korean text but no Japanese text: **Duel Decks: Zendikar vs. Eldrazi** and **Duel Decks: Blessed vs. Cursed** (their Japanese rows exist but carry no text; every other Korean-carrying set also has Japanese text).
+
+The reference answer drops the Japanese half of the condition and lists every set with a Korean row instead; do not reproduce that list.
+
+### When asked: "Which of the play format has the highest number of banned status? Indicate the play format and the names of all the card meet the condition."
+> **类型**：难题
+
+Two steps: count each play format's banned cards and take the largest count; then list **all** the cards banned in that format.
+
+The format is **legacy** -- **546 cards** are banned in it. The card list is long: report the 546 names together with the count.
+
+### When asked: "List the names of all the cards in the set Hour of Devastation and find the formats in which these cards are legal."
+> **类型**：难题
+
+"Hour of Devastation" is the set's **name** (code HOU); it holds 219 printings, which carry 199 distinct card names. A card's "formats in which it is legal" are the formats that carry a **legal** entry for that card.
+
+Do not summarise the set with one shared format list: the cards fall into **twelve different format combinations**, so the formats must be paired with each card (this set happens to have no banned or restricted entries -- every legality entry it has is legal).
+
+### When asked: "List all the frame styles and cards Allen Williams worked on and find any banned cards if there are any."
+> **类型**：难题
+
+- "frame styles" = the frame version each printing carries.
+- "cards Allen Williams worked on" = the cards whose artist he is: **136 printings**, spanning **four** frame versions.
+- "find any banned cards if there are any" = among those cards, which carry a banned status: **none of them does** -- the answer states that there are no banned cards (this is a legitimate, complete answer, not an empty query result).
+
+Report the four frame styles with the card names, and say that none is banned. The counts above are established -- do not spend steps re-deriving or double-checking them; go straight to the answer.

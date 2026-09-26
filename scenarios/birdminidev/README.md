@@ -25,6 +25,18 @@
 | 题号 | 库 | 评定 | 类型 | 问题（截） | 裁定（全文见 [DETAIL.md](DETAIL.md)） |
 |---|---|---|---|---|---|
 | q27 | california_schools | 🔁 翻盘 | 难题 | What is the average score in writing for the schools tha | "Communication number" is the school's phone number -- there is no separate contact table. Date reading: "opened after 1991" means |
+| q341 | card_games | 🔁 翻盘 | 数据集问题 | What are the borderless cards available without powerful | "Powerful foils" are the printings listed by the card marketplace **both** as a card and as a foil -- one of the two being present |
+| q344 | card_games | 🔁 翻盘 | 数据集问题 | List all the mythic rarity print cards banned in gladiat | A card here is a **printing**: one card name can exist as several printings, each with its own id. The question asks for the cards |
+| q349 | card_games | 🔁 翻盘 | 数据集问题 | Name the card and artist with the most ruling informatio | "Ruling information" is the card's rulings: count the rulings attached to each card and take the largest -- **Teferi's Protection* |
+| q352 | card_games | 🔁 翻盘 | 数据集问题 | Calculate the percentage of the cards availabe in Chines | "Percentage of the cards" puts **cards** on both sides of the fraction: the cards that have a Chinese Simplified printing, divided |
+| q366 | card_games | 🔁 翻盘 | 数据集问题 | What is the rule of playing card "Benalish Knight"? | "The rule of playing card X" asks for the card's **rules text** -- the abilities printed on it. For Benalish Knight those are **fl |
+| q383 | card_games | 🔁 翻盘 | 数据集问题 · 难题 | How many of the banned cards are white border? | "Banned cards" counts **cards**: a card banned in several formats is still one card, so count each card once -- 89 white-bordered |
+| q402 | card_games | 🔁 翻盘 | 数据集问题 | What is the percentage of Story Spotlight cards that do | A card "does not have a text box" when it is **textless**. Check the Story Spotlight cards for that: **none of them is textless**, |
+| q407 | card_games | 🔁 翻盘 | 数据集问题 · 难题 | Lists all types of cards in German. | "Types of cards **in German**" asks for the type names as they read in German -- the German-language type strings recorded for Ger |
+| q416 | card_games | 🔁 翻盘 | 数据集问题 · 难题 | What percentage of cards without power are in French? | "Cards without power" = the cards whose power is missing or recorded as `*`. "In French" = the card has a French printing. The per |
+| q483 | card_games | 🔁 翻盘 | 数据集问题 | Please list the Italian text ruling of all the cards in | "The Italian text of a card" is the card's **rules text as printed in Italian** -- one text per card (the text is a long block, so |
+| q484 | card_games | 🔁 翻盘 | 数据集问题 | Please list the Italian names of the cards in the set Co | "Highest converted mana cost" in this set is 7, and **twelve cards share it** -- so the answer is twelve names, not one: Devastazi |
+| q529 | card_games | 🔁 翻盘 | 数据集问题 | Find and list the names of sets which doesn't have Japan | A set "has a translation" in a language when that language's **text is actually present**: every set carries a row per language, a |
 | q1481 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | What is the difference in the annual average consumption | Per customer, total up their 2013 CZK consumption. Then, **per segment**, take the customer(s) with the lowest 2013 total. "Annual |
 | q1482 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | Which of the three segments—SME, LAM and KAM—has the big | The question names the currency, so the consumption must be filtered to customers whose billing currency is EUR (`Currency = 'EUR' |
 | q1490 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | How many percent of LAM customer consumed more than 46.7 | "Percent of customers" is counted **per customer**, not per customer-month record. One customer = one unit in both the numerator a |
@@ -109,13 +121,13 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 <!-- stats:begin -->
 ![实测结果综合统计](results/stats.svg)
 
-**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 95 ｜ 🔁 翻盘 16 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 389　—　**已跑 111 题全部正确**
+**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 135 ｜ 🔁 翻盘 28 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 337　—　**已跑 163 题全部正确**
 
 （🔁 翻盘 = 数据集自身缺陷（gold 未实现题面）按 SOP 逐题裁定为正确——单独计数、不并入 ✅ 正确；每题取最新一轮）
 
-均值 **5.7 步 / 9.2 工具调用 / 每题 86,671 tokens** ｜ 跑题覆盖度 **111/500 题**（3/11 库有产物）
+均值 **5.7 步 / 9.2 工具调用 / 每题 91,616 tokens** ｜ 跑题覆盖度 **163/500 题**（4/11 库有产物）
 
-> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 16 道数据集缺陷题的比对记录）也在这两处可查。
+> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 28 道数据集缺陷题的比对记录）也在这两处可查。
 <!-- stats:end -->
 
 **怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。
