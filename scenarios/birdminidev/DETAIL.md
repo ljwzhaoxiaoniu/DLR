@@ -15,7 +15,7 @@
 |---|---|---|---|---|
 | california_schools | 30 | 30 | 0 | 100.0% ✅ |
 | card_games | 52 | 52 | 0 | 100.0% ✅ |
-| codebase_community | 49 | 0 | 49 | 0.0% |
+| codebase_community | 49 | 20 | 29 | 40.8% |
 | debit_card_specializing | 30 | 30 | 0 | 100.0% ✅ |
 | european_football_2 | 51 | 51 | 0 | 100.0% ✅ |
 | financial | 32 | 0 | 32 | 0.0% |
@@ -24,7 +24,7 @@
 | superhero | 52 | 0 | 52 | 0.0% |
 | thrombosis_prediction | 50 | 0 | 50 | 0.0% |
 | toxicology | 40 | 0 | 40 | 0.0% |
-| **合计** | **500** | **163** | **337** | **32.6%** |
+| **合计** | **500** | **183** | **317** | **36.6%** |
 
 ## 汇总
 
@@ -32,17 +32,17 @@
 
 | 评定 | 值 |
 |---|---|
-| ✅ 正确（与 gold 一致） | 135 / 163（82.8%） |
+| ✅ 正确（与 gold 一致） | 155 / 183（84.7%） |
 | 🔁 翻盘（按 SOP 裁定为正确） | 28 |
 | ❌ 错误 | 0 |
 | ⚠️ 待仲裁 | 0 |
-| **合计正确（正确 + 翻盘）** | **163 / 163（100.0%）** |
+| **合计正确（正确 + 翻盘）** | **183 / 183（100.0%）** |
 
 **判定**（与 gold 原始比对 · 留档；gold 数据集原生、不修正）
 
 | 判定 | 值 |
 |---|---|
-| PASS（与 gold 一致） | 137 / 163（84.0%） |
+| PASS（与 gold 一致） | 157 / 183（85.8%） |
 | UNCERTAIN（抽不出可比对的值） | 10 |
 | FAIL（与 gold 不符） | 16 |
 | GOLD_ERR（gold 本身执行失败） | 0 |
@@ -51,7 +51,7 @@
 
 | 指标 | 值 |
 |---|---|
-| token 平均 / 中位 | 91,616 / 83,364 |
+| token 平均 / 中位 | 89,965 / 81,910 |
 | token 最低 / 最高 | 33,353 / 282,597 |
 | 步数均值 / 工具调用均值 | 6 / 9 |
 
@@ -69,6 +69,7 @@
 |---|---|---|---|---|---|---|
 | [california_schools](DETAIL/california_schools.md) | 30 | 29 | 1 | 0 | 0 | 122,742 |
 | [card_games](DETAIL/card_games.md) | 52 | 40 | 12 | 0 | 0 | 93,661 |
+| [codebase_community](DETAIL/codebase_community.md) | 20 | 20 | 0 | 0 | 0 | 78,570 |
 | [debit_card_specializing](DETAIL/debit_card_specializing.md) | 30 | 21 | 9 | 0 | 0 | 47,948 |
 | [european_football_2](DETAIL/european_football_2.md) | 51 | 45 | 6 | 0 | 0 | 79,889 |
 
