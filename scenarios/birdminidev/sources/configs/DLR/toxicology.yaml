@@ -23,11 +23,11 @@ logical_entities:
     attributes:
     - column: toxicology.molecule.molecule_id
       biz_name: MoleculeID
-      description: '分子ID: 分子的唯一标识符'
+      description: "unique id of molecule. \"+\" --> this molecule / compound is carcinogenic '-' this molecule is not / compound carcinogenic"
       public: true
     - column: toxicology.molecule.label
       biz_name: label
-      description: '致癌性标签: 该分子是否具有致癌性（+ 致癌 / - 非致癌）'
+      description: whether this molecule is carcinogenic or not
       public: true
 - logical_entity_id: LOGICAL.Atom
   biz_name: Atom
@@ -45,15 +45,15 @@ logical_entities:
     attributes:
     - column: toxicology.atom.atom_id
       biz_name: AtomID
-      description: '原子ID: 原子的唯一标识符'
+      description: the unique id of atoms
       public: true
     - column: toxicology.atom.molecule_id
       biz_name: Molecule
-      description: '所属分子ID: 该原子所属分子的唯一标识，关联 molecule 表'
+      description: "identifying the molecule to which the atom belongs. commonsense evidence: TRXXX_i represents ith atom of molecule TRXXX"
       public: true
     - column: toxicology.atom.element
       biz_name: element
-      description: '元素符号: 化学元素符号，如 o=氧、c=碳、h=氢、n=氮、s=硫、br=溴、ca=钙、cl=氯、cu=铜、f=氟、p=磷、pb=铅、sn=锡'
+      description: "the element of the toxicology.  cl: chlorine  c: carbon  h: hydrogen  o: oxygen  s: sulfur  n: nitrogen  p: phosphorus  na: sodium  br: bromine  f: fluorine  i: iodine  sn: Tin  pb: lead  te: tellurium  ca: Calcium"
       public: true
 - logical_entity_id: LOGICAL.Bond
   biz_name: Bond
@@ -70,15 +70,15 @@ logical_entities:
     attributes:
     - column: toxicology.bond.bond_id
       biz_name: BondID
-      description: '化学键ID: 化学键的唯一标识符'
+      description: "unique id representing bonds. TRxxx_A1_A2: TRXXX refers to which molecule A1 and A2 refers to which atom"
       public: true
     - column: toxicology.bond.molecule_id
       biz_name: Molecule
-      description: '所属分子ID: 该化学键所属分子的唯一标识，关联 molecule 表'
+      description: identifying the molecule in which the bond appears
       public: true
     - column: toxicology.bond.bond_type
       biz_name: bond_type
-      description: '键类型: = 双键、- 单键、# 三键'
+      description: "type of the bond. commonsense evidence: -: single bond '=': double bond '#': triple bond"
       public: true
   - physical_entity_id: PHYSICAL.Connected
     physical_table_name: connected
@@ -91,15 +91,15 @@ logical_entities:
     attributes:
     - column: toxicology.connected.bond_id
       biz_name: BondID
-      description: '化学键ID: 化学键的唯一标识符'
+      description: bond id representing bond between two atoms
       public: true
     - column: toxicology.connected.atom_id
       biz_name: atom1
-      description: '原子1 ID: 键连接的第一个原子ID，FK→atom'
+      description: id of the first atom
       public: true
     - column: toxicology.connected.atom_id2
       biz_name: atom2
-      description: '原子2 ID: 键连接的第二个原子ID，FK→atom'
+      description: id of the second atom
       public: true
 pas_relations:
 - relation_id: LOGICAL.Molecule_TO_LOGICAL.Atom

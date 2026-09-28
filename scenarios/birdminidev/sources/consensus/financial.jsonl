@@ -1,32 +1,27 @@
-{"qid": 89, "question": "How many accounts who choose issuance after transaction are staying in East Bohemia region?", "evidence": "A3 contains the data of region; 'POPLATEK PO OBRATU' represents for 'issuance after transaction'."}
-{"qid": 92, "question": "List out the no. of districts that have female average salary is more than 6000 but less than 10000?", "evidence": "A11 refers to average salary; Female mapps to gender = 'F'"}
-{"qid": 93, "question": "How many male customers who are living in North Bohemia have average salary greater than 8000?", "evidence": "Male means that gender = 'M'; A3 refers to region; A11 pertains to average salary."}
-{"qid": 94, "question": "List out the account numbers of the female clients who have the lowest average salary, and among these lowest-paid clients, find the ones who are the oldest. Calculate the gap between this lowest average salary and the highest average salary.", "evidence": "Female means gender = \"F\"; A11 refers to average salary; Gap = highest average salary - lowest average salary; If person A birthdate > B birthdate, B is older than A. The query should first filter the female client(s) with the minimum A11 (lowest average salary), and then select the one(s) with the minimum birth_date (oldest) among them."}
-{"qid": 95, "question": "List out the account numbers of clients who are in the highest average salary district and are youngest?", "evidence": "highest average salary refers to MAX(A11); youngest refers to MAX(birth_date); first find the district with highest A11, then among clients in that district find the youngest one(s)"}
-{"qid": 98, "question": "Among the accounts who have approved loan date in 1997, list out the accounts that have the lowest approved amount and choose weekly issuance statement.", "evidence": "'POPLATEK TYDNE' stands for weekly issuance"}
-{"qid": 99, "question": "Among the accounts who have loan validity more than 12 months, list out the accounts that have the highest approved amount and have account opening date in 1993.", "evidence": "Loan validity more than 12 months refers to duration > 12"}
-{"qid": 100, "question": "Among the account opened, how many female customers who were born before 1950 and stayed in Sokolov?", "evidence": "Customers refer to clients; Female refers to gender = 'F'; Names of districts appear in column A2"}
-{"qid": 112, "question": "For the female client who was born in 1976/1/29, which district did she opened her account?", "evidence": "Female refers to gender = 'F'; A2 refers to district names"}
-{"qid": 115, "question": "For the branch which located in the south Bohemia with biggest number of inhabitants, what is the percentage of the male clients?", "evidence": "Percentage of the male clients = DIVIDE(COUNT(male clients), COUNT(clients)) * 100; Male refers to gender = 'M', A3 is the region name. A4 contains the information about inhabitants."}
-{"qid": 116, "question": "For the client whose loan was approved first in 1993/7/5, what is the increase rate of his/her account balance from 1993/3/22 to 1998/12/27?", "evidence": "Increase rate of his/her account balance = [(balance of date A - balance of date B) / balance of Date B] * 100%"}
-{"qid": 117, "question": "What is the percentage of loan amount that has been fully paid with no issue.", "evidence": "Loan paid with no issue means contract finished, no problems; status = 'A' means contract finished, no problems; Percentage of accounts by condition = [(total(amount) & condition) / (total amount)] * 100%"}
-{"qid": 118, "question": "For loan amount less than USD100,000, what is the percentage of accounts that is still running with no issue.", "evidence": "Status = 'C' stands for running contract, ok so far; Percentage of accounts by condition = [(total(amount) & condition) / (total amount)] * 100."}
-{"qid": 125, "question": "For loans contracts which are still running where client are in debt, list the district of the and the state the percentage unemployment rate increment from year 1995 to 1996.", "evidence": "Unemployment increment rate in percentage = [(unemployment rate 2016 - unemployment rate 2015) / unemployment rate 2015] * 100; unemployment rate 2015 appears in the A12; unemployment rate 2016 appears in the A13; Loan contracts which are still running where client are in debt can be presented as status = 'D'"}
-{"qid": 128, "question": "List the top nine districts, by descending order, from the highest to the lowest, the number of female account holders.", "evidence": "A2 refers to districts; Female refers to gender = 'F'"}
-{"qid": 136, "question": "Between 1/1/1995 and 12/31/1997, how many loans in the amount of at least 250,000 per account that chose monthly statement issuance were approved?", "evidence": "Frequency = 'POPLATEK MESICNE' stands for monthly issurance"}
-{"qid": 129, "question": "Which are the top ten withdrawals (non-credit card) by district names for the month of January 1996?", "evidence": "Non-credit card withdraws refers to type = 'VYDAJ'; January 1996 can be found by date LIKE '1996-01%' in the database; A2 means district names"}
-{"qid": 137, "question": "How many accounts have running contracts in Branch location 1?", "evidence": "Status = 'C' stands for running contract, OK so far; Status = 'D' stands for running contract, client in debt"}
-{"qid": 138, "question": "In the branch where the second-highest number of crimes were committed in 1995 occurred, how many male clients are there?", "evidence": "Male refers to gender = 'M'; A15 stands for no. of commited crimes 1995"}
-{"qid": 145, "question": "Who are the account holder identification numbers whose who have transactions on the credit card with the amount is less than the average, in 1998?", "evidence": "Operation = 'VYBER KARTOU' refers to credit card withdrawal"}
-{"qid": 149, "question": "Please list the account types that are not eligible for loans, and the average income of residents in the district where the account is located exceeds $8000 but is no more than $9000.", "evidence": "A11 represents the average salary; Salary and income share the similar meanings; when the account type = 'OWNER', it's eligible for loans"}
-{"qid": 152, "question": "What is the average number of crimes committed in 1995 in regions where the number exceeds 4000 and the region has accounts that are opened starting from the year 1997?", "evidence": "A3 refers to region names; A15 stands for the average number of crimes commited in 1995."}
-{"qid": 159, "question": "List all the withdrawals in cash transactions that the client with the id 3356 makes.", "evidence": "operation = 'VYBER' refers to withdrawal in cash"}
-{"qid": 168, "question": "What percentage of clients who opened their accounts in the district with an average salary of over 10000 are women?", "evidence": "Female refers to gender = 'F'; Woman and female are closed; Average salary can be found in A11"}
-{"qid": 169, "question": "What was the growth rate of the total amount of loans across all accounts for a male client between 1996 and 1997?", "evidence": "Growth rate = (sum of amount_1997 - sum of amount_1996) / (sum of amount_1996) * 100%; Male refers to gender = 'M'"}
-{"qid": 173, "question": "How often does account number 3 request an account statement to be released? What was the aim of debiting 3539 in total?", "evidence": "k_symbol refers to the purpose of payments"}
-{"qid": 186, "question": "What percentage of male clients request for weekly statements to be issued?", "evidence": "Percentage of male clients = [count(male clients who requested weekly statements / count(clients who requested weekly statements)] * 100%; Male means gender = 'M'; 'POPLATEK TYDNE' stands for weekly issuance"}
-{"qid": 189, "question": "Name the account numbers of female clients who are oldest and have lowest average salary?", "evidence": "Female refers to 'F' in the gender; A11 contains information about average salary"}
-{"qid": 192, "question": "What is the average amount of loan which are still on running contract with statement issuance after each transaction?", "evidence": "status = 'C' stands for running contract, OK so far; status = 'D' stands for running contract, client in debt. 'POPLATEK PO OBRATU' stands for issuance after transaction"}
-{"qid": 194, "question": "Provide the IDs and age of the client with high level credit card, which is eligible for loans.", "evidence": "the credit card is high-level refers to card.type = 'gold'; eligible for loans refers to disp.type = 'OWNER'"}
-{"qid": 119, "question": "For accounts in 1993 with statement issued after transaction, list the account ID, district name and district region.", "evidence": "Records about district names could be found in A2; A3 contains the information about regions. 'POPLATEK PO OBRATU' stands for issuance after transaction"}
-{"qid": 120, "question": "From Year 1995 to 2000, who are the accounts holders from 'east Bohemia'. State the account ID the frequency of statement issuance.", "evidence": "Accounts holder refers to the person who own this account."}
+[
+  {
+    "kid": 1,
+    "knowledge": "Naming: \"customers\" are the bank's clients; a client's gender is 'F' (female) or 'M' (male), and \"woman\" means female; \"salary\" and \"income\" carry the same meaning; an account's holder is the client who owns the account.",
+    "source_qids": [92, 93, 94, 100, 112, 115, 128, 168, 186, 189, 120]
+  },
+  {
+    "kid": 2,
+    "knowledge": "Rate formulas: an increase rate is (value at the later date minus value at the earlier date) divided by the value at the earlier date, times 100 (account balance, yearly sums, and unemployment rates all follow this shape); a percentage of clients is the count of the qualifying clients divided by the count of clients, times 100; a percentage of accounts by condition is the total amount under that condition divided by the total amount, times 100.",
+    "source_qids": [115, 116, 117, 118, 125, 169, 186]
+  },
+  {
+    "kid": 3,
+    "knowledge": "Extremes and spreads: \"gap\" between the highest and lowest average salary is the difference of the two district figures; questions that name the district with the highest average salary first select that district and then work on the clients in it; \"youngest\" is the latest birth date, \"oldest\" the earliest.",
+    "source_qids": [94, 95, 152, 168]
+  },
+  {
+    "kid": 4,
+    "knowledge": "Loan and card readings: a loan paid with no issue is a contract that finished with no problems; a client is \"eligible for loans\" when their disposition on the account is the owner type; \"a high-level credit card\" is the gold card type; loan validity beyond 12 months is a duration over 12.",
+    "source_qids": [99, 117, 149, 194]
+  },
+  {
+    "kid": 5,
+    "knowledge": "Time readings: a month such as January 1996 is the date prefix '1996-01'; \"in 2015/2016\" filters the year of the record.",
+    "source_qids": [125, 129]
+  }
+]

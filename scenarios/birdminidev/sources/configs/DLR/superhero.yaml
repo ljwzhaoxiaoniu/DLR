@@ -9,9 +9,7 @@ databases:
 logical_entities:
 - logical_entity_id: LOGICAL.Superhero
   biz_name: Superhero
-  description: 超级英雄本体(Superhero/hero/character)，集成了所有 1:1 维度查表（颜色/eye colour/种族/race/性别/gender/出版商/publisher/阵营/alignment），碎片化物理表对
-    Agent 透明。Each superhero has a unique name (superhero_name), height, weight, and links to colour/race/gender/publisher/alignment
-    tables.
+  description: "Superhero — a comic-book hero/character: hero name (e.g. Batman, Spider-Man), height, weight, eye colour, hair colour, skin colour, race (e.g. Human, Kryptonian, Mutant), gender (Male/Female), publisher (e.g. Marvel Comics, DC Comics), alignment (Good/Bad/Neutral), plus the hero's attribute scores and powers"
   physical_entities:
   - physical_entity_id: PHYSICAL.Superhero
     physical_table_name: superhero
@@ -24,19 +22,19 @@ logical_entities:
     attributes:
     - column: superhero.superhero.id
       biz_name: HeroID
-      description: '英雄ID: 超级英雄唯一标识符'
+      description: the unique identifier of the superhero
       public: true
     - column: superhero.superhero.superhero_name
       biz_name: HeroName
-      description: '英雄代号: 如 "Batman", "Spider-Man"'
+      description: the name of the superhero
       public: true
     - column: superhero.superhero.height_cm
       biz_name: Height_cm
-      description: 身高(cm)
+      description: "the height of the superhero. commonsense evidence: The unit of height is centimeter. If the height_cm is NULL or 0, it means the height of the superhero is missing."
       public: true
     - column: superhero.superhero.weight_kg
       biz_name: Weight_kg
-      description: 体重(kg)
+      description: "the weight of the superhero. commonsense evidence: The unit of weight is kilogram. If the weight_kg is NULL or 0, it means the weight of the superhero is missing."
       public: true
     - column: superhero.superhero.full_name
       biz_name: full name
@@ -47,24 +45,31 @@ logical_entities:
     - column: superhero.superhero.eye_colour_id
       biz_name: eye colour id
       description: the id of the superhero's eye color
+      public: true
     - column: superhero.superhero.hair_colour_id
       biz_name: hair colour id
       description: the id of the superhero's hair color
+      public: true
     - column: superhero.superhero.skin_colour_id
       biz_name: skin colour id
       description: the id of the superhero's skin color
+      public: true
     - column: superhero.superhero.race_id
       biz_name: race id
       description: the id of the superhero's race
+      public: true
     - column: superhero.superhero.gender_id
       biz_name: gender id
       description: the id of the superhero's gender
+      public: true
     - column: superhero.superhero.publisher_id
       biz_name: publisher id
       description: the id of the publisher
+      public: true
     - column: superhero.superhero.alignment_id
       biz_name: alignment id
       description: the id of the superhero's alignment
+      public: true
   - physical_entity_id: PHYSICAL.Colour
     physical_table_name: colour
     physical_table_id: superhero.colour
@@ -76,11 +81,11 @@ logical_entities:
     attributes:
     - column: superhero.colour.id
       biz_name: HeroID
-      description: '英雄ID: 超级英雄唯一标识符'
+      description: the unique identifier of the color
       public: true
     - column: superhero.colour.colour
       biz_name: EyeColour
-      description: '眼睛颜色: 如 Blue, Brown, Gold, Red, Green'
+      description: "the color of the superhero's skin/eye/hair/etc"
       public: true
   - physical_entity_id: PHYSICAL.HeroRace
     physical_table_name: race
@@ -93,11 +98,11 @@ logical_entities:
     attributes:
     - column: superhero.race.id
       biz_name: HeroID
-      description: '英雄ID: 超级英雄唯一标识符'
+      description: the unique identifier of the race
       public: true
     - column: superhero.race.race
       biz_name: Race
-      description: '种族: 如 Human, Kryptonian, Mutant'
+      description: "the race of the superhero. commonsense evidence: In the context of superheroes, a superhero's race would refer to the particular group of people that the superhero belongs to base on these physical characteristics"
       public: true
   - physical_entity_id: PHYSICAL.Gender
     physical_table_name: gender
@@ -110,11 +115,11 @@ logical_entities:
     attributes:
     - column: superhero.gender.id
       biz_name: HeroID
-      description: '英雄ID: 超级英雄唯一标识符'
+      description: the unique identifier of the gender
       public: true
     - column: superhero.gender.gender
       biz_name: Gender
-      description: '性别: Male / Female'
+      description: the gender of the superhero
       public: true
   - physical_entity_id: PHYSICAL.Publisher
     physical_table_name: publisher
@@ -127,11 +132,11 @@ logical_entities:
     attributes:
     - column: superhero.publisher.id
       biz_name: HeroID
-      description: '英雄ID: 超级英雄唯一标识符'
+      description: the unique identifier of the publisher
       public: true
     - column: superhero.publisher.publisher_name
       biz_name: PublisherName
-      description: '出版商名称: 如 Marvel Comics, DC Comics'
+      description: the name of the publisher
       public: true
   - physical_entity_id: PHYSICAL.Alignment
     physical_table_name: alignment
@@ -144,11 +149,11 @@ logical_entities:
     attributes:
     - column: superhero.alignment.id
       biz_name: HeroID
-      description: '英雄ID: 超级英雄唯一标识符'
+      description: the unique identifier of the alignment
       public: true
     - column: superhero.alignment.alignment
       biz_name: Alignment
-      description: '阵营: Good / Bad / Neutral'
+      description: "the alignment of the superhero. commonsense evidence: Alignment refers to a character's moral and ethical stance and can be used to describe the overall attitude or behavior of a superhero. Some common alignments for superheroes include: Good: These superheroes are typically kind, selfless, and dedicated to protecting others and upholding justice. Examples of good alignments include Superman, Wonder Woman, and Spider-Man. Neutral: These superheroes may not always prioritize the greater good, but they are not necessarily evil either. They may act in their own self-interest or make decisions based on their own moral code. Examples of neutral alignments include the Hulk and Deadpool.  Bad: These superheroes are typically selfish, manipulative, and willing to harm others in pursuit of their own goals. Examples of evil alignments include Lex Luthor and the Joker."
       public: true
 - logical_entity_id: LOGICAL.Power
   biz_name: Power
@@ -173,6 +178,7 @@ logical_entities:
       description: 'the id of the power Maps to superpower(id). commonsense evidence: In general, a superhero''s attributes
         provide the foundation for their abilities and help to define who they are, while their powers are the specific abilities
         that they use to fight crime and protect others.'
+      public: true
   - physical_entity_id: PHYSICAL.Superpower
     physical_table_name: superpower
     physical_table_id: superhero.superpower
@@ -215,6 +221,7 @@ logical_entities:
     - column: superhero.hero_attribute.attribute_id
       biz_name: attribute id
       description: the id of the attribute Maps to attribute(id)
+      public: true
   - physical_entity_id: PHYSICAL.Attribute
     physical_table_name: attribute
     physical_table_id: superhero.attribute

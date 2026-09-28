@@ -23,15 +23,15 @@ logical_entities:
     attributes:
     - column: codebase_community.users.Id
       biz_name: UserID
-      description: '用户ID: Stack Overflow 用户唯一标识符 (users.Id)'
+      description: the user id
       public: true
     - column: codebase_community.users.DisplayName
       biz_name: DisplayName
-      description: 显示名称 (users.DisplayName)
+      description: "the user's display name"
       public: true
     - column: codebase_community.users.LastAccessDate
       biz_name: LastAccessDate
-      description: 最后访问日期 (users.LastAccessDate)
+      description: the last access date of the user account
       public: true
     - column: codebase_community.users.Reputation
       biz_name: Reputation
@@ -81,11 +81,11 @@ logical_entities:
     attributes:
     - column: codebase_community.posts.Id
       biz_name: PostID
-      description: '帖子ID: 帖子唯一标识符 (posts.Id)'
+      description: the post id
       public: true
     - column: codebase_community.posts.OwnerUserId
       biz_name: OwnerUserId
-      description: 作者ID (posts.OwnerUserId)
+      description: the id of the owner user
       public: true
     - column: codebase_community.posts.Title
       biz_name: Title
@@ -122,6 +122,7 @@ logical_entities:
     - column: codebase_community.posts.LastEditorUserId
       biz_name: Last Editor User Id
       description: the id of the last editor
+      public: true
     - column: codebase_community.posts.PostTypeId
       biz_name: Post Type Id
       description: the id of the post type
@@ -141,6 +142,7 @@ logical_entities:
       biz_name: ParentId
       description: 'the id of the parent post. commonsense evidence: If the parent id is null, the post is the root post.
         Otherwise, the post is the child post of other post.'
+      public: true
     - column: codebase_community.posts.OwnerDisplayName
       biz_name: Owner Display Name
       description: the display name of the post owner
@@ -170,6 +172,7 @@ logical_entities:
     - column: codebase_community.comments.UserId
       biz_name: User Id
       description: the id of the user who post the comment
+      public: true
     - column: codebase_community.comments.Text
       biz_name: Text
       description: the detailed content of the comment
@@ -202,6 +205,7 @@ logical_entities:
     - column: codebase_community.postHistory.UserId
       biz_name: User Id
       description: the user who post the post
+      public: true
     - column: codebase_community.postHistory.Comment
       biz_name: Comment
       description: comments of the post
@@ -239,6 +243,7 @@ logical_entities:
     - column: codebase_community.postLinks.RelatedPostId
       biz_name: Related Post Id
       description: the id of the related post
+      public: true
     - column: codebase_community.postLinks.CreationDate
       biz_name: Creation Date
       description: the creation date of the post link
@@ -268,6 +273,7 @@ logical_entities:
     - column: codebase_community.tags.ExcerptPostId
       biz_name: Excerpt Post Id
       description: the excerpt post id of the tag
+      public: true
     - column: codebase_community.tags.WikiPostId
       biz_name: Wiki Post Id
       description: the wiki post id of the tag

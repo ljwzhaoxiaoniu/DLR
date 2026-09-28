@@ -35,7 +35,7 @@ logical_entities:
       public: true
     - column: financial.account.frequency
       biz_name: frequency
-      description: frequency of the acount
+      description: "frequency of the acount: 'POPLATEK PO OBRATU' stands for issuance after transaction; 'POPLATEK TYDNE' stands for weekly issuance; 'POPLATEK MESICNE' stands for monthly issuance"
   - physical_entity_id: PHYSICAL.Disp
     physical_table_name: disp
     physical_table_id: financial.disp
@@ -216,7 +216,7 @@ logical_entities:
       public: true
     - column: financial.loan.status
       biz_name: status
-      description: 'Loan status: A=active, B=finished, C=running, D=in debt'
+      description: "repayment status. 'A' stands for contract finished, no problems; 'B' stands for contract finished, loan not paid; 'C' stands for running contract, OK so far; 'D' stands for running contract, client in debt"
       public: true
     - column: financial.loan.duration
       biz_name: duration

@@ -149,6 +149,12 @@ logical_entities:
         1) Some entities (primarily closed or retired schools) may not have data in this field; 2) Many active entities have
         not provided a mailing street address. For your convenience we have filled the unpopulated MailStreet cells with Street
         data.'
+    - column: california_schools.schools.Ext
+      biz_name: extension
+      description: The phone number extension of the school, district, or administrative authority.. The phone number extension of the school, district, or administrative authority.
+    - column: california_schools.schools.Website
+      biz_name: Website
+      description: The website address of the school, district, or administrative authority.. The website address of the school, district, or administrative authority.
     - column: california_schools.schools.AdmFName1
       biz_name: administrator's first name
       description: 'administrator''s first name. The superintendent’s or principal’s first name. commonsense evidence: Only
@@ -279,6 +285,9 @@ logical_entities:
     - column: california_schools.satscores.cname
       biz_name: county name
       description: county name
+    - column: california_schools.satscores.enroll12
+      biz_name: enrollment (1st-12nd grade)
+      description: enrollment (1st-12nd grade)
   - physical_entity_id: PHYSICAL.FRPM
     physical_table_name: frpm
     physical_table_id: california_schools.frpm
@@ -346,6 +355,12 @@ logical_entities:
     - column: california_schools.frpm.District Code
       biz_name: District Code
       description: District Code
+    - column: california_schools.frpm.District Type
+      biz_name: District Type
+      description: District Type
+    - column: california_schools.frpm.Charter School (Y/N)
+      biz_name: Charter School (Y/N)
+      description: 'Charter School (Y/N). 0: N; 1: Y'
     - column: california_schools.frpm.Educational Option Type
       biz_name: Educational Option Type
       description: Educational Option Type

@@ -23,7 +23,7 @@ logical_entities:
     attributes:
     - column: student_club.member.member_id
       biz_name: MemberID
-      description: '成员ID: 社团成员唯一标识符'
+      description: 'the member id: unique identifier of the student club member'
       public: true
     - column: student_club.member.first_name
       biz_name: first name
@@ -45,9 +45,11 @@ logical_entities:
     - column: student_club.member.zip
       biz_name: zip
       description: the zip code of the member's hometown
+      public: true
     - column: student_club.member.link_to_major
       biz_name: link to major
       description: The unique identifier of the major of the member. References the Major table
+      public: true
     - column: student_club.member.email
       biz_name: email
       description: member's email
@@ -104,11 +106,11 @@ logical_entities:
     attributes:
     - column: student_club.attendance.link_to_event
       biz_name: Event
-      description: '关联活动ID: 参加的活动ID，关联 event 表'
+      description: 'the event attended: FK to the event table'
       public: true
     - column: student_club.attendance.link_to_member
       biz_name: Member
-      description: '关联成员ID: 参加的成员ID，关联 member 表'
+      description: 'the member attending: FK to the member table'
       public: true
 - logical_entity_id: LOGICAL.Budget
   biz_name: Budget
@@ -125,7 +127,7 @@ logical_entities:
     attributes:
     - column: student_club.budget.budget_id
       biz_name: BudgetID
-      description: '预算ID: 预算项唯一标识符'
+      description: 'the budget id: unique identifier of the budget line'
       public: true
     - column: student_club.budget.link_to_event
       biz_name: Event
@@ -137,7 +139,7 @@ logical_entities:
       public: true
     - column: student_club.budget.spent
       biz_name: Spent
-      description: 'Spent amount: actual expenses charged to this budget'
+      description: 'the amount spent out of this budget, the unit is dollar. This is summarized from the Expense table'
       public: true
     - column: student_club.budget.category
       biz_name: category
@@ -168,23 +170,23 @@ logical_entities:
     attributes:
     - column: student_club.expense.expense_id
       biz_name: ExpenseID
-      description: '开支ID: 开支记录唯一标识符'
+      description: 'the expense id: unique identifier of the expense record'
       public: true
     - column: student_club.expense.link_to_member
       biz_name: Member
-      description: '成员ID: FK→member，花钱的人'
+      description: 'the member who spent: FK to the member table'
       public: true
     - column: student_club.expense.link_to_budget
       biz_name: Budget
-      description: '预算ID: FK→budget，所属预算项'
+      description: 'the budget this expense belongs to: FK to the budget table'
       public: true
     - column: student_club.expense.cost
       biz_name: cost
-      description: '金额: 开支金额'
+      description: 'The dollar amount of the expense. the unit is dollar'
       public: true
     - column: student_club.expense.expense_date
       biz_name: expense_date
-      description: '日期: 支出日期 YYYY-MM-DD 格式'
+      description: 'the date the expense was made (YYYY-MM-DD)'
       public: true
     - column: student_club.expense.expense_description
       biz_name: expense description
@@ -240,7 +242,7 @@ logical_entities:
     attributes:
     - column: student_club.major.major_id
       biz_name: MajorID
-      description: '专业ID: 专业唯一标识符'
+      description: 'the major id: unique identifier of the major'
       public: true
     - column: student_club.major.major_name
       biz_name: major name

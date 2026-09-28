@@ -119,6 +119,7 @@ logical_entities:
     - column: formula_1.races.circuitId
       biz_name: Circuit Id
       description: circuit Id
+      public: true
     - column: formula_1.races.date
       biz_name: date
       description: duration time
@@ -180,6 +181,7 @@ logical_entities:
     - column: formula_1.qualifying.constructorId
       biz_name: constructor id
       description: constructor Id
+      public: true
   - physical_entity_id: PHYSICAL.Result
     physical_table_name: results
     physical_table_id: formula_1.results
@@ -203,6 +205,7 @@ logical_entities:
     - column: formula_1.results.constructorId
       biz_name: constructor Id
       description: the identification number identifying which constructors
+      public: true
     - column: formula_1.results.number
       biz_name: number
       description: number
@@ -242,6 +245,7 @@ logical_entities:
     - column: formula_1.results.statusId
       biz_name: status Id
       description: status ID. its category description appear in the table status
+      public: true
     - column: formula_1.results.positionText
       biz_name: position text
       description: position text. not quite useful

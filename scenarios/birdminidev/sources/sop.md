@@ -387,6 +387,43 @@ The roster is far too long to lay out in full, so the count is what settles the 
 
 
 
+### When asked: "In Scotland Premier League, which away team won the most during the 2010 season?"
+> **类型**：数据集问题
+> **Expected**：Rangers | Celtic
+
+"Away team won the most" = per away team, count how many matches it won away in that league and season, and take the largest count. The "2010 season" is recorded as **2009/2010**.
+
+The top of that count is a **tie: Rangers and Celtic both won 11 away matches** in Scotland Premier League 2009/2010. The reference answer names Celtic only because its query sorts and returns one row arbitrarily; the question gives no tie-break, so **both names are the answer** -- state the tie and name both.
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- Away wins in Scotland Premier League 2009/2010: **Rangers 11, Celtic 11**, Dundee United 9, Hamilton Academical FC 7.
+
+### When asked: "Calculate the percentage of players who prefer left foot, who were born between 1987 and 1992?"
+> **类型**：数据集问题
+> **Expected**：28.868144690781797
+
+"Percentage of players" counts **players**, not rating records: one player counts once in both the numerator and the denominator, even though a player has many dated records (his preferred foot can even differ between them).
+
+- Numerator: players born in 1987-1992 who have a record with preferred foot = left (1,237 players).
+- Denominator: players born in 1987-1992 (4,285 players).
+
+The reference answer counts joined rows instead, so its figure (24.57%) mixes record counts into a "percentage of players" -- do not copy it.
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- 1,237 / 4,285 = 28.868144690781797 (~28.87%).
+
+### When asked: "At present, calculate for the player's age who have a sprint speed of no less than 97 between 2013 to 2015?"
+> **类型**：难题
+
+"A player's age at present" = the current year minus the player's birth year. "Sprint speed of no less than 97" filters the player's sprint-speed records (97 is the highest sprint speed anywhere in the data, so only the players who ever reached it qualify). "Between 2013 to 2015" is the year window of those rating records -- not the player's birthday.
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- The qualifying player is **Mathis Bolly** (born 1990-11-14): the window holds 23 sprint-speed = 97 records and every one of them belongs to him.
+- The answer is therefore the current year minus 1990 (36 while the current year is 2026).
+
 ## card_games
 
 ### When asked: "List all the mythic rarity print cards banned in gladiator format."

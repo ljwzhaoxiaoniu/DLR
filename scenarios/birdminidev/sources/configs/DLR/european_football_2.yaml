@@ -23,27 +23,28 @@ logical_entities:
     attributes:
     - column: european_football_2.Player.player_api_id
       biz_name: PlayerID
-      description: '球员API ID: 球员唯一标识符'
+      description: the id of the player api
       public: true
     - column: european_football_2.Player.player_name
       biz_name: player_name
-      description: '球员姓名: 球员的全名'
+      description: player name
       public: true
     - column: european_football_2.Player.birthday
       biz_name: birthday
-      description: '生日: 球员出生日期'
+      description: 'The player''s birthday. Player A is older than player B when A''s birthday is earlier than B''s'
       public: true
     - column: european_football_2.Player.height
       biz_name: height
-      description: '身高: 球员身高(cm)'
+      description: 'The player''s height'
       public: true
     - column: european_football_2.Player.weight
       biz_name: weight
-      description: '体重: 球员体重(kg)'
+      description: 'The player''s weight'
       public: true
     - column: european_football_2.Player.player_fifa_api_id
-      biz_name: player federation international football association api id
+      biz_name: PlayerFIFAID
       description: the id of the player fifa api
+      public: true
     - column: european_football_2.Player.id
       biz_name: id
       description: the unique id for players
@@ -58,19 +59,19 @@ logical_entities:
     attributes:
     - column: european_football_2.Player_Attributes.player_api_id
       biz_name: PlayerID
-      description: '球员API ID: 球员唯一标识符'
+      description: the id of the player api
       public: true
     - column: european_football_2.Player_Attributes.overall_rating
       biz_name: overall_rating
-      description: '综合评分: FIFA综合能力评分'
+      description: The overall rating of the player (0-100 which is calculated by FIFA)
       public: true
     - column: european_football_2.Player_Attributes.potential
       biz_name: potential
-      description: '潜力值: FIFA潜力评分'
+      description: "potential of the player. commonsense reasoning: The potential score is between 0-100 which is calculated by FIFA. Higher potential score means that the player has more potential"
       public: true
     - column: european_football_2.Player_Attributes.date
-      biz_name: date
-      description: '日期: FIFA数据记录日期'
+      biz_name: RatingDate
+      description: "date. e.g. 2016-02-18 00:00:00"
       public: true
     - column: european_football_2.Player_Attributes.heading_accuracy
       biz_name: heading_accuracy
@@ -113,30 +114,32 @@ logical_entities:
       description: 'Jumping: jumping height/ability score'
       public: true
     - column: european_football_2.Player_Attributes.preferred_foot
-      biz_name: preferred foot
-      description: the player's preferred foot when attacking. right/ left
+      biz_name: PreferredFoot
+      description: 'The player''s preferred foot when attacking: right/ left'
+      public: true
     - column: european_football_2.Player_Attributes.attacking_work_rate
-      biz_name: attacking work rate
-      description: "the player's attacking work rate. commonsense reasoning: \x95 high: implies that the player is going to\
-        \ be in all of your attack moves \x95 medium: implies that the player will select the attack actions he will join\
-        \ in \x95 low: remain in his position while the team attacks"
+      biz_name: AttackingWorkRate
+      description: 'The player''s attacking work rate. high: implies that the player is going to be in all of your attack moves; medium: implies that the player will select the attack actions he will join in; low: remain in his position while the team attacks'
+      public: true
     - column: european_football_2.Player_Attributes.defensive_work_rate
-      biz_name: defensive_work_rate
-      description: "the player's defensive work rate. commonsense reasoning: \x95 high: remain in his position and defense\
-        \ while the team attacks \x95 medium: implies that the player will select the defensive actions he will join in \x95\
-        \ low: implies that the player is going to be in all of your attack moves instead of defensing"
+      biz_name: DefensiveWorkRate
+      description: 'The player''s defensive work rate. high: remain in his position and defense while the team attacks; medium: implies that the player will select the defensive actions he will join in; low: implies that the player is going to be in all of your attack moves instead of defensing'
+      public: true
     - column: european_football_2.Player_Attributes.volleys
-      biz_name: volleys
-      description: the player's volley score. 0-100 which is calculated by FIFA
+      biz_name: Volleys
+      description: 'The player''s volley score. 0-100 which is calculated by FIFA'
+      public: true
     - column: european_football_2.Player_Attributes.curve
-      biz_name: curve
-      description: the player's curve score. 0-100 which is calculated by FIFA
+      biz_name: Curve
+      description: 'The player''s curve score. 0-100 which is calculated by FIFA'
+      public: true
     - column: european_football_2.Player_Attributes.id
       biz_name: id
       description: the unique id for players
     - column: european_football_2.Player_Attributes.player_fifa_api_id
-      biz_name: player federation international football association api id
+      biz_name: PlayerFIFAID
       description: the id of the player fifa api
+      public: true
     - column: european_football_2.Player_Attributes.long_passing
       biz_name: long passing
       description: the player's long passing score. 0-100 which is calculated by FIFA
@@ -159,11 +162,13 @@ logical_entities:
       biz_name: stamina
       description: the player's stamina score. 0-100 which is calculated by FIFA
     - column: european_football_2.Player_Attributes.strength
-      biz_name: strength
-      description: the player's strength score. 0-100 which is calculated by FIFA
+      biz_name: Strength
+      description: 'the player''s strength score. 0-100 which is calculated by FIFA'
+      public: true
     - column: european_football_2.Player_Attributes.aggression
-      biz_name: aggression
-      description: the player's aggression score. 0-100 which is calculated by FIFA
+      biz_name: Aggression
+      description: 'the player''s aggression score. 0-100 which is calculated by FIFA'
+      public: true
     - column: european_football_2.Player_Attributes.interceptions
       biz_name: interceptions
       description: the player's interceptions score. 0-100 which is calculated by FIFA
@@ -216,19 +221,19 @@ logical_entities:
     attributes:
     - column: european_football_2.Team.team_api_id
       biz_name: TeamID
-      description: '球队API ID: 球队唯一标识符'
+      description: the id of the team api
       public: true
     - column: european_football_2.Team.team_fifa_api_id
-      biz_name: team_fifa_api_id
-      description: '球队FIFA ID: 球队在FIFA系统中的ID'
+      biz_name: TeamFIFAID
+      description: the id of the team fifa api
       public: true
     - column: european_football_2.Team.team_long_name
       biz_name: team_long_name
-      description: '球队全名: 球队完整名称'
+      description: "the team's long name"
       public: true
     - column: european_football_2.Team.team_short_name
       biz_name: team_short_name
-      description: '球队简称: 球队缩写名称'
+      description: "the team's short name"
       public: true
     - column: european_football_2.Team.id
       biz_name: id
@@ -244,26 +249,28 @@ logical_entities:
     attributes:
     - column: european_football_2.Team_Attributes.team_api_id
       biz_name: TeamID
-      description: '球队API ID: 球队唯一标识符'
+      description: the id of the team api
       public: true
     - column: european_football_2.Team_Attributes.buildUpPlaySpeed
       biz_name: buildUpPlaySpeed
-      description: '组织进攻速度: 球队组织进攻的速度评分'
+      description: 'The speed in which attacks are put together: the score which is between 1-100 to measure the team''s attack speed'
       public: true
     - column: european_football_2.Team_Attributes.buildUpPlayPassing
       biz_name: buildUpPlayPassing
-      description: '组织进攻传球: 球队组织进攻的传球评分'
+      description: affects passing distance and support from teammates
       public: true
     - column: european_football_2.Team_Attributes.date
-      biz_name: date
-      description: '日期: 战术属性记录日期 YYYY-MM-DD'
+      biz_name: TacticsDate
+      description: "Date. e.g. 2010-02-22 00:00:00"
       public: true
     - column: european_football_2.Team_Attributes.buildUpPlaySpeedClass
-      biz_name: build Up Play Speed Class
-      description: "the speed class. commonsense reasoning: \x95 Slow: 1-33 \x95 Balanced: 34-66 \x95 Fast: 66-100"
+      biz_name: BuildUpPlaySpeedClass
+      description: 'The speed class: Slow (1-33) / Balanced (34-66) / Fast (66-100)'
+      public: true
     - column: european_football_2.Team_Attributes.buildUpPlayPassingClass
-      biz_name: build Up Play Passing Class
-      description: "the passing class. commonsense reasoning: \x95 Short: 1-33 \x95 Mixed: 34-66 \x95 Long: 66-100"
+      biz_name: BuildUpPlayPassingClass
+      description: 'The passing class: Short (1-33) / Mixed (34-66) / Long (66-100)'
+      public: true
     - column: european_football_2.Team_Attributes.buildUpPlayDribbling
       biz_name: build Up Play Dribbling
       description: the tendency/ frequency of dribbling
@@ -271,12 +278,13 @@ logical_entities:
       biz_name: build Up Play Dribbling Class
       description: "the dribbling class. commonsense reasoning: \x95 Little: 1-33 \x95 Normal: 34-66 \x95 Lots: 66-100"
     - column: european_football_2.Team_Attributes.chanceCreationPassing
-      biz_name: chance Creation Passing
+      biz_name: ChanceCreationPassing
       description: Amount of risk in pass decision and run support
+      public: true
     - column: european_football_2.Team_Attributes.chanceCreationPassingClass
-      biz_name: chance Creation Passing Class
-      description: "the chance creation passing class. commonsense reasoning: \x95 Safe: 1-33 \x95 Normal: 34-66 \x95 Risky:\
-        \ 66-100"
+      biz_name: ChanceCreationPassingClass
+      description: 'The chance creation passing class: Safe (1-33) / Normal (34-66) / Risky (66-100)'
+      public: true
     - column: european_football_2.Team_Attributes.chanceCreationCrossing
       biz_name: chance Creation Crossing
       description: The tendency / frequency of crosses into the box
@@ -301,9 +309,9 @@ logical_entities:
       biz_name: defence Aggression
       description: "Affect the team\x92s approach to tackling the ball possessor"
     - column: european_football_2.Team_Attributes.defenceAggressionClass
-      biz_name: defence Aggression Class
-      description: "the defence aggression class. commonsense reasoning: \x95 Contain: 1-33 \x95 Press: 34-66 \x95 Double:\
-        \ 66-100"
+      biz_name: DefenceAggressionClass
+      description: 'The defence aggression class: Contain (1-33) / Press (34-66) / Double (66-100)'
+      public: true
     - column: european_football_2.Team_Attributes.defenceTeamWidth
       biz_name: defence Team Width
       description: Affects how much the team will shift to the ball side
@@ -323,8 +331,9 @@ logical_entities:
       biz_name: id
       description: the unique id for teams
     - column: european_football_2.Team_Attributes.team_fifa_api_id
-      biz_name: team federation international football association api id
+      biz_name: TeamFIFAID
       description: the id of the team fifa api
+      public: true
 - logical_entity_id: LOGICAL.Match
   biz_name: Match
   description: League matches — home/away team (FK to Team), goals, season, and date; belongs to a league
@@ -336,43 +345,44 @@ logical_entities:
       cardinality: '1:1'
       key: id
     R: null
-    S: Match records — home/away team FK, goals, season, date
+    S: Match records — home/away team FK, goals, season, date; the 22 home/away player slot columns (home_player_1..11, away_player_1..11) each hold a player id referencing Player
     attributes:
     - column: european_football_2.Match.id
       biz_name: MatchID
-      description: '比赛ID: 比赛唯一标识符'
+      description: the unique id for matches
       public: true
     - column: european_football_2.Match.home_team_api_id
       biz_name: home_team_api_id
-      description: '主队API ID: FK→Team，主队标识'
+      description: the id of the home team api
       public: true
     - column: european_football_2.Match.away_team_api_id
       biz_name: away_team_api_id
-      description: '客队API ID: FK→Team，客队标识'
+      description: the id of the away team api
       public: true
     - column: european_football_2.Match.home_team_goal
       biz_name: home_team_goal
-      description: '主队进球: 主队的进球数量'
+      description: The goal of the home team
       public: true
     - column: european_football_2.Match.away_team_goal
       biz_name: away_team_goal
-      description: '客队进球: 客队的进球数量'
+      description: The goal of the away team
       public: true
     - column: european_football_2.Match.season
       biz_name: season
-      description: '赛季: 比赛所属赛季，格式如 2015/2016'
+      description: 'The season of the match: a spanning label, e.g. 2015/2016 (a question''s ''2016 season'' is 2015/2016)'
       public: true
     - column: european_football_2.Match.date
-      biz_name: date
-      description: '日期: 比赛日期'
+      biz_name: MatchDate
+      description: 'The date of the match. e.g. 2008-08-17 00:00:00'
       public: true
     - column: european_football_2.Match.league_id
       biz_name: league_id
       description: 'League ID: FK to League, the league this match belongs to'
       public: true
     - column: european_football_2.Match.country_id
-      biz_name: country id
-      description: country id
+      biz_name: CountryID
+      description: Country id
+      public: true
     - column: european_football_2.Match.stage
       biz_name: stage
       description: the stage of the match
@@ -707,15 +717,33 @@ logical_entities:
     attributes:
     - column: european_football_2.League.id
       biz_name: LeagueID
-      description: '联赛ID: 联赛唯一标识符'
+      description: the unique id for leagues
       public: true
     - column: european_football_2.League.name
-      biz_name: name
-      description: '联赛名称: 联赛名称，如 England Premier League'
+      biz_name: LeagueName
+      description: league name
       public: true
     - column: european_football_2.League.country_id
-      biz_name: country id
-      description: the unique id for countries
+      biz_name: CountryID
+      description: The unique id for countries
+      public: true
+  - physical_entity_id: PHYSICAL.Country
+    physical_table_name: Country
+    physical_table_id: european_football_2.Country
+    A:
+      cardinality: '1:1'
+      key: CountryID
+    R: null
+    S: Country dictionary — league.country_id / Match.country_id → Country.id
+    attributes:
+    - column: european_football_2.Country.id
+      biz_name: CountryID
+      description: The unique id for countries
+      public: true
+    - column: european_football_2.Country.name
+      biz_name: CountryName
+      description: Country name
+      public: true
 pas_relations:
 - relation_id: LOGICAL.League_TO_LOGICAL.Match
   relation_name: Contains

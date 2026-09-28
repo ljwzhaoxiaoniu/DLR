@@ -147,8 +147,21 @@ function coverageForDb(db: string): DbReport {
         continue;
       }
       if (!c?.desc && a.description) colsL1Filled.push(`${t.name}.${col}`);
-      if (c?.desc && !a.public && (a.description ?? "").trim() !== c.desc) {
-        colsDescMismatch.push(`${t.name}.${col}：CSV="${c.desc}" ↔ L1="${(a.description ?? "").trim()}"`);
+      // 描述纪律（2026-09-29 定盘）：L1 描述 = 数据集描述原文（column_description，可并 value_description）；
+      // 只把「两者都装不下的自加文本」算偏离（此前只比 column_description，会把吸收 value_description 误报）。
+      const l1d = (a.description ?? "").trim();
+      if (c?.desc && !a.public && l1d) {
+        const norm = (s: string) => s.toLowerCase().replace(/[\s•·:：;；,，.。()（）/\-—_"']+/g, "");
+        const nL1 = norm(l1d), nDesc = norm(c.desc), nVal = norm(c.value ?? "");
+        const ok =
+          nL1 === nDesc ||
+          (nL1.startsWith(nDesc) && (!nVal || nVal.includes(nL1.slice(nDesc.length)))) ||
+          (!!nVal && (nL1 === nVal || nVal.includes(nL1) || nL1.includes(nVal)));
+        if (!ok) {
+          colsDescMismatch.push(
+            `${t.name}.${col}：CSV="${c.desc}"${c.value ? ` (+value "${(c.value ?? "").replace(/\s+/g, " ").slice(0, 40)}…")` : ""} ↔ L1="${l1d.replace(/\s+/g, " ").slice(0, 90)}"`,
+          );
+        }
       }
     }
   }
