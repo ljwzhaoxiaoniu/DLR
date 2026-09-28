@@ -24,6 +24,7 @@
 
 ### When asked: "What was the average monthly consumption of customers in SME for the year 2013?"
 > **类型**：数据集问题
+> **Expected**：5519.475171445073
 
 Consumption is recorded customer-month by customer-month: every recorded figure is already one customer's consumption for one month. So "average monthly consumption" is simply the average over those monthly figures -- one step, done. Do not divide by 12.
 
@@ -145,6 +146,44 @@ Contrast with the LAM / 46.73 percentage question: that one names a segment and 
 The reference answer divides by the **number of transactions** that day, putting a transaction count under a "percentage of customers" label -- a unit mix, and the reason its figure disagrees (1.65 against 2.70). Do not copy a formula whose denominator counts rows instead of customers.
 
 The date 2012/8/25 is stored as `2012-08-25`.
+
+### When asked: "In 2012, who had the least consumption in LAM?"
+> **类型**：难题
+
+"Who had the least consumption in 2012" asks about a **customer**: per LAM customer, add up that customer's 2012 monthly figures, then take the smallest year total. Do not sort the raw monthly figures and take the first row -- that lands on a refund entry, not on a low-consumption customer.
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- Smallest 2012 total among LAM customers: **47273** (its only 2012 record is 0.74). Next: 45331 (1.06), 4864 (1.58), 48319 (2.22), 3958 (3.16).
+- The smallest single month is 7653 (-1651.79), whose 2012 total is 28,883.84.
+- Only two monthly figures in the whole LAM 2012 set are negative.
+
+### When asked: "What is the highest monthly consumption in the year 2012?"
+> **类型**：数据集问题
+> **Expected**：445279.69
+
+Consumption is recorded customer-month by customer-month, and each recorded figure is already one customer's monthly consumption. So the year's highest monthly consumption is the **largest recorded figure** -- no further aggregation across customers.
+
+The reference answer sums all customers together month by month and reports the biggest month's total. That is a different quantity (the whole network in one month), not the highest monthly consumption under this data's granularity -- do not follow it.
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- The largest single figure is **445279.69** (customer 1673, January 2012); the next largest are 361080.78 and 349539.77 (the same customer).
+- Summing every customer per month gives roughly 51.8M for the peak month (March) -- that is the reference quantity, not the answer.
+
+### When asked: "Among the customers who paid in euro, how many of them have a monthly consumption of over 1000?"
+> **类型**：数据集问题
+> **Expected**：391
+
+"Of them" means **customers**: count each Euro customer once, however many months cross the threshold. The condition is on a monthly figure ("a monthly consumption of over 1000"), so a customer qualifies if **any** of their monthly figures is above 1000 -- and is then still one customer.
+
+The reference answer counts customer-month **records** instead (the same customer counted many times). Do not copy a record-level count for a "how many customers" question.
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- Qualifying customers: **391** (of 2002 Euro customers).
+- Record-level count: 2730 -- the reference quantity, not the answer.
+- Other readings, also wrong: customers whose **total** consumption exceeds 1000 (1242), or whose **average** month exceeds 1000 (178). "A monthly consumption" is one month's figure, not a total and not an average.
 
 ## california_schools
 

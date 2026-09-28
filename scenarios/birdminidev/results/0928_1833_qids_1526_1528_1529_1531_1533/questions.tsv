@@ -1,0 +1,5 @@
+1526	debit_card_specializing	For the customer who paid 634.8 in 2012/8/25, what was the consumption decrease rate from Year 2012 to 2013?
+1528	debit_card_specializing	What is the percentage of "premium" against the overall segment in Country = "SVK"?
+1529	debit_card_specializing	What is the amount spent by customer "38508" at the gas stations? How much had the customer spent in January 2012?
+1531	debit_card_specializing	Who is the top spending customer and how much is the average price per single item purchased by this customer? What currency was being used?
+1533	debit_card_specializing	For all the people who paid more than 29.00 per unit of product id No.5. Give their consumption status in the August of 2012.

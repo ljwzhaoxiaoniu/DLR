@@ -32,8 +32,8 @@
 
 | 评定 | 值 |
 |---|---|
-| ✅ 正确（与 gold 一致） | 177 / 212（83.5%） |
-| 🔁 翻盘（按 SOP 裁定为正确） | 35 |
+| ✅ 正确（与 gold 一致） | 174 / 212（82.1%） |
+| 🔁 翻盘（按 SOP 裁定为正确） | 38 |
 | ❌ 错误 | 0 |
 | ⚠️ 待仲裁 | 0 |
 | **合计正确（正确 + 翻盘）** | **212 / 212（100.0%）** |
@@ -42,17 +42,17 @@
 
 | 判定 | 值 |
 |---|---|
-| PASS（与 gold 一致） | 180 / 212（84.9%） |
+| PASS（与 gold 一致） | 176 / 212（83.0%） |
 | UNCERTAIN（抽不出可比对的值） | 10 |
-| FAIL（与 gold 不符） | 22 |
+| FAIL（与 gold 不符） | 26 |
 | GOLD_ERR（gold 本身执行失败） | 0 |
 
 **效率**
 
 | 指标 | 值 |
 |---|---|
-| token 平均 / 中位 | 84,537 / 81,453 |
-| token 最低 / 最高 | 33,353 / 204,836 |
+| token 平均 / 中位 | 83,158 / 80,558 |
+| token 最低 / 最高 | 29,637 / 204,836 |
 | 步数均值 / 工具调用均值 | 5 / 9 |
 
 > **口径**：本文档汇总按**去重题数**计（同题多轮取**最新一轮**的判定/评定）——与 [results/STATS.md](results/STATS.md) 的**按次数**分布会不同（重跑过或跑挂过的题，那边会多计一次）。仅覆盖已跑轮次，勿外推为全数据集结论。token = input + cache_read + output（不含 CoT 的 reasoning 分项由 harness 单独计）。
@@ -70,7 +70,7 @@
 | [california_schools](DETAIL/california_schools.md) | 30 | 29 | 1 | 0 | 0 | 66,005 |
 | [card_games](DETAIL/card_games.md) | 52 | 40 | 12 | 0 | 0 | 93,661 |
 | [codebase_community](DETAIL/codebase_community.md) | 49 | 42 | 7 | 0 | 0 | 84,921 |
-| [debit_card_specializing](DETAIL/debit_card_specializing.md) | 30 | 21 | 9 | 0 | 0 | 47,948 |
+| [debit_card_specializing](DETAIL/debit_card_specializing.md) | 30 | 18 | 12 | 0 | 0 | 43,973 |
 | [european_football_2](DETAIL/european_football_2.md) | 51 | 45 | 6 | 0 | 0 | 79,889 |
 
 ## 数据集缺陷与裁定（SOP 条目缘由）
@@ -97,13 +97,16 @@
 | q672 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Among the users located in United Kingdom, how many users wh | The question counts **users**, and "a favorite amount of 4 or more" is a post's own favorite count (not a sum across the user's posts). Of t |
 | q683 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What is the percentage of posts whose owners had a reputatio | "In 2011" scopes the whole question -- the posts of that year, and among them the share whose owner's reputation is over 1000. That year has |
 | q710 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | In posts with 1 comment, how many of the comments have 0 sco | "In posts with 1 comment" picks the posts whose **recorded comment count** is exactly 1 -- not the posts that merely happen to have one comm |
+| q1473 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What was the average monthly consumption of customers in SME | Consumption is recorded customer-month by customer-month: every recorded figure is already one customer's consumption for one month. So "ave |
 | q1481 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 · 难题 | What is the difference in the annual average consumption of | Per customer, total up their 2013 CZK consumption. Then, **per segment**, take the customer(s) with the lowest 2013 total. "Annual average c |
 | q1482 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Which of the three segments—SME, LAM and KAM—has the biggest | The question names the currency, so the consumption must be filtered to customers whose billing currency is EUR (`Currency = 'EUR'` in the c |
 | q1490 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 · 难题 | How many percent of LAM customer consumed more than 46.73? | "Percent of customers" is counted **per customer**, not per customer-month record. One customer = one unit in both the numerator and the den |
+| q1498 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What is the highest monthly consumption in the year 2012? | Consumption is recorded customer-month by customer-month, and each recorded figure is already one customer's monthly consumption. So the yea |
 | q1500 | debit_card_specializing | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Please list the product description of the products consumed | The individual-purchase records are only a **four-day sample**: they cover 2012-08-23 through 2012-08-26, and nothing else. Any month outsid |
-| q1501 | debit_card_specializing | ✅ PASS | 🔁 翻盘 | 数据集问题 | Please list the countries of the gas stations with transacti | Same sample-window fact: the individual-purchase records cover only 2012-08-23~26, so no purchases took place in June 2013, and the truthful |
+| q1501 | debit_card_specializing | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Please list the countries of the gas stations with transacti | Same sample-window fact: the individual-purchase records cover only 2012-08-23~26, so no purchases took place in June 2013, and the truthful |
+| q1505 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Among the customers who paid in euro, how many of them have | "Of them" means **customers**: count each Euro customer once, however many months cross the threshold. The condition is on a monthly figure |
 | q1525 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What is the percentage of the customers who used EUR in 2012 | "Percentage of customers" = **customers**, not transactions: one customer counts once, in both the numerator and the denominator, and both a |
-| q1526 | debit_card_specializing | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 · 难题 | For the customer who paid 634.8 in 2012/8/25, what was the c | "paid 634.8" identifies the customer through a single purchase of that amount on that date -- a purchase-level condition, not a monthly tota |
+| q1526 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 · 难题 | For the customer who paid 634.8 in 2012/8/25, what was the c | "paid 634.8" identifies the customer through a single purchase of that amount on that date -- a purchase-level condition, not a monthly tota |
 | q1529 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What is the amount spent by customer "38508" at the gas stat | "Amount spent by a customer" is that customer's total consumption across all gas stations -- a question about the customer's monthly figures |
 | q1531 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 · 难题 | Who is the top spending customer and how much is the average | "Top spending customer" is decided by the customer's total consumption across all gas stations (the month-by-month figures), not by adding u |
 | q1029 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What are the speed in which attacks are put together of the | "Speed in which attacks are put together" and "build-up play speed" are the same team attribute -- the question names one quantity twice. "H |
