@@ -35,7 +35,9 @@ export class LanceStore {
     return new LanceStore(db, encoder);
   }
 
-  private async table(name: string): Promise<lancedb.Table> {
+  private async table(name: string, fresh = false): Promise<lancedb.Table> {
+    // fresh：不取缓存句柄、按请求重开表——L3 sop 索引要"改源 → build → 即生效"（不吃常驻缓存版本）
+    if (fresh) return this.db.openTable(name);
     let t = this.tables.get(name);
     if (!t) {
       t = await this.db.openTable(name);
@@ -51,10 +53,10 @@ export class LanceStore {
   async search(
     tableName: string,
     question: string,
-    opts: { limit?: number; where?: string; db?: string } = {},
+    opts: { limit?: number; where?: string; db?: string; fresh?: boolean } = {},
   ): Promise<LanceHit[]> {
     const vec = await this.encoder.encodeOne(question);
-    const tbl = await this.table(tableName);
+    const tbl = await this.table(tableName, opts.fresh);
     let q = (tbl.search(vec) as lancedb.VectorQuery).distanceType("cosine").limit(opts.limit ?? 100_000);
     const where = opts.where ?? (opts.db ? `db = '${opts.db.replace(/'/g, "''")}'` : undefined);
     if (where) q = q.where(where);
@@ -73,6 +75,13 @@ export class LanceStore {
       }
     }
     return out;
+  }
+
+  /** 全量取行（小表场景：L3 SOP 索引按标题做精确命中，表仅几十行） */
+  async listRows(tableName: string, fresh = false): Promise<LanceHit[]> {
+    const tbl = await this.table(tableName, fresh);
+    const rows = (await tbl.query().toArray()) as Record<string, unknown>[];
+    return rows.map((r) => ({ ...r, score: 0 })) as LanceHit[];
   }
 
   /** 全文检索（L2 的"术语字面"一路，hybrid 用） */

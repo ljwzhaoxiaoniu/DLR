@@ -12,11 +12,11 @@ scenarios/birdminidev/
 ├── sources/
 │   ├── configs/{ER,DLR,RDF}/   # L1 建模源（11 库 × 3 范式；本线消费 DLR）
 │   ├── consensus/*.jsonl       # L2 领域共识源（11 库各一份）
-│   └── sop.md                  # L3 口径源（sync_sop.sh 的输入）
+│   └── sop.md                  # L3 口径源（人写；`tsm build sop` 编译成检索索引）
 └── fixtures/                   # 对照真值（verify 套件用，见 §三）
 ```
 
-现状规模：图 **LE 49 / PE 72 / PA 792 / LA 220 / PAS 35**；向量 **entities 948 · consensus 458**；共识覆盖 11 个 namespace。
+现状规模：图 **LE 49 / PE 72 / PA 773 / LA 237 / PAS 35**；向量 **entities 929 · consensus 458**；共识覆盖 11 个 namespace。（PA 773 = california 视图收敛后净减 19 列；LA 237 = public 面扩容 +17。）
 
 ## 二、三层各写什么
 
@@ -49,7 +49,7 @@ scenarios/birdminidev/
 - **质量线**（2026-09-26 定）：③ 难题节**不能只复述题面 / 解释术语**——必须钉**实测的事实与陷阱**（计数、集合大小、并列/分布、易错读法），事实**先用 SQL 核过再写**；给出事实后要说明**该事实已确立、照此作答**（否则 agent 会把余量花在自证上）。
 - **可比口径**：裁定值写成 `> **Expected**：<值>`（多值用 `|` 分隔），判定/裁定都按它算；"真答案 = 空结果"的节**不写 Expected**，正文写清"空"的判据（判据认 `empty list / no data / 为空` 一类说法）。
 - **准入**：**事后、按需**——运行暴露问题 → 归类 → 补节；不预写通用规则（n=1 不成为规则）。三档准入见 [02-concept.md §二](02-concept.md)。
-- **部署**：`sync_sop.sh` 从源生成 **bundle 内**的 `dsh-tsm/skills/sop/SKILL.md`（加 frontmatter）。**部署出去的技能名永远是 `sop`**——"用哪套"发生在配置层，模型层永远不需要选。
+- **交付**：`tsm build sop` 把源编译成 LanceDB 的 `sop` 索引（题面 → 节），由 `dlr_search_sop` 按题检索——**只取复述本题的那一节**（原 `sync_sop.sh` + `skills/sop` 整文件载入的传输方式已退役，2026-09-28）。真源仍只有这一份 `sop.md`。
 
 ## 三、`fixtures/` —— 对照真值
 
@@ -82,10 +82,8 @@ export TSM_SCENARIO="/abs/path/scenarios/<name>"
 cd "TSM Core Service"
 npx tsx src/build/buildLance.ts --all          # L1 向量（LE/PE/属性/PAS）
 npx tsx src/build/buildConsensus.ts            # L2 向量（按 namespace）
+npx tsx src/build/buildSop.ts                  # L3 索引（题面 → 节）
 npx tsx src/graph/loadNeo4j.ts --all --wipe    # 图（⚠ 先停 MCP server：清库重建）
-
-# 3) L3 部署件
-cd "../DSH-based Agent Service/dsh_dlr" && bash sync_sop.sh "<场景路径>/sources/sop.md" sop
 
 # 4) 自检
 cd "../../TSM Core Service" && npx tsx src/verify/precheck.ts
@@ -96,8 +94,8 @@ cd "../../TSM Core Service" && npx tsx src/verify/precheck.ts
 | 不动的东西 | 为什么 |
 |---|---|
 | 认知层 `skills/paradigm`（TSM + DLR 范式认知） | **与场景无关**——这正是它单独存在的原因 |
-| 部署技能名 `sop` | 固定名：换的是配置层的内容，不是模型层的选择 |
-| MCP 工具面（5 个） | 契约冻结（见 [roadmap.md](roadmap.md) §一） |
+| L3 工具名 `dlr_search_sop` | 固定名：换的是索引内容（`tsm build sop` 从场景源编译），不是模型层的选择 |
+| MCP 工具面（7 个：L1/L2/L3 语义 + `get_full_data_info` 下探 + `execute_sql` 取数） | 契约冻结（见 [roadmap.md](roadmap.md) §一） |
 
 ## 相关
 

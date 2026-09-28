@@ -4,7 +4,7 @@
  *
  *   tsm serve  [--http <port> | --stdio]     起 MCP server（默认 --http 28795）
  *   tsm status [--port <port>]               打印 /status 健康快照（JSON）
- *   tsm build  [lance|consensus|graph|all] [--wipe]   构建（graph 需 Neo4j 在跑）
+ *   tsm build  [lance|consensus|sop|graph|all] [--wipe]   构建（graph 需 Neo4j 在跑）
  *   tsm verify [脚本名]                       跑 verify 套件（默认 precheck）
  *
  * 实现：用包内 tsx 直接跑 TS 源码（无需先编译）；一切路径由脚本自身位置推导（cwd 无关）。
@@ -32,7 +32,7 @@ const usage = () => {
 
   tsm serve  [--http <port> | --stdio]              起 MCP server（默认 --http 28795）
   tsm status [--port <port>]                        打印 /status 快照
-  tsm build  [lance|consensus|graph|all] [--wipe]   构建（graph 需 Neo4j 在跑）
+  tsm build  [lance|consensus|sop|graph|all] [--wipe]   构建（graph 需 Neo4j 在跑）
   tsm verify [precheck|parity_dlr|tool_parity|...]  跑 verify 脚本（默认 precheck）
   tsm viz    [--open] [--db <库名>]                 生成自包含的 DLR 图谱页（开发态）
   tsm coverage [--db <库名>] [--out <file>]         建模覆盖度对账（数据集原生语义 ↔ L1/L2/L3）
@@ -67,9 +67,10 @@ switch (cmd) {
     const wipe = rest.includes("--wipe");
     if (what === "lance" || what === "all") code ||= await runTs("build/buildLance.ts", ["--all"]);
     if (what === "consensus" || what === "all") code ||= await runTs("build/buildConsensus.ts", []);
+    if (what === "sop" || what === "all") code ||= await runTs("build/buildSop.ts", []);
     if (what === "graph" || what === "all")
       code ||= await runTs("graph/loadNeo4j.ts", wipe ? ["--all", "--wipe"] : ["--all"]);
-    if (!["lance", "consensus", "graph", "all"].includes(what)) {
+    if (!["lance", "consensus", "sop", "graph", "all"].includes(what)) {
       console.error(`[ERR] 未知构建目标：${what}`);
       usage();
       code = 1;

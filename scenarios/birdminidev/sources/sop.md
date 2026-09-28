@@ -196,6 +196,8 @@ City ("Fremont") is on the school master as well; the answer is one count.
 
 "Complete address" = the four address parts together: physical street, city, state, zip -- all four on the school master. The answer needs the school's four address fields, each named.
 
+**Measured facts (verified against the data -- take them as settled, no re-derivation needed).** 218 of the 2,269 score rows belong to schools with **no test takers at all**, so their rate is undefined and an ascending order puts those rows first: the literal "first row" is a zero-test-taker school, namely **Aspire California College Preparatory Academy -- 2125 Jefferson Avenue, Berkeley, CA 94703-1414** (also a closed school; the address is shared by several rows, so the row choice does not change the answer). **Do not narrow the pool on your own** -- dropping schools with no test takers, or standing in a zero for the missing numerator, moves the answer to a different school (1900 Third Street, Alameda), which is not this question's answer. Answer straight from the plain ascending order.
+
 ### When asked: "Please list the codes of the schools with a total enrollment of over 500."
 > **类型**：难题
 

@@ -7,7 +7,7 @@
 
 ```
 dsh（headless / web）
-   │  MCP（streamable-http :28795，5 工具）
+   │  MCP（streamable-http :28795，7 工具）
    ▼
 TSM Core Service（node 进程）：LanceDB（向量）+ ONNX 编码器（进程内）
    │  bolt :7687
@@ -26,7 +26,7 @@ Neo4j（Browser :7474）
 bash "DSH-based Agent Service/scripts/start_backend.sh"
 ```
 
-- 判据是**功能性的**：Neo4j 探 `:7474`；MCP server 用**预检**（真连上去列 5 工具）；最后再预检一次当回执。
+- 判据是**功能性的**：Neo4j 探 `:7474`；MCP server 用**预检**（真连上去列 7 工具）；最后再预检一次当回执。
 - 已在跑的跳过；起不来看它给的日志（`tmp_scripts/neo4j_console.log` / `tsm_mcp.log`）。
 - ⚠ **改过 `TSM Core Service/src/**` 必须重启 MCP server**——tsx 常驻进程不会自动加载，脚本只会说"已在跑"；先杀端口（`netstat -ano | grep :28795` → `taskkill //F //PID <pid>`）再跑脚本。
 - ⚠ Neo4j 是**前台 console 进程**：起它的终端/会话关了，它可能一起走；重跑本脚本即恢复。
@@ -70,7 +70,7 @@ curl -s http://127.0.0.1:28795/status
 | 工具 | 依赖 | Neo4j 停时 |
 |---|---|---|
 | `dlr_semantic_query` · `get_pe_mapping` · `get_le_attrs` | Neo4j | ❌ 不可用 |
-| `dlr_search_consensus` | LanceDB | ✅ 照常 |
+| `dlr_search_consensus` · `dlr_search_sop` | LanceDB | ✅ 照常 |
 | `execute_sql` | SQLite | ✅ 照常 |
 
 **失败不缓存**：连接失败不会被粘住——Neo4j 恢复后工具**自愈**（无需重启 MCP）。
@@ -94,7 +94,7 @@ curl -s http://127.0.0.1:28795/status
 - **运行态 = dsh 宿主 + MCP 面 + 状态面；开发态 = `tsm` CLI**（`tsm build` / `tsm verify` / `tsm viz`）。
   `tsm viz [--open] [--db <库>]` 生成自包含的 DLR 图谱页（开发态看建模：LE/PE/ARCS/PAS，点击 PE 看列映射），产物在 `TSM Core Service/.store/viz/dlr-graph.html`。
 - **服务由项目主手动启停**；本手册的命令都可**重复执行**（幂等是设计目标）。
-- 改配置（patch / 插件）→ 重启对应宿主；改 `skills/*.md` 的源 → `sync_sop.sh` 后即生效（不用重启）。
+- 改配置（patch / 插件）→ 重启对应宿主；**改 L3 源 `sources/sop.md` → `tsm build sop` 重建索引后即生效**（不再需要重启宿主；原 sync_sop.sh 已退役）。
 - 临时产物一律进 `tmp_scripts/`，或随用随删。
 
 ## 8. 新机器安装（异地验收清单）
@@ -150,22 +150,22 @@ dsh plugin --profile headless add "<新机>/dlr-proj/DSH-based Agent Service/dsh
 cd "dlr-proj/TSM Core Service"
 npx tsx src/build/buildLance.ts --all
 npx tsx src/build/buildConsensus.ts
+npx tsx src/build/buildSop.ts
 npx tsx src/graph/loadNeo4j.ts --all --wipe
 ```
 
-**6) L3 部署件 + 起后端**
+**6) 起后端**（L3 索引已在第 5 步随 `buildSop.ts` 建好）
 
 ```bash
-cd "../DSH-based Agent Service/dsh_dlr" && bash sync_sop.sh
-cd ../.. && bash "DSH-based Agent Service/scripts/start_backend.sh"
+bash "DSH-based Agent Service/scripts/start_backend.sh"
 ```
 
 **7) 验收**
 
 | 检查 | 期望 |
 |---|---|
-| `npx tsx src/verify/precheck.ts` | 5 工具 |
-| `curl -s localhost:28795/status` | `ok:true`，LE 49 / PE 72 / PA 792 / PAS 35 |
+| `npx tsx src/verify/precheck.ts` | 7 工具 |
+| `curl -s localhost:28795/status` | `ok:true`，LE 49 / PE 72 / PA 773 / PAS 35 |
 | `bash dsh_dlr/run_one.sh 1471 "What is the ratio of customers who pay in EUR against customers who pay in CZK?"` | 答案 **0.0657** |
 | `bash dsh_dlr/run_web.sh` | 右下角状态卡两盏灯全绿 |
 

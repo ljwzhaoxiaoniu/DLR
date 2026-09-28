@@ -7,7 +7,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { SOP_SOURCE } from "../config.js";
-import { judge, judgeEmpty, QUESTIONS } from "./judge.js";
+import { judge, judgeEmpty, stripModelGap, QUESTIONS } from "./judge.js";
 
 // ── 结果目录 ─────────────────────────────────────────────────────────
 /** 列出 results/ 下有产物的轮次（含 questions.csv 的目录），按名字排序 */
@@ -98,7 +98,7 @@ export function readRunQuestions(runDir: string): QEvent[] {
       }
       const type = o.type as string;
       if (type === "session") sid = String(o.sessionId ?? o.id ?? "");
-      if (type === "final") final = String(o.text ?? "");
+      if (type === "final") final = stripModelGap(String(o.text ?? "")); // 剔除「建模缺口」小节：防列名数字污染判据
       if (type === "tool_call") {
         tools++;
         const name = typeof o.tool === "string" ? o.tool : ((o.tool as { name?: string } | undefined)?.name ?? "?");

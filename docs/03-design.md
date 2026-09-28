@@ -46,7 +46,9 @@
 
 ### 1.3 一个标记位：public
 
-**public 不是实体，是 PE 属性上的可见性标记**：标了的 → 投影成 **LE 的 public 面**（进 LE 向量、供召回），**同时**是 `PAS.A` 的指认对象；未标的 → 只在下钻 PE 时可见。同一业务属性在多张 PE 上物化 → 投影时**去重为一条**。
+**public 不是实体，是 PE 属性上的可见性标记**：标了的 → 投影成 **LE 的 public 面**（进 LE 向量、供召回），**同时**是 `PAS.A` 的指认对象；未标的 → 仍在下钻 PE 时可见（属视图列，只是不进 LE 面）。同一业务属性在多张 PE 上物化 → 投影时**去重为一条**。
+
+> **PE 块 = 视图列**（2026-09-28 定）：PE 的 `attributes` 只列**该业务对象语义上应有的列**（视图）；`get_pe_mapping` 就按此返回。物理表里其余列不在语义面承诺内——agent 需要时走 `get_full_data_info` 下探，并在答案里**固定反馈建模缺口**（下探 → 反馈 → 建模维护的闭环，不做硬拦截）。
 
 ### 1.4 三档数量关系（agent 的行数推理）
 
@@ -207,9 +209,9 @@ pas_relations:
 
 **召回只在 LE 面收口**（"先收口后截断"）——这决定了两条设计纪律：LE description 必须丰富（规则 8）、例名必须写进 LE 可见面（规则 11）。
 
-### 5.3 工具面（5 个）
+### 5.3 工具面（7 个）
 
-`dlr_semantic_query`（LE 召回）→ `get_pe_mapping`（第二跳：表名/列/ARCS/`database_url`）/ `get_le_attrs`；`dlr_search_consensus`（L2）；`execute_sql`（取数）。
+`dlr_semantic_query`（LE 召回）→ `get_pe_mapping`（第二跳：表名/**视图列**/ARCS/`database_url`）/ `get_le_attrs`；`dlr_search_consensus`（L2）；`dlr_search_sop`（**L3**：按题检索的 SOP 索引，只取复述本题的那一节）；`execute_sql`（取数）；`get_full_data_info`（**下探**：视图外的物理列，用后须在答案反馈建模缺口）。
 
 ## 6. 新库接入作业流程（2.0）
 
@@ -218,7 +220,7 @@ pas_relations:
 1. **读物理层**：`PRAGMA table_info` / `foreign_key_list` 摸清表、列、真实 FK。**物理真相优先**于任何现成清单。
 2. **划 LE**：对每张表问第一原则（§3.0）；先画「表 → 归属」草图再动手。
 3. **定 PE 与 ARCS**：`A.key` 选有逻辑意义的 FK；共享锚定键的多个 PE 挂同一个 LE（碎表集中）。
-4. **定属性与 public**：每列一条；核心度量 / 高频过滤列 `public: true`。
+4. **定视图列与 public**：PE 块 = **视图列**（该业务对象语义上应有的列；登记/派生/重复噪声列不入）——`get_pe_mapping` 按此返回；核心度量 / 高频过滤列 `public: true`（进 LE 面）。
 5. **写 PAS**：只在跨 LE 时写；`A` 落在两侧之一；`P` 两侧动词与基数都写。
 6. **构建与自检**：
 
@@ -242,6 +244,8 @@ npx tsx src/verify/precheck.ts                # 工具面可用
 [ ] 所有属性都有 description 吗？魔鬼数字列是否声明了语义？
 [ ] 同名异义的列都被 disambiguate 了吗？
 [ ] WHERE / GROUP BY / JOIN 高频列都是 public 吗？
+[ ] PE 块只含视图列吗（登记 / 派生 / 重复噪声列都移出了吗）？
+[ ] 近邻混选列（同名族：`(K-12)` vs `(Ages 5-17)`、`Charter` vs `CharterNum`…）是否只保留语义明确的那一个？
 [ ] PE 的 A_anchor 有逻辑意义吗？
 [ ] 有没有独立业务概念被埋在某 LE 下？
 [ ] LE description 够丰富吗？（≥ 关键字段名 + 业务语义；3-5 词不够）英文？例名列全？

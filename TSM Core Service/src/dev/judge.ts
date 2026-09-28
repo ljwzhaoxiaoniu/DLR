@@ -126,6 +126,29 @@ const NUM_RE = /[-−–—－]?\d[\d,]*(?:\.\d+)?/g;
 const norm = (s: string) =>
   s.toLowerCase().replace(NEG_RE, "-").replace(/[\s,]+/g, " ").replace(/[^\w.%\- ]+/g, "").trim();
 
+/**
+ * 去掉答案里的「建模缺口」固定反馈小节（AGENTS.md 要求 agent 在答案末尾报的建模缺口）。
+ * 为什么必须剔：judge 从**整段文本**抽数字/文本候选，缺口小节里的列名（如 `Enrollment (Ages 5-17)`）
+ * 会带出 5/17 这类数字污染判据；judgeEmpty 也会被"无"字误判。只影响判据，原始日志不动。
+ * 兼容：标题行形如 `建模缺口` / `## 建模缺口` / `**Modeling gap**`；块止于 Final Answer / Evidence SQL 行或文本末尾。
+ */
+export function stripModelGap(text: string): string {
+  const isGap = (l: string) => /^\s*(#{1,6}\s*)?[*_]{0,2}\s*(建模缺口|modell?ing\s*gap)\b/i.test(l);
+  const isBoundary = (l: string) => /^\s*(#{1,6}\s*)?[*_]{0,2}\s*(Final Answer|Evidence SQL)\b/i.test(l);
+  const lines = text.split(/\r?\n/);
+  const out: string[] = [];
+  for (let i = 0; i < lines.length; i++) {
+    if (isGap(lines[i])) {
+      let j = i + 1;
+      while (j < lines.length && !isBoundary(lines[j])) j++;
+      i = j - 1;
+      continue;
+    }
+    out.push(lines[i]);
+  }
+  return out.join("\n");
+}
+
 /** 文本比对（**逐值判定**：每个期望值各自走「文本命中 或 数值逐级容差」；混合类型期望也能判） */
 export function judge(finalText: string, expected: string[]): { verdict: string; precision: string } {
   if (!expected.length) return { verdict: "GOLD_ERR", precision: "-" };

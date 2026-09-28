@@ -1,5 +1,5 @@
 /**
- * TSM MCP Server（TS 版）—— 暴露 DLR 的 5 个工具，与 Python 服务同契约
+ * TSM MCP Server（TS 版）—— 暴露 DLR 的 7 个工具（L1/L2/L3 语义 + 下探 + 取数）
  *
  * 传输：
  *   npx tsx src/mcp/server.ts                → stdio（dsh/Claude 直接 spawn）
@@ -19,6 +19,8 @@ import { Neo4jGraph } from "../graph/queries.js";
 import { dlrSemanticQuery } from "../queries/semanticQuery.js";
 import { searchConsensus } from "../queries/searchConsensus.js";
 import { getPeMapping } from "../queries/peMapping.js";
+import { getFullDataInfo } from "../queries/fullDataInfo.js";
+import { searchSop } from "../queries/searchSop.js";
 import { executeSql } from "../queries/executeSql.js";
 
 import { STORE_DIR, MODEL_DIR } from "../config.js";
@@ -109,6 +111,44 @@ function createServer(): McpServer {
       const r = await getPeMapping(await getGraph(), pe_id);
       return { content: [{ type: "text", text: JSON.stringify(r) }] };
     },
+  );
+
+  server.registerTool(
+    "dlr_search_sop",
+    {
+      description:
+        "[DLR] L3 业务逻辑级 SOP 检索：按题面取「复述本题」的那一节（题级口径/陷阱/Expected）。" +
+        "match=exact（标题与本题逐字相同）→ 该节是本题最权威口径，按它执行；" +
+        "match=similar → 只是近似候选，**只有标题逐字复述本题时才采用**；" +
+        "match=none → 本题无 L3 节，按 L1 描述 + L2 共识自解。",
+      inputSchema: {
+        question: z.string().describe("题目原文（逐字传入，用于精确命中）"),
+        top_k: z.number().int().positive().default(2),
+      },
+    },
+    async ({ question, top_k }) => {
+      const r = await searchSop(await getStore(), question, top_k);
+      return { content: [{ type: "text", text: JSON.stringify(r) }] };
+    },
+  );
+
+  server.registerTool(
+    "get_full_data_info",
+    {
+      description:
+        "[DLR] 下探物理表全量列信息（数据集原始描述 + 每列 in_modeled_view 标注）——" +
+        "get_pe_mapping 只回建模视图内的列；**仅当视图不足以回答问题时**才用本工具下探物理表其余列。" +
+        "用过之后，请在最终答案的「建模缺口」一节固定反馈：哪张表的哪列缺口、为何视图内没有、建议（升入视图 / 升 public / 不管）。",
+      inputSchema: {
+        pe_id: z.string().default("").describe("物理实体 id（如 PHYSICAL.School）；与 db+table 二选一"),
+        db: z.string().default("").describe("库名（如 california_schools）；与 table 搭配"),
+        table: z.string().default("").describe("表名（如 schools）；与 db 搭配"),
+        columns: z.array(z.string()).optional().describe("只看部分列时传（可省，默认整表列清单）"),
+      },
+    },
+    async ({ pe_id, db, table, columns }) => ({
+      content: [{ type: "text", text: JSON.stringify(getFullDataInfo({ peId: pe_id, db, table, columns })) }],
+    }),
   );
 
   server.registerTool(

@@ -8,7 +8,7 @@
 
 - **2.0 日常**：`scenarios/<场景>/`（一套完整 TSM 的内容：`sources/{configs=L1, consensus=L2, sop.md=L3}` + `fixtures/`，当前 `birdminidev`）＋ `TSM Core Service/`（TS 语义服务：LanceDB + Neo4j）＋ `DSH-based Agent Service/`（dsh 接入）
 - **评测线**（v4 基线、opencode 四阶段、归档）：在 `dlr-eval-v1.5` 分支 / 另一份检出。本分支**已移除 `OC-based Agent Service/` 与 `Semantic Core Service/`**；`Evaluation/`、`docs/` 中指向它们的引用仅评测线有效
-- **术语（三级标识，定案 2026-09-23）**：L1 = **`dlr`**（DLR 语义图谱）｜ L2 = **`consensus`**（Domain Consensus = **场景所需的、基于 L1 schema 的一类「非 workflow」知识**：术语 / 口径 / 背景；工作流与题级打法归 L3。刻意不用 "knowledge" 作名——区别于传统知识库/KG）｜ L3 = **`sop`**（SOP，题级流程/打法，skill 形态交付）。中文级名：数据源级 / 领域共识级 / 业务逻辑级
+- **术语（三级标识，定案 2026-09-23）**：L1 = **`dlr`**（DLR 语义图谱）｜ L2 = **`consensus`**（Domain Consensus = **场景所需的、基于 L1 schema 的一类「非 workflow」知识**：术语 / 口径 / 背景；工作流与题级打法归 L3。刻意不用 "knowledge" 作名——区别于传统知识库/KG）｜ L3 = **`sop`**（SOP，题级流程/打法，**向量索引按题检索交付**——`dlr_search_sop`，2026-09-28 起不再整文件载入）。中文级名：数据源级 / 领域共识级 / 业务逻辑级
 - **L2/L3 准入判据**：非 workflow → `consensus`；题级流程/打法/陷阱 → `sop`
 - 源数据里的 `evidence`（BIRD 字段）/ `knowledge`（聚合格式字段）只是**源格式字段名**，不是范式术语（loader 两种都兼容）
 - 2.0 命令速查：
@@ -26,7 +26,7 @@ bash "DSH-based Agent Service/dsh_dlr/run_web.sh"                    # Web 对�
 
 ```
 # 2.0（本分支）
-dsh（headless / web）→ MCP（5 工具）→ TSM Core Service（LanceDB + Neo4j）→ 物理层（数据集 SQLite）
+dsh（headless / web）→ MCP（7 工具）→ TSM Core Service（LanceDB + Neo4j）→ 物理层（数据集 SQLite）
 
 # 评测线（dlr-eval-v1.5）
 opencode 执行层 → Semantic Core Service（Kuzu + FAISS）→ 同一物理层
@@ -45,7 +45,7 @@ opencode 执行层 → Semantic Core Service（Kuzu + FAISS）→ 同一物理�
 | 5 | **Python 用绝对路径** `/d/ProgramData/anaconda3/envs/lepe_som/python`，禁止裸 `python`（2.0 默认不用 Python；仅兜底路线/评测线） |
 | 6 | **临时文件只进 `tmp_scripts/`**，或随用随删 —— 禁止写盘根 / 仓库散落 |
 | 7 | **`opencode run` 必须在 Git Bash 下执行**（评测线；Python subprocess 启动会让 MCP 工具不可见） |
-| 8 | **判定口径以知识层为准**：术语/公式以 L2 领域共识（`scenarios/<场景>/sources/consensus`）+ L3 `skills/sop.md` 为准；冲突时按 `disputes > SkillPath(SOP) > KnowledgePath(共识) > 源字段字面` |
+| 8 | **判定口径以知识层为准**：术语/公式以 L2 领域共识（`scenarios/<场景>/sources/consensus`）+ L3（`scenarios/<场景>/sources/sop.md`，检索交付 `dlr_search_sop`）为准；冲突时按 `disputes > L3 节口径 > L2 共识 > 源字段字面` |
 | 9 | **SOP 加节有三档准入**：① 数据集错误 ② 无 SOP 跑不对 ③ 无 SOP 时 >15W —— 新库**先裸跑取基线**，只给 ①②③ 写节，**每题最多两遍**；节必须钉**实测事实与陷阱**并附"不必再核、直接作答"（[docs/02-concept.md](docs/02-concept.md) §二 / [docs/04-application.md](docs/04-application.md) §二） |
 
 ---
@@ -76,7 +76,7 @@ opencode 执行层 → Semantic Core Service（Kuzu + FAISS）→ 同一物理�
 bash "DSH-based Agent Service/scripts/start_backend.sh"               # 起后端（Neo4j + TS MCP，幂等）
 bash "DSH-based Agent Service/dsh_dlr/run_one.sh" <qid> "<question>"  # 单题（自动预检）
 bash "DSH-based Agent Service/dsh_dlr/run_web.sh"                     # Web 对话
-cd "TSM Core Service" && npx tsx src/verify/precheck.ts               # 后端预检（应列出 5 工具）
+cd "TSM Core Service" && npx tsx src/verify/precheck.ts               # 后端预检（应列出 7 工具）
 ```
 
 **评测线（dlr-eval-v1.5）**：
@@ -107,7 +107,7 @@ $PY post_process.py --run-id $RID [--group original|control]  # 确认后归档�
 - **旧 pair 目录字母序反杀**：单题目录排在前面时旧行会覆盖新行
 - **judge 超时**默认 INCORRECT：不要直接改 CSV，先手动 `opencode run` 验证
 - **token 口径** `total = input + cache_read + reasoning(CoT) + output`（cache_read 可占 80%+），**差异看 steps**
-- **改配置必须 rebuild + 重启**（`skills/*.md` 例外，改文件即生效）；同批次配置必须一致
+- **改配置必须 rebuild + 重启**（L1/L2/L3 三层同规：改 yaml / consensus / **sop.md** → 各自 `tsm build` 重建；原「skills/*.md 改文件即生效」的例外已随 L3 检索化取消）；同批次配置必须一致
 
 ---
 

@@ -26,7 +26,7 @@
 |---|---|---|---|---|---|---|
 | **数据源级** L1 | `dlr` | 场景包 `sources/configs/DLR/*.yaml` → 图 + 向量 | 这个领域**有什么**：业务概念、落地在哪、怎么连 | `dlr_semantic_query` → `get_pe_mapping` / `get_le_attrs` | **数据侧** | 随 schema / 数据源演进 |
 | **领域共识级** L2 | `consensus` | 场景包 `sources/consensus/*.jsonl` → 向量 | 题面用词**怎么算 / 怎么过滤**：术语→值、口径、背景 | `dlr_search_consensus` | **领域业务人员** | 随业务口径 |
-| **业务逻辑级** L3 | `sop` | 场景包 `sources/sop.md` → skill 部署件 | 这类问题**怎么裁**：打法、例外、陷阱 | `skill(name="sop")` | **业务人员** | 随流程 / 打法 |
+| **业务逻辑级** L3 | `sop` | 场景包 `sources/sop.md` → 向量索引（`tsm build` 编译，按题检索） | 这类问题**怎么裁**：打法、例外、陷阱 | `dlr_search_sop(question)` | **业务人员** | 随流程 / 打法 |
 
 三级**并行锚定**（不是串行流程）：拿到问题后三级同时取，交叉验证后才进入 SQL 构造。
 

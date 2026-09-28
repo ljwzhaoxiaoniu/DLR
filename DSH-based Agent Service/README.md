@@ -18,13 +18,13 @@ DSH-based Agent Service/
 ├── dsh-tsm/                  # ★ bundle（dsh plugin add 安装）：MCP 网关 + preset-dlr + 状态浮层 + skills
 │   ├── cordis.patch.yml      #   顶层行：mcp-semantic-core · dlr-status
 │   ├── presets/dlr.patch.yml #   preset-dlr：persona / AGENTS.md / skills / compaction
-│   ├── skills/               #   paradigm（认知层，场景无关）+ sop（L3 部署件，sync_sop.sh 生成）
+│   ├── skills/               #   paradigm（认知层，场景无关）；L3 已走索引检索（不随包发技能）
 │   └── lib/client.js         #   TSM 状态浮层（浏览器半）
 ├── .dsh-home/                # 运行时生成（$DSH_HOME；会话日志在此，可取证可删）
 └── dsh_dlr/
     ├── dsh.patch.yml         # headless 本地策略：禁用清单 / 模型 / persona / 指令候选
     ├── dsh-web.patch.yml     # web 本地策略：进程级收尾 / 目录选择器修复 / registry 默认 preset
-    ├── sync_sop.sh           # L3 同步：scenarios/<场景>/sources/sop.md → dsh-tsm/skills/sop/SKILL.md
+    ├── run_one.sh / run_web.sh / run_batch.sh   # 单题 / Web / 批跑（L3 索引用 tsm build sop 重建）
     ├── run_one.sh            # 单题运行器（预检 + dsh headless）
     ├── run_web.sh            # Web UI 启动器（预检 + dsh web）
     └── .env.example          # DEEPSEEK_API_KEY → 复制为 .env
@@ -60,7 +60,7 @@ bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 |---|---|---|
 | L1 DLR | 重新建模/构建 | `scenarios/<s>/sources/configs/{ER,DLR,RDF}/*.yaml` → `TSM Core Service` 构建 |
 | L2 Domain Consensus | 换一组共识源 | `scenarios/<s>/sources/consensus/*.jsonl` → `buildConsensus.ts`（namespace 隔离） |
-| L3 SOP | 换一个源文件 | `scenarios/<s>/sources/sop.md` → `sync_sop.sh` 生成部署件 |
+| L3 SOP | 换一个源文件 | `scenarios/<s>/sources/sop.md` → `buildSop.ts` 编译成检索索引（`dlr_search_sop`） |
 | 认知层 | **不动** | `skills/paradigm/SKILL.md`（与场景无关） |
 | 对照真值 | 随场景 | `scenarios/<s>/fixtures/*.json`（verify 套件用） |
 

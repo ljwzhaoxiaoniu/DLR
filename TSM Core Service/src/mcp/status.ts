@@ -10,17 +10,19 @@ import { SCENARIO } from "../config.js";
 import type { LanceStore } from "../store/lance.js";
 import type { Neo4jGraph } from "../graph/queries.js";
 
-/** 工具面清单（契约冻结的 5 个，仅作展示） */
+/** 工具面清单（契约冻结的 7 个，仅作展示） */
 const TOOLS = [
   "dlr_semantic_query",
   "dlr_search_consensus",
+  "dlr_search_sop",
   "get_pe_mapping",
+  "get_full_data_info",
   "get_le_attrs",
   "execute_sql",
 ];
 
-/** 向量表（L1 entities / L2 consensus） */
-const VECTOR_TABLES = ["entities", "consensus"];
+/** 向量表（L1 entities / L2 consensus / L3 sop 索引） */
+const VECTOR_TABLES = ["entities", "consensus", "sop"];
 
 const STARTED_AT = Date.now();
 

@@ -51,9 +51,11 @@ logical_entities:
     - column: california_schools.schools.District
       biz_name: District
       description: District
+      public: true
     - column: california_schools.schools.Phone
       biz_name: Phone
       description: Phone
+      public: true
     - column: california_schools.schools.Virtual
       biz_name: Virtual
       description: 'This field identifies the type of virtual instruction offered by the school. Virtual instruction is instruction
@@ -65,17 +67,21 @@ logical_entities:
         primary means of instruction. · N = Not Virtual – The school does not offer any virtual instruction. · P = Partial
         Virtual – The school offers some, but not all, instruction through virtual instruction. Note: This value was retired
         and replaced with the Primarily Virtual and Primarily Classroom values beginning with the 2016–17 school year.'
+      public: true
     - column: california_schools.schools.Charter
       biz_name: Charter
       description: 'This field identifies a charter school.. The field is coded as follows: · 1 = The school is a charter
         · 0 = The school is not a charter'
+      public: true
     - column: california_schools.schools.CharterNum
       biz_name: CharterNum
       description: The charter school number,. 4-digit number assigned to a charter school.
+      public: true
     - column: california_schools.schools.FundingType
       biz_name: FundingType
       description: 'Indicates the charter school funding type. Values are as follows: · Not in CS (California School) funding
         model · Locally funded · Directly funded'
+      public: true
     - column: california_schools.schools.DOC
       biz_name: District Ownership Code
       description: 'District Ownership Code. The District Ownership Code (DOC) is the numeric code used to identify the category
@@ -105,12 +111,15 @@ logical_entities:
         is coded as follows: · 1 = Magnet - The school is a magnet school and/or offers a magnet program. · 0 = Not Magnet
         - The school is not a magnet school and/or does not offer a magnet program. commonsense evidence: Note: Preschools
         and adult education centers do not contain a magnet school indicator.'
+      public: true
     - column: california_schools.schools.OpenDate
       biz_name: OpenDate
       description: The date the school opened.
+      public: true
     - column: california_schools.schools.ClosedDate
       biz_name: ClosedDate
       description: The date the school closed.
+      public: true
     - column: california_schools.schools.StatusType
       biz_name: StatusType
       description: 'This field identifies the status of the district.. Definitions of the valid status types are listed below:
@@ -118,12 +127,14 @@ logical_entities:
         and no longer providing instructional services. · Merged: The district has combined with another district or districts.
         · Pending: The district has not opened for operation and instructional services yet, but plans to open within the
         next 9–12 months.'
+      public: true
     - column: california_schools.schools.GSoffered
       biz_name: grade span offered
       description: 'The grade span offered is the lowest grade and the highest grade offered or supported by the school, district,
         or administrative authority. This field might differ from the grade span served as reported in the most recent certified
         California Longitudinal Pupil Achievement (CALPADS) Fall 1 data collection.. For example XYZ School might display
         the following data: GSoffered = P–Adult GSserved = K–12'
+      public: true
     - column: california_schools.schools.GSserved
       biz_name: grade span served.
       description: 'It is the lowest grade and the highest grade of student enrollment as reported in the most recent certified
@@ -131,6 +142,7 @@ logical_entities:
         span offered.. commonsense evidence: 1. Only K–12 enrollment is reported through CALPADS 2. Note: Special programs
         at independent study, alternative education, and special education schools will often exceed the typical grade span
         for schools of that type'
+      public: true
     - column: california_schools.schools.MailStreet
       biz_name: MailStreet
       description: 'MailStreet. The unabbreviated mailing address of the school, district, or administrative authority. Note:
@@ -141,10 +153,12 @@ logical_entities:
       biz_name: administrator's first name
       description: 'administrator''s first name. The superintendent’s or principal’s first name. commonsense evidence: Only
         active and pending districts and schools will display administrator information, if applicable.'
+      public: true
     - column: california_schools.schools.AdmLName1
       biz_name: administrator's last name
       description: 'administrator''s last name. The superintendent’s or principal’s last name. commonsense evidence: Only
         active and pending districts and schools will display administrator information, if applicable.'
+      public: true
     - column: california_schools.schools.AdmFName2
       biz_name: AdmFName2
       description: AdmFName2. SAME as 1
@@ -170,25 +184,6 @@ logical_entities:
         authority and the prime meridian (Greenwich, England) measured from west to east.. The angular distance (expressed
         in degrees) between the location of the school, district, or administrative authority and the prime meridian (Greenwich,
         England) measured from west to east.
-    - column: california_schools.schools.NCESDist
-      biz_name: National Center for Educational Statistics school district identification number
-      description: This field represents the 7-digit National Center for Educational Statistics (NCES) school district identification
-        number. The first 2 digits identify the state and the last 5 digits identify the school district. Combined, they make
-        a unique 7-digit ID for each school district.
-    - column: california_schools.schools.NCESSchool
-      biz_name: National Center for Educational Statistics school identification number
-      description: This field represents the 5-digit NCES school identification number. The NCESSchool combined with the NCESDist
-        form a unique 12-digit ID for each school.
-    - column: california_schools.schools.StreetAbr
-      biz_name: street address
-      description: 'The abbreviated street address of the school, district, or administrative authority’s physical location..
-        The abbreviated street address of the school, district, or administrative authority’s physical location. Note: Some
-        records (primarily records of closed or retired schools) may not have data in this field.'
-    - column: california_schools.schools.MailStrAbr
-      biz_name: mailing street address
-      description: 'mailing street address. the abbreviated mailing street address of the school, district, or administrative
-        authority.Note: Many active entities have not provided a mailing street address. For your convenience we have filled
-        the unpopulated MailStrAbr cells with StreetAbr data.'
     - column: california_schools.schools.MailCity
       biz_name: mailing city
       description: 'mailing city. The city associated with the mailing address of the school, district, or administrative
@@ -203,14 +198,6 @@ logical_entities:
       biz_name: mailing state
       description: mailing state. The state within the mailing address. For your convenience we have filled the unpopulated
         MailState cells with State data.
-    - column: california_schools.schools.Ext
-      biz_name: extension
-      description: The phone number extension of the school, district, or administrative authority.. The phone number extension
-        of the school, district, or administrative authority.
-    - column: california_schools.schools.Website
-      biz_name: Website
-      description: The website address of the school, district, or administrative authority.. The website address of the school,
-        district, or administrative authority.
     - column: california_schools.schools.DOCType
       biz_name: The District Ownership Code Type
       description: The District Ownership Code Type is the text description of the DOC category.. (See text values in DOC
@@ -241,9 +228,6 @@ logical_entities:
     - column: california_schools.schools.AdmEmail3
       biz_name: AdmEmail3
       description: AdmEmail3. not useful
-    - column: california_schools.schools.LastUpdate
-      biz_name: LastUpdate
-      description: LastUpdate. when is this record updated last time
 - logical_entity_id: LOGICAL.SchoolPerformance
   biz_name: SchoolPerformance
   description: California school performance — SAT scores (AvgScrMath, AvgScrRead, AvgScrWrite, NumGE1500, NumTstTakr), FRPM
@@ -282,6 +266,7 @@ logical_entities:
     - column: california_schools.satscores.NumTstTakr
       biz_name: Number of Test Takers
       description: Number of Test Takers in this school. number of test takers in each school
+      public: true
     - column: california_schools.satscores.rtype
       biz_name: rtype
       description: rtype. unuseful
@@ -294,9 +279,6 @@ logical_entities:
     - column: california_schools.satscores.cname
       biz_name: county name
       description: county name
-    - column: california_schools.satscores.enroll12
-      biz_name: enrollment (1st-12nd grade)
-      description: enrollment (1st-12nd grade)
   - physical_entity_id: PHYSICAL.FRPM
     physical_table_name: frpm
     physical_table_id: california_schools.frpm
@@ -357,54 +339,23 @@ logical_entities:
     - column: california_schools.frpm.Academic Year
       biz_name: Academic Year
       description: Academic Year
-    - column: california_schools.frpm.County Code
-      biz_name: County Code
-      description: County Code
-    - column: california_schools.frpm.District Code
-      biz_name: District Code
-      description: District Code
-    - column: california_schools.frpm.School Code
-      biz_name: School Code
-      description: School Code
+      public: true
     - column: california_schools.frpm.County Name
       biz_name: County Name
       description: County Code
-    - column: california_schools.frpm.District Type
-      biz_name: District Type
-      description: District Type
     - column: california_schools.frpm.Educational Option Type
       biz_name: Educational Option Type
       description: Educational Option Type
     - column: california_schools.frpm.NSLP Provision Status
       biz_name: NSLP Provision Status
       description: NSLP Provision Status
-    - column: california_schools.frpm.Charter School (Y/N)
-      biz_name: Charter School (Y/N)
-      description: 'Charter School (Y/N). 0: N; 1: Y'
-    - column: california_schools.frpm.Charter School Number
-      biz_name: Charter School Number
-      description: Charter School Number
-    - column: california_schools.frpm.IRC
-      biz_name: IRC
-      description: IRC. Not useful
+      public: true
     - column: california_schools.frpm.Low Grade
       biz_name: Low Grade
       description: Low Grade
     - column: california_schools.frpm.High Grade
       biz_name: High Grade
       description: High Grade
-    - column: california_schools.frpm.Percent (%) Eligible FRPM (K-12)
-      biz_name: Percent (%) Eligible FRPM (K-12)
-      description: Percent (%) Eligible FRPM (K-12)
-    - column: california_schools.frpm.Percent (%) Eligible Free (Ages 5-17)
-      biz_name: Percent (%) Eligible Free (Ages 5-17)
-      description: Percent (%) Eligible Free (Ages 5-17)
-    - column: california_schools.frpm.Percent (%) Eligible FRPM (Ages 5-17)
-      biz_name: Percent (%) Eligible FRPM (Ages 5-17)
-      description: Percent (%) Eligible FRPM (Ages 5-17)
-    - column: california_schools.frpm.2013-14 CALPADS Fall 1 Certification Status
-      biz_name: 2013-14 CALPADS Fall 1 Certification Status
-      description: 2013-14 CALPADS Fall 1 Certification Status
 pas_relations:
 - relation_id: LOGICAL.School_TO_LOGICAL.SchoolPerformance
   relation_name: HasPerformance
