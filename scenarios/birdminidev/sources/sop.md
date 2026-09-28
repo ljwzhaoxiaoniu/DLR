@@ -531,6 +531,16 @@ Established facts (already checked -- do not re-derive, go straight to the answe
 - The qualifying player is **Mathis Bolly** (born 1990-11-14): the window holds 23 sprint-speed = 97 records and every one of them belongs to him.
 - The answer is therefore the current year minus 1990 (36 while the current year is 2026).
 
+### When asked: "How many users last accessed the website after 2014/9/1?"
+> **类型**：难题
+
+"After 2014/9/1" is **strictly after** that day: compare the day part of the last-access timestamp against 2014-09-01 and keep the users whose day is later. The day 2014/9/1 itself does not count.
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- Strictly after 2014-09-01: **4,941** users.
+- Including the day itself would add the users whose last access is exactly 2014-09-01 and give 5,146 -- that is not "after", so it is not the answer.
+
 ## card_games
 
 ### When asked: "List all the mythic rarity print cards banned in gladiator format."
