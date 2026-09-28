@@ -1,6 +1,6 @@
 # 评测明细 · california_schools — birdminidev
 
-> 本库已跑 **30** 题：✅ 29 ｜ 🔁 1 ｜ ❌ 0 ｜ ⚠️ 0 ｜ token 中位 **66,793**
+> 本库已跑 **30** 题：✅ 29 ｜ 🔁 1 ｜ ❌ 0 ｜ ⚠️ 0 ｜ token 中位 **66,005**
 > 总账（覆盖度 / 汇总 / 数据集缺陷与裁定）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -15,10 +15,10 @@
 | [q24](#q24) | ✅ PASS | ✅ 正确 | 8 | 13 | 172,295 | 2 轮（最新 0928_1116_qids_5_11_12_17_24） | 文本一致 |
 | [q25](#q25) | ✅ PASS | ✅ 正确 | 6 | 10 | 80,558 | 2 轮（最新 0928_1118_qids_25_26_27_28_31） | 文本一致 |
 | [q26](#q26) | ✅ PASS | ✅ 正确 | 7 | 14 | 127,784 | 2 轮（最新 0928_1118_qids_25_26_27_28_31） | 文本一致 |
-| [q27](#q27) | ⚠️ UNCERTAIN | 🔁 翻盘 | 10 | 17 | 292,786 | 3 轮（最新 0928_1118_qids_25_26_27_28_31） | 抽不出可比对的值；按 SOP 裁定为正确（难题） |
+| [q27](#q27) | ⚠️ UNCERTAIN | 🔁 翻盘 | 6 | 10 | 100,273 | 5 轮（最新 0928_1150_qids_27） | 抽不出可比对的值；按 SOP 裁定为正确（难题） |
 | [q28](#q28) | ✅ PASS | ✅ 正确 | 5 | 8 | 68,204 | 3 轮（最新 0928_1118_qids_25_26_27_28_31） | 文本一致 |
 | [q31](#q31) | ✅ PASS | ✅ 正确 | 5 | 8 | 66,793 | 2 轮（最新 0928_1118_qids_25_26_27_28_31） | 文本一致 |
-| [q32](#q32) | ✅ PASS | ✅ 正确 | 5 | 8 | 69,416 | 2 轮（最新 0928_1123_qids_32_36_39_40_41） | 文本一致 |
+| [q32](#q32) | ✅ PASS | ✅ 正确 | 5 | 8 | 72,370 | 3 轮（最新 0928_1147_qids_27_32_83_85） | 文本一致 |
 | [q36](#q36) | ✅ PASS | ✅ 正确 | 5 | 8 | 61,876 | 2 轮（最新 0928_1123_qids_32_36_39_40_41） | 文本一致 |
 | [q37](#q37) | ✅ PASS | ✅ 正确 | 5 | 9 | 63,682 | 3 轮（最新 0928_1135_qids_23_37_45_82_85） | 文本一致 |
 | [q39](#q39) | ✅ PASS | ✅ 正确 | 5 | 7 | 60,587 | 3 轮（最新 0928_1137_qids_39_41_50_77） | 文本一致 |
@@ -34,8 +34,8 @@
 | [q77](#q77) | ✅ PASS | ✅ 正确 | 4 | 6 | 46,344 | 3 轮（最新 0928_1137_qids_39_41_50_77） | 文本一致 |
 | [q79](#q79) | ✅ PASS | ✅ 正确 | 5 | 7 | 54,306 | 2 轮（最新 0928_1132_qids_72_77_79_83_87） | 文本一致 |
 | [q82](#q82) | ✅ PASS | ✅ 正确 | 5 | 8 | 62,306 | 2 轮（最新 0928_1135_qids_23_37_45_82_85） | 文本一致 |
-| [q83](#q83) | ✅ PASS | ✅ 正确 | 10 | 21 | 222,743 | 3 轮（最新 0928_1132_qids_72_77_79_83_87） | 文本一致 |
-| [q85](#q85) | ✅ PASS | ✅ 正确 | 8 | 12 | 127,968 | 2 轮（最新 0928_1135_qids_23_37_45_82_85） | 文本一致 |
+| [q83](#q83) | ✅ PASS | ✅ 正确 | 8 | 14 | 125,775 | 4 轮（最新 0928_1147_qids_27_32_83_85） | 文本一致 |
+| [q85](#q85) | ✅ PASS | ✅ 正确 | 5 | 8 | 64,686 | 3 轮（最新 0928_1147_qids_27_32_83_85） | 文本一致 |
 | [q87](#q87) | ✅ PASS | ✅ 正确 | 6 | 11 | 96,739 | 2 轮（最新 0928_1132_qids_72_77_79_83_87） | 结果集一致（与该题 gold 同集） |
 
 ## 本库数据集缺陷与裁定
@@ -538,63 +538,58 @@ Evidence SQL: SELECT s.School AS School, s.Street AS Street, s.City AS City, s.S
 </details>
 
 <details id="q27">
-<summary><b>q27</b> · california_schools · ⚠️ <b>UNCERTAIN</b> · 🔁 翻盘 · 10 步 / 17 工具 · 292,786 tok · 3 轮 · 抽不出可比对的值；按 SOP 裁定为正确（难题）</summary>
+<summary><b>q27</b> · california_schools · ⚠️ <b>UNCERTAIN</b> · 🔁 翻盘 · 6 步 / 10 工具 · 100,273 tok · 5 轮 · 抽不出可比对的值；按 SOP 裁定为正确（难题）</summary>
 
 **问题**：What is the average score in writing for the schools that were opened after 1991 or closed before 2000? List the school names along with the score. Also, list the communication number of the schools if there is any.
 
 **期望**：`FAME Public Charter | 505 | null | Envision Academy for Arts & Technology | 395 | (510) 596-8901 | Aspire California College Preparatory Academy | null`
 
-**答案**：`## 解题过程 **三级并行锚定**（同时发起）： \| 级 \| 工具 \| 命中 \| \|---\|---\|---\| \| L3 口径 \| 'dlr_search_sop' \| **match=exact**（标题逐字复述本题）→ 该节即本题权威口径 \| \| L1 实体 \| 'dlr_semantic_query' \| 'LOGICAL.School'（schools：Ope`
+**答案**：`## 检索路径 **L3（'dlr_search_sop'，'match=exact'，标题逐字复述本题 → 本题最权威口径）** 给出四条关键口径： 1. "Communication number"＝学校的电话号码（无独立联系表）→ 'schools.Phone' 2. "opened after 1991"＝开办年为 1992 及以后；"closed before 2000"＝关闭日期早于 `
 
 **调用步骤**
 
 | # | 工具 | 参数（截 200） |
 |---|---|---|
 | 1 | `dlr_search_sop` | `{"question":"What is the average score in writing for the schools that were opened after 1991 or closed before 2000? List the school names along with the score. Also, list the communication number of ` |
-| 2 | `dlr_semantic_query` | `{"question":"average writing score for schools opened after 1991 or closed before 2000, school names, communication number"}` |
-| 3 | `dlr_search_consensus` | `{"question":"schools opened after 1991 or closed before 2000, average writing score, communication number"}` |
+| 2 | `dlr_semantic_query` | `{"question":"average writing score of schools opened after 1991 or closed before 2000, with school names and communication number"}` |
+| 3 | `dlr_search_consensus` | `{"question":"school opened after 1991 or closed before 2000, average writing score, communication number"}` |
 | 4 | `get_pe_mapping` | `{"pe_id":"PHYSICAL.School"}` |
 | 5 | `get_pe_mapping` | `{"pe_id":"PHYSICAL.SATScore"}` |
-| 6 | `execute_sql` | `{"sql":"SELECT s.School, st.AvgScrWrite, s.OpenDate, s.ClosedDate, s.Phone\nFROM schools s JOIN satscores st ON st.cds = s.CDSCode\nWHERE (s.OpenDate > '1991-12-31' OR s.ClosedDate < '2000-01-01')\n A` |
-| 7 | `execute_sql` | `{"sql":"SELECT COUNT(*) AS total, SUM(CASE WHEN st.AvgScrWrite IS NULL THEN 1 ELSE 0 END) AS null_write\nFROM schools s JOIN satscores st ON st.cds = s.CDSCode\nWHERE (s.OpenDate > '1991-12-31' OR s.C` |
-| 8 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT (SELECT COUNT(*) FROM schools) AS n_schools,\n (SELECT COUNT(*) FR` |
-| 9 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT s.School, st.AvgScrWrite, s.OpenDate, s.ClosedDate, s.Phone\nFROM ` |
-| 10 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT s.School, s.Phone FROM schools s LEFT JOIN satscores st ON st.cds ` |
-| 11 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT COUNT(*) AS n FROM schools s JOIN satscores st ON st.cds = s.CDSCo` |
-| 12 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT s.School, st.AvgScrWrite, s.Phone FROM schools s JOIN satscores st` |
-| 13 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT s.School || ' | ' || st.AvgScrWrite || ' | ' || COALESCE(s.Phone,'` |
-| 14 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT s.School || ' | ' || st.AvgScrWrite || ' | ' || COALESCE(s.Phone,'` |
-| 15 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT s.School || ' | ' || st.AvgScrWrite || ' | ' || COALESCE(s.Phone,'` |
-| 16 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT s.School, st.AvgScrMath, st.AvgScrRead, st.AvgScrWrite, st.NumTstT` |
-| 17 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT COUNT(*) AS n_atleast_one_score,\n (SELECT COUNT(*) FROM schools s` |
+| 6 | `execute_sql` | `{"sql":"SELECT COUNT(*) AS n, SUM(CASE WHEN s.Phone IS NOT NULL AND TRIM(s.Phone)<>'' THEN 1 ELSE 0 END) AS with_phone, SUM(CASE WHEN s.ClosedDate IS NOT NULL AND s.ClosedDate < '2000-01-01' THEN 1 EL` |
+| 7 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT s.School, t.AvgScrWrite, s.Phone, s.OpenDate, s.ClosedDate, s.City` |
+| 8 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT s.School || ' | ' || t.AvgScrWrite || ' | ' || COALESCE(NULLIF(TRI` |
+| 9 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT s.School || ' | ' || t.AvgScrWrite || ' | ' || COALESCE(NULLIF(TRI` |
+| 10 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT s.School || ' | ' || t.AvgScrWrite || ' | ' || COALESCE(NULLIF(TRI` |
 
 **依据与结论**（agent 原文）
 
-#### 解题过程
+#### 检索路径
 
-**三级并行锚定**（同时发起）：
+**L3（`dlr_search_sop`，`match=exact`，标题逐字复述本题 → 本题最权威口径）** 给出四条关键口径：
+1. "Communication number"＝学校的电话号码（无独立联系表）→ `schools.Phone`
+2. "opened after 1991"＝开办年为 1992 及以后；"closed before 2000"＝关闭日期早于 2000；**OR 条件**，仍在办的学校无关闭日期，靠开办日期入选
+3. `AvgScrWrite` **本身就是每校平均分**（列名即"average"），**不得再套 AVG()**；只有问"跨校平均"时才聚合
+4. 只有**有写作分数**的学校进列表；无分数的学校不贡献行
+5. SOP 已给出实测基准：**493 行，其中 482 行有电话**；"closed before 2000" 分支**贡献 0 行**
 
-| 级 | 工具 | 命中 |
-|---|---|---|
-| L3 口径 | `dlr_search_sop` | **match=exact**（标题逐字复述本题）→ 该节即本题权威口径 |
-| L1 实体 | `dlr_semantic_query` | `LOGICAL.School`（schools：OpenDate/ClosedDate/Phone）+ `LOGICAL.SchoolPerformance`（satscores：AvgScrWrite），db=california_schools |
-| L2 共识 | `dlr_search_consensus` | 跨库召回，命中集中在 california_schools（日期/学校属性口径） |
+**L1（`dlr_semantic_query`）** 锚定 `LOGICAL.School`（→ `schools`：`School`/`Phone`/`OpenDate`/`ClosedDate`/`CDSCode`）与 `LOGICAL.SchoolPerformance`（→ `satscores`：`AvgScrWrite`，锚键 `cds`）；**`get_pe_mapping`** 第二跳确认 JOIN 锚键 `schools.CDSCode = satscores.cds`（1:1）与 `database_url`。
 
-**L3 口径要点（严格照办）**：
-1. "opened after 1991" = 开学年为 **1992 及以后**（`OpenDate > '1991-12-31'`）；"closed before 2000" = 关闭日期 **早于 2000**（`ClosedDate < '2000-01-01'`）；是 **OR**，仍未关闭的学校（ClosedDate 为空）通过开学日入选。
-2. `AvgScrWrite` **本身就是每校的平均分**（"average" 指的是这一列，不是要再套 `AVG()`）。
-3. "Communication number" = 学校的 **电话**（`schools.Phone`），没有单独的联系表。
-4. 入榜条件：**有写作成绩**的学校；写作成绩为空的学校不贡献任何行。按校名排序。
+**L2（`dlr_search_consensus`）** 未返回本题专属条目（命中的是 california_schools 其他题），以 L3 + L1 为准。
 
-**JOIN 依据**（`get_pe_mapping` 的 A_anchor）：`ARCS.A_anchor` → `satscores.cds = schools.CDSCode`（1:1）。
+#### 校验（与 SOP 实测基准逐项对齐）
 
-**数据核对**：`satscores` 2269 行全部能与 `schools` 匹配；满足日期 OR 条件的有 **813** 行，其中写作成绩为空 **320** 行 → 最终列出 **493** 行（与 L1/L2/L3 一致；`dlr_semantic_query` 明确 AvgScrWrite 为预计算每校均值）。
+| 指标 | SOP 基准 | 实测 | 一致 |
+|---|---|---|---|
+| 列表行数 | 493 | **493** | ✅ |
+| 有电话行数 | 482 | **482** | ✅ |
+| 经"closed before 2000"入选行数 | 0 | **0** | ✅ |
+| Expected 三校是否在列 | APEX Academy / ARISE High / Windsor High | 三校均在（368 / 369 / 516 分） | ✅ |
 
----
+#### 结果：493 所学校的写作平均分与通讯号码
 
-Final Answer:
-共 493 行（校名 | 写作平均分 AvgScrWrite | 联系电话 Phone，按校名排序；另有 320 所满足日期条件但写作成绩为空的学校不贡献任何行，如 21st Century Learning Institute、ASA Charter，已按口径剔除）：
+（格式：`学校名 | 写作平均分 | 通讯号码`；无电话者以空值呈现，不剔除）
 
+```
 APEX Academy | 368 | (323) 817-6550
 ARISE High | 369 | (510) 436-5487
 Academies of Education and Empowerment at Carson High | 403 | (310) 847-1455
@@ -1088,8 +1083,14 @@ Windsor High | 516 | (707) 837-7767
 Wonderful College Prep Academy | 377 | (661) 454-3000
 Woodcreek High | 501 | (916) 771-6565
 Yorba Linda High | 543 | (714) 986-7500
+```
 
-Evidence SQL: SELECT s.School || ' | ' || st.AvgScrWrite || ' | ' || COALESCE(s.Phone,'') AS row_txt FROM schools s JOIN satscores st ON st.cds = s.CDSCode WHERE (s.OpenDate > '1991-12-31' OR s.ClosedDate < '2000-01-01') AND st.AvgScrWrite IS NOT NULL ORDER BY s.School
+**汇总**：共 **493 行**；其中 **482 行含通讯号码**，**11 行通讯号码为空**（FAME Public Charter、Frederick Douglass Academy High、Insight @ Los Angeles、Leadership Public Schools - San Jose、Leadership in Entertainment and Media Arts (LEMA)、Los Angeles Teacher Preparatory Academy、Northcoast Preparatory and Performing Arts Academy、PUC CA Academy for Liberal Studies Early College High、San Diego MVP Arts、San Francisco Flex Academy、Student Empowerment Academy —— 按口径保留不剔除）。入选项**全部来自"1992 年后开办"分支**；"2000 年前关闭"分支贡献 0 行。写作分数列为每校既有平均分（`AvgScrWrite`），未再聚合。
+
+```
+Final Answer: 493 rows (school | AvgScrWrite | Phone), listed above in school-name order; 482 rows carry a phone number, 11 rows have an empty phone (kept, not dropped). All rows qualify via OpenDate >= 1992-01-01; the "closed before 2000" branch contributes 0 rows. Notes: writing score column is the pre-computed per-school average AvgScrWrite (not re-aggregated). Expected names present: APEX Academy (368, (323) 817-6550), ARISE High (369, (510) 436-5487), Windsor High (516, (707) 837-7767).
+Evidence SQL: SELECT s.School, t.AvgScrWrite, s.Phone FROM schools s JOIN satscores t ON s.CDSCode = t.cds WHERE (s.OpenDate >= '1992-01-01' OR s.ClosedDate < '2000-01-01') AND t.AvgScrWrite IS NOT NULL ORDER BY s.School;
+```
 
 建模缺口: 无
 
@@ -1241,56 +1242,61 @@ Evidence SQL: SELECT "School Name" AS school, "Enrollment (K-12)" AS enrollment,
 </details>
 
 <details id="q32">
-<summary><b>q32</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 69,416 tok · 2 轮 · 文本一致</summary>
+<summary><b>q32</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 72,370 tok · 3 轮 · 文本一致</summary>
 
 **问题**：What is the eligible free or reduced price meal rate for the top 5 schools in grades 1-12 with the highest free or reduced price meal count of the schools with the ownership code 66?
 
 **期望**：`0.9179476526796843 | 0.9993290841999329 | 0.8964987714987716 | 0.8958203368683718 | 0.9141803553469662`
 
-**答案**：`## 解题过程 **三级锚定** - **L1（实体路）**：'dlr_semantic_query' → 'LOGICAL.SchoolPerformance'（PE 'frpm'，含 'FRPM Count (K-12)'、'Enrollment (K-12)'）+ 'LOGICAL.School'（PE 'schools'，含 CDCSCode 锚键）。 - **L2（evidence 路）`
+**答案**：`## 查询过程与依据 **三级锚定** \| 级 \| 命中 \| 结论 \| \|---\|---\|---\| \| L2 领域共识 \| qid 32 **逐字即本题**："grades 1-12 means K-12；Eligible free or reduced price meal rate for K-12 = 'FRPM Count (K-12)' / 'Enrollment (`
 
 **调用步骤**
 
 | # | 工具 | 参数（截 200） |
 |---|---|---|
 | 1 | `dlr_search_sop` | `{"question":"What is the eligible free or reduced price meal rate for the top 5 schools in grades 1-12 with the highest free or reduced price meal count of the schools with the ownership code 66?"}` |
-| 2 | `dlr_semantic_query` | `{"question":"What is the eligible free or reduced price meal rate for the top 5 schools in grades 1-12 with the highest free or reduced price meal count of the schools with the ownership code 66?"}` |
-| 3 | `dlr_search_consensus` | `{"question":"What is the eligible free or reduced price meal rate for the top 5 schools in grades 1-12 with the highest free or reduced price meal count of the schools with the ownership code 66?"}` |
+| 2 | `dlr_semantic_query` | `{"question":"free or reduced price meal rate, ownership code 66, grades 1-12 schools"}` |
+| 3 | `dlr_search_consensus` | `{"question":"free or reduced price meal count and rate, ownership code 66, grades 1-12"}` |
 | 4 | `get_pe_mapping` | `{"pe_id":"PHYSICAL.FRPM"}` |
 | 5 | `get_pe_mapping` | `{"pe_id":"PHYSICAL.School"}` |
-| 6 | `dlr_search_consensus` | `{"question":"ownership code 66 schools california ownership code column meaning","namespace":"california_schools"}` |
-| 7 | `execute_sql` | `{"sql":"SELECT T1.School AS SchoolName, T2.\"FRPM Count (K-12)\" AS FRPM_K12, T2.\"Enrollment (K-12)\" AS Enroll_K12, CAST(T2.\"FRPM Count (K-12)\" AS REAL) / T2.\"Enrollment (K-12)\" AS rate FROM sch` |
-| 8 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT CAST(T2.\"FRPM Count (K-12)\" AS REAL) / T2.\"Enrollment (K-12)\" ` |
+| 6 | `execute_sql` | `{"sql":"SELECT s.School, f.'FRPM Count (K-12)', f.'Enrollment (K-12)', CAST(f.'FRPM Count (K-12)' AS REAL)/f.'Enrollment (K-12)' AS rate FROM frpm f JOIN schools s ON f.CDSCode = s.CDSCode WHERE s.SOC` |
+| 7 | `execute_sql` | `{"sql":"SELECT COUNT(*) AS n_rows, COUNT(DISTINCT CDSCode) AS n_codes FROM frpm","database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite"}` |
+| 8 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT CAST(f.'FRPM Count (K-12)' AS REAL)/f.'Enrollment (K-12)' AS rate ` |
 
 **依据与结论**（agent 原文）
 
-#### 解题过程
+#### 查询过程与依据
 
 **三级锚定**
-- **L1（实体路）**：`dlr_semantic_query` → `LOGICAL.SchoolPerformance`（PE `frpm`，含 `FRPM Count (K-12)`、`Enrollment (K-12)`）+ `LOGICAL.School`（PE `schools`，含 CDCSCode 锚键）。
-- **L2（evidence 路）**：`dlr_search_consensus` 命中 **qid=32，题面逐字复述本题**：
-  - "grades 1-12 means K-12"
-  - **"Eligible free or reduced price meal rate for K-12 = `FRPM Count (K-12)` / `Enrollment (K-12)`"**
-- **L3（口径路）**：`dlr_search_sop` 返回 `match=similar`（两条候选均非本题）→ 本题无 L3 节，按 L1+L2 自解。
 
-**"ownership code 66" 的锚定**：`get_pe_mapping(PHYSICAL.School)` 中 `DOC`（District Ownership Code）的合法值只有 00/02/03/31/34/52/54/56/98，**不含 66**；而 `SOC`（School Ownership Code）明确列出 **"66 – High Schools (Public)"** → 过滤列锁定为 `schools.SOC = '66'`。
+| 级 | 命中 | 结论 |
+|---|---|---|
+| L2 领域共识 | qid 32 **逐字即本题**："grades 1-12 means K-12；Eligible free or reduced price meal rate for K-12 = `FRPM Count (K-12)` / `Enrollment (K-12)`" | 公式＝FRPM(K-12)÷Enrollment(K-12)；"grades 1-12" 走 K-12 列 |
+| L1 语义召回 | `LOGICAL.SchoolPerformance` → `PHYSICAL.FRPM`(frpm)；`LOGICAL.School` → `PHYSICAL.School`(schools) | 计数/在校数在 frpm，ownership code 在 schools |
+| L3 SOP | `match=similar`（标题少了 "with the ownership code 66"，非逐字复述 → 不作口径，仅作背景校验） | 其"measured facts"5 个 rate 与我的 SQL 结果**逐位一致** |
 
-**SQL 结构**：`schools` ⟗ `frpm`（ARC 锚键 `CDSCode`，1:1），按 `FRPM Count (K-12)` 降序取前 5，比率在 SQL 内用浮点除法算出（SQLite 整数除法会截断，故 `CAST(... AS REAL)`）。
+**锚定要点**
+- ownership code 66 → `schools.SOC`（School Ownership Code），编码表明确 `66 – High Schools (Public)`（来源：`get_pe_mapping` 的 `california_schools.schools.SOC` 描述）。
+- JOIN 唯一依据 = ARC 锚键 `CDSCode`（frpm 1:1 schools）。已校验 `frpm` 为 9986 行 / 9986 个 distinct CDSCode，**无 JOIN 虚增风险**。
+- 排序按 **count**（`FRPM Count (K-12)`）降序取 5，rate 只作为输出（不按 rate 排）——这是本题最易错点。
+- 整数除法陷阱：用 `CAST(... AS REAL)` 保证浮点。
 
-| # | School | FRPM Count (K-12) | Enrollment (K-12) | Rate |
-|---|---|---|---|---|
-| 1 | Paramount High | 4419 | 4814 | 0.9179476526796843 |
-| 2 | Calexico High | 2979 | 2981 | 0.9993290841999329 |
-| 3 | Bell Senior High | 2919 | 3256 | 0.8964987714987716 |
-| 4 | Anaheim High | 2872 | 3206 | 0.8958203368683718 |
-| 5 | Bell Gardens High | 2727 | 2983 | 0.9141803553469662 |
+**结果（按 count 降序）**
 
-来源：`mcp__semantic-core__dlr_semantic_query`（LE SchoolPerformance/School）、`mcp__semantic-core__get_pe_mapping`（SOC=66 → High Schools (Public)；公式列名）、`mcp__semantic-core__dlr_search_consensus`（qid=32：rate = FRPM Count (K-12) / Enrollment (K-12)）、`mcp__semantic-core__execute_sql`（结果表）。
+| 学校 | FRPM Count (K-12) | Enrollment (K-12) | Rate |
+|---|---|---|---|
+| Paramount High | 4419 | 4814 | 0.9179476526796843 |
+| Calexico High | 2979 | 2981 | 0.9993290841999329 |
+| Bell Senior High | 2919 | 3256 | 0.8964987714987716 |
+| Anaheim High | 2872 | 3206 | 0.8958203368683718 |
+| Bell Gardens High | 2727 | 2983 | 0.9141803553469662 |
 
-Final Answer: [0.9179476526796843, 0.9993290841999329, 0.8964987714987716, 0.8958203368683718, 0.9141803553469662]  (Paramount High, Calexico High, Bell Senior High, Anaheim High, Bell Gardens High — in descending FRPM Count (K-12) order)
-Evidence SQL: SELECT CAST(T2."FRPM Count (K-12)" AS REAL) / T2."Enrollment (K-12)" AS eligible_frpm_rate FROM schools AS T1 INNER JOIN frpm AS T2 ON T1.CDSCode = T2.CDSCode WHERE T1.SOC = '66' ORDER BY T2."FRPM Count (K-12)" DESC LIMIT 5;
+```
+Final Answer: [0.9179476526796843, 0.9993290841999329, 0.8964987714987716, 0.8958203368683718, 0.9141803553469662]
+Evidence SQL: SELECT CAST(f.`FRPM Count (K-12)` AS REAL)/f.`Enrollment (K-12)` AS rate FROM frpm f JOIN schools s ON f.CDSCode = s.CDSCode WHERE s.SOC = '66' ORDER BY f.`FRPM Count (K-12)` DESC LIMIT 5
+```
 
-建模缺口: 无
+建模缺口: `schools.SOC / schools.SOCType` — 列已在建模视图内（`get_pe_mapping(PHYSICAL.School)` 可返回），但未挂到 `LOGICAL.School` 的任何公开属性上（C_column 里无 ownership code 语义位），本题的筛选条件只能靠物理列名直取；建议 升入 `LOGICAL.School` 公开属性（如 `OwnershipCode` / `OwnershipType`），使"school ownership/type"这一常用过滤口径可被 LE 级召回。
 
 </details>
 
@@ -2029,13 +2035,13 @@ Evidence SQL: SELECT GSoffered FROM schools WHERE Longitude IS NOT NULL ORDER BY
 </details>
 
 <details id="q83">
-<summary><b>q83</b> · california_schools · ✅ <b>PASS</b> · 10 步 / 21 工具 · 222,743 tok · 3 轮 · 文本一致</summary>
+<summary><b>q83</b> · california_schools · ✅ <b>PASS</b> · 8 步 / 14 工具 · 125,775 tok · 4 轮 · 文本一致</summary>
 
 **问题**：Of the schools that offers a magnet program serving a grade span of Kindergarten to 8th grade, how many offers Multiple Provision Types? List the number of cities that offers a Kindergarten to 8th grade span and indicate how many schools are there serving such grade span for each city.
 
 **期望**：`Adelanto | 1`
 
-**答案**：`## 三级锚定结果 **L3（'dlr_search_sop'，match=exact，标题逐字复述本题）**——本题最权威口径，共三条关键定调： 1. "offers a magnet program" 是**标志位**（'Magnet = 1'），不是项目名称； 2. "Kindergarten to 8th grade" 是**年级段取值**，按存储原样匹配（我核查过：两列中都只存在唯一写法`
+**答案**：`## 结论 **第一问 — 提供 Kindergarten–8 年级（K-8）学段且设有 magnet 项目的学校中，有多少所提供 Multiple Provision Types？** **1 所。** - 全库 'schools.Magnet = 1' 且 'schools.GSoffered = 'K-8'' 的学校共 **37 所**（L2 共识：'Magnet = 1' 即"提供 mag`
 
 **调用步骤**
 
@@ -2043,114 +2049,119 @@ Evidence SQL: SELECT GSoffered FROM schools WHERE Longitude IS NOT NULL ORDER BY
 |---|---|---|
 | 1 | `dlr_search_sop` | `{"question":"Of the schools that offers a magnet program serving a grade span of Kindergarten to 8th grade, how many offers Multiple Provision Types? List the number of cities that offers a Kindergart` |
 | 2 | `dlr_semantic_query` | `{"question":"Of the schools that offers a magnet program serving a grade span of Kindergarten to 8th grade, how many offers Multiple Provision Types? List the number of cities that offers a Kindergart` |
-| 3 | `dlr_search_consensus` | `{"question":"Of the schools that offers a magnet program serving a grade span of Kindergarten to 8th grade, how many offers Multiple Provision Types? List the number of cities that offers a Kindergart` |
+| 3 | `dlr_search_consensus` | `{"question":"magnet program grade span Kindergarten to 8th grade Multiple Provision Types city schools count"}` |
 | 4 | `get_pe_mapping` | `{"pe_id":"PHYSICAL.School"}` |
 | 5 | `get_pe_mapping` | `{"pe_id":"PHYSICAL.FRPM"}` |
-| 6 | `execute_sql` | `{"sql":"SELECT GSoffered, COUNT(*) c FROM schools GROUP BY GSoffered ORDER BY c DESC LIMIT 40","database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_sc` |
-| 7 | `execute_sql` | `{"sql":"SELECT GSserved, COUNT(*) c FROM schools GROUP BY GSserved ORDER BY c DESC LIMIT 40","database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_scho` |
-| 8 | `execute_sql` | `{"sql":"SELECT DISTINCT \"NSLP Provision Status\" FROM frpm","database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite"}` |
-| 9 | `execute_sql` | `{"sql":"SELECT COUNT(*) total, COUNT(DISTINCT CDSCode) schools, COUNT(DISTINCT \"Academic Year\") yrs FROM frpm","database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_scho` |
-| 10 | `execute_sql` | `{"sql":"SELECT COUNT(DISTINCT s.CDSCode) AS n FROM schools s JOIN frpm f ON s.CDSCode = f.CDSCode WHERE s.Magnet = 1 AND s.GSoffered = 'K-8' AND f.\"NSLP Provision Status\" = 'Multiple Provision Types` |
-| 11 | `execute_sql` | `{"sql":"SELECT COUNT(DISTINCT s.CDSCode) AS n FROM schools s JOIN frpm f ON s.CDSCode = f.CDSCode WHERE s.Magnet = 1 AND s.GSserved = 'K-8' AND f.\"NSLP Provision Status\" = 'Multiple Provision Types'` |
-| 12 | `execute_sql` | `{"sql":"SELECT City, COUNT(DISTINCT CDSCode) AS n FROM schools WHERE GSoffered = 'K-8' GROUP BY City ORDER BY n DESC","database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california` |
-| 13 | `execute_sql` | `{"sql":"SELECT City, COUNT(DISTINCT CDSCode) AS n FROM schools WHERE GSserved = 'K-8' GROUP BY City ORDER BY n DESC","database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_` |
-| 14 | `execute_sql` | `{"sql":"SELECT 'offered' AS col, COUNT(DISTINCT City) AS cities, COUNT(*) AS schools FROM schools WHERE GSoffered='K-8' AND City IS NOT NULL UNION ALL SELECT 'served', COUNT(DISTINCT City), COUNT(*) F` |
-| 15 | `execute_sql` | `{"sql":"SELECT COUNT(*) AS total_rows, SUM(CASE WHEN City IS NULL THEN 1 ELSE 0 END) AS null_city FROM schools WHERE GSoffered='K-8'","database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_datab` |
-| 16 | `dlr_search_consensus` | `{"question":"school grade span Kindergarten to 8th grade K-8 grade span offered GSoffered vs grade span served GSserved city","namespace":"california_schools","top_k":10}` |
-| 17 | `dlr_semantic_query` | `{"question":"schools serving grade span K-8 Kindergarten to 8th grade, city, count of schools per city","db":"california_schools","top_k":5}` |
-| 18 | `execute_sql` | `{"sql":"SELECT s.CDSCode, s.School, s.City, s.GSoffered, f.\"NSLP Provision Status\" FROM schools s JOIN frpm f ON s.CDSCode = f.CDSCode WHERE s.Magnet = 1 AND s.GSoffered = 'K-8' AND f.\"NSLP Provisi` |
-| 19 | `execute_sql` | `{"sql":"SELECT COUNT(DISTINCT City) AS num_cities, COUNT(*) AS num_schools FROM schools WHERE GSoffered = 'K-8' AND City IS NOT NULL","database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_datab` |
-| 20 | `execute_sql` | `{"sql":"SELECT group_concat(City || ' (' || c || ')', ', ') AS per_city FROM (SELECT City, COUNT(*) AS c FROM schools WHERE GSoffered='K-8' AND City IS NOT NULL GROUP BY City ORDER BY COUNT(*) DESC, C` |
-| 21 | `execute_sql` | `{"sql":"SELECT (SELECT CAST(COUNT(DISTINCT s.CDSCode) AS TEXT) FROM schools s JOIN frpm f ON s.CDSCode=f.CDSCode WHERE s.Magnet=1 AND s.GSoffered='K-8' AND f.\"NSLP Provision Status\"='Multiple Provis` |
+| 6 | `execute_sql` | `{"sql":"SELECT GSoffered, COUNT(*) c FROM schools WHERE GSoffered LIKE '%K%8%' OR GSoffered LIKE '%Kindergarten%' GROUP BY GSoffered ORDER BY c DESC LIMIT 40","database_url":"D:\\Code_Proj\\DLR Proj\\` |
+| 7 | `execute_sql` | `{"sql":"SELECT DISTINCT \"NSLP Provision Status\" FROM frpm LIMIT 30","database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite"}` |
+| 8 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT s.CDSCode, s.School, s.City, f.\"Academic Year\", f.\"NSLP Provisi` |
+| 9 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT COUNT(*) AS magnet_k8 FROM schools WHERE Magnet = 1 AND GSoffered ` |
+| 10 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT COUNT(*) AS num_cities, SUM(cnt) AS total_schools FROM (SELECT Cit` |
+| 11 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT City, COUNT(*) AS schools FROM schools WHERE GSoffered = 'K-8' GRO` |
+| 12 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT COUNT(DISTINCT City) AS cities_nonnull, (SELECT COUNT(*) FROM scho` |
+| 13 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT\n (SELECT COUNT(DISTINCT s.CDSCode) FROM schools s JOIN frpm f ON ` |
+| 14 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT City, COUNT(*) AS schools FROM schools WHERE GSoffered = 'K-8' AND` |
 
 **依据与结论**（agent 原文）
 
-#### 三级锚定结果
+#### 结论
 
-**L3（`dlr_search_sop`，match=exact，标题逐字复述本题）**——本题最权威口径，共三条关键定调：
-1. "offers a magnet program" 是**标志位**（`Magnet = 1`），不是项目名称；
-2. "Kindergarten to 8th grade" 是**年级段取值**，按存储原样匹配（我核查过：两列中都只存在唯一写法 `K-8`）；
-3. "Multiple Provision Types" 是 frpm 表供餐状态列的取值；
-4. 后半句是**独立的更宽问题**——面向全库（不只 magnet 校），按 City 统计 K-8 学段学校数。
+**第一问 — 提供 Kindergarten–8 年级（K-8）学段且设有 magnet 项目的学校中，有多少所提供 Multiple Provision Types？**
 
-**L2 共识（qid 83）**：`Kindergarten to 8th grade` → K-8；`Offers a magnet program` → `Magnet = 1`；`Multiple Provision Types` → `NSLP Provision Status = 'Multiple Provision Types'`。
+**1 所。**
 
-**L1 → 映射**：`LOGICAL.School` → `schools`（`Magnet`、`City`、`GSoffered`/`GSserved`），`LOGICAL.SchoolPerformance` → `frpm`（`NSLP Provision Status`），锚键均为 `CDSCode`（1:1，`frpm` 每校仅 1 行，9986 行 = 9986 校，**不存在 JOIN 虚增**）。
+- 全库 `schools.Magnet = 1` 且 `schools.GSoffered = 'K-8'` 的学校共 **37 所**（L2 共识：`Magnet = 1` 即"提供 magnet 项目/是 magnet 学校"）；
+- 按锚键 `CDSCode` 与 `frpm` 表 1:1 关联后，其中仅 **1 所** 的 `NSLP Provision Status = 'Multiple Provision Types'` —— **George Visual and Performing Arts Magnet and Middle，Adelanto**（学年 2014-2015）。
 
-#### 第一问：符合"磁石校 + K-8 学段 + Multiple Provision Types"的学校数
+**第二问 — 提供 K-8 学段的城市数量，及各城市此类学校数（全库，不限 magnet）**
 
-结果 **1 所**：`36675870107425 | George Visual and Performing Arts Magnet and Middle | Adelanto | K-8 | Multiple Provision Types`。
+共 **537 个城市**，合计 **1,292 所** K-8 学段学校。规模最大的城市：
 
-（稳健性核验：改用 `GSserved = 'K-8'` 同样得 1 所；`frpm` 无学年多版本，无需去重陷阱。）
+| City | 学校数 |
+|---|---|
+| Stockton | 57 |
+| Los Angeles | 36 |
+| San Diego | 31 |
+| Sacramento | 22 |
+| Oakland | 21 |
+| San Jose | 21 |
+| Redding | 19 |
+| Fresno | 16 |
+| Manteca | 14 |
+| Palmdale | 14 |
+| San Francisco | 12 |
+| Nevada City | 11 |
+| Tracy | 11 |
+| Santee | 10 |
+| Alhambra / Bakersfield / Madera / Santa Rosa / West Sacramento | 9 |
+| Grass Valley | 8 |
 
-#### 第二问：K-8 学段学校的城市分布
+（其余城市各 1–8 所；另有 10 所 K-8 学校 `City` 字段为空，不计入城市数。）
 
-以题面 "offers a Kindergarten to 8th grade span" 锚定 `GSoffered`（LE 属性即 "grade span offered"）：
-- **537 个城市**，共 **1282 所** K-8 学段学校（另有 10 所 City 为空，不计入城市）
-- 头部：Stockton 57、Los Angeles 36、San Diego 31、Sacramento 22、Oakland 21、San Jose 21、Redding 19、Fresno 16…
-- 完整逐市清单见下方 Final Answer（按学校数降序，尾部 300+ 城市各 1 所）
+#### 证据链
 
-> 口径提示：若按 `GSserved`（CALPADS 实际就读学段）统计，则为 454 城 / 1018 校。题面用词 "offers a … grade span" 指向 `GSoffered`，故以此为准；两列对第一问结论一致。
+- **L3（`dlr_search_sop`，match=exact，标题逐字复述本题）**：本题为三处非文本查值——① "offers a magnet program" = 学校记录上的标志位 `Magnet = 1`；② "Kindergarten to 8th grade" = 学段列中的存储值 `K-8`；③ "Multiple Provision Types" = 报名/供餐表的 provision 列取值。并给出已核实事实：37 所 magnet K-8，其中 1 所带 Multiple Provision Types（Adelanto）；全库 537 城市 / 1,292 所学校。**本次执行结果与 L3 完全一致。**
+- **L2（`dlr_search_consensus`, qid 83, namespace=california_schools）**：`Grade K-8 → 'K-8'`；`magnet program → Magnet = 1`；`Multiple Provision Types → NSLP Provision Status = 'Multiple Provision Types'`。
+- **L1（`dlr_semantic_query`）→ 映射（`get_pe_mapping`）**：`LOGICAL.School` → `california_schools.schools`（`Magnet`、`GSoffered`、`City`、锚键 `CDSCode`）；`LOGICAL.SchoolPerformance` → `california_schools.frpm`（`NSLP Provision Status`，锚键 `CDSCode`，ARC 基数 1:1 → JOIN 依据）。
+- **取值形态校验（执行 SQL）**：`GSoffered` 中匹配 K-8 的存储形式**只有一种** `'K-8'`（1,292 行）；`NSLP Provision Status` 取值集合含 `Multiple Provision Types`。
 
-Final Answer: 1 | 537 cities with a K-8 grade span (1282 schools) — Stockton (57), Los Angeles (36), San Diego (31), Sacramento (22), Oakland (21), San Jose (21), Redding (19), Fresno (16), Manteca (14), Palmdale (14), San Francisco (12), Nevada City (11), Tracy (11), Santee (10), Alhambra (9), Bakersfield (9), Madera (9), Santa Rosa (9), West Sacramento (9), Grass Valley (8), Hanford (8), Long Beach (8), Modesto (8), Tulare (8), Yuba City (8), El Monte (7), Lancaster (7), Oxnard (7), Santa Ana (7), Sonora (7), Apple Valley (6), Auberry (6), Fairfield (6), Montague (6), Oroville (6), Porterville (6), Redwood City (6), Chico (5), East Palo Alto (5), Escondido (5), Hollister (5), Lathrop (5), Lindsay (5), Loomis (5), North Highlands (5), Oceanside (5), Petaluma (5), Ripon (5), San Bernardino (5), Sebastopol (5), Vallejo (5), Visalia (5), Anderson (4), Beaumont (4), Beverly Hills (4), Camarillo (4), Chula Vista (4), Compton (4), Corning (4), Corona (4), El Cajon (4), El Centro (4), Irvine (4), La Puente (4), Livermore (4), Lodi (4), Los Molinos (4), Marysville (4), Merced (4), Monterey Park (4), Mountain House (4), Pacifica (4), Red Bluff (4), San Miguel (4), Tollhouse (4), Ukiah (4), Ahwahnee (3), Antioch (3), Arcata (3), Auburn (3), Blythe (3), Cantua Creek (3), Chino (3), Citrus Heights (3), Columbia (3), Denair (3), Eureka (3), Hemet (3), Hesperia (3), Hoopa (3), Huntington Beach (3), Kingsburg (3), La Grange (3), Littlerock (3), Mariposa (3), Menlo Park (3), Morgan Hill (3), Mount Shasta (3), Murrieta (3), National City (3), Newcastle (3), North Fork (3), North Hollywood (3), North San Juan (3), Ontario (3), Orland (3), Paicines (3), Palm Springs (3), Palo Cedro (3), Perris (3), Petrolia (3), Richmond (3), Rocklin (3), San Joaquin (3), Shaver Lake (3), Simi Valley (3), Strathmore (3), Ventura (3), Vista (3), Waterford (3), Watsonville (3), Willits (3), Acampo (2), Adelanto (2), Alameda (2), Aliso Viejo (2), Alpine (2), Arcadia (2), Arvin (2), Berry Creek (2), Blue Lake (2), Brawley (2), Bridgeville (2), Camino (2), Carmichael (2), Caruthers (2), Cazadero (2), Ceres (2), Coarsegold (2), Colfax (2), Cottonwood (2), Coulterville (2), Crescent City (2), Delano (2), Dixon (2), Dorris (2), Dunsmuir (2), Encino (2), Fair Oaks (2), Ferndale (2), Foresthill (2), Fullerton (2), Grenada (2), Groveland (2), Hacienda Heights (2), Happy Camp (2), Hayfork (2), Hayward (2), Helm (2), Hornbrook (2), Inglewood (2), Jamestown (2), Lakehead (2), Lakeside (2), Lakewood (2), Laytonville (2), Leggett (2), Litchfield (2), Live Oak (2), Lone Pine (2), Markleeville (2), McKittrick (2), Meridian (2), Mountain View (2), Napa (2), Novato (2), O'Neals (2), Orangevale (2), Paradise (2), Paramount (2), Pinecrest (2), Point Arena (2), Raymond (2), Reedley (2), Salinas (2), San Juan Bautista (2), Sanger (2), Santa Cruz (2), Santa Maria (2), Santa Paula (2), Sausalito (2), Seaside (2), Somis (2), Sonoma (2), Springville (2), Sunol (2), Susanville (2), Sutter (2), Temecula (2), Tranquillity (2), Trinidad (2), Tuolumne (2), Tupman (2), Twain Harte (2), Vacaville (2), Valinda (2), Walnut (2), Wasco (2), Weaverville (2), Weed (2), Weldon (2), West Covina (2), Whittier (2), Yreka (2), Yucaipa (2), and 337 more cities with 1 school each (Agoura, Aguanga, Allensworth, Alta, Altadena, Amboy, Angels Camp, Angwin, Annapolis, Anza, Arnold, Aromas, Atherton, Avery, Badger, Bangor, Banning, Bayside, Bear Valley, Bella Vista, Big Bar, Big Bend, Big Creek, Big Pine, Big Sur, Biggs, Bishop, Blocksburg, Blue Jay, Bolinas, Bradley, Brentwood, Bridgeport, Buena Park, Burnt Ranch, Buttonwillow, Byron, Calente, Caliente, California Hot Springs, Camptonville, Canoga Park, Canyon, Capistrano Beach, Carlotta, Carson, Casmalia, Castella, Catheys Valley, Cayucos, Cedarville, Chatsworth, Chualar, City Of Commerce, City of Commerce, Claremont, Clovis, Coffee Creek, Coleville, Concord, Copperopolis, Cotati, Covelo, Covina, Cudahy, Daly City, Desert Center, Desert Hot Springs, Dinuba, Douglas City, Doyle, Ducor, Dunlap, East Nicolaus, El Dorado, El Nido, El Portal, El Sobrante, Elk Grove, Emeryville, Emigrant Gap, Essex, Etna, Fallbrook, Fellows, Felton, Firebaugh, Five Points, Flournoy, Forest Falls, Forest Ranch, Forks Of Salmon, Fort Jones, Fortuna, Fountain Valley, Fowler, Fremont, French Camp, French Gulch, Gasquet, Gaviota, Gazelle, Gerber, Gilroy, Glennville, Gold River, Goleta, Gorman, Gridley, Guerneville, Hamilton City, Havasu Lake, Hawthorne, Heber, Herald, Herlong, Hickman, Hinkley, Holtville, Horse Creek, Huntington Park, Hyampom, Hydesville, Idyllwild, Igo, Imperial Beach, Independence, Ivanhoe, Janesville, Johnsondale, Junction City, Kettleman City, King City, Kirkwood, Kneeland, Knights Ferry, Knightsen, Korbel, Kyburz, La Mesa, La Port, Laguna Niguel, Lake Elsinore, Lake Forest, Lake Hughes, Le Grand, Lee Vining, Lemon Grove, Lemoore, Leona Valley, Lewiston, Lockeford, Lockwood, Loleta, Lompoc, Los Alamos, Los Altos, Los Banos, Los Olivos, Lucerne, Magalia, Mammoth Lakes, Manchester, Manton, Marina Del Rey, Mather, McKinleyville, Mccloud, Meadow Vista, Mendocino, Middletown, Millville, Mineral, Mission Viejo, Monte Rio, Monterey, Montgomery Creek, Moorpark, Mt. Baldy, Mt. Hamilton, New Cuyama, Newbury Park, Nicasio, Oak View, Oakhurst, Oakley, Oceano, Orange, Oregon House, Orick, Orleans, Orosi, Pacific Grove, Palermo, Palm Desert, Palomar Mountain, Parker Dam, Parlier, Pasadena, Paskenta, Paso Robles, Patterson, Pauma Valley, Paynes Creek, Pearblossom, Pecwan, Penn Valley, Penryn, Pescadero, Phelan, Pinole, Pixley, Placerville, Platina, Pleasant Grove, Pollock Pines, Pope Valley, Porter Ranch, Quincy, Rainbow, Raisin City, Ramona, Rancho Cordova, Redondo Beach, Rialto, Richgrove, Ridgecrest, Rio Linda, Rio Oso, Riverbank, Riverdale, Riverside, Robbins, Romoland, Rosemead, Roseville, Ross, Rowland Heights, Samoa, San Anselmo, San Ardo, San Carlos, San Clemente, San Geronimo, San Jacinto, San Juan Capistrano, San Leandro, San Lucas, San Marcos, San Mateo, San Rafael, San Ysidro, Santa Barbara, Santa Clara, Santa Monica, Santa Ynez, Santa Ysabel, Saratoga, Sawyers Bar, Scotia, Seeley, Seiad Valley, Shafter, Shandon, Shasta, Shasta Lake, Shingle Springs, Smith River, Snelling, Solana Beach, Soledad, Solvang, Somerset, Somes Bar, Soulsbyville, South Gate, Stewarts Point, Sun Valley, Sunnymead, Sunnyvale, Sylmar, Templeton, Termo, Terra Bella, Thermal, Thornton, Thousand Oaks, Thousand Palms, Three Rivers, Tipton, Tomales, Traver, Treasure Island, Tres Pinos, Trinity Center, Truckee, Tustin, Twin Peaks, Upland, Valley Home, Walnut Creek, Warner Springs, Washington, Wawona, West Hollywood, Westminster, Westmorland, Whitethorn, Whitmore, Wildomar, Willow Creek, Willows, Wilmington, Winchester, Windsor, Woodland Hills, Woodside, Woody, Yermo, Yorba Linda, Yosemite, Zenia)
-
-Evidence SQL: SELECT (SELECT CAST(COUNT(DISTINCT s.CDSCode) AS TEXT) FROM schools s JOIN frpm f ON s.CDSCode=f.CDSCode WHERE s.Magnet=1 AND s.GSoffered='K-8' AND f."NSLP Provision Status"='Multiple Provision Types') || ' | ' || (SELECT CAST(COUNT(DISTINCT City) AS TEXT) FROM schools WHERE GSoffered='K-8' AND City IS NOT NULL) || ' | ' || (SELECT group_concat(City||' ('||c||')', ', ') FROM (SELECT City, COUNT(*) c FROM schools WHERE GSoffered='K-8' AND City IS NOT NULL GROUP BY City ORDER BY COUNT(*) DESC, City)) AS final_answer
+```
+Final Answer: Part 1: 1 (only 1 of the 37 magnet K-8 schools offers "Multiple Provision Types" — George Visual and Performing Arts Magnet and Middle, Adelanto).
+Part 2: 537 cities with a Kindergarten-to-8th-grade (K-8) span, covering 1,292 K-8 schools in total; per-city counts — Stockton 57, Los Angeles 36, San Diego 31, Sacramento 22, Oakland 21, San Jose 21, Redding 19, Fresno 16, Manteca 14, Palmdale 14, San Francisco 12, Nevada City 11, Tracy 11, Santee 10, Alhambra 9, Bakersfield 9, Madera 9, Santa Rosa 9, West Sacramento 9, Grass Valley 8, remaining cities 1-8 each.
+Evidence SQL: SELECT (SELECT COUNT(DISTINCT s.CDSCode) FROM schools s JOIN frpm f ON s.CDSCode = f.CDSCode WHERE s.Magnet = 1 AND s.GSoffered = 'K-8' AND f."NSLP Provision Status" = 'Multiple Provision Types') AS magnet_k8_multiple_provision_types, (SELECT COUNT(DISTINCT City) FROM schools WHERE GSoffered = 'K-8' AND City IS NOT NULL) AS num_cities_k8, (SELECT COUNT(*) FROM schools WHERE GSoffered = 'K-8') AS k8_schools_total
+```
 
 建模缺口: 无
 
 </details>
 
 <details id="q85">
-<summary><b>q85</b> · california_schools · ✅ <b>PASS</b> · 8 步 / 12 工具 · 127,968 tok · 2 轮 · 文本一致</summary>
+<summary><b>q85</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 64,686 tok · 3 轮 · 文本一致</summary>
 
 **问题**：What is the Percent (%) Eligible Free (K-12) in the school administered by an administrator whose first name is Alusine. List the district code of the school.
 
 **期望**：`70.15113350125945 | 64857`
 
-**答案**：`## 结论 **锚定过程（三级）** - **L3（SOP）**：'dlr_search_sop' 返回 'similar'，两个候选节标题都不是本题逐字复述 → 本题无 L3 节，按 L1+L2 自解。 - **L2（领域共识）**：命中本题原题 **qid=85**（namespace=california_schools），权威口径：   'Percent (%) Eligible Free`
+**答案**：`## 结论 **学校**：Buena Vista Elementary（Palmdale Elementary 学区，CDSCode '19648576108609'），其校长/管理员名字为 **Alusine**（'schools.AdmFName1'）。 **Percent (%) Eligible Free (K-12)** = 70.15113350125945 **District Co`
 
 **调用步骤**
 
 | # | 工具 | 参数（截 200） |
 |---|---|---|
 | 1 | `dlr_search_sop` | `{"question":"What is the Percent (%) Eligible Free (K-12) in the school administered by an administrator whose first name is Alusine. List the district code of the school."}` |
-| 2 | `dlr_semantic_query` | `{"question":"Percent (%) Eligible Free (K-12) in the school administered by an administrator whose first name is Alusine"}` |
-| 3 | `dlr_search_consensus` | `{"question":"administrator first name Alusine, Percent Eligible Free K-12, district code"}` |
+| 2 | `dlr_semantic_query` | `{"question":"What is the Percent (%) Eligible Free (K-12) in the school administered by an administrator whose first name is Alusine. List the district code of the school."}` |
+| 3 | `dlr_search_consensus` | `{"question":"What is the Percent (%) Eligible Free (K-12) in the school administered by an administrator whose first name is Alusine. List the district code of the school."}` |
 | 4 | `get_pe_mapping` | `{"pe_id":"PHYSICAL.School"}` |
 | 5 | `get_pe_mapping` | `{"pe_id":"PHYSICAL.FRPM"}` |
-| 6 | `execute_sql` | `{"sql":"SELECT CDSCode, School, District, AdmFName1, AdmLName1, AdmFName2, AdmLName2, AdmFName3, AdmLName3 FROM schools WHERE AdmFName1='Alusine' OR AdmFName2='Alusine' OR AdmFName3='Alusine'","databa` |
-| 7 | `execute_sql` | `{"sql":"SELECT CDSCode, \"School Name\", \"District Name\", \"Free Meal Count (K-12)\", \"Enrollment (K-12)\", \"Percent (%) Eligible Free (K-12)\" FROM frpm WHERE \"School Name\" LIKE '%Alusine%' LIM` |
-| 8 | `dlr_search_consensus` | `{"question":"district code of the school","namespace":"california_schools"}` |
-| 9 | `get_full_data_info` | `{"db":"california_schools","table":"frpm"}` |
-| 10 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT f.CDSCode, f.\"School Name\", f.\"District Code\", f.\"Free Meal C` |
-| 11 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT s.CDSCode, s.School, s.District, f.\"Academic Year\", f.\"District` |
-| 12 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT MAX(\"Percent (%) Eligible Free (K-12)\") AS max_col, MIN(\"Percen` |
+| 6 | `execute_sql` | `{"sql":"SELECT s.CDSCode, s.School, f.\"Academic Year\", f.\"District Code\", f.\"District Name\", f.\"Free Meal Count (K-12)\", f.\"Enrollment (K-12)\", f.\"Percent (%) Eligible Free (K-12)\", CAST(f` |
+| 7 | `execute_sql` | `{"sql":"SELECT COUNT(*) AS n, COUNT(DISTINCT \"Academic Year\") AS yrs FROM frpm","database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite"` |
+| 8 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT CAST(f.\"Free Meal Count (K-12)\" AS REAL) * 100.0 / f.\"Enrollmen` |
 
 **依据与结论**（agent 原文）
 
 #### 结论
 
-**锚定过程（三级）**
-- **L3（SOP）**：`dlr_search_sop` 返回 `similar`，两个候选节标题都不是本题逐字复述 → 本题无 L3 节，按 L1+L2 自解。
-- **L2（领域共识）**：命中本题原题 **qid=85**（namespace=california_schools），权威口径：
-  `Percent (%) Eligible Free (K-12) = Free Meal Count (K-12) / Enrollment (K-12) * 100%`
-  另一条共识：题面 "administrator's first name" → `schools.AdmFName1`（同一 school 最多 3 个 administrator，故需覆盖 AdmFName1/2/3）。
-- **L1（语义召回）**：`LOGICAL.School`（PE = schools，锚键 `CDSCode`）+ `LOGICAL.SchoolPerformance`（PE = frpm，锚键 `CDSCode`），二者按 A_anchor `CDSCode` 1:1 JOIN。
+**学校**：Buena Vista Elementary（Palmdale Elementary 学区，CDSCode `19648576108609`），其校长/管理员名字为 **Alusine**（`schools.AdmFName1`）。
 
-**数据事实**（SQL 实测）
-- `schools` 中 `AdmFName1='Alusine'` 仅 1 条：**Buena Vista Elementary**，CDSCode `19648576108609`，District = Palmdale Elementary（Administrator: Alusine Conteh；AdmFName2/3 无同名人，无歧义）。
-- JOIN `frpm` 后仅 1 行（Academic Year 2014-2015）：Free Meal Count (K-12) = **557**，Enrollment (K-12) = **794**。
-- 557 / 794 × 100 = **70.15113350125945**。
-- 该校 **District Code = 64857**（frpm 表内 `District Code` 列；亦与 CDSCode 前 7 位 `19-64857` 的区码一致）。
+**Percent (%) Eligible Free (K-12)** = 70.15113350125945
+**District Code** = 64857
 
-⚠️ 口径说明：frpm 表现存的 `Percent (%) Eligible Free (K-12)` 列在库内实为**比值**（全表取值区间 0.0018–1，该行存 0.701511335012594），按 L2 权威公式须 ×100，故结果为 70.15113350125945，不做四舍五入。
+**口径说明（三级锚定）**：
+- **L3（`dlr_search_sop`，`match=exact`，标题逐字复述本题）** 给定题级口径与已核实事实：全库恰好只有一所学校匹配，为 Buena Vista Elementary（Palmdale Elementary district），percent = 70.15113350125945，district code = 64857，且要求报告**未四舍五入**的百分比。这与我的 SQL 结果完全一致。
+- **L2（`dlr_search_consensus`, qid=85）**：`Percent (%) Eligible Free (K-12) = Free Meal Count (K-12) / Enrollment (K-12) * 100%` —— 即分母是 **K-12 在校生数**，不是 Ages 5-17。
+- **L1（`dlr_semantic_query`）**：命中 `LOGICAL.SchoolPerformance`（挂 `PHYSICAL.FRPM` = `frpm`）与 `LOGICAL.School`（挂 `PHYSICAL.School` = `schools`），两 PE 以 `A_anchor: CDSCode`（1:1）为 JOIN 依据。
+- 关键陷阱（L3 明示）：**"district code" 指 frpm 表里的 District Code 五位数编码**，不是 schools 表上的 District 名称，也不是学校自身的 CDSCode。
+- 数据侧校验：`frpm` 仅含 1 个学年（`COUNT(*)=9986`, `COUNT(DISTINCT Academic Year)=1`），故不存在多学年 JOIN 虚增行的问题；`AdmFName1='Alusine'` 的 JOIN 结果恰为 1 行。
+- 另注：`frpm."Percent (%) Eligible Free (K-12)"` 物理列存的是**小数比例**（0.701511335012594），需 ×100 才是百分比——这也印证 L2 的公式口径。
 
 ```
-Final Answer: 70.15113350125945 (%), District Code = 64857 (Buena Vista Elementary, Palmdale Elementary)
-Evidence SQL: SELECT s.CDSCode, s.School, s.District, f."District Code", f."Free Meal Count (K-12)", f."Enrollment (K-12)", 100.0 * f."Free Meal Count (K-12)" / f."Enrollment (K-12)" AS pct_free_k12 FROM schools s JOIN frpm f ON s.CDSCode = f.CDSCode WHERE s.AdmFName1 = 'Alusine'
+Final Answer: Percent (%) Eligible Free (K-12) = 70.15113350125945; District Code = 64857
+Evidence SQL: SELECT CAST(f."Free Meal Count (K-12)" AS REAL) * 100.0 / f."Enrollment (K-12)" AS percent_eligible_free_k12, f."District Code" AS district_code
+FROM schools s JOIN frpm f ON s.CDSCode = f.CDSCode
+WHERE s.AdmFName1 = 'Alusine'
 ```
 
-建模缺口: frpm."District Code" — 该列未进入建模视图（`in_modeled_view: false`，L1/PE 映射只暴露了 "District Name"/"County Name"），而本题题面明确要求 "district code"，视图内无同义列可替代；建议**升入视图**（并入 PHYSICAL.FRPM 的 C_column，作为 DistrictCode 属性）。
+建模缺口: 无
 
 </details>
 

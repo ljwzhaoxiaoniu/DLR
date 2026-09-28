@@ -51,8 +51,8 @@
 
 | 指标 | 值 |
 |---|---|
-| token 平均 / 中位 | 86,187 / 81,601 |
-| token 最低 / 最高 | 33,353 / 292,786 |
+| token 平均 / 中位 | 84,537 / 81,453 |
+| token 最低 / 最高 | 33,353 / 204,836 |
 | 步数均值 / 工具调用均值 | 5 / 9 |
 
 > **口径**：本文档汇总按**去重题数**计（同题多轮取**最新一轮**的判定/评定）——与 [results/STATS.md](results/STATS.md) 的**按次数**分布会不同（重跑过或跑挂过的题，那边会多计一次）。仅覆盖已跑轮次，勿外推为全数据集结论。token = input + cache_read + output（不含 CoT 的 reasoning 分项由 harness 单独计）。
@@ -67,7 +67,7 @@
 
 | 数据库 | 已跑 | ✅ 正确 | 🔁 翻盘 | ❌ 错误 | ⚠️ 待仲裁 | token 中位 |
 |---|---|---|---|---|---|---|
-| [california_schools](DETAIL/california_schools.md) | 30 | 29 | 1 | 0 | 0 | 66,793 |
+| [california_schools](DETAIL/california_schools.md) | 30 | 29 | 1 | 0 | 0 | 66,005 |
 | [card_games](DETAIL/card_games.md) | 52 | 40 | 12 | 0 | 0 | 93,661 |
 | [codebase_community](DETAIL/codebase_community.md) | 49 | 42 | 7 | 0 | 0 | 84,921 |
 | [debit_card_specializing](DETAIL/debit_card_specializing.md) | 30 | 21 | 9 | 0 | 0 | 47,948 |

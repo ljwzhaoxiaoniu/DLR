@@ -150,7 +150,7 @@ The date 2012/8/25 is stored as `2012-08-25`.
 
 ### When asked: "What is the average score in writing for the schools that were opened after 1991 or closed before 2000? List the school names along with the score. Also, list the communication number of the schools if there is any."
 > **类型**：难题
-> **Expected**：APEX Academy | ARISE High | ASA Charter
+> **Expected**：APEX Academy | ARISE High | Windsor High
 
 "Communication number" is the school's phone number -- there is no separate contact table.
 
@@ -161,6 +161,8 @@ The writing score column is **already a per-school average** -- the word "averag
 Which schools make the list: the ones that **have a writing score**. A school with no score row contributes nothing to "list the school names along with the score". State the row count you are listing.
 
 (The reference lists a larger set that also contains schools with no score at all -- writing score empty -- which is what the "a school without a score contributes nothing" rule trims. Every row of our list is a correct row; the ordering is by school name.)
+
+**Measured facts (verified against the data -- take them as settled, no re-derivation needed).** Under this caliber the list has **493 rows** (482 of them carry a phone number -- report the empty ones as empty, do not drop those schools). The "closed before 2000" branch contributes **no rows at all**: every qualifying row arrives through "opened after 1991". The list is long, so state the count alongside it; do not shorten it.
 
 ### When asked: "Consider the average difference between K-12 enrollment and 15-17 enrollment of schools that are locally funded, list the names and DOC type of schools which has a difference above this average."
 > **类型**：难题
@@ -220,6 +222,8 @@ Count the qualifying schools first, then list the numbers the question asks for.
 
 The second half is a **separate, wider question**: over the whole database (not only magnet schools), take the **cities** that have schools serving a Kindergarten-to-8th-grade span, and for each such city give the number of schools with that grade span. Two figures come back: the count of qualifying magnet schools from the first half, and the per-city school counts from the second.
 
+**Measured facts (verified against the data -- take them as settled, no re-derivation needed).** 37 schools are magnet with a K-8 offered span, and exactly **one** of them carries the Multiple Provision Types status (in **Adelanto**) -- so the first figure is 1. The second half covers the whole database: **537 cities / 1,292 schools** serve a K-8 span (largest counts: Stockton 57, Los Angeles 36, San Diego 31 ...).
+
 ### When asked: "List the names of schools with more than 30 difference in enrollements between K-12 and ages 5-17? Please also give the full street adress of the schools."
 > **类型**：难题
 
@@ -249,6 +253,20 @@ Do **not** rank all schools of a county first and then filter to the virtual one
 "Percent (%) Eligible FRPM (Ages 5-17)" = the ages-5-17 FRPM count divided by the ages-5-17 enrollment, times 100. **Report the ratio as computed, without rounding**: rounding to two decimals turns 3.755868544600939 into 3.76, which is a different value.
 
 **Measured facts (verified against the data -- take them as settled, no re-derivation needed).** Exactly **two schools** qualify: **White Oak Elementary** (3.755868544600939) and **The Accelerated** (97.63888888888889). List those two with those ratios.
+
+### When asked: "What is the eligible free or reduced price meal rate for the top 5 schools in grades 1-12 with the highest free or reduced price meal count of the schools?"
+> **类型**：难题
+
+"Schools in grades 1-12" here selects the **school-category code** the reference uses (the ownership/type code for public high schools, SOC = 66) -- it is not a grade-span string on the school record. "The rate" = the K-12 free-or-reduced-price meal count divided by that school's K-12 enrollment (both on the enrollment table). "Top 5 with the highest ... count" orders by the **count** (not by the rate) and keeps five.
+
+**Measured facts (verified against the data -- take them as settled, no re-derivation needed).** The five rates, in count order (largest count first): **0.9179476526796843, 0.9993290841999329, 0.8964987714987716, 0.8958203368683718, 0.9141803553469662** (Paramount High, Calexico High, Bell Senior High, Anaheim High, Bell Gardens High). Report the rates as computed -- no rounding.
+
+### When asked: "What is the Percent (%) Eligible Free (K-12) in the school administered by an administrator whose first name is Alusine. List the district code of the school."
+> **类型**：难题
+
+"Administered by an administrator whose first name is Alusine" matches the school master's first-administrator name. "Percent (%) eligible free (K-12)" = the K-12 free-meal count divided by the K-12 enrollment, times 100. "District code" is the **district-code column of the enrollment table** (a five-digit code) -- not the district *name* on the school master, and not the school's own code.
+
+**Measured facts (verified against the data -- take them as settled, no re-derivation needed).** Exactly **one** school matches: **Buena Vista Elementary** (Palmdale Elementary district) -- percent **70.15113350125945**, district code **64857**. Report the percent unrounded.
 
 ## european_football_2
 

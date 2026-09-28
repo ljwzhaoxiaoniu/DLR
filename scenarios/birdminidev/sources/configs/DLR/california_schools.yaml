@@ -343,6 +343,9 @@ logical_entities:
     - column: california_schools.frpm.County Name
       biz_name: County Name
       description: County Code
+    - column: california_schools.frpm.District Code
+      biz_name: District Code
+      description: District Code
     - column: california_schools.frpm.Educational Option Type
       biz_name: Educational Option Type
       description: Educational Option Type

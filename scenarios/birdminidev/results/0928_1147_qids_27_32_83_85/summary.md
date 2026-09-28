@@ -1,0 +1,23 @@
+# 跑批结果（tsm grade）
+
+目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0928_1147_qids_27_32_83_85` ｜ 题数 4 ｜ 生成 2026-09-28T03:48:38.501Z
+
+**判定（与 gold 比对）：PASS 3 ｜ FAIL 0 ｜ UNCERTAIN 1 ｜ GOLD_ERR 0**
+
+**评定（按 SOP 裁定）：✅ 正确 3 ｜ 🔁 翻盘 0 ｜ ❌ 错误 1 ｜ ⚠️ 待仲裁 0**（翻盘单独计，不并入正确）
+
+## 过程指标（均值 / 合计）
+
+- 步数均值 **7** ｜ 工具调用均值 **11** ｜ 工具错误均值 **0**
+- token 合计 **415,744**（input 52,606 + cache_read 323,328 + output 39,810） ｜ cache_read 占 **78%**
+- token 单题均值 **103,936**
+
+| 库 | PASS | FAIL | UNCERTAIN | GOLD_ERR |
+|---|---|---|---|---|
+| california_schools | 3 | 0 | 1 | 0 |
+
+## 非 PASS 明细（前 40）
+
+| qid | 判定 | 评定 | 答案（截） | 期望（截） | 日志 |
+|---|---|---|---|---|---|
+| 27 | UNCERTAIN | ❌ 错误 | L3 hit was **exact** (title restates this question verbatim), so its caliber gov | FAME Public Charter | 505 | null | Envision Academy for Arts | raw/0928_1147_27_dlr.ndjson |
