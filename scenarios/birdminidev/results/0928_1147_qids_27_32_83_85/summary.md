@@ -1,10 +1,10 @@
 # 跑批结果（tsm grade）
 
-目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0928_1147_qids_27_32_83_85` ｜ 题数 4 ｜ 生成 2026-09-28T03:48:38.501Z
+目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0928_1147_qids_27_32_83_85` ｜ 题数 4 ｜ 生成 2026-09-28T13:51:29.897Z
 
 **判定（与 gold 比对）：PASS 3 ｜ FAIL 0 ｜ UNCERTAIN 1 ｜ GOLD_ERR 0**
 
-**评定（按 SOP 裁定）：✅ 正确 3 ｜ 🔁 翻盘 0 ｜ ❌ 错误 1 ｜ ⚠️ 待仲裁 0**（翻盘单独计，不并入正确）
+**评定（按 SOP 裁定）：✅ 正确 3 ｜ 🔁 翻盘 1 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0**（翻盘单独计，不并入正确）
 
 ## 过程指标（均值 / 合计）
 
@@ -20,4 +20,4 @@
 
 | qid | 判定 | 评定 | 答案（截） | 期望（截） | 日志 |
 |---|---|---|---|---|---|
-| 27 | UNCERTAIN | ❌ 错误 | L3 hit was **exact** (title restates this question verbatim), so its caliber gov | FAME Public Charter | 505 | null | Envision Academy for Arts | raw/0928_1147_27_dlr.ndjson |
+| 27 | UNCERTAIN | 🔁 翻盘 | L3 hit was **exact** (title restates this question verbatim), so its caliber gov | FAME Public Charter | 505 | null | Envision Academy for Arts | raw/0928_1147_27_dlr.ndjson |

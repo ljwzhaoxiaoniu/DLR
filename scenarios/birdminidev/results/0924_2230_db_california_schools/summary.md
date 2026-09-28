@@ -1,6 +1,6 @@
 # 跑批结果（tsm grade）
 
-目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0924_2230_db_california_schools` ｜ 题数 30 ｜ 生成 2026-09-25T06:21:34.136Z
+目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0924_2230_db_california_schools` ｜ 题数 30 ｜ 生成 2026-09-28T13:44:17.718Z
 
 **判定（与 gold 比对）：PASS 28 ｜ FAIL 0 ｜ UNCERTAIN 2 ｜ GOLD_ERR 0**
 

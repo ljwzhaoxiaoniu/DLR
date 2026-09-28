@@ -1,6 +1,6 @@
 # 跑批结果（tsm grade）
 
-目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0926_1049_qids_518_528_530` ｜ 题数 3 ｜ 生成 2026-09-26T03:02:10.241Z
+目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0926_1049_qids_518_528_530` ｜ 题数 3 ｜ 生成 2026-09-28T13:49:58.889Z
 
 **判定（与 gold 比对）：PASS 3 ｜ FAIL 0 ｜ UNCERTAIN 0 ｜ GOLD_ERR 0**
 

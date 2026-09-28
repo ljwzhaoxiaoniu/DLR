@@ -1,10 +1,10 @@
 # 跑批结果（tsm grade）
 
-目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0924_2140_qids_1490_1493_1498_1501_1505` ｜ 题数 5 ｜ 生成 2026-09-25T06:21:25.376Z
+目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0924_2140_qids_1490_1493_1498_1501_1505` ｜ 题数 5 ｜ 生成 2026-09-28T13:44:05.804Z
 
-**判定（与 gold 比对）：PASS 3 ｜ FAIL 2 ｜ UNCERTAIN 0 ｜ GOLD_ERR 0**
+**判定（与 gold 比对）：PASS 2 ｜ FAIL 3 ｜ UNCERTAIN 0 ｜ GOLD_ERR 0**
 
-**评定（按 SOP 裁定）：✅ 正确 2 ｜ 🔁 翻盘 2 ｜ ❌ 错误 1 ｜ ⚠️ 待仲裁 0**（翻盘单独计，不并入正确）
+**评定（按 SOP 裁定）：✅ 正确 0 ｜ 🔁 翻盘 3 ｜ ❌ 错误 2 ｜ ⚠️ 待仲裁 0**（翻盘单独计，不并入正确）
 
 ## 过程指标（均值 / 合计）
 
@@ -14,7 +14,7 @@
 
 | 库 | PASS | FAIL | UNCERTAIN | GOLD_ERR |
 |---|---|---|---|---|
-| debit_card_specializing | 3 | 2 | 0 | 0 |
+| debit_card_specializing | 2 | 3 | 0 | 0 |
 
 ## 非 PASS 明细（前 40）
 
@@ -22,3 +22,4 @@
 |---|---|---|---|---|---|
 | 1490 | FAIL | 🔁 翻盘 | **Analysis (three-level anchoring):** - **L3 (SOP)** — the `sop` skill has a sec | 98.5267932135058 | raw/0924_2140_1490_dlr.ndjson |
 | 1493 | FAIL | ❌ 错误 | ## 回答 **问题**：2012 年 2 月，有多少百分比的客户消费超过 528.3？ **三级锚定结果** - **L1（实体路）**：`dlr_seman | 66.62300807683911 | raw/0924_2140_1493_dlr.ndjson |
+| 1505 | FAIL | 🔁 翻盘 | ## 结论 **391** 位欧元结算客户至少有一个月的消费额超过 1000。 ### 推理过程 **L3 业务逻辑级（`sop` 技能）** — 命中完整复述 | 2730 | raw/0924_2140_1505_dlr.ndjson |

@@ -1,10 +1,10 @@
 # 跑批结果（tsm grade）
 
-目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0926_1005_qids_529_530` ｜ 题数 2 ｜ 生成 2026-09-26T02:05:47.941Z
+目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0926_1005_qids_529_530` ｜ 题数 2 ｜ 生成 2026-09-28T13:46:03.551Z
 
 **判定（与 gold 比对）：PASS 1 ｜ FAIL 0 ｜ UNCERTAIN 1 ｜ GOLD_ERR 0**
 
-**评定（按 SOP 裁定）：✅ 正确 1 ｜ 🔁 翻盘 0 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 1**（翻盘单独计，不并入正确）
+**评定（按 SOP 裁定）：✅ 正确 1 ｜ 🔁 翻盘 1 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0**（翻盘单独计，不并入正确）
 
 ## 过程指标（均值 / 合计）
 
@@ -20,4 +20,4 @@
 
 | qid | 判定 | 评定 | 答案（截） | 期望（截） | 日志 |
 |---|---|---|---|---|---|
-| 529 | UNCERTAIN | ⚠️ 待仲裁 | ## 结论 **有韩文翻译但没有日文翻译的系列（set）共 2 个：** | 系列代码 | 系列名称（sets.name） | 韩文译名 | |---|---| | Tenth Edition | Fourth Edition | Fifth Dawn | Fifth Edition | raw/0926_1005_529_dlr.ndjson |
+| 529 | UNCERTAIN | 🔁 翻盘 | ## 结论 **有韩文翻译但没有日文翻译的系列（set）共 2 个：** | 系列代码 | 系列名称（sets.name） | 韩文译名 | |---|---| | Tenth Edition | Fourth Edition | Fifth Dawn | Fifth Edition | raw/0926_1005_529_dlr.ndjson |

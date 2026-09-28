@@ -56,12 +56,20 @@
 | q1526 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | For the customer who paid 634.8 in 2012/8/25, what was t | "paid 634.8" identifies the customer through a single purchase of that amount on that date -- a purchase-level condition, not a mo |
 | q1529 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | What is the amount spent by customer "38508" at the gas | "Amount spent by a customer" is that customer's total consumption across all gas stations -- a question about the customer's month |
 | q1531 | debit_card_specializing | 🔁 翻盘 | 数据集问题 · 难题 | Who is the top spending customer and how much is the ave | "Top spending customer" is decided by the customer's total consumption across all gas stations (the month-by-month figures), not b |
+| q1028 | european_football_2 | 🔁 翻盘 | 数据集问题 | In Scotland Premier League, which away team won the most | "Away team won the most" = per away team, count how many matches it won away in that league and season, and take the largest count |
 | q1029 | european_football_2 | 🔁 翻盘 | 数据集问题 | What are the speed in which attacks are put together of | "Speed in which attacks are put together" and "build-up play speed" are the same team attribute -- the question names one quantity |
+| q1037 | european_football_2 | 🔁 翻盘 | 数据集问题 | Calculate the percentage of players who prefer left foot | "Percentage of players" counts **players**, not rating records: one player counts once in both the numerator and the denominator, |
+| q1058 | european_football_2 | 🔁 翻盘 | 数据集问题 | Who has the highest average finishing rate between the h | The question compares exactly two players: the tallest and the shortest one. Compare their average finishing rates over their date |
+| q1080 | european_football_2 | 🔁 翻盘 | 数据集问题 | Among the players whose preferred foot was the left foot | "Among the players ... how many of them" counts **players**: one player counts once, even though a player has many dated records ( |
 | q1094 | european_football_2 | 🔁 翻盘 | 数据集问题 | How much higher in percentage is Ariel Borysiuk's overal | A player's rating is a **dated series of observations**, not one number: the same player has many rating records over the years. A |
 | q1107 | european_football_2 | 🔁 翻盘 | 数据集问题 | When was the first time did Kevin Constant have his high | A player's scores are a dated series. "His highest crossing score" is the largest value in that series, and he can carry it on mor |
+| q1115 | european_football_2 | 🔁 翻盘 | 数据集问题 | What percentage is Landon Donovan's overall rating highe | The question names a date, so take each player's rating record of that day, then express how much higher the first is as a percent |
 | q1124 | european_football_2 | 🔁 翻盘 | 难题 | Who are the players that tend to be attacking when their | "Tend to be attacking when their mates were doing attack moves" is the **high** attacking work rate; the answer is the list of pla |
+| q1133 | european_football_2 | 🔁 翻盘 | 数据集问题 | How many football players born after the 1990s have the | "Born after the 1990s" here means born **after 1990** -- the players born from 1991 on whose name starts with Aaron. (Read literal |
 | q1135 | european_football_2 | 🔁 翻盘 | 数据集问题 | Please provide top four football players' IDs who are am | Two readings decide this question, and both must be right: - **Right-footed**: only records whose preferred foot is the right one |
+| q1136 | european_football_2 | 🔁 翻盘 | 数据集问题 | How many players had the highest potential score for cro | "The highest potential score for crossing" is the highest score in the **crossing** column (the best a player can reach at crossin |
 | q1144 | european_football_2 | 🔁 翻盘 | 数据集问题 | Please state the finishing rate and curve score of the p | The heaviest player is the one with the largest weight; his attributes are a dated series, and with no date in the question take h |
+| q1148 | european_football_2 | 🔁 翻盘 | 数据集问题 | What is the percentage of players that are under 180 cm | Two readings decide this question: - "An overall strength of more than 70" is the player's **overall rating** above 70 -- the over |
 <!-- mistakes:end -->
 
 ## 二、建模应用思路（原料 → 三层）
@@ -131,13 +139,13 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 <!-- stats:begin -->
 ![实测结果综合统计](results/stats.svg)
 
-**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 174 ｜ 🔁 翻盘 38 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 288　—　**已跑 212 题全部正确**
+**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 166 ｜ 🔁 翻盘 46 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 288　—　**已跑 212 题全部正确**
 
 （🔁 翻盘 = 数据集自身缺陷（gold 未实现题面）按 SOP 逐题裁定为正确——单独计数、不并入 ✅ 正确；每题取最新一轮）
 
-均值 **5.4 步 / 8.5 工具调用 / 每题 83,158 tokens** ｜ 跑题覆盖度 **212/500 题**（5/11 库有产物）
+均值 **5.5 步 / 8.6 工具调用 / 每题 80,535 tokens** ｜ 跑题覆盖度 **212/500 题**（5/11 库有产物）
 
-> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 38 道数据集缺陷题的比对记录）也在这两处可查。
+> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 46 道数据集缺陷题的比对记录）也在这两处可查。
 <!-- stats:end -->
 
 **怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。

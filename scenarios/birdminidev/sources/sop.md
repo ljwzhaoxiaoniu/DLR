@@ -293,7 +293,7 @@ Do **not** rank all schools of a county first and then filter to the virtual one
 
 **Measured facts (verified against the data -- take them as settled, no re-derivation needed).** Exactly **two schools** qualify: **White Oak Elementary** (3.755868544600939) and **The Accelerated** (97.63888888888889). List those two with those ratios.
 
-### When asked: "What is the eligible free or reduced price meal rate for the top 5 schools in grades 1-12 with the highest free or reduced price meal count of the schools?"
+### When asked: "What is the eligible free or reduced price meal rate for the top 5 schools in grades 1-12 with the highest free or reduced price meal count of the schools with the ownership code 66?"
 > **类型**：难题
 
 "Schools in grades 1-12" here selects the **school-category code** the reference uses (the ownership/type code for public high schools, SOC = 66) -- it is not a grade-span string on the school record. "The rate" = the K-12 free-or-reduced-price meal count divided by that school's K-12 enrollment (both on the enrollment table). "Top 5 with the highest ... count" orders by the **count** (not by the rate) and keeps five.
@@ -399,7 +399,114 @@ Established facts (already checked -- do not re-derive, go straight to the answe
 
 - Away wins in Scotland Premier League 2009/2010: **Rangers 11, Celtic 11**, Dundee United 9, Hamilton Academical FC 7.
 
-### When asked: "Calculate the percentage of players who prefer left foot, who were born between 1987 and 1992?"
+### When asked: "What was the average overall rating for Marko Arnautovic from 2007/2/22 to 2016/4/21?"
+> **类型**：难题
+
+The date window runs from 2007/2/22 to 2016/4/21 **inclusive of both days**, over the player's dated rating records. The date column stores a full timestamp, so compare the **date part** of it (the first ten characters) with the window -- comparing the whole timestamp against a bare date string silently drops the last day.
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- The window holds **33** records (both boundary days have one: 2007-02-22 and 2016-04-21), and their average overall rating is **75.39393939393939**.
+- Dropping the boundary day (the whole-timestamp comparison) yields 32 records and 75.28125 -- wrong for this question.
+
+### When asked: "Among the players whose preferred foot was the left foot when attacking, how many of them would remain in his position when the team attacked?"
+> **类型**：数据集问题
+> **Expected**：189
+
+"Among the players ... how many of them" counts **players**: one player counts once, even though a player has many dated records (and his preferred foot or work rate can change between them).
+
+- Numerator / whole set: the players who have a record with preferred foot = left and attacking work rate = low.
+
+The reference answer counts rating **records** instead, so its figure (1569) is a record count wearing a "how many players" label -- do not copy it.
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- Players with a left-foot + low-work-rate record: **189** (the underlying records number 1569).
+
+### When asked: "Who has the highest average finishing rate between the highest and shortest football player?"
+> **类型**：数据集问题
+> **Expected**：Juan Quero
+
+The question compares exactly two players: the tallest and the shortest one. Compare their average finishing rates over their dated records and answer with the player who has the higher one.
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- The tallest player, **Kristof van Hout** (208 cm), averages 15.5; the shortest, **Juan Quero** (157 cm), averages 60.9.
+- So the answer is **Juan Quero** (the shortest player). The reference answer states its label only -- it reports which side of the comparison won ("Min"), which denotes this same player; naming him is the complete answer.
+
+### When asked: "What is the percentage of players that are under 180 cm who have an overall strength of more than 70?"
+> **类型**：数据集问题
+> **Expected**：17.585895117540687
+
+Two readings decide this question:
+
+- "An overall strength of more than 70" is the player's **overall rating** above 70 -- the overall talent score -- not the separate score column literally named `strength`.
+- "Percentage of players" counts **players**: one player counts once, both in the numerator and in the denominator (all players), even though a player has many dated rating records.
+
+The reference answer divides a record-level count by the joined rows, so its figure (13.940797269238713) mixes record counts into a "percentage of players" -- do not copy it.
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- Players under 180 cm with an overall rating above 70: **1,945**, out of 18,380 players in all -- **17.585895117540687** (~17.59%).
+
+### When asked: "Please provide the full name of the away team that scored the most goals."
+> **类型**：难题
+
+"Scored the most goals" reads against the away-team goals of a **single match** (the goals an away team scored in one game), not a total accumulated league by league across all its away matches -- the question names no season, league or span, so a career-wide total is not what it asks for. Take the largest away-team goals figure in the data and give the team that scored it.
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- The largest away-team figure is **9 goals in one match** (2013/2014), scored by **Paris Saint-Germain**.
+- Summing each team's away goals across every match instead yields FC Barcelona -- that is a different question's answer, not this one's.
+
+### When asked: "How many football players born after the 1990s have the first name "Aaron"?"
+> **类型**：数据集问题
+> **Expected**：6
+
+"Born after the 1990s" here means born **after 1990** -- the players born from 1991 on whose name starts with Aaron. (Read literally as "after the decade" it would be born 2000 or later, and the data has no such player at all.)
+
+The reference answer compares the birthday against the string '1990', which a full date such as '1990-05-05' exceeds as a string, so it silently counts the three players born **within** 1990 as well; that string-comparison side effect is not the question's meaning.
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- Players named Aaron born from 1991 on: **6** (Aaron Taylor-Sinclair, Aaron Doran, Aaron Appindangoye, Aaron Lennox, Aaron Kuhl, Aaron Splaine).
+- The reference figure 9 additionally contains Aaron Muirhead, Aaron Mooy and Aaron Ramsey, all born in 1990.
+
+### When asked: "How many players had the highest potential score for crossing that preferred to use their left foots while attacking?"
+> **类型**：数据集问题
+> **Expected**：2
+
+"The highest potential score for crossing" is the highest score in the **crossing** column (the best a player can reach at crossing), not the separate `potential` column, and not the strength/physical scores.
+
+"How many players" counts **players**: one player counts once, even when several of his dated records reach that score. The reference answer counts those records instead (3) -- a record count is not a player count.
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- The highest crossing score in the data is **95**; among left-footed players it is reached by two players: **Jerome Rothen** and **Morten Gamst Pedersen** (three records in total).
+- So the answer is **2**.
+
+### When asked: "What percentage is Landon Donovan's overall rating higher than Jordan Bowery on 2013/7/12?"
+> **类型**：数据集问题
+> **Expected**：33.89830508474576
+
+The question names a date, so take each player's rating record of that day, then express how much higher the first is as a percentage of the second: `(Donovan - Bowery) / Bowery * 100` -- the same shape as the other "how much higher in percentage" question in this database.
+
+The reference answer divides by Donovan's own rating instead, giving 25.31645569620253 -- that is "how much lower the second is than the first", not "how much higher the first is than the second"; do not reproduce it.
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- On 2013-07-12: Landon Donovan 79, Jordan Bowery 59, so the answer is **33.89830508474576** (~33.9%).
+
+### When asked: "State the name of the most strongest player."
+> **类型**：难题
+
+"The most strongest player" is the player with the highest **overall rating** (the talent score), not the player with the highest score in the column literally named `strength` -- "strongest" here means the best player, and a question with no date takes each player's records as they are and looks for the global maximum of the overall rating.
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- The highest overall rating anywhere in the data is **94**, held by **Lionel Messi** (a card-named `strength` score reaches 96, but that is a different quantity and not what the question asks for).
+
+### When asked: "Calculate the percentage of players who prefer left foot, who were born between 1987 and 1992."
 > **类型**：数据集问题
 > **Expected**：28.868144690781797
 
@@ -414,7 +521,7 @@ Established facts (already checked -- do not re-derive, go straight to the answe
 
 - 1,237 / 4,285 = 28.868144690781797 (~28.87%).
 
-### When asked: "At present, calculate for the player's age who have a sprint speed of no less than 97 between 2013 to 2015?"
+### When asked: "At present, calculate for the player's age who have a sprint speed of no less than 97 between 2013 to 2015."
 > **类型**：难题
 
 "A player's age at present" = the current year minus the player's birth year. "Sprint speed of no less than 97" filters the player's sprint-speed records (97 is the highest sprint speed anywhere in the data, so only the players who ever reached it qualify). "Between 2013 to 2015" is the year window of those rating records -- not the player's birthday.

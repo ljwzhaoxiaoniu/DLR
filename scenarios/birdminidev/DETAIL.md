@@ -32,8 +32,8 @@
 
 | 评定 | 值 |
 |---|---|
-| ✅ 正确（与 gold 一致） | 174 / 212（82.1%） |
-| 🔁 翻盘（按 SOP 裁定为正确） | 38 |
+| ✅ 正确（与 gold 一致） | 166 / 212（78.3%） |
+| 🔁 翻盘（按 SOP 裁定为正确） | 46 |
 | ❌ 错误 | 0 |
 | ⚠️ 待仲裁 | 0 |
 | **合计正确（正确 + 翻盘）** | **212 / 212（100.0%）** |
@@ -42,18 +42,18 @@
 
 | 判定 | 值 |
 |---|---|
-| PASS（与 gold 一致） | 176 / 212（83.0%） |
+| PASS（与 gold 一致） | 168 / 212（79.2%） |
 | UNCERTAIN（抽不出可比对的值） | 10 |
-| FAIL（与 gold 不符） | 26 |
+| FAIL（与 gold 不符） | 34 |
 | GOLD_ERR（gold 本身执行失败） | 0 |
 
 **效率**
 
 | 指标 | 值 |
 |---|---|
-| token 平均 / 中位 | 83,158 / 80,558 |
-| token 最低 / 最高 | 29,637 / 204,836 |
-| 步数均值 / 工具调用均值 | 5 / 9 |
+| token 平均 / 中位 | 80,535 / 77,926 |
+| token 最低 / 最高 | 29,637 / 219,218 |
+| 步数均值 / 工具调用均值 | 6 / 9 |
 
 > **口径**：本文档汇总按**去重题数**计（同题多轮取**最新一轮**的判定/评定）——与 [results/STATS.md](results/STATS.md) 的**按次数**分布会不同（重跑过或跑挂过的题，那边会多计一次）。仅覆盖已跑轮次，勿外推为全数据集结论。token = input + cache_read + output（不含 CoT 的 reasoning 分项由 harness 单独计）。
 
@@ -71,7 +71,7 @@
 | [card_games](DETAIL/card_games.md) | 52 | 40 | 12 | 0 | 0 | 93,661 |
 | [codebase_community](DETAIL/codebase_community.md) | 49 | 42 | 7 | 0 | 0 | 84,921 |
 | [debit_card_specializing](DETAIL/debit_card_specializing.md) | 30 | 18 | 12 | 0 | 0 | 43,973 |
-| [european_football_2](DETAIL/european_football_2.md) | 51 | 45 | 6 | 0 | 0 | 79,889 |
+| [european_football_2](DETAIL/european_football_2.md) | 51 | 37 | 14 | 0 | 0 | 60,923 |
 
 ## 数据集缺陷与裁定（SOP 条目缘由）
 
@@ -109,9 +109,17 @@
 | q1526 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 · 难题 | For the customer who paid 634.8 in 2012/8/25, what was the c | "paid 634.8" identifies the customer through a single purchase of that amount on that date -- a purchase-level condition, not a monthly tota |
 | q1529 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What is the amount spent by customer "38508" at the gas stat | "Amount spent by a customer" is that customer's total consumption across all gas stations -- a question about the customer's monthly figures |
 | q1531 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 · 难题 | Who is the top spending customer and how much is the average | "Top spending customer" is decided by the customer's total consumption across all gas stations (the month-by-month figures), not by adding u |
+| q1028 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | In Scotland Premier League, which away team won the most dur | "Away team won the most" = per away team, count how many matches it won away in that league and season, and take the largest count. The "201 |
 | q1029 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What are the speed in which attacks are put together of the | "Speed in which attacks are put together" and "build-up play speed" are the same team attribute -- the question names one quantity twice. "H |
+| q1037 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Calculate the percentage of players who prefer left foot, wh | "Percentage of players" counts **players**, not rating records: one player counts once in both the numerator and the denominator, even thoug |
+| q1058 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Who has the highest average finishing rate between the highe | The question compares exactly two players: the tallest and the shortest one. Compare their average finishing rates over their dated records |
+| q1080 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Among the players whose preferred foot was the left foot whe | "Among the players ... how many of them" counts **players**: one player counts once, even though a player has many dated records (and his pr |
 | q1094 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | How much higher in percentage is Ariel Borysiuk's overall ra | A player's rating is a **dated series of observations**, not one number: the same player has many rating records over the years. A question |
 | q1107 | european_football_2 | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | When was the first time did Kevin Constant have his highest | A player's scores are a dated series. "His highest crossing score" is the largest value in that series, and he can carry it on more than one |
+| q1115 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What percentage is Landon Donovan's overall rating higher th | The question names a date, so take each player's rating record of that day, then express how much higher the first is as a percentage of the |
 | q1124 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 难题 | Who are the players that tend to be attacking when their mat | "Tend to be attacking when their mates were doing attack moves" is the **high** attacking work rate; the answer is the list of players carry |
+| q1133 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | How many football players born after the 1990s have the firs | "Born after the 1990s" here means born **after 1990** -- the players born from 1991 on whose name starts with Aaron. (Read literally as "aft |
 | q1135 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Please provide top four football players' IDs who are among | Two readings decide this question, and both must be right: - **Right-footed**: only records whose preferred foot is the right one compete. - |
+| q1136 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | How many players had the highest potential score for crossin | "The highest potential score for crossing" is the highest score in the **crossing** column (the best a player can reach at crossing), not th |
 | q1144 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Please state the finishing rate and curve score of the playe | The heaviest player is the one with the largest weight; his attributes are a dated series, and with no date in the question take his **prese |
+| q1148 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What is the percentage of players that are under 180 cm who | Two readings decide this question: - "An overall strength of more than 70" is the player's **overall rating** above 70 -- the overall talent |
