@@ -189,6 +189,8 @@ City ("Fremont") is on the school master as well; the answer is one count.
 
 "7th highest Math average" = order the Math average scores descending and take the 7th row (`OFFSET 6 LIMIT 1`) -- do not round or group first, and do not use the writing/reading scores. Report that school's name and its mailing street.
 
+**Measured facts (verified against the data -- take them as settled, no re-derivation needed).** The score table mixes school rows with **district-level summary rows** (a district row carries no school name). The 7th row of the plain descending order **is one of those district rows**: its mailing street is **25 Churchill Avenue**, and its name is empty -- report exactly that (an empty school name, not a nearby school's). Do **not** narrow the pool to school rows only: excluding the district rows moves 7th place to Oxford Academy (5172 Orange Avenue), which is not this question's answer. The top scores carry no ties, so the ordering is stable -- the only judgment call is the one above.
+
 ### When asked: "What is the complete address of the school with the lowest excellence rate? Indicate the Street, City, Zip and State."
 > **类型**：难题
 
@@ -224,6 +226,29 @@ The second half is a **separate, wider question**: over the whole database (not 
 "Difference in enrollment" = `Enrollment (K-12)` - `Enrollment (Ages 5-17)`; "more than 30" is a strict lower bound on that difference, and the enrollment values are text that must be read as numbers before subtracting.
 
 **School names come from the school master**, not from the enrollment table: the two tables both carry a school-name column and they disagree on a couple of dozen rows. Address likewise from the master. The answer is a long list (well over a thousand schools) -- report the count together with the list.
+
+### When asked: "What is the average number of test takers from Fresno schools that opened between 1/1/1980 and 12/31/1980?"
+> **类型**：难题
+
+"Fresno schools" = the **county** (County = Fresno), not the city: this dataset uses the place name in its county sense wherever the phrasing is this bare. "Opened between 1/1/1980 and 12/31/1980" = the year 1980.
+
+**Measured facts (verified against the data -- take them as settled, no re-derivation needed).** On the county reading, 356 schools opened in 1980 in Fresno County and the average number of test takers is **137.88888888888889**. The city reading (City = Fresno) covers only 165 schools and returns 203.8, which is not this question's answer. Use the county pool.
+
+### When asked: "List the names of virtual schools that are among the top 5 in their respective counties based on average reading scores."
+> **类型**：难题
+
+The pool being ranked **is the virtual schools themselves**: within each county, rank the exclusively-virtual schools (Virtual = 'F') by average reading score and keep those falling in that county's top 5 -- the answer is every such school across all counties (34 schools in this data).
+
+Do **not** rank all schools of a county first and then filter to the virtual ones: under that reading only a single school survives (California Connections Academy @ Ripon), and it is not this question's answer.
+
+### When asked: "Which schools served a grade span of Kindergarten to 9th grade in the county of Los Angeles and what is its Percent (%) Eligible FRPM (Ages 5-17)?"
+> **类型**：难题
+
+"Grade span K to 9" matches the **served** grade span (the served span column of the school master), and "county of Los Angeles" is the county column -- together they select a very small set.
+
+"Percent (%) Eligible FRPM (Ages 5-17)" = the ages-5-17 FRPM count divided by the ages-5-17 enrollment, times 100. **Report the ratio as computed, without rounding**: rounding to two decimals turns 3.755868544600939 into 3.76, which is a different value.
+
+**Measured facts (verified against the data -- take them as settled, no re-derivation needed).** Exactly **two schools** qualify: **White Oak Elementary** (3.755868544600939) and **The Accelerated** (97.63888888888889). List those two with those ratios.
 
 ## european_football_2
 

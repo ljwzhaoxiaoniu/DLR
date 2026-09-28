@@ -1,0 +1,5 @@
+25	california_schools	Name schools in Riverside which the average of average math score for SAT is grater than 400, what is the funding type of these schools?
+26	california_schools	State the names and full communication address of high schools in Monterey which has more than 800 free or reduced price meals for ages 15-17?
+27	california_schools	What is the average score in writing for the schools that were opened after 1991 or closed before 2000? List the school names along with the score. Also, list the communication number of the schools if there is any.
+28	california_schools	Consider the average difference between K-12 enrollment and 15-17 enrollment of schools that are locally funded, list the names and DOC type of schools which has a difference above this average.
+31	california_schools	What is the eligible free rate of the 10th and 11th schools with the highest enrolment for students in grades 1 through 12?

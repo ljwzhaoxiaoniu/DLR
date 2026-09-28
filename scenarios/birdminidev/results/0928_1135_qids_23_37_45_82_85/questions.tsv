@@ -1,0 +1,5 @@
+23	california_schools	List the names of schools with more than 30 difference in enrollements between K-12 and ages 5-17? Please also give the full street adress of the schools.
+37	california_schools	What is the complete address of the school with the lowest excellence rate? Indicate the Street, City, Zip and State.
+45	california_schools	What is the average writing score of each of the schools managed by Ricci Ulrich? List the schools and the corresponding average writing scores.
+82	california_schools	What is the grade span offered in the school with the highest longitude?
+85	california_schools	What is the Percent (%) Eligible Free (K-12) in the school administered by an administrator whose first name is Alusine. List the district code of the school.

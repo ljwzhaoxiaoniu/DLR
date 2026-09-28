@@ -1,0 +1,5 @@
+5	california_schools	How many schools with an average score in Math greater than 400 in the SAT test are exclusively virtual?
+11	california_schools	Please list the codes of the schools with a total enrollment of over 500.
+12	california_schools	Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?
+17	california_schools	Rank schools by their average score in Writing where the score is greater than 499, showing their charter numbers.
+24	california_schools	Give the names of the schools with the percent eligible for free meals in K-12 is more than 0.1 and test takers whose test score is greater than or equal to 1500?

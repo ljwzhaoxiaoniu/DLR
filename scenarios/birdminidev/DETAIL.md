@@ -1,6 +1,6 @@
 # 评测明细 — DLR · birdminidev
 
-> **说明**：question 驱动三级锚定——L1 dsh MCP 语义层（`dlr_semantic_query` 等 5 工具）/ L2 共识（`dlr_search_consensus`）/ L3 SOP（`skill sop`），交叉验证后出 SQL。
+> **说明**：question 驱动三级锚定——L1 dsh MCP 语义层（`dlr_semantic_query` 等 7 工具，含 `get_full_data_info` 下探）/ L2 共识（`dlr_search_consensus`）/ L3 SOP（`dlr_search_sop`），交叉验证后出 SQL。
 > **判定**：gold SQL 在数据集 SQLite 上执行得期望值 ↔ agent 答案（**数据集原生，不修正**）；数值逐级容差、文本归一化包含。
 > **评定**：SOP 生效时按 SOP 裁定——与 gold 对不上但答法合 SOP 口径 = **翻盘**（计正确，但**单独标注、单独计数，不并入 PASS**）。
 > **数据来源**：`results/<轮次>/{questions.csv, raw/*.ndjson}` ｜ 本文件由 `tsm stats` 自动重建（定性观察一节在跑批后按 SOP 案例补写）。
@@ -51,9 +51,9 @@
 
 | 指标 | 值 |
 |---|---|
-| token 平均 / 中位 | 91,242 / 84,428 |
-| token 最低 / 最高 | 33,353 / 282,597 |
-| 步数均值 / 工具调用均值 | 6 / 9 |
+| token 平均 / 中位 | 86,187 / 81,601 |
+| token 最低 / 最高 | 33,353 / 292,786 |
+| 步数均值 / 工具调用均值 | 5 / 9 |
 
 > **口径**：本文档汇总按**去重题数**计（同题多轮取**最新一轮**的判定/评定）——与 [results/STATS.md](results/STATS.md) 的**按次数**分布会不同（重跑过或跑挂过的题，那边会多计一次）。仅覆盖已跑轮次，勿外推为全数据集结论。token = input + cache_read + output（不含 CoT 的 reasoning 分项由 harness 单独计）。
 
@@ -67,7 +67,7 @@
 
 | 数据库 | 已跑 | ✅ 正确 | 🔁 翻盘 | ❌ 错误 | ⚠️ 待仲裁 | token 中位 |
 |---|---|---|---|---|---|---|
-| [california_schools](DETAIL/california_schools.md) | 30 | 29 | 1 | 0 | 0 | 122,742 |
+| [california_schools](DETAIL/california_schools.md) | 30 | 29 | 1 | 0 | 0 | 66,793 |
 | [card_games](DETAIL/card_games.md) | 52 | 40 | 12 | 0 | 0 | 93,661 |
 | [codebase_community](DETAIL/codebase_community.md) | 49 | 42 | 7 | 0 | 0 | 84,921 |
 | [debit_card_specializing](DETAIL/debit_card_specializing.md) | 30 | 21 | 9 | 0 | 0 | 47,948 |

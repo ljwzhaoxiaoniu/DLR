@@ -1,0 +1,5 @@
+32	california_schools	What is the eligible free or reduced price meal rate for the top 5 schools in grades 1-12 with the highest free or reduced price meal count of the schools with the ownership code 66?
+36	california_schools	Under whose administration is the school with the highest number of students scoring 1500 or more on the SAT? Indicate their full names.
+39	california_schools	What is the average number of test takers from Fresno schools that opened between 1/1/1980 and 12/31/1980?
+40	california_schools	What is the telephone number for the school with the lowest average score in reading in Fresno Unified?
+41	california_schools	List the names of virtual schools that are among the top 5 in their respective counties based on average reading scores.

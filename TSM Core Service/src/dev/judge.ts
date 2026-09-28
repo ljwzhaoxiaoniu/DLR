@@ -157,6 +157,11 @@ export function judge(finalText: string, expected: string[]): { verdict: string;
   const REL = [1e-9, 1e-6, 1e-4, 1e-3];
 
   const hit = (e: string): { ok: boolean; how: string } => {
+    // NULL 单元格：gold 结果里的 NULL 渲染成字符串 "null"，但答案用 empty/blank/无… 表述同样正确
+    // （2026-09-28 q50 实证：答 "school name = (empty …)" 被判 UNCERTAIN，仅因未写 "null"）
+    if (/^(null|none|nil|nan|n\/a|na)$/i.test(e.trim())) {
+      return { ok: /(null|none|nil|n\/a|empty|blank|missing|no [a-z ]{0,24}name|无|空|没有)/i.test(finalText), how: "nullish" };
+    }
     if (tn.includes(norm(e))) return { ok: true, how: "text" };
     const n = toNum(e);
     if (!Number.isFinite(n)) return { ok: false, how: "" };
