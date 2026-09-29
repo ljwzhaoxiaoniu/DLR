@@ -13,6 +13,8 @@ scenarios/birdminidev/
 │   ├── configs/{ER,DLR,RDF}/   # L1 建模源（11 库 × 3 范式；本线消费 DLR）
 │   ├── consensus/*.jsonl       # L2 领域共识源（11 库各一份）
 │   └── sop.md                  # L3 口径源（人写；`tsm build sop` 编译成检索索引）
+├── eval/                       # 考卷：questions.jsonl（500 题：题面+期望+口径来源）
+│   └── build.mjs               # 生成器（node eval/build.mjs 可复现；答案键取 L3 节口径、其余取 gold）
 └── fixtures/                   # 对照真值（verify 套件用，见 §三）
 ```
 
@@ -68,9 +70,10 @@ scenarios/birdminidev/
 
 **2.0 定位 = 回归快照**：Python 线已删，这些不再是"跨实现 parity"，而是**改建模后的自证基线**——改了 YAML / consensus，跑 `src/verify/*` 看结果是否**符合预期地**变化；预期变化则一并更新快照。
 
-## 四、`eval/` —— 考卷（约定，尚未落地）
+## 四、`eval/` —— 考卷（✅ 已落地：500 题）
 
 - 每个场景自带考卷：`eval/questions.jsonl`，每题 `{question, expected, source}`（`source` = 口径来源，便于判错归因）。
+- **birdminidev 现状**：500 行 = **L3 节口径 74 处**（翻盘题的答案键）+ **gold 426 处**；生成器 `eval/build.mjs`（`node eval/build.mjs` 可复现，答案键与台账互证：74/426 与评定分栏**逐项一致**）。
 - **考卷跟场景走、考试系统跟 dsh 走**（独立 bundle）——见 [eval.md](eval.md)。
 
 ## 五、评审：双读测试
@@ -90,7 +93,10 @@ npx tsx src/build/buildConsensus.ts            # L2 向量（按 namespace）
 npx tsx src/build/buildSop.ts                  # L3 索引（题面 → 节）
 npx tsx src/graph/loadNeo4j.ts --all --wipe    # 图（⚠ 先停 MCP server：清库重建）
 
-# 4) 自检
+# 4) 考卷（可选：从三层源生成）
+node eval/build.mjs
+
+# 5) 自检
 cd "../../TSM Core Service" && npx tsx src/verify/precheck.ts
 ```
 

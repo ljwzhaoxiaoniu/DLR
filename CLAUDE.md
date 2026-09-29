@@ -6,7 +6,7 @@
 
 本检出在分支 **`2.0`**：DLR + TSM 的**持续线**（不再是评测轮次）。与 `dlr-eval-v1.5` 已面目全非 → **各自分支演进，不要求跨分支一致**。
 
-- **2.0 日常**：`scenarios/<场景>/`（一套完整 TSM 的内容：`sources/{configs=L1, consensus=L2, sop.md=L3}` + `fixtures/`，当前 `birdminidev`）＋ `TSM Core Service/`（TS 语义服务：LanceDB + Neo4j）＋ `DSH-based Agent Service/`（dsh 接入）
+- **2.0 日常**：`scenarios/<场景>/`（一套完整 TSM 的内容：`sources/{configs=L1, consensus=L2, sop.md=L3}` + `eval/`（考卷）+ `fixtures/`，当前 `birdminidev`）＋ `TSM Core Service/`（TS 语义服务：LanceDB + Neo4j）＋ `DSH-based Agent Service/`（dsh 接入）
 - **评测线**（v4 基线、opencode 四阶段、归档）：在 `dlr-eval-v1.5` 分支 / 另一份检出。本分支**已移除 `OC-based Agent Service/` 与 `Semantic Core Service/`**；`Evaluation/`、`docs/` 中指向它们的引用仅评测线有效
 - **术语（三级标识，定案 2026-09-23）**：L1 = **`dlr`**（DLR 语义图谱）｜ L2 = **`consensus`**（Domain Consensus = **场景所需的、基于 L1 schema 的一类「非 workflow」知识**：术语 / 口径 / 背景；工作流与题级打法归 L3。刻意不用 "knowledge" 作名——区别于传统知识库/KG）｜ L3 = **`sop`**（SOP，题级流程/打法，**向量索引按题检索交付**——`dlr_search_sop`，2026-09-28 起不再整文件载入）。中文级名：数据源级 / 领域共识级 / 业务逻辑级
 - **L2/L3 准入判据**：非 workflow → `consensus`；题级流程/打法/陷阱 → `sop`
@@ -125,6 +125,7 @@ DLR Proj/                          # 分支 2.0
 │                                #   sources/configs/{ER,DLR,RDF}/ = L1 建模源
 │                                #   sources/consensus/           = L2 Domain Consensus 源
 │                                #   sources/sop.md               = L3 口径源
+│                                #   eval/questions.jsonl         = 考卷（500 题=题面+期望+口径来源；eval/build.mjs 生成）
 │                                #   fixtures/                    = 对照真值（verify 用）
 │                                #   results/<轮次>/              = 跑批留档（questions.csv + raw/）
 │                                #   DETAIL.md                    = 评测总账（覆盖度/汇总/分库索引/缺陷裁定）

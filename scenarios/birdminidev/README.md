@@ -230,6 +230,8 @@ scenarios/birdminidev/
 ├── sources/
 │   ├── configs/{ER,DLR,RDF}/   # L1 建模源（本线消费 DLR；ER/RDF 为评测线遗留）
 │   ├── consensus/*.jsonl       # L2 源（11 库；两种格式：聚合式 / 逐题式）
-│   └── sop.md                  # L3 源（题级打法；sync_sop.sh 的输入）
+│   └── sop.md                  # L3 源（题级打法；`tsm build sop` 编译成按题检索索引）
+├── eval/                       # 考卷：questions.jsonl（500 题 = 题面 + 期望 + 口径来源）
+│   └── build.mjs               #   生成器（node eval/build.mjs；答案键取 L3 节口径、其余取 gold）
 └── fixtures/                   # 回归快照（verify 套件对照）
 ```
