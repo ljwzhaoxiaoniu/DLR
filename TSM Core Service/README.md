@@ -1,7 +1,7 @@
 # TSM Core Service（TS/Node）
 
 2.0 线的 TSM 服务：**Neo4j（图）+ LanceDB（向量/共识）+ ONNX（编码器）** 的 TypeScript 实现，
-契约 = MCP 5 工具（L2 工具名与 Python 线不同，见下）。用于插件化（无 Python、无 sidecar）。
+契约 = MCP **7 工具**（L2/L3 工具名与 Python 线不同，见下）。用于插件化（无 Python、无 sidecar）。
 
 > 三级语义建模（TSM）：**L1 = `dlr`**（语义图谱）｜**L2 = `consensus`**（Domain Consensus = 场景所需的、
 > 基于 L1 schema 的一类**非 workflow** 知识：术语/口径/背景，非明细）｜**L3 = `sop`**（题级流程/打法）。
@@ -16,7 +16,8 @@ src/
 ├── embed/encoder.ts             # TextEncoder：ONNX 本地推理，复刻 sentence-transformers 行为
 ├── store/lance.ts               # LanceDB 访问层（entities=L1 语义 / consensus=L2 领域共识）
 ├── graph/{physicalSchema,queries,types,loadNeo4j}.ts  # SQLite 类型扫描 / Neo4j 查询 / YAML→Neo4j
-├── queries/{semanticQuery,searchConsensus,peMapping,executeSql}.ts  # 5 个工具的实现
+├── queries/{semanticQuery,searchConsensus,searchSop,peMapping,fullDataInfo,executeSql}.ts
+│     + {unwind,sqlWorker}.ts     # 7 个工具的实现；unwind=行级 PE 展开（ARCS.R），sqlWorker=execute_sql 子进程执行器
 ├── build/{buildLance,buildConsensus}.ts         # 构建向量表 / 领域共识表
 ├── mcp/server.ts                # MCP server（stdio + streamable-http，stateful）
 └── verify/                      # 回归套件（对 fixtures 自证 + MCP 预检）
@@ -41,16 +42,16 @@ cp .env.example .env               # 填 NEO4J_PASSWORD
 ## 构建与运行
 
 ```bash
-npx tsx src/build/buildLance.ts --all        # L1 向量表（11 库 948 行）
-npx tsx src/build/buildConsensus.ts          # L2 领域共识表（11 namespace 458 条）
-npx tsx src/graph/loadNeo4j.ts --all --wipe  # 图（LE 49/PE 72/PA 792/PAS 35）
+npx tsx src/build/buildLance.ts --all        # L1 向量表（11 库 946 行）
+npx tsx src/build/buildConsensus.ts          # L2 领域共识表（11 namespace 91 条，已加工）
+npx tsx src/graph/loadNeo4j.ts --all --wipe  # 图（LE 50 / PE 74 / LA 277 / PA 784 · PAS 37；共 1185 节点）
 npx tsx src/mcp/server.ts --http 28795       # MCP server（dsh 直连；stdio 模式去掉 --http）
 ```
 
-## MCP 工具（5）
+## MCP 工具（7）
 
-`dlr_semantic_query`（L1 召回）· **`dlr_search_consensus`**（L2 领域共识）· `get_pe_mapping`（第二跳）·
-`get_le_attrs` · `execute_sql`
+`dlr_semantic_query`（L1 召回）· `dlr_search_consensus`（L2 领域共识）· **`dlr_search_sop`**（L3，按题检索交付）·
+`get_pe_mapping`（第二跳）· `get_le_attrs` · `get_full_data_info`（下探视图外物理列）· `execute_sql`（**子进程 + 20s 硬超时**，`TSM_SQL_TIMEOUT_MS` 可调）
 
 > ⚠ 与 1.5 线（Python）的契约差异：那边 L2 工具名仍是 `dlr_search_evidence`（BIRD 遗留命名）。
 > 其余 4 个工具同名同构；L2 的**返回形状与分数口径一致**，仅 qid 编号口径不同（kid vs 旧题号）。
@@ -61,7 +62,7 @@ npx tsx src/mcp/server.ts --http 28795       # MCP server（dsh 直连；stdio �
 |---|---|---|
 | `parity_dlr.ts` | YAML→向量行 vs Python 线产物（fixtures manifest） | id/name/PAS 文本逐字一致 |
 | `embed_parity.ts` | Node(ONNX) 编码（与 Python 线比对见 fixtures 历史） | cosine 1.000000（已验） |
-| `tool_parity.ts` | 全链路（LanceDB+Neo4j）vs `dlr_semantic_query` 真值 | 5/5 结构逐字段一致 |
+| `tool_parity.ts` | 全链路（LanceDB+Neo4j）vs `dlr_semantic_query` 真值 | **按 id 配对**逐字段对账（位置比对会被新增 LE 误报）；现存 1 处描述漂移 = `LOGICAL.Loan`（真值 fixture 系 09-29 定盘前快照） |
 | `consensus_parity.ts` | L2 检索 vs Python 线真值 | 内容与分数逐位一致 |
 | `pe_mapping_parity.ts` | 第二跳 vs `get_pe_mapping` 真值 | JSON 逐字节一致（含 database_url） |
 | `execute_sql_check.ts` | SQL 执行 vs 真值 | 结果一致 + 拒绝口径一致 |

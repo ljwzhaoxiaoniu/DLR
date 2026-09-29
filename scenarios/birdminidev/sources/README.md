@@ -58,7 +58,7 @@ npx tsx src/verify/parity_dlr.ts <库名>   # 与历史 Python 线的向量清�
 
 | 库 | L1（视图 / 描述 / 关系） | L2 |
 |---|---|---|
-| european_football_2 | 199 列全投影 ✓ ｜ 描述 ✓（6 处为 CSV 自身编码坏字）｜ 关系：22 个首发槽位列为多槽位列，未以 PAS 表达（**待定**） | 7 条（51→7） |
+| european_football_2 | 199 列全投影 ✓ ｜ 描述 ✓（6 处为 CSV 自身编码坏字）｜ 关系：22 个首发槽位列为多槽位列 → **已由行级 PE 表达**（`R = unwind` → Appearance LE + PAS Appearance→Player；见场景 README §三） | 7 条（51→7） |
 | codebase_community | ✓（补 6 条 FK 为可见连接键） | 7 条（49→7） |
 | card_games | ✓ | 21 条（原有聚合式） |
 | debit_card_specializing | ✓ | 13 条 |

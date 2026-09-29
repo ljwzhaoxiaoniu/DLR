@@ -16,7 +16,7 @@ scenarios/birdminidev/
 └── fixtures/                   # 对照真值（verify 套件用，见 §三）
 ```
 
-现状规模：图 **LE 49 / PE 72 / PA 773 / LA 237 / PAS 35**；向量 **entities 929 · consensus 458**；共识覆盖 11 个 namespace。（PA 773 = california 视图收敛后净减 19 列；LA 237 = public 面扩容 +17。）
+现状规模：图 **LE 50 / PE 74 / PA 784 / LA 277 / PAS 37**（共 1185 节点）；向量 **entities 946 · consensus 91 · sop 180**；共识覆盖 11 个 namespace。
 
 ## 二、三层各写什么
 

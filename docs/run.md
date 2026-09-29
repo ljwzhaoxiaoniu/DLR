@@ -170,7 +170,7 @@ bash "DSH-based Agent Service/scripts/start_backend.sh"
 | 检查 | 期望 |
 |---|---|
 | `npx tsx src/verify/precheck.ts` | 7 工具 |
-| `curl -s localhost:28795/status` | `ok:true`，LE 49 / PE 72 / PA 773 / PAS 35 |
+| `curl -s localhost:28795/status` | `ok:true`，图 **LE 50 / PE 74 / PA 784 · PAS 37**（注：`/status` 的 lance 行数走**缓存句柄**，sop 数可能滞后；检索路径每次重开表，不受影响） |
 | `bash dsh_dlr/run_one.sh 1471 "What is the ratio of customers who pay in EUR against customers who pay in CZK?"` | 答案 **0.0657** |
 | `bash dsh_dlr/run_web.sh` | 右下角状态卡两盏灯全绿 |
 

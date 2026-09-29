@@ -23,12 +23,12 @@
 
 ```
 dsh（DeepSeek Harness：headless / web）
-   │  MCP（streamable-http :28795，5 工具）
+   │  MCP（streamable-http :28795，7 工具）
    ▼
 TSM Core Service（TS/Node）：LanceDB（向量）+ ONNX 编码器（进程内）
    │  bolt :7687
    ▼
-Neo4j（图：LE 49 / PE 72 / PA 792 / PAS 35；Browser :7474）
+Neo4j（图：LE 50 / PE 74 / PA 784 · PAS 37；Browser :7474）
    │  sqlite:///…
    ▼
 数据集（MINIDEV_sqlite，gitignored）
