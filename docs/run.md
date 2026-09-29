@@ -89,6 +89,9 @@ curl -s http://127.0.0.1:28795/status
 | 机器内存吃紧 | 常驻约 650MB（Neo4j ~280 + MCP ~330）；不用时关，用时跑幂等脚本 |
 | dsh 报工具名不对 | 工具面是 `mcp__semantic-core__*`；升级 dsh 后先 `--dump-config` 核行 id |
 | `tsm grade` 卡死（CPU 不动、无输出） | 重活 = gold 大查询 / 结果集补救；杀该进程 → 重跑该目录即可（gold 有磁盘缓存，不重复付） |
+| 整批出现 **0-token 空轮**（ndjson 停在 step 1、报 `TRANSPORT`/模型传输失败） | 网络/API 瞬断：**作废轮不计遍数**——原题重跑即可（另可 `grep -l TRANSPORT raw/*.ndjson` 定位） |
+| 单题无结论句、ndjson 停在中间 | 撞上 `timeout 600`（agent 跑飞）：收紧该题 L3 节的**答案形态**后单题重跑（q186/q1241 先例） |
+| 跑批中后端"卡死"（`/status` 超时、后续题全废） | agent 写的**病态 SQL**（大表相关子查询）钉死单线程服务——已加 `execute_sql` 子进程 + **20s 硬超时**护栏（`TSM_SQL_TIMEOUT_MS` 可调）；杀端口 → `start_backend.sh` |
 
 ## 7. 纪律
 

@@ -174,6 +174,20 @@ export function buildDetail(): Mistake[] {
     return `| [${db}](DETAIL/${db}.md) | ${rows.length} | ${rt("CORRECT")} | ${rt("OVERTURNED")} | ${rt("WRONG")} | ${rt("PENDING")} | ${fmt(dbMedian(rows))} |`;
   });
 
+  /** 复用 DETAIL.md 里既有的「定性观察」正文（人工撰写、跑批后补写）；仅当仍是内置占位时回退占位 */
+  function preservedObservation(): string[] {
+    const PLACEHOLDER = "> 分批跑完后按 SOP 案例撰写：每个 SOP 条目题须有对应观察、数字与归档 CSV 逐项一致（防止「先写结论后找证据」）。";
+    try {
+      const old = fs.readFileSync(path.join(SCENARIO, "DETAIL.md"), "utf8");
+      const m = old.match(/\n## 定性观察\n+([\s\S]*?)(?=\n## )/);
+      const body = (m?.[1] ?? "").trim();
+      if (body && !body.startsWith("> 分批跑完后按 SOP 案例撰写")) return body.split("\n");
+    } catch {
+      /* 首次生成：无旧文件 */
+    }
+    return [PLACEHOLDER];
+  }
+
   /** 逐题明细块（分库文件内；`id` 供校验表锚点跳转） */
   const blockOf = (a: Agg): string => {
     const g = goldValues(Number(a.qid), a.db);
@@ -279,7 +293,7 @@ export function buildDetail(): Mistake[] {
     "",
     "## 定性观察",
     "",
-    "> 分批跑完后按 SOP 案例撰写：每个 SOP 条目题须有对应观察、数字与归档 CSV 逐项一致（防止「先写结论后找证据」）。",
+    ...preservedObservation(),
     "",
     "## 分库明细（逐题校验表 + 证据正文）",
     "",
