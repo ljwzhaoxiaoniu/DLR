@@ -1201,3 +1201,41 @@ Returning only the single fastest row misses the set.
 Rank the drivers by their **shortest lap** using the numeric `milliseconds` column and take the top twenty; the first eight are Lewis Hamilton, Daniel Ricciardo, Kimi Räikkönen, Sebastian Vettel, Valtteri Bottas, Daniil Kvyat, Michael Schumacher and Felipe Massa.
 
 The dataset's own query parses the time **text** and its ranking lands on a different set (Hülkenberg, Ricciardo, Sutil, ...) -- do not report it. The millisecond ranking is settled.
+
+## student_club
+
+### When asked: "Among the events attended by more than 10 members of the Student_Club, how many of them are meetings?"
+> **类型**：数据集问题
+> **Expected**：4
+
+A meeting is an event with `type = 'Meeting'`; "attended by more than 10 members" means more than ten attendance rows. **Four** meetings qualify.
+
+The dataset's own query groups by event and returns one row per meeting (each carrying the value 1) instead of the number of meetings -- do not report its rows. 4 is settled.
+
+### When asked: "How many times was the budget in Advertisement for "Yearly Kickoff" meeting more than "October Meeting"?"
+> **类型**：难题
+
+"How many times ... more than" is the **ratio** of the two Advertisement budgets: Yearly Kickoff's 150 over October Meeting's 55 = **2.727272727272727** (restrict to `category = 'Advertisement'` and Meeting-type events).
+
+Answering with a count (1) is the wrong shape.
+
+### When asked: "Which event has the lowest cost?"
+> **类型**：难题
+
+The lowest **expense** cost is **6**, carried by the Speaker events of November, October and September (a three-way tie); report **November Speaker**.
+
+Do not rank events by their **total** cost instead (that reading lands on Officers meeting - November at 20.20) -- the question asks which event carries the lowest cost.
+
+### When asked: "State the category of events were held at MU 215."
+> **类型**：难题
+
+"Category" here is the **budget** category of the event (`budget.category`), not the event's own type: the events at MU 215 carry **Advertisement, Food, Speaker Gifts and Parking** (all four).
+
+Listing the event types (Meeting, Guest Speaker, Election) uses the wrong column.
+
+### When asked: "Among the members with t-shirt size of medium, what is the percentage of the amount 50 received by the Student_Club?"
+> **类型**：难题
+
+The population is the members whose **position is 'Member'** and whose t-shirt size is 'Medium'; all ten of their income rows are exactly 50, so the percentage is **100**.
+
+Counting members (or dropping the position filter) gives 30.303030303030305 -- wrong reading.

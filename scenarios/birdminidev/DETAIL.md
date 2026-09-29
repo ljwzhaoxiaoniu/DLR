@@ -20,11 +20,11 @@
 | european_football_2 | 51 | 51 | 0 | 100.0% ✅ |
 | financial | 32 | 32 | 0 | 100.0% ✅ |
 | formula_1 | 66 | 66 | 0 | 100.0% ✅ |
-| student_club | 48 | 0 | 48 | 0.0% |
+| student_club | 48 | 48 | 0 | 100.0% ✅ |
 | superhero | 52 | 0 | 52 | 0.0% |
 | thrombosis_prediction | 50 | 0 | 50 | 0.0% |
 | toxicology | 40 | 0 | 40 | 0.0% |
-| **合计** | **500** | **310** | **190** | **62.0%** |
+| **合计** | **500** | **358** | **142** | **71.6%** |
 
 ## 汇总
 
@@ -32,27 +32,27 @@
 
 | 评定 | 值 |
 |---|---|
-| ✅ 正确（与 gold 一致） | 250 / 310（80.6%） |
-| 🔁 翻盘（按 SOP 裁定为正确） | 60 |
+| ✅ 正确（与 gold 一致） | 297 / 358（83.0%） |
+| 🔁 翻盘（按 SOP 裁定为正确） | 61 |
 | ❌ 错误 | 0 |
 | ⚠️ 待仲裁 | 0 |
-| **合计正确（正确 + 翻盘）** | **310 / 310（100.0%）** |
+| **合计正确（正确 + 翻盘）** | **358 / 358（100.0%）** |
 
 **判定**（与 gold 原始比对 · 留档；gold 数据集原生、不修正）
 
 | 判定 | 值 |
 |---|---|
-| PASS（与 gold 一致） | 250 / 310（80.6%） |
+| PASS（与 gold 一致） | 297 / 358（83.0%） |
 | UNCERTAIN（抽不出可比对的值） | 14 |
-| FAIL（与 gold 不符） | 46 |
+| FAIL（与 gold 不符） | 47 |
 | GOLD_ERR（gold 本身执行失败） | 0 |
 
 **效率**
 
 | 指标 | 值 |
 |---|---|
-| token 平均 / 中位 | 71,254 / 58,796 |
-| token 最低 / 最高 | 26,925 / 462,235 |
+| token 平均 / 中位 | 71,196 / 57,723 |
+| token 最低 / 最高 | 26,925 / 689,012 |
 | 步数均值 / 工具调用均值 | 6 / 10 |
 
 > **口径**：本文档汇总按**去重题数**计（同题多轮取**最新一轮**的判定/评定）——与 [results/STATS.md](results/STATS.md) 的**按次数**分布会不同（重跑过或跑挂过的题，那边会多计一次）。仅覆盖已跑轮次，勿外推为全数据集结论。token = input + cache_read + output（不含 CoT 的 reasoning 分项由 harness 单独计）。
@@ -74,6 +74,7 @@
 | [european_football_2](DETAIL/european_football_2.md) | 51 | 37 | 14 | 0 | 0 | 60,026 |
 | [financial](DETAIL/financial.md) | 32 | 26 | 6 | 0 | 0 | 64,174 |
 | [formula_1](DETAIL/formula_1.md) | 66 | 59 | 7 | 0 | 0 | 61,576 |
+| [student_club](DETAIL/student_club.md) | 48 | 47 | 1 | 0 | 0 | 54,420 |
 
 ## 数据集缺陷与裁定（SOP 条目缘由）
 
@@ -139,3 +140,4 @@
 | q962 | formula_1 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | From 2000 to 2005, what percentage of drivers who were born | Counted over **drivers**: every one of the 52 drivers of the 2000-2005 seasons was born before 1985, and all 52 have a race with more than 5 |
 | q963 | formula_1 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | How many French drivers who obtain the laptime less than 02: | Count **drivers**, not lap records: **9** French drivers hold a lap under two minutes (compare the time numerically, e.g. `milliseconds < 12 |
 | q1011 | formula_1 | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Which top 20 driver created the shortest lap time ever recor | Rank the drivers by their **shortest lap** using the numeric `milliseconds` column and take the top twenty; the first eight are Lewis Hamilt |
+| q1322 | student_club | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Among the events attended by more than 10 members of the Stu | A meeting is an event with `type = 'Meeting'`; "attended by more than 10 members" means more than ten attendance rows. **Four** meetings qua |

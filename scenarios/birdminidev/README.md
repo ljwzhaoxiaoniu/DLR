@@ -84,6 +84,7 @@
 | q962 | formula_1 | 🔁 翻盘 | 数据集问题 | From 2000 to 2005, what percentage of drivers who were b | Counted over **drivers**: every one of the 52 drivers of the 2000-2005 seasons was born before 1985, and all 52 have a race with m |
 | q963 | formula_1 | 🔁 翻盘 | 数据集问题 | How many French drivers who obtain the laptime less than | Count **drivers**, not lap records: **9** French drivers hold a lap under two minutes (compare the time numerically, e.g. `millise |
 | q1011 | formula_1 | 🔁 翻盘 | 数据集问题 | Which top 20 driver created the shortest lap time ever r | Rank the drivers by their **shortest lap** using the numeric `milliseconds` column and take the top twenty; the first eight are Le |
+| q1322 | student_club | 🔁 翻盘 | 数据集问题 | Among the events attended by more than 10 members of the | A meeting is an event with `type = 'Meeting'`; "attended by more than 10 members" means more than ten attendance rows. **Four** me |
 <!-- mistakes:end -->
 
 ## 二、建模应用思路（原料 → 三层）
@@ -153,13 +154,13 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 <!-- stats:begin -->
 ![实测结果综合统计](results/stats.svg)
 
-**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 250 ｜ 🔁 翻盘 60 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 190　—　**已跑 310 题全部正确**
+**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 297 ｜ 🔁 翻盘 61 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 142　—　**已跑 358 题全部正确**
 
 （🔁 翻盘 = 数据集自身缺陷（gold 未实现题面）按 SOP 逐题裁定为正确——单独计数、不并入 ✅ 正确；每题取最新一轮）
 
-均值 **5.9 步 / 9.5 工具调用 / 每题 71,254 tokens** ｜ 跑题覆盖度 **310/500 题**（7/11 库有产物）
+均值 **6.0 步 / 9.7 工具调用 / 每题 71,196 tokens** ｜ 跑题覆盖度 **358/500 题**（8/11 库有产物）
 
-> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 60 道数据集缺陷题的比对记录）也在这两处可查。
+> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 61 道数据集缺陷题的比对记录）也在这两处可查。
 <!-- stats:end -->
 
 **怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。
