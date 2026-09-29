@@ -1,0 +1,5 @@
+116	financial	For the client whose loan was approved first in 1993/7/5, what is the increase rate of his/her account balance from 1993/3/22 to 1998/12/27?
+117	financial	What is the percentage of loan amount that has been fully paid with no issue.
+118	financial	For loan amount less than USD100,000, what is the percentage of accounts that is still running with no issue.
+125	financial	For loans contracts which are still running where client are in debt, list the district of the and the state the percentage unemployment rate increment from year 1995 to 1996.
+128	financial	List the top nine districts, by descending order, from the highest to the lowest, the number of female account holders.

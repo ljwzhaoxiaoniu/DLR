@@ -1,0 +1,5 @@
+149	financial	Please list the account types that are not eligible for loans, and the average income of residents in the district where the account is located exceeds $8000 but is no more than $9000.
+152	financial	What is the average number of crimes committed in 1995 in regions where the number exceeds 4000 and the region has accounts that are opened starting from the year 1997?
+159	financial	List all the withdrawals in cash transactions that the client with the id 3356 makes.
+168	financial	What percentage of clients who opened their accounts in the district with an average salary of over 10000 are women?
+169	financial	What was the growth rate of the total amount of loans across all accounts for a male client between 1996 and 1997?

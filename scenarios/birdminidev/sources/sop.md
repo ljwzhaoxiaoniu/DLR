@@ -973,3 +973,102 @@ definition counts entities (the posts-owned-by-an-elder-user question); here the
 so a row without it sits on neither side.
 
 The counts are established -- do not spend steps re-deriving them; go straight to the answer.
+
+## financial
+
+### When asked: "List out the account numbers of female clients who are oldest and has lowest average salary, calculate the gap between this lowest average salary with the highest average salary?"
+> **类型**：数据集问题
+> **Expected**：3214 | 4431
+
+Two conditions pick one person and one district: the oldest female client (`gender = 'F'`, smallest `birth_date`) **within the district whose average salary `A11` is the lowest**. Her account number is **3214**, and the salary gap is the global spread of the district salaries, `MAX(A11) - MIN(A11)` = **4431**.
+
+The dataset's own query ranks that district's accounts by `A11` **descending** -- the opposite end of the salary scale -- and reports account 6; do not report its account number. 3214 and 4431 are settled -- go straight to them.
+
+### When asked: "List out the account numbers of clients who are youngest and have highest average salary?"
+> **类型**：数据集问题
+> **Expected**：1372
+
+Both conditions apply to the same pick: the client with the largest `birth_date` (youngest) **inside the district whose average salary `A11` is the highest**. That client's account number is **1372**.
+
+The dataset's own query takes the youngest client overall and drops the salary condition, reporting 2836; do not report it. 1372 is settled -- go straight to it.
+
+### When asked: "For the branch which located in the south Bohemia with biggest number of inhabitants, what is the percentage of the male clients?"
+> **类型**：数据集问题
+> **Expected**：40
+
+"The branch in south Bohemia with the biggest number of inhabitants" is the district with `A3 = 'south Bohemia'` whose `A4` (inhabitants) is largest; `A4` is stored as text, so it must be compared as a number, not as a string. That district carries **177,686** inhabitants, and its male clients are **40%** of its clients.
+
+The dataset's own query orders the raw `A4` text (no cast), which lands on a different district and reports 44.26229508196721 -- do not report it. 40 is settled.
+
+### When asked: "For loan amount less than USD100,000, what is the percentage of accounts that is still running with no issue."
+> **类型**：难题
+
+"Percentage of **accounts**" puts accounts on both sides of the fraction: loans under 100,000 whose status is `'C'` (running, ok so far) over all loans under 100,000 -- a share of **counts**, not of amounts. The value is **46.885245901639344** (≈46.89%).
+
+Summing `amount` instead of counting rows gives 47.55 -- wrong reading.
+
+### When asked: "List the top nine districts, by descending order, from the highest to the lowest, the number of female account holders."
+> **类型**：难题
+
+A client belongs to exactly one district: their own `client.district_id` (not the district of an account they hold). Count the female clients per district and rank descending -- the top three are **Hl.m. Praha (324)**, **Karvina (88)**, **Ostrava - mesto (84)**.
+
+Re-attributing clients through the `disp`/`account` joins yields lower counts (276/79/...) -- wrong reading.
+
+### When asked: "Which are the top ten withdrawals (non-credit card) by district names for the month of January 1996?"
+> **类型**：数据集问题
+> **Expected**：Hl.m. Praha | Karvina | Ostrava - mesto | Zlin | Olomouc | Frydek - Mistek | Brno - mesto | Usti nad Orlici | Rychnov nad Kneznou | Brno - venkov
+
+"Top ten withdrawals (non-credit card) by district" ranks the districts by the **total amount** of their non-card withdrawals (`type = 'VYDAJ'`, `operation <> 'VYBER KARTOU'`) dated January 1996, descending. The ten districts are Hl.m. Praha, Karvina, Ostrava - mesto, Zlin, Olomouc, Frydek - Mistek, Brno - mesto, Usti nad Orlici, Rychnov nad Kneznou, Brno - venkov.
+
+The dataset's own query sorts the district **names alphabetically**, which returns a different (and meaningless) set -- do not report it. This list is settled.
+
+### When asked: "How many accounts have running contracts in Branch location 1?"
+> **类型**：难题
+
+A "running contract" is status **`'C'` or `'D'`** -- `'D'` means the running contract whose client is in debt, so both are running. The accounts of district 1 carrying either status number **47** (counting accounts; de-duplicating does not change the figure).
+
+Restricting to `'C'` alone gives 43 -- wrong reading.
+
+### When asked: "Who are the account holder identification numbers whose who have transactions on the credit card with the amount is less than the average, in 1998?"
+> **类型**：难题
+
+"Transactions on the credit card" are the operations recorded as **`'VYBER KARTOU'`** (card withdrawal); "less than the average" compares against the average amount of **that same year's** transactions (1998). Answer with the **account numbers**: **799 accounts** qualify (the first are 14, 33, 34, 43, 48, ...).
+
+Counting distinct clients, or comparing against the all-years average, gives other figures -- wrong readings.
+
+### When asked: "What is the average number of crimes committed in 1995 in regions where the number exceeds 4000 and the region has accounts that are opened starting from the year 1997?"
+> **类型**：数据集问题
+> **Expected**：9675.038461538461
+
+The candidates are the **distinct districts** with `A15 > 4000` that hold at least one account opened in 1997 or later -- **26 regions** -- and the answer is the average of their 1995 crime figures `A15`: **9675.038461538461**.
+
+The dataset's own query joins accounts before averaging, so each region is repeated once per account and the mean is taken over those repeated rows (29,670.44951923077) -- an account-weighted figure, not the regions' average; do not report it. 9675.038461538461 is settled.
+
+### When asked: "What percentage of clients who opened their accounts in the district with an average salary of over 10000 are women?"
+> **类型**：难题
+
+The client set is the clients whose **own district** is a district with `A11 > 10000`; among them the women are **49.609984399375975%** (≈49.61%).
+
+Restricting the population to clients who hold an account (through `disp`) gives 50.39 -- wrong reading.
+
+### When asked: "What percentage of male clients request for weekly statements to be issued?"
+> **类型**：数据集问题
+> **Expected**：52.12765957446808
+
+A client "requests weekly statements" when they hold an account whose frequency is `'POPLATEK TYDNE'` (link clients to accounts through `disp`). The share is counted over **clients** -- one client counts once however many weekly accounts they hold: **52.12765957446808%**.
+
+Two wrong readings: dividing by all male clients (a small figure like 5.4%) uses the wrong denominator; and counting one row per client-account pair instead of per client gives 52.63157894736842 (the dataset's own query does this) -- do not report it. The client-count value is settled -- go straight to it instead of re-deriving the join.
+
+### When asked: "Name the account numbers of female clients who are oldest and have lowest average salary?"
+> **类型**：难题
+
+Order the female clients by **birth_date ascending (oldest first), then by their district's average salary `A11` ascending**, and take the first: her account number is **1743**.
+
+Picking the lowest-salary district first and only then the oldest client inside it gives 3214 -- wrong reading.
+
+### When asked: "What is the average amount of loan which are still on running contract with statement issuance after each transaction?"
+> **类型**：难题
+
+"Running contract" covers status **`'C'` and `'D'`**; "statement issuance after each transaction" is the account frequency **`'POPLATEK PO OBRATU'`**. The average loan amount over those accounts is **192836.57142857142**.
+
+Restricting to `'C'` alone gives 195839.33333333334 -- wrong reading.

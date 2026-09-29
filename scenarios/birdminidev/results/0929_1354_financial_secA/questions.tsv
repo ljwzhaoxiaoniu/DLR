@@ -1,0 +1,5 @@
+94	financial	List out the account numbers of female clients who are oldest and has lowest average salary, calculate the gap between this lowest average salary with the highest average salary?
+95	financial	List out the account numbers of clients who are youngest and have highest average salary?
+115	financial	For the branch which located in the south Bohemia with biggest number of inhabitants, what is the percentage of the male clients?
+118	financial	For loan amount less than USD100,000, what is the percentage of accounts that is still running with no issue.
+128	financial	List the top nine districts, by descending order, from the highest to the lowest, the number of female account holders.

@@ -18,13 +18,13 @@
 | codebase_community | 49 | 49 | 0 | 100.0% ✅ |
 | debit_card_specializing | 30 | 30 | 0 | 100.0% ✅ |
 | european_football_2 | 51 | 51 | 0 | 100.0% ✅ |
-| financial | 32 | 0 | 32 | 0.0% |
+| financial | 32 | 32 | 0 | 100.0% ✅ |
 | formula_1 | 66 | 0 | 66 | 0.0% |
 | student_club | 48 | 0 | 48 | 0.0% |
 | superhero | 52 | 0 | 52 | 0.0% |
 | thrombosis_prediction | 50 | 0 | 50 | 0.0% |
 | toxicology | 40 | 0 | 40 | 0.0% |
-| **合计** | **500** | **212** | **288** | **42.4%** |
+| **合计** | **500** | **244** | **256** | **48.8%** |
 
 ## 汇总
 
@@ -32,26 +32,26 @@
 
 | 评定 | 值 |
 |---|---|
-| ✅ 正确（与 gold 一致） | 165 / 212（77.8%） |
-| 🔁 翻盘（按 SOP 裁定为正确） | 47 |
+| ✅ 正确（与 gold 一致） | 191 / 244（78.3%） |
+| 🔁 翻盘（按 SOP 裁定为正确） | 53 |
 | ❌ 错误 | 0 |
 | ⚠️ 待仲裁 | 0 |
-| **合计正确（正确 + 翻盘）** | **212 / 212（100.0%）** |
+| **合计正确（正确 + 翻盘）** | **244 / 244（100.0%）** |
 
 **判定**（与 gold 原始比对 · 留档；gold 数据集原生、不修正）
 
 | 判定 | 值 |
 |---|---|
-| PASS（与 gold 一致） | 165 / 212（77.8%） |
-| UNCERTAIN（抽不出可比对的值） | 11 |
-| FAIL（与 gold 不符） | 36 |
+| PASS（与 gold 一致） | 191 / 244（78.3%） |
+| UNCERTAIN（抽不出可比对的值） | 12 |
+| FAIL（与 gold 不符） | 41 |
 | GOLD_ERR（gold 本身执行失败） | 0 |
 
 **效率**
 
 | 指标 | 值 |
 |---|---|
-| token 平均 / 中位 | 65,901 / 57,549 |
+| token 平均 / 中位 | 69,695 / 58,490 |
 | token 最低 / 最高 | 29,420 / 397,982 |
 | 步数均值 / 工具调用均值 | 6 / 9 |
 
@@ -72,6 +72,7 @@
 | [codebase_community](DETAIL/codebase_community.md) | 49 | 41 | 8 | 0 | 0 | 47,901 |
 | [debit_card_specializing](DETAIL/debit_card_specializing.md) | 30 | 18 | 12 | 0 | 0 | 43,973 |
 | [european_football_2](DETAIL/european_football_2.md) | 51 | 37 | 14 | 0 | 0 | 60,026 |
+| [financial](DETAIL/financial.md) | 32 | 26 | 6 | 0 | 0 | 64,174 |
 
 ## 数据集缺陷与裁定（SOP 条目缘由）
 
@@ -124,3 +125,9 @@
 | q1136 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | How many players had the highest potential score for crossin | "The highest potential score for crossing" is the highest score in the **crossing** column (the best a player can reach at crossing), not th |
 | q1144 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Please state the finishing rate and curve score of the playe | The heaviest player is the one with the largest weight; his attributes are a dated series, and with no date in the question take his **prese |
 | q1148 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What is the percentage of players that are under 180 cm who | Two readings decide this question: - "An overall strength of more than 70" is the player's **overall rating** above 70 -- the overall talent |
+| q94 | financial | ❌ FAIL | 🔁 翻盘 | 数据集问题 | List out the account numbers of female clients who are oldes | Two conditions pick one person and one district: the oldest female client (`gender = 'F'`, smallest `birth_date`) **within the district whos |
+| q95 | financial | ❌ FAIL | 🔁 翻盘 | 数据集问题 | List out the account numbers of clients who are youngest and | Both conditions apply to the same pick: the client with the largest `birth_date` (youngest) **inside the district whose average salary `A11` |
+| q115 | financial | ❌ FAIL | 🔁 翻盘 | 数据集问题 | For the branch which located in the south Bohemia with bigge | "The branch in south Bohemia with the biggest number of inhabitants" is the district with `A3 = 'south Bohemia'` whose `A4` (inhabitants) is |
+| q129 | financial | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Which are the top ten withdrawals (non-credit card) by distr | "Top ten withdrawals (non-credit card) by district" ranks the districts by the **total amount** of their non-card withdrawals (`type = 'VYDA |
+| q152 | financial | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What is the average number of crimes committed in 1995 in re | The candidates are the **distinct districts** with `A15 > 4000` that hold at least one account opened in 1997 or later -- **26 regions** -- |
+| q186 | financial | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What percentage of male clients request for weekly statement | A client "requests weekly statements" when they hold an account whose frequency is `'POPLATEK TYDNE'` (link clients to accounts through `dis |

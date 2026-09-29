@@ -71,6 +71,12 @@
 | q1136 | european_football_2 | 🔁 翻盘 | 数据集问题 | How many players had the highest potential score for cro | "The highest potential score for crossing" is the highest score in the **crossing** column (the best a player can reach at crossin |
 | q1144 | european_football_2 | 🔁 翻盘 | 数据集问题 | Please state the finishing rate and curve score of the p | The heaviest player is the one with the largest weight; his attributes are a dated series, and with no date in the question take h |
 | q1148 | european_football_2 | 🔁 翻盘 | 数据集问题 | What is the percentage of players that are under 180 cm | Two readings decide this question: - "An overall strength of more than 70" is the player's **overall rating** above 70 -- the over |
+| q94 | financial | 🔁 翻盘 | 数据集问题 | List out the account numbers of female clients who are o | Two conditions pick one person and one district: the oldest female client (`gender = 'F'`, smallest `birth_date`) **within the dis |
+| q95 | financial | 🔁 翻盘 | 数据集问题 | List out the account numbers of clients who are youngest | Both conditions apply to the same pick: the client with the largest `birth_date` (youngest) **inside the district whose average sa |
+| q115 | financial | 🔁 翻盘 | 数据集问题 | For the branch which located in the south Bohemia with b | "The branch in south Bohemia with the biggest number of inhabitants" is the district with `A3 = 'south Bohemia'` whose `A4` (inhab |
+| q129 | financial | 🔁 翻盘 | 数据集问题 | Which are the top ten withdrawals (non-credit card) by d | "Top ten withdrawals (non-credit card) by district" ranks the districts by the **total amount** of their non-card withdrawals (`ty |
+| q152 | financial | 🔁 翻盘 | 数据集问题 | What is the average number of crimes committed in 1995 i | The candidates are the **distinct districts** with `A15 > 4000` that hold at least one account opened in 1997 or later -- **26 reg |
+| q186 | financial | 🔁 翻盘 | 数据集问题 | What percentage of male clients request for weekly state | A client "requests weekly statements" when they hold an account whose frequency is `'POPLATEK TYDNE'` (link clients to accounts th |
 <!-- mistakes:end -->
 
 ## 二、建模应用思路（原料 → 三层）
@@ -140,13 +146,13 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 <!-- stats:begin -->
 ![实测结果综合统计](results/stats.svg)
 
-**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 165 ｜ 🔁 翻盘 47 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 288　—　**已跑 212 题全部正确**
+**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 191 ｜ 🔁 翻盘 53 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 256　—　**已跑 244 题全部正确**
 
 （🔁 翻盘 = 数据集自身缺陷（gold 未实现题面）按 SOP 逐题裁定为正确——单独计数、不并入 ✅ 正确；每题取最新一轮）
 
-均值 **5.6 步 / 8.7 工具调用 / 每题 65,901 tokens** ｜ 跑题覆盖度 **212/500 题**（5/11 库有产物）
+均值 **5.8 步 / 9.2 工具调用 / 每题 69,695 tokens** ｜ 跑题覆盖度 **244/500 题**（6/11 库有产物）
 
-> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 47 道数据集缺陷题的比对记录）也在这两处可查。
+> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 53 道数据集缺陷题的比对记录）也在这两处可查。
 <!-- stats:end -->
 
 **怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。
