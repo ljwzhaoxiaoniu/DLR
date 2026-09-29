@@ -149,11 +149,54 @@ export function stripModelGap(text: string): string {
   return out.join("\n");
 }
 
+/**
+ * 结论句区域（`Final Answer:` 标记后的一段）：**数值判定只看这里**。
+ *
+ * 为什么必须限制：judge 原先把整段答案当候选池，而答案正文天然会引用**被否决的备选读法**——
+ * 「不用 INNER JOIN 的 1358 做分母（那会得到 1.3254…，属错误口径）」里的那个数就是 gold 期望值，
+ * 于是判 PASS 假阳性（q716；同族：q1472/1498/1505/1473/q39/q47/598/q682/q533）。
+ * 结论句是 AGENTS.md 规定 agent 必须写出的答案本身 —— 数值答对必须体现在这里。
+ * 无标记（或标记区里没有任何数字）时退回全文判定，保持向后兼容。
+ */
+export function finalAnswerMarker(text: string): string {
+  const m = text.match(/^[^\S\n]*(?:#{1,6}\s*)?[*_]{0,2}\s*Final Answer\s*[:：][^\S\n]*/im);
+  if (!m || m.index === undefined) return "";
+  const out: string[] = [];
+  let len = 0;
+  let started = false;
+  for (const l of text.slice(m.index + m[0].length).split(/\r?\n/)) {
+    // 标记后先跳过空行（答案常写在下一行），随后空行/边界行/新标题即止
+    if (!started) {
+      if (!l.trim()) continue;
+      started = true;
+    }
+    if (!l.trim()) break;
+    if (/^\s*(#{1,6}\s*)?[*_]{0,2}\s*(Evidence SQL|建模缺口|Modell?ing gap)\b/i.test(l)) break;
+    if (/^\s*#{1,6}\s/.test(l)) break;
+    out.push(l);
+    len += l.length;
+    if (len > 3000) break;
+  }
+  return out.join("\n").trim();
+}
+
+/** 短文本期望（如 "Min"、"well-finished"）：按词边界匹配，且不得是函数调用/标识符的前缀（防 `MIN(` 命中 "Min"） */
+const SHORT_TEXT_LEN = 12;
+const shortTextHit = (e: string, text: string): boolean => {
+  const t = e.trim();
+  if (!t) return false;
+  const re = new RegExp(String.raw`(?<![\w.])${t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\w(])`, "i");
+  return re.test(text);
+};
+
 /** 文本比对（**逐值判定**：每个期望值各自走「文本命中 或 数值逐级容差」；混合类型期望也能判） */
 export function judge(finalText: string, expected: string[]): { verdict: string; precision: string } {
   if (!expected.length) return { verdict: "GOLD_ERR", precision: "-" };
   const tn = norm(finalText);
-  const cands = (finalText.match(NUM_RE) ?? []).map(toNum);
+  const marker = finalAnswerMarker(finalText);
+  const markerCands = (marker.match(NUM_RE) ?? []).map(toNum);
+  // 数值候选池：标记区里有数 → 只认标记区（结论句）；否则退回全文
+  const cands = markerCands.length ? markerCands : (finalText.match(NUM_RE) ?? []).map(toNum);
   const REL = [1e-9, 1e-6, 1e-4, 1e-3];
 
   const hit = (e: string): { ok: boolean; how: string } => {
@@ -162,12 +205,21 @@ export function judge(finalText: string, expected: string[]): { verdict: string;
     if (/^(null|none|nil|nan|n\/a|na)$/i.test(e.trim())) {
       return { ok: /(null|none|nil|n\/a|empty|blank|missing|no [a-z ]{0,24}name|无|空|没有)/i.test(finalText), how: "nullish" };
     }
-    if (tn.includes(norm(e))) return { ok: true, how: "text" };
+    const ne = norm(e);
     const n = toNum(e);
-    if (!Number.isFinite(n)) return { ok: false, how: "" };
+    const et = e.trim();
+    // 非数值期望 → 文本判定（长文本可整段找；短标签按词边界找）
+    if (!Number.isFinite(n) || !/^[-−–—－]?\s*[\d,]+(\.\d+)?\s*$/.test(et)) {
+      return ne.length > SHORT_TEXT_LEN ? { ok: tn.includes(ne), how: "text" } : { ok: shortTextHit(e, finalText), how: "text" };
+    }
+    // 数值期望：① 数值逐级容差（候选池 = 结论句里的数；无标记时退回全文）
     for (const r of REL)
       if (cands.some((c) => Math.abs(c - n) <= Math.max(1e-12, Math.abs(n) * r))) return { ok: true, how: `num@${r}` };
-    return { ok: false, how: "" };
+    // ② 前导零码（月码 "04"、DOCType "00"）：答案常写全码（201304），允许按数字尾部命中
+    if (/^0\d+$/.test(et) && cands.some((c) => String(Math.trunc(Math.abs(c))).endsWith(et))) return { ok: true, how: "zcode" };
+    // ③ 文本形式（千分位/百分号等）：同样只看结论句区域（无标记则全文）——
+    //    防的是「1.3254…」这类值只在正文的被否决读法里现身（q716）被判命中
+    return { ok: norm(marker || finalText).includes(ne), how: "text" };
   };
   const hits = expected.map(hit);
   if (hits.every((h) => h.ok)) {

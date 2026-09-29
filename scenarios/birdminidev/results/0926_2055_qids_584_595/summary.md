@@ -1,10 +1,10 @@
 # 跑批结果（tsm grade）
 
-目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0926_2055_qids_584_595` ｜ 题数 2 ｜ 生成 2026-09-28T13:50:45.482Z
+目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0926_2055_qids_584_595` ｜ 题数 2 ｜ 生成 2026-09-29T03:07:15.128Z
 
 **判定（与 gold 比对）：PASS 1 ｜ FAIL 1 ｜ UNCERTAIN 0 ｜ GOLD_ERR 0**
 
-**评定（按 SOP 裁定）：✅ 正确 0 ｜ 🔁 翻盘 2 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0**（翻盘单独计，不并入正确）
+**评定（按 SOP 裁定）：✅ 正确 1 ｜ 🔁 翻盘 1 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0**（翻盘单独计，不并入正确）
 
 ## 过程指标（均值 / 合计）
 

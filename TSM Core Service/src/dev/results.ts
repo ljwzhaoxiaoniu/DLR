@@ -211,13 +211,18 @@ export function rulingOf(verdict: string, final: string, sec?: SopSection): Ruli
   // ① 节里给了可比的 Expected（多个值用 | 分隔）→ 按该口径判，**不论类型**（口径以知识层为准）
   if (sec?.expect) {
     const vals = sec.expect.split(/\s*\|\s*/).filter(Boolean);
-    return judge(final, vals).verdict === "PASS" ? "OVERTURNED" : "WRONG";
+    if (judge(final, vals).verdict !== "PASS") return "WRONG";
+    // 节口径命中：gold 也没判错 → 本来就正确（节与 gold 同值时不记翻盘，q344/q1521 教训）；
+    // 只有 gold 判 FAIL 而节口径命中，才是一次「翻盘」。
+    return verdict === "PASS" ? "CORRECT" : "OVERTURNED";
   }
   // SOP 已裁定该题有缺陷（数据集问题）→ 按 SOP 口径判，不再由 gold 定夺（gold 对这类题不可信）
   if (sec?.types.includes("数据集问题")) {
     // ② 节裁定为「空 / 无记录」类 → 比 agent 是否也说空（复用 judgeEmpty 的口径识别）
-    if (judgeEmpty(sec.body).verdict === "PASS")
-      return judgeEmpty(final).verdict === "PASS" ? "OVERTURNED" : "WRONG";
+    if (judgeEmpty(sec.body).verdict === "PASS") {
+      if (judgeEmpty(final).verdict !== "PASS") return "WRONG";
+      return verdict === "PASS" ? "CORRECT" : "OVERTURNED"; // gold 也判空 → 正确，不记翻盘（q1501）
+    }
     // ③ 判为数据集问题，但节里没给可比口径 → 与 gold 一致仍记正确，否则待仲裁
     return verdict === "PASS" ? "CORRECT" : "PENDING";
   }
