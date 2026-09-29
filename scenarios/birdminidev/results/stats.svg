@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 505" width="880" height="505" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
 <rect width="880" height="505" fill="#ffffff"/>
 <text x="24" y="36" font-size="16" font-weight="600" fill="#1f2328">DLR · birdminidev · 实测结果（综合统计）</text>
-<text x="856" y="36" font-size="11" fill="#656d76" text-anchor="end">生成 2026-09-29 08:16 UTC</text>
+<text x="856" y="36" font-size="11" fill="#656d76" text-anchor="end">生成 2026-09-29 08:51 UTC</text>
 <text x="24" y="70" font-size="13" font-weight="600" fill="#1f2328">评定</text>
-<text x="76" y="70" font-size="11" fill="#656d76">按 SOP 裁定 · 500 题口径（已跑 358）· 🔁 翻盘单独计，不并入 ✅ 正确</text>
-<rect x="24.0" y="84" width="494.2" height="22" fill="#1a7f37"/><text x="271.1" y="99" font-size="11" fill="#fff" text-anchor="middle">297</text><rect x="518.2" y="84" width="101.5" height="22" fill="#0969da"/><text x="569.0" y="99" font-size="11" fill="#fff" text-anchor="middle">61</text><rect x="619.7" y="84" width="236.3" height="22" fill="#d0d7de"/><text x="737.9" y="99" font-size="11" fill="#656d76" text-anchor="middle">142</text>
-<text x="24" y="122" font-size="11" fill="#656d76">已跑 358 题（放大）</text>
-<rect x="24.0" y="132" width="690.2" height="20" fill="#1a7f37"/><text x="369.1" y="146" font-size="11" fill="#fff" text-anchor="middle">297</text><rect x="714.2" y="132" width="141.8" height="20" fill="#0969da"/><text x="785.1" y="146" font-size="11" fill="#fff" text-anchor="middle">61</text>
-<rect x="24" y="162" width="9" height="9" rx="2" fill="#1a7f37"/><text x="38" y="170" font-size="12" fill="#656d76">✅ 正确 297</text><rect x="106" y="162" width="9" height="9" rx="2" fill="#0969da"/><text x="120" y="170" font-size="12" fill="#656d76">🔁 翻盘 61</text><rect x="181" y="162" width="9" height="9" rx="2" fill="#cf222e"/><text x="195" y="170" font-size="12" fill="#656d76">❌ 错误 0</text><rect x="249" y="162" width="9" height="9" rx="2" fill="#bf8700"/><text x="263" y="170" font-size="12" fill="#656d76">⚠️ 待仲裁 0</text><rect x="336" y="162" width="9" height="9" rx="2" fill="#d0d7de"/><text x="350" y="170" font-size="12" fill="#656d76">⬜ 未跑 142</text>
+<text x="76" y="70" font-size="11" fill="#656d76">按 SOP 裁定 · 500 题口径（已跑 410）· 🔁 翻盘单独计，不并入 ✅ 正确</text>
+<rect x="24.0" y="84" width="579.1" height="22" fill="#1a7f37"/><text x="313.5" y="99" font-size="11" fill="#fff" text-anchor="middle">348</text><rect x="603.1" y="84" width="103.2" height="22" fill="#0969da"/><text x="654.7" y="99" font-size="11" fill="#fff" text-anchor="middle">62</text><rect x="706.2" y="84" width="149.8" height="22" fill="#d0d7de"/><text x="781.1" y="99" font-size="11" fill="#656d76" text-anchor="middle">90</text>
+<text x="24" y="122" font-size="11" fill="#656d76">已跑 410 题（放大）</text>
+<rect x="24.0" y="132" width="706.2" height="20" fill="#1a7f37"/><text x="377.1" y="146" font-size="11" fill="#fff" text-anchor="middle">348</text><rect x="730.2" y="132" width="125.8" height="20" fill="#0969da"/><text x="793.1" y="146" font-size="11" fill="#fff" text-anchor="middle">62</text>
+<rect x="24" y="162" width="9" height="9" rx="2" fill="#1a7f37"/><text x="38" y="170" font-size="12" fill="#656d76">✅ 正确 348</text><rect x="106" y="162" width="9" height="9" rx="2" fill="#0969da"/><text x="120" y="170" font-size="12" fill="#656d76">🔁 翻盘 62</text><rect x="181" y="162" width="9" height="9" rx="2" fill="#cf222e"/><text x="195" y="170" font-size="12" fill="#656d76">❌ 错误 0</text><rect x="249" y="162" width="9" height="9" rx="2" fill="#bf8700"/><text x="263" y="170" font-size="12" fill="#656d76">⚠️ 待仲裁 0</text><rect x="336" y="162" width="9" height="9" rx="2" fill="#d0d7de"/><text x="350" y="170" font-size="12" fill="#656d76">⬜ 未跑 90</text>
 <text x="24" y="204" font-size="13" font-weight="600" fill="#1f2328">跑题覆盖度</text>
 <text x="100" y="204" font-size="11" fill="#656d76">跑过（去重）/ 数据集题数 · 与判定、评定无关</text>
 <text x="24" y="230" font-size="12" fill="#1f2328">california_schools</text>
@@ -42,9 +42,10 @@
 <rect x="234" y="362" width="548" height="10" rx="3" fill="#eaeef2"/>
 <rect x="234" y="362" width="548.0" height="10" rx="3" fill="#0969da"/>
 <text x="856" y="371" font-size="12" fill="#656d76" text-anchor="end">48/48</text>
-<text x="24" y="390" font-size="12" fill="#656d76">superhero</text>
+<text x="24" y="390" font-size="12" fill="#1f2328">superhero</text>
 <rect x="234" y="382" width="548" height="10" rx="3" fill="#eaeef2"/>
-<text x="856" y="391" font-size="12" fill="#656d76" text-anchor="end">0/52</text>
+<rect x="234" y="382" width="548.0" height="10" rx="3" fill="#0969da"/>
+<text x="856" y="391" font-size="12" fill="#656d76" text-anchor="end">52/52</text>
 <text x="24" y="410" font-size="12" fill="#656d76">thrombosis_prediction</text>
 <rect x="234" y="402" width="548" height="10" rx="3" fill="#eaeef2"/>
 <text x="856" y="411" font-size="12" fill="#656d76" text-anchor="end">0/50</text>
@@ -52,6 +53,6 @@
 <rect x="234" y="422" width="548" height="10" rx="3" fill="#eaeef2"/>
 <text x="856" y="431" font-size="12" fill="#656d76" text-anchor="end">0/40</text>
 <line x1="24" y1="452" x2="856" y2="452" stroke="#eaeef2"/>
-<text x="24" y="466" font-size="12" fill="#656d76">均值 6.0 步 / 9.7 工具调用 / 去重每题 71,196 tokens（累计 73,213,193 含重跑）｜ cache_read 占比 81%</text>
+<text x="24" y="466" font-size="12" fill="#656d76">均值 5.9 步 / 9.6 工具调用 / 去重每题 68,548 tokens（累计 76,607,326 含重跑）｜ cache_read 占比 81%</text>
 <text x="24" y="487" font-size="11" fill="#656d76">口径：评定 = 最终结果（每题取最新一轮；🔁 翻盘单独计）；⬜ 未跑 = 500 题里尚未跑过的题；判定按次数留档；跑题覆盖度按去重题数。明细见 results/STATS.md 与各轮 questions.csv。</text>
 </svg>

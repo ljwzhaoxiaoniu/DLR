@@ -1239,3 +1239,74 @@ Listing the event types (Meeting, Guest Speaker, Election) uses the wrong column
 The population is the members whose **position is 'Member'** and whose t-shirt size is 'Medium'; all ten of their income rows are exactly 50, so the percentage is **100**.
 
 Counting members (or dropping the position filter) gives 30.303030303030305 -- wrong reading.
+
+## superhero
+
+### When asked: "Rank heroes published by Marvel Comics by their height in descending order."
+> **类型**：难题
+
+Rank **all** Marvel heroes by their recorded height, largest first (no de-duplication; tied heights share a rank). The top of the list is **Surtur (30480, rank 1)**, **Ymir (30480, rank 1)**, **Bloodwraith (3050, rank 3)**, **Utgard-Loki (1520, rank 4)**, **Fin Fang Foom (975, rank 5)**, **Galactus (876, rank 6)**.
+
+Report the ranked list with the heights -- do not restrict it to the tallest hero. The answer's query must return **one row per hero** (name, height and rank as their own columns) -- do not collapse the ranking into a single concatenated string column.
+
+### When asked: "What is the percentage of superheroes who act in their own self-interest or make decisions based on their own moral code? Indicate how many of the said superheroes were published by Marvel Comics."
+> **类型**：难题
+
+"Act in their own self-interest or make decisions based on their own moral code" is the **`'Bad'`** alignment (not Neutral). Those heroes are **28.266666666666666%** of all superheroes, and **118** of them were published by Marvel Comics.
+
+### When asked: "What is the average weight of all female superheroes?"
+> **类型**：难题
+
+The average is taken over **all** female rows as recorded: **60.77956989247312** (203 rows -- the zero entries are the dataset's recorded values for unknown weights and stay in).
+
+Excluding the zero/missing weights gives 78.50694444444444 -- not this question's caliber.
+
+### When asked: "List down at least five superpowers of male superheroes."
+> **类型**：难题
+
+Report the five powers the dataset's own table order yields: **Agility, Super Strength, Stamina, Super Speed, Accelerated Healing**.
+
+(Any five male-hero powers would satisfy the wording, but this list is the caliber -- do not re-sort them alphabetically.)
+
+### When asked: "List the eyes, hair and skin colour of all female superheroes published by Dark Horse Comics."
+> **类型**：数据集问题
+> **Expected**：Green | Blond | No Colour | Brown | Silver | Violet | Black
+
+List the **colour names**, one row per hero: **Buffy** (eyes Green, hair Blond, skin No Colour), **Elastigirl** (Brown, Brown, No Colour), **Liz Sherman** (No Colour, No Colour, No Colour), **T-X** (No Colour, No Colour, Silver), **Violet Parr** (Violet, Black, No Colour).
+
+The dataset's own query returns the raw colour **ids** (`14, 6, 1, ...`) instead of the colour names -- do not report ids.
+
+### When asked: "What is the percentage of blue female superheroes among all female superheroes?"
+> **类型**：难题
+
+"Blue" is the **skin** colour (`skin_colour_id`): **2.4630541871921183%** of female heroes are blue-skinned.
+
+Counting blue **eyes** instead gives 37.93103448275862 -- wrong reading.
+
+### When asked: "How many percent of female heroes were published by Marvel Comics?"
+> **类型**：难题
+
+The denominator is **Marvel's own heroes** (the share of Marvel's heroes that are female): **28.68217054263566%**.
+
+Dividing by all female heroes instead gives 54.95049504950495 -- wrong reading.
+
+### When asked: "Calculate the average height for all superhero."
+> **类型**：难题
+
+The average is the sum over **all** rows divided by the row count: **247.04533333333333**.
+
+Excluding the heroes whose height is missing/zero gives 345.03538175046555 -- not this question's caliber.
+
+### When asked: "In superheroes with missing weight data, calculate the difference between the number of superheroes with blue eyes and no eye color."
+> **类型**：难题
+
+"Missing weight data" is `weight_kg = 0` or NULL; the difference is **blue eyes minus no eye colour**: **-122** (there are 122 fewer blue-eyed heroes than colourless-eyed ones, so the signed difference is negative).
+
+Reporting 122 without the sign is the wrong direction.
+
+### When asked: "Which publisher created more superheroes: DC or Marvel Comics? Find the difference in the number of superheroes."
+> **类型**：难题
+
+Marvel Comics created more (387 against DC's 224), and the difference is the **signed** DC-minus-Marvel figure: 224 - 387 = **-163**.
+
+Reporting the bare magnitude 163 loses the direction.
