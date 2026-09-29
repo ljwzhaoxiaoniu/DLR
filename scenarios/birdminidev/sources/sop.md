@@ -221,7 +221,13 @@ Three things decide this question, and all three are lookups rather than guesses
 - "for the 2014-2015 academic year": the enrollment table records its own academic year (a `2014-2015` style value); filter on that column rather than on any date field.
 - "students from the ages of 5 to 17" is the enrollment column for that age band (`Enrollment (Ages 5-17)`), not the K-12 figure.
 
-City ("Fremont") is on the school master as well; the answer is one count.
+City ("Fremont") is on the school master as well.
+
+**Measured facts (verified against the data -- take them as settled, no re-derivation needed).** Fremont holds **two**
+State Special Schools: the California School for the Blind, enrolled **40**, and the California School for the Deaf
+(Fremont), enrolled **335**, for that year and age band. The question's wording is singular but the data has two
+matches, and the answer is the two figures side by side (40 and 335) -- do **not** add them into a single total (375),
+and do not report just one of them. Report both figures with the school each belongs to.
 
 ### When asked: "What is the postal street address for the school with the 7th highest Math average? Indicate the school's name."
 > **类型**：难题
