@@ -1,6 +1,6 @@
 # 评测明细 · european_football_2 — birdminidev
 
-> 本库已跑 **51** 题：✅ 37 ｜ 🔁 14 ｜ ❌ 0 ｜ ⚠️ 0 ｜ token 中位 **60,923**
+> 本库已跑 **51** 题：✅ 37 ｜ 🔁 14 ｜ ❌ 0 ｜ ⚠️ 0 ｜ token 中位 **60,026**
 > 总账（覆盖度 / 汇总 / 数据集缺陷与裁定）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -11,47 +11,47 @@
 | [q1028](#q1028) | ❌ FAIL | 🔁 翻盘 | 6 | 9 | 89,955 | 4 轮（最新 0928_2045_qids_1025_1028_1029_1030_1031） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
 | [q1029](#q1029) | ❌ FAIL | 🔁 翻盘 | 5 | 9 | 50,816 | 3 轮（最新 0928_2045_qids_1025_1028_1029_1030_1031） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
 | [q1030](#q1030) | ✅ PASS | ✅ 正确 | 5 | 7 | 65,127 | 3 轮（最新 0928_2045_qids_1025_1028_1029_1030_1031） | 文本一致 |
-| [q1031](#q1031) | ✅ PASS | ✅ 正确 | 5 | 8 | 63,210 | 4 轮（最新 0928_2048_qids_1031） | 文本一致 |
-| [q1032](#q1032) | ✅ PASS | ✅ 正确 | 5 | 7 | 65,014 | 4 轮（最新 0928_2047_qids_1032_1035_1036_1037_1039） | 文本一致 |
-| [q1035](#q1035) | ✅ PASS | ✅ 正确 | 5 | 7 | 53,369 | 3 轮（最新 0928_2047_qids_1032_1035_1036_1037_1039） | 文本一致 |
+| [q1031](#q1031) | ✅ PASS | ✅ 正确 | 5 | 8 | 63,210 | 4 轮（最新 0928_2048_qids_1031） | 数值一致（容差 1e-9） |
+| [q1032](#q1032) | ✅ PASS | ✅ 正确 | 5 | 7 | 65,014 | 4 轮（最新 0928_2047_qids_1032_1035_1036_1037_1039） | 数值一致（容差 1e-9） |
+| [q1035](#q1035) | ✅ PASS | ✅ 正确 | 5 | 7 | 53,369 | 3 轮（最新 0928_2047_qids_1032_1035_1036_1037_1039） | 数值一致（容差 1e-9） |
 | [q1036](#q1036) | ✅ PASS | ✅ 正确 | 5 | 8 | 51,222 | 4 轮（最新 0928_2047_qids_1032_1035_1036_1037_1039） | 文本一致 |
 | [q1037](#q1037) | ❌ FAIL | 🔁 翻盘 | 10 | 24 | 199,940 | 3 轮（最新 0928_2047_qids_1032_1035_1036_1037_1039） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
-| [q1039](#q1039) | ✅ PASS | ✅ 正确 | 6 | 10 | 74,702 | 3 轮（最新 0928_2047_qids_1032_1035_1036_1037_1039） | 文本一致 |
+| [q1039](#q1039) | ✅ PASS | ✅ 正确 | 6 | 10 | 74,702 | 3 轮（最新 0928_2047_qids_1032_1035_1036_1037_1039） | 数值一致（容差 1e-9） |
 | [q1040](#q1040) | ✅ PASS | ✅ 正确 | 5 | 7 | 59,139 | 2 轮（最新 0928_2113_qids_1040_1042_1044_1048_1057） | 文本一致 |
 | [q1042](#q1042) | ✅ PASS | ✅ 正确 | 4 | 6 | 48,162 | 2 轮（最新 0928_2113_qids_1040_1042_1044_1048_1057） | 文本一致 |
 | [q1044](#q1044) | ✅ PASS | ✅ 正确 | 5 | 6 | 42,606 | 2 轮（最新 0928_2113_qids_1040_1042_1044_1048_1057） | 文本一致 |
-| [q1048](#q1048) | ✅ PASS | ✅ 正确 | 5 | 7 | 55,718 | 2 轮（最新 0928_2113_qids_1040_1042_1044_1048_1057） | 文本一致 |
-| [q1057](#q1057) | ✅ PASS | ✅ 正确 | 8 | 12 | 130,070 | 2 轮（最新 0928_2113_qids_1040_1042_1044_1048_1057） | 文本一致 |
-| [q1058](#q1058) | ❌ FAIL | 🔁 翻盘 | 5 | 9 | 60,923 | 2 轮（最新 0928_2116_qids_1058_1068_1076_1078_1079） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
+| [q1048](#q1048) | ✅ PASS | ✅ 正确 | 5 | 7 | 55,718 | 2 轮（最新 0928_2113_qids_1040_1042_1044_1048_1057） | 数值一致（容差 1e-9） |
+| [q1057](#q1057) | ✅ PASS | ✅ 正确 | 8 | 12 | 130,070 | 2 轮（最新 0928_2113_qids_1040_1042_1044_1048_1057） | 数值一致（容差 1e-9） |
+| [q1058](#q1058) | ⚠️ UNCERTAIN | 🔁 翻盘 | 5 | 9 | 60,923 | 2 轮（最新 0928_2116_qids_1058_1068_1076_1078_1079） | 抽不出可比对的值；按 SOP 裁定为正确（数据集问题） |
 | [q1068](#q1068) | ✅ PASS | ✅ 正确 | 5 | 8 | 59,225 | 2 轮（最新 0928_2116_qids_1058_1068_1076_1078_1079） | 数值一致（容差 0.001） |
 | [q1076](#q1076) | ✅ PASS | ✅ 正确 | 5 | 7 | 57,549 | 2 轮（最新 0928_2116_qids_1058_1068_1076_1078_1079） | 数值一致（容差 1e-9） |
 | [q1078](#q1078) | ✅ PASS | ✅ 正确 | 5 | 6 | 43,717 | 2 轮（最新 0928_2116_qids_1058_1068_1076_1078_1079） | 文本一致 |
 | [q1079](#q1079) | ✅ PASS | ✅ 正确 | 5 | 7 | 42,937 | 2 轮（最新 0928_2116_qids_1058_1068_1076_1078_1079） | 文本一致 |
 | [q1080](#q1080) | ❌ FAIL | 🔁 翻盘 | 5 | 8 | 56,178 | 2 轮（最新 0928_2124_qids_1080_1084_1088_1091_1092） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
-| [q1084](#q1084) | ✅ PASS | ✅ 正确 | 7 | 12 | 95,664 | 2 轮（最新 0928_2124_qids_1080_1084_1088_1091_1092） | 文本一致 |
+| [q1084](#q1084) | ✅ PASS | ✅ 正确 | 7 | 12 | 95,664 | 2 轮（最新 0928_2124_qids_1080_1084_1088_1091_1092） | 数值一致（容差 1e-9） |
 | [q1088](#q1088) | ✅ PASS | ✅ 正确 | 5 | 9 | 74,068 | 2 轮（最新 0928_2124_qids_1080_1084_1088_1091_1092） | 结果集一致（与该题 gold 同集） |
-| [q1091](#q1091) | ✅ PASS | ✅ 正确 | 6 | 9 | 81,847 | 2 轮（最新 0928_2124_qids_1080_1084_1088_1091_1092） | 文本一致 |
+| [q1091](#q1091) | ✅ PASS | ✅ 正确 | 6 | 9 | 81,847 | 2 轮（最新 0928_2124_qids_1080_1084_1088_1091_1092） | 数值一致（容差 1e-9） |
 | [q1092](#q1092) | ✅ PASS | ✅ 正确 | 5 | 7 | 65,911 | 2 轮（最新 0928_2124_qids_1080_1084_1088_1091_1092） | 文本一致 |
 | [q1094](#q1094) | ❌ FAIL | 🔁 翻盘 | 5 | 8 | 61,779 | 3 轮（最新 0928_2128_qids_1094_1096_1098_1102_1103） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
-| [q1096](#q1096) | ✅ PASS | ✅ 正确 | 7 | 13 | 93,456 | 2 轮（最新 0928_2128_qids_1094_1096_1098_1102_1103） | 数值一致（容差 0.000001） |
-| [q1098](#q1098) | ✅ PASS | ✅ 正确 | 6 | 9 | 63,015 | 2 轮（最新 0928_2128_qids_1094_1096_1098_1102_1103） | 文本一致 |
+| [q1096](#q1096) | ✅ PASS | ✅ 正确 | 7 | 13 | 93,456 | 2 轮（最新 0928_2128_qids_1094_1096_1098_1102_1103） | 数值一致（容差 0.0001） |
+| [q1098](#q1098) | ✅ PASS | ✅ 正确 | 6 | 9 | 63,015 | 2 轮（最新 0928_2128_qids_1094_1096_1098_1102_1103） | 数值一致（容差 1e-9） |
 | [q1102](#q1102) | ✅ PASS | ✅ 正确 | 5 | 7 | 57,245 | 2 轮（最新 0928_2128_qids_1094_1096_1098_1102_1103） | 文本一致 |
-| [q1103](#q1103) | ✅ PASS | ✅ 正确 | 4 | 8 | 42,909 | 2 轮（最新 0928_2128_qids_1094_1096_1098_1102_1103） | 文本一致 |
+| [q1103](#q1103) | ✅ PASS | ✅ 正确 | 4 | 8 | 42,909 | 2 轮（最新 0928_2128_qids_1094_1096_1098_1102_1103） | 数值一致（容差 1e-9） |
 | [q1105](#q1105) | ✅ PASS | ✅ 正确 | 5 | 9 | 55,190 | 2 轮（最新 0928_2132_qids_1105_1107_1110_1113_1114） | 文本一致 |
 | [q1107](#q1107) | ⚠️ UNCERTAIN | 🔁 翻盘 | 15 | 17 | 219,218 | 3 轮（最新 0928_2132_qids_1105_1107_1110_1113_1114） | 抽不出可比对的值；按 SOP 裁定为正确（数据集问题） |
 | [q1110](#q1110) | ✅ PASS | ✅ 正确 | 5 | 8 | 53,549 | 2 轮（最新 0928_2132_qids_1105_1107_1110_1113_1114） | 文本一致 |
 | [q1113](#q1113) | ✅ PASS | ✅ 正确 | 5 | 7 | 50,655 | 3 轮（最新 0928_2137_qids_1113_1114） | 文本一致 |
-| [q1114](#q1114) | ✅ PASS | ✅ 正确 | 6 | 9 | 68,650 | 4 轮（最新 0928_2140_qids_1114） | 文本一致 |
+| [q1114](#q1114) | ✅ PASS | ✅ 正确 | 6 | 9 | 68,650 | 4 轮（最新 0928_2140_qids_1114） | 数值一致（容差 1e-9） |
 | [q1115](#q1115) | ❌ FAIL | 🔁 翻盘 | 7 | 10 | 94,991 | 2 轮（最新 0928_2153_qids_1115_1116_1122_1124_1130） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
 | [q1116](#q1116) | ✅ PASS | ✅ 正确 | 5 | 8 | 43,296 | 2 轮（最新 0928_2153_qids_1115_1116_1122_1124_1130） | 文本一致 |
 | [q1122](#q1122) | ✅ PASS | ✅ 正确 | 5 | 8 | 54,883 | 3 轮（最新 0928_2200_qids_1122） | 文本一致 |
 | [q1124](#q1124) | ❌ FAIL | 🔁 翻盘 | 6 | 9 | 74,566 | 3 轮（最新 0928_2153_qids_1115_1116_1122_1124_1130） | 与 gold 不符；按 SOP 裁定为正确（难题） |
 | [q1130](#q1130) | ✅ PASS | ✅ 正确 | 4 | 6 | 38,595 | 2 轮（最新 0928_2153_qids_1115_1116_1122_1124_1130） | 文本一致 |
 | [q1133](#q1133) | ❌ FAIL | 🔁 翻盘 | 9 | 13 | 107,918 | 2 轮（最新 0928_2201_qids_1133_1134_1135_1136_1139） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
-| [q1134](#q1134) | ✅ PASS | ✅ 正确 | 5 | 7 | 60,026 | 3 轮（最新 0928_2201_qids_1133_1134_1135_1136_1139） | 文本一致 |
+| [q1134](#q1134) | ✅ PASS | ✅ 正确 | 5 | 7 | 60,026 | 3 轮（最新 0928_2201_qids_1133_1134_1135_1136_1139） | 数值一致（容差 1e-9） |
 | [q1135](#q1135) | ❌ FAIL | 🔁 翻盘 | 5 | 8 | 59,652 | 3 轮（最新 0928_2201_qids_1133_1134_1135_1136_1139） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
-| [q1136](#q1136) | ❌ FAIL | 🔁 翻盘 | 6 | 13 | 88,498 | 2 轮（最新 0928_2201_qids_1133_1134_1135_1136_1139） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
-| [q1139](#q1139) | ✅ PASS | ✅ 正确 | 5 | 7 | 65,512 | 2 轮（最新 0928_2201_qids_1133_1134_1135_1136_1139） | 文本一致 |
+| [q1136](#q1136) | ❌ FAIL | 🔁 翻盘 | 4 | 7 | 43,085 | 3 轮（最新 0929_1118_qids_72_716_1136） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
+| [q1139](#q1139) | ✅ PASS | ✅ 正确 | 5 | 7 | 65,512 | 2 轮（最新 0928_2201_qids_1133_1134_1135_1136_1139） | 数值一致（容差 1e-9） |
 | [q1141](#q1141) | ✅ PASS | ✅ 正确 | 5 | 9 | 57,303 | 2 轮（最新 0928_2205_qids_1141_1144_1145_1146_1147） | 文本一致 |
 | [q1144](#q1144) | ❌ FAIL | 🔁 翻盘 | 5 | 8 | 57,723 | 3 轮（最新 0928_2205_qids_1141_1144_1145_1146_1147） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
 | [q1145](#q1145) | ✅ PASS | ✅ 正确 | 6 | 9 | 81,901 | 2 轮（最新 0928_2205_qids_1141_1144_1145_1146_1147） | 文本一致 |
@@ -66,7 +66,7 @@
 | q1028 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | In Scotland Premier League, which away team won the most dur | "Away team won the most" = per away team, count how many matches it won away in that league and season, and take the largest count. The "201 |
 | q1029 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What are the speed in which attacks are put together of the | "Speed in which attacks are put together" and "build-up play speed" are the same team attribute -- the question names one quantity twice. "H |
 | q1037 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Calculate the percentage of players who prefer left foot, wh | "Percentage of players" counts **players**, not rating records: one player counts once in both the numerator and the denominator, even thoug |
-| q1058 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Who has the highest average finishing rate between the highe | The question compares exactly two players: the tallest and the shortest one. Compare their average finishing rates over their dated records |
+| q1058 | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Who has the highest average finishing rate between the highe | The question compares exactly two players: the tallest and the shortest one. Compare their average finishing rates over their dated records |
 | q1080 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Among the players whose preferred foot was the left foot whe | "Among the players ... how many of them" counts **players**: one player counts once, even though a player has many dated records (and his pr |
 | q1094 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | How much higher in percentage is Ariel Borysiuk's overall ra | A player's rating is a **dated series of observations**, not one number: the same player has many rating records over the years. A question |
 | q1107 | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | When was the first time did Kevin Constant have his highest | A player's scores are a dated series. "His highest crossing score" is the largest value in that series, and he can carry it on more than one |
@@ -311,7 +311,7 @@ Evidence SQL: SELECT l.name AS league_name FROM Match m JOIN League l ON m.leagu
 </details>
 
 <details id="q1031">
-<summary><b>q1031</b> · european_football_2 · ✅ <b>PASS</b> · 5 步 / 8 工具 · 63,210 tok · 4 轮 · 文本一致</summary>
+<summary><b>q1031</b> · european_football_2 · ✅ <b>PASS</b> · 5 步 / 8 工具 · 63,210 tok · 4 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：At present, calculate for the player's age who have a sprint speed of no less than 97 between 2013 to 2015.
 
@@ -361,7 +361,7 @@ Evidence SQL: SELECT DISTINCT CAST(strftime('%Y','now') AS INTEGER) - CAST(strft
 </details>
 
 <details id="q1032">
-<summary><b>q1032</b> · european_football_2 · ✅ <b>PASS</b> · 5 步 / 7 工具 · 65,014 tok · 4 轮 · 文本一致</summary>
+<summary><b>q1032</b> · european_football_2 · ✅ <b>PASS</b> · 5 步 / 7 工具 · 65,014 tok · 4 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：Give the name of the league with the highest matches of all time and how many matches were played in the said league.
 
@@ -413,7 +413,7 @@ Evidence SQL: SELECT l.name AS league_name, COUNT(*) AS matches_played FROM Matc
 </details>
 
 <details id="q1035">
-<summary><b>q1035</b> · european_football_2 · ✅ <b>PASS</b> · 5 步 / 7 工具 · 53,369 tok · 3 轮 · 文本一致</summary>
+<summary><b>q1035</b> · european_football_2 · ✅ <b>PASS</b> · 5 步 / 7 工具 · 53,369 tok · 3 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：Give the team_fifa_api_id of teams with more than 50 but less than 60 build-up play speed.
 
@@ -576,7 +576,7 @@ WHERE p.birthday BETWEEN '1987-01-01 00:00:00' AND '1992-12-31 00:00:00';
 </details>
 
 <details id="q1039">
-<summary><b>q1039</b> · european_football_2 · ✅ <b>PASS</b> · 6 步 / 10 工具 · 74,702 tok · 3 轮 · 文本一致</summary>
+<summary><b>q1039</b> · european_football_2 · ✅ <b>PASS</b> · 6 步 / 10 工具 · 74,702 tok · 3 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：Find the average number of long-shot done by Ahmed Samir Farag.
 
@@ -752,7 +752,7 @@ Evidence SQL: SELECT DISTINCT player_name FROM Player WHERE strftime('%Y', birth
 </details>
 
 <details id="q1048">
-<summary><b>q1048</b> · european_football_2 · ✅ <b>PASS</b> · 5 步 / 7 工具 · 55,718 tok · 2 轮 · 文本一致</summary>
+<summary><b>q1048</b> · european_football_2 · ✅ <b>PASS</b> · 5 步 / 7 工具 · 55,718 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What is the overall rating of the football player Gabriel Tamas in year 2011?
 
@@ -803,7 +803,7 @@ Evidence SQL: SELECT pa.overall_rating FROM Player p JOIN Player_Attributes pa O
 </details>
 
 <details id="q1057">
-<summary><b>q1057</b> · european_football_2 · ✅ <b>PASS</b> · 8 步 / 12 工具 · 130,070 tok · 2 轮 · 文本一致</summary>
+<summary><b>q1057</b> · european_football_2 · ✅ <b>PASS</b> · 8 步 / 12 工具 · 130,070 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：Calculate the average home team goal in the 2010/2011 season in the country of Poland.
 
@@ -861,7 +861,7 @@ Evidence SQL: SELECT CAST(AVG(m.home_team_goal) AS REAL) AS avg_home_goal FROM M
 </details>
 
 <details id="q1058">
-<summary><b>q1058</b> · european_football_2 · ❌ <b>FAIL</b> · 🔁 翻盘 · 5 步 / 9 工具 · 60,923 tok · 2 轮 · 与 gold 不符；按 SOP 裁定为正确（数据集问题）</summary>
+<summary><b>q1058</b> · european_football_2 · ⚠️ <b>UNCERTAIN</b> · 🔁 翻盘 · 5 步 / 9 工具 · 60,923 tok · 2 轮 · 抽不出可比对的值；按 SOP 裁定为正确（数据集问题）</summary>
 
 **问题**：Who has the highest average finishing rate between the highest and shortest football player?
 
@@ -1125,7 +1125,7 @@ Evidence SQL: SELECT COUNT(DISTINCT player_api_id) AS left_foot_low_work_rate_pl
 </details>
 
 <details id="q1084">
-<summary><b>q1084</b> · european_football_2 · ✅ <b>PASS</b> · 7 步 / 12 工具 · 95,664 tok · 2 轮 · 文本一致</summary>
+<summary><b>q1084</b> · european_football_2 · ✅ <b>PASS</b> · 7 步 / 12 工具 · 95,664 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：Among the players born before the year 1986, how many of them would remain in his position and defense while the team attacked?
 
@@ -1221,7 +1221,7 @@ Evidence SQL: SELECT DISTINCT p.player_name FROM Player p JOIN Player_Attributes
 </details>
 
 <details id="q1091">
-<summary><b>q1091</b> · european_football_2 · ✅ <b>PASS</b> · 6 步 / 9 工具 · 81,847 tok · 2 轮 · 文本一致</summary>
+<summary><b>q1091</b> · european_football_2 · ✅ <b>PASS</b> · 6 步 / 9 工具 · 81,847 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：How many matches were held in the Belgium Jupiler League in April, 2009?
 
@@ -1384,7 +1384,7 @@ FROM (SELECT pa.overall_rating AS rating
 </details>
 
 <details id="q1096">
-<summary><b>q1096</b> · european_football_2 · ✅ <b>PASS</b> · 7 步 / 13 工具 · 93,456 tok · 2 轮 · 数值一致（容差 0.000001）</summary>
+<summary><b>q1096</b> · european_football_2 · ✅ <b>PASS</b> · 7 步 / 13 工具 · 93,456 tok · 2 轮 · 数值一致（容差 0.0001）</summary>
 
 **问题**：Calculate the average overall rating of Pietro Marino.
 
@@ -1434,7 +1434,7 @@ Evidence SQL: SELECT ROUND(AVG(CAST(pa.overall_rating AS REAL)), 2) AS avg_overa
 </details>
 
 <details id="q1098">
-<summary><b>q1098</b> · european_football_2 · ✅ <b>PASS</b> · 6 步 / 9 工具 · 63,015 tok · 2 轮 · 文本一致</summary>
+<summary><b>q1098</b> · european_football_2 · ✅ <b>PASS</b> · 6 步 / 9 工具 · 63,015 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What is Ajax's highest chance creation passing score and what is it classified as?
 
@@ -1514,7 +1514,7 @@ Evidence SQL: SELECT p.player_name, p.birthday FROM Player p JOIN Player_Attribu
 </details>
 
 <details id="q1103">
-<summary><b>q1103</b> · european_football_2 · ✅ <b>PASS</b> · 4 步 / 8 工具 · 42,909 tok · 2 轮 · 文本一致</summary>
+<summary><b>q1103</b> · european_football_2 · ✅ <b>PASS</b> · 4 步 / 8 工具 · 42,909 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What was the overall rating for Aaron Mooy on 2016/2/4?
 
@@ -1754,7 +1754,7 @@ Evidence SQL: SELECT ta.defenceAggressionClass FROM Team t JOIN Team_Attributes 
 </details>
 
 <details id="q1114">
-<summary><b>q1114</b> · european_football_2 · ✅ <b>PASS</b> · 6 步 / 9 工具 · 68,650 tok · 4 轮 · 文本一致</summary>
+<summary><b>q1114</b> · european_football_2 · ✅ <b>PASS</b> · 6 步 / 9 工具 · 68,650 tok · 4 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What was the average overall rating for Marko Arnautovic from 2007/2/22 to 2016/4/21?
 
@@ -2076,7 +2076,7 @@ Evidence SQL: SELECT COUNT(*) AS aaron_after_1990 FROM Player WHERE player_name 
 </details>
 
 <details id="q1134">
-<summary><b>q1134</b> · european_football_2 · ✅ <b>PASS</b> · 5 步 / 7 工具 · 60,026 tok · 3 轮 · 文本一致</summary>
+<summary><b>q1134</b> · european_football_2 · ✅ <b>PASS</b> · 5 步 / 7 工具 · 60,026 tok · 3 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What is the difference between players 6 and 23's jumping scores?
 
@@ -2160,13 +2160,13 @@ Evidence SQL: SELECT player_api_id FROM Player_Attributes WHERE preferred_foot =
 </details>
 
 <details id="q1136">
-<summary><b>q1136</b> · european_football_2 · ❌ <b>FAIL</b> · 🔁 翻盘 · 6 步 / 13 工具 · 88,498 tok · 2 轮 · 与 gold 不符；按 SOP 裁定为正确（数据集问题）</summary>
+<summary><b>q1136</b> · european_football_2 · ❌ <b>FAIL</b> · 🔁 翻盘 · 4 步 / 7 工具 · 43,085 tok · 3 轮 · 与 gold 不符；按 SOP 裁定为正确（数据集问题）</summary>
 
 **问题**：How many players had the highest potential score for crossing that preferred to use their left foots while attacking?
 
 **期望**：`3`
 
-**答案**：`## 结论路径 **三级锚定** - **L1（实体路）**：命中 'LOGICAL.Player'（db='european_football_2'），属性含 'potential'（"potential of the player… Higher potential score means that the player has more potential"）、'PreferredFoot'`
+**答案**：`三级锚定完成，SQL 结果与 L3 口径一致。 **执行链路** - **L3（'dlr_search_sop'，match=exact，标题逐字复述本题）**：本题最权威口径 —— ① "highest potential score for crossing" 指的是 **'crossing' 列的最高分**（不是 'potential' 列）；② "how many players" 要**`
 
 **调用步骤**
 
@@ -2177,36 +2177,36 @@ Evidence SQL: SELECT player_api_id FROM Player_Attributes WHERE preferred_foot =
 | 3 | `dlr_search_consensus` | `{"question":"How many players had the highest potential score for crossing that preferred to use their left foots while attacking?"}` |
 | 4 | `get_pe_mapping` | `{"pe_id":"PHYSICAL.PlayerAttribute"}` |
 | 5 | `get_pe_mapping` | `{"pe_id":"PHYSICAL.Player"}` |
-| 6 | `dlr_search_consensus` | `{"question":"highest potential score players preferred left foot when attacking count players once"}` |
-| 7 | `dlr_search_consensus` | `{"question":"highest potential player preferred foot left","namespace":"european_football_2"}` |
-| 8 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\european_football_2\\european_football_2.sqlite","sql":"SELECT (SELECT MAX(potential) FROM Player_Attributes) AS max_potential,` |
-| 9 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\european_football_2\\european_football_2.sqlite","sql":"SELECT DISTINCT preferred_foot FROM Player_Attributes; "}` |
-| 10 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\european_football_2\\european_football_2.sqlite","sql":"SELECT pa.player_api_id, p.player_name, pa.potential, pa.crossing, pa.p` |
-| 11 | `dlr_search_sop` | `{"question":"How many players had the highest potential score and preferred to use their left foot while attacking?"}` |
-| 12 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\european_football_2\\european_football_2.sqlite","sql":"SELECT COUNT(DISTINCT player_api_id) AS players_highest_potential_left_` |
-| 13 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\european_football_2\\european_football_2.sqlite","sql":"SELECT pa.player_api_id, p.player_name, pa.potential, pa.crossing, pa.p` |
+| 6 | `execute_sql` | `{"sql":"SELECT COUNT(DISTINCT pa.player_api_id) AS left_footed_players_at_max_crossing\nFROM Player_Attributes pa\nWHERE pa.preferred_foot = 'left'\n AND pa.crossing = (SELECT MAX(crossing) FROM Playe` |
+| 7 | `execute_sql` | `{"sql":"SELECT p.player_name, pa.player_api_id, pa.crossing, pa.preferred_foot, pa.date\nFROM Player_Attributes pa\nJOIN Player p ON p.player_api_id = pa.player_api_id\nWHERE pa.preferred_foot = 'left` |
 
 **依据与结论**（agent 原文）
 
-#### 结论路径
+三级锚定完成，SQL 结果与 L3 口径一致。
 
-**三级锚定**
-- **L1（实体路）**：命中 `LOGICAL.Player`（db=`european_football_2`），属性含 `potential`（"potential of the player… Higher potential score means that the player has more potential"）、`PreferredFoot`（"preferred foot when attacking: right/ left"）、`crossing`。
-- **L2（证据路）**：`european_football_2` 库共识 qid=3「Preferred foot takes the values right / left when attacking.」→ 题干"preferred to use their left foots while attacking" = `preferred_foot = 'left'`（实测该列取值 `right` / `left` / NULL，无 `foots` 之类的变体）；qid=1：属性分为 0-100 的 FIFA 评分，且一名球员有多条带日期的记录。
-- **L3（口径路）**：`dlr_search_sop` 只返回 `similar`（本题无逐字复述的节）。但近似节给出**同库同型题的关键口径**：「"how many players" 计的是**球员**，一名球员只算一次（他的评分历史有多条记录）；参考答案数的是 **record**，那是把记录数贴上了"多少球员"的标签——不要照抄。」另一节（lowest potential + right foot）同样强调 **players, counted once each**。
+**执行链路**
+- **L3（`dlr_search_sop`，match=exact，标题逐字复述本题）**：本题最权威口径 —— ① "highest potential score for crossing" 指的是 **`crossing` 列的最高分**（不是 `potential` 列）；② "how many players" 要**数球员（去重）**，同一球员的多个日期记录只算一次，参考答案口径 3 是记录数是错的；③ 既定事实：最高 crossing = **95**，左手球员中达到的共 **2 人**（3 条记录）。
+- **L2（`dlr_search_consensus`）**：namespace=`european_football_2` —— `PreferredFoot` 在进攻时取值 right/left；球员属性分为 0-100 的 FIFA 评分，且一名球员有多条带日期的记录。
+- **L1（`dlr_semantic_query` → `get_pe_mapping`）**：`LOGICAL.Player` 挂两个 PE —— `Player`（player_api_id, player_name）与 `Player_Attributes`（crossing, preferred_foot, date），锚键 `player_api_id`（N:1），JOIN 依据明确。
 
-**口径判定**："the highest potential score" 指的是 `potential` 列（L1 描述即"potential score… 越高潜力越大"），即 `potential = MAX(potential)`；两处近似节的反复强调（按球员去重）是本库该题型最权威的口径。
+**按 SOP 陷阱校验后的结论**
 
-**SQL 验证**：
-- `MAX(potential) = 97`，全库只有 1 名球员达到该分值。
-- 该球员即 **Lionel Messi（player_api_id=30981）**，`preferred_foot='left'`（其 97 分记录共 6 条 → 若误按记录数会得 6，按球员数则为 1）。
-- 反向校验：`potential=97 且 preferred_foot='right'` 的球员数 = 0，说明唯一满足者确实是左脚。
+| player_name | player_api_id | crossing | preferred_foot | date |
+|---|---|---|---|---|
+| Jerome Rothen | 32578 | 95 | left | 2007-08-30 |
+| Morten Gamst Pedersen | 23916 | 95 | left | 2008-08-30 |
+| Morten Gamst Pedersen | 23916 | 95 | left | 2007-08-30 |
 
-注：若把 "for crossing" 误读成"crossing 分数最高"，会得 2（Morten Gamst Pedersen、Jerome Rothen，crossing=95 且左脚）——但题干明确说的是 **potential score**，故以 `potential` 为准。
+共 **3 条记录**，但只有 **2 名球员**（Morten Gamst Pedersen 出现两次）。按"数球员"的口径去重后为 **2**。
 
-```
-Final Answer: 1
-Evidence SQL: SELECT COUNT(DISTINCT player_api_id) FROM Player_Attributes WHERE preferred_foot = 'left' AND potential = (SELECT MAX(potential) FROM Player_Attributes);
+Final Answer: 2
+
+Evidence SQL:
+```sql
+SELECT COUNT(DISTINCT pa.player_api_id) AS left_footed_players_at_max_crossing
+FROM Player_Attributes pa
+WHERE pa.preferred_foot = 'left'
+  AND pa.crossing = (SELECT MAX(crossing) FROM Player_Attributes);
 ```
 
 建模缺口: 无
@@ -2214,7 +2214,7 @@ Evidence SQL: SELECT COUNT(DISTINCT player_api_id) FROM Player_Attributes WHERE 
 </details>
 
 <details id="q1139">
-<summary><b>q1139</b> · european_football_2 · ✅ <b>PASS</b> · 5 步 / 7 工具 · 65,512 tok · 2 轮 · 文本一致</summary>
+<summary><b>q1139</b> · european_football_2 · ✅ <b>PASS</b> · 5 步 / 7 工具 · 65,512 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What was the final score for the match on September 24, 2008, in the Belgian Jupiler League between the home team and the away team?
 

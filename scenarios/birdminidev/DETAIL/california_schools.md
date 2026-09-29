@@ -7,35 +7,35 @@
 
 | 题号 | 判定 | 评定 | 步数 | 工具 | tokens | 轮次 | 备注 |
 |---|---|---|---|---|---|---|---|
-| [q5](#q5) | ✅ PASS | ✅ 正确 | 5 | 8 | 63,058 | 2 轮（最新 0928_1116_qids_5_11_12_17_24） | 文本一致 |
+| [q5](#q5) | ✅ PASS | ✅ 正确 | 5 | 8 | 63,058 | 2 轮（最新 0928_1116_qids_5_11_12_17_24） | 数值一致（容差 1e-9） |
 | [q11](#q11) | ✅ PASS | ✅ 正确 | 7 | 12 | 114,001 | 3 轮（最新 0928_1116_qids_5_11_12_17_24） | 结果集一致（与该题 gold 同集） |
-| [q12](#q12) | ✅ PASS | ✅ 正确 | 5 | 8 | 54,440 | 2 轮（最新 0928_1116_qids_5_11_12_17_24） | 文本一致 |
-| [q17](#q17) | ✅ PASS | ✅ 正确 | 6 | 9 | 86,459 | 2 轮（最新 0928_1116_qids_5_11_12_17_24） | 文本一致 |
+| [q12](#q12) | ✅ PASS | ✅ 正确 | 5 | 8 | 54,440 | 2 轮（最新 0928_1116_qids_5_11_12_17_24） | 数值一致（容差 1e-9） |
+| [q17](#q17) | ✅ PASS | ✅ 正确 | 6 | 9 | 86,459 | 2 轮（最新 0928_1116_qids_5_11_12_17_24） | 结果集一致（与该题 gold 同集） |
 | [q23](#q23) | ✅ PASS | ✅ 正确 | 8 | 14 | 167,866 | 3 轮（最新 0928_1135_qids_23_37_45_82_85） | 文本一致 |
 | [q24](#q24) | ✅ PASS | ✅ 正确 | 8 | 13 | 172,295 | 2 轮（最新 0928_1116_qids_5_11_12_17_24） | 文本一致 |
 | [q25](#q25) | ✅ PASS | ✅ 正确 | 6 | 10 | 80,558 | 2 轮（最新 0928_1118_qids_25_26_27_28_31） | 文本一致 |
 | [q26](#q26) | ✅ PASS | ✅ 正确 | 7 | 14 | 127,784 | 2 轮（最新 0928_1118_qids_25_26_27_28_31） | 文本一致 |
 | [q27](#q27) | ⚠️ UNCERTAIN | 🔁 翻盘 | 6 | 10 | 100,273 | 5 轮（最新 0928_1150_qids_27） | 抽不出可比对的值；按 SOP 裁定为正确（难题） |
-| [q28](#q28) | ✅ PASS | ✅ 正确 | 5 | 8 | 68,204 | 3 轮（最新 0928_1118_qids_25_26_27_28_31） | 文本一致 |
-| [q31](#q31) | ✅ PASS | ✅ 正确 | 5 | 8 | 66,793 | 2 轮（最新 0928_1118_qids_25_26_27_28_31） | 文本一致 |
-| [q32](#q32) | ✅ PASS | ✅ 正确 | 5 | 8 | 72,370 | 3 轮（最新 0928_1147_qids_27_32_83_85） | 文本一致 |
+| [q28](#q28) | ✅ PASS | ✅ 正确 | 5 | 8 | 68,204 | 3 轮（最新 0928_1118_qids_25_26_27_28_31） | 结果集一致（与该题 gold 同集） |
+| [q31](#q31) | ✅ PASS | ✅ 正确 | 5 | 8 | 66,793 | 2 轮（最新 0928_1118_qids_25_26_27_28_31） | 数值一致（容差 1e-9） |
+| [q32](#q32) | ✅ PASS | ✅ 正确 | 5 | 8 | 72,370 | 3 轮（最新 0928_1147_qids_27_32_83_85） | 数值一致（容差 1e-9） |
 | [q36](#q36) | ✅ PASS | ✅ 正确 | 5 | 8 | 61,876 | 2 轮（最新 0928_1123_qids_32_36_39_40_41） | 文本一致 |
 | [q37](#q37) | ✅ PASS | ✅ 正确 | 5 | 9 | 63,682 | 3 轮（最新 0928_1135_qids_23_37_45_82_85） | 文本一致 |
-| [q39](#q39) | ✅ PASS | ✅ 正确 | 5 | 7 | 60,587 | 3 轮（最新 0928_1137_qids_39_41_50_77） | 文本一致 |
+| [q39](#q39) | ✅ PASS | ✅ 正确 | 5 | 7 | 60,587 | 3 轮（最新 0928_1137_qids_39_41_50_77） | 数值一致（容差 1e-9） |
 | [q40](#q40) | ✅ PASS | ✅ 正确 | 6 | 12 | 85,290 | 2 轮（最新 0928_1123_qids_32_36_39_40_41） | 文本一致 |
 | [q41](#q41) | ✅ PASS | ✅ 正确 | 4 | 6 | 43,753 | 3 轮（最新 0928_1137_qids_39_41_50_77） | 文本一致 |
-| [q45](#q45) | ✅ PASS | ✅ 正确 | 4 | 8 | 48,826 | 2 轮（最新 0928_1135_qids_23_37_45_82_85） | 文本一致 |
+| [q45](#q45) | ✅ PASS | ✅ 正确 | 4 | 8 | 48,826 | 2 轮（最新 0928_1135_qids_23_37_45_82_85） | 数值一致（容差 1e-9） |
 | [q46](#q46) | ✅ PASS | ✅ 正确 | 5 | 7 | 66,005 | 2 轮（最新 0928_1127_qids_46_47_48_50_62） | 文本一致 |
-| [q47](#q47) | ✅ PASS | ✅ 正确 | 5 | 8 | 60,827 | 2 轮（最新 0928_1127_qids_46_47_48_50_62） | 文本一致 |
-| [q48](#q48) | ✅ PASS | ✅ 正确 | 4 | 7 | 41,810 | 2 轮（最新 0928_1127_qids_46_47_48_50_62） | 文本一致 |
+| [q47](#q47) | ✅ PASS | ✅ 正确 | 5 | 8 | 60,827 | 2 轮（最新 0928_1127_qids_46_47_48_50_62） | 数值一致（容差 1e-9） |
+| [q48](#q48) | ✅ PASS | ✅ 正确 | 4 | 7 | 41,810 | 2 轮（最新 0928_1127_qids_46_47_48_50_62） | 数值一致（容差 1e-9） |
 | [q50](#q50) | ✅ PASS | ✅ 正确 | 5 | 8 | 62,891 | 4 轮（最新 0928_1137_qids_39_41_50_77） | 文本一致 |
-| [q62](#q62) | ✅ PASS | ✅ 正确 | 6 | 9 | 84,389 | 2 轮（最新 0928_1127_qids_46_47_48_50_62） | 文本一致 |
-| [q72](#q72) | ✅ PASS | ✅ 正确 | 5 | 7 | 61,244 | 3 轮（最新 0928_1132_qids_72_77_79_83_87） | 文本一致 |
-| [q77](#q77) | ✅ PASS | ✅ 正确 | 4 | 6 | 46,344 | 3 轮（最新 0928_1137_qids_39_41_50_77） | 文本一致 |
-| [q79](#q79) | ✅ PASS | ✅ 正确 | 5 | 7 | 54,306 | 2 轮（最新 0928_1132_qids_72_77_79_83_87） | 文本一致 |
+| [q62](#q62) | ✅ PASS | ✅ 正确 | 6 | 9 | 84,389 | 2 轮（最新 0928_1127_qids_46_47_48_50_62） | 数值一致（容差 1e-9） |
+| [q72](#q72) | ✅ PASS | ✅ 正确 | 4 | 6 | 47,104 | 4 轮（最新 0929_1118_qids_72_716_1136） | 数值一致（容差 1e-9） |
+| [q77](#q77) | ✅ PASS | ✅ 正确 | 4 | 6 | 46,344 | 3 轮（最新 0928_1137_qids_39_41_50_77） | 数值一致（容差 1e-9） |
+| [q79](#q79) | ✅ PASS | ✅ 正确 | 5 | 7 | 54,306 | 2 轮（最新 0928_1132_qids_72_77_79_83_87） | 数值一致（容差 1e-9） |
 | [q82](#q82) | ✅ PASS | ✅ 正确 | 5 | 8 | 62,306 | 2 轮（最新 0928_1135_qids_23_37_45_82_85） | 文本一致 |
-| [q83](#q83) | ✅ PASS | ✅ 正确 | 8 | 14 | 125,775 | 4 轮（最新 0928_1147_qids_27_32_83_85） | 文本一致 |
-| [q85](#q85) | ✅ PASS | ✅ 正确 | 5 | 8 | 64,686 | 3 轮（最新 0928_1147_qids_27_32_83_85） | 文本一致 |
+| [q83](#q83) | ✅ PASS | ✅ 正确 | 8 | 14 | 125,775 | 4 轮（最新 0928_1147_qids_27_32_83_85） | 数值一致（容差 1e-9） |
+| [q85](#q85) | ✅ PASS | ✅ 正确 | 5 | 8 | 64,686 | 3 轮（最新 0928_1147_qids_27_32_83_85） | 数值一致（容差 1e-9） |
 | [q87](#q87) | ✅ PASS | ✅ 正确 | 6 | 11 | 96,739 | 2 轮（最新 0928_1132_qids_72_77_79_83_87） | 结果集一致（与该题 gold 同集） |
 
 ## 本库数据集缺陷与裁定
@@ -47,7 +47,7 @@
 ## 逐题明细（怎么对的）
 
 <details id="q5">
-<summary><b>q5</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 63,058 tok · 2 轮 · 文本一致</summary>
+<summary><b>q5</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 63,058 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：How many schools with an average score in Math greater than 400 in the SAT test are exclusively virtual?
 
@@ -146,7 +146,7 @@ Evidence SQL: SELECT s.CDSCode FROM frpm AS f INNER JOIN schools AS s ON f.CDSCo
 </details>
 
 <details id="q12">
-<summary><b>q12</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 54,440 tok · 2 轮 · 文本一致</summary>
+<summary><b>q12</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 54,440 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?
 
@@ -209,7 +209,7 @@ Evidence SQL: SELECT MAX(CAST(f."Free Meal Count (Ages 5-17)" AS REAL) / f."Enro
 </details>
 
 <details id="q17">
-<summary><b>q17</b> · california_schools · ✅ <b>PASS</b> · 6 步 / 9 工具 · 86,459 tok · 2 轮 · 文本一致</summary>
+<summary><b>q17</b> · california_schools · ✅ <b>PASS</b> · 6 步 / 9 工具 · 86,459 tok · 2 轮 · 结果集一致（与该题 gold 同集）</summary>
 
 **问题**：Rank schools by their average score in Writing where the score is greater than 499, showing their charter numbers.
 
@@ -1097,7 +1097,7 @@ Evidence SQL: SELECT s.School, t.AvgScrWrite, s.Phone FROM schools s JOIN satsco
 </details>
 
 <details id="q28">
-<summary><b>q28</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 68,204 tok · 3 轮 · 文本一致</summary>
+<summary><b>q28</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 68,204 tok · 3 轮 · 结果集一致（与该题 gold 同集）</summary>
 
 **问题**：Consider the average difference between K-12 enrollment and 15-17 enrollment of schools that are locally funded, list the names and DOC type of schools which has a difference above this average.
 
@@ -1203,7 +1203,7 @@ Evidence SQL: SELECT T2.School, T2.DOCType, T2.DOC, CAST(T1."Enrollment (K-12)" 
 </details>
 
 <details id="q31">
-<summary><b>q31</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 66,793 tok · 2 轮 · 文本一致</summary>
+<summary><b>q31</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 66,793 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What is the eligible free rate of the 10th and 11th schools with the highest enrolment for students in grades 1 through 12?
 
@@ -1242,7 +1242,7 @@ Evidence SQL: SELECT "School Name" AS school, "Enrollment (K-12)" AS enrollment,
 </details>
 
 <details id="q32">
-<summary><b>q32</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 72,370 tok · 3 轮 · 文本一致</summary>
+<summary><b>q32</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 72,370 tok · 3 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What is the eligible free or reduced price meal rate for the top 5 schools in grades 1-12 with the highest free or reduced price meal count of the schools with the ownership code 66?
 
@@ -1396,7 +1396,7 @@ Evidence SQL: SELECT s.Street, s.City, s.Zip, s.State FROM satscores t JOIN scho
 </details>
 
 <details id="q39">
-<summary><b>q39</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 7 工具 · 60,587 tok · 3 轮 · 文本一致</summary>
+<summary><b>q39</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 7 工具 · 60,587 tok · 3 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What is the average number of test takers from Fresno schools that opened between 1/1/1980 and 12/31/1980?
 
@@ -1540,7 +1540,7 @@ Evidence SQL: SELECT SchoolName FROM (SELECT s.School AS SchoolName, RANK() OVER
 </details>
 
 <details id="q45">
-<summary><b>q45</b> · california_schools · ✅ <b>PASS</b> · 4 步 / 8 工具 · 48,826 tok · 2 轮 · 文本一致</summary>
+<summary><b>q45</b> · california_schools · ✅ <b>PASS</b> · 4 步 / 8 工具 · 48,826 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What is the average writing score of each of the schools managed by Ricci Ulrich? List the schools and the corresponding average writing scores.
 
@@ -1630,7 +1630,7 @@ Evidence SQL: SELECT s.School AS school_name FROM schools s JOIN frpm f ON s.CDS
 </details>
 
 <details id="q47">
-<summary><b>q47</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 60,827 tok · 2 轮 · 文本一致</summary>
+<summary><b>q47</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 60,827 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What is the monthly average number of schools that opened in Alameda County under the jurisdiction of the Elementary School District in 1980?
 
@@ -1678,7 +1678,7 @@ Evidence SQL: SELECT CAST(COUNT(*) AS REAL) / 12 AS monthly_avg FROM schools WHE
 </details>
 
 <details id="q48">
-<summary><b>q48</b> · california_schools · ✅ <b>PASS</b> · 4 步 / 7 工具 · 41,810 tok · 2 轮 · 文本一致</summary>
+<summary><b>q48</b> · california_schools · ✅ <b>PASS</b> · 4 步 / 7 工具 · 41,810 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What is the ratio of merged Unified School District schools in Orange County to merged Elementary School District schools?
 
@@ -1780,7 +1780,7 @@ Evidence SQL: SELECT sc.School AS school_name, sc.MailStreet AS postal_street FR
 </details>
 
 <details id="q62">
-<summary><b>q62</b> · california_schools · ✅ <b>PASS</b> · 6 步 / 9 工具 · 84,389 tok · 2 轮 · 文本一致</summary>
+<summary><b>q62</b> · california_schools · ✅ <b>PASS</b> · 6 步 / 9 工具 · 84,389 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What is the total number of non-chartered schools in the county of Los Angeles with a percent (%) of eligible free meals for grades 1 through 12 that is less than 0.18%?
 
@@ -1841,13 +1841,13 @@ Evidence SQL: SELECT COUNT(*) AS n FROM schools s JOIN frpm f ON s.CDSCode = f.C
 </details>
 
 <details id="q72">
-<summary><b>q72</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 7 工具 · 61,244 tok · 3 轮 · 文本一致</summary>
+<summary><b>q72</b> · california_schools · ✅ <b>PASS</b> · 4 步 / 6 工具 · 47,104 tok · 4 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：How many students from the ages of 5 to 17 are enrolled at the State Special School school in Fremont for the 2014-2015 academic year?
 
 **期望**：`40 | 335`
 
-**答案**：`## 分析过程 **L3 SOP**（'dlr_search_sop'，'match=exact'，标题逐字复述本题）给出三条关键口径： 1. "State Special School" 是**校级代码** 'EdOpsCode = 'SSS''（由 school master 承载），不是名称文本匹配 2. "2014-2015 academic year" 是 enrollment 表自身的`
+**答案**：`Verified — the SQL result matches the L3 spec's measured facts exactly. ## Answer For the 2014-2015 academic year, in Fremont, two schools carry the **State Special School** code ('EdOpsCode = 'SSS'')`
 
 **调用步骤**
 
@@ -1856,34 +1856,41 @@ Evidence SQL: SELECT COUNT(*) AS n FROM schools s JOIN frpm f ON s.CDSCode = f.C
 | 1 | `dlr_search_sop` | `{"question":"How many students from the ages of 5 to 17 are enrolled at the State Special School school in Fremont for the 2014-2015 academic year?"}` |
 | 2 | `dlr_semantic_query` | `{"question":"How many students from the ages of 5 to 17 are enrolled at the State Special School school in Fremont for the 2014-2015 academic year?"}` |
 | 3 | `dlr_search_consensus` | `{"question":"How many students from the ages of 5 to 17 are enrolled at the State Special School school in Fremont for the 2014-2015 academic year?"}` |
-| 4 | `get_pe_mapping` | `{"pe_id":"PHYSICAL.School"}` |
-| 5 | `get_pe_mapping` | `{"pe_id":"PHYSICAL.FRPM"}` |
-| 6 | `execute_sql` | `{"sql":"SELECT s.CDSCode, s.School, s.City, s.EdOpsCode, f.\"Academic Year\", f.\"Enrollment (Ages 5-17)\" FROM schools s JOIN frpm f ON s.CDSCode = f.CDSCode WHERE s.EdOpsCode = 'SSS' AND s.City = 'F` |
-| 7 | `execute_sql` | `{"database_url":"D:\\Code_Proj\\DLR Proj\\MINIDEV_sqlite\\dev_databases\\california_schools\\california_schools.sqlite","sql":"SELECT SUM(CAST(f.\"Enrollment (Ages 5-17)\" AS INTEGER)) AS total_enroll` |
+| 4 | `get_pe_mapping` | `{"pe_id":"PHYSICAL.FRPM"}` |
+| 5 | `get_pe_mapping` | `{"pe_id":"PHYSICAL.School"}` |
+| 6 | `execute_sql` | `{"sql":"SELECT s.School AS SchoolName, f.\"Enrollment (Ages 5-17)\" AS Enrollment_5_17\nFROM schools s\nJOIN frpm f ON f.CDSCode = s.CDSCode\nWHERE s.EdOpsCode = 'SSS'\n AND s.City = 'Fremont'\n AND f` |
 
 **依据与结论**（agent 原文）
 
-#### 分析过程
+Verified — the SQL result matches the L3 spec's measured facts exactly.
 
-**L3 SOP**（`dlr_search_sop`，`match=exact`，标题逐字复述本题）给出三条关键口径：
-1. "State Special School" 是**校级代码** `EdOpsCode = 'SSS'`（由 school master 承载），不是名称文本匹配
-2. "2014-2015 academic year" 是 enrollment 表自身的学年列（`Academic Year`），用该列过滤，而非任何日期字段
-3. "students from the ages of 5 to 17" 对应 `Enrollment (Ages 5-17)` 列，不是 K-12 口径；City 也在 school master 上；答案是一个 count
+#### Answer
 
-**L1 语义召回**：`california_schools` 库中 `LOGICAL.School`（PE=`schools`，锚键 `CDSCode`）与 `LOGICAL.SchoolPerformance`（PE=`frpm`，锚键 `CDSCode`）——两者 1:1 锚键一致，可 JOIN。
+For the 2014-2015 academic year, in Fremont, two schools carry the **State Special School** code (`EdOpsCode = 'SSS'`), and each has its own enrollment count for the ages 5-17 band:
 
-**L2 领域共识**：命中 `qid=46`（"State Special Schools refers to DOC = 31"）与本题同库同域，佐证"州立特殊学校"是一类编码而非校名。
+| School (Fremont) | Enrollment (Ages 5-17), 2014-2015 |
+|---|---|
+| California School for the Blind | **40** |
+| California School for the Deaf-Fremont | **335** |
 
-**执行**：`EdOpsCode='SSS' AND City='Fremont'` 命中两所州立特殊学校（California School for the Blind 40 人、California School for the Deaf-Fremont 335 人），2014-2015 学年 5-17 岁在册合计 **375**。
+The question is worded in the singular, but the data holds **two** State Special Schools in Fremont — so the answer is the two figures side by side, **not** their sum (375) and not just one of them.
 
-Final Answer: 375
+**How the three levels anchored:**
+- **L3 (authoritative, `match=exact`)**: the SOP section restates this question verbatim and settles all three lookups — "State Special School" is the school-level code `EdOpsCode = 'SSS'` (not a text search on the school name); the academic year is the enrollment table's own `Academic Year` column (`'2014-2015'` style); and "ages 5 to 17" is the `Enrollment (Ages 5-17)` column, not the K-12 figure. It also states the two-Fremont-schools fact (40 / 335) and explicitly warns against summing to 375.
+- **L1 (`dlr_semantic_query`)**: `LOGICAL.School` → `PHYSICAL.School` (schools master: `CDSCode`, `City`, `EdOpsCode`) and `LOGICAL.SchoolPerformance` → `PHYSICAL.FRPM` (frpm: `Enrollment (Ages 5-17)`, `Academic Year`). JOIN key confirmed by ARC `A_anchor` = `CDSCode` (1:1) on both sides.
+- **L2 (`dlr_search_consensus`, namespace `california_schools`)**: school-type names map onto code columns — "State Special School(s)" = DOC code 31 or education option code `SSS`. This corroborates the L3 rule.
 
-Evidence SQL:
-```sql
-SELECT SUM(CAST(f."Enrollment (Ages 5-17)" AS INTEGER)) AS total_enrolled_5_17
+**Why no sum:** the L3 section flags this as the trap. A `SUM(...)` over the join would return 375, which is wrong; the two schools are distinct entities and the pairing (school → count) is the answer.
+
+```
+Final Answer: California School for the Blind: 40; California School for the Deaf-Fremont: 335 (two State Special Schools in Fremont, 2014-2015, ages 5-17 enrollment — not summed)
+Evidence SQL: SELECT s.School AS SchoolName, f."Enrollment (Ages 5-17)" AS Enrollment_5_17
 FROM schools s
-JOIN frpm f ON s.CDSCode = f.CDSCode
-WHERE s.EdOpsCode = 'SSS' AND s.City = 'Fremont' AND f."Academic Year" = '2014-2015'
+JOIN frpm f ON f.CDSCode = s.CDSCode
+WHERE s.EdOpsCode = 'SSS'
+  AND s.City = 'Fremont'
+  AND f."Academic Year" = '2014-2015'
+ORDER BY s.School
 ```
 
 建模缺口: 无
@@ -1891,7 +1898,7 @@ WHERE s.EdOpsCode = 'SSS' AND s.City = 'Fremont' AND f."Academic Year" = '2014-2
 </details>
 
 <details id="q77">
-<summary><b>q77</b> · california_schools · ✅ <b>PASS</b> · 4 步 / 6 工具 · 46,344 tok · 3 轮 · 文本一致</summary>
+<summary><b>q77</b> · california_schools · ✅ <b>PASS</b> · 4 步 / 6 工具 · 46,344 tok · 3 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：Which schools served a grade span of Kindergarten to 9th grade in the county of Los Angeles and what is its Percent (%) Eligible FRPM (Ages 5-17)?
 
@@ -1937,7 +1944,7 @@ Evidence SQL: SELECT s.School, s.GSserved, s.County, f."FRPM Count (Ages 5-17)" 
 </details>
 
 <details id="q79">
-<summary><b>q79</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 7 工具 · 54,306 tok · 2 轮 · 文本一致</summary>
+<summary><b>q79</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 7 工具 · 54,306 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：Between San Diego and Santa Barbara, which county offers the most number of schools that does not offer physical building? Indicate the amount.
 
@@ -2035,7 +2042,7 @@ Evidence SQL: SELECT GSoffered FROM schools WHERE Longitude IS NOT NULL ORDER BY
 </details>
 
 <details id="q83">
-<summary><b>q83</b> · california_schools · ✅ <b>PASS</b> · 8 步 / 14 工具 · 125,775 tok · 4 轮 · 文本一致</summary>
+<summary><b>q83</b> · california_schools · ✅ <b>PASS</b> · 8 步 / 14 工具 · 125,775 tok · 4 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：Of the schools that offers a magnet program serving a grade span of Kindergarten to 8th grade, how many offers Multiple Provision Types? List the number of cities that offers a Kindergarten to 8th grade span and indicate how many schools are there serving such grade span for each city.
 
@@ -2116,7 +2123,7 @@ Evidence SQL: SELECT (SELECT COUNT(DISTINCT s.CDSCode) FROM schools s JOIN frpm 
 </details>
 
 <details id="q85">
-<summary><b>q85</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 64,686 tok · 3 轮 · 文本一致</summary>
+<summary><b>q85</b> · california_schools · ✅ <b>PASS</b> · 5 步 / 8 工具 · 64,686 tok · 3 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What is the Percent (%) Eligible Free (K-12) in the school administered by an administrator whose first name is Alusine. List the district code of the school.
 

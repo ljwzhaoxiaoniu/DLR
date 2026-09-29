@@ -7,16 +7,16 @@
 
 | 题号 | 判定 | 评定 | 步数 | 工具 | tokens | 轮次 | 备注 |
 |---|---|---|---|---|---|---|---|
-| [q1471](#q1471) | ✅ PASS | ✅ 正确 | 5 | 7 | 39,344 | 2 轮（最新 0928_1405_qids_1471_1472_1473_1476_1479） | 文本一致 |
-| [q1472](#q1472) | ✅ PASS | ✅ 正确 | 7 | 9 | 66,133 | 3 轮（最新 0928_1413_qids_1472） | 文本一致 |
+| [q1471](#q1471) | ✅ PASS | ✅ 正确 | 5 | 7 | 39,344 | 2 轮（最新 0928_1405_qids_1471_1472_1473_1476_1479） | 数值一致（容差 1e-9） |
+| [q1472](#q1472) | ✅ PASS | ✅ 正确 | 7 | 9 | 66,133 | 3 轮（最新 0928_1413_qids_1472） | 数值一致（容差 1e-9） |
 | [q1473](#q1473) | ❌ FAIL | 🔁 翻盘 | 6 | 11 | 53,841 | 2 轮（最新 0928_1405_qids_1471_1472_1473_1476_1479） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
-| [q1476](#q1476) | ✅ PASS | ✅ 正确 | 5 | 7 | 40,978 | 2 轮（最新 0928_1405_qids_1471_1472_1473_1476_1479） | 文本一致 |
-| [q1479](#q1479) | ✅ PASS | ✅ 正确 | 6 | 10 | 57,168 | 2 轮（最新 0928_1405_qids_1471_1472_1473_1476_1479） | 文本一致 |
+| [q1476](#q1476) | ✅ PASS | ✅ 正确 | 5 | 7 | 40,978 | 2 轮（最新 0928_1405_qids_1471_1472_1473_1476_1479） | 数值一致（容差 1e-9） |
+| [q1479](#q1479) | ✅ PASS | ✅ 正确 | 6 | 10 | 57,168 | 2 轮（最新 0928_1405_qids_1471_1472_1473_1476_1479） | 数值一致（容差 1e-9） |
 | [q1480](#q1480) | ✅ PASS | ✅ 正确 | 5 | 7 | 44,863 | 2 轮（最新 0928_1413_qids_1480_1481_1482_1483_1484） | 文本一致 |
 | [q1481](#q1481) | ❌ FAIL | 🔁 翻盘 | 4 | 6 | 32,240 | 3 轮（最新 0928_1413_qids_1480_1481_1482_1483_1484） | 与 gold 不符；按 SOP 裁定为正确（数据集问题 · 难题） |
 | [q1482](#q1482) | ❌ FAIL | 🔁 翻盘 | 5 | 7 | 42,542 | 3 轮（最新 0928_1413_qids_1480_1481_1482_1483_1484） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
-| [q1483](#q1483) | ✅ PASS | ✅ 正确 | 6 | 9 | 53,047 | 2 轮（最新 0928_1413_qids_1480_1481_1482_1483_1484） | 文本一致 |
-| [q1484](#q1484) | ✅ PASS | ✅ 正确 | 5 | 7 | 39,145 | 2 轮（最新 0928_1413_qids_1480_1481_1482_1483_1484） | 文本一致 |
+| [q1483](#q1483) | ✅ PASS | ✅ 正确 | 6 | 9 | 53,047 | 2 轮（最新 0928_1413_qids_1480_1481_1482_1483_1484） | 数值一致（容差 1e-9） |
+| [q1484](#q1484) | ✅ PASS | ✅ 正确 | 5 | 7 | 39,145 | 2 轮（最新 0928_1413_qids_1480_1481_1482_1483_1484） | 数值一致（容差 1e-9） |
 | [q1486](#q1486) | ✅ PASS | ✅ 正确 | 6 | 8 | 47,214 | 2 轮（最新 0928_1419_qids_1486_1490_1493_1498_1500） | 数值一致（容差 1e-9） |
 | [q1490](#q1490) | ❌ FAIL | 🔁 翻盘 | 5 | 7 | 39,331 | 2 轮（最新 0928_1419_qids_1486_1490_1493_1498_1500） | 与 gold 不符；按 SOP 裁定为正确（数据集问题 · 难题） |
 | [q1493](#q1493) | ✅ PASS | ✅ 正确 | 5 | 6 | 37,512 | 3 轮（最新 0928_1419_qids_1486_1490_1493_1498_1500） | 数值一致（容差 0.000001） |
@@ -26,17 +26,17 @@
 | [q1505](#q1505) | ❌ FAIL | 🔁 翻盘 | 4 | 7 | 31,457 | 3 轮（最新 0928_1828_qids_1505） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
 | [q1506](#q1506) | ✅ PASS | ✅ 正确 | 4 | 7 | 32,438 | 2 轮（最新 0928_1427_qids_1501_1505_1506_1507_1509） | 文本一致 |
 | [q1507](#q1507) | ✅ PASS | ✅ 正确 | 6 | 9 | 53,489 | 2 轮（最新 0928_1427_qids_1501_1505_1506_1507_1509） | 文本一致 |
-| [q1509](#q1509) | ✅ PASS | ✅ 正确 | 5 | 8 | 40,317 | 2 轮（最新 0928_1427_qids_1501_1505_1506_1507_1509） | 文本一致 |
+| [q1509](#q1509) | ✅ PASS | ✅ 正确 | 5 | 8 | 40,317 | 2 轮（最新 0928_1427_qids_1501_1505_1506_1507_1509） | 数值一致（容差 1e-9） |
 | [q1514](#q1514) | ✅ PASS | ✅ 正确 | 5 | 8 | 45,550 | 2 轮（最新 0928_1829_qids_1514_1515_1521_1524_1525） | 文本一致 |
 | [q1515](#q1515) | ✅ PASS | ✅ 正确 | 7 | 11 | 78,652 | 2 轮（最新 0928_1829_qids_1514_1515_1521_1524_1525） | 文本一致 |
-| [q1521](#q1521) | ✅ PASS | ✅ 正确 | 6 | 8 | 53,288 | 2 轮（最新 0928_1829_qids_1514_1515_1521_1524_1525） | 文本一致 |
+| [q1521](#q1521) | ✅ PASS | ✅ 正确 | 6 | 8 | 53,288 | 2 轮（最新 0928_1829_qids_1514_1515_1521_1524_1525） | 数值一致（容差 1e-9） |
 | [q1524](#q1524) | ✅ PASS | ✅ 正确 | 6 | 8 | 55,279 | 2 轮（最新 0928_1829_qids_1514_1515_1521_1524_1525） | 文本一致 |
 | [q1525](#q1525) | ❌ FAIL | 🔁 翻盘 | 4 | 7 | 32,564 | 2 轮（最新 0928_1829_qids_1514_1515_1521_1524_1525） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
 | [q1526](#q1526) | ❌ FAIL | 🔁 翻盘 | 5 | 8 | 42,729 | 2 轮（最新 0928_1833_qids_1526_1528_1529_1531_1533） | 与 gold 不符；按 SOP 裁定为正确（数据集问题 · 难题） |
-| [q1528](#q1528) | ✅ PASS | ✅ 正确 | 8 | 14 | 88,633 | 2 轮（最新 0928_1833_qids_1526_1528_1529_1531_1533） | 文本一致 |
+| [q1528](#q1528) | ✅ PASS | ✅ 正确 | 8 | 14 | 88,633 | 2 轮（最新 0928_1833_qids_1526_1528_1529_1531_1533） | 数值一致（容差 1e-9） |
 | [q1529](#q1529) | ❌ FAIL | 🔁 翻盘 | 4 | 5 | 29,637 | 2 轮（最新 0928_1833_qids_1526_1528_1529_1531_1533） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
 | [q1531](#q1531) | ❌ FAIL | 🔁 翻盘 | 5 | 8 | 44,771 | 2 轮（最新 0928_1833_qids_1526_1528_1529_1531_1533） | 与 gold 不符；按 SOP 裁定为正确（数据集问题 · 难题） |
-| [q1533](#q1533) | ✅ PASS | ✅ 正确 | 6 | 9 | 55,028 | 2 轮（最新 0928_1833_qids_1526_1528_1529_1531_1533） | 文本一致 |
+| [q1533](#q1533) | ✅ PASS | ✅ 正确 | 6 | 9 | 55,028 | 2 轮（最新 0928_1833_qids_1526_1528_1529_1531_1533） | 数值一致（容差 1e-9） |
 
 ## 本库数据集缺陷与裁定
 
@@ -58,7 +58,7 @@
 ## 逐题明细（怎么对的）
 
 <details id="q1471">
-<summary><b>q1471</b> · debit_card_specializing · ✅ <b>PASS</b> · 5 步 / 7 工具 · 39,344 tok · 2 轮 · 文本一致</summary>
+<summary><b>q1471</b> · debit_card_specializing · ✅ <b>PASS</b> · 5 步 / 7 工具 · 39,344 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What is the ratio of customers who pay in EUR against customers who pay in CZK?
 
@@ -113,7 +113,7 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN Currency = 'EUR' THEN 1 ELSE 0 END) AS R
 </details>
 
 <details id="q1472">
-<summary><b>q1472</b> · debit_card_specializing · ✅ <b>PASS</b> · 7 步 / 9 工具 · 66,133 tok · 3 轮 · 文本一致</summary>
+<summary><b>q1472</b> · debit_card_specializing · ✅ <b>PASS</b> · 7 步 / 9 工具 · 66,133 tok · 3 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：In 2012, who had the least consumption in LAM?
 
@@ -240,7 +240,7 @@ Evidence SQL: SELECT AVG(ym.Consumption) AS avg_monthly_consumption_2013_SME FRO
 </details>
 
 <details id="q1476">
-<summary><b>q1476</b> · debit_card_specializing · ✅ <b>PASS</b> · 5 步 / 7 工具 · 40,978 tok · 2 轮 · 文本一致</summary>
+<summary><b>q1476</b> · debit_card_specializing · ✅ <b>PASS</b> · 5 步 / 7 工具 · 40,978 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What was the difference in gas consumption between CZK-paying customers and EUR-paying customers in 2012?
 
@@ -289,7 +289,7 @@ Evidence SQL: SELECT SUM(CASE WHEN c.Currency = 'CZK' THEN y.Consumption ELSE 0 
 </details>
 
 <details id="q1479">
-<summary><b>q1479</b> · debit_card_specializing · ✅ <b>PASS</b> · 6 步 / 10 工具 · 57,168 tok · 2 轮 · 文本一致</summary>
+<summary><b>q1479</b> · debit_card_specializing · ✅ <b>PASS</b> · 6 步 / 10 工具 · 57,168 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：Which year recorded the most consumption of gas paid in CZK?
 
@@ -535,7 +535,7 @@ SELECT (SELECT Segment FROM p ORDER BY pct DESC LIMIT 1) AS biggest,
 </details>
 
 <details id="q1483">
-<summary><b>q1483</b> · debit_card_specializing · ✅ <b>PASS</b> · 6 步 / 9 工具 · 53,047 tok · 2 轮 · 文本一致</summary>
+<summary><b>q1483</b> · debit_card_specializing · ✅ <b>PASS</b> · 6 步 / 9 工具 · 53,047 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：How much did customer 6 consume in total between August and November 2013?
 
@@ -576,7 +576,7 @@ Evidence SQL: SELECT SUM(Consumption) AS total_consumption FROM yearmonth WHERE 
 </details>
 
 <details id="q1484">
-<summary><b>q1484</b> · debit_card_specializing · ✅ <b>PASS</b> · 5 步 / 7 工具 · 39,145 tok · 2 轮 · 文本一致</summary>
+<summary><b>q1484</b> · debit_card_specializing · ✅ <b>PASS</b> · 5 步 / 7 工具 · 39,145 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：How many more "discount" gas stations does the Czech Republic have compared to Slovakia?
 
@@ -1069,7 +1069,7 @@ Evidence SQL: SELECT DISTINCT t.Time FROM transactions_1k t JOIN gasstations g O
 </details>
 
 <details id="q1509">
-<summary><b>q1509</b> · debit_card_specializing · ✅ <b>PASS</b> · 5 步 / 8 工具 · 40,317 tok · 2 轮 · 文本一致</summary>
+<summary><b>q1509</b> · debit_card_specializing · ✅ <b>PASS</b> · 5 步 / 8 工具 · 40,317 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：Among the transactions made in the gas stations in the Czech Republic, how many of them are taken place after 2012/1/1?
 
@@ -1224,7 +1224,7 @@ Evidence SQL: SELECT c.Segment FROM transactions_1k t JOIN customers c ON t.Cust
 </details>
 
 <details id="q1521">
-<summary><b>q1521</b> · debit_card_specializing · ✅ <b>PASS</b> · 6 步 / 8 工具 · 53,288 tok · 2 轮 · 文本一致</summary>
+<summary><b>q1521</b> · debit_card_specializing · ✅ <b>PASS</b> · 6 步 / 8 工具 · 53,288 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：For all the transactions happened during 8:00-9:00 in 2012/8/26, how many happened in CZE?
 
@@ -1416,7 +1416,7 @@ SELECT (CAST((SELECT Tot FROM yr WHERE Yr='2012') - (SELECT Tot FROM yr WHERE Yr
 </details>
 
 <details id="q1528">
-<summary><b>q1528</b> · debit_card_specializing · ✅ <b>PASS</b> · 8 步 / 14 工具 · 88,633 tok · 2 轮 · 文本一致</summary>
+<summary><b>q1528</b> · debit_card_specializing · ✅ <b>PASS</b> · 8 步 / 14 工具 · 88,633 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What is the percentage of "premium" against the overall segment in Country = "SVK"?
 
@@ -1569,7 +1569,7 @@ WHERE c.CustomerID = (SELECT CustomerID FROM yearmonth GROUP BY CustomerID ORDER
 </details>
 
 <details id="q1533">
-<summary><b>q1533</b> · debit_card_specializing · ✅ <b>PASS</b> · 6 步 / 9 工具 · 55,028 tok · 2 轮 · 文本一致</summary>
+<summary><b>q1533</b> · debit_card_specializing · ✅ <b>PASS</b> · 6 步 / 9 工具 · 55,028 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：For all the people who paid more than 29.00 per unit of product id No.5. Give their consumption status in the August of 2012.
 

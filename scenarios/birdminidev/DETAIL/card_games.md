@@ -1,6 +1,6 @@
 # 评测明细 · card_games — birdminidev
 
-> 本库已跑 **52** 题：✅ 40 ｜ 🔁 12 ｜ ❌ 0 ｜ ⚠️ 0 ｜ token 中位 **93,661**
+> 本库已跑 **52** 题：✅ 39 ｜ 🔁 11 ｜ ❌ 1 ｜ ⚠️ 1 ｜ token 中位 **93,661**
 > 总账（覆盖度 / 汇总 / 数据集缺陷与裁定）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -9,30 +9,30 @@
 |---|---|---|---|---|---|---|---|
 | [q340](#q340) | ✅ PASS | ✅ 正确 | 6 | 9 | 126,723 | 0926_0928_qids_340_341_344_345_346 | 结果集一致（与该题 gold 同集） |
 | [q341](#q341) | ❌ FAIL | 🔁 翻盘 | 5 | 8 | 77,926 | 2 轮（最新 0926_0930_qids_341_345_346） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
-| [q344](#q344) | ✅ PASS | 🔁 翻盘 | 4 | 6 | 56,472 | 0926_0928_qids_340_341_344_345_346 | 文本一致；按 SOP 裁定为正确（数据集问题） |
+| [q344](#q344) | ✅ PASS | ✅ 正确 | 4 | 6 | 56,472 | 0926_0928_qids_340_341_344_345_346 | 数值一致（容差 1e-9） |
 | [q345](#q345) | ✅ PASS | ✅ 正确 | 5 | 9 | 93,661 | 3 轮（最新 0926_1110_qids_528_345_518_530） | 文本一致 |
 | [q346](#q346) | ✅ PASS | ✅ 正确 | 6 | 9 | 105,791 | 2 轮（最新 0926_0930_qids_341_345_346） | 结果集一致（与该题 gold 同集） |
 | [q347](#q347) | ✅ PASS | ✅ 正确 | 7 | 12 | 146,176 | 0926_0931_qids_347_349_352_356_358 | 结果集一致（与该题 gold 同集） |
 | [q349](#q349) | ⚠️ UNCERTAIN | 🔁 翻盘 | 7 | 11 | 129,083 | 0926_0931_qids_347_349_352_356_358 | 抽不出可比对的值；按 SOP 裁定为正确（数据集问题） |
 | [q352](#q352) | ❌ FAIL | 🔁 翻盘 | 4 | 6 | 58,315 | 0926_0931_qids_347_349_352_356_358 | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
-| [q356](#q356) | ✅ PASS | ✅ 正确 | 7 | 9 | 133,406 | 0926_0931_qids_347_349_352_356_358 | 文本一致 |
+| [q356](#q356) | ✅ PASS | ✅ 正确 | 7 | 9 | 133,406 | 0926_0931_qids_347_349_352_356_358 | 数值一致（容差 1e-9） |
 | [q358](#q358) | ✅ PASS | ✅ 正确 | 5 | 7 | 76,174 | 0926_0931_qids_347_349_352_356_358 | 文本一致 |
 | [q366](#q366) | ⚠️ UNCERTAIN | 🔁 翻盘 | 5 | 7 | 79,856 | 2 轮（最新 0926_0935_qids_366_383_391_397_402_405） | 抽不出可比对的值；按 SOP 裁定为正确（数据集问题） |
 | [q368](#q368) | ✅ PASS | ✅ 正确 | 5 | 7 | 77,423 | 0926_0933_qids_366_368_371_377_379 | 数值一致（容差 0.0001） |
-| [q371](#q371) | ✅ PASS | ✅ 正确 | 5 | 8 | 78,968 | 0926_0933_qids_366_368_371_377_379 | 文本一致 |
-| [q377](#q377) | ✅ PASS | ✅ 正确 | 5 | 9 | 78,785 | 0926_0933_qids_366_368_371_377_379 | 文本一致 |
-| [q379](#q379) | ✅ PASS | ✅ 正确 | 5 | 7 | 89,832 | 0926_0933_qids_366_368_371_377_379 | 文本一致 |
+| [q371](#q371) | ❌ FAIL | ❌ 错误 | 5 | 8 | 78,968 | 0926_0933_qids_366_368_371_377_379 | 与 gold 不符 |
+| [q377](#q377) | ✅ PASS | ✅ 正确 | 5 | 9 | 78,785 | 0926_0933_qids_366_368_371_377_379 | 数值一致（容差 1e-9） |
+| [q379](#q379) | ✅ PASS | ✅ 正确 | 5 | 7 | 89,832 | 0926_0933_qids_366_368_371_377_379 | 数值一致（容差 1e-9） |
 | [q383](#q383) | ❌ FAIL | 🔁 翻盘 | 5 | 7 | 81,910 | 2 轮（最新 0926_0938_qids_383_391_397_402） | 与 gold 不符；按 SOP 裁定为正确（数据集问题 · 难题） |
 | [q391](#q391) | ✅ PASS | ✅ 正确 | 7 | 12 | 129,488 | 2 轮（最新 0926_0938_qids_383_391_397_402） | 文本一致 |
 | [q397](#q397) | ✅ PASS | ✅ 正确 | 5 | 9 | 100,926 | 2 轮（最新 0926_0938_qids_383_391_397_402） | 文本一致 |
 | [q402](#q402) | ❌ FAIL | 🔁 翻盘 | 5 | 9 | 80,326 | 2 轮（最新 0926_0938_qids_383_391_397_402） | 与 gold 不符；按 SOP 裁定为正确（数据集问题） |
-| [q405](#q405) | ✅ PASS | ✅ 正确 | 6 | 11 | 85,691 | 0926_0935_qids_366_383_391_397_402_405 | 文本一致 |
+| [q405](#q405) | ✅ PASS | ✅ 正确 | 6 | 11 | 85,691 | 0926_0935_qids_366_383_391_397_402_405 | 数值一致（容差 1e-9） |
 | [q407](#q407) | ⚠️ UNCERTAIN | 🔁 翻盘 | 4 | 7 | 51,608 | 2 轮（最新 0926_0944_qids_407_408_412） | 抽不出可比对的值；按 SOP 裁定为正确（数据集问题 · 难题） |
-| [q408](#q408) | ✅ PASS | ✅ 正确 | 5 | 7 | 81,453 | 2 轮（最新 0926_0944_qids_407_408_412） | 文本一致 |
-| [q409](#q409) | ✅ PASS | ✅ 正确 | 7 | 12 | 132,610 | 0926_0940_qids_407_408_409_412_414 | 文本一致 |
+| [q408](#q408) | ✅ PASS | ✅ 正确 | 5 | 7 | 81,453 | 2 轮（最新 0926_0944_qids_407_408_412） | 数值一致（容差 1e-9） |
+| [q409](#q409) | ✅ PASS | ✅ 正确 | 7 | 12 | 132,610 | 0926_0940_qids_407_408_409_412_414 | 数值一致（容差 1e-9） |
 | [q412](#q412) | ✅ PASS | ✅ 正确 | 9 | 17 | 188,205 | 2 轮（最新 0926_0944_qids_407_408_412） | 文本一致 |
 | [q414](#q414) | ✅ PASS | ✅ 正确 | 7 | 11 | 111,468 | 0926_0940_qids_407_408_409_412_414 | 文本一致 |
-| [q415](#q415) | ✅ PASS | ✅ 正确 | 5 | 7 | 83,070 | 2 轮（最新 0926_0948_qids_416_415_424） | 文本一致 |
+| [q415](#q415) | ✅ PASS | ✅ 正确 | 5 | 7 | 83,070 | 2 轮（最新 0926_0948_qids_416_415_424） | 数值一致（容差 1e-9） |
 | [q416](#q416) | ❌ FAIL | 🔁 翻盘 | 5 | 7 | 84,185 | 2 轮（最新 0926_0948_qids_416_415_424） | 与 gold 不符；按 SOP 裁定为正确（数据集问题 · 难题） |
 | [q422](#q422) | ✅ PASS | ✅ 正确 | 7 | 12 | 128,759 | 0926_0945_qids_415_416_422_424_427 | 文本一致 |
 | [q424](#q424) | ✅ PASS | ✅ 正确 | 5 | 8 | 85,284 | 2 轮（最新 0926_0948_qids_416_415_424） | 数值一致（容差 0.0001） |
@@ -41,38 +41,39 @@
 | [q459](#q459) | ✅ PASS | ✅ 正确 | 5 | 8 | 83,364 | 0926_0951_qids_440_459_462_465_466 | 文本一致 |
 | [q462](#q462) | ✅ PASS | ✅ 正确 | 6 | 9 | 114,732 | 2 轮（最新 0926_0954_qids_462_465_466） | 文本一致 |
 | [q465](#q465) | ✅ PASS | ✅ 正确 | 7 | 12 | 142,377 | 2 轮（最新 0926_0954_qids_462_465_466） | 文本一致 |
-| [q466](#q466) | ✅ PASS | ✅ 正确 | 8 | 11 | 163,593 | 2 轮（最新 0926_0954_qids_462_465_466） | 文本一致 |
+| [q466](#q466) | ✅ PASS | ✅ 正确 | 8 | 11 | 163,593 | 2 轮（最新 0926_0954_qids_462_465_466） | 数值一致（容差 1e-9） |
 | [q468](#q468) | ✅ PASS | ✅ 正确 | 6 | 9 | 98,196 | 0926_0954_qids_468_469_472_473_474 | 文本一致 |
-| [q469](#q469) | ✅ PASS | ✅ 正确 | 5 | 7 | 89,850 | 0926_0954_qids_468_469_472_473_474 | 文本一致 |
-| [q472](#q472) | ✅ PASS | ✅ 正确 | 6 | 8 | 95,315 | 2 轮（最新 0926_0957_qids_472_477_479_480_483_484） | 文本一致 |
+| [q469](#q469) | ⚠️ UNCERTAIN | ⚠️ 待仲裁 | 5 | 7 | 89,850 | 0926_0954_qids_468_469_472_473_474 | 抽不出可比对的值；待仲裁 |
+| [q472](#q472) | ✅ PASS | ✅ 正确 | 6 | 8 | 95,315 | 2 轮（最新 0926_0957_qids_472_477_479_480_483_484） | 数值一致（容差 1e-9） |
 | [q473](#q473) | ✅ PASS | ✅ 正确 | 5 | 8 | 91,012 | 0926_0954_qids_468_469_472_473_474 | 文本一致 |
-| [q474](#q474) | ✅ PASS | ✅ 正确 | 6 | 10 | 99,062 | 0926_0954_qids_468_469_472_473_474 | 文本一致 |
+| [q474](#q474) | ✅ PASS | ✅ 正确 | 6 | 10 | 99,062 | 0926_0954_qids_468_469_472_473_474 | 数值一致（容差 1e-9） |
 | [q477](#q477) | ✅ PASS | ✅ 正确 | 6 | 10 | 113,785 | 0926_0957_qids_472_477_479_480_483_484 | 文本一致 |
-| [q479](#q479) | ✅ PASS | ✅ 正确 | 5 | 10 | 92,588 | 0926_0957_qids_472_477_479_480_483_484 | 文本一致 |
+| [q479](#q479) | ✅ PASS | ✅ 正确 | 5 | 10 | 92,588 | 0926_0957_qids_472_477_479_480_483_484 | 数值一致（容差 1e-9） |
 | [q480](#q480) | ✅ PASS | ✅ 正确 | 5 | 7 | 88,816 | 0926_0957_qids_472_477_479_480_483_484 | 文本一致 |
 | [q483](#q483) | ⚠️ UNCERTAIN | 🔁 翻盘 | 7 | 11 | 163,704 | 2 轮（最新 0926_1000_qids_483_484） | 抽不出可比对的值；按 SOP 裁定为正确（数据集问题） |
 | [q484](#q484) | ⚠️ UNCERTAIN | 🔁 翻盘 | 6 | 9 | 117,932 | 2 轮（最新 0926_1000_qids_483_484） | 抽不出可比对的值；按 SOP 裁定为正确（数据集问题） |
 | [q486](#q486) | ✅ PASS | ✅ 正确 | 5 | 10 | 94,855 | 0926_1001_qids_486_487_518_522_528 | 数值一致（容差 0.0001） |
-| [q487](#q487) | ✅ PASS | ✅ 正确 | 6 | 9 | 112,373 | 0926_1001_qids_486_487_518_522_528 | 文本一致 |
+| [q487](#q487) | ✅ PASS | ✅ 正确 | 6 | 9 | 112,373 | 0926_1001_qids_486_487_518_522_528 | 数值一致（容差 1e-9） |
 | [q518](#q518) | ✅ PASS | ✅ 正确 | 6 | 9 | 121,971 | 4 轮（最新 0926_1110_qids_528_345_518_530） | 文本一致 |
 | [q522](#q522) | ✅ PASS | ✅ 正确 | 6 | 10 | 123,796 | 0926_1001_qids_486_487_518_522_528 | 文本一致 |
 | [q528](#q528) | ✅ PASS | ✅ 正确 | 6 | 14 | 131,109 | 4 轮（最新 0926_1110_qids_528_345_518_530） | 文本一致 |
 | [q529](#q529) | ⚠️ UNCERTAIN | 🔁 翻盘 | 5 | 9 | 80,234 | 2 轮（最新 0926_1009_qids_529_518_528_530） | 抽不出可比对的值；按 SOP 裁定为正确（数据集问题） |
-| [q530](#q530) | ✅ PASS | ✅ 正确 | 5 | 7 | 92,615 | 5 轮（最新 0926_1114_qids_530） | 文本一致 |
+| [q530](#q530) | ✅ PASS | ✅ 正确 | 5 | 7 | 92,615 | 5 轮（最新 0926_1114_qids_530） | 数值一致（容差 1e-9） |
 
 ## 本库数据集缺陷与裁定
 
 | 题号 | 判定 | 评定 | 类型 | 问题（截） | 裁定（sop.md 摘要） |
 |---|---|---|---|---|---|
 | q341 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What are the borderless cards available without powerful foi | "Powerful foils" are the printings listed by the card marketplace **both** as a card and as a foil -- one of the two being present is not en |
-| q344 | ✅ PASS | 🔁 翻盘 | 数据集问题 | List all the mythic rarity print cards banned in gladiator f | A card here is a **printing**: one card name can exist as several printings, each with its own id. The question asks for the cards themselve |
 | q349 | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Name the card and artist with the most ruling information. A | "Ruling information" is the card's rulings: count the rulings attached to each card and take the largest -- **Teferi's Protection**, illustr |
 | q352 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Calculate the percentage of the cards availabe in Chinese Si | "Percentage of the cards" puts **cards** on both sides of the fraction: the cards that have a Chinese Simplified printing, divided by all th |
 | q366 | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | What is the rule of playing card "Benalish Knight"? | "The rule of playing card X" asks for the card's **rules text** -- the abilities printed on it. For Benalish Knight those are **flash** (it |
+| q371 | ❌ FAIL | ❌ 错误 | — | What is the percentage of cards whose language is French amo |  |
 | q383 | ❌ FAIL | 🔁 翻盘 | 数据集问题 · 难题 | How many of the banned cards are white border? | "Banned cards" counts **cards**: a card banned in several formats is still one card, so count each card once -- 89 white-bordered cards are |
 | q402 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What is the percentage of Story Spotlight cards that do not | A card "does not have a text box" when it is **textless**. Check the Story Spotlight cards for that: **none of them is textless**, so the pe |
 | q407 | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 · 难题 | Lists all types of cards in German. | "Types of cards **in German**" asks for the type names as they read in German -- the German-language type strings recorded for German printi |
 | q416 | ❌ FAIL | 🔁 翻盘 | 数据集问题 · 难题 | What percentage of cards without power are in French? | "Cards without power" = the cards whose power is missing or recorded as `*`. "In French" = the card has a French printing. The percentage pu |
+| q469 | ⚠️ UNCERTAIN | ⚠️ 待仲裁 | — | Did the set of cards with "Angel of Mercy" appear on Magic: |  |
 | q483 | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Please list the Italian text ruling of all the cards in the | "The Italian text of a card" is the card's **rules text as printed in Italian** -- one text per card (the text is a long block, so identical |
 | q484 | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Please list the Italian names of the cards in the set Coldsn | "Highest converted mana cost" in this set is 7, and **twelve cards share it** -- so the answer is twelve names, not one: Devastazione Solare |
 | q529 | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Find and list the names of sets which doesn't have Japanese | A set "has a translation" in a language when that language's **text is actually present**: every set carries a row per language, and a row w |
@@ -193,7 +194,7 @@ Evidence SQL: SELECT COUNT(DISTINCT name) FROM cards WHERE borderColor = 'border
 </details>
 
 <details id="q344">
-<summary><b>q344</b> · card_games · ✅ <b>PASS</b> · 🔁 翻盘 · 4 步 / 6 工具 · 56,472 tok · 文本一致；按 SOP 裁定为正确（数据集问题）</summary>
+<summary><b>q344</b> · card_games · ✅ <b>PASS</b> · 4 步 / 6 工具 · 56,472 tok · 数值一致（容差 1e-9）</summary>
 
 **问题**：List all the mythic rarity print cards banned in gladiator format.
 
@@ -535,7 +536,7 @@ Evidence SQL: SELECT (SELECT COUNT(DISTINCT fd.uuid) FROM foreign_data fd WHERE 
 </details>
 
 <details id="q356">
-<summary><b>q356</b> · card_games · ✅ <b>PASS</b> · 7 步 / 9 工具 · 133,406 tok · 文本一致</summary>
+<summary><b>q356</b> · card_games · ✅ <b>PASS</b> · 7 步 / 9 工具 · 133,406 tok · 数值一致（容差 1e-9）</summary>
 
 **问题**：How many cards have infinite power?
 
@@ -714,7 +715,7 @@ Evidence SQL: SELECT COUNT(DISTINCT CASE WHEN borderColor = 'borderless' THEN uu
 </details>
 
 <details id="q371">
-<summary><b>q371</b> · card_games · ✅ <b>PASS</b> · 5 步 / 8 工具 · 78,968 tok · 文本一致</summary>
+<summary><b>q371</b> · card_games · ❌ <b>FAIL</b> · ❌ 错误 · 5 步 / 8 工具 · 78,968 tok · 与 gold 不符</summary>
 
 **问题**：What is the percentage of cards whose language is French among the Story Spotlight cards?
 
@@ -772,7 +773,7 @@ Evidence SQL: SELECT COUNT(DISTINCT CASE WHEN EXISTS (SELECT 1 FROM foreign_data
 </details>
 
 <details id="q377">
-<summary><b>q377</b> · card_games · ✅ <b>PASS</b> · 5 步 / 9 工具 · 78,785 tok · 文本一致</summary>
+<summary><b>q377</b> · card_games · ✅ <b>PASS</b> · 5 步 / 9 工具 · 78,785 tok · 数值一致（容差 1e-9）</summary>
 
 **问题**：How many cards with original type of "Summon - Angel" have subtype other than "Angel"?
 
@@ -833,7 +834,7 @@ Evidence SQL: SELECT COUNT(*) AS cards_with_other_subtype FROM cards WHERE origi
 </details>
 
 <details id="q379">
-<summary><b>q379</b> · card_games · ✅ <b>PASS</b> · 5 步 / 7 工具 · 89,832 tok · 文本一致</summary>
+<summary><b>q379</b> · card_games · ✅ <b>PASS</b> · 5 步 / 7 工具 · 89,832 tok · 数值一致（容差 1e-9）</summary>
 
 **问题**：What are the cards belong to duel deck a? List the ID.
 
@@ -1102,7 +1103,7 @@ Evidence SQL: SELECT 100.0 * SUM(CASE WHEN isTextless = 1 THEN 1 ELSE 0 END) / C
 </details>
 
 <details id="q405">
-<summary><b>q405</b> · card_games · ✅ <b>PASS</b> · 6 步 / 11 工具 · 85,691 tok · 文本一致</summary>
+<summary><b>q405</b> · card_games · ✅ <b>PASS</b> · 6 步 / 11 工具 · 85,691 tok · 数值一致（容差 1e-9）</summary>
 
 **问题**：How many Brazilian Portuguese translated sets are inside the Commander block?
 
@@ -1241,7 +1242,7 @@ Evidence SQL: SELECT COUNT(DISTINCT type) FROM foreign_data WHERE language = 'Ge
 </details>
 
 <details id="q408">
-<summary><b>q408</b> · card_games · ✅ <b>PASS</b> · 5 步 / 7 工具 · 81,453 tok · 2 轮 · 文本一致</summary>
+<summary><b>q408</b> · card_games · ✅ <b>PASS</b> · 5 步 / 7 工具 · 81,453 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：How many unknown power cards contain info about the triggered ability
 
@@ -1293,7 +1294,7 @@ Evidence SQL: SELECT COUNT(*) FROM cards c WHERE (c.power IS NULL OR c.power = '
 </details>
 
 <details id="q409">
-<summary><b>q409</b> · card_games · ✅ <b>PASS</b> · 7 步 / 12 工具 · 132,610 tok · 文本一致</summary>
+<summary><b>q409</b> · card_games · ✅ <b>PASS</b> · 7 步 / 12 工具 · 132,610 tok · 数值一致（容差 1e-9）</summary>
 
 **问题**：Indicates the number of cards with pre-modern format, ruling text "This is a triggered mana ability." that do not have multiple faces.
 
@@ -1449,7 +1450,7 @@ Evidence SQL: SELECT s.code, s.name, s.block, s.baseSetSize, st.language, st.tra
 </details>
 
 <details id="q415">
-<summary><b>q415</b> · card_games · ✅ <b>PASS</b> · 5 步 / 7 工具 · 83,070 tok · 2 轮 · 文本一致</summary>
+<summary><b>q415</b> · card_games · ✅ <b>PASS</b> · 5 步 / 7 工具 · 83,070 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：What percentage of cards with format commander and legal status do not have a content warning?
 
@@ -1883,7 +1884,7 @@ Evidence SQL: SELECT st.setCode, s.name, st.translation FROM set_translations st
 </details>
 
 <details id="q466">
-<summary><b>q466</b> · card_games · ✅ <b>PASS</b> · 8 步 / 11 工具 · 163,593 tok · 2 轮 · 文本一致</summary>
+<summary><b>q466</b> · card_games · ✅ <b>PASS</b> · 8 步 / 11 工具 · 163,593 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：Among the cards in the set "Hauptset Zehnte Edition", how many of them are designed by Adam Rex?
 
@@ -1968,7 +1969,7 @@ Evidence SQL: SELECT t.translation FROM sets s JOIN set_translations t ON t.setC
 </details>
 
 <details id="q469">
-<summary><b>q469</b> · card_games · ✅ <b>PASS</b> · 5 步 / 7 工具 · 89,850 tok · 文本一致</summary>
+<summary><b>q469</b> · card_games · ⚠️ <b>UNCERTAIN</b> · ⚠️ 待仲裁 · 5 步 / 7 工具 · 89,850 tok · 抽不出可比对的值；待仲裁</summary>
 
 **问题**：Did the set of cards with "Angel of Mercy" appear on Magic: The Gathering Online?
 
@@ -2025,7 +2026,7 @@ Evidence SQL: SELECT DISTINCT s.name AS set_name FROM cards c JOIN sets s ON c.s
 </details>
 
 <details id="q472">
-<summary><b>q472</b> · card_games · ✅ <b>PASS</b> · 6 步 / 8 工具 · 95,315 tok · 2 轮 · 文本一致</summary>
+<summary><b>q472</b> · card_games · ✅ <b>PASS</b> · 6 步 / 8 工具 · 95,315 tok · 2 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：Among the sets in the block "Ice Age", how many of them have an Italian translation?
 
@@ -2116,7 +2117,7 @@ Evidence SQL: SELECT CASE WHEN COUNT(*) > 0 THEN 'Yes' ELSE 'No' END AS answer F
 </details>
 
 <details id="q474">
-<summary><b>q474</b> · card_games · ✅ <b>PASS</b> · 6 步 / 10 工具 · 99,062 tok · 文本一致</summary>
+<summary><b>q474</b> · card_games · ✅ <b>PASS</b> · 6 步 / 10 工具 · 99,062 tok · 数值一致（容差 1e-9）</summary>
 
 **问题**：Among the sets of cards that have an Italian translation, how many of them have a base set number of under 100?
 
@@ -2219,7 +2220,7 @@ Evidence SQL: SELECT DISTINCT cards.artist FROM cards JOIN sets ON cards.setCode
 </details>
 
 <details id="q479">
-<summary><b>q479</b> · card_games · ✅ <b>PASS</b> · 5 步 / 10 工具 · 92,588 tok · 文本一致</summary>
+<summary><b>q479</b> · card_games · ✅ <b>PASS</b> · 5 步 / 10 工具 · 92,588 tok · 数值一致（容差 1e-9）</summary>
 
 **问题**：Among the cards with converted mana cost higher than 5 in the set Coldsnap, how many of them have unknown power?
 
@@ -2609,7 +2610,7 @@ Evidence SQL: SELECT COUNT(DISTINCT CASE WHEN c.convertedManaCost = 7 THEN c.uui
 </details>
 
 <details id="q487">
-<summary><b>q487</b> · card_games · ✅ <b>PASS</b> · 6 步 / 9 工具 · 112,373 tok · 文本一致</summary>
+<summary><b>q487</b> · card_games · ✅ <b>PASS</b> · 6 步 / 9 工具 · 112,373 tok · 数值一致（容差 1e-9）</summary>
 
 **问题**：What is the percentage of incredibly powerful cards in the set Coldsnap?
 
@@ -2921,7 +2922,7 @@ Evidence SQL: SELECT s.name FROM sets s JOIN set_translations ko ON ko.setCode =
 </details>
 
 <details id="q530">
-<summary><b>q530</b> · card_games · ✅ <b>PASS</b> · 5 步 / 7 工具 · 92,615 tok · 5 轮 · 文本一致</summary>
+<summary><b>q530</b> · card_games · ✅ <b>PASS</b> · 5 步 / 7 工具 · 92,615 tok · 5 轮 · 数值一致（容差 1e-9）</summary>
 
 **问题**：List all the frame styles and cards Allen Williams worked on and find any banned cards if there are any.
 

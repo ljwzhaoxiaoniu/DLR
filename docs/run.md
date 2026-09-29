@@ -88,6 +88,7 @@ curl -s http://127.0.0.1:28795/status
 | 会话日志"看起来是空的" | **多帧 zstd**：单帧解码只出 header——用 `DSH-based Agent Service/scripts/decode_session_log.cjs` |
 | 机器内存吃紧 | 常驻约 650MB（Neo4j ~280 + MCP ~330）；不用时关，用时跑幂等脚本 |
 | dsh 报工具名不对 | 工具面是 `mcp__semantic-core__*`；升级 dsh 后先 `--dump-config` 核行 id |
+| `tsm grade` 卡死（CPU 不动、无输出） | 重活 = gold 大查询 / 结果集补救；杀该进程 → 重跑该目录即可（gold 有磁盘缓存，不重复付） |
 
 ## 7. 纪律
 
@@ -96,6 +97,7 @@ curl -s http://127.0.0.1:28795/status
 - **服务由项目主手动启停**；本手册的命令都可**重复执行**（幂等是设计目标）。
 - 改配置（patch / 插件）→ 重启对应宿主；**改 L3 源 `sources/sop.md` → `tsm build sop` 重建索引后即生效**（不再需要重启宿主；原 sync_sop.sh 已退役）。
 - 临时产物一律进 `tmp_scripts/`，或随用随删。
+- **跑一批题 + 判定**：`run_batch.sh --qids ... --jobs 3` → `tsm grade --run <批次目录>`；判据三层、翻盘口径与迁移期纪律（5 题一批 / 每题最多两遍 / 节写完必须复跑 / 全量重判）见 [eval.md](eval.md) §六。
 
 ## 8. 新机器安装（异地验收清单）
 

@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 505" width="880" height="505" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
 <rect width="880" height="505" fill="#ffffff"/>
 <text x="24" y="36" font-size="16" font-weight="600" fill="#1f2328">DLR · birdminidev · 实测结果（综合统计）</text>
-<text x="856" y="36" font-size="11" fill="#656d76" text-anchor="end">生成 2026-09-28 14:12 UTC</text>
+<text x="856" y="36" font-size="11" fill="#656d76" text-anchor="end">生成 2026-09-29 03:25 UTC</text>
 <text x="24" y="70" font-size="13" font-weight="600" fill="#1f2328">评定</text>
 <text x="76" y="70" font-size="11" fill="#656d76">按 SOP 裁定 · 500 题口径（已跑 212）· 🔁 翻盘单独计，不并入 ✅ 正确</text>
-<rect x="24.0" y="84" width="276.2" height="22" fill="#1a7f37"/><text x="162.1" y="99" font-size="11" fill="#fff" text-anchor="middle">166</text><rect x="300.2" y="84" width="76.5" height="22" fill="#0969da"/><text x="338.5" y="99" font-size="11" fill="#fff" text-anchor="middle">46</text><rect x="376.8" y="84" width="479.2" height="22" fill="#d0d7de"/><text x="616.4" y="99" font-size="11" fill="#656d76" text-anchor="middle">288</text>
+<rect x="24.0" y="84" width="272.9" height="22" fill="#1a7f37"/><text x="160.4" y="99" font-size="11" fill="#fff" text-anchor="middle">164</text><rect x="296.9" y="84" width="76.5" height="22" fill="#0969da"/><text x="335.2" y="99" font-size="11" fill="#fff" text-anchor="middle">46</text><rect x="373.4" y="84" width="1.7" height="22" fill="#cf222e"/><rect x="375.1" y="84" width="1.7" height="22" fill="#bf8700"/><rect x="376.8" y="84" width="479.2" height="22" fill="#d0d7de"/><text x="616.4" y="99" font-size="11" fill="#656d76" text-anchor="middle">288</text>
 <text x="24" y="122" font-size="11" fill="#656d76">已跑 212 题（放大）</text>
-<rect x="24.0" y="132" width="651.5" height="20" fill="#1a7f37"/><text x="349.7" y="146" font-size="11" fill="#fff" text-anchor="middle">166</text><rect x="675.5" y="132" width="180.5" height="20" fill="#0969da"/><text x="765.7" y="146" font-size="11" fill="#fff" text-anchor="middle">46</text>
-<rect x="24" y="162" width="9" height="9" rx="2" fill="#1a7f37"/><text x="38" y="170" font-size="12" fill="#656d76">✅ 正确 166</text><rect x="106" y="162" width="9" height="9" rx="2" fill="#0969da"/><text x="120" y="170" font-size="12" fill="#656d76">🔁 翻盘 46</text><rect x="181" y="162" width="9" height="9" rx="2" fill="#cf222e"/><text x="195" y="170" font-size="12" fill="#656d76">❌ 错误 0</text><rect x="249" y="162" width="9" height="9" rx="2" fill="#bf8700"/><text x="263" y="170" font-size="12" fill="#656d76">⚠️ 待仲裁 0</text><rect x="336" y="162" width="9" height="9" rx="2" fill="#d0d7de"/><text x="350" y="170" font-size="12" fill="#656d76">⬜ 未跑 288</text>
+<rect x="24.0" y="132" width="643.6" height="20" fill="#1a7f37"/><text x="345.8" y="146" font-size="11" fill="#fff" text-anchor="middle">164</text><rect x="667.6" y="132" width="180.5" height="20" fill="#0969da"/><text x="757.9" y="146" font-size="11" fill="#fff" text-anchor="middle">46</text><rect x="848.2" y="132" width="3.9" height="20" fill="#cf222e"/><rect x="852.1" y="132" width="3.9" height="20" fill="#bf8700"/>
+<rect x="24" y="162" width="9" height="9" rx="2" fill="#1a7f37"/><text x="38" y="170" font-size="12" fill="#656d76">✅ 正确 164</text><rect x="106" y="162" width="9" height="9" rx="2" fill="#0969da"/><text x="120" y="170" font-size="12" fill="#656d76">🔁 翻盘 46</text><rect x="181" y="162" width="9" height="9" rx="2" fill="#cf222e"/><text x="195" y="170" font-size="12" fill="#656d76">❌ 错误 1</text><rect x="249" y="162" width="9" height="9" rx="2" fill="#bf8700"/><text x="263" y="170" font-size="12" fill="#656d76">⚠️ 待仲裁 1</text><rect x="336" y="162" width="9" height="9" rx="2" fill="#d0d7de"/><text x="350" y="170" font-size="12" fill="#656d76">⬜ 未跑 288</text>
 <text x="24" y="204" font-size="13" font-weight="600" fill="#1f2328">跑题覆盖度</text>
 <text x="100" y="204" font-size="11" fill="#656d76">跑过（去重）/ 数据集题数 · 与判定、评定无关</text>
 <text x="24" y="230" font-size="12" fill="#1f2328">california_schools</text>
@@ -49,6 +49,6 @@
 <rect x="234" y="422" width="548" height="10" rx="3" fill="#eaeef2"/>
 <text x="856" y="431" font-size="12" fill="#656d76" text-anchor="end">0/40</text>
 <line x1="24" y1="452" x2="856" y2="452" stroke="#eaeef2"/>
-<text x="24" y="466" font-size="12" fill="#656d76">均值 5.5 步 / 8.6 工具调用 / 去重每题 80,535 tokens（累计 46,555,127 含重跑）｜ cache_read 占比 81%</text>
+<text x="24" y="466" font-size="12" fill="#656d76">均值 5.5 步 / 8.7 工具调用 / 去重每题 71,165 tokens（累计 49,345,977 含重跑）｜ cache_read 占比 81%</text>
 <text x="24" y="487" font-size="11" fill="#656d76">口径：评定 = 最终结果（每题取最新一轮；🔁 翻盘单独计）；⬜ 未跑 = 500 题里尚未跑过的题；判定按次数留档；跑题覆盖度按去重题数。明细见 results/STATS.md 与各轮 questions.csv。</text>
 </svg>

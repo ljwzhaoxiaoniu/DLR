@@ -75,7 +75,9 @@ opencode 执行层 → Semantic Core Service（Kuzu + FAISS）→ 同一物理�
 ```bash
 bash "DSH-based Agent Service/scripts/start_backend.sh"               # 起后端（Neo4j + TS MCP，幂等）
 bash "DSH-based Agent Service/dsh_dlr/run_one.sh" <qid> "<question>"  # 单题（自动预检）
+bash "DSH-based Agent Service/scripts/run_batch.sh" --qids <q1>,<q2> --jobs 3   # 跑一批（产物进 scenarios/<场景>/results/）
 bash "DSH-based Agent Service/dsh_dlr/run_web.sh"                     # Web 对话
+cd "TSM Core Service" && node bin/tsm.mjs grade --run "<批次目录>"    # 判定 → questions.csv + summary.md（口径见 docs/eval.md §六）
 cd "TSM Core Service" && npx tsx src/verify/precheck.ts               # 后端预检（应列出 7 工具）
 ```
 
@@ -108,6 +110,9 @@ $PY post_process.py --run-id $RID [--group original|control]  # 确认后归档�
 - **judge 超时**默认 INCORRECT：不要直接改 CSV，先手动 `opencode run` 验证
 - **token 口径** `total = input + cache_read + reasoning(CoT) + output`（cache_read 可占 80%+），**差异看 steps**
 - **改配置必须 rebuild + 重启**（L1/L2/L3 三层同规：改 yaml / consensus / **sop.md** → 各自 `tsm build` 重建；原「skills/*.md 改文件即生效」的例外已随 L3 检索化取消）；同批次配置必须一致
+- **2.0 判定只看结论句**（`Final Answer:` 区域）：正文里"参考值 / 被否决的备选读法"不算命中（2026-09-29 judge 加固）；写节时 `Expected` 要写**结论句里会给出的那个值**
+- **节写完必须复跑该题**（节晚于跑批生效 → 旧档 ✅ 可能靠假阳性撑着）；节标题须与题面**逐字符**一致（含结尾标点）；判据/口径变动后**全量重判**（口径与流程见 [docs/eval.md](docs/eval.md) §六）
+- **`tsm grade` 可能卡死**（重活 = gold 大查询 / 结果集补救；表现为 CPU 不动、无输出）→ 杀该进程重跑该目录即可（金缓存已落盘，不重复付）
 
 ---
 

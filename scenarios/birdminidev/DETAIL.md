@@ -1,7 +1,7 @@
 # 评测明细 — DLR · birdminidev
 
 > **说明**：question 驱动三级锚定——L1 dsh MCP 语义层（`dlr_semantic_query` 等 7 工具，含 `get_full_data_info` 下探）/ L2 共识（`dlr_search_consensus`）/ L3 SOP（`dlr_search_sop`），交叉验证后出 SQL。
-> **判定**：gold SQL 在数据集 SQLite 上执行得期望值 ↔ agent 答案（**数据集原生，不修正**）；数值逐级容差、文本归一化包含。
+> **判定**：gold SQL 在数据集 SQLite 上执行得期望值 ↔ agent 答案（**数据集原生，不修正**）；数值逐级容差、文本归一化包含，**都只看 `Final Answer:` 结论句区域**（正文里的备选读法不算命中）。
 > **评定**：SOP 生效时按 SOP 裁定——与 gold 对不上但答法合 SOP 口径 = **翻盘**（计正确，但**单独标注、单独计数，不并入 PASS**）。
 > **数据来源**：`results/<轮次>/{questions.csv, raw/*.ndjson}` ｜ 本文件由 `tsm stats` 自动重建（定性观察一节在跑批后按 SOP 案例补写）。
 > **列义**：判定 PASS ｜ FAIL ｜ UNCERTAIN（抽不出可比对的值）｜ GOLD_ERR（gold 本身执行失败）；评定 ✅ 正确 ｜ 🔁 翻盘 ｜ ❌ 错误 ｜ ⚠️ 待仲裁；**备注** = 这一行的判定依据 + 裁定依据（人话一句）。
@@ -32,27 +32,27 @@
 
 | 评定 | 值 |
 |---|---|
-| ✅ 正确（与 gold 一致） | 166 / 212（78.3%） |
+| ✅ 正确（与 gold 一致） | 164 / 212（77.4%） |
 | 🔁 翻盘（按 SOP 裁定为正确） | 46 |
-| ❌ 错误 | 0 |
-| ⚠️ 待仲裁 | 0 |
-| **合计正确（正确 + 翻盘）** | **212 / 212（100.0%）** |
+| ❌ 错误 | 1 |
+| ⚠️ 待仲裁 | 1 |
+| **合计正确（正确 + 翻盘）** | **210 / 212（99.1%）** |
 
 **判定**（与 gold 原始比对 · 留档；gold 数据集原生、不修正）
 
 | 判定 | 值 |
 |---|---|
-| PASS（与 gold 一致） | 168 / 212（79.2%） |
-| UNCERTAIN（抽不出可比对的值） | 10 |
-| FAIL（与 gold 不符） | 34 |
+| PASS（与 gold 一致） | 164 / 212（77.4%） |
+| UNCERTAIN（抽不出可比对的值） | 12 |
+| FAIL（与 gold 不符） | 36 |
 | GOLD_ERR（gold 本身执行失败） | 0 |
 
 **效率**
 
 | 指标 | 值 |
 |---|---|
-| token 平均 / 中位 | 80,535 / 77,926 |
-| token 最低 / 最高 | 29,637 / 219,218 |
+| token 平均 / 中位 | 71,165 / 62,306 |
+| token 最低 / 最高 | 29,420 / 219,218 |
 | 步数均值 / 工具调用均值 | 6 / 9 |
 
 > **口径**：本文档汇总按**去重题数**计（同题多轮取**最新一轮**的判定/评定）——与 [results/STATS.md](results/STATS.md) 的**按次数**分布会不同（重跑过或跑挂过的题，那边会多计一次）。仅覆盖已跑轮次，勿外推为全数据集结论。token = input + cache_read + output（不含 CoT 的 reasoning 分项由 harness 单独计）。
@@ -68,10 +68,10 @@
 | 数据库 | 已跑 | ✅ 正确 | 🔁 翻盘 | ❌ 错误 | ⚠️ 待仲裁 | token 中位 |
 |---|---|---|---|---|---|---|
 | [california_schools](DETAIL/california_schools.md) | 30 | 29 | 1 | 0 | 0 | 66,005 |
-| [card_games](DETAIL/card_games.md) | 52 | 40 | 12 | 0 | 0 | 93,661 |
-| [codebase_community](DETAIL/codebase_community.md) | 49 | 42 | 7 | 0 | 0 | 84,921 |
+| [card_games](DETAIL/card_games.md) | 52 | 39 | 11 | 1 | 1 | 93,661 |
+| [codebase_community](DETAIL/codebase_community.md) | 49 | 41 | 8 | 0 | 0 | 47,901 |
 | [debit_card_specializing](DETAIL/debit_card_specializing.md) | 30 | 18 | 12 | 0 | 0 | 43,973 |
-| [european_football_2](DETAIL/european_football_2.md) | 51 | 37 | 14 | 0 | 0 | 60,923 |
+| [european_football_2](DETAIL/european_football_2.md) | 51 | 37 | 14 | 0 | 0 | 60,026 |
 
 ## 数据集缺陷与裁定（SOP 条目缘由）
 
@@ -79,22 +79,24 @@
 |---|---|---|---|---|---|---|
 | q27 | california_schools | ⚠️ UNCERTAIN | 🔁 翻盘 | 难题 | What is the average score in writing for the schools that we | "Communication number" is the school's phone number -- there is no separate contact table. Date reading: "opened after 1991" means the openi |
 | q341 | card_games | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What are the borderless cards available without powerful foi | "Powerful foils" are the printings listed by the card marketplace **both** as a card and as a foil -- one of the two being present is not en |
-| q344 | card_games | ✅ PASS | 🔁 翻盘 | 数据集问题 | List all the mythic rarity print cards banned in gladiator f | A card here is a **printing**: one card name can exist as several printings, each with its own id. The question asks for the cards themselve |
 | q349 | card_games | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Name the card and artist with the most ruling information. A | "Ruling information" is the card's rulings: count the rulings attached to each card and take the largest -- **Teferi's Protection**, illustr |
 | q352 | card_games | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Calculate the percentage of the cards availabe in Chinese Si | "Percentage of the cards" puts **cards** on both sides of the fraction: the cards that have a Chinese Simplified printing, divided by all th |
 | q366 | card_games | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | What is the rule of playing card "Benalish Knight"? | "The rule of playing card X" asks for the card's **rules text** -- the abilities printed on it. For Benalish Knight those are **flash** (it |
+| q371 | card_games | ❌ FAIL | ❌ 错误 | — | What is the percentage of cards whose language is French amo |  |
 | q383 | card_games | ❌ FAIL | 🔁 翻盘 | 数据集问题 · 难题 | How many of the banned cards are white border? | "Banned cards" counts **cards**: a card banned in several formats is still one card, so count each card once -- 89 white-bordered cards are |
 | q402 | card_games | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What is the percentage of Story Spotlight cards that do not | A card "does not have a text box" when it is **textless**. Check the Story Spotlight cards for that: **none of them is textless**, so the pe |
 | q407 | card_games | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 · 难题 | Lists all types of cards in German. | "Types of cards **in German**" asks for the type names as they read in German -- the German-language type strings recorded for German printi |
 | q416 | card_games | ❌ FAIL | 🔁 翻盘 | 数据集问题 · 难题 | What percentage of cards without power are in French? | "Cards without power" = the cards whose power is missing or recorded as `*`. "In French" = the card has a French printing. The percentage pu |
+| q469 | card_games | ⚠️ UNCERTAIN | ⚠️ 待仲裁 | — | Did the set of cards with "Angel of Mercy" appear on Magic: |  |
 | q483 | card_games | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Please list the Italian text ruling of all the cards in the | "The Italian text of a card" is the card's **rules text as printed in Italian** -- one text per card (the text is a long block, so identical |
 | q484 | card_games | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Please list the Italian names of the cards in the set Coldsn | "Highest converted mana cost" in this set is 7, and **twelve cards share it** -- so the answer is twelve names, not one: Devastazione Solare |
 | q529 | card_games | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Find and list the names of sets which doesn't have Japanese | A set "has a translation" in a language when that language's **text is actually present**: every set carries a row per language, and a row w |
+| q557 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Among the posts with a score of over 5, what is the percenta | "Among the posts with a score of over 5" is the denominator: **all** posts with a score above 5 (11,465 of them), each counted once. Posts w |
 | q584 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Write all the comments left by users who edited the post tit | "The comments left by users who edited the post" are the **notes the editing users left with their edits** -- the short note each edit of th |
-| q595 | codebase_community | ✅ PASS | 🔁 翻盘 | 数据集问题 | Which user have only one post history per post and having at | The question leaves two things unsaid: whether "one post history" counts the **records** a user left or the **kinds** of history entry they |
 | q639 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Based on posts posted by Community, calculate the percentage | The fraction puts **one set of posts** on both sides: the posts that use the R language, among the posts that account posted. That account o |
 | q640 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Calculate the difference in view count from post posted by M | "The posts posted by an author" are the posts that author owns, and a post's view count is the count the post itself records -- counted once |
 | q672 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Among the users located in United Kingdom, how many users wh | The question counts **users**, and "a favorite amount of 4 or more" is a post's own favorite count (not a sum across the user's posts). Of t |
+| q682 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Which is the most valuable post in 2010? Please give its id | "Most valuable" is the post carrying the largest **FavoriteCount**, and "in 2010" is the **post's own** creation year (the evidence reads MA |
 | q683 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What is the percentage of posts whose owners had a reputatio | "In 2011" scopes the whole question -- the posts of that year, and among them the share whose owner's reputation is over 1000. That year has |
 | q710 | codebase_community | ❌ FAIL | 🔁 翻盘 | 数据集问题 | In posts with 1 comment, how many of the comments have 0 sco | "In posts with 1 comment" picks the posts whose **recorded comment count** is exactly 1 -- not the posts that merely happen to have one comm |
 | q1473 | debit_card_specializing | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What was the average monthly consumption of customers in SME | Consumption is recorded customer-month by customer-month: every recorded figure is already one customer's consumption for one month. So "ave |
@@ -112,7 +114,7 @@
 | q1028 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | In Scotland Premier League, which away team won the most dur | "Away team won the most" = per away team, count how many matches it won away in that league and season, and take the largest count. The "201 |
 | q1029 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What are the speed in which attacks are put together of the | "Speed in which attacks are put together" and "build-up play speed" are the same team attribute -- the question names one quantity twice. "H |
 | q1037 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Calculate the percentage of players who prefer left foot, wh | "Percentage of players" counts **players**, not rating records: one player counts once in both the numerator and the denominator, even thoug |
-| q1058 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Who has the highest average finishing rate between the highe | The question compares exactly two players: the tallest and the shortest one. Compare their average finishing rates over their dated records |
+| q1058 | european_football_2 | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Who has the highest average finishing rate between the highe | The question compares exactly two players: the tallest and the shortest one. Compare their average finishing rates over their dated records |
 | q1080 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Among the players whose preferred foot was the left foot whe | "Among the players ... how many of them" counts **players**: one player counts once, even though a player has many dated records (and his pr |
 | q1094 | european_football_2 | ❌ FAIL | 🔁 翻盘 | 数据集问题 | How much higher in percentage is Ariel Borysiuk's overall ra | A player's rating is a **dated series of observations**, not one number: the same player has many rating records over the years. A question |
 | q1107 | european_football_2 | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | When was the first time did Kevin Constant have his highest | A player's scores are a dated series. "His highest crossing score" is the largest value in that series, and he can carry it on more than one |

@@ -26,22 +26,24 @@
 |---|---|---|---|---|---|
 | q27 | california_schools | 🔁 翻盘 | 难题 | What is the average score in writing for the schools tha | "Communication number" is the school's phone number -- there is no separate contact table. Date reading: "opened after 1991" means |
 | q341 | card_games | 🔁 翻盘 | 数据集问题 | What are the borderless cards available without powerful | "Powerful foils" are the printings listed by the card marketplace **both** as a card and as a foil -- one of the two being present |
-| q344 | card_games | 🔁 翻盘 | 数据集问题 | List all the mythic rarity print cards banned in gladiat | A card here is a **printing**: one card name can exist as several printings, each with its own id. The question asks for the cards |
 | q349 | card_games | 🔁 翻盘 | 数据集问题 | Name the card and artist with the most ruling informatio | "Ruling information" is the card's rulings: count the rulings attached to each card and take the largest -- **Teferi's Protection* |
 | q352 | card_games | 🔁 翻盘 | 数据集问题 | Calculate the percentage of the cards availabe in Chines | "Percentage of the cards" puts **cards** on both sides of the fraction: the cards that have a Chinese Simplified printing, divided |
 | q366 | card_games | 🔁 翻盘 | 数据集问题 | What is the rule of playing card "Benalish Knight"? | "The rule of playing card X" asks for the card's **rules text** -- the abilities printed on it. For Benalish Knight those are **fl |
+| q371 | card_games | ❌ 错误 | — | What is the percentage of cards whose language is French |  |
 | q383 | card_games | 🔁 翻盘 | 数据集问题 · 难题 | How many of the banned cards are white border? | "Banned cards" counts **cards**: a card banned in several formats is still one card, so count each card once -- 89 white-bordered |
 | q402 | card_games | 🔁 翻盘 | 数据集问题 | What is the percentage of Story Spotlight cards that do | A card "does not have a text box" when it is **textless**. Check the Story Spotlight cards for that: **none of them is textless**, |
 | q407 | card_games | 🔁 翻盘 | 数据集问题 · 难题 | Lists all types of cards in German. | "Types of cards **in German**" asks for the type names as they read in German -- the German-language type strings recorded for Ger |
 | q416 | card_games | 🔁 翻盘 | 数据集问题 · 难题 | What percentage of cards without power are in French? | "Cards without power" = the cards whose power is missing or recorded as `*`. "In French" = the card has a French printing. The per |
+| q469 | card_games | ⚠️ 待仲裁 | — | Did the set of cards with "Angel of Mercy" appear on Mag |  |
 | q483 | card_games | 🔁 翻盘 | 数据集问题 | Please list the Italian text ruling of all the cards in | "The Italian text of a card" is the card's **rules text as printed in Italian** -- one text per card (the text is a long block, so |
 | q484 | card_games | 🔁 翻盘 | 数据集问题 | Please list the Italian names of the cards in the set Co | "Highest converted mana cost" in this set is 7, and **twelve cards share it** -- so the answer is twelve names, not one: Devastazi |
 | q529 | card_games | 🔁 翻盘 | 数据集问题 | Find and list the names of sets which doesn't have Japan | A set "has a translation" in a language when that language's **text is actually present**: every set carries a row per language, a |
+| q557 | codebase_community | 🔁 翻盘 | 数据集问题 | Among the posts with a score of over 5, what is the perc | "Among the posts with a score of over 5" is the denominator: **all** posts with a score above 5 (11,465 of them), each counted onc |
 | q584 | codebase_community | 🔁 翻盘 | 数据集问题 | Write all the comments left by users who edited the post | "The comments left by users who edited the post" are the **notes the editing users left with their edits** -- the short note each |
-| q595 | codebase_community | 🔁 翻盘 | 数据集问题 | Which user have only one post history per post and havin | The question leaves two things unsaid: whether "one post history" counts the **records** a user left or the **kinds** of history e |
 | q639 | codebase_community | 🔁 翻盘 | 数据集问题 | Based on posts posted by Community, calculate the percen | The fraction puts **one set of posts** on both sides: the posts that use the R language, among the posts that account posted. That |
 | q640 | codebase_community | 🔁 翻盘 | 数据集问题 | Calculate the difference in view count from post posted | "The posts posted by an author" are the posts that author owns, and a post's view count is the count the post itself records -- co |
 | q672 | codebase_community | 🔁 翻盘 | 数据集问题 | Among the users located in United Kingdom, how many user | The question counts **users**, and "a favorite amount of 4 or more" is a post's own favorite count (not a sum across the user's po |
+| q682 | codebase_community | 🔁 翻盘 | 数据集问题 | Which is the most valuable post in 2010? Please give its | "Most valuable" is the post carrying the largest **FavoriteCount**, and "in 2010" is the **post's own** creation year (the evidenc |
 | q683 | codebase_community | 🔁 翻盘 | 数据集问题 | What is the percentage of posts whose owners had a reput | "In 2011" scopes the whole question -- the posts of that year, and among them the share whose owner's reputation is over 1000. Tha |
 | q710 | codebase_community | 🔁 翻盘 | 数据集问题 | In posts with 1 comment, how many of the comments have 0 | "In posts with 1 comment" picks the posts whose **recorded comment count** is exactly 1 -- not the posts that merely happen to hav |
 | q1473 | debit_card_specializing | 🔁 翻盘 | 数据集问题 | What was the average monthly consumption of customers in | Consumption is recorded customer-month by customer-month: every recorded figure is already one customer's consumption for one mont |
@@ -139,11 +141,11 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 <!-- stats:begin -->
 ![实测结果综合统计](results/stats.svg)
 
-**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 166 ｜ 🔁 翻盘 46 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 288　—　**已跑 212 题全部正确**
+**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 164 ｜ 🔁 翻盘 46 ｜ ❌ 错误 1 ｜ ⚠️ 待仲裁 1 ｜ ⬜ 未跑 288　—　**已跑 212 题：正确 210 题**
 
 （🔁 翻盘 = 数据集自身缺陷（gold 未实现题面）按 SOP 逐题裁定为正确——单独计数、不并入 ✅ 正确；每题取最新一轮）
 
-均值 **5.5 步 / 8.6 工具调用 / 每题 80,535 tokens** ｜ 跑题覆盖度 **212/500 题**（5/11 库有产物）
+均值 **5.5 步 / 8.7 工具调用 / 每题 71,165 tokens** ｜ 跑题覆盖度 **212/500 题**（5/11 库有产物）
 
 > 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 46 道数据集缺陷题的比对记录）也在这两处可查。
 <!-- stats:end -->
