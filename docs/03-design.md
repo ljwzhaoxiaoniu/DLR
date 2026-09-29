@@ -211,7 +211,7 @@ pas_relations:
 
 ### 5.3 工具面（7 个）
 
-`dlr_semantic_query`（LE 召回）→ `get_pe_mapping`（第二跳：表名/**视图列**/ARCS/`database_url`）/ `get_le_attrs`；`dlr_search_consensus`（L2）；`dlr_search_sop`（**L3**：按题检索的 SOP 索引，只取复述本题的那一节）；`execute_sql`（取数）；`get_full_data_info`（**下探**：视图外的物理列，用后须在答案反馈建模缺口）。
+`dlr_semantic_query`（LE 召回）→ `get_pe_mapping`（第二跳：表名/**视图列**/ARCS/`database_url`）/ `get_le_attrs`；`dlr_search_consensus`（L2）；`dlr_search_sop`（**L3**：按题检索的 SOP 索引，只取复述本题的那一节）；`execute_sql`（取数：**子进程执行 + 20s 硬超时**，超时中止并让 agent 改写——防病态 SQL 钉死单线程服务）；`get_full_data_info`（**下探**：视图外的物理列，用后须在答案反馈建模缺口）。
 
 ## 6. 新库接入作业流程（2.0）
 

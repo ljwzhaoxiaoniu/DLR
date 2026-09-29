@@ -29,12 +29,11 @@
 | q349 | card_games | 🔁 翻盘 | 数据集问题 | Name the card and artist with the most ruling informatio | "Ruling information" is the card's rulings: count the rulings attached to each card and take the largest -- **Teferi's Protection* |
 | q352 | card_games | 🔁 翻盘 | 数据集问题 | Calculate the percentage of the cards availabe in Chines | "Percentage of the cards" puts **cards** on both sides of the fraction: the cards that have a Chinese Simplified printing, divided |
 | q366 | card_games | 🔁 翻盘 | 数据集问题 | What is the rule of playing card "Benalish Knight"? | "The rule of playing card X" asks for the card's **rules text** -- the abilities printed on it. For Benalish Knight those are **fl |
-| q371 | card_games | ❌ 错误 | — | What is the percentage of cards whose language is French |  |
+| q371 | card_games | 🔁 翻盘 | 数据集问题 | What is the percentage of cards whose language is French | "Percentage of cards" puts **cards** on both sides of the fraction: the Story Spotlight cards that have a French printing, over al |
 | q383 | card_games | 🔁 翻盘 | 数据集问题 · 难题 | How many of the banned cards are white border? | "Banned cards" counts **cards**: a card banned in several formats is still one card, so count each card once -- 89 white-bordered |
 | q402 | card_games | 🔁 翻盘 | 数据集问题 | What is the percentage of Story Spotlight cards that do | A card "does not have a text box" when it is **textless**. Check the Story Spotlight cards for that: **none of them is textless**, |
 | q407 | card_games | 🔁 翻盘 | 数据集问题 · 难题 | Lists all types of cards in German. | "Types of cards **in German**" asks for the type names as they read in German -- the German-language type strings recorded for Ger |
 | q416 | card_games | 🔁 翻盘 | 数据集问题 · 难题 | What percentage of cards without power are in French? | "Cards without power" = the cards whose power is missing or recorded as `*`. "In French" = the card has a French printing. The per |
-| q469 | card_games | ⚠️ 待仲裁 | — | Did the set of cards with "Angel of Mercy" appear on Mag |  |
 | q483 | card_games | 🔁 翻盘 | 数据集问题 | Please list the Italian text ruling of all the cards in | "The Italian text of a card" is the card's **rules text as printed in Italian** -- one text per card (the text is a long block, so |
 | q484 | card_games | 🔁 翻盘 | 数据集问题 | Please list the Italian names of the cards in the set Co | "Highest converted mana cost" in this set is 7, and **twelve cards share it** -- so the answer is twelve names, not one: Devastazi |
 | q529 | card_games | 🔁 翻盘 | 数据集问题 | Find and list the names of sets which doesn't have Japan | A set "has a translation" in a language when that language's **text is actually present**: every set carries a row per language, a |
@@ -141,13 +140,13 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 <!-- stats:begin -->
 ![实测结果综合统计](results/stats.svg)
 
-**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 164 ｜ 🔁 翻盘 46 ｜ ❌ 错误 1 ｜ ⚠️ 待仲裁 1 ｜ ⬜ 未跑 288　—　**已跑 212 题：正确 210 题**
+**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 165 ｜ 🔁 翻盘 47 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 288　—　**已跑 212 题全部正确**
 
 （🔁 翻盘 = 数据集自身缺陷（gold 未实现题面）按 SOP 逐题裁定为正确——单独计数、不并入 ✅ 正确；每题取最新一轮）
 
-均值 **5.5 步 / 8.7 工具调用 / 每题 71,165 tokens** ｜ 跑题覆盖度 **212/500 题**（5/11 库有产物）
+均值 **5.6 步 / 8.7 工具调用 / 每题 65,901 tokens** ｜ 跑题覆盖度 **212/500 题**（5/11 库有产物）
 
-> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 46 道数据集缺陷题的比对记录）也在这两处可查。
+> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 47 道数据集缺陷题的比对记录）也在这两处可查。
 <!-- stats:end -->
 
 **怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。

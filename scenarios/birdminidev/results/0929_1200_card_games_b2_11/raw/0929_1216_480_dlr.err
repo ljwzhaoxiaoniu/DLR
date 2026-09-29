@@ -1,0 +1,13 @@
+dsh: warning: 2 entries did not activate
+mcp-semantic-core (@deepseek-ai/dsh-mcp-client): Error: mcp-client(semantic-core): initial connection or tool synchronization failed
+    at Object.apply [as callback] (file:///C:/Users/user/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-mcp-client/lib/index.js:832:67)
+    at async Fiber._reload (file:///C:/Users/user/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/cordis/lib/index.js:1356:5)
+SdkError: Version negotiation probe timed out after 60000ms
+    at classifyProbeOutcome (file:///C:/Users/user/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@modelcontextprotocol/client/dist/index.mjs:2321:12)
+    at probe (file:///C:/Users/user/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@modelcontextprotocol/client/dist/index.mjs:2707:20)
+    at async negotiateEra (file:///C:/Users/user/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@modelcontextprotocol/client/dist/index.mjs:2738:12)
+    at async Client._connectNegotiated (file:///C:/Users/user/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@modelcontextprotocol/client/dist/index.mjs:3278:38)
+    at async connectGeneration (file:///C:/Users/user/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-mcp-client/lib/index.js:644:4)
+    at async Object.apply [as callback] (file:///C:/Users/user/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/dsh-mcp-client/lib/index.js:831:18)
+    at async Fiber._reload (file:///C:/Users/user/AppData/Roaming/npm/node_modules/@deepseek-ai/dsh/node_modules/@deepseek-ai/cordis/lib/index.js:1356:5)
+preset-dlr (@deepseek-ai/dsh-agent-preset): pending (waiting for service: agentPresets)

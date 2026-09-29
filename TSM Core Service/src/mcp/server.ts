@@ -172,7 +172,8 @@ function createServer(): McpServer {
     {
       description:
         "[DLR] 执行只读 SQL（database_url 由映射工具取得）。SELECT * 必须带 LIMIT；结果超 200 行截断。" +
-        "SQLite 整数除法会截断小数，需要浮点请 CAST(x AS REAL)。",
+        "SQLite 整数除法会截断小数，需要浮点请 CAST(x AS REAL)。" +
+        "单条查询有 20s 硬超时：不要对大表（数万行且无索引）写相关子查询 / CASE WHEN EXISTS（会嵌套全表扫描、超时中止）——先在子表侧 GROUP BY 聚合，再 JOIN。",
       inputSchema: { sql: z.string(), database_url: z.string() },
     },
     async ({ sql, database_url }) => ({

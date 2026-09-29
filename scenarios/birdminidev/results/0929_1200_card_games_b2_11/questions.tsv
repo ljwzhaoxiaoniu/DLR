@@ -1,0 +1,47 @@
+347	card_games	Find all cards illustrated by Stephen Daniel and describe the text of the ruling of these cards. State if these cards have missing or degraded properties and values.
+349	card_games	Name the card and artist with the most ruling information. Also state if the card is a promotional printing.
+352	card_games	Calculate the percentage of the cards availabe in Chinese Simplified.
+356	card_games	How many cards have infinite power?
+358	card_games	What is the border color of card "Ancestor's Chosen"?
+366	card_games	What is the rule of playing card "Benalish Knight"?
+368	card_games	What is the percentage of borderless cards?
+371	card_games	What is the percentage of cards whose language is French among the Story Spotlight cards?
+377	card_games	How many cards with original type of "Summon - Angel" have subtype other than "Angel"?
+379	card_games	What are the cards belong to duel deck a? List the ID.
+383	card_games	How many of the banned cards are white border?
+391	card_games	Among the Artifact cards, which are black color and comes with foreign languague translation?
+397	card_games	What is the mana cost of cards with a normal layout, a 2003 frame version, with a black border color, and available in paper and mtgo?
+402	card_games	What is the percentage of Story Spotlight cards that do not have a text box? List them by their ID.
+405	card_games	How many Brazilian Portuguese translated sets are inside the Commander block?
+407	card_games	Lists all types of cards in German.
+408	card_games	How many unknown power cards contain info about the triggered ability
+409	card_games	Indicates the number of cards with pre-modern format, ruling text "This is a triggered mana ability." that do not have multiple faces.
+412	card_games	What is the foreign name of the card in French of type Creature, normal layout and black border color, by artist Matthew D. Wilson?
+414	card_games	What language is the set of 180 cards that belongs to the Ravnica block translated into?
+415	card_games	What percentage of cards with format commander and legal status do not have a content warning?
+416	card_games	What percentage of cards without power are in French?
+422	card_games	What is the language of the card with the multiverse number 149934?
+424	card_games	What proportion of cards do not have a text box with a normal layout?
+427	card_games	What languages are available in the set known as Archenemy on the magic card market and having the code ARC?
+440	card_games	Which foreign language used by "A Pedra Fellwar"?
+459	card_games	Which card costs more converted mana, "Serra Angel" or "Shrine Keeper"?
+462	card_games	What's the Italian name of the set of cards with "Ancestor's Chosen" is in?
+465	card_games	For the set of cards with "Ancestor's Chosen" in it, is there a Korean version of it?
+466	card_games	Among the cards in the set "Hauptset Zehnte Edition", how many of them are designed by Adam Rex?
+468	card_games	What is the Simplified Chinese translation of the name of the set "Eighth Edition"?
+469	card_games	Did the set of cards with "Angel of Mercy" appear on Magic: The Gathering Online?
+472	card_games	Among the sets in the block "Ice Age", how many of them have an Italian translation?
+473	card_games	Is the set of cards with Adarkar Valkyrie only available outside the United States?
+474	card_games	Among the sets of cards that have an Italian translation, how many of them have a base set number of under 100?
+477	card_games	Which of these artists have designed a card in the set Coldsnap, Jeremy Jarvis, Aaron Miller or Chippy?
+479	card_games	Among the cards with converted mana cost higher than 5 in the set Coldsnap, how many of them have unknown power?
+480	card_games	What is the Italian flavor text of the card "Ancestor's Chosen"?
+483	card_games	Please list the Italian text ruling of all the cards in the set Coldsnap.
+484	card_games	Please list the Italian names of the cards in the set Coldsnap with the highest converted mana cost.
+486	card_games	What is the percentage of the cards with a converted mana cost of 7 in the set Coldsnap?
+487	card_games	What is the percentage of incredibly powerful cards in the set Coldsnap?
+518	card_games	Which of the play format has the highest number of banned status? Indicate the play format and the names of all the card meet the condition.
+522	card_games	Which cards are ranked 1st on EDHRec? List all of the cards name and its banned play format.
+528	card_games	List the names of all the cards in the set Hour of Devastation and find the formats in which these cards are legal.
+529	card_games	Find and list the names of sets which doesn't have Japanese translation but have Korean translation.
+530	card_games	List all the frame styles and cards Allen Williams worked on and find any banned cards if there are any.

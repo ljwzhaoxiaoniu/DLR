@@ -32,18 +32,18 @@
 
 | 评定 | 值 |
 |---|---|
-| ✅ 正确（与 gold 一致） | 164 / 212（77.4%） |
-| 🔁 翻盘（按 SOP 裁定为正确） | 46 |
-| ❌ 错误 | 1 |
-| ⚠️ 待仲裁 | 1 |
-| **合计正确（正确 + 翻盘）** | **210 / 212（99.1%）** |
+| ✅ 正确（与 gold 一致） | 165 / 212（77.8%） |
+| 🔁 翻盘（按 SOP 裁定为正确） | 47 |
+| ❌ 错误 | 0 |
+| ⚠️ 待仲裁 | 0 |
+| **合计正确（正确 + 翻盘）** | **212 / 212（100.0%）** |
 
 **判定**（与 gold 原始比对 · 留档；gold 数据集原生、不修正）
 
 | 判定 | 值 |
 |---|---|
-| PASS（与 gold 一致） | 164 / 212（77.4%） |
-| UNCERTAIN（抽不出可比对的值） | 12 |
+| PASS（与 gold 一致） | 165 / 212（77.8%） |
+| UNCERTAIN（抽不出可比对的值） | 11 |
 | FAIL（与 gold 不符） | 36 |
 | GOLD_ERR（gold 本身执行失败） | 0 |
 
@@ -51,8 +51,8 @@
 
 | 指标 | 值 |
 |---|---|
-| token 平均 / 中位 | 71,165 / 62,306 |
-| token 最低 / 最高 | 29,420 / 219,218 |
+| token 平均 / 中位 | 65,901 / 57,549 |
+| token 最低 / 最高 | 29,420 / 397,982 |
 | 步数均值 / 工具调用均值 | 6 / 9 |
 
 > **口径**：本文档汇总按**去重题数**计（同题多轮取**最新一轮**的判定/评定）——与 [results/STATS.md](results/STATS.md) 的**按次数**分布会不同（重跑过或跑挂过的题，那边会多计一次）。仅覆盖已跑轮次，勿外推为全数据集结论。token = input + cache_read + output（不含 CoT 的 reasoning 分项由 harness 单独计）。
@@ -68,7 +68,7 @@
 | 数据库 | 已跑 | ✅ 正确 | 🔁 翻盘 | ❌ 错误 | ⚠️ 待仲裁 | token 中位 |
 |---|---|---|---|---|---|---|
 | [california_schools](DETAIL/california_schools.md) | 30 | 29 | 1 | 0 | 0 | 66,005 |
-| [card_games](DETAIL/card_games.md) | 52 | 39 | 11 | 1 | 1 | 93,661 |
+| [card_games](DETAIL/card_games.md) | 52 | 40 | 12 | 0 | 0 | 60,552 |
 | [codebase_community](DETAIL/codebase_community.md) | 49 | 41 | 8 | 0 | 0 | 47,901 |
 | [debit_card_specializing](DETAIL/debit_card_specializing.md) | 30 | 18 | 12 | 0 | 0 | 43,973 |
 | [european_football_2](DETAIL/european_football_2.md) | 51 | 37 | 14 | 0 | 0 | 60,026 |
@@ -82,12 +82,11 @@
 | q349 | card_games | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Name the card and artist with the most ruling information. A | "Ruling information" is the card's rulings: count the rulings attached to each card and take the largest -- **Teferi's Protection**, illustr |
 | q352 | card_games | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Calculate the percentage of the cards availabe in Chinese Si | "Percentage of the cards" puts **cards** on both sides of the fraction: the cards that have a Chinese Simplified printing, divided by all th |
 | q366 | card_games | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | What is the rule of playing card "Benalish Knight"? | "The rule of playing card X" asks for the card's **rules text** -- the abilities printed on it. For Benalish Knight those are **flash** (it |
-| q371 | card_games | ❌ FAIL | ❌ 错误 | — | What is the percentage of cards whose language is French amo |  |
+| q371 | card_games | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What is the percentage of cards whose language is French amo | "Percentage of cards" puts **cards** on both sides of the fraction: the Story Spotlight cards that have a French printing, over all Story Sp |
 | q383 | card_games | ❌ FAIL | 🔁 翻盘 | 数据集问题 · 难题 | How many of the banned cards are white border? | "Banned cards" counts **cards**: a card banned in several formats is still one card, so count each card once -- 89 white-bordered cards are |
 | q402 | card_games | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What is the percentage of Story Spotlight cards that do not | A card "does not have a text box" when it is **textless**. Check the Story Spotlight cards for that: **none of them is textless**, so the pe |
 | q407 | card_games | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 · 难题 | Lists all types of cards in German. | "Types of cards **in German**" asks for the type names as they read in German -- the German-language type strings recorded for German printi |
 | q416 | card_games | ❌ FAIL | 🔁 翻盘 | 数据集问题 · 难题 | What percentage of cards without power are in French? | "Cards without power" = the cards whose power is missing or recorded as `*`. "In French" = the card has a French printing. The percentage pu |
-| q469 | card_games | ⚠️ UNCERTAIN | ⚠️ 待仲裁 | — | Did the set of cards with "Angel of Mercy" appear on Magic: |  |
 | q483 | card_games | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Please list the Italian text ruling of all the cards in the | "The Italian text of a card" is the card's **rules text as printed in Italian** -- one text per card (the text is a long block, so identical |
 | q484 | card_games | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Please list the Italian names of the cards in the set Coldsn | "Highest converted mana cost" in this set is 7, and **twelve cards share it** -- so the answer is twelve names, not one: Devastazione Solare |
 | q529 | card_games | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Find and list the names of sets which doesn't have Japanese | A set "has a translation" in a language when that language's **text is actually present**: every set carries a row per language, and a row w |
