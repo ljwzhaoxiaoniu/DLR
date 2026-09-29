@@ -1,6 +1,6 @@
 # 跑批结果（tsm grade）
 
-目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0928_2215_qids_531_532_533_537_539` ｜ 题数 5 ｜ 生成 2026-09-29T00:34:17.102Z
+目录：`D:\Code_Proj\DLR Proj\scenarios\birdminidev\results\0928_2256_qids_563_565_567_568_571` ｜ 题数 5 ｜ 生成 2026-09-29T00:34:20.754Z
 
 **判定（与 gold 比对）：PASS 5 ｜ FAIL 0 ｜ UNCERTAIN 0 ｜ GOLD_ERR 0**
 
@@ -8,9 +8,9 @@
 
 ## 过程指标（均值 / 合计）
 
-- 步数均值 **6** ｜ 工具调用均值 **8** ｜ 工具错误均值 **0**
-- token 合计 **277,651**（input 54,944 + cache_read 196,480 + output 26,227） ｜ cache_read 占 **71%**
-- token 单题均值 **55,530**
+- 步数均值 **6** ｜ 工具调用均值 **9** ｜ 工具错误均值 **0**
+- token 合计 **283,473**（input 42,757 + cache_read 229,632 + output 11,084） ｜ cache_read 占 **81%**
+- token 单题均值 **56,695**
 
 | 库 | PASS | FAIL | UNCERTAIN | GOLD_ERR |
 |---|---|---|---|---|

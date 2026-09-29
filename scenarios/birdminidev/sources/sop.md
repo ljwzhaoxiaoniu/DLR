@@ -531,6 +531,16 @@ Established facts (already checked -- do not re-derive, go straight to the answe
 - The qualifying player is **Mathis Bolly** (born 1990-11-14): the window holds 23 sprint-speed = 97 records and every one of them belongs to him.
 - The answer is therefore the current year minus 1990 (36 while the current year is 2026).
 
+### When asked: "What is the percentage difference of student badges given during 2010 and 2011?"
+> **类型**：难题
+
+"Student badges" are the badges named Student. For each year take that year's Student badges as a percentage of **all** Student badges, then subtract: (2010 share) - (2011 share). This is a difference of two percentages of the same whole -- not a growth rate between the two years (that would divide by one year's count).
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- Student badges: 542 in 2010, 1,959 in 2011, 14,847 in all.
+- 542/14847 x 100 - 1959/14847 x 100 = **-9.544015626052403**.
+
 ### When asked: "How many users last accessed the website after 2014/9/1?"
 > **类型**：难题
 
@@ -540,6 +550,19 @@ Established facts (already checked -- do not re-derive, go straight to the answe
 
 - Strictly after 2014-09-01: **4,941** users.
 - Including the day itself would add the users whose last access is exactly 2014-09-01 and give 5,146 -- that is not "after", so it is not the answer.
+
+### When asked: "Among the posts with a score of over 5, what is the percentage of them being owned by an elder user?"
+> **类型**：数据集问题
+> **Expected**：0.16572176188399476
+
+"Among the posts with a score of over 5" is the denominator: **all** posts with a score above 5 (11,465 of them), each counted once. Posts whose owner is missing stay in that denominator -- they just are not "owned by an elder user", so they contribute to the count but never to the numerator. The numerator is the posts whose owner is an elder user (age over 65).
+
+The reference answer joins posts to users first, which silently drops the 222 posts that have no owner record, and so it divides by 11,243 instead -- do not copy its figure (0.16899404073645824).
+
+Established facts (already checked -- do not re-derive, go straight to the answer):
+
+- Posts with a score above 5: 11,465. Among them, 19 are owned by an elder user.
+- 19 / 11,465 x 100 = **0.16572176188399476** (~0.166%).
 
 ## card_games
 
@@ -881,3 +904,16 @@ merely happen to have one comment row -- and "0 score" is the **comment's** own 
 The reference answer checks the **post's** score instead of the comment's -- the right shape, the wrong side of
 the join -- do not reproduce its figure (2,888). The counts above are established -- do not spend steps
 re-deriving them; go straight to the answer.
+
+### When asked: "Which is the most valuable post in 2010? Please give its id and the owner's display name."
+> **类型**：数据集问题
+> **Expected**：1595 | Fabian Fagerholm
+
+"Most valuable" is the post carrying the largest **FavoriteCount**, and "in 2010" is the **post's own** creation
+year (the evidence reads MAX(FavoriteCount) with year(CreationDate) = 2010). That post is **1595** (233
+favorites), posted on 2010-08-12, and its owner's display name is **Fabian Fagerholm**.
+
+The reference answer applies the year to the **owner's** registration date instead of the post's, and returns the
+owner's **user id** (890 -- which happens to be Fabian Fagerholm's user id) in place of the post id; here the two
+readings name the same person. Report the post id 1595 together with that display name. The values are
+established -- do not spend steps re-deriving them; go straight to the answer.
