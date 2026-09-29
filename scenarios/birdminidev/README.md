@@ -92,6 +92,12 @@
 | q1247 | thrombosis_prediction | 🔁 翻盘 | 数据集问题 | Among the male patients who have a normal level of white | Normal WBC is between 3.5 and 9.0; abnormal fibrinogen is `FG <= 150` or `FG >= 450`. Apply **all** the conditions together -- mal |
 | q1251 | thrombosis_prediction | 🔁 翻盘 | 数据集问题 | How many patients with an Ig G higher than normal? | Higher than normal is `IGG >= 2000`, counted over patients of the laboratory table: **136**. The dataset's own query additionally |
 | q1265 | thrombosis_prediction | 🔁 翻盘 | 数据集问题 | How many patients have a normal level of anti-ribonuclea | A normal anti-RNP reads `'negative'` or `'0'`, and the admission is `Admission = '+'`. Apply **both** conditions: **35** patients. |
+| q197 | toxicology | 🔁 翻盘 | 数据集问题 | Calculate the average number of oxygen atoms in single-b | The average is taken over **all** single-bonded molecules -- including the ones with no oxygen atom (they count as zero): **2.1612 |
+| q198 | toxicology | 🔁 翻盘 | 数据集问题 | On average how many carcinogenic molecules are single bo | The average is taken over **all** carcinogenic molecules (`label = '+'`), counting each molecule's single bonds (molecules without |
+| q207 | toxicology | 🔁 翻盘 | 数据集问题 | What elements are in a double type bond? | The elements are the atoms that actually sit in a double bond (join `atom` to `bond` through `connected`, `bond_type = '='`): **c, |
+| q218 | toxicology | 🔁 翻盘 | 数据集问题 | What percentage of carcinogenic-type molecules does not | Of the **152** carcinogenic molecules only **one** contains fluorine, so **151/152 = 99.34210526315789%** do not. The dataset's ow |
+| q234 | toxicology | 🔁 翻盘 | 数据集问题 | How many bonds which involved atom 12 does molecule TR00 | Molecule TR009 has **3** bonds involving its atom `TR009_12` (via `connected`). The dataset's own query tests `'_1'` and `'_2'` (a |
+| q263 | toxicology | 🔁 翻盘 | 数据集问题 | What is the composition of element chlorine in percentag | Among the single-bond molecules, count each molecule **once** and take chlorine atoms over all their atoms: **3.4823684499615513** |
 <!-- mistakes:end -->
 
 ## 二、建模应用思路（原料 → 三层）
@@ -161,13 +167,13 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 <!-- stats:begin -->
 ![实测结果综合统计](results/stats.svg)
 
-**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 392 ｜ 🔁 翻盘 68 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 40　—　**已跑 460 题全部正确**
+**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 426 ｜ 🔁 翻盘 74 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 0　—　**已跑 500 题全部正确**
 
 （🔁 翻盘 = 数据集自身缺陷（gold 未实现题面）按 SOP 逐题裁定为正确——单独计数、不并入 ✅ 正确；每题取最新一轮）
 
-均值 **6.1 步 / 10.0 工具调用 / 每题 75,147 tokens** ｜ 跑题覆盖度 **460/500 题**（10/11 库有产物）
+均值 **6.0 步 / 10.0 工具调用 / 每题 73,307 tokens** ｜ 跑题覆盖度 **500/500 题**（11/11 库有产物）
 
-> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 68 道数据集缺陷题的比对记录）也在这两处可查。
+> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 74 道数据集缺陷题的比对记录）也在这两处可查。
 <!-- stats:end -->
 
 **怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。

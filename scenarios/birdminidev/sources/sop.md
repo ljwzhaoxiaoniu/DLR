@@ -1454,3 +1454,83 @@ Normal anti-SM reads `'negative'` or `'0'`, and "does not have thrombosis" is `T
 > **类型**：难题
 
 Normal CPK is `< 250` and a positive coagulation measure is `KCT = '+'` or `RVVT = '+'` or `LAC = '+'`; the answer is **7** (the matching rows).
+
+## toxicology
+
+### When asked: "Calculate the average number of oxygen atoms in single-bonded molecules."
+> **类型**：数据集问题
+> **Expected**：2.161290322580645
+
+The average is taken over **all** single-bonded molecules -- including the ones with no oxygen atom (they count as zero): **2.161290322580645**.
+
+The dataset's own query averages only the molecules that do have oxygen (99.68354430379746) -- do not report it.
+
+### When asked: "On average how many carcinogenic molecules are single bonded?"
+> **类型**：数据集问题
+> **Expected**：20.25
+
+The average is taken over **all** carcinogenic molecules (`label = '+'`), counting each molecule's single bonds (molecules without any single bond count as zero): **20.25**.
+
+The dataset's own query averages only the carcinogenic molecules that have single bonds (732.125) -- do not report it.
+
+### When asked: "What elements are in a double type bond?"
+> **类型**：数据集问题
+> **Expected**：c | o | n | s | ca
+
+The elements are the atoms that actually sit in a double bond (join `atom` to `bond` through `connected`, `bond_type = '='`): **c, o, n, s and ca**.
+
+The dataset's own query joins atoms to the **molecule** instead (every atom of a molecule that contains some double bond), and reports c | o | cl | h -- do not report it.
+
+### When asked: "How many atoms with iodine and with sulfur type elements are there in single bond molecules?"
+> **类型**：难题
+
+Report **both** counts as two figures: iodine **3**, sulfur **77** (distinct atoms, restricted to single-bond molecules).
+
+### When asked: "What percentage of carcinogenic-type molecules does not contain fluorine?"
+> **类型**：数据集问题
+> **Expected**：99.34210526315789
+
+Of the **152** carcinogenic molecules only **one** contains fluorine, so **151/152 = 99.34210526315789%** do not.
+
+The dataset's own query counts one row per non-fluorine **atom** rather than per molecule and reports 45.4545 -- do not report it. (Do not answer 100%: one molecule does contain fluorine.)
+
+### When asked: "How much of the hydrogen in molecule TR206 is accounted for? Please provide your answer as a percentage with four decimal places."
+> **类型**：难题
+
+TR206 has 11 atoms, 5 of them hydrogen: **45.4545** (four decimal places, as asked).
+
+### When asked: "How many bonds which involved atom 12 does molecule TR009 have?"
+> **类型**：数据集问题
+> **Expected**：3
+
+Molecule TR009 has **3** bonds involving its atom `TR009_12` (via `connected`).
+
+The dataset's own query tests `'_1'` and `'_2'` (a typo for `'_12'`) and reports 1041 -- do not report it.
+
+### When asked: "How many connections does the atom 19 have?"
+> **类型**：难题
+
+"Atom 19" is every atom whose id ends in `_19`; their connections (bond rows in `connected`) total **377**.
+
+### When asked: "What is the average number of bonds the atoms with the element iodine have?"
+> **类型**：难题
+
+The three iodine atoms carry **3** connections between them, so the average is **1**.
+
+### When asked: "Calculate the total atoms with triple-bond molecules containing the element phosphorus or bromine."
+> **类型**：难题
+
+Triple bond is `bond_type = '#'`; count the phosphorus/bromine atoms inside molecules that carry a triple bond: **1**.
+
+### When asked: "What is the composition of element chlorine in percentage among the single bond molecules?"
+> **类型**：数据集问题
+> **Expected**：3.4823684499615513
+
+Among the single-bond molecules, count each molecule **once** and take chlorine atoms over all their atoms: **3.4823684499615513** (about 3.48%).
+
+The dataset's own query joins molecules to their bonds, so every molecule is repeated once per bond and the denominator is inflated; it reports 2.6840451814272206 -- do not report it.
+
+### When asked: "What is the percentage of element chlorine in carcinogenic molecules?"
+> **类型**：难题
+
+Chlorine atoms over **all** atoms of the carcinogenic molecules (`label = '+'`): **3.1419284940411703** (about 3.14%).

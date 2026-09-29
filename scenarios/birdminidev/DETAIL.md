@@ -23,8 +23,8 @@
 | student_club | 48 | 48 | 0 | 100.0% ✅ |
 | superhero | 52 | 52 | 0 | 100.0% ✅ |
 | thrombosis_prediction | 50 | 50 | 0 | 100.0% ✅ |
-| toxicology | 40 | 0 | 40 | 0.0% |
-| **合计** | **500** | **460** | **40** | **92.0%** |
+| toxicology | 40 | 40 | 0 | 100.0% ✅ |
+| **合计** | **500** | **500** | **0** | **100.0%** |
 
 ## 汇总
 
@@ -32,26 +32,26 @@
 
 | 评定 | 值 |
 |---|---|
-| ✅ 正确（与 gold 一致） | 392 / 460（85.2%） |
-| 🔁 翻盘（按 SOP 裁定为正确） | 68 |
+| ✅ 正确（与 gold 一致） | 426 / 500（85.2%） |
+| 🔁 翻盘（按 SOP 裁定为正确） | 74 |
 | ❌ 错误 | 0 |
 | ⚠️ 待仲裁 | 0 |
-| **合计正确（正确 + 翻盘）** | **460 / 460（100.0%）** |
+| **合计正确（正确 + 翻盘）** | **500 / 500（100.0%）** |
 
 **判定**（与 gold 原始比对 · 留档；gold 数据集原生、不修正）
 
 | 判定 | 值 |
 |---|---|
-| PASS（与 gold 一致） | 392 / 460（85.2%） |
-| UNCERTAIN（抽不出可比对的值） | 14 |
-| FAIL（与 gold 不符） | 54 |
+| PASS（与 gold 一致） | 426 / 500（85.2%） |
+| UNCERTAIN（抽不出可比对的值） | 15 |
+| FAIL（与 gold 不符） | 59 |
 | GOLD_ERR（gold 本身执行失败） | 0 |
 
 **效率**
 
 | 指标 | 值 |
 |---|---|
-| token 平均 / 中位 | 75,147 / 57,279 |
+| token 平均 / 中位 | 73,307 / 55,898 |
 | token 最低 / 最高 | 26,925 / 689,012 |
 | 步数均值 / 工具调用均值 | 6 / 10 |
 
@@ -77,6 +77,7 @@
 | [student_club](DETAIL/student_club.md) | 48 | 47 | 1 | 0 | 0 | 54,420 |
 | [superhero](DETAIL/superhero.md) | 52 | 51 | 1 | 0 | 0 | 45,861 |
 | [thrombosis_prediction](DETAIL/thrombosis_prediction.md) | 50 | 44 | 6 | 0 | 0 | 88,615 |
+| [toxicology](DETAIL/toxicology.md) | 40 | 34 | 6 | 0 | 0 | 45,684 |
 
 ## 数据集缺陷与裁定（SOP 条目缘由）
 
@@ -150,3 +151,9 @@
 | q1247 | thrombosis_prediction | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Among the male patients who have a normal level of white blo | Normal WBC is between 3.5 and 9.0; abnormal fibrinogen is `FG <= 150` or `FG >= 450`. Apply **all** the conditions together -- male, normal |
 | q1251 | thrombosis_prediction | ❌ FAIL | 🔁 翻盘 | 数据集问题 | How many patients with an Ig G higher than normal? | Higher than normal is `IGG >= 2000`, counted over patients of the laboratory table: **136**. The dataset's own query additionally joins `Exa |
 | q1265 | thrombosis_prediction | ❌ FAIL | 🔁 翻盘 | 数据集问题 | How many patients have a normal level of anti-ribonuclear pr | A normal anti-RNP reads `'negative'` or `'0'`, and the admission is `Admission = '+'`. Apply **both** conditions: **35** patients. The datas |
+| q197 | toxicology | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Calculate the average number of oxygen atoms in single-bonde | The average is taken over **all** single-bonded molecules -- including the ones with no oxygen atom (they count as zero): **2.16129032258064 |
+| q198 | toxicology | ❌ FAIL | 🔁 翻盘 | 数据集问题 | On average how many carcinogenic molecules are single bonded | The average is taken over **all** carcinogenic molecules (`label = '+'`), counting each molecule's single bonds (molecules without any singl |
+| q207 | toxicology | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | What elements are in a double type bond? | The elements are the atoms that actually sit in a double bond (join `atom` to `bond` through `connected`, `bond_type = '='`): **c, o, n, s a |
+| q218 | toxicology | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What percentage of carcinogenic-type molecules does not cont | Of the **152** carcinogenic molecules only **one** contains fluorine, so **151/152 = 99.34210526315789%** do not. The dataset's own query co |
+| q234 | toxicology | ❌ FAIL | 🔁 翻盘 | 数据集问题 | How many bonds which involved atom 12 does molecule TR009 ha | Molecule TR009 has **3** bonds involving its atom `TR009_12` (via `connected`). The dataset's own query tests `'_1'` and `'_2'` (a typo for |
+| q263 | toxicology | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What is the composition of element chlorine in percentage am | Among the single-bond molecules, count each molecule **once** and take chlorine atoms over all their atoms: **3.4823684499615513** (about 3. |
