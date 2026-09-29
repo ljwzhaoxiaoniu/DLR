@@ -1,0 +1,5 @@
+1166	thrombosis_prediction	What are the symptoms observed by the youngest patient to ever did a medical examination? Identify their diagnosis.
+1175	thrombosis_prediction	How old was the patient who had the highest hemoglobin count at the time of the examination, and what is the doctor's diagnosis?
+1185	thrombosis_prediction	For the patient who was born on 1959/2/18, what is the decrease rate for his/her total cholesterol from November to December in 1981?
+1205	thrombosis_prediction	Was the patient with the number 57266's uric acid within a normal range?
+1209	thrombosis_prediction	Please provide the diagnosis of patients with ALT glutamic pylvic transaminase beyond the normal range by ascending order of their date of birth.

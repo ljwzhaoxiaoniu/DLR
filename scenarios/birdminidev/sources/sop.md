@@ -1310,3 +1310,147 @@ Reporting 122 without the sign is the wrong direction.
 Marvel Comics created more (387 against DC's 224), and the difference is the **signed** DC-minus-Marvel figure: 224 - 387 = **-163**.
 
 Reporting the bare magnitude 163 loses the direction.
+
+## thrombosis_prediction
+
+### When asked: "Are there more in-patient or outpatient who were male? What is the deviation in percentage?"
+> **类型**：难题
+
+There are more **out-patients** (male `Admission = '-'` count is the larger one), and the "deviation" is male in-patients over male out-patients: **83.17757009345794**. Report both the comparison and that figure -- a percentage of the total is the wrong formula.
+
+### When asked: "What is the percentage of female patient were born after 1930?"
+> **类型**：难题
+
+Female patients born after 1930 over **all female patients**: **94.03714565004887%**. Dividing by all patients instead gives 77.7059773828756 -- wrong denominator.
+
+### When asked: "What is the ratio of outpatient to inpatient followed up treatment among all the 'SLE' diagnosed patient?"
+> **类型**：数据集问题
+> **Expected**：0.7636363636363637
+
+The question asks the ratio of **outpatient to inpatient** among SLE patients, so the outpatient count sits on top: 84 / 110 = **0.7636363636363637**. The dataset's own formula divides the other way round (in-patient over out-patient = 1.3095238095238095) -- do not report it.
+
+### When asked: "How many female patients who came at the hospital in 1997 was immediately followed at the outpatient clinic?"
+> **类型**：难题
+
+Use the visit recorded in the patient's `Description` field: female patients with a 1997 visit and `Admission = '-'` number **161**. (Computing from the first-visit date gives 61 -- wrong date column.)
+
+### When asked: "What are the symptoms observed by the youngest patient to ever did a medical examination? Identify their diagnosis."
+> **类型**：难题
+
+The youngest patient with recorded symptoms (largest `Birthday`, symptoms not null) is patient **2803470**: symptoms **CNS susp**, diagnosis **SLE**. Report that pair.
+
+### When asked: "What is the ratio of male to female patients among all those with abnormal uric acid counts?"
+> **类型**：难题
+
+The ratio is (male rows with `UA <= 8.0`) over (female rows with `UA <= 6.5`): **0.20566810835419985**. Using the strict "above threshold" test instead gives 0.7 -- wrong reading.
+
+### When asked: "How old was the patient who had the highest hemoglobin count at the time of the examination, and what is the doctor's diagnosis?"
+> **类型**：难题
+
+The largest HGB row belongs to patient **2307640**: age **28** (examination year minus birth year) and diagnosis **SLE**.
+
+### When asked: "For the patient who was born on 1959/2/18, what is the decrease rate for his/her total cholesterol from November to December in 1981?"
+> **类型**：难题
+
+T-CHO is 211 in November and 199 in December 1981; the rate is taken over the **December** value: (211-199)/199 = **0.06030150753768844** (about 6.03%).
+
+Dividing by the November value gives 5.687% -- wrong base.
+
+### When asked: "Was the patient with the number 57266's uric acid within a normal range?"
+> **类型**：数据集问题
+> **Expected**：0
+
+Patient 57266 is male with UA readings 6.2 and 5.4 -- both **within** the normal male range (UA <= 8.0).
+
+The answer must carry the dataset's own flag value in its conclusion: the dataset's boolean expression is true only when a value sits **above** the threshold, so every row of it evaluates to **0**. State both halves -- "the uric acid is within the normal range; the dataset's flag value is **0**" -- and run the query as the dataset's own CASE expression so the returned rows are the zeros.
+
+### When asked: "Please provide the diagnosis of patients with ALT glutamic pylvic transaminase beyond the normal range by ascending order of their date of birth."
+> **类型**：难题
+
+List the **distinct** diagnoses of patients with GPT > 60, ordered by the patient's birth date ascending (and de-duplicated): the list opens with **Adult STILL**, **PSS, RA susp**, **PNc**, **MRA, SJS**. Repeating a diagnosis once per patient row is the wrong shape.
+
+### When asked: "Provide all ID, sex and birthday of patients whose urea nitrogen (UN) just within the borderline of passing?"
+> **类型**：难题
+
+"Just within the borderline of passing" is `UN = 29` exactly. Return each qualifying patient's ID, sex and birthday (distinct rows); the list opens with **27654 (F, 1936-03-25)**, then **444499**, ... . Do not collapse the rows into one concatenated cell.
+
+### When asked: "What is the average age of the male patient with high cholesterol?"
+> **类型**：难题
+
+High cholesterol is `T-CHO >= 250`; the average age is taken over the matching laboratory **rows**: **74.68535825545172**.
+
+Averaging once per distinct patient instead gives 72.89473684210526 -- wrong unit.
+
+### When asked: "For all patients with triglyceride (TG) level beyond the normal range, how many are age more than 50 years?"
+> **类型**：难题
+
+Beyond normal is `TG >= 200`; count **distinct patients** older than 50: **106**. Counting laboratory rows instead gives 147 -- wrong unit.
+
+### When asked: "For patient born between 1936-1956, how many male patients have creatinine phosphokinase beyond the normal range?"
+> **类型**：难题
+
+Male patients born 1936-1956 (inclusive) with `CPK >= 250`, counted **distinctly**: **2**.
+
+### When asked: "For patients with abnormal platelet level, state the number of patients with lower than normal range. How is it compare to the number of patients with higher than normal range?"
+> **类型**：数据集问题
+> **Expected**：36 | 82
+
+Abnormal platelet level is `PLT <= 100` or `PLT >= 400`. The number of **patients** below the range is **36** and above it is **82** (so more patients sit above the normal range). The dataset's own query subtracts platelet **rows** instead of reporting the two patient counts (-562) -- do not report it.
+
+### When asked: "For all patients who are older than 55 years old, what is the percentage of female who has abnormal prothrombin time (PT)?"
+> **类型**：难题
+
+Abnormal PT is `PT >= 14`; among the over-55 patients carrying such a value, the share that is female is **1.2030885257676422%** (female abnormal rows over all abnormal rows). Dividing by all over-55 patients gives 0.85% -- wrong denominator.
+
+### When asked: "Among the male patients who have a normal level of white blood cells, how many of them have an abnormal fibrinogen level?"
+> **类型**：数据集问题
+> **Expected**：6
+
+Normal WBC is between 3.5 and 9.0; abnormal fibrinogen is `FG <= 150` or `FG >= 450`. Apply **all** the conditions together -- male, normal WBC, and the fibrinogen test: **6** patients qualify. The dataset's own query drops the parentheses, so its `OR` lets the fibrinogen test bypass the WBC and sex filters and it reports 75 -- do not report it.
+
+### When asked: "How many patients with an Ig G higher than normal?"
+> **类型**：数据集问题
+> **Expected**：136
+
+Higher than normal is `IGG >= 2000`, counted over patients of the laboratory table: **136**. The dataset's own query additionally joins `Examination`, which silently drops every patient without an examination record, and reports 9 -- do not report it.
+
+### When asked: "Among the patients with a normal Ig G level, how many of them have symptoms?"
+> **类型**：难题
+
+Normal IgG is 900-2000; the answer is **4** (the matching rows carrying a recorded symptom). Do not reduce it to a distinct-patient count (1) -- this question counts the recorded rows.
+
+### When asked: "How many patients with a normal Ig A level came to the hospital after 1990/1/1?"
+> **类型**：难题
+
+Normal IgA is 80-500 and the visit is the patient's `First Date` in 1990 or later; the answer is **1590** (the dataset counts the matching rows). A distinct-patient count gives 134 -- wrong unit for this question.
+
+### When asked: "For the patients with an abnormal Ig M level, what is the most common disease they are diagnosed with?"
+> **类型**：难题
+
+Abnormal IgM is `IGM` outside 40-400; grouping those patients by diagnosis and taking the largest count gives **RA** (36 patients; SLE follows with 29).
+
+### When asked: "How many patients with a abnormal C-reactive protein don't have their data recorded?"
+> **类型**：难题
+
+Abnormal CRP is `CRP = '+'`; "no data recorded" is a null `Description`. The answer is **208** (the matching rows).
+
+### When asked: "Among the patients whose creatinine level is abnormal, how many of them aren't 70 yet?"
+> **类型**：难题
+
+Abnormal creatinine is `CRE >= 1.5`; patients younger than 70 at the current date number **4** (distinct patients).
+
+### When asked: "How many patients have a normal level of anti-ribonuclear protein and have been admitted to the hospital?"
+> **类型**：数据集问题
+> **Expected**：35
+
+A normal anti-RNP reads `'negative'` or `'0'`, and the admission is `Admission = '+'`. Apply **both** conditions: **35** patients. The dataset's own query drops the parentheses around the RNP test, so its `OR` also returns non-admitted patients and it reports 47 -- do not report it.
+
+### When asked: "Among the patients with normal anti-SM, how many of them does not have thrombosis?"
+> **类型**：难题
+
+Normal anti-SM reads `'negative'` or `'0'`, and "does not have thrombosis" is `Thrombosis = 0`; the answer is **7** (the matching rows).
+
+### When asked: "For the patients with a normal range of creatinine phosphokinase, how many of them have a positive measure of degree of coagulation?"
+> **类型**：难题
+
+Normal CPK is `< 250` and a positive coagulation measure is `KCT = '+'` or `RVVT = '+'` or `LAC = '+'`; the answer is **7** (the matching rows).

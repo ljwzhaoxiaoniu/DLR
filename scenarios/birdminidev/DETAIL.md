@@ -22,9 +22,9 @@
 | formula_1 | 66 | 66 | 0 | 100.0% ✅ |
 | student_club | 48 | 48 | 0 | 100.0% ✅ |
 | superhero | 52 | 52 | 0 | 100.0% ✅ |
-| thrombosis_prediction | 50 | 0 | 50 | 0.0% |
+| thrombosis_prediction | 50 | 50 | 0 | 100.0% ✅ |
 | toxicology | 40 | 0 | 40 | 0.0% |
-| **合计** | **500** | **410** | **90** | **82.0%** |
+| **合计** | **500** | **460** | **40** | **92.0%** |
 
 ## 汇总
 
@@ -32,26 +32,26 @@
 
 | 评定 | 值 |
 |---|---|
-| ✅ 正确（与 gold 一致） | 348 / 410（84.9%） |
-| 🔁 翻盘（按 SOP 裁定为正确） | 62 |
+| ✅ 正确（与 gold 一致） | 392 / 460（85.2%） |
+| 🔁 翻盘（按 SOP 裁定为正确） | 68 |
 | ❌ 错误 | 0 |
 | ⚠️ 待仲裁 | 0 |
-| **合计正确（正确 + 翻盘）** | **410 / 410（100.0%）** |
+| **合计正确（正确 + 翻盘）** | **460 / 460（100.0%）** |
 
 **判定**（与 gold 原始比对 · 留档；gold 数据集原生、不修正）
 
 | 判定 | 值 |
 |---|---|
-| PASS（与 gold 一致） | 348 / 410（84.9%） |
+| PASS（与 gold 一致） | 392 / 460（85.2%） |
 | UNCERTAIN（抽不出可比对的值） | 14 |
-| FAIL（与 gold 不符） | 48 |
+| FAIL（与 gold 不符） | 54 |
 | GOLD_ERR（gold 本身执行失败） | 0 |
 
 **效率**
 
 | 指标 | 值 |
 |---|---|
-| token 平均 / 中位 | 68,548 / 55,822 |
+| token 平均 / 中位 | 75,147 / 57,279 |
 | token 最低 / 最高 | 26,925 / 689,012 |
 | 步数均值 / 工具调用均值 | 6 / 10 |
 
@@ -76,6 +76,7 @@
 | [formula_1](DETAIL/formula_1.md) | 66 | 59 | 7 | 0 | 0 | 61,576 |
 | [student_club](DETAIL/student_club.md) | 48 | 47 | 1 | 0 | 0 | 54,420 |
 | [superhero](DETAIL/superhero.md) | 52 | 51 | 1 | 0 | 0 | 45,861 |
+| [thrombosis_prediction](DETAIL/thrombosis_prediction.md) | 50 | 44 | 6 | 0 | 0 | 88,615 |
 
 ## 数据集缺陷与裁定（SOP 条目缘由）
 
@@ -143,3 +144,9 @@
 | q1011 | formula_1 | ⚠️ UNCERTAIN | 🔁 翻盘 | 数据集问题 | Which top 20 driver created the shortest lap time ever recor | Rank the drivers by their **shortest lap** using the numeric `milliseconds` column and take the top twenty; the first eight are Lewis Hamilt |
 | q1322 | student_club | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Among the events attended by more than 10 members of the Stu | A meeting is an event with `type = 'Meeting'`; "attended by more than 10 members" means more than ten attendance rows. **Four** meetings qua |
 | q772 | superhero | ❌ FAIL | 🔁 翻盘 | 数据集问题 | List the eyes, hair and skin colour of all female superheroe | List the **colour names**, one row per hero: **Buffy** (eyes Green, hair Blond, skin No Colour), **Elastigirl** (Brown, Brown, No Colour), * |
+| q1152 | thrombosis_prediction | ❌ FAIL | 🔁 翻盘 | 数据集问题 | What is the ratio of outpatient to inpatient followed up tre | The question asks the ratio of **outpatient to inpatient** among SLE patients, so the outpatient count sits on top: 84 / 110 = **0.763636363 |
+| q1205 | thrombosis_prediction | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Was the patient with the number 57266's uric acid within a n | Patient 57266 is male with UA readings 6.2 and 5.4 -- both **within** the normal male range (UA <= 8.0). The answer must carry the dataset's |
+| q1241 | thrombosis_prediction | ❌ FAIL | 🔁 翻盘 | 数据集问题 | For patients with abnormal platelet level, state the number | Abnormal platelet level is `PLT <= 100` or `PLT >= 400`. The number of **patients** below the range is **36** and above it is **82** (so mor |
+| q1247 | thrombosis_prediction | ❌ FAIL | 🔁 翻盘 | 数据集问题 | Among the male patients who have a normal level of white blo | Normal WBC is between 3.5 and 9.0; abnormal fibrinogen is `FG <= 150` or `FG >= 450`. Apply **all** the conditions together -- male, normal |
+| q1251 | thrombosis_prediction | ❌ FAIL | 🔁 翻盘 | 数据集问题 | How many patients with an Ig G higher than normal? | Higher than normal is `IGG >= 2000`, counted over patients of the laboratory table: **136**. The dataset's own query additionally joins `Exa |
+| q1265 | thrombosis_prediction | ❌ FAIL | 🔁 翻盘 | 数据集问题 | How many patients have a normal level of anti-ribonuclear pr | A normal anti-RNP reads `'negative'` or `'0'`, and the admission is `Admission = '+'`. Apply **both** conditions: **35** patients. The datas |

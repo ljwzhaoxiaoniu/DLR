@@ -1,0 +1,3 @@
+1205	thrombosis_prediction	Was the patient with the number 57266's uric acid within a normal range?
+1241	thrombosis_prediction	For patients with abnormal platelet level, state the number of patients with lower than normal range. How is it compare to the number of patients with higher than normal range?
+1302	thrombosis_prediction	For the patients with a normal range of creatinine phosphokinase, how many of them have a positive measure of degree of coagulation?

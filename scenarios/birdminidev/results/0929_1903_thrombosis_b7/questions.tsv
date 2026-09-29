@@ -1,0 +1,5 @@
+1232	thrombosis_prediction	Provide ID, sex and age of patient who has blood glucose (GLU) not within normal range but with total cholesterol(T-CHO) within normal range.
+1235	thrombosis_prediction	What are the patient's diagnosis for those who has lower red blood blood cell? State their ID and age.
+1238	thrombosis_prediction	Among the patients who were diagnosed with SLE, who is the oldest with normal hemoglobin level. Provide the ID and sex.
+1239	thrombosis_prediction	Name the ID and age of patient with two or more laboratory examinations which show their hematoclit level exceeded the normal range.
+1241	thrombosis_prediction	For patients with abnormal platelet level, state the number of patients with lower than normal range. How is it compare to the number of patients with higher than normal range?

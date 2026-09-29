@@ -1,0 +1,5 @@
+1156	thrombosis_prediction	State the ID and age of patient with positive degree of coagulation.
+1157	thrombosis_prediction	For patients with severe degree of thrombosis, list their ID, sex and disease the patient is diagnosed with.
+1162	thrombosis_prediction	How many female patients who came at the hospital in 1997 was immediately followed at the outpatient clinic?
+1164	thrombosis_prediction	How many of the patients with the most serious thrombosis cases examined in 1997 are women?
+1166	thrombosis_prediction	What are the symptoms observed by the youngest patient to ever did a medical examination? Identify their diagnosis.

@@ -86,6 +86,12 @@
 | q1011 | formula_1 | 🔁 翻盘 | 数据集问题 | Which top 20 driver created the shortest lap time ever r | Rank the drivers by their **shortest lap** using the numeric `milliseconds` column and take the top twenty; the first eight are Le |
 | q1322 | student_club | 🔁 翻盘 | 数据集问题 | Among the events attended by more than 10 members of the | A meeting is an event with `type = 'Meeting'`; "attended by more than 10 members" means more than ten attendance rows. **Four** me |
 | q772 | superhero | 🔁 翻盘 | 数据集问题 | List the eyes, hair and skin colour of all female superh | List the **colour names**, one row per hero: **Buffy** (eyes Green, hair Blond, skin No Colour), **Elastigirl** (Brown, Brown, No |
+| q1152 | thrombosis_prediction | 🔁 翻盘 | 数据集问题 | What is the ratio of outpatient to inpatient followed up | The question asks the ratio of **outpatient to inpatient** among SLE patients, so the outpatient count sits on top: 84 / 110 = **0 |
+| q1205 | thrombosis_prediction | 🔁 翻盘 | 数据集问题 | Was the patient with the number 57266's uric acid within | Patient 57266 is male with UA readings 6.2 and 5.4 -- both **within** the normal male range (UA <= 8.0). The answer must carry the |
+| q1241 | thrombosis_prediction | 🔁 翻盘 | 数据集问题 | For patients with abnormal platelet level, state the num | Abnormal platelet level is `PLT <= 100` or `PLT >= 400`. The number of **patients** below the range is **36** and above it is **82 |
+| q1247 | thrombosis_prediction | 🔁 翻盘 | 数据集问题 | Among the male patients who have a normal level of white | Normal WBC is between 3.5 and 9.0; abnormal fibrinogen is `FG <= 150` or `FG >= 450`. Apply **all** the conditions together -- mal |
+| q1251 | thrombosis_prediction | 🔁 翻盘 | 数据集问题 | How many patients with an Ig G higher than normal? | Higher than normal is `IGG >= 2000`, counted over patients of the laboratory table: **136**. The dataset's own query additionally |
+| q1265 | thrombosis_prediction | 🔁 翻盘 | 数据集问题 | How many patients have a normal level of anti-ribonuclea | A normal anti-RNP reads `'negative'` or `'0'`, and the admission is `Admission = '+'`. Apply **both** conditions: **35** patients. |
 <!-- mistakes:end -->
 
 ## 二、建模应用思路（原料 → 三层）
@@ -155,13 +161,13 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 <!-- stats:begin -->
 ![实测结果综合统计](results/stats.svg)
 
-**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 348 ｜ 🔁 翻盘 62 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 90　—　**已跑 410 题全部正确**
+**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 392 ｜ 🔁 翻盘 68 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 40　—　**已跑 460 题全部正确**
 
 （🔁 翻盘 = 数据集自身缺陷（gold 未实现题面）按 SOP 逐题裁定为正确——单独计数、不并入 ✅ 正确；每题取最新一轮）
 
-均值 **5.9 步 / 9.6 工具调用 / 每题 68,548 tokens** ｜ 跑题覆盖度 **410/500 题**（9/11 库有产物）
+均值 **6.1 步 / 10.0 工具调用 / 每题 75,147 tokens** ｜ 跑题覆盖度 **460/500 题**（10/11 库有产物）
 
-> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 62 道数据集缺陷题的比对记录）也在这两处可查。
+> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 68 道数据集缺陷题的比对记录）也在这两处可查。
 <!-- stats:end -->
 
 **怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。

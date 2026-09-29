@@ -1,0 +1,5 @@
+1149	thrombosis_prediction	Are there more in-patient or outpatient who were male? What is the deviation in percentage?
+1150	thrombosis_prediction	What is the percentage of female patient were born after 1930?
+1152	thrombosis_prediction	What is the ratio of outpatient to inpatient followed up treatment among all the 'SLE' diagnosed patient?
+1153	thrombosis_prediction	What is the disease patient '30609' diagnosed with. List all the date of laboratory tests done for this patient.
+1155	thrombosis_prediction	List the patient ID, sex and birthday of patient with LDH beyond normal range.

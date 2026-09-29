@@ -1,0 +1,5 @@
+1185	thrombosis_prediction	For the patient who was born on 1959/2/18, what is the decrease rate for his/her total cholesterol from November to December in 1981?
+1187	thrombosis_prediction	How many patients who were examined between 1987/7/6 and 1996/1/31 had a GPT level greater than 30 and an ALB level less than 4? List them by their ID.
+1189	thrombosis_prediction	What number of patients with a degree of thrombosis level 2 and ANA pattern of only S, have a level of anti-Cardiolip in antibody (IgM) 20% higher than average?
+1192	thrombosis_prediction	List all patients who were followed up at the outpatient clinic who underwent a laboratory test in October 1991 and had a total blood bilirubin level within the normal range.
+1195	thrombosis_prediction	What is the average blood albumin level for female patients with a PLT greater than 400 who have been diagnosed with SLE?

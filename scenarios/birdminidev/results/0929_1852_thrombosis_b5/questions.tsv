@@ -1,0 +1,5 @@
+1198	thrombosis_prediction	How many female patients were given an APS diagnosis?
+1201	thrombosis_prediction	What percentage of patients who were born in 1980 and were diagnosed with RA are women?
+1205	thrombosis_prediction	Was the patient with the number 57266's uric acid within a normal range?
+1208	thrombosis_prediction	Provide IDs for male patients with ALT glutamic pylvic transaminase (GPT) that have history of ALT glutamic pylvic transaminase (GPT) exceed the normal range.
+1209	thrombosis_prediction	Please provide the diagnosis of patients with ALT glutamic pylvic transaminase beyond the normal range by ascending order of their date of birth.

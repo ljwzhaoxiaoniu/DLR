@@ -1,0 +1,5 @@
+1255	thrombosis_prediction	For the patients with an abnormal Ig M level, what is the most common disease they are diagnosed with?
+1256	thrombosis_prediction	How many patients with a abnormal C-reactive protein don't have their data recorded?
+1257	thrombosis_prediction	Among the patients whose creatinine level is abnormal, how many of them aren't 70 yet?
+1265	thrombosis_prediction	How many patients have a normal level of anti-ribonuclear protein and have been admitted to the hospital?
+1267	thrombosis_prediction	Among the patients with normal anti-SM, how many of them does not have thrombosis?

@@ -1,0 +1,6 @@
+{"type":"session","sessionId":"session-6272a485-7697-486e-9d22-95f8e1e3c0d8","cwd":"D:\\Code_Proj\\DLR Proj\\DSH-based Agent Service\\dsh_dlr"}
+{"type":"status","phase":"turn_start","turn":1}
+{"type":"status","phase":"step_start","turn":1,"step":1}
+{"type":"status","phase":"step_end","turn":1,"step":1}
+{"type":"status","phase":"turn_end","turn":1,"reason":{"kind":"error","error":{"message":"DeepSeek Messages transport failed","code":"TRANSPORT"}}}
+{"type":"final","text":""}

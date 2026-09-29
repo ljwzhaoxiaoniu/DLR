@@ -1,0 +1,5 @@
+1220	thrombosis_prediction	Provide all ID, sex and birthday of patients whose urea nitrogen (UN) just within the borderline of passing?
+1227	thrombosis_prediction	What is the average age of the male patient with high cholesterol?
+1229	thrombosis_prediction	For all patients with triglyceride (TG) level beyond the normal range, how many are age more than 50 years?
+1231	thrombosis_prediction	For patient born between 1936-1956, how many male patients have creatinine phosphokinase beyond the normal range?
+1241	thrombosis_prediction	For patients with abnormal platelet level, state the number of patients with lower than normal range. How is it compare to the number of patients with higher than normal range?

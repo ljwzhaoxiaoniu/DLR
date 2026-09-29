@@ -1,0 +1,5 @@
+1243	thrombosis_prediction	For all patients who are older than 55 years old, what is the percentage of female who has abnormal prothrombin time (PT)?
+1247	thrombosis_prediction	Among the male patients who have a normal level of white blood cells, how many of them have an abnormal fibrinogen level?
+1251	thrombosis_prediction	How many patients with an Ig G higher than normal?
+1252	thrombosis_prediction	Among the patients with a normal Ig G level, how many of them have symptoms?
+1254	thrombosis_prediction	How many patients with a normal Ig A level came to the hospital after 1990/1/1?
