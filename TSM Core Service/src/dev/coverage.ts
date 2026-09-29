@@ -16,6 +16,8 @@ import { CONSENSUS_DIR, ROOT } from "../config.js";
 import { consensusSourceFormat, readConsensusSource } from "../model/consensusSource.js";
 import { readScenario, scenarioFiles } from "../model/graphData.js";
 import { loadForeignKeys, loadTables, resolveSqlitePath } from "../graph/physicalSchema.js";
+import { expandUnwind } from "../queries/unwind.js";
+import type { DlrArcR } from "../model/types.js";
 
 const arg = (name: string, fallback = ""): string => {
   const i = process.argv.indexOf(name);
@@ -111,14 +113,32 @@ function coverageForDb(db: string): DbReport {
   L.push("");
   L.push(`SQLite：${tables.length} 表 / ${tables.reduce((n, t) => n + t.columns.length, 0)} 列 ｜ 真实 FK：${fks.length} 条 ｜ CSV 描述目录：${fs.existsSync(descDir) ? "有" : "**缺**"}`);
 
-  // L1 索引：表 → {le, pe}
-  const peByTable = new Map<string, { le: Record<string, unknown>; pe: Record<string, unknown> }>();
+  // L1 索引：表 → [{le, pe}]（**一表可多 PE**：如 football 的 Match 既有常规 PE，也有 R=unwind 的行级 PE）
+  const peByTable = new Map<string, { le: Record<string, unknown>; pe: Record<string, unknown> }[]>();
   for (const le of (sc.logical_entities ?? []) as Record<string, unknown>[]) {
     for (const pe of (le.physical_entities ?? []) as Record<string, unknown>[]) {
       const t = String(pe.physical_table_name ?? String(pe.physical_table_id).split(".").pop());
-      peByTable.set(t, { le, pe });
+      const arr = peByTable.get(t) ?? [];
+      arr.push({ le, pe });
+      peByTable.set(t, arr);
     }
   }
+  /** 该表全部 PE 的属性合集（一表多 PE 时按列去重合并） */
+  const attrsOfTable = (table: string) =>
+    (peByTable.get(table) ?? [])
+      .flatMap((h) => (h.pe.attributes ?? []) as { column: string; biz_name?: string; public?: boolean; description?: string }[])
+      .filter((a, i, all) => all.findIndex((x) => x.column === a.column) === i);
+  /** 该表全部 PE 的锚定键集合（A.key，LE 属性名） */
+  const anchorsOfTable = (table: string) =>
+    (peByTable.get(table) ?? []).map((h) => (h.pe.A as { key?: string } | undefined)?.key).filter((k): k is string => !!k);
+  /** 该表被行级 PE（R = unwind）覆盖的物理列（多槽位 FK 经行化后 = 已表达） */
+  const unwindColsOfTable = (table: string): Set<string> => {
+    const cols = (peByTable.get(table) ?? [])
+      .map((h) => h.pe.R as DlrArcR | null | undefined)
+      .filter((r): r is DlrArcR => !!r && r.kind === "unwind")
+      .flatMap((r) => expandUnwind(r, (tables.find((t) => t.name === table)?.columns ?? []) as string[]).slots.map((s) => s.column));
+    return new Set(cols);
+  };
 
   // ── A) 表/列级 ──
   const colsMissingL1: string[] = [];
@@ -133,12 +153,12 @@ function coverageForDb(db: string): DbReport {
         if (r[0]) csv.set(r[0], { desc: (r[2] ?? "").trim(), fmt: (r[3] ?? "").trim(), value: (r[4] ?? "").trim() });
       }
     }
-    const hit = peByTable.get(t.name);
-    if (!hit) {
+    const hits = peByTable.get(t.name) ?? [];
+    if (!hits.length) {
       L.push(`- ⚠ 表 \`${t.name}\`（${t.columns.length} 列）**没有对应 PE**`);
       continue;
     }
-    const attrs = (hit.pe.attributes ?? []) as { column: string; description?: string; public?: boolean }[];
+    const attrs = attrsOfTable(t.name);
     for (const col of t.columns) {
       const a = attrs.find((x) => x.column.endsWith(`.${col}`));
       const c = csv.get(col);
@@ -181,14 +201,13 @@ function coverageForDb(db: string): DbReport {
   // ── B) 关系级 ──
   const fkUnexpressed: string[] = [];
   for (const fk of fks) {
-    const hit = peByTable.get(fk.table);
-    const attrs = (hit?.pe.attributes ?? []) as { column: string; biz_name?: string; public?: boolean }[];
+    const attrs = attrsOfTable(fk.table);
     const attr = attrs.find((x) => x.column.endsWith(`.${fk.column}`));
-    const aKey = (hit?.pe.A as { key?: string } | undefined)?.key;
-    const isAnchor = !!attr && aKey === (attr.biz_name || fk.column);
+    const isAnchor = !!attr && anchorsOfTable(fk.table).includes(attr.biz_name || fk.column);
     const isPublic = !!attr?.public;
     const pasHit = ((sc.pas_relations ?? []) as { A?: string }[]).some((p) => p.A === (attr?.biz_name || fk.column));
-    if (!isAnchor && !isPublic && !pasHit) {
+    const isUnwound = unwindColsOfTable(fk.table).has(fk.column);
+    if (!isAnchor && !isPublic && !pasHit && !isUnwound) {
       fkUnexpressed.push(`${fk.table}.${fk.column} → ${fk.refTable}.${fk.refColumn || "(pk)"}`);
     }
   }

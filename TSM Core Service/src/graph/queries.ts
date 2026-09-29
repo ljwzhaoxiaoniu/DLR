@@ -80,7 +80,7 @@ export class Neo4jGraph implements GraphQueries {
       physical_table_id: x.get("table_id") as string,
       arcs: {
         A_anchor: parseMaybeJson(x.get("arcs_a")),
-        R_row: x.get("arcs_r") ?? null,
+        R_row: parseMaybeJson(x.get("arcs_r")) ?? null,
         C_column: parseMaybeJson(x.get("arcs_c")),
         S_semantic4arcs: (x.get("arcs_s") as string) ?? null,
       },

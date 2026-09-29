@@ -123,14 +123,53 @@ evidence 的剩余 ────────────────────�
 | card_games | 4 | Card ← cards ｜ CardExtension ← legalities+rulings+foreign_data ｜ CardSet ← sets ｜ SetTranslation ← set_translations | 3 | 6/115 | 同卡的多视角（法律性/裁定/外文印）收敛为一个 LE |
 | codebase_community | 6 | User ← users ｜ Post ← posts ｜ PostInteraction ← comments+postHistory+postLinks ｜ Tag ← tags ｜ Badge ← badges ｜ Vote ← votes | 4 | 8/71 | 三种"帖子交互"归一个 LE；Tag/Badge/Vote 各自独立 |
 | debit_card_specializing | 4 | Customer ← customers ｜ Consumption ← yearmonth+transactions_1k ｜ GasStation ← gasstations ｜ Product ← products | 3 | 5/21 | 月度汇总与逐笔样本**两种粒度**同属 Consumption，差异由各自 PE 说明 |
-| european_football_2 | 4 | Player ← Player+Player_Attributes ｜ Team ← Team+Team_Attributes ｜ Match ← Match ｜ League ← League | 2 | 7/199 | 「主表 + 属性面」成对归一个 LE |
+| european_football_2 | 5 | Player ← Player+Player_Attributes ｜ Team ← Team+Team_Attributes ｜ Match ← Match ｜ League ← League ｜ **Appearance ← Match（R=unwind）** | 4 | 7/199 | 「主表 + 属性面」成对归一个 LE；**44 个球员槽位列经行级 PE 暴露为可查关系**（见下） |
 | financial | 6 | Account ← account+disp+card ｜ Client ← client ｜ District ← district ｜ Loan ← loan ｜ Transaction ← trans ｜ PermanentOrder ← order | 6 | 8/55 | 纯 junction（disp）与卡**下沉为 PE**；有独立生命周期的 Loan/Transaction/Order 升独立 LE |
 | formula_1 | 8 | Driver ← drivers ｜ Circuit ← circuits ｜ Race ← races ｜ DriverRaceData ← qualifying+results+lapTimes ｜ DriverStandings ← driverStandings ｜ PitStop ← pitStops ｜ Constructor ← constructors ｜ ConstructorRaceData ← constructorResults+constructorStandings | 4 | 13/94 | 一场比赛的多视角（排位/结果/圈速）归一个 LE |
 | student_club | 8 | Member ← member ｜ Event ← event ｜ Attendance ← attendance ｜ Budget ← budget ｜ Expense ← expense ｜ Income ← income ｜ Major ← major ｜ ZipCode ← zip_code | 7 | 8/48 | member↔event 的桥（attendance）独立成 LE；Major/ZipCode 作维度 |
 | superhero | 3 | Superhero ← superhero+colour+race+gender+publisher+alignment ｜ Power ← hero_power+superpower ｜ Attribute ← hero_attribute+attribute | 2 | 10/31 | 5 张碎片维度表收敛进主 LE（"碎表集中"样板）；Power/Attribute 独立 LE + PAS |
 | thrombosis_prediction | 1 | Patient ← Patient+Laboratory+Examination | 0 | 3/64 | 3 表共享 `PatientID` 锚键 → **1 LE + 3 PE + 0 PAS**（ARCS 隐式编码 JOIN） |
 | toxicology | 3 | Molecule ← molecule ｜ Atom ← atom ｜ Bond ← bond+connected | 3 | 4/11 | bond+connected 合成一个 LE；Atom/Molecule 各自 |
-| **合计** | **49** | **72 PE** | **35** | 1133 节点 | |
+| **合计** | **50** | **74 PE** | **37** | 1185 节点 | |
+
+### 行级 PE（`ARCS.R = unwind`）：多槽位 FK 的表达 — 首个用例（football 首发槽位）
+
+**问题**：`Match` 表有 **22 个首发槽位列**（`home_player_1..11` / `away_player_1..11`，各存一个 `player_api_id`，另有 `X`/`Y` 变体语义未在数据集说明）。PAS 是**单坐标**路由（一侧一个 key），表达不了"22 列同指一张表"；若按常规只留列级建模，agent 想算"谁首发次数最多"就得手写 22 路 `UNION ALL`。
+
+**设计**：PE 是**视图、不物化**——`ARCS.R` 本就是**行空间定义**（不止"行过滤"）。`R = unwind` 让一个物理行按「槽位列」展开成 N 个派生行：
+
+```yaml
+- logical_entity_id: LOGICAL.Appearance
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Appearance
+    physical_table_id: european_football_2.Match
+    A: { cardinality: '1:N', key: MatchID }      # 一个 match → 22 条出场行（明细面）
+    R:
+      kind: unwind
+      pattern: '{side}_player_{slot}'
+      side: [home, away]
+      slot: ['1'..'11']
+      value_as: player_id
+      key: [id, side, slot]
+```
+
+**实现**（不改物理层、不物化）：`get_pe_mapping(PHYSICAL.Appearance)` 返回派生列（`MatchID / player_id / side / slot`）+ **现生成的 `row_expansion`**——把 R 按物理表校验（`missing=[]` 即列全部对得上）后展开成 UNION ALL 的 SQL，可**原样粘进 `execute_sql`**。展开实测量：**542,281 行 / 25,221 场**。
+
+**探针题与结果**（实验跑，产物在 `tmp_scripts/dsh_smoke/`，不入台账）：
+
+> **Q**：`In the 2015/2016 season, which player started the most matches in the home line-up? Give his name and the number of matches.`
+
+| 项 | 结果 |
+|---|---|
+| 真值（独立 SQL 复算） | **Virgil van Dijk 20 场**（与 **Guillaume Gillet 20 场**并列） |
+| agent 行为 | `dlr_semantic_query` **召回到 `LOGICAL.Appearance`**（新 LE 进召回面）→ `get_pe_mapping(PHYSICAL.Appearance)` 取派生列 → 直接 `side='home'` 聚合 |
+| 答案 | **正确且给出了并列**（Gillet 20 = van Dijk 20），并自行指出"按 `player_api_id` 分组、不能按姓名"的陷阱 |
+| 成本 | **11 步 / 20 次工具 / 35k token** |
+| 对照 | 无该 PE 时须手写 22 路 UNION（列名 `home_player_1..11` 由 PE 列描述可推，但要把"22 列 = 同一关系"讲清楚，正是行级视图的职责） |
+
+**边界（明确不做）**：`X`/`Y` 槽位变体的语义数据集未说明 → **不建模**（不在 L1 发明语义）；`R = unwind` 只定义行空间，派生列以 `derived: true` 标注（无物理列，`data_type = null`）。
+
+> ⚠️ 注：football 官方跑批（51/51）是在**加入该 PE 之前**完成的；本 PE 为规格能力演示 + 召回面扩充，未回灌台账。
 
 ## 四、处理和使用流程（这份数据集怎么跑）
 

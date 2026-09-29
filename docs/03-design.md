@@ -36,10 +36,23 @@
 
 | 机制 | 连接 | 连接的是 | 携带 |
 |---|---|---|---|
-| **ARCS** | PE ↔ **物理表** | 视图的**投影定义** | A 锚定 / R 行过滤 / C 列选择 / S 语义补注 |
+| **ARCS** | PE ↔ **物理表** | 视图的**投影定义** | A 锚定 / **R 行空间**（行过滤，或多槽位展开的行化——见 §1.2.1）/ C 列选择 / S 语义补注 |
 | **PAS** | LE ↔ LE | **public 属性级**的业务关联 | P 谓词（方向+动词+基数）/ A 寻址坐标 / S 语义补注 |
 
 > ⚠️ **最常见的误解**：ARCS 连的是 **PE ↔ 物理表**（投影定义），**不是** PE ↔ LE。LE 与 PE 是 1:N **容器**关系（yaml 的嵌套结构），不是 ARCS。
+
+#### 1.2.1 R 是**行空间定义**，不只是行过滤
+
+PE 是**视图，不物化**——所以视图的行空间可以在模型里定义，而不必先有物理视图。`R = unwind` 处理**多槽位 FK**（一表 N 列同指另一张表，PAS 单坐标表达不了）：
+
+```yaml
+R: { kind: unwind, pattern: '{side}_player_{slot}', side: [home, away], slot: ['1'..'11'],
+     value_as: player_id, key: [id, side, slot] }
+```
+
+- **服务侧**：`get_pe_mapping` 对 unwind PE 返回**现生成的行展开 SQL**（校验物理列后展开为 UNION ALL，`missing` 非空即规格写错），agent 可直接 `execute_sql`；
+- **首个用例与探针题**：football `Match` 的 22 个首发槽位 → `Appearance` LE（含 agent 实测轨迹与成本）见 [scenarios/birdminidev/README.md](../scenarios/birdminidev/README.md) §三「行级 PE」；
+- **边界**：数据集未说明语义的列（该表的 `X`/`Y` 槽位变体）**不建模**——行级建模是"把已有列讲成关系"，不是发明语义。
 
 - `ARCS.A.cardinality` 一律**从 LE 视角**写：`1:1`（每个锚定值 ↔ 本表 1 行 = 身份/属性面）或 `1:N`（↔ 本表 N 行 = 明细/事件面）。**不存在 `N:1` 写法。**
 - `ARCS.C` 的**值**是物理列，**键**是 `{LE}.{public 属性名}`——视图说业务话，列名取自 LE 面。
@@ -95,7 +108,7 @@ logical_entities:
     physical_table_name: cards
     physical_table_id: card_games.cards
     A: {cardinality: '1:1', key: uuid}  # 锚定：基数（LE 视角）+ 锚定键（LE 属性名）
-    R: null                             # 行过滤，通常 null
+    R: null                             # 行空间：null=行对行；unwind=多槽位展开（§1.2.1）
     S: Card attributes                  # 语义补注 → 落 PE 的 description
     attributes:
     - column: card_games.cards.uuid     # 物理列全 id（db.table.col，不带引号）

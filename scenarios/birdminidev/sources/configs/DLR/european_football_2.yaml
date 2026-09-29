@@ -744,6 +744,63 @@ logical_entities:
       biz_name: CountryName
       description: Country name
       public: true
+- logical_entity_id: LOGICAL.Appearance
+  biz_name: Appearance
+  description: 'Appearance — one starting line-up slot of a match: which player filled
+    which slot (slot 1..11) on which side (home/away); a row-space view over the Match
+    table''s 22 player slot columns (ARCS.R = unwind), so a line-up reads as a normal
+    one-row-per-player relation instead of 22 wide columns'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Appearance
+    physical_table_name: Match
+    physical_table_id: european_football_2.Match
+    A:
+      cardinality: '1:N'
+      key: MatchID
+    R:
+      kind: unwind
+      pattern: '{side}_player_{slot}'
+      side:
+      - home
+      - away
+      slot:
+      - '1'
+      - '2'
+      - '3'
+      - '4'
+      - '5'
+      - '6'
+      - '7'
+      - '8'
+      - '9'
+      - '10'
+      - '11'
+      value_as: player_id
+      key:
+      - id
+      - side
+      - slot
+    S: Starting line-up slots — one derived row per filled home/away_player_1..11 slot of Match
+    attributes:
+    - column: european_football_2.Match.id
+      biz_name: MatchID
+      description: The match the appearance belongs to (Match.id)
+      public: true
+    - column: european_football_2.Match.player_id
+      biz_name: player_id
+      description: 'The player who filled the slot — derived column (ARCS.R = unwind: the value of the home/away_player_1..11 slot columns)'
+      public: true
+      derived: true
+    - column: european_football_2.Match.side
+      biz_name: side
+      description: 'home | away — derived column (ARCS.R = unwind)'
+      public: true
+      derived: true
+    - column: european_football_2.Match.slot
+      biz_name: slot
+      description: '1..11 — derived column (ARCS.R = unwind)'
+      public: true
+      derived: true
 pas_relations:
 - relation_id: LOGICAL.League_TO_LOGICAL.Match
   relation_name: Contains
@@ -768,3 +825,26 @@ pas_relations:
   A: TeamID
   S: Teams participate in matches as home or away — Match.home_team_api_id → Team.team_api_id, Match.away_team_api_id → Team.team_api_id
     (use home_team_api_id for home, away_team_api_id for away)
+- relation_id: LOGICAL.Appearance_TO_LOGICAL.Player
+  relation_name: Features
+  P:
+    forward:
+      verb: features
+      cardinality: '1:1'
+    reverse:
+      verb: appears in
+      cardinality: 1:N
+  A: player_id
+  S: Line-up slot → the player who filled it — Appearance.player_id → Player.player_api_id
+    (one player appears in N appearances)
+- relation_id: LOGICAL.Match_TO_LOGICAL.Appearance
+  relation_name: HasLineup
+  P:
+    forward:
+      verb: has line-up slot
+      cardinality: 1:N
+    reverse:
+      verb: belongs to
+      cardinality: '1:1'
+  A: MatchID
+  S: A match has 22 line-up slots (11 home + 11 away) — Match.id → Appearance.MatchID

@@ -9,6 +9,8 @@ import * as path from "node:path";
 import { parse } from "yaml";
 import type { Neo4jGraph } from "../graph/queries.js";
 import { resolveSqlitePath } from "../graph/physicalSchema.js";
+import type { DlrArcR } from "../model/types.js";
+import { buildUnwindExpansion, type UnwindExpansion } from "./unwind.js";
 
 import { ROOT, YAML_DIR } from "../config.js";
 
@@ -44,6 +46,20 @@ export async function getPeMapping(graph: Neo4jGraph, peId: string) {
   }
   const attributes = await graph.getPhysicalEntityAttributes(peId);
   const database_url = resolveDatabaseUrl(entity.physical_table_id);
+
+  // ARCS.R = unwind（行空间定义）→ 现生成行展开 SQL（可原样粘进 execute_sql）
+  const arcs = entity.arcs as { A_anchor?: { key?: string } | null; R_row?: DlrArcR | null } | null;
+  let row_expansion: UnwindExpansion | undefined;
+  const R = arcs?.R_row ?? null;
+  if (R && R.kind === "unwind" && database_url) {
+    const tableName = entity.physical_table_id.split(".")[1] ?? "";
+    const keyAlias = arcs?.A_anchor?.key ?? "id";
+    const colId = (a: { physical_column_id?: string; attr_id?: string }) => a.physical_column_id ?? a.attr_id ?? "";
+    const keyAttr = attributes.find((a) => a.name === keyAlias || colId(a).endsWith(`.${keyAlias}`));
+    const keyColumn = keyAttr ? (colId(keyAttr).split(".").pop() ?? "id") : "id";
+    row_expansion = buildUnwindExpansion(R, tableName, database_url, keyColumn, keyAlias) ?? undefined;
+  }
+
   return {
     success: true as const,
     physical_entity_id: peId,
@@ -51,5 +67,6 @@ export async function getPeMapping(graph: Neo4jGraph, peId: string) {
     attributes,
     arcs: entity.arcs,
     database_url,
+    ...(row_expansion ? { row_expansion } : {}),
   };
 }

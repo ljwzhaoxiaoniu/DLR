@@ -12,14 +12,37 @@ export interface DlrYamlAttribute {
   biz_name?: string;
   description?: string;
   public?: boolean;
+  /** 派生列（R = unwind 展开出的列，物理表里没有对应列；column 为合成 id） */
+  derived?: boolean;
 }
+
+/**
+ * ARCS.R —— 行空间定义（PE 是**视图**，不物化；R 不止"行过滤"）：
+ *  - null  = 行对行投影（默认：物理一行 = 视图一行）
+ *  - unwind = 多槽位展开：把一个物理行按 N 个「槽位列」展开成 N 个派生行
+ *             （用例：football 的 Match.home/away_player_1..11 首发槽位）
+ */
+export interface DlrArcRUnwind {
+  kind: "unwind";
+  /** 物理列名模板，如 "{side}_player_{slot}" */
+  pattern: string;
+  /** 模板变量取值；不写 side 则列名里不含该段 */
+  side?: string[];
+  slot: string[];
+  /** 槽位列的值派生出的列名（LE 面用 biz_name） */
+  value_as: string;
+  /** 派生行身份（物理键 + 派生列名的组合） */
+  key?: string[];
+}
+
+export type DlrArcR = DlrArcRUnwind;
 
 export interface DlrYamlPhysicalEntity {
   physical_entity_id: string;
   physical_table_name?: string;
   physical_table_id: string;
   A?: DlrArcA;
-  R?: unknown;
+  R?: DlrArcR | null;
   S?: string;
   attributes?: DlrYamlAttribute[];
 }

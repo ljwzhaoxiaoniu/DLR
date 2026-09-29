@@ -56,4 +56,19 @@ for (let i = 0; i < Math.max(ts.data.structures.length, py.data.structures.lengt
   }
 }
 
+// 位置无关的逐实体对账：召回排序会随库内新增 LE 变化（位置比对会误报），按 id 配对才反映"字段是否一致"
+{
+  const byId = (arr: S[]) => new Map(arr.map((s) => [s.logical_entity_id, s]));
+  const t = byId(ts.data.structures);
+  const p = byId(py.data.structures);
+  const bad: string[] = [];
+  for (const [id, sa] of t) {
+    const sb = p.get(id);
+    if (!sb) { bad.push(`${id}（仅 TS 命中，Py 无）`); continue; }
+    if (norm(sa) !== norm(sb)) bad.push(`${id}（两边都有但字段不同）`);
+  }
+  for (const id of p.keys()) if (!t.has(id)) bad.push(`${id}（仅 Py 命中，TS 无）`);
+  console.log(bad.length ? `按 id 对账：⚠️ ${bad.length} 处 → ${bad.join("; ")}` : "按 id 对账：✅ 两边命中的实体逐字段一致");
+}
+
 await graph.close();
