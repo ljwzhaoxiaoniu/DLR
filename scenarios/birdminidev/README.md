@@ -77,6 +77,13 @@
 | q129 | financial | 🔁 翻盘 | 数据集问题 | Which are the top ten withdrawals (non-credit card) by d | "Top ten withdrawals (non-credit card) by district" ranks the districts by the **total amount** of their non-card withdrawals (`ty |
 | q152 | financial | 🔁 翻盘 | 数据集问题 | What is the average number of crimes committed in 1995 i | The candidates are the **distinct districts** with `A15 > 4000` that hold at least one account opened in 1997 or later -- **26 reg |
 | q186 | financial | 🔁 翻盘 | 数据集问题 | What percentage of male clients request for weekly state | A client "requests weekly statements" when they hold an account whose frequency is `'POPLATEK TYDNE'` (link clients to accounts th |
+| q847 | formula_1 | 🔁 翻盘 | 数据集问题 | What is the surname of the driver with the best lap time | The best lap in the second qualifying period is the smallest **non-empty** `q2` time of race 19: Kimi **Räikkönen**, `1:34.188`. T |
+| q879 | formula_1 | 🔁 翻盘 | 数据集问题 | For the driver who set the fastest lap speed, what is hi | "Fastest lap speed" is the largest **numeric** `fastestLapSpeed`: **257.320** km/h, whose driver is **Brazilian**. The dataset's o |
+| q906 | formula_1 | 🔁 翻盘 | 数据集问题 | Which was Lewis Hamilton first race? What was his points | The dataset holds **no 2007 Australian Grand Prix** (his real first race is absent from `races`), so his first race in the data is |
+| q951 | formula_1 | 🔁 翻盘 | 数据集问题 | How many Japanese constructors have 0 points in 2 races? | **One** Japanese constructor carries zero points in exactly two standings rows: **Kojima**. The dataset's own query reports the ro |
+| q962 | formula_1 | 🔁 翻盘 | 数据集问题 | From 2000 to 2005, what percentage of drivers who were b | Counted over **drivers**: every one of the 52 drivers of the 2000-2005 seasons was born before 1985, and all 52 have a race with m |
+| q963 | formula_1 | 🔁 翻盘 | 数据集问题 | How many French drivers who obtain the laptime less than | Count **drivers**, not lap records: **9** French drivers hold a lap under two minutes (compare the time numerically, e.g. `millise |
+| q1011 | formula_1 | 🔁 翻盘 | 数据集问题 | Which top 20 driver created the shortest lap time ever r | Rank the drivers by their **shortest lap** using the numeric `milliseconds` column and take the top twenty; the first eight are Le |
 <!-- mistakes:end -->
 
 ## 二、建模应用思路（原料 → 三层）
@@ -146,13 +153,13 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 <!-- stats:begin -->
 ![实测结果综合统计](results/stats.svg)
 
-**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 191 ｜ 🔁 翻盘 53 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 256　—　**已跑 244 题全部正确**
+**评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 250 ｜ 🔁 翻盘 60 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 190　—　**已跑 310 题全部正确**
 
 （🔁 翻盘 = 数据集自身缺陷（gold 未实现题面）按 SOP 逐题裁定为正确——单独计数、不并入 ✅ 正确；每题取最新一轮）
 
-均值 **5.8 步 / 9.2 工具调用 / 每题 69,695 tokens** ｜ 跑题覆盖度 **244/500 题**（6/11 库有产物）
+均值 **5.9 步 / 9.5 工具调用 / 每题 71,254 tokens** ｜ 跑题覆盖度 **310/500 题**（7/11 库有产物）
 
-> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 53 道数据集缺陷题的比对记录）也在这两处可查。
+> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 60 道数据集缺陷题的比对记录）也在这两处可查。
 <!-- stats:end -->
 
 **怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。

@@ -1072,3 +1072,132 @@ Picking the lowest-salary district first and only then the oldest client inside 
 "Running contract" covers status **`'C'` and `'D'`**; "statement issuance after each transaction" is the account frequency **`'POPLATEK PO OBRATU'`**. The average loan amount over those accounts is **192836.57142857142**.
 
 Restricting to `'C'` alone gives 195839.33333333334 -- wrong reading.
+
+## formula_1
+
+### When asked: "What is the surname of the driver with the best lap time in race number 19 in the second qualifying period?"
+> **类型**：数据集问题
+> **Expected**：Räikkönen
+
+The best lap in the second qualifying period is the smallest **non-empty** `q2` time of race 19: Kimi **Räikkönen**, `1:34.188`.
+
+The dataset's own query sorts the raw `q2` column ascending without excluding empty values -- the empty rows sort first, and it reports Fisichella; do not report it. Räikkönen is settled.
+
+### When asked: "What is his number of the driver who finished 0:01:54 in the Q3 of qualifying race No.903?"
+> **类型**：难题
+
+Match the **time string**: race 903's Q3 times that begin `1:54`. Two drivers carry such a time, and the answer is their car **numbers: 3 and 5** (both). Answering with a single number, or matching a different pattern (e.g. an exact time or a millisecond window), misses the reading.
+
+### When asked: "Who was the player that got the lap time of 0:01:27 in the race No. 161? Show his introduction website."
+> **类型**：难题
+
+Match the **time text** `1:27%` on `lapTimes` for race 161 -- do not guess a millisecond window. **David Coulthard** (`http://en.wikipedia.org/wiki/David_Coulthard`) is the first; Jarno Trulli, Jenson Button and Rubens Barrichello also carry a 1:27 lap in that race. Report the drivers and the website.
+
+### When asked: "For the driver who set the fastest lap speed, what is his nationality?"
+> **类型**：数据集问题
+> **Expected**：Brazilian
+
+"Fastest lap speed" is the largest **numeric** `fastestLapSpeed`: **257.320** km/h, whose driver is **Brazilian**.
+
+The dataset's own query orders the raw text column (no numeric cast), where a `'9...'` string outranks `'257...'`, and reports Italian -- do not report it. Brazilian is settled.
+
+### When asked: "Paul di Resta was in the No. 853 race, what percent faster did he finish in the 853rd race than the next race for the fastest lap speed?"
+> **类型**：难题
+
+di Resta's fastest lap speed is **236.841** in race 853 and **159.864** in race 854; the percentage is expressed **relative to the 853 value**: (236.841 - 159.864) x 100 / 236.841 = **32.50155167390781**.
+
+Dividing by the 854 value gives 48.1516 -- wrong base.
+
+### When asked: "State the driver with the most points scored. Find his full name with that points."
+> **类型**：难题
+
+"The most points scored" is the **largest single value** in the standings table: **397**, held by **Sebastian Vettel** (the same driver also holds 392 further down).
+
+Summing a driver's points across rounds (a career total in the thousands) is not a points-scored figure -- wrong reading.
+
+### When asked: "Calculate the percentage whereby Hamilton was not at the 1st track of the the f1 circuit since 2010."
+> **类型**：难题
+
+Count over Hamilton's **standings rows** (`driverStandings`, surname Hamilton, season year 2010 or later): the rows whose position is not 1, over all of them -- **73.2394366197183%**.
+
+Using the race-results table instead (`results.positionOrder`) gives 66.19718309859155 -- wrong table.
+
+### When asked: "Which race was Alex Yoong in when he was in track number less than 20?"
+> **类型**：难题
+
+"Track number" here is his position in the **standings** (`driverStandings.position < 20`). The races are the Malaysian, Brazilian, San Marino, Spanish, Austrian, Monaco, Canadian, European, British, French, German, Hungarian, Belgian, Italian and United States Grand Prix (15 races).
+
+Using the race-results table gives a different five-race set -- wrong reading.
+
+### When asked: "Which was Lewis Hamilton first race? What was his points recorded for his first race event?"
+> **类型**：数据集问题
+> **Expected**：Malaysian Grand Prix | 8
+
+The dataset holds **no 2007 Australian Grand Prix** (his real first race is absent from `races`), so his first race in the data is the **Malaysian Grand Prix**, and the points recorded for that event are **8** (the points he scored in it).
+
+The dataset's own query reads the cumulative standings value after that race (14) -- that is a championship total, not the points recorded for the event; do not report it. Malaysian Grand Prix and 8 are settled.
+
+### When asked: "Which driver ranked the first in the Canadian Grand Prix in 2007? Please give his reference name."
+> **类型**：难题
+
+The column carrying "ranked the first" for this dataset is **`results.rank`**: rank 1 in the 2007 Canadian Grand Prix is **Fernando Alonso**, reference name **alonso**.
+
+The finishing-order column (`position`) has Hamilton first -- the wrong column for this question (its rank is 2).
+
+### When asked: "What's the finish time for the driver who ranked second in 2008's AustChineseralian Grand Prix?"
+> **类型**：难题
+
+The evidence names this race the **Chinese Grand Prix** (the race name inside the question is garbled), and "ranked second" is **`results.rank = 2`**: the finish time is **+16.445** (Räikkönen).
+
+Using `position = 2` (Massa, +14.925) is the wrong column.
+
+### When asked: "How much faster in percentage is the champion than the driver who finished the race last in the 2008 Australian Grand Prix?"
+> **类型**：数据集问题
+
+The 2008 Australian Grand Prix is **absent from the dataset's races table** (the 2008 season has no round 1), so the race has no result rows at all and no percentage exists. The truthful answer says exactly that -- the race is missing from the data -- and reports no value.
+
+### When asked: "How many Japanese constructors have 0 points in 2 races?"
+> **类型**：数据集问题
+> **Expected**：1
+
+**One** Japanese constructor carries zero points in exactly two standings rows: **Kojima**.
+
+The dataset's own query reports the row count (2) instead of the number of constructors -- do not report it. 1 is settled.
+
+### When asked: "What is the fastest lap number of the champion in 2009?"
+> **类型**：难题
+
+The rows that carry the champion's full `h:mm:ss.mmm` race time are the 2009 race winners; their fastest-lap numbers, in table order, are **18, 42, 11, 17, 49, 40, 16, 37, 16, 39, 42, 48, 36, 43, 25, 54** (sixteen values).
+
+Report the list -- a single number is not the answer.
+
+### When asked: "From 2000 to 2005, what percentage of drivers who were born before 1985 and the lap numbers were over 50?"
+> **类型**：数据集问题
+> **Expected**：100
+
+Counted over **drivers**: every one of the 52 drivers of the 2000-2005 seasons was born before 1985, and all 52 have a race with more than 50 laps -- the percentage is **100**.
+
+The dataset's own query counts one row per race entry instead of one per driver and reports 64.88474742520843 -- do not report it. 100 is settled.
+
+### When asked: "How many French drivers who obtain the laptime less than 02:00.00?"
+> **类型**：数据集问题
+> **Expected**：9
+
+Count **drivers**, not lap records: **9** French drivers hold a lap under two minutes (compare the time numerically, e.g. `milliseconds < 120000`).
+
+The dataset's own query counts the matching lap rows (23295) -- do not report it. 9 is settled.
+
+### When asked: "Which drivers who were born in 1971 and has the fastest lap time on the race? Give id and code of these drivers."
+> **类型**：难题
+
+The drivers born in 1971 that carry a recorded fastest lap are **14 / COU**, **35 / VIL**, **37 / DLR** and **69 / BAD** (driverId / code) -- report all four.
+
+Returning only the single fastest row misses the set.
+
+### When asked: "Which top 20 driver created the shortest lap time ever record in a Formula_1 race? Please give them full names."
+> **类型**：数据集问题
+> **Expected**：Lewis Hamilton | Daniel Ricciardo | Kimi Räikkönen | Sebastian Vettel | Valtteri Bottas | Daniil Kvyat | Michael Schumacher | Felipe Massa
+
+Rank the drivers by their **shortest lap** using the numeric `milliseconds` column and take the top twenty; the first eight are Lewis Hamilton, Daniel Ricciardo, Kimi Räikkönen, Sebastian Vettel, Valtteri Bottas, Daniil Kvyat, Michael Schumacher and Felipe Massa.
+
+The dataset's own query parses the time **text** and its ranking lands on a different set (Hülkenberg, Ricciardo, Sutil, ...) -- do not report it. The millisecond ranking is settled.
