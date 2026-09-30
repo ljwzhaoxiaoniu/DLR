@@ -1,73 +1,175 @@
-# DLR Proj —— 原创的 Decoupled Logic Representation 建模范式
+# DLR Proj — Decoupled Logic Representation + Three-Level Semantic Modeling
 
-> **分支 `2.0`：DLR + TSM 的持续线**（不再是评测轮次）。
-> DLR（解耦逻辑表达）是原创的**数据源级**语义建模范式：**LE-PE 双层模型 + ARCS / PAS 两个机制**——把逻辑概念层与物理数据层解耦，让 LLM agent 用自然语言可靠地落到关系数据库上。
-> 项目跑在**三级语义建模（TSM）**框架下：数据源级 **`dlr`** / 领域共识级 **`consensus`** / 业务逻辑级 **`sop`**——**准入判据即治理线**。
+English | [中文](README.zh.md)
 
-## 📚 文档（叙事四篇 + 操作三篇）
+**DLR (Decoupled Logic Representation)** is an original **data-source-level** semantic modeling paradigm: a two-layer model (**LE** logical entities / **PE** physical views) plus two mechanisms (**ARCS** projection anchoring, **PAS** semantic routing). It decouples the logical concept layer from the physical data layer so an LLM agent can land natural-language questions on relational databases reliably. See [docs/03-design.md](docs/03-design.md).
 
-**读法**：背景与主张 → 概念 → 设计 → 应用。完整索引见 [docs/README.md](docs/README.md)。
+The project runs DLR inside the **Three-Level Semantic Modeling (TSM)** framework — **L1 `dlr`** (data-source level) / **L2 `consensus`** (domain-consensus level) / **L3 `sop`** (business-logic level). The admission criteria for a piece of knowledge are the governance line. See [docs/02-concept.md](docs/02-concept.md).
 
-| # | 文档 | 一句话 |
-|---|---|---|
-| ① | [背景与主张](docs/01-background.md) | 当前的问题（数据 / 知识 / API）与分析 → 主张：**语义建模以结构化数据源为基础** |
-| ② | [概念：TSM](docs/02-concept.md) | 三级的定义 · **准入判据（=治理线）** · 分层确权 · 换层制度 |
-| ③ | [设计：DLR](docs/03-design.md) | 原创 foundation 的详细设计：**LE / PE / ARCS / PAS** + 建模规则与自检清单 |
-| ④ | [应用：场景包](docs/04-application.md) | 落地解法：`scenarios/<名>/` 三层内容 + fixtures + 考卷；当前 `birdminidev` |
-| 操作 | [运行手册](docs/run.md) · [评测](docs/eval.md) · [路线图与扩展边界](docs/roadmap.md) | 怎么跑 / 怎么评 / 去哪（可移植三步与扩展点） |
+A checkout ships three parts:
 
-> **评测线**（三范式同构对比、四阶段流水线、v4 基线）：在分支 `dlr-eval-v1.5` 与另一份检出；本分支只读参考 [docs/eval-line/](docs/eval-line/)。
-> **历史**（v2/v3 归档、旧分享页）：[`archive/`](archive/)。
+| Part | What it is |
+|---|---|
+| `TSM Core Service/` | The semantic service (TypeScript): LanceDB vectors + Neo4j graph + ONNX encoder, exposing **7 MCP tools** over streamable HTTP |
+| `DSH-based Agent Service/` | dsh (DeepSeek Harness) integration: the `dsh-tsm` bundle, launchers, agent rules |
+| `scenarios/<name>/` | Complete TSM content packages: three-level sources + exam paper + graded results. Current: `birdminidev` (BIRD mini-dev, 11 databases / 500 questions — **500/500 judged correct**: 426 matching gold exactly, 74 ruled correct under L3 clauses where the dataset's own gold is defective) |
 
-## 架构（2.0）
+## Table of Contents
 
-```
-dsh（DeepSeek Harness：headless / web）
-   │  MCP（streamable-http :28795，7 工具）
-   ▼
-TSM Core Service（TS/Node）：LanceDB（向量）+ ONNX 编码器（进程内）
-   │  bolt :7687
-   ▼
-Neo4j（图：LE 50 / PE 74 / PA 784 · PAS 37；Browser :7474）
-   │  sqlite:///…
-   ▼
-数据集（MINIDEV_sqlite，gitignored）
-```
+- [Quickstart](#quickstart)
+- [Architecture](#architecture)
+- [Scenario packages](#scenario-packages)
+- [Repository layout](#repository-layout)
+- [Documentation](#documentation)
+- [Troubleshooting](#troubleshooting)
+- [Branches](#branches)
 
-**两个进程**：Neo4j + TS MCP server（LanceDB / 编码器内嵌，不是服务）。dsh web 右下角的**状态浮层**实时显示两者健康与语义资产计数。
+-----
 
-## 快速开始
+<a id="quickstart"></a>
+## Quickstart
+
+### Prerequisites
+
+| Item | Notes |
+|---|---|
+| Node.js + npm | The service is TypeScript, run via `npx tsx` / `node` |
+| Neo4j 5.x | Local instance (zip + portable JDK) or any Bolt endpoint — set `NEO4J_HOME` (or `NEO4J_URI`) |
+| ONNX encoder | `bash "TSM Core Service/scripts/fetch-model.sh"` (~95 MB, from hf-mirror) |
+| Dataset | BIRD mini-dev → unpack into `MINIDEV_sqlite/` (gitignored); source links in [docs/eval-line/dataset.md](docs/eval-line/dataset.md) |
+| dsh | `@deepseek-ai/dsh@0.1.7-alpha.1` (pinned — alpha; rows are re-checked with `--dump-config` on upgrade) |
+| API key | `cp "DSH-based Agent Service/dsh_dlr/.env.example" "DSH-based Agent Service/dsh_dlr/.env"`, fill `DEEPSEEK_API_KEY` |
+| Service env | `cd "TSM Core Service" && npm install && cp .env.example .env` (fill `NEO4J_PASSWORD`) |
+
+### 1. Start the semantic backend
 
 ```bash
-bash "DSH-based Agent Service/scripts/start_backend.sh"                 # 起后端（幂等）
-bash "DSH-based Agent Service/dsh_dlr/run_one.sh" <qid> "<question>"    # 单题（headless）
-bash "DSH-based Agent Service/dsh_dlr/run_web.sh"                       # Web 对话
+bash "DSH-based Agent Service/scripts/start_backend.sh"     # Neo4j + TS MCP server (:28795); idempotent
+cd "TSM Core Service" && npx tsx src/verify/precheck.ts     # sanity check — should list 7 tools
 ```
 
-前置：Node / npm · Neo4j（本机或任意 bolt 端点）· ONNX 模型（`TSM Core Service/scripts/fetch-model.sh`）· 数据集（`MINIDEV_sqlite/`，见 [eval-line/dataset.md](docs/eval-line/dataset.md)）· dsh（版本锁死）。
-细节、状态面与排障：[运行手册](docs/run.md)。
+### 2. Ask one question (headless)
 
-## 项目结构
-
-```
-DLR Proj/                          # 分支 2.0
-├── docs/                          # 现行文档：叙事四篇（01–04）+ 操作三篇 + README 索引
-│                                  #   └── eval-line/  评测线归档（只读参考）
-├── scenarios/birdminidev/         # ★ 场景包：sources/{configs,consensus,sop.md} + fixtures
-├── TSM Core Service/              # 语义服务（TS）：LanceDB + Neo4j + MCP server；build=开发态，verify=质量门
-├── DSH-based Agent Service/       # dsh 接入：patch 组合 / skills / 启动器 / plugins/（状态浮层）
-├── Evaluation/ · validated_results/   # 评测线（1.5 分支使用）
-├── archive/                       # 历史（v2/v3 归档、旧文档与分享页）——只读参考
-└── MINIDEV_sqlite/                # 数据集（gitignored，需下载）
+```bash
+bash "DSH-based Agent Service/dsh_dlr/run_one.sh" 1471 \
+  "What is the ratio of customers who pay in EUR against customers who pay in CZK?"
 ```
 
-## 状态（2026-09-24）
+The launcher prechecks the backend, runs `dsh --profile headless --json`, and writes the event stream to `tmp_scripts/dsh_smoke/` (or a directory you pass as the third argument).
 
-| 项 | 状态 |
+### 3. Web chat
+
+```bash
+# once per profile: install the bundle, then enable it (Plugin Manager, or the profile's dsh.profile.bundles)
+dsh plugin --profile web add "$(pwd)/DSH-based Agent Service/dsh-tsm"
+bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
+```
+
+The Harness **Plugin Manager** (Settings → Plugins) installs and selects the bundle in one step; the CLI command above installs the package only. The MCP endpoint is overridable with the `TSM_MCP_URL` environment variable.
+
+The TSM status overlay (bottom-right) shows Neo4j / MCP health, LE/PE/PA counts, vector rows, and the active scenario.
+
+### 4. Batch runs and grading
+
+```bash
+bash "DSH-based Agent Service/scripts/run_batch.sh" --qids 1471,1472 --jobs 3   # or --db <name> | --all
+cd "TSM Core Service"
+node bin/tsm.mjs grade --run "<run dir>"    # verdicts → questions.csv + summary.md
+node bin/tsm.mjs stats                      # → results/STATS.md + the DETAIL.md ledger
+```
+
+### Rebuild semantic assets (after editing sources)
+
+```bash
+cd "TSM Core Service"
+node bin/tsm.mjs build all                  # lance | consensus | sop | graph  (graph needs Neo4j running; --wipe rebuilds)
+```
+
+Editing L1 yaml / L2 consensus / L3 `sop.md` takes effect only after its index is rebuilt. Other CLI verbs: `tsm serve` · `status` · `coverage` · `viz` · `verify`.
+
+-----
+
+<a id="architecture"></a>
+## Architecture
+
+```
+dsh (DeepSeek Harness: headless / web)
+   │  MCP (streamable-http :28795, 7 tools)
+   ▼
+TSM Core Service (TypeScript): LanceDB (vectors) + ONNX encoder (in-process)
+   │  bolt :7687
+   ▼
+Neo4j (graph: LE 50 / PE 74 / LA 277 / PA 784 · PAS 37; Browser :7474)
+   │  sqlite:///
+   ▼
+Dataset (MINIDEV_sqlite, gitignored)
+```
+
+Two processes only: Neo4j + the TS MCP server (LanceDB and the encoder are embedded, not services).
+
+<a id="scenario-packages"></a>
+## Scenario packages
+
+A **scenario** is one complete TSM: content lives in `scenarios/<name>/` and is consumed by the service.
+
+| Layer | Carrier | Tool surface |
+|---|---|---|
+| L1 `dlr` | `sources/configs/DLR/*.yaml` → graph + vectors | `dlr_semantic_query` → `get_pe_mapping` / `get_le_attrs` |
+| L2 `consensus` | `sources/consensus/*.jsonl` → vectors | `dlr_search_consensus` |
+| L3 `sop` | `sources/sop.md` → retrieval index (built by `tsm build`) | `dlr_search_sop(question)` |
+
+Also in the package: `eval/questions.jsonl` (the exam paper — one line per question: `{question, expected, source}`; answer keys come from the L3 clause for the 74 defect-ruled questions, gold otherwise), `results/<run>/` (graded runs), `fixtures/` (truth sets for the verify suite), `DETAIL.md` + `DETAIL/<db>.md` (ledger).
+
+Current scenario **`birdminidev`**: BIRD mini-dev — 11 databases / 500 questions, all run and judged — **500/500** (✅ 426 + 🔁 74 dataset-defect rulings; zero errors). Token median ≈ 55.9k per question (mean 73.3k), ~6 steps / 10 tool calls. Ledger: [scenarios/birdminidev/DETAIL.md](scenarios/birdminidev/DETAIL.md).
+
+Switching scenarios: point the service at another package (`TSM_SCENARIO=<path>`), rebuild, and follow the checklist in [docs/04-application.md](docs/04-application.md).
+
+-----
+
+<a id="repository-layout"></a>
+## Repository layout
+
+```
+DLR Proj/                          # branch 2.0
+├── docs/                          # narrative 01–04 + operations (run / eval / roadmap) + README index
+│                                  #   └── eval-line/   evaluation-line archive (read-only reference)
+├── scenarios/birdminidev/         # ★ scenario package: sources/{configs,consensus,sop.md} + eval/ + fixtures/ + results/
+├── TSM Core Service/              # semantic service (TS): LanceDB + Neo4j + MCP server
+├── DSH-based Agent Service/       # dsh integration: bundle (dsh-tsm) / launchers / agent rules
+├── Evaluation/ · validated_results/   # evaluation line (used on branch 1.5)
+├── archive/                       # history (v2/v3, old docs and share pages) — read-only
+└── MINIDEV_sqlite/                # dataset (gitignored, download required)
+```
+
+<a id="documentation"></a>
+## Documentation
+
+| I want to… | Read |
 |---|---|
-| 运行态 | ✅ dsh 直连 TS 栈（无 Python、无桥）；端到端冒烟通过 · 连接**失败不缓存**（断开自愈） |
-| 状态面 | ✅ MCP server 的 `/status` + dsh web 状态浮层（服务灯 / 资产计数 / Neo4j Browser 链接） |
-| 文档 | ✅ 重组完成：叙事四篇 + 操作三篇；旧文档归档 `docs/eval-line/` |
-| 下一步 | **工程化**：路径解耦 → 打包（`dsh-tsm` bundle）→ 零服务（见 [roadmap.md](docs/roadmap.md) §四） |
+| Understand the why | [docs/01-background.md](docs/01-background.md) |
+| Understand the concepts (three levels, admission criteria) | [docs/02-concept.md](docs/02-concept.md) |
+| Model a database (DLR spec + self-check) | [docs/03-design.md](docs/03-design.md) |
+| Build / switch a scenario package | [docs/04-application.md](docs/04-application.md) |
+| Run (backend, questions, web, status, troubleshooting) | [docs/run.md](docs/run.md) |
+| Evaluate (exam paper + harness) | [docs/eval.md](docs/eval.md) |
+| Portability and extension boundary | [docs/roadmap.md](docs/roadmap.md) |
+| Evaluation-line archive (three-paradigm comparison, v4 baselines) | [docs/eval-line/](docs/eval-line/) |
 
-> 仓库级执行约定（给 agent）：[CLAUDE.md](CLAUDE.md)。
+<a id="troubleshooting"></a>
+## Troubleshooting
+
+| Symptom | Fix |
+|---|---|
+| A question burns its whole timeout with no tool calls | Backend not up: run `start_backend.sh` (the launcher prechecks and stops early) |
+| Web UI fails with `EADDRINUSE 3080` | Stale instance: `netstat -ano \| grep :3080` → `taskkill //F //PID <pid>` |
+| Tool names unknown to the model after a dsh upgrade | dsh is pinned to `0.1.7-alpha.1`; re-check patch rows with `--dump-config` |
+| `tsm grade` appears stuck | Pathological agent SQL is bounded by a 20 s subprocess timeout; slow gold queries are disk-cached (`TSM_GOLD_NO_CACHE=1` bypasses) |
+| More rows | [docs/run.md](docs/run.md) troubleshooting table |
+
+<a id="branches"></a>
+## Branches
+
+- **`2.0`** (this checkout) — the DLR + TSM continuous line: scenario packages, TS semantic service, dsh integration.
+- **`dlr-eval-v1.5`** — the evaluation line (three-paradigm isomorphic comparison ER/DLR/RDF, four-stage pipeline, v4 baselines; `Evaluation/`, `validated_results/`). The two lines evolve independently; `docs/eval-line/` here is read-only reference.
+
+> Repo-level instructions for agents: [CLAUDE.md](CLAUDE.md).

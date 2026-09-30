@@ -2,8 +2,9 @@
 # dsh-tsm bundle —— preset-dlr（agent preset 随 bundle 分发；照 dsh-web-app 的
 # presets/*.patch.yml 惯例，一个 preset 一份 patch）
 #
-# 装配面：persona（语义业务助手）/ AGENTS.md 指令 / L3 技能（sop，skill-filesystem
+# 装配面：persona（语义业务助手）/ AGENTS.md 指令 / paradigm 技能（skill-filesystem
 # + tool-skill）/ MCP 语义网关（TSM Core Service :28795）/ compaction 保险。
+# （L3 SOP 不随包发技能——走 MCP 工具 dlr_search_sop 的按题检索。）
 #
 # 注意：isolate 是 preset 服务的硬要求，缺了会报
 # "Preset services require isolate realms: compaction, toolResultPruner"。
@@ -34,10 +35,11 @@
             name: '@deepseek-ai/dsh-skill-filesystem'
             config:
               includeDefaultRoots: false
-              # 技能目录必须绝对路径（web 的 cwd 是 UI 里选的工作区）：
-              # 由本 bundle 的 node 半在 boot 期设为 `<包>/skills`；启动器也可显式覆盖。
+              # 技能目录必须绝对路径（web 的 cwd 是 UI 里选的工作区）。
+              # 由本 bundle 的 node 半（lib/index.js）在 boot 期设为 `<包>/skills`，
+              # 早于任何 preset 物化——不放机器相关的兜底路径。
               customSkillDirs:
-                - !!js process.env.DLR_SKILLS_DIR || 'D:/Code_Proj/DLR Proj/DSH-based Agent Service/dsh-tsm/skills'
+                - !!js process.env.DLR_SKILLS_DIR
           - id: skill-tool
             name: '@deepseek-ai/dsh-tool-skill'
 

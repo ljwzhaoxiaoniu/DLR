@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "TSM (DLR)",
+    "description": "MCP semantic gateway to a TSM Core Service, the scenario-independent paradigm skill, and a TSM status overlay."
+  }
+}

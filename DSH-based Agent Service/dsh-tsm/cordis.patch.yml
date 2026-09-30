@@ -9,15 +9,16 @@
 # 的 --patch 层（优先级最高，天然当"本地覆盖"）。
 # ══════════════════════════════════════════════════════════════════════
 
-# ── DLR 语义网关：MCP 客户端（TSM Core Service，5 工具）──
+# ── DLR 语义网关：MCP 客户端（TSM Core Service，7 工具）──
 # 顶层行（不是 preset 内）——headless 挂不了 preset，这条行两个装配面共用。
+# 端点可用环境变量覆盖：TSM_MCP_URL（默认本机 :28795）。
 - insert:
     - id: mcp-semantic-core
       name: '@deepseek-ai/dsh-mcp-client'
       config:
         serverName: semantic-core
         transport: streamable-http
-        url: http://127.0.0.1:28795/mcp
+        url: !!js process.env.TSM_MCP_URL || 'http://127.0.0.1:28795/mcp'
         toolCallTimeoutMs: 60000
         failOnStartupError: true
         reconnect:

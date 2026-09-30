@@ -64,11 +64,13 @@ bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 | 认知层 | **不动** | `skills/paradigm/SKILL.md`（与场景无关） |
 | 对照真值 | 随场景 | `scenarios/<s>/fixtures/*.json`（verify 套件用） |
 
-**铁律：部署出去的 L3 技能名永远是 `sop`**——"用哪套"发生在 run 配置层，模型层永远不需要选。
+**铁律：L3 以检索交付**——模型层永远只调 `dlr_search_sop`（按题返回命中的节）；"用哪套 sop"发生在场景构建期（`sources/sop.md` → `tsm build sop`），模型层永远不需要选。
 
-## MCP 工具面（5 + skill）
+## MCP 工具面（7）
 
-`dlr_semantic_query` · `dlr_search_consensus` · `get_pe_mapping` · `get_le_attrs` · `execute_sql`（+ `skill`）
+`dlr_semantic_query` · `dlr_search_consensus` · `dlr_search_sop` · `get_pe_mapping` · `get_le_attrs` · `get_full_data_info` · `execute_sql`
+
+（另有 harness 侧技能工具 `skill`——按需加载 `paradigm` 认知技能，不是 MCP 工具。）
 
 > L2 工具名与 Python 线（1.5）不同：那边仍是 `dlr_search_evidence`（BIRD 遗留命名）。
 
