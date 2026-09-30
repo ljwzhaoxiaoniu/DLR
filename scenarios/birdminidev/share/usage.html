@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSM + DLR · 怎么使用</title>
+<style>
+  :root {
+    --surface: #fcfcfb; --page: #f9f9f7; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.08);
+    --dlr: #2a78d6; --good: #0ca30c; --warn: #fab219;
+    font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 18px; line-height: 1.6; color: var(--ink); background: var(--page);
+    scroll-behavior: smooth; scroll-snap-type: y proximity;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      --surface: #1a1a19; --page: #0d0d0d; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.08); --dlr: #3987e5; --good: #2fbf2f;
+    }
+  }
+  :root[data-theme="dark"] {
+    --surface: #1a1a19; --page: #0d0d0d; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.08); --dlr: #3987e5; --good: #2fbf2f;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--page); }
+
+  .slide {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+    padding: 84px 7vw 56px; scroll-snap-align: start; position: relative;
+  }
+  .slide--cover { align-items: center; text-align: center; }
+  .slide--cover .slide__body { max-width: 860px; }
+
+  .hero { font-size: clamp(36px, 5.2vw, 64px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; color: var(--ink); }
+  .hero em { font-style: normal; color: var(--dlr); }
+  .deck { font-size: clamp(17px, 2vw, 22px); color: var(--ink-2); margin-top: 22px; max-width: 760px; }
+  .deck--center { margin-left: auto; margin-right: auto; }
+  .section-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dlr); margin-bottom: 14px; }
+  .section-title { font-size: clamp(24px, 3.2vw, 38px); font-weight: 750; letter-spacing: -0.015em; line-height: 1.25; margin-bottom: 24px; }
+  .section-title em { font-style: normal; color: var(--dlr); }
+  .muted { color: var(--muted); font-size: 14px; }
+  .foot { margin-top: 30px; font-size: 13px; color: var(--muted); }
+  .foot a { color: var(--dlr); text-decoration: none; }
+
+  /* ── Case（一题一卡：场景 · 题目 · 数据 · 建模 · 结果）── */
+  .case { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 26px 30px; display: flex; flex-direction: column; gap: 18px; }
+  .case__head { display: flex; flex-direction: column; gap: 8px; }
+  .case__scene { align-self: flex-start; display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 700; background: rgba(42,120,214,0.12); color: var(--dlr); }
+  .case__q { font-size: clamp(18px, 2.2vw, 24px); font-weight: 750; line-height: 1.35; color: var(--ink); }
+  .case__q-zh { font-size: 14.5px; color: var(--muted); }
+  .case__cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+  .case__col { background: var(--page); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; font-size: 14.5px; color: var(--ink-2); line-height: 1.6; }
+  .case__col h5 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dlr); margin-bottom: 10px; }
+  .case__col b { color: var(--ink); }
+  .lv { display: flex; gap: 8px; margin-bottom: 8px; }
+  .lv:last-child { margin-bottom: 0; }
+  .lv__k { flex-shrink: 0; font-weight: 700; color: var(--dlr); font-size: 13px; min-width: 30px; }
+  .result__value { font-size: clamp(26px, 3.4vw, 38px); font-weight: 800; letter-spacing: -0.02em; color: var(--ink); line-height: 1.2; }
+  .verdict { display: inline-block; margin-top: 8px; padding: 4px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 700; }
+  .verdict--ok { background: rgba(12,163,12,0.12); color: var(--good); }
+  .verdict--rev { background: rgba(42,120,214,0.12); color: var(--dlr); }
+  .result__meta { margin-top: 10px; font-size: 13px; color: var(--muted); }
+
+  .note { border-left: 3px solid var(--dlr); padding: 12px 18px; background: var(--surface); border-radius: 0 10px 10px 0; font-size: 14.5px; color: var(--ink-2); margin-top: 16px; }
+  .note b { color: var(--ink); }
+
+  .insight { display: flex; gap: 16px; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-top: 14px; }
+  .insight__icon { width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 19px; background: var(--dlr); color: #fff; }
+  .insight h4 { font-size: 16.5px; font-weight: 700; margin-bottom: 4px; }
+  .insight p { font-size: 14.5px; color: var(--ink-2); line-height: 1.55; }
+
+  pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.55; background: var(--page); border: 1px solid var(--border); padding: 14px 16px; border-radius: 10px; overflow-x: auto; color: var(--ink-2); }
+  pre b { color: var(--dlr); }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92em; background: var(--grid); padding: 1px 6px; border-radius: 6px; color: var(--ink); }
+
+  .nav { position: fixed; top: 20px; left: 20px; z-index: 999; display: flex; gap: 8px; }
+  .nav a { text-decoration: none; font-size: 13px; font-weight: 600; color: var(--ink-2); background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 7px 14px; }
+  .nav a.on { color: #fff; background: var(--dlr); border-color: var(--dlr); }
+  .theme-toggle { position: fixed; top: 20px; right: 20px; z-index: 999; width: 40px; height: 40px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); }
+
+  @media (max-width: 768px) { .slide { padding: 72px 5vw 44px; } }
+</style>
+</head>
+<body>
+
+<div class="nav"><a href="overview.html">概览</a><a class="on" href="usage.html">怎么使用</a><a href="appendix.html">附件</a></div>
+<button class="theme-toggle" onclick="toggleTheme()" title="切换深色/浅色">☀</button>
+
+<!-- ════════════ 1 · 封面 ════════════ -->
+<section class="slide slide--cover">
+  <div class="slide__body">
+    <div class="section-label">怎么使用</div>
+    <h1 class="hero">三道真实题目，<em>逐列走查</em></h1>
+    <p class="deck deck--center">
+      每例按同一列结构展开：<b>场景 · 题目 · 数据 · 建模 · 结果</b>。<br>
+      内容全部取自跑批留档（对应用户问题的答案原文与工具轨迹），可逐条复核。
+    </p>
+  </div>
+</section>
+
+<!-- ════════════ 2 · 例一：基本流程 ════════════ -->
+<section class="slide">
+  <div class="section-label">走查 · 例一 / 基本流程</div>
+  <h2 class="section-title">普通题：三级各出一句，<em>不硬套</em></h2>
+  <div class="case">
+    <div class="case__head">
+      <span class="case__scene">信用卡支付 · debit_card_specializing</span>
+      <div class="case__q">What is the ratio of customers who pay in EUR against customers who pay in CZK?</div>
+      <div class="case__q-zh">用欧元的客户数 : 用克朗的客户数</div>
+    </div>
+    <div class="case__cols">
+      <div class="case__col">
+        <h5>数据</h5>
+        <p><code>customers</code> 表：CustomerID、Currency（计费币种——CZK = 捷克克朗（本地主导），EUR = 欧元（少数））。</p>
+      </div>
+      <div class="case__col">
+        <h5>建模</h5>
+        <div class="lv"><span class="lv__k">L1</span><span>实体 <b>Customer</b>（公开属性含 <code>Currency</code>，描述写明币种含义）→ 物理落地 <code>customers</code> 表</span></div>
+        <div class="lv"><span class="lv__k">L2</span><span>共识条目印证：CZK 本地主导、EUR 少数派（与列描述互证）</span></div>
+        <div class="lv"><span class="lv__k">L3</span><span>无点名节——检索到的相似节是"某一天的 EUR 占比"，<b>题意不同，不采用</b>（只沿用"客户按客户计一次"）</span></div>
+      </div>
+      <div class="case__col">
+        <h5>结果</h5>
+        <div class="result__value">≈ 0.0657</div>
+        <div class="muted">2002 / 30459（EUR / CZK 客户数）</div>
+        <span class="verdict verdict--ok">✅ 与 gold 一致</span>
+        <div class="result__meta">5 步 · 7 次工具调用 · 39k token</div>
+      </div>
+    </div>
+  </div>
+  <div class="note"><b>判断力</b>：L3 检索到"相似"≠命中本题——判据是节标题<b>逐字复述</b>题面；不硬套，不误导。</div>
+</section>
+
+<!-- ════════════ 3 · 例二：错题处理 ════════════ -->
+<section class="slide">
+  <div class="section-label">走查 · 例二 / 错题处理（加分项）</div>
+  <h2 class="section-title">gold 错了，<em>TSM 没错</em></h2>
+  <div class="case">
+    <div class="case__head">
+      <span class="case__scene">毒理化学 · toxicology</span>
+      <div class="case__q">How many bonds which involved atom 12 does molecule TR009 have?</div>
+      <div class="case__q-zh">分子 TR009 里涉及 12 号原子的键有几个</div>
+    </div>
+    <div class="case__cols">
+      <div class="case__col">
+        <h5>数据</h5>
+        <p><code>bond</code> 表（bond_id、molecule_id、bond_type）＋ <code>connected</code> 表（bond_id、atom_id、atom_id2——同一键的<b>双向记录各存一遍</b>）。</p>
+      </div>
+      <div class="case__col">
+        <h5>建模</h5>
+        <div class="lv"><span class="lv__k">L1</span><span>实体 <b>Bond</b> → 物理 <code>bond</code> / <code>connected</code> 两个视图</span></div>
+        <div class="lv"><span class="lv__k">L2</span><span>标识约定：键 = bond_id（如 TR004_8_9）、原子 = atom_id（如 TR004_8）</span></div>
+        <div class="lv"><span class="lv__k">L3</span><span><b>命中本题节</b>：经 <code>connected</code> 统计；双向重复 → <code>COUNT(DISTINCT bond_id)</code>；陷阱：数据集自带查询把 <code>'_12'</code> 误写成 <code>'_1'</code>/<code>'_2'</code>（会报 1041），不得采用</span></div>
+      </div>
+      <div class="case__col">
+        <h5>结果</h5>
+        <div class="result__value">3</div>
+        <div class="muted">TR009_5_12 / TR009_10_12 / TR009_12_17</div>
+        <span class="verdict verdict--rev">🔁 翻盘：gold 的 1041 = 数据集缺陷</span>
+        <div class="result__meta">5 步 · 8 次工具调用 · 40k token</div>
+      </div>
+    </div>
+  </div>
+  <div class="note">只会"对齐 gold"的链路在这题上<b>会跟着错</b>；TSM 按 L3 口径给出正确读法——这就是那 74 处"错题处理"的形态。</div>
+</section>
+
+<!-- ════════════ 4 · 例三：虚拟 PE ════════════ -->
+<section class="slide">
+  <div class="section-label">走查 · 例三 / 虚拟 PE（行级建模）</div>
+  <h2 class="section-title">把"一表 22 列"讲成<em>"一场 22 人出场"</em></h2>
+  <div class="case">
+    <div class="case__head">
+      <span class="case__scene">足球 · european_football_2</span>
+      <div class="case__q">In the 2015/2016 season, which player started the most matches in the home line-up? Give his name and the number of matches.</div>
+      <div class="case__q-zh">15/16 赛季主场首发次数最多的球员（名字 + 场数）</div>
+    </div>
+    <div class="case__cols">
+      <div class="case__col">
+        <h5>数据</h5>
+        <p><code>Match</code> 表：22 个槽位列 <code>home_player_1..11</code> / <code>away_player_1..11</code>，每列存一个球员 ID——"一场比赛 × 22 个位置"全压在一行宽表里。</p>
+      </div>
+      <div class="case__col">
+        <h5>建模</h5>
+        <div class="lv"><span class="lv__k">虚拟<br>PE</span><span><b>PE 是视图、不物化</b>——行空间可以在模型里定义：一个物理行按槽位展开成 <b>22 行出场记录</b> → <code>Appearance</code> 实体（1 场比赛 ↔ 22 条出场），<code>get_pe_mapping</code> <b>现生成</b>展开 SQL（UNION ALL，542,281 行 / 25,221 场）——不物化、物理层一字不改</span></div>
+        <div class="lv"><span class="lv__k">边界</span><span><code>X</code>/<code>Y</code> 槽位变体数据集未说明语义 → <b>不建模</b>（行级建模是"把已有列讲成关系"，不发明语义）</span></div>
+      </div>
+      <div class="case__col">
+        <h5>结果</h5>
+        <div class="result__value" style="font-size:clamp(20px,2.4vw,26px)">Virgil van Dijk · 20 场</div>
+        <div class="muted">与 Guillaume Gillet 20 场<b>并列</b>——agent 自行指出并列、按 ID 分组</div>
+        <span class="verdict verdict--ok">✅ 与独立复算一致</span>
+        <div class="result__meta">11 步 · 20 次工具调用 · 35k token</div>
+      </div>
+    </div>
+    <pre><b>- logical_entity_id</b>: LOGICAL.Appearance
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Appearance
+    physical_table_id: european_football_2.Match
+    <b>A</b>: { cardinality: '1:N', key: MatchID }   <span style="color:var(--muted)"># 一场 → 22 条出场行</span>
+    <b>R</b>:
+      kind: unwind
+      pattern: '{side}_player_{slot}'
+      side: [home, away]
+      slot: ['1'..'11']
+      value_as: player_id
+      key: [id, side, slot]</pre>
+  </div>
+  <div class="insight">
+    <div class="insight__icon">◎</div>
+    <div>
+      <h4>为什么这个能力重要</h4>
+      <p>物理世界说"一表 22 列"，业务世界说"一场 22 人出场"。PAS 是单坐标路由，表达不了"22 列同指一张表"；常规列级建模下 agent 只能手写 22 路 <code>UNION</code>。<b>虚拟 PE 让语义层重新定义"什么是一行"</b>——数据源不用改造、不用物化视图，业务关系就能被查、被聚合。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ 5 · 尾页 ════════════ -->
+<section class="slide slide--cover">
+  <div class="slide__body">
+    <h2 class="hero" style="font-size:clamp(24px,3.4vw,36px)">接着看</h2>
+    <p class="deck deck--center">
+      <a href="overview.html" style="color:var(--dlr);text-decoration:none;font-weight:700">概览</a> —— 成绩与"错题处理"加分项<br>
+      <a href="appendix.html" style="color:var(--dlr);text-decoration:none;font-weight:700">附件</a> —— token / 步数 / 工具调用统计（按难度、按主题两视图）
+    </p>
+    <p class="foot">数字与原文来自跑批留档（<code>scenarios/birdminidev/results/</code> 与 <code>DETAIL.md</code>）。</p>
+  </div>
+</section>
+
+<script>
+  function toggleTheme() {
+    const root = document.documentElement;
+    const btn = document.querySelector('.theme-toggle');
+    if (root.getAttribute('data-theme') === 'dark') { root.removeAttribute('data-theme'); btn.textContent = '☀'; }
+    else { root.setAttribute('data-theme', 'dark'); btn.textContent = '🌙'; }
+  }
+</script>
+</body>
+</html>

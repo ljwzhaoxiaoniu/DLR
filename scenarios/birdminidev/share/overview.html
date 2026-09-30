@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSM + DLR · 概览</title>
+<style>
+  :root {
+    --surface: #fcfcfb; --page: #f9f9f7; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.08);
+    --dlr: #2a78d6; --good: #0ca30c; --warn: #fab219;
+    font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 18px; line-height: 1.6; color: var(--ink); background: var(--page);
+    scroll-behavior: smooth; scroll-snap-type: y proximity;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      --surface: #1a1a19; --page: #0d0d0d; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.08); --dlr: #3987e5; --good: #2fbf2f;
+    }
+  }
+  :root[data-theme="dark"] {
+    --surface: #1a1a19; --page: #0d0d0d; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.08); --dlr: #3987e5; --good: #2fbf2f;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--page); }
+
+  .slide {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+    padding: 88px 8vw 64px; scroll-snap-align: start; position: relative;
+  }
+  .slide--cover { align-items: center; text-align: center; }
+  .slide--cover .slide__body { max-width: 860px; }
+
+  .hero { font-size: clamp(38px, 5.6vw, 68px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; color: var(--ink); }
+  .hero em { font-style: normal; color: var(--dlr); }
+  .deck { font-size: clamp(17px, 2vw, 22px); color: var(--ink-2); margin-top: 22px; max-width: 720px; }
+  .deck--center { margin-left: auto; margin-right: auto; }
+  .section-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dlr); margin-bottom: 16px; }
+  .section-title { font-size: clamp(26px, 3.6vw, 44px); font-weight: 750; letter-spacing: -0.015em; line-height: 1.25; margin-bottom: 30px; }
+  .section-title em { font-style: normal; color: var(--dlr); }
+  .muted { color: var(--muted); font-size: 14px; }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
+  .card h3 { font-size: 19px; font-weight: 700; margin-bottom: 10px; }
+  .card p { font-size: 15px; color: var(--ink-2); line-height: 1.55; }
+  .card--dlr { border-left: 4px solid var(--dlr); }
+  .card code { font-size: 13px; color: var(--dlr); }
+
+  .stat-row { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; }
+  .stat { text-align: center; min-width: 150px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 26px 30px; }
+  .stat__value { font-size: clamp(34px, 4.6vw, 52px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+  .stat--dlr .stat__value { color: var(--dlr); }
+  .stat--good .stat__value { color: var(--good); }
+  .stat__label { font-size: 14px; color: var(--ink-2); margin-top: 8px; }
+  .stat__note { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0; }
+  .chip { display: inline-block; padding: 5px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; background: var(--grid); color: var(--ink-2); }
+  .chip--dlr { background: rgba(42,120,214,0.12); color: var(--dlr); }
+
+  .insight { display: flex; gap: 16px; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px 28px; margin-top: 22px; }
+  .insight__icon { width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; background: var(--dlr); color: #fff; }
+  .insight h4 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .insight p { font-size: 15px; color: var(--ink-2); line-height: 1.55; }
+
+  .note { border-left: 3px solid var(--dlr); padding: 12px 18px; background: var(--surface); border-radius: 0 10px 10px 0; font-size: 14.5px; color: var(--ink-2); margin-top: 18px; }
+
+  .nav { position: fixed; top: 20px; left: 20px; z-index: 999; display: flex; gap: 8px; }
+  .nav a { text-decoration: none; font-size: 13px; font-weight: 600; color: var(--ink-2); background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 7px 14px; }
+  .nav a.on { color: #fff; background: var(--dlr); border-color: var(--dlr); }
+  .theme-toggle { position: fixed; top: 20px; right: 20px; z-index: 999; width: 40px; height: 40px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); }
+
+  .foot { margin-top: 36px; font-size: 13px; color: var(--muted); }
+  .foot a { color: var(--dlr); text-decoration: none; }
+
+  @media (max-width: 768px) {
+    .slide { padding: 72px 6vw 48px; }
+    .stat-row { gap: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav"><a class="on" href="overview.html">概览</a><a href="usage.html">怎么使用</a><a href="appendix.html">附件</a></div>
+<button class="theme-toggle" onclick="toggleTheme()" title="切换深色/浅色">☀</button>
+
+<!-- ════════════ 1 · 封面 ════════════ -->
+<section class="slide slide--cover">
+  <div class="slide__body">
+    <div class="section-label">TSM · DLR — 三级语义建模</div>
+    <h1 class="hero">让 Agent 在企业数据上<em>答对</em></h1>
+    <p class="deck deck--center">
+      BIRD mini-dev 实证：11 个数据库、500 题 —— <strong>500/500 正确</strong>。<br>
+      每题 token 中位约 5.6 万；三级语义资产全部 git 化，可复跑复核。
+    </p>
+  </div>
+</section>
+
+<!-- ════════════ 2 · 是什么 ════════════ -->
+<section class="slide">
+  <div class="section-label">是什么</div>
+  <h2 class="section-title">TSM 把"回答一个问题要用的知识"分成<em>三级</em></h2>
+  <div class="grid-3">
+    <div class="card card--dlr">
+      <h3>L1 数据源级 <code>dlr</code></h3>
+      <p>这个领域<b>有什么</b>：业务概念、落地在哪、怎么连。<br>检索面 = <code>dlr_semantic_query</code> → <code>get_pe_mapping</code> / <code>get_le_attrs</code></p>
+    </div>
+    <div class="card card--dlr">
+      <h3>L2 领域共识级 <code>consensus</code></h3>
+      <p>题面用词<b>怎么算 / 怎么过滤</b>：术语→列值、公式、口径。<br>检索面 = <code>dlr_search_consensus</code></p>
+    </div>
+    <div class="card card--dlr">
+      <h3>L3 业务逻辑级 <code>sop</code></h3>
+      <p>这道题<b>怎么裁</b>：打法、例外、陷阱。<br>检索面 = <code>dlr_search_sop</code>（按题检索，只取命中那一节）</p>
+    </div>
+  </div>
+  <div class="note">三级覆盖的是 <b>schema 级语义</b>（结构 / 值域 / 粒度 / 术语 / 打法）；数据源实例级事实（"客户 38508 是谁"）不入体系——即时用 SQL 算，或经 MCP 外部取。</div>
+  <div class="note"><b>DLR 的定位</b>：TSM 不限定数据源级用哪种建模方式；<b>DLR 是我们推荐的数据源级范式</b>（LE-PE 双层 + ARCS / PAS 两个机制）——本次实证用的就是它。</div>
+</section>
+
+<!-- ════════════ 3 · 成绩 ════════════ -->
+<section class="slide">
+  <div class="section-label">成绩</div>
+  <h2 class="section-title">11 个数据库、500 题 —— <em>500 / 500 正确</em></h2>
+  <div class="stat-row">
+    <div class="stat stat--good">
+      <div class="stat__value">500/500</div>
+      <div class="stat__label">评定正确</div>
+      <div class="stat__note">426 与 gold 一致 + 74 数据集缺陷裁定 · 0 错误</div>
+    </div>
+    <div class="stat stat--dlr">
+      <div class="stat__value">11</div>
+      <div class="stat__label">数据库</div>
+      <div class="stat__note">BIRD mini-dev 全量</div>
+    </div>
+    <div class="stat stat--dlr">
+      <div class="stat__value">5.6 万</div>
+      <div class="stat__label">token / 题（中位）</div>
+      <div class="stat__note">均值 7.3 万</div>
+    </div>
+    <div class="stat stat--dlr">
+      <div class="stat__value">6 / 10</div>
+      <div class="stat__label">步数 / 工具调用</div>
+      <div class="stat__note">每题均值</div>
+    </div>
+  </div>
+  <div class="note">三级<b>并行锚定</b>（不是串行流程）：拿到问题后三级同时取，交叉验证后才写 SQL——每一步都可追溯到工具返回与执行结果。</div>
+</section>
+
+<!-- ════════════ 4 · 错题处理（加分项）════════════ -->
+<section class="slide">
+  <div class="section-label">结果呈现 · 加分项</div>
+  <h2 class="section-title">基准自带 <em>74 处错题</em> —— TSM 照样答对</h2>
+  <p style="color:var(--ink-2);max-width:760px">这 74 处，基准的 gold 答案本身有问题。典型形态：</p>
+  <div class="chips">
+    <span class="chip">计数对象错："多少客户"被算成"多少条记录"</span>
+    <span class="chip">缺类型转换：文本按字典序比大小</span>
+    <span class="chip">缺括号：OR 绕过了前面的过滤</span>
+    <span class="chip">时间序列被当单个数值求和</span>
+    <span class="chip">分母基数歧义：行 vs 去重实体</span>
+    <span class="chip">样本窗口：逐笔记录只有 4 天</span>
+  </div>
+  <p style="color:var(--ink-2);max-width:760px">TSM 的做法：<b>L3 口径先行把正确读法钉死</b>——即使与 gold 不同，给出的也是对的。</p>
+  <div class="insight">
+    <div class="insight__icon">＋</div>
+    <div>
+      <h4>为什么这是加分项</h4>
+      <p>企业数据的常态就是定义混乱、口径冲突。语义层不只"描述数据"，还能<b>仲裁口径</b>——这是 TSM 超出普通 schema 描述的地方。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ 5 · 备注与证据 ════════════ -->
+<section class="slide">
+  <div class="section-label">备注 · 证据</div>
+  <h2 class="section-title">数据集与<em>可复核性</em></h2>
+  <div class="grid-2">
+    <div class="card">
+      <h3>数据集备注</h3>
+      <p>上述 74 处属数据集自身缺陷（按业务口径认定）；<b>数据集原始内容未作修改</b>——缺陷由知识层承载并按口径裁定。</p>
+    </div>
+    <div class="card">
+      <h3>证据 / 复跑</h3>
+      <p>场景包全部 git 化：三层语义源（L1 / L2 / L3）+ 考卷（<code>eval/questions.jsonl</code>，500 题）+ 逐题台账；仓库 README 有从起服务到批跑判定的完整命令。</p>
+    </div>
+  </div>
+  <p class="foot">数字来自跑批留档（<code>scenarios/birdminidev/results/</code> 与 <code>DETAIL.md</code>）。</p>
+</section>
+
+<!-- ════════════ 6 · 尾页 ════════════ -->
+<section class="slide slide--cover">
+  <div class="slide__body">
+    <h2 class="hero" style="font-size:clamp(24px,3.4vw,36px)">接着看</h2>
+    <p class="deck deck--center">
+      <a href="usage.html" style="color:var(--dlr);text-decoration:none;font-weight:700">怎么使用</a> —— 三道真实题目逐列走查（场景 · 题目 · 数据 · 建模 · 结果）<br>
+      <a href="appendix.html" style="color:var(--dlr);text-decoration:none;font-weight:700">附件</a> —— token / 步数 / 工具调用统计（按难度、按主题两视图）
+    </p>
+    <p class="foot">DLR Proj · birdminidev · 2026-09</p>
+  </div>
+</section>
+
+<script>
+  function toggleTheme() {
+    const root = document.documentElement;
+    const btn = document.querySelector('.theme-toggle');
+    if (root.getAttribute('data-theme') === 'dark') { root.removeAttribute('data-theme'); btn.textContent = '☀'; }
+    else { root.setAttribute('data-theme', 'dark'); btn.textContent = '🌙'; }
+  }
+</script>
+</body>
+</html>

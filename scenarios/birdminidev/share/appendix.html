@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSM + DLR · 附件统计</title>
+<style>
+  :root {
+    --surface: #fcfcfb; --page: #f9f9f7; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.08);
+    --dlr: #2a78d6; --good: #0ca30c; --warn: #fab219;
+    font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 18px; line-height: 1.6; color: var(--ink); background: var(--page);
+    scroll-behavior: smooth; scroll-snap-type: y proximity;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      --surface: #1a1a19; --page: #0d0d0d; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.08); --dlr: #3987e5; --good: #2fbf2f;
+    }
+  }
+  :root[data-theme="dark"] {
+    --surface: #1a1a19; --page: #0d0d0d; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.08); --dlr: #3987e5; --good: #2fbf2f;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--page); }
+
+  .slide {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+    padding: 84px 7vw 56px; scroll-snap-align: start; position: relative;
+  }
+  .slide--cover { align-items: center; text-align: center; }
+  .slide--cover .slide__body { max-width: 880px; }
+
+  .hero { font-size: clamp(36px, 5.2vw, 64px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; color: var(--ink); }
+  .hero em { font-style: normal; color: var(--dlr); }
+  .deck { font-size: clamp(17px, 2vw, 22px); color: var(--ink-2); margin-top: 22px; max-width: 780px; }
+  .deck--center { margin-left: auto; margin-right: auto; }
+  .section-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dlr); margin-bottom: 14px; }
+  .section-title { font-size: clamp(24px, 3.2vw, 38px); font-weight: 750; letter-spacing: -0.015em; line-height: 1.25; margin-bottom: 22px; }
+  .section-title em { font-style: normal; color: var(--dlr); }
+  .muted { color: var(--muted); font-size: 14px; }
+  .foot { margin-top: 30px; font-size: 13px; color: var(--muted); }
+  .foot a { color: var(--dlr); text-decoration: none; }
+
+  .tbl-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 8px 10px; overflow-x: auto; }
+  table.tbl { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .tbl th { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); text-align: right; padding: 12px 14px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  .tbl th:first-child { text-align: left; }
+  .tbl td { padding: 10px 14px; text-align: right; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; color: var(--ink-2); white-space: nowrap; }
+  .tbl td:first-child { text-align: left; color: var(--ink); font-weight: 600; }
+  .tbl tr:last-child td { border-bottom: none; }
+  .tbl tr.total td { font-weight: 800; color: var(--ink); border-top: 2px solid var(--baseline); }
+  .tbl .zh { color: var(--muted); font-weight: 400; font-size: 13px; }
+
+  .note { border-left: 3px solid var(--dlr); padding: 12px 18px; background: var(--surface); border-radius: 0 10px 10px 0; font-size: 14.5px; color: var(--ink-2); margin-top: 18px; }
+  .note b { color: var(--ink); }
+
+  pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; line-height: 1.7; background: var(--surface); border: 1px solid var(--border); padding: 20px 22px; border-radius: 12px; overflow-x: auto; color: var(--ink-2); }
+  pre .c { color: var(--muted); }
+  pre b { color: var(--dlr); font-weight: 600; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92em; background: var(--grid); padding: 1px 6px; border-radius: 6px; color: var(--ink); }
+
+  .nav { position: fixed; top: 20px; left: 20px; z-index: 999; display: flex; gap: 8px; }
+  .nav a { text-decoration: none; font-size: 13px; font-weight: 600; color: var(--ink-2); background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 7px 14px; }
+  .nav a.on { color: #fff; background: var(--dlr); border-color: var(--dlr); }
+  .theme-toggle { position: fixed; top: 20px; right: 20px; z-index: 999; width: 40px; height: 40px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); }
+
+  @media (max-width: 768px) { .slide { padding: 72px 5vw 44px; } }
+</style>
+</head>
+<body>
+
+<div class="nav"><a href="overview.html">概览</a><a href="usage.html">怎么使用</a><a class="on" href="appendix.html">附件</a></div>
+<button class="theme-toggle" onclick="toggleTheme()" title="切换深色/浅色">☀</button>
+
+<!-- ════════════ 1 · 封面 ════════════ -->
+<section class="slide slide--cover">
+  <div class="slide__body">
+    <div class="section-label">附件 · 实测统计</div>
+    <h1 class="hero">每一题都在算：<em>token · 步数 · 工具</em></h1>
+    <p class="deck deck--center">
+      每题取最新一轮（n = 500），两个视图：<b>按题目难度</b>（数据集原生 difficulty）、<b>按主题</b>（11 个库）。<br>
+      所有数字与归档 CSV、台账逐项一致；token = input + cache_read + output。
+    </p>
+  </div>
+</section>
+
+<!-- ════════════ 2 · 视图一：难度 ════════════ -->
+<section class="slide">
+  <div class="section-label">视图一 · 按题目难度</div>
+  <h2 class="section-title">难度越高越贵——但<em>都答对了</em></h2>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead>
+        <tr><th>难度</th><th>题数</th><th>token 中位</th><th>token 均值</th><th>步数均值</th><th>工具数均值</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>simple <span class="zh">简单</span></td><td>148</td><td>48,810</td><td>62,534</td><td>5.6</td><td>8.9</td></tr>
+        <tr><td>moderate <span class="zh">中等</span></td><td>250</td><td>58,983</td><td>77,005</td><td>6.2</td><td>10.4</td></tr>
+        <tr><td>challenging <span class="zh">困难</span></td><td>102</td><td>60,012</td><td>79,876</td><td>6.2</td><td>10.6</td></tr>
+        <tr class="total"><td>全部</td><td>500</td><td>55,898</td><td>73,307</td><td>6.0</td><td>10.0</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">差距主要在 token（中位 4.88 万 → 6.00 万，<b>+23%</b>）——难在跨表与口径，不在步数（5.6 → 6.2）。</div>
+</section>
+
+<!-- ════════════ 3 · 视图二：主题 ════════════ -->
+<section class="slide">
+  <div class="section-label">视图二 · 按主题（库）</div>
+  <h2 class="section-title">11 个业务领域，<em>同一套方法</em></h2>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead>
+        <tr><th>主题 / 库</th><th>题数</th><th>token 中位</th><th>token 均值</th><th>步数均值</th><th>工具数均值</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>信用卡支付 <span class="zh">debit_card_specializing</span></td><td>30</td><td>43,973</td><td>46,417</td><td>5.3</td><td>8.0</td></tr>
+        <tr><td>超级英雄 <span class="zh">superhero</span></td><td>52</td><td>45,861</td><td>50,317</td><td>5.1</td><td>8.7</td></tr>
+        <tr><td>毒理化学 <span class="zh">toxicology</span></td><td>40</td><td>45,684</td><td>52,154</td><td>5.7</td><td>9.5</td></tr>
+        <tr><td>开发者社区 <span class="zh">codebase_community</span></td><td>49</td><td>47,901</td><td>50,673</td><td>5.4</td><td>8.4</td></tr>
+        <tr><td>学生社团 <span class="zh">student_club</span></td><td>48</td><td>54,420</td><td>70,819</td><td>6.2</td><td>10.6</td></tr>
+        <tr><td>足球 <span class="zh">european_football_2</span></td><td>51</td><td>60,026</td><td>69,553</td><td>5.6</td><td>8.7</td></tr>
+        <tr><td>卡牌游戏 <span class="zh">card_games</span></td><td>52</td><td>60,552</td><td>80,711</td><td>6.1</td><td>9.4</td></tr>
+        <tr><td>赛车 <span class="zh">formula_1</span></td><td>66</td><td>61,576</td><td>77,018</td><td>6.4</td><td>10.8</td></tr>
+        <tr><td>银行金融 <span class="zh">financial</span></td><td>32</td><td>64,174</td><td>94,832</td><td>7.1</td><td>12.3</td></tr>
+        <tr><td>学校 <span class="zh">california_schools</span></td><td>30</td><td>66,005</td><td>78,377</td><td>5.5</td><td>9.0</td></tr>
+        <tr><td>血栓医疗 <span class="zh">thrombosis_prediction</span></td><td>50</td><td>88,615</td><td>129,258</td><td>7.7</td><td>13.8</td></tr>
+        <tr class="total"><td>全部</td><td>500</td><td>55,898</td><td>73,307</td><td>6.0</td><td>10.0</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">最贵 = <b>血栓医疗</b>（中位 8.86 万——临床口径密集、单位/范围判定多）；最便宜 = <b>信用卡支付 / 超级英雄 / 毒理化学</b>（4.4–4.6 万）。</div>
+</section>
+
+<!-- ════════════ 4 · 复跑入口 ════════════ -->
+<section class="slide">
+  <div class="section-label">复跑入口</div>
+  <h2 class="section-title">一条命令，<em>自己复核</em></h2>
+  <pre><span class="c"># 1) 起语义后端（Neo4j + MCP server :28795，幂等）</span>
+bash "DSH-based Agent Service/scripts/start_backend.sh"
+
+<span class="c"># 2) 单题</span>
+bash "DSH-based Agent Service/dsh_dlr/run_one.sh" &lt;qid&gt; "&lt;question&gt;"
+
+<span class="c"># 3) 批跑 → 判定 → 统计</span>
+bash "DSH-based Agent Service/scripts/run_batch.sh" --qids &lt;q1&gt;,&lt;q2&gt; --jobs 3
+cd "TSM Core Service"
+node bin/tsm.mjs <b>grade</b> --run "&lt;批次目录&gt;"    <span class="c"># → questions.csv + summary.md</span>
+node bin/tsm.mjs <b>stats</b>                        <span class="c"># → results/STATS.md + 台账 DETAIL.md</span></pre>
+  <div class="note">
+    <b>考卷</b>：<code>scenarios/birdminidev/eval/questions.jsonl</code>——500 行 = 题面 + 期望 + 口径来源（74 处缺陷题的答案键取 L3 节口径，其余取 gold）。<br>
+    <b>台账</b>：<code>DETAIL.md</code> + <code>DETAIL/&lt;库&gt;.md</code>（逐题判定依据与证据）。<br>
+    <b>完整上手</b>（含 Web 对话与 bundle 安装）见仓库 README。
+  </div>
+  <p class="foot">统计口径与 <code>tsm stats</code> 相同（每题取最新一轮、上中位）；复算脚本见 <code>scenarios/birdminidev/eval/appendix_views.mjs</code>。</p>
+</section>
+
+<!-- ════════════ 5 · 尾页 ════════════ -->
+<section class="slide slide--cover">
+  <div class="slide__body">
+    <h2 class="hero" style="font-size:clamp(24px,3.4vw,36px)">回到</h2>
+    <p class="deck deck--center">
+      <a href="overview.html" style="color:var(--dlr);text-decoration:none;font-weight:700">概览</a> —— 成绩与"错题处理"加分项<br>
+      <a href="usage.html" style="color:var(--dlr);text-decoration:none;font-weight:700">怎么使用</a> —— 三道真实题目逐列走查
+    </p>
+    <p class="foot">DLR Proj · birdminidev · 2026-09</p>
+  </div>
+</section>
+
+<script>
+  function toggleTheme() {
+    const root = document.documentElement;
+    const btn = document.querySelector('.theme-toggle');
+    if (root.getAttribute('data-theme') === 'dark') { root.removeAttribute('data-theme'); btn.textContent = '☀'; }
+    else { root.setAttribute('data-theme', 'dark'); btn.textContent = '🌙'; }
+  }
+</script>
+</body>
+</html>
