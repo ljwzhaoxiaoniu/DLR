@@ -6,9 +6,16 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const RESULTS = "scenarios/birdminidev/results";
-const DATASET = "MINIDEV_sqlite/mini_dev_sqlite.json";
+// 路径可从任何 cwd 运行：场景自身位置推导 + env 覆盖（TSM_RESULTS_DIR / TSM_DATASET_DIR）
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+const SCN = path.resolve(HERE, "..");
+const RESULTS = process.env.TSM_RESULTS_DIR ?? path.join(SCN, "results");
+const DATASET =
+  process.env.TSM_DATASET_DIR != null
+    ? path.join(process.env.TSM_DATASET_DIR, "MINIDEV_sqlite/mini_dev_sqlite.json")
+    : path.resolve(SCN, "..", "..", "MINIDEV_sqlite/mini_dev_sqlite.json");
 
 // ── CSV 解析（引号状态机；按全文解析，兼容字段内换行）────────────────
 const parseCsv = (s) => {

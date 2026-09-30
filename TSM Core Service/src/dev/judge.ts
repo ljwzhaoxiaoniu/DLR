@@ -12,7 +12,7 @@ import * as path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { readScenario, scenarioFiles } from "../model/graphData.js";
 import { resolveSqlitePath } from "../graph/physicalSchema.js";
-import { CACHE_DIR, ROOT } from "../config.js";
+import { CACHE_DIR, DATASET_QUESTIONS, DATASET_ROOT } from "../config.js";
 
 export interface QJson {
   question_id: number;
@@ -24,7 +24,7 @@ export interface QJson {
 }
 
 export const QUESTIONS: QJson[] = JSON.parse(
-  fs.readFileSync(path.join(ROOT, "MINIDEV_sqlite", "mini_dev_sqlite.json"), "utf8"),
+  fs.readFileSync(DATASET_QUESTIONS, "utf8"),
 );
 export const byQid = new Map(QUESTIONS.map((q) => [Number(q.question_id), q]));
 
@@ -34,7 +34,7 @@ for (const f of scenarioFiles()) {
   const db = f.replace(/\.yaml$/, "");
   const { sc } = readScenario(db);
   const url = Object.values(sc.databases ?? {})[0] ?? "";
-  const p = resolveSqlitePath(url, ROOT);
+  const p = resolveSqlitePath(url, DATASET_ROOT);
   if (p) dbPath.set(db, p);
 }
 

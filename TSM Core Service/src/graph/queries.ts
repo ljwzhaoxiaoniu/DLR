@@ -21,6 +21,8 @@ function parseMaybeJson(v: unknown): unknown {
 }
 
 export class Neo4jGraph implements GraphQueries {
+  readonly backend = "neo4j" as const;
+
   private constructor(private readonly driver: Driver) {}
 
   static async connect(uri: string, user: string, pass: string): Promise<Neo4jGraph> {

@@ -1,14 +1,17 @@
 /**
  * /status —— TSM 语义后端的健康 + 资产快照（HTTP 路由，**不是** MCP 工具）。
  *
- * 设计：**状态从服务自己出**——MCP server 进程本就握着 Neo4j driver 与 LanceDB
- * 句柄，dsh 侧的展示插件只做"读表头"。任何一段探针失败都不抛错：对应小节记
+ * 设计：**状态从服务自己出**——MCP server 进程本就握着图句柄与 LanceDB 句柄，
+ * dsh 侧的展示插件只做"读表头"。任何一段探针失败都不抛错：对应小节记
  * `ok:false` + error，整体照常返回（面板因此能区分"服务挂了"与"面板没数据"）。
+ *
+ * 图后端双轨（2026-09-30）：`graph` 段为**当前生效后端**（`memory` 或 `neo4j`）；
+ * 旧客户端兼容：`neo4j` 键保留——内存后端时 `enabled:false`（旧面板会画红灯，
+ * 但不会报错；新版浮层改读 `graph`）。
  */
-import * as path from "node:path";
-import { SCENARIO } from "../config.js";
+import { SCENARIO, SCENARIO_NAME, SCENARIO_SOURCE, YAML_DIR } from "../config.js";
 import type { LanceStore } from "../store/lance.js";
-import type { Neo4jGraph } from "../graph/queries.js";
+import type { GraphHandle } from "../graph/types.js";
 
 /** 工具面清单（契约冻结的 7 个，仅作展示） */
 const TOOLS = [
@@ -28,37 +31,54 @@ const STARTED_AT = Date.now();
 
 export interface StatusDeps {
   getStore: () => Promise<LanceStore>;
-  getGraph: () => Promise<Neo4jGraph>;
+  getGraph: () => Promise<GraphHandle>;
+  /** HTTP 基址（如 http://127.0.0.1:28795）；stdin/stdio 模式可缺省 */
+  httpBase?: string;
 }
 
-export async function buildStatus({ getStore, getGraph }: StatusDeps) {
-  // ── Neo4j：连通性 + 全图标签计数（LE/PE/PA/PAS…）──
-  const neo4j: {
+export async function buildStatus({ getStore, getGraph, httpBase }: StatusDeps) {
+  // ── 图：连通性 + 全图标签计数（LE/PE/PA/PAS…）；后端可能是内存图或 Neo4j ──
+  const graph: {
+    backend: "memory" | "neo4j" | "unknown";
     ok: boolean;
-    uri: string;
-    browser_url: string;
     nodes: Record<string, number> | null;
     rels: Record<string, number> | null;
     total_nodes: number | null;
+    source: { scenario: string; yaml_dir: string };
+    fallback_reason?: string;
     error?: string;
   } = {
+    backend: "unknown",
     ok: false,
-    uri: process.env.NEO4J_URI ?? "bolt://localhost:7687",
-    browser_url: process.env.NEO4J_BROWSER_URL ?? "http://localhost:7474",
     nodes: null,
     rels: null,
     total_nodes: null,
+    source: { scenario: SCENARIO_NAME, yaml_dir: YAML_DIR },
   };
   try {
-    const graph = await getGraph();
-    const nodes = await graph.labelCounts();
-    neo4j.nodes = nodes;
-    neo4j.rels = await graph.relationshipCounts();
-    neo4j.total_nodes = Object.values(nodes).reduce((a, b) => a + b, 0);
-    neo4j.ok = true;
+    const g = await getGraph();
+    graph.backend = g.backend;
+    if (g.fallback_reason) graph.fallback_reason = g.fallback_reason;
+    const nodes = await g.labelCounts();
+    graph.nodes = nodes;
+    graph.rels = await g.relationshipCounts();
+    graph.total_nodes = Object.values(nodes).reduce((a, b) => a + b, 0);
+    graph.ok = true;
   } catch (e) {
-    neo4j.error = String(e);
+    graph.error = String(e);
   }
+
+  // ── 兼容旧客户端：neo4j 键保留（内存后端时 enabled:false）──
+  const neo4j = {
+    enabled: graph.backend === "neo4j",
+    ok: graph.backend === "neo4j" && graph.ok,
+    uri: process.env.NEO4J_URI ?? "bolt://localhost:7687",
+    browser_url: process.env.NEO4J_BROWSER_URL ?? "http://localhost:7474",
+    nodes: graph.backend === "neo4j" ? graph.nodes : null,
+    rels: graph.backend === "neo4j" ? graph.rels : null,
+    total_nodes: graph.backend === "neo4j" ? graph.total_nodes : null,
+    ...(graph.backend === "neo4j" && !graph.ok && graph.error ? { error: graph.error } : {}),
+  };
 
   // ── LanceDB：各向量表行数（表缺失即跳过）──
   const lance: { ok: boolean; tables: Record<string, number>; error?: string } = {
@@ -73,12 +93,17 @@ export async function buildStatus({ getStore, getGraph }: StatusDeps) {
   }
 
   return {
-    ok: neo4j.ok && lance.ok,
-    service: "tsm-core",
+    ok: graph.ok && lance.ok,
+    service: "tsm-core-dlr",
     pid: process.pid,
     uptime_sec: Math.round((Date.now() - STARTED_AT) / 1000),
-    scenario: { name: path.basename(SCENARIO), dir: SCENARIO },
+    service_info: {
+      http_base: httpBase ?? null,
+      viz_url: httpBase ? `${httpBase}/viz/dlr` : null,
+    },
+    scenario: { name: SCENARIO_NAME, dir: SCENARIO, source: SCENARIO_SOURCE },
     tools: TOOLS,
+    graph,
     neo4j,
     lance,
     checked_at: new Date().toISOString(),

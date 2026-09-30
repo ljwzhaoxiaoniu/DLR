@@ -13,6 +13,7 @@ import * as path from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { buildPayload } from "../model/graphData.js";
+import { VIZ_DIR } from "../config.js";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)); // …/TSM Core Service/src/viz
 const SERVICE_DIR = path.resolve(HERE, "..", ".."); // …/TSM Core Service
@@ -25,7 +26,7 @@ const arg = (name: string, fallback = ""): string => {
 };
 const OPEN = process.argv.includes("--open");
 const DB = arg("--db") || undefined;
-const OUT = arg("--out") || path.join(SERVICE_DIR, ".store", "viz", "dlr-graph.html");
+const OUT = arg("--out") || path.join(VIZ_DIR, "dlr-graph.html");
 
 if (!fs.existsSync(TEMPLATE)) {
   console.error(`[ERR] 页面模板不存在：${TEMPLATE}`);

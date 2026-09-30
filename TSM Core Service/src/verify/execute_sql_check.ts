@@ -5,8 +5,8 @@
 import * as fs from "node:fs";
 import { executeSql } from "../queries/executeSql.js";
 
-import { ROOT, FIXTURES_DIR } from "../config.js";
-const DB = `${ROOT}/MINIDEV_sqlite/dev_databases/debit_card_specializing/debit_card_specializing.sqlite`;
+import { DATASET_DIR, FIXTURES_DIR } from "../config.js";
+const DB = `${DATASET_DIR}/dev_databases/debit_card_specializing/debit_card_specializing.sqlite`;
 const SQL = `SELECT CAST(SUM(CASE WHEN Currency='EUR' THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN Currency='CZK' THEN 1 ELSE 0 END) AS ratio FROM customers`;
 
 const ts = executeSql(SQL, DB);

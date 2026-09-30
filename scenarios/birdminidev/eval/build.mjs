@@ -12,8 +12,11 @@ import { fileURLToPath } from "node:url";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SCN = path.resolve(HERE, "..");
-const ROOT = path.resolve(SCN, "..", "..");
-const qs = JSON.parse(fs.readFileSync(path.join(ROOT, "MINIDEV_sqlite/mini_dev_sqlite.json"), "utf8"));
+// 数据集根：env 优先（TSM_DATASET_DIR），否则按仓库布局回退两级（脚本装在场景包内也成立）
+const DATASET_ROOT = process.env.TSM_DATASET_DIR ?? path.resolve(SCN, "..", "..");
+const qs = JSON.parse(
+  fs.readFileSync(path.join(DATASET_ROOT, "MINIDEV_sqlite/mini_dev_sqlite.json"), "utf8"),
+);
 
 // ── gold 期望：扫 results 各轮 questions.csv，每题取最新轮 ──
 /** 整文件解析（**题面可含换行** → 必须按引号状态切记录，不能按行切） */
@@ -34,7 +37,7 @@ const parseCsv = (text) => {
   return rows;
 };
 const gold = new Map();
-const resDir = path.join(SCN, "results");
+const resDir = process.env.TSM_RESULTS_DIR ?? path.join(SCN, "results");
 for (const d of fs.readdirSync(resDir).filter((x) => fs.statSync(path.join(resDir, x)).isDirectory()).sort()) {
   const p = path.join(resDir, d, "questions.csv");
   if (!fs.existsSync(p)) continue;
@@ -74,7 +77,9 @@ for (const q of qs) {
   if (!expected) noGold.push(qid);
   out.push(JSON.stringify({ question, expected, source }));
 }
-fs.mkdirSync(path.join(SCN, "eval"), { recursive: true });
-fs.writeFileSync(path.join(SCN, "eval/questions.jsonl"), out.join("\n") + "\n");
+// 产物落点：默认写回场景包 eval/（仓库内）；安装态可用 TSM_OUT_DIR 指到可写目录
+const outDir = process.env.TSM_OUT_DIR ? path.join(process.env.TSM_OUT_DIR, "eval") : path.join(SCN, "eval");
+fs.mkdirSync(outDir, { recursive: true });
+fs.writeFileSync(path.join(outDir, "questions.jsonl"), out.join("\n") + "\n");
 console.log(`写 ${out.length} 行 ｜ L3 口径 ${nSop} ｜ gold ${nGold} ｜ 无期望 ${noGold.length}${noGold.length ? " → " + noGold.slice(0, 8).join(",") : ""}`);
 console.log("节总数:", sopByTitle.size, "｜ 带 Expected 的节:", [...sopByTitle.values()].filter((v) => v.expected).length);

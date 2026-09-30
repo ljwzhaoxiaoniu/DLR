@@ -7,7 +7,7 @@
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { SCENARIO } from "../config.js";
+import { DETAIL_DIR, DETAIL_MD, RESULTS_DIR, SCENARIO_NAME } from "../config.js";
 import {
   listRuns,
   readRunCsv,
@@ -95,7 +95,7 @@ interface Agg {
 
 /** 生成 <场景>/DETAIL.md，并返回错题清单（README 首节用） */
 export function buildDetail(): Mistake[] {
-  const resultsDir = path.join(SCENARIO, "results");
+  const resultsDir = RESULTS_DIR;
   const runs = listRuns(resultsDir);
 
   // ── L3 源：题面 → 题号 → SOP 裁定（共享实现；也用于评定的兜底推导） ──
@@ -178,7 +178,7 @@ export function buildDetail(): Mistake[] {
   function preservedObservation(): string[] {
     const PLACEHOLDER = "> 分批跑完后按 SOP 案例撰写：每个 SOP 条目题须有对应观察、数字与归档 CSV 逐项一致（防止「先写结论后找证据」）。";
     try {
-      const old = fs.readFileSync(path.join(SCENARIO, "DETAIL.md"), "utf8");
+      const old = fs.readFileSync(DETAIL_MD, "utf8");
       const m = old.match(/\n## 定性观察\n+([\s\S]*?)(?=\n## )/);
       const body = (m?.[1] ?? "").trim();
       if (body && !body.startsWith("> 分批跑完后按 SOP 案例撰写")) return body.split("\n");
@@ -237,7 +237,7 @@ export function buildDetail(): Mistake[] {
 
   // ── 组装：主文档 = 总账（覆盖度 / 汇总 / 分库索引 / 缺陷裁定） ────────
   const md: string[] = [
-    `# 评测明细 — DLR · ${path.basename(SCENARIO)}`,
+    `# 评测明细 — DLR · ${SCENARIO_NAME}`,
     "",
     "> **说明**：question 驱动三级锚定——L1 dsh MCP 语义层（`dlr_semantic_query` 等 7 工具，含 `get_full_data_info` 下探）/ L2 共识（`dlr_search_consensus`）/ L3 SOP（`dlr_search_sop`），交叉验证后出 SQL。",
     "> **判定**：gold SQL 在数据集 SQLite 上执行得期望值 ↔ agent 答案（**数据集原生，不修正**）；数值逐级容差、文本归一化包含，**都只看 `Final Answer:` 结论句区域**（正文里的备选读法不算命中）。",
@@ -310,13 +310,13 @@ export function buildDetail(): Mistake[] {
   ];
 
   // ── 分库文件：DETAIL/<库>.md（逐题校验表 + 证据正文 + 本库缺陷） ──────
-  const DETAIL_DIR = path.join(SCENARIO, "DETAIL");
+  // DETAIL_DIR 来自 config（= <SCENARIO_OUT>/DETAIL；安装态不写进场景包）
   fs.mkdirSync(DETAIL_DIR, { recursive: true });
   for (const db of dbNames) {
     const rows = byDb.get(db)!;
     const rt = (v: string) => rows.filter((a) => a.ruling === v).length;
     const content = [
-      `# 评测明细 · ${db} — ${path.basename(SCENARIO)}`,
+      `# 评测明细 · ${db} — ${SCENARIO_NAME}`,
       "",
       `> 本库已跑 **${rows.length}** 题：✅ ${rt("CORRECT")} ｜ 🔁 ${rt("OVERTURNED")} ｜ ❌ ${rt("WRONG")} ｜ ⚠️ ${rt("PENDING")} ｜ token 中位 **${fmt(dbMedian(rows))}**`,
       "> 总账（覆盖度 / 汇总 / 数据集缺陷与裁定）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。",
@@ -336,7 +336,7 @@ export function buildDetail(): Mistake[] {
     fs.writeFileSync(path.join(DETAIL_DIR, `${db}.md`), content.join("\n"));
   }
 
-  const outPath = path.join(SCENARIO, "DETAIL.md");
+  const outPath = DETAIL_MD;
   fs.writeFileSync(outPath, md.join("\n"));
   return mistakes;
 }

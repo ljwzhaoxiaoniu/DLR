@@ -4,17 +4,13 @@
  * 跑法: npx tsx src/spike/pe_mapping_parity.ts ["PHYSICAL.YearMonth"]
  */
 import * as fs from "node:fs";
-import { Neo4jGraph } from "../graph/queries.js";
+import { openGraph } from "../graph/backend.js";
 import { getPeMapping } from "../queries/peMapping.js";
 
 import { FIXTURES_DIR } from "../config.js";
 const peId = process.argv[2] ?? "PHYSICAL.YearMonth";
 
-const g = await Neo4jGraph.connect(
-  process.env.NEO4J_URI ?? "bolt://localhost:7687",
-  process.env.NEO4J_USER ?? "neo4j",
-  process.env.NEO4J_PASSWORD ?? "",
-);
+const g = await openGraph(); // 按 TSM_GRAPH_BACKEND 选后端（auto/内存/Neo4j）
 const ts = await getPeMapping(g, peId);
 await g.close();
 

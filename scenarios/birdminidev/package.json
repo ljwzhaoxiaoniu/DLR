@@ -1,0 +1,24 @@
+{
+  "name": "tsm-scenario-birdmini",
+  "version": "1.0.0",
+  "description": "TSM scenario package: BIRD mini-dev — L1 DLR modeling YAML (11 databases), L2 domain consensus, L3 SOP, the 500-question exam paper and verify fixtures. Consumed by tsm-core-dlr (TSM_SCENARIO=tsm-scenario-birdmini).",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ljwzhaoxiaoniu/DLR.git",
+    "directory": "scenarios/birdminidev"
+  },
+  "files": [
+    "tsm-scenario.json",
+    "sources/configs/DLR",
+    "sources/consensus",
+    "sources/sop.md",
+    "sources/README.md",
+    "eval",
+    "fixtures",
+    "share",
+    "README.md",
+    "LICENSE"
+  ]
+}

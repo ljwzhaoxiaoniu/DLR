@@ -10,7 +10,7 @@ import * as path from "node:path";
 import { parse } from "yaml";
 import type { DlrScenarioYaml } from "./types.js";
 import { loadColumnTypes, resolveSqlitePath } from "../graph/physicalSchema.js";
-import { ROOT, YAML_DIR } from "../config.js";
+import { DATASET_ROOT, YAML_DIR } from "../config.js";
 
 const dbFromTableId = (t: string) => t.split(".")[0];
 
@@ -35,7 +35,7 @@ export function scenarioFiles(db?: string): string[] {
 export function readScenario(dbName: string): { sc: DlrScenarioYaml; colTypes: Map<string, string> } {
   const sc = parse(fs.readFileSync(path.join(YAML_DIR, `${dbName}.yaml`), "utf8")) as DlrScenarioYaml;
   const sqliteUrl = sc.databases?.[dbName] ?? Object.values(sc.databases ?? {})[0] ?? "";
-  const sqlitePath = resolveSqlitePath(sqliteUrl, ROOT);
+  const sqlitePath = resolveSqlitePath(sqliteUrl, DATASET_ROOT);
   const colTypes =
     sqlitePath && fs.existsSync(sqlitePath) ? loadColumnTypes(sqlitePath) : new Map<string, string>();
   return { sc, colTypes };

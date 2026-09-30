@@ -8,7 +8,7 @@
  */
 import * as fs from "node:fs";
 import { LanceStore } from "../store/lance.js";
-import { Neo4jGraph } from "../graph/queries.js";
+import { openGraph } from "../graph/backend.js";
 import { dlrSemanticQuery } from "../queries/semanticQuery.js";
 
 import { STORE_DIR as STORE, MODEL_DIR as MODEL, FIXTURES_DIR } from "../config.js";
@@ -18,11 +18,7 @@ const Q =
   "What is the ratio of customers who pay in EUR against customers who pay in CZK?";
 
 const store = await LanceStore.open(STORE, MODEL);
-const graph = await Neo4jGraph.connect(
-  process.env.NEO4J_URI ?? "bolt://localhost:7687",
-  process.env.NEO4J_USER ?? "neo4j",
-  process.env.NEO4J_PASSWORD ?? "",
-);
+const graph = await openGraph(); // 按 TSM_GRAPH_BACKEND 选后端（auto/内存/Neo4j）
 
 const ts = await dlrSemanticQuery(store, graph, Q, { topK: 5, threshold: 0.5 });
 const py = JSON.parse(fs.readFileSync(PY_JSON, "utf8")) as typeof ts;

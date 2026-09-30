@@ -7,12 +7,12 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { parse } from "yaml";
-import type { Neo4jGraph } from "../graph/queries.js";
+import type { GraphQueries } from "../graph/types.js";
 import { resolveSqlitePath } from "../graph/physicalSchema.js";
 import type { DlrArcR } from "../model/types.js";
 import { buildUnwindExpansion, type UnwindExpansion } from "./unwind.js";
 
-import { ROOT, YAML_DIR } from "../config.js";
+import { DATASET_ROOT, YAML_DIR } from "../config.js";
 
 /** db 名 → sqlite 绝对路径（扫 DLR 全部 YAML 的 databases 映射，进程内缓存） */
 let dbUrlCache: Map<string, string> | null = null;
@@ -24,7 +24,7 @@ function dbToSqlitePath(): Map<string, string> {
       databases?: Record<string, string>;
     };
     for (const [db, url] of Object.entries(sc.databases ?? {})) {
-      const p = resolveSqlitePath(url, ROOT);
+      const p = resolveSqlitePath(url, DATASET_ROOT);
       if (p) m.set(db, p);
     }
   }
@@ -39,7 +39,7 @@ export function resolveDatabaseUrl(physicalTableId: string): string {
   return p ?? "";
 }
 
-export async function getPeMapping(graph: Neo4jGraph, peId: string) {
+export async function getPeMapping(graph: GraphQueries, peId: string) {
   const entity = await graph.getPhysicalEntityById(peId);
   if (!entity) {
     return { success: false as const, message: `物理实体不存在: ${peId}` };

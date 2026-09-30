@@ -9,13 +9,15 @@
  * McpServer 实例（共享底层 LanceDB/Neo4j 连接），会话 id 走 `mcp-session-id` 头。
  */
 import { randomUUID } from "node:crypto";
+import { createRequire } from "node:module";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { LanceStore } from "../store/lance.js";
-import { Neo4jGraph } from "../graph/queries.js";
+import { openGraph } from "../graph/backend.js";
+import type { GraphHandle } from "../graph/types.js";
 import { dlrSemanticQuery } from "../queries/semanticQuery.js";
 import { searchConsensus } from "../queries/searchConsensus.js";
 import { getPeMapping } from "../queries/peMapping.js";
@@ -26,9 +28,15 @@ import { executeSql } from "../queries/executeSql.js";
 import { STORE_DIR, MODEL_DIR } from "../config.js";
 import { buildStatus } from "./status.js";
 import { renderVizHtml } from "../viz/buildViz.js";
-const NEO4J_URI = process.env.NEO4J_URI ?? "bolt://localhost:7687";
-const NEO4J_USER = process.env.NEO4J_USER ?? "neo4j";
-const NEO4J_PASSWORD = process.env.NEO4J_PASSWORD ?? "";
+
+/** 服务版本（MCP 自报；取自 package.json，读不到时退回 0.1.0） */
+const SERVICE_VERSION = (() => {
+  try {
+    return (createRequire(import.meta.url)("../../package.json") as { version?: string }).version ?? "0.1.0";
+  } catch {
+    return "0.1.0";
+  }
+})();
 
 /** 允许读 /status 的浏览器源（仅 dsh web 的 loopback 写法；可用 TSM_STATUS_ORIGINS 覆盖） */
 const STATUS_ORIGINS = new Set(
@@ -39,7 +47,7 @@ const STATUS_ORIGINS = new Set(
 // 失败不缓存：reject 时把缓存复位，下次调用自动重试——这样「Neo4j / MCP 谁先起」
 // 都行，中途断开再拉起也能自愈（否则一个 rejected promise 会一直吐错到进程重启）。
 let storePromise: Promise<LanceStore> | null = null;
-let graphPromise: Promise<Neo4jGraph> | null = null;
+let graphPromise: Promise<GraphHandle> | null = null;
 const withReset = <T>(reset: () => void, p: Promise<T>): Promise<T> =>
   p.catch((e) => {
     reset();
@@ -48,14 +56,11 @@ const withReset = <T>(reset: () => void, p: Promise<T>): Promise<T> =>
 const getStore = () =>
   (storePromise ??= withReset(() => (storePromise = null), LanceStore.open(STORE_DIR, MODEL_DIR)));
 const getGraph = () =>
-  (graphPromise ??= withReset(
-    () => (graphPromise = null),
-    Neo4jGraph.connect(NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD),
-  ));
+  (graphPromise ??= withReset(() => (graphPromise = null), openGraph()));
 
 /** 每会话一个 McpServer 实例（工具注册相同，底层共享上面的连接） */
 function createServer(): McpServer {
-  const server = new McpServer({ name: "tsm-core", version: "0.1.0" });
+  const server = new McpServer({ name: "tsm-core-dlr", version: SERVICE_VERSION });
 
   server.registerTool(
     "dlr_semantic_query",
@@ -213,7 +218,11 @@ if (httpIdx >= 0) {
             "cache-control": "no-store",
           };
           if (origin && STATUS_ORIGINS.has(origin)) headers["access-control-allow-origin"] = origin;
-          res.writeHead(200, headers).end(JSON.stringify(await buildStatus({ getStore, getGraph })));
+          res.writeHead(200, headers).end(
+            JSON.stringify(
+              await buildStatus({ getStore, getGraph, httpBase: `http://127.0.0.1:${port}` }),
+            ),
+          );
           return;
         }
 

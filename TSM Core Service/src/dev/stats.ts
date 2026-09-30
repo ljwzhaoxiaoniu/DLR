@@ -16,14 +16,14 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { spawn } from "node:child_process";
-import { ROOT, SCENARIO } from "../config.js";
+import { DATASET_QUESTIONS, DETAIL_MD, RESULTS_DIR, SCENARIO, SCENARIO_NAME, SCENARIO_README } from "../config.js";
 import { listRuns, readRunCsv, RULINGS, RULING_LABEL } from "./results.js";
 import { buildDetail } from "./detail.js";
 
 const NO_SYNC = process.argv.includes("--no-sync");
 const OPEN = process.argv.includes("--open");
 
-const RESULTS = path.join(SCENARIO, "results");
+const RESULTS = RESULTS_DIR;
 const OUT_SVG = path.join(RESULTS, "stats.svg");
 const OUT_MD = path.join(RESULTS, "STATS.md");
 const MARK_BEGIN = "<!-- stats:begin -->";
@@ -102,7 +102,7 @@ const avgOf = (f: (r: Row) => number) => (rows.length ? rows.reduce((n, r) => n 
 const distinct = (rs: Row[]) => new Set(rs.map((r) => r.qid)).size;
 
 // 跑题覆盖度：数据集原生题数（按库）
-const QJSON = path.join(ROOT, "MINIDEV_sqlite", "mini_dev_sqlite.json");
+const QJSON = DATASET_QUESTIONS;
 const dataset: { question_id: number; db_id: string }[] = JSON.parse(fs.readFileSync(QJSON, "utf8"));
 const dbTotal = new Map<string, number>();
 for (const q of dataset) dbTotal.set(q.db_id, (dbTotal.get(q.db_id) ?? 0) + 1);
@@ -262,7 +262,7 @@ fs.writeFileSync(OUT_SVG, svg);
 const md = [
   `# 实测结果综合统计（tsm stats）`,
   "",
-  `场景 \`${path.basename(SCENARIO)}\` ｜ 轮次 ${runs.length} ｜ 判定 ${rows.length} 次（去重 ${doneTotal} 题）｜ 生成 ${new Date().toISOString()}`,
+  `场景 \`${SCENARIO_NAME}\` ｜ 轮次 ${runs.length} ｜ 判定 ${rows.length} 次（去重 ${doneTotal} 题）｜ 生成 ${new Date().toISOString()}`,
   "",
   `**评定（按 SOP 裁定 · 主口径 · 最终结果 ${finals.length} 题去重）：${RULINGS.map((r) => `${RULING_LABEL[r]} ${rTallyFinal(r)}`).join(" ｜ ")}**（每题取最新一轮；🔁 翻盘单独计，不并入 ✅ 正确）`,
   "",
@@ -321,7 +321,7 @@ const block = [
 
 // ── 明细文档（DETAIL.md，与 README 并列）+ 错题块 ─────────────────────
 const mistakes = buildDetail();
-console.log(`[stats] 明细文档 → ${path.join(SCENARIO, "DETAIL.md")}（数据集缺陷 ${mistakes.length} 题）`);
+console.log(`[stats] 明细文档 → ${DETAIL_MD}（数据集缺陷 ${mistakes.length} 题）`);
 
 const cell = (s: string) => s.replace(/\|/g, "\\|").replace(/\r?\n+/g, " ").trim();
 const mistakesBlock = mistakes.length
@@ -336,7 +336,16 @@ const mistakesBlock = mistakes.length
   : "（暂无：已跑题判定均为 PASS）";
 
 if (!NO_SYNC) {
-  const readmePath = path.join(SCENARIO, "README.md");
+  const readmePath = SCENARIO_README;
+  // 安装态首次写入：从场景包复制一份 README（标记块的宿主），之后同步都落在这里
+  if (!fs.existsSync(readmePath)) {
+    const src = path.join(SCENARIO, "README.md");
+    if (fs.existsSync(src) && path.resolve(src) !== path.resolve(readmePath)) {
+      fs.mkdirSync(path.dirname(readmePath), { recursive: true });
+      fs.copyFileSync(src, readmePath);
+      console.log(`[stats] 已从场景包复制 README → ${readmePath}`);
+    }
+  }
   const syncBlock = (begin: string, end: string, content: string, label: string) => {
     const text = fs.existsSync(readmePath) ? fs.readFileSync(readmePath, "utf8") : "";
     const i = text.indexOf(begin);

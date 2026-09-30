@@ -12,7 +12,7 @@
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { CONSENSUS_DIR, ROOT } from "../config.js";
+import { CONSENSUS_DIR, COVERAGE_DIR, DATASET_QUESTIONS, DATASET_ROOT } from "../config.js";
 import { consensusSourceFormat, readConsensusSource } from "../model/consensusSource.js";
 import { readScenario, scenarioFiles } from "../model/graphData.js";
 import { loadForeignKeys, loadTables, resolveSqlitePath } from "../graph/physicalSchema.js";
@@ -85,7 +85,7 @@ function coverageForDb(db: string): DbReport {
   const stats: Record<string, number> = {};
   const { sc } = readScenario(db);
   const sqliteUrl = Object.values(sc.databases ?? {})[0] ?? "";
-  const sqlitePath = resolveSqlitePath(sqliteUrl, ROOT);
+  const sqlitePath = resolveSqlitePath(sqliteUrl, DATASET_ROOT);
   if (!sqlitePath || !fs.existsSync(sqlitePath)) {
     return { db, lines: [`## ${db}\n\n[ERR] SQLite 不存在：${sqliteUrl}`], stats };
   }
@@ -219,7 +219,7 @@ function coverageForDb(db: string): DbReport {
   if (fkUnexpressed.length) L.push(`  - ${fkUnexpressed.join("\n  - ")}`);
 
   // ── C) evidence 残差（启发式）──
-  const qPath = path.join(ROOT, "MINIDEV_sqlite", "mini_dev_sqlite.json");
+  const qPath = DATASET_QUESTIONS;
   const consPath = path.join(CONSENSUS_DIR, `${db}.jsonl`);
   const cons = fs.existsSync(consPath) ? readConsensusSource(consPath) : [];
   let evTotal = 0;
@@ -317,7 +317,7 @@ const header = [
   ...reports.flatMap((r) => [...r.lines, ""]),
 ].join("\n");
 
-const outPath = path.resolve(OUT || path.join(ROOT, "TSM Core Service", ".store", "coverage", `${ONLY_DB ?? "all"}.md`));
+const outPath = path.resolve(OUT || path.join(COVERAGE_DIR, `${ONLY_DB ?? "all"}.md`));
 fs.mkdirSync(path.dirname(outPath), { recursive: true });
 fs.writeFileSync(outPath, header);
 console.log(header.split("\n").slice(0, 12).join("\n"));

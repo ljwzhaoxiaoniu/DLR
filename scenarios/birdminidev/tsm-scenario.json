@@ -1,0 +1,7 @@
+{
+  "name": "birdminidev",
+  "yamlDir": "sources/configs/DLR",
+  "consensusDir": "sources/consensus",
+  "sop": "sources/sop.md",
+  "fixturesDir": "fixtures"
+}
