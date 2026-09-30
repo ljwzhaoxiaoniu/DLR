@@ -1,182 +1,177 @@
-# 运行手册（2.0）
+# Runbook (2.0)
 
-> 操作篇：**起后端 / 跑题 / Web / 状态面 / 排障**。命令都在 Git Bash 下执行（Windows）。
-> 背景见叙事四篇（[01](01-background.md) → [04](04-application.md)）；两棵树的就地说明书：[TSM Core Service](<../TSM Core Service/README.md>)、[DSH-based Agent Service](<../DSH-based Agent Service/README.md>)。
+> Operations: **start the backend / run a question / Web / status surface / troubleshooting.** Commands run under Git Bash (Windows).
+> Background: the narrative docs ([01](01-background.md) → [04](04-application.md)); per-tree reference docs: [TSM Core Service](<../TSM Core Service/README.md>) · [DSH-based Agent Service](<../DSH-based Agent Service/README.md>).
 
-## 0. 全局图
+## 0. Big picture
 
 ```
-dsh（headless / web）
-   │  MCP（streamable-http :28795，7 工具）
+dsh (headless / web)
+   │  MCP (streamable-http :28795, 7 tools)
    ▼
-TSM Core Service（node 进程）：LanceDB（向量）+ ONNX 编码器（进程内）
-   │  bolt :7687
+tsm-core-dlr (node process): LanceDB (vectors) + ONNX encoder (in-process)
+   │  graph backend, two tracks:
+   │    · memory  — YAML → in-process graph (default; zero deps, zero locks)
+   │    · neo4j   — bolt :7687 (optional; enabled by NEO4J_URI)
    ▼
-Neo4j（Browser :7474）
-   │  sqlite:///…
-   ▼
-数据集（MINIDEV_sqlite，gitignored）
+dataset (MINIDEV_sqlite, gitignored; manual download)
 ```
 
-**两个进程**：Neo4j + TS MCP server。LanceDB 与编码器是嵌在 MCP 进程里的库，**不是**服务。
+**Processes**: the TS MCP server always; Neo4j only when the Neo4j graph backend is in use (the default in this repo — see §5). LanceDB and the encoder are libraries embedded in the MCP process, not services.
 
-## 1. 起后端（幂等）
+## 1. Start the backend (idempotent)
 
 ```bash
 bash "DSH-based Agent Service/scripts/start_backend.sh"
 ```
 
-- 判据是**功能性的**：Neo4j 探 `:7474`；MCP server 用**预检**（真连上去列 7 工具）；最后再预检一次当回执。
-- 已在跑的跳过；起不来看它给的日志（`tmp_scripts/neo4j_console.log` / `tsm_mcp.log`）。
-- ⚠ **改过 `TSM Core Service/src/**` 必须重启 MCP server**——tsx 常驻进程不会自动加载，脚本只会说"已在跑"；先杀端口（`netstat -ano | grep :28795` → `taskkill //F //PID <pid>`）再跑脚本。
-- ⚠ Neo4j 是**前台 console 进程**：起它的终端/会话关了，它可能一起走；重跑本脚本即恢复。
+- The criteria are **functional**: Neo4j is probed at `:7474` (skipped when the graph backend is `memory`); the MCP server is probed by **precheck** (actually connecting and listing the 7 tools); a final precheck is the receipt.
+- Anything already running is skipped; if it fails to come up, read its logs (`tmp_scripts/neo4j_console.log` / `tsm_mcp.log`).
+- ⚠ **After changing `TSM Core Service/src/**`, restart the MCP server** — the tsx process does not hot-reload; the script will just say "already running". Kill the port first (`netstat -ano | grep :28795` → `taskkill //F //PID <pid>`), then rerun the script.
+- ⚠ Neo4j is a **foreground console process**: closing the terminal that started it may take it down; rerunning this script brings it back.
 
-## 2. 跑一道题（headless）
+## 2. Run one question (headless)
 
 ```bash
 bash "DSH-based Agent Service/dsh_dlr/run_one.sh" <qid> "<question>"
 ```
 
-- 产物：`tmp_scripts/dsh_smoke/<stamp>_<qid>_dlr.ndjson`（`--json` 事件流）+ 同名 `.err`。
-- 自动预检后端；后端不可达**响亮退出**（exit 3），不会烧模型调用。
-- 会话日志：`DSH-based Agent Service/.dsh-home/sessions/<项目目录>/<session-id>/session.v4.jsonl.zstd`（**多帧 zstd**，取证解码器 `DSH-based Agent Service/scripts/decode_session_log.cjs`）。
-- **跑一批**（并行 → 判定 → 统计）：见 `scenarios/birdminidev/results/README.md`「一轮怎么跑」。
+- Artifacts: `tmp_scripts/dsh_smoke/<stamp>_<qid>_dlr.ndjson` (the `--json` event stream) plus a same-named `.err`.
+- The backend is prechecked automatically; an unreachable backend **exits loudly** (exit 3) instead of burning model calls.
+- Session logs: `DSH-based Agent Service/.dsh-home/sessions/<project-dir>/<session-id>/session.v4.jsonl.zstd` (**multi-frame zstd**; decoder: `DSH-based Agent Service/scripts/decode_session_log.cjs`).
+- **Batch runs** (parallel → grade → stats): see "How a round is run" in `scenarios/birdminidev/results/README.md`.
 
-## 3. Web 对话
+## 3. Web chat
 
 ```bash
 bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 ```
 
-- 默认 preset = dlr（语义业务助手）；进 UI 先选工作区 `DSH-based Agent Service`（AGENTS.md 靠它加载）。
-- 启动器会把状态浮层插件同步到 `$DSH_HOME/profiles/node_modules`。
-- 改过 patch / 插件后**必须重启 web**（组合在启动时装配）。
+- Default preset = `dlr` (semantic business assistant). Agent rules (`AGENTS.md`) ship **inside the bundle** (`dsh-tsm-agent`): a workspace that carries its own `AGENTS.md` wins, otherwise the bundled copy is used — so selecting the workspace is no longer required just for instructions.
+- The launcher syncs the status-overlay plugin into `$DSH_HOME/profiles/node_modules`.
+- After changing patches / plugins, **restart web** (composition happens at startup).
 
-## 4. 状态面
+## 4. Status surface
 
-- 右下角常驻 **TSM 状态浮层**（随 `dsh-tsm-agent` bundle 分发）：Neo4j / MCP 两盏灯 · LE/PE/PA/PAS · 向量行数 · 场景名 · Neo4j Browser 链接；10 秒轮询。
-- 数据源 = MCP server 的 `GET /status`（JSON；CORS 只放行 dsh web 的 loopback 源）：
+- The bottom-right **TSM status overlay** (shipped in the `dsh-tsm-agent` bundle) shows: graph-backend lamp (`内存图` / `Neo4j`) · MCP lamp · LE/PE/PA/PAS · vector rows · scenario name · the `图谱 ↗` link; it polls every 10 s.
+- Data source = the MCP server's `GET /status` (JSON; CORS allows only dsh web's loopback origins by default):
 
 ```bash
 curl -s http://127.0.0.1:28795/status
 ```
 
-- **图谱页**：**http://127.0.0.1:28795/viz/dlr**（MCP server 实时渲染；状态卡上的 `图谱 ↗` 指向它）。
-  离线/分享用单文件版：`tsm viz`（产物 `.store/viz/dlr-graph.html`）。
-- Neo4j Browser：http://localhost:7474 —— 账号 `neo4j`，密码在 `TSM Core Service/.env`（状态卡 `Neo4j ↗` 指向它）。
+  Key fields: `graph.backend` (`memory` | `neo4j`), `graph.fallback_reason` (when `auto` fell back), `scenario.{name,dir,source}`, `service_info.{http_base,viz_url}`, `neo4j.enabled` (compat key).
+- **Graph page**: **http://127.0.0.1:28795/viz/dlr** (rendered live by the MCP server; the overlay's `图谱 ↗` points there). Offline/shareable single file: `tsm viz` (writes `<DATA_DIR>/viz/dlr-graph.html`).
+- Neo4j Browser: http://localhost:7474 — user `neo4j`, password in `TSM Core Service/.env` (the overlay's `Neo4j ↗` points there; hidden when the backend is `memory`).
 
-## 5. 工具依赖（Neo4j 挂了会怎样）
+## 5. Graph backend (what changes when Neo4j is absent)
 
-| 工具 | 依赖 | Neo4j 停时 |
-|---|---|---|
-| `dlr_semantic_query` · `get_pe_mapping` · `get_le_attrs` | Neo4j | ❌ 不可用 |
-| `dlr_search_consensus` · `dlr_search_sop` | LanceDB | ✅ 照常 |
-| `execute_sql` | SQLite | ✅ 照常 |
+`TSM_GRAPH_BACKEND` = `auto` (default) | `memory` | `neo4j`.
 
-**失败不缓存**：连接失败不会被粘住——Neo4j 恢复后工具**自愈**（无需重启 MCP）。
+- `auto`: tries Neo4j **only when `NEO4J_URI` is set**; on connection failure it **falls back to the in-memory graph** (the choice sticks for the process lifetime; the reason is reported as `graph.fallback_reason` and logged). The in-repo `.env` sets `NEO4J_URI`, so this checkout keeps using Neo4j by default — the 500-question configuration is unchanged.
+- `memory`: YAML → in-process graph. No Neo4j needed; **all 7 tools work** (parity with Neo4j is enforced by `tsm verify memory_graph_parity`).
+- `neo4j`: requires `NEO4J_URI` and a reachable server; fails loudly otherwise.
 
-## 6. 排障表
-
-| 症状 | 查这里 |
+| Tool | Backend needed |
 |---|---|
-| 跑题 600s 白跑、无工具调用 | 后端没起：`run_one.sh` 预检会先拦；跑 `start_backend.sh` |
-| 状态卡不出现 | ①启动终端有无插件告警 ②浏览器 console ③是不是没重启 web |
-| 状态卡 Neo4j 红灯 | `curl /status` 看 error；Neo4j 是否在听 `:7474` |
-| 改了 `src/**` 不生效 | MCP server 是常驻进程：杀端口 → `start_backend.sh` |
-| Web 选工作区报错（Windows） | 已钉 `-browse` 曲面（native worker 会崩）；禁 auto + 插 browse，二者不可同挂 |
-| 起 UI 报 `EADDRINUSE 3080` | `netstat -ano \| grep :3080` → `taskkill //F //PID <pid>` |
-| 会话日志"看起来是空的" | **多帧 zstd**：单帧解码只出 header——用 `DSH-based Agent Service/scripts/decode_session_log.cjs` |
-| 机器内存吃紧 | 常驻约 650MB（Neo4j ~280 + MCP ~330）；不用时关，用时跑幂等脚本 |
-| dsh 报工具名不对 | 工具面是 `mcp__semantic-core__*`；升级 dsh 后先 `--dump-config` 核行 id |
-| `tsm grade` 卡死（CPU 不动、无输出） | 重活 = gold 大查询 / 结果集补救；杀该进程 → 重跑该目录即可（gold 有磁盘缓存，不重复付） |
-| 整批出现 **0-token 空轮**（ndjson 停在 step 1、报 `TRANSPORT`/模型传输失败） | 网络/API 瞬断：**作废轮不计遍数**——原题重跑即可（另可 `grep -l TRANSPORT raw/*.ndjson` 定位） |
-| 单题无结论句、ndjson 停在中间 | 撞上 `timeout 600`（agent 跑飞）：收紧该题 L3 节的**答案形态**后单题重跑（q186/q1241 先例） |
-| 跑批中后端"卡死"（`/status` 超时、后续题全废） | agent 写的**病态 SQL**（大表相关子查询）钉死单线程服务——已加 `execute_sql` 子进程 + **20s 硬超时**护栏（`TSM_SQL_TIMEOUT_MS` 可调）；杀端口 → `start_backend.sh` |
+| `dlr_semantic_query` · `get_pe_mapping` · `get_le_attrs` | graph (memory **or** Neo4j) |
+| `dlr_search_consensus` · `dlr_search_sop` | LanceDB |
+| `execute_sql` · `get_full_data_info` | SQLite (+ YAML) |
 
-## 7. 纪律
+**Failures are not cached** in the MCP-server sense: with the `neo4j` backend, connection failures reset the handle so tools **self-heal** after Neo4j returns (no restart). A `memory` fallback under `auto`, by contrast, is a *success*: restart the server to go back to Cypher.
 
-- **运行态 = dsh 宿主 + MCP 面 + 状态面；开发态 = `tsm` CLI**（`tsm build` / `tsm verify` / `tsm viz`）。
-  `tsm viz [--open] [--db <库>]` 生成自包含的 DLR 图谱页（开发态看建模：LE/PE/ARCS/PAS，点击 PE 看列映射），产物在 `TSM Core Service/.store/viz/dlr-graph.html`。
-- **服务由项目主手动启停**；本手册的命令都可**重复执行**（幂等是设计目标）。
-- 改配置（patch / 插件）→ 重启对应宿主；**改 L3 源 `sources/sop.md` → `tsm build sop` 重建索引后即生效**（不再需要重启宿主；原 sync_sop.sh 已退役）。
-- 临时产物一律进 `tmp_scripts/`，或随用随删。
-- **跑一批题 + 判定**：`run_batch.sh --qids ... --jobs 3` → `tsm grade --run <批次目录>`；判据三层、翻盘口径与迁移期纪律（5 题一批 / 每题最多两遍 / 节写完必须复跑 / 全量重判）见 [eval.md](eval.md) §六。
+## 6. Troubleshooting
 
-## 8. 新机器安装（异地验收清单）
-
-> 目标：在"只有 dsh 的环境"把整套装起来。**dsh 侧已 bundle 化**（DLR 的行 = `dsh-tsm-agent` 一条命令）；**后端仍是独立服务**（clone + npm i + build）。
-
-**0) 代码**（2.0 分支；当前它未推远端，二选一）
-
-```bash
-# A. 从远端（先在这台机器上 push）
-git clone -b 2.0 https://gitcode.com/wei_44/DLR-Proj.git dlr-proj
-# B. 从本机直接克隆（带上 2.0 的本地提交，最快）
-git clone "D:/Code_Proj/DLR Proj" "D:/dlr-proj"
-```
-
-**1) 系统依赖**
-
-| 项 | 说明 |
+| Symptom | Where to look |
 |---|---|
-| Node ≥ 22 + npm | 跑服务与 dsh |
-| Git Bash（Windows）/ bash | 所有脚本的宿主 |
-| Neo4j 5.x | 任意 bolt 端点即可：docker 一行 `docker run -d --name tsm-neo4j -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/<密码> neo4j:5`，或本机免安装 zip |
+| A question burns 600 s with no tool calls | Backend not started: `run_one.sh` prechecks and stops early; run `start_backend.sh` |
+| The status card does not appear | ① any plugin warnings in the launcher terminal ② the browser console ③ did you restart web |
+| Status card shows the graph lamp red | `curl /status` → `graph.error`; check the backend (`graph.backend`) |
+| Changed `src/**` has no effect | The MCP server is a long-running process: kill the port → `start_backend.sh` |
+| Web workspace picker errors (Windows) | The `-browse` surface is pinned (native worker crashes); auto + browse cannot both be mounted |
+| `EADDRINUSE 3080` on web start | `netstat -ano \| grep :3080` → `taskkill //F //PID <pid>` |
+| Session log "looks empty" | **Multi-frame zstd**: a single frame decodes to just the header — use `DSH-based Agent Service/scripts/decode_session_log.cjs` |
+| Memory pressure | Steady state ≈ 650 MB (Neo4j ~280 + MCP ~330); shut them down when idle — the start script is idempotent |
+| dsh reports wrong tool names | The tool surface is `mcp__semantic-core__*`; after a dsh upgrade re-check rows with `--dump-config` |
+| `tsm grade` looks stuck (no CPU, no output) | Heavy work = big gold queries / result-set rescue; kill that process and rerun the directory (gold values are disk-cached) |
+| A whole batch has **0-token empty rounds** (ndjson stops at step 1, `TRANSPORT`) | Transient network/API break: **voided rounds do not count** — just rerun those questions (`grep -l TRANSPORT raw/*.ndjson` finds them) |
+| A question ends with no conclusion sentence | Hit `timeout 600` (runaway agent): tighten that question's L3 clause **answer shape**, then rerun it |
+| The backend "wedges" mid-batch (`/status` times out, everything fails) | A pathological agent SQL pinning the single-threaded service — guarded by `execute_sql`'s subprocess + 20 s hard timeout (`TSM_SQL_TIMEOUT_MS`); kill the port → `start_backend.sh` |
+| Wrong scenario is live | `tsm scenario` prints the resolved dir + `source` (`env-path` / `env-package` / `default`) |
 
-**2) 数据与模型**（都是 gitignored，要单独弄）
+## 7. Discipline
 
-```bash
-# 数据集 1.4G：从原机拷（或按 eval-line/dataset.md 下载 mini_dev 解压）
-cp -r "<原机>/MINIDEV_sqlite" "<新机>/dlr-proj/"
-# ONNX 编码器 91M：从镜像拉
-cd "dlr-proj/TSM Core Service" && bash scripts/fetch-model.sh
-```
+- **Runtime = dsh host + MCP surface + status surface; dev = the `tsm` CLI** (`tsm build` / `tsm verify` / `tsm viz` / `tsm coverage` / `tsm scenario`).
+  `tsm viz [--open] [--db <name>]` renders the self-contained DLR graph page (LE/PE/ARCS/PAS; click a PE for its column mapping) into `<DATA_DIR>/viz/dlr-graph.html`.
+- **The backend is started/stopped by the operator**; every command in this runbook is **repeatable** (idempotence is a design goal).
+- Configuration changes (patches / plugins) → restart the host; **L3 source `sources/sop.md` → `tsm build sop`, effective without a host restart** (the old `sync_sop.sh` is retired).
+- Paths and data dirs (all env-overridable): `TSM_DATA_DIR` (store/cache/viz; default `<service>/.store` in-repo, `~/.tsm` when installed), `TSM_DATASET_DIR` (default = repo root), `TSM_SCENARIO` (path or package name), `TSM_OUT_DIR` (scenario write target), `TSM_MODEL_DIR`, `TSM_STORE_DIR`, `TSM_CACHE_DIR`, `TSM_MCP_URL`, `TSM_GRAPH_BACKEND`.
+- Temporary artifacts go to `tmp_scripts/` or are deleted on the spot.
+- **Batch + grading**: `run_batch.sh --qids ... --jobs 3` → `tsm grade --run <dir>`; the three-tier verdicts, reversal policy and migration-period discipline (5 questions per batch, at most two passes per question, always re-run after writing a clause, full re-judge after policy changes) are in [eval.md](eval.md) §6.
 
-**3) 两份 .env**（gitignored，从 `.env.example` 复制）
+## 8. New-machine install
 
-- `TSM Core Service/.env` → `NEO4J_URI / NEO4J_USER / NEO4J_PASSWORD`
-- `DSH-based Agent Service/dsh_dlr/.env` → `DEEPSEEK_API_KEY`
+> Goal: on a machine that has **only dsh**, stand the whole thing up. Split into three packages: the **service** `tsm-core-dlr`, the **scenario content** `tsm-scenario-birdmini`, and the **dsh bundle** `dsh-tsm-agent` (which depends on the service).
 
-**4) 装依赖 + dsh + bundle**
-
-```bash
-cd "dlr-proj/TSM Core Service" && npm install
-npm install -g @deepseek-ai/dsh@0.2.0-rc.2        # 当前适配版（500 题跑批在 0.1.7-alpha.1 上完成，未重跑）
-npm install -g pnpm                               # dsh plugin 转发给它（装 bundle 必需）
-
-# DLR 的行（MCP 网关 / preset-dlr / 状态浮层 / skills）——装进 profile
-dsh plugin --profile web add "<新机>/dlr-proj/DSH-based Agent Service/dsh-tsm-agent"
-dsh plugin --profile headless add "<新机>/dlr-proj/DSH-based Agent Service/dsh-tsm-agent"
-# ⚠ 装包 ≠ 启用：把 dsh-tsm-agent 加进各 profile 的 dsh.profile.bundles（插件管理器里勾选等价）
-```
-
-**5) 构建（先起 Neo4j）**
+**0) Packages** (from npm; in this checkout, install from paths instead)
 
 ```bash
-cd "dlr-proj/TSM Core Service"
-npx tsx src/build/buildLance.ts --all
-npx tsx src/build/buildConsensus.ts
-npx tsx src/build/buildSop.ts
-npx tsx src/graph/loadNeo4j.ts --all --wipe
+npm i -g tsm-core-dlr                 # the service + `tsm` CLI
+npm i -g tsm-scenario-birdmini        # scenario content (one package per benchmark)
 ```
 
-**6) 起后端**（L3 索引已在第 5 步随 `buildSop.ts` 建好）
+**1) System dependencies**
 
-```bash
-bash "DSH-based Agent Service/scripts/start_backend.sh"
-```
-
-**7) 验收**
-
-| 检查 | 期望 |
+| Item | Notes |
 |---|---|
-| `npx tsx src/verify/precheck.ts` | 7 工具 |
-| `curl -s localhost:28795/status` | `ok:true`，图 **LE 50 / PE 74 / PA 784 · PAS 37**（注：`/status` 的 lance 行数走**缓存句柄**，sop 数可能滞后；检索路径每次重开表，不受影响） |
-| `bash dsh_dlr/run_one.sh 1471 "What is the ratio of customers who pay in EUR against customers who pay in CZK?"` | 答案 **0.0657** |
-| `bash dsh_dlr/run_web.sh` | 右下角状态卡两盏灯全绿 |
+| Node ≥ 23.4 (24 recommended) + npm | Runs the service and dsh (`node:sqlite` without a flag) |
+| Git Bash (Windows) / bash | Host for all scripts |
+| Neo4j 5.x — **optional** | Only for the Neo4j graph backend: `docker run -d --name tsm-neo4j -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/<password> neo4j:5`; without it the service uses the in-memory graph |
 
-> 任何一步不符合期望 = 可移植性问题，回报给本仓库（这正是"路径解耦"要保证的）。
+**2) Model and dataset** (both large; fetched separately)
 
-## 相关
+```bash
+tsm fetch-model                                    # ONNX encoder ~95 MB (hf-mirror)
+# dataset ~1.4 GB: copy MINIDEV_sqlite/ from the original machine, or download
+# mini_dev per docs/eval-line/dataset.md and unpack to <data-root>/MINIDEV_sqlite/
+```
 
-- 场景包与考卷：[04-application.md](04-application.md)｜评测：[eval.md](eval.md)｜可移植与扩展边界：[roadmap.md](roadmap.md)
+**3) Build the indexes** (matching the backend; `graph` is a no-op self-check in memory mode)
+
+```bash
+TSM_SCENARIO=tsm-scenario-birdmini TSM_DATASET_DIR=<data-root> tsm build all
+```
+
+**4) Serve**
+
+```bash
+TSM_SCENARIO=tsm-scenario-birdmini TSM_DATASET_DIR=<data-root> tsm serve --http 28795
+# in-repo equivalent: bash "DSH-based Agent Service/scripts/start_backend.sh"
+```
+
+**5) dsh side**
+
+```bash
+npm install -g @deepseek-ai/dsh@0.2.0-rc.2        # current adapted version
+npm install -g pnpm                               # `dsh plugin` forwards to pnpm (needed to install bundles)
+
+dsh plugin --profile web add dsh-tsm-agent        # installs tsm-core-dlr with it
+dsh plugin --profile headless add dsh-tsm-agent
+# ⚠ installing ≠ selecting: add dsh-tsm-agent to each profile's dsh.profile.bundles
+#   (or tick it in the Plugin Manager, which does both)
+```
+
+**6) Acceptance**
+
+| Check | Expected |
+|---|---|
+| `tsm verify precheck` | 7 tools |
+| `curl -s localhost:28795/status` | `ok:true`; graph `LE 50 / PE 74 / PA 784 · PAS 37` (in memory **or** Neo4j backend) |
+| `bash dsh_dlr/run_one.sh 1471 "What is the ratio of customers who pay in EUR against customers who pay in CZK?"` | answer **0.0657** |
+| `bash dsh_dlr/run_web.sh` | both status lamps green |
+
+> Any deviation = a portability problem; report it back to this repo (that is exactly what path decoupling is meant to guarantee).
+
+## Related
+
+- Scenario packages and the exam paper: [04-application.md](04-application.md) | evaluation: [eval.md](eval.md) | portability and extension boundary: [roadmap.md](roadmap.md)

@@ -1,52 +1,53 @@
-# 路线图与扩展边界
+# Roadmap and Extension Boundary
 
-> 叙事四篇的"落地"在 [04-application.md](04-application.md)；本文是**工程去向**：我们做什么、不做什么、企业在哪接、怎么变得可移植。
+> The "landing" of the narrative docs is in [04-application.md](04-application.md); this document is the **engineering direction**: what we do, what we don't, where enterprises plug in, and how the whole thing becomes portable.
+> 中文版：[roadmap.zh.md](roadmap.zh.md)
 
-## 一、扩展边界：契约在内，实现在外
+## 1. Extension boundary: contract inside, implementation outside
 
-本项目交付的是**语义接地的最小闭合**；凡是"接入企业既有数据基础设施"的部分，**都是扩展层，由企业自建，本项目不改**。
+This project delivers the **minimal closure of semantic grounding**; anything that "plugs into an enterprise's existing data infrastructure" is an **extension layer, built by the enterprise** — this project does not change for it.
 
-| | 本项目（冻结） | 企业扩展层（自建） | 业界参照 |
+| | This project (frozen) | Enterprise extension layer (self-built) | Industry reference |
 |---|---|---|---|
-| **查询执行** | `execute_sql`——演示级 SQLite 直连 | 扩展成自己的 **`DSL_SQL 服务`**：受控查询 DSL → 各方言 SQL（PG / MySQL / Oracle / 数仓）→ 执行 + 权限下推（视图 / RLS） | **OData**（标准化查询协议：`$filter` / `$select` / `$expand` + `$metadata` 自描述；SAP Gateway、Microsoft Graph 在用） |
-| 连接器 / 方言 | 仅 SQLite | 同上，统一在 DSL_SQL 层解决 | 各数据库驱动 |
-| **图结构后端** | **进程内内存图**（YAML→内存，默认，待做）＋ **Neo4j 兼容样例** | 企业自建连接器（自家图库/图服务），按同一读取接口实现 | 与 `execute_sql`→DSL_SQL 同构 |
-| 行 / 列级权限 | 无（单用户本地） | 权限下推到 DSL_SQL 层 | 数据库 RLS / 视图 |
-| 冷启动建模 | 手写 YAML（样板） | introspect → 草稿 → 评审（可接企业元数据平台） | dbt docs / DataHub |
-| 指标口径对接 | L2 引用即可 | 从 dbt / Cube / LookML 导入为 L2 条目 | MetricFlow |
-| 服务化 / HA / 审计 | 单机 + 本地会话日志 | 企业网关 / 容器化 / 审计平台 | 标准 Ops |
+| **Query execution** | `execute_sql` — demo-grade direct SQLite | Extend into your own **`DSL_SQL service`**: a controlled query DSL → per-dialect SQL (PG / MySQL / Oracle / warehouse) → execution + pushed-down permissions (views / RLS) | **OData** (standardized query protocol: `$filter` / `$select` / `$expand` + self-describing `$metadata`; used by SAP Gateway, Microsoft Graph) |
+| Connectors / dialects | SQLite only | Same as above, solved once in the DSL_SQL layer | Per-database drivers |
+| **Graph backend** | **In-process memory graph** (YAML → memory; **default**, done) + **Neo4j compatible sample** (optional) | Enterprise connector (their graph store/service) against the same read interface | Isomorphic to `execute_sql` → DSL_SQL |
+| Row / column permissions | None (single-user local) | Push permissions down into the DSL_SQL layer | DB RLS / views |
+| Cold-start modeling | Hand-written YAML (templates) | introspect → draft → review (can hook into the enterprise metadata platform) | dbt docs / DataHub |
+| Metric-caliber integration | L2 reference is enough | Import from dbt / Cube / LookML as L2 entries | MetricFlow |
+| Serving / HA / audit | Single machine + local session logs | Enterprise gateway / containers / audit platform | Standard ops |
 
-**关键句**：语义网关**只发 DSL，不碰方言**——工具签名不变，变的是实现。**"当前项目不改"是边界，不是欠债**；"轻量"的承诺正是靠这个边界兑现的。
+**Key sentence**: the semantic gateway **emits a DSL only, never touches dialects** — tool signatures stay fixed; only implementations vary. **"This project does not change" is a boundary, not a debt**; the "lightweight" promise is exactly what this boundary buys.
 
-## 二、明确不做
+## 2. Explicitly not doing
 
-- **不做本体 / KG 平台**——DLR 只有四个概念（LE / PE / ARC / PAS），DBA 半天上手；
-- **不替代指标计算平台**——只做"LLM 能不能正确落到你的数据上"的**接地层**，可引用既有指标定义；
-- **不锁模型、不锁宿主**——MCP 是标准（换宿主可行），模型可换；dsh 是**首选宿主**，不是唯一。
+- **No ontology / KG platform** — DLR has only four concepts (LE / PE / ARC / PAS); a DBA is productive in half a day;
+- **No replacement for metric-computation platforms** — we only build the **grounding layer** for "can the LLM land correctly on your data", and can reference existing metric definitions;
+- **No model lock-in, no host lock-in** — MCP is a standard (hosts are swappable), models are swappable; dsh is the **preferred host**, not the only one.
 
-## 三、数据主权
+## 3. Data sovereignty
 
-组件全在本地：图（Neo4j）、向量（LanceDB）、编码器（ONNX 本地推理）、建模产物（git 文本）；**唯一外呼是 LLM API**（可指向私有部署）→ **数据不出域**。
+All components are local: graph (memory or Neo4j), vectors (LanceDB), encoder (ONNX inference in-process), modeling artifacts (git text); **the only outbound call is the LLM API** (pointable at a private deployment) → **data never leaves the domain**.
 
-## 四、可移植：三步走
+## 4. Portability: three steps — all landed
 
-目标："任何有 dsh 的机器上，装一条命令就能用。"
+Goal: "on any machine that has dsh, one command installs everything."
 
-| 步 | 做什么 | 验收 |
+| Step | What | Status |
 |---|---|---|
-| **1. 路径解耦** | 消灭硬编码绝对路径：`TSM Core Service/src/config.ts` 的 `ROOT` 改为**包自身位置推导 + env 覆盖**；patch 里的 skills 目录改 env/相对注入；Neo4j 位置改探测 | 仓库挪到任意目录照跑 |
-| **2. 打包** | ✅ **dsh 侧**：`dsh-tsm-agent` bundle（MCP 网关 + preset-dlr + 状态浮层 + **skills 随包**），`dsh plugin --profile {web,headless} add` 一条装 ｜ ✅ **后端 CLI**：`tsm serve｜status｜build｜verify`（运行态/开发态同一入口） ｜ **剩余**：分发（npm 发布或 git 地址） | 另一台有 dsh 的机器按 [run.md](run.md) §8 走通 |
-| **3. 图后端双轨（原"零服务"）** | 默认**进程内**（YAML→内存：零依赖、零锁、零服务；1133 节点的只读查找，四个读方法抽成接口即可）；**保留 Neo4j 兼容**（配 `NEO4J_URI` 即启用：Cypher / Browser / 大图 / 企业已有图库） | 测试机不装 Neo4j 也能跑通验收四连 |
-| **附带：可视化独立成页** | ✅ **已落**：`tsm viz`（开发态）读 YAML 结构载荷 → 自包含 HTML（数据 + vis-network 内联，约 830KB）；服务侧以 **`GET /viz/dlr`** 端出（状态卡 `图谱 ↗` 直链，实时渲染）；Neo4j Browser 作为并列入口保留 | 演示不依赖任何图服务 |
+| **1. Path decoupling** | No hardcoded absolute paths: paths derive from the package's own location with env overrides (`TSM_*`); data dirs default inside the checkout and fall back to a user dir when installed; Neo4j location is probed | ✅ Done — checkout runs from any directory; `tsm scenario` prints what is live |
+| **2. Packaging** | **Three npm packages**: `tsm-core-dlr` (service + `tsm` CLI) · `tsm-scenario-<benchmark>` (content; one per benchmark, e.g. `tsm-scenario-birdmini`) · `dsh-tsm-agent` (the dsh bundle; depends on the service). The scenario is optional/pluggable: `TSM_SCENARIO` accepts a path **or a package name** | ✅ Done |
+| **3. Graph backend, two tracks** ("zero-service") | **In-process by default** (YAML → memory: zero dependencies, zero locks, zero services; read-only lookups over the ~1,100-node graph) + **Neo4j kept compatible** (set `NEO4J_URI` to use Cypher / Browser / big graphs / an existing enterprise graph store). Parity is enforced by `tsm verify memory_graph_parity` (field-level, all 11 databases) | ✅ Done — a Neo4j-free machine passes the four-point acceptance |
+| **Bonus: visualization as a standalone page** | ✅ `tsm viz` (dev) reads the YAML structure payload → a self-contained HTML (data + vis-network inlined); the service serves it live at **`GET /viz/dlr`** (the status card's `图谱 ↗` links to it); Neo4j Browser stays as a parallel entry | ✅ Done |
 
-> dsh 生态口径参考：bundle = npm 包 + `dsh.bundle.patch`（自带要插入的行）+ 可选 `dsh.client`（浏览器半）；安装/更新走 profile 内 pnpm（支持 registry / Git / tarball / **本地绝对路径**）；行级开关 = profile 的 `cordis.patch.yml`。两条路可并存，`--patch` 层优先级最高，正好当"本地覆盖"。
+> dsh ecosystem note: a bundle = an npm package + `dsh.bundle.patch` (+ optional `dsh.client` browser half); installation/updates go through pnpm inside the profile (registry / Git / tarball / **local absolute path**); per-row switches live in the profile's `cordis.patch.yml`. Both routes coexist, and the `--patch` layer has the highest priority — the natural "local override" slot.
 
-## 五、待探索
+## 5. To explore
 
-- **Cloud-OpsBench**（K8s agentic 根因分析基准）：TSM 跷跷板另一端的候选——**L3 重 / L1 薄**（诊断 runbook ≈ 知识化的 golden trajectory；其"证据链闭合（ECR）"与我们的过程可评同向）。工具面是 K8s 诊断接口（非 SQL），真玩需另起 `scenarios/cloudops/` + 工具适配层。
-- **开发态能力的继续内建**：introspect → 草稿 → 评审（反身建模），与第 1/2 步同一条 CLI 长出来。
+- **Cloud-OpsBench** (K8s agentic root-cause analysis benchmark): the candidate for the other end of the TSM seesaw — **L3 heavy / L1 thin** (a diagnostic runbook ≈ a knowledge-ized golden trajectory; its "evidence-chain closure (ECR)" points the same way as our process evaluation). Its tool surface is K8s diagnostics (not SQL); a real attempt needs a separate `scenarios/cloudops/` plus a tool adapter layer.
+- **More dev-mode capabilities**: introspect → draft → review (reflexive modeling), growing along the same CLI as steps 1/2.
 
-## 相关
+## Related
 
-- 扩展边界的理论依据（不发明 / 不补全 / 不重建）：[01-background.md](01-background.md) §三
-- 概念与判据：[02-concept.md](02-concept.md)｜实现：[03-design.md](03-design.md)｜落地：[04-application.md](04-application.md)
+- Theoretical basis for the extension boundary (no invention / no completion / no reconstruction): [01-background.md](01-background.md) §3
+- Concepts and criteria: [02-concept.md](02-concept.md) | design: [03-design.md](03-design.md) | application: [04-application.md](04-application.md)
