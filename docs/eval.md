@@ -1,98 +1,101 @@
-# 评测：内容与能力分离
+# Evaluation: content and capability, separated
 
-> 操作篇。**2.0 的评测与 1.5 的四阶段流水线完全不同**：这里只讲 2.0 的设计，旧口径见 `eval-line/`。
+> Operations. **2.0's evaluation is nothing like 1.5's four-stage pipeline**: this document describes the 2.0 design only; the old caliber is archived in `eval-line/`.
+> 中文版：[eval.zh.md](eval.zh.md)
 
-## 一、一句话
+## 1. In one sentence
 
-**考卷跟场景走，考试系统跟 dsh 走。**
+**The exam paper follows the scenario; the exam system follows dsh.**
 
-| | 跟着谁 | 形态 | 性质 |
+| | Follows | Form | Nature |
 |---|---|---|---|
-| **考卷**（题面 + 期望 + 口径来源） | **场景** | `scenarios/<名>/eval/questions.jsonl` | **内容资产**：一场景一份，随场景包 git 化 ｜ ✅ `birdminidev` 已有（500 题；生成器 `eval/build.mjs`：**答案键取 L3 节口径 74 处、其余取 gold 426 处**）
-| **考试系统**（跑题 + 采分 + 出报告） | **dsh** | 独立 bundle（暂名 `dsh-tsm-agent-eval`） | **宿主能力**：一套通吃多场景，**独立可分** |
+| **Exam paper** (question + expected + caliber source) | **scenario** | `scenarios/<name>/eval/questions.jsonl` | **Content asset**: one per scenario, versioned with the scenario package ｜ ✅ `birdminidev` has one (500 questions; generator `eval/build.mjs` — **answer keys take the L3 clause for 74 questions and gold for the other 426**) |
+| **Exam system** (run + score + report) | **dsh** | standalone bundle (working name `dsh-tsm-eval`) | **Host capability**: one system serves all scenarios, **independently separable** |
 
-## 二、为什么这样切
+## 2. Why split this way
 
-评测的对象本质上是「**宿主组合 × 场景内容**」的联合体——所以考试系统天然属于宿主侧；而且原料现成：
+What evaluation really targets is the joint object "**host composition × scenario content**" — so the exam system naturally belongs on the host side, and the raw material is already there:
 
-- **`dsh --json` 事件流**（跑题即得：逐步状态、工具调用、final）；
-- **会话日志**（`.dsh-home/sessions/**.jsonl.zstd`）——完整取证：工具轨迹、消息全文、`turn/end`。
+- the **`dsh --json` event stream** (per-step status, tool calls, final — produced by just running a question);
+- **session logs** (`.dsh-home/sessions/**.jsonl.zstd`) — full forensics: tool traces, full messages, `turn/end`.
 
-比 1.5 那套"适配器 + 四阶段"的口径干净得多。三个附加收益：
+Much cleaner than 1.5's "adapters + four stages". Three extra benefits:
 
-1. **多场景**：一套系统 × N 份考卷（场景平级设计本来就是为这个）；
-2. **过程可评**：1.5 只能判最终答案；dsh 原生能看**调用链与证据链**（与 Cloud-OpsBench 的 ECR"证据链闭合"同向，见 [roadmap.md](roadmap.md) §五）；
-3. **企业演示**：改一条 L3 口径 → 跑同一份考卷 → 行为变化**可复现**——语义资产的 CI。
+1. **Multi-scenario**: one system × N papers (scenarios are peer-level by design, exactly for this);
+2. **Process is evaluable**: 1.5 can only judge the final answer; dsh natively exposes the **tool-call chain and evidence chain** (the same direction as Cloud-OpsBench's ECR "evidence-chain closure", see [roadmap.md](roadmap.md) §5);
+3. **Enterprise demo**: change one L3 clause → rerun the same paper → the behavior change is **reproducible** — a CI for semantic assets.
 
-**代价（诚实说）**：绑 dsh（alpha 会漂）；只在有 dsh 的地方能评——产品线本就是 dsh，成立。
+**The cost (honestly)**: pinned to dsh (an alpha that drifts); you can only evaluate where dsh runs — but the product line *is* dsh, so that holds.
 
-## 三、考卷格式（约定）
+## 3. Paper format (convention)
 
-`scenarios/<名>/eval/questions.jsonl`，一行一题：
+`scenarios/<name>/eval/questions.jsonl`, one question per line:
 
 ```json
 {"question": "...", "expected": "0.0657", "source": "L3 sop#EUR-ratio"}
 ```
 
-- `expected`：精确值优先（可程序判定）；需要宽容时给判定说明；
-- `source`：口径来自哪（L1 描述 / L2 kid / L3 节）——判错时能**归因到层**。
+- `expected`: prefer an exact value (program-checkable); give a judging note when tolerance is needed;
+- `source`: where the caliber comes from (L1 description / L2 kid / L3 clause) — so a mistake can be **attributed to a layer**.
 
-## 四、报告（约定）
+## 4. Report (convention)
 
-- **结果**：正确率（分场景 × 分 profile）；
-- **过程**：步数、token、工具调用序列、是否闭合证据链；
-- 输出同时落 `--json` 事件流与会话日志路径，**可回放取证**。
+- **Result**: correctness (per scenario × per profile);
+- **Process**: steps, tokens, tool-call sequence, whether the evidence chain closes;
+- Both the `--json` event stream and the session-log path are recorded — **replayable forensics**.
 
-## 五、与 1.5 的关系
+## 5. Relationship to 1.5
 
-| | 1.5（`dlr-eval-v1.5`） | 2.0（本文） |
+| | 1.5 (`dlr-eval-v1.5`) | 2.0 (this document) |
 |---|---|---|
-| 运行宿主 | opencode + 桥 | dsh 原生 |
-| 流程 | 四阶段（run → judge → parse → 归档） | 跑题 + 采分 + 报告（一体的 bundle） |
-| 判定 | 两段式 + judge + disputes | 规则优先 + LLM judge（可复用 1.5 的判定政策） |
-| 归档 | `post_process` 目录结构 | 报告 + 会话日志（原生取证） |
+| Host | opencode + bridge | dsh, native |
+| Flow | four stages (run → judge → parse → archive) | run + score + report (one bundle) |
+| Judging | two-tier + LLM judge + disputes | rules first + LLM judge (1.5's judging policy is reusable) |
+| Archiving | `post_process` directory layout | reports + session logs (native forensics) |
 
-**2.0 不复刻四阶段**；历史口径与基线数据在 `eval-line/`。
+**2.0 does not re-implement the four stages**; historical calibers and baselines live in `eval-line/`.
 
-## 六、跑批与判定（当前实操）
+## 6. Batch runs and judging (current practice)
 
-> 迁移期正在用的批跑链路：场景包内容驱动的**题级验证**——验的是 **L3**（L1/L2 是既定输入，跑的差异只应来自 L3）。正式考试系统见 §七。
+> The migration-period chain: **question-level validation driven by scenario content** — what is being validated is **L3** (L1/L2 are given inputs; the only differences in a run should come from L3). The formal exam system is §7.
 
-**跑批**（`DSH-based Agent Service/scripts/run_batch.sh`）：
+**Batch run** (`DSH-based Agent Service/scripts/run_batch.sh`):
 
 ```bash
 bash "DSH-based Agent Service/scripts/run_batch.sh" --qids 685,687,694 --jobs 3
-#   产物 → scenarios/<场景>/results/<stamp>_qids_.../（raw/ 逐题 ndjson）
-cd "TSM Core Service" && node bin/tsm.mjs grade --run "<上一步目录>"   # → questions.csv + summary.md
+#   artifacts → scenarios/<scenario>/results/<stamp>_qids_.../ (per-question ndjson under raw/)
+cd "TSM Core Service" && node bin/tsm.mjs grade --run "<that dir>"   # → questions.csv + summary.md
 ```
 
-**判定的三层**（`src/dev/judge.ts` · `src/dev/results.ts`）：
+(With an installed scenario package, runs and reports land under `TSM_OUT_DIR` — a user data dir by default — never inside the scenario package itself.)
 
-| 层 | 做什么 | 关键口径 |
+**Three tiers of judging** (`src/dev/judge.ts` · `src/dev/results.ts`):
+
+| Tier | What | Key caliber |
 |---|---|---|
-| ① 与 gold 比对 | 期望值（gold SQL 在该库 SQLite 执行的结果，<2s 起走磁盘缓存）↔ agent 答案 | 数值逐级容差（1e-9…1e-3）；**数值与文本都只认 `Final Answer:` 结论句区域**——正文里"被否决的备选读法""参考值"不算命中（q716 族教训） |
-| ② 结果集比对（**只救假阴性**） | gold 判非 PASS 时，拿 agent 候选 SQL 与 gold SQL 比行集（原样 / 去 LIMIT / 共同列投影） | 列表题的安全网；只认"生成逻辑"，不认"结论表述" |
-| ③ SOP 裁定（评定） | 按 L3 节的 `Expected` / 数据集问题标签裁定 | 合节口径而 gold 不同 → 🔁 翻盘；节口径与 gold 同值命中 → ✅ 正确（**不记翻盘**）；两者都不合 → ❌ |
+| ① Compare with gold | expected value (gold SQL executed on the dataset SQLite; >2 s queries go through a disk cache) ↔ the agent's answer | Numeric tolerance tiers (1e-9…1e-3); **numeric and text both read only the `Final Answer:` region** — superseded alternative readings in the body do not count (the q716 family lesson) |
+| ② Result-set comparison (**rescues false negatives only**) | when gold judged non-PASS, compare the agent's candidate SQL row set with gold's (as-is / LIMIT-stripped / common-column projection) | A safety net for list questions; credits the **generating logic**, not the wording |
+| ③ SOP ruling (the verdict) | rule by the L3 clause's `Expected` / dataset-defect tag | Answer matches the clause but differs from gold → 🔁 **reversal**; clause caliber equals gold and it matches → ✅ correct (**not** a reversal); neither → ❌ |
 
-**纪律**（迁移期）：
+**Discipline (migration period)**:
 
-- 一批 **5 题**，批间停下报数；**每题最多两遍**（第二遍用于补节后对表）。
-- **节写完必须复跑该题**——节的生效时点若晚于跑批，旧档那一行可能靠假阳性撑着（q1136 节晚 11 分钟 / q1472 节晚 4.5 小时，重判后才暴露）。
-- 改 `sources/sop.md` → `tsm build sop` 重建索引 → 复跑对表；**实验跑不进 `results/`**（台账取每题最新一轮）。
-- 判据 / 口径变动后**全量重判**（逐目录 `tsm grade` 即可，gold 走缓存）：台账只能有一套尺子。
+- One batch = **5 questions**; stop and report between batches; **at most two passes per question** (the second pass is for post-clause re-runs).
+- **Always re-run a question after writing its clause** — if the clause postdates the run, that old row may be propped up by a false positive (q1136's clause was 11 minutes late, q1472's 4.5 hours; only a re-judge exposed it).
+- `sources/sop.md` change → `tsm build sop` (rebuild the index) → re-run to compare; **experimental runs never go into `results/`** (the ledger takes the latest round per question).
+- After a judging-policy change, **re-judge everything** (run `tsm grade` per directory; gold is cached): the ledger may only have one ruler.
 
-## 七、与换层制度的关系（探针）
+## 7. Relationship to the layer-migration regime (probes)
 
-考试系统的副产品 = **探针**：谁被反复引用、谁被反复纠正、哪些题反复失分——这些运行观测为**换层移民**生成候选（晋升 / 降级 / 补节），人只签字（[02-concept.md](02-concept.md) §二后附）。
+The exam system's by-product = **probes**: who gets cited repeatedly, who gets corrected repeatedly, which questions keep losing points — these runtime observations generate candidates for **layer migration** (promotion / demotion / new clauses), and humans only sign off (see [02-concept.md](02-concept.md) §2 appendix).
 
-## 八、路线
+## 8. Roadmap
 
-1. 场景包先落 `eval/questions.jsonl`（内容，随时可加）；
-2. 考试系统做成 dsh bundle（`--json` + 会话日志 → 判定 → 报告）；
-3. 报告基线化：每轮语义资产变更跑同一份考卷，diff 行为。
+1. Scenario packages land `eval/questions.jsonl` first (content, extendable anytime) — ✅ done for `birdminidev`;
+2. The exam system becomes a dsh bundle (`--json` + session logs → judging → report);
+3. Reports get baselined: every round of semantic-asset change reruns the same paper, and behavior is diffed.
 
-## 相关
+## Related
 
-- 场景包与考卷目录：[04-application.md](04-application.md) §四
-- 运行（跑题与会话日志）：[run.md](run.md)｜探针与换层制度：[02-concept.md](02-concept.md)
-- 旧四阶段口径：[`eval-line/`](eval-line/)（待搬迁）
+- Scenario packages and the exam directory: [04-application.md](04-application.md) §4
+- Running (questions and session logs): [run.md](run.md) ｜ probes and layer migration: [02-concept.md](02-concept.md)
+- The old four-stage caliber: [`eval-line/`](eval-line/)

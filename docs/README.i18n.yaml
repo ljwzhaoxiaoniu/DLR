@@ -4,8 +4,12 @@
 #   git hash-object <file>
 #
 # 规则：每篇文档一对 X.md（英文主）+ X.zh.md（中文对照）。新增一篇 → 在此登记两条哈希。
-# 迁移中（2026-09-30 起，2–3 篇一批）：未落对的文档暂时只有中文单篇；落对后从本表移除备注。
+# 迁移中（2026-09-30 起，2–3 篇一批）：未落对的文档暂时只有中文单篇。
+README.md: d03b365816004ee105628d8d0e52395563a6b92d
+README.zh.md: e75ea9baa9fe738a675a692a1b7ec3742abfceb1
 run.md: 94c2924e1754a2dbda9b26aca8fb1830a3730254
 run.zh.md: 7ea7dd0ecb402ec7f388be980480104956c95590
+eval.md: 90b1b6ef3fa4be40372a2eae27a88b9894ad37dc
+eval.zh.md: dd6fdb6168620f484794e26e3026d79ad6f1b7d6
 roadmap.md: 1b8ea7122a03882337336b3abaaff14cce4bcaa2
 roadmap.zh.md: f0825c02c21bc5bc33d04016d209acc507d48d74
