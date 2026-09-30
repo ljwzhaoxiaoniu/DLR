@@ -37,7 +37,7 @@
 | Neo4j 5.x | 本机实例（免安装 zip + 便携 JDK）或任意 Bolt 端点——设 `NEO4J_HOME`（或 `NEO4J_URI`） |
 | ONNX 编码器 | `bash "TSM Core Service/scripts/fetch-model.sh"`（~95 MB，走 hf-mirror） |
 | 数据集 | BIRD mini-dev → 解压到 `MINIDEV_sqlite/`（gitignored）；下载源见 [docs/eval-line/dataset.md](docs/eval-line/dataset.md) |
-| dsh | `@deepseek-ai/dsh@0.1.7-alpha.1`（锁死——alpha；升级后先 `--dump-config` 核行） |
+| dsh | `@deepseek-ai/dsh@0.2.0-rc.2`（alpha 预览；500 题跑批产出于 `0.1.7-alpha.1`、**未重跑**；升级后先 `--dump-config` 核行） |
 | API key | `cp "DSH-based Agent Service/dsh_dlr/.env.example" "DSH-based Agent Service/dsh_dlr/.env"`，填 `DEEPSEEK_API_KEY` |
 | 服务 env | `cd "TSM Core Service" && npm install && cp .env.example .env`（填 `NEO4J_PASSWORD`） |
 
@@ -162,7 +162,7 @@ DLR Proj/                          # 分支 2.0
 |---|---|
 | 单题跑满 timeout、无任何工具调用 | 后端没起：跑 `start_backend.sh`（启动器会预检并提前拦） |
 | Web 报 `EADDRINUSE 3080` | 旧实例没死透：`netstat -ano \| grep :3080` → `taskkill //F //PID <pid>` |
-| dsh 升级后模型报工具名不对 | dsh 锁在 `0.1.7-alpha.1`；升级后先 `--dump-config` 核 patch 行 |
+| dsh 升级后模型报工具名不对 | 先 `--dump-config` 核 patch 行（bundle 已在 `0.2.0-rc.2` 上核过） |
 | `tsm grade` 看着卡死 | 病态 agent SQL 有 20s 子进程硬超时护栏；慢 gold 查询走磁盘缓存（`TSM_GOLD_NO_CACHE=1` 可绕过） |
 | 更多条目 | [docs/run.md](docs/run.md) 排障表 |
 

@@ -76,7 +76,7 @@ Tools register as `mcp__semantic-core__<tool>`:
 <a id="known-limitations-and-deferred-work"></a>
 ## Known Limitations and Deferred Work
 
-- dsh is alpha; this package is built against `@deepseek-ai/dsh@0.1.7-alpha.1` — re-check patch rows with `--dump-config` after upgrading.
+- dsh is alpha; this package is verified against `@deepseek-ai/dsh@0.2.0-rc.2` (profile composition, referenced plugin packages, the client-half contract and headless `--json` were all checked). The 500-question benchmark run predates that verification and was produced on `0.1.7-alpha.1` — **results were not re-run**. Re-check patch rows with `--dump-config` after any upgrade.
 - The semantic backend is out of scope: without it, activation fails (`failOnStartupError: true`).
 - Default model and API credentials are profile-level concerns (`dsh_dlr/` patches + `.env`), not part of the bundle.
 

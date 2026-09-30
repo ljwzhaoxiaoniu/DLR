@@ -37,7 +37,7 @@ A checkout ships three parts:
 | Neo4j 5.x | Local instance (zip + portable JDK) or any Bolt endpoint — set `NEO4J_HOME` (or `NEO4J_URI`) |
 | ONNX encoder | `bash "TSM Core Service/scripts/fetch-model.sh"` (~95 MB, from hf-mirror) |
 | Dataset | BIRD mini-dev → unpack into `MINIDEV_sqlite/` (gitignored); source links in [docs/eval-line/dataset.md](docs/eval-line/dataset.md) |
-| dsh | `@deepseek-ai/dsh@0.1.7-alpha.1` (pinned — alpha; rows are re-checked with `--dump-config` on upgrade) |
+| dsh | `@deepseek-ai/dsh@0.2.0-rc.2` (alpha preview; the 500-question run was produced on `0.1.7-alpha.1` and was **not re-run**; re-check patch rows with `--dump-config` after any upgrade) |
 | API key | `cp "DSH-based Agent Service/dsh_dlr/.env.example" "DSH-based Agent Service/dsh_dlr/.env"`, fill `DEEPSEEK_API_KEY` |
 | Service env | `cd "TSM Core Service" && npm install && cp .env.example .env` (fill `NEO4J_PASSWORD`) |
 
@@ -162,7 +162,7 @@ DLR Proj/                          # branch 2.0
 |---|---|
 | A question burns its whole timeout with no tool calls | Backend not up: run `start_backend.sh` (the launcher prechecks and stops early) |
 | Web UI fails with `EADDRINUSE 3080` | Stale instance: `netstat -ano \| grep :3080` → `taskkill //F //PID <pid>` |
-| Tool names unknown to the model after a dsh upgrade | dsh is pinned to `0.1.7-alpha.1`; re-check patch rows with `--dump-config` |
+| Tool names unknown to the model after a dsh upgrade | re-check patch rows with `--dump-config` (the bundle is verified on `0.2.0-rc.2`) |
 | `tsm grade` appears stuck | Pathological agent SQL is bounded by a 20 s subprocess timeout; slow gold queries are disk-cached (`TSM_GOLD_NO_CACHE=1` bypasses) |
 | More rows | [docs/run.md](docs/run.md) troubleshooting table |
 

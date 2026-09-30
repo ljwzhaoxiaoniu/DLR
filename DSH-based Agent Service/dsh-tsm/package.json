@@ -5,6 +5,11 @@
   "description": "DLR / TSM bundle for dsh: MCP semantic gateway to a TSM Core Service, the scenario-independent paradigm skill, and a TSM status overlay. Assembly face = preset-dlr; the semantic backend is a separate service; L3 SOP is delivered by index retrieval (dlr_search_sop), not by a packaged skill.",
   "license": "MIT",
   "icon": "./icon.svg",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ljwzhaoxiaoniu/DLR.git",
+    "directory": "DSH-based Agent Service/dsh-tsm"
+  },
   "main": "lib/index.js",
   "exports": {
     ".": {

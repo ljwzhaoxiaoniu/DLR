@@ -76,7 +76,7 @@ MCP 端点默认 `http://127.0.0.1:28795/mcp`，可用环境变量 `TSM_MCP_URL`
 <a id="已知限制与待办"></a>
 ## 已知限制与待办
 
-- dsh 是 alpha；本包按 `@deepseek-ai/dsh@0.1.7-alpha.1` 构建——升级后先 `--dump-config` 核行。
+- dsh 是 alpha；本包已对 `@deepseek-ai/dsh@0.2.0-rc.2` 核过（配置组合 / 引用插件包名 / 客户端契约 / headless `--json` 四项探测全过）。500 题跑批早于该验证、产出于 `0.1.7-alpha.1`，**结果未重跑**。任何升级后先 `--dump-config` 核行。
 - 语义后端不在包内：后端没起时激活失败（`failOnStartupError: true`）。
 - 默认模型与凭据是 profile 层的事（`dsh_dlr/` 的 patch + `.env`），不属于本包。
 

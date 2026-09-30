@@ -141,12 +141,13 @@ cd "dlr-proj/TSM Core Service" && bash scripts/fetch-model.sh
 
 ```bash
 cd "dlr-proj/TSM Core Service" && npm install
-npm install -g @deepseek-ai/dsh@0.1.7-alpha.1     # 版本锁死
+npm install -g @deepseek-ai/dsh@0.2.0-rc.2        # 当前适配版（500 题跑批在 0.1.7-alpha.1 上完成，未重跑）
 npm install -g pnpm                               # dsh plugin 转发给它（装 bundle 必需）
 
-# DLR 的行（MCP 网关 / preset-dlr / 状态浮层 / skills）——一条命令装进 profile
+# DLR 的行（MCP 网关 / preset-dlr / 状态浮层 / skills）——装进 profile
 dsh plugin --profile web add "<新机>/dlr-proj/DSH-based Agent Service/dsh-tsm"
 dsh plugin --profile headless add "<新机>/dlr-proj/DSH-based Agent Service/dsh-tsm"
+# ⚠ 装包 ≠ 启用：把 dsh-tsm 加进各 profile 的 dsh.profile.bundles（插件管理器里勾选等价）
 ```
 
 **5) 构建（先起 Neo4j）**
