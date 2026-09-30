@@ -31,7 +31,9 @@
   name: '@deepseek-ai/dsh-agent-instructions'
   config:
     maxBytes: 65536
-    instructionFileCandidates: ['AGENTS.md']
+    # 随包 AGENTS.md 由 bundle 的 node 半按需注入（工作区自带则优先工作区）——
+    # 与 presets/dlr.patch.yml 的同名行保持同步
+    instructionFileCandidates: [!!js process.env.DLR_AGENTS_MD || 'AGENTS.md']
     localInstructionFileCandidates: []
 
 # 技能源：关掉 project/user 默认根，只认 ./skills（相对 cwd，即 dsh_dlr/skills）。
@@ -144,7 +146,7 @@
   disabled: true
 
 # ── 三、DLR 的行从哪来（bundle）─────────────────────────────────────
-# MCP 语义网关（mcp-semantic-core）已随 **`dsh-tsm` bundle** 分发
-# （`DSH-based Agent Service/dsh-tsm/`，顶层行——headless 与 web 两个装配面共用）。
-# 安装：dsh plugin --profile headless add "<abs>/DSH-based Agent Service/dsh-tsm"
+# MCP 语义网关（mcp-semantic-core）已随 **`dsh-tsm-agent` bundle** 分发
+# （`DSH-based Agent Service/dsh-tsm-agent/`，顶层行——headless 与 web 两个装配面共用）。
+# 安装：dsh plugin --profile headless add "<abs>/DSH-based Agent Service/dsh-tsm-agent"
 # 本文件自此只保留**本地策略**：上面的禁用清单 / 模型 / persona / 指令候选。

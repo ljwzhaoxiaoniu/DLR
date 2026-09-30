@@ -1,15 +1,15 @@
 ---
-description: "DLR / TSM 的 dsh 套件（bundle）：MCP 语义网关 + 与场景无关的 paradigm 技能 + Web 状态浮层。"
+description: "TSM / DLR 的 dsh 套件（bundle）：到 tsm-core-dlr 的 MCP 语义网关 + 与场景无关的 paradigm 技能 + Web 状态浮层 + agent 规则（AGENTS.md）。"
 kind: "package-bundle"
 ---
 
-# dsh-tsm
+# dsh-tsm-agent
 
 [English](README.md) | 中文
 
 ## Summary
 
-`dsh-tsm` 把一个 dsh profile 接到运行中的 **TSM Core Service** 上，并附带与场景无关的 `paradigm` 技能和 Web 状态浮层。它贡献两条**顶层行**——`mcp-semantic-core`（MCP 客户端，指向 `http://127.0.0.1:28795/mcp`，streamable HTTP）与 `dlr-status`（浮层）——以及一个 agent preset `preset-dlr`（persona、AGENTS.md 指令、技能、compaction）。语义后端是独立服务（`TSM Core Service/`），不在本包内。L3 SOP 已走索引检索（`dlr_search_sop`），**不再随包发 L3 技能**。
+`dsh-tsm-agent` 把一个 dsh profile 接到运行中的 **TSM Core Service**（`tsm-core-dlr`）上，并附带与场景无关的 `paradigm` 技能、Web 状态浮层和 agent 规则（`AGENTS.md`）。它贡献两条**顶层行**——`mcp-semantic-core`（MCP 客户端，指向 `http://127.0.0.1:28795/mcp`，streamable HTTP）与 `dlr-status`（浮层）——以及一个 agent preset `preset-dlr`（persona、AGENTS.md 指令、技能、compaction）。语义后端是**独立包 `tsm-core-dlr`**（已声明为依赖，装本包会连带装上）；场景内容来自独立的 `tsm-scenario-*` 包或路径。L3 SOP 已走索引检索（`dlr_search_sop`），**不再随包发 L3 技能**。
 
 ## 目录
 
@@ -27,7 +27,8 @@ kind: "package-bundle"
 每个 profile 装一次。推荐走 Harness 的**插件管理器**（设置 → 插件 → 安装 bundle）或 agent 侧的 `plugin_manager` 工具（`install_bundle`）——两者都会**装包 + 选中 bundle**。CLI 等价命令只装包，装完还要在插件管理器里**启用**（或把包名加进 profile 的 `dsh.profile.bundles`）：
 
 ```bash
-dsh plugin --profile web add "<repo>/DSH-based Agent Service/dsh-tsm"   # 装包
+dsh plugin --profile web add dsh-tsm-agent                              # 从 npm 装（连带 tsm-core-dlr）
+dsh plugin --profile web add "<repo>/DSH-based Agent Service/dsh-tsm-agent"   # 或从本地检出装
 # 然后启用 bundle——只装不选，不会生效
 ```
 
@@ -76,6 +77,7 @@ MCP 端点默认 `http://127.0.0.1:28795/mcp`，可用环境变量 `TSM_MCP_URL`
 <a id="已知限制与待办"></a>
 ## 已知限制与待办
 
+- 本包依赖 `tsm-core-dlr`（装本包会连带装服务包及其原生依赖，约 200 MB）。服务仍需**单独起**（`tsm serve --http 28795`，或检出里的 `scripts/start_backend.sh`）——端点不可达时激活会响亮失败（`failOnStartupError: true`）。
 - dsh 是 alpha；本包已对 `@deepseek-ai/dsh@0.2.0-rc.2` 核过（配置组合 / 引用插件包名 / 客户端契约 / headless `--json` 四项探测全过）。500 题跑批早于该验证、产出于 `0.1.7-alpha.1`，**结果未重跑**。任何升级后先 `--dump-config` 核行。
 - 语义后端不在包内：后端没起时激活失败（`failOnStartupError: true`）。
 - 默认模型与凭据是 profile 层的事（`dsh_dlr/` 的 patch + `.env`），不属于本包。

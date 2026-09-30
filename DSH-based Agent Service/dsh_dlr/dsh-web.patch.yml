@@ -3,7 +3,7 @@
 #
 # 与 dsh.patch.yml（headless 版）的关系：
 #   - 共用：MCP 行、sop 技能、AGENTS.md、.env —— 只是「装配面」不同；
-#   - web 的工具归属 **agent preset**；preset-dlr 已随 `dsh-tsm` bundle 分发（见 §三）；
+#   - web 的工具归属 **agent preset**；preset-dlr 已随 `dsh-tsm-agent` bundle 分发（见 §三）；
 #   - web 已在进程级禁用大部分工具行（tool-bash/fs/search/web/todo…），
 #     headless 那串 disable 在这里大半冗余，只补 web 没禁且对 DLR 有影响的；
 #   - 技能目录必须**绝对路径**（web 的 cwd = 你在 UI 里选的工作区）；
@@ -50,7 +50,7 @@
 
 # ── 三、DLR / TSM 的行从哪来（bundle）───────────────────────────────
 # preset-dlr（persona · AGENTS.md · sop 技能 · MCP 语义网关 · compaction）与
-# TSM 状态浮层，已随 **`dsh-tsm` bundle** 分发，见 `DSH-based Agent Service/dsh-tsm/`。
+# TSM 状态浮层，已随 **`dsh-tsm-agent` bundle** 分发，见 `DSH-based Agent Service/dsh-tsm-agent/`。
 # 安装（本机已装）：
-#   dsh plugin --profile web add "<abs>/DSH-based Agent Service/dsh-tsm"
+#   dsh plugin --profile web add "<abs>/DSH-based Agent Service/dsh-tsm-agent"
 # 本文件自此只保留**本地策略**：上面的禁用清单 / 目录选择器修复 / registry 默认 preset。

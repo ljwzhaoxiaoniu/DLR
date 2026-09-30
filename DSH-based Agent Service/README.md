@@ -15,7 +15,7 @@ DSH-based Agent Service/
 ├── README.md
 ├── .gitignore                # .dsh-home/、.env
 ├── scripts/start_backend.sh  # 一键起后端（Neo4j + TS MCP server，幂等 + 预检）
-├── dsh-tsm/                  # ★ bundle（dsh plugin add 安装）：MCP 网关 + preset-dlr + 状态浮层 + skills
+├── dsh-tsm-agent/                  # ★ bundle（dsh plugin add 安装）：MCP 网关 + preset-dlr + 状态浮层 + skills
 │   ├── cordis.patch.yml      #   顶层行：mcp-semantic-core · dlr-status
 │   ├── presets/dlr.patch.yml #   preset-dlr：persona / AGENTS.md / skills / compaction
 │   ├── skills/               #   paradigm（认知层，场景无关）；L3 已走索引检索（不随包发技能）
@@ -49,7 +49,7 @@ bash "DSH-based Agent Service/dsh_dlr/run_one.sh" 1471 "What is the ratio of cus
 # Web 对话（默认 preset = dlr；进 UI 先选工作区 DSH-based Agent Service）
 bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 #   ↑ 右下角浮出 TSM 状态卡：Neo4j / MCP 服务灯 · LE/PE/PA/PAS · 向量行数 · 场景名 · Neo4j Browser 链接
-#     （前提：dsh-tsm bundle 已装 —— dsh plugin --profile web add "<abs>/DSH-based Agent Service/dsh-tsm"）
+#     （前提：dsh-tsm-agent bundle 已装 —— dsh plugin --profile web add "<abs>/DSH-based Agent Service/dsh-tsm-agent"）
 ```
 
 ## 场景（scenario = 一套完整 TSM）

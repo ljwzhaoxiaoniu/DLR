@@ -1,15 +1,15 @@
 ---
-description: "DLR / TSM bundle for dsh: MCP semantic gateway, scenario-independent paradigm skill, and a TSM status overlay for the Web UI."
+description: "dsh bundle for TSM / DLR: MCP semantic gateway to tsm-core-dlr, the scenario-independent paradigm skill, the TSM status overlay, and the agent rules (AGENTS.md)."
 kind: "package-bundle"
 ---
 
-# dsh-tsm
+# dsh-tsm-agent
 
 English | [中文](README.zh.md)
 
 ## Summary
 
-`dsh-tsm` wires a dsh profile to a running **TSM Core Service** and adds the scenario-independent `paradigm` skill plus a Web status overlay. It contributes two top-level rows — `mcp-semantic-core` (MCP client for `http://127.0.0.1:28795/mcp`, streamable HTTP) and `dlr-status` (overlay) — and one agent preset, `preset-dlr` (persona, AGENTS.md instruction loader, skills, compaction). The semantic backend is a separate service (`TSM Core Service/`), not part of this package. L3 SOP is delivered by index retrieval (`dlr_search_sop`), so no L3 skill ships with the package.
+`dsh-tsm-agent` wires a dsh profile to a running **TSM Core Service** (`tsm-core-dlr`) and adds the scenario-independent `paradigm` skill, a Web status overlay, and the agent rules (`AGENTS.md`). It contributes two top-level rows — `mcp-semantic-core` (MCP client for `http://127.0.0.1:28795/mcp`, streamable HTTP) and `dlr-status` (overlay) — and one agent preset, `preset-dlr` (persona, AGENTS.md instruction loader, skills, compaction). The semantic backend is the **separate package `tsm-core-dlr`** (declared as a dependency, so installing this bundle installs it too); the scenario content comes from a separate `tsm-scenario-*` package or a path. L3 SOP is delivered by index retrieval (`dlr_search_sop`), so no L3 skill ships with the package.
 
 ## Table of Contents
 
@@ -27,7 +27,8 @@ English | [中文](README.zh.md)
 Install once per profile. The recommended path is the Harness **Plugin Manager** (Settings → Plugins → install bundle) or the agent-side `plugin_manager` tool with `install_bundle` — both perform package installation **and** bundle selection. The CLI equivalent installs the package only; the bundle must then be selected (Plugin Manager toggle, or by listing it in the profile's `dsh.profile.bundles`):
 
 ```bash
-dsh plugin --profile web add "<repo>/DSH-based Agent Service/dsh-tsm"   # install the package
+dsh plugin --profile web add dsh-tsm-agent                              # from npm (pulls tsm-core-dlr with it)
+dsh plugin --profile web add "<repo>/DSH-based Agent Service/dsh-tsm-agent"   # or from a local checkout
 # then select/enable the bundle — installing alone does not select it
 ```
 
@@ -76,6 +77,7 @@ Tools register as `mcp__semantic-core__<tool>`:
 <a id="known-limitations-and-deferred-work"></a>
 ## Known Limitations and Deferred Work
 
+- The bundle depends on `tsm-core-dlr` (installing it pulls the service package and its native dependencies, ~200 MB). The service still has to be **started** separately (`tsm serve --http 28795`, or `scripts/start_backend.sh` in a checkout) — bundle activation fails loudly (`failOnStartupError: true`) when the MCP endpoint is unreachable.
 - dsh is alpha; this package is verified against `@deepseek-ai/dsh@0.2.0-rc.2` (profile composition, referenced plugin packages, the client-half contract and headless `--json` were all checked). The 500-question benchmark run predates that verification and was produced on `0.1.7-alpha.1` — **results were not re-run**. Re-check patch rows with `--dump-config` after any upgrade.
 - The semantic backend is out of scope: without it, activation fails (`failOnStartupError: true`).
 - Default model and API credentials are profile-level concerns (`dsh_dlr/` patches + `.env`), not part of the bundle.

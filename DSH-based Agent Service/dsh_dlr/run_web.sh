@@ -17,17 +17,17 @@ MCP_URL="${TSM_MCP_URL:-http://127.0.0.1:28795/mcp}"
 
 export DSH_HOME="$SVC_DIR/.dsh-home"
 # 技能目录绝对路径（web 的 cwd 是 UI 工作区，不能用相对路径）——bundle 内的 skills
-export DLR_SKILLS_DIR="$SVC_DIR/dsh-tsm/skills"
+export DLR_SKILLS_DIR="$SVC_DIR/dsh-tsm-agent/skills"
 
 # 凭据：把 .env 载入进程环境（dsh 凭据链里「继承环境」优先级最高）
 if [ -f "$HERE/.env" ]; then set -a; . "$HERE/.env"; set +a; fi
 
-# DLR 的行（MCP 网关 / preset-dlr / 状态浮层）随 `dsh-tsm` bundle 分发 —— 装一次即可
+# DLR 的行（MCP 网关 / preset-dlr / 状态浮层）随 `dsh-tsm-agent` bundle 分发 —— 装一次即可
 # （link 方式指向仓库目录，改包即时生效）：
-#   dsh plugin --profile web add "$SVC_DIR/dsh-tsm"
-if ! node -e "const b=require('$DSH_HOME/profiles/web/package.json').dsh?.profile?.bundles||[];process.exit(b.includes('dsh-tsm')?0:1)" 2>/dev/null; then
-  echo "[WARN] web profile 未安装 dsh-tsm bundle —— preset-dlr 与状态浮层不会出现" >&2
-  echo "       安装：dsh plugin --profile web add \"$SVC_DIR/dsh-tsm\"" >&2
+#   dsh plugin --profile web add "$SVC_DIR/dsh-tsm-agent"
+if ! node -e "const b=require('$DSH_HOME/profiles/web/package.json').dsh?.profile?.bundles||[];process.exit(b.includes('dsh-tsm-agent')?0:1)" 2>/dev/null; then
+  echo "[WARN] web profile 未安装 dsh-tsm-agent bundle —— preset-dlr 与状态浮层不会出现" >&2
+  echo "       安装：dsh plugin --profile web add \"$SVC_DIR/dsh-tsm-agent\"" >&2
 fi
 
 # 预检（不可达只告警：UI 能起，但工具会起不来）

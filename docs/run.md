@@ -54,7 +54,7 @@ bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 
 ## 4. 状态面
 
-- 右下角常驻 **TSM 状态浮层**（随 `dsh-tsm` bundle 分发）：Neo4j / MCP 两盏灯 · LE/PE/PA/PAS · 向量行数 · 场景名 · Neo4j Browser 链接；10 秒轮询。
+- 右下角常驻 **TSM 状态浮层**（随 `dsh-tsm-agent` bundle 分发）：Neo4j / MCP 两盏灯 · LE/PE/PA/PAS · 向量行数 · 场景名 · Neo4j Browser 链接；10 秒轮询。
 - 数据源 = MCP server 的 `GET /status`（JSON；CORS 只放行 dsh web 的 loopback 源）：
 
 ```bash
@@ -104,7 +104,7 @@ curl -s http://127.0.0.1:28795/status
 
 ## 8. 新机器安装（异地验收清单）
 
-> 目标：在"只有 dsh 的环境"把整套装起来。**dsh 侧已 bundle 化**（DLR 的行 = `dsh-tsm` 一条命令）；**后端仍是独立服务**（clone + npm i + build）。
+> 目标：在"只有 dsh 的环境"把整套装起来。**dsh 侧已 bundle 化**（DLR 的行 = `dsh-tsm-agent` 一条命令）；**后端仍是独立服务**（clone + npm i + build）。
 
 **0) 代码**（2.0 分支；当前它未推远端，二选一）
 
@@ -145,9 +145,9 @@ npm install -g @deepseek-ai/dsh@0.2.0-rc.2        # 当前适配版（500 题跑
 npm install -g pnpm                               # dsh plugin 转发给它（装 bundle 必需）
 
 # DLR 的行（MCP 网关 / preset-dlr / 状态浮层 / skills）——装进 profile
-dsh plugin --profile web add "<新机>/dlr-proj/DSH-based Agent Service/dsh-tsm"
-dsh plugin --profile headless add "<新机>/dlr-proj/DSH-based Agent Service/dsh-tsm"
-# ⚠ 装包 ≠ 启用：把 dsh-tsm 加进各 profile 的 dsh.profile.bundles（插件管理器里勾选等价）
+dsh plugin --profile web add "<新机>/dlr-proj/DSH-based Agent Service/dsh-tsm-agent"
+dsh plugin --profile headless add "<新机>/dlr-proj/DSH-based Agent Service/dsh-tsm-agent"
+# ⚠ 装包 ≠ 启用：把 dsh-tsm-agent 加进各 profile 的 dsh.profile.bundles（插件管理器里勾选等价）
 ```
 
 **5) 构建（先起 Neo4j）**

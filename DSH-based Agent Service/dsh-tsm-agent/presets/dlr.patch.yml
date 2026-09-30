@@ -1,5 +1,5 @@
 # ══════════════════════════════════════════════════════════════════════
-# dsh-tsm bundle —— preset-dlr（agent preset 随 bundle 分发；照 dsh-web-app 的
+# dsh-tsm-agent bundle —— preset-dlr（agent preset 随 bundle 分发；照 dsh-web-app 的
 # presets/*.patch.yml 惯例，一个 preset 一份 patch）
 #
 # 装配面：persona（语义业务助手）/ AGENTS.md 指令 / paradigm 技能（skill-filesystem
@@ -28,7 +28,9 @@
             name: '@deepseek-ai/dsh-agent-instructions'
             config:
               maxBytes: 65536
-              instructionFileCandidates: ['AGENTS.md']
+              # 随包 AGENTS.md 由 node 半按需注入（工作区自带则优先工作区）——
+              # 与 dsh_dlr/dsh.patch.yml 的同名行保持同步
+              instructionFileCandidates: [!!js process.env.DLR_AGENTS_MD || 'AGENTS.md']
               localInstructionFileCandidates: []
 
           - id: skill-provider

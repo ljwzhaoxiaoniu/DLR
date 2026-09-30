@@ -1,12 +1,38 @@
 {
-  "name": "tsm-core",
+  "name": "tsm-core-dlr",
   "version": "1.0.0",
-  "private": true,
   "type": "module",
-  "description": "TSM Core Service —— DLR 语义层后端（LanceDB + Neo4j + MCP server）；CLI：tsm serve|status|build|verify|viz",
+  "description": "TSM Core Service (DLR): the semantic-layer backend for the Three-Level Semantic Modeling framework — LanceDB vectors + in-process memory graph (Neo4j optional) + MCP server with 7 tools. CLI: tsm serve|status|build|verify|scenario|fetch-model|grade|stats|coverage|viz.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ljwzhaoxiaoniu/DLR.git",
+    "directory": "TSM Core Service"
+  },
+  "engines": {
+    "node": ">=23.4.0"
+  },
+  "keywords": [
+    "tsm",
+    "dlr",
+    "semantic-layer",
+    "mcp",
+    "lancedb",
+    "neo4j",
+    "nl2sql"
+  ],
   "bin": {
     "tsm": "./bin/tsm.mjs"
   },
+  "files": [
+    "bin",
+    "src",
+    "static",
+    "scripts",
+    "README.md",
+    "LICENSE",
+    ".env.example"
+  ],
   "dependencies": {
     "@huggingface/transformers": "^4.3.0",
     "@lancedb/lancedb": "^0.39.0",

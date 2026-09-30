@@ -11,7 +11,7 @@ A checkout ships three parts:
 | Part | What it is |
 |---|---|
 | `TSM Core Service/` | The semantic service (TypeScript): LanceDB vectors + Neo4j graph + ONNX encoder, exposing **7 MCP tools** over streamable HTTP |
-| `DSH-based Agent Service/` | dsh (DeepSeek Harness) integration: the `dsh-tsm` bundle, launchers, agent rules |
+| `DSH-based Agent Service/` | dsh (DeepSeek Harness) integration: the `dsh-tsm-agent` bundle, launchers, agent rules |
 | `scenarios/<name>/` | Complete TSM content packages: three-level sources + exam paper + graded results. Current: `birdminidev` (BIRD mini-dev, 11 databases / 500 questions — **500/500 judged correct**: 426 matching gold exactly, 74 ruled correct under L3 clauses where the dataset's own gold is defective) |
 
 ## Table of Contents
@@ -61,7 +61,7 @@ The launcher prechecks the backend, runs `dsh --profile headless --json`, and wr
 
 ```bash
 # once per profile: install the bundle, then enable it (Plugin Manager, or the profile's dsh.profile.bundles)
-dsh plugin --profile web add "$(pwd)/DSH-based Agent Service/dsh-tsm"
+dsh plugin --profile web add "$(pwd)/DSH-based Agent Service/dsh-tsm-agent"
 bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 ```
 
@@ -135,7 +135,7 @@ DLR Proj/                          # branch 2.0
 │                                  #   └── eval-line/   evaluation-line archive (read-only reference)
 ├── scenarios/birdminidev/         # ★ scenario package: sources/{configs,consensus,sop.md} + eval/ + fixtures/ + results/
 ├── TSM Core Service/              # semantic service (TS): LanceDB + Neo4j + MCP server
-├── DSH-based Agent Service/       # dsh integration: bundle (dsh-tsm) / launchers / agent rules
+├── DSH-based Agent Service/       # dsh integration: bundle (dsh-tsm-agent) / launchers / agent rules
 ├── Evaluation/ · validated_results/   # evaluation line (used on branch 1.5)
 ├── archive/                       # history (v2/v3, old docs and share pages) — read-only
 └── MINIDEV_sqlite/                # dataset (gitignored, download required)

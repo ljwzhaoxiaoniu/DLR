@@ -1,0 +1,43 @@
+{
+  "name": "dsh-tsm-agent",
+  "version": "0.2.0",
+  "type": "module",
+  "description": "dsh bundle for TSM / DLR: MCP semantic gateway to tsm-core-dlr, the scenario-independent paradigm skill, the TSM status overlay, and the agent rules (AGENTS.md). Assembly face = preset-dlr.",
+  "license": "MIT",
+  "icon": "./icon.svg",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ljwzhaoxiaoniu/DLR.git",
+    "directory": "DSH-based Agent Service/dsh-tsm-agent"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "prepack": "node ./scripts/copy-agents.mjs"
+  },
+  "files": [
+    "lib",
+    "presets",
+    "skills",
+    "cordis.patch.yml",
+    "locale",
+    "icon.svg",
+    "AGENTS.md"
+  ],
+  "dependencies": {
+    "tsm-core-dlr": "^1.0.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": [
+        "./cordis.patch.yml",
+        "./presets/dlr.patch.yml"
+      ]
+    },
+    "client": {
+      "platform": "web",
+      "inject": []
+    }
+  }
+}

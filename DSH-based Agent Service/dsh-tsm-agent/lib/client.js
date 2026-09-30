@@ -1,7 +1,7 @@
 // TSM 状态浮层（shell.overlay 座位）——显示两个语义后端服务的健康状况。
 // 手写 bundle：与自带客户端插件同格式（window.__ModuleLoader__.load + factory(require)）。
 window.__ModuleLoader__.load({
-  id: "dsh-tsm",
+  id: "dsh-tsm-agent",
   factory: (require) => {
     var module = { exports: {} };
     var exports = module.exports;
@@ -59,11 +59,16 @@ window.__ModuleLoader__.load({
     function TsmStatusPill() {
       const { reachable, data } = useStatus();
       const neo = data && data.neo4j ? data.neo4j : null;
+      const graph = data && data.graph ? data.graph : null; // 图后端双轨：memory（内存图）/ neo4j
       const lance = data && data.lance ? data.lance : null;
-      const counts = (neo && neo.nodes) || {};
-      const rels = (neo && neo.rels) || {};
+      const counts = (graph && graph.nodes) || (neo && neo.nodes) || {};
+      const rels = (graph && graph.rels) || (neo && neo.rels) || {};
       const vectors = (lance && lance.tables) || {};
       const browserUrl = (neo && neo.browser_url) || "http://localhost:7474";
+      const vizUrl =
+        (data && data.service_info && data.service_info.viz_url) || "http://127.0.0.1:28795/viz/dlr";
+      const graphLabel = graph && graph.backend === "memory" ? "内存图" : "Neo4j";
+      const graphOk = graph ? graph.ok : neo && neo.ok;
       const scenario = (data && data.scenario && data.scenario.name) || "-";
 
       const title = reachable && data && data.ok ? "TSM 语义后端" : "TSM 语义后端（不可达）";
@@ -107,8 +112,8 @@ window.__ModuleLoader__.load({
         row(
           "services",
           [
-            dot(!reachable ? COLORS.bad : neo && neo.ok ? COLORS.ok : COLORS.bad),
-            React.createElement("span", { key: "neo", style: { marginRight: 14 } }, "Neo4j"),
+            dot(!reachable ? COLORS.bad : graphOk ? COLORS.ok : COLORS.bad),
+            React.createElement("span", { key: "graph", style: { marginRight: 14 } }, graphLabel),
             dot(reachable ? COLORS.ok : COLORS.bad),
             React.createElement("span", { key: "mcp" }, "MCP :28795"),
           ],
@@ -122,25 +127,32 @@ window.__ModuleLoader__.load({
               "a",
               {
                 key: "viz",
-                href: "http://127.0.0.1:28795/viz/dlr",
+                href: vizUrl,
                 target: "_blank",
                 rel: "noreferrer",
                 style: { color: "#58a6ff", textDecoration: "none" },
               },
               "图谱 ↗",
             ),
-            React.createElement("span", { key: "sep", style: { opacity: 0.4, margin: "0 8px" } }, "·"),
-            React.createElement(
-              "a",
-              {
-                key: "neo",
-                href: browserUrl,
-                target: "_blank",
-                rel: "noreferrer",
-                style: { color: "#8b949e", textDecoration: "none" },
-              },
-              "Neo4j ↗",
-            ),
+            // Neo4j 行只在后端确为 Neo4j 时出现（内存图模式隐藏）
+            neo && neo.enabled !== false
+              ? React.createElement(
+                  "span",
+                  { key: "sepwrap" },
+                  React.createElement("span", { key: "sep", style: { opacity: 0.4, margin: "0 8px" } }, "·"),
+                  React.createElement(
+                    "a",
+                    {
+                      key: "neo",
+                      href: browserUrl,
+                      target: "_blank",
+                      rel: "noreferrer",
+                      style: { color: "#8b949e", textDecoration: "none" },
+                    },
+                    "Neo4j ↗",
+                  ),
+                )
+              : null,
           ],
         ),
       );
