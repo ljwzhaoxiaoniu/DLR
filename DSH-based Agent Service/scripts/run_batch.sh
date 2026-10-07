@@ -83,3 +83,4 @@ done < "$RUN_DIR/questions.tsv"
 wait
 echo "[batch] 全部完成：$(ls "$RAW"/*.ndjson 2>/dev/null | wc -l)/$TOTAL 题有产物"
 echo "[batch] 下一步判定：cd \"TSM Core Service\" && tsm grade --run \"$RUN_DIR\""
+echo "[batch] 或改用考试系统一条龙：node \"$ROOT/DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs\" all --qids … --out <目录>（见 dsh-tsm-eval README）"

@@ -41,6 +41,19 @@ bash "DSH-based Agent Service/dsh_dlr/run_one.sh" <qid> "<question>"
 - Session logs: `DSH-based Agent Service/.dsh-home/sessions/<project-dir>/<session-id>/session.v4.jsonl.zstd` (**multi-frame zstd**; decoder: `DSH-based Agent Service/scripts/decode_session_log.cjs`).
 - **Batch runs** (parallel → grade → stats): see "How a round is run" in `scenarios/birdminidev/results/README.md`.
 
+## 2.5 Run the exam (dsh-tsm-eval)
+
+The 2.0 exam system (`DSH-based Agent Service/dsh-tsm-eval/`, bin `dsh-eval`) drives a scenario's paper end to end: dsh headless per question → `tsm grade` → a replayable report.
+
+```bash
+node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" doctor                       # 11 preflight checks
+node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" all --qids 1471,27 --out tmp_scripts/smoke
+```
+
+- Default landing is `<scenario>/eval/runs/` — **never scanned by `tsm stats`**; `--ledger` targets `results/`, and runs over 5 questions need `--yes` (batch discipline).
+- `report.json` / `report.md` add process metrics, the invalid-round split (TRANSPORT / timeout) and session-log forensics on top of grade's CSV.
+- Full reference: [dsh-tsm-eval README](../DSH-based%20Agent%20Service/dsh-tsm-eval/README.md).
+
 ## 3. Web chat
 
 ```bash

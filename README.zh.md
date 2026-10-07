@@ -11,7 +11,7 @@
 | 部分 | 是什么 |
 |---|---|
 | `TSM Core Service/` | 语义服务（TypeScript）：LanceDB 向量 + Neo4j 图 + ONNX 编码器，经 streamable-http 暴露 **7 个 MCP 工具** |
-| `DSH-based Agent Service/` | dsh（DeepSeek Harness）接入：`dsh-tsm-agent` bundle、启动器、agent 规则 |
+| `DSH-based Agent Service/` | dsh（DeepSeek Harness）接入：`dsh-tsm-agent` bundle、`dsh-tsm-eval` 考试系统、启动器、agent 规则 |
 | `scenarios/<名>/` | 完整 TSM 内容包：三层源 + 考卷 + 跑批结果。当前 `birdminidev`（BIRD mini-dev，11 库 / 500 题——**500/500 评定正确**：426 与 gold 一致 + 74 处按 L3 节口径裁定为数据集自身缺陷） |
 
 ## 目录
@@ -135,7 +135,7 @@ DLR Proj/                          # 分支 2.0
 │                                  #   └── eval-line/   评测线归档（只读参考）
 ├── scenarios/birdminidev/         # ★ 场景包：sources/{configs,consensus,sop.md} + eval/ + fixtures/ + results/
 ├── TSM Core Service/              # 语义服务（TS）：LanceDB + Neo4j + MCP server
-├── DSH-based Agent Service/       # dsh 接入：bundle（dsh-tsm-agent）/ 启动器 / agent 规则
+├── DSH-based Agent Service/       # dsh 接入：bundle（dsh-tsm-agent）/ 考试系统（dsh-tsm-eval）/ 启动器 / agent 规则
 ├── Evaluation/ · validated_results/   # 评测线（1.5 分支使用）
 ├── archive/                       # 历史（v2/v3 归档、旧文档与分享页）——只读
 └── MINIDEV_sqlite/                # 数据集（gitignored，需下载）

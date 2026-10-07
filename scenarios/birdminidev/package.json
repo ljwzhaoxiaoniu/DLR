@@ -16,6 +16,7 @@
     "sources/sop.md",
     "sources/README.md",
     "eval",
+    "!eval/runs",
     "fixtures",
     "share",
     "README.md",

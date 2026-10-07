@@ -79,6 +79,8 @@ bash "DSH-based Agent Service/scripts/run_batch.sh" --qids <q1>,<q2> --jobs 3   
 bash "DSH-based Agent Service/dsh_dlr/run_web.sh"                     # Web 对话
 cd "TSM Core Service" && node bin/tsm.mjs grade --run "<批次目录>"    # 判定 → questions.csv + summary.md（口径见 docs/eval.md §六）
 cd "TSM Core Service" && npx tsx src/verify/precheck.ts               # 后端预检（应列出 7 工具）
+node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" doctor   # 考试系统自检（11 项；任一失败非零退出）
+node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" all --qids <q1>,<q2> --out tmp_scripts/<目录>  # 跑+判+报一条龙（默认不进台账；--ledger 才进，且 >5 题需 --yes）
 ```
 
 **评测线（dlr-eval-v1.5）**：

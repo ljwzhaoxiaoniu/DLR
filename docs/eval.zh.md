@@ -10,7 +10,7 @@
 | | 跟着谁 | 形态 | 性质 |
 |---|---|---|---|
 | **考卷**（题面 + 期望 + 口径来源） | **场景** | `scenarios/<名>/eval/questions.jsonl` | **内容资产**：一场景一份，随场景包 git 化 ｜ ✅ `birdminidev` 已有（500 题；生成器 `eval/build.mjs`：**答案键取 L3 节口径 74 处、其余取 gold 426 处**） |
-| **考试系统**（跑题 + 采分 + 出报告） | **dsh** | 独立 bundle（暂名 `dsh-tsm-eval`） | **宿主能力**：一套通吃多场景，**独立可分** |
+| **考试系统**（跑题 + 采分 + 出报告） | **dsh** | ✅ 独立包 `dsh-tsm-eval`（v1：CLI `run → score → report`；bundle 面 —— web 浮层、`/eval` —— 属 v1.5） | **宿主能力**：一套通吃多场景，**独立可分** |
 
 ## 二、为什么这样切
 
@@ -69,6 +69,8 @@ cd "TSM Core Service" && node bin/tsm.mjs grade --run "<上一步目录>"   # �
 
 （场景包装在仓库外时，跑批产物落 `TSM_OUT_DIR`——默认用户数据目录——**永不写进场景包**。）
 
+> `dsh-tsm-eval`（`DSH-based Agent Service/dsh-tsm-eval/`）已把这条链收进一条命令——`dsh-eval all` 跑题、采分、出报告一条龙；**下述判据不变**（它子进程调用 `tsm grade`，并原样嵌入其行）。
+
 **判定的三层**（`src/dev/judge.ts` · `src/dev/results.ts`）：
 
 | 层 | 做什么 | 关键口径 |
@@ -91,7 +93,7 @@ cd "TSM Core Service" && node bin/tsm.mjs grade --run "<上一步目录>"   # �
 ## 八、路线
 
 1. 场景包先落 `eval/questions.jsonl`（内容，随时可加）——✅ `birdminidev` 已落；
-2. 考试系统做成 dsh bundle（`--json` + 会话日志 → 判定 → 报告）；
+2. 考试系统做成 dsh bundle（`--json` + 会话日志 → 判定 → 报告）——✅ v1 已落地为独立包 `dsh-tsm-eval`（CLI 编排器；`report.json` 带 `baseline_key` diff 锚）；bundle 面（web 浮层 / `/eval`）属 v1.5；
 3. 报告基线化：每轮语义资产变更跑同一份考卷，diff 行为。
 
 ## 相关

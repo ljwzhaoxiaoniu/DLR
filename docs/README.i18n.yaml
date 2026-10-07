@@ -7,9 +7,9 @@
 # 迁移中（2026-09-30 起，2–3 篇一批）：未落对的文档暂时只有中文单篇。
 README.md: d03b365816004ee105628d8d0e52395563a6b92d
 README.zh.md: e75ea9baa9fe738a675a692a1b7ec3742abfceb1
-run.md: 94c2924e1754a2dbda9b26aca8fb1830a3730254
-run.zh.md: 7ea7dd0ecb402ec7f388be980480104956c95590
-eval.md: 90b1b6ef3fa4be40372a2eae27a88b9894ad37dc
-eval.zh.md: dd6fdb6168620f484794e26e3026d79ad6f1b7d6
+run.md: 5890b75c15b0f557a7b2564bd197ffe1712f4a46
+run.zh.md: aef9edcea2090bbad664b5516819ef9fe6a90ee3
+eval.md: deb92a7276101f956c2b387a63788aed81285e69
+eval.zh.md: 8ca47d40d9aa2e07818bfc7b2c67c4dc53ba94ee
 roadmap.md: 1b8ea7122a03882337336b3abaaff14cce4bcaa2
 roadmap.zh.md: f0825c02c21bc5bc33d04016d209acc507d48d74

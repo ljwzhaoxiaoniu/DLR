@@ -1,0 +1,41 @@
+{
+  "name": "dsh-tsm-eval",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "dsh-tsm-eval: the exam system for TSM/DLR. Run a scenario paper (eval/questions.jsonl) through dsh headless, score it with tsm grade, and emit a replayable report (result + process + session-log forensics).",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ljwzhaoxiaoniu/DLR.git",
+    "directory": "DSH-based Agent Service/dsh-tsm-eval"
+  },
+  "engines": {
+    "node": ">=22.15.0"
+  },
+  "bin": {
+    "dsh-eval": "./bin/dsh-eval.mjs"
+  },
+  "main": "./lib/index.mjs",
+  "exports": {
+    ".": {
+      "default": "./lib/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "test": "node --test",
+    "doctor": "node ./bin/dsh-eval.mjs doctor",
+    "parity": "node ./bin/dsh-eval.mjs parity --all-results"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "README.md",
+    "README.zh.md",
+    "README.i18n.yaml",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "tsm-core-dlr": "^1.0.0"
+  }
+}

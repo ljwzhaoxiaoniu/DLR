@@ -10,7 +10,7 @@
 | | Follows | Form | Nature |
 |---|---|---|---|
 | **Exam paper** (question + expected + caliber source) | **scenario** | `scenarios/<name>/eval/questions.jsonl` | **Content asset**: one per scenario, versioned with the scenario package ｜ ✅ `birdminidev` has one (500 questions; generator `eval/build.mjs` — **answer keys take the L3 clause for 74 questions and gold for the other 426**) |
-| **Exam system** (run + score + report) | **dsh** | standalone bundle (working name `dsh-tsm-eval`) | **Host capability**: one system serves all scenarios, **independently separable** |
+| **Exam system** (run + score + report) | **dsh** | ✅ the standalone `dsh-tsm-eval` package (v1: CLI `run → score → report`; the dsh bundle surface — web overlay, `/eval` — is v1.5) | **Host capability**: one system serves all scenarios, **independently separable** |
 
 ## 2. Why split this way
 
@@ -69,6 +69,8 @@ cd "TSM Core Service" && node bin/tsm.mjs grade --run "<that dir>"   # → quest
 
 (With an installed scenario package, runs and reports land under `TSM_OUT_DIR` — a user data dir by default — never inside the scenario package itself.)
 
+> `dsh-tsm-eval` (`DSH-based Agent Service/dsh-tsm-eval/`) now packages this whole chain into one command — `dsh-eval all` runs, scores and reports; **the calibers below are unchanged** (it shells out to `tsm grade` and embeds its rows verbatim).
+
 **Three tiers of judging** (`src/dev/judge.ts` · `src/dev/results.ts`):
 
 | Tier | What | Key caliber |
@@ -91,7 +93,7 @@ The exam system's by-product = **probes**: who gets cited repeatedly, who gets c
 ## 8. Roadmap
 
 1. Scenario packages land `eval/questions.jsonl` first (content, extendable anytime) — ✅ done for `birdminidev`;
-2. The exam system becomes a dsh bundle (`--json` + session logs → judging → report);
+2. The exam system becomes a dsh bundle (`--json` + session logs → judging → report) — ✅ v1 landed as the standalone `dsh-tsm-eval` package (CLI orchestrator; `report.json` carries the `baseline_key` diff anchor); the dsh bundle surface (web overlay / `/eval`) is v1.5;
 3. Reports get baselined: every round of semantic-asset change reruns the same paper, and behavior is diffed.
 
 ## Related

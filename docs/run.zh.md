@@ -42,6 +42,19 @@ bash "DSH-based Agent Service/dsh_dlr/run_one.sh" <qid> "<question>"
 - 会话日志：`DSH-based Agent Service/.dsh-home/sessions/<项目目录>/<session-id>/session.v4.jsonl.zstd`（**多帧 zstd**，取证解码器 `DSH-based Agent Service/scripts/decode_session_log.cjs`）。
 - **跑一批**（并行 → 判定 → 统计）：见 `scenarios/birdminidev/results/README.md`「一轮怎么跑」。
 
+## 2.5 跑考试（dsh-tsm-eval）
+
+2.0 的考试系统（`DSH-based Agent Service/dsh-tsm-eval/`，bin `dsh-eval`）端到端驱动一套场景的考卷：逐题 dsh headless → `tsm grade` → 可回放报告。
+
+```bash
+node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" doctor                       # 11 项自检
+node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" all --qids 1471,27 --out tmp_scripts/smoke
+```
+
+- 默认落 `<场景>/eval/runs/` —— **`tsm stats` 永不会扫到**；`--ledger` 才写 `results/`，且超 5 题须 `--yes`（批量纪律）。
+- `report.json` / `report.md` 在 grade 的 CSV 之上补：过程指标、无效轮分离（TRANSPORT / 超时）、会话日志取证。
+- 完整参考：[dsh-tsm-eval README](../DSH-based%20Agent%20Service/dsh-tsm-eval/README.zh.md)。
+
 ## 3. Web 对话
 
 ```bash
