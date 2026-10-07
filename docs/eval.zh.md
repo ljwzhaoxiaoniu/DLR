@@ -10,7 +10,7 @@
 | | 跟着谁 | 形态 | 性质 |
 |---|---|---|---|
 | **考卷**（题面 + 期望 + 口径来源） | **场景** | `scenarios/<名>/eval/questions.jsonl` | **内容资产**：一场景一份，随场景包 git 化 ｜ ✅ `birdminidev` 已有（500 题；生成器 `eval/build.mjs`：**答案键取 L3 节口径 74 处、其余取 gold 426 处**） |
-| **考试系统**（跑题 + 采分 + 出报告） | **dsh** | ✅ 独立包 `dsh-tsm-eval`（v1：CLI `run → score → report`；bundle 面 —— web 浮层、`/eval` —— 属 v1.5） | **宿主能力**：一套通吃多场景，**独立可分** |
+| **考试系统**（跑题 + 采分 + 出报告） | **dsh** | ✅ 独立包 `dsh-tsm-eval`（0.1：CLI `run → score → report`；bundle 面 —— web 浮层、`/eval` —— 计划 0.2） | **宿主能力**：一套通吃多场景，**独立可分** |
 
 ## 二、为什么这样切
 
@@ -93,7 +93,7 @@ cd "TSM Core Service" && node bin/tsm.mjs grade --run "<上一步目录>"   # �
 ## 八、路线
 
 1. 场景包先落 `eval/questions.jsonl`（内容，随时可加）——✅ `birdminidev` 已落；
-2. 考试系统做成 dsh bundle（`--json` + 会话日志 → 判定 → 报告）——✅ v1 已落地为独立包 `dsh-tsm-eval`（CLI 编排器；`report.json` 带 `baseline_key` diff 锚）；bundle 面（web 浮层 / `/eval`）属 v1.5；
+2. 考试系统做成 dsh bundle（`--json` + 会话日志 → 判定 → 报告）——✅ 已落地为独立包 `dsh-tsm-eval`（v0.1，CLI 编排器；`report.json` 带 `baseline_key` diff 锚）；bundle 面（web 浮层 / `/eval`）属 0.2；
 3. 报告基线化：每轮语义资产变更跑同一份考卷，diff 行为。
 
 ## 相关

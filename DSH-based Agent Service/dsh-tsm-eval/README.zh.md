@@ -118,7 +118,7 @@ $DSH_HOME/sessions/<cwd-slug>/<session-id>/session.v4.jsonl.zstd
 
 ## Roadmap
 
-- **v1.5**：dsh bundle 面（web 报告浮层 + `/eval` 斜杠命令）；`eval/build.mjs` 给考卷追加式补 `qid`；重试落 `failed/`；台账批量重判模式；
+- **0.2**：dsh bundle 面（web 报告浮层 + `/eval` 斜杠命令）；`eval/build.mjs` 给考卷追加式补 `qid`；重试落 `failed/`；台账批量重判模式；
 - **路线 3**：按 `baseline_key` 做轮间 diff（同卷、语义资产变更 → 行为差异）。
 
 ## 许可

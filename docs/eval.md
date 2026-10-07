@@ -10,7 +10,7 @@
 | | Follows | Form | Nature |
 |---|---|---|---|
 | **Exam paper** (question + expected + caliber source) | **scenario** | `scenarios/<name>/eval/questions.jsonl` | **Content asset**: one per scenario, versioned with the scenario package ｜ ✅ `birdminidev` has one (500 questions; generator `eval/build.mjs` — **answer keys take the L3 clause for 74 questions and gold for the other 426**) |
-| **Exam system** (run + score + report) | **dsh** | ✅ the standalone `dsh-tsm-eval` package (v1: CLI `run → score → report`; the dsh bundle surface — web overlay, `/eval` — is v1.5) | **Host capability**: one system serves all scenarios, **independently separable** |
+| **Exam system** (run + score + report) | **dsh** | ✅ the standalone `dsh-tsm-eval` package (0.1: CLI `run → score → report`; the dsh bundle surface — web overlay, `/eval` — is planned for 0.2) | **Host capability**: one system serves all scenarios, **independently separable** |
 
 ## 2. Why split this way
 
@@ -93,7 +93,7 @@ The exam system's by-product = **probes**: who gets cited repeatedly, who gets c
 ## 8. Roadmap
 
 1. Scenario packages land `eval/questions.jsonl` first (content, extendable anytime) — ✅ done for `birdminidev`;
-2. The exam system becomes a dsh bundle (`--json` + session logs → judging → report) — ✅ v1 landed as the standalone `dsh-tsm-eval` package (CLI orchestrator; `report.json` carries the `baseline_key` diff anchor); the dsh bundle surface (web overlay / `/eval`) is v1.5;
+2. The exam system becomes a dsh bundle (`--json` + session logs → judging → report) — ✅ landed as the standalone `dsh-tsm-eval` package (v0.1, CLI orchestrator; `report.json` carries the `baseline_key` diff anchor); the dsh bundle surface (web overlay / `/eval`) is 0.2;
 3. Reports get baselined: every round of semantic-asset change reruns the same paper, and behavior is diffed.
 
 ## Related

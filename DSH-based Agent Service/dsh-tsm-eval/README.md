@@ -121,7 +121,7 @@ They are **multi-frame zstd** (one frame per append batch; plain zstd decoders r
 
 ## Roadmap
 
-- **v1.5**: dsh bundle surface (web report overlay + `/eval` slash command); `qid` appended to the paper by `eval/build.mjs`; retries into a `failed/` area; mass regrade mode for the ledger;
+- **0.2**: dsh bundle surface (web report overlay + `/eval` slash command); `qid` appended to the paper by `eval/build.mjs`; retries into a `failed/` area; mass regrade mode for the ledger;
 - **Route 3**: round-to-round diff on `baseline_key` (same paper, changed semantic assets → behavior diff).
 
 ## License
