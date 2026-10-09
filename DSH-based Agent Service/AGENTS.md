@@ -22,7 +22,7 @@ MCP server 名为 `semantic-core`，DLR 范式下共注册 6 个工具：
 | `mcp__semantic-core__dlr_semantic_query` | L1 语义召回：候选逻辑实体/物理实体/属性（不含物理表名） |
 | `mcp__semantic-core__dlr_search_consensus` | L2 领域共识检索：问题用词 → 列/值映射 |
 | `mcp__semantic-core__get_pe_mapping` | 第二跳：按 `pe_id` 取映射（`database_url`、**建模视图内的列**、arcs） |
-| `mcp__semantic-core__get_full_data_info` | **下探**：物理表全量列（数据集原始描述 + 每列 `in_modeled_view` 标注）——**仅当视图不足以回答时**用，用后必须在答案里固定反馈缺口 |
+| `mcp__semantic-core__get_full_data_info` | **下探**：物理表全量列（数据集原始描述 + 每列 `in_modeled_view` 标注）——**仅当视图不足以回答时**用，用后必须按下方 **Modeling gap** 小节固定反馈 |
 | `mcp__semantic-core__get_le_attrs` | 逻辑实体属性 |
 | `mcp__semantic-core__execute_sql` | 执行只读 SQL（参数 `sql`、`database_url`） |
 
@@ -46,7 +46,7 @@ MCP server 名为 `semantic-core`，DLR 范式下共注册 6 个工具：
    - 发现表结构、列名、关联关系 → 使用 MCP 工具
    - 查询具体业务数据 → 先调 `mcp__semantic-core__dlr_semantic_query` → `mcp__semantic-core__get_pe_mapping` 拿到 `database_url` 和字段名，再通过 `mcp__semantic-core__execute_sql` 执行
    - **`get_pe_mapping` 只返回建模视图内的列**。视图不够用时（需要的列不在其中）→ 用 `mcp__semantic-core__get_full_data_info` 下探物理表全量列——这是**唯一**的元数据下探口，不要用 `execute_sql` 摸 schema（`PRAGMA` / `sqlite_master`）
-   - **下探必须反馈**：用过 `get_full_data_info` 后，答案末尾的「建模缺口」一节必须写明——哪张表哪列、为何视图内没有、建议（升入视图 / 升 public / 不管）
+   - **下探必须反馈**：用过 `get_full_data_info` 后，答案末尾的「Modeling gap」一节必须写明——哪张表哪列、为何视图内没有、建议（promote into view / promote to public / leave as is）
    - **禁止跳过 MCP 直接查库**：MCP 没返回时换 query 重试 MCP
    - 禁止凭空猜测数据库名、表名、字段名——这些必须从 MCP 工具返回结果中提取
 3. **证据驱动**：每个结论必须有具体数据作为依据，引用时注明来源（MCP 工具名 + 字段名，或 SQL 查询结果）。
@@ -143,18 +143,18 @@ Evidence SQL: <你实际执行的最后一条 SELECT SQL>
 - Evidence SQL 必须是可被 sqlite3 直接执行的 SELECT 语句
 - 若执行失败，Final Answer 写 `ERROR: <原因>`，Evidence SQL 写失败的语句
 
-## 建模缺口（固定反馈小节，紧接 Final Answer 块之后）
+## Modeling gap (fixed feedback section, immediately after the Final Answer block)
 
 ```
-建模缺口: 无
+Modeling gap: none
 ```
 
-或（用过 `get_full_data_info` / 发现视图内缺列时，一行一条）：
+Or, when `get_full_data_info` was used / a missing column was found (one item per line):
 
 ```
-建模缺口: <表.列> — <为何建模视图内没有这一列>；建议 <升入视图 / 升 public / 不管>
+Modeling gap: <table.column> — <why this column is not in the modeling view>; suggestion <promote into view / promote to public / leave as is>
 ```
 
-规则:
-- **只有下探过、或确实发现视图缺列时才写具体内容**；否则写「无」。不得把本题的普通难点写进来。
-- 这一节是给建模维护者的固定反馈，**不参与答案判定**；不要在这里重复 Final Answer 的值。
+Rules:
+- **Write specific content only when you probed, or genuinely found a missing column**; otherwise write `none`. Do not put this question's ordinary difficulties here.
+- This section is fixed feedback for the modeling maintainers and **does not participate in answer judging**; do not repeat the Final Answer value here.

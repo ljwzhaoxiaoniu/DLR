@@ -127,13 +127,15 @@ const norm = (s: string) =>
   s.toLowerCase().replace(NEG_RE, "-").replace(/[\s,]+/g, " ").replace(/[^\w.%\- ]+/g, "").trim();
 
 /**
- * 去掉答案里的「建模缺口」固定反馈小节（AGENTS.md 要求 agent 在答案末尾报的建模缺口）。
+ * 去掉答案里的「Modeling gap / 建模缺口」固定反馈小节（AGENTS.md 要求 agent 在答案末尾报的建模缺口）。
  * 为什么必须剔：judge 从**整段文本**抽数字/文本候选，缺口小节里的列名（如 `Enrollment (Ages 5-17)`）
  * 会带出 5/17 这类数字污染判据；judgeEmpty 也会被"无"字误判。只影响判据，原始日志不动。
  * 兼容：标题行形如 `建模缺口` / `## 建模缺口` / `**Modeling gap**`；块止于 Final Answer / Evidence SQL 行或文本末尾。
+ * 词尾判定用 `(?!\w)` 而非 `\b`（2026-10-09 修）：汉字非 \w，`\b` 在 CJK 之后恒不成立——
+ * 中文标题从未命中过（模板长期是中文 → 本防护此前形同虚设；修后中英两式都真剥）。
  */
 export function stripModelGap(text: string): string {
-  const isGap = (l: string) => /^\s*(#{1,6}\s*)?[*_]{0,2}\s*(建模缺口|modell?ing\s*gap)\b/i.test(l);
+  const isGap = (l: string) => /^\s*(#{1,6}\s*)?[*_]{0,2}\s*(建模缺口|modell?ing\s*gap)(?!\w)/i.test(l);
   const isBoundary = (l: string) => /^\s*(#{1,6}\s*)?[*_]{0,2}\s*(Final Answer|Evidence SQL)\b/i.test(l);
   const lines = text.split(/\r?\n/);
   const out: string[] = [];
@@ -171,7 +173,8 @@ export function finalAnswerMarker(text: string): string {
       started = true;
     }
     if (!l.trim()) break;
-    if (/^\s*(#{1,6}\s*)?[*_]{0,2}\s*(Evidence SQL|建模缺口|Modell?ing gap)\b/i.test(l)) break;
+    // 截止行：词尾用 (?!\w)（\b 在 CJK 后恒不成立——中文缺口标题需此写法，同 stripModelGap）
+    if (/^\s*(#{1,6}\s*)?[*_]{0,2}\s*(Evidence SQL|建模缺口|Modell?ing gap)(?!\w)/i.test(l)) break;
     if (/^\s*#{1,6}\s/.test(l)) break;
     out.push(l);
     len += l.length;

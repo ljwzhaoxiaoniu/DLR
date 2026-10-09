@@ -6,14 +6,14 @@ import fs from "node:fs";
 import path from "node:path";
 
 /**
- * Ported verbatim from judge.ts stripModelGap(): drop the trailing "modeling gap" note.
- * NOTE (faithful to upstream, verified on real finals): the trailing \b makes the CJK
- * alternative (`建模缺口`) effectively inert — after a CJK char \b has no word/non-word
- * boundary, so only "Modeling gap"-style headings match. Kept as-is: the parity gate
- * requires byte-equal behavior with judge.ts.
+ * Port of judge.ts stripModelGap(): drop the trailing "modeling gap" note.
+ * 2026-10-09: fixed in tandem with judge.ts — trailing \b → (?!\w), because \b can never
+ * hold after a CJK char (the 建模缺口 alternative was inert all along; real finals write
+ * "建模缺口: 无" verbatim from the AGENTS.md template). The parity gate still holds:
+ * judge.ts was changed the same way in the same commit.
  */
 export function stripModelGap(text) {
-  const isGap = (l) => /^\s*(#{1,6}\s*)?[*_]{0,2}\s*(建模缺口|modell?ing\s*gap)\b/i.test(l);
+  const isGap = (l) => /^\s*(#{1,6}\s*)?[*_]{0,2}\s*(建模缺口|modell?ing\s*gap)(?!\w)/i.test(l);
   const isBoundary = (l) => /^\s*(#{1,6}\s*)?[*_]{0,2}\s*(Final Answer|Evidence SQL)\b/i.test(l);
   const lines = String(text).split(/\r?\n/);
   const out = [];
@@ -42,7 +42,7 @@ export function finalAnswerMarker(text) {
       started = true;
     }
     if (!l.trim()) break;
-    if (/^\s*(#{1,6}\s*)?[*_]{0,2}\s*(Evidence SQL|建模缺口|Modell?ing gap)\b/i.test(l)) break;
+    if (/^\s*(#{1,6}\s*)?[*_]{0,2}\s*(Evidence SQL|建模缺口|Modell?ing gap)(?!\w)/i.test(l)) break;
     if (/^\s*#{1,6}\s/.test(l)) break;
     out.push(l);
     len += l.length;

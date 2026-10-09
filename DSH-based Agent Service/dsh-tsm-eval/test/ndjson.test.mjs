@@ -49,12 +49,18 @@ test("stripModelGap drops an English modeling-gap block (and keeps the rest)", (
   assert.ok(out.includes("after"));
 });
 
-test("stripModelGap: the CJK heading is inert upstream (\\b after CJK) - kept for parity", () => {
-  // Verified against real finals ("建模缺口: 无"): the regex has \b right after the CJK
-  // alternative, which can never hold after a CJK char, so only the English form strips.
-  // This test pins the ported behavior to judge.ts; a future upstream fix must move both.
+test("stripModelGap drops a CJK modeling-gap block (2026-10-09: (?!\\w) replaced \\b)", () => {
+  // \b can never hold after a CJK char, so the 建模缺口 alternative used to be inert
+  // (real finals write "建模缺口: 无" verbatim from the AGENTS.md template). Fixed in
+  // tandem with judge.ts; this test pins the shared behavior.
   const text = "before\n建模缺口: 无\nFinal Answer: 42";
-  assert.equal(stripModelGap(text), text);
+  const out = stripModelGap(text);
+  assert.ok(!out.includes("建模缺口"));
+  assert.ok(out.includes("Final Answer: 42"));
+});
+
+test("finalAnswerMarker stops at a CJK gap heading", () => {
+  assert.equal(finalAnswerMarker("Final Answer: 42\n建模缺口: 无"), "42");
 });
 
 test("finalAnswerMarker stops at blank line / next heading", () => {
