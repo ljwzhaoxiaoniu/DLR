@@ -1,0 +1,9 @@
+# Bilingual-pair consistency record: the git blob hash of each side as of the last
+# confirmed-consistent state. Both languages carry equal authority; after editing
+# either side, bring the other along and re-record with:
+#   git hash-object <file>
+#
+# 规则：每篇文档一对 X.md（英文主）+ X.zh.md（中文对照）。新增一篇 → 在此登记两条哈希。
+
+modeling-plan.md: 7b4f9c56b9cd3dd15595094a060b604d318bf1e3
+modeling-plan.zh.md: 7381d6c4195a78efa118478dbb4a737b5656ef67
