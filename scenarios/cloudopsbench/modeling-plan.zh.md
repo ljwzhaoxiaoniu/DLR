@@ -2,7 +2,7 @@
 
 > **状态**：**v1**，2026-10-10 —— 收口三项已全部折叠：codedefect / infrastructure 已抽样（实体表闭环）、Train-Ticket 差异落定、判分语义查证完成。
 > **归纳来源**：benchmark README（布局 / 工具面 / 指标）+ Boutique 八家族各抽 1 例（**8/8**，含 codedefect / infrastructure）+ 全库 754 例缓存扫描（cluster-config 核查）+ `agents/*/evaluation_utils` 判分内部——只用可见侧信息；gold / 答案侧材料不用于建模。
-> **待补**：build 产物（§七.1）· L2 / L3 门槛未触发。
+> **待补**：build/运行时接入（§七.1，实现外延）· L2 / L3 门槛未触发。
 > 本目录当前只有本方案；场景 README 与模型产物后续再补。
 > English: [modeling-plan.md](modeling-plan.md)
 
@@ -27,6 +27,7 @@
 ## 三、L1 模型（schema 级）
 
 > **观测槽** = "这个状态住在哪里、用哪个工具看、读输出的哪一段"——关系表的核心列，也是"帮找数据"的落点。
+> 机器可读源：[`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml)（`mapping_type: dlr-obs`）——三表 1:1 序列化；schema 注记在文件尾。
 
 ### 3.1 实体种类
 
@@ -110,6 +111,6 @@
 
 ## 七、待办
 
-1. 三张表 YAML 化为 build 产物（与 TSM build 管线的对齐方式）——下一步。
+1. **产物已落（v1）**：三张表 → [`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml)（`mapping_type: dlr-obs`，行级 1:1）。剩余（实现外延——契约在内、实现在外）：把该源编译成运行态（向量 + 图）的 builder，及该场景的服务路径。
 2. L2 / L3 仅在各自门槛触发后建。
 3. 快照若移动（换 pin）：重核两项落在代码里的能力事实——code 工具硬门槛与预渲染集。

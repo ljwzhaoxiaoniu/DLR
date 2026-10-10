@@ -2,7 +2,7 @@
 
 > **Status**: **v1**, 2026-10-10 — all closure items folded: codedefect & infrastructure sampled (entity table closed), Train-Ticket deltas verified, scorer semantics read.
 > **Provenance**: benchmark README (layout / tool surface / metrics) + one sampled case per Boutique family (**all 8**, incl. codedefect / infrastructure) + a cache scan of all 754 cases (cluster-config check) + the scorer internals in `agents/*/evaluation_utils` — visible side only; gold / answer-side material never feeds the model.
-> **Open**: build artifacts (§7.1) · L2 / L3 gates untriggered.
+> **Open**: build/runtime ingestion (§7.1 — implementation side) · L2 / L3 gates untriggered.
 > Current dir holds this plan only; a scenario README and the built model artifacts come later.
 > 中文版：[modeling-plan.zh.md](modeling-plan.zh.md)
 
@@ -27,6 +27,7 @@
 ## 3. L1 model (schema level)
 
 > **Observation slot** = where a state lives, which tool reads it, and which part of the output to read — the core column of the relation table, and the anchor of "help the agent find data".
+> Machine-readable source: [`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml) (`mapping_type: dlr-obs`) — tables 3.1–3.3 serialized 1:1; schema notes at the file foot.
 
 ### 3.1 Entity kinds
 
@@ -110,6 +111,6 @@ Delivery shape mirrors TSM 2.0: the model via MCP (a "modeling view"), the data 
 
 ## 7. Open items
 
-1. Turn tables 3.1–3.3 into build-time artifacts (YAML; alignment with the TSM build pipeline) — next step.
+1. **Artifacts done (v1)**: tables 3.1–3.3 → [`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml) (`mapping_type: dlr-obs`, 1:1 rows). Remaining on this line is implementation-side (contract inside, implementation outside): the builder that compiles this source into runtime artifacts (vectors + graph) and the scenario's serving path.
 2. L2 / L3 only once their gates trigger.
 3. If the snapshot ever moves (new pin): re-check the two capability facts that live in code — the code-tool hard gate and the pre-render sets.
