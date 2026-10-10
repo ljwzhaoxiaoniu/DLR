@@ -1,0 +1,163 @@
+# ══════════════════════════════════════════════════════════════════════
+# Cloud-OpsBench（dlr-state）组合——骑在 base + headless + dsh-tsm-agent 之上
+#
+# 语义（与 dsh_dlr/dsh.patch.yml 同规）：
+#   - 按 id 覆写 = 浅赋值；config 是「整块替换」，要保留的字段必须重述；
+#   - id 未命中只 warn 不致命 → 每次改动后用 `--dump-config` 核对 stderr；
+#   - 层序：base < headless < profile < $DSH_HOME < 本文件（最后 = 必胜）。
+#
+# 两个 MCP 面：
+#   ① 模型视   TSM Core Service（dlr-state，streamable-http，:28796）——随 bundle 分发，
+#              url 由 TSM_MCP_URL 覆盖（见 dsh-tsm-agent/cordis.patch.yml 的顶层行）。
+#   ② 数据工具 基准诊断 MCP（cloudopsbench_mcp，streamable-http，:8000）——一题一进程，
+#              由 run_one.sh 按题起停；本文件只声明客户端行。
+# ══════════════════════════════════════════════════════════════════════
+
+# ── 一、改配置（保留行）───────────────────────────────────────────────
+
+# persona：钉成故障诊断助手；删掉 headless 默认的 "coding agent" 与
+# "Your working directory is {{cwd}}."（后者诱导模型去探索文件系统）。
+- id: system-prompt
+  name: '@deepseek-ai/dsh-system-prompt'
+  config:
+    personaPrefix: '你是 Kubernetes 故障诊断助手（Cloud-OpsBench 根因分析 RCA），不是通用编程工具，也不是 CLI/coding agent；无论被问"你是谁""你是什么"，都按故障诊断助手的职责回答。'
+    personaSuffix: ''
+
+# 模型：沿用 base 的 deepseek-official 路由（与 dsh_dlr 口径对齐）。
+- id: agent-default-model
+  name: '@deepseek-ai/dsh-agent-default-model'
+  config:
+    provider: deepseek-official
+    model: deepseek-flash
+
+# AGENTS.md 加载器：候选只留 AGENTS.md（排除仓库根 CLAUDE.md），关掉 local overlay。
+- id: agent-instructions
+  name: '@deepseek-ai/dsh-agent-instructions'
+  config:
+    maxBytes: 65536
+    # 按题指令（静态工作流 + 上游答案契约原文）由 run_one.sh 生成后经 DLR_AGENTS_MD 注入；
+    # 未设置时退回工作区 dsh_cob/AGENTS.md
+    instructionFileCandidates: [!!js process.env.DLR_AGENTS_MD || 'AGENTS.md']
+    localInstructionFileCandidates: []
+
+# MCP 结果剪裁：默认 8192 字符对基准工具的长文本输出偏小，会静默腰斩 → 抬高（同 dsh_dlr）。
+- id: tool-result-pruner
+  name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+  config:
+    thresholdChars: 48000
+    headChars: 40000
+    tailChars: 5000
+
+# 会话日志回传：每轮请求会附带 session log，影响 token 口径 → 关（同 dsh_dlr）。
+- id: session-log-deepseek
+  name: '@deepseek-ai/dsh-session-log-deepseek'
+  config:
+    enabled: false
+
+# ── 二、禁用（与 dsh_dlr 逐条对齐 + 技能关）──────────────────────────
+
+# 2.1 shell / 文件读写 / 搜索
+- id: tool-bash
+  disabled: true
+- id: tool-pwsh
+  disabled: true
+- id: tool-jobs
+  disabled: true
+- id: tool-fs
+  disabled: true
+- id: tool-fs-search
+  disabled: true
+- id: fs-observation-policy
+  disabled: true
+
+# 2.2 网络
+- id: tool-web
+  disabled: true
+- id: web-search-deepseek
+  disabled: true
+
+# 2.3 任务管理 / 规划 / 子 agent / 工作流
+- id: tool-todo
+  disabled: true
+- id: plan-mode
+  disabled: true
+- id: tool-goal
+  disabled: true
+- id: goal
+  disabled: true
+- id: goal-round-driver
+  disabled: true
+- id: command-goal
+  disabled: true
+- id: tool-subagent
+  disabled: true
+- id: tool-subagent-fork
+  disabled: true
+- id: tool-subagent-control
+  disabled: true
+- id: tool-subagent-list-agents
+  disabled: true
+- id: subagent
+  disabled: true
+- id: subagent-spawn-in-process
+  disabled: true
+- id: subagent-fork-in-process
+  disabled: true
+- id: tool-workflow
+  disabled: true
+- id: workflow-ptc
+  disabled: true
+- id: ptc-runtime
+  disabled: true
+
+# 2.4 headless 下无 UI 可用的斜杠命令
+- id: commands
+  disabled: true
+- id: command-feedback
+  disabled: true
+- id: command-compact
+  disabled: true
+
+# 2.5 MCP resources（两个服务都只提供 tools，没有 resources）
+- id: mcp-resources
+  disabled: true
+
+# 2.6 spill：超限结果会被换成"预览 + 定位符"，而本组合没有 read 工具取回 → 静默丢数据
+- id: spill-local
+  disabled: true
+- id: spill-policy
+  disabled: true
+
+# 2.7 图片卸载（无图片输入）
+- id: image-offload
+  disabled: true
+
+# 2.8 重复调用提醒（消息注入会改变 Agent 行为；关掉对齐）
+- id: repeat-tool-reminder
+  disabled: true
+
+# 2.9 首次请求额外一次标题模型调用，污染 token 口径
+- id: session-title-llm
+  disabled: true
+
+# 2.10 技能（COB v0 无技能：DLR 的 paradigm 技能不适用本场景）
+- id: tool-skill
+  disabled: true
+- id: skill-filesystem
+  disabled: true
+
+# ── 三、基准诊断工具 MCP（数据面）───────────────────────────────────
+# mcp-semantic-core（模型面）已随 dsh-tsm-agent bundle 分发（顶层行）；
+# 这条是本场景专属的数据面客户端行。
+- insert:
+    - id: mcp-cloudops-tools
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: cloudops-tools
+        transport: streamable-http
+        url: !!js process.env.COB_MCP_URL || 'http://127.0.0.1:8000/mcp'
+        toolCallTimeoutMs: 60000
+        failOnStartupError: true
+        reconnect:
+          enabled: true
+          maxAttempts: 3
