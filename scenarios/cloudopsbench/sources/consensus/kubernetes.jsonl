@@ -2,43 +2,85 @@
   {
     "kid": 1,
     "knowledge": "Reading workload pod listings: the READY column (a/b containers ready) and the RESTARTS column (count, with the most recent restart time) are what single out the unhealthy instance — typically one pod at 'READY 1/2' with a rising restart count; the phase word (Running) alone does not distinguish it.",
-    "anchors": ["rel 1", "PHYSICAL.Pod"],
+    "anchors": ["surface:pods"],
     "basis": "GetResources(pods) output columns (visible side)",
     "source_cases": ["boutique/codedefect/2", "boutique/codedefect/70"]
   },
   {
     "kid": 2,
     "knowledge": "Reading the error-log output: it arrives as deduplicated patterns (count / ratio per group) whose sample lines hold the raw text — read the sample text verbatim as the mechanism lead (a panic / exception line states the failure itself); the counts only tell how dominant each pattern is.",
-    "anchors": ["rel 9", "PHYSICAL.LogStream"],
+    "anchors": ["surface:logs"],
     "basis": "GetErrorLogs output structure (patterns + samples)",
     "source_cases": ["boutique/codedefect/2", "boutique/codedefect/40"]
   },
   {
     "kid": 3,
     "knowledge": "Reading the alert output: it is self-describing — each alert names the entity, an anomaly class (e.g. RESOURCE_SATURATION / LATENCY_DEGRADATION / THROUGHPUT_DROP) and an evidence line comparing baseline vs current (e.g. 'Normal=4.74ms -> Current=37.82ms (+697.2%)'); the comparison inside the text is the reading — the alert identifies where and what kind of anomaly.",
-    "anchors": ["rel 8", "PHYSICAL.Alert", "PHYSICAL.MetricSeries"],
+    "anchors": ["surface:telemetry"],
     "basis": "GetAlerts output fields (entity / metric_category / evidence)",
     "source_cases": ["boutique/performance/1", "trainticket/performance/1"]
   },
   {
     "kid": 4,
     "knowledge": "Telemetry-led reading: pair the alerted entity with the object-layer listings — if that entity reads normal (all running, no restarts, endpoints bound), the break is not an unhealthy object; the signal lives at the metric level, and the object listing is the exclusion side of the pair.",
-    "anchors": ["rel 8", "rel 1", "rel 2"],
+    "anchors": ["surface:telemetry", "surface:pods"],
     "basis": "object listings vs alerts cross-reading (both visible)",
     "source_cases": ["boutique/performance/1", "trainticket/performance/1"]
   },
   {
     "kid": 5,
-    "knowledge": "Reading a restarted container: its pod detail carries the last termination state — a reason and an exit code (e.g. OOMKilled) — read that field to classify why the container restarted before moving further down the chain.",
-    "anchors": ["rel 6", "PHYSICAL.Container"],
+    "knowledge": "Reading a restarted container: its pod detail carries the last termination state — a reason and an exit code (e.g. OOMKilled 137 vs SIGTERM-by-kubelet 143) — read that field to classify why the container restarted before moving further down the chain.",
+    "anchors": ["surface:pods"],
     "basis": "DescribeResource(pod) container status fields",
-    "source_cases": ["boutique/codedefect/70"]
+    "source_cases": ["boutique/codedefect/70", "boutique/runtime/1"]
   },
   {
     "kid": 6,
     "knowledge": "Reading the code slot (Boutique only): service-first — list the recorded source files of the service named by the log sample, then fetch the specific file; the failing call / parameter is read off that source. The slot is closed by the source itself, not by a wider search.",
-    "anchors": ["rel 9", "PHYSICAL.CodeArtifact"],
+    "anchors": ["surface:code"],
     "basis": "ListCodeFiles / GetSourceCode outputs",
     "source_cases": ["boutique/codedefect/2", "boutique/codedefect/40"]
+  },
+  {
+    "kid": 7,
+    "knowledge": "Symptom wording → entry chain — 'Partial Service Unreachability.' enters the reachability chain: caller-side error logs → the caller's addressed endpoints → the target service's endpoint binding / pods → owner chain (deployment) → stage evidence. Walk the surfaces in that order; the first surface whose observation contradicts expectation is the break.",
+    "anchors": ["chain:reachability"],
+    "basis": "query templates ↔ chain entry (dataset wording, model-side mapping)",
+    "source_cases": ["boutique/admission/1", "boutique/service/1", "trainticket/service/25"]
+  },
+  {
+    "kid": 8,
+    "knowledge": "Symptom wording → entry chain — 'Service Availability Disruption.' uses the SAME reachability chain (it is overloaded across scheduling / startup / admission stages): walk caller logs → endpoints → pods; when the pods surface shows the pod never became ready, read its phase and events (FailedScheduling / FailedCreate / FailedMount / image-pull / probe) and follow that mechanism to the matching object surface. Discriminate on the chain, not on the wording.",
+    "anchors": ["chain:reachability"],
+    "basis": "query templates ↔ chain entry (overloaded wording; discrimination happens on the chain)",
+    "source_cases": ["boutique/scheduling/1", "boutique/startup/1", "boutique/admission/1"]
+  },
+  {
+    "kid": 9,
+    "knowledge": "Symptom wording → entry chain — 'Service Performance Degradation.' enters the telemetry chain: read alerts first (entity + anomaly class + baseline/current comparison), then EXCLUDE the object layer for that entity (listings normal → the break is at the metric level). Gated by the scorer: alerts are a symptom pointer, not evidence — close the case on object-layer exclusion plus metric readings.",
+    "anchors": ["chain:telemetry"],
+    "basis": "query templates ↔ chain entry; scorer gate on GetAlerts credit (visible side)",
+    "source_cases": ["boutique/performance/1", "trainticket/performance/1", "boutique/performance/20"]
+  },
+  {
+    "kid": 10,
+    "knowledge": "Symptom wording → entry chain — 'Service abnormal restart.' enters the health chain: restarts (pods surface: RESTARTS column) → last termination state (exit code class: 137 OOMKilled vs 143 SIGTERM) → probe / OOM evidence (pod events: 'Unhealthy' / 'Killing' messages; deployment probes config). The restarting pod's own record and the workload probe config are the two halves that close this chain.",
+    "anchors": ["chain:health"],
+    "basis": "query templates ↔ chain entry (dataset wording, model-side mapping)",
+    "source_cases": ["boutique/runtime/1", "boutique/runtime/2"]
+  },
+  {
+    "kid": 11,
+    "knowledge": "Symptom wording → entry chain — 'Service latency increased significantly' enters the telemetry chain (as Performance Degradation): alerts → object-layer exclusion → metric readings. No object-layer break is expected; the closure is the metric comparison itself.",
+    "anchors": ["chain:telemetry"],
+    "basis": "query templates ↔ chain entry",
+    "source_cases": ["boutique/performance/1"]
+  },
+  {
+    "kid": 12,
+    "knowledge": "Symptom wording → entry chain — 'Service quality degradation.' enters the telemetry chain (as Performance Degradation): alerts every time; pair the alerted entity with object-layer listings to exclude object faults before concluding on the metric reading.",
+    "anchors": ["chain:telemetry"],
+    "basis": "query templates ↔ chain entry (both systems)",
+    "source_cases": ["boutique/performance/1", "trainticket/performance/1", "trainticket/performance/2"]
   }
 ]

@@ -5,6 +5,8 @@
 #                  PAS = 本系统的**服务调用图**（自快照的依赖图读得，逐 case 稳定）。
 # 锚：同一对象的所有观测面共享**应用标签**（app=<service>）——ARCS.A.key = app_label；
 #     节点面按 node_name、命名空间面按 namespace 锚定。
+# 锚的作用 = **剪枝**：A 是取数时的 WHERE 键——每个面都带锚定读法（S 里的 read: 模板），
+#     返回体 = 该对象的薄切片而不是集群全量；唯一合法的全量 = 首轮症状扫描（找锚），其后一律收窄。
 # 边界：实例（pod 名 / IP / 状态值 / 日志内容）不入模型——由 agent 经工具沿面实查。
 # 源：LLM4Ops/Cloud-OpsBench @ ea05daf（2026-10-10 拉取）；调用图/名册自 tool_cache 样本抽取。
 
@@ -30,8 +32,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-ui-dashboard) shared by every surface of this service
@@ -54,7 +56,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-ui-dashboard)
@@ -80,7 +83,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -97,7 +101,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -111,7 +115,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-ui-dashboard — routine and abnormal messages; read with GetRecentLogs(service_name=ts-ui-dashboard)
@@ -128,8 +133,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-gateway-service) shared by every surface of this service
@@ -152,7 +157,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-gateway-service)
@@ -178,7 +184,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -195,7 +202,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -209,7 +216,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-gateway-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-gateway-service)
@@ -226,8 +234,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-auth-service) shared by every surface of this service
@@ -250,7 +258,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-auth-service)
@@ -276,7 +285,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -293,7 +303,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -307,7 +317,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-auth-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-auth-service)
@@ -324,8 +335,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-verification-code-service) shared by every surface
@@ -349,7 +360,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-verification-code-service)
@@ -375,7 +387,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -392,7 +405,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -406,7 +419,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-verification-code-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-verification-code-service)
@@ -423,8 +437,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-user-service) shared by every surface of this service
@@ -447,7 +461,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-user-service)
@@ -473,7 +488,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -490,7 +506,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -504,7 +520,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-user-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-user-service)
@@ -521,8 +538,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-contacts-service) shared by every surface of this service
@@ -545,7 +562,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-contacts-service)
@@ -571,7 +589,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -588,7 +607,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -602,7 +621,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-contacts-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-contacts-service)
@@ -619,8 +639,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-avatar-service) shared by every surface of this service
@@ -643,7 +663,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-avatar-service)
@@ -669,7 +690,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -686,7 +708,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -700,7 +722,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-avatar-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-avatar-service)
@@ -717,8 +740,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-basic-service) shared by every surface of this service
@@ -741,7 +764,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-basic-service)
@@ -767,7 +791,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -784,7 +809,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -798,7 +823,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-basic-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-basic-service)
@@ -815,8 +841,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-train-service) shared by every surface of this service
@@ -839,7 +865,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-train-service)
@@ -865,7 +892,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -882,7 +910,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -896,7 +924,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-train-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-train-service)
@@ -913,8 +942,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-route-service) shared by every surface of this service
@@ -937,7 +966,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-route-service)
@@ -963,7 +993,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -980,7 +1011,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -994,7 +1025,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-route-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-route-service)
@@ -1011,8 +1043,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-station-service) shared by every surface of this service
@@ -1035,7 +1067,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-station-service)
@@ -1061,7 +1094,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -1078,7 +1112,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -1092,7 +1126,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-station-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-station-service)
@@ -1109,8 +1144,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-price-service) shared by every surface of this service
@@ -1133,7 +1168,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-price-service)
@@ -1159,7 +1195,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -1176,7 +1213,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -1190,7 +1227,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-price-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-price-service)
@@ -1207,8 +1245,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-seat-service) shared by every surface of this service
@@ -1231,7 +1269,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-seat-service)
@@ -1257,7 +1296,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -1274,7 +1314,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -1288,7 +1328,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-seat-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-seat-service)
@@ -1305,8 +1346,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-travel-service) shared by every surface of this service
@@ -1329,7 +1370,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-travel-service)
@@ -1355,7 +1397,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -1372,7 +1415,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -1386,7 +1429,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-travel-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-travel-service)
@@ -1403,8 +1447,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-travel2-service) shared by every surface of this service
@@ -1427,7 +1471,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-travel2-service)
@@ -1453,7 +1498,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -1470,7 +1516,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -1484,7 +1530,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-travel2-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-travel2-service)
@@ -1501,8 +1548,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-travel-plan-service) shared by every surface of this
@@ -1526,7 +1573,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-travel-plan-service)
@@ -1552,7 +1600,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -1569,7 +1618,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -1583,7 +1632,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-travel-plan-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-travel-plan-service)
@@ -1600,8 +1650,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-route-plan-service) shared by every surface of this
@@ -1625,7 +1675,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-route-plan-service)
@@ -1651,7 +1702,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -1668,7 +1720,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -1682,7 +1734,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-route-plan-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-route-plan-service)
@@ -1699,8 +1752,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-preserve-service) shared by every surface of this service
@@ -1723,7 +1776,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-preserve-service)
@@ -1749,7 +1803,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -1766,7 +1821,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -1780,7 +1835,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-preserve-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-preserve-service)
@@ -1797,8 +1853,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-preserve-other-service) shared by every surface of
@@ -1822,7 +1878,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-preserve-other-service)
@@ -1848,7 +1905,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -1865,7 +1923,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -1879,7 +1937,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-preserve-other-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-preserve-other-service)
@@ -1896,8 +1955,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-order-service) shared by every surface of this service
@@ -1920,7 +1979,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-order-service)
@@ -1946,7 +2006,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -1963,7 +2024,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -1977,7 +2038,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-order-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-order-service)
@@ -1994,8 +2056,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-order-other-service) shared by every surface of this
@@ -2019,7 +2081,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-order-other-service)
@@ -2045,7 +2108,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -2062,7 +2126,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -2076,7 +2140,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-order-other-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-order-other-service)
@@ -2093,8 +2158,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-wait-order-service) shared by every surface of this
@@ -2118,7 +2183,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-wait-order-service)
@@ -2144,7 +2210,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -2161,7 +2228,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -2175,7 +2242,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-wait-order-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-wait-order-service)
@@ -2192,8 +2260,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-execute-service) shared by every surface of this service
@@ -2216,7 +2284,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-execute-service)
@@ -2242,7 +2311,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -2259,7 +2329,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -2273,7 +2343,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-execute-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-execute-service)
@@ -2290,8 +2361,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-cancel-service) shared by every surface of this service
@@ -2314,7 +2385,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-cancel-service)
@@ -2340,7 +2412,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -2357,7 +2430,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -2371,7 +2444,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-cancel-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-cancel-service)
@@ -2388,8 +2462,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-rebook-service) shared by every surface of this service
@@ -2412,7 +2486,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-rebook-service)
@@ -2438,7 +2513,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -2455,7 +2531,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -2469,7 +2545,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-rebook-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-rebook-service)
@@ -2486,8 +2563,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-payment-service) shared by every surface of this service
@@ -2510,7 +2587,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-payment-service)
@@ -2536,7 +2614,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -2553,7 +2632,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -2567,7 +2646,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-payment-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-payment-service)
@@ -2584,8 +2664,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-inside-payment-service) shared by every surface of
@@ -2609,7 +2689,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-inside-payment-service)
@@ -2635,7 +2716,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -2652,7 +2734,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -2666,7 +2748,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-inside-payment-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-inside-payment-service)
@@ -2683,8 +2766,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-food-service) shared by every surface of this service
@@ -2707,7 +2790,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-food-service)
@@ -2733,7 +2817,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -2750,7 +2835,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -2764,7 +2849,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-food-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-food-service)
@@ -2781,8 +2867,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-food-delivery-service) shared by every surface of this
@@ -2806,7 +2892,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-food-delivery-service)
@@ -2832,7 +2919,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -2849,7 +2937,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -2863,7 +2951,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-food-delivery-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-food-delivery-service)
@@ -2880,8 +2969,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-station-food-service) shared by every surface of this
@@ -2905,7 +2994,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-station-food-service)
@@ -2931,7 +3021,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -2948,7 +3039,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -2962,7 +3053,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-station-food-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-station-food-service)
@@ -2979,8 +3071,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-train-food-service) shared by every surface of this
@@ -3004,7 +3096,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-train-food-service)
@@ -3030,7 +3123,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -3047,7 +3141,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -3061,7 +3155,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-train-food-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-train-food-service)
@@ -3078,8 +3173,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-consign-service) shared by every surface of this service
@@ -3102,7 +3197,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-consign-service)
@@ -3128,7 +3224,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -3145,7 +3242,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -3159,7 +3256,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-consign-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-consign-service)
@@ -3176,8 +3274,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-consign-price-service) shared by every surface of this
@@ -3201,7 +3299,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-consign-price-service)
@@ -3227,7 +3326,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -3244,7 +3344,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -3258,7 +3358,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-consign-price-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-consign-price-service)
@@ -3275,8 +3376,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-assurance-service) shared by every surface of this
@@ -3300,7 +3401,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-assurance-service)
@@ -3326,7 +3428,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -3343,7 +3446,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -3357,7 +3460,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-assurance-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-assurance-service)
@@ -3374,8 +3478,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-security-service) shared by every surface of this service
@@ -3398,7 +3502,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-security-service)
@@ -3424,7 +3529,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -3441,7 +3547,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -3455,7 +3561,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-security-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-security-service)
@@ -3472,8 +3579,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-notification-service) shared by every surface of this
@@ -3497,7 +3604,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-notification-service)
@@ -3523,7 +3631,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -3540,7 +3649,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -3554,7 +3663,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-notification-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-notification-service)
@@ -3571,8 +3681,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-voucher-service) shared by every surface of this service
@@ -3595,7 +3705,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-voucher-service)
@@ -3621,7 +3732,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -3638,7 +3750,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -3652,7 +3764,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-voucher-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-voucher-service)
@@ -3669,8 +3782,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-config-service) shared by every surface of this service
@@ -3693,7 +3806,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-config-service)
@@ -3719,7 +3833,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -3736,7 +3851,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -3750,7 +3865,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-config-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-config-service)
@@ -3767,8 +3883,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-news-service) shared by every surface of this service
@@ -3791,7 +3907,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-news-service)
@@ -3817,7 +3934,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -3834,7 +3952,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -3848,7 +3966,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-news-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-news-service)
@@ -3865,8 +3984,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-ticket-office-service) shared by every surface of this
@@ -3890,7 +4009,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-ticket-office-service)
@@ -3916,7 +4036,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -3933,7 +4054,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -3947,7 +4068,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-ticket-office-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-ticket-office-service)
@@ -3964,8 +4086,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=ts-delivery-service) shared by every surface of this service
@@ -3988,7 +4110,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=ts-delivery-service)
@@ -4014,7 +4137,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -4031,7 +4155,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -4045,7 +4169,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of ts-delivery-service — routine and abnormal messages; read with GetRecentLogs(service_name=ts-delivery-service)
@@ -4063,8 +4188,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references
+    S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
     attributes:
     - name: app_label
       description: the identifying application label (app=tsdb-mysql) shared by every surface of this service
@@ -4087,7 +4212,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: instances — scheduling, creation, startup and health of the containers running this service
+    S: 'instances — scheduling, creation, startup and health of the containers running this service；read: GetResources(pods,
+      label_selector=app=<svc>) → DescribeResource(pod, name=<命中>)'
     attributes:
     - name: app_label
       description: application label of the pod set (app=tsdb-mysql)
@@ -4113,7 +4239,8 @@ logical_entities:
       cardinality: '1:1'
       key: app_label
     R: null
-    S: reachability as seen by callers — the Service object and its endpoint binding result
+    S: 'reachability as seen by callers — the Service object and its endpoint binding result；read: GetResources(services,
+      name=<svc>)（+ GetResources(endpoints, name=<svc>) 对照）'
     attributes:
     - name: cluster_ip_ports
       description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
@@ -4130,7 +4257,7 @@ logical_entities:
       key: app_label
     R: null
     S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
-      (alerts are a symptom pointer: close on object-layer evidence)'
+      (alerts are a symptom pointer: close on object-layer evidence)；read: GetAlerts()（按 <svc> 收窄阅读；告警是指针，证据回对象层闭环）'
     attributes:
     - name: alerts
       description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
@@ -4144,7 +4271,8 @@ logical_entities:
       cardinality: 1:N
       key: app_label
     R: null
-    S: application log stream of the service as captured in the snapshot
+    S: 'application log stream of the service as captured in the snapshot；read: GetRecentLogs(service_name=<svc>)
+      / GetErrorLogs(service_name=<svc>)'
     attributes:
     - name: recent_logs
       description: recent log lines of tsdb-mysql — routine and abnormal messages; read with GetRecentLogs(service_name=tsdb-mysql)
@@ -4160,9 +4288,9 @@ logical_entities:
     resource: nodes
     A:
       cardinality: '1:1'
-      key: app_label
+      key: node_name
     R: null
-    S: the node object — placement-related state
+    S: 'the node object — placement-related state；read: DescribeResource(node, name=<node>) / GetClusterConfiguration()'
     attributes:
     - name: node_name
       description: node identity (master)
@@ -4180,9 +4308,10 @@ logical_entities:
     resource: node runtime services
     A:
       cardinality: 1:N
-      key: app_label
+      key: node_name
     R: null
-    S: node-internal mechanisms — systemd services on the node (why pods on this node cannot run)
+    S: 'node-internal mechanisms — systemd services on the node (why pods on this node cannot run)；read: CheckNodeServiceStatus(node_name=<node>,
+      service_name=kubelet|containerd|kube-proxy|…)'
     attributes:
     - name: kubelet
       description: kubelet status (active/inactive) — kubelet down breaks the node's pod lifecycle
@@ -4203,9 +4332,9 @@ logical_entities:
     resource: nodes
     A:
       cardinality: '1:1'
-      key: app_label
+      key: node_name
     R: null
-    S: the node object — placement-related state
+    S: 'the node object — placement-related state；read: DescribeResource(node, name=<node>) / GetClusterConfiguration()'
     attributes:
     - name: node_name
       description: node identity (worker-01)
@@ -4223,9 +4352,10 @@ logical_entities:
     resource: node runtime services
     A:
       cardinality: 1:N
-      key: app_label
+      key: node_name
     R: null
-    S: node-internal mechanisms — systemd services on the node (why pods on this node cannot run)
+    S: 'node-internal mechanisms — systemd services on the node (why pods on this node cannot run)；read: CheckNodeServiceStatus(node_name=<node>,
+      service_name=kubelet|containerd|kube-proxy|…)'
     attributes:
     - name: kubelet
       description: kubelet status (active/inactive) — kubelet down breaks the node's pod lifecycle
@@ -4246,9 +4376,9 @@ logical_entities:
     resource: nodes
     A:
       cardinality: '1:1'
-      key: app_label
+      key: node_name
     R: null
-    S: the node object — placement-related state
+    S: 'the node object — placement-related state；read: DescribeResource(node, name=<node>) / GetClusterConfiguration()'
     attributes:
     - name: node_name
       description: node identity (worker-02)
@@ -4266,9 +4396,10 @@ logical_entities:
     resource: node runtime services
     A:
       cardinality: 1:N
-      key: app_label
+      key: node_name
     R: null
-    S: node-internal mechanisms — systemd services on the node (why pods on this node cannot run)
+    S: 'node-internal mechanisms — systemd services on the node (why pods on this node cannot run)；read: CheckNodeServiceStatus(node_name=<node>,
+      service_name=kubelet|containerd|kube-proxy|…)'
     attributes:
     - name: kubelet
       description: kubelet status (active/inactive) — kubelet down breaks the node's pod lifecycle
@@ -4289,9 +4420,9 @@ logical_entities:
     resource: nodes
     A:
       cardinality: '1:1'
-      key: app_label
+      key: node_name
     R: null
-    S: the node object — placement-related state
+    S: 'the node object — placement-related state；read: DescribeResource(node, name=<node>) / GetClusterConfiguration()'
     attributes:
     - name: node_name
       description: node identity (worker-03)
@@ -4309,9 +4440,10 @@ logical_entities:
     resource: node runtime services
     A:
       cardinality: 1:N
-      key: app_label
+      key: node_name
     R: null
-    S: node-internal mechanisms — systemd services on the node (why pods on this node cannot run)
+    S: 'node-internal mechanisms — systemd services on the node (why pods on this node cannot run)；read: CheckNodeServiceStatus(node_name=<node>,
+      service_name=kubelet|containerd|kube-proxy|…)'
     attributes:
     - name: kubelet
       description: kubelet status (active/inactive) — kubelet down breaks the node's pod lifecycle
