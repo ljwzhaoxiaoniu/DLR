@@ -41,6 +41,8 @@
 
 > ⚠️ **最常见的误解**：ARCS 连的是 **PE ↔ 物理表**（投影定义），**不是** PE ↔ LE。LE 与 PE 是 1:N **容器**关系（yaml 的嵌套结构），不是 ARCS。
 
+> **A 锚 = 取数时的 WHERE 键（剪枝作用，2026-10-10 明写）**：模型给出锚，agent 沿它取**该锚的少量行（薄切片）**而不是整表——上下文因此小、注意力因此集中。对 dlr 是 JOIN/过滤键；对 dlr-state 是对象名（`app=<服务>` 等，见 §1.7）——每个面随锚连**读法模板**一起给出，agent 拿来即用、不试错。唯一合法的"全量"是首轮扫描（找锚），其后一切按锚收窄。
+
 #### 1.2.1 R 是**行空间定义**，不只是行过滤
 
 PE 是**视图，不物化**——所以视图的行空间可以在模型里定义，而不必先有物理视图。`R = unwind` 处理**多槽位 FK**（一表 N 列同指另一张表，PAS 单坐标表达不了）：
@@ -87,6 +89,21 @@ R: { kind: unwind, pattern: '{side}_player_{slot}', side: [home, away], slot: ['
 2. `PAS.A` 必须落在两侧之一的 public 面**名字**上；
 3. **桥梁 PE 的两侧键要在可见面上**（private 也能走通，但要多绕步）。
 
+### 1.7 两个应用面：dlr 与 dlr-state
+
+同一套原则落在两种数据源上，形成两种**形态**（yaml 以 `mapping_type` 声明；**两形态不混装**）：
+
+| | **dlr**（数据库） | **dlr-state**（状态空间，非数据库，如 K8s 快照） |
+|---|---|---|
+| 数据源 | 表 / 列 / 行 | 资源种类 / 可读字段 / 确定性快照 |
+| 承载单位 | 一库一份 yaml | 一**系统/单元**一份 yaml（如 boutique / trainticket 各一份） |
+| PE 的"物理表" | 物理表 | 数据源的**资源面**（deployments / pods / logs / endpoints …） |
+| PE 的属性 | 物理列（C 选择 + public） | 面内的**可读字段**——写在面的说明与读法模板里，**不升为属性节点**（state 形态不引入 LA/PA：那是"列"词汇） |
+| 锚 `A` | 逻辑键（JOIN / 过滤键） | **对象名**（`app=<服务>` / `node_name` / `namespace`） |
+| LE 例 | Account / Loan / Player | 具体服务 / 节点 / 命名空间——**可指认的对象** |
+
+两形态共享全部词汇与纪律：LE/PE 双侧、ARCS/PAS、A 锚（= 取数 WHERE 键，§1.2）、schema 级边界、例名与描述纪律。参考应用：`scenarios/birdminidev/`（dlr，11 库）、`scenarios/cloudopsbench/`（dlr-state，两系统两份）。
+
 ## 2. yaml 逐字段规范
 
 文件位置：`scenarios/<场景>/sources/configs/DLR/{db}.yaml`（一库一份；范式内各库合并进同一套存储）。
@@ -130,9 +147,9 @@ pas_relations:
 
 | 字段 | 规则 | 踩过的坑 |
 |---|---|---|
-| `logical_entity_id` / `physical_entity_id` | **不带库前缀，必须全局唯一** | 跨库重名会被**静默合并**——2.0 载入器按 id `MERGE`，**没有冲突拦截**（Python 线曾有 `BuildConflictError`）→ 只能靠建模自检（§7） |
+| `logical_entity_id` / `physical_entity_id` | **不带库前缀、全局唯一**（名字本身唯一时）；不同单元确有**同名对象**（如两个集群各有 `worker-01`）→ 用**单元限定**（`LOGICAL.<system>.<name>`），否则 | 跨库重名会被**静默合并**——2.0 载入器按 id `MERGE`，**没有冲突拦截**（Python 线曾有 `BuildConflictError`）→ 只能靠建模自检（§7） |
 | `column` | 物理列**全 id**，**不加引号** | 早期写成 `frpm."Academic Year"` → id 与 ER 不同构、data_type 查表失配。含空格/括号的列写 SQL 时自行加引号 |
-| `A.cardinality` | 从 **LE 视角**写，只有 `1:1` / `1:N` | 写成 `N:1` 是常见笔误（旧文档也写错过） |
+| `A.cardinality` | 从 **LE 视角**写，只有 `1:1` / `1:N` | `N:1` 是 PE 视角的误记（2026-10-10 全库归一完毕；描述文本里也不要写 `N:1`，写"many rows per …"） |
 | `A.key` | 是 **LE 属性名**（public 面的名字），不是物理列名 | 写物理列名 → agent 拿不到 JOIN 落脚点 |
 | `P.*.cardinality` | PAS 的基数，与 ARCS 的 cardinality 不是一回事 | 混用会误导 agent 的行数判断 |
 | `description`（文件头，top-level） | 写**业务语义**（这个库是什么领域、有哪些业务对象）——**不写建模元说明**（"N PE 归 M LE"这类归场景 README） | 案例说明见 `scenarios/<名>/README.md` |
@@ -143,9 +160,12 @@ pas_relations:
 
 ## 3. 建模规则（按顺序决策）
 
-### 3.0 第一原则：LE 必须有业务对象生命周期
+### 3.0 第一原则：LE 必须是**可指认**的业务对象（通常有生命周期）
 
-**LE 代表业务世界中一个有独立生命周期（创建→存续→终结）、独立业务身份的对象。**
+**LE 代表业务/运维人员能『指认』的具体对象**——说出名字就知道在说谁（一个账户、一个球员、一个服务、一个节点）。**抽象类别词不构成 LE**："一个 Service"指不到任何东西，那等于没建模。判据（可叠加）：
+
+1. **可指认**（名字是对象名，不是类别名）；
+2. 通常有独立生命周期（创建→存续→终结）与独立业务身份。
 
 | 问题 | 例子 | 判定 |
 |---|---|---|
