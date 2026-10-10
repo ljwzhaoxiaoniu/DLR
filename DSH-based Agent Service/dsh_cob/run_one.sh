@@ -36,9 +36,13 @@ esac
 CASE_DIR="$COB_DIR/benchmark/$SYS_DIR/$CATEGORY/$CASE_ID"
 [ -d "$CASE_DIR" ] || { echo "[ERR] 案例目录不存在: $CASE_DIR" >&2; exit 2; }
 
-# ── 读题面（metadata.json 的 query）──
+# ── 读题面（metadata.json：query + namespace）──
 QUERY="$("$PY" -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["query"])' "$CASE_DIR/metadata.json")"
 [ -n "$QUERY" ] || { echo "[ERR] metadata.json 无 query 字段: $CASE_DIR" >&2; exit 2; }
+NAMESPACE="$("$PY" -c 'import json,sys; d=json.load(open(sys.argv[1], encoding="utf-8")); print(d.get("namespace") or "")' "$CASE_DIR/metadata.json")"
+[ -n "$NAMESPACE" ] || NAMESPACE="$( [ "$SYS" = "train-ticket" ] && echo train-ticket || echo boutique )"
+# 题面 = 上游原句（run.py:104-108 逐字；基准的 agent 看到的 Question 即此包装句）
+QUESTION="The Kubernetes environment in namespace \`${NAMESPACE}\` is experiencing a fault. A high-level symptom has been reported: '${QUERY}'. Diagnose the root cause of this incident."
 
 STAMP="$(date +%m%d_%H%M)"
 KEY="${SYS_DIR}-${CATEGORY}-${CASE_ID}"
@@ -123,7 +127,7 @@ OUT_FILE="$RUN_DIR/${KEY}_dlr.ndjson"
 ERR_FILE="$RUN_DIR/${KEY}_dlr.err"
 cd "$RUN_DIR"
 TSM_MCP_URL="$MCP_URL" COB_MCP_URL="$BENCH_URL" DLR_AGENTS_MD="instructions.md" \
-timeout "$TIMEOUT" dsh --profile headless --patch "$HERE/dsh.patch.yml" --json "Question: ${QUERY}" \
+timeout "$TIMEOUT" dsh --profile headless --patch "$HERE/dsh.patch.yml" --json "Question: ${QUESTION}" \
   < /dev/null > "$OUT_FILE" 2> "$ERR_FILE"
 RC=$?
 
