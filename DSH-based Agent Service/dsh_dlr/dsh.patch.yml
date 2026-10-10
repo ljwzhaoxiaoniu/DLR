@@ -31,7 +31,9 @@
   name: '@deepseek-ai/dsh-agent-instructions'
   config:
     maxBytes: 65536
-    # 随包 AGENTS.md 由 bundle 的 node 半按需注入（工作区自带则优先工作区）——
+    # 随包 AGENTS.md 由 bundle 的 node 半按需注入为 **user-global 副本**（$DSH_HOME/AGENTS.md，
+    # 加载器无条件读取；候选只认裸文件名故绝对路径无效）——工作区自带 AGENTS.md 或
+    # 启动器给了 DLR_AGENTS_MD（如 dsh_cob 按题指令）时则清掉副本、以工作区/启动器为准。
     # 与 presets/dlr.patch.yml 的同名行保持同步
     instructionFileCandidates: [!!js process.env.DLR_AGENTS_MD || 'AGENTS.md']
     localInstructionFileCandidates: []
