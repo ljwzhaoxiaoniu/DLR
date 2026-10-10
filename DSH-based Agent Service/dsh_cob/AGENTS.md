@@ -21,8 +21,8 @@
 
 | 工具 | 用途 |
 |------|------|
-| `mcp__semantic-core__dlr_search_consensus` | L2 领域共识：**领路**——题面症状原文 → 入口链（哪条链、先走哪些面）+ 各面的读法（对象清单怎么读、重启容器看什么、告警是不是证据、代码槽怎么走）。**第一跳必须调它** |
-| `mcp__semantic-core__state_model_query` | L1 模型检索：**对象名 / 问题 → 该对象的观测面与 `read` 模板**（按锚剪枝的取数模板，如 `GetResources(pods, label_selector=app=<服务>)`）+ `relations`（PAS 调用边）。找到异常对象后用它，拿"按锚怎么取数、哪些面存在" |
+| `mcp__semantic-core__dlr_search_consensus` | L2 领域共识：题面症状原文 → **入口链**（哪条链、先走哪些面）+ 各面的读法（对象清单怎么读、重启容器看什么、告警是不是证据、代码槽怎么走） |
+| `mcp__semantic-core__state_model_query` | L1 模型检索：问题 / 对象名 → **对象与观测面**（含按锚剪枝的 `read` 模板，如 `GetResources(pods, label_selector=app=<服务>)`）+ `relations`（PAS 调用边） |
 
 ### 数据侧（基准诊断工具，server 名 `cloudops-tools`）
 
@@ -39,9 +39,12 @@
 
 ## 诊断工作流（按序）
 
-1. **领路（L2）**：第一步调用 `mcp__semantic-core__dlr_search_consensus`，question 传题面里**引号内的症状短语原文**（逐字，如 `Service abnormal restart.`）——拿「症状 → 入口链」与各面的读法。
+1. **双路召回（同一轮并行）**：第一步**同时**调两个语义工具（question 都传题面里**引号内的症状短语原文**，逐字，如 `Service abnormal restart.`）——
+   - `mcp__semantic-core__dlr_search_consensus`（L2）：拿「症状 → 入口链」与各面读法；
+   - `mcp__semantic-core__state_model_query`（L1）：拿与问题相关的对象 / 观测面（read 模板）。
+   两路**交叉验证**后再走链：L1 召回可能排错（症状措辞跨链重载），以 L2 的入口链为准纠偏。
 2. **锚定（首轮扫描找异常对象）**：按入口链做**首轮全量扫描**（通常是 pods 清单的 RESTARTS / READY / STATUS 离群行）——这是**唯一合法的"全量"**；找到异常对象（哪个服务 / 哪个节点）后，其后一切取数**按锚收窄**。
-3. **按锚走面（剪枝）**：调 `mcp__semantic-core__state_model_query`（传对象名）拿该对象的观测面与 **read 模板**（带剪枝谓词），沿链逐面实查——**禁止反复做无锚的全量拉取**（全 namespace 清单 / 未按服务收窄的日志、源码）。
+3. **按锚走面（剪枝）**：需要确认对象有哪些面 / 怎么按锚取数时（名字已知后再查一次 `state_model_query`），用面返回的 **read 模板**（带剪枝谓词）沿链逐面实查——**禁止反复做无锚的全量拉取**（全 namespace 清单 / 未按服务收窄的日志、源码）。
 4. **判断点**：每个面对照「期望」——第一个观测与期望不符的面即断点；以工具输出原文为证据。
 5. **收口**：确认 组件（哪个服务 / 节点 / 命名空间）+ 机制（断在哪个环节）后，按契约提交。
 

@@ -1,0 +1,2 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/runtime/1,1.0,1.0,1.0,1.0,1.0,1.0,0.375,9.0,0.0,0.0,app/adservice,liveness_probe_incorrect_protocol,app/adservice,liveness_probe_incorrect_protocol,

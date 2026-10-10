@@ -94,9 +94,9 @@ function registerStateTools(server: McpServer): void {
     {
       description:
         "[dlr-state] L1 模型检索：问题/对象名 → 场景模型切片——objects（服务/节点/命名空间 + 每个观测面的锚定读法）、" +
-        "surfaces（观测面：怎么读、锚在哪）、relations（PAS 调用边）。用法：**名先锚定后取数**——" +
-        "每个面带 read 模板（按锚剪枝取数：返回该对象的薄切片，而不是集群全量清单）；" +
-        "症状措辞的领路请先查 L2 dlr_search_consensus（题面 → 入口链）。第一个「观测 ≠ 期望」的槽即断点。",
+        "surfaces（观测面：怎么读、锚在哪）、relations（PAS 调用边）。用法：**与 L2 dlr_search_consensus 同一轮双路召回**" +
+        "（并行发出、交叉验证；症状措辞的链入口在 L2，L1 供对象/面的锁定与 read 模板）；" +
+        "每个面带 read 模板（按锚剪枝取数：返回该对象的薄切片，而不是集群全量清单）。第一个「观测 ≠ 期望」的槽即断点。",
       inputSchema: {
         question: z.string(),
         top_k: z.number().int().positive().default(5),
