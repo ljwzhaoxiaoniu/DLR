@@ -11,6 +11,7 @@
 
 | 原料 | 位置 | 内容 |
 |---|---|---|
+| **数据集版本** | 上游 [bird-bench/mini_dev](https://github.com/bird-bench/mini_dev) | **mini_dev 0703** —— 版本锁定：跑题与建模以该版为准，不随上游更新 |
 | **列级说明** | `MINIDEV_sqlite/dev_databases/<db>/database_description/*.csv` | `original_column_name, column_name, column_description, data_format, value_description`（BIRD 原生；**部分列的描述为空**） |
 | **表/列/外键** | `MINIDEV_sqlite/dev_tables.json` | 表名、列名、外键——**外键不全**（如 debit_card 只登记了 1 条） |
 | **物理真相** | `<db>.sqlite` 本体 | `PRAGMA table_info / foreign_key_list`——**类型与 FK 以此为准** |
