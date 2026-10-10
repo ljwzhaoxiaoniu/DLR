@@ -2,7 +2,7 @@
 
 > **状态**：**v1**，2026-10-10 —— 收口三项已全部折叠：codedefect / infrastructure 已抽样（实体表闭环）、Train-Ticket 差异落定、判分语义查证完成。
 > **归纳来源**：benchmark README（布局 / 工具面 / 指标）+ Boutique 八家族各抽 1 例（**8/8**，含 codedefect / infrastructure）+ 全库 754 例缓存扫描（cluster-config 核查）+ `agents/*/evaluation_utils` 判分内部——只用可见侧信息；gold / 答案侧材料不用于建模。
-> **待补**：build/运行时接入（§七.1，实现外延）· L2 起步份已落（`sources/consensus/kubernetes.jsonl`）；L3 门槛未触发。
+> **待补**：场景服务路径（§七.1，实现外延）· L2 起步份已落（`sources/consensus/kubernetes.jsonl`）；L3 门槛未触发。
 > 本目录当前只有本方案；场景 README 与模型产物后续再补。
 > English: [modeling-plan.md](modeling-plan.md)
 
@@ -111,6 +111,6 @@
 
 ## 七、待办
 
-1. **产物已落（v1）**：三张表 → [`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml)（`mapping_type: dlr-obs`，行级 1:1）。剩余（实现外延——契约在内、实现在外）：把该源编译成运行态（向量 + 图）的 builder，及该场景的服务路径。
+1. **产物已落（v1）**：三张表 → [`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml)（`mapping_type: dlr-obs`，行级 1:1）。**builder 已落（2026-10-10）**：`buildLance`（向量：实体 / 关系 / 切片）+ `loadNeo4j`（图：LE/PE 节点；关系即节点带槽属性 + `INVOLVES` 边；切片）按 `mapping_type` 分派。剩余（实现外延）：场景服务路径（内存图 / 工具消费），及场景切换时的图实载。
 2. L2 按需生长（起步份已落）；L3 仅在门槛触发后建。
 3. 快照若移动（换 pin）：重核两项落在代码里的能力事实——code 工具硬门槛与预渲染集。

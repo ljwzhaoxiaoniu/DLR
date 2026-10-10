@@ -2,7 +2,7 @@
 
 > **Status**: **v1**, 2026-10-10 — all closure items folded: codedefect & infrastructure sampled (entity table closed), Train-Ticket deltas verified, scorer semantics read.
 > **Provenance**: benchmark README (layout / tool surface / metrics) + one sampled case per Boutique family (**all 8**, incl. codedefect / infrastructure) + a cache scan of all 754 cases (cluster-config check) + the scorer internals in `agents/*/evaluation_utils` — visible side only; gold / answer-side material never feeds the model.
-> **Open**: build/runtime ingestion (§7.1 — implementation side) · L2 starter library landed (`sources/consensus/kubernetes.jsonl`) · L3 gate untriggered.
+> **Open**: the scenario's serving path (§7.1 — implementation side) · L2 starter library landed (`sources/consensus/kubernetes.jsonl`) · L3 gate untriggered.
 > Current dir holds this plan only; a scenario README and the built model artifacts come later.
 > 中文版：[modeling-plan.zh.md](modeling-plan.zh.md)
 
@@ -111,6 +111,6 @@ Delivery shape mirrors TSM 2.0: the model via MCP (a "modeling view"), the data 
 
 ## 7. Open items
 
-1. **Artifacts done (v1)**: tables 3.1–3.3 → [`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml) (`mapping_type: dlr-obs`, 1:1 rows). Remaining on this line is implementation-side (contract inside, implementation outside): the builder that compiles this source into runtime artifacts (vectors + graph) and the scenario's serving path.
+1. **Artifacts done (v1)**: tables 3.1–3.3 → [`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml) (`mapping_type: dlr-obs`, 1:1 rows). **Builder landed (2026-10-10)**: `buildLance` (vectors: entities / relations / slices) + `loadNeo4j` (graph: LE/PE nodes; relations as nodes carrying the slot + `INVOLVES` edges; slices) dispatch on `mapping_type` in tsm-core. Remaining (implementation side): the scenario's serving path (memory graph / tool consumption) and the live graph load on scenario switch.
 2. L2 grows on run evidence (starter library landed); L3 only once its gate triggers.
 3. If the snapshot ever moves (new pin): re-check the two capability facts that live in code — the code-tool hard gate and the pre-render sets.
