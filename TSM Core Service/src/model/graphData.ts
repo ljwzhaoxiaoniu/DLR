@@ -8,7 +8,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { parse } from "yaml";
-import type { DlrScenarioYaml } from "./types.js";
+import type { DlrScenarioYaml, ObsScenarioYaml } from "./types.js";
 import { loadColumnTypes, resolveSqlitePath } from "../graph/physicalSchema.js";
 import { DATASET_ROOT, YAML_DIR } from "../config.js";
 
@@ -271,4 +271,55 @@ export function buildPayload(db?: string): GraphPayload {
   }
 
   return { logical_entities, physical_entities, inherits, pas_relations };
+}
+
+// ── dlr-obs（非数据库形态：实体 / 关系即节点 / 症状切片）────────────────────
+// 关系在本形态 = 带观测槽的节点（1..n 参与方，INVOLVES 连实体）——槽是本形态核心列。
+
+export interface ObsBatch {
+  ns: string;
+  les: Record<string, unknown>[];
+  pes: Record<string, unknown>[];
+  rels: Record<string, unknown>[];
+  slices: Record<string, unknown>[];
+}
+
+export function readObsFile(file: string): ObsScenarioYaml {
+  return parse(fs.readFileSync(file, "utf8")) as ObsScenarioYaml;
+}
+
+export function buildObsBatch(sc: ObsScenarioYaml): ObsBatch {
+  const ns = sc.scenario_name ?? "obs";
+  const b: ObsBatch = { ns, les: [], pes: [], rels: [], slices: [] };
+  for (const e of sc.entities ?? []) {
+    const rec = {
+      id: e.entity_id,
+      name: e.entity_id.split(".").slice(1).join("."), // LOGICAL.Service → Service
+      description: e.description ?? "",
+      db: ns,
+    };
+    (e.side === "LE" ? b.les : b.pes).push(rec);
+  }
+  for (const r of sc.relations ?? []) {
+    b.rels.push({
+      id: `RELATION.${r.id}`,
+      class: r.class,
+      relation: r.relation,
+      carries: r.carries ?? "",
+      slot_tools: (r.slot?.tools ?? []).join(" "),
+      slot_read: r.slot?.read ?? "",
+      entities: r.entities ?? [],
+      db: ns,
+    });
+  }
+  (sc.symptom_slices ?? []).forEach((sl, i) => {
+    b.slices.push({
+      id: `SLICE.${i + 1}`,
+      template: sl.template,
+      entry_chain: sl.entry_chain ?? "",
+      cases: JSON.stringify(sl.cases ?? {}),
+      db: ns,
+    });
+  });
+  return b;
 }
