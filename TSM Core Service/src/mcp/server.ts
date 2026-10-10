@@ -1,5 +1,6 @@
 /**
  * TSM MCP Server（TS 版）—— 暴露 DLR 的 7 个工具（L1/L2/L3 语义 + 下探 + 取数）
+ * 工具面按场景形态分派：`dlr` = 原 7 工具；`dlr-state` = [state_model_query, dlr_search_consensus]（DB 型工具不挂）。
  *
  * 传输：
  *   npx tsx src/mcp/server.ts                → stdio（dsh/Claude 直接 spawn）
@@ -20,6 +21,8 @@ import { openGraph } from "../graph/backend.js";
 import type { GraphHandle } from "../graph/types.js";
 import { dlrSemanticQuery } from "../queries/semanticQuery.js";
 import { searchConsensus } from "../queries/searchConsensus.js";
+import { stateModelQuery } from "../queries/stateModelQuery.js";
+import { scenarioKind } from "../model/scenarioKind.js";
 import { getPeMapping } from "../queries/peMapping.js";
 import { getFullDataInfo } from "../queries/fullDataInfo.js";
 import { searchSop } from "../queries/searchSop.js";
@@ -58,30 +61,8 @@ const getStore = () =>
 const getGraph = () =>
   (graphPromise ??= withReset(() => (graphPromise = null), openGraph()));
 
-/** 每会话一个 McpServer 实例（工具注册相同，底层共享上面的连接） */
-function createServer(): McpServer {
-  const server = new McpServer({ name: "tsm-core-dlr", version: SERVICE_VERSION });
-
-  server.registerTool(
-    "dlr_semantic_query",
-    {
-      description:
-        "[DLR] 语义召回 → 返回结构体(LE-PE 复合,无物理表/字段)。db 留空做全局召回；" +
-        "确定目标库后必须传 db 避免跨库串扰。交付口径：先收口后截断——全量召回 → 归并（LE 层）→ 返回前 top_k 个结构体。",
-      inputSchema: {
-        question: z.string(),
-        top_k: z.number().int().positive().default(5),
-        threshold: z.number().default(0.5),
-        db: z.string().default(""),
-      },
-    },
-    async ({ question, top_k, threshold, db }) => {
-      const [store, graph] = await Promise.all([getStore(), getGraph()]);
-      const r = await dlrSemanticQuery(store, graph, question, { topK: top_k, threshold, db });
-      return { content: [{ type: "text", text: JSON.stringify(r) }] };
-    },
-  );
-
+/** L2 共识检索（两种场景形态共用） */
+function registerConsensus(server: McpServer): void {
   server.registerTool(
     "dlr_search_consensus",
     {
@@ -104,6 +85,62 @@ function createServer(): McpServer {
       return { content: [{ type: "text", text: JSON.stringify(r) }] };
     },
   );
+}
+
+/** dlr-state 场景的工具面：模型切片检索 + L2 共识（DB 型工具为数据库形态专属，不挂） */
+function registerStateTools(server: McpServer): void {
+  server.registerTool(
+    "state_model_query",
+    {
+      description:
+        "[dlr-state] 模型切片检索：症状/问题文本 → 场景模型切片——" +
+        "symptom_slices（题面模板 → 入口链：走哪条链）+ relations（关系 + 观测槽：工具 → 读哪段）+ entities（实体种类）。" +
+        "用法：先取切片沿链走（数据经数据源侧工具实查）；第一个「观测 ≠ 期望」的槽即断点。",
+      inputSchema: {
+        question: z.string(),
+        top_k: z.number().int().positive().default(5),
+        threshold: z.number().default(0.5),
+      },
+    },
+    async ({ question, top_k, threshold }) => {
+      const r = await stateModelQuery(await getStore(), question, { topK: top_k, threshold });
+      return { content: [{ type: "text", text: JSON.stringify(r) }] };
+    },
+  );
+  registerConsensus(server);
+}
+
+/** 每会话一个 McpServer 实例（工具注册相同，底层共享上面的连接） */
+export function createServer(): McpServer {
+  const server = new McpServer({ name: "tsm-core-dlr", version: SERVICE_VERSION });
+
+  // dlr-state 场景：只挂模型面（模型切片 + L2）。
+  if (scenarioKind() === "dlr-state") {
+    registerStateTools(server);
+    return server;
+  }
+
+  server.registerTool(
+    "dlr_semantic_query",
+    {
+      description:
+        "[DLR] 语义召回 → 返回结构体(LE-PE 复合,无物理表/字段)。db 留空做全局召回；" +
+        "确定目标库后必须传 db 避免跨库串扰。交付口径：先收口后截断——全量召回 → 归并（LE 层）→ 返回前 top_k 个结构体。",
+      inputSchema: {
+        question: z.string(),
+        top_k: z.number().int().positive().default(5),
+        threshold: z.number().default(0.5),
+        db: z.string().default(""),
+      },
+    },
+    async ({ question, top_k, threshold, db }) => {
+      const [store, graph] = await Promise.all([getStore(), getGraph()]);
+      const r = await dlrSemanticQuery(store, graph, question, { topK: top_k, threshold, db });
+      return { content: [{ type: "text", text: JSON.stringify(r) }] };
+    },
+  );
+
+  registerConsensus(server);
 
   server.registerTool(
     "get_pe_mapping",
@@ -190,8 +227,10 @@ function createServer(): McpServer {
 }
 
 // ── 启动 ─────────────────────────────────────────────────────────────
+// 仅直接运行（tsx server.ts / node server.js）才启动传输层；被 import（verify 等）时只提供 createServer。
+const RUN_AS_MAIN = /server\.(ts|js|mjs)$/.test(process.argv[1] ?? "");
 const httpIdx = process.argv.indexOf("--http");
-if (httpIdx >= 0) {
+if (RUN_AS_MAIN && httpIdx >= 0) {
   const port = Number(process.argv[httpIdx + 1] ?? 28795);
   const http = await import("node:http");
   const transports = new Map<string, StreamableHTTPServerTransport>();
@@ -266,7 +305,7 @@ if (httpIdx >= 0) {
     .listen(port, "127.0.0.1", () => {
       console.error(`[tsm-core] streamable-http on http://127.0.0.1:${port}/mcp`);
     });
-} else {
+} else if (RUN_AS_MAIN) {
   await createServer().connect(new StdioServerTransport());
   console.error("[tsm-core] stdio ready");
 }
