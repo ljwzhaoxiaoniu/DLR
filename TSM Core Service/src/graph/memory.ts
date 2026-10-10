@@ -85,17 +85,8 @@ export class InMemoryGraph implements GraphHandle {
             description: le.description ?? "",
             db,
           });
-          const seenPub = new Set<string>();
-          let laOrd = 0;
-          for (const pe of le.physical_entities ?? []) {
-            for (const a of pe.attributes ?? []) {
-              if (!a.public || seenPub.has(a.name)) continue;
-              seenPub.add(a.name);
-              const aid = `${le.logical_entity_id}.${a.name}`;
-              las.set(aid, { id: aid, name: a.name, description: a.description ?? "", ord: laOrd });
-              leLa.set(`${le.logical_entity_id}|${aid}`, { le_id: le.logical_entity_id, attr_id: aid, ord: laOrd++ });
-            }
-          }
+          // 注：state 形态**不引入 LA/PA 概念**（那是数据库形态的"列"词汇）——
+          // 面的可读字段（restarts / events…）留在面说明（S）与向量文本里，不作独立图节点。
           for (const pe of le.physical_entities ?? []) {
             const peId = pe.physical_entity_id;
             const kind = peId.split(".").pop() ?? peId;
@@ -113,11 +104,6 @@ export class InMemoryGraph implements GraphHandle {
               pe_id: peId,
               le_id: le.logical_entity_id,
               ord: peOrd++,
-            });
-            (pe.attributes ?? []).forEach((a, i) => {
-              const aid = `${peId}.${a.name}`;
-              pas.set(aid, { id: aid, name: a.name, description: a.description ?? "", column_id: "", data_type: null, db, ord: i });
-              pePa.set(`${peId}|${aid}`, { pe_id: peId, attr_id: aid, ord: i });
             });
           }
         }

@@ -12,7 +12,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { buildPayload } from "../model/graphData.js";
+import { buildPayload, scenarioFiles } from "../model/graphData.js";
 import { VIZ_DIR } from "../config.js";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)); // …/TSM Core Service/src/viz
@@ -63,9 +63,13 @@ export function renderVizHtml(db?: string): string {
   );
 
   // 3) 注入数据（放在 </head> 前，页面主脚本运行时已可用）
+  //    附注入：可用单元清单（场景文件）+ 当前过滤——页面据此渲染「全部 / <单元>」切换条
+  //    （state 形态的单元 = 系统 boutique/trainticket；dlr 形态 = 库）。
+  const dbs = scenarioFiles().map((f) => f.replace(/\.yaml$/, ""));
   return html.replace(
     "</head>",
-    `<script>window.__DLR_GRAPH__ = ${JSON.stringify(payload)};</script>\n</head>`,
+    `<script>window.__DLR_GRAPH__ = ${JSON.stringify(payload)};</script>\n` +
+      `<script>window.__DLR_DBS__ = ${JSON.stringify(dbs)}; window.__DLR_DB__ = ${JSON.stringify(db ?? "")};</script>\n</head>`,
   );
 }
 

@@ -1420,8 +1420,37 @@
         }
     }
 
+    // ── 单元切换条（「全部 / <单元>」）——state 形态的单元=系统；dlr 形态=库 ──────
+    function renderDbSwitcher() {
+        const dbs = window.__DLR_DBS__ || [];
+        if (dbs.length < 2) return;
+        const cur = window.__DLR_DB__ || "";
+        const header = document.querySelector('.right-panel .header');
+        if (!header) return;
+        const isState = !!(SemanticVis.state.stateData && SemanticVis.state.stateData.kind === 'dlr-state');
+        const labelText = isState ? '系统:' : '库:';
+        const bar = document.createElement('div');
+        bar.style.cssText = 'font-size:12px; margin-top:2px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;';
+        const label = document.createElement('span');
+        label.textContent = labelText;
+        label.style.opacity = 0.6;
+        bar.appendChild(label);
+        const mk = (text, href, active) => {
+            const a = document.createElement('a');
+            a.textContent = text;
+            a.href = href;
+            a.style.cssText =
+                'color:' + (active ? '#1b5e20' : '#58a6ff') + ';text-decoration:none;font-weight:' + (active ? '700' : '400') + ';';
+            return a;
+        };
+        bar.appendChild(mk('全部', location.pathname, cur === ''));
+        dbs.forEach(d => bar.appendChild(mk(d, location.pathname + '?db=' + encodeURIComponent(d), cur === d)));
+        header.appendChild(bar);
+    }
+
     async function init() {
         const success = await loadData();
+        if (success) renderDbSwitcher();
 
         if (success && SemanticVis.state.mode === 'state') {
             // 状态形态：左栏（实体列表）不适用 → 隐藏；图谱 + 点击详情
