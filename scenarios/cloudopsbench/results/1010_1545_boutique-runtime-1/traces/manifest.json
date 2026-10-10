@@ -1,0 +1,9 @@
+[
+  {
+    "case": "boutique/runtime/1",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1010_1545_boutique-runtime-1\\raw\\1010_1459_boutique-runtime-1",
+    "steps": 8,
+    "has_final_answer": true,
+    "predictions": 3
+  }
+]
