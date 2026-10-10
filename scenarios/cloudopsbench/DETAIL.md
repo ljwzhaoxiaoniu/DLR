@@ -9,19 +9,19 @@
 
 | 家族 | 全量 | 已跑 | 剩余 | 覆盖 |
 |---|---|---|---|---|
-| boutique/admission | 58 | 0 | 58 | 0.0% |
-| boutique/codedefect | 98 | 0 | 98 | 0.0% |
+| boutique/admission | 58 | 1 | 57 | 1.7% |
+| boutique/codedefect | 98 | 1 | 97 | 1.0% |
 | boutique/infrastructure | 40 | 0 | 40 | 0.0% |
-| boutique/performance | 29 | 0 | 29 | 0.0% |
+| boutique/performance | 29 | 1 | 28 | 3.4% |
 | boutique/runtime | 45 | 1 | 44 | 2.2% |
-| boutique/scheduling | 164 | 0 | 164 | 0.0% |
+| boutique/scheduling | 164 | 1 | 163 | 0.6% |
 | boutique/service | 54 | 0 | 54 | 0.0% |
 | boutique/startup | 62 | 0 | 62 | 0.0% |
 | train-ticket/performance | 47 | 0 | 47 | 0.0% |
 | train-ticket/runtime | 96 | 0 | 96 | 0.0% |
-| train-ticket/service | 37 | 0 | 37 | 0.0% |
+| train-ticket/service | 37 | 1 | 36 | 2.7% |
 | train-ticket/startup | 24 | 0 | 24 | 0.0% |
-| **合计** | **754** | **1** | **753** | **0.1%** |
+| **合计** | **754** | **6** | **748** | **0.8%** |
 
 ## 汇总（去重 · 取最新）
 
@@ -29,27 +29,33 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 1 / 1（100.0%） |
-| CA（组件命中） | 1 / 1（100.0%） |
-| FA（故障型命中） | 1 / 1（100.0%） |
-| ECR（证据链全闭） | 1 / 1（100.0%） |
+| JRA（联合命中） | 6 / 6（100.0%） |
+| CA（组件命中） | 6 / 6（100.0%） |
+| FA（故障型命中） | 6 / 6（100.0%） |
+| ECR（证据链全闭） | 6 / 6（100.0%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 1 | 1 | 1 | 0.375 | 9 | 0 | 0 |
+| 1 | 0.8333 | 1 | 0.378 | 16.6667 | 0 | 0 |
 
 ## 分家族索引
 
 | 家族 | 全量 | 已跑 | JRA | 链全闭 | 明细 |
 |---|---|---|---|---|---|
+| boutique/admission | 58 | 1 | 1 | 1 | [boutique-admission.md](DETAIL/boutique-admission.md) |
+| boutique/codedefect | 98 | 1 | 1 | 1 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
+| boutique/performance | 29 | 1 | 1 | 1 | [boutique-performance.md](DETAIL/boutique-performance.md) |
 | boutique/runtime | 45 | 1 | 1 | 1 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
+| boutique/scheduling | 164 | 1 | 1 | 1 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
+| train-ticket/service | 37 | 1 | 1 | 1 | [trainticket-service.md](DETAIL/trainticket-service.md) |
 
 ## 定性观察
 
 <!-- stats:keep-below（定性观察手写区——重建时原样保留） -->
 > （跑批后按案例补写：值得注意的错法 / 链闭而答案错 / 流程分特低特高 的题。）
+
 
 
 

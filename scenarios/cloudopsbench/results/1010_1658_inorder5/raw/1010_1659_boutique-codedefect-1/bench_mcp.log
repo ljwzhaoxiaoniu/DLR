@@ -1,0 +1,27 @@
+INFO:     Started server process [22988]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:56064 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56065 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:56064 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56066 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56069 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56071 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60266 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:60266 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60266 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"checkoutservice"}
+INFO:     127.0.0.1:60266 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60266 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"checkoutservice"}
+INFO:     127.0.0.1:60266 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60266 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60266 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60266 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:55880 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55880 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"currencyservice"}
+INFO:     127.0.0.1:55883 - "POST /mcp HTTP/1.1" 200 OK
