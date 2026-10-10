@@ -1,8 +1,8 @@
 # Cloud-OpsBench — TSM Modeling Plan (L1 first)
 
-> **Status**: v0 draft, 2026-10-10 — for iteration.
-> **Provenance**: benchmark README (layout / tool surface / metrics) + 6 sampled Boutique cases, one per family (admission, scheduling, startup, runtime, service, performance) — visible side only.
-> **Open**: codedefect & infrastructure families not yet sampled · Train-Ticket differences · scorer internals (`agents/*/evaluation_utils`, `evidence_patterns` semantics).
+> **Status**: **v1**, 2026-10-10 — all closure items folded: codedefect & infrastructure sampled (entity table closed), Train-Ticket deltas verified, scorer semantics read.
+> **Provenance**: benchmark README (layout / tool surface / metrics) + one sampled case per Boutique family (**all 8**, incl. codedefect / infrastructure) + a cache scan of all 754 cases (cluster-config check) + the scorer internals in `agents/*/evaluation_utils` — visible side only; gold / answer-side material never feeds the model.
+> **Open**: build artifacts (§7.1) · L2 / L3 gates untriggered.
 > Current dir holds this plan only; a scenario README and the built model artifacts come later.
 > 中文版：[modeling-plan.zh.md](modeling-plan.zh.md)
 
@@ -12,10 +12,10 @@
 - **Scoring is two-track**: outcome `CA / FA / JRA` (component / fault type / joint) + process `MC / EOC / ECR / EE / RAR` (milestone coverage / admissible order / closure / evidence efficiency / redundancy).
 - **Per-case data source** (`benchmark/<system>/<category>/<id>/`):
   - `metadata.json` — the **query** (a short symptom phrase) + ground truth (**never used to author the model**)
-  - `tool_cache.json` — the whole namespace pre-rendered as tool outputs (~485 keys/case; the cache is per-snapshot, not per-fault)
-  - `raw_data/` — `k8s_states.json` · `logs.json` · `alert.json` · `metrics.csv` (performance cases only)
+  - `tool_cache.json` — the **whole namespace pre-rendered as tool outputs**, keyed by tool call (`tool:args`); ~0.5k keys Boutique, ~1.6–1.7k TT (scales with namespace size; the cache is per-snapshot, not per-fault)
+  - `raw_data/` — `k8s_states.json` · `logs.json` · `alert.json` · `metrics.csv`; **`metrics.csv` is not performance-only**: Boutique codedefect 98/98 and performance 25/29 carry it, TT only performance 47/47, sampled infrastructure cases carry none — the performance slot is actually carried by `GetAlerts` (cf. §4)
   - `code/` — trimmed service sources (Boutique only)
-- **Tool surface** (what the agent sees = the query + tool outputs): 12 tools — `GetResources`, `DescribeResource`, `GetAppYAML`, `GetServiceDependencies`, `CheckServiceConnectivity`, `GetAlerts`, `GetRecentLogs`, `GetErrorLogs`, `ListCodeFiles`, `GetSourceCode`, `GetClusterConfiguration`, `CheckNodeServiceStatus`. Train-Ticket has 10 (no code tools). The sampled caches pre-render 10 of the 12 (`GetRecentLogs` / `GetSourceCode` are on demand).
+- **Tool surface** (what the agent sees = the query + tool outputs): 12 tools — `GetResources`, `DescribeResource`, `GetAppYAML`, `GetServiceDependencies`, `CheckServiceConnectivity`, `GetAlerts`, `GetRecentLogs`, `GetErrorLogs`, `ListCodeFiles`, `GetSourceCode`, `GetClusterConfiguration`, `CheckNodeServiceStatus`. Train-Ticket's surface is 10 (the two code tools are a Boutique-only **hard gate**, cf. §3.2 #9); pre-rendered: Boutique 10 of 12, TT 9 of its 10 (`GetRecentLogs` on demand on both). `GetClusterConfiguration` is pre-rendered with real node configs in **all 754** cases, both systems.
 - **Snapshot pin**: upstream frozen at `ea05daf` (`LLM4Ops/Cloud-OpsBench`, `main`, pulled 2026-10-10) — scenario development rides this snapshot; later upstream changes sync incrementally, not tracked live.
 
 ## 2. Boundaries (settled)
@@ -42,8 +42,10 @@
 | PE | Policy & quota: ResourceQuota / NetworkPolicy / RoleBinding | creation permission / traffic permission |
 | PE | Event | the mechanism record (why X failed) |
 | PE | Log stream / Metric series / Alert | telemetry surfaces per entity |
+| PE | Code artifact (service sources under `code/`) | source-defect surface: which file / function carries the fault |
+| PE | Node runtime services (containerd / kubelet …) | node-internal mechanism: why pods on this node cannot run |
 
-> Observable-kind vocabulary (union over the 6 sampled caches, 21 kinds): configmaps, daemonsets, deployments, endpoints, events, ingresses, jobs, namespaces, networkpolicies, nodes, persistentvolumeclaims, persistentvolumes, pods, replicasets, resourcequota, rolebindings, secrets, serviceaccounts, services, statefulsets, storageclasses.
+> Observable-kind vocabulary (union over **all 754** case caches = 21 kinds, closure verified): configmaps, daemonsets, deployments, endpoints, events, ingresses, jobs, namespaces, networkpolicies, nodes, persistentvolumeclaims, persistentvolumes, pods, replicasets, resourcequota, rolebindings, secrets, serviceaccounts, services, statefulsets, storageclasses. No new kinds — the singulars `pod` / `service` / `statefulset` are parameter aliases of the plural kinds. The two closure families' surfaces sit **outside** the k8s-kind list: the code artifact (`code/`, Boutique-only) and node runtime services (`CheckNodeServiceStatus` output).
 
 ### 3.2 Relation kinds + observation slots (core table)
 
@@ -57,6 +59,8 @@
 | 6 | Container → probes (liveness / readiness) | ARCS | health gating | DescribeResource(pod: probe failures, restarts) · GetAppYAML(probe config) |
 | 7 | Service ↔ Service (dependency / addressing) | PAS | call reachability & addresses | GetServiceDependencies · CheckServiceConnectivity · GetAppYAML(env) · GetErrorLogs |
 | 8 | entity → telemetry surface | (observation) | anomaly signals | GetAlerts · GetErrorLogs / GetRecentLogs |
+| 9 | Workload → code artifact (`code/`) | (observation) | defect localization: error message → file / function → code evidence | GetErrorLogs / GetRecentLogs (message) → ListCodeFiles → GetSourceCode (Boutique-only hard gate) |
+| 10 | Node → node runtime services | ARCS | node-side mechanism (e.g. containerd down) | CheckNodeServiceStatus |
 
 > ARCS = vertical anchoring (LE↔PE); PAS = lateral routing (LE↔LE) — the same terms as the DLR model.
 
@@ -71,13 +75,19 @@
 | Service latency increased significantly | 18 / 0 | telemetry (as Performance Degradation) |
 | Service quality degradation. | 11 / 47 | telemetry (as Performance Degradation) |
 
-> Templates are overloaded across families (one phrase serves both admission and service-routing cases; Availability Disruption serves both scheduling and startup) — discrimination happens **on the chain**, not from the phrase.
+> Templates are overloaded across families (one phrase serves both admission and service-routing cases; Availability Disruption serves both scheduling and startup) — discrimination happens **on the chain**, not from the phrase. The closure families enter through these same templates: codedefect/1 and infrastructure/1 both read "Service Availability Disruption." — their fingerprints are the **code slot** and the **node-service slot**.
 
 ## 4. Runtime usage (guide, not query)
 
 symptom → retrieve the chain's **model slice** (slot list + query-instruction templates) → the agent **calls the benchmark tools** → instance data returns → correct → advance along edges → the first slot where *observed ≠ expected* is the break point → conclusion (component + mechanism). The expert walk (the gold path for the admission case = 6 steps) is one instance of this; the evidence chain — and hence MC/EOC/ECR — is satisfied by construction.
 Delivery shape mirrors TSM 2.0: the model via MCP (a "modeling view"), the data via the source tools — contract inside, implementation outside.
 (Corroboration, not model input: the benchmark's own milestone role system — symptom → mechanism → root-cause confirmation — lines up with the chain stages.)
+
+**Scoring side (verified 2026-10-10 from `agents/*/evaluation_utils`; context, not model input):**
+
+- Admissible matching = tool name + argument subset (resource aliases normalized, e.g. pod↔pods); `evidence_patterns` match the **tool-output observation text** (5 kinds: literal substring / regex / json_path / yaml_path fallback / code_snippet). Walking the chain with admissible calls and quoting observations satisfies MC / EOC / ECR by construction.
+- Completion formulas (8 kinds; largely all-of `M1..M3`) plus `precedes` edge order encode the chain order — the same order the slot table prescribes.
+- Gated performance cases strip `GetAlerts` credit (`evaluation.py:246`): alerts are a symptom pointer, not evidence — close on object-layer exclusion + metric readings. `EE` = evidence steps / total steps; `RAR` = repeated-signature rate.
 
 ## 5. Level split & authoring discipline
 
@@ -95,11 +105,11 @@ Delivery shape mirrors TSM 2.0: the model via MCP (a "modeling view"), the data 
 | runtime/1 | probe slot (pod running) | `Liveness probe failed: malformed HTTP status code` |
 | service/1 | addressing slot (TCP all up) | connectivity probes `Connection Succeeded`; break in env address |
 | performance/1 | telemetry slot | `LATENCY_DEGRADATION p95 4.85ms→70.04ms (+1343%)` |
+| codedefect/1 (checkoutservice, hard) | code slot — wrong argument order | `panic: mismatching currency codes` (43 logs, 2 errors — the same panic) |
+| infrastructure/1 (node/worker-01, medium) | node-service slot — containerd down | `containerd.service … Active: inactive (dead)` on worker-01 |
 
 ## 7. Open items
 
-1. Sample codedefect / infrastructure to close the entity table.
-2. Train-Ticket differences (10 tools, 4 categories) — express capability gaps at the model level.
-3. Read `agents/*/evaluation_utils/` — `evidence_patterns` matching semantics (1058 non-empty entries in Boutique).
-4. Turn tables 3.1–3.3 into build-time artifacts (YAML; alignment with the TSM build pipeline TBD).
-5. L2 / L3 only once their gates trigger.
+1. Turn tables 3.1–3.3 into build-time artifacts (YAML; alignment with the TSM build pipeline) — next step.
+2. L2 / L3 only once their gates trigger.
+3. If the snapshot ever moves (new pin): re-check the two capability facts that live in code — the code-tool hard gate and the pre-render sets.

@@ -1,8 +1,8 @@
 # Cloud-OpsBench — TSM 建模方案（L1 先行）
 
-> **状态**：v0 草案，2026-10-10 —— 供后续迭代。
-> **归纳来源**：benchmark README（布局 / 工具面 / 指标）+ Boutique 六家族各抽 1 例（admission / scheduling / startup / runtime / service / performance），只用可见侧信息。
-> **待补**：codedefect 与 infrastructure 两家族未抽样 · Train-Ticket 差异 · 判分器内部（`agents/*/evaluation_utils`，`evidence_patterns` 语义）。
+> **状态**：**v1**，2026-10-10 —— 收口三项已全部折叠：codedefect / infrastructure 已抽样（实体表闭环）、Train-Ticket 差异落定、判分语义查证完成。
+> **归纳来源**：benchmark README（布局 / 工具面 / 指标）+ Boutique 八家族各抽 1 例（**8/8**，含 codedefect / infrastructure）+ 全库 754 例缓存扫描（cluster-config 核查）+ `agents/*/evaluation_utils` 判分内部——只用可见侧信息；gold / 答案侧材料不用于建模。
+> **待补**：build 产物（§七.1）· L2 / L3 门槛未触发。
 > 本目录当前只有本方案；场景 README 与模型产物后续再补。
 > English: [modeling-plan.md](modeling-plan.md)
 
@@ -12,10 +12,10 @@
 - **判分双轨**：结果 `CA / FA / JRA`（组件 / 故障型别 / 联合）+ 过程 `MC / EOC / ECR / EE / RAR`（里程碑覆盖 / admissible 顺序 / 闭合 / 证据效率 / 冗余）。
 - **每题数据源**（`benchmark/<system>/<category>/<id>/`）：
   - `metadata.json` —— 题面 **query**（症状短语）+ 真值（**不用于**建模）
-  - `tool_cache.json` —— 全命名空间预渲染的工具输出（约 485 键/题；缓存随快照而定、与故障无关）
-  - `raw_data/` —— `k8s_states.json` · `logs.json` · `alert.json` · `metrics.csv`（仅性能类）
+  - `tool_cache.json` —— 全命名空间预渲染的工具输出，按工具调用（`tool:args`）为键；Boutique 约 0.5k 键、TT 约 1.6–1.7k 键（随命名空间规模变化；缓存随快照而定、与故障无关）
+  - `raw_data/` —— `k8s_states.json` · `logs.json` · `alert.json` · `metrics.csv`；**`metrics.csv` 非 performance 专属**：Boutique codedefect 98/98 全带 + performance 25/29，TT 仅 performance 47/47，infrastructure（抽样）不带——"性能槽"实际由 `GetAlerts` 承载（见 §四）
   - `code/` —— 裁剪后的服务源码（仅 Boutique）
-- **工具面**（agent 可见 = 题面 + 工具输出）：12 个工具 —— `GetResources`、`DescribeResource`、`GetAppYAML`、`GetServiceDependencies`、`CheckServiceConnectivity`、`GetAlerts`、`GetRecentLogs`、`GetErrorLogs`、`ListCodeFiles`、`GetSourceCode`、`GetClusterConfiguration`、`CheckNodeServiceStatus`。Train-Ticket 10 个（无 code 两件）；抽样缓存预渲染其中 10 个（`GetRecentLogs` / `GetSourceCode` 按需）。
+- **工具面**（agent 可见 = 题面 + 工具输出）：12 个工具 —— `GetResources`、`DescribeResource`、`GetAppYAML`、`GetServiceDependencies`、`CheckServiceConnectivity`、`GetAlerts`、`GetRecentLogs`、`GetErrorLogs`、`ListCodeFiles`、`GetSourceCode`、`GetClusterConfiguration`、`CheckNodeServiceStatus`。Train-Ticket 面为 10 个（code 两件为 Boutique 专属**硬门槛**，见 §三.2 #9）；预渲染：Boutique 12 中 10 个、TT 10 中 9 个（`GetRecentLogs` 两系统均按需）。`GetClusterConfiguration` 在**全 754 例**（两系统）均预渲染有真实节点配置。
 - **快照锚定**：上游冻结于 `ea05daf`（`LLM4Ops/Cloud-OpsBench`，`main`，2026-10-10 拉取）——场景开发以该快照为准；后续上游变动走增量更新、不实时跟随。
 
 ## 二、边界（定案）
@@ -42,8 +42,10 @@
 | PE | 策略与配额：ResourceQuota / NetworkPolicy / RoleBinding | 创建许可 / 流量许可 |
 | PE | Event | 机制记录（X 为什么失败） |
 | PE | 日志流 / 指标流 / Alert | 实体的遥测面 |
+| PE | 代码面（`code/` 下的服务源码） | 源码缺陷面：哪个文件 / 函数承载缺陷 |
+| PE | 节点运行时服务（containerd / kubelet …） | 节点内部机制：本节点上的 pod 为什么起不来 |
 
-> 可观测种类全集（6 例缓存并集，21 种）：configmaps, daemonsets, deployments, endpoints, events, ingresses, jobs, namespaces, networkpolicies, nodes, persistentvolumeclaims, persistentvolumes, pods, replicasets, resourcequota, rolebindings, secrets, serviceaccounts, services, statefulsets, storageclasses。
+> 可观测种类全集（**全 754 例**缓存并集 = 21 种，闭包验证无新增）：configmaps, daemonsets, deployments, endpoints, events, ingresses, jobs, namespaces, networkpolicies, nodes, persistentvolumeclaims, persistentvolumes, pods, replicasets, resourcequota, rolebindings, secrets, serviceaccounts, services, statefulsets, storageclasses。无新增种类——单数 `pod` / `service` / `statefulset` 是复数种类的参数别名。两个收口家族的观测面在 k8s 种类表**之外**：代码面（`code/`，仅 Boutique）与节点运行时服务（`CheckNodeServiceStatus` 输出）。
 
 ### 3.2 关系种类 + 观测槽（核心表）
 
@@ -57,6 +59,8 @@
 | 6 | Container → 探针（liveness / readiness） | ARCS | 健康门控 | DescribeResource(pod：probe failed、restarts) · GetAppYAML(探针配置) |
 | 7 | Service ↔ Service（依赖 / 寻址） | PAS | 调用可达与地址 | GetServiceDependencies · CheckServiceConnectivity · GetAppYAML(env) · GetErrorLogs |
 | 8 | 实体 → 遥测面 | （观测） | 异常信号 | GetAlerts · GetErrorLogs / GetRecentLogs |
+| 9 | 工作负载 → 代码面（`code/`） | （观测） | 缺陷定位：报错报文 → 文件 / 函数 → 代码证据 | GetErrorLogs / GetRecentLogs（报文）→ ListCodeFiles → GetSourceCode（Boutique 硬门槛） |
+| 10 | Node → 节点运行时服务 | ARCS | 节点侧机制（如 containerd 挂） | CheckNodeServiceStatus |
 
 > ARCS = 纵向锚定（LE↔PE）；PAS = 横向路由（LE↔LE）——与 DLR 模型同术语。
 
@@ -71,13 +75,19 @@
 | Service latency increased significantly | 18 / 0 | 遥测（同 Performance Degradation） |
 | Service quality degradation. | 11 / 47 | 遥测（同 Performance Degradation） |
 
-> 模板跨家族重载（同一短语既用于 admission 也用于 service routing；Availability Disruption 既用于 scheduling 也用于 startup）——判别发生在**链上**，不是短语本身。
+> 模板跨家族重载（同一短语既用于 admission 也用于 service routing；Availability Disruption 既用于 scheduling 也用于 startup）——判别发生在**链上**，不是短语本身。两个收口家族走同样的模板进入：codedefect/1 与 infrastructure/1 的题面都是 "Service Availability Disruption."——指纹在**代码槽**与**节点服务槽**。
 
 ## 四、运行时用法（引导，而非查询）
 
 症状 → 取该链的**模型切片**（槽位清单 + 查询指令模板）→ agent **调用 benchmark 工具**实查 → 实例数据回流 → 修正 → 沿边推进 → 第一个"观测 ≠ 期望"的槽 = 断点 → 结论（组件 + 机制）。专家轨迹（admission 例的 gold path = 6 步）即此走链的一个实例；证据链——进而 MC/EOC/ECR——由走链天然满足。
 交付形态同 TSM 2.0：模型经 MCP 给"建模视图"，数据经源工具给——契约在内、实现在外。
 （佐证，不入模型：benchmark 自己的里程碑角色体系——症状 → 机制 → 根因确认——与链上阶段一一对应。）
+
+**判分侧（2026-10-10 查证，自 `agents/*/evaluation_utils`；语境说明、不入模型）：**
+
+- admissible 匹配 = 工具名 + 参数子集（资源别名归一，如 pod↔pods）；`evidence_patterns` 匹配**工具输出的观察文本**（5 种：literal 子串 / regex / json_path / yaml_path 回退 / code_snippet）。沿链走 admissible 调用并引用观察文本，MC / EOC / ECR 由构造满足。
+- completion_formula（8 种构造；主力 all-of `M1..M3`）+ `precedes` 边序 = 链序——与槽表规定的顺序同构。
+- gated performance 案例剥 `GetAlerts` credit（`evaluation.py:246`）：alerts 只作症状指针、不作证据——靠对象层排除 + 指标读数收链。`EE` = 证据步 / 总步；`RAR` = 重复签名率。
 
 ## 五、三级分工与编入纪律
 
@@ -95,11 +105,11 @@
 | runtime/1 | 探针槽（pod 在跑） | `Liveness probe failed: malformed HTTP status code` |
 | service/1 | 寻址槽（TCP 全通） | connectivity 探针 `Connection Succeeded`；断在 env 地址 |
 | performance/1 | 遥测槽 | `LATENCY_DEGRADATION p95 4.85ms→70.04ms (+1343%)` |
+| codedefect/1（checkoutservice · hard） | 代码槽——参数顺序 | `panic: mismatching currency codes`（43 条日志、2 条错误皆为同一 panic） |
+| infrastructure/1（node/worker-01 · medium） | 节点服务槽——containerd 挂 | worker-01 上 `containerd.service … Active: inactive (dead)` |
 
 ## 七、待办
 
-1. 补抽 codedefect / infrastructure 两家族，收口实体表。
-2. Train-Ticket 差异（10 工具、4 家族）——能力缺口在模型层表达。
-3. 读 `agents/*/evaluation_utils/`——`evidence_patterns` 匹配语义（Boutique 有 1058 条非空）。
-4. 三张表 YAML 化（与 TSM build 管线的对齐方式待定）。
-5. L2 / L3 仅在各自门槛触发后建。
+1. 三张表 YAML 化为 build 产物（与 TSM build 管线的对齐方式）——下一步。
+2. L2 / L3 仅在各自门槛触发后建。
+3. 快照若移动（换 pin）：重核两项落在代码里的能力事实——code 工具硬门槛与预渲染集。
