@@ -52,7 +52,7 @@ logical_entities:
     physical_table_name: Player_Attributes
     physical_table_id: european_football_2.Player_Attributes
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: player_api_id
     R: null
     S: Player FIFA attributes — overall_rating, potential, and skill ratings tracked by date
@@ -242,7 +242,7 @@ logical_entities:
     physical_table_name: Team_Attributes
     physical_table_id: european_football_2.Team_Attributes
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: team_api_id
     R: null
     S: Team tactical attributes — buildUpPlay speed/passing, chanceCreation, defence

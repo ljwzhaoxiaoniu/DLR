@@ -164,7 +164,7 @@ logical_entities:
     physical_table_name: hero_power
     physical_table_id: superhero.hero_power
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: hero_id
     R: null
     S: Junction 表 — hero_id→superhero.id + power_id→superpower.id, 1 英雄可有 N 条记录
@@ -205,7 +205,7 @@ logical_entities:
     physical_table_name: hero_attribute
     physical_table_id: superhero.hero_attribute
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: hero_id
     R: null
     S: Junction 表 — hero_id→superhero.id + attribute_id→attribute.id, 含属性值

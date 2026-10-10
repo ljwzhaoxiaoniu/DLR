@@ -41,7 +41,7 @@ logical_entities:
     physical_table_name: yearmonth
     physical_table_id: debit_card_specializing.yearmonth
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: CustomerID
     R: null
     S: Monthly customer spending summary
@@ -63,7 +63,7 @@ logical_entities:
     physical_table_name: transactions_1k
     physical_table_id: debit_card_specializing.transactions_1k
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: CustomerID
     R: null
     S: Gas station single transaction details — Price per item, Quantity, GasStation, Product

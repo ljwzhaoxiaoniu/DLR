@@ -157,7 +157,7 @@ logical_entities:
     physical_table_name: comments
     physical_table_id: codebase_community.comments
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: PostId
     R: null
     S: Comments
@@ -190,7 +190,7 @@ logical_entities:
     physical_table_name: postHistory
     physical_table_id: codebase_community.postHistory
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: PostId
     R: null
     S: Edit history
@@ -228,7 +228,7 @@ logical_entities:
     physical_table_name: postLinks
     physical_table_id: codebase_community.postLinks
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: PostId
     R: null
     S: Post links
@@ -288,7 +288,7 @@ logical_entities:
     physical_table_name: badges
     physical_table_id: codebase_community.badges
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: UserId
     R: null
     S: User badges
@@ -314,7 +314,7 @@ logical_entities:
     physical_table_name: votes
     physical_table_id: codebase_community.votes
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: PostId
     R: null
     S: Votes

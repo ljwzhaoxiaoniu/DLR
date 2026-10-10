@@ -54,10 +54,10 @@ logical_entities:
     physical_table_name: Laboratory
     physical_table_id: thrombosis_prediction.Laboratory
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: ID
     R: null
-    S: Laboratory test results (biochemistry, blood, urine) — N:1 per patient
+    S: Laboratory test results (biochemistry, blood, urine) — many rows per patient
     attributes:
     - column: thrombosis_prediction.Laboratory.ID
       biz_name: PatientID
@@ -219,10 +219,10 @@ logical_entities:
     physical_table_name: Examination
     physical_table_id: thrombosis_prediction.Examination
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: ID
     R: null
-    S: Clinical examination findings (thrombosis, coagulation, antibodies) — N:1 per patient
+    S: Clinical examination findings (thrombosis, coagulation, antibodies) — many rows per patient
     attributes:
     - column: thrombosis_prediction.Examination.ID
       biz_name: PatientID

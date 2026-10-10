@@ -40,7 +40,7 @@ logical_entities:
     physical_table_name: disp
     physical_table_id: financial.disp
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: account_id
     R: null
     S: Client-account authorization (junction) — client_id, account_id, type (OWNER/DISPONENT)
@@ -64,7 +64,7 @@ logical_entities:
     physical_table_name: card
     physical_table_id: financial.card
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: disp_id
     R: null
     S: Credit card information — card_id, type, issued date
@@ -193,7 +193,7 @@ logical_entities:
     physical_table_name: loan
     physical_table_id: financial.loan
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: account_id
     R: null
     S: Loan contract table — amount, date, duration, payments, status
@@ -233,7 +233,7 @@ logical_entities:
     physical_table_name: trans
     physical_table_id: financial.trans
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: account_id
     R: null
     S: Transaction details — date, type, operation, amount, balance
@@ -284,7 +284,7 @@ logical_entities:
     physical_table_name: order
     physical_table_id: financial.order
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: account_id
     R: null
     S: Permanent payment orders — bank_to, account_to, amount, k_symbol
@@ -360,7 +360,7 @@ pas_relations:
   P:
     forward:
       verb: resides in
-      cardinality: N:1
+      cardinality: '1:N'
     reverse:
       verb: contains
       cardinality: 1:N
@@ -374,6 +374,6 @@ pas_relations:
       cardinality: 1:N
     reverse:
       verb: is located in
-      cardinality: N:1
+      cardinality: '1:N'
   A: DistrictID
   S: 1 district contains N accounts — account.district_id → district.district_id

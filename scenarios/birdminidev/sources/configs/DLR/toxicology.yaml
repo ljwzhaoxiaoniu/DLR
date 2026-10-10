@@ -38,7 +38,7 @@ logical_entities:
     physical_table_name: atom
     physical_table_id: toxicology.atom
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: molecule_id
     R: null
     S: Atom composition — atom_id, element symbol, and molecule membership
@@ -63,7 +63,7 @@ logical_entities:
     physical_table_name: bond
     physical_table_id: toxicology.bond
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: molecule_id
     R: null
     S: Bond master — bond_id, bond_type, and molecule membership
@@ -84,7 +84,7 @@ logical_entities:
     physical_table_name: connected
     physical_table_id: toxicology.connected
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: bond_id
     R: null
     S: Bond-atom junction — each bond connects exactly 2 atoms (atom_id + atom_id2)

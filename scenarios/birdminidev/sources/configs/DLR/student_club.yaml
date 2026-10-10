@@ -99,7 +99,7 @@ logical_entities:
     physical_table_name: attendance
     physical_table_id: student_club.attendance
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: link_to_event
     R: null
     S: Member-event many-to-many
@@ -120,7 +120,7 @@ logical_entities:
     physical_table_name: budget
     physical_table_id: student_club.budget
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: link_to_event
     R: null
     S: Event budget item — amount, spent, remaining, category
@@ -163,7 +163,7 @@ logical_entities:
     physical_table_name: expense
     physical_table_id: student_club.expense
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: link_to_member
     R: null
     S: Individual member expense at an event — cost, date, description, approval status
@@ -202,7 +202,7 @@ logical_entities:
     physical_table_name: income
     physical_table_id: student_club.income
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: link_to_member
     R: null
     S: Income records
@@ -317,7 +317,7 @@ pas_relations:
       cardinality: 1:N
     reverse:
       verb: is funded by
-      cardinality: N:1
+      cardinality: '1:N'
   A: Budget
   S: 1 budget item funds N member expenses — expense.link_to_budget → budget.budget_id
 - relation_id: LOGICAL.Member_TO_LOGICAL.Expense
@@ -328,7 +328,7 @@ pas_relations:
       cardinality: 1:N
     reverse:
       verb: belongs to
-      cardinality: N:1
+      cardinality: '1:N'
   A: Member
   S: 1 member incurs N expenses at events — expense.link_to_member → member.member_id
 - relation_id: LOGICAL.Member_TO_LOGICAL.Income
@@ -347,7 +347,7 @@ pas_relations:
   P:
     forward:
       verb: belongs to
-      cardinality: N:1
+      cardinality: '1:N'
     reverse:
       verb: contains
       cardinality: 1:N
@@ -358,7 +358,7 @@ pas_relations:
   P:
     forward:
       verb: lives in
-      cardinality: N:1
+      cardinality: '1:N'
     reverse:
       verb: contains
       cardinality: 1:N

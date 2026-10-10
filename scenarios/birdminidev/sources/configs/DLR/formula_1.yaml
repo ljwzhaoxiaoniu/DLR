@@ -137,7 +137,7 @@ logical_entities:
     physical_table_name: qualifying
     physical_table_id: formula_1.qualifying
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: raceId
     R: null
     S: Qualifying results
@@ -186,7 +186,7 @@ logical_entities:
     physical_table_name: results
     physical_table_id: formula_1.results
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: raceId
     R: null
     S: Race results
@@ -256,7 +256,7 @@ logical_entities:
     physical_table_name: lapTimes
     physical_table_id: formula_1.lapTimes
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: raceId
     R: null
     S: Lap times
@@ -288,7 +288,7 @@ logical_entities:
     physical_table_name: driverStandings
     physical_table_id: formula_1.driverStandings
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: raceId
     R: null
     S: Driver season standings
@@ -323,7 +323,7 @@ logical_entities:
     physical_table_name: pitStops
     physical_table_id: formula_1.pitStops
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: raceId
     R: null
     S: Pit stop records
@@ -387,7 +387,7 @@ logical_entities:
     physical_table_name: constructorResults
     physical_table_id: formula_1.constructorResults
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: raceId
     R: null
     S: Constructor race results
@@ -413,7 +413,7 @@ logical_entities:
     physical_table_name: constructorStandings
     physical_table_id: formula_1.constructorStandings
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: raceId
     R: null
     S: Constructor season standings

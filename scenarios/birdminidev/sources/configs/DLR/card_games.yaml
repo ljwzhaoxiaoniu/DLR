@@ -281,7 +281,7 @@ logical_entities:
     physical_table_name: legalities
     physical_table_id: card_games.legalities
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: uuid
     R: null
     S: Format legalities — format name and legality status per card
@@ -305,7 +305,7 @@ logical_entities:
     physical_table_name: rulings
     physical_table_id: card_games.rulings
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: uuid
     R: null
     S: Rulings
@@ -327,7 +327,7 @@ logical_entities:
     physical_table_name: foreign_data
     physical_table_id: card_games.foreign_data
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: uuid
     R: null
     S: Foreign translations
@@ -449,7 +449,7 @@ logical_entities:
     physical_table_name: set_translations
     physical_table_id: card_games.set_translations
     A:
-      cardinality: N:1
+      cardinality: '1:N'
       key: setCode
     R: null
     S: Set translations
