@@ -8,7 +8,11 @@
  * 数据来源与 Neo4j 完全一致：scenario YAML → `buildBatch`（含 colTypes 扫描）。
  * 图规模千级（LE 50 / PE 74 / PA 784 / PAS 37），启动期一次构建即可。
  */
+import * as fs from "node:fs";
+import * as path from "node:path";
+import { parse } from "yaml";
 import { buildBatch, readScenario, scenarioFiles } from "../model/graphData.js";
+import { YAML_DIR } from "../config.js";
 import type { GraphHandle, LeAttribute, PeAttribute, PeFull } from "./types.js";
 
 function parseMaybeJson(v: unknown): unknown {
@@ -49,6 +53,100 @@ export class InMemoryGraph implements GraphHandle {
     const pasRels = new Map<string, Row>();
 
     for (const f of scenarioFiles()) {
+      // dlr-state v2 分派（LE=对象嵌套 PE=观测面；PAS=调用边）——与 dlr 归并进同一套 Map：
+      // 锚 A={cardinality,key} 存进 arcs_a（读出时解析），PE 的 resource → table_id。
+      const full = path.join(YAML_DIR, f);
+      let raw: { mapping_type?: string; scenario_name?: string; logical_entities?: unknown[]; pas_relations?: unknown[] };
+      try {
+        raw = parse(fs.readFileSync(full, "utf8")) as typeof raw;
+      } catch {
+        continue;
+      }
+      if (raw.mapping_type === "dlr-state") {
+        if (!Array.isArray(raw.logical_entities)) continue; // v1 过渡文件已移除
+        const db = raw.scenario_name ?? f.replace(/\.yaml$/, "");
+        let peOrd = 0;
+        for (const leAny of raw.logical_entities) {
+          const le = leAny as {
+            logical_entity_id: string;
+            biz_name: string;
+            description?: string;
+            physical_entities?: {
+              physical_entity_id: string;
+              resource?: string;
+              A?: { cardinality?: string; key?: string };
+              S?: string;
+              attributes?: { name: string; description?: string; public?: boolean }[];
+            }[];
+          };
+          les.set(le.logical_entity_id, {
+            id: le.logical_entity_id,
+            name: le.biz_name,
+            description: le.description ?? "",
+            db,
+          });
+          const seenPub = new Set<string>();
+          let laOrd = 0;
+          for (const pe of le.physical_entities ?? []) {
+            for (const a of pe.attributes ?? []) {
+              if (!a.public || seenPub.has(a.name)) continue;
+              seenPub.add(a.name);
+              const aid = `${le.logical_entity_id}.${a.name}`;
+              las.set(aid, { id: aid, name: a.name, description: a.description ?? "", ord: laOrd });
+              leLa.set(`${le.logical_entity_id}|${aid}`, { le_id: le.logical_entity_id, attr_id: aid, ord: laOrd++ });
+            }
+          }
+          for (const pe of le.physical_entities ?? []) {
+            const peId = pe.physical_entity_id;
+            const kind = peId.split(".").pop() ?? peId;
+            pes.set(peId, {
+              id: peId,
+              name: kind,
+              description: pe.S ?? "",
+              table_id: pe.resource ?? "",
+              db,
+              arcs_a: JSON.stringify(pe.A ?? {}),
+              arcs_r: null,
+              arcs_s: pe.resource ?? "",
+            });
+            inherits.set(`${peId}|${le.logical_entity_id}`, {
+              pe_id: peId,
+              le_id: le.logical_entity_id,
+              ord: peOrd++,
+            });
+            (pe.attributes ?? []).forEach((a, i) => {
+              const aid = `${peId}.${a.name}`;
+              pas.set(aid, { id: aid, name: a.name, description: a.description ?? "", column_id: "", data_type: null, db, ord: i });
+              pePa.set(`${peId}|${aid}`, { pe_id: peId, attr_id: aid, ord: i });
+            });
+          }
+        }
+        for (const rAny of raw.pas_relations ?? []) {
+          const r = rAny as {
+            relation_id: string;
+            relation_name?: string;
+            P?: { forward?: { verb?: string; cardinality?: string }; reverse?: { verb?: string; cardinality?: string } };
+            A?: string;
+            S?: string;
+          };
+          const parts = String(r.relation_id).split("_TO_");
+          if (parts.length !== 2) continue;
+          pasRels.set(`${parts[0]}|${parts[1]}|${r.relation_id}`, {
+            id: r.relation_id,
+            name: r.relation_name ?? "",
+            from: parts[0],
+            to: parts[1],
+            forward_verb: r.P?.forward?.verb ?? "",
+            forward_cardinality: r.P?.forward?.cardinality ?? "",
+            reverse_verb: r.P?.reverse?.verb ?? "",
+            reverse_cardinality: r.P?.reverse?.cardinality ?? "",
+            a_attribute: typeof r.A === "string" ? r.A : "",
+            s_semantic: r.S ?? "",
+            db,
+          });
+        }
+        continue;
+      }
       const dbName = f.replace(/\.yaml$/, "");
       const { sc, colTypes } = readScenario(dbName);
       const b = buildBatch(sc, colTypes);

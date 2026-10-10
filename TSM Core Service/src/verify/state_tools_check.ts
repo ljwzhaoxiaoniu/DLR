@@ -44,11 +44,18 @@ if (kind === "dlr-state") {
   const text = (r.content as { type: string; text?: string }[])?.[0]?.text ?? "";
   const parsed = JSON.parse(text) as {
     confidence: number;
-    data: { symptom_slices: { id: string; score: number }[]; relations: { id: string; class: string }[] };
+    data: {
+      objects: { id: string; name: string; kind: string; surfaces: { kind: string; read: string }[] }[];
+      surfaces: { id: string; name: string }[];
+      relations: { id: string; from_name: string; to_name: string }[];
+    };
   };
   console.log(`[tools] state_model_query("${question}") → confidence=${parsed.confidence}`);
-  console.log(`  slices: ${parsed.data.symptom_slices.map((s) => s.id).join(" | ")}`);
-  console.log(`  top rel: ${parsed.data.relations[0]?.id} ${parsed.data.relations[0]?.class}`);
+  console.log(`  objects: ${parsed.data.objects.map((s) => `${s.name}(${s.kind})`).join(" | ") || "(无)"}`);
+  console.log(`  surfaces: ${parsed.data.surfaces.map((s) => s.name).join(" | ") || "(无)"}`);
+  const top = parsed.data.objects[0];
+  if (top) console.log(`  top obj surfaces: ${top.surfaces.map((s) => s.kind).join(", ")}`);
+  console.log(`  top rel: ${parsed.data.relations[0]?.from_name} → ${parsed.data.relations[0]?.to_name}`);
 }
 
 await client.close();

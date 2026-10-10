@@ -17,11 +17,15 @@ const store = await LanceStore.open(STORE_DIR, MODEL_DIR);
 
 const r = await stateModelQuery(store, question);
 console.log(`[state] q="${question}"  confidence=${r.confidence}`);
-console.log(`  slices   : ${r.data.symptom_slices.map((s) => `${s.id} ${s.score}`).join(" | ") || "(无)"}`);
-console.log(`  relations: ${r.data.relations.map((s) => `${s.id} ${s.class} ${s.score}`).join(" | ") || "(无)"}`);
-console.log(`  entities : ${r.data.entities.map((s) => `${s.id} ${s.score}`).join(" | ") || "(无)"}`);
-if (r.data.symptom_slices[0]) console.log(`  top slice: ${r.data.symptom_slices[0].entry_chain}`);
-if (r.data.relations[0]) console.log(`  top rel  : ${JSON.stringify(r.data.relations[0])}`);
+console.log(`  objects  : ${r.data.objects.map((s) => `${s.name}(${s.kind}) ${s.score}`).join(" | ") || "(无)"}`);
+console.log(`  surfaces : ${r.data.surfaces.map((s) => `${s.name} ${s.score}`).join(" | ") || "(无)"}`);
+console.log(`  relations: ${r.data.relations.map((s) => `${s.from_name}→${s.to_name} ${s.score}`).join(" | ") || "(无)"}`);
+if (r.data.objects[0]) {
+  console.log(`  top obj surfaces: ${r.data.objects[0].surfaces.map((s) => s.kind).join(", ")}`);
+  const withRead = r.data.objects[0].surfaces.find((s) => s.read);
+  if (withRead) console.log(`  read 示例: ${withRead.read}`);
+}
+if (r.data.surfaces[0]) console.log(`  top surface: ${JSON.stringify(r.data.surfaces[0]).slice(0, 220)}`);
 
 const c = await searchConsensus(store, "", question, 3);
 console.log(`[consensus] count=${c.count}`);

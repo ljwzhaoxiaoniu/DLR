@@ -118,12 +118,49 @@ export interface StateSymptomSlice {
   entry_chain?: string;
 }
 
+// ── dlr-state v2（按系统落份：LE 嵌套观测面 PE + PAS——DLR 词汇的 state 形态）─────
+// 见 `scenarios/cloudopsbench/sources/configs/DLR/{boutique,trainticket}.yaml`；v1（类别级
+// entities/relations/slices）为过渡形态，同场出现时以 v2 为准。
+
+export interface StatePhysicalEntityV2 {
+  physical_entity_id: string;
+  /** 数据源侧资源种类（deployments / pods / services + endpoints / logs / code …） */
+  resource?: string;
+  /** 锚：基数（LE 视角）+ 锚定键（app_label / node_name / namespace） */
+  A?: { cardinality?: string; key?: string };
+  R?: unknown;
+  S?: string;
+  attributes?: { name: string; description?: string; public?: boolean }[];
+}
+
+export interface StateLogicalEntityV2 {
+  logical_entity_id: string;
+  biz_name: string;
+  description?: string;
+  physical_entities?: StatePhysicalEntityV2[];
+}
+
+export interface StatePasRelationV2 {
+  relation_id: string;
+  relation_name?: string;
+  P?: {
+    forward?: { verb?: string; cardinality?: string };
+    reverse?: { verb?: string; cardinality?: string };
+  };
+  A?: string;
+  S?: string;
+}
+
 export interface StateScenarioYaml {
   mapping_type: "dlr-state";
   version?: string;
   scenario_name?: string;
   description?: string;
   source?: Record<string, unknown>;
+  // v2（优先）
+  logical_entities?: StateLogicalEntityV2[];
+  pas_relations?: StatePasRelationV2[];
+  // v1（过渡形态）
   entities?: StateEntity[];
   relations?: StateRelation[];
   symptom_slices?: StateSymptomSlice[];
