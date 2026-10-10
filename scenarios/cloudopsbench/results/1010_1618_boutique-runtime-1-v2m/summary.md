@@ -1,6 +1,6 @@
-# Cloud-OpsBench 评测 · 1010_1632
+# Cloud-OpsBench 评测 · 1010_1635
 
-- runs: 1 个（1010_1630_boutique-runtime-1 ）
+- runs: 2 个（1010_1630_boutique-runtime-1 1010_1634_boutique-runtime-1 ）
 - model: dsh-tsm · checkout: /d/Code_Proj/Cloud-OpsBench（快照 ea05daf）
 - 指标：CA/FA/JRA=结果对上错；MC/EOC/ECR/EE=流程分（证据链）；steps/RAR/inv=过程统计
 

@@ -19,12 +19,12 @@
       {
         "rank": 2,
         "fault_object": "app/adservice",
-        "root_cause": "liveness_probe_incorrect_timing"
+        "root_cause": "liveness_probe_incorrect_port"
       },
       {
         "rank": 3,
         "fault_object": "app/adservice",
-        "root_cause": "liveness_probe_incorrect_port"
+        "root_cause": "liveness_probe_incorrect_timing"
       }
     ],
     "tool_call_count": 8,

@@ -1,6 +1,6 @@
 # 评测明细 · boutique/runtime — cloudopsbench
 
-> 本家族已跑 **1/45** 题：JRA ✅1 ❌0 ｜ 证据链全闭 1 ｜ 生成 2026-10-10T08:32:59.562Z
+> 本家族已跑 **1/45** 题：JRA ✅1 ❌0 ｜ 证据链全闭 1 ｜ 生成 2026-10-10T08:35:35.493Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -15,5 +15,5 @@
 
 - **结论**：`app/adservice` + `liveness_probe_incorrect_protocol` ｜ 标签 `app/adservice` + `liveness_probe_incorrect_protocol`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.375 · steps 9
-- **摘要**：Only outlier in the boutique pods listing is adservice-d6c9fcc6b-d4nlb (RESTARTS 2, 30s ago) on worker-02; all other 10 pods show RESTARTS 0, so the victim is app/adservice rather than a node. Its last termination state is Reason=Error, Exit Code=143 (SIGTERM by kubelet), not 137/OOMKilled, pointing at the probe rather than memory. kubelet events show 'Liveness probe failed: Get "http://172.20.2.163:9555/": HTTP/1.x transport connection broken: malformed HTTP status code "\x00\x00\x00\x04\b..."' (x9) and 'Container server failed liveness probe, will be restarted' (x3). The deployment's own pro
+- **摘要**：Only adservice showed restart outlier: pod adservice-d6c9fcc6b-d4nlb on worker-02 had RESTARTS 2 (30s ago) while all other 10 boutique services had 0. Pod detail: Last State Terminated, Reason Error, Exit Code 143 (kubelet SIGTERM, not OOM 137), with events 'Liveness probe failed: Get "http://172.20.2.163:9555/": net/http: HTTP/1.x transport connection broken: malformed HTTP status code "\x00\x00\x00\x04\b..."' (x9) and 'Killing: Container server failed liveness probe, will be restarted' (x3). GetAppYAML(adservice) shows the mismatch: readinessProbe correctly uses grpc port 9555, but livenessP
 
