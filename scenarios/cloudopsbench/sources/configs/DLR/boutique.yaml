@@ -1,0 +1,1678 @@
+# Cloud-OpsBench 场景 · L1（dlr-state）—— boutique
+#
+# 结构（DLR 词汇）：LE = 本系统**有独立生命周期**的对象（服务 / 节点 / 命名空间）；
+#                  PE = 每个对象的**状态观测面**（deployment / pods / service+endpoints / telemetry / logs；boutique 另有 code）；
+#                  PAS = 本系统的**服务调用图**（自快照的依赖图读得，逐 case 稳定）。
+# 锚：同一对象的所有观测面共享**应用标签**（app=<service>）——ARCS.A.key = app_label；
+#     节点面按 node_name、命名空间面按 namespace 锚定。
+# 边界：实例（pod 名 / IP / 状态值 / 日志内容）不入模型——由 agent 经工具沿面实查。
+# 源：LLM4Ops/Cloud-OpsBench @ ea05daf（2026-10-10 拉取）；调用图/名册自 tool_cache 样本抽取。
+
+mapping_type: dlr-state
+version: '2.0'
+scenario_name: dlr_cloudopsbench_boutique
+description: boutique system of Cloud-OpsBench — its services and nodes (LE), the resource / observation surfaces
+  through which each object's state is read from deterministic Kubernetes snapshots (PE), and the service call topology
+  (PAS).
+source:
+  kind: kubernetes-state-snapshots
+  repo: LLM4Ops/Cloud-OpsBench
+  pin: ea05daf
+  system: boutique
+logical_entities:
+- logical_entity_id: LOGICAL.boutique.frontend
+  biz_name: frontend
+  description: 'Web frontend and entry point of Online Boutique — a Go HTTP server (port 8080) that renders the
+    shop and fans out to all shopping services (ad, cart, checkout, currency, product, recommendation, shipping).
+    Every user request enters here (Upstream: user traffic).'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.frontend.deployment
+    resource: deployments
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references
+    attributes:
+    - name: app_label
+      description: the identifying application label (app=frontend) shared by every surface of this service
+      public: true
+    - name: replicas
+      description: desired vs ready replica count (AVAILABLE) — 0/1 means the service is drained; read from the
+        deployments listing or the app YAML
+    - name: probes
+      description: liveness / readiness probe configuration (protocol / port / timing / commands) — a probe that
+        can never succeed restarts containers in a loop; read from the app YAML
+    - name: env_addresses
+      description: downstream call addresses carried as environment variables (host:port of the services this one
+        calls) — the addressing surface for call failures; read from the app YAML
+    - name: config_refs
+      description: referenced objects — serviceAccountName, secrets / configmaps, PVC-PV claims, image reference;
+        missing refs surface as pod events (FailedCreate / FailedMount / image-pull messages)
+  - physical_entity_id: PHYSICAL.boutique.frontend.pods
+    resource: pods
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: instances — scheduling, creation, startup and health of the containers running this service
+    attributes:
+    - name: app_label
+      description: application label of the pod set (app=frontend)
+      public: true
+    - name: phase_status
+      description: pod phase and container states — Running / Pending / CrashLoopBackOff / ImagePullBackOff / ErrImagePull
+        / ContainerCreating (STATUS column of the pods listing)
+    - name: restarts
+      description: container restart count — the first-level liveness symptom; the outlier row among healthy peers
+        (RESTARTS column)
+    - name: last_termination
+      description: last terminated container state — reason + exit code (Error 143 = SIGTERM sent by kubelet; OOMKilled
+        137 = memory limit hit); read from the pod detail
+    - name: node
+      description: node the pod is placed on — placement surface to pair with node state (taints / capacity / cordon);
+        read from the pod detail or pods -o wide
+    - name: events
+      description: 'pod events — the mechanism record: FailedScheduling / FailedCreate / FailedMount / FailedAttachVolume
+        / Unhealthy (probe) / Killing / BackOff / image-pull messages; read from the pod detail Events section'
+  - physical_entity_id: PHYSICAL.boutique.frontend.service_endpoints
+    resource: services + endpoints
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: reachability as seen by callers — the Service object and its endpoint binding result
+    attributes:
+    - name: cluster_ip_ports
+      description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
+        connection failures; read from the services listing / service detail
+    - name: selector_match
+      description: label selector → matched pods; a selector matching nothing leaves the endpoints empty
+    - name: endpoints_binding
+      description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
+        'connection refused' logs; read from the endpoints object
+  - physical_entity_id: PHYSICAL.boutique.frontend.telemetry
+    resource: alerts + metrics
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
+      (alerts are a symptom pointer: close on object-layer evidence)'
+    attributes:
+    - name: alerts
+      description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
+        with GetAlerts
+    - name: metrics
+      description: metric readings (latency / error / resource usage) present only in performance-manifesting snapshots
+        — read with GetAlerts
+  - physical_entity_id: PHYSICAL.boutique.frontend.logs
+    resource: logs
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: application log stream of the service as captured in the snapshot
+    attributes:
+    - name: recent_logs
+      description: recent log lines of frontend — routine and abnormal messages; read with GetRecentLogs(service_name=frontend)
+    - name: error_logs
+      description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
+        causal narrative surface; read with GetErrorLogs
+  - physical_entity_id: PHYSICAL.boutique.frontend.code
+    resource: code artifact
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: trimmed service sources shipped with the snapshot — the source-defect surface (error message → file / function
+      → code evidence)
+    attributes:
+    - name: source_files
+      description: recorded source files of frontend — list with ListCodeFiles(service_name=frontend)
+    - name: source_code
+      description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
+        delay / missing parameter); read with GetSourceCode
+- logical_entity_id: LOGICAL.boutique.cartservice
+  biz_name: cartservice
+  description: Shopping cart service — C#/.NET gRPC server (port 7070); persists carts in redis-cart. Called by
+    frontend and checkoutservice.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.cartservice.deployment
+    resource: deployments
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references
+    attributes:
+    - name: app_label
+      description: the identifying application label (app=cartservice) shared by every surface of this service
+      public: true
+    - name: replicas
+      description: desired vs ready replica count (AVAILABLE) — 0/1 means the service is drained; read from the
+        deployments listing or the app YAML
+    - name: probes
+      description: liveness / readiness probe configuration (protocol / port / timing / commands) — a probe that
+        can never succeed restarts containers in a loop; read from the app YAML
+    - name: env_addresses
+      description: downstream call addresses carried as environment variables (host:port of the services this one
+        calls) — the addressing surface for call failures; read from the app YAML
+    - name: config_refs
+      description: referenced objects — serviceAccountName, secrets / configmaps, PVC-PV claims, image reference;
+        missing refs surface as pod events (FailedCreate / FailedMount / image-pull messages)
+  - physical_entity_id: PHYSICAL.boutique.cartservice.pods
+    resource: pods
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: instances — scheduling, creation, startup and health of the containers running this service
+    attributes:
+    - name: app_label
+      description: application label of the pod set (app=cartservice)
+      public: true
+    - name: phase_status
+      description: pod phase and container states — Running / Pending / CrashLoopBackOff / ImagePullBackOff / ErrImagePull
+        / ContainerCreating (STATUS column of the pods listing)
+    - name: restarts
+      description: container restart count — the first-level liveness symptom; the outlier row among healthy peers
+        (RESTARTS column)
+    - name: last_termination
+      description: last terminated container state — reason + exit code (Error 143 = SIGTERM sent by kubelet; OOMKilled
+        137 = memory limit hit); read from the pod detail
+    - name: node
+      description: node the pod is placed on — placement surface to pair with node state (taints / capacity / cordon);
+        read from the pod detail or pods -o wide
+    - name: events
+      description: 'pod events — the mechanism record: FailedScheduling / FailedCreate / FailedMount / FailedAttachVolume
+        / Unhealthy (probe) / Killing / BackOff / image-pull messages; read from the pod detail Events section'
+  - physical_entity_id: PHYSICAL.boutique.cartservice.service_endpoints
+    resource: services + endpoints
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: reachability as seen by callers — the Service object and its endpoint binding result
+    attributes:
+    - name: cluster_ip_ports
+      description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
+        connection failures; read from the services listing / service detail
+    - name: selector_match
+      description: label selector → matched pods; a selector matching nothing leaves the endpoints empty
+    - name: endpoints_binding
+      description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
+        'connection refused' logs; read from the endpoints object
+  - physical_entity_id: PHYSICAL.boutique.cartservice.telemetry
+    resource: alerts + metrics
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
+      (alerts are a symptom pointer: close on object-layer evidence)'
+    attributes:
+    - name: alerts
+      description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
+        with GetAlerts
+    - name: metrics
+      description: metric readings (latency / error / resource usage) present only in performance-manifesting snapshots
+        — read with GetAlerts
+  - physical_entity_id: PHYSICAL.boutique.cartservice.logs
+    resource: logs
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: application log stream of the service as captured in the snapshot
+    attributes:
+    - name: recent_logs
+      description: recent log lines of cartservice — routine and abnormal messages; read with GetRecentLogs(service_name=cartservice)
+    - name: error_logs
+      description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
+        causal narrative surface; read with GetErrorLogs
+  - physical_entity_id: PHYSICAL.boutique.cartservice.code
+    resource: code artifact
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: trimmed service sources shipped with the snapshot — the source-defect surface (error message → file / function
+      → code evidence)
+    attributes:
+    - name: source_files
+      description: recorded source files of cartservice — list with ListCodeFiles(service_name=cartservice)
+    - name: source_code
+      description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
+        delay / missing parameter); read with GetSourceCode
+- logical_entity_id: LOGICAL.boutique.productcatalogservice
+  biz_name: productcatalogservice
+  description: Product catalog — Go gRPC server (port 3550); the product listing/search source. Called by frontend,
+    checkoutservice and recommendationservice.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.productcatalogservice.deployment
+    resource: deployments
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references
+    attributes:
+    - name: app_label
+      description: the identifying application label (app=productcatalogservice) shared by every surface of this
+        service
+      public: true
+    - name: replicas
+      description: desired vs ready replica count (AVAILABLE) — 0/1 means the service is drained; read from the
+        deployments listing or the app YAML
+    - name: probes
+      description: liveness / readiness probe configuration (protocol / port / timing / commands) — a probe that
+        can never succeed restarts containers in a loop; read from the app YAML
+    - name: env_addresses
+      description: downstream call addresses carried as environment variables (host:port of the services this one
+        calls) — the addressing surface for call failures; read from the app YAML
+    - name: config_refs
+      description: referenced objects — serviceAccountName, secrets / configmaps, PVC-PV claims, image reference;
+        missing refs surface as pod events (FailedCreate / FailedMount / image-pull messages)
+  - physical_entity_id: PHYSICAL.boutique.productcatalogservice.pods
+    resource: pods
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: instances — scheduling, creation, startup and health of the containers running this service
+    attributes:
+    - name: app_label
+      description: application label of the pod set (app=productcatalogservice)
+      public: true
+    - name: phase_status
+      description: pod phase and container states — Running / Pending / CrashLoopBackOff / ImagePullBackOff / ErrImagePull
+        / ContainerCreating (STATUS column of the pods listing)
+    - name: restarts
+      description: container restart count — the first-level liveness symptom; the outlier row among healthy peers
+        (RESTARTS column)
+    - name: last_termination
+      description: last terminated container state — reason + exit code (Error 143 = SIGTERM sent by kubelet; OOMKilled
+        137 = memory limit hit); read from the pod detail
+    - name: node
+      description: node the pod is placed on — placement surface to pair with node state (taints / capacity / cordon);
+        read from the pod detail or pods -o wide
+    - name: events
+      description: 'pod events — the mechanism record: FailedScheduling / FailedCreate / FailedMount / FailedAttachVolume
+        / Unhealthy (probe) / Killing / BackOff / image-pull messages; read from the pod detail Events section'
+  - physical_entity_id: PHYSICAL.boutique.productcatalogservice.service_endpoints
+    resource: services + endpoints
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: reachability as seen by callers — the Service object and its endpoint binding result
+    attributes:
+    - name: cluster_ip_ports
+      description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
+        connection failures; read from the services listing / service detail
+    - name: selector_match
+      description: label selector → matched pods; a selector matching nothing leaves the endpoints empty
+    - name: endpoints_binding
+      description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
+        'connection refused' logs; read from the endpoints object
+  - physical_entity_id: PHYSICAL.boutique.productcatalogservice.telemetry
+    resource: alerts + metrics
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
+      (alerts are a symptom pointer: close on object-layer evidence)'
+    attributes:
+    - name: alerts
+      description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
+        with GetAlerts
+    - name: metrics
+      description: metric readings (latency / error / resource usage) present only in performance-manifesting snapshots
+        — read with GetAlerts
+  - physical_entity_id: PHYSICAL.boutique.productcatalogservice.logs
+    resource: logs
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: application log stream of the service as captured in the snapshot
+    attributes:
+    - name: recent_logs
+      description: recent log lines of productcatalogservice — routine and abnormal messages; read with GetRecentLogs(service_name=productcatalogservice)
+    - name: error_logs
+      description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
+        causal narrative surface; read with GetErrorLogs
+  - physical_entity_id: PHYSICAL.boutique.productcatalogservice.code
+    resource: code artifact
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: trimmed service sources shipped with the snapshot — the source-defect surface (error message → file / function
+      → code evidence)
+    attributes:
+    - name: source_files
+      description: recorded source files of productcatalogservice — list with ListCodeFiles(service_name=productcatalogservice)
+    - name: source_code
+      description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
+        delay / missing parameter); read with GetSourceCode
+- logical_entity_id: LOGICAL.boutique.currencyservice
+  biz_name: currencyservice
+  description: Currency conversion — Node.js gRPC server (port 7000). Called by frontend and checkoutservice.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.currencyservice.deployment
+    resource: deployments
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references
+    attributes:
+    - name: app_label
+      description: the identifying application label (app=currencyservice) shared by every surface of this service
+      public: true
+    - name: replicas
+      description: desired vs ready replica count (AVAILABLE) — 0/1 means the service is drained; read from the
+        deployments listing or the app YAML
+    - name: probes
+      description: liveness / readiness probe configuration (protocol / port / timing / commands) — a probe that
+        can never succeed restarts containers in a loop; read from the app YAML
+    - name: env_addresses
+      description: downstream call addresses carried as environment variables (host:port of the services this one
+        calls) — the addressing surface for call failures; read from the app YAML
+    - name: config_refs
+      description: referenced objects — serviceAccountName, secrets / configmaps, PVC-PV claims, image reference;
+        missing refs surface as pod events (FailedCreate / FailedMount / image-pull messages)
+  - physical_entity_id: PHYSICAL.boutique.currencyservice.pods
+    resource: pods
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: instances — scheduling, creation, startup and health of the containers running this service
+    attributes:
+    - name: app_label
+      description: application label of the pod set (app=currencyservice)
+      public: true
+    - name: phase_status
+      description: pod phase and container states — Running / Pending / CrashLoopBackOff / ImagePullBackOff / ErrImagePull
+        / ContainerCreating (STATUS column of the pods listing)
+    - name: restarts
+      description: container restart count — the first-level liveness symptom; the outlier row among healthy peers
+        (RESTARTS column)
+    - name: last_termination
+      description: last terminated container state — reason + exit code (Error 143 = SIGTERM sent by kubelet; OOMKilled
+        137 = memory limit hit); read from the pod detail
+    - name: node
+      description: node the pod is placed on — placement surface to pair with node state (taints / capacity / cordon);
+        read from the pod detail or pods -o wide
+    - name: events
+      description: 'pod events — the mechanism record: FailedScheduling / FailedCreate / FailedMount / FailedAttachVolume
+        / Unhealthy (probe) / Killing / BackOff / image-pull messages; read from the pod detail Events section'
+  - physical_entity_id: PHYSICAL.boutique.currencyservice.service_endpoints
+    resource: services + endpoints
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: reachability as seen by callers — the Service object and its endpoint binding result
+    attributes:
+    - name: cluster_ip_ports
+      description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
+        connection failures; read from the services listing / service detail
+    - name: selector_match
+      description: label selector → matched pods; a selector matching nothing leaves the endpoints empty
+    - name: endpoints_binding
+      description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
+        'connection refused' logs; read from the endpoints object
+  - physical_entity_id: PHYSICAL.boutique.currencyservice.telemetry
+    resource: alerts + metrics
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
+      (alerts are a symptom pointer: close on object-layer evidence)'
+    attributes:
+    - name: alerts
+      description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
+        with GetAlerts
+    - name: metrics
+      description: metric readings (latency / error / resource usage) present only in performance-manifesting snapshots
+        — read with GetAlerts
+  - physical_entity_id: PHYSICAL.boutique.currencyservice.logs
+    resource: logs
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: application log stream of the service as captured in the snapshot
+    attributes:
+    - name: recent_logs
+      description: recent log lines of currencyservice — routine and abnormal messages; read with GetRecentLogs(service_name=currencyservice)
+    - name: error_logs
+      description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
+        causal narrative surface; read with GetErrorLogs
+  - physical_entity_id: PHYSICAL.boutique.currencyservice.code
+    resource: code artifact
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: trimmed service sources shipped with the snapshot — the source-defect surface (error message → file / function
+      → code evidence)
+    attributes:
+    - name: source_files
+      description: recorded source files of currencyservice — list with ListCodeFiles(service_name=currencyservice)
+    - name: source_code
+      description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
+        delay / missing parameter); read with GetSourceCode
+- logical_entity_id: LOGICAL.boutique.paymentservice
+  biz_name: paymentservice
+  description: Payment charging — Node.js gRPC server (port 50051); charges credit cards at checkout. Called by
+    checkoutservice.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.paymentservice.deployment
+    resource: deployments
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references
+    attributes:
+    - name: app_label
+      description: the identifying application label (app=paymentservice) shared by every surface of this service
+      public: true
+    - name: replicas
+      description: desired vs ready replica count (AVAILABLE) — 0/1 means the service is drained; read from the
+        deployments listing or the app YAML
+    - name: probes
+      description: liveness / readiness probe configuration (protocol / port / timing / commands) — a probe that
+        can never succeed restarts containers in a loop; read from the app YAML
+    - name: env_addresses
+      description: downstream call addresses carried as environment variables (host:port of the services this one
+        calls) — the addressing surface for call failures; read from the app YAML
+    - name: config_refs
+      description: referenced objects — serviceAccountName, secrets / configmaps, PVC-PV claims, image reference;
+        missing refs surface as pod events (FailedCreate / FailedMount / image-pull messages)
+  - physical_entity_id: PHYSICAL.boutique.paymentservice.pods
+    resource: pods
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: instances — scheduling, creation, startup and health of the containers running this service
+    attributes:
+    - name: app_label
+      description: application label of the pod set (app=paymentservice)
+      public: true
+    - name: phase_status
+      description: pod phase and container states — Running / Pending / CrashLoopBackOff / ImagePullBackOff / ErrImagePull
+        / ContainerCreating (STATUS column of the pods listing)
+    - name: restarts
+      description: container restart count — the first-level liveness symptom; the outlier row among healthy peers
+        (RESTARTS column)
+    - name: last_termination
+      description: last terminated container state — reason + exit code (Error 143 = SIGTERM sent by kubelet; OOMKilled
+        137 = memory limit hit); read from the pod detail
+    - name: node
+      description: node the pod is placed on — placement surface to pair with node state (taints / capacity / cordon);
+        read from the pod detail or pods -o wide
+    - name: events
+      description: 'pod events — the mechanism record: FailedScheduling / FailedCreate / FailedMount / FailedAttachVolume
+        / Unhealthy (probe) / Killing / BackOff / image-pull messages; read from the pod detail Events section'
+  - physical_entity_id: PHYSICAL.boutique.paymentservice.service_endpoints
+    resource: services + endpoints
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: reachability as seen by callers — the Service object and its endpoint binding result
+    attributes:
+    - name: cluster_ip_ports
+      description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
+        connection failures; read from the services listing / service detail
+    - name: selector_match
+      description: label selector → matched pods; a selector matching nothing leaves the endpoints empty
+    - name: endpoints_binding
+      description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
+        'connection refused' logs; read from the endpoints object
+  - physical_entity_id: PHYSICAL.boutique.paymentservice.telemetry
+    resource: alerts + metrics
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
+      (alerts are a symptom pointer: close on object-layer evidence)'
+    attributes:
+    - name: alerts
+      description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
+        with GetAlerts
+    - name: metrics
+      description: metric readings (latency / error / resource usage) present only in performance-manifesting snapshots
+        — read with GetAlerts
+  - physical_entity_id: PHYSICAL.boutique.paymentservice.logs
+    resource: logs
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: application log stream of the service as captured in the snapshot
+    attributes:
+    - name: recent_logs
+      description: recent log lines of paymentservice — routine and abnormal messages; read with GetRecentLogs(service_name=paymentservice)
+    - name: error_logs
+      description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
+        causal narrative surface; read with GetErrorLogs
+  - physical_entity_id: PHYSICAL.boutique.paymentservice.code
+    resource: code artifact
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: trimmed service sources shipped with the snapshot — the source-defect surface (error message → file / function
+      → code evidence)
+    attributes:
+    - name: source_files
+      description: recorded source files of paymentservice — list with ListCodeFiles(service_name=paymentservice)
+    - name: source_code
+      description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
+        delay / missing parameter); read with GetSourceCode
+- logical_entity_id: LOGICAL.boutique.shippingservice
+  biz_name: shippingservice
+  description: Shipping quotes — Go gRPC server (port 50051). Called by frontend and checkoutservice.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.shippingservice.deployment
+    resource: deployments
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references
+    attributes:
+    - name: app_label
+      description: the identifying application label (app=shippingservice) shared by every surface of this service
+      public: true
+    - name: replicas
+      description: desired vs ready replica count (AVAILABLE) — 0/1 means the service is drained; read from the
+        deployments listing or the app YAML
+    - name: probes
+      description: liveness / readiness probe configuration (protocol / port / timing / commands) — a probe that
+        can never succeed restarts containers in a loop; read from the app YAML
+    - name: env_addresses
+      description: downstream call addresses carried as environment variables (host:port of the services this one
+        calls) — the addressing surface for call failures; read from the app YAML
+    - name: config_refs
+      description: referenced objects — serviceAccountName, secrets / configmaps, PVC-PV claims, image reference;
+        missing refs surface as pod events (FailedCreate / FailedMount / image-pull messages)
+  - physical_entity_id: PHYSICAL.boutique.shippingservice.pods
+    resource: pods
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: instances — scheduling, creation, startup and health of the containers running this service
+    attributes:
+    - name: app_label
+      description: application label of the pod set (app=shippingservice)
+      public: true
+    - name: phase_status
+      description: pod phase and container states — Running / Pending / CrashLoopBackOff / ImagePullBackOff / ErrImagePull
+        / ContainerCreating (STATUS column of the pods listing)
+    - name: restarts
+      description: container restart count — the first-level liveness symptom; the outlier row among healthy peers
+        (RESTARTS column)
+    - name: last_termination
+      description: last terminated container state — reason + exit code (Error 143 = SIGTERM sent by kubelet; OOMKilled
+        137 = memory limit hit); read from the pod detail
+    - name: node
+      description: node the pod is placed on — placement surface to pair with node state (taints / capacity / cordon);
+        read from the pod detail or pods -o wide
+    - name: events
+      description: 'pod events — the mechanism record: FailedScheduling / FailedCreate / FailedMount / FailedAttachVolume
+        / Unhealthy (probe) / Killing / BackOff / image-pull messages; read from the pod detail Events section'
+  - physical_entity_id: PHYSICAL.boutique.shippingservice.service_endpoints
+    resource: services + endpoints
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: reachability as seen by callers — the Service object and its endpoint binding result
+    attributes:
+    - name: cluster_ip_ports
+      description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
+        connection failures; read from the services listing / service detail
+    - name: selector_match
+      description: label selector → matched pods; a selector matching nothing leaves the endpoints empty
+    - name: endpoints_binding
+      description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
+        'connection refused' logs; read from the endpoints object
+  - physical_entity_id: PHYSICAL.boutique.shippingservice.telemetry
+    resource: alerts + metrics
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
+      (alerts are a symptom pointer: close on object-layer evidence)'
+    attributes:
+    - name: alerts
+      description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
+        with GetAlerts
+    - name: metrics
+      description: metric readings (latency / error / resource usage) present only in performance-manifesting snapshots
+        — read with GetAlerts
+  - physical_entity_id: PHYSICAL.boutique.shippingservice.logs
+    resource: logs
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: application log stream of the service as captured in the snapshot
+    attributes:
+    - name: recent_logs
+      description: recent log lines of shippingservice — routine and abnormal messages; read with GetRecentLogs(service_name=shippingservice)
+    - name: error_logs
+      description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
+        causal narrative surface; read with GetErrorLogs
+  - physical_entity_id: PHYSICAL.boutique.shippingservice.code
+    resource: code artifact
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: trimmed service sources shipped with the snapshot — the source-defect surface (error message → file / function
+      → code evidence)
+    attributes:
+    - name: source_files
+      description: recorded source files of shippingservice — list with ListCodeFiles(service_name=shippingservice)
+    - name: source_code
+      description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
+        delay / missing parameter); read with GetSourceCode
+- logical_entity_id: LOGICAL.boutique.emailservice
+  biz_name: emailservice
+  description: Order-confirmation email — Python gRPC server (port 5000/8080). Called by checkoutservice.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.emailservice.deployment
+    resource: deployments
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references
+    attributes:
+    - name: app_label
+      description: the identifying application label (app=emailservice) shared by every surface of this service
+      public: true
+    - name: replicas
+      description: desired vs ready replica count (AVAILABLE) — 0/1 means the service is drained; read from the
+        deployments listing or the app YAML
+    - name: probes
+      description: liveness / readiness probe configuration (protocol / port / timing / commands) — a probe that
+        can never succeed restarts containers in a loop; read from the app YAML
+    - name: env_addresses
+      description: downstream call addresses carried as environment variables (host:port of the services this one
+        calls) — the addressing surface for call failures; read from the app YAML
+    - name: config_refs
+      description: referenced objects — serviceAccountName, secrets / configmaps, PVC-PV claims, image reference;
+        missing refs surface as pod events (FailedCreate / FailedMount / image-pull messages)
+  - physical_entity_id: PHYSICAL.boutique.emailservice.pods
+    resource: pods
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: instances — scheduling, creation, startup and health of the containers running this service
+    attributes:
+    - name: app_label
+      description: application label of the pod set (app=emailservice)
+      public: true
+    - name: phase_status
+      description: pod phase and container states — Running / Pending / CrashLoopBackOff / ImagePullBackOff / ErrImagePull
+        / ContainerCreating (STATUS column of the pods listing)
+    - name: restarts
+      description: container restart count — the first-level liveness symptom; the outlier row among healthy peers
+        (RESTARTS column)
+    - name: last_termination
+      description: last terminated container state — reason + exit code (Error 143 = SIGTERM sent by kubelet; OOMKilled
+        137 = memory limit hit); read from the pod detail
+    - name: node
+      description: node the pod is placed on — placement surface to pair with node state (taints / capacity / cordon);
+        read from the pod detail or pods -o wide
+    - name: events
+      description: 'pod events — the mechanism record: FailedScheduling / FailedCreate / FailedMount / FailedAttachVolume
+        / Unhealthy (probe) / Killing / BackOff / image-pull messages; read from the pod detail Events section'
+  - physical_entity_id: PHYSICAL.boutique.emailservice.service_endpoints
+    resource: services + endpoints
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: reachability as seen by callers — the Service object and its endpoint binding result
+    attributes:
+    - name: cluster_ip_ports
+      description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
+        connection failures; read from the services listing / service detail
+    - name: selector_match
+      description: label selector → matched pods; a selector matching nothing leaves the endpoints empty
+    - name: endpoints_binding
+      description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
+        'connection refused' logs; read from the endpoints object
+  - physical_entity_id: PHYSICAL.boutique.emailservice.telemetry
+    resource: alerts + metrics
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
+      (alerts are a symptom pointer: close on object-layer evidence)'
+    attributes:
+    - name: alerts
+      description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
+        with GetAlerts
+    - name: metrics
+      description: metric readings (latency / error / resource usage) present only in performance-manifesting snapshots
+        — read with GetAlerts
+  - physical_entity_id: PHYSICAL.boutique.emailservice.logs
+    resource: logs
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: application log stream of the service as captured in the snapshot
+    attributes:
+    - name: recent_logs
+      description: recent log lines of emailservice — routine and abnormal messages; read with GetRecentLogs(service_name=emailservice)
+    - name: error_logs
+      description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
+        causal narrative surface; read with GetErrorLogs
+  - physical_entity_id: PHYSICAL.boutique.emailservice.code
+    resource: code artifact
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: trimmed service sources shipped with the snapshot — the source-defect surface (error message → file / function
+      → code evidence)
+    attributes:
+    - name: source_files
+      description: recorded source files of emailservice — list with ListCodeFiles(service_name=emailservice)
+    - name: source_code
+      description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
+        delay / missing parameter); read with GetSourceCode
+- logical_entity_id: LOGICAL.boutique.checkoutservice
+  biz_name: checkoutservice
+  description: Checkout orchestration — Go gRPC server (port 5050); places orders by calling productcatalog, shipping,
+    currency, payment, email and cart services in sequence. Called by frontend.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.checkoutservice.deployment
+    resource: deployments
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references
+    attributes:
+    - name: app_label
+      description: the identifying application label (app=checkoutservice) shared by every surface of this service
+      public: true
+    - name: replicas
+      description: desired vs ready replica count (AVAILABLE) — 0/1 means the service is drained; read from the
+        deployments listing or the app YAML
+    - name: probes
+      description: liveness / readiness probe configuration (protocol / port / timing / commands) — a probe that
+        can never succeed restarts containers in a loop; read from the app YAML
+    - name: env_addresses
+      description: downstream call addresses carried as environment variables (host:port of the services this one
+        calls) — the addressing surface for call failures; read from the app YAML
+    - name: config_refs
+      description: referenced objects — serviceAccountName, secrets / configmaps, PVC-PV claims, image reference;
+        missing refs surface as pod events (FailedCreate / FailedMount / image-pull messages)
+  - physical_entity_id: PHYSICAL.boutique.checkoutservice.pods
+    resource: pods
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: instances — scheduling, creation, startup and health of the containers running this service
+    attributes:
+    - name: app_label
+      description: application label of the pod set (app=checkoutservice)
+      public: true
+    - name: phase_status
+      description: pod phase and container states — Running / Pending / CrashLoopBackOff / ImagePullBackOff / ErrImagePull
+        / ContainerCreating (STATUS column of the pods listing)
+    - name: restarts
+      description: container restart count — the first-level liveness symptom; the outlier row among healthy peers
+        (RESTARTS column)
+    - name: last_termination
+      description: last terminated container state — reason + exit code (Error 143 = SIGTERM sent by kubelet; OOMKilled
+        137 = memory limit hit); read from the pod detail
+    - name: node
+      description: node the pod is placed on — placement surface to pair with node state (taints / capacity / cordon);
+        read from the pod detail or pods -o wide
+    - name: events
+      description: 'pod events — the mechanism record: FailedScheduling / FailedCreate / FailedMount / FailedAttachVolume
+        / Unhealthy (probe) / Killing / BackOff / image-pull messages; read from the pod detail Events section'
+  - physical_entity_id: PHYSICAL.boutique.checkoutservice.service_endpoints
+    resource: services + endpoints
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: reachability as seen by callers — the Service object and its endpoint binding result
+    attributes:
+    - name: cluster_ip_ports
+      description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
+        connection failures; read from the services listing / service detail
+    - name: selector_match
+      description: label selector → matched pods; a selector matching nothing leaves the endpoints empty
+    - name: endpoints_binding
+      description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
+        'connection refused' logs; read from the endpoints object
+  - physical_entity_id: PHYSICAL.boutique.checkoutservice.telemetry
+    resource: alerts + metrics
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
+      (alerts are a symptom pointer: close on object-layer evidence)'
+    attributes:
+    - name: alerts
+      description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
+        with GetAlerts
+    - name: metrics
+      description: metric readings (latency / error / resource usage) present only in performance-manifesting snapshots
+        — read with GetAlerts
+  - physical_entity_id: PHYSICAL.boutique.checkoutservice.logs
+    resource: logs
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: application log stream of the service as captured in the snapshot
+    attributes:
+    - name: recent_logs
+      description: recent log lines of checkoutservice — routine and abnormal messages; read with GetRecentLogs(service_name=checkoutservice)
+    - name: error_logs
+      description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
+        causal narrative surface; read with GetErrorLogs
+  - physical_entity_id: PHYSICAL.boutique.checkoutservice.code
+    resource: code artifact
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: trimmed service sources shipped with the snapshot — the source-defect surface (error message → file / function
+      → code evidence)
+    attributes:
+    - name: source_files
+      description: recorded source files of checkoutservice — list with ListCodeFiles(service_name=checkoutservice)
+    - name: source_code
+      description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
+        delay / missing parameter); read with GetSourceCode
+- logical_entity_id: LOGICAL.boutique.recommendationservice
+  biz_name: recommendationservice
+  description: Product recommendations — Python gRPC server (port 8080); derives recommendations from the product
+    catalog. Called by frontend.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.recommendationservice.deployment
+    resource: deployments
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references
+    attributes:
+    - name: app_label
+      description: the identifying application label (app=recommendationservice) shared by every surface of this
+        service
+      public: true
+    - name: replicas
+      description: desired vs ready replica count (AVAILABLE) — 0/1 means the service is drained; read from the
+        deployments listing or the app YAML
+    - name: probes
+      description: liveness / readiness probe configuration (protocol / port / timing / commands) — a probe that
+        can never succeed restarts containers in a loop; read from the app YAML
+    - name: env_addresses
+      description: downstream call addresses carried as environment variables (host:port of the services this one
+        calls) — the addressing surface for call failures; read from the app YAML
+    - name: config_refs
+      description: referenced objects — serviceAccountName, secrets / configmaps, PVC-PV claims, image reference;
+        missing refs surface as pod events (FailedCreate / FailedMount / image-pull messages)
+  - physical_entity_id: PHYSICAL.boutique.recommendationservice.pods
+    resource: pods
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: instances — scheduling, creation, startup and health of the containers running this service
+    attributes:
+    - name: app_label
+      description: application label of the pod set (app=recommendationservice)
+      public: true
+    - name: phase_status
+      description: pod phase and container states — Running / Pending / CrashLoopBackOff / ImagePullBackOff / ErrImagePull
+        / ContainerCreating (STATUS column of the pods listing)
+    - name: restarts
+      description: container restart count — the first-level liveness symptom; the outlier row among healthy peers
+        (RESTARTS column)
+    - name: last_termination
+      description: last terminated container state — reason + exit code (Error 143 = SIGTERM sent by kubelet; OOMKilled
+        137 = memory limit hit); read from the pod detail
+    - name: node
+      description: node the pod is placed on — placement surface to pair with node state (taints / capacity / cordon);
+        read from the pod detail or pods -o wide
+    - name: events
+      description: 'pod events — the mechanism record: FailedScheduling / FailedCreate / FailedMount / FailedAttachVolume
+        / Unhealthy (probe) / Killing / BackOff / image-pull messages; read from the pod detail Events section'
+  - physical_entity_id: PHYSICAL.boutique.recommendationservice.service_endpoints
+    resource: services + endpoints
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: reachability as seen by callers — the Service object and its endpoint binding result
+    attributes:
+    - name: cluster_ip_ports
+      description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
+        connection failures; read from the services listing / service detail
+    - name: selector_match
+      description: label selector → matched pods; a selector matching nothing leaves the endpoints empty
+    - name: endpoints_binding
+      description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
+        'connection refused' logs; read from the endpoints object
+  - physical_entity_id: PHYSICAL.boutique.recommendationservice.telemetry
+    resource: alerts + metrics
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
+      (alerts are a symptom pointer: close on object-layer evidence)'
+    attributes:
+    - name: alerts
+      description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
+        with GetAlerts
+    - name: metrics
+      description: metric readings (latency / error / resource usage) present only in performance-manifesting snapshots
+        — read with GetAlerts
+  - physical_entity_id: PHYSICAL.boutique.recommendationservice.logs
+    resource: logs
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: application log stream of the service as captured in the snapshot
+    attributes:
+    - name: recent_logs
+      description: recent log lines of recommendationservice — routine and abnormal messages; read with GetRecentLogs(service_name=recommendationservice)
+    - name: error_logs
+      description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
+        causal narrative surface; read with GetErrorLogs
+  - physical_entity_id: PHYSICAL.boutique.recommendationservice.code
+    resource: code artifact
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: trimmed service sources shipped with the snapshot — the source-defect surface (error message → file / function
+      → code evidence)
+    attributes:
+    - name: source_files
+      description: recorded source files of recommendationservice — list with ListCodeFiles(service_name=recommendationservice)
+    - name: source_code
+      description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
+        delay / missing parameter); read with GetSourceCode
+- logical_entity_id: LOGICAL.boutique.adservice
+  biz_name: adservice
+  description: Contextual ads — Java gRPC server (port 9555, gRPC-only port). Leaf service (calls nothing). Called
+    by frontend.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.adservice.deployment
+    resource: deployments
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references
+    attributes:
+    - name: app_label
+      description: the identifying application label (app=adservice) shared by every surface of this service
+      public: true
+    - name: replicas
+      description: desired vs ready replica count (AVAILABLE) — 0/1 means the service is drained; read from the
+        deployments listing or the app YAML
+    - name: probes
+      description: liveness / readiness probe configuration (protocol / port / timing / commands) — a probe that
+        can never succeed restarts containers in a loop; read from the app YAML
+    - name: env_addresses
+      description: downstream call addresses carried as environment variables (host:port of the services this one
+        calls) — the addressing surface for call failures; read from the app YAML
+    - name: config_refs
+      description: referenced objects — serviceAccountName, secrets / configmaps, PVC-PV claims, image reference;
+        missing refs surface as pod events (FailedCreate / FailedMount / image-pull messages)
+  - physical_entity_id: PHYSICAL.boutique.adservice.pods
+    resource: pods
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: instances — scheduling, creation, startup and health of the containers running this service
+    attributes:
+    - name: app_label
+      description: application label of the pod set (app=adservice)
+      public: true
+    - name: phase_status
+      description: pod phase and container states — Running / Pending / CrashLoopBackOff / ImagePullBackOff / ErrImagePull
+        / ContainerCreating (STATUS column of the pods listing)
+    - name: restarts
+      description: container restart count — the first-level liveness symptom; the outlier row among healthy peers
+        (RESTARTS column)
+    - name: last_termination
+      description: last terminated container state — reason + exit code (Error 143 = SIGTERM sent by kubelet; OOMKilled
+        137 = memory limit hit); read from the pod detail
+    - name: node
+      description: node the pod is placed on — placement surface to pair with node state (taints / capacity / cordon);
+        read from the pod detail or pods -o wide
+    - name: events
+      description: 'pod events — the mechanism record: FailedScheduling / FailedCreate / FailedMount / FailedAttachVolume
+        / Unhealthy (probe) / Killing / BackOff / image-pull messages; read from the pod detail Events section'
+  - physical_entity_id: PHYSICAL.boutique.adservice.service_endpoints
+    resource: services + endpoints
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: reachability as seen by callers — the Service object and its endpoint binding result
+    attributes:
+    - name: cluster_ip_ports
+      description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
+        connection failures; read from the services listing / service detail
+    - name: selector_match
+      description: label selector → matched pods; a selector matching nothing leaves the endpoints empty
+    - name: endpoints_binding
+      description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
+        'connection refused' logs; read from the endpoints object
+  - physical_entity_id: PHYSICAL.boutique.adservice.telemetry
+    resource: alerts + metrics
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
+      (alerts are a symptom pointer: close on object-layer evidence)'
+    attributes:
+    - name: alerts
+      description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
+        with GetAlerts
+    - name: metrics
+      description: metric readings (latency / error / resource usage) present only in performance-manifesting snapshots
+        — read with GetAlerts
+  - physical_entity_id: PHYSICAL.boutique.adservice.logs
+    resource: logs
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: application log stream of the service as captured in the snapshot
+    attributes:
+    - name: recent_logs
+      description: recent log lines of adservice — routine and abnormal messages; read with GetRecentLogs(service_name=adservice)
+    - name: error_logs
+      description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
+        causal narrative surface; read with GetErrorLogs
+  - physical_entity_id: PHYSICAL.boutique.adservice.code
+    resource: code artifact
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: trimmed service sources shipped with the snapshot — the source-defect surface (error message → file / function
+      → code evidence)
+    attributes:
+    - name: source_files
+      description: recorded source files of adservice — list with ListCodeFiles(service_name=adservice)
+    - name: source_code
+      description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
+        delay / missing parameter); read with GetSourceCode
+- logical_entity_id: LOGICAL.boutique.redis-cart
+  biz_name: redis-cart
+  description: In-memory cart database — Redis (port 6379); the cart store behind cartservice. Leaf database service.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.redis-cart.deployment
+    resource: deployments
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: desired state of the service — replicas, pod template (image / probes / ports), service account and config
+      references
+    attributes:
+    - name: app_label
+      description: the identifying application label (app=redis-cart) shared by every surface of this service
+      public: true
+    - name: replicas
+      description: desired vs ready replica count (AVAILABLE) — 0/1 means the service is drained; read from the
+        deployments listing or the app YAML
+    - name: probes
+      description: liveness / readiness probe configuration (protocol / port / timing / commands) — a probe that
+        can never succeed restarts containers in a loop; read from the app YAML
+    - name: env_addresses
+      description: downstream call addresses carried as environment variables (host:port of the services this one
+        calls) — the addressing surface for call failures; read from the app YAML
+    - name: config_refs
+      description: referenced objects — serviceAccountName, secrets / configmaps, PVC-PV claims, image reference;
+        missing refs surface as pod events (FailedCreate / FailedMount / image-pull messages)
+  - physical_entity_id: PHYSICAL.boutique.redis-cart.pods
+    resource: pods
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: instances — scheduling, creation, startup and health of the containers running this service
+    attributes:
+    - name: app_label
+      description: application label of the pod set (app=redis-cart)
+      public: true
+    - name: phase_status
+      description: pod phase and container states — Running / Pending / CrashLoopBackOff / ImagePullBackOff / ErrImagePull
+        / ContainerCreating (STATUS column of the pods listing)
+    - name: restarts
+      description: container restart count — the first-level liveness symptom; the outlier row among healthy peers
+        (RESTARTS column)
+    - name: last_termination
+      description: last terminated container state — reason + exit code (Error 143 = SIGTERM sent by kubelet; OOMKilled
+        137 = memory limit hit); read from the pod detail
+    - name: node
+      description: node the pod is placed on — placement surface to pair with node state (taints / capacity / cordon);
+        read from the pod detail or pods -o wide
+    - name: events
+      description: 'pod events — the mechanism record: FailedScheduling / FailedCreate / FailedMount / FailedAttachVolume
+        / Unhealthy (probe) / Killing / BackOff / image-pull messages; read from the pod detail Events section'
+  - physical_entity_id: PHYSICAL.boutique.redis-cart.service_endpoints
+    resource: services + endpoints
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: reachability as seen by callers — the Service object and its endpoint binding result
+    attributes:
+    - name: cluster_ip_ports
+      description: ClusterIP and port mapping (port → targetPort → protocol) — a wrong mapping leaves callers with
+        connection failures; read from the services listing / service detail
+    - name: selector_match
+      description: label selector → matched pods; a selector matching nothing leaves the endpoints empty
+    - name: endpoints_binding
+      description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
+        'connection refused' logs; read from the endpoints object
+  - physical_entity_id: PHYSICAL.boutique.redis-cart.telemetry
+    resource: alerts + metrics
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: 'anomaly signals — self-describing alerts and, when the snapshot carries them, performance metric series
+      (alerts are a symptom pointer: close on object-layer evidence)'
+    attributes:
+    - name: alerts
+      description: active alerts naming entity and anomaly class (e.g. latency percentiles before → after) — read
+        with GetAlerts
+    - name: metrics
+      description: metric readings (latency / error / resource usage) present only in performance-manifesting snapshots
+        — read with GetAlerts
+  - physical_entity_id: PHYSICAL.boutique.redis-cart.logs
+    resource: logs
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: application log stream of the service as captured in the snapshot
+    attributes:
+    - name: recent_logs
+      description: recent log lines of redis-cart — routine and abnormal messages; read with GetRecentLogs(service_name=redis-cart)
+    - name: error_logs
+      description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
+        causal narrative surface; read with GetErrorLogs
+  - physical_entity_id: PHYSICAL.boutique.redis-cart.code
+    resource: code artifact
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: trimmed service sources shipped with the snapshot — the source-defect surface (error message → file / function
+      → code evidence)
+    attributes:
+    - name: source_files
+      description: recorded source files of redis-cart — list with ListCodeFiles(service_name=redis-cart)
+    - name: source_code
+      description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
+        delay / missing parameter); read with GetSourceCode
+- logical_entity_id: LOGICAL.boutique.node.master
+  biz_name: master
+  description: Kubernetes node master of the boutique cluster — a placement target with its own runtime services;
+    hosts service pods and can itself be the fault object (node-side faults).
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.node.master.node
+    resource: nodes
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: the node object — placement-related state
+    attributes:
+    - name: node_name
+      description: node identity (master)
+      public: true
+    - name: conditions
+      description: Ready / MemoryPressure / DiskPressure / PIDPressure condition rows
+    - name: taints_labels
+      description: taints and labels — what the scheduler filters on; node affinity / selector mismatches show here
+    - name: capacity_allocatable
+      description: CPU / memory capacity vs allocatable — insufficient capacity blocks scheduling
+    - name: unschedulable
+      description: cordoned (Unschedulable) flag — a cordoned node receives no new pods; read from the node listing
+        / cluster configuration
+  - physical_entity_id: PHYSICAL.boutique.node.master.node_services
+    resource: node runtime services
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: node-internal mechanisms — systemd services on the node (why pods on this node cannot run)
+    attributes:
+    - name: kubelet
+      description: kubelet status (active/inactive) — kubelet down breaks the node's pod lifecycle
+    - name: containerd
+      description: container runtime status (active/inactive) — a dead containerd stops all container operations
+        on the node
+    - name: kube_proxy
+      description: kube-proxy status — forwarding rules for service traffic
+    - name: kube_scheduler
+      description: kube-scheduler status (master-side) — where scheduling is decided; read with CheckNodeServiceStatus(node_name,
+        service_name)
+- logical_entity_id: LOGICAL.boutique.node.worker-01
+  biz_name: worker-01
+  description: Kubernetes node worker-01 of the boutique cluster — a placement target with its own runtime services;
+    hosts service pods and can itself be the fault object (node-side faults).
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.node.worker-01.node
+    resource: nodes
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: the node object — placement-related state
+    attributes:
+    - name: node_name
+      description: node identity (worker-01)
+      public: true
+    - name: conditions
+      description: Ready / MemoryPressure / DiskPressure / PIDPressure condition rows
+    - name: taints_labels
+      description: taints and labels — what the scheduler filters on; node affinity / selector mismatches show here
+    - name: capacity_allocatable
+      description: CPU / memory capacity vs allocatable — insufficient capacity blocks scheduling
+    - name: unschedulable
+      description: cordoned (Unschedulable) flag — a cordoned node receives no new pods; read from the node listing
+        / cluster configuration
+  - physical_entity_id: PHYSICAL.boutique.node.worker-01.node_services
+    resource: node runtime services
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: node-internal mechanisms — systemd services on the node (why pods on this node cannot run)
+    attributes:
+    - name: kubelet
+      description: kubelet status (active/inactive) — kubelet down breaks the node's pod lifecycle
+    - name: containerd
+      description: container runtime status (active/inactive) — a dead containerd stops all container operations
+        on the node
+    - name: kube_proxy
+      description: kube-proxy status — forwarding rules for service traffic
+    - name: kube_scheduler
+      description: kube-scheduler status (master-side) — where scheduling is decided; read with CheckNodeServiceStatus(node_name,
+        service_name)
+- logical_entity_id: LOGICAL.boutique.node.worker-02
+  biz_name: worker-02
+  description: Kubernetes node worker-02 of the boutique cluster — a placement target with its own runtime services;
+    hosts service pods and can itself be the fault object (node-side faults).
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.node.worker-02.node
+    resource: nodes
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: the node object — placement-related state
+    attributes:
+    - name: node_name
+      description: node identity (worker-02)
+      public: true
+    - name: conditions
+      description: Ready / MemoryPressure / DiskPressure / PIDPressure condition rows
+    - name: taints_labels
+      description: taints and labels — what the scheduler filters on; node affinity / selector mismatches show here
+    - name: capacity_allocatable
+      description: CPU / memory capacity vs allocatable — insufficient capacity blocks scheduling
+    - name: unschedulable
+      description: cordoned (Unschedulable) flag — a cordoned node receives no new pods; read from the node listing
+        / cluster configuration
+  - physical_entity_id: PHYSICAL.boutique.node.worker-02.node_services
+    resource: node runtime services
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: node-internal mechanisms — systemd services on the node (why pods on this node cannot run)
+    attributes:
+    - name: kubelet
+      description: kubelet status (active/inactive) — kubelet down breaks the node's pod lifecycle
+    - name: containerd
+      description: container runtime status (active/inactive) — a dead containerd stops all container operations
+        on the node
+    - name: kube_proxy
+      description: kube-proxy status — forwarding rules for service traffic
+    - name: kube_scheduler
+      description: kube-scheduler status (master-side) — where scheduling is decided; read with CheckNodeServiceStatus(node_name,
+        service_name)
+- logical_entity_id: LOGICAL.boutique.node.worker-03
+  biz_name: worker-03
+  description: Kubernetes node worker-03 of the boutique cluster — a placement target with its own runtime services;
+    hosts service pods and can itself be the fault object (node-side faults).
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.node.worker-03.node
+    resource: nodes
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: the node object — placement-related state
+    attributes:
+    - name: node_name
+      description: node identity (worker-03)
+      public: true
+    - name: conditions
+      description: Ready / MemoryPressure / DiskPressure / PIDPressure condition rows
+    - name: taints_labels
+      description: taints and labels — what the scheduler filters on; node affinity / selector mismatches show here
+    - name: capacity_allocatable
+      description: CPU / memory capacity vs allocatable — insufficient capacity blocks scheduling
+    - name: unschedulable
+      description: cordoned (Unschedulable) flag — a cordoned node receives no new pods; read from the node listing
+        / cluster configuration
+  - physical_entity_id: PHYSICAL.boutique.node.worker-03.node_services
+    resource: node runtime services
+    A:
+      cardinality: 1:N
+      key: app_label
+    R: null
+    S: node-internal mechanisms — systemd services on the node (why pods on this node cannot run)
+    attributes:
+    - name: kubelet
+      description: kubelet status (active/inactive) — kubelet down breaks the node's pod lifecycle
+    - name: containerd
+      description: container runtime status (active/inactive) — a dead containerd stops all container operations
+        on the node
+    - name: kube_proxy
+      description: kube-proxy status — forwarding rules for service traffic
+    - name: kube_scheduler
+      description: kube-scheduler status (master-side) — where scheduling is decided; read with CheckNodeServiceStatus(node_name,
+        service_name)
+- logical_entity_id: LOGICAL.boutique.namespace
+  biz_name: boutique namespace
+  description: 'The boutique namespace — the scope of the system: admission objects (service accounts, RBAC, quotas,
+    network policies) and referenced config storage live here; namespace-level faults block object creation or traffic
+    wholesale.'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.namespace.serviceaccounts
+    resource: serviceaccounts
+    A:
+      cardinality: 1:N
+      key: namespace
+    R: null
+    S: service accounts referenced by workload specs — creation admission surface
+    attributes:
+    - name: serviceaccounts
+      description: 'existing service accounts; a spec referencing a missing one fails pod creation (FailedCreate:
+        serviceaccount not found)'
+  - physical_entity_id: PHYSICAL.boutique.namespace.rolebindings
+    resource: rolebindings
+    A:
+      cardinality: 1:N
+      key: namespace
+    R: null
+    S: RBAC bindings — creation permission surface
+    attributes:
+    - name: rolebindings
+      description: role bindings in the namespace; missing bindings surface as FailedCreate (forbidden) on pods
+  - physical_entity_id: PHYSICAL.boutique.namespace.resourcequotas
+    resource: resourcequota
+    A:
+      cardinality: 1:N
+      key: namespace
+    R: null
+    S: namespace quota limits — creation admission surface
+    attributes:
+    - name: hard_used
+      description: quota hard limits vs used — exceeded CPU / memory / pod / service / storage quota blocks new
+        objects (FailedCreate with quota message)
+  - physical_entity_id: PHYSICAL.boutique.namespace.networkpolicies
+    resource: networkpolicies
+    A:
+      cardinality: 1:N
+      key: namespace
+    R: null
+    S: traffic permission surface
+    attributes:
+    - name: networkpolicies
+      description: pod-selector traffic rules — a policy matching the service can silently drop callers' traffic
+  - physical_entity_id: PHYSICAL.boutique.namespace.config_objects
+    resource: configmaps + secrets + pvc/pv
+    A:
+      cardinality: 1:N
+      key: namespace
+    R: null
+    S: referenced config storage — existence and bindability surface
+    attributes:
+    - name: configmaps_secrets
+      description: configmaps and secrets present in the namespace — missing entries surface as FailedMount / CreateContainerConfigError
+    - name: volumes
+      description: PVC / PV / StorageClass bindability — mismatched selector / class / access mode / capacity leaves
+        claims Pending
+pas_relations:
+- relation_id: LOGICAL.boutique.frontend_TO_LOGICAL.boutique.adservice
+  relation_name: Calls
+  P:
+    forward:
+      verb: calls
+      cardinality: 1:N
+    reverse:
+      verb: called by
+      cardinality: 1:N
+  A: app_label
+  S: frontend → adservice — call edge of the boutique topology (from the snapshot's service dependency graph); address
+    carried in env/DNS (see frontend's env_addresses).
+- relation_id: LOGICAL.boutique.frontend_TO_LOGICAL.boutique.recommendationservice
+  relation_name: Calls
+  P:
+    forward:
+      verb: calls
+      cardinality: 1:N
+    reverse:
+      verb: called by
+      cardinality: 1:N
+  A: app_label
+  S: frontend → recommendationservice — call edge of the boutique topology (from the snapshot's service dependency
+    graph); address carried in env/DNS (see frontend's env_addresses).
+- relation_id: LOGICAL.boutique.frontend_TO_LOGICAL.boutique.productcatalogservice
+  relation_name: Calls
+  P:
+    forward:
+      verb: calls
+      cardinality: 1:N
+    reverse:
+      verb: called by
+      cardinality: 1:N
+  A: app_label
+  S: frontend → productcatalogservice — call edge of the boutique topology (from the snapshot's service dependency
+    graph); address carried in env/DNS (see frontend's env_addresses).
+- relation_id: LOGICAL.boutique.frontend_TO_LOGICAL.boutique.checkoutservice
+  relation_name: Calls
+  P:
+    forward:
+      verb: calls
+      cardinality: 1:N
+    reverse:
+      verb: called by
+      cardinality: 1:N
+  A: app_label
+  S: frontend → checkoutservice — call edge of the boutique topology (from the snapshot's service dependency graph);
+    address carried in env/DNS (see frontend's env_addresses).
+- relation_id: LOGICAL.boutique.frontend_TO_LOGICAL.boutique.shippingservice
+  relation_name: Calls
+  P:
+    forward:
+      verb: calls
+      cardinality: 1:N
+    reverse:
+      verb: called by
+      cardinality: 1:N
+  A: app_label
+  S: frontend → shippingservice — call edge of the boutique topology (from the snapshot's service dependency graph);
+    address carried in env/DNS (see frontend's env_addresses).
+- relation_id: LOGICAL.boutique.frontend_TO_LOGICAL.boutique.cartservice
+  relation_name: Calls
+  P:
+    forward:
+      verb: calls
+      cardinality: 1:N
+    reverse:
+      verb: called by
+      cardinality: 1:N
+  A: app_label
+  S: frontend → cartservice — call edge of the boutique topology (from the snapshot's service dependency graph);
+    address carried in env/DNS (see frontend's env_addresses).
+- relation_id: LOGICAL.boutique.frontend_TO_LOGICAL.boutique.currencyservice
+  relation_name: Calls
+  P:
+    forward:
+      verb: calls
+      cardinality: 1:N
+    reverse:
+      verb: called by
+      cardinality: 1:N
+  A: app_label
+  S: frontend → currencyservice — call edge of the boutique topology (from the snapshot's service dependency graph);
+    address carried in env/DNS (see frontend's env_addresses).
+- relation_id: LOGICAL.boutique.recommendationservice_TO_LOGICAL.boutique.productcatalogservice
+  relation_name: Calls
+  P:
+    forward:
+      verb: calls
+      cardinality: 1:N
+    reverse:
+      verb: called by
+      cardinality: 1:N
+  A: app_label
+  S: recommendationservice → productcatalogservice — call edge of the boutique topology (from the snapshot's service
+    dependency graph); address carried in env/DNS (see recommendationservice's env_addresses).
+- relation_id: LOGICAL.boutique.checkoutservice_TO_LOGICAL.boutique.productcatalogservice
+  relation_name: Calls
+  P:
+    forward:
+      verb: calls
+      cardinality: 1:N
+    reverse:
+      verb: called by
+      cardinality: 1:N
+  A: app_label
+  S: checkoutservice → productcatalogservice — call edge of the boutique topology (from the snapshot's service dependency
+    graph); address carried in env/DNS (see checkoutservice's env_addresses).
+- relation_id: LOGICAL.boutique.checkoutservice_TO_LOGICAL.boutique.shippingservice
+  relation_name: Calls
+  P:
+    forward:
+      verb: calls
+      cardinality: 1:N
+    reverse:
+      verb: called by
+      cardinality: 1:N
+  A: app_label
+  S: checkoutservice → shippingservice — call edge of the boutique topology (from the snapshot's service dependency
+    graph); address carried in env/DNS (see checkoutservice's env_addresses).
+- relation_id: LOGICAL.boutique.checkoutservice_TO_LOGICAL.boutique.currencyservice
+  relation_name: Calls
+  P:
+    forward:
+      verb: calls
+      cardinality: 1:N
+    reverse:
+      verb: called by
+      cardinality: 1:N
+  A: app_label
+  S: checkoutservice → currencyservice — call edge of the boutique topology (from the snapshot's service dependency
+    graph); address carried in env/DNS (see checkoutservice's env_addresses).
+- relation_id: LOGICAL.boutique.checkoutservice_TO_LOGICAL.boutique.paymentservice
+  relation_name: Calls
+  P:
+    forward:
+      verb: calls
+      cardinality: 1:N
+    reverse:
+      verb: called by
+      cardinality: 1:N
+  A: app_label
+  S: checkoutservice → paymentservice — call edge of the boutique topology (from the snapshot's service dependency
+    graph); address carried in env/DNS (see checkoutservice's env_addresses).
+- relation_id: LOGICAL.boutique.checkoutservice_TO_LOGICAL.boutique.emailservice
+  relation_name: Calls
+  P:
+    forward:
+      verb: calls
+      cardinality: 1:N
+    reverse:
+      verb: called by
+      cardinality: 1:N
+  A: app_label
+  S: checkoutservice → emailservice — call edge of the boutique topology (from the snapshot's service dependency
+    graph); address carried in env/DNS (see checkoutservice's env_addresses).
+- relation_id: LOGICAL.boutique.checkoutservice_TO_LOGICAL.boutique.cartservice
+  relation_name: Calls
+  P:
+    forward:
+      verb: calls
+      cardinality: 1:N
+    reverse:
+      verb: called by
+      cardinality: 1:N
+  A: app_label
+  S: checkoutservice → cartservice — call edge of the boutique topology (from the snapshot's service dependency
+    graph); address carried in env/DNS (see checkoutservice's env_addresses).
+- relation_id: LOGICAL.boutique.cartservice_TO_LOGICAL.boutique.redis-cart
+  relation_name: Calls
+  P:
+    forward:
+      verb: calls
+      cardinality: 1:N
+    reverse:
+      verb: called by
+      cardinality: 1:N
+  A: app_label
+  S: cartservice → redis-cart — call edge of the boutique topology (from the snapshot's service dependency graph);
+    address carried in env/DNS (see cartservice's env_addresses).
