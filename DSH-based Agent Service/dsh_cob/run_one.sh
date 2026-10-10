@@ -52,14 +52,19 @@ cat "$HERE/AGENTS.md" > "$INSTRUCT"
   printf '\n---\n\n## 答案契约（Cloud-OpsBench 原文，逐字附上）\n\n'
   (cd "$COB_DIR/agents/cloudops_agent" && "$PY" -c "from runtime.contracts import build_expected_output; print(build_expected_output('$SYS'))")
   printf '\n---\n\n'
-  printf '**提交方式（本环境适配）**：本组合没有 `Submit` 工具——把你要提交给 `Submit` 的 Action Input 原文（上面规定格式的 JSON 对象）作为**最终回答**输出，用 ```json 代码块包裹；这是最后一步，输出后不要再调用任何工具。\n'
+  printf '**提交方式（本环境适配，硬性）**：本组合没有 `Submit` 工具——上面契约中「Submit 的 Action Input」= 你的**最终回答**。最终回答**必须以一个 ```json 代码块收尾**，代码块内容 = 契约规定格式的 JSON 对象（`key_evidence_summary` + `top_3_predictions` 三条，字段名逐字）；诊断报告正文写在代码块之前。**没有这个 JSON 代码块 = 交付失败。**\n'
 } >> "$INSTRUCT"
 
 # ── 基准诊断 MCP：端口预检 → 后台起 → 就绪等待（trap 收尸）──
+# 注：探测一律用 netstat 判 LISTENING——**不要用 curl 探 /mcp**：GET /mcp 是长挂 SSE 流，
+# curl 会拿到 200 后一直等（-m 超时），「curl 不通」并不等于端口空闲（踩过）。
 BENCH_PORT="${COB_MCP_PORT:-8000}"
 BENCH_URL="${COB_MCP_URL:-http://127.0.0.1:$BENCH_PORT/mcp}"
-if curl -s -o /dev/null -m 2 "http://127.0.0.1:$BENCH_PORT/mcp"; then
-  echo "[ERR] 端口 $BENCH_PORT 已有服务在听——先停掉（多为上一题未收尸的基准 MCP）" >&2
+port_pid() { netstat -ano 2>/dev/null | grep -E "TCP +127\.0\.0\.1:${BENCH_PORT} +0\.0\.0\.0:0 +LISTENING" | awk '{print $NF}' | head -1; }
+
+BUSY="$(port_pid)"
+if [ -n "$BUSY" ]; then
+  echo "[ERR] 端口 $BENCH_PORT 已被 PID $BUSY 占用（多为上一题未收尸的基准 MCP）——先收尸: taskkill //PID $BUSY //F" >&2
   exit 3
 fi
 
@@ -74,21 +79,36 @@ CLOUDOPSBENCH_TRACE_PATH="$RUN_DIR/mcp.jsonl" \
 BENCH_PID=$!
 popd >/dev/null
 
-cleanup() { kill "$BENCH_PID" 2>/dev/null; }
+# 收尸双保险：MSYS kill 直杀子进程 + taskkill 按监听 PID 兜底（MSYS kill 有时落不到原生 python）
+BENCH_WIN_PID=""
+cleanup() {
+  kill "$BENCH_PID" 2>/dev/null
+  [ -n "$BENCH_WIN_PID" ] && taskkill //PID "$BENCH_WIN_PID" //F >/dev/null 2>&1
+  return 0
+}
 trap cleanup EXIT
 
+# 就绪：等 LISTENING（顺带拿监听 PID 备收尸；T-核对是 python，防误杀他人）
 for i in $(seq 1 20); do
   sleep 1
-  curl -s -o /dev/null -m 2 "$BENCH_URL" && break
+  BENCH_WIN_PID="$(port_pid)"
+  [ -n "$BENCH_WIN_PID" ] && break
 done
+if [ -n "$BENCH_WIN_PID" ] && ! tasklist //FI "PID eq $BENCH_WIN_PID" 2>/dev/null | grep -qi "python.exe"; then
+  BENCH_WIN_PID=""   # 监听者不是本次起的 python（理论竞态）→ 不 taskkill
+fi
 
 # ── 双 MCP 预检（SKIP_PRECHECK=1 跳过——批跑时预检一次就够）──
 MCP_URL="${TSM_MCP_URL:-http://127.0.0.1:28796/mcp}"
 if [ "${SKIP_PRECHECK:-0}" != "1" ]; then
   (cd "$TSM_DIR" && npx tsx src/verify/precheck.ts "$MCP_URL") \
     || { echo "[ERR] COB 语义后端不可达: $MCP_URL —— 先跑 dsh_cob/scripts/start_backend.sh" >&2; exit 4; }
-  (cd "$TSM_DIR" && npx tsx src/verify/precheck.ts "$BENCH_URL") \
-    || { echo "[ERR] 基准诊断 MCP 不可达: $BENCH_URL（见 $RUN_DIR/bench_mcp.log）" >&2; exit 5; }
+  BENCH_OK=0
+  for t in 1 2 3; do
+    (cd "$TSM_DIR" && npx tsx src/verify/precheck.ts "$BENCH_URL") && { BENCH_OK=1; break; }
+    sleep 2
+  done
+  [ "$BENCH_OK" = 1 ] || { echo "[ERR] 基准诊断 MCP 不可达: $BENCH_URL（见 $RUN_DIR/bench_mcp.log）" >&2; exit 5; }
 fi
 
 # ── 凭据 + $DSH_HOME（与 dsh_dlr 同心智：会话日志可取证可删）──
