@@ -304,6 +304,29 @@
             if (!res.ok) throw new Error('HTTP ' + res.status);
             const data = await res.json();
 
+            // dlr-state（非数据库形态）：整页切换为状态空间渲染
+            if (data.kind === 'dlr-state') {
+                SemanticVis.state.mode = 'state';
+                SemanticVis.state.stateData = data;
+                const h1 = document.querySelector('.header h1');
+                if (h1) h1.textContent = 'TSM 状态空间图谱（' + (data.scenario || 'dlr-state') + '）';
+                const stats = document.getElementById('stats');
+                if (data.shape === 'entities') {
+                    const les = data.logical_entities || [];
+                    const n = (k) => les.filter(e => e.kind === k).length;
+                    stats.textContent = '服务:' + n('service') + ' | 节点:' + n('node') + ' | 命名空间:' + n('namespace') +
+                        ' | 观测面(PE):' + (data.physical_entities || []).length +
+                        ' | 调用(PAS):' + (data.pas_relations || []).length;
+                } else {
+                    stats.textContent =
+                        'LE:' + (data.logical_entities || []).length +
+                        ' | PE:' + (data.physical_entities || []).length +
+                        ' | 关系:' + (data.relations || []).length +
+                        ' | 症状切片:' + (data.slices || []).length;
+                }
+                return true;
+            }
+
             // LE — 直接可用
             SemanticVis.state.logicalEntities = data.logical_entities || [];
 
@@ -1127,8 +1150,287 @@
         }
     }
 
+    // ── dlr-state 渲染（实体 / 关系即节点 / 症状切片；仿 dlr 版交互）──────
+    function initStateNetwork() {
+        if (typeof vis === 'undefined') {
+            document.getElementById('stats').textContent = 'vis.js加载失败';
+            return;
+        }
+        const d = SemanticVis.state.stateData || {};
+        if (d.shape === 'entities') { initStateV2Network(d); return; }
+        const CONST = SemanticVis.CONST;
+        const nodes = [];
+        const edges = [];
+        // 长文本折行（vis label 支持 \n）
+        const wrap = (s, n) => {
+            s = String(s || '');
+            const out = [];
+            for (let i = 0; i < s.length; i += n) out.push(s.slice(i, i + n));
+            return out.join('\n');
+        };
+
+        // LE：马卡龙圆形
+        (d.logical_entities || []).forEach((le, i) => {
+            const color = CONST.LE_COLORS[i % CONST.LE_COLORS.length];
+            nodes.push({
+                id: 'LE:' + le.id,
+                label: le.name || le.id,
+                title: '逻辑实体（LE）: ' + le.name + '\n' + le.id + (le.description ? '\n' + le.description : ''),
+                shape: 'circle', size: 46, borderWidth: 3,
+                color: { background: color, border: '#333', highlight: { background: color, border: '#000' } },
+                font: { size: 16, face: 'Arial', bold: true, color: '#333' },
+                group: 'le'
+            });
+        });
+        // PE：蓝色矩形
+        (d.physical_entities || []).forEach((pe) => {
+            nodes.push({
+                id: 'PE:' + pe.id,
+                label: pe.name || pe.id,
+                title: '物理实体（PE）: ' + pe.name + '\n' + pe.id + (pe.description ? '\n' + pe.description : ''),
+                shape: 'box', shapeProperties: { borderRadius: 6 }, borderWidth: 2,
+                color: { background: CONST.PE_COLOR.background, border: CONST.PE_COLOR.border, highlight: CONST.PE_COLOR.highlight },
+                font: { size: 14, face: 'Arial', color: '#fff' },
+                group: 'pe'
+            });
+        });
+        // 关系即节点：菱形（label = 关系文本；tooltip = 观测槽全信息）
+        (d.relations || []).forEach((r) => {
+            nodes.push({
+                id: 'REL:' + r.id,
+                label: wrap(r.relation, 18),
+                title: '关系 [' + r.class + '] ' + r.relation +
+                       '\n承载: ' + (r.carries || '') +
+                       '\n观测槽: ' + (r.tools || []).join(', ') + ' → ' + (r.read || ''),
+                shape: 'diamond', size: 34, borderWidth: 2,
+                color: { background: '#FF8A65', border: '#D84315', highlight: { background: '#FF7043', border: '#BF360C' } },
+                font: { size: 12, face: 'Arial', color: '#333' },
+                group: 'rel'
+            });
+        });
+        // 症状切片：绿色便签（题面模板 + 入口链）
+        (d.slices || []).forEach((s) => {
+            nodes.push({
+                id: 'SLICE:' + s.id,
+                label: '◆ ' + wrap(s.template, 16),
+                title: '症状切片: ' + s.template + '\n入口链: ' + (s.entry_chain || '') +
+                       '\n案例数: ' + JSON.stringify(s.cases || {}),
+                shape: 'note', borderWidth: 2,
+                color: { background: '#C8E6C9', border: '#2E7D32', highlight: { background: '#A5D6A7', border: '#1B5E20' } },
+                font: { size: 12, face: 'Arial', color: '#1B5E20' },
+                group: 'slice'
+            });
+        });
+        // 边：关系 → 参与实体（INVOLVES）；class 区分线型（ARCS 实线 / PAS 虚线 / observation 点线）
+        const dashByClass = { ARCS: false, PAS: [6, 4], observation: [2, 4] };
+        (d.relations || []).forEach((r) => {
+            (r.entities || []).forEach((eid) => {
+                const target = eid.startsWith('LOGICAL.') ? 'LE:' + eid : 'PE:' + eid;
+                edges.push({
+                    id: 'E:' + r.id + '->' + eid,
+                    from: 'REL:' + r.id,
+                    to: target,
+                    dashes: dashByClass[r.class] !== undefined ? dashByClass[r.class] : false,
+                    color: { color: '#B0BEC5', highlight: '#FF7043' },
+                    width: 1.4
+                });
+            });
+        });
+
+        const container = document.getElementById('network');
+        const data = { nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges) };
+        const options = {
+            nodes: { font: { size: 14, color: '#333', face: 'Arial' } },
+            edges: { smooth: { type: 'continuous' }, arrows: { to: { enabled: true, scaleFactor: 0.5 } } },
+            physics: {
+                enabled: true, solver: 'barnesHut',
+                barnesHut: { gravitationalConstant: -6000, centralGravity: 0.25,
+                             springLength: 110, springConstant: 0.008, damping: 0.3 },
+                stabilization: { iterations: 60, fit: true }
+            },
+            layout: { improvedLayout: true, hierarchical: false }
+        };
+        try {
+            SemanticVis.state.network = new vis.Network(container, data, options);
+            SemanticVis.state.network.once('stabilizationIterationsDone', function() {
+                SemanticVis.state.network.setOptions({ physics: { enabled: false } });
+            });
+            SemanticVis.state.network.on('click', function(params) {
+                if (params.nodes.length > 0) {
+                    showStateDetail(params.nodes[0]);
+                } else {
+                    document.getElementById('attrPanel').style.display = 'none';
+                }
+            });
+        } catch (error) {
+            console.error('状态网络创建失败:', error);
+        }
+    }
+
+    function showStateDetail(nodeId) {
+        const d = SemanticVis.state.stateData || {};
+        const panel = document.getElementById('attrPanel');
+        const title = document.getElementById('attrTitle');
+        const content = document.getElementById('attrContent');
+        const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const row = (k, v) => v ? '<div class="pas-field"><span class="pas-label">' + k + '</span>：' + String(v) + '</div>' : '';
+        let html = '';
+        if (nodeId.startsWith('LE:') || nodeId.startsWith('PE:')) {
+            const isLE = nodeId.startsWith('LE:');
+            const ent = ((isLE ? d.logical_entities : d.physical_entities) || []).find(e => nodeId === (isLE ? 'LE:' : 'PE:') + e.id) || {};
+            title.textContent = isLE ? '逻辑实体（LE）' : '物理实体（PE）';
+            html = '<div class="pas-info">' + row('id', esc(ent.id)) + row('名称', esc(ent.name)) + row('描述', esc(ent.description)) + '</div>';
+        } else if (nodeId.startsWith('REL:')) {
+            const r = (d.relations || []).find(x => 'REL:' + x.id === nodeId) || {};
+            title.textContent = '关系（观测槽）';
+            html = '<div class="pas-info">' + row('id', esc(r.id)) + row('class', esc(r.class)) +
+                   row('关系', esc(r.relation)) + row('承载', esc(r.carries)) +
+                   row('观测槽', (r.tools || []).map(esc).join(', ') + (r.read ? ' → ' + esc(r.read) : '')) +
+                   row('参与实体', (r.entities || []).map(esc).join('<br>')) + '</div>';
+        } else if (nodeId.startsWith('SLICE:')) {
+            const s = (d.slices || []).find(x => 'SLICE:' + x.id === nodeId) || {};
+            title.textContent = '症状切片';
+            html = '<div class="arcs-info">' + row('id', esc(s.id)) + row('题面模板', esc(s.template)) +
+                   row('入口链', esc(s.entry_chain)) + row('案例数', esc(JSON.stringify(s.cases || {}))) + '</div>';
+        }
+        content.innerHTML = html;
+        panel.style.display = 'block';
+    }
+
+    // ── dlr-state v2 渲染（LE=对象 圆 · PE=观测面 方 · PAS=调用图 绿边——经典 DLR 观感）──
+    function initStateV2Network(d) {
+        const CONST = SemanticVis.CONST;
+        const nodes = [];
+        const edges = [];
+        const svcColor = (i) => CONST.LE_COLORS[i % CONST.LE_COLORS.length];
+        const TYPE_COLOR = {
+            service: null, // 马卡龙轮转
+            node: { bg: '#B0BEC5', bd: '#546E7A' },
+            namespace: { bg: '#FFE082', bd: '#F9A825' }
+        };
+        let svcIdx = 0;
+        (d.logical_entities || []).forEach((le) => {
+            const c = le.kind === 'service'
+                ? { bg: svcColor(svcIdx++), bd: '#333' }
+                : TYPE_COLOR[le.kind] || { bg: '#B0BEC5', bd: '#546E7A' };
+            nodes.push({
+                id: le.id,
+                label: le.name,
+                title: (le.kind === 'service' ? '服务' : le.kind === 'node' ? '节点' : '命名空间') + '（LE）: ' + le.name +
+                       '\n' + le.id + (le.description ? '\n' + le.description : ''),
+                shape: 'circle', size: le.kind === 'service' ? 46 : 38, borderWidth: 3,
+                color: { background: c.bg, border: c.bd, highlight: { background: c.bg, border: '#000' } },
+                font: { size: 15, face: 'Arial', bold: true, color: '#333' },
+                group: 'le'
+            });
+        });
+        (d.physical_entities || []).forEach((pe) => {
+            nodes.push({
+                id: pe.id,
+                label: pe.name,
+                title: '观测面（PE）: ' + pe.name + (pe.resource ? '（' + pe.resource + '）' : '') +
+                       '\n' + (pe.s || '') + (pe.cardinality ? '\nA: ' + pe.cardinality : ''),
+                shape: 'box', shapeProperties: { borderRadius: 6 }, borderWidth: 2,
+                color: { background: CONST.PE_COLOR.background, border: CONST.PE_COLOR.border, highlight: CONST.PE_COLOR.highlight },
+                font: { size: 11, face: 'Arial', color: '#fff' },
+                group: 'pe'
+            });
+            edges.push({
+                id: 'INH:' + pe.id,
+                from: pe.id, to: pe.le_id,
+                color: { color: '#b39ddb', highlight: '#7E57C2' },
+                width: 1.2, arrows: { to: { enabled: false } }
+            });
+        });
+        (d.pas_relations || []).forEach((r) => {
+            edges.push({
+                id: 'PAS:' + r.id,
+                from: r.from, to: r.to,
+                title: r.from.split('.').pop() + ' ' + (r.forward.verb || 'relates') + ' ' + r.to.split('.').pop() +
+                       (r.forward.cardinality ? '（' + r.forward.cardinality + '）' : '') + (r.s ? '\n' + r.s : ''),
+                color: { color: CONST.PAS_EDGE_COLOR, highlight: '#1b5e20' },
+                width: 1.8, arrows: { to: { enabled: true, scaleFactor: 0.5 } }
+            });
+        });
+
+        const container = document.getElementById('network');
+        const data = { nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges) };
+        const options = {
+            nodes: { font: { size: 14, color: '#333', face: 'Arial' } },
+            edges: { smooth: { type: 'continuous' } },
+            physics: {
+                enabled: true, solver: 'barnesHut',
+                barnesHut: { gravitationalConstant: -9000, centralGravity: 0.22,
+                             springLength: 100, springConstant: 0.007, damping: 0.35 },
+                stabilization: { iterations: 80, fit: true }
+            },
+            layout: { improvedLayout: true, hierarchical: false }
+        };
+        try {
+            SemanticVis.state.network = new vis.Network(container, data, options);
+            SemanticVis.state.network.once('stabilizationIterationsDone', function() {
+                SemanticVis.state.network.setOptions({ physics: { enabled: false } });
+            });
+            SemanticVis.state.network.on('click', function(params) {
+                if (params.nodes.length > 0) {
+                    showStateV2Detail(params.nodes[0], d);
+                } else {
+                    document.getElementById('attrPanel').style.display = 'none';
+                }
+            });
+        } catch (error) {
+            console.error('状态网络创建失败(v2):', error);
+        }
+    }
+
+    function showStateV2Detail(nodeId, d) {
+        const panel = document.getElementById('attrPanel');
+        const title = document.getElementById('attrTitle');
+        const content = document.getElementById('attrContent');
+        const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const row = (k, v) => v ? '<div class="pas-field"><span class="pas-label">' + k + '</span>：' + String(v) + '</div>' : '';
+        const le = (d.logical_entities || []).find(e => e.id === nodeId);
+        if (le) {
+            const kinds = { service: '服务', node: '节点', namespace: '命名空间' };
+            title.textContent = (kinds[le.kind] || '对象') + '（LE）: ' + le.name;
+            let html = '<div class="pas-info">' + row('id', esc(le.id)) + row('描述', esc(le.description)) + '</div>';
+            if (le.attributes && le.attributes.length) {
+                html += '<div class="arcs-info">' + le.attributes.map(a => row(esc(a.name), esc(a.description))).join('') + '</div>';
+            }
+            const rels = (d.pas_relations || []).filter(r => r.from === nodeId || r.to === nodeId);
+            if (rels.length) {
+                html += '<div class="pas-info">' + row('调用（PAS）', rels.map(r => {
+                    const out = r.from === nodeId;
+                    return esc((out ? '→ ' : '← ') + r.from.split('.').pop() + (out ? ' ' + r.forward.verb : ' ' + r.reverse.verb) + ' ' + r.to.split('.').pop());
+                }).join('<br>')) + '</div>';
+            }
+            content.innerHTML = html;
+            panel.style.display = 'block';
+            return;
+        }
+        const pe = (d.physical_entities || []).find(e => e.id === nodeId);
+        if (pe) {
+            const owner = (d.logical_entities || []).find(e => e.id === pe.le_id);
+            title.textContent = '观测面（PE）: ' + (owner ? owner.name + ' · ' : '') + pe.name;
+            let html = '<div class="pas-info">' + row('id', esc(pe.id)) + row('资源', esc(pe.resource)) +
+                       row('锚（A）', pe.cardinality ? esc(pe.cardinality + ' · ' + 'app_label') : '') + row('说明', esc(pe.s)) + '</div>';
+            html += '<div class="arcs-info">' + (pe.attributes || []).map(a => row(esc(a.name), esc(a.description))).join('') + '</div>';
+            content.innerHTML = html;
+            panel.style.display = 'block';
+        }
+    }
+
     async function init() {
         const success = await loadData();
+
+        if (success && SemanticVis.state.mode === 'state') {
+            // 状态形态：左栏（实体列表）不适用 → 隐藏；图谱 + 点击详情
+            const left = document.querySelector('.left-panel');
+            if (left) left.style.display = 'none';
+            initStateNetwork();
+            bindEvents();
+            return;
+        }
 
         if (success && SemanticVis.state.entities.length > 0) {
             renderEntityList();

@@ -69,9 +69,29 @@ export function renderVizHtml(db?: string): string {
   );
 }
 
-/** 结构计数（CLI 回显用） */
+/** 结构计数（CLI 回显用；按形态分派） */
 export function payloadCounts(db?: string) {
   const p = buildPayload(db);
+  if (p.kind === "dlr-state" && p.shape === "entities") {
+    const svc = p.logical_entities.filter((e) => e.kind === "service").length;
+    const node = p.logical_entities.filter((e) => e.kind === "node").length;
+    const ns = p.logical_entities.filter((e) => e.kind === "namespace").length;
+    return {
+      SVC: svc,
+      NODE: node,
+      NS: ns,
+      PE: p.physical_entities.length,
+      PAS: p.pas_relations.length,
+    };
+  }
+  if (p.kind === "dlr-state") {
+    return {
+      LE: p.logical_entities.length,
+      PE: p.physical_entities.length,
+      REL: p.relations.length,
+      SLICE: p.slices.length,
+    };
+  }
   return {
     LE: p.logical_entities.length,
     PE: p.physical_entities.length,
@@ -93,9 +113,13 @@ if (invokedDirectly) {
 
   const s = payloadCounts(DB);
   console.log(`[viz] ${outPath}  (${(html.length / 1024).toFixed(0)} KB 自包含)`);
-  console.log(
-    `      LE ${s.LE} · PE ${s.PE} · LA ${s.LA} · PA ${s.PA} · PAS ${s.PAS}${DB ? `  [db=${DB}]` : ""}`,
-  );
+  const detail =
+    "SVC" in s
+      ? `服务 ${s.SVC} · 节点 ${s.NODE} · 命名空间 ${s.NS} · PE ${s.PE} · PAS ${s.PAS}（dlr-state v2）`
+      : "REL" in s
+        ? `LE ${s.LE} · PE ${s.PE} · REL ${s.REL} · SLICE ${s.SLICE}（dlr-state v1）`
+        : `LE ${s.LE} · PE ${s.PE} · LA ${s.LA} · PA ${s.PA} · PAS ${s.PAS}`;
+  console.log(`      ${detail}${DB ? `  [db=${DB}]` : ""}`);
 
   if (OPEN) {
     const cmd = process.platform === "win32" ? ["cmd", ["/c", "start", "", outPath]] : ["open", [outPath]];

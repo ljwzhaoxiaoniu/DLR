@@ -182,7 +182,198 @@ const parseJsonOrRaw = (v: unknown): unknown => {
   }
 };
 
-export function buildPayload(db?: string): GraphPayload {
+/** dlr-state 的可视化载荷。v2（shape=entities）：LE=具体对象（服务/节点/命名空间，嵌套观测面 PE），
+ *  PAS=调用图——页面按经典 DLR 观感渲染；v1（shape=slices，过渡期）：类别级 entities/relations/slices。 */
+export interface StateGraphPayloadV2 {
+  kind: "dlr-state";
+  shape: "entities";
+  scenario: string;
+  logical_entities: {
+    id: string;
+    name: string;
+    kind: "service" | "node" | "namespace";
+    description: string;
+    attributes: { name: string; description: string }[];
+  }[];
+  physical_entities: {
+    id: string;
+    le_id: string;
+    name: string;
+    resource: string;
+    s: string;
+    cardinality: string;
+    attributes: { name: string; description: string }[];
+  }[];
+  pas_relations: {
+    id: string;
+    name: string;
+    from: string;
+    to: string;
+    forward: { verb: string; cardinality: string };
+    reverse: { verb: string; cardinality: string };
+    a_attribute: string;
+    s: string;
+  }[];
+}
+
+export interface StateGraphPayloadV1 {
+  kind: "dlr-state";
+  shape: "slices";
+  scenario: string;
+  logical_entities: { id: string; name: string; description: string }[];
+  physical_entities: { id: string; name: string; description: string }[];
+  relations: {
+    id: string;
+    class: string;
+    relation: string;
+    carries: string;
+    tools: string[];
+    read: string;
+    entities: string[];
+  }[];
+  slices: { id: string; template: string; entry_chain: string; cases: Record<string, number> }[];
+}
+
+export type StateGraphPayload = StateGraphPayloadV1 | StateGraphPayloadV2;
+
+/** v1（过渡期）载荷 */
+export function buildStatePayloadV1(file: string): StateGraphPayloadV1 {
+  const sc = parse(fs.readFileSync(file, "utf8")) as StateScenarioYaml;
+  const b = buildStateBatch(sc);
+  return {
+    kind: "dlr-state",
+    shape: "slices",
+    scenario: b.ns,
+    logical_entities: b.les.map((r) => ({
+      id: r.id as string,
+      name: r.name as string,
+      description: r.description as string,
+    })),
+    physical_entities: b.pes.map((r) => ({
+      id: r.id as string,
+      name: r.name as string,
+      description: r.description as string,
+    })),
+    relations: b.rels.map((r) => ({
+      id: r.id as string,
+      class: r.class as string,
+      relation: r.relation as string,
+      carries: (r.carries as string) ?? "",
+      tools: String(r.slot_tools ?? "").split(" ").filter(Boolean),
+      read: (r.slot_read as string) ?? "",
+      entities: (r.entities as string[]) ?? [],
+    })),
+    slices: b.slices.map((r) => ({
+      id: r.id as string,
+      template: r.template as string,
+      entry_chain: r.entry_chain as string,
+      cases: (r.cases as Record<string, number>) ?? {},
+    })),
+  };
+}
+
+/** v2 载荷：逐文件读（LE 嵌套 PE + PAS），多文件合并（--db 过滤时单系统） */
+interface StateScenarioYamlV2 {
+  scenario_name?: string;
+  logical_entities?: {
+    logical_entity_id: string;
+    biz_name: string;
+    description?: string;
+    physical_entities?: {
+      physical_entity_id: string;
+      resource?: string;
+      A?: { cardinality?: string; key?: string };
+      S?: string;
+      attributes?: { name: string; description?: string; public?: boolean }[];
+    }[];
+  }[];
+  pas_relations?: {
+    relation_id: string;
+    relation_name?: string;
+    P?: { forward?: { verb?: string; cardinality?: string }; reverse?: { verb?: string; cardinality?: string } };
+    A?: string;
+    S?: string;
+  }[];
+}
+
+export function buildStatePayloadV2(files: string[]): StateGraphPayloadV2 {
+  const payload: StateGraphPayloadV2 = {
+    kind: "dlr-state",
+    shape: "entities",
+    scenario: files.map((f) => path.basename(f, ".yaml")).join(" + "),
+    logical_entities: [],
+    physical_entities: [],
+    pas_relations: [],
+  };
+  for (const file of files) {
+    const sc = parse(fs.readFileSync(file, "utf8")) as StateScenarioYamlV2;
+    for (const le of sc.logical_entities ?? []) {
+      let kind: "service" | "node" | "namespace" = "service";
+      if (/\.node\./.test(le.logical_entity_id)) kind = "node";
+      else if (/\.namespace$/.test(le.logical_entity_id)) kind = "namespace";
+      // LE 公开面 = 嵌套 PE 里 public 属性的去重投影
+      const pub = new Map<string, { name: string; description: string }>();
+      for (const pe of le.physical_entities ?? []) {
+        for (const a of pe.attributes ?? []) {
+          if (a.public && !pub.has(a.name)) pub.set(a.name, { name: a.name, description: a.description ?? "" });
+        }
+      }
+      payload.logical_entities.push({
+        id: le.logical_entity_id,
+        name: le.biz_name,
+        kind,
+        description: le.description ?? "",
+        attributes: [...pub.values()],
+      });
+      for (const pe of le.physical_entities ?? []) {
+        payload.physical_entities.push({
+          id: pe.physical_entity_id,
+          le_id: le.logical_entity_id,
+          name: pe.physical_entity_id.split(".").pop() ?? pe.physical_entity_id,
+          resource: pe.resource ?? "",
+          s: pe.S ?? "",
+          cardinality: pe.A?.cardinality ?? "",
+          attributes: (pe.attributes ?? []).map((a) => ({ name: a.name, description: a.description ?? "" })),
+        });
+      }
+    }
+    for (const r of sc.pas_relations ?? []) {
+      const m = r.relation_id.split("_TO_");
+      if (m.length !== 2) continue;
+      payload.pas_relations.push({
+        id: r.relation_id,
+        name: r.relation_name ?? "",
+        from: m[0],
+        to: m[1],
+        forward: { verb: r.P?.forward?.verb ?? "", cardinality: r.P?.forward?.cardinality ?? "" },
+        reverse: { verb: r.P?.reverse?.verb ?? "", cardinality: r.P?.reverse?.cardinality ?? "" },
+        a_attribute: typeof r.A === "string" ? r.A : "",
+        s: r.S ?? "",
+      });
+    }
+  }
+  return payload;
+}
+
+export function buildPayload(db?: string): GraphPayload | StateGraphPayload {
+  // 形态分派（同 scenarioKind 口径：任一文件为 dlr-state 即判 state——两形态不混装）。
+  // 注：scenarioFiles 返回**裸文件名**（dlr 路径经 readScenario 自行 join）——这里要手动 join。
+  // dlr-state 内部再分派：有 logical_entities 的 v2 文件优先（v1 过渡文件同场时被跳过）。
+  const files = scenarioFiles(db).map((f) => path.join(YAML_DIR, f));
+  const v2Files: string[] = [];
+  let v1File = "";
+  for (const full of files) {
+    try {
+      const raw = parse(fs.readFileSync(full, "utf8")) as { mapping_type?: string; logical_entities?: unknown };
+      if (raw.mapping_type !== "dlr-state") continue;
+      if (Array.isArray(raw.logical_entities)) v2Files.push(full);
+      else if (!v1File) v1File = full;
+    } catch {
+      /* 解析失败留给 dlr 路径报错 */
+    }
+  }
+  if (v2Files.length) return buildStatePayloadV2(v2Files);
+  if (v1File) return buildStatePayloadV1(v1File);
   const logical_entities: GraphPayload["logical_entities"] = [];
   const physical_entities: GraphPayload["physical_entities"] = [];
   const inherits: Record<string, string> = {};
