@@ -35,8 +35,9 @@
   name: '@deepseek-ai/dsh-agent-instructions'
   config:
     maxBytes: 65536
-    # 按题指令（静态工作流 + 上游答案契约原文）由 run_one.sh 生成后经 DLR_AGENTS_MD 注入；
-    # 未设置时退回工作区 dsh_cob/AGENTS.md
+    # 按题指令（静态工作流 + 上游答案契约原文）由 run_one.sh 生成 instructions.md 后经
+    # DLR_AGENTS_MD 注入——**候选只认裸文件名**（含路径分隔符会被加载器过滤，绝对路径无效），
+    # 且从 cwd 向上查找 → run_one.sh 在 run 目录里就地启动 dsh。未设置时退回工作区 AGENTS.md
     instructionFileCandidates: [!!js process.env.DLR_AGENTS_MD || 'AGENTS.md']
     localInstructionFileCandidates: []
 

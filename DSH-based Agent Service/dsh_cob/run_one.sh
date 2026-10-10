@@ -116,10 +116,13 @@ export DSH_HOME="$SVC_DIR/.dsh-home"
 if [ -f "$SVC_DIR/dsh_dlr/.env" ]; then set -a; . "$SVC_DIR/dsh_dlr/.env"; set +a; fi
 
 # ── 跑 ──
+# ⚠ 指令注入语义（dsh-agent-instructions 源码核实）：候选只认**裸文件名**——含 / \ 的候选
+# 会被过滤掉（绝对路径无效！）；加载方式是「从 cwd 逐级向上找候选名」。
+# 所以：在 RUN_DIR 里启动 dsh（instructions.md 就地命中），DLR_AGENTS_MD 传裸名。
 OUT_FILE="$RUN_DIR/${KEY}_dlr.ndjson"
 ERR_FILE="$RUN_DIR/${KEY}_dlr.err"
-cd "$HERE"
-TSM_MCP_URL="$MCP_URL" COB_MCP_URL="$BENCH_URL" DLR_AGENTS_MD="$INSTRUCT" \
+cd "$RUN_DIR"
+TSM_MCP_URL="$MCP_URL" COB_MCP_URL="$BENCH_URL" DLR_AGENTS_MD="instructions.md" \
 timeout "$TIMEOUT" dsh --profile headless --patch "$HERE/dsh.patch.yml" --json "Question: ${QUERY}" \
   < /dev/null > "$OUT_FILE" 2> "$ERR_FILE"
 RC=$?
