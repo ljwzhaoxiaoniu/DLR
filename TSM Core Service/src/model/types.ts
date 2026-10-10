@@ -77,7 +77,7 @@ export interface DlrScenarioYaml {
 export interface VectorRow {
   id: string;
   name: string;
-  type: "logical_entity" | "entity" | "attribute" | "pas_relation";
+  type: "logical_entity" | "entity" | "attribute" | "pas_relation" | "relation" | "symptom_slice";
   description: string;
   db: string;
   /** 送进 embedding 的文本（Python 侧不落盘；这里保留用于对齐与调试） */
@@ -86,4 +86,45 @@ export interface VectorRow {
   from_le_id?: string;
   to_le_id?: string;
   A_attribute?: string;
+}
+
+// ── dlr-obs（非数据库形态：实体 / 关系+观测槽 / 症状切片）──────────────────
+// 场景侧源：`sources/configs/DLR/*.yaml` 中 mapping_type: dlr-obs 的文件
+// （Cloud-OpsBench 首用；schema 注记见该场景 yaml 尾注与 modeling-plan）
+
+export interface ObsEntity {
+  entity_id: string;
+  side: "LE" | "PE";
+  /** 回指方案 §3.1 的行号（三表 1:1 序列化的对账锚） */
+  row?: number;
+  description?: string;
+}
+
+export interface ObsRelation {
+  id: number | string;
+  class: "ARCS" | "PAS" | "observation";
+  /** 人读关系式，如 "Deployment → ReplicaSet → Pod" */
+  relation: string;
+  /** 参与实体（LOGICAL./PHYSICAL. id） */
+  entities?: string[];
+  carries?: string;
+  /** 观测槽：工具 → 读哪段（本形态的核心列） */
+  slot?: { tools?: string[]; read?: string };
+}
+
+export interface ObsSymptomSlice {
+  template: string;
+  cases?: Record<string, number>;
+  entry_chain?: string;
+}
+
+export interface ObsScenarioYaml {
+  mapping_type: "dlr-obs";
+  version?: string;
+  scenario_name?: string;
+  description?: string;
+  source?: Record<string, unknown>;
+  entities?: ObsEntity[];
+  relations?: ObsRelation[];
+  symptom_slices?: ObsSymptomSlice[];
 }
