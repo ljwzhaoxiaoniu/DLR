@@ -10,11 +10,12 @@
  * 但不会报错；新版浮层改读 `graph`）。
  */
 import { SCENARIO, SCENARIO_NAME, SCENARIO_SOURCE, YAML_DIR } from "../config.js";
+import { scenarioKind } from "../model/scenarioKind.js";
 import type { LanceStore } from "../store/lance.js";
 import type { GraphHandle } from "../graph/types.js";
 
-/** 工具面清单（契约冻结的 7 个，仅作展示） */
-const TOOLS = [
+/** 工具面清单（**按场景形态**；仅作展示——与 server.ts 的注册保持同步） */
+const TOOLS_DLR = [
   "dlr_semantic_query",
   "dlr_search_consensus",
   "dlr_search_sop",
@@ -23,6 +24,7 @@ const TOOLS = [
   "get_le_attrs",
   "execute_sql",
 ];
+const TOOLS_STATE = ["state_model_query", "dlr_search_consensus"];
 
 /** 向量表（L1 entities / L2 consensus / L3 sop 索引） */
 const VECTOR_TABLES = ["entities", "consensus", "sop"];
@@ -102,7 +104,7 @@ export async function buildStatus({ getStore, getGraph, httpBase }: StatusDeps) 
       viz_url: httpBase ? `${httpBase}/viz/dlr` : null,
     },
     scenario: { name: SCENARIO_NAME, dir: SCENARIO, source: SCENARIO_SOURCE },
-    tools: TOOLS,
+    tools: scenarioKind() === "dlr-state" ? TOOLS_STATE : TOOLS_DLR,
     graph,
     neo4j,
     lance,
