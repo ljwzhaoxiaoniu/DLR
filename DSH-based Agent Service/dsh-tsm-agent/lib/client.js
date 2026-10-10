@@ -89,11 +89,10 @@ window.__ModuleLoader__.load({
       const vizUrl =
         (data.service_info && data.service_info.viz_url) || "http://127.0.0.1:" + port + "/viz/dlr";
 
-      // 资产行：计数按后端实际返回的字段渲染（state 形态没有 PA——不硬塞概念）
+      // 资产行：只显示 LE / PE / PAS（PA 是列级明细，不上浮层——用户定：统计它干嘛）
       const assetLine = [
         ["LE", counts.LogicalEntity],
         ["PE", counts.PhysicalEntity],
-        ["PA", counts.PhysicalAttribute],
         ["PAS", rels.PAS_RELATED_TO],
       ]
         .filter((p) => p[1] !== undefined)
