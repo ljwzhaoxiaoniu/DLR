@@ -1,0 +1,44 @@
+[
+  {
+    "kid": 1,
+    "knowledge": "Reading workload pod listings: the READY column (a/b containers ready) and the RESTARTS column (count, with the most recent restart time) are what single out the unhealthy instance — typically one pod at 'READY 1/2' with a rising restart count; the phase word (Running) alone does not distinguish it.",
+    "anchors": ["rel 1", "PHYSICAL.Pod"],
+    "basis": "GetResources(pods) output columns (visible side)",
+    "source_cases": ["boutique/codedefect/2", "boutique/codedefect/70"]
+  },
+  {
+    "kid": 2,
+    "knowledge": "Reading the error-log output: it arrives as deduplicated patterns (count / ratio per group) whose sample lines hold the raw text — read the sample text verbatim as the mechanism lead (a panic / exception line states the failure itself); the counts only tell how dominant each pattern is.",
+    "anchors": ["rel 9", "PHYSICAL.LogStream"],
+    "basis": "GetErrorLogs output structure (patterns + samples)",
+    "source_cases": ["boutique/codedefect/2", "boutique/codedefect/40"]
+  },
+  {
+    "kid": 3,
+    "knowledge": "Reading the alert output: it is self-describing — each alert names the entity, an anomaly class (e.g. RESOURCE_SATURATION / LATENCY_DEGRADATION / THROUGHPUT_DROP) and an evidence line comparing baseline vs current (e.g. 'Normal=4.74ms -> Current=37.82ms (+697.2%)'); the comparison inside the text is the reading — the alert identifies where and what kind of anomaly.",
+    "anchors": ["rel 8", "PHYSICAL.Alert", "PHYSICAL.MetricSeries"],
+    "basis": "GetAlerts output fields (entity / metric_category / evidence)",
+    "source_cases": ["boutique/performance/1", "trainticket/performance/1"]
+  },
+  {
+    "kid": 4,
+    "knowledge": "Telemetry-led reading: pair the alerted entity with the object-layer listings — if that entity reads normal (all running, no restarts, endpoints bound), the break is not an unhealthy object; the signal lives at the metric level, and the object listing is the exclusion side of the pair.",
+    "anchors": ["rel 8", "rel 1", "rel 2"],
+    "basis": "object listings vs alerts cross-reading (both visible)",
+    "source_cases": ["boutique/performance/1", "trainticket/performance/1"]
+  },
+  {
+    "kid": 5,
+    "knowledge": "Reading a restarted container: its pod detail carries the last termination state — a reason and an exit code (e.g. OOMKilled) — read that field to classify why the container restarted before moving further down the chain.",
+    "anchors": ["rel 6", "PHYSICAL.Container"],
+    "basis": "DescribeResource(pod) container status fields",
+    "source_cases": ["boutique/codedefect/70"]
+  },
+  {
+    "kid": 6,
+    "knowledge": "Reading the code slot (Boutique only): service-first — list the recorded source files of the service named by the log sample, then fetch the specific file; the failing call / parameter is read off that source. The slot is closed by the source itself, not by a wider search.",
+    "anchors": ["rel 9", "PHYSICAL.CodeArtifact"],
+    "basis": "ListCodeFiles / GetSourceCode outputs",
+    "source_cases": ["boutique/codedefect/2", "boutique/codedefect/40"]
+  }
+]

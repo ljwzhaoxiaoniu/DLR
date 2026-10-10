@@ -2,7 +2,7 @@
 
 > **状态**：**v1**，2026-10-10 —— 收口三项已全部折叠：codedefect / infrastructure 已抽样（实体表闭环）、Train-Ticket 差异落定、判分语义查证完成。
 > **归纳来源**：benchmark README（布局 / 工具面 / 指标）+ Boutique 八家族各抽 1 例（**8/8**，含 codedefect / infrastructure）+ 全库 754 例缓存扫描（cluster-config 核查）+ `agents/*/evaluation_utils` 判分内部——只用可见侧信息；gold / 答案侧材料不用于建模。
-> **待补**：build/运行时接入（§七.1，实现外延）· L2 / L3 门槛未触发。
+> **待补**：build/运行时接入（§七.1，实现外延）· L2 起步份已落（`sources/consensus/kubernetes.jsonl`）；L3 门槛未触发。
 > 本目录当前只有本方案；场景 README 与模型产物后续再补。
 > English: [modeling-plan.md](modeling-plan.md)
 
@@ -93,7 +93,7 @@
 ## 五、三级分工与编入纪律
 
 - **L1（数据源级）**——本方案主体。从数据源**读**出来（看几道样例即可——L1 是读出来的、不是跑出来的）；零 per-case 构建；靠修正增长、越来越稳。
-- **L2（领域共识，按需）**——症状读法、报文族（refused vs timeout；FailedCreate 族）、阈值 / alert 语义——从可见证据归纳，不照抄答案侧材料。
+- **L2（领域共识，按需）**——**只写 schema 级读法**：怎么读各观测槽的输出（对象清单列；日志 patterns/samples；遥测槽自描述的 alerts；代码槽），以及症状措辞如何落到链上——**不超出数据集自身信息**；数据源明细（报文文本、值域清单、组件名册）不入 L2（由 agent 沿槽实查）。难题解剖（codedefect 98 / performance 76）表明读法需求**按槽类聚类、不按系统** → v0 单域库（`sources/consensus/kubernetes.jsonl`）；按槽类拆分只在够本时做（条目量 / 检索串扰 / 第二个 k8s 场景）。
 - **L3（具体业务 SOP，门槛制）**——卡死才加（裸跑基线 + 门槛证据）；可超出测试集信息；不可答案倒推。
 
 ## 六、验证记录（存证，不入模型）
@@ -112,5 +112,5 @@
 ## 七、待办
 
 1. **产物已落（v1）**：三张表 → [`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml)（`mapping_type: dlr-obs`，行级 1:1）。剩余（实现外延——契约在内、实现在外）：把该源编译成运行态（向量 + 图）的 builder，及该场景的服务路径。
-2. L2 / L3 仅在各自门槛触发后建。
+2. L2 按需生长（起步份已落）；L3 仅在门槛触发后建。
 3. 快照若移动（换 pin）：重核两项落在代码里的能力事实——code 工具硬门槛与预渲染集。

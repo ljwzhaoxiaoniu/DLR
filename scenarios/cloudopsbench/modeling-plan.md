@@ -2,7 +2,7 @@
 
 > **Status**: **v1**, 2026-10-10 — all closure items folded: codedefect & infrastructure sampled (entity table closed), Train-Ticket deltas verified, scorer semantics read.
 > **Provenance**: benchmark README (layout / tool surface / metrics) + one sampled case per Boutique family (**all 8**, incl. codedefect / infrastructure) + a cache scan of all 754 cases (cluster-config check) + the scorer internals in `agents/*/evaluation_utils` — visible side only; gold / answer-side material never feeds the model.
-> **Open**: build/runtime ingestion (§7.1 — implementation side) · L2 / L3 gates untriggered.
+> **Open**: build/runtime ingestion (§7.1 — implementation side) · L2 starter library landed (`sources/consensus/kubernetes.jsonl`) · L3 gate untriggered.
 > Current dir holds this plan only; a scenario README and the built model artifacts come later.
 > 中文版：[modeling-plan.zh.md](modeling-plan.zh.md)
 
@@ -93,7 +93,7 @@ Delivery shape mirrors TSM 2.0: the model via MCP (a "modeling view"), the data 
 ## 5. Level split & authoring discipline
 
 - **L1 (data-source level)** — the subject of this plan. Read out of the data source (a few samples suffice — L1 is *read*, not *run*); zero per-case build; grows by correction, stabilizes over time.
-- **L2 (domain consensus, on demand)** — symptom reading, message families (refused vs timeout; the FailedCreate family), threshold / alert semantics — induced from visible evidence; never copied from answer-side material.
+- **L2 (domain consensus, on demand)** — **schema-level reading rules only**: how to read each slot's output (object-list columns; log patterns/samples; the telemetry slot's self-describing alerts; the code slot) and how symptom wording maps onto the chains — never beyond the dataset's own information; data-source particulars (message texts, value lists, component inventories) stay out of L2 (the agent reads those live along the slots). Hard-case analysis (codedefect 98 / performance 76) shows reading needs cluster by **slot class, not system** → v0 keeps one domain library (`sources/consensus/kubernetes.jsonl`); split by slot class only when earned (volume / cross-talk / a second k8s scenario).
 - **L3 (per-problem SOP, gated)** — added only when stuck (bare-run baseline + evidence of need); may exceed test-set information; never derived from answers / gold.
 
 ## 6. Verification log (recorded, not model input)
@@ -112,5 +112,5 @@ Delivery shape mirrors TSM 2.0: the model via MCP (a "modeling view"), the data 
 ## 7. Open items
 
 1. **Artifacts done (v1)**: tables 3.1–3.3 → [`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml) (`mapping_type: dlr-obs`, 1:1 rows). Remaining on this line is implementation-side (contract inside, implementation outside): the builder that compiles this source into runtime artifacts (vectors + graph) and the scenario's serving path.
-2. L2 / L3 only once their gates trigger.
+2. L2 grows on run evidence (starter library landed); L3 only once its gate triggers.
 3. If the snapshot ever moves (new pin): re-check the two capability facts that live in code — the code-tool hard gate and the pre-render sets.
