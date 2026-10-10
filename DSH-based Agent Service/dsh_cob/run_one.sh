@@ -25,6 +25,9 @@ SYSTEM="${1:?用法: run_one.sh <system> <category> <case_id> [out_dir]}"
 CATEGORY="${2:?}"
 CASE_ID="${3:?}"
 OUT_ROOT="${4:-$ROOT/tmp_scripts/cob_runs}"
+# OUT_ROOT 归一为绝对路径——run_one 中途会 pushd 到基准检出，相对路径会让
+# bench_mcp.log 重定向解析失败（基准 MCP 起不来 → exit 5；实测踩过一次）。
+OUT_ROOT="$(mkdir -p "$OUT_ROOT" && cd "$OUT_ROOT" && pwd -W)"
 
 # ── system 归一（dir 名 trainticket / 服务名 train-ticket）──
 SYS="$(echo "$SYSTEM" | tr '[:upper:]' '[:lower:]')"
