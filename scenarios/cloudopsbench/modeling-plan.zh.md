@@ -27,7 +27,7 @@
 ## 三、L1 模型（schema 级）
 
 > **观测槽** = "这个状态住在哪里、用哪个工具看、读输出的哪一段"——关系表的核心列，也是"帮找数据"的落点。
-> 机器可读源：[`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml)（`mapping_type: dlr-obs`）——三表 1:1 序列化；schema 注记在文件尾。
+> 机器可读源：[`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml)（`mapping_type: dlr-state`）——三表 1:1 序列化；schema 注记在文件尾。
 
 ### 3.1 实体种类
 
@@ -111,6 +111,6 @@
 
 ## 七、待办
 
-1. **产物已落（v1）**：三张表 → [`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml)（`mapping_type: dlr-obs`，行级 1:1）。**builder 已落（2026-10-10）**：`buildLance`（向量：实体 / 关系 / 切片）+ `loadNeo4j`（图：LE/PE 节点；关系即节点带槽属性 + `INVOLVES` 边；切片）按 `mapping_type` 分派。剩余（实现外延）：场景服务路径（内存图 / 工具消费），及场景切换时的图实载。
+1. **产物已落（v1）**：三张表 → [`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml)（`mapping_type: dlr-state`，行级 1:1）。**builder 已落（2026-10-10）**：`buildLance`（向量：实体 / 关系 / 切片）+ `loadNeo4j`（图：LE/PE 节点；关系即节点带槽属性 + `INVOLVES` 边；切片）按 `mapping_type` 分派。剩余（实现外延）：场景服务路径（内存图 / 工具消费），及场景切换时的图实载。
 2. L2 按需生长（起步份已落）；L3 仅在门槛触发后建。
 3. 快照若移动（换 pin）：重核两项落在代码里的能力事实——code 工具硬门槛与预渲染集。

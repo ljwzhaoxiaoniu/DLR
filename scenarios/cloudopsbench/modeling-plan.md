@@ -27,7 +27,7 @@
 ## 3. L1 model (schema level)
 
 > **Observation slot** = where a state lives, which tool reads it, and which part of the output to read — the core column of the relation table, and the anchor of "help the agent find data".
-> Machine-readable source: [`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml) (`mapping_type: dlr-obs`) — tables 3.1–3.3 serialized 1:1; schema notes at the file foot.
+> Machine-readable source: [`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml) (`mapping_type: dlr-state`) — tables 3.1–3.3 serialized 1:1; schema notes at the file foot.
 
 ### 3.1 Entity kinds
 
@@ -111,6 +111,6 @@ Delivery shape mirrors TSM 2.0: the model via MCP (a "modeling view"), the data 
 
 ## 7. Open items
 
-1. **Artifacts done (v1)**: tables 3.1–3.3 → [`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml) (`mapping_type: dlr-obs`, 1:1 rows). **Builder landed (2026-10-10)**: `buildLance` (vectors: entities / relations / slices) + `loadNeo4j` (graph: LE/PE nodes; relations as nodes carrying the slot + `INVOLVES` edges; slices) dispatch on `mapping_type` in tsm-core. Remaining (implementation side): the scenario's serving path (memory graph / tool consumption) and the live graph load on scenario switch.
+1. **Artifacts done (v1)**: tables 3.1–3.3 → [`sources/configs/DLR/cloudopsbench.yaml`](sources/configs/DLR/cloudopsbench.yaml) (`mapping_type: dlr-state`, 1:1 rows). **Builder landed (2026-10-10)**: `buildLance` (vectors: entities / relations / slices) + `loadNeo4j` (graph: LE/PE nodes; relations as nodes carrying the slot + `INVOLVES` edges; slices) dispatch on `mapping_type` in tsm-core. Remaining (implementation side): the scenario's serving path (memory graph / tool consumption) and the live graph load on scenario switch.
 2. L2 grows on run evidence (starter library landed); L3 only once its gate triggers.
 3. If the snapshot ever moves (new pin): re-check the two capability facts that live in code — the code-tool hard gate and the pre-render sets.

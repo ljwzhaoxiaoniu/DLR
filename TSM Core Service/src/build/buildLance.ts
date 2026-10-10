@@ -1,6 +1,6 @@
 /**
  * 构建 LanceDB 向量表：DLR YAML → 向量行 → embedding → LanceDB（+ FTS 索引）
- * 支持两种 mapping_type：`dlr` 与 `dlr-obs`（按文件分派；dlr 路径逐字节不变）
+ * 支持两种 mapping_type：`dlr` 与 `dlr-state`（按文件分派；dlr 路径逐字节不变）
  *
  * 跑法:
  *   npx tsx src/build/buildLance.ts --all          # 全部 11 库（应产出 948 行，与 Python 侧一致）
@@ -13,8 +13,8 @@ import * as lancedb from "@lancedb/lancedb";
 import { TextEncoder } from "../embed/encoder.js";
 import { parse } from "yaml";
 import { toVectorRows } from "../model/loadDlr.js";
-import { toObsVectorRows } from "../model/loadObs.js";
-import type { DlrScenarioYaml, ObsScenarioYaml, VectorRow } from "../model/types.js";
+import { toStateVectorRows } from "../model/loadState.js";
+import type { DlrScenarioYaml, StateScenarioYaml, VectorRow } from "../model/types.js";
 
 import { YAML_DIR, STORE_DIR as DEFAULT_STORE, MODEL_DIR as DEFAULT_MODEL_DIR } from "../config.js";
 
@@ -47,8 +47,8 @@ for (const dbName of DBS) {
     console.warn(`  [skip] 无 YAML: ${dbName}`);
     continue;
   }
-  const sc = parse(fs.readFileSync(yamlPath, "utf8")) as DlrScenarioYaml | ObsScenarioYaml;
-  const rs = sc.mapping_type === "dlr-obs" ? toObsVectorRows(sc) : toVectorRows(sc);
+  const sc = parse(fs.readFileSync(yamlPath, "utf8")) as DlrScenarioYaml | StateScenarioYaml;
+  const rs = sc.mapping_type === "dlr-state" ? toStateVectorRows(sc) : toVectorRows(sc);
   rows.push(...rs);
   console.log(`  ${dbName}: ${rs.length} 行`);
 }

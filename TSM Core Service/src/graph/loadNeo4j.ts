@@ -4,8 +4,8 @@
  * 节点：LogicalEntity / PhysicalEntity / PhysicalAttribute / LogicalAttribute
  * 关系：HAS_LOGICAL_ATTRIBUTE（LE→LA）/ HAS_PHYSICAL_ATTRIBUTE（PE→PA）
  *       INHERITS（PE→LE）/ PAS_RELATED_TO（LE→LE）
- * dlr-obs（非数据库形态，按 mapping_type 分派）：LogicalEntity / PhysicalEntity /
- *       ObsRelation（关系即节点，INVOLVES→参与实体）/ ObsSymptomSlice
+ * dlr-state（非数据库形态，按 mapping_type 分派）：LogicalEntity / PhysicalEntity /
+ *       StateRelation（关系即节点，INVOLVES→参与实体）/ StateSymptomSlice
  *
  * 口径要点：
  *  - PE.arcs_c（C_column）= 该 PE 的 public 属性重建的 {LE属性名: 全限定列名}（同 mapping/dlr.py）
@@ -20,8 +20,8 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { parse } from "yaml";
 import neo4j, { type Session } from "neo4j-driver";
-import { buildBatch, buildObsBatch, readScenario, type Batch, type ObsBatch } from "../model/graphData.js";
-import type { ObsScenarioYaml } from "../model/types.js";
+import { buildBatch, buildStateBatch, readScenario, type Batch, type StateBatch } from "../model/graphData.js";
+import type { StateScenarioYaml } from "../model/types.js";
 
 import { YAML_DIR } from "../config.js";
 function arg(name: string, fallback = ""): string {
@@ -87,8 +87,8 @@ async function writeBatch(s: Session, b: Batch) {
          rel.a_attribute=r.a_attribute, rel.s_semantic=r.s_semantic, rel.db=r.db`, b.pasRels);
 }
 
-/** dlr-obs 写入：关系 = 带观测槽的节点 + INVOLVES→参与实体；切片为独立节点 */
-async function writeObsBatch(s: Session, b: ObsBatch) {
+/** dlr-state 写入：关系 = 带观测槽的节点 + INVOLVES→参与实体；切片为独立节点 */
+async function writeStateBatch(s: Session, b: StateBatch) {
   const run = (cypher: string, rows: Record<string, unknown>[]) =>
     rows.length ? s.run(cypher, { rows }) : Promise.resolve(null);
   await run(
@@ -98,16 +98,16 @@ async function writeObsBatch(s: Session, b: ObsBatch) {
     `UNWIND $rows AS r MERGE (n:PhysicalEntity {id: r.id})
      SET n.name=r.name, n.description=r.description, n.db=r.db`, b.pes);
   await run(
-    `UNWIND $rows AS r MERGE (n:ObsRelation {id: r.id})
+    `UNWIND $rows AS r MERGE (n:StateRelation {id: r.id})
      SET n.class=r.class, n.relation=r.relation, n.carries=r.carries,
          n.slot_tools=r.slot_tools, n.slot_read=r.slot_read, n.db=r.db`, b.rels);
   await run(
-    `UNWIND $rows AS r MATCH (n:ObsRelation {id: r.id})
+    `UNWIND $rows AS r MATCH (n:StateRelation {id: r.id})
      UNWIND r.entities AS eid
      MATCH (m) WHERE m.id = eid
      MERGE (n)-[:INVOLVES]->(m)`, b.rels);
   await run(
-    `UNWIND $rows AS r MERGE (n:ObsSymptomSlice {id: r.id})
+    `UNWIND $rows AS r MERGE (n:StateSymptomSlice {id: r.id})
      SET n.template=r.template, n.entry_chain=r.entry_chain, n.cases=r.cases, n.db=r.db`, b.slices);
 }
 
@@ -128,13 +128,13 @@ try {
       console.warn(`  [skip] 无 YAML: ${dbName}`);
       continue;
     }
-    const raw = parse(fs.readFileSync(p, "utf8")) as ObsScenarioYaml | { mapping_type?: string };
-    if (raw.mapping_type === "dlr-obs") {
-      const ob = buildObsBatch(raw as ObsScenarioYaml);
-      await writeObsBatch(session, ob);
+    const raw = parse(fs.readFileSync(p, "utf8")) as StateScenarioYaml | { mapping_type?: string };
+    if (raw.mapping_type === "dlr-state") {
+      const ob = buildStateBatch(raw as StateScenarioYaml);
+      await writeStateBatch(session, ob);
       total.le += ob.les.length; total.pe += ob.pes.length;
       total.rel += ob.rels.length; total.slice += ob.slices.length;
-      console.log(`  ${dbName}: [dlr-obs] LE ${ob.les.length} / PE ${ob.pes.length} / REL ${ob.rels.length} / SLICE ${ob.slices.length}`);
+      console.log(`  ${dbName}: [dlr-state] LE ${ob.les.length} / PE ${ob.pes.length} / REL ${ob.rels.length} / SLICE ${ob.slices.length}`);
       continue;
     }
     const { sc, colTypes } = readScenario(dbName);

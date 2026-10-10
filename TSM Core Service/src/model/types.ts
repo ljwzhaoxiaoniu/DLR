@@ -88,11 +88,11 @@ export interface VectorRow {
   A_attribute?: string;
 }
 
-// ── dlr-obs（非数据库形态：实体 / 关系+观测槽 / 症状切片）──────────────────
-// 场景侧源：`sources/configs/DLR/*.yaml` 中 mapping_type: dlr-obs 的文件
+// ── dlr-state（非数据库形态：实体 / 关系+观测槽 / 症状切片）──────────────────
+// 场景侧源：`sources/configs/DLR/*.yaml` 中 mapping_type: dlr-state 的文件
 // （Cloud-OpsBench 首用；schema 注记见该场景 yaml 尾注与 modeling-plan）
 
-export interface ObsEntity {
+export interface StateEntity {
   entity_id: string;
   side: "LE" | "PE";
   /** 回指方案 §3.1 的行号（三表 1:1 序列化的对账锚） */
@@ -100,7 +100,7 @@ export interface ObsEntity {
   description?: string;
 }
 
-export interface ObsRelation {
+export interface StateRelation {
   id: number | string;
   class: "ARCS" | "PAS" | "observation";
   /** 人读关系式，如 "Deployment → ReplicaSet → Pod" */
@@ -112,19 +112,19 @@ export interface ObsRelation {
   slot?: { tools?: string[]; read?: string };
 }
 
-export interface ObsSymptomSlice {
+export interface StateSymptomSlice {
   template: string;
   cases?: Record<string, number>;
   entry_chain?: string;
 }
 
-export interface ObsScenarioYaml {
-  mapping_type: "dlr-obs";
+export interface StateScenarioYaml {
+  mapping_type: "dlr-state";
   version?: string;
   scenario_name?: string;
   description?: string;
   source?: Record<string, unknown>;
-  entities?: ObsEntity[];
-  relations?: ObsRelation[];
-  symptom_slices?: ObsSymptomSlice[];
+  entities?: StateEntity[];
+  relations?: StateRelation[];
+  symptom_slices?: StateSymptomSlice[];
 }

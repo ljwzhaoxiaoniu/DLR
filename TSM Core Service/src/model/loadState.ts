@@ -1,16 +1,16 @@
 /**
- * dlr-obs YAML → 向量行（非数据库形态：实体 / 关系+观测槽 / 症状切片）
+ * dlr-state YAML → 向量行（非数据库形态：实体 / 关系+观测槽 / 症状切片）
  *
- * 源：场景 `sources/configs/DLR/*.yaml` 中 `mapping_type: dlr-obs` 的文件
+ * 源：场景 `sources/configs/DLR/*.yaml` 中 `mapping_type: dlr-state` 的文件
  * （Cloud-OpsBench 首用；schema 与对齐说明见该场景 modeling-plan 与 yaml 文件尾注）。
  * 与 dlr 线同规：只写源自身事实；schema 级（实例级不入）。
  */
 import * as fs from "node:fs";
 import { parse } from "yaml";
-import type { ObsScenarioYaml, VectorRow } from "./types.js";
+import type { StateScenarioYaml, VectorRow } from "./types.js";
 
-export function loadObsScenario(path: string): ObsScenarioYaml {
-  return parse(fs.readFileSync(path, "utf8")) as ObsScenarioYaml;
+export function loadStateScenario(path: string): StateScenarioYaml {
+  return parse(fs.readFileSync(path, "utf8")) as StateScenarioYaml;
 }
 
 /** 展示名口径：LOGICAL.Service → Service（同 loadDlr 的 leName） */
@@ -20,8 +20,8 @@ function shortName(id: string): string {
 }
 
 /** 全部向量行（顺序：实体 → 关系 → 症状切片） */
-export function toObsVectorRows(s: ObsScenarioYaml): VectorRow[] {
-  const ns = s.scenario_name ?? "obs";
+export function toStateVectorRows(s: StateScenarioYaml): VectorRow[] {
+  const ns = s.scenario_name ?? "state";
   const rows: VectorRow[] = [];
 
   // ── 1) 实体：LE → logical_entity / PE → entity（沿用 dlr 的 type 词汇，运行时过滤不变）

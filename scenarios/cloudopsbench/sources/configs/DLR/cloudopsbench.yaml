@@ -2,7 +2,7 @@
 # 案例说明（方案与来源）：scenarios/cloudopsbench/modeling-plan.md（v1，双语）
 # 本文件 = 方案 §3.1–3.3 三张表的机器可读形态，行级 1:1（row 字段回指行号）；schema 注记见文件尾。
 
-mapping_type: dlr-obs
+mapping_type: dlr-state
 version: '2.0'
 scenario_name: dlr_cloudopsbench
 description: 'Kubernetes RCA state snapshots (Online Boutique + Train-Ticket, 754 cases): service-level entities (LE), physical resource kinds (PE), relations carrying observation slots, and symptom entry slices.'
@@ -213,7 +213,7 @@ symptom_slices:
   entry_chain: 'telemetry (as Performance Degradation)'
 
 # ---------------------------------------------------------------------------
-# Schema 注记（dlr-obs = DLR 的非数据库形态；对照 sources/configs/DLR 下 dlr 型 yaml）：
+# Schema 注记（dlr-state = DLR 的非数据库形态；对照 sources/configs/DLR 下 dlr 型 yaml）：
 # - 共享词汇与约定：LE/PE 双侧、ARCS（纵向锚定）/PAS（横向路由）类别、LOGICAL./PHYSICAL. id、
 #   描述纪律（只写源自身事实；不写题面口径与实例级事实）。
 # - 差异：无 databases / attributes（数据源是 K8s 快照而非数据库）；关系携带**观测槽**
