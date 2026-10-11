@@ -182,16 +182,23 @@ const unarchive = (ws, sid) => {
 
 // ── sync：登记进全量组 ──────────────────────────────────────────────
 if (cmd === "sync") {
-  const { ws, W, allId } = loadWs();
+  const { ws, W, allId, formalId } = loadWs();
   const list = W[allId].sessionIds;
-  let added = 0, unarch = 0, noSid = 0;
+  const formal = new Set(W[formalId].sessionIds);
+  let added = 0, unarch = 0, noSid = 0, cleaned = 0;
   for (const r of runs) {
     if (!r.sessionId) { noSid++; console.log(`  ! ${r.dirName}: ndjson 无 session 事件，跳过`); continue; }
+    // 两组互斥（promote = move 语义）：已在正式组的不再入全量组；历史误入的顺手清出
+    if (formal.has(r.sessionId)) {
+      const i = list.indexOf(r.sessionId);
+      if (i >= 0) { list.splice(i, 1); cleaned++; console.log(`  ~ ${short(r.sessionId)}  ${r.caseKey}  已在正式组 → 从全量组清出`); }
+      continue;
+    }
     if (!list.includes(r.sessionId)) { list.push(r.sessionId); added++; console.log(`  + ${short(r.sessionId)}  ${r.caseKey}  ${r.dirName}`); }
     if (unarchive(ws, r.sessionId)) unarch++;
   }
-  console.log(`[sync] 扫到 run ${runs.length}（无 session ${noSid}）· 新登记 ${added} · 解除归档 ${unarch} · 全量组共 ${list.length}`);
-  if ((added || unarch) && !dry) saveWs(ws);
+  console.log(`[sync] 扫到 run ${runs.length}（无 session ${noSid}）· 新登记 ${added} · 清出 ${cleaned}（已在正式组）· 解除归档 ${unarch} · 全量组共 ${list.length}`);
+  if ((added || unarch || cleaned) && !dry) saveWs(ws);
   else console.log(dry ? "[dry] 未写盘" : "[sync] 无变化");
 }
 
