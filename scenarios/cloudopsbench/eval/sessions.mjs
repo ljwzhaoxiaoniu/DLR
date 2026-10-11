@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 // Cloud-OpsBench 会话归组（评测包组件 · 与 grade.sh / stats.mjs 同列）
 //
-// 两个组的职责（dsh web 左侧列表）：
-//   cloudopsbench-all   全量/默认组 —— 每个跑题 session 的默认落点（sync 例行执行，补齐登记）
-//   cloudopsbench       正式组     —— 只放「通过」（JRA=1）的 session（promote，认可才移）
+// 两个组的职责（dsh web 左侧列表；2026-10-11 语义定稿：并存不互斥）：
+//   cloudopsbench-all   全量组 —— 跑过的 session 都在（超集；sync 例行补齐登记）
+//   cloudopsbench       正式组 —— 再加挂「通过」（JRA=1）的 session（promote；不搬走，两处并存）
 //
 // 用法:
 //   node sessions.mjs sync    [--results <dir>] [--dirs <run_dir>...] [--dry]
 //       把 results/<轮次>/raw/<run>/ 里全部 session 登记进全量组（补登记 + 解除归档）
 //   node sessions.mjs promote [--round <id前缀>] [--case <sys/cat/case>]... [--session <id前缀>]... [--dry]
-//       默认：每题取最近一轮，「通过」（JRA=1）的 run 移入正式组（全量组 → 正式组，move）
+//       默认：每题取最近一轮，「通过」（JRA=1）的 run 加挂进正式组（全量组不动，两处并存）
 //       --case / --session 手动指定（可越过分档，即「认可」通道）
 //   node sessions.mjs list
 //       两组现状（session → 案例/轮次 反查）
@@ -182,30 +182,23 @@ const unarchive = (ws, sid) => {
 
 // ── sync：登记进全量组 ──────────────────────────────────────────────
 if (cmd === "sync") {
-  const { ws, W, allId, formalId } = loadWs();
+  const { ws, W, allId } = loadWs();
   const list = W[allId].sessionIds;
-  const formal = new Set(W[formalId].sessionIds);
-  let added = 0, unarch = 0, noSid = 0, cleaned = 0;
+  let added = 0, unarch = 0, noSid = 0;
   for (const r of runs) {
     if (!r.sessionId) { noSid++; console.log(`  ! ${r.dirName}: ndjson 无 session 事件，跳过`); continue; }
-    // 两组互斥（promote = move 语义）：已在正式组的不再入全量组；历史误入的顺手清出
-    if (formal.has(r.sessionId)) {
-      const i = list.indexOf(r.sessionId);
-      if (i >= 0) { list.splice(i, 1); cleaned++; console.log(`  ~ ${short(r.sessionId)}  ${r.caseKey}  已在正式组 → 从全量组清出`); }
-      continue;
-    }
+    // 全量组 = 超集：跑过的都登记（已加挂正式组的照样保留在这里，两处并存）
     if (!list.includes(r.sessionId)) { list.push(r.sessionId); added++; console.log(`  + ${short(r.sessionId)}  ${r.caseKey}  ${r.dirName}`); }
     if (unarchive(ws, r.sessionId)) unarch++;
   }
-  console.log(`[sync] 扫到 run ${runs.length}（无 session ${noSid}）· 新登记 ${added} · 清出 ${cleaned}（已在正式组）· 解除归档 ${unarch} · 全量组共 ${list.length}`);
-  if ((added || unarch || cleaned) && !dry) saveWs(ws);
+  console.log(`[sync] 扫到 run ${runs.length}（无 session ${noSid}）· 新登记 ${added} · 解除归档 ${unarch} · 全量组共 ${list.length}`);
+  if ((added || unarch) && !dry) saveWs(ws);
   else console.log(dry ? "[dry] 未写盘" : "[sync] 无变化");
 }
 
 // ── promote：移入正式组 ─────────────────────────────────────────────
 else if (cmd === "promote") {
-  const { ws, W, allId, formalId } = loadWs();
-  const allList = W[allId].sessionIds;
+  const { ws, W, formalId } = loadWs();
   const formalList = W[formalId].sessionIds;
 
   // 目标集合
@@ -238,21 +231,18 @@ else if (cmd === "promote") {
 
   let moved = 0, already = 0;
   for (const t of targets) {
-    const inFormal = formalList.includes(t.sessionId);
-    const inAll = allList.includes(t.sessionId);
-    let act;
-    if (inFormal && !inAll) { act = "已在正式组"; already++; }
-    else {
-      if (!inFormal) formalList.push(t.sessionId);
-      const i = allList.indexOf(t.sessionId);
-      if (i >= 0) allList.splice(i, 1);
-      unarchive(ws, t.sessionId); // 正式组要可见
-      act = inAll ? "全量→正式" : "直接入正式"; moved++;
+    if (formalList.includes(t.sessionId)) {
+      already++;
+      console.log(`  = ${t.caseKey}  [${t.round} · ${t.jra == null ? "手动" : "JRA=" + t.jra}]  ${short(t.sessionId)}  已在正式组`);
+      continue;
     }
-    console.log(`  ${act === "已在正式组" ? "=" : "→"} ${t.caseKey}  [${t.round} · ${t.jra == null ? "手动" : "JRA=" + t.jra}]  ${short(t.sessionId)}  ${act}`);
+    formalList.push(t.sessionId);
+    unarchive(ws, t.sessionId); // 正式组要可见
+    moved++;
+    console.log(`  → ${t.caseKey}  [${t.round} · ${t.jra == null ? "手动" : "JRA=" + t.jra}]  ${short(t.sessionId)}  加挂正式（全量组不动）`);
   }
   formalList.sort();
-  console.log(`[promote] 移入 ${moved} · 已在 ${already} · 正式组共 ${formalList.length} · 全量组剩 ${allList.length}`);
+  console.log(`[promote] 新加挂 ${moved} · 已在 ${already} · 正式组共 ${formalList.length}（全量与正式并存，不搬走）`);
   if (moved && !dry) saveWs(ws);
   else console.log(dry ? "[dry] 未写盘" : "[promote] 无变化");
   console.log("[提示] dsh web 重启后可见（bash \"DSH-based Agent Service/dsh_dlr/run_web.sh\"）");
