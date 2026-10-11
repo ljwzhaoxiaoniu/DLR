@@ -1120,7 +1120,11 @@
 
             SemanticVis.state.selectedNodeId = entityId;
 
-            if (entityType === 'le') {
+            const isStateV2 = SemanticVis.state.mode === 'state' &&
+                SemanticVis.state.stateData && SemanticVis.state.stateData.shape === 'entities';
+            if (isStateV2) {
+                showStateV2Detail(entityId, SemanticVis.state.stateData);
+            } else if (entityType === 'le') {
                 showLEDetail(entityId);
             } else {
                 showEntityDetail(entityId);
@@ -1297,6 +1301,52 @@
         panel.style.display = 'block';
     }
 
+    // ── dlr-state v2 左栏（对象列表：服务/节点/命名空间分组 → LE → 下挂 PE）─────────
+    function renderStateV2List() {
+        const d = SemanticVis.state.stateData || {};
+        const listEl = document.getElementById('entityList');
+        const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const KIND_LABEL = { service: '服务', node: '节点', namespace: '命名空间' };
+        let html = '';
+        for (const kind of ['service', 'node', 'namespace']) {
+            const les = (d.logical_entities || []).filter(e => e.kind === kind)
+                .sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), undefined, { numeric: true }));
+            if (!les.length) continue;
+            html += '<div class="ungrouped-header">' + (KIND_LABEL[kind] || kind) + '（' + les.length + '）</div>';
+            for (const le of les) {
+                const childPEs = (d.physical_entities || []).filter(p => p.le_id === le.id);
+                html += '<div class="le-group-header" data-le-id="' + esc(le.id) + '">' +
+                    '<span class="le-arrow">▼</span>' +
+                    '<span class="badge le-badge">LE</span>' +
+                    esc(le.name || le.id) +
+                    ' <span style="font-size:11px;color:#888;">(' + childPEs.length + '个PE)</span>' +
+                    '</div>';
+                html += '<div class="le-group-children" data-le-children="' + esc(le.id) + '">';
+                html += '<div class="entity-item le-item" data-id="' + esc(le.id) + '" data-type="le">' +
+                    '<span class="badge le-badge">LE</span>' +
+                    '<div>' + esc(le.name || le.id) + '</div>' +
+                    '<div style="font-size:11px;color:#999;">' + esc(le.id) + '</div>' +
+                    '</div>';
+                childPEs.forEach(pe => {
+                    html += '<div class="entity-item" data-id="' + esc(pe.id) + '" data-type="pe">' +
+                        '<span class="badge pe-badge">PE</span>' +
+                        '<div>' + esc(pe.name || '未知') + '</div>' +
+                        '<div style="font-size:11px;color:#999;">' + esc(pe.resource || pe.id) + '</div>' +
+                        '</div>';
+                });
+                html += '</div>';
+            }
+        }
+        listEl.innerHTML = html || '<div style="padding:20px;text-align:center;color:#999;">无对象</div>';
+        listEl.querySelectorAll('.le-group-header').forEach(header => {
+            header.addEventListener('click', function() {
+                this.classList.toggle('collapsed');
+                const children = listEl.querySelector('[data-le-children="' + this.dataset.leId + '"]');
+                if (children) children.classList.toggle('collapsed');
+            });
+        });
+    }
+
     // ── dlr-state v2 渲染（LE=对象 圆 · PE=观测面 方 · PAS=调用图 绿边——经典 DLR 观感）──
     function initStateV2Network(d) {
         const CONST = SemanticVis.CONST;
@@ -1373,8 +1423,12 @@
             });
             SemanticVis.state.network.on('click', function(params) {
                 if (params.nodes.length > 0) {
+                    SemanticVis.state.selectedNodeId = params.nodes[0];
+                    updateEntityListHighlight();
                     showStateV2Detail(params.nodes[0], d);
                 } else {
+                    SemanticVis.state.selectedNodeId = null;
+                    updateEntityListHighlight();
                     document.getElementById('attrPanel').style.display = 'none';
                 }
             });
@@ -1453,9 +1507,13 @@
         if (success) renderDbSwitcher();
 
         if (success && SemanticVis.state.mode === 'state') {
-            // 状态形态：左栏（实体列表）不适用 → 隐藏；图谱 + 点击详情
+            // 状态形态 v2：左栏 = 对象列表（服务/节点/命名空间 → 观测面）；旧 v1 形态无列表 → 隐藏
             const left = document.querySelector('.left-panel');
-            if (left) left.style.display = 'none';
+            if (SemanticVis.state.stateData.shape === 'entities') {
+                renderStateV2List();
+            } else if (left) {
+                left.style.display = 'none';
+            }
             initStateNetwork();
             bindEvents();
             return;
