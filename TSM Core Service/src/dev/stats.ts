@@ -5,6 +5,7 @@
  * 产出：
  *   results/stats.svg   综合统计图（评定〔500 题口径 + 已跑放大〕/ 跑题覆盖度 / 效率指标）
  *   results/STATS.md    同一份统计的文字版
+ *   场景 overview.html  总视图（自动生成，与 DETAIL.md 同级：关键数卡片 + 逐库覆盖度进度条 + 逐轮 + 逐库明细）
  *   场景 DETAIL.md      评测明细文档（与 README 并列；见 dev/detail.ts）
  *   场景 README         两个标记块同步：实测结果（stats:）+ 错题记录（mistakes:）
  *
@@ -363,6 +364,104 @@ if (!NO_SYNC) {
   syncBlock(MARK_BEGIN, MARK_END, block, "实测结果");
   syncBlock(MK_BEGIN, MK_END, mistakesBlock, "数据集缺陷记录");
 }
+
+// ── 总视图 overview.html（自动生成，与 DETAIL.md 同级；结构与 cloudopsbench/overview.html 同构）──
+const overviewPath = path.join(SCENARIO, "overview.html");
+const barPct = (d: number, t: number) => (t ? Math.round((d / t) * 1000) / 10 : 0);
+const medOf = (a: number[]) => { const s = [...a].sort((x, y) => x - y); return s.length ? s[Math.floor(s.length / 2)] : 0; };
+const tksFinal = finals.map((r) => r.tokens);
+const dbRows = allDbs.map((db) => {
+  const rs = finals.filter((r) => r.db === db);
+  const done = dbDone.get(db) ?? 0;
+  const total = dbTotal.get(db) ?? 0;
+  return { db, rs, done, total, pctv: barPct(done, total) };
+});
+const famBars = dbRows.map(({ db, done, total, pctv }) =>
+  `<div class="fam"><div class="fam__name">${esc(db)}</div><div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:${Math.min(pctv, 100)}%"></div></div></div><div class="fam__num">${done}/${total} · ${pctv}%</div></div>`
+).join("\n");
+const dbTable = dbRows.map(({ db, rs, pctv }) =>
+  `<tr><td><a href="DETAIL/${esc(db)}.md"><code>${esc(db)}</code></a></td><td>${rs.length}</td><td>${rs.filter((r) => r.ruling === "CORRECT").length}</td><td>${rs.filter((r) => r.ruling === "OVERTURNED").length}</td><td>${rs.filter((r) => r.ruling === "WRONG").length}</td><td>${rs.filter((r) => r.ruling === "PENDING").length}</td><td>${fmt(medOf(rs.map((r) => r.tokens)))}</td><td>${pctv}%</td></tr>`
+).join("\n");
+const roundTable = byRun.map(({ run, rs }) =>
+  `<tr><td><code>${run}</code></td><td>${rs.length}</td><td>${rTally(rs, "CORRECT")}</td><td>${rTally(rs, "OVERTURNED")}</td><td>${rTally(rs, "WRONG")}</td><td>${rTally(rs, "PENDING")}</td><td>${fmt(rs.reduce((n, r) => n + r.tokens, 0))}</td></tr>`
+).join("\n");
+const dashboardHtml = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSM + DLR · birdminidev · 总视图</title>
+<style>
+  :root {
+    --surface: #fcfcfb; --page: #f9f9f7; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --border: rgba(11,11,11,0.08); --dlr: #2a78d6; --good: #0ca30c;
+    font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 17px; line-height: 1.6; color: var(--ink); background: var(--page);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      --surface: #1a1a19; --page: #0d0d0d; --ink: #fff; --ink-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --border: rgba(255,255,255,0.08); --dlr: #3987e5; --good: #2fbf2f;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { max-width: 1080px; margin: 0 auto; padding: 56px 28px 80px; }
+  .hero { font-size: clamp(30px, 4.5vw, 48px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; }
+  .hero em { font-style: normal; color: var(--dlr); }
+  .deck { color: var(--ink-2); margin-top: 14px; max-width: 760px; }
+  .section-title { font-size: clamp(22px, 3vw, 32px); font-weight: 750; letter-spacing: -0.015em; margin: 56px 0 20px; }
+  .section-title em { font-style: normal; color: var(--dlr); }
+  .muted { color: var(--muted); font-size: 14px; }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 30px; }
+  .stat { flex: 1 1 180px; min-width: 160px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 22px 24px; }
+  .stat__value { font-size: clamp(26px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; color: var(--dlr); }
+  .stat--good .stat__value { color: var(--good); }
+  .stat__label { font-size: 14px; color: var(--ink-2); margin-top: 6px; }
+  .stat__note { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  .fam { display: grid; grid-template-columns: 240px 1fr 130px; gap: 14px; align-items: center; padding: 7px 0; }
+  .fam__name { font-size: 14.5px; font-weight: 600; text-align: right; }
+  .fam__num { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .bar { height: 10px; border-radius: 999px; background: var(--grid); overflow: hidden; }
+  .bar__fill { height: 100%; background: var(--dlr); border-radius: 999px; min-width: 2px; }
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 14px; }
+  th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th { font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+  tr:last-child td { border-bottom: none; }
+  code { font-size: 13px; color: var(--dlr); }
+  .note { border-left: 3px solid var(--dlr); padding: 12px 18px; background: var(--surface); border-radius: 0 10px 10px 0; font-size: 14.5px; color: var(--ink-2); margin-top: 26px; }
+  a { color: var(--dlr); }
+</style>
+</head>
+<body>
+<h1 class="hero">TSM + DLR · birdminidev · <em>总视图</em></h1>
+<p class="deck">三级语义建模（L1/L2/L3）驱动 NL2SQL mini_dev——主口径 = SOP 评定（每题取最新一轮）。本页由 <code>tsm stats</code> 每次重建自动刷新；手工分享页（overview / appendix / usage）与本页并存。</p>
+<div class="stat-row">
+  <div class="stat stat--good"><div class="stat__value">✅ ${rTallyFinal("CORRECT")} · 🔁 ${rTallyFinal("OVERTURNED")}</div><div class="stat__label">评定（${dataset.length} 题口径）</div><div class="stat__note">❌ ${rTallyFinal("WRONG")} · ⚠️ ${rTallyFinal("PENDING")} · ⬜ 未跑 ${dataset.length - finals.length}</div></div>
+  <div class="stat"><div class="stat__value">${doneTotal}/${dataset.length}</div><div class="stat__label">跑题覆盖度</div><div class="stat__note">${((doneTotal / dataset.length) * 100).toFixed(1)}% · ${dbDone.size}/${dbTotal.size} 库有产物</div></div>
+  <div class="stat"><div class="stat__value">${fmt(medOf(tksFinal))}</div><div class="stat__label">token 中位 / 题</div><div class="stat__note">平均 ${fmt(Math.round(avgFinal((r) => r.tokens)))} · cache 读 ${cacheShare}%</div></div>
+  <div class="stat"><div class="stat__value">${avgFinal((r) => r.steps).toFixed(1)} / ${avgFinal((r) => r.tools).toFixed(1)}</div><div class="stat__label">步数 / 工具 均值</div><div class="stat__note">工具错误 ${avgFinal((r) => r.toolErrors).toFixed(2)}</div></div>
+</div>
+
+<h2 class="section-title">跑题覆盖度 · <em>逐库进度</em></h2>
+${famBars}
+
+<h2 class="section-title">逐轮 · <em>评定与消耗</em></h2>
+<table>
+<tr><th>轮次</th><th>题数</th><th>✅</th><th>🔁</th><th>❌</th><th>⚠️</th><th>tokens</th></tr>
+${roundTable}
+</table>
+
+<h2 class="section-title">逐库明细 · <em>去重取最新</em></h2>
+<table>
+<tr><th>库</th><th>题数</th><th>✅</th><th>🔁</th><th>❌</th><th>⚠️</th><th>token 中位</th><th>覆盖</th></tr>
+${dbTable}
+</table>
+<div class="note">口径：评定 = 最终结果（每题取最新一轮；🔁 翻盘单独计，不并入 ✅ 正确）；tokens = input + cache_read + output。文字版台账：<a href="results/STATS.md">STATS.md</a> · <a href="DETAIL.md">DETAIL.md</a>（逐题证据按库拆 <a href="DETAIL/">DETAIL/</a>）。生成 ${new Date().toISOString()}</div>
+</body>
+</html>
+`;
+fs.writeFileSync(overviewPath, dashboardHtml);
+console.log(`[stats] 总视图 → ${overviewPath}`);
 
 console.log(`[stats] 轮次 ${runs.length} ｜ 判定 ${rows.length} 次（去重 ${doneTotal} 题）`);
 console.log(md.split("\n").slice(0, 6).join("\n"));

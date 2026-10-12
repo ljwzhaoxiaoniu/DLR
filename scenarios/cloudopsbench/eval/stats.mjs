@@ -284,10 +284,9 @@ if (keepTail) D.push(keepTail.slice(KEEP.length).replace(/^\n+/, ""));
 else D.push("> （跑批后按案例补写：值得注意的错法 / 链闭而答案错 / 流程分特低特高 的题。）", "");
 fs.writeFileSync(detailPath, D.join("\n") + "\n", "utf8");
 
-// ── ⑧ share/overview.html（总视图：关键数 + 覆盖度进度条 + 效率 + 逐题明细）──
+// ── ⑧ overview.html（总视图：关键数 + 覆盖度进度条 + 效率 + 逐题明细；与 DETAIL.md 同级）──
 // 设计系统对齐 birdminidev/share（同源 CSS 变量）；每次 stats 重建自动刷新
-const shareDir = path.join(SCENARIO, "share");
-fs.mkdirSync(shareDir, { recursive: true });
+const overviewPath = path.join(SCENARIO, "overview.html");
 const barPct = (done, total) => (total ? Math.round((done / total) * 1000) / 10 : 0);
 const familiesSorted = [...new Set([...full.keys(), ...families])].sort();
 const famRows = familiesSorted.map((f) => {
@@ -381,14 +380,14 @@ ${roundRows}
 <tr><th>题</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>轮次</th></tr>
 ${caseRows}
 </table>
-<div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="../results/STATS.md">STATS.md</a> · <a href="../DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="../DETAIL/">DETAIL/</a>）。生成 ${now}</div>
+<div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="results/STATS.md">STATS.md</a> · <a href="DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="DETAIL/">DETAIL/</a>）。生成 ${now}</div>
 </body>
 </html>
 `;
-fs.writeFileSync(path.join(shareDir, "overview.html"), overviewHtml, "utf8");
+fs.writeFileSync(overviewPath, overviewHtml, "utf8");
 
 console.log(`[stats] 轮次 ${rounds.length} · 覆盖 ${covered}/${grandTotal} · JRA ${A.jra}/${A.n}`);
 console.log(`[stats] → ${path.join(resultsDir, "STATS.md")}`);
 console.log(`[stats] → ${detailPath}`);
 console.log(`[stats] → ${detailDir}/*.md（${families.length} 个家族）`);
-console.log(`[stats] → ${path.join(shareDir, "overview.html")}`);
+console.log(`[stats] → ${overviewPath}`);

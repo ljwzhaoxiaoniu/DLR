@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSM + DLR · birdminidev · 总视图</title>
+<style>
+  :root {
+    --surface: #fcfcfb; --page: #f9f9f7; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --border: rgba(11,11,11,0.08); --dlr: #2a78d6; --good: #0ca30c;
+    font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 17px; line-height: 1.6; color: var(--ink); background: var(--page);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      --surface: #1a1a19; --page: #0d0d0d; --ink: #fff; --ink-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --border: rgba(255,255,255,0.08); --dlr: #3987e5; --good: #2fbf2f;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { max-width: 1080px; margin: 0 auto; padding: 56px 28px 80px; }
+  .hero { font-size: clamp(30px, 4.5vw, 48px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; }
+  .hero em { font-style: normal; color: var(--dlr); }
+  .deck { color: var(--ink-2); margin-top: 14px; max-width: 760px; }
+  .section-title { font-size: clamp(22px, 3vw, 32px); font-weight: 750; letter-spacing: -0.015em; margin: 56px 0 20px; }
+  .section-title em { font-style: normal; color: var(--dlr); }
+  .muted { color: var(--muted); font-size: 14px; }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 30px; }
+  .stat { flex: 1 1 180px; min-width: 160px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 22px 24px; }
+  .stat__value { font-size: clamp(26px, 3.4vw, 40px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; color: var(--dlr); }
+  .stat--good .stat__value { color: var(--good); }
+  .stat__label { font-size: 14px; color: var(--ink-2); margin-top: 6px; }
+  .stat__note { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  .fam { display: grid; grid-template-columns: 240px 1fr 130px; gap: 14px; align-items: center; padding: 7px 0; }
+  .fam__name { font-size: 14.5px; font-weight: 600; text-align: right; }
+  .fam__num { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .bar { height: 10px; border-radius: 999px; background: var(--grid); overflow: hidden; }
+  .bar__fill { height: 100%; background: var(--dlr); border-radius: 999px; min-width: 2px; }
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 14px; }
+  th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th { font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+  tr:last-child td { border-bottom: none; }
+  code { font-size: 13px; color: var(--dlr); }
+  .note { border-left: 3px solid var(--dlr); padding: 12px 18px; background: var(--surface); border-radius: 0 10px 10px 0; font-size: 14.5px; color: var(--ink-2); margin-top: 26px; }
+  a { color: var(--dlr); }
+</style>
+</head>
+<body>
+<h1 class="hero">TSM + DLR · birdminidev · <em>总视图</em></h1>
+<p class="deck">三级语义建模（L1/L2/L3）驱动 NL2SQL mini_dev——主口径 = SOP 评定（每题取最新一轮）。本页由 <code>tsm stats</code> 每次重建自动刷新；手工分享页（overview / appendix / usage）与本页并存。</p>
+<div class="stat-row">
+  <div class="stat stat--good"><div class="stat__value">✅ 426 · 🔁 74</div><div class="stat__label">评定（500 题口径）</div><div class="stat__note">❌ 0 · ⚠️ 0 · ⬜ 未跑 0</div></div>
+  <div class="stat"><div class="stat__value">500/500</div><div class="stat__label">跑题覆盖度</div><div class="stat__note">100.0% · 11/11 库有产物</div></div>
+  <div class="stat"><div class="stat__value">55,898</div><div class="stat__label">token 中位 / 题</div><div class="stat__note">平均 73,307 · cache 读 82%</div></div>
+  <div class="stat"><div class="stat__value">6.0 / 10.0</div><div class="stat__label">步数 / 工具 均值</div><div class="stat__note">工具错误 0.05</div></div>
+</div>
+
+<h2 class="section-title">跑题覆盖度 · <em>逐库进度</em></h2>
+<div class="fam"><div class="fam__name">california_schools</div><div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:100%"></div></div></div><div class="fam__num">30/30 · 100%</div></div>
+<div class="fam"><div class="fam__name">card_games</div><div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:100%"></div></div></div><div class="fam__num">52/52 · 100%</div></div>
+<div class="fam"><div class="fam__name">codebase_community</div><div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:100%"></div></div></div><div class="fam__num">49/49 · 100%</div></div>
+<div class="fam"><div class="fam__name">debit_card_specializing</div><div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:100%"></div></div></div><div class="fam__num">30/30 · 100%</div></div>
+<div class="fam"><div class="fam__name">european_football_2</div><div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:100%"></div></div></div><div class="fam__num">51/51 · 100%</div></div>
+<div class="fam"><div class="fam__name">financial</div><div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:100%"></div></div></div><div class="fam__num">32/32 · 100%</div></div>
+<div class="fam"><div class="fam__name">formula_1</div><div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:100%"></div></div></div><div class="fam__num">66/66 · 100%</div></div>
+<div class="fam"><div class="fam__name">student_club</div><div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:100%"></div></div></div><div class="fam__num">48/48 · 100%</div></div>
+<div class="fam"><div class="fam__name">superhero</div><div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:100%"></div></div></div><div class="fam__num">52/52 · 100%</div></div>
+<div class="fam"><div class="fam__name">thrombosis_prediction</div><div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:100%"></div></div></div><div class="fam__num">50/50 · 100%</div></div>
+<div class="fam"><div class="fam__name">toxicology</div><div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:100%"></div></div></div><div class="fam__num">40/40 · 100%</div></div>
+
+<h2 class="section-title">逐轮 · <em>评定与消耗</em></h2>
+<table>
+<tr><th>轮次</th><th>题数</th><th>✅</th><th>🔁</th><th>❌</th><th>⚠️</th><th>tokens</th></tr>
+<tr><td><code>0924_1559_qids_1473_1480_1500</code></td><td>3</td><td>1</td><td>2</td><td>0</td><td>0</td><td>123,072</td></tr>
+<tr><td><code>0924_1837_qids_1471_1472_1476_1479</code></td><td>4</td><td>4</td><td>0</td><td>0</td><td>0</td><td>179,327</td></tr>
+<tr><td><code>0924_1847_qids_1481_1482_1483_1484_1486</code></td><td>5</td><td>3</td><td>1</td><td>0</td><td>1</td><td>302,400</td></tr>
+<tr><td><code>0924_1901_qids_1481</code></td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>52,221</td></tr>
+<tr><td><code>0924_2140_qids_1490_1493_1498_1501_1505</code></td><td>5</td><td>1</td><td>2</td><td>2</td><td>0</td><td>306,044</td></tr>
+<tr><td><code>0924_2158_qids_1506_1507_1509_1514</code></td><td>4</td><td>4</td><td>0</td><td>0</td><td>0</td><td>186,265</td></tr>
+<tr><td><code>0924_2200_qids_1515_1521_1524_1525_1526</code></td><td>5</td><td>3</td><td>2</td><td>0</td><td>0</td><td>461,256</td></tr>
+<tr><td><code>0924_2223_qids_1528_1529_1531_1533</code></td><td>4</td><td>2</td><td>2</td><td>0</td><td>0</td><td>239,011</td></tr>
+<tr><td><code>0924_2230_db_california_schools</code></td><td>30</td><td>26</td><td>1</td><td>2</td><td>1</td><td>5,913,733</td></tr>
+<tr><td><code>0925_1216_qids_28_37_50_72_1493</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>670,811</td></tr>
+<tr><td><code>0925_1357_qids_1025_1028_1029_1030_1031</code></td><td>5</td><td>3</td><td>2</td><td>0</td><td>0</td><td>442,706</td></tr>
+<tr><td><code>0925_1422_qids_1032_1035_1036_1037_1039</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>567,695</td></tr>
+<tr><td><code>0925_1424_qids_1032_1036</code></td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td><td>162,920</td></tr>
+<tr><td><code>0925_1424_qids_1040_1042_1044_1048_1057</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>363,301</td></tr>
+<tr><td><code>0925_1425_qids_1058_1068_1076_1078_1079</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>416,737</td></tr>
+<tr><td><code>0925_1426_qids_1080_1084_1088_1091_1092</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>434,320</td></tr>
+<tr><td><code>0925_1427_qids_1094_1096_1098_1102_1103</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>758,325</td></tr>
+<tr><td><code>0925_1431_qids_1094</code></td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>91,655</td></tr>
+<tr><td><code>0925_1431_qids_1105_1107_1110_1113_1114</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>399,021</td></tr>
+<tr><td><code>0925_1432_qids_1107</code></td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>70,320</td></tr>
+<tr><td><code>0925_1433_qids_1115_1116_1122_1124_1130</code></td><td>5</td><td>3</td><td>1</td><td>1</td><td>0</td><td>413,663</td></tr>
+<tr><td><code>0925_1435_qids_1133_1134_1135_1136_1139</code></td><td>5</td><td>2</td><td>1</td><td>2</td><td>0</td><td>611,295</td></tr>
+<tr><td><code>0925_1437_qids_1134_1135</code></td><td>2</td><td>1</td><td>1</td><td>0</td><td>0</td><td>106,902</td></tr>
+<tr><td><code>0925_1438_qids_1141_1144_1145_1146_1147</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>494,914</td></tr>
+<tr><td><code>0925_1440_qids_1144_1148</code></td><td>2</td><td>0</td><td>1</td><td>1</td><td>0</td><td>175,279</td></tr>
+<tr><td><code>0925_1739_qids_1124_1482_11_23_27_83</code></td><td>6</td><td>3</td><td>3</td><td>0</td><td>0</td><td>955,192</td></tr>
+<tr><td><code>0926_0928_qids_340_341_344_345_346</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>698,627</td></tr>
+<tr><td><code>0926_0930_qids_341_345_346</code></td><td>3</td><td>2</td><td>1</td><td>0</td><td>0</td><td>387,023</td></tr>
+<tr><td><code>0926_0931_qids_347_349_352_356_358</code></td><td>5</td><td>3</td><td>2</td><td>0</td><td>0</td><td>543,154</td></tr>
+<tr><td><code>0926_0933_qids_366_368_371_377_379</code></td><td>5</td><td>3</td><td>1</td><td>1</td><td>0</td><td>428,441</td></tr>
+<tr><td><code>0926_0935_qids_366_383_391_397_402_405</code></td><td>6</td><td>3</td><td>3</td><td>0</td><td>0</td><td>1,016,662</td></tr>
+<tr><td><code>0926_0938_qids_383_391_397_402</code></td><td>4</td><td>2</td><td>2</td><td>0</td><td>0</td><td>392,650</td></tr>
+<tr><td><code>0926_0940_qids_407_408_409_412_414</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>1,712,193</td></tr>
+<tr><td><code>0926_0944_qids_407_408_412</code></td><td>3</td><td>2</td><td>1</td><td>0</td><td>0</td><td>321,266</td></tr>
+<tr><td><code>0926_0945_qids_415_416_422_424_427</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>898,288</td></tr>
+<tr><td><code>0926_0948_qids_416_415_424</code></td><td>3</td><td>2</td><td>1</td><td>0</td><td>0</td><td>252,539</td></tr>
+<tr><td><code>0926_0951_qids_440_459_462_465_466</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>1,065,045</td></tr>
+<tr><td><code>0926_0954_qids_462_465_466</code></td><td>3</td><td>3</td><td>0</td><td>0</td><td>0</td><td>420,702</td></tr>
+<tr><td><code>0926_0954_qids_468_469_472_473_474</code></td><td>5</td><td>3</td><td>0</td><td>1</td><td>1</td><td>786,948</td></tr>
+<tr><td><code>0926_0957_qids_472_477_479_480_483_484</code></td><td>6</td><td>4</td><td>1</td><td>1</td><td>0</td><td>844,188</td></tr>
+<tr><td><code>0926_1000_qids_483_484</code></td><td>2</td><td>0</td><td>2</td><td>0</td><td>0</td><td>281,636</td></tr>
+<tr><td><code>0926_1001_qids_486_487_518_522_528</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>687,346</td></tr>
+<tr><td><code>0926_1005_qids_529_530</code></td><td>2</td><td>0</td><td>1</td><td>0</td><td>1</td><td>280,529</td></tr>
+<tr><td><code>0926_1009_qids_529_518_528_530</code></td><td>4</td><td>0</td><td>1</td><td>0</td><td>3</td><td>1,224,942</td></tr>
+<tr><td><code>0926_1049_qids_518_528_530</code></td><td>3</td><td>3</td><td>0</td><td>0</td><td>0</td><td>470,639</td></tr>
+<tr><td><code>0926_1110_qids_528_345_518_530</code></td><td>4</td><td>4</td><td>0</td><td>0</td><td>0</td><td>555,314</td></tr>
+<tr><td><code>0926_1114_qids_530</code></td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>92,615</td></tr>
+<tr><td><code>0926_1152_qids_531_532_533_539_537</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>413,144</td></tr>
+<tr><td><code>0926_1203_qids_544_547_549_555_557</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>405,832</td></tr>
+<tr><td><code>0926_1936_qids_563_565_567_568_571</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>360,116</td></tr>
+<tr><td><code>0926_2029_qids_572_573_576_578_581</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>351,170</td></tr>
+<tr><td><code>0926_2041_qids_584_586_587_592_595</code></td><td>5</td><td>2</td><td>0</td><td>2</td><td>1</td><td>1,495,016</td></tr>
+<tr><td><code>0926_2055_qids_584_595</code></td><td>2</td><td>1</td><td>1</td><td>0</td><td>0</td><td>169,438</td></tr>
+<tr><td><code>0926_2101_qids_598_604_629_633_634</code></td><td>5</td><td>3</td><td>0</td><td>2</td><td>0</td><td>789,149</td></tr>
+<tr><td><code>0926_2106_qids_633_634</code></td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td><td>199,947</td></tr>
+<tr><td><code>0926_2108_qids_637_639_640_665_669</code></td><td>5</td><td>3</td><td>1</td><td>1</td><td>0</td><td>807,303</td></tr>
+<tr><td><code>0926_2115_qids_639_640</code></td><td>2</td><td>0</td><td>2</td><td>0</td><td>0</td><td>213,222</td></tr>
+<tr><td><code>0926_2118_qids_671_672_678_682_683</code></td><td>5</td><td>2</td><td>3</td><td>0</td><td>0</td><td>613,625</td></tr>
+<tr><td><code>0926_2123_qids_672_683</code></td><td>2</td><td>0</td><td>2</td><td>0</td><td>0</td><td>200,316</td></tr>
+<tr><td><code>0926_2124_qids_685_687_694_701_704</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>578,838</td></tr>
+<tr><td><code>0926_2148_qids_705_707_710_716</code></td><td>4</td><td>3</td><td>1</td><td>0</td><td>0</td><td>377,227</td></tr>
+<tr><td><code>0926_2152_qids_685_710</code></td><td>2</td><td>1</td><td>1</td><td>0</td><td>0</td><td>177,714</td></tr>
+<tr><td><code>0928_1116_qids_5_11_12_17_24</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>490,253</td></tr>
+<tr><td><code>0928_1118_qids_25_26_27_28_31</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>636,125</td></tr>
+<tr><td><code>0928_1123_qids_32_36_39_40_41</code></td><td>5</td><td>3</td><td>0</td><td>1</td><td>1</td><td>638,284</td></tr>
+<tr><td><code>0928_1127_qids_46_47_48_50_62</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>660,519</td></tr>
+<tr><td><code>0928_1132_qids_72_77_79_83_87</code></td><td>5</td><td>4</td><td>0</td><td>0</td><td>1</td><td>566,368</td></tr>
+<tr><td><code>0928_1135_qids_23_37_45_82_85</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>470,648</td></tr>
+<tr><td><code>0928_1137_qids_39_41_50_77</code></td><td>4</td><td>4</td><td>0</td><td>0</td><td>0</td><td>213,575</td></tr>
+<tr><td><code>0928_1147_qids_27_32_83_85</code></td><td>4</td><td>3</td><td>1</td><td>0</td><td>0</td><td>415,744</td></tr>
+<tr><td><code>0928_1150_qids_27</code></td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>100,273</td></tr>
+<tr><td><code>0928_1405_qids_1471_1472_1473_1476_1479</code></td><td>5</td><td>3</td><td>1</td><td>1</td><td>0</td><td>286,981</td></tr>
+<tr><td><code>0928_1413_qids_1472</code></td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>66,133</td></tr>
+<tr><td><code>0928_1413_qids_1480_1481_1482_1483_1484</code></td><td>5</td><td>3</td><td>2</td><td>0</td><td>0</td><td>211,837</td></tr>
+<tr><td><code>0928_1419_qids_1486_1490_1493_1498_1500</code></td><td>5</td><td>2</td><td>3</td><td>0</td><td>0</td><td>207,632</td></tr>
+<tr><td><code>0928_1427_qids_1501_1505_1506_1507_1509</code></td><td>5</td><td>3</td><td>2</td><td>0</td><td>0</td><td>269,862</td></tr>
+<tr><td><code>0928_1828_qids_1505</code></td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>31,457</td></tr>
+<tr><td><code>0928_1829_qids_1514_1515_1521_1524_1525</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>265,333</td></tr>
+<tr><td><code>0928_1833_qids_1526_1528_1529_1531_1533</code></td><td>5</td><td>2</td><td>3</td><td>0</td><td>0</td><td>260,798</td></tr>
+<tr><td><code>0928_2013_qids_1025_1028_1029_1030_1031</code></td><td>5</td><td>3</td><td>2</td><td>0</td><td>0</td><td>407,139</td></tr>
+<tr><td><code>0928_2020_qids_1028</code></td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>62,219</td></tr>
+<tr><td><code>0928_2021_qids_1032_1035_1036_1037_1039</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>314,631</td></tr>
+<tr><td><code>0928_2045_qids_1025_1028_1029_1030_1031</code></td><td>5</td><td>3</td><td>2</td><td>0</td><td>0</td><td>575,827</td></tr>
+<tr><td><code>0928_2047_qids_1032_1035_1036_1037_1039</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>444,247</td></tr>
+<tr><td><code>0928_2048_qids_1031</code></td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>63,210</td></tr>
+<tr><td><code>0928_2113_qids_1040_1042_1044_1048_1057</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>335,695</td></tr>
+<tr><td><code>0928_2116_qids_1058_1068_1076_1078_1079</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>264,351</td></tr>
+<tr><td><code>0928_2124_qids_1080_1084_1088_1091_1092</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>373,668</td></tr>
+<tr><td><code>0928_2128_qids_1094_1096_1098_1102_1103</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>318,404</td></tr>
+<tr><td><code>0928_2132_qids_1105_1107_1110_1113_1114</code></td><td>5</td><td>2</td><td>1</td><td>1</td><td>1</td><td>382,991</td></tr>
+<tr><td><code>0928_2137_qids_1113_1114</code></td><td>2</td><td>1</td><td>0</td><td>1</td><td>0</td><td>182,864</td></tr>
+<tr><td><code>0928_2140_qids_1114</code></td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>68,650</td></tr>
+<tr><td><code>0928_2153_qids_1115_1116_1122_1124_1130</code></td><td>5</td><td>2</td><td>2</td><td>0</td><td>1</td><td>474,509</td></tr>
+<tr><td><code>0928_2200_qids_1122</code></td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>54,883</td></tr>
+<tr><td><code>0928_2201_qids_1133_1134_1135_1136_1139</code></td><td>5</td><td>2</td><td>2</td><td>1</td><td>0</td><td>381,606</td></tr>
+<tr><td><code>0928_2205_qids_1141_1144_1145_1146_1147</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>313,576</td></tr>
+<tr><td><code>0928_2208_qids_1146_1148</code></td><td>2</td><td>1</td><td>0</td><td>1</td><td>0</td><td>257,488</td></tr>
+<tr><td><code>0928_2211_qids_1148</code></td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>76,158</td></tr>
+<tr><td><code>0928_2215_qids_531_532_533_537_539</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>277,651</td></tr>
+<tr><td><code>0928_2218_qids_533</code></td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>38,762</td></tr>
+<tr><td><code>0928_2227_qids_544_547_549_555_557</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>238,548</td></tr>
+<tr><td><code>0928_2256_qids_563_565_567_568_571</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>283,473</td></tr>
+<tr><td><code>0928_2309_qids_572_573_576_578_581</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>177,510</td></tr>
+<tr><td><code>0928_2320_qids_584_586_587_592_595</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>264,797</td></tr>
+<tr><td><code>0928_2344_qids_598_604_629_633_634</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>283,825</td></tr>
+<tr><td><code>0928_2347_qids_598</code></td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>32,227</td></tr>
+<tr><td><code>0928_2355_qids_637_639_640_665_669</code></td><td>5</td><td>3</td><td>2</td><td>0</td><td>0</td><td>294,875</td></tr>
+<tr><td><code>0929_0826_qids_671_672_678_682_683</code></td><td>5</td><td>2</td><td>3</td><td>0</td><td>0</td><td>298,050</td></tr>
+<tr><td><code>0929_0847_qids_685_687_694_701_704</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>256,569</td></tr>
+<tr><td><code>0929_0850_qids_705_707_710_716</code></td><td>4</td><td>2</td><td>1</td><td>1</td><td>0</td><td>212,520</td></tr>
+<tr><td><code>0929_1118_qids_72_716_1136</code></td><td>3</td><td>2</td><td>1</td><td>0</td><td>0</td><td>132,043</td></tr>
+<tr><td><code>0929_1133_qids_340_341_344_345_346</code></td><td>5</td><td>3</td><td>1</td><td>1</td><td>0</td><td>417,274</td></tr>
+<tr><td><code>0929_1200_card_games_b2_11</code></td><td>47</td><td>16</td><td>6</td><td>11</td><td>14</td><td>2,816,156</td></tr>
+<tr><td><code>0929_1251_card_games_rerun26b</code></td><td>26</td><td>21</td><td>4</td><td>1</td><td>0</td><td>1,996,731</td></tr>
+<tr><td><code>0929_1303_card_games_sec4</code></td><td>4</td><td>2</td><td>1</td><td>1</td><td>0</td><td>485,161</td></tr>
+<tr><td><code>0929_1308_card_games_q340</code></td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>171,706</td></tr>
+<tr><td><code>0929_1331_financial_b1</code></td><td>5</td><td>3</td><td>0</td><td>2</td><td>0</td><td>676,286</td></tr>
+<tr><td><code>0929_1333_financial_b2</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>313,637</td></tr>
+<tr><td><code>0929_1335_financial_b3</code></td><td>5</td><td>3</td><td>0</td><td>1</td><td>1</td><td>867,857</td></tr>
+<tr><td><code>0929_1339_financial_b4</code></td><td>5</td><td>2</td><td>0</td><td>2</td><td>1</td><td>697,466</td></tr>
+<tr><td><code>0929_1343_financial_b5</code></td><td>5</td><td>3</td><td>0</td><td>2</td><td>0</td><td>631,500</td></tr>
+<tr><td><code>0929_1346_financial_b6</code></td><td>5</td><td>2</td><td>0</td><td>3</td><td>0</td><td>773,327</td></tr>
+<tr><td><code>0929_1350_financial_b7</code></td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td><td>217,552</td></tr>
+<tr><td><code>0929_1354_financial_secA</code></td><td>5</td><td>2</td><td>3</td><td>0</td><td>0</td><td>282,400</td></tr>
+<tr><td><code>0929_1356_financial_secB</code></td><td>5</td><td>3</td><td>2</td><td>0</td><td>0</td><td>265,627</td></tr>
+<tr><td><code>0929_1359_financial_secC</code></td><td>3</td><td>2</td><td>0</td><td>0</td><td>1</td><td>332,912</td></tr>
+<tr><td><code>0929_1403_financial_q186</code></td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>77,479</td></tr>
+<tr><td><code>0929_1446_formula1_b1</code></td><td>5</td><td>4</td><td>0</td><td>0</td><td>1</td><td>297,381</td></tr>
+<tr><td><code>0929_1449_formula1_b2</code></td><td>5</td><td>3</td><td>0</td><td>1</td><td>1</td><td>1,356,232</td></tr>
+<tr><td><code>0929_1456_formula1_b3</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>309,728</td></tr>
+<tr><td><code>0929_1457_formula1_b4</code></td><td>5</td><td>2</td><td>0</td><td>1</td><td>2</td><td>478,097</td></tr>
+<tr><td><code>0929_1459_formula1_b5</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>359,745</td></tr>
+<tr><td><code>0929_1500_formula1_b6</code></td><td>5</td><td>3</td><td>0</td><td>0</td><td>2</td><td>457,421</td></tr>
+<tr><td><code>0929_1502_formula1_b7</code></td><td>5</td><td>4</td><td>0</td><td>0</td><td>1</td><td>642,189</td></tr>
+<tr><td><code>0929_1506_formula1_b8</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>1,357,099</td></tr>
+<tr><td><code>0929_1512_formula1_b9</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>413,266</td></tr>
+<tr><td><code>0929_1513_formula1_b10</code></td><td>5</td><td>2</td><td>0</td><td>3</td><td>0</td><td>483,535</td></tr>
+<tr><td><code>0929_1516_formula1_b11</code></td><td>5</td><td>4</td><td>0</td><td>0</td><td>1</td><td>660,189</td></tr>
+<tr><td><code>0929_1520_formula1_b12</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>296,195</td></tr>
+<tr><td><code>0929_1521_formula1_b13</code></td><td>5</td><td>4</td><td>0</td><td>0</td><td>1</td><td>537,772</td></tr>
+<tr><td><code>0929_1524_formula1_b14</code></td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>108,482</td></tr>
+<tr><td><code>0929_1528_formula1_secA</code></td><td>5</td><td>3</td><td>2</td><td>0</td><td>0</td><td>411,890</td></tr>
+<tr><td><code>0929_1530_formula1_secB</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>271,254</td></tr>
+<tr><td><code>0929_1534_formula1_secC</code></td><td>5</td><td>3</td><td>2</td><td>0</td><td>0</td><td>326,482</td></tr>
+<tr><td><code>0929_1537_formula1_secD</code></td><td>3</td><td>1</td><td>2</td><td>0</td><td>0</td><td>165,304</td></tr>
+<tr><td><code>0929_1554_student_club_b1</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>258,223</td></tr>
+<tr><td><code>0929_1558_student_club_b2</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>438,021</td></tr>
+<tr><td><code>0929_1559_student_club_b3</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>246,768</td></tr>
+<tr><td><code>0929_1602_student_club_b4</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>335,101</td></tr>
+<tr><td><code>0929_1603_student_club_b5</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>255,665</td></tr>
+<tr><td><code>0929_1604_student_club_b6</code></td><td>5</td><td>4</td><td>0</td><td>0</td><td>1</td><td>958,505</td></tr>
+<tr><td><code>0929_1608_student_club_b7</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>254,668</td></tr>
+<tr><td><code>0929_1609_student_club_b8</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>246,821</td></tr>
+<tr><td><code>0929_1610_student_club_b9</code></td><td>5</td><td>3</td><td>0</td><td>1</td><td>1</td><td>481,657</td></tr>
+<tr><td><code>0929_1613_student_club_b10</code></td><td>3</td><td>3</td><td>0</td><td>0</td><td>0</td><td>199,694</td></tr>
+<tr><td><code>0929_1615_student_club_sec</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>236,761</td></tr>
+<tr><td><code>0929_1625_superhero_b1</code></td><td>5</td><td>4</td><td>0</td><td>0</td><td>1</td><td>254,007</td></tr>
+<tr><td><code>0929_1628_superhero_b2</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>243,024</td></tr>
+<tr><td><code>0929_1629_superhero_b3</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>279,054</td></tr>
+<tr><td><code>0929_1633_superhero_b4</code></td><td>5</td><td>3</td><td>0</td><td>1</td><td>1</td><td>219,465</td></tr>
+<tr><td><code>0929_1633_superhero_b5</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>277,053</td></tr>
+<tr><td><code>0929_1635_superhero_b6</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>327,125</td></tr>
+<tr><td><code>0929_1636_superhero_b7</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>262,473</td></tr>
+<tr><td><code>0929_1637_superhero_b8</code></td><td>5</td><td>3</td><td>0</td><td>2</td><td>0</td><td>285,653</td></tr>
+<tr><td><code>0929_1639_superhero_b9</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>297,490</td></tr>
+<tr><td><code>0929_1640_superhero_b10</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>284,113</td></tr>
+<tr><td><code>0929_1641_superhero_b11</code></td><td>2</td><td>1</td><td>0</td><td>1</td><td>0</td><td>80,705</td></tr>
+<tr><td><code>0929_1643_superhero_secA</code></td><td>5</td><td>3</td><td>1</td><td>0</td><td>1</td><td>296,181</td></tr>
+<tr><td><code>0929_1644_superhero_secB</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>221,418</td></tr>
+<tr><td><code>0929_1648_superhero_q726</code></td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>66,372</td></tr>
+<tr><td><code>0929_1838_thrombosis_b1</code></td><td>5</td><td>2</td><td>0</td><td>3</td><td>0</td><td>453,539</td></tr>
+<tr><td><code>0929_1841_thrombosis_b2</code></td><td>5</td><td>3</td><td>0</td><td>1</td><td>1</td><td>767,175</td></tr>
+<tr><td><code>0929_1844_thrombosis_b3</code></td><td>5</td><td>3</td><td>0</td><td>1</td><td>1</td><td>1,440,473</td></tr>
+<tr><td><code>0929_1851_thrombosis_b4</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>433,512</td></tr>
+<tr><td><code>0929_1852_thrombosis_b5</code></td><td>5</td><td>3</td><td>0</td><td>1</td><td>1</td><td>1,127,473</td></tr>
+<tr><td><code>0929_1856_thrombosis_b6</code></td><td>5</td><td>1</td><td>0</td><td>3</td><td>1</td><td>1,947,819</td></tr>
+<tr><td><code>0929_1903_thrombosis_b7</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>977,641</td></tr>
+<tr><td><code>0929_1906_thrombosis_b8</code></td><td>5</td><td>1</td><td>0</td><td>4</td><td>0</td><td>2,278,522</td></tr>
+<tr><td><code>0929_1913_thrombosis_b9</code></td><td>5</td><td>1</td><td>0</td><td>4</td><td>0</td><td>2,378,412</td></tr>
+<tr><td><code>0929_1919_thrombosis_b10</code></td><td>5</td><td>3</td><td>0</td><td>2</td><td>0</td><td>1,855,899</td></tr>
+<tr><td><code>0929_2016_thrombosis_secA</code></td><td>5</td><td>0</td><td>0</td><td>0</td><td>5</td><td>0</td></tr>
+<tr><td><code>0929_2035_thrombosis_secB</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>391,662</td></tr>
+<tr><td><code>0929_2039_thrombosis_secA2</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>211,245</td></tr>
+<tr><td><code>0929_2044_thrombosis_secC</code></td><td>5</td><td>4</td><td>0</td><td>0</td><td>1</td><td>318,049</td></tr>
+<tr><td><code>0929_2045_thrombosis_q1205</code></td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>43,874</td></tr>
+<tr><td><code>0929_2048_thrombosis_secD</code></td><td>5</td><td>3</td><td>2</td><td>0</td><td>0</td><td>473,155</td></tr>
+<tr><td><code>0929_2052_thrombosis_secE</code></td><td>5</td><td>4</td><td>1</td><td>0</td><td>0</td><td>400,445</td></tr>
+<tr><td><code>0929_2056_thrombosis_secF</code></td><td>3</td><td>1</td><td>1</td><td>1</td><td>0</td><td>359,255</td></tr>
+<tr><td><code>0929_2100_thrombosis_q1205b</code></td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>256,876</td></tr>
+<tr><td><code>0929_2241_toxicology_b1</code></td><td>5</td><td>3</td><td>0</td><td>2</td><td>0</td><td>256,023</td></tr>
+<tr><td><code>0929_2243_toxicology_b2</code></td><td>5</td><td>4</td><td>0</td><td>0</td><td>1</td><td>258,306</td></tr>
+<tr><td><code>0929_2245_toxicology_b3</code></td><td>5</td><td>3</td><td>0</td><td>2</td><td>0</td><td>265,822</td></tr>
+<tr><td><code>0929_2248_toxicology_b4</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>536,870</td></tr>
+<tr><td><code>0929_2252_toxicology_b5</code></td><td>5</td><td>3</td><td>0</td><td>2</td><td>0</td><td>543,037</td></tr>
+<tr><td><code>0929_2255_toxicology_b6</code></td><td>5</td><td>4</td><td>0</td><td>1</td><td>0</td><td>245,192</td></tr>
+<tr><td><code>0929_2259_toxicology_b7</code></td><td>5</td><td>3</td><td>0</td><td>2</td><td>0</td><td>405,888</td></tr>
+<tr><td><code>0929_2303_toxicology_b8</code></td><td>5</td><td>5</td><td>0</td><td>0</td><td>0</td><td>258,271</td></tr>
+<tr><td><code>0929_2308_toxicology_secA</code></td><td>6</td><td>2</td><td>4</td><td>0</td><td>0</td><td>301,767</td></tr>
+<tr><td><code>0929_2312_toxicology_secB</code></td><td>6</td><td>4</td><td>2</td><td>0</td><td>0</td><td>308,393</td></tr>
+</table>
+
+<h2 class="section-title">逐库明细 · <em>去重取最新</em></h2>
+<table>
+<tr><th>库</th><th>题数</th><th>✅</th><th>🔁</th><th>❌</th><th>⚠️</th><th>token 中位</th><th>覆盖</th></tr>
+<tr><td><a href="DETAIL/california_schools.md"><code>california_schools</code></a></td><td>30</td><td>29</td><td>1</td><td>0</td><td>0</td><td>66,005</td><td>100%</td></tr>
+<tr><td><a href="DETAIL/card_games.md"><code>card_games</code></a></td><td>52</td><td>40</td><td>12</td><td>0</td><td>0</td><td>60,552</td><td>100%</td></tr>
+<tr><td><a href="DETAIL/codebase_community.md"><code>codebase_community</code></a></td><td>49</td><td>41</td><td>8</td><td>0</td><td>0</td><td>47,901</td><td>100%</td></tr>
+<tr><td><a href="DETAIL/debit_card_specializing.md"><code>debit_card_specializing</code></a></td><td>30</td><td>18</td><td>12</td><td>0</td><td>0</td><td>43,973</td><td>100%</td></tr>
+<tr><td><a href="DETAIL/european_football_2.md"><code>european_football_2</code></a></td><td>51</td><td>37</td><td>14</td><td>0</td><td>0</td><td>60,026</td><td>100%</td></tr>
+<tr><td><a href="DETAIL/financial.md"><code>financial</code></a></td><td>32</td><td>26</td><td>6</td><td>0</td><td>0</td><td>64,174</td><td>100%</td></tr>
+<tr><td><a href="DETAIL/formula_1.md"><code>formula_1</code></a></td><td>66</td><td>59</td><td>7</td><td>0</td><td>0</td><td>61,576</td><td>100%</td></tr>
+<tr><td><a href="DETAIL/student_club.md"><code>student_club</code></a></td><td>48</td><td>47</td><td>1</td><td>0</td><td>0</td><td>54,420</td><td>100%</td></tr>
+<tr><td><a href="DETAIL/superhero.md"><code>superhero</code></a></td><td>52</td><td>51</td><td>1</td><td>0</td><td>0</td><td>45,861</td><td>100%</td></tr>
+<tr><td><a href="DETAIL/thrombosis_prediction.md"><code>thrombosis_prediction</code></a></td><td>50</td><td>44</td><td>6</td><td>0</td><td>0</td><td>88,615</td><td>100%</td></tr>
+<tr><td><a href="DETAIL/toxicology.md"><code>toxicology</code></a></td><td>40</td><td>34</td><td>6</td><td>0</td><td>0</td><td>45,684</td><td>100%</td></tr>
+</table>
+<div class="note">口径：评定 = 最终结果（每题取最新一轮；🔁 翻盘单独计，不并入 ✅ 正确）；tokens = input + cache_read + output。文字版台账：<a href="results/STATS.md">STATS.md</a> · <a href="DETAIL.md">DETAIL.md</a>（逐题证据按库拆 <a href="DETAIL/">DETAIL/</a>）。生成 2026-10-12T09:38:21.337Z</div>
+</body>
+</html>
