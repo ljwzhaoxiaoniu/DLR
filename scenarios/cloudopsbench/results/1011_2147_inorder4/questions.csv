@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/infrastructure/1,1.0,1.0,1.0,1.0,1.0,1.0,0.36363636363636365,12.0,0.0,0.0,node/worker-01,containerd_unavailable,node/worker-01,containerd_unavailable,
+boutique/startup/1,1.0,0.0,0.0,1.0,1.0,1.0,0.3,11.0,0.0,0.0,app/adservice,incorrect_image_reference,app/adservice,image_registry_dns_failure,
+boutique/service/1,1.0,1.0,1.0,1.0,1.0,1.0,0.3125,17.0,0.0,0.0,app/cartservice,service_env_var_address_mismatch,app/cartservice,service_env_var_address_mismatch,
+trainticket/startup/1,1.0,1.0,1.0,1.0,1.0,1.0,0.4444444444444444,10.0,0.0,0.0,app/ts-assurance-service,missing_secret_binding,app/ts-assurance-service,missing_secret_binding,
