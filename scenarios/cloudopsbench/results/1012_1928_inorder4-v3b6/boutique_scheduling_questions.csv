@@ -1,0 +1,2 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/scheduling/4,1.0,1.0,1.0,1.0,1.0,1.0,0.14285714285714285,22.0,0.0,0.0,app/frontend,node_cordon_mismatch,app/frontend,node_cordon_mismatch,

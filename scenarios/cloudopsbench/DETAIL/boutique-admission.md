@@ -1,6 +1,6 @@
 # 评测明细 · boutique/admission — cloudopsbench
 
-> 本家族已跑 **2/58** 题：JRA ✅2 ❌0 ｜ 证据链全闭 2 ｜ token 中位 104,662 ｜ 生成 2026-10-12T10:54:47.441Z
+> 本家族已跑 **4/58** 题：JRA ✅4 ❌0 ｜ 证据链全闭 4 ｜ token 中位 102,119 ｜ 生成 2026-10-12T11:39:23.180Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -9,6 +9,8 @@
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | [1](#case-1) | 1 | 1 | 1 | 1 | 1 | 1 | 0.6 | 16 | 81,626 | 0 | 0 | 1012_1458_l3-verify3 | 全对·链闭 |
 | [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.6 | 16 | 104,662 | 0 | 0 | 1012_1846_inorder4-v3b4 | 全对·链闭 |
+| [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5294 | 18 | 102,119 | 0 | 0 | 1012_1907_l3-tweak2 | 全对·链闭 |
+| [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5833 | 13 | 68,497 | 0 | 0 | 1012_1935_tidy-verify1 | 全对·链闭 |
 
 ## 证据正文
 
@@ -23,4 +25,16 @@
 - **结论**：`app/cartservice` + `missing_service_account` ｜ 标签 `app/cartservice` + `missing_service_account`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.6 · steps 16 · tokens 104,662
 - **摘要**：cartservice is the only service in namespace boutique with no running pod: GetResources(pods, label_selector=app=cartservice) returns 'No matching pods found' and the deployment lists as 0/1 READY, 0 UP-TO-DATE, 0 AVAILABLE while 1 is desired. Its Deployment condition shows ReplicaFailure=True (FailedCreate) and the new ReplicaSet cartservice-d68b7d767 (0/1 replicas created) emits 'Error creating: pods "cartservice-d68b7d767-" is forbidden: error looking up service account boutique/cartservices: serviceaccount "cartservices" not found' (x15 over 101s). The configuration close confirms the mism
+
+### case-3
+
+- **结论**：`app/checkoutservice` + `missing_service_account` ｜ 标签 `app/checkoutservice` + `missing_service_account`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.5294 · steps 18 · tokens 102,119
+- **摘要**：checkoutservice has no pod instance while all other 10 boutique services are 1/1 Running with 0 restarts. GetResources(deployments) shows checkoutservice 0/1 (UP-TO-DATE 0, AVAILABLE 0) and its ReplicaSet checkoutservice-d4d5bb7d8 CURRENT=0, i.e. the pod was never created. Deployment/RS events give the mechanism: 'FailedCreate ... pods "checkoutservice-d4d5bb7d8-" is forbidden: error looking up service account boutique/checkoutservices: serviceaccount "checkoutservices" not found' (x15 over 101s), with condition ReplicaFailure=True/FailedCreate. The configuration closure confirms the mismatch:
+
+### case-4
+
+- **结论**：`app/currencyservice` + `missing_service_account` ｜ 标签 `app/currencyservice` + `missing_service_account`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.5833 · steps 13 · tokens 68,497
+- **摘要**：frontend error logs (202x) show 'could not retrieve currencies: rpc error: code = Unavailable ... dial tcp 10.68.161.153:7000: connect: connection refused' (currencyservice ClusterIP:7000), and CheckServiceConnectivity(currencyservice:7000) returned Connection Failed. The pods listing (-o wide) contains only 10 of 11 boutique services: no currencyservice pod exists at all, and GetResources(pods,label_selector=app=currencyservice) is empty. Deployment currencyservice shows READY 0/1 and UP-TO-DATE 0 (no pod ever created, so not a start/probe/image issue). Namespace events carry the mechanism ve
 

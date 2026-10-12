@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **2/96** 题：JRA ✅2 ❌0 ｜ 证据链全闭 2 ｜ token 中位 554,007 ｜ 生成 2026-10-12T10:54:47.441Z
+> 本家族已跑 **4/96** 题：JRA ✅4 ❌0 ｜ 证据链全闭 4 ｜ token 中位 535,723 ｜ 生成 2026-10-12T11:39:23.180Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -9,6 +9,8 @@
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | [1](#case-1) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 26 | 265,656 | 0 | 0 | 1012_1512_inorder4-v3b3 | 全对·链闭 |
 | [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1944 | 37 | 554,007 | 0 | 0 | 1012_1846_inorder4-v3b4 | 全对·链闭 |
+| [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1818 | 23 | 535,723 | 0 | 0 | 1012_1923_l1l2-verify2 | 全对·链闭 |
+| [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 517,218 | 0 | 0 | 1012_1935_tidy-verify1 | 全对·链闭 |
 
 ## 证据正文
 
@@ -23,4 +25,16 @@
 - **结论**：`app/tsdb-mysql` + `db_connection_exhaustion` ｜ 标签 `app/tsdb-mysql` + `db_connection_exhaustion`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1944 · steps 37 · tokens 554,007
 - **摘要**：13/40 train-ticket Deployments show 0/1 AVAILABLE and their pods are CrashLoopBackOff (RESTARTS=5, exit code 1) spread across worker-01/02/03; CheckServiceConnectivity to ts-user-service:12342 and ts-price-service:16579 fails from all three nodes ('Connection Failed'). Client container logs show 'HikariPool-1 - Exception during pool initialization ... java.sql.SQLNonTransientConnectionException: Too many connections' (SQL Error: 1040, SQLState: 08004) -> 'Unable to open JDBC Connection for DDL execution' -> 'Application run failed'. Server-side closure: tsdb-mysql error log contains 484 occurr
+
+### case-3
+
+- **结论**：`app/tsdb-mysql` + `db_connection_exhaustion` ｜ 标签 `app/tsdb-mysql` + `db_connection_exhaustion`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1818 · steps 23 · tokens 535,723
+- **摘要**：Namespace train-ticket: 13 DB-dependent services (ts-order-other, ts-payment, ts-price, ts-route, ts-security, ts-station-food, ts-train, ts-travel, ts-travel2, ts-user, ts-wait-order CrashLoopBackOff; ts-station-service and ts-train-food-service 0/1 Running with 4 restarts) across worker-01/02/03 all fail identically at JPA/Hibernate pool init: 'java.sql.SQLNonTransientConnectionException: Too many connections', 'SQL Error: 1040, SQLState: 08004'. Namespace events bind the mechanism to the DB: 'pod/tsdb-mysql-0 Readiness probe failed: ERROR 1040 (HY000): Too many connections' and the same for
+
+### case-4
+
+- **结论**：`app/tsdb-mysql` + `db_connection_exhaustion` ｜ 标签 `app/tsdb-mysql` + `db_connection_exhaustion`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2105 · steps 20 · tokens 517,218
+- **摘要**：Namespace train-ticket shows a cluster-wide reachability break, not a node/app-local one: 13 business pods (ts-price, ts-route, ts-security, ts-station, ts-station-food, ts-train, ts-train-food, ts-travel, ts-travel2, ts-user, ts-wait-order, ts-order-other, ts-payment) are in CrashLoopBackOff spread across worker-01/02/03, with no FailedScheduling/FailedCreate/FailedMount/image-pull events. Caller-side logs (ts-price-service, ts-user-service) show HikariPool-1 pool initialization failing with java.sql.SQLNonTransientConnectionException 'Too many connections' (SQL Error 1040, SQLState 08004), w
 
