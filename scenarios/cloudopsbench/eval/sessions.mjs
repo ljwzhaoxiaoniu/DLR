@@ -15,6 +15,9 @@
 //   node sessions.mjs promote [--round <id前缀>] [--case <sys/cat/case>]... [--session <id前缀>]... [--dry]
 //       默认：每题取最近一轮，「通过」（JRA=1）的 run 移入正式组（从全量组搬出，不留副本）
 //       --case / --session 手动指定（可越过分档，即「认可」通道）
+//   node sessions.mjs adopt [--to <组名>] [--dry]
+//       把「未分组」（未归档、不属于任何组、已落盘的持久会话）收进指定组（默认全量组）——
+//       界面上「未分组」区里未落盘的空会话不在此列（等它落盘再收）
 //   node sessions.mjs list
 //       两组现状（session → 案例/轮次 反查）
 //
@@ -40,6 +43,7 @@ let wsPath = process.env.DSH_HOME
   : path.join(REPO, "DSH-based Agent Service", ".dsh-home", "storages", "workspace.json");
 let dry = false;
 let roundFilter = null;
+let toGroup = null;
 const extraDirs = [];
 const caseFilter = [];
 const sessionFilter = [];
@@ -52,9 +56,10 @@ for (let i = 1; i < argv.length; i++) {
   else if (a === "--dirs") { while (argv[i + 1] && !argv[i + 1].startsWith("--")) extraDirs.push(argv[++i]); }
   else if (a === "--case") caseFilter.push(normCase(argv[++i]));
   else if (a === "--session") sessionFilter.push(argv[++i]);
+  else if (a === "--to") toGroup = argv[++i];
   else { console.error(`未知参数: ${a}`); process.exit(2); }
 }
-if (!["sync", "promote", "list"].includes(cmd)) {
+if (!["sync", "promote", "adopt", "list"].includes(cmd)) {
   console.error("用法: node sessions.mjs <sync|promote|list> [选项…]（见文件头注释）");
   process.exit(2);
 }
@@ -272,6 +277,41 @@ else if (cmd === "promote") {
   if (moved && !dry) saveWs(ws);
   else console.log(dry ? "[dry] 未写盘" : "[promote] 无变化");
   console.log("[提示] dsh web 重启后可见（bash \"DSH-based Agent Service/dsh_dlr/run_web.sh\"）");
+}
+
+// ── adopt：把「未分组」的持久会话收进指定组 ─────────────────────────
+else if (cmd === "adopt") {
+  const { ws, W, allId } = loadWs();
+  const targetId = toGroup ? Object.entries(W).find(([, w]) => w.title === toGroup)?.[0] : allId;
+  if (!targetId) { console.error(`[ERR] 找不到组「${toGroup}」`); process.exit(3); }
+  const grouped = new Set();
+  for (const w of Object.values(W)) for (const s of w.sessionIds) grouped.add(s);
+  const archived = new Set(ws.global.archivedSessionIds || []);
+  // 盘上全部持久会话：sessions/<bucket>/<session-id>/session.v4.jsonl.zstd
+  const root = path.join(path.dirname(wsPath), "..", "sessions");
+  const logs = [];
+  const walk = (dir) => {
+    let ents; try { ents = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
+    for (const e of ents) {
+      if (!e.isDirectory()) continue;
+      const p = path.join(dir, e.name);
+      if (e.name.startsWith("session-")) {
+        if (fs.existsSync(path.join(p, "session.v4.jsonl.zstd"))) logs.push({ id: e.name, bucket: path.basename(dir) });
+      } else walk(p);
+    }
+  };
+  walk(root);
+  const todo = logs.filter((s) => !grouped.has(s.id) && !archived.has(s.id));
+  console.log(`[adopt] 盘上持久会话 ${logs.length} · 未分组且未归档 ${todo.length} → 目标组「${W[targetId].title}」`);
+  for (const s of todo) console.log(`  → ${s.id}  (cwd bucket: ${s.bucket})`);
+  if (!todo.length) {
+    console.log("（没有未分组的持久会话——界面上「未分组」里的多半是刚建的空会话，还没落盘；等有内容/落盘后再收）");
+  } else if (dry) {
+    console.log("[dry] 未写盘");
+  } else {
+    for (const s of todo) W[targetId].sessionIds.push(s.id);
+    saveWs(ws);
+  }
 }
 
 // ── list ────────────────────────────────────────────────────────────
