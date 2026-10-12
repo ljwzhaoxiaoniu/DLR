@@ -1,0 +1,123 @@
+[14:58:14] 批次 l3-verify3 · 3 题（串行）→ scenarios/cloudopsbench/results/1012_1458_l3-verify3
+[14:58:14] === boutique/admission/1 第 1 遍 ===
+[start] 基准诊断 MCP（boutique-admission-1）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8000/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1012_1458_l3-verify3/raw/1012_1458_boutique-admission-1
+[14:59:05] === trainticket/startup/1 第 1 遍 ===
+[start] 基准诊断 MCP（trainticket-startup-1）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8000/mcp ok (10 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1012_1458_l3-verify3/raw/1012_1459_trainticket-startup-1
+[14:59:41] === boutique/infrastructure/1 第 1 遍 ===
+[start] 基准诊断 MCP（boutique-infrastructure-1）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8000/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1012_1458_l3-verify3/raw/1012_1459_boutique-infrastructure-1
+[15:00:30] 全部跑完 → grade
+[grade] runs=3 → out=scenarios/cloudopsbench/results/1012_1458_l3-verify3
+[convert] boutique/admission/1 → scenarios\cloudopsbench\results\1012_1458_l3-verify3\traces\boutique\dsh-tsm\admission\1\1.json  steps=15 final=有 preds=3
+[convert] boutique/infrastructure/1 → scenarios\cloudopsbench\results\1012_1458_l3-verify3\traces\boutique\dsh-tsm\infrastructure\1\1.json  steps=14 final=有 preds=3
+[convert] trainticket/startup/1 → scenarios\cloudopsbench\results\1012_1458_l3-verify3\traces\trainticket\dsh-tsm\startup\1\1.json  steps=12 final=有 preds=3
+[convert] manifest → scenarios\cloudopsbench\results\1012_1458_l3-verify3\traces\manifest.json（共 3 条）
+[grade] 评分组: boutique/admission
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: boutique
+fault_category: admission
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\boutique\admission
+agent_root: scenarios\cloudopsbench\results\1012_1458_l3-verify3\traces\boutique\dsh-tsm\admission
+--------------------------------------------------------------------------------
+total_cases: 58
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 1.0
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.6
+steps (Average Diagnostic Steps per Case): 16.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] boutique_admission: scenarios\cloudopsbench\results\1012_1458_l3-verify3\boutique_admission_questions.csv
+[grade] 评分组: boutique/infrastructure
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: boutique
+fault_category: infrastructure
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\boutique\infrastructure
+agent_root: scenarios\cloudopsbench\results\1012_1458_l3-verify3\traces\boutique\dsh-tsm\infrastructure
+--------------------------------------------------------------------------------
+total_cases: 40
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 1.0
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.2857
+steps (Average Diagnostic Steps per Case): 15.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] boutique_infrastructure: scenarios\cloudopsbench\results\1012_1458_l3-verify3\boutique_infrastructure_questions.csv
+[grade] 评分组: train-ticket/startup
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: train-ticket
+fault_category: startup
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\trainticket\startup
+agent_root: scenarios\cloudopsbench\results\1012_1458_l3-verify3\traces\trainticket\dsh-tsm\startup
+--------------------------------------------------------------------------------
+total_cases: 24
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 1.0
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.3333
+steps (Average Diagnostic Steps per Case): 13.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] trainticket_startup: scenarios\cloudopsbench\results\1012_1458_l3-verify3\trainticket_startup_questions.csv
+
+[grade] 完成
+  summary.md   : scenarios/cloudopsbench/results/1012_1458_l3-verify3/summary.md
+  questions.csv: scenarios/cloudopsbench/results/1012_1458_l3-verify3/questions.csv
+  traces/      : scenarios/cloudopsbench/results/1012_1458_l3-verify3/traces
+[15:00:34] grade rc=0 → stats
+[stats] 轮次 3 · 覆盖 8/754 · JRA 8/8
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\results\STATS.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL/*.md（8 个家族）
+[15:00:35] 批次完成
