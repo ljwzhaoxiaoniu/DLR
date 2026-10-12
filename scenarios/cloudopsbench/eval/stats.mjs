@@ -30,6 +30,44 @@ const sysDirToName = (d) => (d === "trainticket" ? "train-ticket" : d);
 const nameToSysDir = (s) => (s === "train-ticket" ? "trainticket" : s);
 const now = new Date().toISOString();
 const fmt = (n) => (typeof n === "number" ? String(Number(n.toFixed(4))) : String(n ?? ""));
+/** token 显示（同 tsm stats 口径）：千分位；口径 total = input + cache_read + cache_write + output */
+const tok = (n) => (typeof n === "number" ? n.toLocaleString("en-US") : "—");
+
+/** raw ndjson 的 step_end.usage 逐轮求和：round 目录 → "sysdir/cat/case" → token 统计 */
+function scanTokens(dir) {
+  const map = new Map();
+  const rawDir = path.join(dir, "raw");
+  if (!fs.existsSync(rawDir)) return map;
+  for (const run of fs.readdirSync(rawDir, { withFileTypes: true })) {
+    if (!run.isDirectory()) continue;
+    const metaPath = path.join(rawDir, run.name, "meta.yml");
+    if (!fs.existsSync(metaPath)) continue;
+    const meta = fs.readFileSync(metaPath, "utf8");
+    const g = (k) => (meta.match(new RegExp(`^${k}:\\s*(.+)$`, "m")) || [])[1]?.trim();
+    const sys = g("system"), cat = g("category"), cs = g("case");
+    if (!sys || !cat || !cs) continue;
+    const nd = fs.readdirSync(path.join(rawDir, run.name)).find((f) => f.endsWith(".ndjson"));
+    if (!nd) continue;
+    const key = `${nameToSysDir(sys)}/${cat}/${cs}`;
+    const acc = map.get(key) ?? { total: 0, input: 0, cacheRead: 0, cacheWrite: 0, output: 0, turns: 0 };
+    for (const line of fs.readFileSync(path.join(rawDir, run.name, nd), "utf8").split("\n")) {
+      try {
+        const o = JSON.parse(line);
+        if (o.type === "status" && o.phase === "step_end" && o.usage) {
+          const u = o.usage;
+          acc.total += u.totalTokens ?? ((u.inputTokens || 0) + (u.cacheReadTokens || 0) + (u.cacheWriteTokens || 0) + (u.outputTokens || 0));
+          acc.input += u.inputTokens || 0;
+          acc.cacheRead += u.cacheReadTokens || 0;
+          acc.cacheWrite += u.cacheWriteTokens || 0;
+          acc.output += u.outputTokens || 0;
+          acc.turns += 1;
+        }
+      } catch { /* 截断行 */ }
+    }
+    map.set(key, acc);
+  }
+  return map;
+}
 
 // ── ① 读取轮次 ──────────────────────────────────────────────────────
 const rounds = []; // {id, dir, entries: [detail...]}
@@ -51,6 +89,11 @@ for (const ent of fs.existsSync(resultsDir) ? fs.readdirSync(resultsDir, { withF
   rounds.push({ id: ent.name, dir: rdir, entries });
 }
 rounds.sort((a, b) => a.id.localeCompare(b.id)); // 时间戳前缀 → 字典序即时间序
+// ①b token：各轮 raw 逐 run 求和后挂到对应的条目上
+for (const r of rounds) {
+  const tmap = scanTokens(r.dir);
+  for (const e of r.entries) e.tokens = tmap.get(`${e.family}/${e.case_name}`) ?? null;
+}
 
 // ── ② 去重取最新 + 家族索引 ─────────────────────────────────────────
 const latest = new Map(); // "sysdir/cat/case" → {…, round}
@@ -104,11 +147,12 @@ statLines.push("# 实测结果综合统计（cob stats）", "");
 statLines.push(`场景 \`cloudopsbench\` ｜ 轮次 ${rounds.length} ｜ 覆盖 ${covered}/${grandTotal} ｜ 生成 ${now}`, "");
 statLines.push(`**结果分（去重取最新 · 每题取最新一轮）：JRA ${A.jra}/${A.n}（${pct(A.jra, A.n)}）｜ CA ${A.ca} ｜ FA ${A.fa}**`, "");
 statLines.push("## 逐轮 · 结果与流程（本轮记录 · 按次数）", "");
-statLines.push("| 轮次 | 题数 | JRA | CA | FA | MC | EOC | ECR | EE | steps |");
-statLines.push("|---|---|---|---|---|---|---|---|---|---|");
+statLines.push("| 轮次 | 题数 | JRA | CA | FA | MC | EOC | ECR | EE | steps | tokens |");
+statLines.push("|---|---|---|---|---|---|---|---|---|---|---|");
 for (const r of rounds) {
   const a = aggregate(r.entries);
-  statLines.push(`| ${r.id} | ${a.n} | ${a.jra} | ${a.ca} | ${a.fa} | ${fmt(a.MC)} | ${fmt(a.EOC)} | ${fmt(a.ECR)} | ${fmt(a.EE)} | ${fmt(a.steps)} |`);
+  const tSum = r.entries.reduce((n, e) => n + (e.tokens?.total || 0), 0);
+  statLines.push(`| ${r.id} | ${a.n} | ${a.jra} | ${a.ca} | ${a.fa} | ${fmt(a.MC)} | ${fmt(a.EOC)} | ${fmt(a.ECR)} | ${fmt(a.EE)} | ${fmt(a.steps)} | ${tok(tSum)} |`);
 }
 statLines.push("", "## 跑题覆盖度（跑过多少题）", "");
 statLines.push("> 覆盖度 = 跑过的题（去重）÷ `process-label` 全量题数——只看跑没跑过，与对错无关。", "");
@@ -127,7 +171,17 @@ statLines.push("**流程分（均值）**", "");
 statLines.push("| MC | EOC | ECR | EE | steps | RAR | invalid |");
 statLines.push("|---|---|---|---|---|---|---|");
 statLines.push(`| ${fmt(A.MC)} | ${fmt(A.EOC)} | ${fmt(A.ECR)} | ${fmt(A.EE)} | ${fmt(A.steps)} | ${fmt(A.RAR)} | ${fmt(A.invalid)} |`);
-statLines.push("", "> 口径：结果/流程分全部来自上游 scorer（同口径可与基准发表数字对表）；去重取最新（同题多轮取最新一轮）；逐题明细在各轮 `questions.csv` 与 `../DETAIL.md`。");
+// token（去重取最新）
+const tks = latestAll.map((e) => e.tokens?.total).filter((n) => typeof n === "number").sort((x, y) => x - y);
+const tSum = tks.reduce((x, y) => x + y, 0);
+const tAvg = tks.length ? Math.round(tSum / tks.length) : null;
+const tMed = tks.length ? tks[Math.floor(tks.length / 2)] : null;
+const tCr = latestAll.reduce((n, e) => n + (e.tokens?.cacheRead || 0), 0);
+statLines.push("", "**token（去重取最新 · total = input + cache_read + cache_write + output）**", "");
+statLines.push("| 平均 | 中位 | 最低 | 最高 | cache 读占比 |");
+statLines.push("|---|---|---|---|---|");
+statLines.push(`| ${tok(tAvg)} | ${tok(tMed)} | ${tok(tks[0] ?? null)} | ${tok(tks[tks.length - 1] ?? null)} | ${tSum ? Math.round((tCr / tSum) * 100) + "%" : "—"} |`);
+statLines.push("", "> 口径：结果/流程分全部来自上游 scorer（同口径可与基准发表数字对表）；去重取最新（同题多轮取最新一轮）；逐题明细在各轮 `questions.csv` 与 `../DETAIL.md`；token 自各轮 `raw/` ndjson 的 `step_end.usage` 逐 run 求和。");
 fs.writeFileSync(path.join(resultsDir, "STATS.md"), statLines.join("\n") + "\n", "utf8");
 
 // ── ⑥ DETAIL/<家族>.md ──────────────────────────────────────────────
@@ -138,18 +192,20 @@ for (const f of families) {
   const entries = latestAll.filter((e) => e.family === f).sort((a, b) => (Number(a.case_name) || 0) - (Number(b.case_name) || 0));
   const a = aggregate(entries);
   const total = full.get(f) ?? 0;
+  const ft = entries.map((e) => e.tokens?.total).filter((n) => typeof n === "number").sort((x, y) => x - y);
+  const famMed = ft.length ? ft[Math.floor(ft.length / 2)] : null;
   const L = [];
   L.push(`# 评测明细 · ${familyDisplay(f)} — cloudopsbench`, "");
-  L.push(`> 本家族已跑 **${a.n}/${total}** 题：JRA ✅${a.jra} ❌${a.n - a.jra} ｜ 证据链全闭 ${a.chain} ｜ 生成 ${now}`);
+  L.push(`> 本家族已跑 **${a.n}/${total}** 题：JRA ✅${a.jra} ❌${a.n - a.jra} ｜ 证据链全闭 ${a.chain} ｜ token 中位 ${tok(famMed)} ｜ 生成 ${now}`);
   L.push(`> 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。`, "");
   L.push("## 逐题校验表", "");
-  L.push("| 案例 | CA | FA | JRA | MC | EOC | ECR | EE | steps | RAR | inv | 轮次 | 备注 |");
-  L.push("|---|---|---|---|---|---|---|---|---|---|---|---|---|");
+  L.push("| 案例 | CA | FA | JRA | MC | EOC | ECR | EE | steps | tokens | RAR | inv | 轮次 | 备注 |");
+  L.push("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|");
   for (const e of entries) {
     const g = (k) => fmt(e.metrics?.[k]);
     const hit = Number(e.metrics?.JRA) === 1;
     const note = e.error ? `错误: ${e.error}` : (hit && Number(e.metrics?.ECR) === 1 ? "全对·链闭" : hit ? "结果对·链未闭" : "未命中");
-    L.push(`| [${e.case_name}](#case-${e.case_name}) | ${g("CA")} | ${g("FA")} | ${g("JRA")} | ${g("MC")} | ${g("EOC")} | ${g("ECR")} | ${g("EE")} | ${g("steps")} | ${g("RAR")} | ${g("invalid_actions")} | ${e.round} | ${note} |`);
+    L.push(`| [${e.case_name}](#case-${e.case_name}) | ${g("CA")} | ${g("FA")} | ${g("JRA")} | ${g("MC")} | ${g("EOC")} | ${g("ECR")} | ${g("EE")} | ${g("steps")} | ${tok(e.tokens?.total)} | ${g("RAR")} | ${g("invalid_actions")} | ${e.round} | ${note} |`);
   }
   L.push("", "## 证据正文", "");
   for (const e of entries) {
@@ -165,7 +221,7 @@ for (const f of families) {
     } catch { /* 无 traces 时留空 */ }
     L.push(`### case-${e.case_name}`, "");
     L.push(`- **结论**：\`${p1.fault_object ?? ""}\` + \`${p1.root_cause ?? ""}\` ｜ 标签 \`${gt.fault_object ?? ""}\` + \`${gt.root_cause ?? ""}\`（${verdict}）`);
-    L.push(`- **流程**：MC ${fmt(e.metrics?.MC)} · EOC ${fmt(e.metrics?.EOC)} · ECR ${fmt(e.metrics?.ECR)} · EE ${fmt(e.metrics?.EE)} · steps ${fmt(e.metrics?.steps)}`);
+    L.push(`- **流程**：MC ${fmt(e.metrics?.MC)} · EOC ${fmt(e.metrics?.EOC)} · ECR ${fmt(e.metrics?.ECR)} · EE ${fmt(e.metrics?.EE)} · steps ${fmt(e.metrics?.steps)} · tokens ${tok(e.tokens?.total)}`);
     if (e.error) L.push(`- **错误**：${e.error}`);
     if (summary) L.push(`- **摘要**：${summary}`);
     L.push("");
@@ -187,7 +243,7 @@ D.push("# 评测明细 — TSM 语义层 · cloudopsbench", "");
 D.push("> **说明**：question 驱动——T1 基准诊断工具实查数据 / T2 `state_model_query` 模型切片（症状 → 入口链 + 观测槽）/ T3 `dlr_search_consensus` 读法；沿链走、第一个「观测 ≠ 期望」的槽即断点。");
 D.push("> **评定**：全部以上游 scorer 输出为准（无人工翻盘口径）——结果分 CA/FA/JRA（Rank 1 对 `process-label` 标签逐字）＋ 流程分 MC/EOC/ECR/EE（对里程碑证据链）。");
 D.push(`> **数据来源**：\`results/<轮次>/\`（questions.csv / traces/）；本文件由 \`eval/stats.mjs\` 自动重建；逐题校验表与证据正文按家族拆分，见文末索引。`);
-D.push("> **列义**：CA 组件 ｜ FA 故障型 ｜ JRA 联合命中 ｜ MC 里程碑覆盖 ｜ EOC 证据顺序 ｜ ECR 证据链闭合 ｜ EE 证据效率 ｜ steps 诊断步数 ｜ RAR 重复调用率 ｜ inv 无效动作。", "");
+D.push("> **列义**：CA 组件 ｜ FA 故障型 ｜ JRA 联合命中 ｜ MC 里程碑覆盖 ｜ EOC 证据顺序 ｜ ECR 证据链闭合 ｜ EE 证据效率 ｜ steps 诊断步数 ｜ tokens 会话 token 合计（input+cache_read+cache_write+output）｜ RAR 重复调用率 ｜ inv 无效动作。", "");
 D.push("## 跑题覆盖度（跑过多少题）", "");
 D.push("| 家族 | 全量 | 已跑 | 剩余 | 覆盖 |");
 D.push("|---|---|---|---|---|");
@@ -209,6 +265,10 @@ D.push("", "**流程分（均值）**", "");
 D.push("| MC | EOC | ECR | EE | steps | RAR | invalid |");
 D.push("|---|---|---|---|---|---|---|");
 D.push(`| ${fmt(A.MC)} | ${fmt(A.EOC)} | ${fmt(A.ECR)} | ${fmt(A.EE)} | ${fmt(A.steps)} | ${fmt(A.RAR)} | ${fmt(A.invalid)} |`);
+D.push("", "**效率（去重取最新）**", "");
+D.push("| token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |");
+D.push("|---|---|---|");
+D.push(`| ${tok(tAvg)} / ${tok(tMed)} | ${tok(tks[0] ?? null)} / ${tok(tks[tks.length - 1] ?? null)} | ${tSum ? Math.round((tCr / tSum) * 100) + "%" : "—"} |`);
 D.push("", "## 分家族索引", "");
 D.push("| 家族 | 全量 | 已跑 | JRA | 链全闭 | 明细 |");
 D.push("|---|---|---|---|---|---|");
