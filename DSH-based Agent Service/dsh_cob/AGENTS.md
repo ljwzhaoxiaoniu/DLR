@@ -58,3 +58,4 @@
 - 告警是"指针"不是证据：告警指到的对象，要用对象层清单 / 配置 / 日志闭环确认。
 - 症状措辞被多类故障共用（同一句话可能是调度 / 启动 / 探针 / 寻址问题）——判别发生在链上，不在措辞上：沿链走到第一个断点为止。
 - **收口要两面**：机制事件（FailedCreate / FailedScheduling / FailedMount / image-pull / probe…）**和**它指向的配置面（模板引用 / 被引对象清单，如 `GetAppYAML`）都读到再下结论——只读到机制一侧 = 链没闭。
+- **收口兜底：关题前读一遍 namespace 事件面**（`GetResources(events, namespace=<ns>)`）——`Warning` 行把机制逐字绑到具体对象/实例；多实例 workload（如 StatefulSet 的序号 pod）靠它 + 逐个实例的事件段定位承载异常的那一个——只读一个实例的详情 ≠ workload 级确认。
