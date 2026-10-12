@@ -111,3 +111,4 @@ No new tool is needed on either side: the semantic layer can only **point** — 
 1. A 5-case cross-family batch through the tracked flow; batch runner (one benchmark-MCP boot per case — a port pool for parallelism).
 2. L2 grows on run evidence.
 3. If the snapshot ever moves (new pin): re-check the two capability facts that live in code — the code-tool hard gate and the pre-render sets.
+4. **PE → technical LE (direction, tentative)** — aggregate an object's observation surfaces (PEs) into a *technical LE* and connect it with its *business LE*, to enrich the semantics the graph carries (the v3 carrier / observer split already does this for part of each service). Noted 2026-10-12; revisit — and adjust as needed — after real evaluation runs.
