@@ -1,2 +1,0 @@
-case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
-boutique/scheduling/1,1.0,1.0,1.0,1.0,1.0,1.0,0.26666666666666666,16.0,0.0,0.0,app/cartservice,node_cordon_mismatch,app/cartservice,node_cordon_mismatch,

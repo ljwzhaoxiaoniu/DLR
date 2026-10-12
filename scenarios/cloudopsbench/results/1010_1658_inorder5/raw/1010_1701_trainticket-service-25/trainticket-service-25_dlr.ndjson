@@ -1,6 +1,0 @@
-{"type":"session","sessionId":"session-d4f04316-2f3a-4d03-8bb2-31763aace217","cwd":"D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1010_1658_inorder5\\raw\\1010_1701_trainticket-service-25"}
-{"type":"status","phase":"turn_start","turn":1}
-{"type":"status","phase":"step_start","turn":1,"step":1}
-{"type":"status","phase":"step_end","turn":1,"step":1}
-{"type":"status","phase":"turn_end","turn":1,"reason":{"kind":"error","error":{"message":"DeepSeek Messages transport failed","code":"TRANSPORT"}}}
-{"type":"final","text":""}

@@ -82,7 +82,7 @@ The model stores **what every snapshot of this system has**: kinds and fixed str
 | codedefect/1 (checkoutservice) | code slot — wrong argument order | `panic: mismatching currency codes` |
 | infrastructure/1 (node/worker-01) | node-service slot — containerd down | `containerd.service … Active: inactive (dead)` |
 
-**End-to-end run (boutique/runtime/1, the tracked round `1010_1618_…-v2m`)**: dual-path recall in one step → anchor found on the pods listing → pruned reads (`app_name=` / `service_name=`) → contract JSON. Scorer: **CA/FA/JRA = 1.0 and MC/EOC/ECR = 1.0** (chain closed and ordered), EE 0.375, steps 9.
+**End-to-end run (boutique/runtime/1)**: dual-path recall in one step → anchor found on the pods listing → pruned reads (`app_name=` / `service_name=`) → contract JSON. Scorer: **CA/FA/JRA = 1.0 and MC/EOC/ECR = 1.0** (chain closed and ordered), EE 0.375, steps 9.
 
 ## 6. Evaluation & ledger
 

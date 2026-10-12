@@ -82,7 +82,7 @@
 | codedefect/1（checkoutservice）| 代码槽——参数顺序错 | `panic: mismatching currency codes` |
 | infrastructure/1（node/worker-01）| 节点服务槽——containerd 死 | `containerd.service … Active: inactive (dead)` |
 
-**端到端实跑（boutique/runtime/1，留档轮 `1010_1618_…-v2m`）**：一步双路召回 → pods 清单上找到锚 → 按锚收窄取数（`app_name=` / `service_name=`）→ 契约 JSON。评分：**CA/FA/JRA = 1.0 且 MC/EOC/ECR = 1.0**（链闭合且有序），EE 0.375，steps 9。
+**端到端实跑（boutique/runtime/1）**：一步双路召回 → pods 清单上找到锚 → 按锚收窄取数（`app_name=` / `service_name=`）→ 契约 JSON。评分：**CA/FA/JRA = 1.0 且 MC/EOC/ECR = 1.0**（链闭合且有序），EE 0.375，steps 9。
 
 ## 六、评测与台账
 

@@ -1,8 +1,0 @@
-system: train-ticket
-category: startup
-case: 1
-query: Partial Service Unreachability.
-rc: 0
-stamp: 1011_2149
-tsm_mcp: http://127.0.0.1:28796/mcp
-bench_mcp: http://127.0.0.1:8000/mcp

@@ -9,7 +9,7 @@
 results/
 ├── README.md            # ← 本文（怎么产生、怎么看、怎么更新）
 ├── STATS.md             # 跨轮统计（stats.mjs 重建）：逐轮表 / 跑题覆盖度 / 汇总（去重取最新）
-└── <run_id>/            # 一轮 = 一个目录（如 1010_1545_boutique-runtime-1）
+└── <run_id>/            # 一轮 = 一个目录（命名 <MMDD>_<HHMM>_<批次名>）
     ├── raw/             # ★ 可追溯：每题一个 run 目录（dsh --json 事件流 + .err + 基准 mcp.jsonl
     │   └── <stamp>_<case>/   #   审计 + instructions.md + meta.yml + case_metadata.json）
     ├── traces/          # convert.mjs 产物：上游 reference 轨迹（<system>/dsh-tsm/<category>/<case>/）
