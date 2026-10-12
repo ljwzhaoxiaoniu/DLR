@@ -1,36 +1,40 @@
 # SOP — business-logic level (read this FIRST)
 
-> One section per **symptom wording** — the section title is the wording **verbatim** (the
-> dataset reuses a small set of templates; a section covers every case that restates it).
-> Match your question against the section headings: if a section restates your question, its
-> **walk discipline** is the highest-caliber instruction for this case — follow it. No matching
-> section -> nothing is known about this case's walk; solve with L1 (objects/surfaces) + L2
-> (readings). Sections govern **how to walk** (order and closure); what each surface means is
-> L2's job, where the objects and surfaces are is L1's.
+> One section per **symptom wording** — the title is the wording **verbatim** (the dataset
+> reuses a small set of templates, so one section covers every case that says the same thing).
+> If a section restates your question, follow it: it goes case by case — deal with the branch
+> your evidence lands on and stop at the first thing that doesn't add up. No match -> nothing
+> known about this walk; solve with L1 (objects) + L2 (readings).
 >
-> Written from measured runs (the 1012 v3 batches) and the chain's own logic — sections state
-> walk discipline, never answers. One section is added only when runs show the walk losses it
-> governs.
+> This is the ops team's own playbook, written the way ops people write for each other on top
+> of a stable L1/L2 — plain language, no K8s 101, no answers. A branch gets added only when
+> runs show the case it covers.
 
 ## cloudopsbench
 
 ### When asked: "Partial Service Unreachability."
 
-Walk the reachability chain in this order — reported symptom FIRST, then the object layer, then the mechanism, then close on the configuration context. (Measured: object-layer-first walks and mechanism-only closures are the two recurring losses on this wording.)
+Follow the reachability chain and stop at the first thing that doesn't add up. Each stop below is a case — deal with the one you actually hit.
 
-1. **Symptom first — before any workload scan.** Read the caller side the wording points at: the caller's error logs, a connectivity probe against the named service, and/or the service's endpoints binding. Establishing the symptom first localizes the chain; a workload listing before this reads out of order.
-2. **Object layer, pruned by the anchor.** The target's pods (READY / phase; drill into the outlier pod's detail) → owner chain (deployment / replicaset). The first observation that contradicts expectation localizes the broken stage.
-3. **Mechanism event.** Read the pod's / owner's events for the concrete mechanism (FailedCreate · FailedScheduling · FailedMount · image-pull · probe) and follow it to the matching surface (admission objects · node state · registry reference · probe config).
-4. **Close on the configuration context — never conclude without it.** The chain closes only when BOTH halves are read: the mechanism event AND the configuration it points at — the workload template's reference (`GetAppYAML`) plus the referenced object's own listing. A conclusion drawn from the mechanism event alone leaves the chain open. **The configuration read is a CLOSE, not a probe: do not pull `GetAppYAML` while steps 1–3 are still open — reading the config before the mechanism evidence names its target is the recurring out-of-order move on this wording. And when the mechanism lands on a concrete carrier (a specific pod / a data-service instance) — especially a workload with several instances — the close must be read off object-level evidence: the instances' own detail / events sections, or the namespace events surface (`GetResources(events)`), whose Warning rows name the object that carries the mechanism. A single replica's detail and a service-level log stream are not that confirmation.**
+1. **Start from the complaint, not the cluster.** Read the caller's error logs, or probe the named service, or check its endpoints — that's what tells you what's actually unreachable. Opening with a workload scan is how you end up chasing the wrong thing.
+2. **Then look at the workload, pruned.** The target's pods (the READY/phase outlier tells the story) → its owner chain. What you find there decides the case:
+   - **Pod stuck Pending** (`0/N nodes are available …`) → it's a node problem: nodes listing / `GetClusterConfiguration`, find the node that blocks it (cordon, taints, capacity). Read that node's own state to close.
+   - **Pod never gets created** (FailedCreate / a missing reference) → it's admission: the event names the missing thing; read the template reference (`GetAppYAML`) plus the referenced object's own listing.
+   - **Image pull / mount / probe errors** → the matching config face: the image line / mount / probe stanza in the template.
+   - **Everything healthy but probes still fail** → it's the address layer: read the routing config (the gateway's route table) and go through it route by route — each route's Path should point at the service its Path names; one that points elsewhere is your evidence. Stop probing — probing is confirmation, not evidence.
+3. **Close properly before you conclude — all three:** the mechanism event; the events surface (`GetResources(events)` — its Warning lines name exactly which object, and for multi-instance workloads which replica, carries the fault); and the config the mechanism points at. Mechanism-only or service-log-only conclusions aren't a closed chain.
 
-The same wording is also used by scheduling / startup-stage failures — discriminate on the chain (steps 2–3's mechanism), never on the wording.
+This wording also shows up on scheduling / startup failures — decide by what you find on the chain, not by the wording.
 
 ### When asked: "Service Availability Disruption."
 
-This wording is overloaded: it enters the SAME reachability chain, whichever stage broke (scheduling / startup / admission / runtime). Walk in chain order and discriminate on the mechanism, not the wording.
+This wording is overloaded — it walks the SAME reachability chain whichever stage broke (scheduling / startup / admission / runtime). Go case by case; the mechanism decides, not the wording.
 
-1. **Symptom first** — caller-side error logs / connectivity against the named service; then the endpoints binding.
-2. **Object layer, pruned** — the workload's pods (state + events) → owner chain. For a node-scoped problem, read the pods listing in its **wide form** first — its NODE column is the pointer to the node.
-3. **Mechanism event → matching surface** — FailedScheduling → node side; FailedCreate → admission objects; image-pull / mount / probe → their own surfaces.
-4. **Node side: generic BEFORE specific.** Read the node's general / transition evidence first (nodes listing · `GetClusterConfiguration` · node events · kubelet status), THEN probe the specific suspected component (containerd · kube-proxy · …). Jumping straight to the suspected root-cause service reads out of order. (Measured on the containerd case.)
-5. **Close on the configuration context** — same closure rule as above: the mechanism event AND the configuration it points at must both be read before concluding. **The configuration read is a CLOSE, not a probe: do not pull `GetAppYAML` while steps 1–4 are still open — reading the config before the mechanism context (log / event) is captured is the recurring out-of-order move on this wording. And when the mechanism lands on a concrete carrier (a specific pod / a data-service instance) — especially a workload with several instances — the close must be read off object-level evidence: the instances' own detail / events sections, or the namespace events surface (`GetResources(events)`), whose Warning rows name the object that carries the mechanism. A single replica's detail and a service-level log stream are not that confirmation.**
+1. **Start from the complaint.** Caller-side error logs / connectivity against the named service; then the endpoints binding. Don't open with a workload scan.
+2. **Then the workload, pruned.** The pods (state + events) → owner chain. Node-scoped problem? Read the pods listing in its **wide form** first — the NODE column is your pointer.
+3. **Deal with the case you land on:**
+   - **Pod Pending / unschedulable** → node side, **and read general before specific**: nodes listing / `GetClusterConfiguration` / node events / kubelet status FIRST, then the suspected component (containerd, kube-proxy, …). Jumping straight at the suspected service reads out of order.
+   - **Pod never created** → admission side (the event names the referenced object; template reference + object listing).
+   - **Image pull / mount / probe errors** → the matching config face.
+   - **Everything healthy but probes diverge** → the address layer: audit the routing config (the gateway's route table, Path ↔ target line by line); probing is confirmation, not scanning.
+4. **Close properly before you conclude — all three:** the mechanism event; the events surface (`GetResources(events)` — for multi-instance workloads the Warning row names the replica that carries it); and the config the mechanism points at.

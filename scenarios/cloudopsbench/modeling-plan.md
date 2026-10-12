@@ -104,7 +104,7 @@ No new tool is needed on either side: the semantic layer can only **point** — 
 
 - **L1** (this model): read out of the data source; two files; grows by correction, stabilizes over time.
 - **L2** (`sources/consensus/kubernetes.jsonl`, 13 entries): schema-level reading rules **plus the symptom→chain mappings** (admission criterion #2: question wording ↔ model terms), incl. the placement reading (pods listing / detail → node faces, kid7). Never beyond the dataset's own information.
-- **L3**: gated (bare-run baseline + evidence of need); never derived from answers. Untriggered here.
+- **L3** (`sources/sop.md`): case-by-case walk playbooks, one section per symptom wording; gated (bare-run baseline + evidence of need), never derived from answers. Positioned as the business team's layer — maintained on top of a stable L1/L2 to raise generalization, accuracy and robustness as cases accumulate.
 
 ## 8. Open items
 
