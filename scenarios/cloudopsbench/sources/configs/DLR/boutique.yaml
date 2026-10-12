@@ -1,21 +1,24 @@
 # Cloud-OpsBench 场景 · L1（dlr-state）—— boutique
 #
-# 结构（DLR 词汇）：LE = 本系统**有独立生命周期**的对象（服务 / 节点 / 命名空间）；
-#                  PE = 每个对象的**状态观测面**（deployment / pods / service+endpoints / telemetry / logs；boutique 另有 code）；
-#                  PAS = 本系统的**服务调用图**（自快照的依赖图读得，逐 case 稳定）。
-# 锚：同一对象的所有观测面共享**应用标签**（app=<service>）——ARCS.A.key = app_label；
-#     节点面按 node_name、命名空间面按 namespace 锚定。
-# 锚的作用 = **剪枝**：A 是取数时的 WHERE 键——每个面都带锚定读法（S 里的 read: 模板），
+# 结构（DLR 词汇，v3 · 2026-10-12）：
+#   LE = **可指认的对象**（名字 + 描述）——不设 kind / 基类；语义全走边与名字。
+#   每服务三件（拆分判据：可指认 ∧ 面群同锚 ∧ 母 LE 不空）：
+#     业务对象 <svc>          PE：调用依赖清单（service_name 锚）+ 源码（boutique）
+#     部署载体 <svc>-deploy   PE：deployment / pods / service_endpoints（app_label 锚）
+#     观测集合 <svc>-obs      PE：telemetry / logs（service_name 锚）
+#   边：调用（service→service）· 部署载体（<svc>→<svc>-deploy）· 观测信号（<svc>-deploy→<svc>-obs）。
+#   节点 / 命名空间为对象 LE；调度是实例事实（读 pods 面的 node 字段指到节点），schema 不连边。
+# 锚 = **剪枝**：A 是取数时的 WHERE 键——每个面都带锚定读法（S 里的 read: 模板），
 #     返回体 = 该对象的薄切片而不是集群全量；唯一合法的全量 = 首轮症状扫描（找锚），其后一律收窄。
 # 边界：实例（pod 名 / IP / 状态值 / 日志内容）不入模型——由 agent 经工具沿面实查。
 # 源：LLM4Ops/Cloud-OpsBench @ ea05daf（2026-10-10 拉取）；调用图/名册自 tool_cache 样本抽取。
 
 mapping_type: dlr-state
-version: '2.0'
+version: '3.0'
 scenario_name: dlr_cloudopsbench_boutique
-description: boutique system of Cloud-OpsBench — its services and nodes (LE), the resource / observation surfaces
-  through which each object's state is read from deterministic Kubernetes snapshots (PE), and the service call topology
-  (PAS).
+description: boutique system of Cloud-OpsBench — its services (business objects with their deployment carriers and
+  observation sets), nodes and namespace (LE), the resource / observation surfaces through which each object's state
+  is read from deterministic Kubernetes snapshots (PE), and the call / carrier / signal edges (PAS).
 source:
   kind: kubernetes-state-snapshots
   repo: LLM4Ops/Cloud-OpsBench
@@ -27,6 +30,38 @@ logical_entities:
   description: 'Web frontend and entry point of Online Boutique — a Go HTTP server (port 8080) that renders the
     shop and fans out to all shopping services (ad, cart, checkout, currency, product, recommendation, shipping).
     Every user request enters here (Upstream: user traffic).'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.frontend.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+  - physical_entity_id: PHYSICAL.boutique.frontend.code
+    resource: code artifact
+    A:
+      cardinality: '1:1'
+      key: app_label
+    R: null
+    S: 'trimmed service sources shipped with the snapshot — the source-defect surface (error message → file / function
+      → code evidence)；read: ListCodeFiles(service_name=<svc>) → GetSourceCode(app_name=…, file_path=<命中项>)'
+    attributes:
+    - name: source_files
+      description: recorded source files of frontend — list with ListCodeFiles(service_name=frontend)
+    - name: source_code
+      description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
+        delay / missing parameter); read with GetSourceCode
+- logical_entity_id: LOGICAL.boutique.frontend.deploy
+  biz_name: frontend-deploy
+  description: The Kubernetes deployment carrier of frontend — the Deployment / Pod / Endpoint resource instances
+    that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.boutique.frontend.deployment
     resource: deployments
@@ -96,6 +131,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.boutique.frontend.obs
+  biz_name: frontend-obs
+  description: The observation signal set of frontend's deployment instances — anomaly alerts / metrics and the
+    application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.boutique.frontend.telemetry
     resource: alerts + metrics
     A:
@@ -125,7 +165,25 @@ logical_entities:
     - name: error_logs
       description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
         causal narrative surface; read with GetErrorLogs
-  - physical_entity_id: PHYSICAL.boutique.frontend.code
+- logical_entity_id: LOGICAL.boutique.cartservice
+  biz_name: cartservice
+  description: Shopping cart service — C#/.NET gRPC server (port 7070); persists carts in redis-cart. Called by
+    frontend and checkoutservice.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.cartservice.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+  - physical_entity_id: PHYSICAL.boutique.cartservice.code
     resource: code artifact
     A:
       cardinality: '1:1'
@@ -135,14 +193,14 @@ logical_entities:
       → code evidence)；read: ListCodeFiles(service_name=<svc>) → GetSourceCode(app_name=…, file_path=<命中项>)'
     attributes:
     - name: source_files
-      description: recorded source files of frontend — list with ListCodeFiles(service_name=frontend)
+      description: recorded source files of cartservice — list with ListCodeFiles(service_name=cartservice)
     - name: source_code
       description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
         delay / missing parameter); read with GetSourceCode
-- logical_entity_id: LOGICAL.boutique.cartservice
-  biz_name: cartservice
-  description: Shopping cart service — C#/.NET gRPC server (port 7070); persists carts in redis-cart. Called by
-    frontend and checkoutservice.
+- logical_entity_id: LOGICAL.boutique.cartservice.deploy
+  biz_name: cartservice-deploy
+  description: The Kubernetes deployment carrier of cartservice — the Deployment / Pod / Endpoint resource instances
+    that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.boutique.cartservice.deployment
     resource: deployments
@@ -212,6 +270,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.boutique.cartservice.obs
+  biz_name: cartservice-obs
+  description: The observation signal set of cartservice's deployment instances — anomaly alerts / metrics and the
+    application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.boutique.cartservice.telemetry
     resource: alerts + metrics
     A:
@@ -241,7 +304,25 @@ logical_entities:
     - name: error_logs
       description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
         causal narrative surface; read with GetErrorLogs
-  - physical_entity_id: PHYSICAL.boutique.cartservice.code
+- logical_entity_id: LOGICAL.boutique.productcatalogservice
+  biz_name: productcatalogservice
+  description: Product catalog — Go gRPC server (port 3550); the product listing/search source. Called by frontend,
+    checkoutservice and recommendationservice.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.productcatalogservice.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+  - physical_entity_id: PHYSICAL.boutique.productcatalogservice.code
     resource: code artifact
     A:
       cardinality: '1:1'
@@ -251,14 +332,15 @@ logical_entities:
       → code evidence)；read: ListCodeFiles(service_name=<svc>) → GetSourceCode(app_name=…, file_path=<命中项>)'
     attributes:
     - name: source_files
-      description: recorded source files of cartservice — list with ListCodeFiles(service_name=cartservice)
+      description: recorded source files of productcatalogservice — list with ListCodeFiles(service_name=productcatalogservice)
     - name: source_code
       description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
         delay / missing parameter); read with GetSourceCode
-- logical_entity_id: LOGICAL.boutique.productcatalogservice
-  biz_name: productcatalogservice
-  description: Product catalog — Go gRPC server (port 3550); the product listing/search source. Called by frontend,
-    checkoutservice and recommendationservice.
+- logical_entity_id: LOGICAL.boutique.productcatalogservice.deploy
+  biz_name: productcatalogservice-deploy
+  description: The Kubernetes deployment carrier of productcatalogservice — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.boutique.productcatalogservice.deployment
     resource: deployments
@@ -329,6 +411,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.boutique.productcatalogservice.obs
+  biz_name: productcatalogservice-obs
+  description: The observation signal set of productcatalogservice's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.boutique.productcatalogservice.telemetry
     resource: alerts + metrics
     A:
@@ -358,7 +445,24 @@ logical_entities:
     - name: error_logs
       description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
         causal narrative surface; read with GetErrorLogs
-  - physical_entity_id: PHYSICAL.boutique.productcatalogservice.code
+- logical_entity_id: LOGICAL.boutique.currencyservice
+  biz_name: currencyservice
+  description: Currency conversion — Node.js gRPC server (port 7000). Called by frontend and checkoutservice.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.currencyservice.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+  - physical_entity_id: PHYSICAL.boutique.currencyservice.code
     resource: code artifact
     A:
       cardinality: '1:1'
@@ -368,13 +472,14 @@ logical_entities:
       → code evidence)；read: ListCodeFiles(service_name=<svc>) → GetSourceCode(app_name=…, file_path=<命中项>)'
     attributes:
     - name: source_files
-      description: recorded source files of productcatalogservice — list with ListCodeFiles(service_name=productcatalogservice)
+      description: recorded source files of currencyservice — list with ListCodeFiles(service_name=currencyservice)
     - name: source_code
       description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
         delay / missing parameter); read with GetSourceCode
-- logical_entity_id: LOGICAL.boutique.currencyservice
-  biz_name: currencyservice
-  description: Currency conversion — Node.js gRPC server (port 7000). Called by frontend and checkoutservice.
+- logical_entity_id: LOGICAL.boutique.currencyservice.deploy
+  biz_name: currencyservice-deploy
+  description: The Kubernetes deployment carrier of currencyservice — the Deployment / Pod / Endpoint resource instances
+    that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.boutique.currencyservice.deployment
     resource: deployments
@@ -444,6 +549,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.boutique.currencyservice.obs
+  biz_name: currencyservice-obs
+  description: The observation signal set of currencyservice's deployment instances — anomaly alerts / metrics and
+    the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.boutique.currencyservice.telemetry
     resource: alerts + metrics
     A:
@@ -473,7 +583,25 @@ logical_entities:
     - name: error_logs
       description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
         causal narrative surface; read with GetErrorLogs
-  - physical_entity_id: PHYSICAL.boutique.currencyservice.code
+- logical_entity_id: LOGICAL.boutique.paymentservice
+  biz_name: paymentservice
+  description: Payment charging — Node.js gRPC server (port 50051); charges credit cards at checkout. Called by
+    checkoutservice.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.paymentservice.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+  - physical_entity_id: PHYSICAL.boutique.paymentservice.code
     resource: code artifact
     A:
       cardinality: '1:1'
@@ -483,14 +611,14 @@ logical_entities:
       → code evidence)；read: ListCodeFiles(service_name=<svc>) → GetSourceCode(app_name=…, file_path=<命中项>)'
     attributes:
     - name: source_files
-      description: recorded source files of currencyservice — list with ListCodeFiles(service_name=currencyservice)
+      description: recorded source files of paymentservice — list with ListCodeFiles(service_name=paymentservice)
     - name: source_code
       description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
         delay / missing parameter); read with GetSourceCode
-- logical_entity_id: LOGICAL.boutique.paymentservice
-  biz_name: paymentservice
-  description: Payment charging — Node.js gRPC server (port 50051); charges credit cards at checkout. Called by
-    checkoutservice.
+- logical_entity_id: LOGICAL.boutique.paymentservice.deploy
+  biz_name: paymentservice-deploy
+  description: The Kubernetes deployment carrier of paymentservice — the Deployment / Pod / Endpoint resource instances
+    that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.boutique.paymentservice.deployment
     resource: deployments
@@ -560,6 +688,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.boutique.paymentservice.obs
+  biz_name: paymentservice-obs
+  description: The observation signal set of paymentservice's deployment instances — anomaly alerts / metrics and
+    the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.boutique.paymentservice.telemetry
     resource: alerts + metrics
     A:
@@ -589,7 +722,24 @@ logical_entities:
     - name: error_logs
       description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
         causal narrative surface; read with GetErrorLogs
-  - physical_entity_id: PHYSICAL.boutique.paymentservice.code
+- logical_entity_id: LOGICAL.boutique.shippingservice
+  biz_name: shippingservice
+  description: Shipping quotes — Go gRPC server (port 50051). Called by frontend and checkoutservice.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.shippingservice.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+  - physical_entity_id: PHYSICAL.boutique.shippingservice.code
     resource: code artifact
     A:
       cardinality: '1:1'
@@ -599,13 +749,14 @@ logical_entities:
       → code evidence)；read: ListCodeFiles(service_name=<svc>) → GetSourceCode(app_name=…, file_path=<命中项>)'
     attributes:
     - name: source_files
-      description: recorded source files of paymentservice — list with ListCodeFiles(service_name=paymentservice)
+      description: recorded source files of shippingservice — list with ListCodeFiles(service_name=shippingservice)
     - name: source_code
       description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
         delay / missing parameter); read with GetSourceCode
-- logical_entity_id: LOGICAL.boutique.shippingservice
-  biz_name: shippingservice
-  description: Shipping quotes — Go gRPC server (port 50051). Called by frontend and checkoutservice.
+- logical_entity_id: LOGICAL.boutique.shippingservice.deploy
+  biz_name: shippingservice-deploy
+  description: The Kubernetes deployment carrier of shippingservice — the Deployment / Pod / Endpoint resource instances
+    that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.boutique.shippingservice.deployment
     resource: deployments
@@ -675,6 +826,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.boutique.shippingservice.obs
+  biz_name: shippingservice-obs
+  description: The observation signal set of shippingservice's deployment instances — anomaly alerts / metrics and
+    the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.boutique.shippingservice.telemetry
     resource: alerts + metrics
     A:
@@ -704,7 +860,24 @@ logical_entities:
     - name: error_logs
       description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
         causal narrative surface; read with GetErrorLogs
-  - physical_entity_id: PHYSICAL.boutique.shippingservice.code
+- logical_entity_id: LOGICAL.boutique.emailservice
+  biz_name: emailservice
+  description: Order-confirmation email — Python gRPC server (port 5000/8080). Called by checkoutservice.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.emailservice.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+  - physical_entity_id: PHYSICAL.boutique.emailservice.code
     resource: code artifact
     A:
       cardinality: '1:1'
@@ -714,13 +887,14 @@ logical_entities:
       → code evidence)；read: ListCodeFiles(service_name=<svc>) → GetSourceCode(app_name=…, file_path=<命中项>)'
     attributes:
     - name: source_files
-      description: recorded source files of shippingservice — list with ListCodeFiles(service_name=shippingservice)
+      description: recorded source files of emailservice — list with ListCodeFiles(service_name=emailservice)
     - name: source_code
       description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
         delay / missing parameter); read with GetSourceCode
-- logical_entity_id: LOGICAL.boutique.emailservice
-  biz_name: emailservice
-  description: Order-confirmation email — Python gRPC server (port 5000/8080). Called by checkoutservice.
+- logical_entity_id: LOGICAL.boutique.emailservice.deploy
+  biz_name: emailservice-deploy
+  description: The Kubernetes deployment carrier of emailservice — the Deployment / Pod / Endpoint resource instances
+    that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.boutique.emailservice.deployment
     resource: deployments
@@ -790,6 +964,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.boutique.emailservice.obs
+  biz_name: emailservice-obs
+  description: The observation signal set of emailservice's deployment instances — anomaly alerts / metrics and
+    the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.boutique.emailservice.telemetry
     resource: alerts + metrics
     A:
@@ -819,7 +998,25 @@ logical_entities:
     - name: error_logs
       description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
         causal narrative surface; read with GetErrorLogs
-  - physical_entity_id: PHYSICAL.boutique.emailservice.code
+- logical_entity_id: LOGICAL.boutique.checkoutservice
+  biz_name: checkoutservice
+  description: Checkout orchestration — Go gRPC server (port 5050); places orders by calling productcatalog, shipping,
+    currency, payment, email and cart services in sequence. Called by frontend.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.checkoutservice.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+  - physical_entity_id: PHYSICAL.boutique.checkoutservice.code
     resource: code artifact
     A:
       cardinality: '1:1'
@@ -829,14 +1026,14 @@ logical_entities:
       → code evidence)；read: ListCodeFiles(service_name=<svc>) → GetSourceCode(app_name=…, file_path=<命中项>)'
     attributes:
     - name: source_files
-      description: recorded source files of emailservice — list with ListCodeFiles(service_name=emailservice)
+      description: recorded source files of checkoutservice — list with ListCodeFiles(service_name=checkoutservice)
     - name: source_code
       description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
         delay / missing parameter); read with GetSourceCode
-- logical_entity_id: LOGICAL.boutique.checkoutservice
-  biz_name: checkoutservice
-  description: Checkout orchestration — Go gRPC server (port 5050); places orders by calling productcatalog, shipping,
-    currency, payment, email and cart services in sequence. Called by frontend.
+- logical_entity_id: LOGICAL.boutique.checkoutservice.deploy
+  biz_name: checkoutservice-deploy
+  description: The Kubernetes deployment carrier of checkoutservice — the Deployment / Pod / Endpoint resource instances
+    that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.boutique.checkoutservice.deployment
     resource: deployments
@@ -906,6 +1103,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.boutique.checkoutservice.obs
+  biz_name: checkoutservice-obs
+  description: The observation signal set of checkoutservice's deployment instances — anomaly alerts / metrics and
+    the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.boutique.checkoutservice.telemetry
     resource: alerts + metrics
     A:
@@ -935,7 +1137,25 @@ logical_entities:
     - name: error_logs
       description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
         causal narrative surface; read with GetErrorLogs
-  - physical_entity_id: PHYSICAL.boutique.checkoutservice.code
+- logical_entity_id: LOGICAL.boutique.recommendationservice
+  biz_name: recommendationservice
+  description: Product recommendations — Python gRPC server (port 8080); derives recommendations from the product
+    catalog. Called by frontend.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.recommendationservice.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+  - physical_entity_id: PHYSICAL.boutique.recommendationservice.code
     resource: code artifact
     A:
       cardinality: '1:1'
@@ -945,14 +1165,15 @@ logical_entities:
       → code evidence)；read: ListCodeFiles(service_name=<svc>) → GetSourceCode(app_name=…, file_path=<命中项>)'
     attributes:
     - name: source_files
-      description: recorded source files of checkoutservice — list with ListCodeFiles(service_name=checkoutservice)
+      description: recorded source files of recommendationservice — list with ListCodeFiles(service_name=recommendationservice)
     - name: source_code
       description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
         delay / missing parameter); read with GetSourceCode
-- logical_entity_id: LOGICAL.boutique.recommendationservice
-  biz_name: recommendationservice
-  description: Product recommendations — Python gRPC server (port 8080); derives recommendations from the product
-    catalog. Called by frontend.
+- logical_entity_id: LOGICAL.boutique.recommendationservice.deploy
+  biz_name: recommendationservice-deploy
+  description: The Kubernetes deployment carrier of recommendationservice — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.boutique.recommendationservice.deployment
     resource: deployments
@@ -1023,6 +1244,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.boutique.recommendationservice.obs
+  biz_name: recommendationservice-obs
+  description: The observation signal set of recommendationservice's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.boutique.recommendationservice.telemetry
     resource: alerts + metrics
     A:
@@ -1052,7 +1278,25 @@ logical_entities:
     - name: error_logs
       description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
         causal narrative surface; read with GetErrorLogs
-  - physical_entity_id: PHYSICAL.boutique.recommendationservice.code
+- logical_entity_id: LOGICAL.boutique.adservice
+  biz_name: adservice
+  description: Contextual ads — Java gRPC server (port 9555, gRPC-only port). Leaf service (calls nothing). Called
+    by frontend.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.adservice.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+  - physical_entity_id: PHYSICAL.boutique.adservice.code
     resource: code artifact
     A:
       cardinality: '1:1'
@@ -1062,14 +1306,14 @@ logical_entities:
       → code evidence)；read: ListCodeFiles(service_name=<svc>) → GetSourceCode(app_name=…, file_path=<命中项>)'
     attributes:
     - name: source_files
-      description: recorded source files of recommendationservice — list with ListCodeFiles(service_name=recommendationservice)
+      description: recorded source files of adservice — list with ListCodeFiles(service_name=adservice)
     - name: source_code
       description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
         delay / missing parameter); read with GetSourceCode
-- logical_entity_id: LOGICAL.boutique.adservice
-  biz_name: adservice
-  description: Contextual ads — Java gRPC server (port 9555, gRPC-only port). Leaf service (calls nothing). Called
-    by frontend.
+- logical_entity_id: LOGICAL.boutique.adservice.deploy
+  biz_name: adservice-deploy
+  description: The Kubernetes deployment carrier of adservice — the Deployment / Pod / Endpoint resource instances
+    that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.boutique.adservice.deployment
     resource: deployments
@@ -1139,6 +1383,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.boutique.adservice.obs
+  biz_name: adservice-obs
+  description: The observation signal set of adservice's deployment instances — anomaly alerts / metrics and the
+    application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.boutique.adservice.telemetry
     resource: alerts + metrics
     A:
@@ -1168,7 +1417,24 @@ logical_entities:
     - name: error_logs
       description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
         causal narrative surface; read with GetErrorLogs
-  - physical_entity_id: PHYSICAL.boutique.adservice.code
+- logical_entity_id: LOGICAL.boutique.redis-cart
+  biz_name: redis-cart
+  description: In-memory cart database — Redis (port 6379); the cart store behind cartservice. Leaf database service.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.boutique.redis-cart.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+  - physical_entity_id: PHYSICAL.boutique.redis-cart.code
     resource: code artifact
     A:
       cardinality: '1:1'
@@ -1178,13 +1444,14 @@ logical_entities:
       → code evidence)；read: ListCodeFiles(service_name=<svc>) → GetSourceCode(app_name=…, file_path=<命中项>)'
     attributes:
     - name: source_files
-      description: recorded source files of adservice — list with ListCodeFiles(service_name=adservice)
+      description: recorded source files of redis-cart — list with ListCodeFiles(service_name=redis-cart)
     - name: source_code
       description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
         delay / missing parameter); read with GetSourceCode
-- logical_entity_id: LOGICAL.boutique.redis-cart
-  biz_name: redis-cart
-  description: In-memory cart database — Redis (port 6379); the cart store behind cartservice. Leaf database service.
+- logical_entity_id: LOGICAL.boutique.redis-cart.deploy
+  biz_name: redis-cart-deploy
+  description: The Kubernetes deployment carrier of redis-cart — the Deployment / Pod / Endpoint resource instances
+    that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.boutique.redis-cart.deployment
     resource: deployments
@@ -1254,6 +1521,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.boutique.redis-cart.obs
+  biz_name: redis-cart-obs
+  description: The observation signal set of redis-cart's deployment instances — anomaly alerts / metrics and the
+    application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.boutique.redis-cart.telemetry
     resource: alerts + metrics
     A:
@@ -1283,20 +1555,6 @@ logical_entities:
     - name: error_logs
       description: error-level log lines — connection failures, panics, gRPC/HTTP exceptions, business errors; the
         causal narrative surface; read with GetErrorLogs
-  - physical_entity_id: PHYSICAL.boutique.redis-cart.code
-    resource: code artifact
-    A:
-      cardinality: '1:1'
-      key: app_label
-    R: null
-    S: 'trimmed service sources shipped with the snapshot — the source-defect surface (error message → file / function
-      → code evidence)；read: ListCodeFiles(service_name=<svc>) → GetSourceCode(app_name=…, file_path=<命中项>)'
-    attributes:
-    - name: source_files
-      description: recorded source files of redis-cart — list with ListCodeFiles(service_name=redis-cart)
-    - name: source_code
-      description: file contents — locate the defect anchor (wrong argument order / wrong return / busy loop / artificial
-        delay / missing parameter); read with GetSourceCode
 - logical_entity_id: LOGICAL.boutique.node.master
   biz_name: master
   description: Kubernetes node master of the boutique cluster — a placement target with its own runtime services;
@@ -1535,6 +1793,270 @@ logical_entities:
       description: PVC / PV / StorageClass bindability — mismatched selector / class / access mode / capacity leaves
         claims Pending
 pas_relations:
+- relation_id: LOGICAL.boutique.frontend_TO_LOGICAL.boutique.frontend.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: frontend 由 frontend-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment / Pod / Endpoint
+    instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.boutique.frontend.deploy_TO_LOGICAL.boutique.frontend.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: frontend-deploy 产生 frontend-obs 观测信号集合 — alerts / metrics / logs captured from the deployment instances; read
+    the signal surfaces by service name.
+- relation_id: LOGICAL.boutique.cartservice_TO_LOGICAL.boutique.cartservice.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: cartservice 由 cartservice-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment / Pod / Endpoint
+    instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.boutique.cartservice.deploy_TO_LOGICAL.boutique.cartservice.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: cartservice-deploy 产生 cartservice-obs 观测信号集合 — alerts / metrics / logs captured from the deployment instances;
+    read the signal surfaces by service name.
+- relation_id: LOGICAL.boutique.productcatalogservice_TO_LOGICAL.boutique.productcatalogservice.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: productcatalogservice 由 productcatalogservice-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.boutique.productcatalogservice.deploy_TO_LOGICAL.boutique.productcatalogservice.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: productcatalogservice-deploy 产生 productcatalogservice-obs 观测信号集合 — alerts / metrics / logs captured from the
+    deployment instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.boutique.currencyservice_TO_LOGICAL.boutique.currencyservice.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: currencyservice 由 currencyservice-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment /
+    Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.boutique.currencyservice.deploy_TO_LOGICAL.boutique.currencyservice.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: currencyservice-deploy 产生 currencyservice-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.boutique.paymentservice_TO_LOGICAL.boutique.paymentservice.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: paymentservice 由 paymentservice-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment / Pod
+    / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.boutique.paymentservice.deploy_TO_LOGICAL.boutique.paymentservice.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: paymentservice-deploy 产生 paymentservice-obs 观测信号集合 — alerts / metrics / logs captured from the deployment instances;
+    read the signal surfaces by service name.
+- relation_id: LOGICAL.boutique.shippingservice_TO_LOGICAL.boutique.shippingservice.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: shippingservice 由 shippingservice-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment /
+    Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.boutique.shippingservice.deploy_TO_LOGICAL.boutique.shippingservice.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: shippingservice-deploy 产生 shippingservice-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.boutique.emailservice_TO_LOGICAL.boutique.emailservice.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: emailservice 由 emailservice-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment / Pod /
+    Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.boutique.emailservice.deploy_TO_LOGICAL.boutique.emailservice.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: emailservice-deploy 产生 emailservice-obs 观测信号集合 — alerts / metrics / logs captured from the deployment instances;
+    read the signal surfaces by service name.
+- relation_id: LOGICAL.boutique.checkoutservice_TO_LOGICAL.boutique.checkoutservice.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: checkoutservice 由 checkoutservice-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment /
+    Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.boutique.checkoutservice.deploy_TO_LOGICAL.boutique.checkoutservice.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: checkoutservice-deploy 产生 checkoutservice-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.boutique.recommendationservice_TO_LOGICAL.boutique.recommendationservice.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: recommendationservice 由 recommendationservice-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.boutique.recommendationservice.deploy_TO_LOGICAL.boutique.recommendationservice.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: recommendationservice-deploy 产生 recommendationservice-obs 观测信号集合 — alerts / metrics / logs captured from the
+    deployment instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.boutique.adservice_TO_LOGICAL.boutique.adservice.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: adservice 由 adservice-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment / Pod / Endpoint
+    instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.boutique.adservice.deploy_TO_LOGICAL.boutique.adservice.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: adservice-deploy 产生 adservice-obs 观测信号集合 — alerts / metrics / logs captured from the deployment instances;
+    read the signal surfaces by service name.
+- relation_id: LOGICAL.boutique.redis-cart_TO_LOGICAL.boutique.redis-cart.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: redis-cart 由 redis-cart-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment / Pod / Endpoint
+    instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.boutique.redis-cart.deploy_TO_LOGICAL.boutique.redis-cart.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: redis-cart-deploy 产生 redis-cart-obs 观测信号集合 — alerts / metrics / logs captured from the deployment instances;
+    read the signal surfaces by service name.
 - relation_id: LOGICAL.boutique.frontend_TO_LOGICAL.boutique.adservice
   relation_name: Calls
   P:

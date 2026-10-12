@@ -2,7 +2,7 @@
  * dlr-state 模型检索（服务路径，v2 口径）：问题 / 对象名 → 模型切片
  *
  * 返回三组，组内按 score 降序：
- *   - objects：命中的 LE（服务 / 节点 / 命名空间）+ 其观测面一览（名字出现时最有用）
+ *   - objects：命中的 LE（对象）+ 其观测面一览（名字出现时最有用）
  *   - surfaces：命中的观测面（PE，如 "<服务> pods / deployment / logs"）
  *   - relations：命中的 PAS 调用边
  *
@@ -25,7 +25,6 @@ export interface StateModelSliceResult {
     objects: {
       id: string;
       name: string;
-      kind: string;
       description: string;
       score: number;
       surfaces: { id: string; kind: string; s: string; read: string }[];
@@ -59,8 +58,6 @@ export interface StateModelSliceResult {
 }
 
 const lastSeg = (id: string): string => id.split(".").pop() ?? id;
-const kindOf = (leId: string): string =>
-  /\.node\./.test(leId) ? "node" : /\.namespace$/.test(leId) ? "namespace" : "service";
 
 /**
  * 锚定读法（剪枝谓词）：面（PE）按锚取数的调用模板——ARCS 锚 = 取数时的 WHERE 键。
@@ -78,6 +75,8 @@ function readHint(kind: string, ownerName: string, nsValue: string): string {
       return `GetAlerts()（按实体名 ${ownerName} 收窄阅读；告警是指针，证据回对象层闭环）`;
     case "logs":
       return `GetRecentLogs(service_name=${ownerName}) / GetErrorLogs(service_name=${ownerName})`;
+    case "deps":
+      return `GetServiceDependencies(service_name=${ownerName})`;
     case "code":
       return `ListCodeFiles(service_name=${ownerName}) → GetSourceCode(app_name=…, file_path=<命中项>)`;
     case "node":
@@ -100,7 +99,7 @@ function readHint(kind: string, ownerName: string, nsValue: string): string {
 }
 
 interface Index {
-  les: Map<string, { name: string; kind: string; description: string; ns: string }>;
+  les: Map<string, { name: string; description: string; ns: string }>;
   pes: Map<
     string,
     { id: string; leId: string; kind: string; resource: string; s: string; cardinality: string; attributes: { name: string; description: string }[] }
@@ -120,7 +119,6 @@ function loadIndex(): Index {
     for (const le of sc.logical_entities ?? []) {
       idx.les.set(le.logical_entity_id, {
         name: le.biz_name,
-        kind: kindOf(le.logical_entity_id),
         description: le.description ?? "",
         ns: nsValue,
       });
@@ -190,7 +188,6 @@ export async function stateModelQuery(
       return {
         id: h.id ?? "",
         name: ownerName,
-        kind: r?.kind ?? "",
         description: r?.description ?? h.description ?? "",
         score: round4(h.score),
         surfaces: (idx.surfacesByLe.get(h.id ?? "") ?? []).map((s) => ({

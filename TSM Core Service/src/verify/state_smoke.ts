@@ -17,7 +17,7 @@ const store = await LanceStore.open(STORE_DIR, MODEL_DIR);
 
 const r = await stateModelQuery(store, question);
 console.log(`[state] q="${question}"  confidence=${r.confidence}`);
-console.log(`  objects  : ${r.data.objects.map((s) => `${s.name}(${s.kind}) ${s.score}`).join(" | ") || "(无)"}`);
+console.log(`  objects  : ${r.data.objects.map((s) => `${s.name} ${s.score}`).join(" | ") || "(无)"}`);
 console.log(`  surfaces : ${r.data.surfaces.map((s) => `${s.name} ${s.score}`).join(" | ") || "(无)"}`);
 console.log(`  relations: ${r.data.relations.map((s) => `${s.from_name}→${s.to_name} ${s.score}`).join(" | ") || "(无)"}`);
 if (r.data.objects[0]) {

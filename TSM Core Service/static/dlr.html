@@ -313,10 +313,9 @@
                 const stats = document.getElementById('stats');
                 if (data.shape === 'entities') {
                     const les = data.logical_entities || [];
-                    const n = (k) => les.filter(e => e.kind === k).length;
-                    stats.textContent = '服务:' + n('service') + ' | 节点:' + n('node') + ' | 命名空间:' + n('namespace') +
+                    stats.textContent = '对象(LE):' + les.length +
                         ' | 观测面(PE):' + (data.physical_entities || []).length +
-                        ' | 调用(PAS):' + (data.pas_relations || []).length;
+                        ' | 关系(PAS):' + (data.pas_relations || []).length;
                 } else {
                     stats.textContent =
                         'LE:' + (data.logical_entities || []).length +
@@ -1301,41 +1300,36 @@
         panel.style.display = 'block';
     }
 
-    // ── dlr-state v2 左栏（对象列表：服务/节点/命名空间分组 → LE → 下挂 PE）─────────
+    // ── dlr-state v2 左栏（对象列表：LE → 下挂 PE；平铺按名排序，不分类）─────────
     function renderStateV2List() {
         const d = SemanticVis.state.stateData || {};
         const listEl = document.getElementById('entityList');
         const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        const KIND_LABEL = { service: '服务', node: '节点', namespace: '命名空间' };
+        const les = [...(d.logical_entities || [])]
+            .sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), undefined, { numeric: true }));
         let html = '';
-        for (const kind of ['service', 'node', 'namespace']) {
-            const les = (d.logical_entities || []).filter(e => e.kind === kind)
-                .sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), undefined, { numeric: true }));
-            if (!les.length) continue;
-            html += '<div class="ungrouped-header">' + (KIND_LABEL[kind] || kind) + '（' + les.length + '）</div>';
-            for (const le of les) {
-                const childPEs = (d.physical_entities || []).filter(p => p.le_id === le.id);
-                html += '<div class="le-group-header" data-le-id="' + esc(le.id) + '">' +
-                    '<span class="le-arrow">▼</span>' +
-                    '<span class="badge le-badge">LE</span>' +
-                    esc(le.name || le.id) +
-                    ' <span style="font-size:11px;color:#888;">(' + childPEs.length + '个PE)</span>' +
+        for (const le of les) {
+            const childPEs = (d.physical_entities || []).filter(p => p.le_id === le.id);
+            html += '<div class="le-group-header" data-le-id="' + esc(le.id) + '">' +
+                '<span class="le-arrow">▼</span>' +
+                '<span class="badge le-badge">LE</span>' +
+                esc(le.name || le.id) +
+                ' <span style="font-size:11px;color:#888;">(' + childPEs.length + '个PE)</span>' +
+                '</div>';
+            html += '<div class="le-group-children" data-le-children="' + esc(le.id) + '">';
+            html += '<div class="entity-item le-item" data-id="' + esc(le.id) + '" data-type="le">' +
+                '<span class="badge le-badge">LE</span>' +
+                '<div>' + esc(le.name || le.id) + '</div>' +
+                '<div style="font-size:11px;color:#999;">' + esc(le.id) + '</div>' +
+                '</div>';
+            childPEs.forEach(pe => {
+                html += '<div class="entity-item" data-id="' + esc(pe.id) + '" data-type="pe">' +
+                    '<span class="badge pe-badge">PE</span>' +
+                    '<div>' + esc(pe.name || '未知') + '</div>' +
+                    '<div style="font-size:11px;color:#999;">' + esc(pe.resource || pe.id) + '</div>' +
                     '</div>';
-                html += '<div class="le-group-children" data-le-children="' + esc(le.id) + '">';
-                html += '<div class="entity-item le-item" data-id="' + esc(le.id) + '" data-type="le">' +
-                    '<span class="badge le-badge">LE</span>' +
-                    '<div>' + esc(le.name || le.id) + '</div>' +
-                    '<div style="font-size:11px;color:#999;">' + esc(le.id) + '</div>' +
-                    '</div>';
-                childPEs.forEach(pe => {
-                    html += '<div class="entity-item" data-id="' + esc(pe.id) + '" data-type="pe">' +
-                        '<span class="badge pe-badge">PE</span>' +
-                        '<div>' + esc(pe.name || '未知') + '</div>' +
-                        '<div style="font-size:11px;color:#999;">' + esc(pe.resource || pe.id) + '</div>' +
-                        '</div>';
-                });
-                html += '</div>';
-            }
+            });
+            html += '</div>';
         }
         listEl.innerHTML = html || '<div style="padding:20px;text-align:center;color:#999;">无对象</div>';
         listEl.querySelectorAll('.le-group-header').forEach(header => {
@@ -1347,28 +1341,20 @@
         });
     }
 
-    // ── dlr-state v2 渲染（LE=对象 圆 · PE=观测面 方 · PAS=调用图 绿边——经典 DLR 观感）──
+    // ── dlr-state v2 渲染（LE=对象 圆 · PE=观测面 方 · 关系边=调用/载体/观测 绿系）──
     function initStateV2Network(d) {
         const CONST = SemanticVis.CONST;
         const nodes = [];
         const edges = [];
-        const svcColor = (i) => CONST.LE_COLORS[i % CONST.LE_COLORS.length];
-        const TYPE_COLOR = {
-            service: null, // 马卡龙轮转
-            node: { bg: '#B0BEC5', bd: '#546E7A' },
-            namespace: { bg: '#FFE082', bd: '#F9A825' }
-        };
-        let svcIdx = 0;
-        (d.logical_entities || []).forEach((le) => {
-            const c = le.kind === 'service'
-                ? { bg: svcColor(svcIdx++), bd: '#333' }
-                : TYPE_COLOR[le.kind] || { bg: '#B0BEC5', bd: '#546E7A' };
+        const leColor = (i) => CONST.LE_COLORS[i % CONST.LE_COLORS.length];
+        (d.logical_entities || []).forEach((le, i) => {
+            const c = { bg: leColor(i), bd: '#333' };
             nodes.push({
                 id: le.id,
                 label: le.name,
-                title: (le.kind === 'service' ? '服务' : le.kind === 'node' ? '节点' : '命名空间') + '（LE）: ' + le.name +
+                title: '对象（LE）: ' + le.name +
                        '\n' + le.id + (le.description ? '\n' + le.description : ''),
-                shape: 'circle', size: le.kind === 'service' ? 46 : 38, borderWidth: 3,
+                shape: 'circle', size: 44, borderWidth: 3,
                 color: { background: c.bg, border: c.bd, highlight: { background: c.bg, border: '#000' } },
                 font: { size: 15, face: 'Arial', bold: true, color: '#333' },
                 group: 'le'
@@ -1445,8 +1431,7 @@
         const row = (k, v) => v ? '<div class="pas-field"><span class="pas-label">' + k + '</span>：' + String(v) + '</div>' : '';
         const le = (d.logical_entities || []).find(e => e.id === nodeId);
         if (le) {
-            const kinds = { service: '服务', node: '节点', namespace: '命名空间' };
-            title.textContent = (kinds[le.kind] || '对象') + '（LE）: ' + le.name;
+            title.textContent = '对象（LE）: ' + le.name;
             let html = '<div class="pas-info">' + row('id', esc(le.id)) + row('描述', esc(le.description)) + '</div>';
             if (le.attributes && le.attributes.length) {
                 html += '<div class="arcs-info">' + le.attributes.map(a => row(esc(a.name), esc(a.description))).join('') + '</div>';

@@ -182,8 +182,8 @@ const parseJsonOrRaw = (v: unknown): unknown => {
   }
 };
 
-/** dlr-state 的可视化载荷。v2（shape=entities）：LE=具体对象（服务/节点/命名空间，嵌套观测面 PE），
- *  PAS=调用图——页面按经典 DLR 观感渲染；v1（shape=slices，过渡期）：类别级 entities/relations/slices。 */
+/** dlr-state 的可视化载荷。v2（shape=entities）：LE=可指认对象（嵌套观测面 PE，不设 kind/基类），
+ *  PAS=关系边（调用/载体/观测）——页面按经典 DLR 观感渲染；v1（shape=slices，过渡期）：类别级 entities/relations/slices。 */
 export interface StateGraphPayloadV2 {
   kind: "dlr-state";
   shape: "entities";
@@ -191,7 +191,6 @@ export interface StateGraphPayloadV2 {
   logical_entities: {
     id: string;
     name: string;
-    kind: "service" | "node" | "namespace";
     description: string;
     attributes: { name: string; description: string }[];
   }[];
@@ -308,9 +307,6 @@ export function buildStatePayloadV2(files: string[]): StateGraphPayloadV2 {
   for (const file of files) {
     const sc = parse(fs.readFileSync(file, "utf8")) as StateScenarioYamlV2;
     for (const le of sc.logical_entities ?? []) {
-      let kind: "service" | "node" | "namespace" = "service";
-      if (/\.node\./.test(le.logical_entity_id)) kind = "node";
-      else if (/\.namespace$/.test(le.logical_entity_id)) kind = "namespace";
       // LE 公开面 = 嵌套 PE 里 public 属性的去重投影
       const pub = new Map<string, { name: string; description: string }>();
       for (const pe of le.physical_entities ?? []) {
@@ -321,7 +317,6 @@ export function buildStatePayloadV2(files: string[]): StateGraphPayloadV2 {
       payload.logical_entities.push({
         id: le.logical_entity_id,
         name: le.biz_name,
-        kind,
         description: le.description ?? "",
         attributes: [...pub.values()],
       });

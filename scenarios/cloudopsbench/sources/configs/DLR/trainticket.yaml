@@ -1,21 +1,24 @@
 # Cloud-OpsBench 场景 · L1（dlr-state）—— trainticket
 #
-# 结构（DLR 词汇）：LE = 本系统**有独立生命周期**的对象（服务 / 节点 / 命名空间）；
-#                  PE = 每个对象的**状态观测面**（deployment / pods / service+endpoints / telemetry / logs；boutique 另有 code）；
-#                  PAS = 本系统的**服务调用图**（自快照的依赖图读得，逐 case 稳定）。
-# 锚：同一对象的所有观测面共享**应用标签**（app=<service>）——ARCS.A.key = app_label；
-#     节点面按 node_name、命名空间面按 namespace 锚定。
-# 锚的作用 = **剪枝**：A 是取数时的 WHERE 键——每个面都带锚定读法（S 里的 read: 模板），
+# 结构（DLR 词汇，v3 · 2026-10-12）：
+#   LE = **可指认的对象**（名字 + 描述）——不设 kind / 基类；语义全走边与名字。
+#   每服务三件（拆分判据：可指认 ∧ 面群同锚 ∧ 母 LE 不空）：
+#     业务对象 <svc>          PE：调用依赖清单（service_name 锚）+ 源码（boutique）
+#     部署载体 <svc>-deploy   PE：deployment / pods / service_endpoints（app_label 锚）
+#     观测集合 <svc>-obs      PE：telemetry / logs（service_name 锚）
+#   边：调用（service→service）· 部署载体（<svc>→<svc>-deploy）· 观测信号（<svc>-deploy→<svc>-obs）。
+#   节点 / 命名空间为对象 LE；调度是实例事实（读 pods 面的 node 字段指到节点），schema 不连边。
+# 锚 = **剪枝**：A 是取数时的 WHERE 键——每个面都带锚定读法（S 里的 read: 模板），
 #     返回体 = 该对象的薄切片而不是集群全量；唯一合法的全量 = 首轮症状扫描（找锚），其后一律收窄。
 # 边界：实例（pod 名 / IP / 状态值 / 日志内容）不入模型——由 agent 经工具沿面实查。
 # 源：LLM4Ops/Cloud-OpsBench @ ea05daf（2026-10-10 拉取）；调用图/名册自 tool_cache 样本抽取。
 
 mapping_type: dlr-state
-version: '2.0'
+version: '3.0'
 scenario_name: dlr_cloudopsbench_trainticket
-description: trainticket system of Cloud-OpsBench — its services and nodes (LE), the resource / observation surfaces
-  through which each object's state is read from deterministic Kubernetes snapshots (PE), and the service call topology
-  (PAS).
+description: trainticket system of Cloud-OpsBench — its services (business objects with their deployment carriers
+  and observation sets), nodes and namespace (LE), the resource / observation surfaces through which each object's
+  state is read from deterministic Kubernetes snapshots (PE), and the call / carrier / signal edges (PAS).
 source:
   kind: kubernetes-state-snapshots
   repo: LLM4Ops/Cloud-OpsBench
@@ -25,6 +28,24 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-ui-dashboard
   biz_name: ts-ui-dashboard
   description: Train-Ticket web UI — the browser-facing dashboard (entry of user traffic).
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-ui-dashboard.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-ui-dashboard.deploy
+  biz_name: ts-ui-dashboard-deploy
+  description: The Kubernetes deployment carrier of ts-ui-dashboard — the Deployment / Pod / Endpoint resource instances
+    that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-ui-dashboard.deployment
     resource: deployments
@@ -94,6 +115,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-ui-dashboard.obs
+  biz_name: ts-ui-dashboard-obs
+  description: The observation signal set of ts-ui-dashboard's deployment instances — anomaly alerts / metrics and
+    the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-ui-dashboard.telemetry
     resource: alerts + metrics
     A:
@@ -126,6 +152,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-gateway-service
   biz_name: ts-gateway-service
   description: API gateway — routes external requests to the backend microservices (fans out to nearly all services).
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-gateway-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-gateway-service.deploy
+  biz_name: ts-gateway-service-deploy
+  description: The Kubernetes deployment carrier of ts-gateway-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-gateway-service.deployment
     resource: deployments
@@ -195,6 +240,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-gateway-service.obs
+  biz_name: ts-gateway-service-obs
+  description: The observation signal set of ts-gateway-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-gateway-service.telemetry
     resource: alerts + metrics
     A:
@@ -227,6 +277,24 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-auth-service
   biz_name: ts-auth-service
   description: Authentication — login/logout and token issuance.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-auth-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-auth-service.deploy
+  biz_name: ts-auth-service-deploy
+  description: The Kubernetes deployment carrier of ts-auth-service — the Deployment / Pod / Endpoint resource instances
+    that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-auth-service.deployment
     resource: deployments
@@ -296,6 +364,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-auth-service.obs
+  biz_name: ts-auth-service-obs
+  description: The observation signal set of ts-auth-service's deployment instances — anomaly alerts / metrics and
+    the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-auth-service.telemetry
     resource: alerts + metrics
     A:
@@ -328,6 +401,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-verification-code-service
   biz_name: ts-verification-code-service
   description: Verification codes — issues/verifies codes used to authenticate.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-verification-code-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-verification-code-service.deploy
+  biz_name: ts-verification-code-service-deploy
+  description: The Kubernetes deployment carrier of ts-verification-code-service — the Deployment / Pod / Endpoint
+    resource instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored
+    by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-verification-code-service.deployment
     resource: deployments
@@ -398,6 +490,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-verification-code-service.obs
+  biz_name: ts-verification-code-service-obs
+  description: The observation signal set of ts-verification-code-service's deployment instances — anomaly alerts
+    / metrics and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-verification-code-service.telemetry
     resource: alerts + metrics
     A:
@@ -430,6 +527,24 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-user-service
   biz_name: ts-user-service
   description: User accounts — registration, profile, permissions.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-user-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-user-service.deploy
+  biz_name: ts-user-service-deploy
+  description: The Kubernetes deployment carrier of ts-user-service — the Deployment / Pod / Endpoint resource instances
+    that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-user-service.deployment
     resource: deployments
@@ -499,6 +614,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-user-service.obs
+  biz_name: ts-user-service-obs
+  description: The observation signal set of ts-user-service's deployment instances — anomaly alerts / metrics and
+    the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-user-service.telemetry
     resource: alerts + metrics
     A:
@@ -531,6 +651,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-contacts-service
   biz_name: ts-contacts-service
   description: User contacts — address-book contacts of users.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-contacts-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-contacts-service.deploy
+  biz_name: ts-contacts-service-deploy
+  description: The Kubernetes deployment carrier of ts-contacts-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-contacts-service.deployment
     resource: deployments
@@ -600,6 +739,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-contacts-service.obs
+  biz_name: ts-contacts-service-obs
+  description: The observation signal set of ts-contacts-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-contacts-service.telemetry
     resource: alerts + metrics
     A:
@@ -632,6 +776,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-avatar-service
   biz_name: ts-avatar-service
   description: User avatars — avatar images and metadata.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-avatar-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-avatar-service.deploy
+  biz_name: ts-avatar-service-deploy
+  description: The Kubernetes deployment carrier of ts-avatar-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-avatar-service.deployment
     resource: deployments
@@ -701,6 +864,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-avatar-service.obs
+  biz_name: ts-avatar-service-obs
+  description: The observation signal set of ts-avatar-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-avatar-service.telemetry
     resource: alerts + metrics
     A:
@@ -733,6 +901,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-basic-service
   biz_name: ts-basic-service
   description: Basic travel data — aggregated queries over train/route/station/price (composes several domain services).
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-basic-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-basic-service.deploy
+  biz_name: ts-basic-service-deploy
+  description: The Kubernetes deployment carrier of ts-basic-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-basic-service.deployment
     resource: deployments
@@ -802,6 +989,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-basic-service.obs
+  biz_name: ts-basic-service-obs
+  description: The observation signal set of ts-basic-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-basic-service.telemetry
     resource: alerts + metrics
     A:
@@ -834,6 +1026,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-train-service
   biz_name: ts-train-service
   description: Trains — train types and carriage composition.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-train-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-train-service.deploy
+  biz_name: ts-train-service-deploy
+  description: The Kubernetes deployment carrier of ts-train-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-train-service.deployment
     resource: deployments
@@ -903,6 +1114,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-train-service.obs
+  biz_name: ts-train-service-obs
+  description: The observation signal set of ts-train-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-train-service.telemetry
     resource: alerts + metrics
     A:
@@ -935,6 +1151,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-route-service
   biz_name: ts-route-service
   description: Routes — ordered station lists of a train route.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-route-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-route-service.deploy
+  biz_name: ts-route-service-deploy
+  description: The Kubernetes deployment carrier of ts-route-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-route-service.deployment
     resource: deployments
@@ -1004,6 +1239,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-route-service.obs
+  biz_name: ts-route-service-obs
+  description: The observation signal set of ts-route-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-route-service.telemetry
     resource: alerts + metrics
     A:
@@ -1036,6 +1276,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-station-service
   biz_name: ts-station-service
   description: Stations — station directory.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-station-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-station-service.deploy
+  biz_name: ts-station-service-deploy
+  description: The Kubernetes deployment carrier of ts-station-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-station-service.deployment
     resource: deployments
@@ -1105,6 +1364,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-station-service.obs
+  biz_name: ts-station-service-obs
+  description: The observation signal set of ts-station-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-station-service.telemetry
     resource: alerts + metrics
     A:
@@ -1137,6 +1401,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-price-service
   biz_name: ts-price-service
   description: Prices — ticket prices for trip segments.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-price-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-price-service.deploy
+  biz_name: ts-price-service-deploy
+  description: The Kubernetes deployment carrier of ts-price-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-price-service.deployment
     resource: deployments
@@ -1206,6 +1489,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-price-service.obs
+  biz_name: ts-price-service-obs
+  description: The observation signal set of ts-price-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-price-service.telemetry
     resource: alerts + metrics
     A:
@@ -1238,6 +1526,24 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-seat-service
   biz_name: ts-seat-service
   description: Seats — seat allocation and availability for a trip.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-seat-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-seat-service.deploy
+  biz_name: ts-seat-service-deploy
+  description: The Kubernetes deployment carrier of ts-seat-service — the Deployment / Pod / Endpoint resource instances
+    that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-seat-service.deployment
     resource: deployments
@@ -1307,6 +1613,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-seat-service.obs
+  biz_name: ts-seat-service-obs
+  description: The observation signal set of ts-seat-service's deployment instances — anomaly alerts / metrics and
+    the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-seat-service.telemetry
     resource: alerts + metrics
     A:
@@ -1339,6 +1650,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-travel-service
   biz_name: ts-travel-service
   description: Trip search — composes trains/routes/stations into sellable trips.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-travel-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-travel-service.deploy
+  biz_name: ts-travel-service-deploy
+  description: The Kubernetes deployment carrier of ts-travel-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-travel-service.deployment
     resource: deployments
@@ -1408,6 +1738,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-travel-service.obs
+  biz_name: ts-travel-service-obs
+  description: The observation signal set of ts-travel-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-travel-service.telemetry
     resource: alerts + metrics
     A:
@@ -1440,6 +1775,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-travel2-service
   biz_name: ts-travel2-service
   description: Trip search (second line) — trips from the other train data set.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-travel2-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-travel2-service.deploy
+  biz_name: ts-travel2-service-deploy
+  description: The Kubernetes deployment carrier of ts-travel2-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-travel2-service.deployment
     resource: deployments
@@ -1509,6 +1863,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-travel2-service.obs
+  biz_name: ts-travel2-service-obs
+  description: The observation signal set of ts-travel2-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-travel2-service.telemetry
     resource: alerts + metrics
     A:
@@ -1541,6 +1900,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-travel-plan-service
   biz_name: ts-travel-plan-service
   description: Trip planning — composes multi-leg travel plans.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-travel-plan-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-travel-plan-service.deploy
+  biz_name: ts-travel-plan-service-deploy
+  description: The Kubernetes deployment carrier of ts-travel-plan-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-travel-plan-service.deployment
     resource: deployments
@@ -1611,6 +1989,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-travel-plan-service.obs
+  biz_name: ts-travel-plan-service-obs
+  description: The observation signal set of ts-travel-plan-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-travel-plan-service.telemetry
     resource: alerts + metrics
     A:
@@ -1643,6 +2026,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-route-plan-service
   biz_name: ts-route-plan-service
   description: Route planning — multi-leg routing over the trip graph.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-route-plan-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-route-plan-service.deploy
+  biz_name: ts-route-plan-service-deploy
+  description: The Kubernetes deployment carrier of ts-route-plan-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-route-plan-service.deployment
     resource: deployments
@@ -1713,6 +2115,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-route-plan-service.obs
+  biz_name: ts-route-plan-service-obs
+  description: The observation signal set of ts-route-plan-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-route-plan-service.telemetry
     resource: alerts + metrics
     A:
@@ -1745,6 +2152,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-preserve-service
   biz_name: ts-preserve-service
   description: Booking (self) — reserves tickets for the logged-in user.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-preserve-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-preserve-service.deploy
+  biz_name: ts-preserve-service-deploy
+  description: The Kubernetes deployment carrier of ts-preserve-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-preserve-service.deployment
     resource: deployments
@@ -1814,6 +2240,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-preserve-service.obs
+  biz_name: ts-preserve-service-obs
+  description: The observation signal set of ts-preserve-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-preserve-service.telemetry
     resource: alerts + metrics
     A:
@@ -1846,6 +2277,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-preserve-other-service
   biz_name: ts-preserve-other-service
   description: Booking (for others) — reserves tickets on behalf of others.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-preserve-other-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-preserve-other-service.deploy
+  biz_name: ts-preserve-other-service-deploy
+  description: The Kubernetes deployment carrier of ts-preserve-other-service — the Deployment / Pod / Endpoint
+    resource instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored
+    by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-preserve-other-service.deployment
     resource: deployments
@@ -1916,6 +2366,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-preserve-other-service.obs
+  biz_name: ts-preserve-other-service-obs
+  description: The observation signal set of ts-preserve-other-service's deployment instances — anomaly alerts /
+    metrics and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-preserve-other-service.telemetry
     resource: alerts + metrics
     A:
@@ -1948,6 +2403,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-order-service
   biz_name: ts-order-service
   description: Orders — order records of ticket purchases.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-order-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-order-service.deploy
+  biz_name: ts-order-service-deploy
+  description: The Kubernetes deployment carrier of ts-order-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-order-service.deployment
     resource: deployments
@@ -2017,6 +2491,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-order-service.obs
+  biz_name: ts-order-service-obs
+  description: The observation signal set of ts-order-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-order-service.telemetry
     resource: alerts + metrics
     A:
@@ -2049,6 +2528,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-order-other-service
   biz_name: ts-order-other-service
   description: Orders (other line) — order records of the second data set.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-order-other-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-order-other-service.deploy
+  biz_name: ts-order-other-service-deploy
+  description: The Kubernetes deployment carrier of ts-order-other-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-order-other-service.deployment
     resource: deployments
@@ -2119,6 +2617,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-order-other-service.obs
+  biz_name: ts-order-other-service-obs
+  description: The observation signal set of ts-order-other-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-order-other-service.telemetry
     resource: alerts + metrics
     A:
@@ -2151,6 +2654,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-wait-order-service
   biz_name: ts-wait-order-service
   description: Waitlist orders — queued/waiting orders.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-wait-order-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-wait-order-service.deploy
+  biz_name: ts-wait-order-service-deploy
+  description: The Kubernetes deployment carrier of ts-wait-order-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-wait-order-service.deployment
     resource: deployments
@@ -2221,6 +2743,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-wait-order-service.obs
+  biz_name: ts-wait-order-service-obs
+  description: The observation signal set of ts-wait-order-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-wait-order-service.telemetry
     resource: alerts + metrics
     A:
@@ -2253,6 +2780,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-execute-service
   biz_name: ts-execute-service
   description: Order execution — fulfils paid orders (consumes orders).
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-execute-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-execute-service.deploy
+  biz_name: ts-execute-service-deploy
+  description: The Kubernetes deployment carrier of ts-execute-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-execute-service.deployment
     resource: deployments
@@ -2322,6 +2868,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-execute-service.obs
+  biz_name: ts-execute-service-obs
+  description: The observation signal set of ts-execute-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-execute-service.telemetry
     resource: alerts + metrics
     A:
@@ -2354,6 +2905,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-cancel-service
   biz_name: ts-cancel-service
   description: Cancellation — cancels orders and triggers refunds.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-cancel-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-cancel-service.deploy
+  biz_name: ts-cancel-service-deploy
+  description: The Kubernetes deployment carrier of ts-cancel-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-cancel-service.deployment
     resource: deployments
@@ -2423,6 +2993,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-cancel-service.obs
+  biz_name: ts-cancel-service-obs
+  description: The observation signal set of ts-cancel-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-cancel-service.telemetry
     resource: alerts + metrics
     A:
@@ -2455,6 +3030,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-rebook-service
   biz_name: ts-rebook-service
   description: Rebooking — changes an order to a different trip.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-rebook-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-rebook-service.deploy
+  biz_name: ts-rebook-service-deploy
+  description: The Kubernetes deployment carrier of ts-rebook-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-rebook-service.deployment
     resource: deployments
@@ -2524,6 +3118,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-rebook-service.obs
+  biz_name: ts-rebook-service-obs
+  description: The observation signal set of ts-rebook-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-rebook-service.telemetry
     resource: alerts + metrics
     A:
@@ -2556,6 +3155,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-payment-service
   biz_name: ts-payment-service
   description: Payment (external) — charges through payment channels.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-payment-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-payment-service.deploy
+  biz_name: ts-payment-service-deploy
+  description: The Kubernetes deployment carrier of ts-payment-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-payment-service.deployment
     resource: deployments
@@ -2625,6 +3243,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-payment-service.obs
+  biz_name: ts-payment-service-obs
+  description: The observation signal set of ts-payment-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-payment-service.telemetry
     resource: alerts + metrics
     A:
@@ -2657,6 +3280,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-inside-payment-service
   biz_name: ts-inside-payment-service
   description: Payment (inside) — in-system balances and payment records.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-inside-payment-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-inside-payment-service.deploy
+  biz_name: ts-inside-payment-service-deploy
+  description: The Kubernetes deployment carrier of ts-inside-payment-service — the Deployment / Pod / Endpoint
+    resource instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored
+    by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-inside-payment-service.deployment
     resource: deployments
@@ -2727,6 +3369,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-inside-payment-service.obs
+  biz_name: ts-inside-payment-service-obs
+  description: The observation signal set of ts-inside-payment-service's deployment instances — anomaly alerts /
+    metrics and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-inside-payment-service.telemetry
     resource: alerts + metrics
     A:
@@ -2759,6 +3406,24 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-food-service
   biz_name: ts-food-service
   description: On-board food — food ordering for trips.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-food-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-food-service.deploy
+  biz_name: ts-food-service-deploy
+  description: The Kubernetes deployment carrier of ts-food-service — the Deployment / Pod / Endpoint resource instances
+    that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-food-service.deployment
     resource: deployments
@@ -2828,6 +3493,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-food-service.obs
+  biz_name: ts-food-service-obs
+  description: The observation signal set of ts-food-service's deployment instances — anomaly alerts / metrics and
+    the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-food-service.telemetry
     resource: alerts + metrics
     A:
@@ -2860,6 +3530,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-food-delivery-service
   biz_name: ts-food-delivery-service
   description: Food delivery — delivers food orders to stations/trains.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-food-delivery-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-food-delivery-service.deploy
+  biz_name: ts-food-delivery-service-deploy
+  description: The Kubernetes deployment carrier of ts-food-delivery-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-food-delivery-service.deployment
     resource: deployments
@@ -2930,6 +3619,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-food-delivery-service.obs
+  biz_name: ts-food-delivery-service-obs
+  description: The observation signal set of ts-food-delivery-service's deployment instances — anomaly alerts /
+    metrics and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-food-delivery-service.telemetry
     resource: alerts + metrics
     A:
@@ -2962,6 +3656,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-station-food-service
   biz_name: ts-station-food-service
   description: Station food stores — food offerings at stations.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-station-food-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-station-food-service.deploy
+  biz_name: ts-station-food-service-deploy
+  description: The Kubernetes deployment carrier of ts-station-food-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-station-food-service.deployment
     resource: deployments
@@ -3032,6 +3745,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-station-food-service.obs
+  biz_name: ts-station-food-service-obs
+  description: The observation signal set of ts-station-food-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-station-food-service.telemetry
     resource: alerts + metrics
     A:
@@ -3064,6 +3782,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-train-food-service
   biz_name: ts-train-food-service
   description: Train food — food offerings on trains.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-train-food-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-train-food-service.deploy
+  biz_name: ts-train-food-service-deploy
+  description: The Kubernetes deployment carrier of ts-train-food-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-train-food-service.deployment
     resource: deployments
@@ -3134,6 +3871,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-train-food-service.obs
+  biz_name: ts-train-food-service-obs
+  description: The observation signal set of ts-train-food-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-train-food-service.telemetry
     resource: alerts + metrics
     A:
@@ -3166,6 +3908,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-consign-service
   biz_name: ts-consign-service
   description: Consignment — luggage drop-off/shipping service.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-consign-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-consign-service.deploy
+  biz_name: ts-consign-service-deploy
+  description: The Kubernetes deployment carrier of ts-consign-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-consign-service.deployment
     resource: deployments
@@ -3235,6 +3996,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-consign-service.obs
+  biz_name: ts-consign-service-obs
+  description: The observation signal set of ts-consign-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-consign-service.telemetry
     resource: alerts + metrics
     A:
@@ -3267,6 +4033,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-consign-price-service
   biz_name: ts-consign-price-service
   description: Consignment pricing — prices for consignment.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-consign-price-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-consign-price-service.deploy
+  biz_name: ts-consign-price-service-deploy
+  description: The Kubernetes deployment carrier of ts-consign-price-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-consign-price-service.deployment
     resource: deployments
@@ -3337,6 +4122,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-consign-price-service.obs
+  biz_name: ts-consign-price-service-obs
+  description: The observation signal set of ts-consign-price-service's deployment instances — anomaly alerts /
+    metrics and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-consign-price-service.telemetry
     resource: alerts + metrics
     A:
@@ -3369,6 +4159,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-assurance-service
   biz_name: ts-assurance-service
   description: Insurance — travel insurance products/records.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-assurance-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-assurance-service.deploy
+  biz_name: ts-assurance-service-deploy
+  description: The Kubernetes deployment carrier of ts-assurance-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-assurance-service.deployment
     resource: deployments
@@ -3439,6 +4248,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-assurance-service.obs
+  biz_name: ts-assurance-service-obs
+  description: The observation signal set of ts-assurance-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-assurance-service.telemetry
     resource: alerts + metrics
     A:
@@ -3471,6 +4285,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-security-service
   biz_name: ts-security-service
   description: Security check —安检 records before boarding.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-security-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-security-service.deploy
+  biz_name: ts-security-service-deploy
+  description: The Kubernetes deployment carrier of ts-security-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-security-service.deployment
     resource: deployments
@@ -3540,6 +4373,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-security-service.obs
+  biz_name: ts-security-service-obs
+  description: The observation signal set of ts-security-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-security-service.telemetry
     resource: alerts + metrics
     A:
@@ -3572,6 +4410,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-notification-service
   biz_name: ts-notification-service
   description: Notifications — sends user notifications (email / in-app).
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-notification-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-notification-service.deploy
+  biz_name: ts-notification-service-deploy
+  description: The Kubernetes deployment carrier of ts-notification-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-notification-service.deployment
     resource: deployments
@@ -3642,6 +4499,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-notification-service.obs
+  biz_name: ts-notification-service-obs
+  description: The observation signal set of ts-notification-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-notification-service.telemetry
     resource: alerts + metrics
     A:
@@ -3674,6 +4536,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-voucher-service
   biz_name: ts-voucher-service
   description: Vouchers — coupons and voucher redemption.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-voucher-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-voucher-service.deploy
+  biz_name: ts-voucher-service-deploy
+  description: The Kubernetes deployment carrier of ts-voucher-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-voucher-service.deployment
     resource: deployments
@@ -3743,6 +4624,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-voucher-service.obs
+  biz_name: ts-voucher-service-obs
+  description: The observation signal set of ts-voucher-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-voucher-service.telemetry
     resource: alerts + metrics
     A:
@@ -3775,6 +4661,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-config-service
   biz_name: ts-config-service
   description: Configuration — service configuration values.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-config-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-config-service.deploy
+  biz_name: ts-config-service-deploy
+  description: The Kubernetes deployment carrier of ts-config-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-config-service.deployment
     resource: deployments
@@ -3844,6 +4749,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-config-service.obs
+  biz_name: ts-config-service-obs
+  description: The observation signal set of ts-config-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-config-service.telemetry
     resource: alerts + metrics
     A:
@@ -3876,6 +4786,24 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-news-service
   biz_name: ts-news-service
   description: News — info/news feed for the UI.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-news-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-news-service.deploy
+  biz_name: ts-news-service-deploy
+  description: The Kubernetes deployment carrier of ts-news-service — the Deployment / Pod / Endpoint resource instances
+    that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-news-service.deployment
     resource: deployments
@@ -3945,6 +4873,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-news-service.obs
+  biz_name: ts-news-service-obs
+  description: The observation signal set of ts-news-service's deployment instances — anomaly alerts / metrics and
+    the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-news-service.telemetry
     resource: alerts + metrics
     A:
@@ -3977,6 +4910,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-ticket-office-service
   biz_name: ts-ticket-office-service
   description: Ticket office — over-the-counter ticket operations.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-ticket-office-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-ticket-office-service.deploy
+  biz_name: ts-ticket-office-service-deploy
+  description: The Kubernetes deployment carrier of ts-ticket-office-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-ticket-office-service.deployment
     resource: deployments
@@ -4047,6 +4999,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-ticket-office-service.obs
+  biz_name: ts-ticket-office-service-obs
+  description: The observation signal set of ts-ticket-office-service's deployment instances — anomaly alerts /
+    metrics and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-ticket-office-service.telemetry
     resource: alerts + metrics
     A:
@@ -4079,6 +5036,25 @@ logical_entities:
 - logical_entity_id: LOGICAL.trainticket.ts-delivery-service
   biz_name: ts-delivery-service
   description: Delivery tracking — status of consignment deliveries.
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.ts-delivery-service.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.ts-delivery-service.deploy
+  biz_name: ts-delivery-service-deploy
+  description: The Kubernetes deployment carrier of ts-delivery-service — the Deployment / Pod / Endpoint resource
+    instances that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by
+    the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-delivery-service.deployment
     resource: deployments
@@ -4148,6 +5124,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.ts-delivery-service.obs
+  biz_name: ts-delivery-service-obs
+  description: The observation signal set of ts-delivery-service's deployment instances — anomaly alerts / metrics
+    and the application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.ts-delivery-service.telemetry
     resource: alerts + metrics
     A:
@@ -4181,6 +5162,24 @@ logical_entities:
   biz_name: tsdb-mysql
   description: Shared MySQL database of Train-Ticket — persistent store behind the data services (orders, users,
     stations, prices…). Database service (leaf).
+  physical_entities:
+  - physical_entity_id: PHYSICAL.trainticket.tsdb-mysql.deps
+    resource: service dependency graph
+    A:
+      cardinality: 1:N
+      key: service_name
+    R: null
+    S: 'the call relationships of this service as captured in the snapshot — upstream (called by) and downstream
+      (calls)；read: GetServiceDependencies(service_name=<svc>)'
+    attributes:
+    - name: upstream
+      description: who calls this service — the symptom usually enters from here; read from the dependency graph
+    - name: downstream
+      description: services this one calls — call failures originate on these edges; read from the dependency graph
+- logical_entity_id: LOGICAL.trainticket.tsdb-mysql.deploy
+  biz_name: tsdb-mysql-deploy
+  description: The Kubernetes deployment carrier of tsdb-mysql — the Deployment / Pod / Endpoint resource instances
+    that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.tsdb-mysql.deployment
     resource: deployments
@@ -4250,6 +5249,11 @@ logical_entities:
     - name: endpoints_binding
       description: ready addresses bound to the service (<none> = no serving pod) — the surface behind caller-side
         'connection refused' logs; read from the endpoints object
+- logical_entity_id: LOGICAL.trainticket.tsdb-mysql.obs
+  biz_name: tsdb-mysql-obs
+  description: The observation signal set of tsdb-mysql's deployment instances — anomaly alerts / metrics and the
+    application log stream captured in the snapshot. Anchored by service name.
+  physical_entities:
   - physical_entity_id: PHYSICAL.trainticket.tsdb-mysql.telemetry
     resource: alerts + metrics
     A:
@@ -4517,6 +5521,1014 @@ logical_entities:
       description: PVC / PV / StorageClass bindability — mismatched selector / class / access mode / capacity leaves
         claims Pending
 pas_relations:
+- relation_id: LOGICAL.trainticket.ts-ui-dashboard_TO_LOGICAL.trainticket.ts-ui-dashboard.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-ui-dashboard 由 ts-ui-dashboard-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment /
+    Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-ui-dashboard.deploy_TO_LOGICAL.trainticket.ts-ui-dashboard.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-ui-dashboard-deploy 产生 ts-ui-dashboard-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-gateway-service_TO_LOGICAL.trainticket.ts-gateway-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-gateway-service 由 ts-gateway-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-gateway-service.deploy_TO_LOGICAL.trainticket.ts-gateway-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-gateway-service-deploy 产生 ts-gateway-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-auth-service_TO_LOGICAL.trainticket.ts-auth-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-auth-service 由 ts-auth-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment /
+    Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-auth-service.deploy_TO_LOGICAL.trainticket.ts-auth-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-auth-service-deploy 产生 ts-auth-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-verification-code-service_TO_LOGICAL.trainticket.ts-verification-code-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-verification-code-service 由 ts-verification-code-service-deploy 部署载体运行 — the K8s carrier that realizes this
+    service (Deployment / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-verification-code-service.deploy_TO_LOGICAL.trainticket.ts-verification-code-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-verification-code-service-deploy 产生 ts-verification-code-service-obs 观测信号集合 — alerts / metrics / logs captured
+    from the deployment instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-user-service_TO_LOGICAL.trainticket.ts-user-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-user-service 由 ts-user-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment /
+    Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-user-service.deploy_TO_LOGICAL.trainticket.ts-user-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-user-service-deploy 产生 ts-user-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-contacts-service_TO_LOGICAL.trainticket.ts-contacts-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-contacts-service 由 ts-contacts-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-contacts-service.deploy_TO_LOGICAL.trainticket.ts-contacts-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-contacts-service-deploy 产生 ts-contacts-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-avatar-service_TO_LOGICAL.trainticket.ts-avatar-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-avatar-service 由 ts-avatar-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-avatar-service.deploy_TO_LOGICAL.trainticket.ts-avatar-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-avatar-service-deploy 产生 ts-avatar-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-basic-service_TO_LOGICAL.trainticket.ts-basic-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-basic-service 由 ts-basic-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-basic-service.deploy_TO_LOGICAL.trainticket.ts-basic-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-basic-service-deploy 产生 ts-basic-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-train-service_TO_LOGICAL.trainticket.ts-train-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-train-service 由 ts-train-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-train-service.deploy_TO_LOGICAL.trainticket.ts-train-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-train-service-deploy 产生 ts-train-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-route-service_TO_LOGICAL.trainticket.ts-route-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-route-service 由 ts-route-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-route-service.deploy_TO_LOGICAL.trainticket.ts-route-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-route-service-deploy 产生 ts-route-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-station-service_TO_LOGICAL.trainticket.ts-station-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-station-service 由 ts-station-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-station-service.deploy_TO_LOGICAL.trainticket.ts-station-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-station-service-deploy 产生 ts-station-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-price-service_TO_LOGICAL.trainticket.ts-price-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-price-service 由 ts-price-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-price-service.deploy_TO_LOGICAL.trainticket.ts-price-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-price-service-deploy 产生 ts-price-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-seat-service_TO_LOGICAL.trainticket.ts-seat-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-seat-service 由 ts-seat-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment /
+    Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-seat-service.deploy_TO_LOGICAL.trainticket.ts-seat-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-seat-service-deploy 产生 ts-seat-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-travel-service_TO_LOGICAL.trainticket.ts-travel-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-travel-service 由 ts-travel-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-travel-service.deploy_TO_LOGICAL.trainticket.ts-travel-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-travel-service-deploy 产生 ts-travel-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-travel2-service_TO_LOGICAL.trainticket.ts-travel2-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-travel2-service 由 ts-travel2-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-travel2-service.deploy_TO_LOGICAL.trainticket.ts-travel2-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-travel2-service-deploy 产生 ts-travel2-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-travel-plan-service_TO_LOGICAL.trainticket.ts-travel-plan-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-travel-plan-service 由 ts-travel-plan-service-deploy 部署载体运行 — the K8s carrier that realizes this service
+    (Deployment / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-travel-plan-service.deploy_TO_LOGICAL.trainticket.ts-travel-plan-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-travel-plan-service-deploy 产生 ts-travel-plan-service-obs 观测信号集合 — alerts / metrics / logs captured from
+    the deployment instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-route-plan-service_TO_LOGICAL.trainticket.ts-route-plan-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-route-plan-service 由 ts-route-plan-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-route-plan-service.deploy_TO_LOGICAL.trainticket.ts-route-plan-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-route-plan-service-deploy 产生 ts-route-plan-service-obs 观测信号集合 — alerts / metrics / logs captured from the
+    deployment instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-preserve-service_TO_LOGICAL.trainticket.ts-preserve-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-preserve-service 由 ts-preserve-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-preserve-service.deploy_TO_LOGICAL.trainticket.ts-preserve-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-preserve-service-deploy 产生 ts-preserve-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-preserve-other-service_TO_LOGICAL.trainticket.ts-preserve-other-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-preserve-other-service 由 ts-preserve-other-service-deploy 部署载体运行 — the K8s carrier that realizes this service
+    (Deployment / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-preserve-other-service.deploy_TO_LOGICAL.trainticket.ts-preserve-other-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-preserve-other-service-deploy 产生 ts-preserve-other-service-obs 观测信号集合 — alerts / metrics / logs captured
+    from the deployment instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-order-service_TO_LOGICAL.trainticket.ts-order-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-order-service 由 ts-order-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-order-service.deploy_TO_LOGICAL.trainticket.ts-order-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-order-service-deploy 产生 ts-order-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-order-other-service_TO_LOGICAL.trainticket.ts-order-other-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-order-other-service 由 ts-order-other-service-deploy 部署载体运行 — the K8s carrier that realizes this service
+    (Deployment / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-order-other-service.deploy_TO_LOGICAL.trainticket.ts-order-other-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-order-other-service-deploy 产生 ts-order-other-service-obs 观测信号集合 — alerts / metrics / logs captured from
+    the deployment instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-wait-order-service_TO_LOGICAL.trainticket.ts-wait-order-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-wait-order-service 由 ts-wait-order-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-wait-order-service.deploy_TO_LOGICAL.trainticket.ts-wait-order-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-wait-order-service-deploy 产生 ts-wait-order-service-obs 观测信号集合 — alerts / metrics / logs captured from the
+    deployment instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-execute-service_TO_LOGICAL.trainticket.ts-execute-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-execute-service 由 ts-execute-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-execute-service.deploy_TO_LOGICAL.trainticket.ts-execute-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-execute-service-deploy 产生 ts-execute-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-cancel-service_TO_LOGICAL.trainticket.ts-cancel-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-cancel-service 由 ts-cancel-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-cancel-service.deploy_TO_LOGICAL.trainticket.ts-cancel-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-cancel-service-deploy 产生 ts-cancel-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-rebook-service_TO_LOGICAL.trainticket.ts-rebook-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-rebook-service 由 ts-rebook-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-rebook-service.deploy_TO_LOGICAL.trainticket.ts-rebook-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-rebook-service-deploy 产生 ts-rebook-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-payment-service_TO_LOGICAL.trainticket.ts-payment-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-payment-service 由 ts-payment-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-payment-service.deploy_TO_LOGICAL.trainticket.ts-payment-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-payment-service-deploy 产生 ts-payment-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-inside-payment-service_TO_LOGICAL.trainticket.ts-inside-payment-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-inside-payment-service 由 ts-inside-payment-service-deploy 部署载体运行 — the K8s carrier that realizes this service
+    (Deployment / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-inside-payment-service.deploy_TO_LOGICAL.trainticket.ts-inside-payment-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-inside-payment-service-deploy 产生 ts-inside-payment-service-obs 观测信号集合 — alerts / metrics / logs captured
+    from the deployment instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-food-service_TO_LOGICAL.trainticket.ts-food-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-food-service 由 ts-food-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment /
+    Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-food-service.deploy_TO_LOGICAL.trainticket.ts-food-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-food-service-deploy 产生 ts-food-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-food-delivery-service_TO_LOGICAL.trainticket.ts-food-delivery-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-food-delivery-service 由 ts-food-delivery-service-deploy 部署载体运行 — the K8s carrier that realizes this service
+    (Deployment / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-food-delivery-service.deploy_TO_LOGICAL.trainticket.ts-food-delivery-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-food-delivery-service-deploy 产生 ts-food-delivery-service-obs 观测信号集合 — alerts / metrics / logs captured from
+    the deployment instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-station-food-service_TO_LOGICAL.trainticket.ts-station-food-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-station-food-service 由 ts-station-food-service-deploy 部署载体运行 — the K8s carrier that realizes this service
+    (Deployment / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-station-food-service.deploy_TO_LOGICAL.trainticket.ts-station-food-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-station-food-service-deploy 产生 ts-station-food-service-obs 观测信号集合 — alerts / metrics / logs captured from
+    the deployment instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-train-food-service_TO_LOGICAL.trainticket.ts-train-food-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-train-food-service 由 ts-train-food-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-train-food-service.deploy_TO_LOGICAL.trainticket.ts-train-food-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-train-food-service-deploy 产生 ts-train-food-service-obs 观测信号集合 — alerts / metrics / logs captured from the
+    deployment instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-consign-service_TO_LOGICAL.trainticket.ts-consign-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-consign-service 由 ts-consign-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-consign-service.deploy_TO_LOGICAL.trainticket.ts-consign-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-consign-service-deploy 产生 ts-consign-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-consign-price-service_TO_LOGICAL.trainticket.ts-consign-price-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-consign-price-service 由 ts-consign-price-service-deploy 部署载体运行 — the K8s carrier that realizes this service
+    (Deployment / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-consign-price-service.deploy_TO_LOGICAL.trainticket.ts-consign-price-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-consign-price-service-deploy 产生 ts-consign-price-service-obs 观测信号集合 — alerts / metrics / logs captured from
+    the deployment instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-assurance-service_TO_LOGICAL.trainticket.ts-assurance-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-assurance-service 由 ts-assurance-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-assurance-service.deploy_TO_LOGICAL.trainticket.ts-assurance-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-assurance-service-deploy 产生 ts-assurance-service-obs 观测信号集合 — alerts / metrics / logs captured from the
+    deployment instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-security-service_TO_LOGICAL.trainticket.ts-security-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-security-service 由 ts-security-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-security-service.deploy_TO_LOGICAL.trainticket.ts-security-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-security-service-deploy 产生 ts-security-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-notification-service_TO_LOGICAL.trainticket.ts-notification-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-notification-service 由 ts-notification-service-deploy 部署载体运行 — the K8s carrier that realizes this service
+    (Deployment / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-notification-service.deploy_TO_LOGICAL.trainticket.ts-notification-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-notification-service-deploy 产生 ts-notification-service-obs 观测信号集合 — alerts / metrics / logs captured from
+    the deployment instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-voucher-service_TO_LOGICAL.trainticket.ts-voucher-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-voucher-service 由 ts-voucher-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-voucher-service.deploy_TO_LOGICAL.trainticket.ts-voucher-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-voucher-service-deploy 产生 ts-voucher-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-config-service_TO_LOGICAL.trainticket.ts-config-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-config-service 由 ts-config-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-config-service.deploy_TO_LOGICAL.trainticket.ts-config-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-config-service-deploy 产生 ts-config-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-news-service_TO_LOGICAL.trainticket.ts-news-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-news-service 由 ts-news-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment /
+    Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-news-service.deploy_TO_LOGICAL.trainticket.ts-news-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-news-service-deploy 产生 ts-news-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-ticket-office-service_TO_LOGICAL.trainticket.ts-ticket-office-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-ticket-office-service 由 ts-ticket-office-service-deploy 部署载体运行 — the K8s carrier that realizes this service
+    (Deployment / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-ticket-office-service.deploy_TO_LOGICAL.trainticket.ts-ticket-office-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-ticket-office-service-deploy 产生 ts-ticket-office-service-obs 观测信号集合 — alerts / metrics / logs captured from
+    the deployment instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.ts-delivery-service_TO_LOGICAL.trainticket.ts-delivery-service.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: ts-delivery-service 由 ts-delivery-service-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment
+    / Pod / Endpoint instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.ts-delivery-service.deploy_TO_LOGICAL.trainticket.ts-delivery-service.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: ts-delivery-service-deploy 产生 ts-delivery-service-obs 观测信号集合 — alerts / metrics / logs captured from the deployment
+    instances; read the signal surfaces by service name.
+- relation_id: LOGICAL.trainticket.tsdb-mysql_TO_LOGICAL.trainticket.tsdb-mysql.deploy
+  relation_name: Deployed as
+  P:
+    forward:
+      verb: is deployed as
+      cardinality: '1:1'
+    reverse:
+      verb: deploys
+      cardinality: '1:1'
+  A: app_label
+  S: tsdb-mysql 由 tsdb-mysql-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment / Pod / Endpoint
+    instances); read the carrier's surfaces by app label.
+- relation_id: LOGICAL.trainticket.tsdb-mysql.deploy_TO_LOGICAL.trainticket.tsdb-mysql.obs
+  relation_name: Produces signals
+  P:
+    forward:
+      verb: produces
+      cardinality: '1:1'
+    reverse:
+      verb: produced by
+      cardinality: '1:1'
+  A: service_name
+  S: tsdb-mysql-deploy 产生 tsdb-mysql-obs 观测信号集合 — alerts / metrics / logs captured from the deployment instances;
+    read the signal surfaces by service name.
 - relation_id: LOGICAL.trainticket.ts-auth-service_TO_LOGICAL.trainticket.ts-verification-code-service
   relation_name: Calls
   P:

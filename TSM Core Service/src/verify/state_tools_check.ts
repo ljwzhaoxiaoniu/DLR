@@ -51,7 +51,7 @@ if (kind === "dlr-state") {
     };
   };
   console.log(`[tools] state_model_query("${question}") → confidence=${parsed.confidence}`);
-  console.log(`  objects: ${parsed.data.objects.map((s) => `${s.name}(${s.kind})`).join(" | ") || "(无)"}`);
+  console.log(`  objects: ${parsed.data.objects.map((s) => `${s.name} ${s.score}`).join(" | ") || "(无)"}`);
   console.log(`  surfaces: ${parsed.data.surfaces.map((s) => s.name).join(" | ") || "(无)"}`);
   const top = parsed.data.objects[0];
   if (top) console.log(`  top obj surfaces: ${top.surfaces.map((s) => s.kind).join(", ")}`);
