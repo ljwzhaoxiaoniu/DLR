@@ -1347,8 +1347,13 @@
         const nodes = [];
         const edges = [];
         const leColor = (i) => CONST.LE_COLORS[i % CONST.LE_COLORS.length];
-        (d.logical_entities || []).forEach((le, i) => {
-            const c = { bg: leColor(i), bd: '#333' };
+        // 配色 = 按「对象族」：<svc> / <svc>-deploy / <svc>-obs 同色（一眼一家）；节点、命名空间各自成族
+        const stem = (id) => String(id).replace(/^LOGICAL\.[^.]+\./, "").replace(/\.(deploy|obs)$/, "");
+        const famIdx = new Map();
+        (d.logical_entities || []).forEach((le) => {
+            const st = stem(le.id);
+            if (!famIdx.has(st)) famIdx.set(st, famIdx.size);
+            const c = { bg: leColor(famIdx.get(st)), bd: '#333' };
             nodes.push({
                 id: le.id,
                 label: le.name,
