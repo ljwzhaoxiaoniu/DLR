@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSM × Cloud-OpsBench · 总视图</title>
+<style>
+  :root {
+    --surface: #fcfcfb; --page: #f9f9f7; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --border: rgba(11,11,11,0.08); --dlr: #2a78d6; --good: #0ca30c;
+    font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 17px; line-height: 1.6; color: var(--ink); background: var(--page);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      --surface: #1a1a19; --page: #0d0d0d; --ink: #fff; --ink-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --border: rgba(255,255,255,0.08); --dlr: #3987e5; --good: #2fbf2f;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { max-width: 1080px; margin: 0 auto; padding: 56px 28px 80px; }
+  .hero { font-size: clamp(30px, 4.5vw, 48px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; }
+  .hero em { font-style: normal; color: var(--dlr); }
+  .deck { color: var(--ink-2); margin-top: 14px; max-width: 760px; }
+  .section-title { font-size: clamp(22px, 3vw, 32px); font-weight: 750; letter-spacing: -0.015em; margin: 56px 0 20px; }
+  .section-title em { font-style: normal; color: var(--dlr); }
+  .muted { color: var(--muted); font-size: 14px; }
+  .ok { color: var(--good); }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 30px; }
+  .stat { flex: 1 1 180px; min-width: 160px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 22px 24px; }
+  .stat__value { font-size: clamp(28px, 3.6vw, 42px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; color: var(--dlr); }
+  .stat--good .stat__value { color: var(--good); }
+  .stat__label { font-size: 14px; color: var(--ink-2); margin-top: 6px; }
+  .stat__note { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  .fam { display: grid; grid-template-columns: 210px 1fr 130px; gap: 14px; align-items: center; padding: 7px 0; }
+  .fam__name { font-size: 14.5px; font-weight: 600; text-align: right; }
+  .fam__num { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .bar { height: 10px; border-radius: 999px; background: var(--grid); overflow: hidden; }
+  .bar__fill { height: 100%; background: var(--dlr); border-radius: 999px; min-width: 2px; }
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 14px; }
+  th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th { font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+  tr:last-child td { border-bottom: none; }
+  code { font-size: 13px; color: var(--dlr); }
+  .note { border-left: 3px solid var(--dlr); padding: 12px 18px; background: var(--surface); border-radius: 0 10px 10px 0; font-size: 14.5px; color: var(--ink-2); margin-top: 26px; }
+  a { color: var(--dlr); }
+</style>
+</head>
+<body>
+<h1 class="hero">TSM × Cloud-OpsBench · <em>总视图</em></h1>
+<p class="deck">三级语义建模（L1 对象/面 · L2 读法 · L3 走链）驱动的 K8s 根因诊断——快照确定性回放（锚 ea05daf），结果为上游 scorer 原口径。本页由 <code>eval/stats.mjs</code> 每次重建自动刷新。</p>
+<div class="stat-row">
+  <div class="stat"><div class="stat__value">12/754</div><div class="stat__label">跑题覆盖度</div><div class="stat__note">1.6%</div></div>
+  <div class="stat stat--good"><div class="stat__value">12/12</div><div class="stat__label">JRA 联合命中</div><div class="stat__note">CA 12 · FA 12</div></div>
+  <div class="stat stat--good"><div class="stat__value">12/12</div><div class="stat__label">证据链全闭</div><div class="stat__note">MC 1 · EOC 1</div></div>
+  <div class="stat"><div class="stat__value">115,616</div><div class="stat__label">token 中位 / 题</div><div class="stat__note">平均 147,641 · cache 读 79%</div></div>
+</div>
+
+<h2 class="section-title">跑题覆盖度 · <em>逐家族进度</em></h2>
+<div class="fam">
+    <div class="fam__name">boutique/admission</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:1.7%"></div></div></div>
+    <div class="fam__num">1/58 · 1.7%</div>
+  </div>
+<div class="fam">
+    <div class="fam__name">boutique/codedefect</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:1%"></div></div></div>
+    <div class="fam__num">1/98 · 1%</div>
+  </div>
+<div class="fam">
+    <div class="fam__name">boutique/infrastructure</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:2.5%"></div></div></div>
+    <div class="fam__num">1/40 · 2.5%</div>
+  </div>
+<div class="fam">
+    <div class="fam__name">boutique/performance</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:3.4%"></div></div></div>
+    <div class="fam__num">1/29 · 3.4%</div>
+  </div>
+<div class="fam">
+    <div class="fam__name">boutique/runtime</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:2.2%"></div></div></div>
+    <div class="fam__num">1/45 · 2.2%</div>
+  </div>
+<div class="fam">
+    <div class="fam__name">boutique/scheduling</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:0.6%"></div></div></div>
+    <div class="fam__num">1/164 · 0.6%</div>
+  </div>
+<div class="fam">
+    <div class="fam__name">boutique/service</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:1.9%"></div></div></div>
+    <div class="fam__num">1/54 · 1.9%</div>
+  </div>
+<div class="fam">
+    <div class="fam__name">boutique/startup</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:1.6%"></div></div></div>
+    <div class="fam__num">1/62 · 1.6%</div>
+  </div>
+<div class="fam">
+    <div class="fam__name">train-ticket/performance</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:2.1%"></div></div></div>
+    <div class="fam__num">1/47 · 2.1%</div>
+  </div>
+<div class="fam">
+    <div class="fam__name">train-ticket/runtime</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:1%"></div></div></div>
+    <div class="fam__num">1/96 · 1%</div>
+  </div>
+<div class="fam">
+    <div class="fam__name">train-ticket/service</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:2.7%"></div></div></div>
+    <div class="fam__num">1/37 · 2.7%</div>
+  </div>
+<div class="fam">
+    <div class="fam__name">train-ticket/startup</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:4.2%"></div></div></div>
+    <div class="fam__num">1/24 · 4.2%</div>
+  </div>
+
+<h2 class="section-title">逐轮 · <em>结果与消耗</em></h2>
+<table>
+<tr><th>轮次</th><th>题数</th><th>JRA</th><th>EOC</th><th>ECR</th><th>steps</th><th>tokens</th></tr>
+<tr><td><code>1012_1415_ino</code></td><td>4</td><td>4</td><td>0.9375</td><td>1</td><td>16</td><td>464,624</td></tr>
+<tr><td><code>1012_1447_ino</code></td><td>4</td><td>4</td><td>0.8542</td><td>0.75</td><td>11.25</td><td>305,464</td></tr>
+<tr><td><code>1012_1458_l3-</code></td><td>3</td><td>3</td><td>1</td><td>1</td><td>14.6667</td><td>251,865</td></tr>
+<tr><td><code>1012_1512_ino</code></td><td>4</td><td>4</td><td>0.9375</td><td>1</td><td>23</td><td>964,090</td></tr>
+<tr><td><code>1012_1521_l3-</code></td><td>1</td><td>1</td><td>1</td><td>1</td><td>23</td><td>204,578</td></tr>
+</table>
+
+<h2 class="section-title">逐题明细 · <em>去重取最新</em></h2>
+<table>
+<tr><th>题</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>轮次</th></tr>
+<tr><td><code>boutique/admission/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.6</td><td>16</td><td>81,626</td><td class="muted">1012_1458_l3-</td></tr>
+<tr><td><code>boutique/codedefect/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3077</td><td>14</td><td>129,107</td><td class="muted">1012_1415_ino</td></tr>
+<tr><td><code>boutique/infrastructure/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>96,876</td><td class="muted">1012_1458_l3-</td></tr>
+<tr><td><code>boutique/performance/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>16</td><td>127,303</td><td class="muted">1012_1415_ino</td></tr>
+<tr><td><code>boutique/runtime/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>10</td><td>61,752</td><td class="muted">1012_1512_ino</td></tr>
+<tr><td><code>boutique/scheduling/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2353</td><td>18</td><td>115,405</td><td class="muted">1012_1415_ino</td></tr>
+<tr><td><code>boutique/service/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4</td><td>16</td><td>115,616</td><td class="muted">1012_1447_ino</td></tr>
+<tr><td><code>boutique/startup/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>10</td><td>58,131</td><td class="muted">1012_1447_ino</td></tr>
+<tr><td><code>train-ticket/performance/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1429</td><td>36</td><td>442,283</td><td class="muted">1012_1512_ino</td></tr>
+<tr><td><code>train-ticket/runtime/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>26</td><td>265,656</td><td class="muted">1012_1512_ino</td></tr>
+<tr><td><code>train-ticket/service/25</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2727</td><td>23</td><td>204,578</td><td class="muted">1012_1521_l3-</td></tr>
+<tr><td><code>train-ticket/startup/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>13</td><td>73,363</td><td class="muted">1012_1458_l3-</td></tr>
+</table>
+<div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="../results/STATS.md">STATS.md</a> · <a href="../DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="../DETAIL/">DETAIL/</a>）。生成 2026-10-12T09:35:38.371Z</div>
+</body>
+</html>

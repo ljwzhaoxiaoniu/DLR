@@ -284,7 +284,111 @@ if (keepTail) D.push(keepTail.slice(KEEP.length).replace(/^\n+/, ""));
 else D.push("> （跑批后按案例补写：值得注意的错法 / 链闭而答案错 / 流程分特低特高 的题。）", "");
 fs.writeFileSync(detailPath, D.join("\n") + "\n", "utf8");
 
+// ── ⑧ share/overview.html（总视图：关键数 + 覆盖度进度条 + 效率 + 逐题明细）──
+// 设计系统对齐 birdminidev/share（同源 CSS 变量）；每次 stats 重建自动刷新
+const shareDir = path.join(SCENARIO, "share");
+fs.mkdirSync(shareDir, { recursive: true });
+const barPct = (done, total) => (total ? Math.round((done / total) * 1000) / 10 : 0);
+const familiesSorted = [...new Set([...full.keys(), ...families])].sort();
+const famRows = familiesSorted.map((f) => {
+  const total = full.get(f) ?? 0;
+  const done = latestAll.filter((e) => e.family === f).length;
+  const p = barPct(done, total);
+  return `<div class="fam">
+    <div class="fam__name">${familyDisplay(f)}</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:${Math.min(p, 100)}%"></div></div></div>
+    <div class="fam__num">${done}/${total} · ${p}%</div>
+  </div>`;
+}).join("\n");
+const caseRows = [...latestAll].sort((a, b) => a.family.localeCompare(b.family) || (Number(a.case_name) || 0) - (Number(b.case_name) || 0)).map((e) => {
+  const g = (k) => fmt(e.metrics?.[k]);
+  return `<tr><td><code>${familyDisplay(e.family)}/${e.case_name}</code></td><td>${g("JRA") === "1" ? '<span class="ok">✅</span>' : g("JRA")}</td><td>${g("MC")}</td><td>${g("EOC")}</td><td>${g("ECR")}</td><td>${g("EE")}</td><td>${g("steps")}</td><td>${tok(e.tokens?.total)}</td><td class="muted">${e.round.slice(0, 13)}</td></tr>`;
+}).join("\n");
+const roundRows = rounds.map((r) => {
+  const a = aggregate(r.entries);
+  const tSum = r.entries.reduce((n, e) => n + (e.tokens?.total || 0), 0);
+  return `<tr><td><code>${r.id.slice(0, 13)}</code></td><td>${a.n}</td><td>${a.jra}</td><td>${fmt(a.EOC)}</td><td>${fmt(a.ECR)}</td><td>${fmt(a.steps)}</td><td>${tok(tSum)}</td></tr>`;
+}).join("\n");
+const overviewHtml = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSM × Cloud-OpsBench · 总视图</title>
+<style>
+  :root {
+    --surface: #fcfcfb; --page: #f9f9f7; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --border: rgba(11,11,11,0.08); --dlr: #2a78d6; --good: #0ca30c;
+    font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 17px; line-height: 1.6; color: var(--ink); background: var(--page);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      --surface: #1a1a19; --page: #0d0d0d; --ink: #fff; --ink-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --border: rgba(255,255,255,0.08); --dlr: #3987e5; --good: #2fbf2f;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { max-width: 1080px; margin: 0 auto; padding: 56px 28px 80px; }
+  .hero { font-size: clamp(30px, 4.5vw, 48px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; }
+  .hero em { font-style: normal; color: var(--dlr); }
+  .deck { color: var(--ink-2); margin-top: 14px; max-width: 760px; }
+  .section-title { font-size: clamp(22px, 3vw, 32px); font-weight: 750; letter-spacing: -0.015em; margin: 56px 0 20px; }
+  .section-title em { font-style: normal; color: var(--dlr); }
+  .muted { color: var(--muted); font-size: 14px; }
+  .ok { color: var(--good); }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 30px; }
+  .stat { flex: 1 1 180px; min-width: 160px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 22px 24px; }
+  .stat__value { font-size: clamp(28px, 3.6vw, 42px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; color: var(--dlr); }
+  .stat--good .stat__value { color: var(--good); }
+  .stat__label { font-size: 14px; color: var(--ink-2); margin-top: 6px; }
+  .stat__note { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  .fam { display: grid; grid-template-columns: 210px 1fr 130px; gap: 14px; align-items: center; padding: 7px 0; }
+  .fam__name { font-size: 14.5px; font-weight: 600; text-align: right; }
+  .fam__num { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .bar { height: 10px; border-radius: 999px; background: var(--grid); overflow: hidden; }
+  .bar__fill { height: 100%; background: var(--dlr); border-radius: 999px; min-width: 2px; }
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 14px; }
+  th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th { font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+  tr:last-child td { border-bottom: none; }
+  code { font-size: 13px; color: var(--dlr); }
+  .note { border-left: 3px solid var(--dlr); padding: 12px 18px; background: var(--surface); border-radius: 0 10px 10px 0; font-size: 14.5px; color: var(--ink-2); margin-top: 26px; }
+  a { color: var(--dlr); }
+</style>
+</head>
+<body>
+<h1 class="hero">TSM × Cloud-OpsBench · <em>总视图</em></h1>
+<p class="deck">三级语义建模（L1 对象/面 · L2 读法 · L3 走链）驱动的 K8s 根因诊断——快照确定性回放（锚 ea05daf），结果为上游 scorer 原口径。本页由 <code>eval/stats.mjs</code> 每次重建自动刷新。</p>
+<div class="stat-row">
+  <div class="stat"><div class="stat__value">${covered}/${grandTotal}</div><div class="stat__label">跑题覆盖度</div><div class="stat__note">${pct(covered, grandTotal)}</div></div>
+  <div class="stat stat--good"><div class="stat__value">${A.jra}/${A.n}</div><div class="stat__label">JRA 联合命中</div><div class="stat__note">CA ${A.ca} · FA ${A.fa}</div></div>
+  <div class="stat stat--good"><div class="stat__value">${A.chain}/${A.n}</div><div class="stat__label">证据链全闭</div><div class="stat__note">MC ${fmt(A.MC)} · EOC ${fmt(A.EOC)}</div></div>
+  <div class="stat"><div class="stat__value">${tok(tMed)}</div><div class="stat__label">token 中位 / 题</div><div class="stat__note">平均 ${tok(tAvg)} · cache 读 ${tSum ? Math.round((tCr / tSum) * 100) : 0}%</div></div>
+</div>
+
+<h2 class="section-title">跑题覆盖度 · <em>逐家族进度</em></h2>
+${famRows}
+
+<h2 class="section-title">逐轮 · <em>结果与消耗</em></h2>
+<table>
+<tr><th>轮次</th><th>题数</th><th>JRA</th><th>EOC</th><th>ECR</th><th>steps</th><th>tokens</th></tr>
+${roundRows}
+</table>
+
+<h2 class="section-title">逐题明细 · <em>去重取最新</em></h2>
+<table>
+<tr><th>题</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>轮次</th></tr>
+${caseRows}
+</table>
+<div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="../results/STATS.md">STATS.md</a> · <a href="../DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="../DETAIL/">DETAIL/</a>）。生成 ${now}</div>
+</body>
+</html>
+`;
+fs.writeFileSync(path.join(shareDir, "overview.html"), overviewHtml, "utf8");
+
 console.log(`[stats] 轮次 ${rounds.length} · 覆盖 ${covered}/${grandTotal} · JRA ${A.jra}/${A.n}`);
 console.log(`[stats] → ${path.join(resultsDir, "STATS.md")}`);
 console.log(`[stats] → ${detailPath}`);
 console.log(`[stats] → ${detailDir}/*.md（${families.length} 个家族）`);
+console.log(`[stats] → ${path.join(shareDir, "overview.html")}`);
