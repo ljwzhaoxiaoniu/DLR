@@ -18,6 +18,12 @@
 //   node sessions.mjs adopt [--to <组名>] [--dry]
 //       把「未分组」（未归档、不属于任何组、已落盘的持久会话）收进指定组（默认全量组）——
 //       界面上「未分组」区里未落盘的空会话不在此列（等它落盘再收）
+//   node sessions.mjs retire --strays [--session <id前缀>…] [--dry]
+//       显示失效的旧会话改写 cwd 收进「归档」组。规则（dsh-workspace 实锤）：组员显示
+//       资格 = 会话头部 cwd 归一后严格等于组 path；被删 run 目录的旧会话因此掉进界面
+//       「未分组」且无法归组。retire = 帧级改写头部 cwd 到归档目录 + 文件搬进对应
+//       bucket + 从原组摘出移入「归档」组（归档态不动）。全量备份到
+//       tmp_scripts/cob_session_retire_<stamp>/（原文件 + manifest + restore.mjs）。
 //   node sessions.mjs list
 //       两组现状（session → 案例/轮次 反查）
 //
@@ -25,6 +31,8 @@
 // 写入前自动备份 workspace.json.bak-<stamp>；dsh web 重启后可见（workspace.json 在启动时读取）。
 import fs from "node:fs";
 import path from "node:path";
+import zlib from "node:zlib";
+import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)); // …/scenarios/cloudopsbench/eval
@@ -33,6 +41,56 @@ const REPO = path.resolve(HERE, "..", "..", "..");
 
 const ALL_TITLE = "cloudopsbench-all";
 const FORMAL_TITLE = "cloudopsbench";
+// 「归档」组 = 退休区：显示失效的旧会话改写 cwd 后收进来（见 retire 命令注释）
+const ARCHIVE_TITLE = "归档";
+const ARCHIVE_DIR = path.join(REPO, "DSH-based Agent Service", "dsh_cob-archive");
+
+// retire 的还原脚本模板（写进备份目录供日后回滚；独立自包含）
+const RESTORE_TEMPLATE = [
+  "#!/usr/bin/env node",
+  "// 还原 retire 搬档：cwd 改回 + 文件搬回原 bucket + 会话 id 搬回原组（并从「归档」组摘除）",
+  "// 用法: node restore.mjs [--dry]（在备份目录里直接跑；跑完重启 dsh web）",
+  'import fs from "node:fs";',
+  'import path from "node:path";',
+  'import zlib from "node:zlib";',
+  'import { fileURLToPath } from "node:url";',
+  'const HERE = path.dirname(fileURLToPath(import.meta.url));',
+  'const REPO = path.resolve(HERE, "..", "..");',
+  'const HOME = path.join(REPO, "DSH-based Agent Service", ".dsh-home");',
+  'const SESS = path.join(HOME, "sessions");',
+  'const WS = path.join(HOME, "storages", "workspace.json");',
+  'const m = JSON.parse(fs.readFileSync(path.join(HERE, "manifest.json"), "utf8"));',
+  'const dry = process.argv.includes("--dry");',
+  'const ZM = Buffer.from([0x28, 0xb5, 0x2f, 0xfd]);',
+  'function magicOffs(buf){ const a=[]; let i=buf.indexOf(ZM); while(i>=0){ a.push(i); i=buf.indexOf(ZM,i+1);} return a; }',
+  'function decodeAll(buf){ const offs=magicOffs(buf); let out=""; for(let k=0;k<offs.length;k++){ const end=k+1<offs.length?offs[k+1]:buf.length; out+=zlib.zstdDecompressSync(buf.subarray(offs[k],end)).toString("utf8"); } return out; }',
+  'function patchCwd(file,newCwd){ const buf=fs.readFileSync(file); const offs=magicOffs(buf); if(offs[0]!==0||offs.length<2) throw new Error("格式异常: "+file); for(const o of offs.slice(1)) zlib.zstdDecompressSync(buf.subarray(o)); const old=decodeAll(buf); const nl=old.indexOf("\\n"); const h=JSON.parse(old.slice(0,nl)); h.cwd=newCwd; const f1=zlib.zstdCompressSync(Buffer.from(JSON.stringify(h)+"\\n")); fs.writeFileSync(file, Buffer.concat([f1, buf.subarray(offs[1])])); }',
+  'let n = 0;',
+  'for (const it of m.items) {',
+  '  const cur = path.join(SESS, it.newBucket, it.sid);',
+  '  const f = path.join(cur, "session.v4.jsonl.zstd");',
+  '  if (!fs.existsSync(f)) { console.log("skip(缺文件):", it.sid); continue; }',
+  '  if (!dry) {',
+  '    patchCwd(f, it.oldCwd);',
+  '    const dst = path.join(SESS, it.oldBucket, it.sid);',
+  '    fs.mkdirSync(path.dirname(dst), { recursive: true }); fs.renameSync(cur, dst);',
+  '    const pc = path.join(HOME, "storages", "session_projcache", "sessions", it.sid + ".json");',
+  '    if (fs.existsSync(pc)) { const t = fs.readFileSync(pc, "utf8"); const o = JSON.stringify(it.newCwd), nn = JSON.stringify(it.oldCwd); if (t.includes(o)) fs.writeFileSync(pc, t.split(o).join(nn)); }',
+  '  }',
+  '  console.log((dry ? "[dry] " : "← ") + it.sid); n++;',
+  '}',
+  'if (!dry) {',
+  '  const ws = JSON.parse(fs.readFileSync(WS, "utf8")); const W = ws.tables.workspaces;',
+  '  const aid = Object.entries(W).find(([, w]) => w.title === "归档")?.[0];',
+  '  for (const it of m.items) {',
+  '    if (aid) { const i = W[aid].sessionIds.indexOf(it.sid); if (i >= 0) W[aid].sessionIds.splice(i, 1); }',
+  '    for (const g of it.oldGroups) { const gid = Object.entries(W).find(([, w]) => w.title === g)?.[0]; if (gid && !W[gid].sessionIds.includes(it.sid)) W[gid].sessionIds.push(it.sid); }',
+  '  }',
+  '  fs.copyFileSync(WS, WS + ".bak-restore");',
+  '  fs.writeFileSync(WS, JSON.stringify(ws, null, 2) + "\\n");',
+  '  console.log("已还原 " + n + " 条（重启 dsh web 生效）");',
+  '}',
+].join("\n");
 
 // ── 参数 ────────────────────────────────────────────────────────────
 const argv = process.argv.slice(2);
@@ -44,6 +102,7 @@ let wsPath = process.env.DSH_HOME
 let dry = false;
 let roundFilter = null;
 let toGroup = null;
+let straysFlag = false;
 const extraDirs = [];
 const caseFilter = [];
 const sessionFilter = [];
@@ -57,10 +116,11 @@ for (let i = 1; i < argv.length; i++) {
   else if (a === "--case") caseFilter.push(normCase(argv[++i]));
   else if (a === "--session") sessionFilter.push(argv[++i]);
   else if (a === "--to") toGroup = argv[++i];
+  else if (a === "--strays") straysFlag = true;
   else { console.error(`未知参数: ${a}`); process.exit(2); }
 }
-if (!["sync", "promote", "adopt", "list"].includes(cmd)) {
-  console.error("用法: node sessions.mjs <sync|promote|list> [选项…]（见文件头注释）");
+if (!["sync", "promote", "adopt", "retire", "list"].includes(cmd)) {
+  console.error("用法: node sessions.mjs <sync|promote|adopt|retire|list> [选项…]（见文件头注释）");
   process.exit(2);
 }
 
@@ -314,6 +374,183 @@ else if (cmd === "adopt") {
   }
 }
 
+// ── retire：改写 cwd 收进「归档」组 ─────────────────────────────────
+// 规则见文件头 retire 段。两阶段：先全量校验构建（不落盘，任一失败整体中止）；
+// 再备份 + 落盘（备份目录 = tmp_scripts/cob_session_retire_<stamp>/，含 restore.mjs）
+else if (cmd === "retire") {
+  const { ws, W } = loadWs();
+  const sessionsRoot = path.resolve(path.dirname(wsPath), "..", "sessions");
+  const pcRoot = path.join(path.dirname(wsPath), "session_projcache", "sessions");
+  const ZMAGIC = Buffer.from([0x28, 0xb5, 0x2f, 0xfd]);
+  /** cwd 目录名 slug（dsh 的 bucket 命名：去冒号、反斜杠→连字符、空格→~0020） */
+  const slug = (p) => "--" + p.replace(/:/g, "").replace(/\\/g, "-").replace(/ /g, "~0020") + "--";
+
+  // 会话索引 sid → { dir, bucketDir, file }
+  const idx = new Map();
+  (function walk(d) {
+    let ents; try { ents = fs.readdirSync(d, { withFileTypes: true }); } catch { return; }
+    for (const e of ents) {
+      if (!e.isDirectory()) continue;
+      const p = path.join(d, e.name);
+      if (e.name.startsWith("session-")) {
+        const f = path.join(p, "session.v4.jsonl.zstd");
+        if (fs.existsSync(f)) idx.set(e.name, { dir: p, bucketDir: d, file: f });
+      } else walk(p);
+    }
+  })(sessionsRoot);
+
+  const magicOffs = (buf) => { const a = []; let i = buf.indexOf(ZMAGIC); while (i >= 0) { a.push(i); i = buf.indexOf(ZMAGIC, i + 1); } return a; };
+  /** 顺序解码全部 zstd 帧 → 全文（多帧拼接 = 会话日志格式） */
+  function decodeAll(buf) {
+    const offs = magicOffs(buf);
+    if (offs[0] !== 0) throw new Error("非 zstd 流（首字节不是 magic）");
+    let out = "";
+    for (let k = 0; k < offs.length; k++) {
+      const end = k + 1 < offs.length ? offs[k + 1] : buf.length;
+      out += zlib.zstdDecompressSync(buf.subarray(offs[k], end)).toString("utf8");
+    }
+    return out;
+  }
+  /** 读头帧 cwd（校验用） */
+  function headCwd(file) {
+    const buf = fs.readFileSync(file);
+    const offs = magicOffs(buf);
+    if (offs[0] !== 0 || offs.length < 2) return null;
+    try {
+      const t = zlib.zstdDecompressSync(buf.subarray(0, offs[1])).toString("utf8");
+      return JSON.parse(t.slice(0, t.indexOf("\n"))).cwd ?? null;
+    } catch { return null; }
+  }
+  /** 帧级重写头帧 cwd：重压缩第一帧，其余字节原样；返回 { oldCwd, out } */
+  function rewriteHeadCwd(file, newCwd) {
+    const buf = fs.readFileSync(file);
+    const offs = magicOffs(buf);
+    if (offs[0] !== 0 || offs.length < 2) throw new Error("非多帧 zstd 会话文件");
+    for (const o of offs.slice(1)) zlib.zstdDecompressSync(buf.subarray(o)); // 每个 magic 均须可解（防伪 magic 边界误判）
+    const oldFull = decodeAll(buf);
+    const nl = oldFull.indexOf("\n");
+    const header = JSON.parse(oldFull.slice(0, nl));
+    if (header.type !== "session" || typeof header.cwd !== "string") throw new Error("头帧格式异常");
+    const oldCwd = header.cwd;
+    header.cwd = newCwd;
+    const newF1 = zlib.zstdCompressSync(Buffer.from(JSON.stringify(header) + "\n"));
+    const out = Buffer.concat([newF1, buf.subarray(offs[1])]);
+    // 语义校验：仅头帧 cwd 变化，其余字符级一致
+    const newFull = decodeAll(out);
+    const nl2 = newFull.indexOf("\n");
+    if (newFull.slice(nl2) !== oldFull.slice(nl)) throw new Error("帧尾部校验不通过");
+    const h2 = JSON.parse(newFull.slice(0, nl2));
+    const a = { ...h2 }, b = { ...header };
+    delete a.cwd; delete b.cwd;
+    if (JSON.stringify(a) !== JSON.stringify(b)) throw new Error("头帧字段校验不通过");
+    return { oldCwd, out };
+  }
+
+  // ── 目标收集：--session 显式 / 默认（--strays）全库扫「cwd 失效或与组 path 不符」的成员 ──
+  const targets = []; // { sid, from }
+  const seen = new Set();
+  if (sessionFilter.length) {
+    for (const pref of sessionFilter) {
+      const hits = [...idx.keys()].filter((s) => s.includes(pref));
+      if (hits.length !== 1) { console.log(`  ! --session ${pref}: 命中 ${hits.length} 个（需唯一）`); continue; }
+      const sid = hits[0];
+      const g = Object.values(W).find((w) => w.title !== ARCHIVE_TITLE && w.sessionIds.includes(sid));
+      targets.push({ sid, from: g ? g.title : null });
+      seen.add(sid);
+    }
+  } else {
+    for (const w of Object.values(W)) {
+      if (w.title === ARCHIVE_TITLE) continue;
+      for (const sid of w.sessionIds) {
+        if (seen.has(sid)) continue; seen.add(sid);
+        const rec = idx.get(sid);
+        const c = rec ? headCwd(rec.file) : null;
+        const ok = c && fs.existsSync(c) && normPath(c) === normPath(w.path);
+        if (!ok) targets.push({ sid, from: w.title });
+      }
+    }
+  }
+  console.log(`[retire] 目标 ${targets.length} 条 → 「${ARCHIVE_TITLE}」（${ARCHIVE_DIR}）`);
+  if (!targets.length) process.exit(0);
+
+  // ── 阶段 A：全部校验 + 构建（不落盘）──
+  const ops = [];
+  let bad = 0;
+  for (const t of targets) {
+    const rec = idx.get(t.sid);
+    if (!rec) { console.log(`  ! ${short(t.sid)}  磁盘无文件，跳过`); bad++; continue; }
+    try {
+      const { oldCwd, out } = rewriteHeadCwd(rec.file, ARCHIVE_DIR);
+      ops.push({ ...t, rec, oldCwd, out });
+      console.log(`  ✓ ${short(t.sid)}  [${t.from}]  ${oldCwd}`);
+    } catch (e) {
+      bad++;
+      console.log(`  ✗ ${short(t.sid)}  校验失败：${e.message}`);
+    }
+  }
+  if (bad) { console.error(`[retire] ${bad} 条未通过校验——整体中止，未做任何改动`); process.exit(1); }
+  if (dry) { console.log("[dry] 未落盘"); process.exit(0); }
+
+  // ── 阶段 B：备份 + 落盘 ──
+  const st = new Date(), pad = (n) => String(n).padStart(2, "0");
+  const stamp = `${st.getFullYear()}${pad(st.getMonth() + 1)}${pad(st.getDate())}_${pad(st.getHours())}${pad(st.getMinutes())}${pad(st.getSeconds())}`;
+  const bkDir = path.join(REPO, "tmp_scripts", `cob_session_retire_${stamp}`);
+  const newBucket = slug(ARCHIVE_DIR);
+  const newBucketDir = path.join(sessionsRoot, newBucket);
+  fs.mkdirSync(path.join(bkDir, "backup"), { recursive: true });
+  fs.mkdirSync(ARCHIVE_DIR, { recursive: true });
+  fs.mkdirSync(newBucketDir, { recursive: true });
+  fs.copyFileSync(wsPath, path.join(bkDir, "workspace.json.bak"));
+  const manifest = { movedAt: new Date().toISOString(), archiveDir: ARCHIVE_DIR, archiveSlug: newBucket, items: [] };
+  for (const op of ops) {
+    const dest = path.join(newBucketDir, op.sid);
+    if (fs.existsSync(dest)) throw new Error(`目标已存在：${dest}`);
+  }
+  for (const op of ops) {
+    fs.copyFileSync(op.rec.file, path.join(bkDir, "backup", `${op.sid}.zstd`));
+    fs.writeFileSync(op.rec.file, op.out);
+    const pc = path.join(pcRoot, `${op.sid}.json`);
+    if (fs.existsSync(pc)) {
+      const t = fs.readFileSync(pc, "utf8");
+      const oEnc = JSON.stringify(op.oldCwd), nEnc = JSON.stringify(ARCHIVE_DIR);
+      if (t.includes(oEnc)) fs.writeFileSync(pc, t.split(oEnc).join(nEnc));
+    }
+    const dest = path.join(newBucketDir, op.sid);
+    fs.renameSync(op.rec.dir, dest);
+    try { fs.rmdirSync(op.rec.bucketDir); } catch { /* 非空则留 */ }
+    manifest.items.push({ sid: op.sid, oldCwd: op.oldCwd, newCwd: ARCHIVE_DIR, oldBucket: path.basename(op.rec.bucketDir), newBucket, oldGroups: op.from ? [op.from] : [] });
+    console.log(`  → ${short(op.sid)}  ${op.oldCwd} → ${ARCHIVE_DIR}`);
+  }
+  // workspace.json：「归档」组建/取 → 迁名单
+  let aid = Object.entries(W).find(([, w]) => w.title === ARCHIVE_TITLE)?.[0];
+  const now = new Date().toISOString();
+  if (!aid) {
+    aid = crypto.randomUUID();
+    W[aid] = { path: ARCHIVE_DIR, title: ARCHIVE_TITLE, sessionIds: [], createdAt: now, updatedAt: now };
+    ws.global.workspaceIds.push(aid);
+    console.log(`[ws] 新建组「${ARCHIVE_TITLE}」 ${aid}`);
+  }
+  for (const op of ops) {
+    for (const w of Object.values(W)) {
+      if (w.title === ARCHIVE_TITLE) continue;
+      const i = w.sessionIds.indexOf(op.sid);
+      if (i >= 0) { w.sessionIds.splice(i, 1); w.updatedAt = now; }
+    }
+    if (!W[aid].sessionIds.includes(op.sid)) W[aid].sessionIds.push(op.sid);
+  }
+  W[aid].updatedAt = now;
+  saveWs(ws);
+  // 复核 + 备份清单与还原脚本
+  let ver = 0;
+  for (const op of ops) {
+    if (headCwd(path.join(newBucketDir, op.sid, "session.v4.jsonl.zstd")) === ARCHIVE_DIR) ver++;
+  }
+  fs.writeFileSync(path.join(bkDir, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
+  fs.writeFileSync(path.join(bkDir, "restore.mjs"), RESTORE_TEMPLATE);
+  console.log(`[retire] 完成 ${ops.length} 条 · 复核 cwd ${ver}/${ops.length} · 备份/还原：${bkDir}`);
+  console.log("[提示] dsh web 重启后可见（bash \"DSH-based Agent Service/dsh_dlr/run_web.sh\"）");
+}
+
 // ── list ────────────────────────────────────────────────────────────
 else if (cmd === "list") {
   const { ws, W, allId, formalId } = loadWs();
@@ -322,7 +559,10 @@ else if (cmd === "list") {
     const r = bySession.get(sid);
     return r ? `${r.caseKey}  (${r.dirName})` : "(未在 results/--dirs 扫到)";
   };
-  for (const [id, title] of [[allId, ALL_TITLE], [formalId, FORMAL_TITLE]]) {
+  const rows = [[allId, ALL_TITLE], [formalId, FORMAL_TITLE]];
+  const aEnt = Object.entries(W).find(([, w]) => w.title === ARCHIVE_TITLE);
+  if (aEnt) rows.push([aEnt[0], ARCHIVE_TITLE]);
+  for (const [id, title] of rows) {
     const l = W[id].sessionIds;
     console.log(`${title}（${l.length}）:`);
     for (const s of l) console.log(`  ${archived.has(s) ? "[归档] " : "       "}${short(s)}  ${label(s)}`);
