@@ -60,3 +60,4 @@ tmp_*
 
 # dsh-tsm-eval 非台账跑次（官方留存在 results/，见 dsh-tsm-eval README）
 scenarios/*/eval/runs/
+DSH-based Agent Service/dsh_cob/instructions.md

@@ -125,10 +125,15 @@ if [ -f "$SVC_DIR/dsh_dlr/.env" ]; then set -a; . "$SVC_DIR/dsh_dlr/.env"; set +
 # ── 跑 ──
 # ⚠ 指令注入语义（dsh-agent-instructions 源码核实）：候选只认**裸文件名**——含 / \ 的候选
 # 会被过滤掉（绝对路径无效！）；加载方式是「从 cwd 逐级向上找候选名」。
-# 所以：在 RUN_DIR 里启动 dsh（instructions.md 就地命中），DLR_AGENTS_MD 传裸名。
+# ⚠ 会话 cwd 语义（dsh-workspace 源码核实，2026-10-12）：工作组成员 = cwd 与其 path
+# **严格相等**的会话——不等者启动时被静默过滤（→ 掉进网页「未分组」）。
+# 所以：在 dsh_cob（= 全量组 path）里启动 dsh——指令写进 dsh_cob/instructions.md
+# （裸名从 cwd 命中），会话 cwd=dsh_cob，天生就是全量组正式成员。
+# （旧版在 RUN_DIR 里启动，导致会话永远进不了组，14 个已归档；串行跑，instructions.md 不并发写。）
 OUT_FILE="$RUN_DIR/${KEY}_dlr.ndjson"
 ERR_FILE="$RUN_DIR/${KEY}_dlr.err"
-cd "$RUN_DIR"
+cp "$INSTRUCT" "$HERE/instructions.md"
+cd "$HERE"
 TSM_MCP_URL="$MCP_URL" COB_MCP_URL="$BENCH_URL" DLR_AGENTS_MD="instructions.md" \
 timeout "$TIMEOUT" dsh --profile headless --patch "$HERE/dsh.patch.yml" --json "Question: ${QUESTION}" \
   < /dev/null > "$OUT_FILE" 2> "$ERR_FILE"
