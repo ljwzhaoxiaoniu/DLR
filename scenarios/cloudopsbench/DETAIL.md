@@ -13,15 +13,15 @@
 | boutique/codedefect | 98 | 1 | 97 | 1.0% |
 | boutique/infrastructure | 40 | 1 | 39 | 2.5% |
 | boutique/performance | 29 | 1 | 28 | 3.4% |
-| boutique/runtime | 45 | 0 | 45 | 0.0% |
+| boutique/runtime | 45 | 1 | 44 | 2.2% |
 | boutique/scheduling | 164 | 1 | 163 | 0.6% |
 | boutique/service | 54 | 1 | 53 | 1.9% |
 | boutique/startup | 62 | 1 | 61 | 1.6% |
-| train-ticket/performance | 47 | 0 | 47 | 0.0% |
-| train-ticket/runtime | 96 | 0 | 96 | 0.0% |
-| train-ticket/service | 37 | 0 | 37 | 0.0% |
+| train-ticket/performance | 47 | 1 | 46 | 2.1% |
+| train-ticket/runtime | 96 | 1 | 95 | 1.0% |
+| train-ticket/service | 37 | 1 | 36 | 2.7% |
 | train-ticket/startup | 24 | 1 | 23 | 4.2% |
-| **合计** | **754** | **8** | **746** | **1.1%** |
+| **合计** | **754** | **12** | **742** | **1.6%** |
 
 ## 汇总（去重 · 取最新）
 
@@ -29,16 +29,16 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 8 / 8（100.0%） |
-| CA（组件命中） | 8 / 8（100.0%） |
-| FA（故障型命中） | 8 / 8（100.0%） |
-| ECR（证据链全闭） | 8 / 8（100.0%） |
+| JRA（联合命中） | 12 / 12（100.0%） |
+| CA（组件命中） | 12 / 12（100.0%） |
+| FA（故障型命中） | 12 / 12（100.0%） |
+| ECR（证据链全闭） | 12 / 12（100.0%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 1 | 1 | 1 | 0.3536 | 14.75 | 0 | 0 |
+| 1 | 1 | 1 | 0.3148 | 17.75 | 0 | 0.0833 |
 
 ## 分家族索引
 
@@ -48,9 +48,13 @@
 | boutique/codedefect | 98 | 1 | 1 | 1 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
 | boutique/infrastructure | 40 | 1 | 1 | 1 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
 | boutique/performance | 29 | 1 | 1 | 1 | [boutique-performance.md](DETAIL/boutique-performance.md) |
+| boutique/runtime | 45 | 1 | 1 | 1 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
 | boutique/scheduling | 164 | 1 | 1 | 1 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
 | boutique/service | 54 | 1 | 1 | 1 | [boutique-service.md](DETAIL/boutique-service.md) |
 | boutique/startup | 62 | 1 | 1 | 1 | [boutique-startup.md](DETAIL/boutique-startup.md) |
+| train-ticket/performance | 47 | 1 | 1 | 1 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
+| train-ticket/runtime | 96 | 1 | 1 | 1 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
+| train-ticket/service | 37 | 1 | 1 | 1 | [trainticket-service.md](DETAIL/trainticket-service.md) |
 | train-ticket/startup | 24 | 1 | 1 | 1 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
 
 ## 定性观察
@@ -61,6 +65,10 @@
 > **2026-10-12 · 轮次 1012_1447_inorder4-v3b2（v3 批二 · 4/4 全对）**：① **startup/1 判型翻案 ✓**——Rank1 = `image_registry_dns_failure`（v2 时代误判 `incorrect_image_reference`，v3 下纠正）。② **tt-startup/1 链没闭（ECR 0.0 · MC 0.75）**：M3「配置确认面」（`GetAppYAML` 确认 secret 引用上下文）整步未走——agent 以「pod 详情 + 错误日志 + secrets 清单」即收口，省了收口的后半。③ **EOC 两批累计 3/8 非满**（admission 0.75 · infrastructure 0.667 · tt-startup 0.75），三例机理同源：**链头序**（先扫对象层/先猜具体根因，`containerd` 抢在通用转换证据前）× **链尾漏走**（配置确认步缺失或不按序）。链序纪律 L1/L2 结构上不承载 → 按 10-12 口径**开 L3 门**。④ service/1 EOC 1.0 链闭；EE 0.33–0.4；steps 9–16。
 
 > **2026-10-12 · 轮次 1012_1458_l3-verify3（L3 开门验收 · 3/3 全满）**：开 L3 门（`sop.md` 2 节：Partial Unreachability / Availability Disruption；走链纪律 = 先立症状 → 对象层 → 机制事件 → 配置确认收口，节点侧通用先于具体；工具面 2→3 + AGENTS 三路召回）后三例复跑对表——**admission EOC 0.75→1.0 · infrastructure EOC 0.667→1.0 · tt-startup MC/ECR/EOC 0.75/0.0/0.75→1.0/1.0/1.0**；三题 JRA 保持全对、链全闭。机理证据：首轮三路召回（sop exact 命中）、`GetAppYAML` 收口归位、节点类先读通用转换证据。**至此 8/8 题 MC/EOC/ECR 全满**。其余 7 个措辞模板无 miss 证据、按门槛未写节（出 miss 再补——迭代闭环见 modeling-plan §8-2）。
+
+> **2026-10-12 · 轮次 1012_1512_inorder4-v3b3 + 1012_1521_l3-tweak1（批三 4 题 + 收口位微调验证）**：① 批三 **4/4 全对**（覆盖 12/754）——补回 `runtime/1`·`trainticket/service/25`；**TT 空白族首秀**：`tt-runtime/1`（`db_connection_exhaustion`·26 步）、`tt-performance/1`（`pod_network_delay`·36 步）均 JRA ✓、链闭。② **tt-service/25 EOC 0.75 —— v2 时代即 0.75 的持久倒位**：解剖 = `GetAppYAML` 在第 7 步被当探针读（早于点名机制的日志）——与 admission 旧倒位同类 → sop 两节补**「配置面 = 收口位，不是探针」**警示 → **复跑 EOC 0.75→1.0**（YAML 归位到第 13 步后，先日志点名机制）。③ `tt-performance/1` 首个 invalid action：模型把工具名写成 `GetServiceConnectivity`（应为 `CheckServiceConnectivity`）、无编造参数、自纠——非建模问题，记观察。④ EE 随 TT 长链稀释（0.14–0.33）；合计 **12/12 JRA 全对、MC/EOC/ECR 全满**。
+
+
 
 
 

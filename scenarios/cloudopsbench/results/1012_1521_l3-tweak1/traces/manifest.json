@@ -1,0 +1,9 @@
+[
+  {
+    "case": "trainticket/service/25",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1012_1521_l3-tweak1\\raw\\1012_1521_trainticket-service-25",
+    "steps": 22,
+    "has_final_answer": true,
+    "predictions": 3
+  }
+]

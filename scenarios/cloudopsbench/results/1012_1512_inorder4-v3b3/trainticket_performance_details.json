@@ -1,0 +1,58 @@
+[
+  {
+    "case_name": "1",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\trainticket\\performance\\1\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1012_1512_inorder4-v3b3\\traces\\trainticket\\dsh-tsm\\performance\\1\\1.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Performance_Fault",
+      "fault_object": "app/ts-basic-service",
+      "root_cause": "pod_network_delay"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/ts-basic-service",
+        "root_cause": "pod_network_delay"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/ts-basic-service",
+        "root_cause": "code_artificial_delay"
+      },
+      {
+        "rank": 3,
+        "fault_object": "node/worker-01",
+        "root_cause": "node_network_delay"
+      }
+    ],
+    "tool_call_count": 35,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [
+      {
+        "step_id": 12,
+        "action_name": "GetServiceConnectivity",
+        "action_input": {
+          "service_name": "ts-basic-service",
+          "port": 8080,
+          "namespace": "train-ticket"
+        },
+        "reason": "tool_error",
+        "error": "Error: unknown tool \"mcp__cloudops-tools__GetServiceConnectivity\""
+      }
+    ],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.14285714285714285,
+      "steps": 36.0,
+      "RAR": 0.0,
+      "invalid_actions": 1.0
+    }
+  }
+]
