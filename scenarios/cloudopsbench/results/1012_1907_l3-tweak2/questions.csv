@@ -1,0 +1,3 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/3,1.0,1.0,1.0,1.0,1.0,1.0,0.5294117647058824,18.0,0.0,0.0,app/checkoutservice,missing_service_account,app/checkoutservice,missing_service_account,
+trainticket/runtime/3,1.0,1.0,1.0,0.6666666666666666,0.6666666666666666,0.0,0.22727272727272727,23.0,0.0,0.0,app/tsdb-mysql,db_connection_exhaustion,app/tsdb-mysql,db_connection_exhaustion,

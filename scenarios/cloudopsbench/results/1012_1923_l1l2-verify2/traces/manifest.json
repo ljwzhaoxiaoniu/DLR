@@ -1,0 +1,9 @@
+[
+  {
+    "case": "trainticket/runtime/3",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1012_1923_l1l2-verify2\\raw\\1012_1923_trainticket-runtime-3",
+    "steps": 22,
+    "has_final_answer": true,
+    "predictions": 3
+  }
+]

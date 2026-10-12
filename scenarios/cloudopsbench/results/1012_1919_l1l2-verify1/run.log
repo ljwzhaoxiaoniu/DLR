@@ -1,0 +1,52 @@
+[19:19:15] 批次 l1l2-verify1 · 1 题（串行）→ scenarios/cloudopsbench/results/1012_1919_l1l2-verify1
+[19:19:16] === train-ticket/runtime/3 第 1 遍 ===
+[start] 基准诊断 MCP（trainticket-runtime-3）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8000/mcp ok (10 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1012_1919_l1l2-verify1/raw/1012_1919_trainticket-runtime-3
+[19:21:33] 全部跑完 → grade
+[grade] runs=1 → out=scenarios/cloudopsbench/results/1012_1919_l1l2-verify1
+[convert] trainticket/runtime/3 → scenarios\cloudopsbench\results\1012_1919_l1l2-verify1\traces\trainticket\dsh-tsm\runtime\3\3.json  steps=26 final=有 preds=3
+[convert] manifest → scenarios\cloudopsbench\results\1012_1919_l1l2-verify1\traces\manifest.json（共 1 条）
+[grade] 评分组: train-ticket/runtime
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: train-ticket
+fault_category: runtime
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\trainticket\runtime
+agent_root: scenarios\cloudopsbench\results\1012_1919_l1l2-verify1\traces\trainticket\dsh-tsm\runtime
+--------------------------------------------------------------------------------
+total_cases: 96
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 0.6667
+EOC (Evidence-Order Consistency): 0.6667
+ECR (Evidence Closure Rate): 0.0
+EE (Evidence Efficiency): 0.1538
+steps (Average Diagnostic Steps per Case): 27.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] trainticket_runtime: scenarios\cloudopsbench\results\1012_1919_l1l2-verify1\trainticket_runtime_questions.csv
+
+[grade] 完成
+  summary.md   : scenarios/cloudopsbench/results/1012_1919_l1l2-verify1/summary.md
+  questions.csv: scenarios/cloudopsbench/results/1012_1919_l1l2-verify1/questions.csv
+  traces/      : scenarios/cloudopsbench/results/1012_1919_l1l2-verify1/traces
+[19:21:35] grade rc=0 → stats
+[stats] 轮次 9 · 覆盖 20/754 · JRA 20/20
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\results\STATS.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL/*.md（12 个家族）
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\overview.html
+[19:21:35] 批次完成

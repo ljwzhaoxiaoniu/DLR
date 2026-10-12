@@ -1,0 +1,16 @@
+[
+  {
+    "case": "boutique/admission/3",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1012_1907_l3-tweak2\\raw\\1012_1907_boutique-admission-3",
+    "steps": 17,
+    "has_final_answer": true,
+    "predictions": 3
+  },
+  {
+    "case": "trainticket/runtime/3",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1012_1907_l3-tweak2\\raw\\1012_1908_trainticket-runtime-3",
+    "steps": 22,
+    "has_final_answer": true,
+    "predictions": 3
+  }
+]
