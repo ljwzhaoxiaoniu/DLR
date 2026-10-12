@@ -98,7 +98,7 @@
   },
   {
     "kid": 9,
-    "knowledge": "Reading the gateway route table (the edge of Train-Ticket): the gateway app YAML (its configmap) carries the full route table — each route maps a Path prefix to a target (uri: lb://<service> or host:port). Audit it by pairing every route’s Path with its uri target: a route whose target names a different service than its Path denotes is a misroute — the evidence is found by reading the table line by line, not by probing from outside. Direct-connect probes that diverge while every object is healthy point at this address layer.",
+    "knowledge": "Reading the gateway route table (the edge of Train-Ticket): the gateway app YAML (its configmap) carries the full route table — each route maps a Path prefix to a target (uri: lb://<service> or host:port). Audit it by pairing every route’s Path with its uri target: a route whose target names a different service than its Path denotes is a misroute — the evidence is found by reading the table line by line, not by probing from outside. Direct-connect probes that diverge while every object is healthy point at this address layer. The component to report is the table’s owner (the gateway) — a mis-wired target service is the victim, not the break.",
     "anchors": [
       "surface:deployment",
       "chain:reachability"
