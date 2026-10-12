@@ -60,6 +60,12 @@ export interface StateModelSliceResult {
 const lastSeg = (id: string): string => id.split(".").pop() ?? id;
 
 /**
+ * 锚定名字归一：载体/观测 LE（`<svc>-deploy` / `<svc>-obs`）的取数锚 = **基础服务名**
+ * ——app 标签 / service_name 仍是 `<svc>`，不是 LE 名本身（v3 拆分后修补：读法模板曾带着后缀）。
+ */
+const anchorName = (leName: string): string => leName.replace(/-(?:deploy|obs)$/, "");
+
+/**
  * 锚定读法（剪枝谓词）：面（PE）按锚取数的调用模板——ARCS 锚 = 取数时的 WHERE 键。
  * 返回体 = 该对象的薄切片而不是集群全量；agent 拿到即用（不试错、不反复拉全量清单）。
  */
@@ -67,6 +73,8 @@ function readHint(kind: string, ownerName: string, nsValue: string): string {
   switch (kind) {
     case "deployment":
       return `GetAppYAML(app_name=${ownerName})（列表可用 GetResources(deployments, label_selector=app=${ownerName})）`;
+    case "statefulset":
+      return `GetResources(statefulsets, name=${ownerName}, output_yaml=true)（列表 GetResources(statefulsets)）`;
     case "pods":
       return `GetResources(pods, label_selector=app=${ownerName})；单 pod 详情用 DescribeResource(resource_type=pod, name=<命中名>)`;
     case "service_endpoints":
@@ -192,7 +200,7 @@ export async function stateModelQuery(
         score: round4(h.score),
         surfaces: (idx.surfacesByLe.get(h.id ?? "") ?? []).map((s) => ({
           ...s,
-          read: readHint(s.kind, ownerName, nsValue),
+          read: readHint(s.kind, anchorName(ownerName), nsValue),
         })),
       };
     }),
@@ -207,7 +215,7 @@ export async function stateModelQuery(
         owner_name: ownerName,
         resource: r?.resource ?? "",
         s: r?.s ?? "",
-        read: r ? readHint(r.kind, ownerName, nsValue) : "",
+        read: r ? readHint(r.kind, anchorName(ownerName), nsValue) : "",
         cardinality: r?.cardinality ?? "",
         attributes: r?.attributes ?? [],
         score: round4(h.score),

@@ -50,41 +50,48 @@
   },
   {
     "kid": 8,
+    "knowledge": "Reading the events surface — GetResources(events, namespace=…) returns the cluster's own narrative rows (LAST SEEN / TYPE / REASON / OBJECT / MESSAGE): Warning rows bind a mechanism to a concrete object verbatim (e.g. 'Unhealthy pod/<name> … Too many connections'). When a mechanism is known only at service level (log streams, alerts) — or a workload has several instances — the events surface, and the instances' own details (their events sections), are where it gets pinned to the object that carries it: read them at the close.",
+    "anchors": ["surface:events"],
+    "basis": "GetResources(events) rows + pod-detail events sections (visible side)",
+    "source_cases": ["trainticket/runtime/3"]
+  },
+  {
+    "kid": 9,
     "knowledge": "Symptom wording → entry chain — 'Partial Service Unreachability.' enters the reachability chain: caller-side error logs → the caller's addressed endpoints → the target service's endpoint binding / pods → owner chain (deployment) → stage evidence. Walk the surfaces in that order; the first surface whose observation contradicts expectation is the break.",
     "anchors": ["chain:reachability"],
     "basis": "query templates ↔ chain entry (dataset wording, model-side mapping)",
     "source_cases": ["boutique/admission/1", "boutique/service/1", "trainticket/service/25"]
   },
   {
-    "kid": 9,
+    "kid": 10,
     "knowledge": "Symptom wording → entry chain — 'Service Availability Disruption.' uses the SAME reachability chain (it is overloaded across scheduling / startup / admission stages): walk caller logs → endpoints → pods; when the pods surface shows the pod never became ready, read its phase and events (FailedScheduling / FailedCreate / FailedMount / image-pull / probe) and follow that mechanism to the matching object surface. Discriminate on the chain, not on the wording.",
     "anchors": ["chain:reachability"],
     "basis": "query templates ↔ chain entry (overloaded wording; discrimination happens on the chain)",
     "source_cases": ["boutique/scheduling/1", "boutique/startup/1", "boutique/admission/1"]
   },
   {
-    "kid": 10,
+    "kid": 11,
     "knowledge": "Symptom wording → entry chain — 'Service Performance Degradation.' enters the telemetry chain: read alerts first (entity + anomaly class + baseline/current comparison), then EXCLUDE the object layer for that entity (listings normal → the break is at the metric level). Gated by the scorer: alerts are a symptom pointer, not evidence — close the case on object-layer exclusion plus metric readings.",
     "anchors": ["chain:telemetry"],
     "basis": "query templates ↔ chain entry; scorer gate on GetAlerts credit (visible side)",
     "source_cases": ["boutique/performance/1", "trainticket/performance/1", "boutique/performance/20"]
   },
   {
-    "kid": 11,
+    "kid": 12,
     "knowledge": "Symptom wording → entry chain — 'Service abnormal restart.' enters the health chain: restarts (pods surface: RESTARTS column) → last termination state (exit code class: 137 OOMKilled vs 143 SIGTERM) → probe / OOM evidence (pod events: 'Unhealthy' / 'Killing' messages; deployment probes config). The restarting pod's own record and the workload probe config are the two halves that close this chain.",
     "anchors": ["chain:health"],
     "basis": "query templates ↔ chain entry (dataset wording, model-side mapping)",
     "source_cases": ["boutique/runtime/1", "boutique/runtime/2"]
   },
   {
-    "kid": 12,
+    "kid": 13,
     "knowledge": "Symptom wording → entry chain — 'Service latency increased significantly' enters the telemetry chain (as Performance Degradation): alerts → object-layer exclusion → metric readings. No object-layer break is expected; the closure is the metric comparison itself.",
     "anchors": ["chain:telemetry"],
     "basis": "query templates ↔ chain entry",
     "source_cases": ["boutique/performance/1"]
   },
   {
-    "kid": 13,
+    "kid": 14,
     "knowledge": "Symptom wording → entry chain — 'Service quality degradation.' enters the telemetry chain (as Performance Degradation): alerts every time; pair the alerted entity with object-layer listings to exclude object faults before concluding on the metric reading.",
     "anchors": ["chain:telemetry"],
     "basis": "query templates ↔ chain entry (both systems)",

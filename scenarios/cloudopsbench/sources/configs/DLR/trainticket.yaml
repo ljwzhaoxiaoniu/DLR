@@ -5178,24 +5178,24 @@ logical_entities:
       description: services this one calls — call failures originate on these edges; read from the dependency graph
 - logical_entity_id: LOGICAL.trainticket.tsdb-mysql.deploy
   biz_name: tsdb-mysql-deploy
-  description: The Kubernetes deployment carrier of tsdb-mysql — the Deployment / Pod / Endpoint resource instances
+  description: The Kubernetes statefulset carrier of tsdb-mysql — the StatefulSet / Pod / Endpoint resource instances
     that realize it (image, probes, ports, placement, reachability). Every surface here is anchored by the app label.
   physical_entities:
-  - physical_entity_id: PHYSICAL.trainticket.tsdb-mysql.deployment
-    resource: deployments
+  - physical_entity_id: PHYSICAL.trainticket.tsdb-mysql.statefulset
+    resource: statefulsets
     A:
       cardinality: '1:1'
       key: app_label
     R: null
     S: 'desired state of the service — replicas, pod template (image / probes / ports), service account and config
-      references；read: GetAppYAML(app_name=<svc>) / GetResources(deployments, label_selector=app=<svc>)'
+      references；read: GetResources(statefulsets, name=<svc>, output_yaml=true)（列表 GetResources(statefulsets)）'
     attributes:
     - name: app_label
       description: the identifying application label (app=tsdb-mysql) shared by every surface of this service
       public: true
     - name: replicas
       description: desired vs ready replica count (AVAILABLE) — 0/1 means the service is drained; read from the
-        deployments listing or the app YAML
+        statefulset listing or its YAML
     - name: probes
       description: liveness / readiness probe configuration (protocol / port / timing / commands) — a probe that
         can never succeed restarts containers in a loop; read from the app YAML
@@ -6515,7 +6515,7 @@ pas_relations:
       verb: deploys
       cardinality: '1:1'
   A: app_label
-  S: tsdb-mysql 由 tsdb-mysql-deploy 部署载体运行 — the K8s carrier that realizes this service (Deployment / Pod / Endpoint
+  S: tsdb-mysql 由 tsdb-mysql-deploy 部署载体运行 — the K8s carrier that realizes this service (StatefulSet / Pod / Endpoint
     instances); read the carrier's surfaces by app label.
 - relation_id: LOGICAL.trainticket.tsdb-mysql.deploy_TO_LOGICAL.trainticket.tsdb-mysql.obs
   relation_name: Produces signals
@@ -6527,8 +6527,8 @@ pas_relations:
       verb: produced by
       cardinality: '1:1'
   A: service_name
-  S: tsdb-mysql-deploy 产生 tsdb-mysql-obs 观测信号集合 — alerts / metrics / logs captured from the deployment instances;
-    read the signal surfaces by service name.
+  S: tsdb-mysql-deploy 产生 tsdb-mysql-obs 观测信号集合 — alerts / metrics / logs captured from the statefulset instances;
+    read the signal surfaces by name.
 - relation_id: LOGICAL.trainticket.ts-auth-service_TO_LOGICAL.trainticket.ts-verification-code-service
   relation_name: Calls
   P:
