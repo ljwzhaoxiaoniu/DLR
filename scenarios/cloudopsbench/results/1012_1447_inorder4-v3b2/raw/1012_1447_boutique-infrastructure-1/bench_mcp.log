@@ -1,0 +1,22 @@
+INFO:     Started server process [7596]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:61948 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61949 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:61948 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61950 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61954 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61956 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61963 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:61963 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61963 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"containerd"}
+INFO:     127.0.0.1:61963 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kubelet"}
+INFO:     127.0.0.1:61963 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"containerd"}
+INFO:     127.0.0.1:61967 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kube-proxy"}
+INFO:     127.0.0.1:61967 - "POST /mcp HTTP/1.1" 200 OK
