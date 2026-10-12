@@ -316,14 +316,11 @@
                     stats.textContent = '对象(LE):' + les.length +
                         ' | 观测面(PE):' + (data.physical_entities || []).length +
                         ' | 关系(PAS):' + (data.pas_relations || []).length;
-                    if (!document.getElementById('typeLegend')) {
+                    if (!document.getElementById('vizHint')) {
                         const L = document.createElement('div');
-                        L.id = 'typeLegend';
-                        L.style.cssText = 'font-size:12px;color:#555;margin-top:2px;display:flex;gap:10px;flex-wrap:wrap;';
-                        const item = (c, t) => '<span style="display:inline-flex;align-items:center;gap:4px;">' +
-                            '<span style="width:10px;height:10px;border-radius:50%;background:' + c + ';border:1px solid #333;display:inline-block;"></span>' + t + '</span>';
-                        L.innerHTML = item('#FFB5BA', '业务') + item('#FFDAB9', '部署载体') + item('#C7CEEA', '观测') +
-                                      item('#A8E6CF', '节点') + item('#E0BBE4', '命名空间');
+                        L.id = 'vizHint';
+                        L.style.cssText = 'font-size:12px;color:#888;margin-top:2px;';
+                        L.textContent = '同色 = 一个对象及其紧密关联的 LE（业务 · 部署载体 · 观测集合）';
                         stats.parentElement.appendChild(L);
                     }
                 } else {
@@ -1357,24 +1354,14 @@
         const nodes = [];
         const edges = [];
         const leColor = (i) => CONST.LE_COLORS[i % CONST.LE_COLORS.length];
-        // 配色 = 按对象类型（业务 / 部署载体 / 观测 / 节点 / 命名空间）——马卡龙色系，一眼分层
-        const TYPE_BG = {
-            biz: '#FFB5BA',     // 业务对象
-            deploy: '#FFDAB9',  // 部署载体
-            obs: '#C7CEEA',     // 观测集合
-            node: '#A8E6CF',    // 节点
-            ns: '#E0BBE4'       // 命名空间
-        };
-        const leType = (id) => {
-            const s = String(id);
-            if (/\.deploy$/.test(s)) return 'deploy';
-            if (/\.obs$/.test(s)) return 'obs';
-            if (/\.node\./.test(s)) return 'node';
-            if (/\.namespace$/.test(s)) return 'ns';
-            return 'biz';
-        };
+        // 配色 = 按「对象族」：<svc> ＋ <svc>-deploy ＋ <svc>-obs 同色（一个对象及其紧密关联的 LE 一家一色）；
+        // 节点、命名空间各自成族。马卡龙色系，13 色轮转。
+        const stem = (id) => String(id).replace(/^LOGICAL\.[^.]+\./, "").replace(/\.(deploy|obs)$/, "");
+        const famIdx = new Map();
         (d.logical_entities || []).forEach((le) => {
-            const c = { bg: TYPE_BG[leType(le.id)], bd: '#333' };
+            const st = stem(le.id);
+            if (!famIdx.has(st)) famIdx.set(st, famIdx.size);
+            const c = { bg: leColor(famIdx.get(st)), bd: '#333' };
             nodes.push({
                 id: le.id,
                 label: le.name,
