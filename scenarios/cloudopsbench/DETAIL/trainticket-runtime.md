@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **4/96** 题：JRA ✅4 ❌0 ｜ 证据链全闭 4 ｜ token 中位 535,723 ｜ 生成 2026-10-12T11:39:23.180Z
+> 本家族已跑 **5/96** 题：JRA ✅5 ❌0 ｜ 证据链全闭 5 ｜ token 中位 535,723 ｜ 生成 2026-10-12T12:12:14.194Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -11,6 +11,7 @@
 | [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1944 | 37 | 554,007 | 0 | 0 | 1012_1846_inorder4-v3b4 | 全对·链闭 |
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1818 | 23 | 535,723 | 0 | 0 | 1012_1923_l1l2-verify2 | 全对·链闭 |
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 517,218 | 0 | 0 | 1012_1935_tidy-verify1 | 全对·链闭 |
+| [5](#case-5) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.1429 | 36 | 800,099 | 0 | 0 | 1012_2000_case-verify1 | 全对·链闭 |
 
 ## 证据正文
 
@@ -37,4 +38,10 @@
 - **结论**：`app/tsdb-mysql` + `db_connection_exhaustion` ｜ 标签 `app/tsdb-mysql` + `db_connection_exhaustion`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2105 · steps 20 · tokens 517,218
 - **摘要**：Namespace train-ticket shows a cluster-wide reachability break, not a node/app-local one: 13 business pods (ts-price, ts-route, ts-security, ts-station, ts-station-food, ts-train, ts-train-food, ts-travel, ts-travel2, ts-user, ts-wait-order, ts-order-other, ts-payment) are in CrashLoopBackOff spread across worker-01/02/03, with no FailedScheduling/FailedCreate/FailedMount/image-pull events. Caller-side logs (ts-price-service, ts-user-service) show HikariPool-1 pool initialization failing with java.sql.SQLNonTransientConnectionException 'Too many connections' (SQL Error 1040, SQLState 08004), w
+
+### case-5
+
+- **结论**：`app/tsdb-mysql` + `db_connection_exhaustion` ｜ 标签 `app/tsdb-mysql` + `db_connection_exhaustion`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.6667 · ECR 1 · EE 0.1429 · steps 36 · tokens 800,099
+- **摘要**：Shared DB tsdb-mysql is up and TCP-reachable (tsdb-mysql-leader endpoint 172.20.3.55:3306 on leader pod tsdb-mysql-2; connectivity test from all three nodes: 'open / Connection Succeeded'), but it refuses new sessions: its own log is 337/1470 lines (23%) of '[Warning] Too many connections' and its readiness probe fails with 'ERROR 1040 (HY000): Too many connections'. Consequently 10 deployments (ts-route/ts-security/ts-station/ts-station-food/ts-train/ts-train-food/ts-travel/ts-travel2/ts-user/ts-wait-order-service) are 0/1 AVAILABLE with pods Error/CrashLoopBackOff (3 restarts, BackOff events
 
