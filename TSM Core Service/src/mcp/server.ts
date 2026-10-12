@@ -1,6 +1,7 @@
 /**
  * TSM MCP Server（TS 版）—— 暴露 DLR 的 7 个工具（L1/L2/L3 语义 + 下探 + 取数）
- * 工具面按场景形态分派：`dlr` = 原 7 工具；`dlr-state` = [state_model_query, dlr_search_consensus]（DB 型工具不挂）。
+ * 工具面按场景形态分派：`dlr` = 原 7 工具；`dlr-state` = [state_model_query, dlr_search_consensus, dlr_search_sop]
+ * （DB 型工具不挂；L3 走链打法 = dlr_search_sop，按题面措辞精确命中分节）。
  *
  * 传输：
  *   npx tsx src/mcp/server.ts                → stdio（dsh/Claude 直接 spawn）
@@ -109,6 +110,23 @@ function registerStateTools(server: McpServer): void {
     },
   );
   registerConsensus(server);
+  server.registerTool(
+    "dlr_search_sop",
+    {
+      description:
+        "[dlr-state] L3 业务逻辑级 SOP（走链打法）：按题面**症状措辞**取「复述本题」的那一节——节的标题就是措辞原文。" +
+        "match=exact（标题与本题逐字相同）→ 该节的**走链纪律**（先立症状 → 对象层 → 机制事件 → 配置确认收口）为本题最高口径，先按它走；" +
+        "match=similar → 只有标题逐字复述本题时才采用；match=none → 本题无 L3 节，按 L1 对象/面 + L2 读法自解。",
+      inputSchema: {
+        question: z.string().describe("题目原文（引号内症状短语，逐字传入，用于精确命中）"),
+        top_k: z.number().int().positive().default(2),
+      },
+    },
+    async ({ question, top_k }) => {
+      const r = await searchSop(await getStore(), question, top_k);
+      return { content: [{ type: "text", text: JSON.stringify(r) }] };
+    },
+  );
 }
 
 /** 每会话一个 McpServer 实例（工具注册相同，底层共享上面的连接） */

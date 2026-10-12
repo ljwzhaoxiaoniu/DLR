@@ -24,7 +24,7 @@ const TOOLS_DLR = [
   "get_le_attrs",
   "execute_sql",
 ];
-const TOOLS_STATE = ["state_model_query", "dlr_search_consensus"];
+const TOOLS_STATE = ["state_model_query", "dlr_search_consensus", "dlr_search_sop"];
 
 /** 向量表（L1 entities / L2 consensus / L3 sop 索引） */
 const VECTOR_TABLES = ["entities", "consensus", "sop"];
