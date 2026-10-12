@@ -57,6 +57,17 @@ The concrete call edges between the services (boutique 15 / train-ticket 112), r
 
 The model stores **what every snapshot of this system has**: kinds and fixed structure (roster, topology, node names, anchor keys). Per-case instances — pod names, IPs, status values, message texts — never enter the model; the agent reads them live through the tools along the surfaces.
 
+### 2.5 Reachability without edges (nodes · namespace)
+
+Nodes and the namespace are object LEs — named, described, with their own surfaces, anchors and read templates — and deliberately carry **no schema edges** (§2.3: placement and scope are instance-level facts). Their reachability runs entirely through the two existing entry tools, in four ways (verified live, 2026-10-12):
+
+1. **By name** — `state_model_query("worker-01")` returns the object with its surfaces (`node` · `node_services`) and their anchored read templates (`DescribeResource(node, name=…)` · `GetClusterConfiguration()` · `CheckNodeServiceStatus(node_name=…)`).
+2. **By slot wording** — `"containerd kubelet node runtime …"` surfaces the `node_services` face directly, read template included.
+3. **By placement wording** — `"which node is the pod scheduled on …"` floats the node objects to the top of the objects group, alongside the workload's `pods` surface.
+4. **By symptom** — the L2 chain entry leads to the workload's pods surface; the wide pods listing carries a `NODE` column, the pod detail a `Node:` field, events an `N nodes are available …` line — the name read there keys back into route 1. This pointer is itself written down as the L2 placement reading (kid7).
+
+No new tool is needed on either side: the semantic layer can only **point** — it holds no snapshot data, and its node-side read templates are exactly that pointing — while the data layer already **states** the fact in outputs the agent reads anyway (pods listing / pod detail). A dedicated placement tool would duplicate the pods surface; per-deployment edges or description notes would repeat one pointer X×N times for nothing the four routes do not already cover.
+
 ## 3. Runtime usage (guide, not query)
 
 - **Dual-path parallel recall** — the first ReAct step issues `dlr_search_consensus` (L2: symptom → entry chain + reading rules) and `state_model_query` (L1: objects / surfaces / call edges) **together**, cross-validates, then walks. TSM's levels anchor in **parallel, not sequentially**; when an L3 surface exists it joins the same step — this scenario's tool surface carries L1 + L2 only (L3 gate untriggered). L1 recall may be off on bare symptom wording (templates overload across chains); the L2 chain entry corrects it.
@@ -92,7 +103,7 @@ The model stores **what every snapshot of this system has**: kinds and fixed str
 ## 7. Level split & authoring discipline
 
 - **L1** (this model): read out of the data source; two files; grows by correction, stabilizes over time.
-- **L2** (`sources/consensus/kubernetes.jsonl`, 12 entries): schema-level reading rules **plus the symptom→chain mappings** (admission criterion #2: question wording ↔ model terms). Never beyond the dataset's own information.
+- **L2** (`sources/consensus/kubernetes.jsonl`, 13 entries): schema-level reading rules **plus the symptom→chain mappings** (admission criterion #2: question wording ↔ model terms), incl. the placement reading (pods listing / detail → node faces, kid7). Never beyond the dataset's own information.
 - **L3**: gated (bare-run baseline + evidence of need); never derived from answers. Untriggered here.
 
 ## 8. Open items
