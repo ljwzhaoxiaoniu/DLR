@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **29/96** 题：JRA ✅29 ❌0 ｜ 证据链全闭 29 ｜ token 中位 507,364 ｜ 生成 2026-10-13T15:36:40.402Z
+> 本家族已跑 **30/96** 题：JRA ✅30 ❌0 ｜ 证据链全闭 30 ｜ token 中位 517,218 ｜ 生成 2026-10-13T15:40:50.356Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -36,6 +36,7 @@
 | [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 507,364 | 0 | 0 | 1013_2320_inorder4-v3b64 | 全对·链闭 |
 | [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 537,254 | 0 | 0 | 1013_2325_inorder4-v3b65 | 全对·链闭 |
 | [29](#case-29) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.125 | 33 | 1,450,360 | 0 | 0 | 1013_2331_inorder4-v3b66 | 全对·链闭 |
+| [30](#case-30) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.125 | 25 | 740,589 | 0 | 0 | 1013_2337_inorder4-v3b67 | 全对·链闭 |
 
 ## 证据正文
 
@@ -241,4 +242,11 @@
 - **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.125 · steps 33 · tokens 1,450,360
 - **raw 日志**：[results/1013_2331_inorder4-v3b66/raw/1013_2334_trainticket-runtime-29](../results/1013_2331_inorder4-v3b66/raw/1013_2334_trainticket-runtime-29/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom wording named no service, so the object-layer inventory was the valid entry: the pods listing contains NO ts-station-service pod at all, and the deployments listing shows the sole outlier 'ts-station-service 0/0 0 0' while all other 41 workloads read 1/1 AVAILABLE. Mechanism closed on the deployment surface: DescribeResource(deployment/ts-station-service) = 'Replicas: 0 desired | 0 updated | 0 total | 0 available', with event 'Scaled down replica set ts-station-service-7cbf6b96c9 to 0 from 1', while its own manifest (GetAppYAML) still declares 'replicas: 1' - a live-vs-declared drift =
+
+### case-30
+
+- **结论**：`app/ts-train-service` + `deployment_zero_replicas` ｜ 标签 `app/ts-train-service` + `deployment_zero_replicas`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.125 · steps 25 · tokens 740,589
+- **raw 日志**：[results/1013_2337_inorder4-v3b67/raw/1013_2338_trainticket-runtime-30](../results/1013_2337_inorder4-v3b67/raw/1013_2338_trainticket-runtime-30/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom names no service, so the pods inventory (wide) was the entry: every ts-* workload is 2/2 Running except that NO ts-train-service pod exists at all, and the deployments listing shows ts-train-service as the only outlier at '0/0 0 0' while all peers are '1/1 1 1'. DescribeResource(deployment/ts-train-service) confirms the live spec: 'Replicas: 0 desired | 0 updated | 0 total | 0 available | 0 unavailable', NewReplicaSet ts-train-service-c4fb58df9 '(0/0 replicas created)', with events 'Scaled up ... to 1' at 6m10s then 'Scaled down replica set ts-train-service-c4fb58df9 to 0 from 1' at 3m
 

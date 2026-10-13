@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **44/98** 题：JRA ✅44 ❌0 ｜ 证据链全闭 44 ｜ token 中位 334,856 ｜ 生成 2026-10-13T15:36:40.402Z
+> 本家族已跑 **45/98** 题：JRA ✅45 ❌0 ｜ 证据链全闭 45 ｜ token 中位 330,738 ｜ 生成 2026-10-13T15:40:50.356Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -51,6 +51,7 @@
 | [42](#case-42) | 1 | 1 | 1 | 1 | 0.6 | 1 | 0.1842 | 39 | 933,395 | 0.0526 | 0 | 1013_2320_inorder4-v3b64 | 全对·链闭 |
 | [43](#case-43) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0962 | 53 | 1,415,438 | 0 | 0 | 1013_2325_inorder4-v3b65 | 全对·链闭 |
 | [44](#case-44) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1515 | 34 | 948,495 | 0 | 0 | 1013_2331_inorder4-v3b66 | 全对·链闭 |
+| [45](#case-45) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 21 | 298,509 | 0 | 0 | 1013_2337_inorder4-v3b67 | 全对·链闭 |
 
 ## 证据正文
 
@@ -361,4 +362,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1515 · steps 34 · tokens 948,495
 - **raw 日志**：[results/1013_2331_inorder4-v3b66/raw/1013_2331_boutique-codedefect-44](../results/1013_2331_inorder4-v3b66/raw/1013_2331_boutique-codedefect-44/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Inventory/object layer is clean (all 11 boutique pods Running 2/2 with 0 restarts, all Deployments 1/1 AVAILABLE, all Service selectors and targetPorts bind, all 4 nodes Ready/workers untainted), ruling out scheduling, startup, admission and node faults. The alert pointer shows the frontend entry returning 503 on /product/{id} (21x) and /cart (8x). frontend's own logs are clean (200s), and the only log outlier in the namespace is its callee cartservice: 743 lines / 26.9% of its stream flagged as 'AddItemAsync called with userId=, productId=OLJCESPC7Z, quantity=1' - the required UserId field ar
+
+### case-45
+
+- **结论**：`app/frontend` + `code_missing_parameter` ｜ 标签 `app/frontend` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 21 · tokens 298,509
+- **raw 日志**：[results/1013_2337_inorder4-v3b67/raw/1013_2337_boutique-codedefect-45](../results/1013_2337_inorder4-v3b67/raw/1013_2337_boutique-codedefect-45/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All boutique pods are 2/2 Running with 0 restarts and clean Normal events (no scheduling/startup/mount/image/probe mechanism), so the break is functional. Alerts flag frontend success rate 95.2%->56.4% with all failing business actions (/product/{id} x433, /cart x180, /setCurrency x175, / x92) returning HTTP 500, and frontend error logs (1053) all funnel into 'failed to convert currency ... Cannot read properties of null (reading units)' plus 'failed to convert currency for shipping cost'. The call-graph walk anchored at the symptom side (frontend -> currencyservice) shows the callee currencys
 

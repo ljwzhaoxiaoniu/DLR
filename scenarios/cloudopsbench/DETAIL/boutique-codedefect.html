@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/codedefect</em></h1>
-<p class="deck">已跑 <b>44/98</b> 题：JRA ✅44 ❌0 ｜ 证据链全闭 44 ｜ token 中位 334,856 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T15:36:40.402Z</p>
+<p class="deck">已跑 <b>45/98</b> 题：JRA ✅45 ❌0 ｜ 证据链全闭 45 ｜ token 中位 330,738 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T15:40:50.356Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3077</td><td>14</td><td>129,107</td><td>0</td><td>0</td><td class="muted">1012_1415_inorder4-v3</td><td><a href="../results/1012_1415_inorder4-v3/raw/1012_1417_boutique-codedefect-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1417_boutique-codedefect-1</a></td></tr>
@@ -60,6 +60,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-42"><code>42</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.6</td><td>1</td><td>0.1842</td><td>39</td><td>933,395</td><td>0.0526</td><td>0</td><td class="muted">1013_2320_inorder4-v3b64</td><td><a href="../results/1013_2320_inorder4-v3b64/raw/1013_2320_boutique-codedefect-42/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2320_boutique-codedefect-42</a></td></tr>
 <tr><td><a href="#case-43"><code>43</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.0962</td><td>53</td><td>1,415,438</td><td>0</td><td>0</td><td class="muted">1013_2325_inorder4-v3b65</td><td><a href="../results/1013_2325_inorder4-v3b65/raw/1013_2325_boutique-codedefect-43/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2325_boutique-codedefect-43</a></td></tr>
 <tr><td><a href="#case-44"><code>44</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1515</td><td>34</td><td>948,495</td><td>0</td><td>0</td><td class="muted">1013_2331_inorder4-v3b66</td><td><a href="../results/1013_2331_inorder4-v3b66/raw/1013_2331_boutique-codedefect-44/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2331_boutique-codedefect-44</a></td></tr>
+<tr><td><a href="#case-45"><code>45</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>21</td><td>298,509</td><td>0</td><td>0</td><td class="muted">1013_2337_inorder4-v3b67</td><td><a href="../results/1013_2337_inorder4-v3b67/raw/1013_2337_boutique-codedefect-45/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2337_boutique-codedefect-45</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/checkoutservice</code> + <code>code_wrong_argument_order</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 14 步</summary><ul>
@@ -2295,6 +2296,53 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/cartservice&quot;,
    &quot;root_cause&quot;: &quot;code_missing_parameter&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-45"><summary><b>case-45</b> · <code>app/frontend</code> + <code>code_missing_parameter</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 21 步</summary><ul>
+<li><b>摘要</b>：All boutique pods are 2/2 Running with 0 restarts and clean Normal events (no scheduling/startup/mount/image/probe mechanism), so the break is functional. Alerts flag frontend success rate 95.2%-&gt;56.4% with all failing business actions (/product/{id} x433, /cart x180, /setCurrency x175, / x92) returning HTTP 500, and frontend error logs (1053) all funnel into 'failed to convert currency ... Cannot read properties of null (reading units)' plus 'failed to convert currency for shipping cost'. The call-graph walk anchored at the symptom side (frontend -&gt; currencyservice) shows the callee currencys</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2337_inorder4-v3b67/raw/1013_2337_boutique-codedefect-45/">results/1013_2337_inorder4-v3b67/raw/1013_2337_boutique-codedefect-45</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;currencyservice-5bc9dbdf66-s9vbs&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;currencyservice&quot;,&quot;file_path&quot;:&quot;server.js&quot;}</code></td></tr>
+<tr><td>14</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;productcatalogservice&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;rpc.go&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;handlers.go&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All boutique pods are 2/2 Running with 0 restarts and clean Normal events (no scheduling/startup/mount/image/probe mechanism), so the break is functional. Alerts flag frontend success rate 95.2%-&gt;56.4% with all failing business actions (/product/{id} x433, /cart x180, /setCurrency x175, / x92) returning HTTP 500, and frontend error logs (1053) all funnel into 'failed to convert currency ... Cannot read properties of null (reading units)' plus 'failed to convert currency for shipping cost'. The call-graph walk anchored at the symptom side (frontend -&gt; currencyservice) shows the callee currencyservice logging 1053x 'conversion request failed: TypeError: Cannot read properties of null (reading units)' (34.67% error ratio) in server.js convert() at from.units, i.e. request.from is null, while checkoutservice and productcatalogservice log no errors (well-formed requests convert fine). The suspect's pod sheet is healthy (Running/Ready, Restart Count 0, all Normal events), so the code surface was read: frontend/rpc.go convertCurrency(ctx, money, currency) contains an injected 'money = nil' immediately before building Convert(ctx, &amp;pb.CurrencyConversionRequest{From: money, ToCode: currency}) - so the required From parameter is omitted from the RPC, and the four call sites in handlers.go (homeHandler, productHandler, viewCartHandler, getShippingQuote) match the four failing frontend error patterns verbatim, each rendering http.StatusInternalServerError. Namespace events only carry stale history (FailedCreate serviceaccount not found while the service accounts now exist and all pods run, plus expired adservice/frontend probe warnings), and frontend's YAML (image wangyl2128/frontend-v2:latest, CURRENCY_SERVICE_ADDR=currencyservice:7000, probes) is consistent - excluding scheduling, admission, addressing and probe chains.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;code_missing_parameter&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
+   &quot;root_cause&quot;: &quot;code_missing_parameter&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_return&quot;
   }
  ]
 }</pre>

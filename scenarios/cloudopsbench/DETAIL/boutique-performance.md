@@ -1,6 +1,6 @@
 # 评测明细 · boutique/performance — cloudopsbench
 
-> 本家族已跑 **10/29** 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 187,540 ｜ 生成 2026-10-13T15:36:40.402Z
+> 本家族已跑 **11/29** 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 187,540 ｜ 生成 2026-10-13T15:40:50.356Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -17,6 +17,7 @@
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 170,422 | 0 | 0 | 1013_1810_inorder4-v3b27 | 全对·链闭 |
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 187,540 | 0 | 0 | 1013_1834_inorder4-v3b30 | 全对·链闭 |
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 22 | 188,689 | 0 | 0 | 1013_2331_inorder4-v3b66 | 全对·链闭 |
+| [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1364 | 23 | 231,341 | 0 | 0 | 1013_2337_inorder4-v3b67 | 全对·链闭 |
 
 ## 证据正文
 
@@ -89,4 +90,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 22 · tokens 188,689
 - **raw 日志**：[results/1013_2331_inorder4-v3b66/raw/1013_2334_boutique-performance-10](../results/1013_2331_inorder4-v3b66/raw/1013_2334_boutique-performance-10/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts in window 16:49:00~16:50:55 show LATENCY_DEGRADATION propagating up the call chain (cartservice p95 4.74ms->37.82ms, +697.2%; checkoutservice +163.8%; frontend +107.6%) plus RESOURCE_SATURATION on redis-cart ([cpu_cfs] 0.679s Throttled; [cpu core] 0.00->0.15 cores, +3196.4%). GetServiceDependencies(cartservice) confirms cartservice -> redis-cart (Database) as the only downstream backend, and the latency amplification increases toward that tail. Object layer is clean and therefore excluded: all 11 pods 2/2 Running with RESTARTS=0, no Warning events in the namespace, no application error 
+
+### case-11
+
+- **结论**：`app/shippingservice` + `pod_cpu_overload` ｜ 标签 `app/shippingservice` + `pod_cpu_overload`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1364 · steps 23 · tokens 231,341
+- **raw 日志**：[results/1013_2337_inorder4-v3b67/raw/1013_2338_boutique-performance-11](../results/1013_2337_inorder4-v3b67/raw/1013_2338_boutique-performance-11/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Telemetry-chain case: all 11 boutique pods are 2/2 Running with 0 restarts, no Warning events, all 4 nodes Ready with no pressure, and kubelet on worker-02 active - the object layer is clean, so the break is at the metric layer. GetAlerts shows shippingservice as the only entity with RESOURCE_SATURATION: 'cpu core Normal=0.00 cores -> Current=0.15 cores (+3744.6%)' and 'cpu_cfs Val: 0.594s (Throttled)', alongside 'shippingservice-p95latency: Normal=4.27ms -> Current=18.99ms (+345.1%)'. Its own 200m CPU limit is what the container is hitting (0.15 cores = 75% of limit) and being CFS-throttled, 
 
