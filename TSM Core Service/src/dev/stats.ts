@@ -380,7 +380,7 @@ const famBars = dbRows.map(({ db, done, total, pctv }) =>
   `<div class="fam"><div class="fam__name">${esc(db)}</div><div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:${Math.min(pctv, 100)}%"></div></div></div><div class="fam__num">${done}/${total} · ${pctv}%</div></div>`
 ).join("\n");
 const dbTable = dbRows.map(({ db, rs, pctv }) =>
-  `<tr><td><a href="DETAIL/${esc(db)}.md"><code>${esc(db)}</code></a></td><td>${rs.length}</td><td>${rs.filter((r) => r.ruling === "CORRECT").length}</td><td>${rs.filter((r) => r.ruling === "OVERTURNED").length}</td><td>${rs.filter((r) => r.ruling === "WRONG").length}</td><td>${rs.filter((r) => r.ruling === "PENDING").length}</td><td>${fmt(medOf(rs.map((r) => r.tokens)))}</td><td>${pctv}%</td></tr>`
+  `<tr><td><a href="DETAIL/${esc(db)}.html" title="逐题统计（HTML）"><code>${esc(db)}</code></a></td><td>${rs.length}</td><td>${rs.filter((r) => r.ruling === "CORRECT").length}</td><td>${rs.filter((r) => r.ruling === "OVERTURNED").length}</td><td>${rs.filter((r) => r.ruling === "WRONG").length}</td><td>${rs.filter((r) => r.ruling === "PENDING").length}</td><td>${fmt(medOf(rs.map((r) => r.tokens)))}</td><td>${pctv}%</td></tr>`
 ).join("\n");
 // 建模实例化展示（静态策展块：三级语义在一道题上的协同）——改内容直接改这里
 const showcaseHtml = `

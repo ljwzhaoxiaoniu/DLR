@@ -22,6 +22,7 @@ import { goldValues, QUESTIONS } from "./judge.js";
 
 const ICON: Record<string, string> = { PASS: "✅", FAIL: "❌", UNCERTAIN: "⚠️", GOLD_ERR: "⛔" };
 const cell = (s: string) => s.replace(/\|/g, "\\|").replace(/\r?\n+/g, " ").trim();
+const eh = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const fmt = (n: number) => n.toLocaleString("en-US");
 
 /** 备注（人话一句）：先说判定怎么来的，再说裁定怎么来的 —— 替代原先晦涩的 `num@1e-9` 精度列 */
@@ -344,6 +345,60 @@ export function buildDetail(): Mistake[] {
       ...rows.map(blockOf),
     ];
     fs.writeFileSync(path.join(DETAIL_DIR, `${db}.md`), content.join("\n"));
+
+    // 同内容的 HTML 浏览版（总视图「逐库明细」的落点）：逐题统计表 + 缺陷裁定 + 逐题明细（折叠）
+    const famCss = `:root { --surface:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781; --grid:#e1e0d9; --border:rgba(11,11,11,0.08); --dlr:#2a78d6; --good:#0ca30c; }
+@media (prefers-color-scheme: dark) { :root:where(:not([data-theme="light"])) { --surface:#1a1a19; --page:#0d0d0d; --ink:#fff; --ink-2:#c3c2b7; --muted:#898781; --grid:#2c2c2a; --border:rgba(255,255,255,0.08); --dlr:#3987e5; --good:#2fbf2f; } }
+* { box-sizing:border-box; margin:0; padding:0; } body { max-width:1080px; margin:0 auto; padding:48px 28px 72px; font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; font-size:16px; line-height:1.6; color:var(--ink); background:var(--page); }
+.hero { font-size:clamp(26px,4vw,40px); font-weight:800; letter-spacing:-0.02em; } .hero em { font-style:normal; color:var(--dlr); }
+.deck { color:var(--ink-2); margin-top:12px; } .muted { color:var(--muted); font-size:13.5px; }
+.section-title { font-size:clamp(19px,2.4vw,26px); font-weight:750; margin:40px 0 16px; } .section-title em { font-style:normal; color:var(--dlr); }
+table { width:100%; border-collapse:collapse; background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; font-size:13.5px; }
+th, td { padding:8px 11px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; } th { font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); } tr:last-child td { border-bottom:none; }
+code { font-size:13px; color:var(--dlr); } a { color:var(--dlr); } a:hover { text-decoration-thickness:2px; } .ok { color:var(--good); }
+details { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 18px; margin:10px 0; } details summary { cursor:pointer; font-size:14.5px; }
+details p { font-size:14px; color:var(--ink-2); margin:7px 0; }
+pre { white-space:pre-wrap; word-break:break-word; background:var(--page); border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:12.8px; line-height:1.55; font-family:ui-monospace,Consolas,monospace; color:var(--ink); margin:8px 0; }`;
+    const H: string[] = [];
+    H.push(`<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>评测明细 · ${eh(db)} — ${SCENARIO_NAME}</title><style>${famCss}</style></head><body>`);
+    H.push(`<p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>`);
+    H.push(`<h1 class="hero">评测明细 · <em>${eh(db)}</em></h1>`);
+    H.push(`<p class="deck">本库已跑 <b>${rows.length}</b> 题：✅ ${rt("CORRECT")} ｜ 🔁 ${rt("OVERTURNED")} ｜ ❌ ${rt("WRONG")} ｜ ⚠️ ${rt("PENDING")} ｜ token 中位 ${fmt(dbMedian(rows))} ｜ 口径与列义同总账</p>`);
+    H.push(`<h2 class="section-title">逐题校验表 · <em>去重取最新</em></h2>`);
+    H.push(`<table><tr><th>题号</th><th>判定</th><th>评定</th><th>步数</th><th>工具</th><th>tokens</th><th>轮次</th><th>备注</th><th>raw 日志</th></tr>`);
+    for (const a of rows) {
+      const rf = rawFileFor(a.runDir, a.qid);
+      const rawCell = rf ? `<a href="../${rf}" title="dsh 事件流 ndjson">${eh(rf.split("/raw/")[1] ?? "raw")}</a>` : "—";
+      H.push(`<tr><td><a href="#q${a.qid}"><code>q${a.qid}</code></a></td><td>${ICON[a.verdict] ?? ""} ${a.verdict}</td><td>${RULING_LABEL[a.ruling] ?? a.ruling}</td><td>${a.steps}</td><td>${a.tools}</td><td>${fmt(a.tokens)}</td><td class="muted">${a.runs.length > 1 ? `${a.runs.length} 轮（最新 ${a.runDir}）` : a.runDir}</td><td>${eh(remarkOf(a, sopQ.get(a.qid)))}</td><td>${rawCell}</td></tr>`);
+    }
+    H.push(`</table>`);
+    const dbMistakes = mistakes.filter((m) => m.db === db);
+    if (dbMistakes.length) {
+      H.push(`<h2 class="section-title">本库数据集缺陷与裁定</h2>`);
+      H.push(`<table><tr><th>题号</th><th>判定</th><th>评定</th><th>类型</th><th>问题</th><th>裁定</th></tr>`);
+      for (const m of dbMistakes) H.push(`<tr><td>q${m.qid}</td><td>${ICON[m.verdict] ?? ""} ${m.verdict}</td><td>${RULING_LABEL[m.ruling] ?? m.ruling}</td><td>${eh(m.types.join(" · ") || "—")}</td><td>${eh(m.question.slice(0, 80))}</td><td>${eh(m.rationale.slice(0, 220))}</td></tr>`);
+      H.push(`</table>`);
+    }
+    H.push(`<h2 class="section-title">逐题明细 · <em>怎么对的（agent 原文）</em></h2>`);
+    for (const a of rows) {
+      const g = goldValues(Number(a.qid), a.db);
+      const expected = g.err ? `gold 执行失败（${g.err}）` : g.empty ? "空结果（合法期望）" : g.values.slice(0, 8).join(" | ");
+      const rf = rawFileFor(a.runDir, a.qid);
+      H.push(`<details id="q${a.qid}"><summary><b>q${a.qid}</b> · ${ICON[a.verdict] ?? ""} <b>${a.verdict}</b>${a.ruling !== "CORRECT" ? ` · ${RULING_LABEL[a.ruling] ?? a.ruling}` : ""} · ${a.steps} 步 / ${a.tools} 工具 · ${fmt(a.tokens)} tok${a.runs.length > 1 ? ` · ${a.runs.length} 轮` : ""}</summary>`);
+      H.push(`<p><b>问题</b>：${eh(a.question)}</p>`);
+      H.push(`<p><b>期望</b>：<code>${eh(expected)}</code></p>`);
+      H.push(`<p><b>答案</b>：${a.final.trim() ? `<code>${eh(a.final.slice(0, 200))}</code>` : "<i>（无 final 文本）</i>"}</p>`);
+      if (rf) H.push(`<p><b>raw 日志</b>：<a href="../${rf}">${eh(rf)}</a>（dsh 事件流 ndjson）</p>`);
+      if (a.trace.length) {
+        H.push(`<table><tr><th>#</th><th>工具</th><th>参数（截 200）</th></tr>`);
+        a.trace.forEach((t, i) => H.push(`<tr><td>${i + 1}</td><td><code>${eh(t.tool)}</code></td><td><code>${eh(t.input.slice(0, 200))}</code></td></tr>`));
+        H.push(`</table>`);
+      }
+      H.push(`<p><b>依据与结论</b>（agent 原文）：</p><pre>${eh(a.final.trim() || "（无 final 文本）")}</pre>`);
+      H.push(`</details>`);
+    }
+    H.push(`</body></html>`);
+    fs.writeFileSync(path.join(DETAIL_DIR, `${db}.html`), H.join("\n") + "\n");
   }
 
   const outPath = DETAIL_MD;
