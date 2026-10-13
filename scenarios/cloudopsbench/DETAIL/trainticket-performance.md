@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **31/47** 题：JRA ✅31 ❌0 ｜ 证据链全闭 31 ｜ token 中位 301,957 ｜ 生成 2026-10-13T14:09:57.216Z
+> 本家族已跑 **32/47** 题：JRA ✅32 ❌0 ｜ 证据链全闭 32 ｜ token 中位 301,957 ｜ 生成 2026-10-13T14:13:38.900Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -38,6 +38,7 @@
 | [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 700,398 | 0 | 0 | 1013_2150_inorder4-v3b47 | 全对·链闭 |
 | [30](#case-30) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2609 | 24 | 524,234 | 0 | 0 | 1013_2203_ttperf30-verify1 | 全对·链闭 |
 | [31](#case-31) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1818 | 23 | 345,078 | 0 | 0 | 1013_2203_inorder4-v3b49 | 全对·链闭 |
+| [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.375 | 17 | 236,382 | 0 | 0 | 1013_2210_inorder4-v3b50 | 全对·链闭 |
 
 ## 证据正文
 
@@ -257,4 +258,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1818 · steps 23 · tokens 345,078
 - **raw 日志**：[results/1013_2203_inorder4-v3b49/raw/1013_2206_trainticket-performance-31](../results/1013_2203_inorder4-v3b49/raw/1013_2206_trainticket-performance-31/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts (13:09:43~13:11:38) show two latency rows whose p50 AND p90 both move: ts-station-service (p50 3.86ms->3105.56ms, +80417%; p90 8.56ms->4618.16ms, +53875.7%, the steepest p90 escalation) and ts-basic-service (p50 38.75->7500ms; p90 49.75->9500ms); ts-travel-service moves its p90 only (partial-traffic ripple). GetServiceDependencies closes the graph: ts-station-service is a LEAF called by ts-gateway-service and ts-basic-service, whereas ts-basic-service calls ts-station-service — an upstream/caller delay cannot raise the server-side latency of a downstream leaf, so the two both-percentile
+
+### case-32
+
+- **结论**：`app/ts-train-service` + `pod_network_delay` ｜ 标签 `app/ts-train-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.375 · steps 17 · tokens 236,382
+- **raw 日志**：[results/1013_2210_inorder4-v3b50/raw/1013_2212_trainticket-performance-32](../results/1013_2210_inorder4-v3b50/raw/1013_2212_trainticket-performance-32/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts show two both-percentile latency rows: ts-train-service (p50 7.38ms->2425ms, p90 9.48ms->4472ms, +47095% p90 escalation = steepest) and its direct caller ts-basic-service (p50 38.33ms->3750ms, p90 49ms->4750ms). ts-train-service is a leaf node in the dependency graph (GetServiceDependencies: no downstream), so the added delay sits on its own network path; ts-basic-service's other downstreams (ts-route-service, ts-station-service, ts-price-service) show clean server-side latency, so ts-basic is only the inheriting caller, not the source. Object layer is fully healthy (all pods Running 2/
 

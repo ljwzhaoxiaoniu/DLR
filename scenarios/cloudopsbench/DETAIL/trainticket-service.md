@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **33/37** 题：JRA ✅33 ❌0 ｜ 证据链全闭 33 ｜ token 中位 501,550 ｜ 生成 2026-10-13T14:09:57.216Z
+> 本家族已跑 **34/37** 题：JRA ✅34 ❌0 ｜ 证据链全闭 34 ｜ token 中位 522,118 ｜ 生成 2026-10-13T14:13:38.900Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -40,6 +40,7 @@
 | [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 26 | 984,705 | 0 | 0 | 1013_2150_inorder4-v3b47 | 全对·链闭 |
 | [33](#case-33) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 21 | 366,893 | 0 | 0 | 1013_2156_inorder4-v3b48 | 全对·链闭 |
 | [34](#case-34) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 380,698 | 0 | 0 | 1013_2203_inorder4-v3b49 | 全对·链闭 |
+| [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 526,268 | 0 | 0 | 1013_2210_inorder4-v3b50 | 全对·链闭 |
 
 ## 证据正文
 
@@ -273,4 +274,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 16 · tokens 380,698
 - **raw 日志**：[results/1013_2203_inorder4-v3b49/raw/1013_2206_trainticket-service-34](../results/1013_2203_inorder4-v3b49/raw/1013_2206_trainticket-service-34/)（ndjson / mcp.jsonl / meta）
 - **摘要**：ts-station-service-6c9db8cccd-b622n on worker-01 is the only outlier in the pods listing (0/2 CrashLoopBackOff, 4 restarts); its app container last terminated with exit code 1 and its Service port 12345 is unreachable from all three workers (CheckServiceConnectivity: Connection Failed on worker-01/02/03). Error logs show 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' causing HikariPool/JPA EntityManagerFactory init failure, and the pod template is the only workload with a DNS override (dnsPolicy: None, dnsConfig.nameservers: [10.255.13.254]); istio-pro
+
+### case-35
+
+- **结论**：`app/ts-train-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-train-service` + `service_dns_resolution_failure`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 526,268
+- **raw 日志**：[results/1013_2210_inorder4-v3b50/raw/1013_2212_trainticket-service-35](../results/1013_2210_inorder4-v3b50/raw/1013_2212_trainticket-service-35/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pod listing shows a single outlier: ts-train-service-84dbf9c989-nn5mp is 0/2 Error with 4 restarts (CrashLoopBackOff, last exit code 1), while all other 51 pods in train-ticket are Running. Its app logs show HikariPool initialization failure / 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' and 'PersistenceException: Unable to build Hibernate SessionFactory', and its istio-proxy logs show all DNS lookups timing out against the same resolver: 'lookup istiod.istio-system.svc on 10.255.12.254:53: read udp 172.20.1.37:...->10.255.12.254:53: i/o timeout' - i
 

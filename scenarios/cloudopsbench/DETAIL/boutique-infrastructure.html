@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/infrastructure</em></h1>
-<p class="deck">已跑 <b>26/40</b> 题：JRA ✅26 ❌0 ｜ 证据链全闭 26 ｜ token 中位 125,844 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:09:57.216Z</p>
+<p class="deck">已跑 <b>27/40</b> 题：JRA ✅27 ❌0 ｜ 证据链全闭 27 ｜ token 中位 125,844 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:13:38.900Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>96,876</td><td>0</td><td>0</td><td class="muted">1012_1458_l3-verify3</td><td><a href="../results/1012_1458_l3-verify3/raw/1012_1459_boutique-infrastructure-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1459_boutique-infrastructure-1</a></td></tr>
@@ -42,6 +42,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-24"><code>24</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.6667</td><td>1</td><td>0.2308</td><td>14</td><td>88,573</td><td>0</td><td>0</td><td class="muted">1013_2150_inorder4-v3b47</td><td><a href="../results/1013_2150_inorder4-v3b47/raw/1013_2152_boutique-infrastructure-24/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2152_boutique-infrastructure-24</a></td></tr>
 <tr><td><a href="#case-25"><code>25</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.6667</td><td>1</td><td>0.1875</td><td>17</td><td>113,077</td><td>0</td><td>0</td><td class="muted">1013_2156_inorder4-v3b48</td><td><a href="../results/1013_2156_inorder4-v3b48/raw/1013_2157_boutique-infrastructure-25/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2157_boutique-infrastructure-25</a></td></tr>
 <tr><td><a href="#case-26"><code>26</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2143</td><td>15</td><td>125,844</td><td>0</td><td>0</td><td class="muted">1013_2203_inorder4-v3b49</td><td><a href="../results/1013_2203_inorder4-v3b49/raw/1013_2204_boutique-infrastructure-26/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2204_boutique-infrastructure-26</a></td></tr>
+<tr><td><a href="#case-27"><code>27</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1667</td><td>19</td><td>134,232</td><td>0</td><td>0</td><td class="muted">1013_2210_inorder4-v3b50</td><td><a href="../results/1013_2210_inorder4-v3b50/raw/1013_2210_boutique-infrastructure-27/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2210_boutique-infrastructure-27</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>node/worker-01</code> + <code>containerd_unavailable</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
@@ -1233,6 +1234,51 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
   {
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/productcatalogservice&quot;,
+   &quot;root_cause&quot;: &quot;node_selector_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-27"><summary><b>case-27</b> · <code>node/master</code> + <code>kube_scheduler_unavailable</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 19 步</summary><ul>
+<li><b>摘要</b>：recommendationservice is the only service with zero endpoints ('recommendationservice  &lt;none&gt;' in the endpoints listing) and its Deployment reads 0/1 AVAILABLE. Its pod recommendationservice-7bf5b7d9b8-tk7kf is Pending with 'Node: &lt;none&gt;' and 'Events: &lt;none&gt;' — no FailedScheduling line at all, meaning nothing ever attempted to place it. The node side is clean: worker-01/02/03 are all Ready, untainted, each with 8 CPU / ~15.6Gi allocatable, and the deployment has no nodeSelector/affinity and only 100m/220Mi requests, excluding capacity, taint, affinity and cordon causes. The mechanism is at the</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2210_inorder4-v3b50/raw/1013_2210_boutique-infrastructure-27/">results/1013_2210_inorder4-v3b50/raw/1013_2210_boutique-infrastructure-27</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;recommendationservice-7bf5b7d9b8-tk7kf&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;nodes&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>11</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;master&quot;,&quot;service_name&quot;:&quot;kube-scheduler&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;serviceaccounts&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;recommendationservice&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;label_selector&quot;:&quot;app=recommendationservice&quot;}</code></td></tr>
+<tr><td>16</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;master&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+<tr><td>17</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;master&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>18</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;master&quot;,&quot;service_name&quot;:&quot;containerd&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;recommendationservice is the only service with zero endpoints ('recommendationservice  &lt;none&gt;' in the endpoints listing) and its Deployment reads 0/1 AVAILABLE. Its pod recommendationservice-7bf5b7d9b8-tk7kf is Pending with 'Node: &lt;none&gt;' and 'Events: &lt;none&gt;' — no FailedScheduling line at all, meaning nothing ever attempted to place it. The node side is clean: worker-01/02/03 are all Ready, untainted, each with 8 CPU / ~15.6Gi allocatable, and the deployment has no nodeSelector/affinity and only 100m/220Mi requests, excluding capacity, taint, affinity and cordon causes. The mechanism is at the control plane: CheckNodeServiceStatus(master, kube-scheduler) returns 'Active: inactive (dead) since Tue 2025-12-02 21:35:09 CST', with log lines 'Scheduling queue is closed' -&gt; 'Requested to terminate, exiting' -&gt; 'Stopped Kubernetes Scheduler', while kubelet/kube-proxy/containerd on the same master are active (running) for 7h. The timing matches: the scheduler died ~111s ago and the recommendationservice ReplicaSet scaled up ~110s ago, after which the pod never got a node. A Warning FailedCreate about serviceaccount 'recommendationservice' is setup history only — the SA now exists in the serviceaccounts listing (96s) and the pod was created successfully (SuccessfulCreate), and probes/Service selector-port (8080/targetPort 8080) all match.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;node/master&quot;,
+   &quot;root_cause&quot;: &quot;kube_scheduler_unavailable&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/recommendationservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/recommendationservice&quot;,
    &quot;root_cause&quot;: &quot;node_selector_mismatch&quot;
   }
  ]

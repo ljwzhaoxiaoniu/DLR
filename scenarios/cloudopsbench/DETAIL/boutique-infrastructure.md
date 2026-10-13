@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **26/40** 题：JRA ✅26 ❌0 ｜ 证据链全闭 26 ｜ token 中位 125,844 ｜ 生成 2026-10-13T14:09:57.216Z
+> 本家族已跑 **27/40** 题：JRA ✅27 ❌0 ｜ 证据链全闭 27 ｜ token 中位 125,844 ｜ 生成 2026-10-13T14:13:38.900Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -33,6 +33,7 @@
 | [24](#case-24) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.2308 | 14 | 88,573 | 0 | 0 | 1013_2150_inorder4-v3b47 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.1875 | 17 | 113,077 | 0 | 0 | 1013_2156_inorder4-v3b48 | 全对·链闭 |
 | [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 125,844 | 0 | 0 | 1013_2203_inorder4-v3b49 | 全对·链闭 |
+| [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 134,232 | 0 | 0 | 1013_2210_inorder4-v3b50 | 全对·链闭 |
 
 ## 证据正文
 
@@ -217,4 +218,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 125,844
 - **raw 日志**：[results/1013_2203_inorder4-v3b49/raw/1013_2204_boutique-infrastructure-26](../results/1013_2203_inorder4-v3b49/raw/1013_2204_boutique-infrastructure-26/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Namespace boutique: only outlier in the pods inventory is productcatalogservice-ddb46fc86-h9klx (0/1 Pending, Node <none>); its endpoints listing is <none> and deployment productcatalogservice reads 0/1 AVAILABLE, i.e. the availability disruption. The pod's own detail carries NO scheduling reason line (Events: <none>, no 'N nodes are available' message), while all three workers are Ready with no taints and ample allocatable (8 CPU / ~15.6Gi each) and the pod specifies no nodeSelector/affinity - so nothing failed to schedule, nothing is attempting to schedule. The closing read is the control pl
+
+### case-27
+
+- **结论**：`node/master` + `kube_scheduler_unavailable` ｜ 标签 `node/master` + `kube_scheduler_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 134,232
+- **raw 日志**：[results/1013_2210_inorder4-v3b50/raw/1013_2210_boutique-infrastructure-27](../results/1013_2210_inorder4-v3b50/raw/1013_2210_boutique-infrastructure-27/)（ndjson / mcp.jsonl / meta）
+- **摘要**：recommendationservice is the only service with zero endpoints ('recommendationservice  <none>' in the endpoints listing) and its Deployment reads 0/1 AVAILABLE. Its pod recommendationservice-7bf5b7d9b8-tk7kf is Pending with 'Node: <none>' and 'Events: <none>' — no FailedScheduling line at all, meaning nothing ever attempted to place it. The node side is clean: worker-01/02/03 are all Ready, untainted, each with 8 CPU / ~15.6Gi allocatable, and the deployment has no nodeSelector/affinity and only 100m/220Mi requests, excluding capacity, taint, affinity and cordon causes. The mechanism is at the
 
