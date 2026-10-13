@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **46/98** 题：JRA ✅46 ❌0 ｜ 证据链全闭 46 ｜ token 中位 330,738 ｜ 生成 2026-10-13T15:50:07.086Z
+> 本家族已跑 **56/98** 题：JRA ✅54 ❌2 ｜ 证据链全闭 56 ｜ token 中位 353,688 ｜ 生成 2026-10-13T16:54:13.295Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -53,6 +53,16 @@
 | [44](#case-44) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1515 | 34 | 948,495 | 0 | 0 | 1013_2331_inorder4-v3b66 | 全对·链闭 |
 | [45](#case-45) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 21 | 298,509 | 0 | 0 | 1013_2337_inorder4-v3b67 | 全对·链闭 |
 | [46](#case-46) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 219,165 | 0 | 0 | 1013_2345_inorder4-v3b68 | 全对·链闭 |
+| [47](#case-47) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1905 | 22 | 250,518 | 0 | 0 | 1014_0009_inorder4-v3b69 | 全对·链闭 |
+| [48](#case-48) | 1 | 1 | 1 | 1 | 0.4 | 1 | 0.1667 | 31 | 727,720 | 0.0333 | 0 | 1014_0012_inorder4-v3b70 | 全对·链闭 |
+| [49](#case-49) | 1 | 1 | 1 | 1 | 1 | 1 | 0.16 | 26 | 484,280 | 0 | 0 | 1014_0016_inorder4-v3b71 | 全对·链闭 |
+| [50](#case-50) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0882 | 69 | 1,685,639 | 0.0147 | 0 | 1014_0021_inorder4-v3b72 | 全对·链闭 |
+| [51](#case-51) | 1 | 0 | 0 | 1 | 1 | 1 | 0.0968 | 32 | 712,951 | 0 | 0 | 1014_0029_inorder4-v3b73 | 未命中 |
+| [52](#case-52) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0811 | 38 | 773,593 | 0 | 0 | 1014_0035_inorder4-v3b74 | 全对·链闭 |
+| [53](#case-53) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1739 | 24 | 762,544 | 0.0435 | 0 | 1014_0041_inorder4-v3b75 | 全对·链闭 |
+| [54](#case-54) | 1 | 1 | 1 | 1 | 1 | 1 | 0.15 | 21 | 479,980 | 0 | 0 | 1014_0046_inorder4-v3b76 | 全对·链闭 |
+| [55](#case-55) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1538 | 27 | 345,289 | 0 | 0 | 1014_0048_inorder4-v3b77 | 全对·链闭 |
+| [56](#case-56) | 1 | 0 | 0 | 1 | 1 | 1 | 0.25 | 17 | 231,291 | 0 | 0 | 1014_0051_inorder4-v3b78 | 未命中 |
 
 ## 证据正文
 
@@ -377,4 +387,74 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2105 · steps 20 · tokens 219,165
 - **raw 日志**：[results/1013_2345_inorder4-v3b68/raw/1013_2345_boutique-codedefect-46](../results/1013_2345_inorder4-v3b68/raw/1013_2345_boutique-codedefect-46/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All 11 boutique pods were 2/2 Running with RESTARTS 0 and the frontend pod Ready=True (no scheduling/startup/probe break). Alerts all pointed at the entry service frontend (503 Service Unavailable: POST /cart x234, GET /cart x172, /product/{id} x15, /setCurrency x6, /cart/checkout x4). Frontend's own logs carry the failing business call: 399x 'http: panic serving ...: mismatching currency codes' with the stack money.Must /src/money/money.go:85 <- main.(*frontendServer).viewCartHandler /src/handlers.go:316, i.e. money.Sum rejected two Money values whose currency_code differ and money.Must panic
+
+### case-47
+
+- **结论**：`app/frontend` + `code_missing_parameter` ｜ 标签 `app/frontend` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1905 · steps 22 · tokens 250,518
+- **raw 日志**：[results/1014_0009_inorder4-v3b69/raw/1014_0009_boutique-codedefect-47](../results/1014_0009_inorder4-v3b69/raw/1014_0009_boutique-codedefect-47/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts: frontend ERROR_SPIKE Success Rate Drop 90.5%->66.7%, 526x HTTP 500 on GET /product/{id}. Object layer healthy: all 11 boutique pods 2/2 Running with 0 restarts, all deployments 1/1 AVAILABLE (the FailedCreate 'serviceaccount not found' and ErrImagePull 403 rows are 30-58min setup history; the ServiceAccounts exist and images were pulled). frontend error logs carry the only failure pattern: 'could not retrieve product: rpc error: code = NotFound desc = no product with ID ' (empty ID, 526/4935 = 10.66%), while the preceding log line 'serving product page' shows a valid id (e.g. OLJCESPC7
+
+### case-48
+
+- **结论**：`app/frontend` + `code_missing_parameter` ｜ 标签 `app/frontend` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.4 · ECR 1 · EE 0.1667 · steps 31 · tokens 727,720
+- **raw 日志**：[results/1014_0012_inorder4-v3b70/raw/1014_0012_boutique-codedefect-48](../results/1014_0012_inorder4-v3b70/raw/1014_0012_boutique-codedefect-48/)（ndjson / mcp.jsonl / meta）
+- **摘要**：frontend error logs name the failing edge verbatim: 'failed to get shipping quote: rpc error: code = Unavailable desc = no healthy upstream' (353x GET /cart) and 'failed to complete the order: ... shipping quote failure: ... no healthy upstream' (203x POST /cart/checkout). Object layer isolates the outlier: pod shippingservice-799cbfbc76-v9pvz is 1/2 READY with RESTARTS 4, container 'server' Last State Terminated/Error Exit Code 2, BackOff event, and the shippingservice Service (declared grpc 50051) has EMPTY endpoints. shippingservice logs show 'panic: runtime error: invalid memory address or
+
+### case-49
+
+- **结论**：`app/frontend` + `code_missing_parameter` ｜ 标签 `app/frontend` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.16 · steps 26 · tokens 484,280
+- **raw 日志**：[results/1014_0016_inorder4-v3b71/raw/1014_0016_boutique-codedefect-49](../results/1014_0016_inorder4-v3b71/raw/1014_0016_boutique-codedefect-49/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are Running 2/2 with RESTARTS=0 and paymentservice:50051 connectivity succeeds, so scheduling/startup/probe/address layers are excluded. The caller-side trail in frontend carries a single 190-hit error pattern: 'failed to complete the order: rpc error: code = Internal desc = failed to charge card: could not charge the card: ... Cannot read properties of null (reading credit_card_number)'. The callee's own inbound request log (paymentservice) shows the malformed request verbatim: 'PaymentService#Charge invoked with request {"amount":{...},"credit_card":null}', throwing Type
+
+### case-50
+
+- **结论**：`app/frontend` + `code_missing_parameter` ｜ 标签 `app/frontend` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.0882 · steps 69 · tokens 1,685,639
+- **raw 日志**：[results/1014_0021_inorder4-v3b72/raw/1014_0021_boutique-codedefect-50](../results/1014_0021_inorder4-v3b72/raw/1014_0021_boutique-codedefect-50/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Reported symptom is entry-level 503 availability errors at the boutique frontend (alerts for /product/{id}, /cart/checkout, /setCurrency, /cart, /). Object/node layers are clean: all 11 deployments 1/1 AVAILABLE, all pods 2/2 Running with 0 restarts, every Service has live endpoints and TCP probes to each declared port succeed (frontend:80, cartservice:7070, productcatalogservice:3550, checkoutservice:5050, ...), all 4 nodes Ready with kubelet/kube-proxy/containerd/kube-scheduler active. The recurring 'FailedCreate: serviceaccount not found' rows are setup history (every ServiceAccount is pres
+
+### case-51
+
+- **结论**：`app/frontend` + `pod_cpu_overload` ｜ 标签 `app/frontend` + `code_excessive_file_reads`（✗ 与标签不符）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.0968 · steps 32 · tokens 712,951
+- **raw 日志**：[results/1014_0029_inorder4-v3b73/raw/1014_0029_boutique-codedefect-51](../results/1014_0029_inorder4-v3b73/raw/1014_0029_boutique-codedefect-51/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Telemetry-chain closure on the boutique snapshot. GetAlerts() flags only frontend: RESOURCE_SATURATION [cpu_cfs] 'Val=0.985s throttled', RESOURCE_SATURATION [cpu] Normal=0.01 -> Current=0.12 cores (+974.4%), LATENCY_DEGRADATION p50 19.21ms->537.50ms (+2698.6%) / p90 59.15ms->4007.26ms (+6675.1%), plus 32 load-generator 503s on frontend entry routes (/product/{id} x16, /cart x7, /cart/checkout x5, /setCurrency x4). Object layer is clean, so the break is not there: all 11 boutique pods are 2/2 Running with RESTARTS=0; DescribeResource(pod/frontend-6794985cd9-mdtpn) shows Ready=True, Restart Coun
+
+### case-52
+
+- **结论**：`app/frontend` + `code_excessive_file_reads` ｜ 标签 `app/frontend` + `code_excessive_file_reads`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.0811 · steps 38 · tokens 773,593
+- **raw 日志**：[results/1014_0035_inorder4-v3b74/raw/1014_0035_boutique-codedefect-52](../results/1014_0035_inorder4-v3b74/raw/1014_0035_boutique-codedefect-52/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Service Performance Degradation.' enters the telemetry chain: GetAlerts() flags only the frontend Service as ABNORMAL over 10:45:10~10:47:45 with RESOURCE_SATURATION [cpu] Normal=0.01 -> Current=0.11 cores (+1022.4%), RESOURCE_SATURATION [cpu_cfs] Val=0.861s throttled, and LATENCY_DEGRADATION p50 19.95ms -> 277.55ms (+1291.3%) / p90 50.00ms -> 3504.33ms (+6908.7%), accompanied by loadgen 503/500 on all frontend routes. Object-layer exclusion is clean: all 11 boutique pods are Running 2/2 with RESTARTS 0, frontend TCP 172.20.1.38:80 connectivity is 'open/Connection Succeeded', and kube
+
+### case-53
+
+- **结论**：`app/frontend` + `code_excessive_file_reads` ｜ 标签 `app/frontend` + `code_excessive_file_reads`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1739 · steps 24 · tokens 762,544
+- **raw 日志**：[results/1014_0041_inorder4-v3b75/raw/1014_0041_boutique-codedefect-53](../results/1014_0041_inorder4-v3b75/raw/1014_0041_boutique-codedefect-53/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts flag exactly one entity: frontend (RESOURCE_SATURATION [cpu_cfs] 0.947s throttled; [cpu] 0.01 -> 0.12 cores +997.2%; LATENCY_DEGRADATION p50 20.08ms -> 495.69ms, p90 48.69ms -> 3832.98ms) while the object layer is clean (all boutique pods 2/2 Running, 0 restarts; frontend pod has only server + istio-proxy, no stress/ephemeral container), i.e. the break is at metric/code level. The frontend source contains, in setCurrencyHandler (handlers.go), a loop that performs 10x os.Open("/src/log.csv") + csv.Reader.ReadAll() per request = excessive file reads in the request path. Frontend logs matc
+
+### case-54
+
+- **结论**：`app/frontend` + `code_excessive_file_reads` ｜ 标签 `app/frontend` + `code_excessive_file_reads`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.15 · steps 21 · tokens 479,980
+- **raw 日志**：[results/1014_0046_inorder4-v3b76/raw/1014_0046_boutique-codedefect-54](../results/1014_0046_inorder4-v3b76/raw/1014_0046_boutique-codedefect-54/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts pin the anomaly on entity 'frontend' (15:21:48~15:24:23): RESOURCE_SATURATION [cpu_cfs] 0.862s throttled, [cpu] 0.01->0.11 cores (+1046.2%), LATENCY_DEGRADATION p50 23.61->382.35ms / p90 82.40->3987.90ms, plus 503/500 on /product/{id}, /cart, /setCurrency, /cart/checkout. Object-layer exclusion: all boutique pods Running 2/2 with 0 RESTARTS and frontend pod frontend-6794985cd9-6zwdx Ready, Restart Count 0, no probe/OOM events -> no object-layer break, the break is at the metric level (telemetry chain). Node worker-01 CPU only 4.29%->6.49%, so no node capacity/network fault. Mechanism fa
+
+### case-55
+
+- **结论**：`app/frontend` + `code_wrong_return` ｜ 标签 `app/frontend` + `code_wrong_return`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1538 · steps 27 · tokens 345,289
+- **raw 日志**：[results/1014_0048_inorder4-v3b77/raw/1014_0048_boutique-codedefect-55](../results/1014_0048_inorder4-v3b77/raw/1014_0048_boutique-codedefect-55/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are Running 2/2 with 0 restarts (no scheduling/startup/probe break), so the entry is the symptom side. Alerts and frontend logs localize a single dominant failure: POST /cart/checkout -> HTTP 500, 195-196 occurrences, error string 'failed to complete the order: Place order error.'. The call-graph walk (frontend -> checkoutservice -> productcatalog/shipping/currency/payment/email/cart) shows the callee is healthy: checkoutservice has zero error logs and its live log shows the SAME checkouts succeeding (17:19:09.221 [PlaceOrder] user_id=8639552a -> 17:19:09.229 'payment went
+
+### case-56
+
+- **结论**：`app/frontend` + `code_missing_parameter` ｜ 标签 `app/frontend` + `code_wrong_return`（✗ 与标签不符）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 17 · tokens 231,291
+- **raw 日志**：[results/1014_0051_inorder4-v3b78/raw/1014_0051_boutique-codedefect-56](../results/1014_0051_inorder4-v3b78/raw/1014_0051_boutique-codedefect-56/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods read Running 2/2 with 0 restarts, no Pending/CrashLoop; only outlier is frontend-76cdc49cd7-w54zf, rolled out 2m27s ago (new ReplicaSet frontend-76cdc49cd7, event '3m1s ScalingReplicaSet deployment/frontend'), i.e. a fresh frontend build. frontend's own logs carry 557 x HTTP 400 'product id not specified' on GET /product/{id} (took_ms=0, failing before any downstream call) while GET / returns 200; TCP connectivity to frontend:80 succeeds, so reachability is intact and the break is functional. Route registration in frontend/main.go is correct ('/product/{id}' -> productHand
 

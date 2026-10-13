@@ -1,0 +1,30 @@
+[
+  {
+    "case": "boutique/codedefect/56",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1014_0051_inorder4-v3b78\\raw\\1014_0051_boutique-codedefect-56",
+    "steps": 16,
+    "has_final_answer": true,
+    "predictions": 3
+  },
+  {
+    "case": "boutique/service/22",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1014_0051_inorder4-v3b78\\raw\\1014_0051_boutique-service-22",
+    "steps": 14,
+    "has_final_answer": true,
+    "predictions": 3
+  },
+  {
+    "case": "boutique/performance/21",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1014_0051_inorder4-v3b78\\raw\\1014_0052_boutique-performance-21",
+    "steps": 22,
+    "has_final_answer": true,
+    "predictions": 3
+  },
+  {
+    "case": "trainticket/runtime/40",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1014_0051_inorder4-v3b78\\raw\\1014_0052_trainticket-runtime-40",
+    "steps": 12,
+    "has_final_answer": true,
+    "predictions": 3
+  }
+]

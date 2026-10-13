@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/54,1.0,1.0,1.0,1.0,1.0,1.0,0.15,21.0,0.0,0.0,app/frontend,code_excessive_file_reads,app/frontend,code_excessive_file_reads,
+boutique/service/20,1.0,1.0,1.0,1.0,1.0,0.0,0.29411764705882354,18.0,0.0,0.0,app/productcatalogservice,service_port_mapping_mismatch,app/productcatalogservice,service_port_mapping_mismatch,
+trainticket/runtime/38,1.0,1.0,1.0,1.0,1.0,1.0,0.375,17.0,0.0,0.0,app/ts-food-delivery-service,mysql_invalid_credentials,app/ts-food-delivery-service,mysql_invalid_credentials,
+boutique/performance/19,1.0,1.0,1.0,1.0,1.0,1.0,0.3,21.0,0.0,0.0,app/productcatalogservice,pod_network_delay,app/productcatalogservice,pod_network_delay,

@@ -1,6 +1,6 @@
 # 评测明细 · boutique/performance — cloudopsbench
 
-> 本家族已跑 **11/29** 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 187,540 ｜ 生成 2026-10-13T15:50:07.086Z
+> 本家族已跑 **21/29** 题：JRA ✅20 ❌1 ｜ 证据链全闭 20 ｜ token 中位 172,807 ｜ 生成 2026-10-13T16:54:13.295Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -18,6 +18,16 @@
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 187,540 | 0 | 0 | 1013_1834_inorder4-v3b30 | 全对·链闭 |
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 22 | 188,689 | 0 | 0 | 1013_2331_inorder4-v3b66 | 全对·链闭 |
 | [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1364 | 23 | 231,341 | 0 | 0 | 1013_2337_inorder4-v3b67 | 全对·链闭 |
+| [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4118 | 18 | 145,538 | 0 | 0 | 1014_0009_inorder4-v3b69 | 全对·链闭 |
+| [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 125,328 | 0 | 0 | 1014_0012_inorder4-v3b70 | 全对·链闭 |
+| [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1071 | 57 | 1,016,010 | 0 | 0 | 1014_0016_inorder4-v3b71 | 全对·链闭 |
+| [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2174 | 24 | 232,678 | 0 | 0 | 1014_0021_inorder4-v3b72 | 全对·链闭 |
+| [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1852 | 28 | 286,169 | 0.037 | 0 | 1014_0029_inorder4-v3b73 | 全对·链闭 |
+| [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2222 | 28 | 318,825 | 0 | 0 | 1014_0035_inorder4-v3b74 | 全对·链闭 |
+| [18](#case-18) | 0 | 1 | 0 | 0.5 | 0.5 | 0 | 0.2727 | 12 | 77,515 | 0 | 0 | 1014_0041_inorder4-v3b75 | 未命中 |
+| [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 21 | 105,777 | 0 | 0 | 1014_0046_inorder4-v3b76 | 全对·链闭 |
+| [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 137,699 | 0 | 0 | 1014_0048_inorder4-v3b77 | 全对·链闭 |
+| [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3182 | 23 | 172,807 | 0 | 0 | 1014_0051_inorder4-v3b78 | 全对·链闭 |
 
 ## 证据正文
 
@@ -97,4 +107,74 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1364 · steps 23 · tokens 231,341
 - **raw 日志**：[results/1013_2337_inorder4-v3b67/raw/1013_2338_boutique-performance-11](../results/1013_2337_inorder4-v3b67/raw/1013_2338_boutique-performance-11/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Telemetry-chain case: all 11 boutique pods are 2/2 Running with 0 restarts, no Warning events, all 4 nodes Ready with no pressure, and kubelet on worker-02 active - the object layer is clean, so the break is at the metric layer. GetAlerts shows shippingservice as the only entity with RESOURCE_SATURATION: 'cpu core Normal=0.00 cores -> Current=0.15 cores (+3744.6%)' and 'cpu_cfs Val: 0.594s (Throttled)', alongside 'shippingservice-p95latency: Normal=4.27ms -> Current=18.99ms (+345.1%)'. Its own 200m CPU limit is what the container is hitting (0.15 cores = 75% of limit) and being CFS-throttled, 
+
+### case-12
+
+- **结论**：`app/adservice` + `pod_network_delay` ｜ 标签 `app/adservice` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4118 · steps 18 · tokens 145,538
+- **raw 日志**：[results/1014_0009_inorder4-v3b69/raw/1014_0010_boutique-performance-12](../results/1014_0009_inorder4-v3b69/raw/1014_0010_boutique-performance-12/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Metric-surface case (L3 exact match): GetAlerts names Service/adservice with LATENCY_DEGRADATION on BOTH percentiles (p50 2.96->59.89ms, p90 6.43->213.44ms) plus THROUGHPUT_DROP 10.92->3.95 req/s, while Service/frontend (its direct upstream per GetServiceDependencies: adservice is Called By frontend, leaf service) moves only p90 (49.81->222.77ms) - a partial-traffic ripple naming adservice as the epicenter; the caller sees the same added delay (~+173ms) and the callee has no downstream. Object layer is fully excluded: pods adservice 2/2 Running RESTARTS 0 on worker-02, all 11 deployments READY
+
+### case-13
+
+- **结论**：`app/cartservice` + `pod_network_delay` ｜ 标签 `app/cartservice` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 125,328
+- **raw 日志**：[results/1014_0012_inorder4-v3b70/raw/1014_0014_boutique-performance-13](../results/1014_0012_inorder4-v3b70/raw/1014_0014_boutique-performance-13/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Metrics-surface case: all 11 boutique services alert with TRAFFIC_ANOMALY [Network Drop] (pps -54%~-79%), but only cartservice/checkoutservice/frontend carry latency rows. cartservice has the steepest p90 escalation (29.41ms -> 4758.50ms, +16079.9%) AND the only self-error spike (success rate 100% -> 25%); checkoutservice (47.68ms -> 6553.37ms) and frontend (140.15ms -> 5456.41ms) receive the same fixed added delay as its callers, while cartservice's downstream redis-cart has no latency row (clean server-side). All 16323 frontend logs / 1478 errors are cart-only: 'rpc error: code = Unavailable
+
+### case-14
+
+- **结论**：`app/checkoutservice` + `pod_network_delay` ｜ 标签 `app/checkoutservice` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1071 · steps 57 · tokens 1,016,010
+- **raw 日志**：[results/1014_0016_inorder4-v3b71/raw/1014_0018_boutique-performance-14](../results/1014_0016_inorder4-v3b71/raw/1014_0018_boutique-performance-14/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (symptom pointer) flag only checkoutservice as ABNORMAL during 23:51:01~23:52:56: THROUGHPUT_DROP 3.07->0.21 req/s (-93.3%), ERROR_SPIKE success 100%->12.5%, LATENCY_DEGRADATION p50 17.36ms->7528.76ms (+43265%) and p90 30.51ms->23763.88ms (+77800%); its caller frontend breached only p90 (37.16ms->8979.88ms), i.e. only the checkout-path requests were slow. Object-layer exclusion: all 11 boutique pods are 2/2 Running with RESTARTS 0 (including checkoutservice-dbcdcb5fb-8rclq on worker-02), no Warning events in the namespace, endpoints bound for every Service and TCP 5050 to checkoutservic
+
+### case-15
+
+- **结论**：`app/currencyservice` + `pod_network_delay` ｜ 标签 `app/currencyservice` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2174 · steps 24 · tokens 232,678
+- **raw 日志**：[results/1014_0021_inorder4-v3b72/raw/1014_0027_boutique-performance-15](../results/1014_0021_inorder4-v3b72/raw/1014_0027_boutique-performance-15/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts fire on exactly three entities in one window (23:58:12-00:00:07): currencyservice (LATENCY_DEGRADATION p90 3.82ms->921.97ms, +24005%, plus the only network-class anomaly TRAFFIC_ANOMALY [Network Drop] Inbound 149.96->61.46pps / Outbound 145.23->48.97pps), frontend (p90 32.41ms->7937.56ms), checkoutservice (p90 33.40ms->2937.82ms). The object layer is fully healthy: all 11 pods 2/2 Running with RESTARTS=0, no Warning events in namespace boutique, currencyservice pod Ready with 0 restarts and no probe/OOM/kill events, kube-proxy and containerd on worker-01 active, and TCP connectivity to 
+
+### case-16
+
+- **结论**：`app/emailservice` + `pod_network_delay` ｜ 标签 `app/emailservice` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1852 · steps 28 · tokens 286,169
+- **raw 日志**：[results/1014_0029_inorder4-v3b73/raw/1014_0033_boutique-performance-16](../results/1014_0029_inorder4-v3b73/raw/1014_0033_boutique-performance-16/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Telemetry chain: 3 pure LATENCY_DEGRADATION[Slow Response] alerts in window 00:05:23-00:07:18 (emailservice p90 4.80ms->895.90ms +18581.6%; checkoutservice p90 28.40->948.48ms p50 17.36->516.72ms; frontend p90 40.77->574.70ms), with zero error/resource alerts. Object layer fully excluded: all 11 boutique pods 2/2 Running, RESTARTS=0, no abnormal status; GetErrorLogs empty for emailservice/checkoutservice; namespace events all Normal (no FailedScheduling/FailedCreate/Unhealthy/Killing); TCP connectivity to emailservice:5000 open/Connection Succeeded; all 4 nodes Ready with no pressure/taints an
+
+### case-17
+
+- **结论**：`app/frontend` + `pod_network_delay` ｜ 标签 `app/frontend` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2222 · steps 28 · tokens 318,825
+- **raw 日志**：[results/1014_0035_inorder4-v3b74/raw/1014_0038_boutique-performance-17](../results/1014_0035_inorder4-v3b74/raw/1014_0038_boutique-performance-17/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts window 00:12:34~00:14:29 shows all 11 boutique services hit by TRAFFIC_ANOMALY [Network Drop] (~-65% in/out pps) and THROUGHPUT_DROP (~-66% RPS), with LATENCY_DEGRADATION on 8. frontend is the ONLY service whose p50 AND p90 both moved (p50 15.98ms->11338.53ms +70835.9%; p90 32.91ms->25144.41ms +76309.6%) and carries the steepest p90 escalation among percentile-paired rows -> epicenter; the other 7 rows move only their p90 (partial-traffic ripple). Topology closes it: all 7 direct downstream neighbors of frontend (adservice, cartservice, checkoutservice, currencyservice, productcatalogse
+
+### case-18
+
+- **结论**：`app/checkoutservice` + `pod_network_delay` ｜ 标签 `app/paymentservice` + `pod_network_delay`（✗ 与标签不符）
+- **流程**：MC 0.5 · EOC 0.5 · ECR 0 · EE 0.2727 · steps 12 · tokens 77,515
+- **raw 日志**：[results/1014_0041_inorder4-v3b75/raw/1014_0044_boutique-performance-18](../results/1014_0041_inorder4-v3b75/raw/1014_0044_boutique-performance-18/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (window 2025-12-26 00:19:43~00:21:38) show three L2 LATENCY_DEGRADATION rows: checkoutservice moves BOTH percentiles (p50 17.05ms->1367.53ms, +7921.8%; p90 24.44ms->2380.35ms, +9640.8%), while frontend (p90 45.76->1567.24ms) and paymentservice (p90 4.81->2259.93ms) move only p90 = partial-traffic ripples; no saturation (cpu_cfs/memory) row exists, so the resource surface is excluded. Per the L3 SOP the both-percentile row marks the epicenter, and the dependency graph closes it: GetServiceDependencies(checkoutservice) gives upstream frontend and downstream paymentservice, i.e. both rippl
+
+### case-19
+
+- **结论**：`app/productcatalogservice` + `pod_network_delay` ｜ 标签 `app/productcatalogservice` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3 · steps 21 · tokens 105,777
+- **raw 日志**：[results/1014_0046_inorder4-v3b76/raw/1014_0047_boutique-performance-19](../results/1014_0046_inorder4-v3b76/raw/1014_0047_boutique-performance-19/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Metric-surface case. No object-layer break exists anywhere: all 11 pods are 2/2 Running with RESTARTS 0, all deployments 1/1 AVAILABLE, all endpoints bound (productcatalogservice -> 172.20.1.222:3550), TCP connectivity to productcatalogservice:3550 succeeds, productcatalogservice logs are clean with no error logs, nodes are Ready, and the namespace event stream contains zero Warning rows (no FailedCreate/FailedScheduling/FailedMount/probe events). No RESOURCE_SATURATION (cpu_cfs/memory) alert is present, so this is not a resource fault. The latency rows identify productcatalogservice as the pr
+
+### case-20
+
+- **结论**：`app/recommendationservice` + `pod_network_delay` ｜ 标签 `app/recommendationservice` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 137,699
+- **raw 日志**：[results/1014_0048_inorder4-v3b77/raw/1014_0050_boutique-performance-20](../results/1014_0048_inorder4-v3b77/raw/1014_0050_boutique-performance-20/)（ndjson / mcp.jsonl / meta）
+- **摘要**：L3 SOP for 'Service quality degradation.' pins this wording to the metric surface: read alerts first, exclude the object layer, close on metric readings. GetAlerts (window 00:34:07~00:36:02) shows the runaway deviation on recommendationservice: p50 3.01ms->4370.55ms and p90 4.81ms->8603.86ms (+178745%), i.e. BOTH percentiles moved, carrying the delay across all of its traffic, and it has the steepest p90 escalation among the both-percentile rows (vs frontend p90 +23311%); its p50/p90 are both lifted by a large fixed amount. The graph (GetServiceDependencies: frontend->recommendationservice->pr
+
+### case-21
+
+- **结论**：`app/shippingservice` + `pod_network_delay` ｜ 标签 `app/shippingservice` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3182 · steps 23 · tokens 172,807
+- **raw 日志**：[results/1014_0051_inorder4-v3b78/raw/1014_0052_boutique-performance-21](../results/1014_0051_inorder4-v3b78/raw/1014_0052_boutique-performance-21/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Metric surface names shippingservice as epicenter: its alert row carries an actual deviation beyond saturation (THROUGHPUT_DROP 12.06->1.01 req/s, ERROR_SPIKE success 100%->16.7%) plus the steepest latency escalation (p90 4.18ms->1716.67ms); the only other two alerted services (checkoutservice p90 ->3589ms, frontend p90 ->2043ms) are exactly shippingservice's direct upstream neighbors (GetServiceDependencies: shipping is a leaf with upstream frontend+checkoutservice), and the added delay is a fixed amount per call (frontend ~+1.7s for one GetQuote, checkoutservice ~+3.5s for GetQuote+ShipOrder
 

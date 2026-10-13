@@ -1,0 +1,44 @@
+INFO:     Started server process [12268]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:54792 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54793 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:54792 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54794 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54803 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54805 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54810 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:54810 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54819 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54819 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"shippingservice"}
+INFO:     127.0.0.1:54819 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"checkoutservice"}
+INFO:     127.0.0.1:54819 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54827 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"shippingservice"}
+INFO:     127.0.0.1:54827 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54827 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54827 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54827 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54827 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54827 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54827 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54827 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61735 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:61735 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"frontend"}
+INFO:     127.0.0.1:61735 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55575 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55575 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55579 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:55579 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55584 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55584 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59629 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59629 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59629 - "POST /mcp HTTP/1.1" 200 OK

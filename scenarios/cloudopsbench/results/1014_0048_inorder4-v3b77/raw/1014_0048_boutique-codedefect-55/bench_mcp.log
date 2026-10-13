@@ -1,0 +1,47 @@
+INFO:     Started server process [22668]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:52696 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52698 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:52696 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52700 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52706 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52710 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52718 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:52718 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:52721 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52721 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"frontend"}
+INFO:     127.0.0.1:52721 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"checkoutservice"}
+INFO:     127.0.0.1:52721 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52721 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"currencyservice"}
+INFO:     127.0.0.1:56004 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"cartservice"}
+INFO:     127.0.0.1:56004 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"paymentservice"}
+INFO:     127.0.0.1:56004 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"shippingservice"}
+INFO:     127.0.0.1:56004 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"emailservice"}
+INFO:     127.0.0.1:56004 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"productcatalogservice"}
+INFO:     127.0.0.1:56004 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"redis-cart"}
+INFO:     127.0.0.1:56004 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"adservice"}
+INFO:     127.0.0.1:56004 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"recommendationservice"}
+INFO:     127.0.0.1:56004 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"frontend"}
+INFO:     127.0.0.1:56923 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56923 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56923 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56923 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56926 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56926 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56926 - "POST /mcp HTTP/1.1" 200 OK

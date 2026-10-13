@@ -1,0 +1,21 @@
+[2026-10-14 00:54:20] inorder4-v3b79 · 4 题 · 2 路 → scenarios/cloudopsbench/results/1014_0054_inorder4-v3b79
+[00:54:20] boutique/codedefect/57 第 1 遍 (:8000)
+[00:54:20] boutique/service/23 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-codedefect-57）…
+[start] 基准诊断 MCP（boutique-service-23）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8000/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_0054_inorder4-v3b79/raw/1014_0054_boutique-service-23
+[00:55:16] trainticket/runtime/41 第 1 遍 (:8001)
+[start] 基准诊断 MCP（trainticket-runtime-41）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8001/mcp ok (10 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_0054_inorder4-v3b79/raw/1014_0054_boutique-codedefect-57
+[00:55:26] boutique/performance/22 第 1 遍 (:8000)
+[start] 基准诊断 MCP（boutique-performance-22）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8000/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_0054_inorder4-v3b79/raw/1014_0055_trainticket-runtime-41

@@ -10,18 +10,18 @@
 | 家族 | 全量 | 已跑 | 剩余 | 覆盖 |
 |---|---|---|---|---|
 | boutique/admission | 58 | 7 | 51 | 12.1% |
-| boutique/codedefect | 98 | 46 | 52 | 46.9% |
+| boutique/codedefect | 98 | 56 | 42 | 57.1% |
 | boutique/infrastructure | 40 | 40 | 0 | 100.0% |
-| boutique/performance | 29 | 11 | 18 | 37.9% |
+| boutique/performance | 29 | 21 | 8 | 72.4% |
 | boutique/runtime | 45 | 9 | 36 | 20.0% |
 | boutique/scheduling | 164 | 12 | 152 | 7.3% |
-| boutique/service | 54 | 12 | 42 | 22.2% |
+| boutique/service | 54 | 22 | 32 | 40.7% |
 | boutique/startup | 62 | 5 | 57 | 8.1% |
 | train-ticket/performance | 47 | 47 | 0 | 100.0% |
-| train-ticket/runtime | 96 | 30 | 66 | 31.3% |
+| train-ticket/runtime | 96 | 40 | 56 | 41.7% |
 | train-ticket/service | 37 | 37 | 0 | 100.0% |
 | train-ticket/startup | 24 | 13 | 11 | 54.2% |
-| **合计** | **754** | **269** | **485** | **35.7%** |
+| **合计** | **754** | **309** | **445** | **41.0%** |
 
 ## 汇总（去重 · 取最新）
 
@@ -29,37 +29,37 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 268 / 269（99.6%） |
-| CA（组件命中） | 268 / 269（99.6%） |
-| FA（故障型命中） | 269 / 269（100.0%） |
-| ECR（证据链全闭） | 267 / 269（99.3%） |
+| JRA（联合命中） | 305 / 309（98.7%） |
+| CA（组件命中） | 307 / 309（99.4%） |
+| FA（故障型命中） | 307 / 309（99.4%） |
+| ECR（证据链全闭） | 301 / 309（97.4%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 0.9972 | 0.9755 | 0.9926 | 0.2637 | 20.5725 | 0.0016 | 0.0112 |
+| 0.9927 | 0.9687 | 0.9741 | 0.2625 | 20.8026 | 0.002 | 0.0097 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 349,792 / 258,331 | 54,365 / 2,181,512 | 73% |
+| 350,685 / 258,590 | 54,365 / 2,181,512 | 74% |
 
 ## 分家族索引
 
 | 家族 | 全量 | 已跑 | JRA | 链全闭 | 明细 |
 |---|---|---|---|---|---|
 | boutique/admission | 58 | 7 | 7 | 6 | [boutique-admission.md](DETAIL/boutique-admission.md) |
-| boutique/codedefect | 98 | 46 | 46 | 46 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
+| boutique/codedefect | 98 | 56 | 54 | 56 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
 | boutique/infrastructure | 40 | 40 | 40 | 40 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
-| boutique/performance | 29 | 11 | 11 | 11 | [boutique-performance.md](DETAIL/boutique-performance.md) |
+| boutique/performance | 29 | 21 | 20 | 20 | [boutique-performance.md](DETAIL/boutique-performance.md) |
 | boutique/runtime | 45 | 9 | 9 | 9 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
 | boutique/scheduling | 164 | 12 | 12 | 12 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
-| boutique/service | 54 | 12 | 12 | 12 | [boutique-service.md](DETAIL/boutique-service.md) |
+| boutique/service | 54 | 22 | 22 | 21 | [boutique-service.md](DETAIL/boutique-service.md) |
 | boutique/startup | 62 | 5 | 5 | 5 | [boutique-startup.md](DETAIL/boutique-startup.md) |
 | train-ticket/performance | 47 | 47 | 46 | 46 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
-| train-ticket/runtime | 96 | 30 | 30 | 30 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
+| train-ticket/runtime | 96 | 40 | 40 | 36 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
 | train-ticket/service | 37 | 37 | 37 | 37 | [trainticket-service.md](DETAIL/trainticket-service.md) |
 | train-ticket/startup | 24 | 13 | 13 | 13 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
 
@@ -229,6 +229,20 @@
 > **2026-10-13 深夜 · ttperf34 定稿轮 1013_2345_ttperf34-verify1（用户令"跑一下看看" · 仍不过 · 记档维持）**：报 `ts-order-service` vs 真值 `ts-user-service`（41 步 · 首跑报 security——**两跑两个不同的错对象**）。**结果定性**：定位口缺位案的重跑落点确实随机（线索不在案面），骰子未中 → **记档维持**，账 268/269 不动。至此 ttperf34 的处置完全闭环：批跑（security）/ 定稿跑（order）双证 + 解剖审计（金标零告警行 · 序列不可读 · 闩锁歧义）。
 >
 > **2026-10-13 深夜 · 轮次 1013_2345_inorder4-v3b68（批六十八 · 止于 1/4 · 会话收官）**：① **用户令"跑完结束·别连续跑了"——引擎停机**：批六十八仅发首题 `cod/46`（`code_missing_parameter`@frontend 20 步 · **六项链全满 · 参数序六连**），余三题（svc/13 · perf/12 · tt-runtime/31）未发、批次止于 1/4。② **停机账：轮次 102 · 覆盖 269/754 · JRA 268/269**（唯一余项 = ttperf34 记档）+ 序滑点观察位七例；满族三（tt-svc · boutique/infrastructure · tt-perf）。③ 后续批次待用户发令（连续跑模式撤销，恢复批间报数）。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
