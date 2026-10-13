@@ -1391,14 +1391,37 @@
                 width: 1.2, arrows: { to: { enabled: false } }
             });
         });
+        // PAS：1 条拆 2 条单箭头（正向内弧 + 反向外弧）——与经典分支同规，forward/reverse 谓词如实呈现
         (d.pas_relations || []).forEach((r) => {
+            const short = (id) => String(id).split('.').pop();
+            const tgtCard = (p) => {
+                if (!p || !p.cardinality) return '';
+                const parts = String(p.cardinality).split(':');
+                return ' →' + (parts.length === 2 ? parts[1] : p.cardinality);
+            };
+            const fwd = r.forward || {};
+            const rev = r.reverse || {};
             edges.push({
                 id: 'PAS:' + r.id,
                 from: r.from, to: r.to,
-                title: r.from.split('.').pop() + ' ' + (r.forward.verb || 'relates') + ' ' + r.to.split('.').pop() +
-                       (r.forward.cardinality ? '（' + r.forward.cardinality + '）' : '') + (r.s ? '\n' + r.s : ''),
+                label: (fwd.verb || r.name || 'relates') + tgtCard(fwd),
+                title: short(r.from) + ' ' + (fwd.verb || 'relates') + ' ' + short(r.to) +
+                       (fwd.cardinality ? '（' + fwd.cardinality + '）' : '') + (r.s ? '\n' + r.s : ''),
                 color: { color: CONST.PAS_EDGE_COLOR, highlight: '#1b5e20' },
-                width: 1.8, arrows: { to: { enabled: true, scaleFactor: 0.5 } }
+                width: 1.8, arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+                smooth: { type: 'curvedCCW', roundness: 0.15 },
+                font: { size: 11, color: CONST.PAS_EDGE_FONT, align: 'top', strokeWidth: 3, strokeColor: '#fff' }
+            });
+            edges.push({
+                id: 'PAS-R:' + r.id,
+                from: r.to, to: r.from,
+                label: (rev.verb || ((r.name || '') + ' ←')) + tgtCard(rev),
+                title: short(r.to) + ' ' + (rev.verb || ((r.name || '') + ' ←')) + ' ' + short(r.from) +
+                       (rev.cardinality ? '（' + rev.cardinality + '）' : '') + (r.s ? '\n' + r.s : ''),
+                color: { color: CONST.PAS_EDGE_COLOR, highlight: '#1b5e20' },
+                width: 1.4, arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+                smooth: { type: 'curvedCCW', roundness: 0.15 },
+                font: { size: 10, color: CONST.PAS_EDGE_FONT, align: 'bottom', strokeWidth: 3, strokeColor: '#fff' }
             });
         });
 
