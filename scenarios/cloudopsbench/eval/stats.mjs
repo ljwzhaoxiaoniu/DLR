@@ -360,6 +360,7 @@ const overviewHtml = `<!DOCTYPE html>
   <div class="stat stat--good"><div class="stat__value">${A.chain}/${A.n}</div><div class="stat__label">证据链全闭</div><div class="stat__note">MC ${fmt(A.MC)} · EOC ${fmt(A.EOC)}</div></div>
   <div class="stat"><div class="stat__value">${tok(tMed)}</div><div class="stat__label">token 中位 / 题</div><div class="stat__note">平均 ${tok(tAvg)} · cache 读 ${tSum ? Math.round((tCr / tSum) * 100) : 0}%</div></div>
 </div>
+<p class="muted" style="margin-top:12px; line-height:1.75;"><b>指标示意</b>：<b>结果分</b> —— CA 组件命中 · FA 故障类型命中 · <b>JRA 联合命中（CA+FA，主指标）</b>；<b>流程分</b> —— MC 里程碑覆盖（该查的检查点走到没）· EOC 证据顺序一致（查证链是否按序闭合）· ECR 证据闭合率 · EE 证据效率（证据步 ÷ 总步）；<b>过程</b> —— steps 步数 · RAR 重复动作率 · inv 无效动作。结果分与流程分互相独立：结论对 ≠ 过程满分（个别题 EOC &lt; 1 = 证据链顺序/覆盖未满分，判定仍可为对）。</p>
 
 <h2 class="section-title">跑题覆盖度 · <em>逐家族进度</em></h2>
 ${famRows}

@@ -55,6 +55,7 @@
   <div class="stat stat--good"><div class="stat__value">32/32</div><div class="stat__label">证据链全闭</div><div class="stat__note">MC 1 · EOC 0.9661</div></div>
   <div class="stat"><div class="stat__value">129,107</div><div class="stat__label">token 中位 / 题</div><div class="stat__note">平均 253,691 · cache 读 79%</div></div>
 </div>
+<p class="muted" style="margin-top:12px; line-height:1.75;"><b>指标示意</b>：<b>结果分</b> —— CA 组件命中 · FA 故障类型命中 · <b>JRA 联合命中（CA+FA，主指标）</b>；<b>流程分</b> —— MC 里程碑覆盖（该查的检查点走到没）· EOC 证据顺序一致（查证链是否按序闭合）· ECR 证据闭合率 · EE 证据效率（证据步 ÷ 总步）；<b>过程</b> —— steps 步数 · RAR 重复动作率 · inv 无效动作。结果分与流程分互相独立：结论对 ≠ 过程满分（个别题 EOC &lt; 1 = 证据链顺序/覆盖未满分，判定仍可为对）。</p>
 
 <h2 class="section-title">跑题覆盖度 · <em>逐家族进度</em></h2>
 <div class="fam">
@@ -154,6 +155,6 @@
 <tr><td><code>train-ticket/startup/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>13</td><td>73,363</td><td class="muted">1012_1458_l3-</td></tr>
 <tr><td><code>train-ticket/startup/2</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4167</td><td>13</td><td>274,127</td><td class="muted">1012_2040_ino</td></tr>
 </table>
-<div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="results/STATS.md">STATS.md</a> · <a href="DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="DETAIL/">DETAIL/</a>）。生成 2026-10-13T03:14:36.034Z</div>
+<div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="results/STATS.md">STATS.md</a> · <a href="DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="DETAIL/">DETAIL/</a>）。生成 2026-10-13T03:19:08.230Z</div>
 </body>
 </html>
