@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/runtime</em></h1>
-<p class="deck">已跑 <b>7/45</b> 题：JRA ✅7 ❌0 ｜ 证据链全闭 7 ｜ token 中位 61,706 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T10:56:45.571Z</p>
+<p class="deck">已跑 <b>8/45</b> 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 61,752 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T11:59:20.567Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>10</td><td>61,752</td><td>0</td><td>0</td><td class="muted">1012_1512_inorder4-v3b3</td><td><a href="../results/1012_1512_inorder4-v3b3/raw/1012_1512_boutique-runtime-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1512_boutique-runtime-1</a></td></tr>
@@ -23,6 +23,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-5"><code>5</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>10</td><td>60,382</td><td>0</td><td>0</td><td class="muted">1013_1520_inorder4-v3b17</td><td><a href="../results/1013_1520_inorder4-v3b17/raw/1013_1520_boutique-runtime-5/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1520_boutique-runtime-5</a></td></tr>
 <tr><td><a href="#case-6"><code>6</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>10</td><td>60,547</td><td>0</td><td>0</td><td class="muted">1013_1819_inorder4-v3b28</td><td><a href="../results/1013_1819_inorder4-v3b28/raw/1013_1819_boutique-runtime-6/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1819_boutique-runtime-6</a></td></tr>
 <tr><td><a href="#case-7"><code>7</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4</td><td>11</td><td>61,706</td><td>0</td><td>0</td><td class="muted">1013_1848_inorder4-v3b33</td><td><a href="../results/1013_1848_inorder4-v3b33/raw/1013_1848_boutique-runtime-7/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1848_boutique-runtime-7</a></td></tr>
+<tr><td><a href="#case-8"><code>8</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4</td><td>11</td><td>62,065</td><td>0</td><td>0</td><td class="muted">1013_1955_inorder4-v3b34</td><td><a href="../results/1013_1955_inorder4-v3b34/raw/1013_1955_boutique-runtime-8/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1955_boutique-runtime-8</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/adservice</code> + <code>liveness_probe_incorrect_protocol</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 10 步</summary><ul>
@@ -275,6 +276,43 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/recommendationservice&quot;,
    &quot;root_cause&quot;: &quot;container_memory_limit_too_low&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-8"><summary><b>case-8</b> · <code>app/shippingservice</code> + <code>liveness_probe_incorrect_protocol</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 11 步</summary><ul>
+<li><b>摘要</b>：Health-chain walk on namespace boutique: pods -o wide shows a single outlier, shippingservice-dcf97c8fd-lkfpz, at 0/1 Running with 3 RESTARTS (0s ago) while all 10 other pods are 1/1 Running with 0 restarts; deployments confirm shippingservice is the only workload at 0/1 AVAILABLE. Pod detail shows Last State Terminated, Reason Error, Exit Code 2 (not 137/OOMKilled), Ready False. The mechanism events bind it exactly: kubelet 'Liveness probe failed: Get &quot;http://172.20.1.120:50051/&quot;: net/http: HTTP/1.x transport connection broken: malformed HTTP response &quot;\x00\x00\x06\x04...&quot;' (that byte pattern</li>
+<li><b>raw 日志</b>：<a href="../results/1013_1955_inorder4-v3b34/raw/1013_1955_boutique-runtime-8/">results/1013_1955_inorder4-v3b34/raw/1013_1955_boutique-runtime-8</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service abnormal restart.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service abnormal restart.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service abnormal restart.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;shippingservice-dcf97c8fd-lkfpz&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;shippingservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;shippingservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Health-chain walk on namespace boutique: pods -o wide shows a single outlier, shippingservice-dcf97c8fd-lkfpz, at 0/1 Running with 3 RESTARTS (0s ago) while all 10 other pods are 1/1 Running with 0 restarts; deployments confirm shippingservice is the only workload at 0/1 AVAILABLE. Pod detail shows Last State Terminated, Reason Error, Exit Code 2 (not 137/OOMKilled), Ready False. The mechanism events bind it exactly: kubelet 'Liveness probe failed: Get \&quot;http://172.20.1.120:50051/\&quot;: net/http: HTTP/1.x transport connection broken: malformed HTTP response \&quot;\\x00\\x00\\x06\\x04...\&quot;' (that byte pattern is an HTTP/2 SETTINGS frame) x9 over 83s, followed by 'Container server failed liveness probe, will be restarted' x3 over 63s. GetAppYAML(shippingservice) closes the configuration surface: readinessProbe uses grpc on port 50051 (correct) while livenessProbe uses httpGet path=/ port=50051 against the same gRPC-only HTTP/2 port - the HTTP/1.x liveness probe can never succeed, so kubelet continuously kills and restarts the container. Container logs show the app itself starts healthily ('Shipping Service listening on port :50051'), so the termination is probe-induced, not application failure; namespace events add no other warning.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/shippingservice&quot;,
+   &quot;root_cause&quot;: &quot;liveness_probe_incorrect_protocol&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/shippingservice&quot;,
+   &quot;root_cause&quot;: &quot;liveness_probe_incorrect_port&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/shippingservice&quot;,
+   &quot;root_cause&quot;: &quot;liveness_probe_incorrect_timing&quot;
   }
  ]
 }</pre>

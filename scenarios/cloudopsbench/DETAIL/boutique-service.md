@@ -1,6 +1,6 @@
 # 评测明细 · boutique/service — cloudopsbench
 
-> 本家族已跑 **6/54** 题：JRA ✅6 ❌0 ｜ 证据链全闭 6 ｜ token 中位 262,983 ｜ 生成 2026-10-13T10:56:45.571Z
+> 本家族已跑 **7/54** 题：JRA ✅7 ❌0 ｜ 证据链全闭 7 ｜ token 中位 213,813 ｜ 生成 2026-10-13T11:59:20.567Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -13,6 +13,7 @@
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2069 | 30 | 262,983 | 0 | 0 | 1013_1520_inorder4-v3b17 | 全对·链闭 |
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.24 | 26 | 213,813 | 0 | 0 | 1013_1819_inorder4-v3b28 | 全对·链闭 |
 | [6](#case-6) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.1556 | 46 | 476,282 | 0.0222 | 0 | 1013_1848_inorder4-v3b33 | 全对·链闭 |
+| [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 21 | 127,254 | 0 | 0 | 1013_1955_inorder4-v3b34 | 全对·链闭 |
 
 ## 证据正文
 
@@ -57,4 +58,11 @@
 - **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.1556 · steps 46 · tokens 476,282
 - **raw 日志**：[results/1013_1848_inorder4-v3b33/raw/1013_1848_boutique-service-6](../results/1013_1848_inorder4-v3b33/raw/1013_1848_boutique-service-6/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Object layer reads clean: all 11 boutique pods are 1/1 Running with RESTARTS=0, GetAlerts() reports no anomalies, and GetResources(events, namespace=boutique) has no Warning rows - so the break is not in scheduling/startup/admission/probe stages. Caller-side symptom: GetErrorLogs(frontend) shows 100 errors in 690 logs (14.49%), 98 of them on POST /cart/checkout failing to complete the order. Address-layer audit by anchor (GetAppYAML on every workload) yields exactly one outlier: checkoutservice's deployment template sets PRODUCT_CATALOG_SERVICE_ADDR="productcatalogservice:3551", while productc
+
+### case-7
+
+- **结论**：`app/frontend` + `service_env_var_address_mismatch` ｜ 标签 `app/frontend` + `service_env_var_address_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 21 · tokens 127,254
+- **raw 日志**：[results/1013_1955_inorder4-v3b34/raw/1013_1956_boutique-service-7](../results/1013_1955_inorder4-v3b34/raw/1013_1956_boutique-service-7/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All object-layer surfaces are healthy (11/11 pods Running 1/1 with RESTARTS 0, all Deployments 1/1 AVAILABLE, nodes Ready/uncordoned, no alerts), yet frontend returns HTTP 500 on every request. Caller-side logs carry 125 hits of 'could not retrieve currencies: ... dial tcp 10.68.199.102:7001: connect: connection refused' (currencyservice ClusterIP). The currencyservice Service and listener declare port 7000 (endpoints 172.20.1.164:7000, targetPort 7000); an active TCP probe to currencyservice:7000 succeeds while currencyservice:7001 fails. GetAppYAML(frontend) shows the wrong address CURRENCY_
 

@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **17/37** 题：JRA ✅17 ❌0 ｜ 证据链全闭 17 ｜ token 中位 666,312 ｜ 生成 2026-10-13T10:56:45.571Z
+> 本家族已跑 **18/37** 题：JRA ✅18 ❌0 ｜ 证据链全闭 18 ｜ token 中位 681,352 ｜ 生成 2026-10-13T11:59:20.567Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -23,6 +23,7 @@
 | [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 930,757 | 0 | 0 | 1013_1831_inorder4-v3b29 | 全对·链闭 |
 | [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2273 | 23 | 1,188,029 | 0 | 0 | 1013_1839_inorder4-v3b31 | 全对·链闭 |
 | [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 21 | 382,197 | 0 | 0 | 1013_1848_inorder4-v3b33 | 全对·链闭 |
+| [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.24 | 26 | 1,087,938 | 0 | 0 | 1013_1955_inorder4-v3b34 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
 
 ## 证据正文
@@ -138,6 +139,13 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 21 · tokens 382,197
 - **raw 日志**：[results/1013_1848_inorder4-v3b33/raw/1013_1851_trainticket-service-17](../results/1013_1848_inorder4-v3b33/raw/1013_1851_trainticket-service-17/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alert surface: POST /api/v1/travelservice/trips/left (business action 'Search ticket', entry ts-travel-service) repeatedly returns HTTPError 404 Not Found (20x) - a valid path answered by an HTTP server that does not own it. Object/node layer is clean: GetResources(pods) shows all 40+ ts-* pods 2/2 Running with no Pending/CrashLoop/image-pull outliers, GetClusterConfiguration shows 4/4 nodes Ready with no taints or pressure, and CheckNodeServiceStatus shows kube-proxy active on worker-01/02/03 - so the break is at the address layer, not in workload or nodes. GetAppYAML(ts-gateway-service) expo
+
+### case-18
+
+- **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.24 · steps 26 · tokens 1,087,938
+- **raw 日志**：[results/1013_1955_inorder4-v3b34/raw/1013_1957_trainticket-service-18](../results/1013_1955_inorder4-v3b34/raw/1013_1957_trainticket-service-18/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Caller side proves the break: ts-ui-dashboard nginx access log records repeated 'POST /api/v1/travelservice/trips/left HTTP/1.1" 404 131' from python-requests (matching alert 'Search ticket' 404 x19), while all other paths in the same log return 200. The gateway route table itself is the break: in ConfigMap ts-gateway-service-config (application.yml of ts-gateway-service) the route 'travel' with predicate Path=/api/v1/travelservice/** is wired to uri lb://${PRESERVE_SERVICE_HOST:ts-preserve-service} instead of the travel upstream (${TRAVEL_SERVICE_HOST:ts-travel-service}); the sibling 'preserv
 
 ### case-25
 

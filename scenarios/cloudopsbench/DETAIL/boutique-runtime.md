@@ -1,6 +1,6 @@
 # 评测明细 · boutique/runtime — cloudopsbench
 
-> 本家族已跑 **7/45** 题：JRA ✅7 ❌0 ｜ 证据链全闭 7 ｜ token 中位 61,706 ｜ 生成 2026-10-13T10:56:45.571Z
+> 本家族已跑 **8/45** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 61,752 ｜ 生成 2026-10-13T11:59:20.567Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -14,6 +14,7 @@
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 10 | 60,382 | 0 | 0 | 1013_1520_inorder4-v3b17 | 全对·链闭 |
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 10 | 60,547 | 0 | 0 | 1013_1819_inorder4-v3b28 | 全对·链闭 |
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 11 | 61,706 | 0 | 0 | 1013_1848_inorder4-v3b33 | 全对·链闭 |
+| [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 11 | 62,065 | 0 | 0 | 1013_1955_inorder4-v3b34 | 全对·链闭 |
 
 ## 证据正文
 
@@ -65,4 +66,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4 · steps 11 · tokens 61,706
 - **raw 日志**：[results/1013_1848_inorder4-v3b33/raw/1013_1848_boutique-runtime-7](../results/1013_1848_inorder4-v3b33/raw/1013_1848_boutique-runtime-7/)（ndjson / mcp.jsonl / meta）
 - **摘要**：pods 清单中唯一离群行是 recommendationservice-667699c9dd-cx2c9（RESTARTS 2 (25s ago)，其余 11 个 pod 均为 0）；其 pod 详情 Last State 为 Terminated/Reason: Error/Exit Code: 137，事件逐字给出机制：'Liveness probe failed: Get "http://172.20.2.198:8080/": net/http: HTTP/1.x transport connection broken: malformed HTTP response "\x00\x00\x1e\x04..."' 与 'Container server failed liveness probe, will be restarted'（x3），返回体开头的 \x00\x00\x1e\x04 为 HTTP/2/gRPC SETTINGS 帧，说明 kubelet 以 HTTP/1.x 客户端探测只提供 gRPC 的端口。GetAppYAML 确认断点：readinessProbe 使用 grpc:8080（正确），而 livenessProbe 使用 httpGet path=/ port=8080（错误）。反证面显示业务与网络健康——CheckServiceConnect
+
+### case-8
+
+- **结论**：`app/shippingservice` + `liveness_probe_incorrect_protocol` ｜ 标签 `app/shippingservice` + `liveness_probe_incorrect_protocol`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4 · steps 11 · tokens 62,065
+- **raw 日志**：[results/1013_1955_inorder4-v3b34/raw/1013_1955_boutique-runtime-8](../results/1013_1955_inorder4-v3b34/raw/1013_1955_boutique-runtime-8/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Health-chain walk on namespace boutique: pods -o wide shows a single outlier, shippingservice-dcf97c8fd-lkfpz, at 0/1 Running with 3 RESTARTS (0s ago) while all 10 other pods are 1/1 Running with 0 restarts; deployments confirm shippingservice is the only workload at 0/1 AVAILABLE. Pod detail shows Last State Terminated, Reason Error, Exit Code 2 (not 137/OOMKilled), Ready False. The mechanism events bind it exactly: kubelet 'Liveness probe failed: Get "http://172.20.1.120:50051/": net/http: HTTP/1.x transport connection broken: malformed HTTP response "\x00\x00\x06\x04..."' (that byte pattern
 

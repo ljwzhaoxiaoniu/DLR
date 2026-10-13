@@ -1,0 +1,43 @@
+INFO:     Started server process [11300]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:56082 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56083 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:56082 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56084 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52876 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56223 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:51561 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51561 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-travel-service"}
+INFO:     127.0.0.1:51561 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-ui-dashboard"}
+INFO:     127.0.0.1:51561 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51561 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55507 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55507 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-inside-payment-service"}
+INFO:     127.0.0.1:55507 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-payment-service"}
+INFO:     127.0.0.1:59239 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59239 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-travel-plan-service"}
+INFO:     127.0.0.1:59239 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-gateway-service"}
+INFO:     127.0.0.1:59239 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59151 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59151 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49675 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-ui-dashboard"}
+INFO:     127.0.0.1:49675 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-gateway-service"}
+INFO:     127.0.0.1:58801 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58801 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-travel-service"}
+INFO:     127.0.0.1:58801 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61393 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-travel-service","port":12346}
+INFO:     127.0.0.1:61393 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61393 - "POST /mcp HTTP/1.1" 200 OK
