@@ -369,12 +369,14 @@ const famRows = familiesSorted.map((f) => {
     <div class="fam__num">${done}/${total} · ${p}%</div>
   </div>`;
 }).join("\n");
-const caseRows = [...latestAll].sort((a, b) => a.family.localeCompare(b.family) || (Number(a.case_name) || 0) - (Number(b.case_name) || 0)).map((e) => {
-  const g = (k) => fmt(e.metrics?.[k]);
-  const rawDir = rawDirFor(e);
-  const label = `<code>${familyDisplay(e.family)}/${e.case_name}</code>`;
-  const cellHtml = rawDir ? `<a href="${rawDir}" title="raw 日志（ndjson / mcp.jsonl / meta）">${label}</a>` : label;
-  return `<tr><td>${cellHtml}</td><td>${g("JRA") === "1" ? '<span class="ok">✅</span>' : g("JRA")}</td><td>${g("MC")}</td><td>${g("EOC")}</td><td>${g("ECR")}</td><td>${g("EE")}</td><td>${g("steps")}</td><td>${tok(e.tokens?.total)}</td><td class="muted">${e.round.slice(0, 13)}</td></tr>`;
+// 家族级明细（总视图颗粒度只到家族；逐题在 DETAIL/<家族>.html）
+const famTableRows = familiesSorted.map((f) => {
+  const entries = latestAll.filter((e) => e.family === f);
+  const a = aggregate(entries);
+  const total = full.get(f) ?? 0;
+  const ft = entries.map((e) => e.tokens?.total).filter((n) => typeof n === "number").sort((x, y) => x - y);
+  const med = ft.length ? ft[Math.floor(ft.length / 2)] : null;
+  return `<tr><td><a href="DETAIL/${famFile(f).replace(/\.md$/, ".html")}" title="逐题统计（HTML）"><code>${familyDisplay(f)}</code></a></td><td>${total}</td><td>${a.n}</td><td>${barPct(a.n, total)}%</td><td>${a.jra === a.n ? `<span class="ok">✅ ${a.jra}</span>` : `✅ ${a.jra} ❌ ${a.n - a.jra}`}</td><td>${a.chain}</td><td>${tok(med)}</td></tr>`;
 }).join("\n");
 // 建模实例化展示（静态策展块：三级语义在一道题上的协同）——改内容直接改这里
 const showcaseHtml = `
@@ -479,13 +481,13 @@ const overviewHtml = `<!DOCTYPE html>
 
 ${showcaseHtml}
 <h2 class="section-title">跑题覆盖度 · <em>逐家族进度</em></h2>
-<p class="muted">点家族名 → 该家族逐题统计页（HTML，含每题 raw 日志）；下方逐题明细表里点题名 → 该题 raw 运行目录。</p>
+<p class="muted">总视图颗粒度到家族；点家族名/表中行 → 该家族逐题统计页（HTML，含每题调用步骤与 raw 日志链接）。</p>
 ${famRows}
 
-<h2 class="section-title">逐题明细 · <em>去重取最新</em></h2>
+<h2 class="section-title">家族明细 · <em>去重取最新</em></h2>
 <table>
-<tr><th>题</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>轮次</th></tr>
-${caseRows}
+<tr><th>家族</th><th>全量</th><th>已跑</th><th>覆盖</th><th>JRA</th><th>证据链全闭</th><th>token 中位</th></tr>
+${famTableRows}
 </table>
 <div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="results/STATS.md">STATS.md</a> · <a href="DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="DETAIL/">DETAIL/</a>）。生成 ${now}</div>
 </body>
