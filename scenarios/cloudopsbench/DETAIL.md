@@ -29,8 +29,8 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 31 / 32（96.9%） |
-| CA（组件命中） | 31 / 32（96.9%） |
+| JRA（联合命中） | 32 / 32（100.0%） |
+| CA（组件命中） | 32 / 32（100.0%） |
 | FA（故障型命中） | 32 / 32（100.0%） |
 | ECR（证据链全闭） | 32 / 32（100.0%） |
 
@@ -38,13 +38,13 @@
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 1 | 0.9661 | 1 | 0.3069 | 18.6875 | 0 | 0.0313 |
+| 1 | 0.9661 | 1 | 0.3059 | 18.4688 | 0 | 0.0313 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 250,915 / 129,107 | 58,131 / 1,044,906 | 79% |
+| 253,691 / 129,107 | 58,131 / 1,133,738 | 79% |
 
 ## 分家族索引
 
@@ -60,7 +60,7 @@
 | boutique/startup | 62 | 2 | 2 | 2 | [boutique-startup.md](DETAIL/boutique-startup.md) |
 | train-ticket/performance | 47 | 1 | 1 | 1 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
 | train-ticket/runtime | 96 | 5 | 5 | 5 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
-| train-ticket/service | 37 | 3 | 2 | 3 | [trainticket-service.md](DETAIL/trainticket-service.md) |
+| train-ticket/service | 37 | 3 | 3 | 3 | [trainticket-service.md](DETAIL/trainticket-service.md) |
 | train-ticket/startup | 24 | 2 | 2 | 2 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
 
 ## 定性观察
@@ -81,6 +81,7 @@
 > **2026-10-12 · 轮次 1012_1928_inorder4-v3b6 + 1012_1935_tidy-verify1（批六 + 指令体检对表）**：① 批六 4/4 全对（覆盖 24/754），三处流程分滑点：admission/4 EOC 0.25（events+配置面提前、症状拖最后）、codedefect/3 EOC 0.25（配置/代码抢前）、tt-runtime/4 ECR 0/MC 0.667（服务日志用了 `GetRecentLogs` 变体、错失 M1 的 11 服务 `GetErrorLogs` 扫掠）。② 病灶判定 = **规则叠加互竞**（多条并列纪律稀释了走序主线的执行）→ **指令体检**：第 2 步加牙齿「症状侧未读不碰配置/代码/事件面（关题工具≠开路工具）」、两条浮动收口纪律收进第 5 步按序化、纪律区瘦身至 5 条。③ **复跑三题全满**（admission/4 0.25→1.0 · codedefect/3 0.25→1.0 · tt-runtime/4 ECR 0→全闭）——三处既是金链指纹类也是**指令结构类**；单线走序让 agent 一次走对（tt-runtime/4 的日志扫掠也自然带出）。**24/24 证据链全闭恢复。**
 
 > **2026-10-12 · 轮次 1012_1941_inorder4-v3b7 + 1012_2000_case-verify1 + 1012_2010_attr-verify1（批七战役 · tt-service/2 三枪修一题）**：① 批七 3/4——**首个真 miss** `tt-service/2`（网关 misroute：预测 food-delivery·dns ✗；**89 步、47 次探测轰炸**）。② **三枪**：case-by-case 判别线重写（L3，用户定调「对着解决 + 讲人话」）+ L2 kid9 网关路由表读法（`Path ↔ uri` 逐条核对，针 = `order` 路由指向 route-service）→ 复跑 32 步：机制对了（`gateway_misrouted` ✓）、组件仍错（报了受害者 order）→ kid9/sop 补「**报路由表的主人（网关）；被错配目标是受害者不是断点**」→ **attr-verify1 20 步全满**（JRA/MC/EOC/ECR 全 1）。③ 两道 EOC 小滑（codedefect/4 0.25 两轮不变 · tt-runtime/5 0.667）：解剖显示**首次命中序其实干净**——EOC 匹配含超出 first-match 的严格性成分，口径未完全反推，**不再为此调参**（守住不扑评分器的线），记档。④ **28/28 JRA 恢复全满。**
+
 
 
 

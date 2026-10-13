@@ -51,9 +51,9 @@
 <p class="deck">三级语义建模（L1 对象/面 · L2 读法 · L3 走链）驱动的 K8s 根因诊断——快照确定性回放（锚 ea05daf），结果为上游 scorer 原口径。本页由 <code>eval/stats.mjs</code> 每次重建自动刷新。</p>
 <div class="stat-row">
   <div class="stat"><div class="stat__value">32/754</div><div class="stat__label">跑题覆盖度</div><div class="stat__note">4.2%</div></div>
-  <div class="stat stat--good"><div class="stat__value">31/32</div><div class="stat__label">JRA 联合命中</div><div class="stat__note">CA 31 · FA 32</div></div>
+  <div class="stat stat--good"><div class="stat__value">32/32</div><div class="stat__label">JRA 联合命中</div><div class="stat__note">CA 32 · FA 32</div></div>
   <div class="stat stat--good"><div class="stat__value">32/32</div><div class="stat__label">证据链全闭</div><div class="stat__note">MC 1 · EOC 0.9661</div></div>
-  <div class="stat"><div class="stat__value">129,107</div><div class="stat__label">token 中位 / 题</div><div class="stat__note">平均 250,915 · cache 读 79%</div></div>
+  <div class="stat"><div class="stat__value">129,107</div><div class="stat__label">token 中位 / 题</div><div class="stat__note">平均 253,691 · cache 读 79%</div></div>
 </div>
 
 <h2 class="section-title">跑题覆盖度 · <em>逐家族进度</em></h2>
@@ -137,6 +137,7 @@
 <tr><td><code>1012_2000_cas</code></td><td>3</td><td>2</td><td>0.6389</td><td>1</td><td>27.3333</td><td>3,132,165</td></tr>
 <tr><td><code>1012_2010_att</code></td><td>1</td><td>1</td><td>1</td><td>1</td><td>20</td><td>681,352</td></tr>
 <tr><td><code>1012_2040_ino</code></td><td>4</td><td>3</td><td>1</td><td>1</td><td>16</td><td>1,628,262</td></tr>
+<tr><td><code>1013_1040_ran</code></td><td>1</td><td>1</td><td>1</td><td>1</td><td>19</td><td>1,133,738</td></tr>
 </table>
 
 <h2 class="section-title">逐题明细 · <em>去重取最新</em></h2>
@@ -170,11 +171,11 @@
 <tr><td><code>train-ticket/runtime/4</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2105</td><td>20</td><td>517,218</td><td class="muted">1012_1935_tid</td></tr>
 <tr><td><code>train-ticket/runtime/5</code></td><td><span class="ok">✅</span></td><td>1</td><td>0.6667</td><td>1</td><td>0.1429</td><td>36</td><td>800,099</td><td class="muted">1012_2000_cas</td></tr>
 <tr><td><code>train-ticket/service/2</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3158</td><td>20</td><td>681,352</td><td class="muted">1012_2010_att</td></tr>
-<tr><td><code>train-ticket/service/3</code></td><td>0</td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>26</td><td>1,044,906</td><td class="muted">1012_2040_ino</td></tr>
+<tr><td><code>train-ticket/service/3</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1667</td><td>19</td><td>1,133,738</td><td class="muted">1013_1040_ran</td></tr>
 <tr><td><code>train-ticket/service/25</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2727</td><td>23</td><td>204,578</td><td class="muted">1012_1521_l3-</td></tr>
 <tr><td><code>train-ticket/startup/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>13</td><td>73,363</td><td class="muted">1012_1458_l3-</td></tr>
 <tr><td><code>train-ticket/startup/2</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4167</td><td>13</td><td>274,127</td><td class="muted">1012_2040_ino</td></tr>
 </table>
-<div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="results/STATS.md">STATS.md</a> · <a href="DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="DETAIL/">DETAIL/</a>）。生成 2026-10-12T14:02:56.778Z</div>
+<div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="results/STATS.md">STATS.md</a> · <a href="DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="DETAIL/">DETAIL/</a>）。生成 2026-10-13T02:41:58.028Z</div>
 </body>
 </html>
