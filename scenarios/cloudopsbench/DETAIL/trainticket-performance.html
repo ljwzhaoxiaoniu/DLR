@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/performance</em></h1>
-<p class="deck">已跑 <b>44/47</b> 题：JRA ✅43 ❌1 ｜ 证据链全闭 43 ｜ token 中位 301,957 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T15:14:54.564Z</p>
+<p class="deck">已跑 <b>45/47</b> 题：JRA ✅44 ❌1 ｜ 证据链全闭 44 ｜ token 中位 301,957 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T15:19:54.467Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1429</td><td>36</td><td>442,283</td><td>0</td><td>1</td><td class="muted">1012_1512_inorder4-v3b3</td><td><a href="../results/1012_1512_inorder4-v3b3/raw/1012_1516_trainticket-performance-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1516_trainticket-performance-1</a></td></tr>
@@ -60,6 +60,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-42"><code>42</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1667</td><td>25</td><td>359,493</td><td>0</td><td>0</td><td class="muted">1013_2303_inorder4-v3b60</td><td><a href="../results/1013_2303_inorder4-v3b60/raw/1013_2304_trainticket-performance-42/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2304_trainticket-performance-42</a></td></tr>
 <tr><td><a href="#case-43"><code>43</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>16</td><td>142,097</td><td>0</td><td>0</td><td class="muted">1013_2308_inorder4-v3b61</td><td><a href="../results/1013_2308_inorder4-v3b61/raw/1013_2309_trainticket-performance-43/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2309_trainticket-performance-43</a></td></tr>
 <tr><td><a href="#case-44"><code>44</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>16</td><td>333,677</td><td>0</td><td>0</td><td class="muted">1013_2311_inorder4-v3b62</td><td><a href="../results/1013_2311_inorder4-v3b62/raw/1013_2313_trainticket-performance-44/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2313_trainticket-performance-44</a></td></tr>
+<tr><td><a href="#case-45"><code>45</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>19</td><td>367,029</td><td>0</td><td>0</td><td class="muted">1013_2315_inorder4-v3b63</td><td><a href="../results/1013_2315_inorder4-v3b63/raw/1013_2316_trainticket-performance-45/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2316_trainticket-performance-45</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/ts-basic-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 36 步</summary><ul>
@@ -2041,6 +2042,51 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
    &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-45"><summary><b>case-45</b> · <code>app/ts-train-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 19 步</summary><ul>
+<li><b>摘要</b>：Metric-surface case per the L3 SOP: alerts are the signal, the object layer is only exclusion. Among 8 co-window alerts (2026-03-16 01:33~01:35), only ts-train-service shows a latency row where BOTH percentiles move on a real baseline: p50 8.35ms -&gt; 2500.00ms (+29843.7%) and p90 411.79ms -&gt; 4500.00ms (+992.8%, Peak 4594.14ms) - the runaway deviation and the steepest p90 escalation, marking the epicenter; ts-preserve-service's p50/p90 'New Spike' starts from a 0.00ms near-zero baseline (proves nothing) and ts-basic-service moves only p50 (partial ripple). GetServiceDependencies closes the graph</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2315_inorder4-v3b63/raw/1013_2316_trainticket-performance-45/">results/1013_2315_inorder4-v3b63/raw/1013_2316_trainticket-performance-45</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-train-service&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-train-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-train-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-train-service&quot;}</code></td></tr>
+<tr><td>17</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-train-service&quot;,&quot;port&quot;:14567,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;services&quot;,&quot;name&quot;:&quot;ts-train-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Metric-surface case per the L3 SOP: alerts are the signal, the object layer is only exclusion. Among 8 co-window alerts (2026-03-16 01:33~01:35), only ts-train-service shows a latency row where BOTH percentiles move on a real baseline: p50 8.35ms -&gt; 2500.00ms (+29843.7%) and p90 411.79ms -&gt; 4500.00ms (+992.8%, Peak 4594.14ms) - the runaway deviation and the steepest p90 escalation, marking the epicenter; ts-preserve-service's p50/p90 'New Spike' starts from a 0.00ms near-zero baseline (proves nothing) and ts-basic-service moves only p50 (partial ripple). GetServiceDependencies closes the graph: ts-train-service is a LEAF (no downstream), so the added delay cannot come from below, and its direct/next-hop callers carry the same added delay (ts-basic-service p50 317.41 -&gt; 3709.68ms; 2-hop caller ts-preserve-service p50 0 -&gt; 7500ms). Mechanism/decoys: ts-order-service's bare 'cpu_cfs 0.712s (Throttled)' has no latency of its own (collateral noise) and ts-contacts-service cpu 0.02-&gt;0.07 cores is sub-noise. Object layer healthy: all deployments 1/1 AVAILABLE, all pods 2/2 Running with ts-train-service RESTARTS 0, nodes 4/4 Ready, namespace events contain only rollout/probe churn - no FailedCreate/FailedScheduling/FailedMount/image-pull. No error logs for ts-train-service/ts-basic-service/ts-preserve-service and its own recent logs show only normal 'TrainController [retrieveByName]' INFO at normal cadence; Service selector matches and CheckServiceConnectivity(ts-train-service:14567) succeeds from worker-01/02/03 - so reachability and configuration are clean and the deviation is pure latency on the pod's network path. Latency rows span worker-01 and worker-02 while many worker-01 pods stay clean, excluding a node-scope fault.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-train-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-basic-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-preserve-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
   }
  ]
 }</pre>

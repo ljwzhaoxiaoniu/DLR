@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/codedefect</em></h1>
-<p class="deck">已跑 <b>40/98</b> 题：JRA ✅40 ❌0 ｜ 证据链全闭 40 ｜ token 中位 325,537 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T15:14:54.564Z</p>
+<p class="deck">已跑 <b>41/98</b> 题：JRA ✅41 ❌0 ｜ 证据链全闭 41 ｜ token 中位 325,537 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T15:19:54.467Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3077</td><td>14</td><td>129,107</td><td>0</td><td>0</td><td class="muted">1012_1415_inorder4-v3</td><td><a href="../results/1012_1415_inorder4-v3/raw/1012_1417_boutique-codedefect-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1417_boutique-codedefect-1</a></td></tr>
@@ -56,6 +56,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-38"><code>38</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1429</td><td>22</td><td>452,396</td><td>0</td><td>0</td><td class="muted">1013_2303_inorder4-v3b60</td><td><a href="../results/1013_2303_inorder4-v3b60/raw/1013_2303_boutique-codedefect-38/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2303_boutique-codedefect-38</a></td></tr>
 <tr><td><a href="#case-39"><code>39</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.25</td><td>17</td><td>289,503</td><td>0</td><td>0</td><td class="muted">1013_2308_inorder4-v3b61</td><td><a href="../results/1013_2308_inorder4-v3b61/raw/1013_2308_boutique-codedefect-39/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2308_boutique-codedefect-39</a></td></tr>
 <tr><td><a href="#case-40"><code>40</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2105</td><td>20</td><td>353,688</td><td>0</td><td>0</td><td class="muted">1013_2311_inorder4-v3b62</td><td><a href="../results/1013_2311_inorder4-v3b62/raw/1013_2311_boutique-codedefect-40/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2311_boutique-codedefect-40</a></td></tr>
+<tr><td><a href="#case-41"><code>41</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2333</td><td>31</td><td>1,115,150</td><td>0.0333</td><td>0</td><td class="muted">1013_2315_inorder4-v3b63</td><td><a href="../results/1013_2315_inorder4-v3b63/raw/1013_2315_boutique-codedefect-41/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2315_boutique-codedefect-41</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/checkoutservice</code> + <code>code_wrong_argument_order</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 14 步</summary><ul>
@@ -2030,6 +2031,63 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/cartservice&quot;,
    &quot;root_cause&quot;: &quot;code_missing_parameter&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-41"><summary><b>case-41</b> · <code>app/frontend</code> + <code>code_missing_parameter</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 31 步</summary><ul>
+<li><b>摘要</b>：boutique: all 11 pods Running 2/2 with 0 restarts and 4/4 nodes Ready (no scheduling/startup/probe break); alerts show frontend entry 503s (GET /product/{id} x20, GET /cart x8) and a currencyservice inbound surge in 23:13:06-23:15:41, exactly when a new frontend ReplicaSet (frontend-645f576c45-ls98t, image wangyl2128/frontend-v2:latest) rolled in. cartservice's error-log stream is 26.78% (747 lines) one pattern: 'AddItemAsync called with userId=, productId=L9ECAV7KIM, quantity=2' - a required userId arriving empty. frontend source proves it: rpc.go insertCart() contains 'userID = &quot;&quot;' before pb</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2315_inorder4-v3b63/raw/1013_2315_boutique-codedefect-41/">results/1013_2315_inorder4-v3b63/raw/1013_2315_boutique-codedefect-41</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;productcatalogservice&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>17</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;code/frontend/handlers.go&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;code/frontend/rpc.go&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>21</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>22</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;trainticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>23</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;default&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>24</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>25</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>26</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>27</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>28</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;handlers.go&quot;}</code></td></tr>
+<tr><td>29</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;rpc.go&quot;}</code></td></tr>
+<tr><td>30</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;frontend-645f576c45-ls98t&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;boutique: all 11 pods Running 2/2 with 0 restarts and 4/4 nodes Ready (no scheduling/startup/probe break); alerts show frontend entry 503s (GET /product/{id} x20, GET /cart x8) and a currencyservice inbound surge in 23:13:06-23:15:41, exactly when a new frontend ReplicaSet (frontend-645f576c45-ls98t, image wangyl2128/frontend-v2:latest) rolled in. cartservice's error-log stream is 26.78% (747 lines) one pattern: 'AddItemAsync called with userId=, productId=L9ECAV7KIM, quantity=2' - a required userId arriving empty. frontend source proves it: rpc.go insertCart() contains 'userID = \&quot;\&quot;' before pb.AddItemRequest{UserId: userID}, i.e. the caller omits the required parameter (all other frontend RPCs correctly pass sessionID(r)). frontend's own addressing config is clean (CART_SERVICE_ADDR=cartservice:7070, standard probes), so the break is in frontend's application code, not scheduling, addressing or resources.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;code_missing_parameter&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;code_missing_parameter&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
   }
  ]
 }</pre>

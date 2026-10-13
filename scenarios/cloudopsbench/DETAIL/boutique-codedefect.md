@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **40/98** 题：JRA ✅40 ❌0 ｜ 证据链全闭 40 ｜ token 中位 325,537 ｜ 生成 2026-10-13T15:14:54.564Z
+> 本家族已跑 **41/98** 题：JRA ✅41 ❌0 ｜ 证据链全闭 41 ｜ token 中位 325,537 ｜ 生成 2026-10-13T15:19:54.467Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -47,6 +47,7 @@
 | [38](#case-38) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1429 | 22 | 452,396 | 0 | 0 | 1013_2303_inorder4-v3b60 | 全对·链闭 |
 | [39](#case-39) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 17 | 289,503 | 0 | 0 | 1013_2308_inorder4-v3b61 | 全对·链闭 |
 | [40](#case-40) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 353,688 | 0 | 0 | 1013_2311_inorder4-v3b62 | 全对·链闭 |
+| [41](#case-41) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2333 | 31 | 1,115,150 | 0.0333 | 0 | 1013_2315_inorder4-v3b63 | 全对·链闭 |
 
 ## 证据正文
 
@@ -329,4 +330,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2105 · steps 20 · tokens 353,688
 - **raw 日志**：[results/1013_2311_inorder4-v3b62/raw/1013_2311_boutique-codedefect-40](../results/1013_2311_inorder4-v3b62/raw/1013_2311_boutique-codedefect-40/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All 11 boutique pods read 2/2 Running with 0 restarts (no scheduling/startup/probe outlier); alert frontend-error-spike shows Success Rate 100%->71.7% with /cart 500s. frontend logs the failing business call 'could not retrieve product #: rpc error: code = NotFound desc = no product with ID ' on GET /cart (1105 occurrences, empty product ID), while cartservice logs the malformed request upstream shows 'AddItemAsync called with userId=..., productId=, quantity=2' (740 occurrences) even though frontend's own log for the same request carried a valid product ('adding to cart product=LS4PSXUNUM'). 
+
+### case-41
+
+- **结论**：`app/frontend` + `code_missing_parameter` ｜ 标签 `app/frontend` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2333 · steps 31 · tokens 1,115,150
+- **raw 日志**：[results/1013_2315_inorder4-v3b63/raw/1013_2315_boutique-codedefect-41](../results/1013_2315_inorder4-v3b63/raw/1013_2315_boutique-codedefect-41/)（ndjson / mcp.jsonl / meta）
+- **摘要**：boutique: all 11 pods Running 2/2 with 0 restarts and 4/4 nodes Ready (no scheduling/startup/probe break); alerts show frontend entry 503s (GET /product/{id} x20, GET /cart x8) and a currencyservice inbound surge in 23:13:06-23:15:41, exactly when a new frontend ReplicaSet (frontend-645f576c45-ls98t, image wangyl2128/frontend-v2:latest) rolled in. cartservice's error-log stream is 26.78% (747 lines) one pattern: 'AddItemAsync called with userId=, productId=L9ECAV7KIM, quantity=2' - a required userId arriving empty. frontend source proves it: rpc.go insertCart() contains 'userID = ""' before pb
 

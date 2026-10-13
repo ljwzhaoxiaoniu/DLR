@@ -1,0 +1,39 @@
+INFO:     Started server process [11176]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:63132 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63133 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:63132 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63134 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63144 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63146 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63150 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:63150 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63154 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63154 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63154 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"shippingservice","port":50051}
+INFO:     127.0.0.1:63158 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"shippingservice"}
+INFO:     127.0.0.1:63158 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"containerd"}
+INFO:     127.0.0.1:63158 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kubelet"}
+INFO:     127.0.0.1:63158 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63158 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63163 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kube-proxy"}
+INFO:     127.0.0.1:63163 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63163 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"adservice","port":9555}
+INFO:     127.0.0.1:63163 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"cartservice","port":7070}
+INFO:     127.0.0.1:63163 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:63163 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:63165 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"checkoutservice"}
+INFO:     127.0.0.1:63165 - "POST /mcp HTTP/1.1" 200 OK

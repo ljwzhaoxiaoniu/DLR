@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **39/40** 题：JRA ✅39 ❌0 ｜ 证据链全闭 39 ｜ token 中位 125,901 ｜ 生成 2026-10-13T15:14:54.564Z
+> 本家族已跑 **40/40** 题：JRA ✅40 ❌0 ｜ 证据链全闭 40 ｜ token 中位 127,753 ｜ 生成 2026-10-13T15:19:54.467Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -46,6 +46,7 @@
 | [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2609 | 24 | 178,626 | 0 | 0 | 1013_2303_inorder4-v3b60 | 全对·链闭 |
 | [38](#case-38) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 137,377 | 0 | 0 | 1013_2308_inorder4-v3b61 | 全对·链闭 |
 | [39](#case-39) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 104,041 | 0 | 0 | 1013_2311_inorder4-v3b62 | 全对·链闭 |
+| [40](#case-40) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1905 | 22 | 128,665 | 0 | 0 | 1013_2315_inorder4-v3b63 | 全对·链闭 |
 
 ## 证据正文
 
@@ -321,4 +322,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2353 · steps 18 · tokens 104,041
 - **raw 日志**：[results/1013_2311_inorder4-v3b62/raw/1013_2312_boutique-infrastructure-39](../results/1013_2311_inorder4-v3b62/raw/1013_2312_boutique-infrastructure-39/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom side first: cartservice (downstream = redis-cart per GetServiceDependencies) error logs show 528 errors / 37% error ratio with 'UnableToConnect on redis-cart:6379 ... no connection became available (5000ms)', and CheckServiceConnectivity(redis-cart, 6379) returned 'Connection Failed'. Object layer: the only unhealthy workload is redis-cart-56db4dcdd5-n9flp, stuck 0/1 ContainerCreating/Pending on worker-01 (its Deployment pins it with nodeSelector kubernetes.io/hostname=worker-01). Namespace events bind the mechanism to objects: 'Warning NodeNotReady pod/adservice|shippingservice|checko
+
+### case-40
+
+- **结论**：`node/worker-01` + `kubelet_unavailable` ｜ 标签 `node/worker-01` + `kubelet_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1905 · steps 22 · tokens 128,665
+- **raw 日志**：[results/1013_2315_inorder4-v3b63/raw/1013_2315_boutique-infrastructure-40](../results/1013_2315_inorder4-v3b63/raw/1013_2315_boutique-infrastructure-40/)（ndjson / mcp.jsonl / meta）
+- **摘要**：worker-01 kubelet is inactive/dead (systemd: 'Stopped Kubernetes Kubelet', Main PID 144481 exited, since 16:36:24); node worker-01 is NotReady with conditions Unknown and taints node.kubernetes.io/unreachable:NoSchedule/NoExecute; checkoutservice error log shows 'dial tcp 192.168.0.222:10250: connect: connection refused' (kubelet port). Containerd and kube-proxy on worker-01 are both active/running, and containerd log shows the sandbox/container were created and started successfully — so the runtime is fine. Reachability is partial exactly along worker-01: shippingservice:50051 Connection Fail
 

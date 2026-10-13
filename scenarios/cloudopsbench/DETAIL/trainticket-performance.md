@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **44/47** 题：JRA ✅43 ❌1 ｜ 证据链全闭 43 ｜ token 中位 301,957 ｜ 生成 2026-10-13T15:14:54.564Z
+> 本家族已跑 **45/47** 题：JRA ✅44 ❌1 ｜ 证据链全闭 44 ｜ token 中位 301,957 ｜ 生成 2026-10-13T15:19:54.467Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -51,6 +51,7 @@
 | [42](#case-42) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 25 | 359,493 | 0 | 0 | 1013_2303_inorder4-v3b60 | 全对·链闭 |
 | [43](#case-43) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 142,097 | 0 | 0 | 1013_2308_inorder4-v3b61 | 全对·链闭 |
 | [44](#case-44) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 333,677 | 0 | 0 | 1013_2311_inorder4-v3b62 | 全对·链闭 |
+| [45](#case-45) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 367,029 | 0 | 0 | 1013_2315_inorder4-v3b63 | 全对·链闭 |
 
 ## 证据正文
 
@@ -361,4 +362,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 333,677
 - **raw 日志**：[results/1013_2311_inorder4-v3b62/raw/1013_2313_trainticket-performance-44](../results/1013_2311_inorder4-v3b62/raw/1013_2313_trainticket-performance-44/)（ndjson / mcp.jsonl / meta）
 - **摘要**：GetAlerts (window 2026-03-16 01:18:55~01:20:50) gives the epicenter by row shape: ts-station-service LATENCY_DEGRADATION moves BOTH percentiles with the steepest p90 escalation (p50 6.99ms -> 2500.00ms +35691.0%, p90 26.79ms -> 4500.00ms +16694.8%, peak 4657.24ms). ts-basic-service shows the rippled p50+p90 (121.72->7607.14ms, 495.02->9925.22ms, peak 23294.12ms) and ts-preserve-service is pinned at the 20000.00ms RPC-timeout ceiling. GetServiceDependencies closes the graph: ts-station-service is a LEAF ('[Downstream (Calls)]: (Leaf Node)') called directly by ts-basic-service, which is called d
+
+### case-45
+
+- **结论**：`app/ts-train-service` + `pod_network_delay` ｜ 标签 `app/ts-train-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 19 · tokens 367,029
+- **raw 日志**：[results/1013_2315_inorder4-v3b63/raw/1013_2316_trainticket-performance-45](../results/1013_2315_inorder4-v3b63/raw/1013_2316_trainticket-performance-45/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Metric-surface case per the L3 SOP: alerts are the signal, the object layer is only exclusion. Among 8 co-window alerts (2026-03-16 01:33~01:35), only ts-train-service shows a latency row where BOTH percentiles move on a real baseline: p50 8.35ms -> 2500.00ms (+29843.7%) and p90 411.79ms -> 4500.00ms (+992.8%, Peak 4594.14ms) - the runaway deviation and the steepest p90 escalation, marking the epicenter; ts-preserve-service's p50/p90 'New Spike' starts from a 0.00ms near-zero baseline (proves nothing) and ts-basic-service moves only p50 (partial ripple). GetServiceDependencies closes the graph
 

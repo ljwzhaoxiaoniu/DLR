@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **25/96** 题：JRA ✅25 ❌0 ｜ 证据链全闭 25 ｜ token 中位 477,041 ｜ 生成 2026-10-13T15:14:54.564Z
+> 本家族已跑 **26/96** 题：JRA ✅26 ❌0 ｜ 证据链全闭 26 ｜ token 中位 490,757 ｜ 生成 2026-10-13T15:19:54.467Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -32,6 +32,7 @@
 | [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 205,969 | 0 | 0 | 1013_2303_inorder4-v3b60 | 全对·链闭 |
 | [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 362,268 | 0.0526 | 0 | 1013_2308_inorder4-v3b61 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.1111 | 19 | 320,076 | 0 | 0 | 1013_2311_inorder4-v3b62 | 全对·链闭 |
+| [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 26 | 531,205 | 0 | 0 | 1013_2315_inorder4-v3b63 | 全对·链闭 |
 
 ## 证据正文
 
@@ -209,4 +210,11 @@
 - **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.1111 · steps 19 · tokens 320,076
 - **raw 日志**：[results/1013_2311_inorder4-v3b62/raw/1013_2313_trainticket-runtime-25](../results/1013_2311_inorder4-v3b62/raw/1013_2313_trainticket-runtime-25/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alert: ts-preserve-service 'Create ticket order' and ts-inside-payment-service return HTTP 500. Walking the 500 trail outward from the complaint: ts-preserve-service errors on /api/v1/travelservice/trip_detail -> ts-travel-service errors on /api/v1/basicservice/basic/travel -> ts-basic-service throws java.lang.IllegalArgumentException: 'Service Instance cannot be null' (its service-discovery lookup for a downstream callee returned no instance). Object layer: ts-price-service, one of ts-basic-service's four callees (ts-route-service, ts-station-service, ts-train-service, ts-price-service), is t
+
+### case-26
+
+- **结论**：`app/ts-route-service` + `deployment_zero_replicas` ｜ 标签 `app/ts-route-service` + `deployment_zero_replicas`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 26 · tokens 531,205
+- **raw 日志**：[results/1013_2315_inorder4-v3b63/raw/1013_2318_trainticket-runtime-26](../results/1013_2315_inorder4-v3b63/raw/1013_2318_trainticket-runtime-26/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom chain walks the reachability path: alert ts-preserve-service POST /api/v1/preserveservice/preserve 500 -> its log shows 500 from ts-travel-service /api/v1/travelservice/trip_detail -> ts-travel-service log shows 500 from ts-basic-service /api/v1/basicservice/basic/travel -> ts-basic-service log shows 'java.lang.IllegalArgumentException: Service Instance cannot be null', i.e. its Nacos lookup for a downstream instance returns null. Object layer localizes it: in the namespace endpoints listing, ts-route-service is the ONLY one of 47 services with ENDPOINTS <none>, and no pod with label a
 

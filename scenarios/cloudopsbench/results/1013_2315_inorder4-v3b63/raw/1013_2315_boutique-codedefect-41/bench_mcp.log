@@ -1,0 +1,47 @@
+INFO:     Started server process [23940]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:63128 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63129 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:63128 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63130 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63138 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63140 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63149 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:63149 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:63149 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"currencyservice"}
+INFO:     127.0.0.1:63149 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"frontend"}
+INFO:     127.0.0.1:63149 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63149 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63156 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63156 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"cartservice"}
+INFO:     127.0.0.1:63167 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"productcatalogservice"}
+INFO:     127.0.0.1:63167 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63167 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"adservice"}
+INFO:     127.0.0.1:63167 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"frontend"}
+INFO:     127.0.0.1:61070 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61070 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54118 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54118 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:54120 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54120 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62555 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62555 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:62555 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62565 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62565 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62565 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56458 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56458 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56467 - "POST /mcp HTTP/1.1" 200 OK
