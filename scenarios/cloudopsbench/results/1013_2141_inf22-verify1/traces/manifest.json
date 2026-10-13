@@ -1,0 +1,9 @@
+[
+  {
+    "case": "boutique/infrastructure/22",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1013_2141_inf22-verify1\\raw\\1013_2141_boutique-infrastructure-22",
+    "steps": 14,
+    "has_final_answer": true,
+    "predictions": 3
+  }
+]

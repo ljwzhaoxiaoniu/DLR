@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/codedefect</em></h1>
-<p class="deck">已跑 <b>22/98</b> 题：JRA ✅22 ❌0 ｜ 证据链全闭 22 ｜ token 中位 207,400 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T13:35:55.674Z</p>
+<p class="deck">已跑 <b>23/98</b> 题：JRA ✅23 ❌0 ｜ 证据链全闭 23 ｜ token 中位 207,400 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T13:44:53.278Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3077</td><td>14</td><td>129,107</td><td>0</td><td>0</td><td class="muted">1012_1415_inorder4-v3</td><td><a href="../results/1012_1415_inorder4-v3/raw/1012_1417_boutique-codedefect-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1417_boutique-codedefect-1</a></td></tr>
@@ -38,6 +38,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-20"><code>20</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2143</td><td>15</td><td>197,018</td><td>0</td><td>0</td><td class="muted">1013_2106_inorder4-v3b42</td><td><a href="../results/1013_2106_inorder4-v3b42/raw/1013_2106_boutique-codedefect-20/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2106_boutique-codedefect-20</a></td></tr>
 <tr><td><a href="#case-21"><code>21</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1875</td><td>17</td><td>149,851</td><td>0</td><td>0</td><td class="muted">1013_2110_inorder4-v3b43</td><td><a href="../results/1013_2110_inorder4-v3b43/raw/1013_2110_boutique-codedefect-21/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2110_boutique-codedefect-21</a></td></tr>
 <tr><td><a href="#case-22"><code>22</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2308</td><td>14</td><td>325,537</td><td>0</td><td>0</td><td class="muted">1013_2114_inorder4-v3b44</td><td><a href="../results/1013_2114_inorder4-v3b44/raw/1013_2114_boutique-codedefect-22/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2114_boutique-codedefect-22</a></td></tr>
+<tr><td><a href="#case-23"><code>23</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>16</td><td>330,738</td><td>0</td><td>0</td><td class="muted">1013_2133_inorder4-v3b45</td><td><a href="../results/1013_2133_inorder4-v3b45/raw/1013_2133_boutique-codedefect-23/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2133_boutique-codedefect-23</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/checkoutservice</code> + <code>code_wrong_argument_order</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 14 步</summary><ul>
@@ -1068,6 +1069,48 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
    &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-23"><summary><b>case-23</b> · <code>app/checkoutservice</code> + <code>code_excessive_file_reads</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 16 步</summary><ul>
+<li><b>摘要</b>：Alerts converge on checkoutservice: RESOURCE_SATURATION cpu_cfs 1.094s throttled, cpu 0.00-&gt;0.12 cores (+6393.5%), LATENCY_DEGRADATION p50 18.67-&gt;4334.76ms / p90 47.33-&gt;9127.39ms; frontend (its caller) shows p90 49.32-&gt;1268.67ms. Object layer excludes infra faults: all 11 boutique pods Running with RESTARTS 0, so the break is at the metric/code level; namespace events bind the mechanism to the checkoutservice instance (repeatedly re-created replica sets, liveness/readiness probe 'context deadline exceeded', 'Back-off restarting failed container server'), and frontend logs show 'failed to compl</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2133_inorder4-v3b45/raw/1013_2133_boutique-codedefect-23/">results/1013_2133_inorder4-v3b45/raw/1013_2133_boutique-codedefect-23</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;name&quot;:&quot;checkoutservice-6fc6d649d8-d54bs&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>10</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;money/money.go&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Alerts converge on checkoutservice: RESOURCE_SATURATION cpu_cfs 1.094s throttled, cpu 0.00-&gt;0.12 cores (+6393.5%), LATENCY_DEGRADATION p50 18.67-&gt;4334.76ms / p90 47.33-&gt;9127.39ms; frontend (its caller) shows p90 49.32-&gt;1268.67ms. Object layer excludes infra faults: all 11 boutique pods Running with RESTARTS 0, so the break is at the metric/code level; namespace events bind the mechanism to the checkoutservice instance (repeatedly re-created replica sets, liveness/readiness probe 'context deadline exceeded', 'Back-off restarting failed container server'), and frontend logs show 'failed to complete the order: rpc error: code = Canceled desc = context canceled' on POST /cart/checkout. Code surface shows the injected fault: checkoutservice main.go PlaceOrder runs 'for i := 0; i &lt; 10; i++ { os.Open(\&quot;/src/log.csv\&quot;); csv.NewReader(f).ReadAll(); f.Close() }' on every order, i.e. 10 full-file reads plus CSV parsing per request on the hot path, producing the CPU burn/CFS throttling and the multi-second latency. Limits (200m CPU) and env addresses are correct, and money.MultiplySlow is original upstream code, so the fault is the excessive file reads in the application code of app/checkoutservice.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_excessive_file_reads&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_busy_loop&quot;
   }
  ]
 }</pre>

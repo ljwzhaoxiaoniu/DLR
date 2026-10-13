@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **21/40** 题：JRA ✅21 ❌0 ｜ 证据链全闭 21 ｜ token 中位 127,753 ｜ 生成 2026-10-13T13:35:55.674Z
+> 本家族已跑 **22/40** 题：JRA ✅22 ❌0 ｜ 证据链全闭 22 ｜ token 中位 127,921 ｜ 生成 2026-10-13T13:44:53.278Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -28,6 +28,7 @@
 | [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.12 | 26 | 208,511 | 0 | 0 | 1013_2106_inorder4-v3b42 | 全对·链闭 |
 | [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1111 | 28 | 177,400 | 0.037 | 0 | 1013_2110_inorder4-v3b43 | 全对·链闭 |
 | [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0909 | 34 | 399,815 | 0 | 0 | 1013_2114_inorder4-v3b44 | 全对·链闭 |
+| [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1429 | 22 | 155,346 | 0 | 0 | 1013_2143_inf22-verify2 | 全对·链闭 |
 
 ## 证据正文
 
@@ -177,4 +178,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.0909 · steps 34 · tokens 399,815
 - **raw 日志**：[results/1013_2114_inorder4-v3b44/raw/1013_2114_boutique-infrastructure-21](../results/1013_2114_inorder4-v3b44/raw/1013_2114_boutique-infrastructure-21/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom side: frontend caller logs show 'failed to complete the order: ... dial tcp 10.68.129.244:5050: connect: connection refused' (checkoutservice ClusterIP) and CheckServiceConnectivity(checkoutservice:5050) returns 'Connection Failed' - only 1 of 11 services is unreachable. Object layer: the single outlier pod checkoutservice-8445f8b6cb-58chn is 0/1 Pending with Node:<none>, and its own Events are empty (no scheduling event at all); owner chain deployment/checkoutservice is 0/1 available (Available=False MinimumReplicasUnavailable), RS 1 current/1 desired / 1 Waiting. Scheduling blockers 
+
+### case-22
+
+- **结论**：`node/master` + `kube_scheduler_unavailable` ｜ 标签 `node/master` + `kube_scheduler_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1429 · steps 22 · tokens 155,346
+- **raw 日志**：[results/1013_2143_inf22-verify2/raw/1013_2143_boutique-infrastructure-22](../results/1013_2143_inf22-verify2/raw/1013_2143_boutique-infrastructure-22/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Reachability chain closed on currencyservice: its Endpoints are '<none>' while every other boutique service is bound, a TCP probe on its declared port 7000 fails, and frontend caller logs show 388 errors 'dial tcp 10.68.249.177:7000: connect: connection refused'. The workload outlier is pod currencyservice-5c6fdf7ccb-tc4gk (0/1 Pending) with deployment currencyservice 0/1 AVAILABLE; the pod's own sheet shows 'Node: <none>' and 'Events: <none>' with NO '0/N nodes are available' scheduling line, meaning no scheduling attempt was ever made. The control plane is the break: CheckNodeServiceStatus(m
 

@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **26/47** 题：JRA ✅26 ❌0 ｜ 证据链全闭 26 ｜ token 中位 301,957 ｜ 生成 2026-10-13T13:35:55.674Z
+> 本家族已跑 **27/47** 题：JRA ✅27 ❌0 ｜ 证据链全闭 27 ｜ token 中位 294,060 ｜ 生成 2026-10-13T13:44:53.278Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -33,6 +33,7 @@
 | [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1538 | 14 | 343,773 | 0 | 0 | 1013_2106_inorder4-v3b42 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 322,359 | 0 | 0 | 1013_2110_inorder4-v3b43 | 全对·链闭 |
 | [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 11 | 185,640 | 0.1 | 0 | 1013_2133_perf26-verify1 | 全对·链闭 |
+| [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 160,103 | 0 | 0 | 1013_2133_inorder4-v3b45 | 全对·链闭 |
 
 ## 证据正文
 
@@ -217,4 +218,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4 · steps 11 · tokens 185,640
 - **raw 日志**：[results/1013_2133_perf26-verify1/raw/1013_2133_trainticket-performance-26](../results/1013_2133_perf26-verify1/raw/1013_2133_trainticket-performance-26/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts in window 11:46:04~11:47:54 show ts-preserve-service as the only LATENCY_DEGRADATION row moving BOTH percentiles (p50 3571.43ms->8453.99ms +136.7%, p90 10500.00ms->23627.85ms +125.0%) = the epicenter; ts-basic-service and ts-food-service moved only p90 (49.15->1145.55ms, 23.50->1750.00ms) i.e. partial-traffic ripples, and every one of them is a direct graph neighbor of ts-preserve-service (GetServiceDependencies: downstream ts-basic/ts-food/ts-order/ts-assurance), so no quiet intermediate hop is needed. The ts-order-service cpu_cfs throttled row and the ts-assurance-service cpu core +68
+
+### case-27
+
+- **结论**：`app/ts-price-service` + `pod_network_delay` ｜ 标签 `app/ts-price-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 12 · tokens 160,103
+- **raw 日志**：[results/1013_2133_inorder4-v3b45/raw/1013_2135_trainticket-performance-27](../results/1013_2133_inorder4-v3b45/raw/1013_2135_trainticket-performance-27/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Service quality degradation.' lives on the metric surface (L3 exact-hit: alerts name the case, object layer only excludes). GetAlerts (12:02:47~12:04:42) shows LATENCY_DEGRADATION with BOTH percentiles moving on ts-price-service (p50 7.50->3216.46ms +42786%, p90 9.62->4643.29ms +48187% - the steepest p90 escalation) and on ts-basic-service (p50 39.75->3750ms, p90 69.29->4750ms); ts-travel-service (p90 only 1927->4487ms) and ts-preserve-service (p50 only 2291->7500ms) moved a single percentile, i.e. partial-traffic ripples. ts-food-service (cpu core 0.01->0.02) and ts-order-service (cp
 

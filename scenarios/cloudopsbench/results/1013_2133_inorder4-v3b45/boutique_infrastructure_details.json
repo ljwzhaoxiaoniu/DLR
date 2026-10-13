@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "22",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\infrastructure\\22\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1013_2133_inorder4-v3b45\\traces\\boutique\\dsh-tsm\\infrastructure\\22\\22.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Infrastructure_Fault",
+      "fault_object": "node/master",
+      "root_cause": "kube_scheduler_unavailable"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/currencyservice",
+        "root_cause": "missing_service_account"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/currencyservice",
+        "root_cause": "node_cordon_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/currencyservice",
+        "root_cause": "taint_toleration_mismatch"
+      }
+    ],
+    "tool_call_count": 17,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 0.0,
+      "FA": 0.0,
+      "JRA": 0.0,
+      "MC": 0.6666666666666666,
+      "EOC": 0.6666666666666666,
+      "ECR": 0.0,
+      "EE": 0.11764705882352941,
+      "steps": 18.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

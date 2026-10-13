@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **22/98** 题：JRA ✅22 ❌0 ｜ 证据链全闭 22 ｜ token 中位 207,400 ｜ 生成 2026-10-13T13:35:55.674Z
+> 本家族已跑 **23/98** 题：JRA ✅23 ❌0 ｜ 证据链全闭 23 ｜ token 中位 207,400 ｜ 生成 2026-10-13T13:44:53.278Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -29,6 +29,7 @@
 | [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 197,018 | 0 | 0 | 1013_2106_inorder4-v3b42 | 全对·链闭 |
 | [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 149,851 | 0 | 0 | 1013_2110_inorder4-v3b43 | 全对·链闭 |
 | [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 325,537 | 0 | 0 | 1013_2114_inorder4-v3b44 | 全对·链闭 |
+| [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 330,738 | 0 | 0 | 1013_2133_inorder4-v3b45 | 全对·链闭 |
 
 ## 证据正文
 
@@ -185,4 +186,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2308 · steps 14 · tokens 325,537
 - **raw 日志**：[results/1013_2114_inorder4-v3b44/raw/1013_2114_boutique-codedefect-22](../results/1013_2114_inorder4-v3b44/raw/1013_2114_boutique-codedefect-22/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom 'Service Performance Degradation.' enters the telemetry chain: alert entity is checkoutservice (RESOURCE_SATURATION cpu_cfs 0.987s throttled, cpu 0.00->0.11 cores +6759.7%, LATENCY_DEGRADATION p50 19.05ms->4364.85ms +22817.4%, p90 45.06ms->9024.84ms), while node worker-01 shows only 4.50%->6.77% CPU (node capacity excluded). Object layer is clean: all boutique pods are 2/2 Running with RESTARTS=0 and no Pending/CrashLoop, so the break is not at the object layer. checkoutservice config is normal (requests cpu=100m/limits cpu=200m) and its pod logs contain no errors, but liveness/readine
+
+### case-23
+
+- **结论**：`app/checkoutservice` + `code_excessive_file_reads` ｜ 标签 `app/checkoutservice` + `code_excessive_file_reads`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 330,738
+- **raw 日志**：[results/1013_2133_inorder4-v3b45/raw/1013_2133_boutique-codedefect-23](../results/1013_2133_inorder4-v3b45/raw/1013_2133_boutique-codedefect-23/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts converge on checkoutservice: RESOURCE_SATURATION cpu_cfs 1.094s throttled, cpu 0.00->0.12 cores (+6393.5%), LATENCY_DEGRADATION p50 18.67->4334.76ms / p90 47.33->9127.39ms; frontend (its caller) shows p90 49.32->1268.67ms. Object layer excludes infra faults: all 11 boutique pods Running with RESTARTS 0, so the break is at the metric/code level; namespace events bind the mechanism to the checkoutservice instance (repeatedly re-created replica sets, liveness/readiness probe 'context deadline exceeded', 'Back-off restarting failed container server'), and frontend logs show 'failed to compl
 

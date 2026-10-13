@@ -1,0 +1,2 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+trainticket/service/30,1.0,1.0,1.0,1.0,1.0,1.0,0.25,21.0,0.0,0.0,app/ts-price-service,service_dns_resolution_failure,app/ts-price-service,service_dns_resolution_failure,

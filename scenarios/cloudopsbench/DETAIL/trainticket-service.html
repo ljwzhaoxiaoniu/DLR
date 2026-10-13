@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/service</em></h1>
-<p class="deck">已跑 <b>28/37</b> 题：JRA ✅28 ❌0 ｜ 证据链全闭 28 ｜ token 中位 528,847 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T13:35:55.674Z</p>
+<p class="deck">已跑 <b>29/37</b> 题：JRA ✅29 ❌0 ｜ 证据链全闭 29 ｜ token 中位 522,118 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T13:44:53.278Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-2"><code>2</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3158</td><td>20</td><td>681,352</td><td>0</td><td>0</td><td class="muted">1012_2010_attr-verify1</td><td><a href="../results/1012_2010_attr-verify1/raw/1012_2010_trainticket-service-2/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_2010_trainticket-service-2</a></td></tr>
@@ -44,6 +44,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-27"><code>27</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>501,550</td><td>0</td><td>0</td><td class="muted">1013_2106_inorder4-v3b42</td><td><a href="../results/1013_2106_inorder4-v3b42/raw/1013_2108_trainticket-service-27/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2108_trainticket-service-27</a></td></tr>
 <tr><td><a href="#case-28"><code>28</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2941</td><td>18</td><td>486,562</td><td>0</td><td>0</td><td class="muted">1013_2110_inorder4-v3b43</td><td><a href="../results/1013_2110_inorder4-v3b43/raw/1013_2112_trainticket-service-28/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2112_trainticket-service-28</a></td></tr>
 <tr><td><a href="#case-29"><code>29</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4211</td><td>20</td><td>325,996</td><td>0</td><td>0</td><td class="muted">1013_2114_inorder4-v3b44</td><td><a href="../results/1013_2114_inorder4-v3b44/raw/1013_2118_trainticket-service-29/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2118_trainticket-service-29</a></td></tr>
+<tr><td><a href="#case-30"><code>30</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.25</td><td>21</td><td>522,118</td><td>0</td><td>0</td><td class="muted">1013_2133_inorder4-v3b45</td><td><a href="../results/1013_2133_inorder4-v3b45/raw/1013_2137_trainticket-service-30/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2137_trainticket-service-30</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-2"><summary><b>case-2</b> · <code>app/ts-gateway-service</code> + <code>gateway_misrouted</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 20 步</summary><ul>
@@ -1386,6 +1387,53 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/ts-preserve-service&quot;,
    &quot;root_cause&quot;: &quot;service_env_var_address_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-30"><summary><b>case-30</b> · <code>app/ts-price-service</code> + <code>service_dns_resolution_failure</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 21 步</summary><ul>
+<li><b>摘要</b>：ts-price-service is the only outlier workload (pod ts-price-service-69f6579f8-xv9gc, 0/2 READY, STATUS Error, 4 restarts, CrashLoopBackOff with Last State Terminated exit code 1 on node worker-01). Its container log shows 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' during HikariPool/Hibernate initialization, so the failure is at name resolution, not at the database: the Service tsdb-mysql-leader (10.68.188.173:3306) exists and a TCP probe from debug pods on worker-01/02/03 returns 'Connection Succeeded' on all three nodes, and a probe on the victim'</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2133_inorder4-v3b45/raw/1013_2137_trainticket-service-30/">results/1013_2133_inorder4-v3b45/raw/1013_2137_trainticket-service-30</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-price-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-price-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-price-service-69f6579f8-xv9gc&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-price-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>12</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-price-service&quot;,&quot;port&quot;:16579,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;kube-system&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>16</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;port&quot;:3306,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-price-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;ts-price-service is the only outlier workload (pod ts-price-service-69f6579f8-xv9gc, 0/2 READY, STATUS Error, 4 restarts, CrashLoopBackOff with Last State Terminated exit code 1 on node worker-01). Its container log shows 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' during HikariPool/Hibernate initialization, so the failure is at name resolution, not at the database: the Service tsdb-mysql-leader (10.68.188.173:3306) exists and a TCP probe from debug pods on worker-01/02/03 returns 'Connection Succeeded' on all three nodes, and a probe on the victim's own declared port 16579 fails from all three nodes. The same resolver failure is visible inside the same pod's istio-proxy as 'lookup istiod.istio-system.svc on 10.255.15.254:53: read udp 172.20.1.243:xxxxx-&gt;10.255.15.254:53: i/o timeout'. Root-cause config face: GetAppYAML(ts-price-service) uniquely declares 'dnsPolicy: \&quot;None\&quot;' with 'dnsConfig.nameservers: [10.255.15.254]' in its pod template, while ts-order-service, ts-preserve-service and ts-basic-service carry no dnsPolicy/dnsConfig (default ClusterFirst, resolving normally); the pod's ReplicaSet hash also changed (6c4b77845 -&gt; 69f6579f8), i.e. the template was modified shortly before the incident. Mechanism closes on the event surface: 'Unhealthy ... pod/ts-price-service-69f6579f8-xv9gc Startup probe failed: dial tcp 172.20.1.243:15021: connect: connection refused'. Chain: pod DNS pointed at an unreachable nameserver -&gt; service-name resolution fails -&gt; app crash-loop -&gt; no ready endpoints for ts-price-service.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-price-service&quot;,
+   &quot;root_cause&quot;: &quot;service_dns_resolution_failure&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-price-service&quot;,
+   &quot;root_cause&quot;: &quot;service_env_var_address_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;node/worker-01&quot;,
+   &quot;root_cause&quot;: &quot;node_network_packet_loss&quot;
   }
  ]
 }</pre>

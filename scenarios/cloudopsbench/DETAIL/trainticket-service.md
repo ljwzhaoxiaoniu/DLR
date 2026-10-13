@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **28/37** 题：JRA ✅28 ❌0 ｜ 证据链全闭 28 ｜ token 中位 528,847 ｜ 生成 2026-10-13T13:35:55.674Z
+> 本家族已跑 **29/37** 题：JRA ✅29 ❌0 ｜ 证据链全闭 29 ｜ token 中位 522,118 ｜ 生成 2026-10-13T13:44:53.278Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -35,6 +35,7 @@
 | [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 501,550 | 0 | 0 | 1013_2106_inorder4-v3b42 | 全对·链闭 |
 | [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 486,562 | 0 | 0 | 1013_2110_inorder4-v3b43 | 全对·链闭 |
 | [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4211 | 20 | 325,996 | 0 | 0 | 1013_2114_inorder4-v3b44 | 全对·链闭 |
+| [30](#case-30) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 21 | 522,118 | 0 | 0 | 1013_2133_inorder4-v3b45 | 全对·链闭 |
 
 ## 证据正文
 
@@ -233,4 +234,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4211 · steps 20 · tokens 325,996
 - **raw 日志**：[results/1013_2114_inorder4-v3b44/raw/1013_2118_trainticket-service-29](../results/1013_2114_inorder4-v3b44/raw/1013_2118_trainticket-service-29/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom side: alert names ts-preserve-service with 503, and the Service's endpoints listing is EMPTY, with connectivity probes on its declared port 14568 failing from all three workers. Workload side: pod ts-preserve-service-6bd658cfc9-gpc6b on worker-02 is 0/2 Running with 4 restarts (app container Last State Terminated, exit code 1), deployment shows MinimumReplicasUnavailable, and its Startup probe fails with 'dial tcp 172.20.2.121:15021: connect: connection refused'. Mechanism: the pod cannot resolve any cluster name — istio-proxy logs repeatedly show 'lookup istiod.istio-system.svc on 10.
+
+### case-30
+
+- **结论**：`app/ts-price-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-price-service` + `service_dns_resolution_failure`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 21 · tokens 522,118
+- **raw 日志**：[results/1013_2133_inorder4-v3b45/raw/1013_2137_trainticket-service-30](../results/1013_2133_inorder4-v3b45/raw/1013_2137_trainticket-service-30/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-price-service is the only outlier workload (pod ts-price-service-69f6579f8-xv9gc, 0/2 READY, STATUS Error, 4 restarts, CrashLoopBackOff with Last State Terminated exit code 1 on node worker-01). Its container log shows 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' during HikariPool/Hibernate initialization, so the failure is at name resolution, not at the database: the Service tsdb-mysql-leader (10.68.188.173:3306) exists and a TCP probe from debug pods on worker-01/02/03 returns 'Connection Succeeded' on all three nodes, and a probe on the victim'
 

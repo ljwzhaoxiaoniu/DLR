@@ -1,0 +1,26 @@
+INFO:     Started server process [11040]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:52650 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52651 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:52650 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52652 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52659 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52661 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63853 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:63853 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63862 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:63862 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"master","service_name":"kube-scheduler"}
+INFO:     127.0.0.1:63862 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"currencyservice","port":7000}
+INFO:     127.0.0.1:63862 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63862 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63862 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63862 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63873 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"currencyservice"}
+INFO:     127.0.0.1:63873 - "POST /mcp HTTP/1.1" 200 OK
