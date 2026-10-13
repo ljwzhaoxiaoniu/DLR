@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **42/98** 题：JRA ✅42 ❌0 ｜ 证据链全闭 42 ｜ token 中位 330,738 ｜ 生成 2026-10-13T15:25:02.535Z
+> 本家族已跑 **43/98** 题：JRA ✅43 ❌0 ｜ 证据链全闭 43 ｜ token 中位 330,738 ｜ 生成 2026-10-13T15:33:07.521Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -49,6 +49,7 @@
 | [40](#case-40) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 353,688 | 0 | 0 | 1013_2311_inorder4-v3b62 | 全对·链闭 |
 | [41](#case-41) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2333 | 31 | 1,115,150 | 0.0333 | 0 | 1013_2315_inorder4-v3b63 | 全对·链闭 |
 | [42](#case-42) | 1 | 1 | 1 | 1 | 0.6 | 1 | 0.1842 | 39 | 933,395 | 0.0526 | 0 | 1013_2320_inorder4-v3b64 | 全对·链闭 |
+| [43](#case-43) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0962 | 53 | 1,415,438 | 0 | 0 | 1013_2325_inorder4-v3b65 | 全对·链闭 |
 
 ## 证据正文
 
@@ -345,4 +346,11 @@
 - **流程**：MC 1 · EOC 0.6 · ECR 1 · EE 0.1842 · steps 39 · tokens 933,395
 - **raw 日志**：[results/1013_2320_inorder4-v3b64/raw/1013_2320_boutique-codedefect-42](../results/1013_2320_inorder4-v3b64/raw/1013_2320_boutique-codedefect-42/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All 11 boutique workloads are healthy at the object layer (2/2 Running, RESTARTS=0, every Service has endpoints, connectivity probes to productcatalogservice:3550 and cartservice:7070 succeed), so the break is not scheduling/startup/admission. The only inventory outlier is frontend-645f576c45-tcg87 (age 2m26s vs ~5m36s for all others) = a fresh frontend rollout at 12:35:56, matching the alert window. Alerts point at the frontend business routes (503 on /product/{id} x16, /cart x14, POST /cart x1). The decisive evidence is the callee-side trail: cartservice's log is 743/2719 lines (27.3%) of 'A
+
+### case-43
+
+- **结论**：`app/frontend` + `code_missing_parameter` ｜ 标签 `app/frontend` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.0962 · steps 53 · tokens 1,415,438
+- **raw 日志**：[results/1013_2325_inorder4-v3b65/raw/1013_2325_boutique-codedefect-43](../results/1013_2325_inorder4-v3b65/raw/1013_2325_boutique-codedefect-43/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts name the frontend entry service returning 503 on GET /product/{id} (16x) and GET /cart (12x). The object layer is fully healthy: all 11 boutique pods Running 2/2 with 0 restarts, every Service has bound endpoints, TCP connectivity Succeeded to all backends (cartservice:7070, currencyservice:7000, productcatalogservice:3550, recommendationservice:8080, adservice:9555, shippingservice:50051, checkoutservice:5050, emailservice:5000, paymentservice:50051, redis-cart:6379, frontend:80), no NetworkPolicy/Ingress, PVC Bound, all ServiceAccounts present (the FailedCreate 'serviceaccount not fou
 

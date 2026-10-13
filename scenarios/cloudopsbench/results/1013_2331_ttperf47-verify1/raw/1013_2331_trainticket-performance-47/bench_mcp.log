@@ -1,0 +1,29 @@
+INFO:     Started server process [24500]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:59064 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59065 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:59064 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59066 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59071 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59073 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:59079 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-preserve-service"}
+INFO:     127.0.0.1:59090 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-user-service"}
+INFO:     127.0.0.1:59090 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59090 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59105 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59105 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-user-service"}
+INFO:     127.0.0.1:59110 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59110 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59110 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-user-service","port":12342}
+INFO:     127.0.0.1:59118 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-03","service_name":"kube-proxy"}
+INFO:     127.0.0.1:59118 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-03","service_name":"kubelet"}
+INFO:     127.0.0.1:59118 - "POST /mcp HTTP/1.1" 200 OK

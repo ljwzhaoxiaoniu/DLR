@@ -1,0 +1,9 @@
+[
+  {
+    "case": "trainticket/performance/47",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1013_2331_ttperf47-verify1\\raw\\1013_2331_trainticket-performance-47",
+    "steps": 15,
+    "has_final_answer": true,
+    "predictions": 3
+  }
+]

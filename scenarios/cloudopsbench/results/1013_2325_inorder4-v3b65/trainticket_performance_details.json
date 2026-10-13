@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "47",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\trainticket\\performance\\47\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1013_2325_inorder4-v3b65\\traces\\trainticket\\dsh-tsm\\performance\\47\\47.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Performance_Fault",
+      "fault_object": "app/ts-user-service",
+      "root_cause": "pod_network_delay"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/ts-preserve-service",
+        "root_cause": "pod_network_delay"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/ts-user-service",
+        "root_cause": "pod_network_delay"
+      },
+      {
+        "rank": 3,
+        "fault_object": "node/worker-01",
+        "root_cause": "node_network_delay"
+      }
+    ],
+    "tool_call_count": 13,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 0.0,
+      "FA": 1.0,
+      "JRA": 0.0,
+      "MC": 0.5,
+      "EOC": 0.5,
+      "ECR": 0.0,
+      "EE": 0.07692307692307693,
+      "steps": 14.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

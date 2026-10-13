@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **46/47** 题：JRA ✅45 ❌1 ｜ 证据链全闭 45 ｜ token 中位 304,738 ｜ 生成 2026-10-13T15:25:02.535Z
+> 本家族已跑 **47/47** 题：JRA ✅46 ❌1 ｜ 证据链全闭 46 ｜ token 中位 304,738 ｜ 生成 2026-10-13T15:33:07.521Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -53,6 +53,7 @@
 | [44](#case-44) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 333,677 | 0 | 0 | 1013_2311_inorder4-v3b62 | 全对·链闭 |
 | [45](#case-45) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 367,029 | 0 | 0 | 1013_2315_inorder4-v3b63 | 全对·链闭 |
 | [46](#case-46) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1538 | 27 | 845,040 | 0 | 0 | 1013_2320_inorder4-v3b64 | 全对·链闭 |
+| [47](#case-47) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 472,209 | 0 | 0 | 1013_2331_ttperf47-verify1 | 全对·链闭 |
 
 ## 证据正文
 
@@ -377,4 +378,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1538 · steps 27 · tokens 845,040
 - **raw 日志**：[results/1013_2320_inorder4-v3b64/raw/1013_2321_trainticket-performance-46](../results/1013_2320_inorder4-v3b64/raw/1013_2321_trainticket-performance-46/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Metric-surface entry chain (per the wording's alert-first discipline): in the injection window 2026-03-16 01:47:22~01:49:12 the alert set carries exactly ONE latency row — ts-travel-service LATENCY_DEGRADATION [Slow Response] p90 9.45ms -> 2121.88ms (+22357.3%, Peak 2181.07ms) — i.e. a fixed ~2.1s ADDITIVE delay on a near-zero baseline, the single runaway deviation; the dependency graph closes it: its direct neighbours are the ripples (ts-gateway-service THROUGHPUT_SURGE +319.2% RPS = caller retry storm; ts-ui-dashboard RPS +274.1% / success 78.9%->62.5%), while ts-order-service (cpu_cfs 0.671
+
+### case-47
+
+- **结论**：`app/ts-user-service` + `pod_network_delay` ｜ 标签 `app/ts-user-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 472,209
+- **raw 日志**：[results/1013_2331_ttperf47-verify1/raw/1013_2331_trainticket-performance-47](../results/1013_2331_ttperf47-verify1/raw/1013_2331_trainticket-performance-47/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert-first per the 'Service quality degradation.' SOP (exact L3 match): only two LATENCY_DEGRADATION rows move BOTH p50 and p90 — ts-preserve-service (p50 0->4833.33ms, p90 0->8981.48ms, peak 41417.50ms) and ts-user-service (p50 0->2460.53ms, p90 0->4486.11ms, peak 4750.00ms); all other rows are ripple/collateral (gateway Inbound +249.8% / RPS +230.2%, contacts/seat/station/travel outbound surges, ui-dashboard cpu 0.01->0.03 cores, ts-order-service cpu_cfs 1.029s Throttled with no latency of its own, ts-auth-service sub-core 0.02->0.05 cores). Dependency graph shows ts-preserve-service -> ts-
 
