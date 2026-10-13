@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "51",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\trainticket\\runtime\\51\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_0151_inorder4-v3b89\\traces\\trainticket\\dsh-tsm\\runtime\\51\\51.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Runtime_Fault",
+      "fault_object": "app/ts-train-food-service",
+      "root_cause": "mysql_invalid_credentials"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/ts-train-food-service",
+        "root_cause": "mysql_invalid_credentials"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/tsdb-mysql",
+        "root_cause": "mysql_invalid_credentials"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/ts-train-food-service",
+        "root_cause": "missing_secret_binding"
+      }
+    ],
+    "tool_call_count": 18,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 0.75,
+      "EOC": 0.5,
+      "ECR": 0.0,
+      "EE": 0.2222222222222222,
+      "steps": 19.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

@@ -1,0 +1,25 @@
+INFO:     Started server process [26716]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:56569 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56570 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:56569 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56571 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50314 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50316 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50328 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:50328 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-station-food-service"}
+INFO:     127.0.0.1:50328 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50328 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50328 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50328 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-station-food-service"}
+INFO:     127.0.0.1:54442 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54442 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54442 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52289 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-station-food-service","port":18855}
+INFO:     127.0.0.1:52289 - "POST /mcp HTTP/1.1" 200 OK

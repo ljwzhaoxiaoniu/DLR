@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/61,1.0,1.0,1.0,1.0,1.0,1.0,0.2,16.0,0.0,0.0,app/frontend,code_excessive_file_writes,app/frontend,code_excessive_file_writes,
+boutique/service/27,1.0,1.0,1.0,1.0,1.0,1.0,0.21428571428571427,15.0,0.0,0.0,app/paymentservice,service_protocol_mismatch,app/paymentservice,service_protocol_mismatch,
+trainticket/runtime/45,1.0,1.0,1.0,0.75,0.75,0.0,0.2,26.0,0.0,0.0,app/ts-price-service,mysql_invalid_credentials,app/ts-price-service,mysql_invalid_credentials,
+boutique/performance/26,1.0,1.0,1.0,1.0,1.0,1.0,0.13043478260869565,24.0,0.0,0.0,node/worker-01,node_network_packet_loss,node/worker-01,node_network_packet_loss,

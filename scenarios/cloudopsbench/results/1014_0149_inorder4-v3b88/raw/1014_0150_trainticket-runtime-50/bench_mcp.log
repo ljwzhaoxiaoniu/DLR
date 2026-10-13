@@ -1,0 +1,36 @@
+INFO:     Started server process [25384]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:62891 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62892 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:62891 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62893 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62896 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62898 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62902 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:62902 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62902 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62902 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-ticket-office-service"}
+INFO:     127.0.0.1:62902 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62919 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62919 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-ticket-office-service","port":16108}
+INFO:     127.0.0.1:62919 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62931 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62931 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"tsdb-mysql-leader","port":3306}
+INFO:     127.0.0.1:62931 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"tsdb-mysql"}
+INFO:     127.0.0.1:62938 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62938 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62938 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62943 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62943 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62943 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62943 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62952 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62952 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62952 - "POST /mcp HTTP/1.1" 200 OK

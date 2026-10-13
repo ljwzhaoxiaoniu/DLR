@@ -1,0 +1,34 @@
+INFO:     Started server process [9668]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:59065 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59066 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:59065 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59067 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59070 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59072 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59078 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59078 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-train-food-service"}
+INFO:     127.0.0.1:59089 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-train-food-service"}
+INFO:     127.0.0.1:59089 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59089 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59089 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-food-service"}
+INFO:     127.0.0.1:59100 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59100 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"tsdb-mysql"}
+INFO:     127.0.0.1:59100 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-station-food-service"}
+INFO:     127.0.0.1:59108 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-order-service"}
+INFO:     127.0.0.1:59108 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-food-service"}
+INFO:     127.0.0.1:59108 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59108 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-train-food-service","port":19999}
+INFO:     127.0.0.1:59121 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:59121 - "POST /mcp HTTP/1.1" 200 OK

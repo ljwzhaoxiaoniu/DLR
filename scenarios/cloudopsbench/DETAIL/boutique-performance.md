@@ -1,6 +1,6 @@
 # 评测明细 · boutique/performance — cloudopsbench
 
-> 本家族已跑 **21/29** 题：JRA ✅20 ❌1 ｜ 证据链全闭 20 ｜ token 中位 172,807 ｜ 生成 2026-10-13T16:54:13.295Z
+> 本家族已跑 **29/29** 题：JRA ✅25 ❌4 ｜ 证据链全闭 26 ｜ token 中位 231,341 ｜ 生成 2026-10-13T18:00:01.919Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -28,6 +28,14 @@
 | [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 21 | 105,777 | 0 | 0 | 1014_0046_inorder4-v3b76 | 全对·链闭 |
 | [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 137,699 | 0 | 0 | 1014_0048_inorder4-v3b77 | 全对·链闭 |
 | [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3182 | 23 | 172,807 | 0 | 0 | 1014_0051_inorder4-v3b78 | 全对·链闭 |
+| [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.087 | 47 | 1,023,978 | 0 | 0 | 1014_0054_inorder4-v3b79 | 全对·链闭 |
+| [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1481 | 28 | 247,891 | 0 | 0 | 1014_0104_inorder4-v3b80 | 全对·链闭 |
+| [24](#case-24) | 0 | 1 | 0 | 0.5 | 0.5 | 0 | 0.0455 | 45 | 860,543 | 0 | 0 | 1014_0108_inorder4-v3b81 | 未命中 |
+| [25](#case-25) | 0 | 0 | 0 | 0.5 | 0.5 | 0 | 0.069 | 30 | 312,686 | 0 | 0 | 1014_0118_inorder4-v3b82 | 未命中 |
+| [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1304 | 24 | 222,648 | 0 | 0 | 1014_0122_inorder4-v3b83 | 全对·链闭 |
+| [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1034 | 30 | 312,461 | 0 | 0 | 1014_0124_inorder4-v3b84 | 全对·链闭 |
+| [28](#case-28) | 1 | 0 | 0 | 1 | 1 | 1 | 0.1176 | 35 | 529,973 | 0 | 0 | 1014_0130_inorder4-v3b85 | 未命中 |
+| [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0882 | 35 | 350,169 | 0 | 0 | 1014_0141_inorder4-v3b86 | 全对·链闭 |
 
 ## 证据正文
 
@@ -177,4 +185,60 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3182 · steps 23 · tokens 172,807
 - **raw 日志**：[results/1014_0051_inorder4-v3b78/raw/1014_0052_boutique-performance-21](../results/1014_0051_inorder4-v3b78/raw/1014_0052_boutique-performance-21/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Metric surface names shippingservice as epicenter: its alert row carries an actual deviation beyond saturation (THROUGHPUT_DROP 12.06->1.01 req/s, ERROR_SPIKE success 100%->16.7%) plus the steepest latency escalation (p90 4.18ms->1716.67ms); the only other two alerted services (checkoutservice p90 ->3589ms, frontend p90 ->2043ms) are exactly shippingservice's direct upstream neighbors (GetServiceDependencies: shipping is a leaf with upstream frontend+checkoutservice), and the added delay is a fixed amount per call (frontend ~+1.7s for one GetQuote, checkoutservice ~+3.5s for GetQuote+ShipOrder
+
+### case-22
+
+- **结论**：`node/worker-02` + `node_network_delay` ｜ 标签 `node/worker-02` + `node_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.087 · steps 47 · tokens 1,023,978
+- **raw 日志**：[results/1014_0054_inorder4-v3b79/raw/1014_0055_boutique-performance-22](../results/1014_0054_inorder4-v3b79/raw/1014_0055_boutique-performance-22/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Metrics-level performance fault with a clean object layer. Alerts (window 2025-12-26 12:23:21~12:25:16) show pure latency degradation with no restarts/failures: recommendationservice p50 3.01ms->4328.87ms (+143716%), checkoutservice p50 17.55ms->3632.62ms and success rate 100%->25%, frontend p50 15.96ms->3480.10ms (+21709%), shippingservice p90 4.32ms->1846.45ms, productcatalogservice p90 1.48ms->606.48ms, adservice p90 5.63ms->205.27ms, plus ~50% RPS/pps drops cluster-wide. All 11 boutique pods are 2/2 Running with 0 restarts; all nodes Ready with no pressure/taint; kubelet, kube-proxy and co
+
+### case-23
+
+- **结论**：`node/worker-02` + `node_network_delay` ｜ 标签 `node/worker-02` + `node_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1481 · steps 28 · tokens 247,891
+- **raw 日志**：[results/1014_0104_inorder4-v3b80/raw/1014_0105_boutique-performance-23](../results/1014_0104_inorder4-v3b80/raw/1014_0105_boutique-performance-23/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Service latency increased significantly' enters the telemetry chain (L2 consensus: alerts -> object-layer exclusion -> metric reading). Alerts (2026-01-17 20:09:14~20:11:09) show all 11 boutique services degraded with uniform throughput drop (-55~-72%) and explicit LATENCY_DEGRADATION on cartservice p50 2.45ms->1236.06ms (+50450%), checkoutservice 17.60ms->7004.69ms (+39696%) and frontend 16.05ms->11557.08ms (+71921%); the ONLY infrastructure-level anomaly is node worker-02 NETWORK_QUALITY_DEGRADED [TCP Retransmission] Normal=0.00retrans -> Current=0.92retrans (new spike), while maste
+
+### case-24
+
+- **结论**：`node/worker-01` + `node_network_delay` ｜ 标签 `node/worker-02` + `node_network_delay`（✗ 与标签不符）
+- **流程**：MC 0.5 · EOC 0.5 · ECR 0 · EE 0.0455 · steps 45 · tokens 860,543
+- **raw 日志**：[results/1014_0108_inorder4-v3b81/raw/1014_0109_boutique-performance-24](../results/1014_0108_inorder4-v3b81/raw/1014_0109_boutique-performance-24/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All boutique pods Running with 0 restarts and no FailedCreate/FailedScheduling/probe/quota/image events -> object layer is clean (latency fault is metric/wire level). GetAlerts shows one infrastructure anomaly: Node worker-01 NETWORK_QUALITY_DEGRADED [TCP Retransmission] 0.00 -> 0.70 retrans/s (new spike), plus LATENCY_DEGRADATION on checkoutservice (17.35ms -> 3559.79ms) and recommendationservice (3.01ms -> 1186.20ms), frontend success rate 99.9%->37.5% / throughput -81.4% / traffic -75%, adservice success rate 100%->76%. Frontend error logs in-window: 370x 'failed to get ads: Unavailable des
+
+### case-25
+
+- **结论**：`app/productcatalogservice` + `pod_network_delay` ｜ 标签 `node/worker-02` + `node_network_delay`（✗ 与标签不符）
+- **流程**：MC 0.5 · EOC 0.5 · ECR 0 · EE 0.069 · steps 30 · tokens 312,686
+- **raw 日志**：[results/1014_0118_inorder4-v3b82/raw/1014_0119_boutique-performance-25](../results/1014_0118_inorder4-v3b82/raw/1014_0119_boutique-performance-25/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (11:38:49~11:40:44) show LATENCY_DEGRADATION on exactly one epicenter and its only dependent: productcatalogservice-p90latency Normal=2.50ms -> Current=1158.68ms (+46268.0%), and recommendationservice p50 3.00ms -> 946.61ms / p90 4.81ms -> 2151.41ms; all other services show only closed-loop traffic/throughput drops (-65%~-75%) and frontend a success-rate drop 99.9% -> 25.0%. Object layer is clean: all 11 pods 2/2 Running, RESTARTS 0, no Warning events, productcatalogservice pod Running/Ready on worker-01 with Normal Scheduled/Pulled/Created/Started events only. GetServiceDependencies sh
+
+### case-26
+
+- **结论**：`node/worker-01` + `node_network_packet_loss` ｜ 标签 `node/worker-01` + `node_network_packet_loss`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1304 · steps 24 · tokens 222,648
+- **raw 日志**：[results/1014_0122_inorder4-v3b83/raw/1014_0123_boutique-performance-26](../results/1014_0122_inorder4-v3b83/raw/1014_0123_boutique-performance-26/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Object layer is clean (all 11 boutique pods 2/2 Running, 0 restarts; node worker-01 Ready, no taints/pressures; kubelet/kube-proxy/containerd all active), and TCP connectivity to adservice:9555, productcatalogservice:3550, recommendationservice:8080 and frontend:80 all returned 'open / Connection Succeeded', excluding pod-start, probe, scheduling, node-component and service addressing faults. The break is at node network quality: GetAlerts shows Node worker-01 'NETWORK_QUALITY_DEGRADED [TCP Retransmission] | Normal=0.01retrans -> Current=8.49retrans (+59027.1%)' together with service p50 laten
+
+### case-27
+
+- **结论**：`node/worker-02` + `node_network_packet_loss` ｜ 标签 `node/worker-02` + `node_network_packet_loss`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1034 · steps 30 · tokens 312,461
+- **raw 日志**：[results/1014_0124_inorder4-v3b84/raw/1014_0125_boutique-performance-27](../results/1014_0124_inorder4-v3b84/raw/1014_0125_boutique-performance-27/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (window 12:32:28~12:34:23) show p90 latency degradation on adservice (16.00->66.24ms), recommendationservice (5.76->203.68ms) and checkoutservice (93.94->800.96ms), plus NETWORK_QUALITY_DEGRADED [TCP Retransmission] on worker-01 (0.07->0.61) and worker-02 (0.00->6.67, New Spike, 10x higher). Object layer is clean and therefore not the break: all 11 boutique pods 2/2 Running with 0 restarts, all 4 nodes Ready with no Memory/Disk/PID pressure and no taints, resource requests only ~20% on worker-02, no Warning events in the namespace, adservice/recommendationservice logs all INFO, checkout
+
+### case-28
+
+- **结论**：`node/worker-02` + `node_network_delay` ｜ 标签 `node/worker-02` + `node_network_packet_loss`（✗ 与标签不符）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1176 · steps 35 · tokens 529,973
+- **raw 日志**：[results/1014_0130_inorder4-v3b85/raw/1014_0131_boutique-performance-28](../results/1014_0130_inorder4-v3b85/raw/1014_0131_boutique-performance-28/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Telemetry-chain incident with a clean object layer. Alerts (19:57:17~19:59:12): LATENCY_DEGRADATION on frontend (p50 16.78ms -> 421.43ms, +2411.0%) and checkoutservice (18.07ms -> 392.23ms, +2070.7%, both cross-node fan-out aggregators, uniform ~+400ms); TRAFFIC_ANOMALY [Network Drop] ~-50% on currencyservice (In 154.67->64.62pps/-58.2%, Out 149.57->69.30/-53.7%), productcatalogservice (153.18->75.34/-50.8%, 120.35->60.53/-49.7%) and redis-cart (46.09->22.87/-50.4%); NETWORK_QUALITY_DEGRADED [TCP Retransmission] on worker-02 (0.00 -> 9.07retrans, New Spike) and worker-01 (0.03 -> 0.53, +1770.6
+
+### case-29
+
+- **结论**：`node/worker-02` + `node_network_packet_loss` ｜ 标签 `node/worker-02` + `node_network_packet_loss`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.0882 · steps 35 · tokens 350,169
+- **raw 日志**：[results/1014_0141_inorder4-v3b86/raw/1014_0142_boutique-performance-29](../results/1014_0141_inorder4-v3b86/raw/1014_0142_boutique-performance-29/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are 2/2 Running with 0 restarts, namespace events contain no Warning, all nodes are Ready with no pressure, kubelet/kube-proxy/containerd are active on worker-01/worker-02, and every TCP connectivity check succeeded -> no restart/probe/scheduling/addressing/component fault; GetErrorLogs is empty and post-window logs show normal fast responses (frontend took_ms 15~33ms). The fault is purely network-performance class inside the 12:09:17~12:11:12 window: 8 LATENCY_DEGRADATION alerts (frontend p90 72.73->2685.82ms +3592.8%, checkoutservice p90 38.93->943.59ms +2324.0%, recomme
 

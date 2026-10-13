@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "60",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\codedefect\\60\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_0118_inorder4-v3b82\\traces\\boutique\\dsh-tsm\\codedefect\\60\\60.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Application_Code_Defect",
+      "fault_object": "app/frontend",
+      "root_cause": "code_excessive_file_writes"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/frontend",
+        "root_cause": "code_excessive_file_writes"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/frontend",
+        "root_cause": "code_busy_loop"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/frontend",
+        "root_cause": "pod_cpu_overload"
+      }
+    ],
+    "tool_call_count": 14,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.21428571428571427,
+      "steps": 15.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

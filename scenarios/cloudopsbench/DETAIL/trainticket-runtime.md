@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **40/96** 题：JRA ✅40 ❌0 ｜ 证据链全闭 36 ｜ token 中位 476,723 ｜ 生成 2026-10-13T16:54:13.295Z
+> 本家族已跑 **54/96** 题：JRA ✅54 ❌0 ｜ 证据链全闭 42 ｜ token 中位 435,734 ｜ 生成 2026-10-13T18:00:01.919Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -47,6 +47,20 @@
 | [38](#case-38) | 1 | 1 | 1 | 1 | 1 | 1 | 0.375 | 17 | 338,478 | 0 | 0 | 1014_0046_inorder4-v3b76 | 全对·链闭 |
 | [39](#case-39) | 1 | 1 | 1 | 0.75 | 0.75 | 0 | 0.25 | 17 | 425,727 | 0 | 0 | 1014_0048_inorder4-v3b77 | 结果对·链未闭 |
 | [40](#case-40) | 1 | 1 | 1 | 0.75 | 0.75 | 0 | 0.3333 | 13 | 293,034 | 0 | 0 | 1014_0051_inorder4-v3b78 | 结果对·链未闭 |
+| [41](#case-41) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 25 | 730,032 | 0.0417 | 0 | 1014_0054_inorder4-v3b79 | 全对·链闭 |
+| [42](#case-42) | 1 | 1 | 1 | 1 | 1 | 1 | 0.35 | 21 | 746,246 | 0.05 | 0 | 1014_0104_inorder4-v3b80 | 全对·链闭 |
+| [43](#case-43) | 1 | 1 | 1 | 0.75 | 0.75 | 0 | 0.2353 | 18 | 217,757 | 0 | 0 | 1014_0108_inorder4-v3b81 | 结果对·链未闭 |
+| [44](#case-44) | 1 | 1 | 1 | 0.75 | 0.75 | 0 | 0.25 | 13 | 310,952 | 0 | 0 | 1014_0118_inorder4-v3b82 | 结果对·链未闭 |
+| [45](#case-45) | 1 | 1 | 1 | 0.75 | 0.75 | 0 | 0.2 | 26 | 336,856 | 0 | 0 | 1014_0122_inorder4-v3b83 | 结果对·链未闭 |
+| [46](#case-46) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 318,741 | 0 | 0 | 1014_0124_inorder4-v3b84 | 全对·链闭 |
+| [47](#case-47) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 429,506 | 0 | 0 | 1014_0130_inorder4-v3b85 | 全对·链闭 |
+| [48](#case-48) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4286 | 15 | 220,649 | 0 | 0 | 1014_0141_inorder4-v3b86 | 全对·链闭 |
+| [49](#case-49) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 440,500 | 0 | 0 | 1014_0147_inorder4-v3b87 | 全对·链闭 |
+| [50](#case-50) | 1 | 1 | 1 | 0.75 | 0.75 | 0 | 0.1667 | 25 | 416,857 | 0 | 0 | 1014_0149_inorder4-v3b88 | 结果对·链未闭 |
+| [51](#case-51) | 1 | 1 | 1 | 0.75 | 0.5 | 0 | 0.2222 | 19 | 343,167 | 0 | 0 | 1014_0151_inorder4-v3b89 | 结果对·链未闭 |
+| [52](#case-52) | 1 | 1 | 1 | 0.5 | 0.25 | 0 | 0.2 | 16 | 311,634 | 0 | 0 | 1014_0153_inorder4-v3b90 | 结果对·链未闭 |
+| [53](#case-53) | 1 | 1 | 1 | 0.75 | 0.75 | 0 | 0.3333 | 16 | 498,040 | 0 | 0 | 1014_0155_inorder4-v3b91 | 结果对·链未闭 |
+| [54](#case-54) | 1 | 1 | 1 | 0.75 | 0.75 | 0 | 0.3077 | 14 | 292,074 | 0 | 0 | 1014_0158_inorder4-v3b92 | 结果对·链未闭 |
 
 ## 证据正文
 
@@ -329,4 +343,102 @@
 - **流程**：MC 0.75 · EOC 0.75 · ECR 0 · EE 0.3333 · steps 13 · tokens 293,034
 - **raw 日志**：[results/1014_0051_inorder4-v3b78/raw/1014_0052_trainticket-runtime-40](../results/1014_0051_inorder4-v3b78/raw/1014_0052_trainticket-runtime-40/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Namespace train-ticket: exactly one workload is unhealthy — pod ts-inside-payment-service-5d5bd5c84d-cp9g6 is 0/1 CrashLoopBackOff with 4 restarts, Last State Terminated/Error/exit 1 (not OOMKilled), and the active Warning row in the namespace events is 'BackOff restarting failed container ts-inside-payment-service'. The alert points at the same service (POST /api/v1/inside_pay_service/inside_payment -> HTTPError 503). Its logs show the break at the credential stage, not the transport stage: 'HikariPool-1 - Exception during pool initialization' / 'java.sql.SQLException: Access denied for user 
+
+### case-41
+
+- **结论**：`app/ts-notification-service` + `mysql_invalid_credentials` ｜ 标签 `app/ts-notification-service` + `mysql_invalid_credentials`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 25 · tokens 730,032
+- **raw 日志**：[results/1014_0054_inorder4-v3b79/raw/1014_0055_trainticket-runtime-41](../results/1014_0054_inorder4-v3b79/raw/1014_0055_trainticket-runtime-41/)（ndjson / mcp.jsonl / meta）
+- **摘要**：In namespace train-ticket the pods inventory shows exactly one outlier: pod ts-notification-service-675d7d65b4-lgcfw is 0/1 CrashLoopBackOff with 4 restarts (all other 44 ts-* workloads are 1/1 Running). Its own signal leads: container logs show 'java.sql.SQLException: Access denied for user ts@172.20.1.137 (using password: YES)', 'SQL Error: 1045, SQLState: 28000', HikariPool-1 pool initialization failure and 'Failed to initialize JPA EntityManagerFactory ... Unable to open JDBC Connection for DDL execution', i.e. MySQL rejects the supplied credential at startup, Spring aborts ('Application r
+
+### case-42
+
+- **结论**：`app/ts-order-other-service` + `mysql_invalid_credentials` ｜ 标签 `app/ts-order-other-service` + `mysql_invalid_credentials`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.35 · steps 21 · tokens 746,246
+- **raw 日志**：[results/1014_0104_inorder4-v3b80/raw/1014_0105_trainticket-runtime-42](../results/1014_0104_inorder4-v3b80/raw/1014_0105_trainticket-runtime-42/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Inventory scan of train-ticket showed exactly one outlier: pod ts-order-other-service-77f574b58b-sxg86 0/1 CrashLoopBackOff (4 restarts), mirrored at workload level by deployment ts-order-other-service 0/1 AVAILABLE while all other deployments are 1/1. Its own logs/sheet give the mechanism: java.sql.SQLException: Access denied for user 'ts'@'172.20.2.194' (using password: YES), SQL Error 1045 / SQLState 28000, HikariPool-1 pool init failure, JPA EntityManagerFactory init failure, container Terminated with Exit Code 1 and repeated BackOff restarts -> the service never becomes Ready, so its Serv
+
+### case-43
+
+- **结论**：`app/ts-order-service` + `mysql_invalid_credentials` ｜ 标签 `app/ts-order-service` + `mysql_invalid_credentials`（✓ 逐字命中）
+- **流程**：MC 0.75 · EOC 0.75 · ECR 0 · EE 0.2353 · steps 18 · tokens 217,757
+- **raw 日志**：[results/1014_0108_inorder4-v3b81/raw/1014_0109_trainticket-runtime-43](../results/1014_0108_inorder4-v3b81/raw/1014_0109_trainticket-runtime-43/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only ts-order-service is down: pod ts-order-service-57d9f6ffbd-2p24f is 0/1 CrashLoopBackOff with 4 restarts, Last State Terminated/Error/Exit Code 1, readiness tcp-socket :12031 never passing, and event 'Warning BackOff Back-off restarting failed container ts-order-service'. Its container logs show the mechanism verbatim: 'HikariPool-1 - Exception during pool initialization', 'java.sql.SQLException: Access denied for user 'ts'@'172.20.2.81' (using password: YES)' (SQL Error 1045 / SQLState 28000, i.e. credentials rejected, not a network or pool-exhaustion error), then 'Failed to initialize JP
+
+### case-44
+
+- **结论**：`app/ts-payment-service` + `mysql_invalid_credentials` ｜ 标签 `app/ts-payment-service` + `mysql_invalid_credentials`（✓ 逐字命中）
+- **流程**：MC 0.75 · EOC 0.75 · ECR 0 · EE 0.25 · steps 13 · tokens 310,952
+- **raw 日志**：[results/1014_0118_inorder4-v3b82/raw/1014_0118_trainticket-runtime-44](../results/1014_0118_inorder4-v3b82/raw/1014_0118_trainticket-runtime-44/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert: 'Process payment' POST /api/v1/inside_pay_service/inside_payment via ts-inside-payment-service returns 500 (13x). Caller log (ts-inside-payment-service) repeats java.lang.IllegalArgumentException: Service Instance cannot be null, i.e. its downstream callee is unavailable; GetServiceDependencies(ts-inside-payment-service) confirms the callee is ts-payment-service. Pods listing (train-ticket, wide) shows a single outlier among 46 pods: ts-payment-service-76d7d44b5b-xjcsw 0/1 CrashLoopBackOff, 4 restarts; endpoints/ts-payment-service is EMPTY (no ready address). Namespace events: 'Warning 
+
+### case-45
+
+- **结论**：`app/ts-price-service` + `mysql_invalid_credentials` ｜ 标签 `app/ts-price-service` + `mysql_invalid_credentials`（✓ 逐字命中）
+- **流程**：MC 0.75 · EOC 0.75 · ECR 0 · EE 0.2 · steps 26 · tokens 336,856
+- **raw 日志**：[results/1014_0122_inorder4-v3b83/raw/1014_0122_trainticket-runtime-45](../results/1014_0122_inorder4-v3b83/raw/1014_0122_trainticket-runtime-45/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only outlier in the train-ticket pod inventory: ts-price-service-69f84bfbc4-lhrjp 0/1 CrashLoopBackOff (Exit Code 1, Ready False, Warning BackOff from kubelet). Its own signal confirms real unavailability: endpoints/ts-price-service has an empty ENDPOINTS column and the TCP probe on its own declared port 16579 (taken from its Service spec) fails from worker-01/02/03. Mechanism is verbatim in its logs: 'java.sql.SQLException: Access denied for user ts@172.20.2.93 (using password: YES)', SQL Error 1045 / SQLState 28000 during HikariPool initialization, killing the Spring context ('Application ru
+
+### case-46
+
+- **结论**：`app/ts-route-service` + `mysql_invalid_credentials` ｜ 标签 `app/ts-route-service` + `mysql_invalid_credentials`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 318,741
+- **raw 日志**：[results/1014_0124_inorder4-v3b84/raw/1014_0125_trainticket-runtime-46](../results/1014_0124_inorder4-v3b84/raw/1014_0125_trainticket-runtime-46/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace train-ticket: only ts-route-service-84fdb67598-lctt7 is anomalous (0/1 CrashLoopBackOff, 4 restarts; all other ~50 pods 1/1 Running incl. tsdb-mysql). Pod detail: Last State Terminated, Reason Error, Exit Code 1, BackOff events (kubelet) latest 86s ago. Its container logs repeat 'java.sql.SQLException: Access denied for user 'ts'@'172.20.2.66' (using password: YES)' / 'SQL Error: 1045, SQLState: 28000' / 'Failed to initialize JPA EntityManagerFactory ... Unable to open JDBC Connection for DDL execution' / 'Application run failed' => startup fails on MySQL authentication, readiness pr
+
+### case-47
+
+- **结论**：`app/ts-security-service` + `mysql_invalid_credentials` ｜ 标签 `app/ts-security-service` + `mysql_invalid_credentials`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 19 · tokens 429,506
+- **raw 日志**：[results/1014_0130_inorder4-v3b85/raw/1014_0131_trainticket-runtime-47](../results/1014_0130_inorder4-v3b85/raw/1014_0131_trainticket-runtime-47/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert pointer: ts-preserve-service POST /api/v1/preserveservice/preserve returns 500 (94 occurrences). Topology walk from the symptom side shows ts-preserve-service calls ts-security-service. Inventory outlier: ts-security-service-64cb5fb74d-w7425 is 0/1 CrashLoopBackOff with 4 restarts, Last State Terminated Reason=Error Exit Code=1; the sibling replica gbgb8 shows the same BackOff. Container logs name the mechanism verbatim: 'java.sql.SQLException: Access denied for user 'ts'@'172.20.1.36' (using password: YES)', 'SQL Error: 1045, SQLState: 28000', 'HikariPool-1 - Exception during pool initi
+
+### case-48
+
+- **结论**：`app/ts-station-food-service` + `mysql_invalid_credentials` ｜ 标签 `app/ts-station-food-service` + `mysql_invalid_credentials`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4286 · steps 15 · tokens 220,649
+- **raw 日志**：[results/1014_0141_inorder4-v3b86/raw/1014_0142_trainticket-runtime-48](../results/1014_0141_inorder4-v3b86/raw/1014_0142_trainticket-runtime-48/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace train-ticket: ts-station-food-service is the sole workload outlier — pod ts-station-food-service-68497bf65b-pdhfm on worker-02 shows 0/1 READY, CrashLoopBackOff, Restart Count 4, last termination Exit Code 1, and its Service ts-station-food-service has an EMPTY endpoints list, with TCP 18855 connectivity failing from worker-01/02/03 (partial unreachability of that service). Owner chain (Deployment/ReplicaSet 68497bf65b) is healthy and scheduling/image/mount are normal (events: Scheduled/Pulled/Created/Started then Warning BackOff). Container logs give the mechanism verbatim: 'java.sq
+
+### case-49
+
+- **结论**：`app/ts-station-service` + `mysql_invalid_credentials` ｜ 标签 `app/ts-station-service` + `mysql_invalid_credentials`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 440,500
+- **raw 日志**：[results/1014_0147_inorder4-v3b87/raw/1014_0148_trainticket-runtime-49](../results/1014_0147_inorder4-v3b87/raw/1014_0148_trainticket-runtime-49/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Inventory outlier: pod ts-station-service-fd984464d-g552p is 0/1 CrashLoopBackOff (Restart Count 5, Last State Terminated Reason=Error Exit Code=1; kubelet event 'Warning BackOff Back-off restarting failed container ts-station-service'). Container logs show the mechanism: 'java.sql.SQLException: Access denied for user 'ts'@'172.20.1.198' (using password: YES)' during 'HikariPool-1 - Exception during pool initialization', leading to 'Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]' and 'Application run failed' - the app exits 1 at startup, so the container
+
+### case-50
+
+- **结论**：`app/ts-ticket-office-service` + `mysql_invalid_credentials` ｜ 标签 `app/ts-ticket-office-service` + `mysql_invalid_credentials`（✓ 逐字命中）
+- **流程**：MC 0.75 · EOC 0.75 · ECR 0 · EE 0.1667 · steps 25 · tokens 416,857
+- **raw 日志**：[results/1014_0149_inorder4-v3b88/raw/1014_0150_trainticket-runtime-50](../results/1014_0149_inorder4-v3b88/raw/1014_0150_trainticket-runtime-50/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pod inventory shows a single outlier: ts-ticket-office-service-588b66bc4b-ztkhq 0/1 CrashLoopBackOff with 5 restarts (all other 44 ts-* workloads 1/1 Running). A TCP probe on the port its Service declares (ts-ticket-office-service:16108) failed from worker-01/02/03. Its container logs show the Node app starting, connecting, then throwing 'Error: Cannot enqueue Query after fatal error.' (PROTOCOL_ENQUEUE_AFTER_FATAL_ERROR) at /app/bin/db.js:24 right after the INSERT INTO office during MySQL handshake, exiting with code 1. Namespace/pod events bind the mechanism to that exact pod: 'BackOff - Bac
+
+### case-51
+
+- **结论**：`app/ts-train-food-service` + `mysql_invalid_credentials` ｜ 标签 `app/ts-train-food-service` + `mysql_invalid_credentials`（✓ 逐字命中）
+- **流程**：MC 0.75 · EOC 0.5 · ECR 0 · EE 0.2222 · steps 19 · tokens 343,167
+- **raw 日志**：[results/1014_0151_inorder4-v3b89/raw/1014_0152_trainticket-runtime-51](../results/1014_0151_inorder4-v3b89/raw/1014_0152_trainticket-runtime-51/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-train-food-service is the only workload in train-ticket without available replicas: pod ts-train-food-service-54754ff6f6-t6sj2 is 0/1 CrashLoopBackOff with 4 restarts, Last State Terminated Reason=Error Exit Code=1 (no OOM/137, no probe or scheduling/mount/image event). Its container log ends in javax.persistence.PersistenceException -> org.hibernate.exception.GenericJDBCException: Unable to open JDBC Connection for DDL execution -> java.sql.SQLException: Access denied for user 'ts'@'172.20.3.85' (using password: YES), and tsdb-mysql's own error log echoes 'Access denied for user ts'. TCP r
+
+### case-52
+
+- **结论**：`app/ts-train-service` + `mysql_invalid_credentials` ｜ 标签 `app/ts-train-service` + `mysql_invalid_credentials`（✓ 逐字命中）
+- **流程**：MC 0.5 · EOC 0.25 · ECR 0 · EE 0.2 · steps 16 · tokens 311,634
+- **raw 日志**：[results/1014_0153_inorder4-v3b90/raw/1014_0154_trainticket-runtime-52](../results/1014_0153_inorder4-v3b90/raw/1014_0154_trainticket-runtime-52/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only outlier in the namespace inventory is ts-train-service-79b45885dd-smhv9 (0/1 CrashLoopBackOff, 4 restarts). Its container log ends in 'Caused by: java.sql.SQLException: Access denied for user ts@172.20.3.174 (using password: YES)' during Hibernate SessionFactory build ('Unable to open JDBC Connection for DDL execution'), pod Last State Terminated/Error exit code 1, and namespace events show 'Back-off restarting failed container ts-train-service' x13 - so the container never starts and its service instance is never registered. The caller chain confirms the same victim: ts-basic-service log
+
+### case-53
+
+- **结论**：`app/ts-travel2-service` + `mysql_invalid_credentials` ｜ 标签 `app/ts-travel2-service` + `mysql_invalid_credentials`（✓ 逐字命中）
+- **流程**：MC 0.75 · EOC 0.75 · ECR 0 · EE 0.3333 · steps 16 · tokens 498,040
+- **raw 日志**：[results/1014_0155_inorder4-v3b91/raw/1014_0156_trainticket-runtime-53](../results/1014_0155_inorder4-v3b91/raw/1014_0156_trainticket-runtime-53/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace-wide pod scan showed a single outlier: ts-travel2-service-c56664fd-x6mc6 (0/1 CrashLoopBackOff, 4 restarts, exit code 1, BackOff x10) while all other 40+ pods were 1/1 Running and all workers Ready. Its own logs/DescribeResource show the container starts then dies during Spring/Hibernate bootstrap: 'java.sql.SQLException: Access denied for user 'ts'@'172.20.3.40' (using password: YES)', 'SQL Error: 1045, SQLState: 28000', 'Unable to open JDBC Connection for DDL execution', HikariPool-1 pool initialization exception -> Application run failed -> exit 1 -> readiness probe on :16346 neve
+
+### case-54
+
+- **结论**：`app/ts-travel-service` + `mysql_invalid_credentials` ｜ 标签 `app/ts-travel-service` + `mysql_invalid_credentials`（✓ 逐字命中）
+- **流程**：MC 0.75 · EOC 0.75 · ECR 0 · EE 0.3077 · steps 14 · tokens 292,074
+- **raw 日志**：[results/1014_0158_inorder4-v3b92/raw/1014_0158_trainticket-runtime-54](../results/1014_0158_inorder4-v3b92/raw/1014_0158_trainticket-runtime-54/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-travel-service-55fd6fc94d-sfbc6 on worker-01 shows READY 0/1, STATUS CrashLoopBackOff, RESTARTS 4, last termination 'Error' Exit Code 1; its own logs carry 'java.sql.SQLException: Access denied for user 'ts'@'172.20.1.165' (using password: YES)', 'SQL Error: 1045, SQLState: 28000', HikariPool-1 pool initialization failure and 'Application run failed' — a credential-level failure with TCP/port already reached. GetAppYAML(ts-travel-service) shows envFrom secretRef ts-travel-mysql (present in the namespace with 5 keys) carrying TRAVEL_MYSQL_HOST=tsdb-mysql-leader, PORT 3306, USER ts, PASSWORD 
 

@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/69,1.0,1.0,1.0,1.0,1.0,1.0,0.13636363636363635,23.0,0.0,0.0,app/productcatalogservice,code_artificial_delay,app/productcatalogservice,code_artificial_delay,
+boutique/service/35,1.0,1.0,1.0,1.0,1.0,1.0,0.3125,17.0,0.0,0.0,app/frontend,service_selector_mismatch,app/frontend,service_selector_mismatch,
+trainticket/runtime/53,1.0,1.0,1.0,0.75,0.75,0.0,0.3333333333333333,16.0,0.0,0.0,app/ts-travel2-service,mysql_invalid_credentials,app/ts-travel2-service,mysql_invalid_credentials,
+trainticket/startup/18,1.0,1.0,1.0,1.0,1.0,1.0,0.45454545454545453,12.0,0.0,0.0,app/ts-train-food-service,missing_secret_binding,app/ts-train-food-service,missing_secret_binding,

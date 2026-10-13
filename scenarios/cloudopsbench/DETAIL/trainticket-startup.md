@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/startup — cloudopsbench
 
-> 本家族已跑 **13/24** 题：JRA ✅13 ❌0 ｜ 证据链全闭 13 ｜ token 中位 252,217 ｜ 生成 2026-10-13T16:54:13.295Z
+> 本家族已跑 **19/24** 题：JRA ✅19 ❌0 ｜ 证据链全闭 18 ｜ token 中位 193,872 ｜ 生成 2026-10-13T18:00:01.919Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -20,6 +20,12 @@
 | [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3571 | 15 | 165,408 | 0 | 0 | 1013_1810_inorder4-v3b27 | 全对·链闭 |
 | [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 167,476 | 0 | 0 | 1013_1834_inorder4-v3b30 | 全对·链闭 |
 | [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4167 | 13 | 187,601 | 0 | 0 | 1013_1845_triple-verify1 | 全对·链闭 |
+| [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 169,779 | 0 | 0 | 1014_0147_inorder4-v3b87 | 全对·链闭 |
+| [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 292,879 | 0 | 0 | 1014_0149_inorder4-v3b88 | 全对·链闭 |
+| [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 171,121 | 0 | 0 | 1014_0151_inorder4-v3b89 | 全对·链闭 |
+| [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5 | 11 | 172,531 | 0 | 0 | 1014_0153_inorder4-v3b90 | 全对·链闭 |
+| [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 269,537 | 0 | 0 | 1014_0155_inorder4-v3b91 | 全对·链闭 |
+| [19](#case-19) | 1 | 1 | 1 | 0.75 | 0.75 | 0 | 0.3333 | 13 | 125,495 | 0 | 0 | 1014_0158_inorder4-v3b92 | 结果对·链未闭 |
 
 ## 证据正文
 
@@ -113,4 +119,46 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4167 · steps 13 · tokens 187,601
 - **raw 日志**：[results/1013_1845_triple-verify1/raw/1013_1845_trainticket-startup-13](../results/1013_1845_triple-verify1/raw/1013_1845_trainticket-startup-13/)（ndjson / mcp.jsonl / meta）
 - **摘要**：ts-price-service is the only non-Running workload in train-ticket: pod ts-price-service-755858595b-6ztwg is 0/1 with STATUS CreateContainerConfigError and State Waiting/CreateContainerConfigError. kubelet events on that pod state verbatim: 'Warning Failed (x12 over 5m2s) Error: secret "ts-price-mysql" not found'; the image was already Pulled and the pod was successfully Scheduled to worker-02, excluding image-pull and scheduling classes. GetAppYAML(ts-price-service) shows the template consumes envFrom.secretRef name=ts-price-mysql, yet GetResources(secrets, train-ticket) lists every sibling ts
+
+### case-14
+
+- **结论**：`app/ts-security-service` + `missing_secret_binding` ｜ 标签 `app/ts-security-service` + `missing_secret_binding`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4545 · steps 12 · tokens 169,779
+- **raw 日志**：[results/1014_0147_inorder4-v3b87/raw/1014_0148_trainticket-startup-14](../results/1014_0147_inorder4-v3b87/raw/1014_0148_trainticket-startup-14/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pod inventory outlier: ts-security-service-59cb94797b-t5w8x is 0/1 with STATUS=CreateContainerConfigError (all other 47 pods 1/1 Running). Its own pod sheet and the namespace event surface both carry the mechanism verbatim: kubelet 'Warning Failed ... Error: secret "ts-security-mysql" not found' (x12), while PodScheduled=True rules out scheduling and failed pulls. GetAppYAML(ts-security-service) shows the template binds envFrom.secretRef name=ts-security-mysql with Optional: false, and the secrets listing in train-ticket contains no such Secret (32 secrets, ts-security-mysql absent), so the re
+
+### case-15
+
+- **结论**：`app/ts-station-food-service` + `missing_secret_binding` ｜ 标签 `app/ts-station-food-service` + `missing_secret_binding`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4545 · steps 12 · tokens 292,879
+- **raw 日志**：[results/1014_0149_inorder4-v3b88/raw/1014_0150_trainticket-startup-15](../results/1014_0149_inorder4-v3b88/raw/1014_0150_trainticket-startup-15/)（ndjson / mcp.jsonl / meta）
+- **摘要**：In namespace train-ticket the only outlier pod is ts-station-food-service-d7d77b769-46xcs (0/1, STATUS=CreateContainerConfigError, READY=False); its declared port 18855 fails connectivity from worker-01/02/03 and endpoints/ts-station-food-service has an empty ENDPOINTS list, so the service is genuinely unreachable. Pod detail carries the mechanism verbatim: 'Warning Failed ... kubelet Error: secret "ts-station-food-mysql1" not found' (x12), while scheduling succeeded ('Successfully assigned ... to worker-02') and the image was already present - so the break is at container env assembly, not sc
+
+### case-16
+
+- **结论**：`app/ts-station-service` + `missing_secret_binding` ｜ 标签 `app/ts-station-service` + `missing_secret_binding`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4545 · steps 12 · tokens 171,121
+- **raw 日志**：[results/1014_0151_inorder4-v3b89/raw/1014_0152_trainticket-startup-16](../results/1014_0151_inorder4-v3b89/raw/1014_0152_trainticket-startup-16/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pod ts-station-service-5f5c7cc968-f9dzr is the only outlier: READY 0/1, STATUS CreateContainerConfigError, container State Waiting/Reason CreateContainerConfigError, Restart Count 0. Its endpoints listing for service ts-station-service is empty (Service declares port/targetPort 12345), so the service is genuinely unreachable; the alert shows the caller side failing (POST /api/v1/preserveservice/preserve via ts-preserve-service returns HTTP 500, 61 occurrences). The mechanism event is verbatim on the pod sheet and in the namespace event surface: 'Warning Failed (x12 over 5m4s) kubelet  Error: s
+
+### case-17
+
+- **结论**：`app/ts-ticket-office-service` + `missing_secret_binding` ｜ 标签 `app/ts-ticket-office-service` + `missing_secret_binding`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.5 · steps 11 · tokens 172,531
+- **raw 日志**：[results/1014_0153_inorder4-v3b90/raw/1014_0155_trainticket-startup-17](../results/1014_0153_inorder4-v3b90/raw/1014_0155_trainticket-startup-17/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pod ts-ticket-office-service-5b479ccdf6-9727s reports 0/1 READY with STATUS CreateContainerConfigError (State Waiting) and 0 restarts; its own sheet shows EnvFrom Secret 'ts-ticket-office-mysql' with Optional: false, and kubelet Warning events x12 read verbatim 'Error: secret "ts-ticket-office-mysql" not found'. Scheduling (PodScheduled True) and image pull (Pulled, already present) both succeeded, so the break is at container-config reference resolution, not scheduling/probe/image. The Deployment ts-ticket-office-service is 0/1 available with the same secretRef in its pod template, and the na
+
+### case-18
+
+- **结论**：`app/ts-train-food-service` + `missing_secret_binding` ｜ 标签 `app/ts-train-food-service` + `missing_secret_binding`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4545 · steps 12 · tokens 269,537
+- **raw 日志**：[results/1014_0155_inorder4-v3b91/raw/1014_0157_trainticket-startup-18](../results/1014_0155_inorder4-v3b91/raw/1014_0157_trainticket-startup-18/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace-wide pod listing showed exactly one outlier: ts-train-food-service-57684b5b44-kbhjt 0/1 CreateContainerConfigError. Its own describe sheet shows State Waiting/CreateContainerConfigError with 'Environment Variables from: ts-train-food-mysql Secret Optional: false', image already present on machine (Pulled) and successful scheduling, so the break is at container-config/admission, not scheduling or image pull. The live kubelet event on that pod reads verbatim 'Error: secret "ts-train-food-mysql" not found' (x12 over 5m5s, still recurring 4m20s ago). The deployment template confirms the 
+
+### case-19
+
+- **结论**：`app/ts-train-service` + `missing_secret_binding` ｜ 标签 `app/ts-train-service` + `missing_secret_binding`（✓ 逐字命中）
+- **流程**：MC 0.75 · EOC 0.75 · ECR 0 · EE 0.3333 · steps 13 · tokens 125,495
+- **raw 日志**：[results/1014_0158_inorder4-v3b92/raw/1014_0159_trainticket-startup-19](../results/1014_0158_inorder4-v3b92/raw/1014_0159_trainticket-startup-19/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-train-service pod ts-train-service-68845fd764-6xwgp 是 pods 清单唯一离群行（0/1 CreateContainerConfigError，其余 42 个业务 Pod 均 1/1 Running）。Service ts-train-service 声明端口 14567 但 Endpoints 为空，上游调用方 ts-basic-service 报 'Service Instance cannot be null'。DescribeResource(pod) 显示容器 State=Waiting Reason=CreateContainerConfigError，envFrom 引用 Secret 'ts-train-mysql'(Optional:false)，事件原文 'Warning Failed ... Error: secret "ts-train-mysql" not found'（连续 x12，并在同 workload 的上一实例 -qvqcb 上重复）；namespace 事件面把该机制逐字绑到 pod/ts-train-service-68845fd764-6xwgp。被引对象清单确认 secrets 中 ts-train-mysql 仍然缺失（其余 ts-*-mysql 全部存在），事件为活事件。断点在
 

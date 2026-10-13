@@ -1,0 +1,35 @@
+INFO:     Started server process [21376]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:50915 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50918 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:50915 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50919 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50926 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50930 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58975 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:58975 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58975 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58975 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"frontend"}
+INFO:     127.0.0.1:58975 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"recommendationservice","port":8080}
+INFO:     127.0.0.1:58980 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"emailservice","port":5000}
+INFO:     127.0.0.1:58980 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"productcatalogservice","port":3550}
+INFO:     127.0.0.1:58980 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:58980 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"recommendationservice"}
+INFO:     127.0.0.1:58984 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"checkoutservice"}
+INFO:     127.0.0.1:58984 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"recommendationservice"}
+INFO:     127.0.0.1:58984 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58984 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53866 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"productcatalogservice"}
+INFO:     127.0.0.1:53866 - "POST /mcp HTTP/1.1" 200 OK
