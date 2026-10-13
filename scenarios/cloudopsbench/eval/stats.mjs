@@ -222,6 +222,8 @@ for (const f of families) {
     L.push(`### case-${e.case_name}`, "");
     L.push(`- **结论**：\`${p1.fault_object ?? ""}\` + \`${p1.root_cause ?? ""}\` ｜ 标签 \`${gt.fault_object ?? ""}\` + \`${gt.root_cause ?? ""}\`（${verdict}）`);
     L.push(`- **流程**：MC ${fmt(e.metrics?.MC)} · EOC ${fmt(e.metrics?.EOC)} · ECR ${fmt(e.metrics?.ECR)} · EE ${fmt(e.metrics?.EE)} · steps ${fmt(e.metrics?.steps)} · tokens ${tok(e.tokens?.total)}`);
+    const rd = rawDirFor(e);
+    if (rd) L.push(`- **raw 日志**：[${rd.replace(/\/$/, "")}](../${rd})（ndjson / mcp.jsonl / meta）`);
     if (e.error) L.push(`- **错误**：${e.error}`);
     if (summary) L.push(`- **摘要**：${summary}`);
     L.push("");
@@ -288,6 +290,15 @@ fs.writeFileSync(detailPath, D.join("\n") + "\n", "utf8");
 // 设计系统对齐 birdminidev/share（同源 CSS 变量）；每次 stats 重建自动刷新
 const overviewPath = path.join(SCENARIO, "overview.html");
 const barPct = (done, total) => (total ? Math.round((done / total) * 1000) / 10 : 0);
+// 该题最新一轮的 raw 运行目录（overview / 家族页相对路径用）；找不到则返回空串
+function rawDirFor(e) {
+  const [sysdir, cat] = e.family.split("/");
+  const rawRoot = path.join(resultsDir, e.round, "raw");
+  try {
+    const hit = fs.readdirSync(rawRoot).filter((d) => d.endsWith(`_${sysdir}-${cat}-${e.case_name}`)).sort().pop();
+    return hit ? `results/${e.round}/raw/${hit}/` : "";
+  } catch { return ""; }
+}
 const familiesSorted = [...new Set([...full.keys(), ...families])].sort();
 const famRows = familiesSorted.map((f) => {
   const total = full.get(f) ?? 0;
@@ -301,8 +312,38 @@ const famRows = familiesSorted.map((f) => {
 }).join("\n");
 const caseRows = [...latestAll].sort((a, b) => a.family.localeCompare(b.family) || (Number(a.case_name) || 0) - (Number(b.case_name) || 0)).map((e) => {
   const g = (k) => fmt(e.metrics?.[k]);
-  return `<tr><td><code>${familyDisplay(e.family)}/${e.case_name}</code></td><td>${g("JRA") === "1" ? '<span class="ok">✅</span>' : g("JRA")}</td><td>${g("MC")}</td><td>${g("EOC")}</td><td>${g("ECR")}</td><td>${g("EE")}</td><td>${g("steps")}</td><td>${tok(e.tokens?.total)}</td><td class="muted">${e.round.slice(0, 13)}</td></tr>`;
+  const rawDir = rawDirFor(e);
+  const label = `<code>${familyDisplay(e.family)}/${e.case_name}</code>`;
+  const cellHtml = rawDir ? `<a href="${rawDir}" title="raw 日志（ndjson / mcp.jsonl / meta）">${label}</a>` : label;
+  return `<tr><td>${cellHtml}</td><td>${g("JRA") === "1" ? '<span class="ok">✅</span>' : g("JRA")}</td><td>${g("MC")}</td><td>${g("EOC")}</td><td>${g("ECR")}</td><td>${g("EE")}</td><td>${g("steps")}</td><td>${tok(e.tokens?.total)}</td><td class="muted">${e.round.slice(0, 13)}</td></tr>`;
 }).join("\n");
+// 建模实例化展示（静态策展块：三级语义在一道题上的协同）——改内容直接改这里
+const showcaseHtml = `
+<h2 class="section-title">TSM 建模实例化 · <em>一道题看三级语义</em></h2>
+<p class="deck">以 <code>boutique/admission/5</code>（题面「Service Availability Disruption.」）为例：L3 定走法 → L2 定入口链与读法 → L1 给出对象 / 面 / 按锚 read 模板 → agent 沿链经基准工具实查 → 证据链闭合。</p>
+<div class="tier"><span class="tier__tag">L3 · SOP</span><span class="tier__title">业务逻辑级 · 题面措辞逐字命中一节 → 定走法</span>
+<ul>
+<li>检索 = 节标题与题面<b>逐字比对</b>（命中即「复述本题」，零误配；下方句子全部是实测陷阱产物、逐条有复跑背书）。</li>
+<li>「If the wording names no service, the inventory listing is the legitimate entry: the moment it names the outlier, <b>the victim's own signal leads</b> — its endpoints listing, or a connectivity probe on the port its Service declares, or its caller-side error log — ahead of its workload state, the event surface, and any config read.」</li>
+<li>「<b>Pod never created</b> → admission side: the victim's own signal comes first — its endpoints listing, or a connectivity probe on its declared port (not a guessed one), or its caller's error log; if you batch, the signal leads the batch. Then the event names the referenced object; template reference (<code>GetAppYAML</code>) + the referenced object's own listing.」</li>
+</ul></div>
+<div class="tier"><span class="tier__tag">L2 · CONSENSUS</span><span class="tier__title">领域共识 · 入口链与读法 → 定怎么读</span>
+<ul>
+<li>「Symptom wording → entry chain — 'Service Availability Disruption.' uses the SAME reachability chain (it is overloaded across scheduling / startup / admission stages): walk caller logs → endpoints → pods; when the pods surface shows the pod never became ready, read its phase and events (FailedScheduling / FailedCreate / FailedMount / image-pull / probe) and follow that mechanism to the matching object surface. <b>Discriminate on the chain, not on the wording.</b>」</li>
+<li>锚 <code>chain:reachability</code> · 来源 case：boutique/scheduling/1 · startup/1 · admission/1</li>
+</ul></div>
+<div class="tier"><span class="tier__tag">L1 · DLR</span><span class="tier__title">数据源级 · 对象 / 观测面 / 按锚 read 模板 → 给取数落点</span>
+<pre>LE  emailservice（服务）          调用关系面 → GetServiceDependencies(service_name=emailservice)
+                                    upstream = checkoutservice：症状的入口
+LE  emailservice-deploy（载体）
+      deployment 面   replicas 0/1 · config_refs（serviceAccountName 缺失 → FailedCreate）
+                      read: GetAppYAML(app_name=emailservice)
+      pods 面         phase / restarts / events（离群行）
+                      read: GetResources(pods, label_selector=app=emailservice)</pre>
+<p>图只存 <b>schema 级</b>（对象 / 面 / 读法）；实例数据（名字、状态、报文）一律经基准工具实查——<b>模型是导航，不是数据</b>。</p></div>
+<div class="note">这题的链 = 三级协作的结果：清单点名 <code>emailservice</code> 缺 pod → 受害者信号（endpoints / 连通性）→ workload 态 0/1 → 事件 <code>FailedCreate</code>（SA 缺）→ <code>GetAppYAML</code> 收口 = 证据链闭合（JRA / MC / EOC / ECR 全 1）。<a href="DETAIL/boutique-admission.md#case-5">明细</a> · <a href="results/1013_1458_chainhead-verify2c/raw/1013_1458_boutique-admission-5/">raw 日志</a></div>
+`;
+
 const overviewHtml = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -349,6 +390,14 @@ const overviewHtml = `<!DOCTYPE html>
   code { font-size: 13px; color: var(--dlr); }
   .note { border-left: 3px solid var(--dlr); padding: 12px 18px; background: var(--surface); border-radius: 0 10px 10px 0; font-size: 14.5px; color: var(--ink-2); margin-top: 26px; }
   a { color: var(--dlr); }
+  a:hover { text-decoration-thickness: 2px; }
+  .tier { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin: 14px 0; }
+  .tier__tag { display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em; color: var(--dlr); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; margin-right: 10px; vertical-align: 1px; }
+  .tier__title { font-weight: 700; font-size: 15.5px; }
+  .tier p, .tier li { font-size: 14.5px; color: var(--ink-2); margin-top: 8px; }
+  .tier ul { padding-left: 20px; }
+  .tier pre { white-space: pre-wrap; word-break: break-word; background: var(--page); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 12.8px; line-height: 1.6; margin-top: 10px; font-family: ui-monospace, "Cascadia Code", Consolas, monospace; color: var(--ink); }
+  .tier pre code { color: inherit; font-size: inherit; }
 </style>
 </head>
 <body>
@@ -362,6 +411,7 @@ const overviewHtml = `<!DOCTYPE html>
 </div>
 <p class="muted" style="margin-top:12px; line-height:1.75;"><b>指标示意</b>：<b>结果分</b> —— CA 组件命中 · FA 故障类型命中 · <b>JRA 联合命中（CA+FA，主指标）</b>；<b>流程分</b> —— MC 里程碑覆盖（该查的检查点走到没）· EOC 证据顺序一致（查证链是否按序闭合）· ECR 证据闭合率 · EE 证据效率（证据步 ÷ 总步）；<b>过程</b> —— steps 步数 · RAR 重复动作率 · inv 无效动作。结果分与流程分互相独立：结论对 ≠ 过程满分（个别题 EOC &lt; 1 = 证据链顺序/覆盖未满分，判定仍可为对）。</p>
 
+${showcaseHtml}
 <h2 class="section-title">跑题覆盖度 · <em>逐家族进度</em></h2>
 ${famRows}
 
