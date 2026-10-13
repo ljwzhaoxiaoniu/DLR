@@ -1,0 +1,20 @@
+INFO:     Started server process [20784]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:57064 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57065 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:57064 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57066 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57069 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57071 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57074 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:57074 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57078 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57078 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57078 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57078 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-order-other-service"}
+INFO:     127.0.0.1:57078 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57078 - "POST /mcp HTTP/1.1" 200 OK

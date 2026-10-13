@@ -1,6 +1,6 @@
 # 评测明细 · boutique/performance — cloudopsbench
 
-> 本家族已跑 **6/29** 题：JRA ✅6 ❌0 ｜ 证据链全闭 6 ｜ token 中位 234,408 ｜ 生成 2026-10-13T08:52:40.926Z
+> 本家族已跑 **7/29** 题：JRA ✅7 ❌0 ｜ 证据链全闭 7 ｜ token 中位 156,035 ｜ 生成 2026-10-13T08:59:34.111Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -13,6 +13,7 @@
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 146,989 | 0 | 0 | 1013_1524_inorder4-v3b18 | 全对·链闭 |
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 234,408 | 0 | 0 | 1013_1541_inorder4-v3b20 | 全对·链闭 |
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1379 | 30 | 293,289 | 0 | 0 | 1013_1628_inorder4-v3b22 | 全对·链闭 |
+| [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 156,035 | 0 | 0 | 1013_1656_inorder4-v3b25 | 全对·链闭 |
 
 ## 证据正文
 
@@ -51,4 +52,10 @@
 - **结论**：`app/frontend` + `pod_cpu_overload` ｜ 标签 `app/frontend` + `pod_cpu_overload`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1379 · steps 30 · tokens 293,289
 - **摘要**：Telemetry chain closure: the only active alert is on Service 'frontend' with 'RESOURCE_SATURATION [cpu_cfs] | Val: 1.333s (Throttled)' and 'RESOURCE_SATURATION [cpu core] | Normal=0.07 -> Current=0.16 cores (+138.1%)' accompanied by 'LATENCY_DEGRADATION frontend-p50: 15.87ms -> 45.00ms, frontend-p95: 27.67ms -> 271.36ms'. Object-layer exclusion found no break: all 11 boutique pods are Running with READY 2/2 and RESTARTS=0, all deployments are 1/1 AVAILABLE, all namespace events are Normal (no FailedScheduling/FailedMount/FailedCreate/image-pull/probe events), all 4 nodes are Ready with MemoryP
+
+### case-7
+
+- **结论**：`app/paymentservice` + `pod_cpu_overload` ｜ 标签 `app/paymentservice` + `pod_cpu_overload`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 19 · tokens 156,035
+- **摘要**：Alerts: paymentservice RESOURCE_SATURATION [cpu_cfs] Val 0.614s (Throttled), [cpu core] Normal=0.00 -> Current=0.16 cores (+4141.0%), LATENCY_DEGRADATION paymentservice-p95latency Normal=4.81ms -> Current=60.66ms (+1161.3%); node worker-02 only echoes it (cpu util 3.03% -> 5.12%). GetAppYAML(paymentservice) closes the saturation reading: container 'server' limits cpu=200m/requests 100m, so current usage 160m rides the cgroup quota and causes the CFS throttling that degrades p95 latency. Object layer excluded: 11 pods all 2/2 Running with RESTARTS 0 (paymentservice-869f9f96cd-k259k Ready, Resta
 

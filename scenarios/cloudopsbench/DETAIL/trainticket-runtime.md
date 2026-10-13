@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **12/96** 题：JRA ✅12 ❌0 ｜ 证据链全闭 12 ｜ token 中位 535,723 ｜ 生成 2026-10-13T08:52:40.926Z
+> 本家族已跑 **13/96** 题：JRA ✅13 ❌0 ｜ 证据链全闭 13 ｜ token 中位 521,337 ｜ 生成 2026-10-13T08:59:34.111Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -19,6 +19,7 @@
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3913 | 24 | 409,060 | 0.0435 | 0 | 1013_1524_inorder4-v3b18 | 全对·链闭 |
 | [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 23 | 347,660 | 0 | 0 | 1013_1541_inorder4-v3b20 | 全对·链闭 |
 | [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4286 | 22 | 554,907 | 0 | 0 | 1013_1628_inorder4-v3b22 | 全对·链闭 |
+| [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2759 | 30 | 476,723 | 0 | 0 | 1013_1656_inorder4-v3b25 | 全对·链闭 |
 
 ## 证据正文
 
@@ -93,4 +94,10 @@
 - **结论**：`app/tsdb-mysql` + `db_readonly_mode` ｜ 标签 `app/tsdb-mysql` + `db_readonly_mode`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4286 · steps 22 · tokens 554,907
 - **摘要**：Alerts show HTTP 500 on 'Process payment' (ts-inside-payment-service) and 'Create ticket order' (ts-preserve-service). Caller logs pin the downstream targets: ts-preserve-service -> ts-order-service /api/v1/orderservice/order 500, ts-inside-payment-service -> ts-payment-service /api/v1/paymentservice/payment 500. Those target pods are 1/1 Running, 0 restarts, probes passing, but their own error logs show 'SQL Error: 1290, SQLState: HY000' / 'The MySQL server is running with the --read-only option so it cannot execute this statement' (52x and 67x) followed by JpaSystemException could not execut
+
+### case-13
+
+- **结论**：`app/tsdb-mysql` + `db_readonly_mode` ｜ 标签 `app/tsdb-mysql` + `db_readonly_mode`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2759 · steps 30 · tokens 476,723
+- **摘要**：All train-ticket pods are Running/Ready with 0 restarts (no scheduling/startup/probe break), and TCP connectivity to tsdb-mysql-leader:3306 succeeds from every worker. The break is at the persistence layer: two independent services report SQL Error 1290 / SQLState HY000 'The MySQL server is running with the --read-only option so it cannot execute this statement' (ts-payment-service 68x, ts-order-service 56x), surfacing as JpaSystemException/GenericJDBCException -> HTTP 500 cascading to ts-inside-payment-service (54x 'Process payment') and ts-preserve-service (12x 'Create ticket order'). Servic
 
