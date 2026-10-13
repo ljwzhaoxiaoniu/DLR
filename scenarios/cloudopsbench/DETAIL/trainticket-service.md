@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **16/37** 题：JRA ✅16 ❌0 ｜ 证据链全闭 16 ｜ token 中位 681,352 ｜ 生成 2026-10-13T10:47:17.868Z
+> 本家族已跑 **17/37** 题：JRA ✅17 ❌0 ｜ 证据链全闭 17 ｜ token 中位 666,312 ｜ 生成 2026-10-13T10:52:37.081Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -22,6 +22,7 @@
 | [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2414 | 30 | 1,341,232 | 0 | 0 | 1013_1825_dual2-verify1 | 全对·链闭 |
 | [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 930,757 | 0 | 0 | 1013_1831_inorder4-v3b29 | 全对·链闭 |
 | [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2273 | 23 | 1,188,029 | 0 | 0 | 1013_1839_inorder4-v3b31 | 全对·链闭 |
+| [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 21 | 382,197 | 0 | 0 | 1013_1848_inorder4-v3b33 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
 
 ## 证据正文
@@ -130,6 +131,13 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2273 · steps 23 · tokens 1,188,029
 - **raw 日志**：[results/1013_1839_inorder4-v3b31/raw/1013_1840_trainticket-service-16](../results/1013_1839_inorder4-v3b31/raw/1013_1840_trainticket-service-16/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom wording named no service, so the inventory listing was the entry: all 47 pods Running/Ready with the only restart outlier being ts-ui-dashboard (3, transient nginx 'host not found in upstream ts-gateway-service' at pod start). Caller-side signal: ts-ui-dashboard nginx access log shows repeated 'POST /api/v1/travelservice/trips/left HTTP/1.1" 404 131' while sibling paths return 200, matching the alert (business_action 'Search ticket', entry_service ts-travel-service, /api/v1/travelservice/trips/left, 19 occurrences, HTTP 404 Not Found). The break is in the address layer, not in either c
+
+### case-17
+
+- **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 21 · tokens 382,197
+- **raw 日志**：[results/1013_1848_inorder4-v3b33/raw/1013_1851_trainticket-service-17](../results/1013_1848_inorder4-v3b33/raw/1013_1851_trainticket-service-17/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert surface: POST /api/v1/travelservice/trips/left (business action 'Search ticket', entry ts-travel-service) repeatedly returns HTTPError 404 Not Found (20x) - a valid path answered by an HTTP server that does not own it. Object/node layer is clean: GetResources(pods) shows all 40+ ts-* pods 2/2 Running with no Pending/CrashLoop/image-pull outliers, GetClusterConfiguration shows 4/4 nodes Ready with no taints or pressure, and CheckNodeServiceStatus shows kube-proxy active on worker-01/02/03 - so the break is at the address layer, not in workload or nodes. GetAppYAML(ts-gateway-service) expo
 
 ### case-25
 

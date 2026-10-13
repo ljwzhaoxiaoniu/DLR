@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **14/47** 题：JRA ✅14 ❌0 ｜ 证据链全闭 14 ｜ token 中位 343,666 ｜ 生成 2026-10-13T10:47:17.868Z
+> 本家族已跑 **15/47** 题：JRA ✅14 ❌1 ｜ 证据链全闭 14 ｜ token 中位 332,420 ｜ 生成 2026-10-13T10:52:37.081Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -21,6 +21,7 @@
 | [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 25 | 850,385 | 0 | 0 | 1013_1825_dual2-verify1 | 全对·链闭 |
 | [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 207,450 | 0 | 0 | 1013_1831_inorder4-v3b29 | 全对·链闭 |
 | [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1818 | 23 | 395,607 | 0 | 0 | 1013_1839_inorder4-v3b31 | 全对·链闭 |
+| [15](#case-15) | 0 | 0 | 0 | 0.5 | 0.5 | 0 | 0.1304 | 24 | 332,420 | 0 | 0 | 1013_1848_inorder4-v3b33 | 未命中 |
 
 ## 证据正文
 
@@ -121,4 +122,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1818 · steps 23 · tokens 395,607
 - **raw 日志**：[results/1013_1839_inorder4-v3b31/raw/1013_1840_trainticket-performance-14](../results/1013_1839_inorder4-v3b31/raw/1013_1840_trainticket-performance-14/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Metric-surface case: 7 alerts in window 2026-03-16 17:57:56~17:59:46. ts-train-service (a call-graph LEAF: 'Upstream: gateway/travel/travel2/basic/travel-plan/rebook; Downstream: (Leaf Node - No downstream calls)') carries by far the largest deviation: p50 6.71ms->2453.12ms (+36478.3%), p90 9.67ms->4483.33ms (+46258.5%), and every other latency alert is one of its callers (ts-basic-service +9346% p50, ts-travel-service +1964% p90, ts-preserve-service +1400% p50, ts-gateway-service +983.8%, ts-ui-dashboard +960.6%), i.e. the added delay accumulates hop-by-hop (leaf +2.4s -> basic +3.7s -> trave
+
+### case-15
+
+- **结论**：`app/ts-order-service` + `pod_cpu_overload` ｜ 标签 `app/ts-travel-service` + `pod_network_delay`（✗ 与标签不符）
+- **流程**：MC 0.5 · EOC 0.5 · ECR 0 · EE 0.1304 · steps 24 · tokens 332,420
+- **raw 日志**：[results/1013_1848_inorder4-v3b33/raw/1013_1848_trainticket-performance-15](../results/1013_1848_inorder4-v3b33/raw/1013_1848_trainticket-performance-15/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 7 alerts share one window (18:14:37~18:16:27). Six are LATENCY_DEGRADATION ripples, and the only resource-level anomaly is ts-order-service: RESOURCE_SATURATION [cpu_cfs] Val: 0.226s (Throttled). Call-direction check via GetServiceDependencies shows ts-order-service is the sink (no downstream), and its direct callers ts-seat-service (+1870.9%), ts-preserve-service (p50 458->7565ms) and ts-gateway-service (+1174.4%) are all alerted, with the ripple continuing upward to ts-travel-service (+29927.2% p50) and ts-ui-dashboard (+1195.0%) - i.e. the latency alerts ripple from order-service. The p
 

@@ -1,0 +1,2 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/service/6,1.0,1.0,1.0,1.0,0.5,1.0,0.15555555555555556,46.0,0.022222222222222223,0.0,app/checkoutservice,service_env_var_address_mismatch,app/checkoutservice,service_env_var_address_mismatch,
