@@ -1,6 +1,6 @@
 # 评测明细 · boutique/service — cloudopsbench
 
-> 本家族已跑 **8/54** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 213,813 ｜ 生成 2026-10-13T12:07:15.900Z
+> 本家族已跑 **8/54** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 213,813 ｜ 生成 2026-10-13T12:48:02.877Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -12,9 +12,9 @@
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 110,899 | 0 | 0 | 1013_1248_inorder4-v3b13 | 全对·链闭 |
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2069 | 30 | 262,983 | 0 | 0 | 1013_1520_inorder4-v3b17 | 全对·链闭 |
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.24 | 26 | 213,813 | 0 | 0 | 1013_1819_inorder4-v3b28 | 全对·链闭 |
-| [6](#case-6) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.1556 | 46 | 476,282 | 0.0222 | 0 | 1013_1848_inorder4-v3b33 | 全对·链闭 |
+| [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0909 | 67 | 1,437,291 | 0.0152 | 0 | 1013_2025_chainpivot-verify1 | 全对·链闭 |
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 21 | 127,254 | 0 | 0 | 1013_1955_inorder4-v3b34 | 全对·链闭 |
-| [8](#case-8) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.1944 | 37 | 209,065 | 0 | 0 | 1013_2000_inorder4-v3b35 | 全对·链闭 |
+| [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 119,079 | 0 | 0 | 1013_2040_chainpivot-verify2 | 全对·链闭 |
 
 ## 证据正文
 
@@ -56,9 +56,9 @@
 ### case-6
 
 - **结论**：`app/checkoutservice` + `service_env_var_address_mismatch` ｜ 标签 `app/checkoutservice` + `service_env_var_address_mismatch`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.1556 · steps 46 · tokens 476,282
-- **raw 日志**：[results/1013_1848_inorder4-v3b33/raw/1013_1848_boutique-service-6](../results/1013_1848_inorder4-v3b33/raw/1013_1848_boutique-service-6/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Object layer reads clean: all 11 boutique pods are 1/1 Running with RESTARTS=0, GetAlerts() reports no anomalies, and GetResources(events, namespace=boutique) has no Warning rows - so the break is not in scheduling/startup/admission/probe stages. Caller-side symptom: GetErrorLogs(frontend) shows 100 errors in 690 logs (14.49%), 98 of them on POST /cart/checkout failing to complete the order. Address-layer audit by anchor (GetAppYAML on every workload) yields exactly one outlier: checkoutservice's deployment template sets PRODUCT_CATALOG_SERVICE_ADDR="productcatalogservice:3551", while productc
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.0909 · steps 67 · tokens 1,437,291
+- **raw 日志**：[results/1013_2025_chainpivot-verify1/raw/1013_2025_boutique-service-6](../results/1013_2025_chainpivot-verify1/raw/1013_2025_boutique-service-6/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Object layer is fully healthy in namespace boutique: all 11 pods Running 1/1 with RESTARTS=0, all deployments AVAILABLE 1/1 with a single ReplicaSet each (no rollout), all Services have ready endpoints, no Warning events, no resource quotas, all 4 nodes Ready, worker kube-proxy active, and no metric alerts — so scheduling/startup/admission/probe/quota/storage mechanisms are excluded and the break sits on the address layer. Audit of the address table (every service-address env var vs. the declared port of the referenced Service) found exactly one mis-wired entry, live in both the running pod en
 
 ### case-7
 
@@ -70,7 +70,7 @@
 ### case-8
 
 - **结论**：`app/recommendationservice` + `service_env_var_address_mismatch` ｜ 标签 `app/recommendationservice` + `service_env_var_address_mismatch`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.1944 · steps 37 · tokens 209,065
-- **raw 日志**：[results/1013_2000_inorder4-v3b35/raw/1013_2000_boutique-service-8](../results/1013_2000_inorder4-v3b35/raw/1013_2000_boutique-service-8/)（ndjson / mcp.jsonl / meta）
-- **摘要**：All boutique pods are Running 1/1 with 0 restarts, all Deployments 1/1, all Service Endpoints populated, and TCP probes on every declared Service port succeed, excluding workload/scheduling/probe faults. The break is at the service-address layer: frontend logs 30x 'failed to get product recommendations' wrapping recommendationservice's Python gRPC error, and recommendationservice's own error logs show 30x 'failed to connect to all addresses; last error: UNKNOWN: ipv4:10.68.14.88:3551: Failed to connect to remote host: Connection refused'. 10.68.14.88 is the productcatalogservice ClusterIP, who
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 19 · tokens 119,079
+- **raw 日志**：[results/1013_2040_chainpivot-verify2/raw/1013_2040_boutique-service-8](../results/1013_2040_chainpivot-verify2/raw/1013_2040_boutique-service-8/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts, all Services have correct selectors and bound endpoints (productcatalogservice -> 172.20.1.197:3550), and no Warning events exist in the namespace, excluding scheduling/startup/probe/endpoint faults. Caller-side logs (frontend, 148/730 errors) show 'failed to get product recommendations' with gRPC StatusCode.UNAVAILABLE: 'failed to connect to all addresses; last error: ipv4:10.68.14.88:3551: Connection refused'; 10.68.14.88 is the productcatalogservice ClusterIP on port 3551, which nothing listens on. The culprit's own log closes the mechan
 

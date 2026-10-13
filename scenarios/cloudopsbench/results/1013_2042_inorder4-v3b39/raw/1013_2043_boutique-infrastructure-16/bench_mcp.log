@@ -1,0 +1,37 @@
+INFO:     Started server process [2392]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:64675 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64676 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:64675 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64677 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49674 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49676 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49684 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:49684 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49686 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:49686 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"frontend"}
+INFO:     127.0.0.1:49686 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"cartservice"}
+INFO:     127.0.0.1:49688 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"cartservice","port":7070}
+INFO:     127.0.0.1:49688 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"redis-cart","port":6379}
+INFO:     127.0.0.1:49688 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:53964 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"kube-proxy"}
+INFO:     127.0.0.1:53964 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"kubelet"}
+INFO:     127.0.0.1:53964 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"containerd"}
+INFO:     127.0.0.1:53964 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kube-proxy"}
+INFO:     127.0.0.1:53967 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-03","service_name":"kube-proxy"}
+INFO:     127.0.0.1:53967 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53967 - "POST /mcp HTTP/1.1" 200 OK

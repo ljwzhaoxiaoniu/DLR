@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **14/98** 题：JRA ✅14 ❌0 ｜ 证据链全闭 14 ｜ token 中位 198,922 ｜ 生成 2026-10-13T12:07:15.900Z
+> 本家族已跑 **17/98** 题：JRA ✅17 ❌0 ｜ 证据链全闭 17 ｜ token 中位 200,618 ｜ 生成 2026-10-13T12:48:02.877Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -21,6 +21,9 @@
 | [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2609 | 24 | 248,815 | 0 | 0 | 1013_1831_inorder4-v3b29 | 全对·链闭 |
 | [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 245,322 | 0 | 0 | 1013_1839_inorder4-v3b31 | 全对·链闭 |
 | [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 17 | 300,857 | 0 | 0 | 1013_2004_inorder4-v3b36 | 全对·链闭 |
+| [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 31 | 382,747 | 0 | 0 | 1013_2025_chainpivot-verify1 | 全对·链闭 |
+| [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0909 | 67 | 1,911,726 | 0.0152 | 0 | 1013_2040_chainpivot-verify2 | 全对·链闭 |
+| [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1724 | 30 | 365,254 | 0 | 0 | 1013_2042_inorder4-v3b39 | 全对·链闭 |
 
 ## 证据正文
 
@@ -121,4 +124,25 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 17 · tokens 300,857
 - **raw 日志**：[results/1013_2004_inorder4-v3b36/raw/1013_2004_boutique-codedefect-14](../results/1013_2004_inorder4-v3b36/raw/1013_2004_boutique-codedefect-14/)（ndjson / mcp.jsonl / meta）
 - **摘要**：checkoutservice-7558b7bbfc-pqrck is the only outlier in the pods inventory (1/2 READY, STATUS CrashLoopBackOff, RESTARTS 2), while all other boutique pods are 2/2 Running with 0 restarts. Its own record shows the server container Last State Terminated with Reason=Error Exit Code=2, and the pod events surface the mechanism verbatim: 'Back-off restarting failed container server'. Container logs carry the decisive evidence: '[PlaceOrder] user_id=... user_currency="EUR"' followed by 'panic: mismatching currency codes' at money.Must (money/money.go:85) from PlaceOrder (main.go:294). The code surfac
+
+### case-15
+
+- **结论**：`app/checkoutservice` + `code_missing_parameter` ｜ 标签 `app/checkoutservice` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 31 · tokens 382,747
+- **raw 日志**：[results/1013_2025_chainpivot-verify1/raw/1013_2025_boutique-codedefect-15](../results/1013_2025_chainpivot-verify1/raw/1013_2025_boutique-codedefect-15/)（ndjson / mcp.jsonl / meta）
+- **摘要**：frontend POST /cart/checkout returned 500 (alert: entry_service=frontend, business_action='Checkout order'); all 11 boutique pods were 2/2 Running with 0 restarts and TCP probes to checkoutservice:5050 / cartservice:7070 succeeded, excluding scheduling/probe/addressing/network faults. Following the call graph frontend -> checkoutservice -> cartservice, only cartservice carried an error pattern: 'GetCartAsync called with userId=' (empty user id, 185 hits), whose timestamps line up one-for-one with checkoutservice's '[PlaceOrder] user_id="<real-uuid>"' lines while its sibling 'EmptyCartAsync cal
+
+### case-16
+
+- **结论**：`app/checkoutservice` + `code_missing_parameter` ｜ 标签 `app/checkoutservice` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.0909 · steps 67 · tokens 1,911,726
+- **raw 日志**：[results/1013_2040_chainpivot-verify2/raw/1013_2040_boutique-codedefect-16](../results/1013_2040_chainpivot-verify2/raw/1013_2040_boutique-codedefect-16/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert: frontend POST /cart/checkout -> HTTP 500 (only active anomaly, 'Checkout order'). frontend error log shows the checkout RPC failing ('rpc error: code = Unavailable ... delayed connect error: Connection refused') at 04:22:14Z, exactly when checkoutservice's old pod (checkoutservice-5b97d6df88-lqtts) was SIGTERM-deleted during the only mid-cycle rollout in the namespace (Deployment revision 2 / generation 2, new RS checkoutservice-7fc85cc97b, pod age 2m31s vs ~5m42s for all others). Object/config layer excludes addressing faults: all 11 pods 2/2 Running with 0 restarts, all Deployments 1/
+
+### case-17
+
+- **结论**：`app/checkoutservice` + `code_missing_parameter` ｜ 标签 `app/checkoutservice` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1724 · steps 30 · tokens 365,254
+- **raw 日志**：[results/1013_2042_inorder4-v3b39/raw/1013_2042_boutique-codedefect-17](../results/1013_2042_inorder4-v3b39/raw/1013_2042_boutique-codedefect-17/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Object layer clean: all 11 boutique pods 2/2 Running with 0 RESTARTS; checkoutservice:5050 connectivity probe 'open / Connection Succeeded'; GetAppYAML(checkoutservice) shows sane replicas, port 5050, gRPC probes and CART_SERVICE_ADDR=cartservice:7070, so addressing/config are not the break. The malformed-request trail is isolated to cartservice logs: 208/1832 (11.35%) entries matching 'GetCartAsync called with userId=' (EMPTY userId), each emitted immediately before 'EmptyCartAsync called with userId=<real id>' in the checkout flow. Code surface proves the mechanism in checkoutservice/main.go
 

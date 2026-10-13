@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **18/47** 题：JRA ✅18 ❌0 ｜ 证据链全闭 18 ｜ token 中位 304,738 ｜ 生成 2026-10-13T12:07:15.900Z
+> 本家族已跑 **21/47** 题：JRA ✅21 ❌0 ｜ 证据链全闭 21 ｜ token 中位 294,060 ｜ 生成 2026-10-13T12:48:02.877Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -25,6 +25,9 @@
 | [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 188,088 | 0 | 0 | 1013_1955_inorder4-v3b34 | 全对·链闭 |
 | [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 195,228 | 0 | 0 | 1013_2000_inorder4-v3b35 | 全对·链闭 |
 | [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 17 | 258,590 | 0 | 0 | 1013_2004_inorder4-v3b36 | 全对·链闭 |
+| [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 13 | 184,004 | 0 | 0 | 1013_2008_inorder4-v3b37 | 全对·链闭 |
+| [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3571 | 15 | 213,402 | 0 | 0 | 1013_2012_inorder4-v3b38 | 全对·链闭 |
+| [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 258,331 | 0 | 0 | 1013_2042_inorder4-v3b39 | 全对·链闭 |
 
 ## 证据正文
 
@@ -153,4 +156,25 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 17 · tokens 258,590
 - **raw 日志**：[results/1013_2004_inorder4-v3b36/raw/1013_2005_trainticket-performance-18](../results/1013_2004_inorder4-v3b36/raw/1013_2005_trainticket-performance-18/)（ndjson / mcp.jsonl / meta）
 - **摘要**：GetAlerts shows a single runaway epicenter: ts-basic-service p50 38.94ms -> 6806.17ms (+17377.7%) and p90 52.50ms -> 9361.24ms (+17730.9%) with RPS -54.1%, dwarfing its callers' ripples (ts-preserve-service +2233.3%, ts-travel-service p90 +2501.7%) which are all upstream callers of ts-basic-service per GetServiceDependencies. A constant added delay (~6.8-9.3s) rides on that service's own latency while its downstream services (ts-route-service, ts-station-service, ts-train-service, ts-price-service) stay clean and it carries no saturation row; its own container logs show ms-level processing (21
+
+### case-19
+
+- **结论**：`app/ts-cancel-service` + `pod_network_delay` ｜ 标签 `app/ts-cancel-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 13 · tokens 184,004
+- **raw 日志**：[results/1013_2008_inorder4-v3b37/raw/1013_2010_trainticket-performance-19](../results/1013_2008_inorder4-v3b37/raw/1013_2010_trainticket-performance-19/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (2026-03-19 21:20:14~21:22:09) show ts-cancel-service as the runaway epicenter: p50 81.78ms -> 2740.39ms (+3250.9%), p90 240.83ms -> 7433.33ms (+2986.5%), dwarfing its callers' ripple rises (ts-gateway-service +171.6%, ts-ui-dashboard +195.2%, ts-inside-payment-service +332.3%). No RESOURCE_SATURATION alert on ts-cancel-service; the only saturation row is a bare 'RESOURCE_SATURATION [cpu_cfs] Val: 0.306s (Throttled)' on ts-order-service, which carries no latency alert of its own (collateral noise, not the epicenter). Symptom side: ts-cancel-service container logs show a complete cancel 
+
+### case-20
+
+- **结论**：`app/ts-contacts-service` + `pod_network_delay` ｜ 标签 `app/ts-contacts-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3571 · steps 15 · tokens 213,402
+- **raw 日志**：[results/1013_2012_inorder4-v3b38/raw/1013_2029_trainticket-performance-20](../results/1013_2012_inorder4-v3b38/raw/1013_2029_trainticket-performance-20/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts in window 21:36:59~21:38:49: ts-contacts-service carries the runaway deviation (LATENCY_DEGRADATION p50 7.57ms->4930.56ms +65011.3%, p90 9.65ms->8977.02ms +92950.2%), while its callers show only ripples of the same added delay - ts-gateway-service p90 980.77ms->5819.44ms (+4838ms, +493.4%), ts-ui-dashboard p90 982.00ms->5805.56ms (+4823ms, +491.2%), ts-preserve-service p50 1219.98ms->7500.00ms (+514.8%). GetServiceDependencies confirms ts-contacts-service is a leaf (Downstream: none) called by ts-gateway-service/ts-preserve-service/ts-preserve-other-service, matching the ripple topology
+
+### case-21
+
+- **结论**：`app/ts-food-service` + `pod_network_delay` ｜ 标签 `app/ts-food-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 12 · tokens 258,331
+- **raw 日志**：[results/1013_2042_inorder4-v3b39/raw/1013_2044_trainticket-performance-21](../results/1013_2042_inorder4-v3b39/raw/1013_2044_trainticket-performance-21/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts name ts-food-service as the primary anomaly: LATENCY_DEGRADATION with p50 17.50ms->7500.00ms (+42757.1%) and p90 23.50ms->9500.00ms (+40325.5%), an order of magnitude larger than the ripple rises of its callers ts-preserve-service (+556.4%), ts-gateway-service (+468.1%) and ts-ui-dashboard (+422.0%), whose dependency graph (GetServiceDependencies) shows ts-gateway-service/ts-preserve-service as upstream callers of ts-food-service. Its downstream services (ts-travel-service, ts-station-food-service, ts-train-food-service) show clean server-side latencies, and ts-food-service has no satur
 

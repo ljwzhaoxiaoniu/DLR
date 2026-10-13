@@ -1,0 +1,23 @@
+INFO:     Started server process [10400]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:53989 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53990 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:53989 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53991 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53997 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53999 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:53997 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54006 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-food-service"}
+INFO:     127.0.0.1:54006 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54012 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-food-service"}
+INFO:     127.0.0.1:54012 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54012 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kube-proxy"}
+INFO:     127.0.0.1:54012 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-food-service","port":18856}
+INFO:     127.0.0.1:54014 - "POST /mcp HTTP/1.1" 200 OK

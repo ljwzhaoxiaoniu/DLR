@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "16",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\codedefect\\16\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1013_2012_inorder4-v3b38\\traces\\boutique\\dsh-tsm\\codedefect\\16\\16.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Application_Code_Defect",
+      "fault_object": "app/checkoutservice",
+      "root_cause": "code_missing_parameter"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "missing_service_account"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "deployment_zero_replicas"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "readiness_probe_incorrect_port"
+      }
+    ],
+    "tool_call_count": 69,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 0.0,
+      "JRA": 0.0,
+      "MC": 0.6,
+      "EOC": 0.6,
+      "ECR": 0.0,
+      "EE": 0.043478260869565216,
+      "steps": 70.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

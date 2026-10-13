@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/16,1.0,0.0,0.0,0.6,0.6,0.0,0.043478260869565216,70.0,0.0,0.0,app/checkoutservice,missing_service_account,app/checkoutservice,code_missing_parameter,
+boutique/infrastructure/15,1.0,1.0,1.0,1.0,1.0,1.0,0.32142857142857145,29.0,0.0,0.0,node/worker-01,kube_proxy_unavailable,node/worker-01,kube_proxy_unavailable,
+trainticket/performance/20,1.0,1.0,1.0,1.0,1.0,1.0,0.35714285714285715,15.0,0.0,0.0,app/ts-contacts-service,pod_network_delay,app/ts-contacts-service,pod_network_delay,
+trainticket/service/22,1.0,1.0,1.0,1.0,1.0,1.0,0.3157894736842105,20.0,0.0,0.0,app/ts-cancel-service,service_dns_resolution_failure,app/ts-cancel-service,service_dns_resolution_failure,

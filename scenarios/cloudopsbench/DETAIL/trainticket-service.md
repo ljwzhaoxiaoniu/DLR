@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **20/37** 题：JRA ✅20 ❌0 ｜ 证据链全闭 20 ｜ token 中位 666,312 ｜ 生成 2026-10-13T12:07:15.900Z
+> 本家族已跑 **23/37** 题：JRA ✅23 ❌0 ｜ 证据链全闭 23 ｜ token 中位 555,827 ｜ 生成 2026-10-13T12:48:02.877Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -26,6 +26,9 @@
 | [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.24 | 26 | 1,087,938 | 0 | 0 | 1013_1955_inorder4-v3b34 | 全对·链闭 |
 | [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 414,398 | 0 | 0 | 1013_2000_inorder4-v3b35 | 全对·链闭 |
 | [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 296,753 | 0 | 0 | 1013_2004_inorder4-v3b36 | 全对·链闭 |
+| [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3684 | 20 | 734,488 | 0 | 0 | 1013_2025_chainpivot-verify1 | 全对·链闭 |
+| [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 528,847 | 0 | 0 | 1013_2012_inorder4-v3b38 | 全对·链闭 |
+| [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 555,827 | 0 | 0 | 1013_2042_inorder4-v3b39 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
 
 ## 证据正文
@@ -162,6 +165,27 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 296,753
 - **raw 日志**：[results/1013_2004_inorder4-v3b36/raw/1013_2006_trainticket-service-20](../results/1013_2004_inorder4-v3b36/raw/1013_2006_trainticket-service-20/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom: ts-assurance-service returns 503 (alert: GET /api/v1/assuranceservice/assurances/types, 17 occurrences). Pod inventory outlier: ts-assurance-service-7d97f6cf77-xw4dz 0/2 CrashLoopBackOff, 4 restarts; all other workloads 2/2 Running. Service ts-assurance-service (port 18888 -> targetPort 18888, selector app=ts-assurance-service) has an EMPTY endpoints list, explaining the 503. Container logs: 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' -> HikariPool init failure -> Exit Code 1. The sidecar in the same pod pins the break to the resolver: 'dia
+
+### case-21
+
+- **结论**：`app/ts-basic-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-basic-service` + `service_dns_resolution_failure`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3684 · steps 20 · tokens 734,488
+- **raw 日志**：[results/1013_2025_chainpivot-verify1/raw/1013_2028_trainticket-service-21](../results/1013_2025_chainpivot-verify1/raw/1013_2028_trainticket-service-21/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only ts-basic-service-76b4574cb-ttvb6 is anomalous in the namespace-wide pod listing (0/2 READY, 4 restarts, Last State Terminated exit code 1 on worker-01) while all 47 other pods are 2/2 Running. Symptom side confirms it: connectivity probe to ts-basic-service:15680 fails from worker-01/02/03 (control: nacos:8848 open from all three), and `get endpoints ts-basic-service` returns an EMPTY endpoints list (Service has no ready backend), so callers ts-preserve-service and ts-inside-payment-service surface HTTP 500 alerts. The break is DNS resolution inside that pod: its app log shows 'nacos regi
+
+### case-22
+
+- **结论**：`app/ts-cancel-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-cancel-service` + `service_dns_resolution_failure`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3158 · steps 20 · tokens 528,847
+- **raw 日志**：[results/1013_2012_inorder4-v3b38/raw/1013_2030_trainticket-service-22](../results/1013_2012_inorder4-v3b38/raw/1013_2030_trainticket-service-22/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts point at ts-cancel-service (503 x34). Its Service has NO endpoints and a TCP probe on its declared port 18885 fails from all three nodes (Connection Failed). Pod ts-cancel-service-758b476b4d-r56v4 is 0/2 Running with 3 restarts, last state Terminated Exit Code 1; deployment reports Available=False / MinimumReplicasUnavailable; events show 'Startup probe failed: ... 172.20.1.7:15021: connect: connection refused'. Inside that pod every name lookup times out: istio-proxy logs 'lookup istiod.istio-system.svc on 10.255.9.254:53: read udp 172.20.1.7->10.255.9.254:53: i/o timeout' and 'failed 
+
+### case-23
+
+- **结论**：`app/ts-contacts-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-contacts-service` + `service_dns_resolution_failure`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3158 · steps 20 · tokens 555,827
+- **raw 日志**：[results/1013_2042_inorder4-v3b39/raw/1013_2045_trainticket-service-23](../results/1013_2042_inorder4-v3b39/raw/1013_2045_trainticket-service-23/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only ts-contacts-service is broken: pod ts-contacts-service-5cfbc8875-8fwnq is 0/2 CrashLoopBackOff with 4 restarts (app container Last State Terminated/Error exit 1, istio-proxy never Ready), while all other train-ticket pods are 2/2 Running. Its logs show 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' -> 'Communications link failure' -> HikariPool init failure -> app exit 1, and its istio-proxy shows 'lookup ... on 10.255.3.254:53 ... i/o timeout', i.e. the pod cannot resolve any name. GetAppYAML(ts-contacts-service) shows the deployment uniquely pin
 
 ### case-25
 
