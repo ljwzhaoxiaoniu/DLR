@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **27/40** 题：JRA ✅27 ❌0 ｜ 证据链全闭 27 ｜ token 中位 125,844 ｜ 生成 2026-10-13T14:13:38.900Z
+> 本家族已跑 **28/40** 题：JRA ✅28 ❌0 ｜ 证据链全闭 28 ｜ token 中位 125,844 ｜ 生成 2026-10-13T14:16:40.173Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -34,6 +34,7 @@
 | [25](#case-25) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.1875 | 17 | 113,077 | 0 | 0 | 1013_2156_inorder4-v3b48 | 全对·链闭 |
 | [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 125,844 | 0 | 0 | 1013_2203_inorder4-v3b49 | 全对·链闭 |
 | [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 134,232 | 0 | 0 | 1013_2210_inorder4-v3b50 | 全对·链闭 |
+| [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 89,399 | 0 | 0 | 1013_2214_inorder4-v3b51 | 全对·链闭 |
 
 ## 证据正文
 
@@ -225,4 +226,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 134,232
 - **raw 日志**：[results/1013_2210_inorder4-v3b50/raw/1013_2210_boutique-infrastructure-27](../results/1013_2210_inorder4-v3b50/raw/1013_2210_boutique-infrastructure-27/)（ndjson / mcp.jsonl / meta）
 - **摘要**：recommendationservice is the only service with zero endpoints ('recommendationservice  <none>' in the endpoints listing) and its Deployment reads 0/1 AVAILABLE. Its pod recommendationservice-7bf5b7d9b8-tk7kf is Pending with 'Node: <none>' and 'Events: <none>' — no FailedScheduling line at all, meaning nothing ever attempted to place it. The node side is clean: worker-01/02/03 are all Ready, untainted, each with 8 CPU / ~15.6Gi allocatable, and the deployment has no nodeSelector/affinity and only 100m/220Mi requests, excluding capacity, taint, affinity and cordon causes. The mechanism is at the
+
+### case-28
+
+- **结论**：`node/master` + `kube_scheduler_unavailable` ｜ 标签 `node/master` + `kube_scheduler_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 89,399
+- **raw 日志**：[results/1013_2214_inorder4-v3b51/raw/1013_2214_boutique-infrastructure-28](../results/1013_2214_inorder4-v3b51/raw/1013_2214_boutique-infrastructure-28/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique inventory shows a single outlier: pod redis-cart-589d486f78-ghstg is 0/1 Pending with 'Node: <none>' and NO scheduling line/event at all (DescribeResource Events: <none>), while deployment redis-cart reports 0/1 AVAILABLE and endpoints/redis-cart shows ENDPOINTS <none> and CheckServiceConnectivity(redis-cart:6379) returns 'Connection Failed'. No node-side blocker exists: workers worker-01/02/03 are Ready with no taints and no pressure (master's unschedulable taint is by design), and the PVC redis-cart-pvc is Bound to redis-cart-pv (2Gi RWO, storageClassName '' matched), so s
 

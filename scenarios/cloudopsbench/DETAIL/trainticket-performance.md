@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **32/47** 题：JRA ✅32 ❌0 ｜ 证据链全闭 32 ｜ token 中位 301,957 ｜ 生成 2026-10-13T14:13:38.900Z
+> 本家族已跑 **33/47** 题：JRA ✅33 ❌0 ｜ 证据链全闭 33 ｜ token 中位 301,957 ｜ 生成 2026-10-13T14:16:40.173Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -39,6 +39,7 @@
 | [30](#case-30) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2609 | 24 | 524,234 | 0 | 0 | 1013_2203_ttperf30-verify1 | 全对·链闭 |
 | [31](#case-31) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1818 | 23 | 345,078 | 0 | 0 | 1013_2203_inorder4-v3b49 | 全对·链闭 |
 | [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.375 | 17 | 236,382 | 0 | 0 | 1013_2210_inorder4-v3b50 | 全对·链闭 |
+| [33](#case-33) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 335,749 | 0 | 0 | 1013_2214_inorder4-v3b51 | 全对·链闭 |
 
 ## 证据正文
 
@@ -265,4 +266,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.375 · steps 17 · tokens 236,382
 - **raw 日志**：[results/1013_2210_inorder4-v3b50/raw/1013_2212_trainticket-performance-32](../results/1013_2210_inorder4-v3b50/raw/1013_2212_trainticket-performance-32/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts show two both-percentile latency rows: ts-train-service (p50 7.38ms->2425ms, p90 9.48ms->4472ms, +47095% p90 escalation = steepest) and its direct caller ts-basic-service (p50 38.33ms->3750ms, p90 49ms->4750ms). ts-train-service is a leaf node in the dependency graph (GetServiceDependencies: no downstream), so the added delay sits on its own network path; ts-basic-service's other downstreams (ts-route-service, ts-station-service, ts-price-service) show clean server-side latency, so ts-basic is only the inheriting caller, not the source. Object layer is fully healthy (all pods Running 2/
+
+### case-33
+
+- **结论**：`app/ts-travel-service` + `pod_network_delay` ｜ 标签 `app/ts-travel-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2308 · steps 14 · tokens 335,749
+- **raw 日志**：[results/1013_2214_inorder4-v3b51/raw/1013_2215_trainticket-performance-33](../results/1013_2214_inorder4-v3b51/raw/1013_2215_trainticket-performance-33/)（ndjson / mcp.jsonl / meta）
+- **摘要**：GetAlerts shows 3 anomalies; only ts-travel-service carries a LATENCY_DEGRADATION row moving BOTH percentiles (p50 46.88ms->2416.67ms, +5055.6%; p90 2791.67ms->8944.44ms, +220.4%) plus a TRAFFIC_ANOMALY network surge (inbound 6.75pps->13.99pps, +107.2%), marking it the epicenter; ts-order-service's bare 'RESOURCE_SATURATION [cpu_cfs] Val: 0.859s (Throttled)' has no baseline movement and no latency of its own, and ts-security-service's 'cpu core 0.01 -> 0.02 cores (+64.6%)' is sub-core noise, so both are collateral. ts-travel-service logs show a constant ~1.4-1.5s gap between every downstream r
 

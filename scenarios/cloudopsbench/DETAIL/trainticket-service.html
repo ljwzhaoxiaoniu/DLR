@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/service</em></h1>
-<p class="deck">已跑 <b>34/37</b> 题：JRA ✅34 ❌0 ｜ 证据链全闭 34 ｜ token 中位 522,118 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:13:38.900Z</p>
+<p class="deck">已跑 <b>35/37</b> 题：JRA ✅35 ❌0 ｜ 证据链全闭 35 ｜ token 中位 501,550 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:16:40.173Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-2"><code>2</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3158</td><td>20</td><td>681,352</td><td>0</td><td>0</td><td class="muted">1012_2010_attr-verify1</td><td><a href="../results/1012_2010_attr-verify1/raw/1012_2010_trainticket-service-2/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_2010_trainticket-service-2</a></td></tr>
@@ -50,6 +50,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-33"><code>33</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3</td><td>21</td><td>366,893</td><td>0</td><td>0</td><td class="muted">1013_2156_inorder4-v3b48</td><td><a href="../results/1013_2156_inorder4-v3b48/raw/1013_2158_trainticket-service-33/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2158_trainticket-service-33</a></td></tr>
 <tr><td><a href="#case-34"><code>34</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>16</td><td>380,698</td><td>0</td><td>0</td><td class="muted">1013_2203_inorder4-v3b49</td><td><a href="../results/1013_2203_inorder4-v3b49/raw/1013_2206_trainticket-service-34/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2206_trainticket-service-34</a></td></tr>
 <tr><td><a href="#case-35"><code>35</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>526,268</td><td>0</td><td>0</td><td class="muted">1013_2210_inorder4-v3b50</td><td><a href="../results/1013_2210_inorder4-v3b50/raw/1013_2212_trainticket-service-35/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2212_trainticket-service-35</a></td></tr>
+<tr><td><a href="#case-36"><code>36</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>16</td><td>315,331</td><td>0</td><td>0</td><td class="muted">1013_2214_inorder4-v3b51</td><td><a href="../results/1013_2214_inorder4-v3b51/raw/1013_2215_trainticket-service-36/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2215_trainticket-service-36</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-2"><summary><b>case-2</b> · <code>app/ts-gateway-service</code> + <code>gateway_misrouted</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 20 步</summary><ul>
@@ -1667,6 +1668,48 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/ts-train-service&quot;,
    &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-36"><summary><b>case-36</b> · <code>app/ts-travel-service</code> + <code>service_dns_resolution_failure</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 16 步</summary><ul>
+<li><b>摘要</b>：Pod inventory names exactly one outlier: ts-travel-service-5b5d9f9746-pxbqv (0/2, Error, 4 restarts, node worker-02), matching the alert 'ts-travel-service -&gt; /api/v1/travelservice/trips/left -&gt; HTTPError 503' (17 occurrences). The victim's own signal is a total in-pod DNS failure: app container last run 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' and istio-proxy 'dial tcp: lookup istiod.istio-system.svc on 10.255.4.254:53: read udp 172.20.2.14:38306-&gt;10.255.4.254:53: i/o timeout'. Connectivity probe to the port its Service declares (12346) fails fr</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2214_inorder4-v3b51/raw/1013_2215_trainticket-service-36/">results/1013_2214_inorder4-v3b51/raw/1013_2215_trainticket-service-36</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-travel-service-5b5d9f9746-pxbqv&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>11</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-travel2-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;kube-system&quot;,&quot;name&quot;:&quot;kube-dns&quot;}</code></td></tr>
+<tr><td>13</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-travel-service&quot;,&quot;port&quot;:12346,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;kube-system&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Pod inventory names exactly one outlier: ts-travel-service-5b5d9f9746-pxbqv (0/2, Error, 4 restarts, node worker-02), matching the alert 'ts-travel-service -&gt; /api/v1/travelservice/trips/left -&gt; HTTPError 503' (17 occurrences). The victim's own signal is a total in-pod DNS failure: app container last run 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' and istio-proxy 'dial tcp: lookup istiod.istio-system.svc on 10.255.4.254:53: read udp 172.20.2.14:38306-&gt;10.255.4.254:53: i/o timeout'. Connectivity probe to the port its Service declares (12346) fails from worker-01/02/03 (no ready endpoints). The config face closes it: GetAppYAML(ts-travel-service) sets 'dnsPolicy: None' with 'dnsConfig.nameservers: [10.255.4.254]', while the sibling ts-travel2-service uses the same downstream host tsdb-mysql-leader with no DNS override and runs 2/2 Running - so the name resolves cluster-wide and only this app's pod cannot resolve anything. Events surface confirms the mechanism on this exact pod ('Startup probe failed: Get http://172.20.2.14:15021/healthz/ready: connect: connection refused', x310) and shows prior ts-travel-service replicas failing on worker-01/worker-02/worker-03 alike, i.e. the fault follows the app, not any node. Break is at the name-resolution/addressing layer of app ts-travel-service.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-travel-service&quot;,
+   &quot;root_cause&quot;: &quot;service_dns_resolution_failure&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;node/worker-02&quot;,
+   &quot;root_cause&quot;: &quot;node_network_packet_loss&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-travel-service&quot;,
+   &quot;root_cause&quot;: &quot;service_env_var_address_mismatch&quot;
   }
  ]
 }</pre>

@@ -1,0 +1,8 @@
+system: boutique
+category: codedefect
+case: 29
+query: Service Performance Degradation.
+rc: 0
+stamp: 1013_2214
+tsm_mcp: http://127.0.0.1:28796/mcp
+bench_mcp: http://127.0.0.1:8000/mcp

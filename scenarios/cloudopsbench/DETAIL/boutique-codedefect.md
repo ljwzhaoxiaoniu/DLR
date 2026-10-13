@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **28/98** 题：JRA ✅28 ❌0 ｜ 证据链全闭 28 ｜ token 中位 254,844 ｜ 生成 2026-10-13T14:13:38.900Z
+> 本家族已跑 **29/98** 题：JRA ✅29 ❌0 ｜ 证据链全闭 29 ｜ token 中位 248,815 ｜ 生成 2026-10-13T14:16:40.173Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -35,6 +35,7 @@
 | [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 26 | 374,809 | 0 | 0 | 1013_2156_inorder4-v3b48 | 全对·链闭 |
 | [27](#case-27) | 1 | 1 | 1 | 1 | 0.4 | 1 | 0.1852 | 28 | 587,242 | 0 | 0 | 1013_2203_inorder4-v3b49 | 全对·链闭 |
 | [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2381 | 22 | 356,032 | 0 | 0 | 1013_2210_inorder4-v3b50 | 全对·链闭 |
+| [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 177,788 | 0 | 0 | 1013_2214_inorder4-v3b51 | 全对·链闭 |
 
 ## 证据正文
 
@@ -233,4 +234,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2381 · steps 22 · tokens 356,032
 - **raw 日志**：[results/1013_2210_inorder4-v3b50/raw/1013_2210_boutique-codedefect-28](../results/1013_2210_inorder4-v3b50/raw/1013_2210_boutique-codedefect-28/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All 11 boutique pods are 2/2 Running with 0 restarts, so no scheduling/startup/admission break exists (events show only stale 'serviceaccount not found' setup history plus Normal Scheduled/Started rows for checkoutservice-5bd966485c-m5gvb). The frontend carries 182 identical errors on POST /cart/checkout: 'rpc error: code = Internal desc = failed to charge card: charge card error.' Order session 89b9cd2b-8eb8-4bb6-a849-5ba3af150105 at 16:40:25 shows checkoutservice logged [PlaceOrder], paymentservice logged 'Transaction processed: visa ending 1221 Amount: USD599.20000000' (charge SUCCEEDED), y
+
+### case-29
+
+- **结论**：`app/checkoutservice` + `code_excessive_file_writes` ｜ 标签 `app/checkoutservice` + `code_excessive_file_writes`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 177,788
+- **raw 日志**：[results/1013_2214_inorder4-v3b51/raw/1013_2214_boutique-codedefect-29](../results/1013_2214_inorder4-v3b51/raw/1013_2214_boutique-codedefect-29/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Telemetry-chain closure. GetAlerts returned exactly one ABNORMAL entity: Service checkoutservice (2026-05-19 11:05:50~11:08:25) with two anomaly classes: RESOURCE_SATURATION [cpu] Normal=0.00 cores -> Current=0.01 cores (+720.3%) and FILESYSTEM_WRITE_SURGE [fs_write_bytes] Normal=0.00B/s -> Current=13305.23B/s (New Spike, Peak=55334.06B/s). Object-layer exclusion: the full boutique pod listing shows all 11 pods 2/2 Running with RESTARTS=0 and no Pending/CrashLoop/NotReady rows, so no scheduling/startup/probe break exists; GetErrorLogs(checkoutservice) returned 'No error logs found' and GetRece
 
