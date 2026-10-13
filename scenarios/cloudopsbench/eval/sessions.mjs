@@ -11,7 +11,8 @@
 //
 // 用法:
 //   node sessions.mjs sync    [--results <dir>] [--dirs <run_dir>...] [--dry]
-//       把 results/<轮次>/raw/<run>/ 里全部 session 登记进全量组（补登记 + 解除归档）
+//       把 results/<轮次>/raw/<run>/ 里全部 session 登记进全量组（补登记 + 解除归档）；
+//       已属其他组（正式/归档）的跳过——retire 过的 raw 配对会话不再捞回
 //   node sessions.mjs promote [--round <id前缀>] [--case <sys/cat/case>]... [--session <id前缀>]... [--dry]
 //       默认：每题取最近一轮，「通过」（JRA=1）的 run 移入正式组（从全量组搬出，不留副本）
 //       --case / --session 手动指定（可越过分档，即「认可」通道）
@@ -264,22 +265,29 @@ const unarchive = (ws, sid) => {
 
 // ── sync：登记进全量组 ──────────────────────────────────────────────
 if (cmd === "sync") {
-  const { ws, W, allId, formalId } = loadWs();
+  const { ws, W, allId } = loadWs();
   const list = W[allId].sessionIds;
-  const formal = new Set(W[formalId].sessionIds);
-  let added = 0, unarch = 0, noSid = 0, cleaned = 0;
+  // 平台硬约束：一个 session 只能属一个组——已属任何其他组（正式 / 归档 / 未来新增组）者
+  // 全量组不登记、历史误入者清出。「不满→归档」口径（10-13）后，被 retire 的 session 仍是
+  // results 扫描范围内的 raw 配对会话，必须在此跳过，否则 assertDisjoint 拒写。
+  const otherOf = new Map(); // sessionId → 所属组名
+  for (const [wid, w] of Object.entries(W)) {
+    if (wid === allId) continue;
+    for (const sid of (w.sessionIds || [])) otherOf.set(sid, w.title);
+  }
+  let added = 0, unarch = 0, noSid = 0, cleaned = 0, skipped = 0;
   for (const r of runs) {
     if (!r.sessionId) { noSid++; console.log(`  ! ${r.dirName}: ndjson 无 session 事件，跳过`); continue; }
-    // 平台硬约束：一个 session 只能属一个组——已搬进正式组的不再登记全量组；历史误入的重叠清出
-    if (formal.has(r.sessionId)) {
+    if (otherOf.has(r.sessionId)) {
       const i = list.indexOf(r.sessionId);
-      if (i >= 0) { list.splice(i, 1); cleaned++; console.log(`  ~ ${short(r.sessionId)}  ${r.caseKey}  已属正式组 → 从全量组清出（避重叠）`); }
+      if (i >= 0) { list.splice(i, 1); cleaned++; console.log(`  ~ ${short(r.sessionId)}  ${r.caseKey}  已属「${otherOf.get(r.sessionId)}」→ 从全量组清出（避重叠）`); }
+      else skipped++;
       continue;
     }
     if (!list.includes(r.sessionId)) { list.push(r.sessionId); added++; console.log(`  + ${short(r.sessionId)}  ${r.caseKey}  ${r.dirName}`); }
     if (unarchive(ws, r.sessionId)) unarch++;
   }
-  console.log(`[sync] 扫到 run ${runs.length}（无 session ${noSid}）· 新登记 ${added} · 清出 ${cleaned}（避重叠）· 解除归档 ${unarch} · 全量组共 ${list.length}`);
+  console.log(`[sync] 扫到 run ${runs.length}（无 session ${noSid}）· 新登记 ${added} · 清出 ${cleaned}（避重叠）· 跳过已归组 ${skipped} · 解除归档 ${unarch} · 全量组共 ${list.length}`);
   if ((added || unarch || cleaned) && !dry) saveWs(ws);
   else console.log(dry ? "[dry] 未写盘" : "[sync] 无变化");
 }
