@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **5/47** 题：JRA ✅5 ❌0 ｜ 证据链全闭 5 ｜ token 中位 346,155 ｜ 生成 2026-10-13T07:16:58.691Z
+> 本家族已跑 **6/47** 题：JRA ✅6 ❌0 ｜ 证据链全闭 6 ｜ token 中位 346,155 ｜ 生成 2026-10-13T07:29:15.283Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -12,6 +12,7 @@
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1379 | 30 | 453,560 | 0 | 0 | 1013_1225_inorder4-v3b11 | 全对·链闭 |
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2381 | 22 | 346,155 | 0 | 0 | 1013_1328_quality-verify1 | 全对·链闭 |
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 224,570 | 0 | 0 | 1013_1413_inorder4-v3b15 | 全对·链闭 |
+| [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 301,957 | 0 | 0 | 1013_1520_inorder4-v3b17 | 全对·链闭 |
 
 ## 证据正文
 
@@ -44,4 +45,10 @@
 - **结论**：`app/ts-inside-payment-service` + `pod_network_delay` ｜ 标签 `app/ts-inside-payment-service` + `pod_network_delay`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2941 · steps 18 · tokens 224,570
 - **摘要**：Symptom 'Service quality degradation.' enters the metric surface: GetAlerts shows no RESOURCE_SATURATION rows, only latency degradation on the single call chain ts-ui-dashboard -> ts-gateway-service -> ts-cancel-service -> ts-inside-payment-service. The deepest node of that chain, ts-inside-payment-service, has the largest anomaly (p50 22.93ms -> 7166.67ms, +31154.5%; p90 64.29ms -> 20333.33ms, +31529.5%), and its callers inherit the same added delay (ts-cancel-service p90 150.77ms -> 21666.67ms +14270.8%; ts-gateway-service p90 +3851.6%; ts-ui-dashboard p90 +4305.0%), while its own downstream
+
+### case-6
+
+- **结论**：`app/ts-order-service` + `pod_network_delay` ｜ 标签 `app/ts-order-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 301,957
+- **摘要**：Metric-surface incident: GetAlerts shows LATENCY_DEGRADATION on the preserve-booking path only (ts-order-service p50 9.44ms->3881.58ms, ts-seat-service 17.65->3906.25ms, ts-security-service 39.11->3750.00ms, ts-travel-service p90 98.74->11000ms, ts-preserve-service p50 295.1->30000ms, ts-gateway-service p90 227.8->39000ms, ts-ui-dashboard p90 229.6->34500ms) plus a cluster-wide ~50-70% pps 'Network Drop' on every service. Object layer is excluded: all pods Running/READY 2/2, RESTARTS 0, nodes Ready with no taints/pressure, namespace events contain no mechanism Warnings (no FailedCreate/FailedM
 

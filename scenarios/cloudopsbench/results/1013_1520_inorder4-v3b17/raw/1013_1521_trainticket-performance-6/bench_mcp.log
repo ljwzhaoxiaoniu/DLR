@@ -1,0 +1,32 @@
+INFO:     Started server process [324]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:55640 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55641 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:55640 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55642 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55645 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55647 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:55645 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61811 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:61811 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-preserve-service"}
+INFO:     127.0.0.1:60544 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-order-service"}
+INFO:     127.0.0.1:60544 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60544 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60544 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-seat-service"}
+INFO:     127.0.0.1:51767 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-security-service"}
+INFO:     127.0.0.1:51767 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-travel-service"}
+INFO:     127.0.0.1:51767 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61381 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-order-service"}
+INFO:     127.0.0.1:61381 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-order-service"}
+INFO:     127.0.0.1:61381 - "POST /mcp HTTP/1.1" 200 OK

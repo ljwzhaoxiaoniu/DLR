@@ -1,0 +1,2 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+trainticket/runtime/10,1.0,1.0,1.0,1.0,1.0,1.0,0.391304347826087,24.0,0.043478260869565216,0.0,app/tsdb-mysql,db_readonly_mode,app/tsdb-mysql,db_readonly_mode,

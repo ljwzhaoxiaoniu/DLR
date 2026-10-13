@@ -1,6 +1,6 @@
 # 评测明细 · boutique/performance — cloudopsbench
 
-> 本家族已跑 **3/29** 题：JRA ✅3 ❌0 ｜ 证据链全闭 3 ｜ token 中位 134,179 ｜ 生成 2026-10-13T07:16:58.691Z
+> 本家族已跑 **4/29** 题：JRA ✅4 ❌0 ｜ 证据链全闭 4 ｜ token 中位 146,989 ｜ 生成 2026-10-13T07:29:15.283Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -10,6 +10,7 @@
 | [1](#case-1) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 127,303 | 0 | 0 | 1012_1415_inorder4-v3 | 全对·链闭 |
 | [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1852 | 28 | 289,569 | 0 | 0 | 1013_1134_inorder4-v3b10 | 全对·链闭 |
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 134,179 | 0 | 0 | 1013_1343_inorder4-v3b14 | 全对·链闭 |
+| [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 146,989 | 0 | 0 | 1013_1524_inorder4-v3b18 | 全对·链闭 |
 
 ## 证据正文
 
@@ -30,4 +31,10 @@
 - **结论**：`app/checkoutservice` + `pod_cpu_overload` ｜ 标签 `app/checkoutservice` + `pod_cpu_overload`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 134,179
 - **摘要**：Metric-surface case: GetAlerts shows the anomaly is owned by checkoutservice — RESOURCE_SATURATION [cpu_cfs] Val: 0.703s (Throttled), RESOURCE_SATURATION [cpu core] Normal=0.01 cores -> Current=0.15 cores (+1985.6%), and LATENCY_DEGRADATION checkoutservice-p95 28.83ms -> 93.18ms (+223.2%); the only other alert is a mild knock-on on its host (Node worker-02 cpu 3.15% -> 5.12%). The pods face closes it: checkoutservice container 'server' runs with limits cpu=200m / requests cpu=100m, so its sampled 0.15 cores (~75% of limit) triggers CFS throttling that explains the added latency. Object layer i
+
+### case-4
+
+- **结论**：`app/currencyservice` + `pod_cpu_overload` ｜ 标签 `app/currencyservice` + `pod_cpu_overload`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2353 · steps 18 · tokens 146,989
+- **摘要**：Object layer is clean (all 11 boutique pods 2/2 Running, RESTARTS=0; currencyservice pod events only Normal Scheduled/Pulled/Created/Started, Restart Count 0, no probe/OOM/scheduling warnings) and namespace events contain no Warning tied to this workload, so the break is at the metric/telemetry level, not an object or health break. GetAlerts() isolates the single resource-level anomaly to currencyservice: RESOURCE_SATURATION [cpu_cfs] Val=1.081s (Throttled) plus RESOURCE_SATURATION [cpu core] Normal=0.04 cores -> Current=0.17 cores (+318.0%), together with LATENCY_DEGRADATION p95 3.69ms -> 73.
 

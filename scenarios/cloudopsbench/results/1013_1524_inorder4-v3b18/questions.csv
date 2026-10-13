@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/performance/4,1.0,1.0,1.0,1.0,1.0,1.0,0.23529411764705882,18.0,0.0,0.0,app/currencyservice,pod_cpu_overload,app/currencyservice,pod_cpu_overload,
+trainticket/runtime/10,1.0,1.0,1.0,1.0,1.0,1.0,0.391304347826087,24.0,0.043478260869565216,0.0,app/tsdb-mysql,db_readonly_mode,app/tsdb-mysql,db_readonly_mode,
+boutique/scheduling/7,1.0,1.0,1.0,1.0,1.0,1.0,0.21052631578947367,20.0,0.0,0.0,app/redis-cart,node_cordon_mismatch,app/redis-cart,node_cordon_mismatch,
+trainticket/startup/7,1.0,1.0,1.0,1.0,1.0,1.0,0.5,11.0,0.0,0.0,app/ts-food-delivery-service,missing_secret_binding,app/ts-food-delivery-service,missing_secret_binding,

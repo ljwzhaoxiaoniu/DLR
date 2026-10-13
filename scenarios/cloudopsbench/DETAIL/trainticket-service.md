@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **7/37** 题：JRA ✅7 ❌0 ｜ 证据链全闭 7 ｜ token 中位 460,035 ｜ 生成 2026-10-13T07:16:58.691Z
+> 本家族已跑 **8/37** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 460,035 ｜ 生成 2026-10-13T07:29:15.283Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -13,6 +13,7 @@
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 460,035 | 0 | 0 | 1013_1225_inorder4-v3b11 | 全对·链闭 |
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3478 | 24 | 437,347 | 0 | 0 | 1013_1248_inorder4-v3b13 | 全对·链闭 |
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 465,479 | 0 | 0 | 1013_1413_inorder4-v3b15 | 全对·链闭 |
+| [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 364,342 | 0 | 0 | 1013_1520_inorder4-v3b17 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
 
 ## 证据正文
@@ -52,6 +53,12 @@
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2778 · steps 19 · tokens 465,479
 - **摘要**：All 44 train-ticket pods read 2/2 Running/Ready with no Pending/CrashLoop and ts-preserve-service:14568 is reachable from every node (CheckServiceConnectivity: Connection Succeeded; no error logs), yet the UI-dashboard nginx access log shows 20x "POST /api/v1/preserveservice/preserve HTTP/1.1" 404 while every sibling path (orderservice/order/refresh, inside_pay_service/inside_payment, cancelservice, users/login) returns 200. Line-by-line audit of the gateway route table (configmap ts-gateway-service-config, AGE 5m55s vs 9d for all other configmaps) shows exactly one mis-paired entry: id=preser
+
+### case-8
+
+- **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 19 · tokens 364,342
+- **摘要**：ts-ui-dashboard (nginx, fronting ts-gateway-service) logs POST /api/v1/preserveservice/preserve -> 404 (13 occurrences, alert entry_service=ts-preserve-service) while every sibling path at the same timestamps returns 200 (cancel/login/travelservice/assuranceservice), i.e. only the preserve path is unreachable. The target itself is healthy: ts-preserve-service pod 2/2 Running, Nacos 'register finished', CheckServiceConnectivity(ts-preserve-service:14568) succeeded from worker-01/02/03, and its container log shows startup only — it never receives any preserve request. The break is the address la
 
 ### case-25
 

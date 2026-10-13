@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **9/96** 题：JRA ✅9 ❌0 ｜ 证据链全闭 9 ｜ token 中位 535,723 ｜ 生成 2026-10-13T07:16:58.691Z
+> 本家族已跑 **10/96** 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 535,723 ｜ 生成 2026-10-13T07:29:15.283Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -16,6 +16,7 @@
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.381 | 22 | 521,337 | 0 | 0 | 1013_1235_inorder4-v3b12 | 全对·链闭 |
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 37 | 631,353 | 0 | 0 | 1013_1343_inorder4-v3b14 | 全对·链闭 |
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4074 | 28 | 644,230 | 0 | 0 | 1013_1503_inorder4-v3b16 | 全对·链闭 |
+| [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3913 | 24 | 409,060 | 0.0435 | 0 | 1013_1524_inorder4-v3b18 | 全对·链闭 |
 
 ## 证据正文
 
@@ -72,4 +73,10 @@
 - **结论**：`app/tsdb-mysql` + `db_readonly_mode` ｜ 标签 `app/tsdb-mysql` + `db_readonly_mode`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4074 · steps 28 · tokens 644,230
 - **摘要**：All 51 pods are Running/Ready with no Pending/FailedCreate/FailedMount/image-pull outlier, excluding scheduling, admission, image and probe faults; the break is in the data layer. Alerts show HTTP 500 on POST /api/v1/inside_pay_service/inside_payment (ts-inside-payment-service, 53x) and /api/v1/preserveservice/preserve (ts-preserve-service, 14x). Caller logs show downstream 500s: ts-inside-payment-service -> /api/v1/paymentservice/payment 500, ts-preserve-service -> /api/v1/orderservice/order 500. The named downstream services' own logs carry the mechanism verbatim: ts-payment-service (66x) an
+
+### case-10
+
+- **结论**：`app/tsdb-mysql` + `db_readonly_mode` ｜ 标签 `app/tsdb-mysql` + `db_readonly_mode`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3913 · steps 24 · tokens 409,060
+- **摘要**：All train-ticket pods are 1/1 Running with 0 restarts (no scheduling/startup/probe breakpoint). Alerts point to 500s on ts-inside-payment-service (/api/v1/paymentservice/payment) and ts-preserve-service (/api/v1/orderservice/order). Downstream logs name the mechanism verbatim: ts-payment-service and ts-order-service both log 'o.h.engine.jdbc.spi.SqlExceptionHelper: SQL Error: 1290, SQLState: HY000' and 'The MySQL server is running with the --read-only option so it cannot execute this statement', then 'JpaSystemException: could not execute statement' -> HTTP 500. The write path is pinned by con
 
