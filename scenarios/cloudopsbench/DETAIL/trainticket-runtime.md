@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **7/96** 题：JRA ✅7 ❌0 ｜ 证据链全闭 7 ｜ token 中位 521,337 ｜ 生成 2026-10-13T05:30:38.570Z
+> 本家族已跑 **8/96** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 535,723 ｜ 生成 2026-10-13T05:47:05.805Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -14,6 +14,7 @@
 | [5](#case-5) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.1429 | 36 | 800,099 | 0 | 0 | 1012_2000_case-verify1 | 全对·链闭 |
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3182 | 23 | 477,041 | 0 | 0 | 1013_1134_inorder4-v3b10 | 全对·链闭 |
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.381 | 22 | 521,337 | 0 | 0 | 1013_1235_inorder4-v3b12 | 全对·链闭 |
+| [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 37 | 631,353 | 0 | 0 | 1013_1343_inorder4-v3b14 | 全对·链闭 |
 
 ## 证据正文
 
@@ -58,4 +59,10 @@
 - **结论**：`app/tsdb-mysql` + `db_readonly_mode` ｜ 标签 `app/tsdb-mysql` + `db_readonly_mode`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.381 · steps 22 · tokens 521,337
 - **摘要**：All train-ticket pods are 1/1 Running with zero restarts, so the break is not probe/scheduling/startup. Caller-side logs pin the mechanism: ts-payment-service and ts-order-service both emit 'SQL Error: 1290, SQLState: HY000' + 'The MySQL server is running with the --read-only option so it cannot execute this statement' (68 and 54 occurrences), then throw JpaSystemException 'could not execute statement' and return HTTP 500. These 500s propagate upward exactly along the reported alerts: ts-inside-payment-service -> /api/v1/paymentservice/payment (54x 'Process payment' 500) and ts-preserve-servic
+
+### case-8
+
+- **结论**：`app/tsdb-mysql` + `db_readonly_mode` ｜ 标签 `app/tsdb-mysql` + `db_readonly_mode`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 37 · tokens 631,353
+- **摘要**：Symptom side: alerts point to ts-inside-payment-service ('Process payment') and ts-preserve-service ('Create ticket order') returning HTTPError 500; their caller logs show downstream 500s from /api/v1/paymentservice/payment (ts-payment-service) and /api/v1/orderservice/order (ts-order-service) plus 'getTickets failed'. Object layer is clean: all 51 pods 1/1 Running, no Pending/CrashLoop/ImagePull/Mount anomalies, and no FailedCreate/FailedScheduling/FailedMount events in the namespace. The break is at the statement level: ts-payment-service (68x) and ts-order-service (52x) both log 'SQL Error:
 

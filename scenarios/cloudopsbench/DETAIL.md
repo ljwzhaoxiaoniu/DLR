@@ -12,16 +12,16 @@
 | boutique/admission | 58 | 5 | 53 | 8.6% |
 | boutique/codedefect | 98 | 5 | 93 | 5.1% |
 | boutique/infrastructure | 40 | 4 | 36 | 10.0% |
-| boutique/performance | 29 | 2 | 27 | 6.9% |
+| boutique/performance | 29 | 3 | 26 | 10.3% |
 | boutique/runtime | 45 | 4 | 41 | 8.9% |
-| boutique/scheduling | 164 | 5 | 159 | 3.0% |
+| boutique/scheduling | 164 | 6 | 158 | 3.7% |
 | boutique/service | 54 | 3 | 51 | 5.6% |
 | boutique/startup | 62 | 3 | 59 | 4.8% |
 | train-ticket/performance | 47 | 4 | 43 | 8.5% |
-| train-ticket/runtime | 96 | 7 | 89 | 7.3% |
+| train-ticket/runtime | 96 | 8 | 88 | 8.3% |
 | train-ticket/service | 37 | 6 | 31 | 16.2% |
-| train-ticket/startup | 24 | 4 | 20 | 16.7% |
-| **合计** | **754** | **52** | **702** | **6.9%** |
+| train-ticket/startup | 24 | 5 | 19 | 20.8% |
+| **合计** | **754** | **56** | **698** | **7.4%** |
 
 ## 汇总（去重 · 取最新）
 
@@ -29,22 +29,22 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 52 / 52（100.0%） |
-| CA（组件命中） | 52 / 52（100.0%） |
-| FA（故障型命中） | 52 / 52（100.0%） |
-| ECR（证据链全闭） | 52 / 52（100.0%） |
+| JRA（联合命中） | 56 / 56（100.0%） |
+| CA（组件命中） | 56 / 56（100.0%） |
+| FA（故障型命中） | 56 / 56（100.0%） |
+| ECR（证据链全闭） | 56 / 56（100.0%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 1 | 0.9583 | 1 | 0.2944 | 19.0385 | 0 | 0.0192 |
+| 1 | 0.9554 | 1 | 0.2946 | 19.125 | 0 | 0.0179 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 259,071 / 186,507 | 58,131 / 1,133,738 | 75% |
+| 260,555 / 186,507 | 58,131 / 1,133,738 | 75% |
 
 ## 分家族索引
 
@@ -53,15 +53,15 @@
 | boutique/admission | 58 | 5 | 5 | 5 | [boutique-admission.md](DETAIL/boutique-admission.md) |
 | boutique/codedefect | 98 | 5 | 5 | 5 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
 | boutique/infrastructure | 40 | 4 | 4 | 4 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
-| boutique/performance | 29 | 2 | 2 | 2 | [boutique-performance.md](DETAIL/boutique-performance.md) |
+| boutique/performance | 29 | 3 | 3 | 3 | [boutique-performance.md](DETAIL/boutique-performance.md) |
 | boutique/runtime | 45 | 4 | 4 | 4 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
-| boutique/scheduling | 164 | 5 | 5 | 5 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
+| boutique/scheduling | 164 | 6 | 6 | 6 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
 | boutique/service | 54 | 3 | 3 | 3 | [boutique-service.md](DETAIL/boutique-service.md) |
 | boutique/startup | 62 | 3 | 3 | 3 | [boutique-startup.md](DETAIL/boutique-startup.md) |
 | train-ticket/performance | 47 | 4 | 4 | 4 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
-| train-ticket/runtime | 96 | 7 | 7 | 7 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
+| train-ticket/runtime | 96 | 8 | 8 | 8 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
 | train-ticket/service | 37 | 6 | 6 | 6 | [trainticket-service.md](DETAIL/trainticket-service.md) |
-| train-ticket/startup | 24 | 4 | 4 | 4 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
+| train-ticket/startup | 24 | 5 | 5 | 5 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
 
 ## 定性观察
 
@@ -93,6 +93,9 @@
 > **2026-10-13 · 轮次 1013_1235_inorder4-v3b12（批十二 · 3/4 · startup/3 判型翻车）**：① 覆盖 48/754，JRA 47/48。② **startup/3 miss**（批八以来首个）：组件对（checkoutservice）、判型错——镜像指向虚构域名 `ghost-registry.example.net`（事件 `lookup … no such host`）；agent 推理「DNS 本身正常（其他服务拉得动）→ 是引用错」→ rank1 报 `incorrect_image_reference`（正解 `image_registry_dns_failure` 被放 rank2）——**v2 时代 startup/1 同一对混淆的再现**（b2 翻案那次无 L3、靠事件消息分类判对；本次命中节 image 分支仅有「读配置面」、无定类判别线，或助偏）。③ admission/5 `missing_service_account`（EOC 0.25 · 13 步）、tt-runtime/7 `db_readonly_mode`（22 步 · 与 /6 连续同型）、tt-startup/4 `missing_secret_binding`（11 步）全满。④ 处置：该节 image-pull 分支补「拉取消息定类 + rank1 跟随」判别线（`565a0e8`）→ L3 rebuild + 探针 → 复跑 **14 步全满**（rank1 = `image_registry_dns_failure` ✓）——**JRA 48/48 恢复**。
 
 > **2026-10-13 · 轮次 1013_1248_inorder4-v3b13（批十三 · 3/4 · tt-performance/4 判型翻车）**：① 覆盖 52/754，JRA 51/52。② **tt-performance/4 miss**：组件对（ts-gateway-service）、判型错——p50 27ms→1928ms **恒定延迟**、下游服务边全净、无饱和；agent 推「延迟在网关自身处理路径 → `code_artificial_delay`」（正解 `pod_network_delay` 在 rank2）——42 步长链，MC/EOC/ECR 全 1（纯判型失分）。③ 症状措辞 = **第三个模板「Service quality degradation.」**（L3 无节、本次未命中）；全库真值分布：该措辞下 boutique = pod_network_delay 7 + pod_cpu_overload 4，tt = **pod_network_delay 47/47**；**`code_artificial_delay` 全库仅存在于 boutique/codedefect（另一措辞「Service Performance Degradation.」、靠代码面证实）**——判类有硬依据。④ 其余全满：boutique/runtime/4 `liveness_probe_incorrect_protocol`（11 步）· boutique/service/3 `service_env_var_address_mismatch`（15 步）· tt-service/6 `gateway_misrouted`（**条款第五连** · 24 步）。⑤ 处置：开「Service quality degradation.」新节（`384656e`：alert 面定案 + 延迟类=网络侧 + 代码排除句 + 节点域分支 + 对象层排除收口）→ L3 3 节 rebuild + 探针 → 复跑 **22 步全满**（rank1 = `pod_network_delay` ✓，42→22 步）——**JRA 52/52 恢复**。
+
+> **2026-10-13 · 轮次 1013_1343_inorder4-v3b14（批十四 · 4/4 JRA · 新节泛化首验 · 一例 EOC 留观）**：① 覆盖 56/754，**JRA 56/56**。② **新节泛化首验过**：boutique/performance/3 `pod_cpu_overload`（16 步）——「Service quality degradation.」节在 boutique 侧（饱和分支）落对。③ **scheduling/6 EOC 0.667（节点类第三次）**：解剖 = 单处倒位——`GetClusterConfiguration`（金链 M3 素材）先于 pod 详情（M2 调度理由）一步读出；非评分器严格性类，为可修序。④ tt-runtime/8 `db_readonly_mode`（37 步长链全闭）、tt-startup/5 `missing_secret_binding`（12 步）全满。⑤ 待定：在该节 Pending 分支补「pod 自身调度理由先读、节点域证据随后」序句 + 复跑对表。
+
 
 
 
