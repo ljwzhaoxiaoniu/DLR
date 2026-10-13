@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **19/40** 题：JRA ✅19 ❌0 ｜ 证据链全闭 19 ｜ token 中位 110,448 ｜ 生成 2026-10-13T13:09:41.096Z
+> 本家族已跑 **20/40** 题：JRA ✅20 ❌0 ｜ 证据链全闭 20 ｜ token 中位 127,753 ｜ 生成 2026-10-13T13:13:39.005Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -26,6 +26,7 @@
 | [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5667 | 31 | 150,940 | 0 | 0 | 1013_2049_inorder4-v3b40 | 全对·链闭 |
 | [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 21 | 131,291 | 0 | 0 | 1013_2059_inorder4-v3b41 | 全对·链闭 |
 | [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.12 | 26 | 208,511 | 0 | 0 | 1013_2106_inorder4-v3b42 | 全对·链闭 |
+| [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1111 | 28 | 177,400 | 0.037 | 0 | 1013_2110_inorder4-v3b43 | 全对·链闭 |
 
 ## 证据正文
 
@@ -161,4 +162,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.12 · steps 26 · tokens 208,511
 - **raw 日志**：[results/1013_2106_inorder4-v3b42/raw/1013_2106_boutique-infrastructure-19](../results/1013_2106_inorder4-v3b42/raw/1013_2106_boutique-infrastructure-19/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Namespace boutique (live cluster confirms boutique is the only workload namespace; no train-ticket namespace exists). Inventory outlier: adservice-64ddc5c766-skqvc 0/1 Pending, NODE <none>, while all other pods are 1/1 Running. Victim signal: endpoints/adservice = <none> and CheckServiceConnectivity(adservice, 9555) = 'Connection Failed'. Pod's own reason is absent (no 'N nodes are available' line, Events: <none>) and the namespace event surface carries no FailedScheduling at all -> the scheduler never processed the pod. Node side: all 4 nodes Ready, no pressure, workers untainted with 8 CPU f
+
+### case-20
+
+- **结论**：`node/master` + `kube_scheduler_unavailable` ｜ 标签 `node/master` + `kube_scheduler_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1111 · steps 28 · tokens 177,400
+- **raw 日志**：[results/1013_2110_inorder4-v3b43/raw/1013_2110_boutique-infrastructure-20](../results/1013_2110_inorder4-v3b43/raw/1013_2110_boutique-infrastructure-20/)（ndjson / mcp.jsonl / meta）
+- **摘要**：boutique inventory has exactly one outlier: pod cartservice-79b49f5555-mmhv4 (0/1 Pending, Node:<none>, Events:<none>), while the other 10 workloads are 1/1 Running. Service-side signal confirms the disruption: CheckServiceConnectivity(cartservice:7070)=Connection Failed, deployment cartservice 0/1 available (Available=False MinimumReplicasUnavailable), so the cartservice Service has no ready endpoints. The break is the scheduler: CheckNodeServiceStatus(master, kube-scheduler) shows 'Active: inactive (dead) since Tue 2025-12-02 21:13:59 CST' with 'Scheduling queue is closed' / 'Requested to te
 

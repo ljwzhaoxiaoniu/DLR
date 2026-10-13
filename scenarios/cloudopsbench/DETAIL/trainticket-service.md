@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **26/37** 题：JRA ✅26 ❌0 ｜ 证据链全闭 26 ｜ token 中位 541,741 ｜ 生成 2026-10-13T13:09:41.096Z
+> 本家族已跑 **27/37** 题：JRA ✅27 ❌0 ｜ 证据链全闭 27 ｜ token 中位 528,847 ｜ 生成 2026-10-13T13:13:39.005Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -33,6 +33,7 @@
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
 | [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 541,741 | 0 | 0 | 1013_2059_inorder4-v3b41 | 全对·链闭 |
 | [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 501,550 | 0 | 0 | 1013_2106_inorder4-v3b42 | 全对·链闭 |
+| [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 486,562 | 0 | 0 | 1013_2110_inorder4-v3b43 | 全对·链闭 |
 
 ## 证据正文
 
@@ -217,4 +218,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 501,550
 - **raw 日志**：[results/1013_2106_inorder4-v3b42/raw/1013_2108_trainticket-service-27](../results/1013_2106_inorder4-v3b42/raw/1013_2108_trainticket-service-27/)（ndjson / mcp.jsonl / meta）
 - **摘要**：ts-order-service is the sole outlier: pod ts-order-service-6cd5889659-v76vn is 0/2 CrashLoopBackOff (4 restarts, last state Terminated/Error exit code 1) while all 48 other pods are 2/2 Running; alerts show 503 Service Unavailable on POST /api/v1/orderservice/order/refresh (entry ts-order-service, 2x20 occurrences). Its container logs die during HikariPool-1 initialization: java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution, and its istio-proxy sidecar also fails lookup of istiod.istio-system.svc on 10.255.7.254:53 (i/o timeout) - a pod-internal DNS failure,
+
+### case-28
+
+- **结论**：`app/ts-payment-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-payment-service` + `service_dns_resolution_failure`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2941 · steps 18 · tokens 486,562
+- **raw 日志**：[results/1013_2110_inorder4-v3b43/raw/1013_2112_trainticket-service-28](../results/1013_2110_inorder4-v3b43/raw/1013_2112_trainticket-service-28/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods inventory shows the single outlier ts-payment-service-dd4c6c46b-qwzxg (0/2 CrashLoopBackOff, 4 restarts, last termination Reason=Error ExitCode=1, node worker-02); connectivity probe to its own declared port ts-payment-service:19001 fails from worker-01/02/03 (no ready endpoints), while the alert pointer ts-inside-payment-service 'Process payment' returns 500. Its app log gives the break verbatim: 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' -> HikariPool-1 Exception during pool initialization -> 'Failed to initialize JPA EntityManagerFactory ..
 

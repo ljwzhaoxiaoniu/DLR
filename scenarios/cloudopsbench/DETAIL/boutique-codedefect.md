@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **20/98** 题：JRA ✅20 ❌0 ｜ 证据链全闭 20 ｜ token 中位 207,400 ｜ 生成 2026-10-13T13:09:41.096Z
+> 本家族已跑 **21/98** 题：JRA ✅21 ❌0 ｜ 证据链全闭 21 ｜ token 中位 200,618 ｜ 生成 2026-10-13T13:13:39.005Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -27,6 +27,7 @@
 | [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1351 | 38 | 650,011 | 0 | 0 | 1013_2049_inorder4-v3b40 | 全对·链闭 |
 | [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 386,921 | 0 | 0 | 1013_2059_inorder4-v3b41 | 全对·链闭 |
 | [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 197,018 | 0 | 0 | 1013_2106_inorder4-v3b42 | 全对·链闭 |
+| [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 149,851 | 0 | 0 | 1013_2110_inorder4-v3b43 | 全对·链闭 |
 
 ## 证据正文
 
@@ -169,4 +170,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 197,018
 - **raw 日志**：[results/1013_2106_inorder4-v3b42/raw/1013_2106_boutique-codedefect-20](../results/1013_2106_inorder4-v3b42/raw/1013_2106_boutique-codedefect-20/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts flag Service/checkoutservice with RESOURCE_SATURATION [cpu_cfs] 'Val=1.027s throttled', RESOURCE_SATURATION [cpu] 0.00 -> 0.12 cores (+7265.9%) and LATENCY_DEGRADATION [Slow Response] p50 18.39ms -> 4478.97ms (+24254.2%), p90 -> 9224.49ms; the node-level alert (worker-01 CPU 4.85% -> 7.32%) is far too mild to be causal. Per the telemetry chain, the object layer was excluded first: all boutique pods list 2/2 Running with RESTARTS 0 (checkoutservice-6fc6d649d8-mrdxh included), and namespace events contain no FailedScheduling/FailedMount/OOMKilled/probe-kill for it, so no scheduling, quota
+
+### case-21
+
+- **结论**：`app/checkoutservice` + `code_excessive_file_reads` ｜ 标签 `app/checkoutservice` + `code_excessive_file_reads`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1875 · steps 17 · tokens 149,851
+- **raw 日志**：[results/1013_2110_inorder4-v3b43/raw/1013_2110_boutique-codedefect-21](../results/1013_2110_inorder4-v3b43/raw/1013_2110_boutique-codedefect-21/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Service Performance Degradation.' resolved on the telemetry chain: alert on Service checkoutservice = RESOURCE_SATURATION [cpu_cfs] 1.076s throttled + [cpu] Normal=0.00 -> Current=0.12 cores (+8864.8%) + LATENCY_DEGRADATION p50 20.25ms -> 4772.73ms (+23474.8%). Object layer excluded: all 11 boutique pods 2/2 Running with 0 RESTARTS, no Pending/CrashLoop; CheckServiceConnectivity checkoutservice:5050 = open/Succeeded; GetErrorLogs empty; node worker-01 Ready, untainted, kubelet active, no pressure (its +63.3% CPU is a consequence). Break found at the workload behaviour face: checkoutse
 

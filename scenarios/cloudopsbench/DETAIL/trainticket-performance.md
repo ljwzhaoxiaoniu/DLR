@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **24/47** 题：JRA ✅24 ❌0 ｜ 证据链全闭 24 ｜ token 中位 301,957 ｜ 生成 2026-10-13T13:09:41.096Z
+> 本家族已跑 **25/47** 题：JRA ✅25 ❌0 ｜ 证据链全闭 25 ｜ token 中位 301,957 ｜ 生成 2026-10-13T13:13:39.005Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -31,6 +31,7 @@
 | [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2222 | 28 | 625,309 | 0 | 0 | 1013_2059_lmdecoy-verify1 | 全对·链闭 |
 | [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 150,648 | 0 | 0 | 1013_2059_inorder4-v3b41 | 全对·链闭 |
 | [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1538 | 14 | 343,773 | 0 | 0 | 1013_2106_inorder4-v3b42 | 全对·链闭 |
+| [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 322,359 | 0 | 0 | 1013_2110_inorder4-v3b43 | 全对·链闭 |
 
 ## 证据正文
 
@@ -201,4 +202,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1538 · steps 14 · tokens 343,773
 - **raw 日志**：[results/1013_2106_inorder4-v3b42/raw/1013_2107_trainticket-performance-24](../results/1013_2106_inorder4-v3b42/raw/1013_2107_trainticket-performance-24/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts show a system-wide traffic collapse (gateway inbound 638.12->196.54pps -69.2%, ui-dashboard -66.6%, RPS -58%~-71% everywhere) plus a localized latency blow-up whose runaway deviation sits on ts-order-service: p50latency 134.03ms -> 4637.29ms (+3359.9%, Peak 60000ms) and p90latency 1999.56ms -> 19476.20ms (+874.0%, Peak 252000ms) - far beyond its callers' rises (gateway p90 +114.5%, travel p90 +373.0%, preserve p50 +629.6%) and beyond ts-seat-service (p50 +17124.6% but p90 only +595%). Dependency graph shows ts-order-service is a leaf core (upstream: gateway/preserve/seat/security/inside
+
+### case-25
+
+- **结论**：`app/ts-payment-service` + `pod_network_delay` ｜ 标签 `app/ts-payment-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2778 · steps 19 · tokens 322,359
+- **raw 日志**：[results/1013_2110_inorder4-v3b43/raw/1013_2112_trainticket-performance-25](../results/1013_2110_inorder4-v3b43/raw/1013_2112_trainticket-performance-25/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Metric-surface wording: GetAlerts shows the epicenter is ts-payment-service with the runaway deviation — LATENCY_DEGRADATION p50 16.12ms -> 6477.27ms (+40069.1%), p90 23.25 -> 9295.45ms (+39880.5%) plus ERROR_SPIKE success 100% -> 81.7%; its caller ts-inside-payment-service shows only the rippled rise (p90 518.75 -> 7625ms, +1369.9%), and ts-order-service's bare RESOURCE_SATURATION cpu_cfs 0.836s row carries no latency of its own (collateral noise, not the case). GetServiceDependencies(ts-payment-service) shows it is a LEAF ('No downstream calls'), so nothing downstream can explain its own 40x
 

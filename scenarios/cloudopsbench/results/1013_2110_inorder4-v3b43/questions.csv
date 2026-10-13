@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/21,1.0,1.0,1.0,1.0,1.0,1.0,0.1875,17.0,0.0,0.0,app/checkoutservice,code_excessive_file_reads,app/checkoutservice,code_excessive_file_reads,
+boutique/infrastructure/20,1.0,1.0,1.0,1.0,1.0,1.0,0.1111111111111111,28.0,0.037037037037037035,0.0,node/master,kube_scheduler_unavailable,node/master,kube_scheduler_unavailable,
+trainticket/performance/25,1.0,1.0,1.0,1.0,1.0,1.0,0.2777777777777778,19.0,0.0,0.0,app/ts-payment-service,pod_network_delay,app/ts-payment-service,pod_network_delay,
+trainticket/service/28,1.0,1.0,1.0,1.0,1.0,1.0,0.29411764705882354,18.0,0.0,0.0,app/ts-payment-service,service_dns_resolution_failure,app/ts-payment-service,service_dns_resolution_failure,
