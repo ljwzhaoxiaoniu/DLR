@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **34/40** 题：JRA ✅34 ❌0 ｜ 证据链全闭 34 ｜ token 中位 125,844 ｜ 生成 2026-10-13T14:52:31.865Z
+> 本家族已跑 **35/40** 题：JRA ✅35 ❌0 ｜ 证据链全闭 35 ｜ token 中位 125,844 ｜ 生成 2026-10-13T14:57:48.890Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -41,6 +41,7 @@
 | [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 140,955 | 0 | 0 | 1013_2240_inorder4-v3b55 | 全对·链闭 |
 | [33](#case-33) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 123,672 | 0 | 0 | 1013_2245_inorder4-v3b56 | 全对·链闭 |
 | [34](#case-34) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 127,753 | 0 | 0 | 1013_2249_inorder4-v3b57 | 全对·链闭 |
+| [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1905 | 22 | 156,072 | 0 | 0 | 1013_2253_inorder4-v3b58 | 全对·链闭 |
 
 ## 证据正文
 
@@ -281,4 +282,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 127,753
 - **raw 日志**：[results/1013_2249_inorder4-v3b57/raw/1013_2249_boutique-infrastructure-34](../results/1013_2249_inorder4-v3b57/raw/1013_2249_boutique-infrastructure-34/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All 11 boutique pods show Running 1/1 with 0 restarts and no alerts, yet Endpoints are selectively empty: adservice, currencyservice, paymentservice, recommendationservice, shippingservice have NO endpoints while cartservice/checkoutservice/frontend/productcatalogservice/redis-cart/emailservice are bound. The split is exactly node-shaped: every pod on worker-01 is unreachable, every pod on worker-02 is fine — hence 'Partial'. worker-01 is NotReady with Ready=Unknown, Reason=NodeStatusUnknown, Message='Kubelet stopped posting node status.', and carries node.kubernetes.io/unreachable:NoSchedule/
+
+### case-35
+
+- **结论**：`node/worker-01` + `kubelet_unavailable` ｜ 标签 `node/worker-01` + `kubelet_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1905 · steps 22 · tokens 156,072
+- **raw 日志**：[results/1013_2253_inorder4-v3b58/raw/1013_2253_boutique-infrastructure-35](../results/1013_2253_inorder4-v3b58/raw/1013_2253_boutique-infrastructure-35/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side first: frontend Service endpoints are <none> and CheckServiceConnectivity(frontend:80) failed; the endpoints listing splits the namespace by node - all worker-01 pods (adservice, checkoutservice, emailservice, productcatalogservice, shippingservice) plus frontend have no endpoints, while every worker-02 service still has endpoints (partial, node-scoped blast radius). The single outlier in the pod inventory is frontend-55c88c6544-7rvkn (0/1 Pending, Node <none>, 62s). Its own sheet carries the scheduling line: 'FailedScheduling ... 0/4 nodes are available: 1 node(s) had untolerated
 

@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/performance</em></h1>
-<p class="deck">已跑 <b>39/47</b> 题：JRA ✅38 ❌1 ｜ 证据链全闭 38 ｜ token 中位 301,957 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:52:31.865Z</p>
+<p class="deck">已跑 <b>40/47</b> 题：JRA ✅39 ❌1 ｜ 证据链全闭 39 ｜ token 中位 301,957 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:57:48.890Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1429</td><td>36</td><td>442,283</td><td>0</td><td>1</td><td class="muted">1012_1512_inorder4-v3b3</td><td><a href="../results/1012_1512_inorder4-v3b3/raw/1012_1516_trainticket-performance-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1516_trainticket-performance-1</a></td></tr>
@@ -55,6 +55,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-37"><code>37</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>21</td><td>223,685</td><td>0</td><td>0</td><td class="muted">1013_2240_inorder4-v3b55</td><td><a href="../results/1013_2240_inorder4-v3b55/raw/1013_2241_trainticket-performance-37/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2241_trainticket-performance-37</a></td></tr>
 <tr><td><a href="#case-38"><code>38</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2308</td><td>14</td><td>461,392</td><td>0</td><td>0</td><td class="muted">1013_2245_inorder4-v3b56</td><td><a href="../results/1013_2245_inorder4-v3b56/raw/1013_2246_trainticket-performance-38/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2246_trainticket-performance-38</a></td></tr>
 <tr><td><a href="#case-39"><code>39</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1667</td><td>19</td><td>540,637</td><td>0</td><td>0</td><td class="muted">1013_2249_inorder4-v3b57</td><td><a href="../results/1013_2249_inorder4-v3b57/raw/1013_2250_trainticket-performance-39/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2250_trainticket-performance-39</a></td></tr>
+<tr><td><a href="#case-40"><code>40</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.15</td><td>21</td><td>299,756</td><td>0</td><td>0</td><td class="muted">1013_2253_inorder4-v3b58</td><td><a href="../results/1013_2253_inorder4-v3b58/raw/1013_2254_trainticket-performance-40/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2254_trainticket-performance-40</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/ts-basic-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 36 步</summary><ul>
@@ -1812,6 +1813,53 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/ts-travel-service&quot;,
    &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-40"><summary><b>case-40</b> · <code>app/ts-payment-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 21 步</summary><ul>
+<li><b>摘要</b>：Alerts (23:53:35~23:55:25) name three entities: ts-payment-service LATENCY_DEGRADATION (p50 16.70ms-&gt;4464.29ms, p90 40.96ms-&gt;8722.22ms, Peak 9362ms), ts-inside-payment-service ERROR_SPIKE+LATENCY (success 100%-&gt;67.6%; p50 300.48-&gt;6048.39ms, p90 822.19-&gt;9209.68ms), ts-order-service RESOURCE_SATURATION [cpu_cfs] Val 0.560s (Throttled). Of the two both-percentile latency rows, ts-payment-service carries the steepest p90 escalation and the largest absolute deviation, i.e. the epicenter; ts-order-service is a bare saturation row with no latency of its own (collateral per the wording's rule). Graph:</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2253_inorder4-v3b58/raw/1013_2254_trainticket-performance-40/">results/1013_2253_inorder4-v3b58/raw/1013_2254_trainticket-performance-40</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;nodes&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-payment-service&quot;,&quot;port&quot;:8080,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>13</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-payment-service&quot;,&quot;port&quot;:19001,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-payment-service-666d596f87-7n2mm&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Alerts (23:53:35~23:55:25) name three entities: ts-payment-service LATENCY_DEGRADATION (p50 16.70ms-&gt;4464.29ms, p90 40.96ms-&gt;8722.22ms, Peak 9362ms), ts-inside-payment-service ERROR_SPIKE+LATENCY (success 100%-&gt;67.6%; p50 300.48-&gt;6048.39ms, p90 822.19-&gt;9209.68ms), ts-order-service RESOURCE_SATURATION [cpu_cfs] Val 0.560s (Throttled). Of the two both-percentile latency rows, ts-payment-service carries the steepest p90 escalation and the largest absolute deviation, i.e. the epicenter; ts-order-service is a bare saturation row with no latency of its own (collateral per the wording's rule). Graph: ts-inside-payment-service -&gt; ts-payment-service is a direct edge (payment is a leaf, upstream gateway+inside-payment), so no quiet intermediate hop. Symptom side: inside-payment logs 500 Internal Server Error from path /api/v1/paymentservice/payment and repeated payment attempts for the same order id (retry traces), while ts-payment-service logs IncorrectResultSizeDataAccessException: query did not return a unique result: 2/3/4/5 in the same window with 1-5s request spacing matching p50~4.5s/p90~8.7s; TCP 19001 to ts-payment-service is open from worker-01/02/03 (slow, not unreachable). Object-layer exclusion: all pods Running with RESTARTS 0 (payment 0 restarts), nodes Ready, no object-level mechanism events in the namespace, and GetAppYAML shows sane image/probe(19001)/resources/secret+configmap refs; the two affected hops sit on different nodes (worker-03 vs worker-01), excluding a node-scope network fault. Conclusion: a constant multi-second delay rides on ts-payment-service's own latency, its caller sees the same added delay, its downstream (leaf) stays clean and it has no saturation row -&gt; the delay sits on that pod's network path; the inside-payment error spike and duplicate-payment artifacts are the ripple (timeouts -&gt; retries).&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-payment-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-inside-payment-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
   }
  ]
 }</pre>

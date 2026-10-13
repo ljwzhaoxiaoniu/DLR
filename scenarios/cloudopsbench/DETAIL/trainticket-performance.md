@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **39/47** 题：JRA ✅38 ❌1 ｜ 证据链全闭 38 ｜ token 中位 301,957 ｜ 生成 2026-10-13T14:52:31.865Z
+> 本家族已跑 **40/47** 题：JRA ✅39 ❌1 ｜ 证据链全闭 39 ｜ token 中位 301,957 ｜ 生成 2026-10-13T14:57:48.890Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -46,6 +46,7 @@
 | [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 21 | 223,685 | 0 | 0 | 1013_2240_inorder4-v3b55 | 全对·链闭 |
 | [38](#case-38) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 461,392 | 0 | 0 | 1013_2245_inorder4-v3b56 | 全对·链闭 |
 | [39](#case-39) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 540,637 | 0 | 0 | 1013_2249_inorder4-v3b57 | 全对·链闭 |
+| [40](#case-40) | 1 | 1 | 1 | 1 | 1 | 1 | 0.15 | 21 | 299,756 | 0 | 0 | 1013_2253_inorder4-v3b58 | 全对·链闭 |
 
 ## 证据正文
 
@@ -321,4 +322,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 540,637
 - **raw 日志**：[results/1013_2249_inorder4-v3b57/raw/1013_2250_trainticket-performance-39](../results/1013_2249_inorder4-v3b57/raw/1013_2250_trainticket-performance-39/)（ndjson / mcp.jsonl / meta）
 - **摘要**：17 alerts in window 23:39:22-23:41:12: system-wide TRAFFIC_ANOMALY[Network Drop] plus LATENCY_DEGRADATION/THROUGHPUT_DROP, with NO RESOURCE_SATURATION row (not a saturation surface) and no restart/OOM/FailedScheduling/FailedMount mechanism events. Percentile shape isolates the epicenter: ts-gateway-service and ts-ui-dashboard moved only p90 (partial-traffic ripples), while ts-order-service (p50 308ms->9844ms, p90 2061ms->25875ms), ts-seat-service, ts-travel-service, ts-preserve-service and ts-security-service moved both p50 and p90. GetServiceDependencies shows ts-order-service is the deepest 
+
+### case-40
+
+- **结论**：`app/ts-payment-service` + `pod_network_delay` ｜ 标签 `app/ts-payment-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.15 · steps 21 · tokens 299,756
+- **raw 日志**：[results/1013_2253_inorder4-v3b58/raw/1013_2254_trainticket-performance-40](../results/1013_2253_inorder4-v3b58/raw/1013_2254_trainticket-performance-40/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (23:53:35~23:55:25) name three entities: ts-payment-service LATENCY_DEGRADATION (p50 16.70ms->4464.29ms, p90 40.96ms->8722.22ms, Peak 9362ms), ts-inside-payment-service ERROR_SPIKE+LATENCY (success 100%->67.6%; p50 300.48->6048.39ms, p90 822.19->9209.68ms), ts-order-service RESOURCE_SATURATION [cpu_cfs] Val 0.560s (Throttled). Of the two both-percentile latency rows, ts-payment-service carries the steepest p90 escalation and the largest absolute deviation, i.e. the epicenter; ts-order-service is a bare saturation row with no latency of its own (collateral per the wording's rule). Graph:
 

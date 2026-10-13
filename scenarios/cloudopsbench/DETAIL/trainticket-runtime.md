@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **20/96** 题：JRA ✅20 ❌0 ｜ 证据链全闭 20 ｜ token 中位 519,918 ｜ 生成 2026-10-13T14:52:31.865Z
+> 本家族已跑 **21/96** 题：JRA ✅21 ❌0 ｜ 证据链全闭 21 ｜ token 中位 517,218 ｜ 生成 2026-10-13T14:57:48.890Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -27,6 +27,7 @@
 | [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 193,963 | 0 | 0 | 1013_2240_inorder4-v3b55 | 全对·链闭 |
 | [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1071 | 29 | 389,833 | 0 | 0 | 1013_2245_inorder4-v3b56 | 全对·链闭 |
 | [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 519,918 | 0 | 0 | 1013_2249_inorder4-v3b57 | 全对·链闭 |
+| [21](#case-21) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.3636 | 12 | 255,702 | 0 | 0 | 1013_2253_inorder4-v3b58 | 全对·链闭 |
 
 ## 证据正文
 
@@ -169,4 +170,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2353 · steps 18 · tokens 519,918
 - **raw 日志**：[results/1013_2249_inorder4-v3b57/raw/1013_2250_trainticket-runtime-20](../results/1013_2249_inorder4-v3b57/raw/1013_2250_trainticket-runtime-20/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom side first: ts-ui-dashboard caller logs repeat 'POST /api/v1/users/login HTTP/1.1" 503' (alert: 30x HTTPError 503 Service Unavailable on /api/v1/users/login), while connectivity probes show ts-auth-service:12340 open from worker-01/02/03 but ts-gateway-service:18888 Connection Failed from all three nodes. Object-layer scan shows the single outlier: deployment ts-gateway-service is 0/0 (UP-TO-DATE 0, AVAILABLE 0) while all other 43 workloads are 1/1, and endpoints list shows 'ts-gateway-service <none>' whereas every other service has bound endpoint IPs. Mechanism event (named on the obj
+
+### case-21
+
+- **结论**：`app/ts-inside-payment-service` + `deployment_zero_replicas` ｜ 标签 `app/ts-inside-payment-service` + `deployment_zero_replicas`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.3636 · steps 12 · tokens 255,702
+- **raw 日志**：[results/1013_2253_inorder4-v3b58/raw/1013_2255_trainticket-runtime-21](../results/1013_2253_inorder4-v3b58/raw/1013_2255_trainticket-runtime-21/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 41 other train-ticket workloads run 2/2 Running with 0 restarts, while ts-inside-payment-service has NO pod in the inventory. Its owner chain is the break: the live Deployment reports 'Replicas: 0 desired | 0 updated | 0 total | 0 available' and the deployments listing shows 'ts-inside-payment-service 0/0 0 0' (GetAppYAML template still declares replicas: 1, so the replica count was actually set to 0). Controller events confirm the mechanism verbatim: 'ScalingReplicaSet ... Scaled down replica set ts-inside-payment-service-5b98976c87 to 0 from 1' plus 'Deleted pod: ts-inside-payment-servic
 
