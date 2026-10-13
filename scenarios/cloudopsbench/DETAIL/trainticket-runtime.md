@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **21/96** 题：JRA ✅21 ❌0 ｜ 证据链全闭 21 ｜ token 中位 517,218 ｜ 生成 2026-10-13T14:57:48.890Z
+> 本家族已跑 **22/96** 题：JRA ✅22 ❌0 ｜ 证据链全闭 22 ｜ token 中位 517,218 ｜ 生成 2026-10-13T15:02:27.142Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -28,6 +28,7 @@
 | [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1071 | 29 | 389,833 | 0 | 0 | 1013_2245_inorder4-v3b56 | 全对·链闭 |
 | [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 519,918 | 0 | 0 | 1013_2249_inorder4-v3b57 | 全对·链闭 |
 | [21](#case-21) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.3636 | 12 | 255,702 | 0 | 0 | 1013_2253_inorder4-v3b58 | 全对·链闭 |
+| [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 409,364 | 0 | 0 | 1013_2258_inorder4-v3b59 | 全对·链闭 |
 
 ## 证据正文
 
@@ -177,4 +178,11 @@
 - **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.3636 · steps 12 · tokens 255,702
 - **raw 日志**：[results/1013_2253_inorder4-v3b58/raw/1013_2255_trainticket-runtime-21](../results/1013_2253_inorder4-v3b58/raw/1013_2255_trainticket-runtime-21/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All 41 other train-ticket workloads run 2/2 Running with 0 restarts, while ts-inside-payment-service has NO pod in the inventory. Its owner chain is the break: the live Deployment reports 'Replicas: 0 desired | 0 updated | 0 total | 0 available' and the deployments listing shows 'ts-inside-payment-service 0/0 0 0' (GetAppYAML template still declares replicas: 1, so the replica count was actually set to 0). Controller events confirm the mechanism verbatim: 'ScalingReplicaSet ... Scaled down replica set ts-inside-payment-service-5b98976c87 to 0 from 1' plus 'Deleted pod: ts-inside-payment-servic
+
+### case-22
+
+- **结论**：`app/ts-order-service` + `deployment_zero_replicas` ｜ 标签 `app/ts-order-service` + `deployment_zero_replicas`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2941 · steps 18 · tokens 409,364
+- **raw 日志**：[results/1013_2258_inorder4-v3b59/raw/1013_2301_trainticket-runtime-22](../results/1013_2258_inorder4-v3b59/raw/1013_2301_trainticket-runtime-22/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Service Availability Disruption.' on namespace train-ticket localizes to ts-order-service. Alerts report 503 Service Unavailable on ts-order-service endpoints (Refresh order list / Refresh orders for cancel, 20 occurrences each) and 500 from upstream ts-preserve-service. The namespace-wide pod inventory (the legitimate full scan) shows every other workload Running 2/2 with 0 restarts, while ts-order-service has NO pod at all (GetResources pods → NotFound) and no logs. Reachability is broken exactly on its own declared port: CheckServiceConnectivity ts-order-service:12031 fails from wo
 

@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **36/98** 题：JRA ✅36 ❌0 ｜ 证据链全闭 36 ｜ token 中位 325,537 ｜ 生成 2026-10-13T14:57:48.890Z
+> 本家族已跑 **37/98** 题：JRA ✅37 ❌0 ｜ 证据链全闭 37 ｜ token 中位 300,857 ｜ 生成 2026-10-13T15:02:27.142Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -43,6 +43,7 @@
 | [34](#case-34) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 382,069 | 0 | 0 | 1013_2245_inorder4-v3b56 | 全对·链闭 |
 | [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1364 | 23 | 285,528 | 0 | 0 | 1013_2249_inorder4-v3b57 | 全对·链闭 |
 | [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1579 | 20 | 394,816 | 0 | 0 | 1013_2253_inorder4-v3b58 | 全对·链闭 |
+| [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 240,302 | 0 | 0 | 1013_2258_inorder4-v3b59 | 全对·链闭 |
 
 ## 证据正文
 
@@ -297,4 +298,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1579 · steps 20 · tokens 394,816
 - **raw 日志**：[results/1013_2253_inorder4-v3b58/raw/1013_2253_boutique-codedefect-36](../results/1013_2253_inorder4-v3b58/raw/1013_2253_boutique-codedefect-36/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom 'Service Performance Degradation.' enters the telemetry chain (L2 qid=12): alerts name a single entity, frontend — RESOURCE_SATURATION [cpu_cfs] 1.274s throttled, [cpu] 0.01->0.14 cores (+1461.5%), LATENCY_DEGRADATION p50 21.25ms->2175.53ms (+10137.8%) / p90 230.5ms->4318.45ms, plus 503s on GET / and GET /product/{id}. Object-layer exclusion is clean: all 11 boutique pods are 2/2 Running with RESTARTS=0 and frontend-7bd85c875b-kj66s shows Ready/ContainersReady=True with only Normal events (Scheduled/Pulled/Created/Started), so there is no scheduling/startup/probe/endpoint break — the b
+
+### case-37
+
+- **结论**：`app/frontend` + `code_busy_loop` ｜ 标签 `app/frontend` + `code_busy_loop`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 240,302
+- **raw 日志**：[results/1013_2258_inorder4-v3b59/raw/1013_2258_boutique-codedefect-37](../results/1013_2258_inorder4-v3b59/raw/1013_2258_boutique-codedefect-37/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts localize the break to frontend: RESOURCE_SATURATION [cpu] Normal=0.01 -> Current=0.14 cores (+1576.1%), RESOURCE_SATURATION [cpu_cfs] 1.254s throttled, LATENCY_DEGRADATION p50 22.19ms -> 2351.29ms (+10497.1%), with 503s on GET / and GET /product/{id}. Object-layer exclusion is clean: all 11 boutique pods 2/2 Running with RESTARTS=0, frontend pod Ready=True, Restart Count 0, probes passing, no FailedScheduling/FailedMount/FailedCreate or OOM events, and frontend's resource config (cpu limit 200m, request 100m) is unchanged. Closure is at the code surface: frontend handlers.go chooseAd() 
 

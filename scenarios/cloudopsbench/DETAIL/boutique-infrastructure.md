@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **35/40** 题：JRA ✅35 ❌0 ｜ 证据链全闭 35 ｜ token 中位 125,844 ｜ 生成 2026-10-13T14:57:48.890Z
+> 本家族已跑 **36/40** 题：JRA ✅36 ❌0 ｜ 证据链全闭 36 ｜ token 中位 125,901 ｜ 生成 2026-10-13T15:02:27.142Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -42,6 +42,7 @@
 | [33](#case-33) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 123,672 | 0 | 0 | 1013_2245_inorder4-v3b56 | 全对·链闭 |
 | [34](#case-34) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 127,753 | 0 | 0 | 1013_2249_inorder4-v3b57 | 全对·链闭 |
 | [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1905 | 22 | 156,072 | 0 | 0 | 1013_2253_inorder4-v3b58 | 全对·链闭 |
+| [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2083 | 25 | 224,794 | 0 | 0 | 1013_2258_inorder4-v3b59 | 全对·链闭 |
 
 ## 证据正文
 
@@ -289,4 +290,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1905 · steps 22 · tokens 156,072
 - **raw 日志**：[results/1013_2253_inorder4-v3b58/raw/1013_2253_boutique-infrastructure-35](../results/1013_2253_inorder4-v3b58/raw/1013_2253_boutique-infrastructure-35/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom side first: frontend Service endpoints are <none> and CheckServiceConnectivity(frontend:80) failed; the endpoints listing splits the namespace by node - all worker-01 pods (adservice, checkoutservice, emailservice, productcatalogservice, shippingservice) plus frontend have no endpoints, while every worker-02 service still has endpoints (partial, node-scoped blast radius). The single outlier in the pod inventory is frontend-55c88c6544-7rvkn (0/1 Pending, Node <none>, 62s). Its own sheet carries the scheduling line: 'FailedScheduling ... 0/4 nodes are available: 1 node(s) had untolerated
+
+### case-36
+
+- **结论**：`node/worker-01` + `kubelet_unavailable` ｜ 标签 `node/worker-01` + `kubelet_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2083 · steps 25 · tokens 224,794
+- **raw 日志**：[results/1013_2258_inorder4-v3b59/raw/1013_2258_boutique-infrastructure-36](../results/1013_2258_inorder4-v3b59/raw/1013_2258_boutique-infrastructure-36/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side first: CheckServiceConnectivity(paymentservice:50051) = Connection Failed and the endpoints surface shows EMPTY endpoints for every service whose pods sit on worker-01 (adservice, currencyservice, frontend, recommendationservice, shippingservice) plus paymentservice <none>, while all worker-02-hosted services keep their endpoints. The pods listing outlier is paymentservice-5668cc5547-fzd74 0/1 Pending (all other 10 pods 1/1 Running), whose own reason reads 'FailedScheduling: 0/4 nodes are available: 1 node(s) had untolerated taint {node.kubernetes.io/unreachable:}, 1 node(s) were 
 

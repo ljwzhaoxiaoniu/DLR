@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **40/47** 题：JRA ✅39 ❌1 ｜ 证据链全闭 39 ｜ token 中位 301,957 ｜ 生成 2026-10-13T14:57:48.890Z
+> 本家族已跑 **41/47** 题：JRA ✅40 ❌1 ｜ 证据链全闭 40 ｜ token 中位 299,756 ｜ 生成 2026-10-13T15:02:27.142Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -47,6 +47,7 @@
 | [38](#case-38) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 461,392 | 0 | 0 | 1013_2245_inorder4-v3b56 | 全对·链闭 |
 | [39](#case-39) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 540,637 | 0 | 0 | 1013_2249_inorder4-v3b57 | 全对·链闭 |
 | [40](#case-40) | 1 | 1 | 1 | 1 | 1 | 1 | 0.15 | 21 | 299,756 | 0 | 0 | 1013_2253_inorder4-v3b58 | 全对·链闭 |
+| [41](#case-41) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 216,649 | 0 | 0 | 1013_2258_inorder4-v3b59 | 全对·链闭 |
 
 ## 证据正文
 
@@ -329,4 +330,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.15 · steps 21 · tokens 299,756
 - **raw 日志**：[results/1013_2253_inorder4-v3b58/raw/1013_2254_trainticket-performance-40](../results/1013_2253_inorder4-v3b58/raw/1013_2254_trainticket-performance-40/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts (23:53:35~23:55:25) name three entities: ts-payment-service LATENCY_DEGRADATION (p50 16.70ms->4464.29ms, p90 40.96ms->8722.22ms, Peak 9362ms), ts-inside-payment-service ERROR_SPIKE+LATENCY (success 100%->67.6%; p50 300.48->6048.39ms, p90 822.19->9209.68ms), ts-order-service RESOURCE_SATURATION [cpu_cfs] Val 0.560s (Throttled). Of the two both-percentile latency rows, ts-payment-service carries the steepest p90 escalation and the largest absolute deviation, i.e. the epicenter; ts-order-service is a bare saturation row with no latency of its own (collateral per the wording's rule). Graph:
+
+### case-41
+
+- **结论**：`app/ts-preserve-service` + `pod_network_delay` ｜ 标签 `app/ts-preserve-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 216,649
+- **raw 日志**：[results/1013_2258_inorder4-v3b59/raw/1013_2259_trainticket-performance-41](../results/1013_2258_inorder4-v3b59/raw/1013_2259_trainticket-performance-41/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (GetAlerts) place the case on the metric surface: ts-preserve-service LATENCY_DEGRADATION p90 Normal=8983.07ms -> Current=22000.00ms (+144.9%, Peak 26000.00ms) is the steepest escalation = primary anomaly; ts-ui-dashboard p90 2732.14ms -> 5958.33ms (+118.1%) is its ripple; ts-order-service shows only a bare RESOURCE_SATURATION [cpu_cfs] 'Val: 0.375s (Throttled)' with no latency row of its own = collateral noise per L3. GetServiceDependencies closes it: ts-ui-dashboard -> ts-gateway-service -> ts-preserve-service (caller sees the same added delay), while ts-preserve-service's own downstr
 
