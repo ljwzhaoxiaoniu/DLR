@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **14/96** 题：JRA ✅14 ❌0 ｜ 证据链全闭 14 ｜ token 中位 535,723 ｜ 生成 2026-10-13T10:34:12.977Z
+> 本家族已跑 **15/96** 题：JRA ✅15 ❌0 ｜ 证据链全闭 15 ｜ token 中位 521,337 ｜ 生成 2026-10-13T10:38:21.754Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -21,6 +21,7 @@
 | [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4286 | 22 | 554,907 | 0 | 0 | 1013_1628_inorder4-v3b22 | 全对·链闭 |
 | [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2759 | 30 | 476,723 | 0 | 0 | 1013_1656_inorder4-v3b25 | 全对·链闭 |
 | [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3684 | 39 | 875,225 | 0 | 0 | 1013_1810_inorder4-v3b27 | 全对·链闭 |
+| [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2692 | 27 | 490,757 | 0 | 0 | 1013_1834_inorder4-v3b30 | 全对·链闭 |
 
 ## 证据正文
 
@@ -121,4 +122,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3684 · steps 39 · tokens 875,225
 - **raw 日志**：[results/1013_1810_inorder4-v3b27/raw/1013_1815_trainticket-runtime-14](../results/1013_1810_inorder4-v3b27/raw/1013_1815_trainticket-runtime-14/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All 43 deployments are 1/1 AVAILABLE, all pods Running/Ready with bound Service endpoints, and all 4 nodes Ready with no cordon/taints; namespace events show no FailedScheduling/FailedCreate/FailedMount/image-pull/probe warnings, ruling out scheduling, admission, image, probe and addressing faults. The break is at the database write path: ts-payment-service logs 'SQL Error: 1290, SQLState: HY000' + 'The MySQL server is running with the --read-only option so it cannot execute this statement' (69x) leading to JpaSystemException -> HTTP 500, and ts-order-service logs the identical 1290/--read-onl
+
+### case-15
+
+- **结论**：`app/tsdb-mysql` + `db_readonly_mode` ｜ 标签 `app/tsdb-mysql` + `db_readonly_mode`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2692 · steps 27 · tokens 490,757
+- **raw 日志**：[results/1013_1834_inorder4-v3b30/raw/1013_1836_trainticket-runtime-15](../results/1013_1834_inorder4-v3b30/raw/1013_1836_trainticket-runtime-15/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All train-ticket pods are Running and 1/1 ready (no restarts, no Pending/FailedScheduling/FailedCreate/FailedMount/image-pull events), and tsdb-mysql-leader:3306 is TCP-open from worker-01/02/03, so the break is not scheduling, networking, DNS, Service-selector or port mapping. The alerts (Process payment / Create ticket order, 500) are only pointers; the caller-side logs descend one leaf: ts-payment-service logs 'SQL Error: 1290, SQLState: HY000' + 'The MySQL server is running with the --read-only option so it cannot execute this statement' (67x) and ts-order-service logs the identical 1290/r
 

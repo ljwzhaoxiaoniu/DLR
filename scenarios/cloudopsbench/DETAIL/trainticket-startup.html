@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/startup</em></h1>
-<p class="deck">已跑 <b>11/24</b> 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 264,001 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T10:34:12.977Z</p>
+<p class="deck">已跑 <b>12/24</b> 题：JRA ✅12 ❌0 ｜ 证据链全闭 12 ｜ token 中位 264,001 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T10:38:21.754Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>13</td><td>73,363</td><td>0</td><td>0</td><td class="muted">1012_1458_l3-verify3</td><td><a href="../results/1012_1458_l3-verify3/raw/1012_1459_trainticket-startup-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1459_trainticket-startup-1</a></td></tr>
@@ -27,6 +27,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-9"><code>9</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3846</td><td>14</td><td>193,872</td><td>0</td><td>0</td><td class="muted">1013_1628_inorder4-v3b22</td><td><a href="../results/1013_1628_inorder4-v3b22/raw/1013_1631_trainticket-startup-9/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1631_trainticket-startup-9</a></td></tr>
 <tr><td><a href="#case-10"><code>10</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4545</td><td>12</td><td>171,036</td><td>0</td><td>0</td><td class="muted">1013_1656_inorder4-v3b25</td><td><a href="../results/1013_1656_inorder4-v3b25/raw/1013_1658_trainticket-startup-10/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1658_trainticket-startup-10</a></td></tr>
 <tr><td><a href="#case-11"><code>11</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3571</td><td>15</td><td>165,408</td><td>0</td><td>0</td><td class="muted">1013_1810_inorder4-v3b27</td><td><a href="../results/1013_1810_inorder4-v3b27/raw/1013_1813_trainticket-startup-11/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1813_trainticket-startup-11</a></td></tr>
+<tr><td><a href="#case-12"><code>12</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4545</td><td>12</td><td>167,476</td><td>0</td><td>0</td><td class="muted">1013_1834_inorder4-v3b30</td><td><a href="../results/1013_1834_inorder4-v3b30/raw/1013_1837_trainticket-startup-12/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1837_trainticket-startup-12</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/ts-assurance-service</code> + <code>missing_secret_binding</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 13 步</summary><ul>
@@ -452,6 +453,44 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
   {
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/ts-notification-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-12"><summary><b>case-12</b> · <code>app/ts-payment-service</code> + <code>missing_secret_binding</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 12 步</summary><ul>
+<li><b>摘要</b>：Namespace-wide pods listing shows exactly one outlier: ts-payment-service-57597f9bb4-zmzsz is 0/1 CreateContainerConfigError (all other 47 pods Running/1-1 Ready). Pod detail gives State Waiting/Reason CreateContainerConfigError with envFrom secretRef 'ts-payment-mysql2' (Optional: false) and kubelet events 'Warning Failed ... Error: secret &quot;ts-payment-mysql2&quot; not found' (x12), while the image is already present and the pod is Scheduled - so admission/scheduling/image are fine and the break is config injection. GetAppYAML(ts-payment-service) confirms envFrom.secretRef.name=ts-payment-mysql2, b</li>
+<li><b>raw 日志</b>：<a href="../results/1013_1834_inorder4-v3b30/raw/1013_1837_trainticket-startup-12/">results/1013_1834_inorder4-v3b30/raw/1013_1837_trainticket-startup-12</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-payment-service-57597f9bb4-zmzsz&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;name&quot;:&quot;ts-payment-service&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;secrets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Namespace-wide pods listing shows exactly one outlier: ts-payment-service-57597f9bb4-zmzsz is 0/1 CreateContainerConfigError (all other 47 pods Running/1-1 Ready). Pod detail gives State Waiting/Reason CreateContainerConfigError with envFrom secretRef 'ts-payment-mysql2' (Optional: false) and kubelet events 'Warning Failed ... Error: secret \&quot;ts-payment-mysql2\&quot; not found' (x12), while the image is already present and the pod is Scheduled - so admission/scheduling/image are fine and the break is config injection. GetAppYAML(ts-payment-service) confirms envFrom.secretRef.name=ts-payment-mysql2, but the same manifest defines the Secret as 'ts-payment-mysql'; the secrets listing contains 'ts-payment-mysql' and no 'ts-payment-mysql2' (no '*mysql2' secret exists). Consequence: container never starts, Service endpoints for ts-payment-service are EMPTY, and the caller/entry service ts-inside-payment-service throws 'java.lang.IllegalArgumentException: Service Instance cannot be null' (HTTP 500 on POST /api/v1/inside_pay_service/inside_payment), i.e. the reported Service Availability Disruption. First observed != expected slot: the Pod's Secret binding reference.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-payment-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-inside-payment-service&quot;,
+   &quot;root_cause&quot;: &quot;service_env_var_address_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-assurance-service&quot;,
    &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
   }
  ]

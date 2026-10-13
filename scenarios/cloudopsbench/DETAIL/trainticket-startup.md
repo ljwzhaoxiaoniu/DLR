@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/startup — cloudopsbench
 
-> 本家族已跑 **11/24** 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 264,001 ｜ 生成 2026-10-13T10:34:12.977Z
+> 本家族已跑 **12/24** 题：JRA ✅12 ❌0 ｜ 证据链全闭 12 ｜ token 中位 264,001 ｜ 生成 2026-10-13T10:38:21.754Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -18,6 +18,7 @@
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3846 | 14 | 193,872 | 0 | 0 | 1013_1628_inorder4-v3b22 | 全对·链闭 |
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 171,036 | 0 | 0 | 1013_1656_inorder4-v3b25 | 全对·链闭 |
 | [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3571 | 15 | 165,408 | 0 | 0 | 1013_1810_inorder4-v3b27 | 全对·链闭 |
+| [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 167,476 | 0 | 0 | 1013_1834_inorder4-v3b30 | 全对·链闭 |
 
 ## 证据正文
 
@@ -97,4 +98,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3571 · steps 15 · tokens 165,408
 - **raw 日志**：[results/1013_1810_inorder4-v3b27/raw/1013_1813_trainticket-startup-11](../results/1013_1810_inorder4-v3b27/raw/1013_1813_trainticket-startup-11/)（ndjson / mcp.jsonl / meta）
 - **摘要**：ts-order-service is the single outlier in the namespace: pod ts-order-service-6c6b786d8-kqmpg shows 0/1 READY with STATUS CreateContainerConfigError, Restart Count 0. Its Service ts-order-service (port/targetPort 12031) has an EMPTY endpoints list, and an active TCP probe on 12031 fails from worker-01/02/03, matching caller-side 503 alerts on ts-order-service /refresh. The pod's deployment ts-order-service reports Available=False (MinimumReplicasUnavailable) with unavailableReplicas: 1. Mechanism event is explicit in both the pod's event section and the namespace event surface: Warning Failed 
+
+### case-12
+
+- **结论**：`app/ts-payment-service` + `missing_secret_binding` ｜ 标签 `app/ts-payment-service` + `missing_secret_binding`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4545 · steps 12 · tokens 167,476
+- **raw 日志**：[results/1013_1834_inorder4-v3b30/raw/1013_1837_trainticket-startup-12](../results/1013_1834_inorder4-v3b30/raw/1013_1837_trainticket-startup-12/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace-wide pods listing shows exactly one outlier: ts-payment-service-57597f9bb4-zmzsz is 0/1 CreateContainerConfigError (all other 47 pods Running/1-1 Ready). Pod detail gives State Waiting/Reason CreateContainerConfigError with envFrom secretRef 'ts-payment-mysql2' (Optional: false) and kubelet events 'Warning Failed ... Error: secret "ts-payment-mysql2" not found' (x12), while the image is already present and the pod is Scheduled - so admission/scheduling/image are fine and the break is config injection. GetAppYAML(ts-payment-service) confirms envFrom.secretRef.name=ts-payment-mysql2, b
 

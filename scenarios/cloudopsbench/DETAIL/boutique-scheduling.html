@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/scheduling</em></h1>
-<p class="deck">已跑 <b>11/164</b> 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 130,741 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T10:34:12.977Z</p>
+<p class="deck">已跑 <b>12/164</b> 题：JRA ✅12 ❌0 ｜ 证据链全闭 12 ｜ token 中位 131,524 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T10:38:21.754Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2353</td><td>18</td><td>115,405</td><td>0</td><td>0</td><td class="muted">1012_1415_inorder4-v3</td><td><a href="../results/1012_1415_inorder4-v3/raw/1012_1416_boutique-scheduling-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1416_boutique-scheduling-1</a></td></tr>
@@ -27,6 +27,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-9"><code>9</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1667</td><td>19</td><td>130,741</td><td>0</td><td>0</td><td class="muted">1013_1628_inorder4-v3b22</td><td><a href="../results/1013_1628_inorder4-v3b22/raw/1013_1628_boutique-scheduling-9/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1628_boutique-scheduling-9</a></td></tr>
 <tr><td><a href="#case-10"><code>10</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1667</td><td>19</td><td>186,153</td><td>0</td><td>0</td><td class="muted">1013_1656_inorder4-v3b25</td><td><a href="../results/1013_1656_inorder4-v3b25/raw/1013_1656_boutique-scheduling-10/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1656_boutique-scheduling-10</a></td></tr>
 <tr><td><a href="#case-11"><code>11</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1875</td><td>17</td><td>132,905</td><td>0</td><td>0</td><td class="muted">1013_1810_inorder4-v3b27</td><td><a href="../results/1013_1810_inorder4-v3b27/raw/1013_1811_boutique-scheduling-11/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1811_boutique-scheduling-11</a></td></tr>
+<tr><td><a href="#case-12"><code>12</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.129</td><td>32</td><td>325,732</td><td>0</td><td>0</td><td class="muted">1013_1834_inorder4-v3b30</td><td><a href="../results/1013_1834_inorder4-v3b30/raw/1013_1834_boutique-scheduling-12/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1834_boutique-scheduling-12</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/cartservice</code> + <code>node_cordon_mismatch</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 18 步</summary><ul>
@@ -514,6 +515,64 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
   {
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
+   &quot;root_cause&quot;: &quot;node_affinity_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-12"><summary><b>case-12</b> · <code>app/emailservice</code> + <code>node_cordon_mismatch</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 32 步</summary><ul>
+<li><b>摘要</b>：Symptom-side first: connectivity probe to emailservice:5000 -&gt; 'Connection Failed'. Object-layer outlier in boutique: pod emailservice-66975b79b8-8k46l is 0/1 Pending (Node: &lt;none&gt;, PodScheduled=False) while all other 10 services are 1/1 Running with 0 restarts; owner chain agrees (deployment emailservice 0/1 AVAILABLE, RS revision 1 with 1 Waiting pod). Mechanism event on the pod: 'FailedScheduling ... 0/4 nodes are available: 2 node(s) didn't match Pod's node affinity/selector, 2 node(s) were unschedulable.' The pod template requires nodeSelector hardware-type=gpu, and the ONLY node carrying</li>
+<li><b>raw 日志</b>：<a href="../results/1013_1834_inorder4-v3b30/raw/1013_1834_boutique-scheduling-12/">results/1013_1834_inorder4-v3b30/raw/1013_1834_boutique-scheduling-12</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;emailservice-66975b79b8-8k46l&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;emailservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;nodes&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;show_labels&quot;:true}</code></td></tr>
+<tr><td>14</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:5000,&quot;service_name&quot;:&quot;emailservice&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;trainticket&quot;,&quot;resource_type&quot;:&quot;pods&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>16</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;services&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>18</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;worker-01&quot;,&quot;resource_type&quot;:&quot;node&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetResources</code></td><td><code>{&quot;name&quot;:&quot;worker-01&quot;,&quot;resource_type&quot;:&quot;nodes&quot;,&quot;show_labels&quot;:true}</code></td></tr>
+<tr><td>20</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Pod stuck Pending, 0/4 nodes are available: node selector / cordon mismatch&quot;,&quot;top_k&quot;:6}</code></td></tr>
+<tr><td>21</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability. nodeSelector hardware-type gpu cordoned node&quot;,&quot;namespace&quot;:&quot;kubernetes&quot;,&quot;top_k&quot;:6}</code></td></tr>
+<tr><td>22</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;master&quot;,&quot;resource_type&quot;:&quot;node&quot;}</code></td></tr>
+<tr><td>23</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;worker-02&quot;,&quot;resource_type&quot;:&quot;node&quot;}</code></td></tr>
+<tr><td>24</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;replicasets&quot;}</code></td></tr>
+<tr><td>25</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;emailservice-66975b79b8&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;replicaset&quot;}</code></td></tr>
+<tr><td>26</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;chaosblade&quot;,&quot;resource_type&quot;:&quot;pods&quot;}</code></td></tr>
+<tr><td>27</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+<tr><td>28</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;services&quot;}</code></td></tr>
+<tr><td>29</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>30</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;redis-cart&quot;}</code></td></tr>
+<tr><td>31</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom-side first: connectivity probe to emailservice:5000 -&gt; 'Connection Failed'. Object-layer outlier in boutique: pod emailservice-66975b79b8-8k46l is 0/1 Pending (Node: &lt;none&gt;, PodScheduled=False) while all other 10 services are 1/1 Running with 0 restarts; owner chain agrees (deployment emailservice 0/1 AVAILABLE, RS revision 1 with 1 Waiting pod). Mechanism event on the pod: 'FailedScheduling ... 0/4 nodes are available: 2 node(s) didn't match Pod's node affinity/selector, 2 node(s) were unschedulable.' The pod template requires nodeSelector hardware-type=gpu, and the ONLY node carrying that label is worker-01, which is 'Ready,SchedulingDisabled' with taint node.kubernetes.io/unschedulable:NoSchedule and Unschedulable: true (i.e. cordoned). The cordon is freshly injected for this scenario: worker-01 reports 'NodeNotSchedulable 91s (x6 over 18m)' preceded by 'NodeSchedulable 2m23s', whereas master's cordon is a 50m-old stable baseline and worker-02's cordon was released 13m ago; additionally the 5 other boutique pods already running on worker-01 (93-95s, scheduled before the 91s cordon) prove the node was schedulable at rollout time, so the cordon was applied after the rollout and is what now blocks the victim pod. Config confirmation: same-namespace services (adservice, checkoutservice, frontend, redis-cart) carry no nodeSelector, no image/mount/probe warnings exist, and node capacity is ample (worker-01/02 ~12% CPU requested) - the chain stops at the scheduling stage because the node matching the victim's selector is cordoned.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/emailservice&quot;,
+   &quot;root_cause&quot;: &quot;node_cordon_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/emailservice&quot;,
+   &quot;root_cause&quot;: &quot;node_selector_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/emailservice&quot;,
    &quot;root_cause&quot;: &quot;node_affinity_mismatch&quot;
   }
  ]
