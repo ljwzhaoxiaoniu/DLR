@@ -1,0 +1,68 @@
+INFO:     Started server process [12212]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:60642 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60643 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:60642 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60644 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60647 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60649 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:60654 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60654 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:60658 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60658 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-gateway-service"}
+INFO:     127.0.0.1:60658 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-gateway-service"}
+INFO:     127.0.0.1:60658 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60662 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60662 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kube-proxy"}
+INFO:     127.0.0.1:60509 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"kube-proxy"}
+INFO:     127.0.0.1:60509 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-03","service_name":"kube-proxy"}
+INFO:     127.0.0.1:60509 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"master","service_name":"kube-proxy"}
+INFO:     127.0.0.1:60509 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60509 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-gateway-service","port":8080}
+INFO:     127.0.0.1:55283 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-order-service","port":8080}
+INFO:     127.0.0.1:55283 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-auth-service","port":8080}
+INFO:     127.0.0.1:55283 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55283 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-gateway-service"}
+INFO:     127.0.0.1:60828 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60828 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-gateway-service","port":18888}
+INFO:     127.0.0.1:60832 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-order-service","port":12031}
+INFO:     127.0.0.1:60832 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-ui-dashboard","port":8080}
+INFO:     127.0.0.1:60832 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-order-service"}
+INFO:     127.0.0.1:60832 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60832 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60839 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60839 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-ui-dashboard"}
+INFO:     127.0.0.1:60842 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-travel-service"}
+INFO:     127.0.0.1:60842 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-auth-service"}
+INFO:     127.0.0.1:60842 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-inside-payment-service"}
+INFO:     127.0.0.1:60842 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-user-service"}
+INFO:     127.0.0.1:60842 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-basic-service"}
+INFO:     127.0.0.1:60842 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60844 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60844 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60844 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60844 - "POST /mcp HTTP/1.1" 200 OK

@@ -1,6 +1,6 @@
 # 评测明细 · boutique/service — cloudopsbench
 
-> 本家族已跑 **2/54** 题：JRA ✅2 ❌0 ｜ 证据链全闭 2 ｜ token 中位 292,901 ｜ 生成 2026-10-13T04:46:50.276Z
+> 本家族已跑 **3/54** 题：JRA ✅3 ❌0 ｜ 证据链全闭 3 ｜ token 中位 115,616 ｜ 生成 2026-10-13T04:56:54.383Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -9,6 +9,7 @@
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | [1](#case-1) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 16 | 115,616 | 0 | 0 | 1012_1447_inorder4-v3b2 | 全对·链闭 |
 | [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1333 | 46 | 292,901 | 0 | 0 | 1013_1122_inorder4-v3b9 | 全对·链闭 |
+| [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 110,899 | 0 | 0 | 1013_1248_inorder4-v3b13 | 全对·链闭 |
 
 ## 证据正文
 
@@ -23,4 +24,10 @@
 - **结论**：`app/checkoutservice` + `service_env_var_address_mismatch` ｜ 标签 `app/checkoutservice` + `service_env_var_address_mismatch`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1333 · steps 46 · tokens 292,901
 - **摘要**：Partial unreachability is confined to the checkout path: frontend (the only caller with errors) logged 82 failures on POST /cart/checkout — 'rpc error: code = Unavailable ... dial tcp: lookup checkoutservice on 169.254.20.10:53: no such host' (11.5% error ratio, HTTP 500), while browsing/catalog paths stayed healthy. The object layer is entirely clean (11/11 pods 1/1 Running, 0 restarts; 11/11 Deployments AVAILABLE; namespace events empty; all 4 nodes Ready, no pressure/taint; no alerts), and the checkoutservice Service itself binds correctly (selector app=checkoutservice, port 5050->5050, End
+
+### case-3
+
+- **结论**：`app/frontend` + `service_env_var_address_mismatch` ｜ 标签 `app/frontend` + `service_env_var_address_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 110,899
+- **摘要**：frontend caller logs show 168/670 (25%) errors, all the same: 'rpc error: code = Unavailable ... dial tcp: lookup productcatalogservices on 169.254.20.10:53: no such host' on GET / and GET /product/<id> (HTTP 500), i.e. partial unreachability confined to product-catalog-dependent routes. Object layer is clean: all 11 boutique pods are 1/1 Running with 0 RESTARTS, no Pending/FailedCreate/image-pull/probe events, and namespace events show no Warning lines, ruling out scheduling/admission/startup faults. The called side is healthy: Service productcatalogservice exists (10.68.93.223:3550, selector
 
