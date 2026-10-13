@@ -1,6 +1,6 @@
 # 评测明细 · boutique/service — cloudopsbench
 
-> 本家族已跑 **7/54** 题：JRA ✅7 ❌0 ｜ 证据链全闭 7 ｜ token 中位 213,813 ｜ 生成 2026-10-13T11:59:20.567Z
+> 本家族已跑 **8/54** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 213,813 ｜ 生成 2026-10-13T12:03:34.899Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -14,6 +14,7 @@
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.24 | 26 | 213,813 | 0 | 0 | 1013_1819_inorder4-v3b28 | 全对·链闭 |
 | [6](#case-6) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.1556 | 46 | 476,282 | 0.0222 | 0 | 1013_1848_inorder4-v3b33 | 全对·链闭 |
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 21 | 127,254 | 0 | 0 | 1013_1955_inorder4-v3b34 | 全对·链闭 |
+| [8](#case-8) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.1944 | 37 | 209,065 | 0 | 0 | 1013_2000_inorder4-v3b35 | 全对·链闭 |
 
 ## 证据正文
 
@@ -65,4 +66,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 21 · tokens 127,254
 - **raw 日志**：[results/1013_1955_inorder4-v3b34/raw/1013_1956_boutique-service-7](../results/1013_1955_inorder4-v3b34/raw/1013_1956_boutique-service-7/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All object-layer surfaces are healthy (11/11 pods Running 1/1 with RESTARTS 0, all Deployments 1/1 AVAILABLE, nodes Ready/uncordoned, no alerts), yet frontend returns HTTP 500 on every request. Caller-side logs carry 125 hits of 'could not retrieve currencies: ... dial tcp 10.68.199.102:7001: connect: connection refused' (currencyservice ClusterIP). The currencyservice Service and listener declare port 7000 (endpoints 172.20.1.164:7000, targetPort 7000); an active TCP probe to currencyservice:7000 succeeds while currencyservice:7001 fails. GetAppYAML(frontend) shows the wrong address CURRENCY_
+
+### case-8
+
+- **结论**：`app/recommendationservice` + `service_env_var_address_mismatch` ｜ 标签 `app/recommendationservice` + `service_env_var_address_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.1944 · steps 37 · tokens 209,065
+- **raw 日志**：[results/1013_2000_inorder4-v3b35/raw/1013_2000_boutique-service-8](../results/1013_2000_inorder4-v3b35/raw/1013_2000_boutique-service-8/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All boutique pods are Running 1/1 with 0 restarts, all Deployments 1/1, all Service Endpoints populated, and TCP probes on every declared Service port succeed, excluding workload/scheduling/probe faults. The break is at the service-address layer: frontend logs 30x 'failed to get product recommendations' wrapping recommendationservice's Python gRPC error, and recommendationservice's own error logs show 30x 'failed to connect to all addresses; last error: UNKNOWN: ipv4:10.68.14.88:3551: Failed to connect to remote host: Connection refused'. 10.68.14.88 is the productcatalogservice ClusterIP, who
 

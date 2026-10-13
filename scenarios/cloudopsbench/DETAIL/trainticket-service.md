@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **18/37** 题：JRA ✅18 ❌0 ｜ 证据链全闭 18 ｜ token 中位 681,352 ｜ 生成 2026-10-13T11:59:20.567Z
+> 本家族已跑 **19/37** 题：JRA ✅19 ❌0 ｜ 证据链全闭 19 ｜ token 中位 666,312 ｜ 生成 2026-10-13T12:03:34.899Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -24,6 +24,7 @@
 | [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2273 | 23 | 1,188,029 | 0 | 0 | 1013_1839_inorder4-v3b31 | 全对·链闭 |
 | [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 21 | 382,197 | 0 | 0 | 1013_1848_inorder4-v3b33 | 全对·链闭 |
 | [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.24 | 26 | 1,087,938 | 0 | 0 | 1013_1955_inorder4-v3b34 | 全对·链闭 |
+| [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 414,398 | 0 | 0 | 1013_2000_inorder4-v3b35 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
 
 ## 证据正文
@@ -146,6 +147,13 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.24 · steps 26 · tokens 1,087,938
 - **raw 日志**：[results/1013_1955_inorder4-v3b34/raw/1013_1957_trainticket-service-18](../results/1013_1955_inorder4-v3b34/raw/1013_1957_trainticket-service-18/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Caller side proves the break: ts-ui-dashboard nginx access log records repeated 'POST /api/v1/travelservice/trips/left HTTP/1.1" 404 131' from python-requests (matching alert 'Search ticket' 404 x19), while all other paths in the same log return 200. The gateway route table itself is the break: in ConfigMap ts-gateway-service-config (application.yml of ts-gateway-service) the route 'travel' with predicate Path=/api/v1/travelservice/** is wired to uri lb://${PRESERVE_SERVICE_HOST:ts-preserve-service} instead of the travel upstream (${TRAVEL_SERVICE_HOST:ts-travel-service}); the sibling 'preserv
+
+### case-19
+
+- **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 19 · tokens 414,398
+- **raw 日志**：[results/1013_2000_inorder4-v3b35/raw/1013_2002_trainticket-service-19](../results/1013_2000_inorder4-v3b35/raw/1013_2002_trainticket-service-19/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert: 503 Service Unavailable on POST /api/v1/travelservice/trips/left (entry_service ts-travel-service, 10 occurrences). ts-ui-dashboard nginx access log reproduces it verbatim ('POST /api/v1/travelservice/trips/left HTTP/1.1" 503 153', 16:00:30-32), and ts-gateway-service logs at the same second: 'WARN RoundRobinLoadBalancer : No servers available for service: ts-nonexistent-travel-backend'. The gateway's own route table (ConfigMap ts-gateway-service-config, mounted into ts-gateway-service) carries the mis-wired entry: route id 'travel', Path=/api/v1/travelservice/**, uri=lb://ts-nonexisten
 
 ### case-25
 

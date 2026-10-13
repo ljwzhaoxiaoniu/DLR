@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **16/47** 题：JRA ✅16 ❌0 ｜ 证据链全闭 16 ｜ token 中位 319,046 ｜ 生成 2026-10-13T11:59:20.567Z
+> 本家族已跑 **17/47** 题：JRA ✅17 ❌0 ｜ 证据链全闭 17 ｜ token 中位 304,738 ｜ 生成 2026-10-13T12:03:34.899Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -23,6 +23,7 @@
 | [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1818 | 23 | 395,607 | 0 | 0 | 1013_1839_inorder4-v3b31 | 全对·链闭 |
 | [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 197,634 | 0 | 0 | 1013_1855_multi2-verify1 | 全对·链闭 |
 | [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 188,088 | 0 | 0 | 1013_1955_inorder4-v3b34 | 全对·链闭 |
+| [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 195,228 | 0 | 0 | 1013_2000_inorder4-v3b35 | 全对·链闭 |
 
 ## 证据正文
 
@@ -137,4 +138,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 16 · tokens 188,088
 - **raw 日志**：[results/1013_1955_inorder4-v3b34/raw/1013_1956_trainticket-performance-16](../results/1013_1955_inorder4-v3b34/raw/1013_1956_trainticket-performance-16/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Metric-surface case under 'Service quality degradation.': 6 alerts in window 20:30:12~20:32:02. The epicenter (runaway deviation) is ts-user-service: p50 7.44ms->2500.00ms (+33513.4%), p90 9.58ms->4500.00ms (+46868.0%), dwarfing every other row. All other latency alerts are caller ripples on PAS edges into it (ts-gateway-service +772.8%, ts-cancel-service +3325.9%, ts-preserve-service +500%, ts-ui-dashboard +830.4%), consistent with the dependency graph ts-gateway-service/ts-preserve-service/ts-preserve-other-service/ts-cancel-service -> ts-user-service -> ts-auth-service. The latency shift is
+
+### case-17
+
+- **结论**：`app/ts-assurance-service` + `pod_network_delay` ｜ 标签 `app/ts-assurance-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 195,228
+- **raw 日志**：[results/1013_2000_inorder4-v3b35/raw/1013_2000_trainticket-performance-17](../results/1013_2000_inorder4-v3b35/raw/1013_2000_trainticket-performance-17/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts name ts-assurance-service with LATENCY_DEGRADATION [Slow Response]: p90 7.86ms -> 2112.50ms (+26762.9%), peak 2167.35ms - a fixed ~2.1s additive delay on that service's own latency, with no saturation row of its own; the only other alert is a bare RESOURCE_SATURATION [cpu_cfs] 0.255s on ts-order-service, which has no latency deviation of its own (collateral noise per L3). ts-assurance-service is a leaf service (GetServiceDependencies: no downstream calls), so no downstream server-side latency can explain the shift; TCP connectivity to ts-assurance-service:18888 succeeds from worker-01/0
 

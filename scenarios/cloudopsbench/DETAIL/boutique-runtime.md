@@ -1,6 +1,6 @@
 # 评测明细 · boutique/runtime — cloudopsbench
 
-> 本家族已跑 **8/45** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 61,752 ｜ 生成 2026-10-13T11:59:20.567Z
+> 本家族已跑 **9/45** 题：JRA ✅9 ❌0 ｜ 证据链全闭 9 ｜ token 中位 61,723 ｜ 生成 2026-10-13T12:03:34.899Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -15,6 +15,7 @@
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 10 | 60,547 | 0 | 0 | 1013_1819_inorder4-v3b28 | 全对·链闭 |
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 11 | 61,706 | 0 | 0 | 1013_1848_inorder4-v3b33 | 全对·链闭 |
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 11 | 62,065 | 0 | 0 | 1013_1955_inorder4-v3b34 | 全对·链闭 |
+| [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 10 | 61,723 | 0 | 0 | 1013_2000_inorder4-v3b35 | 全对·链闭 |
 
 ## 证据正文
 
@@ -73,4 +74,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4 · steps 11 · tokens 62,065
 - **raw 日志**：[results/1013_1955_inorder4-v3b34/raw/1013_1955_boutique-runtime-8](../results/1013_1955_inorder4-v3b34/raw/1013_1955_boutique-runtime-8/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Health-chain walk on namespace boutique: pods -o wide shows a single outlier, shippingservice-dcf97c8fd-lkfpz, at 0/1 Running with 3 RESTARTS (0s ago) while all 10 other pods are 1/1 Running with 0 restarts; deployments confirm shippingservice is the only workload at 0/1 AVAILABLE. Pod detail shows Last State Terminated, Reason Error, Exit Code 2 (not 137/OOMKilled), Ready False. The mechanism events bind it exactly: kubelet 'Liveness probe failed: Get "http://172.20.1.120:50051/": net/http: HTTP/1.x transport connection broken: malformed HTTP response "\x00\x00\x06\x04..."' (that byte pattern
+
+### case-9
+
+- **结论**：`app/adservice` + `liveness_probe_incorrect_port` ｜ 标签 `app/adservice` + `liveness_probe_incorrect_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 10 · tokens 61,723
+- **raw 日志**：[results/1013_2000_inorder4-v3b35/raw/1013_2000_boutique-runtime-9](../results/1013_2000_inorder4-v3b35/raw/1013_2000_boutique-runtime-9/)（ndjson / mcp.jsonl / meta）
+- **摘要**：adservice pod adservice-645c94d6-9jrbk shows RESTARTS 2 (29s ago) within 91s while all other 10 boutique services show 0. Pod detail gives Last State: Terminated, Reason: Error, Exit Code 143 (kubelet SIGTERM), ruling out OOMKilled 137. Pod events name the mechanism verbatim: kubelet 'Container server failed liveness probe, will be restarted' and Warning Unhealthy 'Liveness probe failed: timeout: failed to connect service "172.20.1.125:8080" within 1s: context deadline exceeded' (x8). Deployment YAML confirms the misconfiguration: livenessProbe.grpc.port=8080 while containerPort=9555, env PORT
 
