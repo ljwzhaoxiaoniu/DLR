@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **45/47** 题：JRA ✅44 ❌1 ｜ 证据链全闭 44 ｜ token 中位 301,957 ｜ 生成 2026-10-13T15:19:54.467Z
+> 本家族已跑 **46/47** 题：JRA ✅45 ❌1 ｜ 证据链全闭 45 ｜ token 中位 304,738 ｜ 生成 2026-10-13T15:25:02.535Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -52,6 +52,7 @@
 | [43](#case-43) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 142,097 | 0 | 0 | 1013_2308_inorder4-v3b61 | 全对·链闭 |
 | [44](#case-44) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 333,677 | 0 | 0 | 1013_2311_inorder4-v3b62 | 全对·链闭 |
 | [45](#case-45) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 367,029 | 0 | 0 | 1013_2315_inorder4-v3b63 | 全对·链闭 |
+| [46](#case-46) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1538 | 27 | 845,040 | 0 | 0 | 1013_2320_inorder4-v3b64 | 全对·链闭 |
 
 ## 证据正文
 
@@ -369,4 +370,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 19 · tokens 367,029
 - **raw 日志**：[results/1013_2315_inorder4-v3b63/raw/1013_2316_trainticket-performance-45](../results/1013_2315_inorder4-v3b63/raw/1013_2316_trainticket-performance-45/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Metric-surface case per the L3 SOP: alerts are the signal, the object layer is only exclusion. Among 8 co-window alerts (2026-03-16 01:33~01:35), only ts-train-service shows a latency row where BOTH percentiles move on a real baseline: p50 8.35ms -> 2500.00ms (+29843.7%) and p90 411.79ms -> 4500.00ms (+992.8%, Peak 4594.14ms) - the runaway deviation and the steepest p90 escalation, marking the epicenter; ts-preserve-service's p50/p90 'New Spike' starts from a 0.00ms near-zero baseline (proves nothing) and ts-basic-service moves only p50 (partial ripple). GetServiceDependencies closes the graph
+
+### case-46
+
+- **结论**：`app/ts-travel-service` + `pod_network_delay` ｜ 标签 `app/ts-travel-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1538 · steps 27 · tokens 845,040
+- **raw 日志**：[results/1013_2320_inorder4-v3b64/raw/1013_2321_trainticket-performance-46](../results/1013_2320_inorder4-v3b64/raw/1013_2321_trainticket-performance-46/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Metric-surface entry chain (per the wording's alert-first discipline): in the injection window 2026-03-16 01:47:22~01:49:12 the alert set carries exactly ONE latency row — ts-travel-service LATENCY_DEGRADATION [Slow Response] p90 9.45ms -> 2121.88ms (+22357.3%, Peak 2181.07ms) — i.e. a fixed ~2.1s ADDITIVE delay on a near-zero baseline, the single runaway deviation; the dependency graph closes it: its direct neighbours are the ripples (ts-gateway-service THROUGHPUT_SURGE +319.2% RPS = caller retry storm; ts-ui-dashboard RPS +274.1% / success 78.9%->62.5%), while ts-order-service (cpu_cfs 0.671
 

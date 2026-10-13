@@ -1,6 +1,6 @@
 # 评测明细 · boutique/service — cloudopsbench
 
-> 本家族已跑 **8/54** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 213,813 ｜ 生成 2026-10-13T15:19:54.467Z
+> 本家族已跑 **9/54** 题：JRA ✅9 ❌0 ｜ 证据链全闭 9 ｜ token 中位 127,254 ｜ 生成 2026-10-13T15:25:02.535Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -15,6 +15,7 @@
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0909 | 67 | 1,437,291 | 0.0152 | 0 | 1013_2025_chainpivot-verify1 | 全对·链闭 |
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 21 | 127,254 | 0 | 0 | 1013_1955_inorder4-v3b34 | 全对·链闭 |
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 119,079 | 0 | 0 | 1013_2040_chainpivot-verify2 | 全对·链闭 |
+| [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 121,078 | 0 | 0 | 1013_2320_inorder4-v3b64 | 全对·链闭 |
 
 ## 证据正文
 
@@ -73,4 +74,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 19 · tokens 119,079
 - **raw 日志**：[results/1013_2040_chainpivot-verify2/raw/1013_2040_boutique-service-8](../results/1013_2040_chainpivot-verify2/raw/1013_2040_boutique-service-8/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts, all Services have correct selectors and bound endpoints (productcatalogservice -> 172.20.1.197:3550), and no Warning events exist in the namespace, excluding scheduling/startup/probe/endpoint faults. Caller-side logs (frontend, 148/730 errors) show 'failed to get product recommendations' with gRPC StatusCode.UNAVAILABLE: 'failed to connect to all addresses; last error: ipv4:10.68.14.88:3551: Connection refused'; 10.68.14.88 is the productcatalogservice ClusterIP on port 3551, which nothing listens on. The culprit's own log closes the mechan
+
+### case-9
+
+- **结论**：`app/adservice` + `service_port_mapping_mismatch` ｜ 标签 `app/adservice` + `service_port_mapping_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 16 · tokens 121,078
+- **raw 日志**：[results/1013_2320_inorder4-v3b64/raw/1013_2320_boutique-service-9](../results/1013_2320_inorder4-v3b64/raw/1013_2320_boutique-service-9/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts and no alerts, so the break is not workload-side. The calling frontend logs 118x 'failed to get ads: rpc error: code = Unavailable ... dial tcp 10.68.211.128:9555: connect: connection refused' (adservice ClusterIP reached but refused), and CheckServiceConnectivity(adservice, 9555) returns 'Connection Failed' whereas productcatalogservice (10.68.57.51:3550) returns 'open / Connection Succeeded'. The adservice pod sheet shows the container listening on 9555 (Port 9555/TCP, env PORT=9555, grpc readiness/liveness on 9555) with Ready: True and it
 

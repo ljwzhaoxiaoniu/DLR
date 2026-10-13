@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/service</em></h1>
-<p class="deck">已跑 <b>8/54</b> 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 213,813 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T15:19:54.467Z</p>
+<p class="deck">已跑 <b>9/54</b> 题：JRA ✅9 ❌0 ｜ 证据链全闭 9 ｜ token 中位 127,254 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T15:25:02.535Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4</td><td>16</td><td>115,616</td><td>0</td><td>0</td><td class="muted">1012_1447_inorder4-v3b2</td><td><a href="../results/1012_1447_inorder4-v3b2/raw/1012_1448_boutique-service-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1448_boutique-service-1</a></td></tr>
@@ -24,6 +24,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-6"><code>6</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.0909</td><td>67</td><td>1,437,291</td><td>0.0152</td><td>0</td><td class="muted">1013_2025_chainpivot-verify1</td><td><a href="../results/1013_2025_chainpivot-verify1/raw/1013_2025_boutique-service-6/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2025_boutique-service-6</a></td></tr>
 <tr><td><a href="#case-7"><code>7</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.25</td><td>21</td><td>127,254</td><td>0</td><td>0</td><td class="muted">1013_1955_inorder4-v3b34</td><td><a href="../results/1013_1955_inorder4-v3b34/raw/1013_1956_boutique-service-7/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1956_boutique-service-7</a></td></tr>
 <tr><td><a href="#case-8"><code>8</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>19</td><td>119,079</td><td>0</td><td>0</td><td class="muted">1013_2040_chainpivot-verify2</td><td><a href="../results/1013_2040_chainpivot-verify2/raw/1013_2040_boutique-service-8/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2040_boutique-service-8</a></td></tr>
+<tr><td><a href="#case-9"><code>9</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>16</td><td>121,078</td><td>0</td><td>0</td><td class="muted">1013_2320_inorder4-v3b64</td><td><a href="../results/1013_2320_inorder4-v3b64/raw/1013_2320_boutique-service-9/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2320_boutique-service-9</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/cartservice</code> + <code>service_env_var_address_mismatch</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 16 步</summary><ul>
@@ -470,6 +471,48 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/productcatalogservice&quot;,
    &quot;root_cause&quot;: &quot;service_port_mapping_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-9"><summary><b>case-9</b> · <code>app/adservice</code> + <code>service_port_mapping_mismatch</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 16 步</summary><ul>
+<li><b>摘要</b>：All 11 boutique pods are 1/1 Running with 0 restarts and no alerts, so the break is not workload-side. The calling frontend logs 118x 'failed to get ads: rpc error: code = Unavailable ... dial tcp 10.68.211.128:9555: connect: connection refused' (adservice ClusterIP reached but refused), and CheckServiceConnectivity(adservice, 9555) returns 'Connection Failed' whereas productcatalogservice (10.68.57.51:3550) returns 'open / Connection Succeeded'. The adservice pod sheet shows the container listening on 9555 (Port 9555/TCP, env PORT=9555, grpc readiness/liveness on 9555) with Ready: True and it</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2320_inorder4-v3b64/raw/1013_2320_boutique-service-9/">results/1013_2320_inorder4-v3b64/raw/1013_2320_boutique-service-9</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;adservice&quot;,&quot;port&quot;:9555,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>11</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;productcatalogservice&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:3550}</code></td></tr>
+<tr><td>12</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>15</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;adservice-84dbdf99d-46plm&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All 11 boutique pods are 1/1 Running with 0 restarts and no alerts, so the break is not workload-side. The calling frontend logs 118x 'failed to get ads: rpc error: code = Unavailable ... dial tcp 10.68.211.128:9555: connect: connection refused' (adservice ClusterIP reached but refused), and CheckServiceConnectivity(adservice, 9555) returns 'Connection Failed' whereas productcatalogservice (10.68.57.51:3550) returns 'open / Connection Succeeded'. The adservice pod sheet shows the container listening on 9555 (Port 9555/TCP, env PORT=9555, grpc readiness/liveness on 9555) with Ready: True and it is admitted into Endpoints (172.20.1.187). GetAppYAML(adservice) names the break verbatim: the Service declares port: 9555 with targetPort: 8080, but nothing in the pod listens on 8080 - the Endpoints listing confirms the wrong resolution (172.20.1.187:8080). Traffic to the Service is therefore DNAT'd to a dead port and refused, while the pod itself is healthy. First surface where observation contradicts expectation is the adservice Service port mapping; only adservice is affected, matching 'partial' unreachability. Namespace events surface is empty (no FailedScheduling/FailedCreate/pull/probe mechanism event), confirming a pure configuration mismatch rather than a scheduling, admission or startup fault.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/adservice&quot;,
+   &quot;root_cause&quot;: &quot;service_port_mapping_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/productcatalogservice&quot;,
+   &quot;root_cause&quot;: &quot;service_dns_resolution_failure&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/adservice&quot;,
+   &quot;root_cause&quot;: &quot;service_protocol_mismatch&quot;
   }
  ]
 }</pre>

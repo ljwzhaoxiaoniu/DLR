@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **26/96** 题：JRA ✅26 ❌0 ｜ 证据链全闭 26 ｜ token 中位 490,757 ｜ 生成 2026-10-13T15:19:54.467Z
+> 本家族已跑 **27/96** 题：JRA ✅27 ❌0 ｜ 证据链全闭 27 ｜ token 中位 490,757 ｜ 生成 2026-10-13T15:25:02.535Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -33,6 +33,7 @@
 | [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 362,268 | 0.0526 | 0 | 1013_2308_inorder4-v3b61 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.1111 | 19 | 320,076 | 0 | 0 | 1013_2311_inorder4-v3b62 | 全对·链闭 |
 | [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 26 | 531,205 | 0 | 0 | 1013_2315_inorder4-v3b63 | 全对·链闭 |
+| [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 507,364 | 0 | 0 | 1013_2320_inorder4-v3b64 | 全对·链闭 |
 
 ## 证据正文
 
@@ -217,4 +218,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 26 · tokens 531,205
 - **raw 日志**：[results/1013_2315_inorder4-v3b63/raw/1013_2318_trainticket-runtime-26](../results/1013_2315_inorder4-v3b63/raw/1013_2318_trainticket-runtime-26/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom chain walks the reachability path: alert ts-preserve-service POST /api/v1/preserveservice/preserve 500 -> its log shows 500 from ts-travel-service /api/v1/travelservice/trip_detail -> ts-travel-service log shows 500 from ts-basic-service /api/v1/basicservice/basic/travel -> ts-basic-service log shows 'java.lang.IllegalArgumentException: Service Instance cannot be null', i.e. its Nacos lookup for a downstream instance returns null. Object layer localizes it: in the namespace endpoints listing, ts-route-service is the ONLY one of 47 services with ENDPOINTS <none>, and no pod with label a
+
+### case-27
+
+- **结论**：`app/ts-seat-service` + `deployment_zero_replicas` ｜ 标签 `app/ts-seat-service` + `deployment_zero_replicas`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1875 · steps 17 · tokens 507,364
+- **raw 日志**：[results/1013_2320_inorder4-v3b64/raw/1013_2323_trainticket-runtime-27](../results/1013_2320_inorder4-v3b64/raw/1013_2323_trainticket-runtime-27/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Entry by inventory (symptom named no service): ts-seat-service is the sole outlier - it has a Service object (10.68.172.20:18898) but NO pod at all. Its own signal: connectivity probe to ts-seat-service:18898 fails from worker-01/02/03 ('Connection Failed'). Owner chain: deployment ts-seat-service shows READY 0/0, UP-TO-DATE 0, AVAILABLE 0 (all other workloads 1/1), and GetResources(pods,name=ts-seat-service)=NotFound (not Pending/FailedScheduling). Configuration face: deployment spec.replicas=0 (generation 2, while last-applied-configuration had replicas 1). Mechanism event binds it verbatim:
 

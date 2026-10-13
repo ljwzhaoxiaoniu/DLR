@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/42,1.0,1.0,1.0,1.0,0.6,1.0,0.18421052631578946,39.0,0.05263157894736842,0.0,app/frontend,code_missing_parameter,app/frontend,code_missing_parameter,
+boutique/service/9,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,16.0,0.0,0.0,app/adservice,service_port_mapping_mismatch,app/adservice,service_port_mapping_mismatch,
+trainticket/performance/46,1.0,1.0,1.0,1.0,1.0,1.0,0.15384615384615385,27.0,0.0,0.0,app/ts-travel-service,pod_network_delay,app/ts-travel-service,pod_network_delay,
+trainticket/runtime/27,1.0,1.0,1.0,1.0,1.0,1.0,0.1875,17.0,0.0,0.0,app/ts-seat-service,deployment_zero_replicas,app/ts-seat-service,deployment_zero_replicas,

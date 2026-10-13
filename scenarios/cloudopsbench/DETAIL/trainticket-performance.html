@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/performance</em></h1>
-<p class="deck">已跑 <b>45/47</b> 题：JRA ✅44 ❌1 ｜ 证据链全闭 44 ｜ token 中位 301,957 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T15:19:54.467Z</p>
+<p class="deck">已跑 <b>46/47</b> 题：JRA ✅45 ❌1 ｜ 证据链全闭 45 ｜ token 中位 304,738 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T15:25:02.535Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1429</td><td>36</td><td>442,283</td><td>0</td><td>1</td><td class="muted">1012_1512_inorder4-v3b3</td><td><a href="../results/1012_1512_inorder4-v3b3/raw/1012_1516_trainticket-performance-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1516_trainticket-performance-1</a></td></tr>
@@ -61,6 +61,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-43"><code>43</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>16</td><td>142,097</td><td>0</td><td>0</td><td class="muted">1013_2308_inorder4-v3b61</td><td><a href="../results/1013_2308_inorder4-v3b61/raw/1013_2309_trainticket-performance-43/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2309_trainticket-performance-43</a></td></tr>
 <tr><td><a href="#case-44"><code>44</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>16</td><td>333,677</td><td>0</td><td>0</td><td class="muted">1013_2311_inorder4-v3b62</td><td><a href="../results/1013_2311_inorder4-v3b62/raw/1013_2313_trainticket-performance-44/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2313_trainticket-performance-44</a></td></tr>
 <tr><td><a href="#case-45"><code>45</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>19</td><td>367,029</td><td>0</td><td>0</td><td class="muted">1013_2315_inorder4-v3b63</td><td><a href="../results/1013_2315_inorder4-v3b63/raw/1013_2316_trainticket-performance-45/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2316_trainticket-performance-45</a></td></tr>
+<tr><td><a href="#case-46"><code>46</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1538</td><td>27</td><td>845,040</td><td>0</td><td>0</td><td class="muted">1013_2320_inorder4-v3b64</td><td><a href="../results/1013_2320_inorder4-v3b64/raw/1013_2321_trainticket-performance-46/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2321_trainticket-performance-46</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/ts-basic-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 36 步</summary><ul>
@@ -2087,6 +2088,59 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/ts-preserve-service&quot;,
    &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-46"><summary><b>case-46</b> · <code>app/ts-travel-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 27 步</summary><ul>
+<li><b>摘要</b>：Metric-surface entry chain (per the wording's alert-first discipline): in the injection window 2026-03-16 01:47:22~01:49:12 the alert set carries exactly ONE latency row — ts-travel-service LATENCY_DEGRADATION [Slow Response] p90 9.45ms -&gt; 2121.88ms (+22357.3%, Peak 2181.07ms) — i.e. a fixed ~2.1s ADDITIVE delay on a near-zero baseline, the single runaway deviation; the dependency graph closes it: its direct neighbours are the ripples (ts-gateway-service THROUGHPUT_SURGE +319.2% RPS = caller retry storm; ts-ui-dashboard RPS +274.1% / success 78.9%-&gt;62.5%), while ts-order-service (cpu_cfs 0.671</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2320_inorder4-v3b64/raw/1013_2321_trainticket-performance-46/">results/1013_2320_inorder4-v3b64/raw/1013_2321_trainticket-performance-46</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-route-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-train-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-contacts-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-contacts-service&quot;}</code></td></tr>
+<tr><td>20</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-travel-service&quot;,&quot;port&quot;:12346,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>22</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;port&quot;:12347,&quot;service_name&quot;:&quot;ts-contacts-service&quot;}</code></td></tr>
+<tr><td>23</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;excessive Pod network latency pod_network_delay: how to confirm the delay sits on one pod's network path&quot;,&quot;namespace&quot;:&quot;kubernetes&quot;}</code></td></tr>
+<tr><td>24</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;\&quot;No servers available for service\&quot; / Service Instance cannot be null — service discovery registration missing&quot;,&quot;namespace&quot;:&quot;kubernetes&quot;}</code></td></tr>
+<tr><td>25</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-contacts-service&quot;}</code></td></tr>
+<tr><td>26</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Metric-surface entry chain (per the wording's alert-first discipline): in the injection window 2026-03-16 01:47:22~01:49:12 the alert set carries exactly ONE latency row — ts-travel-service LATENCY_DEGRADATION [Slow Response] p90 9.45ms -&gt; 2121.88ms (+22357.3%, Peak 2181.07ms) — i.e. a fixed ~2.1s ADDITIVE delay on a near-zero baseline, the single runaway deviation; the dependency graph closes it: its direct neighbours are the ripples (ts-gateway-service THROUGHPUT_SURGE +319.2% RPS = caller retry storm; ts-ui-dashboard RPS +274.1% / success 78.9%-&gt;62.5%), while ts-order-service (cpu_cfs 0.671s Throttled + network surge) and ts-security-service (+89.7% outbound) are NOT neighbours of ts-travel-service and carry no latency of their own = collateral noise, ts-auth-service cpu_cfs 0.057s is sub-core. Object layer is exclusion only: all train-ticket pods Running 2/2 with RESTARTS 0 (sole exception ts-ui-dashboard 3 restarts, from rollout churn — 'BackOff restarting failed container' plus prior nginx '[emerg] host not found in upstream \&quot;ts-gateway-service\&quot;'); all four nodes Ready with no pressure/cordon; ts-travel-service:12346 probes Connection Succeeded from worker-01/02/03, so the name-&gt;endpoint path is neither blackholed nor mis-selected (rules out selector/DNS/endpoint breakage and fits an injected delay). ts-travel-service itself has NO saturation row (usage vs limits clean: requests 200m/350Mi, limits 500m/512Mi) and its downstreams ts-basic/route/train/seat show no server-side latency or error rows, so the delay sits on that pod's own network path. First observation != expectation: ts-travel-service's own responses are uniformly inflated by ~2.1s while every other object is healthy; its caller ts-preserve-service (upstream) logs 177 errors and the dashboard returns 500 on /preserveservice/preserve, i.e. the callers see the same added delay. Scope check: only this pod is affected, co-tenant pods on worker-03 show no latency rows -&gt; pod-scope, not node-scope. The lingering 'No servers available for service: ts-contacts-service' (503 on /contactservice/*) and 'Service Instance cannot be null' are pre-existing baseline noise — the sample pre-dates the injection window (01:46:37) and the Normal success rate is already 78.9%, while ts-contacts-service runs 2/2 with port 12347 reachable.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-travel-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-contacts-service&quot;,
+   &quot;root_cause&quot;: &quot;service_dns_resolution_failure&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;node/worker-03&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
   }
  ]
 }</pre>

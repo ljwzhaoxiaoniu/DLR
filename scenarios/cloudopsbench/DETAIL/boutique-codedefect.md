@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **41/98** 题：JRA ✅41 ❌0 ｜ 证据链全闭 41 ｜ token 中位 325,537 ｜ 生成 2026-10-13T15:19:54.467Z
+> 本家族已跑 **42/98** 题：JRA ✅42 ❌0 ｜ 证据链全闭 42 ｜ token 中位 330,738 ｜ 生成 2026-10-13T15:25:02.535Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -48,6 +48,7 @@
 | [39](#case-39) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 17 | 289,503 | 0 | 0 | 1013_2308_inorder4-v3b61 | 全对·链闭 |
 | [40](#case-40) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 353,688 | 0 | 0 | 1013_2311_inorder4-v3b62 | 全对·链闭 |
 | [41](#case-41) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2333 | 31 | 1,115,150 | 0.0333 | 0 | 1013_2315_inorder4-v3b63 | 全对·链闭 |
+| [42](#case-42) | 1 | 1 | 1 | 1 | 0.6 | 1 | 0.1842 | 39 | 933,395 | 0.0526 | 0 | 1013_2320_inorder4-v3b64 | 全对·链闭 |
 
 ## 证据正文
 
@@ -337,4 +338,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2333 · steps 31 · tokens 1,115,150
 - **raw 日志**：[results/1013_2315_inorder4-v3b63/raw/1013_2315_boutique-codedefect-41](../results/1013_2315_inorder4-v3b63/raw/1013_2315_boutique-codedefect-41/)（ndjson / mcp.jsonl / meta）
 - **摘要**：boutique: all 11 pods Running 2/2 with 0 restarts and 4/4 nodes Ready (no scheduling/startup/probe break); alerts show frontend entry 503s (GET /product/{id} x20, GET /cart x8) and a currencyservice inbound surge in 23:13:06-23:15:41, exactly when a new frontend ReplicaSet (frontend-645f576c45-ls98t, image wangyl2128/frontend-v2:latest) rolled in. cartservice's error-log stream is 26.78% (747 lines) one pattern: 'AddItemAsync called with userId=, productId=L9ECAV7KIM, quantity=2' - a required userId arriving empty. frontend source proves it: rpc.go insertCart() contains 'userID = ""' before pb
+
+### case-42
+
+- **结论**：`app/frontend` + `code_missing_parameter` ｜ 标签 `app/frontend` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.6 · ECR 1 · EE 0.1842 · steps 39 · tokens 933,395
+- **raw 日志**：[results/1013_2320_inorder4-v3b64/raw/1013_2320_boutique-codedefect-42](../results/1013_2320_inorder4-v3b64/raw/1013_2320_boutique-codedefect-42/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique workloads are healthy at the object layer (2/2 Running, RESTARTS=0, every Service has endpoints, connectivity probes to productcatalogservice:3550 and cartservice:7070 succeed), so the break is not scheduling/startup/admission. The only inventory outlier is frontend-645f576c45-tcg87 (age 2m26s vs ~5m36s for all others) = a fresh frontend rollout at 12:35:56, matching the alert window. Alerts point at the frontend business routes (503 on /product/{id} x16, /cart x14, POST /cart x1). The decisive evidence is the callee-side trail: cartservice's log is 743/2719 lines (27.3%) of 'A
 
