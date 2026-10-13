@@ -1,0 +1,2 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/6,1.0,1.0,1.0,1.0,0.25,1.0,0.5384615384615384,14.0,0.0,0.0,app/frontend,missing_service_account,app/frontend,missing_service_account,

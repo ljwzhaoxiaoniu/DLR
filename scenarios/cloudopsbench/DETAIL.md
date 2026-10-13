@@ -32,25 +32,25 @@
 | JRA（联合命中） | 64 / 64（100.0%） |
 | CA（组件命中） | 64 / 64（100.0%） |
 | FA（故障型命中） | 64 / 64（100.0%） |
-| ECR（证据链全闭） | 64 / 64（100.0%） |
+| ECR（证据链全闭） | 63 / 64（98.4%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 1 | 0.9818 | 1 | 0.2979 | 19.0313 | 0 | 0.0313 |
+| 0.9961 | 0.974 | 0.9844 | 0.3009 | 18.8438 | 0 | 0.0313 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 258,405 / 186,507 | 58,131 / 1,133,738 | 74% |
+| 257,839 / 186,507 | 58,131 / 1,133,738 | 74% |
 
 ## 分家族索引
 
 | 家族 | 全量 | 已跑 | JRA | 链全闭 | 明细 |
 |---|---|---|---|---|---|
-| boutique/admission | 58 | 6 | 6 | 6 | [boutique-admission.md](DETAIL/boutique-admission.md) |
+| boutique/admission | 58 | 6 | 6 | 5 | [boutique-admission.md](DETAIL/boutique-admission.md) |
 | boutique/codedefect | 98 | 6 | 6 | 6 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
 | boutique/infrastructure | 40 | 5 | 5 | 5 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
 | boutique/performance | 29 | 3 | 3 | 3 | [boutique-performance.md](DETAIL/boutique-performance.md) |
@@ -101,6 +101,9 @@
 > **2026-10-13 · 轮次 chainhead-verify1/2/2b/2c（EOC 双题修复收官 · codedefect/4 + admission/5 六项全满）**：① **机理反推完成**（探针 `tmp_scripts/cob_eoc_probe.py` 复用上游 evaluator + 金轨自评模式）：EOC = 严格单遍级联——里程碑仅当前置先收才进 `ordered`，M0 形态迟到即整链塌 1/4；清单式 admissible 带 `name:""` 键位要求（模型最小参数调用永不命中，金轨靠具体形态兑现：`DescribeResource(pod)` / endpoints / 连通性）。② **金轨自评（合不合理判据）**：codedefect/4 金轨 EOC 1.0（M0 = pod 详情、第 2 步即读）；**admission/5 金轨反而 MC 0.75**（path1 漏 M1 · path2 漏 M3——弱标签，我跑却可达 1.0）；infra/4 金轨 1.0（干净标签，我跑 0.667 = 真序滑点）；**tt-runtime/5 金轨两路皆漏 M2**（MC 0.667——弱标签；我跑 MC 1.0 · EOC 0.667 = 真序滑点）。③ **修（全落「Service Availability Disruption.」节——admission 家族两措辞混用 31/27，首轮曾误加第一节目、已回撤）**：code 分支钉「pod 详情先读 · 批内领跑」→ **codedefect/4 verify2 六项全 1.0**；无名措辞钉「受害者信号领跑（非关题确认）」+ never-created 分支同句 → 序到位后连踩两坑：猜端口 8080（实为 5000）→ v4 再钉「端口从 Service spec 取 · endpoints 免猜测形态」→ **admission/5 verify2c 六项全 1.0**（M0@endpoints → M1@按锚 pods → M2@events → M3@YAML 级联全序）。④ 花絮：verify2 契约 JSON 未转义引号 → 围栏 parse 失败 → JRA 0（上游提取器同严格、无修复通道——按交付失败重置跑）。⑤ **EOC 账**：原位 4 处非满 → 2 处收官（codedefect/4 · admission/5），余 infra/4 · tt-runtime/5 **记档不追**（用户 10-13「不强求」）；EOC 均值 0.9639→0.9889。⑥ 批十六仍待令。
 
 > **2026-10-13 · 轮次 1013_1503_inorder4-v3b16（批十六 · 首度 2 路跑批 · 4/4 全对 · 一例 EOC 0.5）**：① 覆盖 64/754，**JRA 64/64**。② **2 路并发首跑定型**（env 成对 8000/8001，两波四题全收，零重试；全批含 grade+stats ≈ 7 分钟）。③ **image 双胞胎判别线新实例验证**：startup/4 `image_registry_dns_failure`（12 步六项全满）——startup/3 翻车驱动的判别线在未解剖新题上稳定。④ tt-runtime/9 `db_readonly_mode`（28 步六项全满）· tt-startup/6 `missing_secret_binding`（12 步六项全满）。⑤ **admission/6 EOC 0.5 解剖**：症状面开得很快（M0@6：frontend 日志+连通性扫掠——端口全对，v4 端口纪律外溢生效）✓；倒位在**中链**——11 连全服务连通扫掠后 `events`（M2）先于 `deployments`（M1）落读 → M1 迟到，级联保 M0+M1 = 0.5。修法候选：第一节目同 §2 钉「workload 态先于事件面」（待令）。
+
+> **2026-10-13 · 轮次 workload-verify1/2（admission/6 钉句两轮 · 未闭 · 停止迭代）**：① §1 两处钉句（「owner chain 先于事件面 · 批内领跑」+ never-created 分支同句）→ v1 复跑：**中链修正生效**（deployments/按锚 pods 提到 events 前）但**症状面拖到 #9-10**（EOC 0.25）；再补「无名→受害者信号领跑」句（照抄 §2 证明版）→ v2 复跑：**M0 整步未读**（开场 pods→deployments→YAML→SA→events 纯对象层收口——MC 0.75 · EOC 0 · ECR 0）。三轮行为谱：M0@6（批十六）→ M0 末位 → M0 缺席——**该题症状面读取高方差**。② 病灶解读：本 case 受害者 = 入口服务 frontend 自身（SA 缺失卡它自己的 pod）——题面无 caller 可比、frontend 又被默认当 gateway 假定健康，agent 自然把它的信号读放最后/省掉。③ 处置：**停止迭代（三连未闭，用户「不强求」线）**；钉句全部保留（§2 四案背书：codedefect/4 + admission/5 + 批十六 3/4 六项全满——不伤他题）；admission/6 记「症状面高方差」，与 infra/4 · tt-runtime/5 同列记档；若后续同形态 miss 再现，再评估「受害者=入口服务」专用句。④ 会话：v1/v2 两条入档。
+
 
 
 

@@ -1,6 +1,6 @@
 # 评测明细 · boutique/admission — cloudopsbench
 
-> 本家族已跑 **6/58** 题：JRA ✅6 ❌0 ｜ 证据链全闭 6 ｜ token 中位 102,119 ｜ 生成 2026-10-13T07:06:58.986Z
+> 本家族已跑 **6/58** 题：JRA ✅6 ❌0 ｜ 证据链全闭 5 ｜ token 中位 82,218 ｜ 生成 2026-10-13T07:16:58.691Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -12,7 +12,7 @@
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5294 | 18 | 102,119 | 0 | 0 | 1012_1907_l3-tweak2 | 全对·链闭 |
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5833 | 13 | 68,497 | 0 | 0 | 1012_1935_tidy-verify1 | 全对·链闭 |
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5 | 15 | 82,218 | 0 | 0 | 1013_1458_chainhead-verify2c | 全对·链闭 |
-| [6](#case-6) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.2609 | 24 | 104,128 | 0 | 0 | 1013_1503_inorder4-v3b16 | 全对·链闭 |
+| [6](#case-6) | 1 | 1 | 1 | 0.75 | 0 | 0 | 0.4545 | 12 | 67,891 | 0 | 0 | 1013_1515_workload-verify2 | 结果对·链未闭 |
 
 ## 证据正文
 
@@ -49,6 +49,6 @@
 ### case-6
 
 - **结论**：`app/frontend` + `missing_service_account` ｜ 标签 `app/frontend` + `missing_service_account`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.2609 · steps 24 · tokens 104,128
-- **摘要**：Reachability probes on all 11 boutique services show only frontend:80 fails (Connection Failed) while the other 10 succeed, and no metric alerts exist. The pods listing contains 10 pods with NO frontend pod at all (not Pending/CrashLoop), and deployments show frontend 0/1 with UP-TO-DATE=0, i.e. the pod was never created -> admission-layer break. The namespace events surface names the mechanism verbatim: 'Warning FailedCreate replicaset/frontend-fbbd6d5f5: Error creating: pods "frontend-fbbd6d5f5-" is forbidden: error looking up service account boutique/frontend-missing: serviceaccount "fronte
+- **流程**：MC 0.75 · EOC 0 · ECR 0 · EE 0.4545 · steps 12 · tokens 67,891
+- **摘要**：Inventory entry: frontend is the only workload with no pod at all — GetResources(pods) lists 10 boutique services Running 1/1 but zero frontend-* pods. Workload state confirms it is drained (deployment frontend 0/1 READY, UP-TO-DATE 0, AVAILABLE 0) with Conditions ReplicaFailure=True / reason FailedCreate and NewReplicaSet frontend-fbbd6d5f5 (0/1 replicas created). The mechanism event names the object verbatim: 'Warning FailedCreate replicaset/frontend-fbbd6d5f5 — Error creating: pods "frontend-fbbd6d5f5-" is forbidden: error looking up service account boutique/frontend-missing: serviceaccount
 
