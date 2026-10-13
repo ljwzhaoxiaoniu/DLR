@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **23/96** 题：JRA ✅23 ❌0 ｜ 证据链全闭 23 ｜ token 中位 490,757 ｜ 生成 2026-10-13T15:08:00.868Z
+> 本家族已跑 **24/96** 题：JRA ✅24 ❌0 ｜ 证据链全闭 24 ｜ token 中位 490,757 ｜ 生成 2026-10-13T15:11:18.957Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -30,6 +30,7 @@
 | [21](#case-21) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.3636 | 12 | 255,702 | 0 | 0 | 1013_2253_inorder4-v3b58 | 全对·链闭 |
 | [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 409,364 | 0 | 0 | 1013_2258_inorder4-v3b59 | 全对·链闭 |
 | [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 205,969 | 0 | 0 | 1013_2303_inorder4-v3b60 | 全对·链闭 |
+| [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 362,268 | 0.0526 | 0 | 1013_2308_inorder4-v3b61 | 全对·链闭 |
 
 ## 证据正文
 
@@ -193,4 +194,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 205,969
 - **raw 日志**：[results/1013_2303_inorder4-v3b60/raw/1013_2305_trainticket-runtime-23](../results/1013_2303_inorder4-v3b60/raw/1013_2305_trainticket-runtime-23/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Reachability chain closed on ts-payment-service. (1) Symptom side: no pod exists for ts-payment-service in the pods inventory while every other pod is Running 2/2, and CheckServiceConnectivity on its Service-declared port 19001 fails from all three workers (worker-01/02/03: Connection Failed). (2) Endpoints listing: 'ts-payment-service   <none>'. (3) Owner chain break: live Deployment 'ts-payment-service' reads READY 0/0, UP-TO-DATE 0, AVAILABLE 0, and its live spec.replicas is 0 (generation 2) whereas kubectl.kubernetes.io/last-applied-configuration still declares replicas: 1. (4) Mechanism e
+
+### case-24
+
+- **结论**：`app/ts-preserve-service` + `deployment_zero_replicas` ｜ 标签 `app/ts-preserve-service` + `deployment_zero_replicas`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2105 · steps 20 · tokens 362,268
+- **raw 日志**：[results/1013_2308_inorder4-v3b61/raw/1013_2309_trainticket-runtime-24](../results/1013_2308_inorder4-v3b61/raw/1013_2309_trainticket-runtime-24/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side: GetAlerts shows 20x 'HTTPError 503 Server Error: Service Unavailable' on POST /api/v1/preserveservice/preserve with entry service ts-preserve-service. Object layer: pods listing shows all 45 train-ticket workloads Running 2/2 with 0 restarts and NO ts-preserve-service pod at all (only ts-preserve-other-service exists). Endpoints listing shows ts-preserve-service ENDPOINTS=<none> while all 44 other services have endpoints; TCP connectivity probe on its own declared port 14568 fails from worker-01/02/03 ('Connection Failed'). Its Service object is correctly configured (selector app
 

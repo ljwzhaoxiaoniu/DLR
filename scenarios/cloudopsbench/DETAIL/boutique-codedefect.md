@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **38/98** 题：JRA ✅38 ❌0 ｜ 证据链全闭 38 ｜ token 中位 325,537 ｜ 生成 2026-10-13T15:08:00.868Z
+> 本家族已跑 **39/98** 题：JRA ✅39 ❌0 ｜ 证据链全闭 39 ｜ token 中位 300,857 ｜ 生成 2026-10-13T15:11:18.957Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -45,6 +45,7 @@
 | [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1579 | 20 | 394,816 | 0 | 0 | 1013_2253_inorder4-v3b58 | 全对·链闭 |
 | [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 240,302 | 0 | 0 | 1013_2258_inorder4-v3b59 | 全对·链闭 |
 | [38](#case-38) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1429 | 22 | 452,396 | 0 | 0 | 1013_2303_inorder4-v3b60 | 全对·链闭 |
+| [39](#case-39) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 17 | 289,503 | 0 | 0 | 1013_2308_inorder4-v3b61 | 全对·链闭 |
 
 ## 证据正文
 
@@ -313,4 +314,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1429 · steps 22 · tokens 452,396
 - **raw 日志**：[results/1013_2303_inorder4-v3b60/raw/1013_2303_boutique-codedefect-38](../results/1013_2303_inorder4-v3b60/raw/1013_2303_boutique-codedefect-38/)（ndjson / mcp.jsonl / meta）
 - **摘要**：frontend is the alerted entity: GetAlerts reports LATENCY_DEGRADATION on service frontend, p90 latency Normal=147.04ms -> Current=2555.00ms (+1637.6%, peak 2981.82ms) in window 17:30:08~17:32:43, with 31 accompanying 503 errors across '/' , '/product/{id}', '/cart', '/cart/checkout', '/setCurrency'. Object layer is clean (GetResources pods: all 11 pods Running 2/2, RESTARTS=0; DescribeResource frontend-556cf89656-q7b9p: Ready True, Restart Count 0, only Normal Scheduled/Pulled/Created/Started events), so the break is not scheduling/probe/resource. Node and infra layer excluded (all 4 nodes Rea
+
+### case-39
+
+- **结论**：`app/frontend` + `code_memory_leak` ｜ 标签 `app/frontend` + `code_memory_leak`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 17 · tokens 289,503
+- **raw 日志**：[results/1013_2308_inorder4-v3b61/raw/1013_2308_boutique-codedefect-39](../results/1013_2308_inorder4-v3b61/raw/1013_2308_boutique-codedefect-39/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods listing shows a single outlier: frontend-7b49cb6446-6lt6c 1/2 CrashLoopBackOff with 4 restarts while all other boutique pods are 2/2 Running with 0 restarts; deployment frontend is 0/1 AVAILABLE while all others are 1/1. Alerts name frontend (success rate 95.2%->36.7%) with 503 Service Unavailable on /, /product/{id}, /cart, /cart/checkout and notably /setCurrency. Pod detail: container 'server' Last State Terminated Reason=OOMKilled Exit Code=137 on a 128Mi memory limit (requests 64Mi = upstream defaults), restarting every ~2s, with pod event 'Warning BackOff: Back-off restarting failed 
 

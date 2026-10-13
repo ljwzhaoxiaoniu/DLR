@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/infrastructure</em></h1>
-<p class="deck">已跑 <b>37/40</b> 题：JRA ✅37 ❌0 ｜ 证据链全闭 37 ｜ token 中位 125,901 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T15:08:00.868Z</p>
+<p class="deck">已跑 <b>38/40</b> 题：JRA ✅38 ❌0 ｜ 证据链全闭 38 ｜ token 中位 127,753 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T15:11:18.957Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>96,876</td><td>0</td><td>0</td><td class="muted">1012_1458_l3-verify3</td><td><a href="../results/1012_1458_l3-verify3/raw/1012_1459_boutique-infrastructure-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1459_boutique-infrastructure-1</a></td></tr>
@@ -53,6 +53,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-35"><code>35</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1905</td><td>22</td><td>156,072</td><td>0</td><td>0</td><td class="muted">1013_2253_inorder4-v3b58</td><td><a href="../results/1013_2253_inorder4-v3b58/raw/1013_2253_boutique-infrastructure-35/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2253_boutique-infrastructure-35</a></td></tr>
 <tr><td><a href="#case-36"><code>36</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2083</td><td>25</td><td>224,794</td><td>0</td><td>0</td><td class="muted">1013_2258_inorder4-v3b59</td><td><a href="../results/1013_2258_inorder4-v3b59/raw/1013_2258_boutique-infrastructure-36/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2258_boutique-infrastructure-36</a></td></tr>
 <tr><td><a href="#case-37"><code>37</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2609</td><td>24</td><td>178,626</td><td>0</td><td>0</td><td class="muted">1013_2303_inorder4-v3b60</td><td><a href="../results/1013_2303_inorder4-v3b60/raw/1013_2303_boutique-infrastructure-37/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2303_boutique-infrastructure-37</a></td></tr>
+<tr><td><a href="#case-38"><code>38</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2667</td><td>16</td><td>137,377</td><td>0</td><td>0</td><td class="muted">1013_2308_inorder4-v3b61</td><td><a href="../results/1013_2308_inorder4-v3b61/raw/1013_2308_boutique-infrastructure-38/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2308_boutique-infrastructure-38</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>node/worker-01</code> + <code>containerd_unavailable</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
@@ -1742,6 +1743,48 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;node/worker-01&quot;,
    &quot;root_cause&quot;: &quot;containerd_unavailable&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-38"><summary><b>case-38</b> · <code>node/worker-01</code> + <code>kubelet_unavailable</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 16 步</summary><ul>
+<li><b>摘要</b>：Pods listing in boutique shows a single outlier: recommendationservice-7df56b7d59-m8hmq Pending with no node assigned, while all other pods are 1/1 Running. Its DescribeResource reports PodScheduled=False with 'FailedScheduling: 0/4 nodes are available: 1 node(s) had untolerated taint {node.kubernetes.io/unreachable: }, 1 node(s) were unschedulable, 2 node(s) didn't match Pod's node affinity/selector'. Node surface: worker-01 STATUS=NotReady, all conditions Unknown, taints node.kubernetes.io/unreachable:NoSchedule/NoExecute (master's SchedulingDisabled and worker-02/03 Ready are baseline). Che</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2308_inorder4-v3b61/raw/1013_2308_boutique-infrastructure-38/">results/1013_2308_inorder4-v3b61/raw/1013_2308_boutique-infrastructure-38</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;recommendationservice-7df56b7d59-m8hmq&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;nodes&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+<tr><td>10</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;containerd&quot;}</code></td></tr>
+<tr><td>11</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;recommendationservice&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;serviceaccounts&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Pods listing in boutique shows a single outlier: recommendationservice-7df56b7d59-m8hmq Pending with no node assigned, while all other pods are 1/1 Running. Its DescribeResource reports PodScheduled=False with 'FailedScheduling: 0/4 nodes are available: 1 node(s) had untolerated taint {node.kubernetes.io/unreachable: }, 1 node(s) were unschedulable, 2 node(s) didn't match Pod's node affinity/selector'. Node surface: worker-01 STATUS=NotReady, all conditions Unknown, taints node.kubernetes.io/unreachable:NoSchedule/NoExecute (master's SchedulingDisabled and worker-02/03 Ready are baseline). CheckNodeServiceStatus(worker-01) shows kubelet.service 'Active: inactive (dead)' ('Stopped Kubernetes Kubelet' at 16:15:14) while containerd 'active (running)' and kube-proxy 'active (running)' — so the kubelet agent itself is down. Blast radius confirms availability disruption: deployments adservice, currencyservice, frontend, paymentservice, shippingservice (all hosted on worker-01) plus recommendationservice read AVAILABLE 0/1, and the namespace events bind it verbatim with 'Warning NodeNotReady ... Node is not ready' for those exact pods. The FailedCreate 'serviceaccount recommendationservice not found' row is setup history — the SA is present in its listing and the pod was created successfully — so admission/missing-SA is excluded. Breakpoint: worker-01's kubelet observed dead where a running kubelet is expected.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;node/worker-01&quot;,
+   &quot;root_cause&quot;: &quot;kubelet_unavailable&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/recommendationservice&quot;,
+   &quot;root_cause&quot;: &quot;node_selector_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/recommendationservice&quot;,
+   &quot;root_cause&quot;: &quot;taint_toleration_mismatch&quot;
   }
  ]
 }</pre>

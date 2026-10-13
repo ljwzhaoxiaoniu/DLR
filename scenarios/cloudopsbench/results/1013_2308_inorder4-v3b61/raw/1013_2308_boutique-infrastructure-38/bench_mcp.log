@@ -1,0 +1,28 @@
+INFO:     Started server process [25944]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:58732 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58733 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:58732 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58734 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58743 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58745 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58754 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:58754 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58754 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:58754 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58754 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kubelet"}
+INFO:     127.0.0.1:51087 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"containerd"}
+INFO:     127.0.0.1:51087 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kube-proxy"}
+INFO:     127.0.0.1:51087 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51090 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"recommendationservice"}
+INFO:     127.0.0.1:51090 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51090 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51090 - "POST /mcp HTTP/1.1" 200 OK

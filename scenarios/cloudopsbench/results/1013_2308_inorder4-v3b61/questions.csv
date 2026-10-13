@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/39,1.0,1.0,1.0,1.0,1.0,1.0,0.25,17.0,0.0,0.0,app/frontend,code_memory_leak,app/frontend,code_memory_leak,
+boutique/infrastructure/38,1.0,1.0,1.0,1.0,1.0,1.0,0.26666666666666666,16.0,0.0,0.0,node/worker-01,kubelet_unavailable,node/worker-01,kubelet_unavailable,
+trainticket/performance/43,1.0,1.0,1.0,1.0,1.0,1.0,0.2,16.0,0.0,0.0,app/ts-seat-service,pod_network_delay,app/ts-seat-service,pod_network_delay,
+trainticket/runtime/24,1.0,1.0,1.0,1.0,1.0,1.0,0.21052631578947367,20.0,0.05263157894736842,0.0,app/ts-preserve-service,deployment_zero_replicas,app/ts-preserve-service,deployment_zero_replicas,

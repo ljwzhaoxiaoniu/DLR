@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **42/47** 题：JRA ✅41 ❌1 ｜ 证据链全闭 41 ｜ token 中位 301,957 ｜ 生成 2026-10-13T15:08:00.868Z
+> 本家族已跑 **43/47** 题：JRA ✅42 ❌1 ｜ 证据链全闭 42 ｜ token 中位 299,756 ｜ 生成 2026-10-13T15:11:18.957Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -49,6 +49,7 @@
 | [40](#case-40) | 1 | 1 | 1 | 1 | 1 | 1 | 0.15 | 21 | 299,756 | 0 | 0 | 1013_2253_inorder4-v3b58 | 全对·链闭 |
 | [41](#case-41) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 216,649 | 0 | 0 | 1013_2258_inorder4-v3b59 | 全对·链闭 |
 | [42](#case-42) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 25 | 359,493 | 0 | 0 | 1013_2303_inorder4-v3b60 | 全对·链闭 |
+| [43](#case-43) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 142,097 | 0 | 0 | 1013_2308_inorder4-v3b61 | 全对·链闭 |
 
 ## 证据正文
 
@@ -345,4 +346,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 25 · tokens 359,493
 - **raw 日志**：[results/1013_2303_inorder4-v3b60/raw/1013_2304_trainticket-performance-42](../results/1013_2303_inorder4-v3b60/raw/1013_2304_trainticket-performance-42/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts (metric surface, per the exact-matched L3 rule) show latency rows on ts-route-service (p50 7.50ms->8103.45ms, p90 9.50ms->22000ms), ts-basic-service (40.00ms->16571.43ms / 72.69ms->27314.29ms), ts-preserve-service (5647.11->21250.00ms / 24126.89->51000.00ms) and a p90-only partial ripple on ts-travel-service, plus throughput/network-drop ripples (config, contacts, gateway, ui-dashboard) and a bare cpu_cfs throttle on ts-order-service with no latency of its own (collateral). GetServiceDependencies shows ts-route-service is a LEAF (no downstream calls) while ts-basic-service, ts-travel-se
+
+### case-43
+
+- **结论**：`app/ts-seat-service` + `pod_network_delay` ｜ 标签 `app/ts-seat-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 142,097
+- **raw 日志**：[results/1013_2308_inorder4-v3b61/raw/1013_2309_trainticket-performance-43](../results/1013_2308_inorder4-v3b61/raw/1013_2309_trainticket-performance-43/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts point at a metric-surface case: ts-seat-service carries the runaway deviation (LATENCY_DEGRADATION p50 189.50ms -> 3341.67ms, +1663.4%, Peak=3522.73ms) with its own network traffic surge (in 10.52->28.20pps, out 10.97->24.51pps), i.e. a fixed ~3.1s delay added to ALL of its traffic (p50 moves, not just p90). Its direct upstream neighbor ts-travel-service shows only a p90 ripple (904.72 -> 8951.22ms) = partial-traffic ripple, while ts-ui-dashboard (RPS +130%) and ts-order-service (bare cpu_cfs 0.509s throttled + RPS +192%, with NO latency row of its own) are collateral noise that must no
 

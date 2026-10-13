@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **37/40** 题：JRA ✅37 ❌0 ｜ 证据链全闭 37 ｜ token 中位 125,901 ｜ 生成 2026-10-13T15:08:00.868Z
+> 本家族已跑 **38/40** 题：JRA ✅38 ❌0 ｜ 证据链全闭 38 ｜ token 中位 127,753 ｜ 生成 2026-10-13T15:11:18.957Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -44,6 +44,7 @@
 | [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1905 | 22 | 156,072 | 0 | 0 | 1013_2253_inorder4-v3b58 | 全对·链闭 |
 | [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2083 | 25 | 224,794 | 0 | 0 | 1013_2258_inorder4-v3b59 | 全对·链闭 |
 | [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2609 | 24 | 178,626 | 0 | 0 | 1013_2303_inorder4-v3b60 | 全对·链闭 |
+| [38](#case-38) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 137,377 | 0 | 0 | 1013_2308_inorder4-v3b61 | 全对·链闭 |
 
 ## 证据正文
 
@@ -305,4 +306,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2609 · steps 24 · tokens 178,626
 - **raw 日志**：[results/1013_2303_inorder4-v3b60/raw/1013_2303_boutique-infrastructure-37](../results/1013_2303_inorder4-v3b60/raw/1013_2303_boutique-infrastructure-37/)（ndjson / mcp.jsonl / meta）
 - **摘要**：boutique 端点面按节点成片分裂：worker-02 上的 adservice/currencyservice/emailservice/paymentservice/shippingservice 均有端点（1/1 AVAILABLE），而 worker-01 上的 cartservice/checkoutservice/frontend/recommendationservice/redis-cart 端点全为空、deployments AVAILABLE=0，连通性实测 Connection Failed（cartservice:7070），productcatalogservice 端点 <none> 且其 pod productcatalogservice-84d997fd97-kzfpn 为 0/1 Pending。根本机制在 worker-01 节点自身：DescribeResource(node worker-01) 显示 Ready=Unknown、Reason=NodeStatusUnknown 'Kubelet stopped posting node status.'，taints node.kubernetes.io/unreachable:NoSchedule/NoExecute；CheckNodeServiceStatus(worker-01, 
+
+### case-38
+
+- **结论**：`node/worker-01` + `kubelet_unavailable` ｜ 标签 `node/worker-01` + `kubelet_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 137,377
+- **raw 日志**：[results/1013_2308_inorder4-v3b61/raw/1013_2308_boutique-infrastructure-38](../results/1013_2308_inorder4-v3b61/raw/1013_2308_boutique-infrastructure-38/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods listing in boutique shows a single outlier: recommendationservice-7df56b7d59-m8hmq Pending with no node assigned, while all other pods are 1/1 Running. Its DescribeResource reports PodScheduled=False with 'FailedScheduling: 0/4 nodes are available: 1 node(s) had untolerated taint {node.kubernetes.io/unreachable: }, 1 node(s) were unschedulable, 2 node(s) didn't match Pod's node affinity/selector'. Node surface: worker-01 STATUS=NotReady, all conditions Unknown, taints node.kubernetes.io/unreachable:NoSchedule/NoExecute (master's SchedulingDisabled and worker-02/03 Ready are baseline). Che
 
