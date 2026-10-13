@@ -1,6 +1,6 @@
 # 评测明细 · boutique/runtime — cloudopsbench
 
-> 本家族已跑 **2/45** 题：JRA ✅2 ❌0 ｜ 证据链全闭 2 ｜ token 中位 122,722 ｜ 生成 2026-10-13T02:41:58.028Z
+> 本家族已跑 **3/45** 题：JRA ✅3 ❌0 ｜ 证据链全闭 3 ｜ token 中位 61,752 ｜ 生成 2026-10-13T03:28:27.251Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -9,6 +9,7 @@
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | [1](#case-1) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 10 | 61,752 | 0 | 0 | 1012_1512_inorder4-v3b3 | 全对·链闭 |
 | [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 10 | 122,722 | 0 | 0 | 1012_2040_inorder4-v3b8 | 全对·链闭 |
+| [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 10 | 61,152 | 0 | 0 | 1013_1122_inorder4-v3b9 | 全对·链闭 |
 
 ## 证据正文
 
@@ -23,4 +24,10 @@
 - **结论**：`app/checkoutservice` + `liveness_probe_incorrect_protocol` ｜ 标签 `app/checkoutservice` + `liveness_probe_incorrect_protocol`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 10 · tokens 122,722
 - **摘要**：boutique namespace pod listing shows a single outlier: checkoutservice-7f88d56cf6-zjb4s with RESTARTS 2 (30s ago), all other 10 pods 0. DescribeResource on that pod records Last State Terminated/Reason Error/Exit Code 2 (not 137, so OOM is excluded), Ready False, Restart Count 3, and events 'Warning Unhealthy (x9): Liveness probe failed: Get "http://172.20.2.169:5050/": malformed HTTP response "\x00\x00\x06\x04..."' plus 'Normal Killing (x3): Container server failed liveness probe, will be restarted' — so the restart loop is caused by the liveness probe, not by resource limits. GetAppYAML(chec
+
+### case-3
+
+- **结论**：`app/currencyservice` + `liveness_probe_incorrect_protocol` ｜ 标签 `app/currencyservice` + `liveness_probe_incorrect_protocol`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 10 · tokens 61,152
+- **摘要**：Only currencyservice out of 11 boutique pods shows restarts (RESTARTS 2 (25s ago), pod currencyservice-7595dc65b4-ks62n on worker-02); no alerts raised. Pod last state is Terminated with Reason=Error and Exit Code=137, and kubelet events state the mechanism verbatim: 'Warning Unhealthy 1s (x9 over 81s) Liveness probe failed: Get "http://172.20.2.175:7000/": net/http: HTTP/1.x transport connection broken: malformed HTTP response "\x00\x00\x00\x04..."' followed by 'Normal Killing: Container server failed liveness probe, will be restarted'. The malformed response bytes are the HTTP/2/gRPC preface
 

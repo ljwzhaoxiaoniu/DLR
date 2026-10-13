@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **3/37** 题：JRA ✅3 ❌0 ｜ 证据链全闭 3 ｜ token 中位 681,352 ｜ 生成 2026-10-13T02:41:58.028Z
+> 本家族已跑 **4/37** 题：JRA ✅4 ❌0 ｜ 证据链全闭 4 ｜ token 中位 681,352 ｜ 生成 2026-10-13T03:28:27.251Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -9,6 +9,7 @@
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 681,352 | 0 | 0 | 1012_2010_attr-verify1 | 全对·链闭 |
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 1,133,738 | 0 | 0 | 1013_1040_rank1-verify1 | 全对·链闭 |
+| [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 373,034 | 0 | 0 | 1013_1122_inorder4-v3b9 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
 
 ## 证据正文
@@ -24,6 +25,12 @@
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 1,133,738
 - **摘要**：Reachability is partial: ts-ui-dashboard serving other paths 200 (contactservice, travelservice, assuranceservice) while preserveservice returns 499; pods are all 2/2 Running with services/selectors/ports correct, so no workload/node break. The break is in the address layer: the gateway ConfigMap ts-gateway-service-config (application.yml) owns 41 routes and exactly one violates 'each route's Path must point at the service its Path names' - route id 'order' has Path=/api/v1/orderservice/** but uri lb://${TRAVEL_SERVICE_HOST:ts-travel-service}. The nacos ConfigMap contains only NACOS_ADDRS and 
+
+### case-4
+
+- **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2778 · steps 19 · tokens 373,034
+- **摘要**：All train-ticket pods are 2/2 Running with no Pending/CrashLoop/ImagePull failures, and namespace events contain only rollout churn (Killing / 503 readiness / Backoff), so scheduling, admission, image, mount, probe, node and quota surfaces are excluded. Alerts report HTTPError('404 Client Error: Not Found') on POST /api/v1/orderservice/order/refresh (entry_service ts-order-service, 20 occurrences each), and TCP checks succeed to both ts-order-service:12031 and ts-price-service:16579 from worker-01/02/03 - a live backend answering 404 proves an addressing/routing break, not a connectivity break
 
 ### case-25
 
