@@ -396,12 +396,20 @@ const showcaseHtml = `
 <li>「Percentage Calculation: To calculate the percentage of a part relative to a total, use (Count of Part / Total Count) * 100%. When computing customer-level percentages, <b>the denominator must include ALL customers in the target group</b> — count from the customer master table directly or use LEFT JOIN, never INNER JOIN (which silently drops customers without matching records). When the condition involves a threshold on an aggregated measure (e.g., 'consumed more than X'), first compute the per-customer aggregate via SUM with GROUP BY, then apply the threshold on the aggregated result — do not compare individual rows to the threshold before aggregation.」</li>
 <li>来源 qids：1490 · 1493 · 1525 · 1481（规则自这批题归纳）</li>
 </ul></div>
-<div class="tier"><span class="tier__tag">L1 · DLR</span><span class="tier__title">数据源级 · 实体 / 列语义 → 给表与列</span>
-<pre>LE  Customer（客户）         1:1  customers
-      CustomerID · Segment（SME=Small Business / LAM=Local / KAM=Key Account）· Currency（CZK/EUR）
-LE  Consumption（消费）      1:N  yearmonth（月度账单，CZK）＋ transactions_1k（千条交易样本）
-      A 键 CustomerID ——「全量分母」的落点：从 Customer 主表直取（含无消费记录的客户）</pre>
-<p>L1 只写实体 / 列语义（schema 级）；口径由 L3 定、算法由 L2 给、取数由 agent 实查落成 SQL。</p></div>
+<div class="tier"><span class="tier__tag">L1 · DLR</span><span class="tier__title">数据源级 · LE ◀ PE ◀ ARCS → 实体 / 物理表视图 / 锚与列语义</span>
+<pre>构图：LE（有生命周期对象） ◀─1:N 容器── PE（物理表在当前语境下的视图） ◀─ARCS（A 锚 · R 行空间 · C 列 · S 补注）── 物理表
+       A 锚 = JOIN / 过滤键；R: null = 行对行；C = 列选择（业务名取自 LE 面）；S = 语义补注
+
+LE  Customer（客户）
+  PE  customers（表）        ARCS  A: 1:1 · key=CustomerID          R: null
+                                    C: CustomerID · Segment（SME / LAM / KAM）· Currency（CZK / EUR）
+                                    S: Customer master data ——「全量分母」的落点（含无消费记录的客户）
+LE  Consumption（消费）
+  PE  yearmonth（表）        ARCS  A: 1:N · key=CustomerID          R: null
+                                    S: Monthly customer spending summary（每月 CZK 账单）
+  PE  transactions_1k（表）  ARCS  A: 1:N · key=CustomerID          R: null
+                                    S: Gas station single transaction details（千条交易样本）</pre>
+<p>ARCS.A 的 <code>CustomerID</code> 把三张表在逻辑上锚成一条线（先按客户聚合、再比阈值直接在 Consumption 语境里完成）；口径由 L3 定、算法由 L2 给、取数由 agent 实查落成 SQL——<b>L1 只写 schema 级</b>。</p></div>
 <div class="note">这题 = 三级协作的判定样本：L3 钉「逐客户 ＋ 全量分母」口径 → L2 给百分比通则（分母从主表取、先聚合后比阈值）→ L1 指出 Customer / Consumption 两张实体与列义 → 答案 98.3871 与 gold 的 record 级口径不符 → 按 SOP 裁定为正确（🔁 翻盘留档）。<a href="DETAIL/debit_card_specializing.md#q1490">明细</a> · <a href="results/0928_1419_qids_1486_1490_1493_1498_1500/raw/0928_1419_1490_dlr.ndjson">raw 日志</a></div>
 `;
 
