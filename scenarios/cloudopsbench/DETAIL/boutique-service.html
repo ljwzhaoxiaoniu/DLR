@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/service</em></h1>
-<p class="deck">已跑 <b>10/54</b> 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 127,254 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T15:33:07.521Z</p>
+<p class="deck">已跑 <b>11/54</b> 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 125,052 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T15:36:40.402Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4</td><td>16</td><td>115,616</td><td>0</td><td>0</td><td class="muted">1012_1447_inorder4-v3b2</td><td><a href="../results/1012_1447_inorder4-v3b2/raw/1012_1448_boutique-service-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1448_boutique-service-1</a></td></tr>
@@ -26,6 +26,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-8"><code>8</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>19</td><td>119,079</td><td>0</td><td>0</td><td class="muted">1013_2040_chainpivot-verify2</td><td><a href="../results/1013_2040_chainpivot-verify2/raw/1013_2040_boutique-service-8/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2040_boutique-service-8</a></td></tr>
 <tr><td><a href="#case-9"><code>9</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>16</td><td>121,078</td><td>0</td><td>0</td><td class="muted">1013_2320_inorder4-v3b64</td><td><a href="../results/1013_2320_inorder4-v3b64/raw/1013_2320_boutique-service-9/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2320_boutique-service-9</a></td></tr>
 <tr><td><a href="#case-10"><code>10</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3077</td><td>14</td><td>85,111</td><td>0</td><td>0</td><td class="muted">1013_2325_inorder4-v3b65</td><td><a href="../results/1013_2325_inorder4-v3b65/raw/1013_2325_boutique-service-10/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2325_boutique-service-10</a></td></tr>
+<tr><td><a href="#case-11"><code>11</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3158</td><td>20</td><td>125,052</td><td>0</td><td>0</td><td class="muted">1013_2331_inorder4-v3b66</td><td><a href="../results/1013_2331_inorder4-v3b66/raw/1013_2333_boutique-service-11/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2333_boutique-service-11</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/cartservice</code> + <code>service_env_var_address_mismatch</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 16 步</summary><ul>
@@ -553,6 +554,52 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
   {
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;service_selector_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-11"><summary><b>case-11</b> · <code>app/currencyservice</code> + <code>service_port_mapping_mismatch</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 20 步</summary><ul>
+<li><b>摘要</b>：Reachability chain: all 11 boutique pods are 1/1 Running with 0 restarts, so the workload/scheduling surface is healthy; the break is at the address layer. The currencyservice Service (ClusterIP 10.68.7.23) declares port 7000 but targetPort 7001, and its endpoint resolves to 172.20.3.3:7001 (DescribeResource(service currencyservice): 'Port: grpc 7000/TCP, TargetPort: 7001/TCP, Endpoints: 172.20.3.3:7001'), while the pod template and runtime both use 7000 (containerPort 7000, env PORT=7000, grpc probes on 7000; pod log: 'CurrencyService gRPC server started on port 7000'). CheckServiceConnectivi</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2331_inorder4-v3b66/raw/1013_2333_boutique-service-11/">results/1013_2331_inorder4-v3b66/raw/1013_2333_boutique-service-11</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;currencyservice&quot;,&quot;port&quot;:7000,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;service&quot;,&quot;name&quot;:&quot;currencyservice&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>16</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:3550,&quot;service_name&quot;:&quot;productcatalogservice&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;name&quot;:&quot;productcatalogservice&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;productcatalogservice&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Reachability chain: all 11 boutique pods are 1/1 Running with 0 restarts, so the workload/scheduling surface is healthy; the break is at the address layer. The currencyservice Service (ClusterIP 10.68.7.23) declares port 7000 but targetPort 7001, and its endpoint resolves to 172.20.3.3:7001 (DescribeResource(service currencyservice): 'Port: grpc 7000/TCP, TargetPort: 7001/TCP, Endpoints: 172.20.3.3:7001'), while the pod template and runtime both use 7000 (containerPort 7000, env PORT=7000, grpc probes on 7000; pod log: 'CurrencyService gRPC server started on port 7000'). CheckServiceConnectivity(currencyservice,7000) returned 'Connection Failed'. Caller frontend error logs show 138 hits of the dominant pattern (19.77%): 'could not retrieve currencies: rpc error: code = Unavailable ... dial tcp 10.68.7.23:7000: connect: connection refused' - a TCP-level refusal (not DNS or timeout), proving traffic is DNATed to the pod's unlistened port 7001. All other Services' declared ports match their endpoint ports, and the 35 'lookup productcatalogservice ... no such host' lines were excluded (probe to productcatalogservice:3550 succeeded / 'open'); namespace events are empty and no alerts fired.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
+   &quot;root_cause&quot;: &quot;service_port_mapping_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/productcatalogservice&quot;,
+   &quot;root_cause&quot;: &quot;service_dns_resolution_failure&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
    &quot;root_cause&quot;: &quot;service_selector_mismatch&quot;
   }
  ]

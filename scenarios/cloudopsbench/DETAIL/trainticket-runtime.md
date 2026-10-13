@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **28/96** 题：JRA ✅28 ❌0 ｜ 证据链全闭 28 ｜ token 中位 507,364 ｜ 生成 2026-10-13T15:33:07.521Z
+> 本家族已跑 **29/96** 题：JRA ✅29 ❌0 ｜ 证据链全闭 29 ｜ token 中位 507,364 ｜ 生成 2026-10-13T15:36:40.402Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -35,6 +35,7 @@
 | [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 26 | 531,205 | 0 | 0 | 1013_2315_inorder4-v3b63 | 全对·链闭 |
 | [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 507,364 | 0 | 0 | 1013_2320_inorder4-v3b64 | 全对·链闭 |
 | [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 537,254 | 0 | 0 | 1013_2325_inorder4-v3b65 | 全对·链闭 |
+| [29](#case-29) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.125 | 33 | 1,450,360 | 0 | 0 | 1013_2331_inorder4-v3b66 | 全对·链闭 |
 
 ## 证据正文
 
@@ -233,4 +234,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2105 · steps 20 · tokens 537,254
 - **raw 日志**：[results/1013_2325_inorder4-v3b65/raw/1013_2328_trainticket-runtime-28](../results/1013_2325_inorder4-v3b65/raw/1013_2328_trainticket-runtime-28/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom-side first: ts-preserve-service's own caller-side error logs carry 'java.lang.IllegalArgumentException: Service Instance cannot be null' (no service instance found in discovery), matching alert 'POST /api/v1/preserveservice/preserve -> 500'. Workload inventory (pods wide): all 44 pods are Running 2/2 with 0 restarts; the ONLY business service with no pod at all is ts-security-service. Deployments listing: ts-security-service reads '0/0  0  0' (every other app 1/1). Endpoints listing: ts-security-service = <none>. Connectivity probe on ts-security-service's own declared port 11188 fails
+
+### case-29
+
+- **结论**：`app/ts-station-service` + `deployment_zero_replicas` ｜ 标签 `app/ts-station-service` + `deployment_zero_replicas`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.125 · steps 33 · tokens 1,450,360
+- **raw 日志**：[results/1013_2331_inorder4-v3b66/raw/1013_2334_trainticket-runtime-29](../results/1013_2331_inorder4-v3b66/raw/1013_2334_trainticket-runtime-29/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom wording named no service, so the object-layer inventory was the valid entry: the pods listing contains NO ts-station-service pod at all, and the deployments listing shows the sole outlier 'ts-station-service 0/0 0 0' while all other 41 workloads read 1/1 AVAILABLE. Mechanism closed on the deployment surface: DescribeResource(deployment/ts-station-service) = 'Replicas: 0 desired | 0 updated | 0 total | 0 available', with event 'Scaled down replica set ts-station-service-7cbf6b96c9 to 0 from 1', while its own manifest (GetAppYAML) still declares 'replicas: 1' - a live-vs-declared drift =
 

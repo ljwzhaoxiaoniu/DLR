@@ -1,6 +1,6 @@
 # 评测明细 · boutique/performance — cloudopsbench
 
-> 本家族已跑 **9/29** 题：JRA ✅9 ❌0 ｜ 证据链全闭 9 ｜ token 中位 170,422 ｜ 生成 2026-10-13T15:33:07.521Z
+> 本家族已跑 **10/29** 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 187,540 ｜ 生成 2026-10-13T15:36:40.402Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -16,6 +16,7 @@
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 156,035 | 0 | 0 | 1013_1656_inorder4-v3b25 | 全对·链闭 |
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 170,422 | 0 | 0 | 1013_1810_inorder4-v3b27 | 全对·链闭 |
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 187,540 | 0 | 0 | 1013_1834_inorder4-v3b30 | 全对·链闭 |
+| [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 22 | 188,689 | 0 | 0 | 1013_2331_inorder4-v3b66 | 全对·链闭 |
 
 ## 证据正文
 
@@ -81,4 +82,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2105 · steps 20 · tokens 187,540
 - **raw 日志**：[results/1013_1834_inorder4-v3b30/raw/1013_1834_boutique-performance-9](../results/1013_1834_inorder4-v3b30/raw/1013_1834_boutique-performance-9/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts show recommendationservice with RESOURCE_SATURATION [cpu_cfs] Val: 0.923s (Throttled) and [cpu core] Normal=0.03 -> Current=0.15 cores (+487.5%), plus LATENCY_DEGRADATION p95 4.81ms -> 84.41ms (+1656.4%); frontend only shows LATENCY_DEGRADATION p95 30.37ms -> 86.02ms (+183.2%) whose current value matches the recommendationservice p95, i.e. it is the downstream victim. Object layer is clean: all 11 boutique pods Running 2/2 with RESTARTS=0, namespace events contain no Warning (no FailedCreate/FailedScheduling/probe faults), all 4 nodes Ready with no pressure and 8 allocatable CPUs, and T
+
+### case-10
+
+- **结论**：`app/redis-cart` + `pod_cpu_overload` ｜ 标签 `app/redis-cart` + `pod_cpu_overload`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 22 · tokens 188,689
+- **raw 日志**：[results/1013_2331_inorder4-v3b66/raw/1013_2334_boutique-performance-10](../results/1013_2331_inorder4-v3b66/raw/1013_2334_boutique-performance-10/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts in window 16:49:00~16:50:55 show LATENCY_DEGRADATION propagating up the call chain (cartservice p95 4.74ms->37.82ms, +697.2%; checkoutservice +163.8%; frontend +107.6%) plus RESOURCE_SATURATION on redis-cart ([cpu_cfs] 0.679s Throttled; [cpu core] 0.00->0.15 cores, +3196.4%). GetServiceDependencies(cartservice) confirms cartservice -> redis-cart (Database) as the only downstream backend, and the latency amplification increases toward that tail. Object layer is clean and therefore excluded: all 11 pods 2/2 Running with RESTARTS=0, no Warning events in the namespace, no application error 
 

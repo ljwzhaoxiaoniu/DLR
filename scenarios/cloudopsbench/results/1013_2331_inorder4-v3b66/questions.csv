@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/44,1.0,1.0,1.0,1.0,1.0,1.0,0.15151515151515152,34.0,0.0,0.0,app/frontend,code_missing_parameter,app/frontend,code_missing_parameter,
+boutique/service/11,1.0,1.0,1.0,1.0,1.0,1.0,0.3157894736842105,20.0,0.0,0.0,app/currencyservice,service_port_mapping_mismatch,app/currencyservice,service_port_mapping_mismatch,
+boutique/performance/10,1.0,1.0,1.0,1.0,1.0,1.0,0.2857142857142857,22.0,0.0,0.0,app/redis-cart,pod_cpu_overload,app/redis-cart,pod_cpu_overload,
+trainticket/runtime/29,1.0,1.0,1.0,1.0,0.5,1.0,0.125,33.0,0.0,0.0,app/ts-station-service,deployment_zero_replicas,app/ts-station-service,deployment_zero_replicas,

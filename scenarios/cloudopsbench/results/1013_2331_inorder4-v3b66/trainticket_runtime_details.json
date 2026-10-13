@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "29",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\trainticket\\runtime\\29\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1013_2331_inorder4-v3b66\\traces\\trainticket\\dsh-tsm\\runtime\\29\\29.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Runtime_Fault",
+      "fault_object": "app/ts-station-service",
+      "root_cause": "deployment_zero_replicas"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/ts-station-service",
+        "root_cause": "deployment_zero_replicas"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/ts-payment-service",
+        "root_cause": "code_missing_parameter"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/ts-basic-service",
+        "root_cause": "code_wrong_return"
+      }
+    ],
+    "tool_call_count": 32,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 0.5,
+      "ECR": 1.0,
+      "EE": 0.125,
+      "steps": 33.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

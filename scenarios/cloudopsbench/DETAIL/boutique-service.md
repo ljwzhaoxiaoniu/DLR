@@ -1,6 +1,6 @@
 # 评测明细 · boutique/service — cloudopsbench
 
-> 本家族已跑 **10/54** 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 127,254 ｜ 生成 2026-10-13T15:33:07.521Z
+> 本家族已跑 **11/54** 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 125,052 ｜ 生成 2026-10-13T15:36:40.402Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -17,6 +17,7 @@
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 119,079 | 0 | 0 | 1013_2040_chainpivot-verify2 | 全对·链闭 |
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 121,078 | 0 | 0 | 1013_2320_inorder4-v3b64 | 全对·链闭 |
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 85,111 | 0 | 0 | 1013_2325_inorder4-v3b65 | 全对·链闭 |
+| [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 125,052 | 0 | 0 | 1013_2331_inorder4-v3b66 | 全对·链闭 |
 
 ## 证据正文
 
@@ -89,4 +90,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3077 · steps 14 · tokens 85,111
 - **raw 日志**：[results/1013_2325_inorder4-v3b65/raw/1013_2325_boutique-service-10](../results/1013_2325_inorder4-v3b65/raw/1013_2325_boutique-service-10/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts and no Warning events, so scheduling/startup/probe/image mechanisms are excluded. The complaint is caller-side: frontend error logs (174/702) show 'failed to complete the order: rpc error: code = Unavailable ... dial tcp 10.68.125.216:5050: connect: connection refused' on /cart/checkout, i.e. checkoutservice's ClusterIP is reachable but nothing listens on the port traffic is forwarded to. The endpoints listing confirms the outlier: checkoutservice endpoints are 172.20.1.199:5051 while the Service declares port 5050, and every other service's
+
+### case-11
+
+- **结论**：`app/currencyservice` + `service_port_mapping_mismatch` ｜ 标签 `app/currencyservice` + `service_port_mapping_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3158 · steps 20 · tokens 125,052
+- **raw 日志**：[results/1013_2331_inorder4-v3b66/raw/1013_2333_boutique-service-11](../results/1013_2331_inorder4-v3b66/raw/1013_2333_boutique-service-11/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Reachability chain: all 11 boutique pods are 1/1 Running with 0 restarts, so the workload/scheduling surface is healthy; the break is at the address layer. The currencyservice Service (ClusterIP 10.68.7.23) declares port 7000 but targetPort 7001, and its endpoint resolves to 172.20.3.3:7001 (DescribeResource(service currencyservice): 'Port: grpc 7000/TCP, TargetPort: 7001/TCP, Endpoints: 172.20.3.3:7001'), while the pod template and runtime both use 7000 (containerPort 7000, env PORT=7000, grpc probes on 7000; pod log: 'CurrencyService gRPC server started on port 7000'). CheckServiceConnectivi
 
