@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **8/37** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 460,035 ｜ 生成 2026-10-13T07:29:15.283Z
+> 本家族已跑 **9/37** 题：JRA ✅9 ❌0 ｜ 证据链全闭 9 ｜ token 中位 437,347 ｜ 生成 2026-10-13T07:40:30.583Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -14,6 +14,7 @@
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3478 | 24 | 437,347 | 0 | 0 | 1013_1248_inorder4-v3b13 | 全对·链闭 |
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 465,479 | 0 | 0 | 1013_1413_inorder4-v3b15 | 全对·链闭 |
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 364,342 | 0 | 0 | 1013_1520_inorder4-v3b17 | 全对·链闭 |
+| [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.35 | 21 | 295,786 | 0 | 0 | 1013_1536_inorder4-v3b19 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
 
 ## 证据正文
@@ -59,6 +60,12 @@
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 19 · tokens 364,342
 - **摘要**：ts-ui-dashboard (nginx, fronting ts-gateway-service) logs POST /api/v1/preserveservice/preserve -> 404 (13 occurrences, alert entry_service=ts-preserve-service) while every sibling path at the same timestamps returns 200 (cancel/login/travelservice/assuranceservice), i.e. only the preserve path is unreachable. The target itself is healthy: ts-preserve-service pod 2/2 Running, Nacos 'register finished', CheckServiceConnectivity(ts-preserve-service:14568) succeeded from worker-01/02/03, and its container log shows startup only — it never receives any preserve request. The break is the address la
+
+### case-9
+
+- **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.35 · steps 21 · tokens 295,786
+- **摘要**：L3 SOP reachability chain. Symptom side: GetAlerts shows POST /api/v1/preserveservice/preserve -> HTTPError('404 Client Error: Not Found') x13 against ts-preserve-service, while GetErrorLogs(ts-preserve-service) returns 'No error logs found' (traffic never reaches it). Object layer healthy: all pods 2/2 Running with no Pending/FailedCreate/FailedScheduling/image-pull errors, deployments ts-preserve-service and ts-gateway-service both 1/1 AVAILABLE (up-to-date 1, available 1), and endpoints ts-preserve-service bound at 172.20.2.242:14568 - so this is NOT a scheduling/startup/probe/selector-bind
 
 ### case-25
 
