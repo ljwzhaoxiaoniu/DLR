@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **18/96** 题：JRA ✅18 ❌0 ｜ 证据链全闭 18 ｜ token 中位 521,337 ｜ 生成 2026-10-13T14:44:44.670Z
+> 本家族已跑 **19/96** 题：JRA ✅19 ❌0 ｜ 证据链全闭 19 ｜ token 中位 517,218 ｜ 生成 2026-10-13T14:48:34.071Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -25,6 +25,7 @@
 | [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1538 | 14 | 260,976 | 0 | 1 | 1013_1845_triple-verify1 | 全对·链闭 |
 | [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.125 | 25 | 613,053 | 0 | 0 | 1013_2235_inorder4-v3b54 | 全对·链闭 |
 | [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 193,963 | 0 | 0 | 1013_2240_inorder4-v3b55 | 全对·链闭 |
+| [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1071 | 29 | 389,833 | 0 | 0 | 1013_2245_inorder4-v3b56 | 全对·链闭 |
 
 ## 证据正文
 
@@ -153,4 +154,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3077 · steps 14 · tokens 193,963
 - **raw 日志**：[results/1013_2240_inorder4-v3b55/raw/1013_2243_trainticket-runtime-18](../results/1013_2240_inorder4-v3b55/raw/1013_2243_trainticket-runtime-18/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom pointer: alerts on ts-contacts-service report HTTP 503 Service Unavailable (20x each on GET /api/v1/contactservice/contacts/account/{userId} and POST /api/v1/contactservice/contacts), and an active TCP probe against the Service-declared port 12347 fails from worker-01/02/03 ('Connection Failed'). The victim's own signal shows the break: 'ts-contacts-service ENDPOINTS <none>', and the pod inventory contains no ts-contacts-service pod although all other 41 business pods are 2/2 Running. The owner chain isolates the single outlier: deployment ts-contacts-service is 0/0 (0 up-to-date, 0 av
+
+### case-19
+
+- **结论**：`app/ts-food-service` + `deployment_zero_replicas` ｜ 标签 `app/ts-food-service` + `deployment_zero_replicas`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1071 · steps 29 · tokens 389,833
+- **raw 日志**：[results/1013_2245_inorder4-v3b56/raw/1013_2246_trainticket-runtime-19](../results/1013_2245_inorder4-v3b56/raw/1013_2246_trainticket-runtime-19/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom-side first: ts-preserve-service logs 'java.lang.IllegalArgumentException: Service Instance cannot be null' (a downstream call resolving to no instance), with alerts on /preserveservice/preserve (10x 500). The namespace pod inventory has no outlier except the complete absence of any ts-food-service pod while all other ts-* workloads run 2/2. Probing every downstream of ts-preserve-service on the port its Service declares: all 9 others (ts-basic 15680, ts-security 11188, ts-contacts 12347, ts-user 12342, ts-travel 12346, ts-seat 18898, ts-assurance 18888, ts-consign 16111, ts-order 12031
 

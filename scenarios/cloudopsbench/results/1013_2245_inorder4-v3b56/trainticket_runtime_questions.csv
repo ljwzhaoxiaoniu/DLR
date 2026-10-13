@@ -1,0 +1,2 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+trainticket/runtime/19,1.0,1.0,1.0,1.0,1.0,1.0,0.10714285714285714,29.0,0.0,0.0,app/ts-food-service,deployment_zero_replicas,app/ts-food-service,deployment_zero_replicas,
