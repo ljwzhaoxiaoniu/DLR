@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **24/96** 题：JRA ✅24 ❌0 ｜ 证据链全闭 24 ｜ token 中位 490,757 ｜ 生成 2026-10-13T15:11:18.957Z
+> 本家族已跑 **25/96** 题：JRA ✅25 ❌0 ｜ 证据链全闭 25 ｜ token 中位 477,041 ｜ 生成 2026-10-13T15:14:54.564Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -31,6 +31,7 @@
 | [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 409,364 | 0 | 0 | 1013_2258_inorder4-v3b59 | 全对·链闭 |
 | [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 205,969 | 0 | 0 | 1013_2303_inorder4-v3b60 | 全对·链闭 |
 | [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 362,268 | 0.0526 | 0 | 1013_2308_inorder4-v3b61 | 全对·链闭 |
+| [25](#case-25) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.1111 | 19 | 320,076 | 0 | 0 | 1013_2311_inorder4-v3b62 | 全对·链闭 |
 
 ## 证据正文
 
@@ -201,4 +202,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2105 · steps 20 · tokens 362,268
 - **raw 日志**：[results/1013_2308_inorder4-v3b61/raw/1013_2309_trainticket-runtime-24](../results/1013_2308_inorder4-v3b61/raw/1013_2309_trainticket-runtime-24/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom side: GetAlerts shows 20x 'HTTPError 503 Server Error: Service Unavailable' on POST /api/v1/preserveservice/preserve with entry service ts-preserve-service. Object layer: pods listing shows all 45 train-ticket workloads Running 2/2 with 0 restarts and NO ts-preserve-service pod at all (only ts-preserve-other-service exists). Endpoints listing shows ts-preserve-service ENDPOINTS=<none> while all 44 other services have endpoints; TCP connectivity probe on its own declared port 14568 fails from worker-01/02/03 ('Connection Failed'). Its Service object is correctly configured (selector app
+
+### case-25
+
+- **结论**：`app/ts-price-service` + `deployment_zero_replicas` ｜ 标签 `app/ts-price-service` + `deployment_zero_replicas`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.1111 · steps 19 · tokens 320,076
+- **raw 日志**：[results/1013_2311_inorder4-v3b62/raw/1013_2313_trainticket-runtime-25](../results/1013_2311_inorder4-v3b62/raw/1013_2313_trainticket-runtime-25/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert: ts-preserve-service 'Create ticket order' and ts-inside-payment-service return HTTP 500. Walking the 500 trail outward from the complaint: ts-preserve-service errors on /api/v1/travelservice/trip_detail -> ts-travel-service errors on /api/v1/basicservice/basic/travel -> ts-basic-service throws java.lang.IllegalArgumentException: 'Service Instance cannot be null' (its service-discovery lookup for a downstream callee returned no instance). Object layer: ts-price-service, one of ts-basic-service's four callees (ts-route-service, ts-station-service, ts-train-service, ts-price-service), is t
 

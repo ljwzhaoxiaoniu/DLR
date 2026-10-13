@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **39/98** 题：JRA ✅39 ❌0 ｜ 证据链全闭 39 ｜ token 中位 300,857 ｜ 生成 2026-10-13T15:11:18.957Z
+> 本家族已跑 **40/98** 题：JRA ✅40 ❌0 ｜ 证据链全闭 40 ｜ token 中位 325,537 ｜ 生成 2026-10-13T15:14:54.564Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -46,6 +46,7 @@
 | [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 240,302 | 0 | 0 | 1013_2258_inorder4-v3b59 | 全对·链闭 |
 | [38](#case-38) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1429 | 22 | 452,396 | 0 | 0 | 1013_2303_inorder4-v3b60 | 全对·链闭 |
 | [39](#case-39) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 17 | 289,503 | 0 | 0 | 1013_2308_inorder4-v3b61 | 全对·链闭 |
+| [40](#case-40) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 353,688 | 0 | 0 | 1013_2311_inorder4-v3b62 | 全对·链闭 |
 
 ## 证据正文
 
@@ -321,4 +322,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 17 · tokens 289,503
 - **raw 日志**：[results/1013_2308_inorder4-v3b61/raw/1013_2308_boutique-codedefect-39](../results/1013_2308_inorder4-v3b61/raw/1013_2308_boutique-codedefect-39/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Pods listing shows a single outlier: frontend-7b49cb6446-6lt6c 1/2 CrashLoopBackOff with 4 restarts while all other boutique pods are 2/2 Running with 0 restarts; deployment frontend is 0/1 AVAILABLE while all others are 1/1. Alerts name frontend (success rate 95.2%->36.7%) with 503 Service Unavailable on /, /product/{id}, /cart, /cart/checkout and notably /setCurrency. Pod detail: container 'server' Last State Terminated Reason=OOMKilled Exit Code=137 on a 128Mi memory limit (requests 64Mi = upstream defaults), restarting every ~2s, with pod event 'Warning BackOff: Back-off restarting failed 
+
+### case-40
+
+- **结论**：`app/frontend` + `code_missing_parameter` ｜ 标签 `app/frontend` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2105 · steps 20 · tokens 353,688
+- **raw 日志**：[results/1013_2311_inorder4-v3b62/raw/1013_2311_boutique-codedefect-40](../results/1013_2311_inorder4-v3b62/raw/1013_2311_boutique-codedefect-40/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods read 2/2 Running with 0 restarts (no scheduling/startup/probe outlier); alert frontend-error-spike shows Success Rate 100%->71.7% with /cart 500s. frontend logs the failing business call 'could not retrieve product #: rpc error: code = NotFound desc = no product with ID ' on GET /cart (1105 occurrences, empty product ID), while cartservice logs the malformed request upstream shows 'AddItemAsync called with userId=..., productId=, quantity=2' (740 occurrences) even though frontend's own log for the same request carried a valid product ('adding to cart product=LS4PSXUNUM'). 
 

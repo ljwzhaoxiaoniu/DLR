@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **38/40** 题：JRA ✅38 ❌0 ｜ 证据链全闭 38 ｜ token 中位 127,753 ｜ 生成 2026-10-13T15:11:18.957Z
+> 本家族已跑 **39/40** 题：JRA ✅39 ❌0 ｜ 证据链全闭 39 ｜ token 中位 125,901 ｜ 生成 2026-10-13T15:14:54.564Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -45,6 +45,7 @@
 | [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2083 | 25 | 224,794 | 0 | 0 | 1013_2258_inorder4-v3b59 | 全对·链闭 |
 | [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2609 | 24 | 178,626 | 0 | 0 | 1013_2303_inorder4-v3b60 | 全对·链闭 |
 | [38](#case-38) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 137,377 | 0 | 0 | 1013_2308_inorder4-v3b61 | 全对·链闭 |
+| [39](#case-39) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 104,041 | 0 | 0 | 1013_2311_inorder4-v3b62 | 全对·链闭 |
 
 ## 证据正文
 
@@ -313,4 +314,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 137,377
 - **raw 日志**：[results/1013_2308_inorder4-v3b61/raw/1013_2308_boutique-infrastructure-38](../results/1013_2308_inorder4-v3b61/raw/1013_2308_boutique-infrastructure-38/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Pods listing in boutique shows a single outlier: recommendationservice-7df56b7d59-m8hmq Pending with no node assigned, while all other pods are 1/1 Running. Its DescribeResource reports PodScheduled=False with 'FailedScheduling: 0/4 nodes are available: 1 node(s) had untolerated taint {node.kubernetes.io/unreachable: }, 1 node(s) were unschedulable, 2 node(s) didn't match Pod's node affinity/selector'. Node surface: worker-01 STATUS=NotReady, all conditions Unknown, taints node.kubernetes.io/unreachable:NoSchedule/NoExecute (master's SchedulingDisabled and worker-02/03 Ready are baseline). Che
+
+### case-39
+
+- **结论**：`node/worker-01` + `kubelet_unavailable` ｜ 标签 `node/worker-01` + `kubelet_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2353 · steps 18 · tokens 104,041
+- **raw 日志**：[results/1013_2311_inorder4-v3b62/raw/1013_2312_boutique-infrastructure-39](../results/1013_2311_inorder4-v3b62/raw/1013_2312_boutique-infrastructure-39/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side first: cartservice (downstream = redis-cart per GetServiceDependencies) error logs show 528 errors / 37% error ratio with 'UnableToConnect on redis-cart:6379 ... no connection became available (5000ms)', and CheckServiceConnectivity(redis-cart, 6379) returned 'Connection Failed'. Object layer: the only unhealthy workload is redis-cart-56db4dcdd5-n9flp, stuck 0/1 ContainerCreating/Pending on worker-01 (its Deployment pins it with nodeSelector kubernetes.io/hostname=worker-01). Namespace events bind the mechanism to objects: 'Warning NodeNotReady pod/adservice|shippingservice|checko
 

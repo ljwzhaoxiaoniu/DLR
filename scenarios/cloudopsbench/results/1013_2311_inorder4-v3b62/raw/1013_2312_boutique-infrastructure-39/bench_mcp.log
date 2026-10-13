@@ -1,0 +1,33 @@
+INFO:     Started server process [25572]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:56671 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56672 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:56671 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56673 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56683 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56685 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56683 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:56683 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"redis-cart"}
+INFO:     127.0.0.1:54657 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54657 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54657 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"cartservice"}
+INFO:     127.0.0.1:54657 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:54660 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54660 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kubelet"}
+INFO:     127.0.0.1:54660 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"containerd"}
+INFO:     127.0.0.1:54660 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kube-proxy"}
+INFO:     127.0.0.1:54660 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54664 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"redis-cart","port":6379}
+INFO:     127.0.0.1:54664 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"cartservice"}
+INFO:     127.0.0.1:54664 - "POST /mcp HTTP/1.1" 200 OK

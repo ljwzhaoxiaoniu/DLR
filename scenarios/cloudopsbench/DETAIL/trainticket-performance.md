@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **43/47** 题：JRA ✅42 ❌1 ｜ 证据链全闭 42 ｜ token 中位 299,756 ｜ 生成 2026-10-13T15:11:18.957Z
+> 本家族已跑 **44/47** 题：JRA ✅43 ❌1 ｜ 证据链全闭 43 ｜ token 中位 301,957 ｜ 生成 2026-10-13T15:14:54.564Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -50,6 +50,7 @@
 | [41](#case-41) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 216,649 | 0 | 0 | 1013_2258_inorder4-v3b59 | 全对·链闭 |
 | [42](#case-42) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 25 | 359,493 | 0 | 0 | 1013_2303_inorder4-v3b60 | 全对·链闭 |
 | [43](#case-43) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 142,097 | 0 | 0 | 1013_2308_inorder4-v3b61 | 全对·链闭 |
+| [44](#case-44) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 333,677 | 0 | 0 | 1013_2311_inorder4-v3b62 | 全对·链闭 |
 
 ## 证据正文
 
@@ -353,4 +354,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 142,097
 - **raw 日志**：[results/1013_2308_inorder4-v3b61/raw/1013_2309_trainticket-performance-43](../results/1013_2308_inorder4-v3b61/raw/1013_2309_trainticket-performance-43/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts point at a metric-surface case: ts-seat-service carries the runaway deviation (LATENCY_DEGRADATION p50 189.50ms -> 3341.67ms, +1663.4%, Peak=3522.73ms) with its own network traffic surge (in 10.52->28.20pps, out 10.97->24.51pps), i.e. a fixed ~3.1s delay added to ALL of its traffic (p50 moves, not just p90). Its direct upstream neighbor ts-travel-service shows only a p90 ripple (904.72 -> 8951.22ms) = partial-traffic ripple, while ts-ui-dashboard (RPS +130%) and ts-order-service (bare cpu_cfs 0.509s throttled + RPS +192%, with NO latency row of its own) are collateral noise that must no
+
+### case-44
+
+- **结论**：`app/ts-station-service` + `pod_network_delay` ｜ 标签 `app/ts-station-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 333,677
+- **raw 日志**：[results/1013_2311_inorder4-v3b62/raw/1013_2313_trainticket-performance-44](../results/1013_2311_inorder4-v3b62/raw/1013_2313_trainticket-performance-44/)（ndjson / mcp.jsonl / meta）
+- **摘要**：GetAlerts (window 2026-03-16 01:18:55~01:20:50) gives the epicenter by row shape: ts-station-service LATENCY_DEGRADATION moves BOTH percentiles with the steepest p90 escalation (p50 6.99ms -> 2500.00ms +35691.0%, p90 26.79ms -> 4500.00ms +16694.8%, peak 4657.24ms). ts-basic-service shows the rippled p50+p90 (121.72->7607.14ms, 495.02->9925.22ms, peak 23294.12ms) and ts-preserve-service is pinned at the 20000.00ms RPC-timeout ceiling. GetServiceDependencies closes the graph: ts-station-service is a LEAF ('[Downstream (Calls)]: (Leaf Node)') called directly by ts-basic-service, which is called d
 
