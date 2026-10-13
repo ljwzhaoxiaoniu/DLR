@@ -28,14 +28,15 @@ This wording also shows up on scheduling / startup failures — decide by what y
 
 ### When asked: "Service Availability Disruption."
 
-This wording is overloaded — it walks the SAME reachability chain whichever stage broke (scheduling / startup / admission / runtime). Go case by case; the mechanism decides, not the wording.
+This wording is overloaded — it walks the SAME reachability chain whichever stage broke (scheduling / startup / admission / runtime / code). Go case by case; the mechanism decides, not the wording.
 
-1. **Start from the complaint.** Caller-side error logs / connectivity against the named service; then the endpoints binding. Don't open with a workload scan.
+1. **Start from the complaint.** Caller-side error logs / connectivity against the named service; then the endpoints binding — for a named service, don't open with a workload scan. If the wording names no service, the inventory listing is the legitimate entry: the moment it names the outlier, the victim's own signal (its caller-side error log / a connectivity probe / its endpoints) leads — ahead of its workload state (replica counts / pods), ahead of the event surface, ahead of any configuration read. This signal read is the chain's first evidence, not a closing confirmation; if you batch, the signal leads the batch. A mechanism event or a config read fired ahead of it is the chain running backwards.
 2. **Then the workload, pruned.** The pods (state + events) → owner chain. Node-scoped problem? Read the pods listing in its **wide form** first — the NODE column is your pointer.
 3. **Deal with the case you land on:**
    - **Pod Pending / unschedulable** → **first take the pod's own reason** — `DescribeResource(pod)` carries the `N nodes are available…` line that names the blocker; only then the node side, and read general before specific there: nodes listing / `GetClusterConfiguration` / node events / kubelet status, then the suspected component (containerd, kube-proxy, …). The pod's reason comes before any node-side read; jumping straight at the suspected service reads out of order.
-   - **Pod never created** → admission side (the event names the referenced object; template reference + object listing).
+   - **Pod never created** → admission side: **the victim's own signal comes first — a connectivity probe, its caller's error log, or its endpoints; if you batch, the signal leads the batch.** Then the event names the referenced object; template reference + object listing.
    - **Image pull / mount / probe errors** → the matching config face.
+   - **Pod up, but the service misbehaves** — wrong results / functional errors in its own logs (argument order, bad values) → code-defect chain: take the suspect pod's sheet first (`DescribeResource(pod)` — status / restarts / image; this is the entry step here, ahead of the logs) — if you batch, the sheet leads the batch — then its error logs (the mis-computation), then localize the scope (`ListCodeFiles`) and prove it on the code surface (`GetSourceCode`). Logs before the pod sheet means the entry step was skipped.
    - **Everything healthy but probes diverge** → the address layer: audit the routing config (the gateway's route table, Path ↔ target line by line); probing is confirmation, not scanning. **The component to report is the gateway (the table's owner) — the mis-wired target is the victim, not the break.**
 4. **Close properly before you conclude — all three:** the mechanism event; the events surface (`GetResources(events)` — for multi-instance workloads the Warning row names the replica that carries it); and the config the mechanism points at.
 
