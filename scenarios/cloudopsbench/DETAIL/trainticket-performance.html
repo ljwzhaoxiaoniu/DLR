@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/performance</em></h1>
-<p class="deck">已跑 <b>35/47</b> 题：JRA ✅34 ❌1 ｜ 证据链全闭 34 ｜ token 中位 301,957 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:35:03.877Z</p>
+<p class="deck">已跑 <b>36/47</b> 题：JRA ✅35 ❌1 ｜ 证据链全闭 35 ｜ token 中位 301,957 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:39:29.238Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1429</td><td>36</td><td>442,283</td><td>0</td><td>1</td><td class="muted">1012_1512_inorder4-v3b3</td><td><a href="../results/1012_1512_inorder4-v3b3/raw/1012_1516_trainticket-performance-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1516_trainticket-performance-1</a></td></tr>
@@ -51,6 +51,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-33"><code>33</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2308</td><td>14</td><td>335,749</td><td>0</td><td>0</td><td class="muted">1013_2214_inorder4-v3b51</td><td><a href="../results/1013_2214_inorder4-v3b51/raw/1013_2215_trainticket-performance-33/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2215_trainticket-performance-33</a></td></tr>
 <tr><td><a href="#case-34"><code>34</code></a></td><td>0</td><td>1</td><td>0</td><td>0.5</td><td>0.5</td><td>0</td><td>0.0732</td><td>42</td><td>1,529,218</td><td>0</td><td>0</td><td class="muted">1013_2217_inorder4-v3b52</td><td><a href="../results/1013_2217_inorder4-v3b52/raw/1013_2218_trainticket-performance-34/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2218_trainticket-performance-34</a></td></tr>
 <tr><td><a href="#case-35"><code>35</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2143</td><td>15</td><td>111,650</td><td>0</td><td>0</td><td class="muted">1013_2229_inorder4-v3b53</td><td><a href="../results/1013_2229_inorder4-v3b53/raw/1013_2231_trainticket-performance-35/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2231_trainticket-performance-35</a></td></tr>
+<tr><td><a href="#case-36"><code>36</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2727</td><td>12</td><td>264,687</td><td>0</td><td>0</td><td class="muted">1013_2235_inorder4-v3b54</td><td><a href="../results/1013_2235_inorder4-v3b54/raw/1013_2236_trainticket-performance-36/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2236_trainticket-performance-36</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/ts-basic-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 36 步</summary><ul>
@@ -1638,6 +1639,44 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/ts-basic-service&quot;,
    &quot;root_cause&quot;: &quot;code_artificial_delay&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-36"><summary><b>case-36</b> · <code>app/ts-contacts-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 12 步</summary><ul>
+<li><b>摘要</b>：Alerts (metric surface) carry a ~7.5-10s near-constant added delay riding on ts-contacts-service: it is the ONLY service whose p50 AND p90 both moved (p50 18.85ms -&gt; 7500.00ms, +39683.6%; p90 92.28ms -&gt; 10000.00ms, +10736.8%), i.e. the delay covers all of its traffic, and it carries the steepest p90 escalation - the epicenter. Its direct upstreams named by GetServiceDependencies (ts-gateway-service, ts-preserve-service) plus the front-end (ts-ui-dashboard) show p90-only latency rises (+1218.8% / +284.9% / +1253.9%) = partial-traffic ripple, while ts-contacts-service is a leaf with no downstrea</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2235_inorder4-v3b54/raw/1013_2236_trainticket-performance-36/">results/1013_2235_inorder4-v3b54/raw/1013_2236_trainticket-performance-36</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-contacts-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;nodes&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-contacts-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>11</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-contacts-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Alerts (metric surface) carry a ~7.5-10s near-constant added delay riding on ts-contacts-service: it is the ONLY service whose p50 AND p90 both moved (p50 18.85ms -&gt; 7500.00ms, +39683.6%; p90 92.28ms -&gt; 10000.00ms, +10736.8%), i.e. the delay covers all of its traffic, and it carries the steepest p90 escalation - the epicenter. Its direct upstreams named by GetServiceDependencies (ts-gateway-service, ts-preserve-service) plus the front-end (ts-ui-dashboard) show p90-only latency rises (+1218.8% / +284.9% / +1253.9%) = partial-traffic ripple, while ts-contacts-service is a leaf with no downstream calls, so no downstream server-side latency exists. No RESOURCE_SATURATION row appears anywhere, so this is not a resource fault. Object layer is exclusion evidence only: all pods Running 2/2 with RESTARTS 0 (except ts-ui-dashboard), nodes Ready with no pressure, endpoints bound, and the namespace event stream shows no mechanism events (no FailedCreate/FailedScheduling/FailedMount/image-pull); error logs for ts-contacts-service are empty and there is no previous container. The ~50% pps drop that sweeps the whole namespace is the ripple of this epicenter, not a node-scope fault: the affected pods span worker-01, worker-02 and worker-03.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-contacts-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-ui-dashboard&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
   }
  ]
 }</pre>

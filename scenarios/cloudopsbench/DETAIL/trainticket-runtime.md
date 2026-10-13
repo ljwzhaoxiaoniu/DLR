@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **16/96** 题：JRA ✅16 ❌0 ｜ 证据链全闭 16 ｜ token 中位 521,337 ｜ 生成 2026-10-13T14:35:03.877Z
+> 本家族已跑 **17/96** 题：JRA ✅17 ❌0 ｜ 证据链全闭 17 ｜ token 中位 521,337 ｜ 生成 2026-10-13T14:39:29.238Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -23,6 +23,7 @@
 | [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3684 | 39 | 875,225 | 0 | 0 | 1013_1810_inorder4-v3b27 | 全对·链闭 |
 | [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2692 | 27 | 490,757 | 0 | 0 | 1013_1834_inorder4-v3b30 | 全对·链闭 |
 | [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1538 | 14 | 260,976 | 0 | 1 | 1013_1845_triple-verify1 | 全对·链闭 |
+| [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.125 | 25 | 613,053 | 0 | 0 | 1013_2235_inorder4-v3b54 | 全对·链闭 |
 
 ## 证据正文
 
@@ -137,4 +138,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1538 · steps 14 · tokens 260,976
 - **raw 日志**：[results/1013_1845_triple-verify1/raw/1013_1846_trainticket-runtime-16](../results/1013_1845_triple-verify1/raw/1013_1846_trainticket-runtime-16/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alert: GET /api/v1/assuranceservice/assurances/types -> 'HTTPError(503 Server Error: Service Unavailable)' on entry service ts-assurance-service. Inventory: no ts-assurance-service pod exists while every other train-ticket workload is 2/2 Running with 0 restarts. Victim signal: endpoints/ts-assurance-service = <none>, and caller-side ts-gateway-service logs repeat 'No servers available for service: ts-assurance-service'. Workload break: Deployment ts-assurance-service spec.replicas=0 (generation 2) although its stored last-applied config and GetAppYAML specify replicas=1. Mechanism event: 'Sca
+
+### case-17
+
+- **结论**：`app/ts-basic-service` + `deployment_zero_replicas` ｜ 标签 `app/ts-basic-service` + `deployment_zero_replicas`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.125 · steps 25 · tokens 613,053
+- **raw 日志**：[results/1013_2235_inorder4-v3b54/raw/1013_2237_trainticket-runtime-17](../results/1013_2235_inorder4-v3b54/raw/1013_2237_trainticket-runtime-17/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Caller-side trail: ts-preserve-service logs 500 from '/api/v1/travelservice/trip_detail' (alert 'Create ticket order'), and ts-travel-service itself throws 'java.lang.IllegalArgumentException: Service Instance cannot be null' with '[query][Travel Query Fail][Something null]' - a discovery lookup returning no instance. Object layer: ts-basic-service (a direct callee of ts-travel-service) has NO pod in the train-ticket pods listing, and its Deployment reads 0/0; live Deployment YAML shows spec.replicas: 0 with last-applied-configuration replicas:1. Mechanism event verbatim: 'ScalingReplicaSet de
 

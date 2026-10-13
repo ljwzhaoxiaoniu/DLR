@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **35/47** 题：JRA ✅34 ❌1 ｜ 证据链全闭 34 ｜ token 中位 301,957 ｜ 生成 2026-10-13T14:35:03.877Z
+> 本家族已跑 **36/47** 题：JRA ✅35 ❌1 ｜ 证据链全闭 35 ｜ token 中位 301,957 ｜ 生成 2026-10-13T14:39:29.238Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -42,6 +42,7 @@
 | [33](#case-33) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 335,749 | 0 | 0 | 1013_2214_inorder4-v3b51 | 全对·链闭 |
 | [34](#case-34) | 0 | 1 | 0 | 0.5 | 0.5 | 0 | 0.0732 | 42 | 1,529,218 | 0 | 0 | 1013_2217_inorder4-v3b52 | 未命中 |
 | [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 111,650 | 0 | 0 | 1013_2229_inorder4-v3b53 | 全对·链闭 |
+| [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 264,687 | 0 | 0 | 1013_2235_inorder4-v3b54 | 全对·链闭 |
 
 ## 证据正文
 
@@ -289,4 +290,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 111,650
 - **raw 日志**：[results/1013_2229_inorder4-v3b53/raw/1013_2231_trainticket-performance-35](../results/1013_2229_inorder4-v3b53/raw/1013_2231_trainticket-performance-35/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts (6 rows, same window 22:28:53~22:31:28) name ts-basic-service as the epicenter: it is the only latency row moving BOTH percentiles (p50 38.97->6833.33ms +17434.4%, p90 53.89->9366.67ms +17281.4%) with the steepest p90 escalation; the other four latency rows move p90 only (ts-gateway-service +1626.8%, ts-travel-service +1445.6%, ts-ui-dashboard +1637.7%) or less steeply (ts-preserve-service), i.e. partial-traffic ripples. Topology closes it: every flagged service is a path through ts-basic-service (gateway->basic, preserve->basic, travel->basic, ui-dashboard->gateway->basic), while gatew
+
+### case-36
+
+- **结论**：`app/ts-contacts-service` + `pod_network_delay` ｜ 标签 `app/ts-contacts-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 12 · tokens 264,687
+- **raw 日志**：[results/1013_2235_inorder4-v3b54/raw/1013_2236_trainticket-performance-36](../results/1013_2235_inorder4-v3b54/raw/1013_2236_trainticket-performance-36/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (metric surface) carry a ~7.5-10s near-constant added delay riding on ts-contacts-service: it is the ONLY service whose p50 AND p90 both moved (p50 18.85ms -> 7500.00ms, +39683.6%; p90 92.28ms -> 10000.00ms, +10736.8%), i.e. the delay covers all of its traffic, and it carries the steepest p90 escalation - the epicenter. Its direct upstreams named by GetServiceDependencies (ts-gateway-service, ts-preserve-service) plus the front-end (ts-ui-dashboard) show p90-only latency rises (+1218.8% / +284.9% / +1253.9%) = partial-traffic ripple, while ts-contacts-service is a leaf with no downstrea
 

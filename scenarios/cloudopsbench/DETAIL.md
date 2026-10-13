@@ -10,18 +10,18 @@
 | 家族 | 全量 | 已跑 | 剩余 | 覆盖 |
 |---|---|---|---|---|
 | boutique/admission | 58 | 7 | 51 | 12.1% |
-| boutique/codedefect | 98 | 31 | 67 | 31.6% |
-| boutique/infrastructure | 40 | 30 | 10 | 75.0% |
+| boutique/codedefect | 98 | 32 | 66 | 32.7% |
+| boutique/infrastructure | 40 | 31 | 9 | 77.5% |
 | boutique/performance | 29 | 9 | 20 | 31.0% |
 | boutique/runtime | 45 | 9 | 36 | 20.0% |
 | boutique/scheduling | 164 | 12 | 152 | 7.3% |
 | boutique/service | 54 | 8 | 46 | 14.8% |
 | boutique/startup | 62 | 5 | 57 | 8.1% |
-| train-ticket/performance | 47 | 35 | 12 | 74.5% |
-| train-ticket/runtime | 96 | 16 | 80 | 16.7% |
+| train-ticket/performance | 47 | 36 | 11 | 76.6% |
+| train-ticket/runtime | 96 | 17 | 79 | 17.7% |
 | train-ticket/service | 37 | 37 | 0 | 100.0% |
 | train-ticket/startup | 24 | 13 | 11 | 54.2% |
-| **合计** | **754** | **212** | **542** | **28.1%** |
+| **合计** | **754** | **216** | **538** | **28.6%** |
 
 ## 汇总（去重 · 取最新）
 
@@ -29,37 +29,37 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 211 / 212（99.5%） |
-| CA（组件命中） | 211 / 212（99.5%） |
-| FA（故障型命中） | 212 / 212（100.0%） |
-| ECR（证据链全闭） | 210 / 212（99.1%） |
+| JRA（联合命中） | 215 / 216（99.5%） |
+| CA（组件命中） | 215 / 216（99.5%） |
+| FA（故障型命中） | 216 / 216（100.0%） |
+| ECR（证据链全闭） | 214 / 216（99.1%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 0.9965 | 0.9803 | 0.9906 | 0.2784 | 20.1651 | 0.0012 | 0.0142 |
+| 0.9965 | 0.9806 | 0.9907 | 0.277 | 20.2546 | 0.0012 | 0.0139 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 336,665 / 245,322 | 54,365 / 2,181,512 | 73% |
+| 338,806 / 248,815 | 54,365 / 2,181,512 | 73% |
 
 ## 分家族索引
 
 | 家族 | 全量 | 已跑 | JRA | 链全闭 | 明细 |
 |---|---|---|---|---|---|
 | boutique/admission | 58 | 7 | 7 | 6 | [boutique-admission.md](DETAIL/boutique-admission.md) |
-| boutique/codedefect | 98 | 31 | 31 | 31 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
-| boutique/infrastructure | 40 | 30 | 30 | 30 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
+| boutique/codedefect | 98 | 32 | 32 | 32 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
+| boutique/infrastructure | 40 | 31 | 31 | 31 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
 | boutique/performance | 29 | 9 | 9 | 9 | [boutique-performance.md](DETAIL/boutique-performance.md) |
 | boutique/runtime | 45 | 9 | 9 | 9 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
 | boutique/scheduling | 164 | 12 | 12 | 12 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
 | boutique/service | 54 | 8 | 8 | 8 | [boutique-service.md](DETAIL/boutique-service.md) |
 | boutique/startup | 62 | 5 | 5 | 5 | [boutique-startup.md](DETAIL/boutique-startup.md) |
-| train-ticket/performance | 47 | 35 | 34 | 34 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
-| train-ticket/runtime | 96 | 16 | 16 | 16 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
+| train-ticket/performance | 47 | 36 | 35 | 35 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
+| train-ticket/runtime | 96 | 17 | 17 | 17 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
 | train-ticket/service | 37 | 37 | 37 | 37 | [trainticket-service.md](DETAIL/trainticket-service.md) |
 | train-ticket/startup | 24 | 13 | 13 | 13 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
 
@@ -195,6 +195,9 @@
 > **2026-10-13 晚 · 轮次 1013_2217_inorder4-v3b52（批五十二 · 3/4 · ttperf34 记档 · LM 终验位）**：① 覆盖 208/754，**JRA 207/208**（轮次 84）。② cod/30 `code_wrong_argument_order`@frontend（39 步 · RAR 0.053）· inf/29 调度器族连四全满（15 步）· tt-svc/37 `service_dns_resolution_failure`@user（21 步）全满。③ **ttperf34 破连（LM 终验位）**：报 security vs 真值 user（判型对，42 步）——**断点定位口审计（agent 可达面全查）**：告警集仅 auth LM×2 + ui-dash New Spike（0→194400ms），**金标 user 无任何告警行**；全 TT 序列面在该窗整体归零（LM 行的来源）、金标指纹（user rx +173% 冲高）只存在于原始序列未入告警；preserve 日志闩锁停在 `[checkSecurity]`（"最后一条日志"=最后**记日志**的步，非悬挂步——真断点在其后的静默步）；security/order/user 等日志面同为空（istio 噪声）；对象层全净；连通性探针二值（open/succeeded，无时延）。④ **裁决 = 记档不 churn**（金标弱案类）：clause 最多推到"静默候选堆"无法收敛（乱加伤他案）；候选若再现再议。**LM 战役终局**：/22 破连修复 ✓ · /24 泛化立证 ✓ · /34 记档（断点定位口缺位案）。
 
 > **2026-10-13 晚 · 轮次 1013_2229_inorder4-v3b53（批五十三 · 4/4 六项链全满 · tt-svc 家族满覆盖）**：① 覆盖 212/754，**JRA 211/212**（轮次 85）。② cod/31 `code_wrong_argument_order`@frontend（43 步）· inf/30 `kubelet_unavailable`@worker-01（16 步 · 新类型首见）· tt-perf/35 `pod_network_delay`@basic（15 步）· **tt-svc/1 `gateway_misrouted`**（16 步 · 家族补缺号、地址层条款下全满）。③ **tt-svc 家族 37/37 满覆盖**——车道从 v3 时代 25 起跳漏了 /1，本轮补上；批次编排自此四车道 = cod/inf/tt-perf/(待接)。④ 花絮：ttsvc38 按编号惯例填槽、run_one 报"案例目录不存在"（家族到 /37 即止）——"填槽前先验家族上界"入教训列（同路径笔误一类）。
+
+> **2026-10-13 晚 · 轮次 1013_2235_inorder4-v3b54（批五十四 · 4/4 六项链全满 · 第四车道换班）**：① 覆盖 216/754，**JRA 215/216**（轮次 86）。② cod/32 `code_wrong_argument_order`@frontend（45 步）· inf/31 `kubelet_unavailable`@worker-01 连二（18 步）· tt-perf/36 `pod_network_delay`@contacts（12 步 · 本族最短量级）· **tt-runtime/17 `deployment_zero_replicas`@basic**（25 步）——**第四车道换班首题即全满**（tt-svc 满 → tt-runtime 96 题族接棒）。③ 三批连打 12/12 六项全满（b51/53/54）——条款面稳态、新族泛化立证。
+
 
 
 

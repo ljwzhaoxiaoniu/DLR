@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **31/98** 题：JRA ✅31 ❌0 ｜ 证据链全闭 31 ｜ token 中位 254,844 ｜ 生成 2026-10-13T14:35:03.877Z
+> 本家族已跑 **32/98** 题：JRA ✅32 ❌0 ｜ 证据链全闭 32 ｜ token 中位 300,857 ｜ 生成 2026-10-13T14:39:29.238Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -38,6 +38,7 @@
 | [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 177,788 | 0 | 0 | 1013_2214_inorder4-v3b51 | 全对·链闭 |
 | [30](#case-30) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1579 | 39 | 1,081,143 | 0.0526 | 0 | 1013_2217_inorder4-v3b52 | 全对·链闭 |
 | [31](#case-31) | 1 | 1 | 1 | 1 | 1 | 1 | 0.119 | 43 | 334,856 | 0 | 0 | 1013_2229_inorder4-v3b53 | 全对·链闭 |
+| [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1136 | 45 | 831,616 | 0 | 0 | 1013_2235_inorder4-v3b54 | 全对·链闭 |
 
 ## 证据正文
 
@@ -257,4 +258,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.119 · steps 43 · tokens 334,856
 - **raw 日志**：[results/1013_2229_inorder4-v3b53/raw/1013_2229_boutique-codedefect-31](../results/1013_2229_inorder4-v3b53/raw/1013_2229_boutique-codedefect-31/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Object/address layers are clean: all 11 pods 2/2 Running with 0 restarts, all 11 Deployments 1/1 AVAILABLE, every Service has endpoints bound, and active TCP probes to all 11 service:port pairs returned 'Connection Succeeded' — excluding scheduling, image-pull, probe, selector, port-mapping and DNS faults. The break is on the code surface: cartservice error logs are flooded (761/2844 lines, ratio 0.268) with a single pattern showing every add-to-cart arriving with arguments inverted — 'AddItemAsync called with userId=9SIQT8TOJO, productId=4fe51a56-1a94-43ce-be91-5958ce17d236, quantity=5', i.e.
+
+### case-32
+
+- **结论**：`app/frontend` + `code_wrong_argument_order` ｜ 标签 `app/frontend` + `code_wrong_argument_order`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1136 · steps 45 · tokens 831,616
+- **raw 日志**：[results/1013_2235_inorder4-v3b54/raw/1013_2235_boutique-codedefect-32](../results/1013_2235_inorder4-v3b54/raw/1013_2235_boutique-codedefect-32/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Entry service frontend emits 503s on /product/{id} and /cart while every object-layer surface is healthy: all 11 pods 2/2 Running with 0 restarts, all endpoints bound, all deployments 1/1, 4 nodes Ready/untouched, and live TCP probes to all 8 downstream ports succeed. The only anomalous trail sits in cartservice logs (713/2657 log lines), which show AddItemAsync called with userId=<10-char product id> and productId=<session UUID> -- exactly the swap of frontend's own request fields (product=OLJCESPC7Z, session=deb5f24d-1373-4ee9-af47-3e7523a241c7), while its GetCartAsync calls carry correct se
 
