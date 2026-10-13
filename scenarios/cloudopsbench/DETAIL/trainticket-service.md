@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **25/37** 题：JRA ✅25 ❌0 ｜ 证据链全闭 25 ｜ token 中位 541,741 ｜ 生成 2026-10-13T13:05:37.488Z
+> 本家族已跑 **26/37** 题：JRA ✅26 ❌0 ｜ 证据链全闭 26 ｜ token 中位 541,741 ｜ 生成 2026-10-13T13:09:41.096Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -32,6 +32,7 @@
 | [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.375 | 17 | 456,606 | 0 | 0 | 1013_2049_inorder4-v3b40 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
 | [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 541,741 | 0 | 0 | 1013_2059_inorder4-v3b41 | 全对·链闭 |
+| [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 501,550 | 0 | 0 | 1013_2106_inorder4-v3b42 | 全对·链闭 |
 
 ## 证据正文
 
@@ -209,4 +210,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2941 · steps 18 · tokens 541,741
 - **raw 日志**：[results/1013_2059_inorder4-v3b41/raw/1013_2104_trainticket-service-26](../results/1013_2059_inorder4-v3b41/raw/1013_2104_trainticket-service-26/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Only outlier in the pods listing: ts-inside-payment-service-5ddd559466-pfrhl 0/2 CrashLoopBackOff, 4 restarts, Last State Terminated Exit Code 1; alert points to the same service (503 from entry ts-inside-payment-service). Its app container logs show java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution -> HikariPool pool init failure -> JPA/Hibernate init failure -> 'Application run failed'; its istio-proxy likewise fails all DNS lookups (lookup istiod.istio-system.svc on 10.255.8.254:53: i/o timeout). The DB target itself is fine: Service tsdb-mysql-leader ex
+
+### case-27
+
+- **结论**：`app/ts-order-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-order-service` + `service_dns_resolution_failure`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 501,550
+- **raw 日志**：[results/1013_2106_inorder4-v3b42/raw/1013_2108_trainticket-service-27](../results/1013_2106_inorder4-v3b42/raw/1013_2108_trainticket-service-27/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-order-service is the sole outlier: pod ts-order-service-6cd5889659-v76vn is 0/2 CrashLoopBackOff (4 restarts, last state Terminated/Error exit code 1) while all 48 other pods are 2/2 Running; alerts show 503 Service Unavailable on POST /api/v1/orderservice/order/refresh (entry ts-order-service, 2x20 occurrences). Its container logs die during HikariPool-1 initialization: java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution, and its istio-proxy sidecar also fails lookup of istiod.istio-system.svc on 10.255.7.254:53 (i/o timeout) - a pod-internal DNS failure,
 

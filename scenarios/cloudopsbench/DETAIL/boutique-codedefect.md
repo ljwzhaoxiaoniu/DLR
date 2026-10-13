@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **19/98** 题：JRA ✅19 ❌0 ｜ 证据链全闭 19 ｜ token 中位 207,400 ｜ 生成 2026-10-13T13:05:37.488Z
+> 本家族已跑 **20/98** 题：JRA ✅20 ❌0 ｜ 证据链全闭 20 ｜ token 中位 207,400 ｜ 生成 2026-10-13T13:09:41.096Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -26,6 +26,7 @@
 | [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1724 | 30 | 365,254 | 0 | 0 | 1013_2042_inorder4-v3b39 | 全对·链闭 |
 | [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1351 | 38 | 650,011 | 0 | 0 | 1013_2049_inorder4-v3b40 | 全对·链闭 |
 | [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 386,921 | 0 | 0 | 1013_2059_inorder4-v3b41 | 全对·链闭 |
+| [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 197,018 | 0 | 0 | 1013_2106_inorder4-v3b42 | 全对·链闭 |
 
 ## 证据正文
 
@@ -161,4 +162,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3158 · steps 20 · tokens 386,921
 - **raw 日志**：[results/1013_2059_inorder4-v3b41/raw/1013_2059_boutique-codedefect-19](../results/1013_2059_inorder4-v3b41/raw/1013_2059_boutique-codedefect-19/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Pods scan in boutique showed a single outlier: shippingservice-799cbfbc76-bl72b 1/2 Error with 4 restarts (CrashLoopBackOff), and deployment shippingservice 0/1 AVAILABLE while every other workload is 1/1. Its server container last terminated with Reason=Error ExitCode=2, kubelet event 'BackOff restarting failed container server'. Container logs show '[ShipOrder] received request' followed by 'panic: runtime error: invalid memory address or nil pointer dereference / [signal SIGSEGV]' in main.(*server).ShipOrder at /src/main.go:153, i.e. the handler dereferenced an unset in.Address. Topology wa
+
+### case-20
+
+- **结论**：`app/checkoutservice` + `code_excessive_file_reads` ｜ 标签 `app/checkoutservice` + `code_excessive_file_reads`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 197,018
+- **raw 日志**：[results/1013_2106_inorder4-v3b42/raw/1013_2106_boutique-codedefect-20](../results/1013_2106_inorder4-v3b42/raw/1013_2106_boutique-codedefect-20/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts flag Service/checkoutservice with RESOURCE_SATURATION [cpu_cfs] 'Val=1.027s throttled', RESOURCE_SATURATION [cpu] 0.00 -> 0.12 cores (+7265.9%) and LATENCY_DEGRADATION [Slow Response] p50 18.39ms -> 4478.97ms (+24254.2%), p90 -> 9224.49ms; the node-level alert (worker-01 CPU 4.85% -> 7.32%) is far too mild to be causal. Per the telemetry chain, the object layer was excluded first: all boutique pods list 2/2 Running with RESTARTS 0 (checkoutservice-6fc6d649d8-mrdxh included), and namespace events contain no FailedScheduling/FailedMount/OOMKilled/probe-kill for it, so no scheduling, quota
 

@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **23/47** 题：JRA ✅23 ❌0 ｜ 证据链全闭 23 ｜ token 中位 294,060 ｜ 生成 2026-10-13T13:05:37.488Z
+> 本家族已跑 **24/47** 题：JRA ✅24 ❌0 ｜ 证据链全闭 24 ｜ token 中位 301,957 ｜ 生成 2026-10-13T13:09:41.096Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -30,6 +30,7 @@
 | [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 258,331 | 0 | 0 | 1013_2042_inorder4-v3b39 | 全对·链闭 |
 | [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2222 | 28 | 625,309 | 0 | 0 | 1013_2059_lmdecoy-verify1 | 全对·链闭 |
 | [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 150,648 | 0 | 0 | 1013_2059_inorder4-v3b41 | 全对·链闭 |
+| [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1538 | 14 | 343,773 | 0 | 0 | 1013_2106_inorder4-v3b42 | 全对·链闭 |
 
 ## 证据正文
 
@@ -193,4 +194,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 150,648
 - **raw 日志**：[results/1013_2059_inorder4-v3b41/raw/1013_2102_trainticket-performance-23](../results/1013_2059_inorder4-v3b41/raw/1013_2102_trainticket-performance-23/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts identify ts-inside-payment-service as the primary anomaly (epicenter): its own p50 latency went 42.42ms -> 13725.49ms (+32253.1%) and p90 196.00ms -> 26745.10ms (+13545.5%, peak 27400ms) with RPS 1.01 -> 0.29 (-71.0%) - a runaway deviation far larger than its callers' ripples (ts-cancel-service p90 +4925.6%, ts-gateway-service p90 +868.8%, ts-ui-dashboard p90 +1292.9%), confirming it as the source, not the victim of propagation. Its downstream callees (ts-payment-service, ts-order-service, ts-order-other-service) show no server-side latency rows, and there is no saturation row on ts-ins
+
+### case-24
+
+- **结论**：`app/ts-order-service` + `pod_network_delay` ｜ 标签 `app/ts-order-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1538 · steps 14 · tokens 343,773
+- **raw 日志**：[results/1013_2106_inorder4-v3b42/raw/1013_2107_trainticket-performance-24](../results/1013_2106_inorder4-v3b42/raw/1013_2107_trainticket-performance-24/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts show a system-wide traffic collapse (gateway inbound 638.12->196.54pps -69.2%, ui-dashboard -66.6%, RPS -58%~-71% everywhere) plus a localized latency blow-up whose runaway deviation sits on ts-order-service: p50latency 134.03ms -> 4637.29ms (+3359.9%, Peak 60000ms) and p90latency 1999.56ms -> 19476.20ms (+874.0%, Peak 252000ms) - far beyond its callers' rises (gateway p90 +114.5%, travel p90 +373.0%, preserve p50 +629.6%) and beyond ts-seat-service (p50 +17124.6% but p90 only +595%). Dependency graph shows ts-order-service is a leaf core (upstream: gateway/preserve/seat/security/inside
 

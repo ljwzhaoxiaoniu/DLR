@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **18/40** 题：JRA ✅18 ❌0 ｜ 证据链全闭 18 ｜ token 中位 110,448 ｜ 生成 2026-10-13T13:05:37.488Z
+> 本家族已跑 **19/40** 题：JRA ✅19 ❌0 ｜ 证据链全闭 19 ｜ token 中位 110,448 ｜ 生成 2026-10-13T13:09:41.096Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -25,6 +25,7 @@
 | [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 127,753 | 0 | 0 | 1013_2042_inorder4-v3b39 | 全对·链闭 |
 | [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5667 | 31 | 150,940 | 0 | 0 | 1013_2049_inorder4-v3b40 | 全对·链闭 |
 | [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 21 | 131,291 | 0 | 0 | 1013_2059_inorder4-v3b41 | 全对·链闭 |
+| [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.12 | 26 | 208,511 | 0 | 0 | 1013_2106_inorder4-v3b42 | 全对·链闭 |
 
 ## 证据正文
 
@@ -153,4 +154,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4 · steps 21 · tokens 131,291
 - **raw 日志**：[results/1013_2059_inorder4-v3b41/raw/1013_2101_boutique-infrastructure-18](../results/1013_2059_inorder4-v3b41/raw/1013_2101_boutique-infrastructure-18/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Pod/Deployment/Service/Endpoints listings are all uniformly healthy (all pods 1/1 Running, 0 restarts, all deployments 1/1 AVAILABLE, all endpoints populated), so the break is not in the workload layer. Caller-side read (frontend error logs, 197 errors) shows simultaneous address-layer failures: 'lookup productcatalogservice on 169.254.20.10:53: no such host' (85x), 'lookup currencyservice ... no such host' (76x), and 'dial tcp 10.68.159.24:5050: i/o timeout' (34x). Per-node connectivity probes on the ports each Service declares show that from worker-02 every service probe FAILS ('punt! Termin
+
+### case-19
+
+- **结论**：`node/master` + `kube_scheduler_unavailable` ｜ 标签 `node/master` + `kube_scheduler_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.12 · steps 26 · tokens 208,511
+- **raw 日志**：[results/1013_2106_inorder4-v3b42/raw/1013_2106_boutique-infrastructure-19](../results/1013_2106_inorder4-v3b42/raw/1013_2106_boutique-infrastructure-19/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique (live cluster confirms boutique is the only workload namespace; no train-ticket namespace exists). Inventory outlier: adservice-64ddc5c766-skqvc 0/1 Pending, NODE <none>, while all other pods are 1/1 Running. Victim signal: endpoints/adservice = <none> and CheckServiceConnectivity(adservice, 9555) = 'Connection Failed'. Pod's own reason is absent (no 'N nodes are available' line, Events: <none>) and the namespace event surface carries no FailedScheduling at all -> the scheduler never processed the pod. Node side: all 4 nodes Ready, no pressure, workers untainted with 8 CPU f
 
