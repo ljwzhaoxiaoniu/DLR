@@ -10,7 +10,7 @@
 | 家族 | 全量 | 已跑 | 剩余 | 覆盖 |
 |---|---|---|---|---|
 | boutique/admission | 58 | 7 | 51 | 12.1% |
-| boutique/codedefect | 98 | 45 | 53 | 45.9% |
+| boutique/codedefect | 98 | 46 | 52 | 46.9% |
 | boutique/infrastructure | 40 | 40 | 0 | 100.0% |
 | boutique/performance | 29 | 11 | 18 | 37.9% |
 | boutique/runtime | 45 | 9 | 36 | 20.0% |
@@ -21,7 +21,7 @@
 | train-ticket/runtime | 96 | 30 | 66 | 31.3% |
 | train-ticket/service | 37 | 37 | 0 | 100.0% |
 | train-ticket/startup | 24 | 13 | 11 | 54.2% |
-| **合计** | **754** | **268** | **486** | **35.5%** |
+| **合计** | **754** | **269** | **485** | **35.7%** |
 
 ## 汇总（去重 · 取最新）
 
@@ -29,29 +29,29 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 267 / 268（99.6%） |
-| CA（组件命中） | 267 / 268（99.6%） |
-| FA（故障型命中） | 268 / 268（100.0%） |
-| ECR（证据链全闭） | 266 / 268（99.3%） |
+| JRA（联合命中） | 268 / 269（99.6%） |
+| CA（组件命中） | 268 / 269（99.6%） |
+| FA（故障型命中） | 269 / 269（100.0%） |
+| ECR（证据链全闭） | 267 / 269（99.3%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 0.9972 | 0.9754 | 0.9925 | 0.2639 | 20.5784 | 0.0015 | 0.0112 |
+| 0.9972 | 0.9755 | 0.9926 | 0.2637 | 20.5725 | 0.0016 | 0.0112 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 351,745 / 258,590 | 54,365 / 2,181,512 | 73% |
+| 349,792 / 258,331 | 54,365 / 2,181,512 | 73% |
 
 ## 分家族索引
 
 | 家族 | 全量 | 已跑 | JRA | 链全闭 | 明细 |
 |---|---|---|---|---|---|
 | boutique/admission | 58 | 7 | 7 | 6 | [boutique-admission.md](DETAIL/boutique-admission.md) |
-| boutique/codedefect | 98 | 45 | 45 | 45 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
+| boutique/codedefect | 98 | 46 | 46 | 46 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
 | boutique/infrastructure | 40 | 40 | 40 | 40 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
 | boutique/performance | 29 | 11 | 11 | 11 | [boutique-performance.md](DETAIL/boutique-performance.md) |
 | boutique/runtime | 45 | 9 | 9 | 9 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
@@ -225,6 +225,11 @@
 > **2026-10-13 晚 · 轮次 1013_2331_inorder4-v3b66（批六十六 · 4/4 JRA 全对 · performance 车道首题全满）**：① 覆盖 264/754，**JRA 263/264**（轮次 99）。② cod/44 `code_missing_parameter`@frontend 四连（34 步）· svc/11 `service_port_mapping_mismatch`@currency 三连（20 步）· **boutique/performance/10 `pod_cpu_overload`@redis-cart（22 步 · 第三车道换班首题全满 · 真饱和判对——§3 饱和句正例兑现）** 六项链全满；**tt-runtime/29** JRA/MC/ECR 全对、**EOC 0.5**（33 步长链回填——族内序滑点第 3 例〔21/25/29〕，同"执行波动"定案记观察）。③ 四车道定型：cod / **boutique-service** / tt-runtime / **boutique-performance**。
 
 > **2026-10-13 晚 · 轮次 1013_2337_inorder4-v3b67（批六十七 · 4/4 JRA 全对 · 轮次 100）**：① **轮次 100** · 覆盖 268/754，**JRA 267/268**。② cod/45 `code_missing_parameter`@frontend 五连（21 步）· svc/12 `service_port_mapping_mismatch`@payment 四连（21 步）· perf/11 `pod_cpu_overload`@shipping 连二（23 步）**六项链全满**；**tt-runtime/30** JRA/MC/ECR 全对、**EOC 0.5**——同型确认（M1 根因读@20 先于 M0 端点读@23）→ **族内序滑点第 4 例**（21/25/29/30，近期 ~80%）；按 b62 定案续记观察（JRA 安全；守规则在 SOP、加句伤他案已证）。③ 累计观察位七例（inf24/25 · cod27 · cod42 · runtime21/25/29/30——注：cod42 为第 6 例、runtime29 已计，总账以"序滑点观察位"栏为准）。
+
+> **2026-10-13 深夜 · ttperf34 定稿轮 1013_2345_ttperf34-verify1（用户令"跑一下看看" · 仍不过 · 记档维持）**：报 `ts-order-service` vs 真值 `ts-user-service`（41 步 · 首跑报 security——**两跑两个不同的错对象**）。**结果定性**：定位口缺位案的重跑落点确实随机（线索不在案面），骰子未中 → **记档维持**，账 268/269 不动。至此 ttperf34 的处置完全闭环：批跑（security）/ 定稿跑（order）双证 + 解剖审计（金标零告警行 · 序列不可读 · 闩锁歧义）。
+>
+> **2026-10-13 深夜 · 轮次 1013_2345_inorder4-v3b68（批六十八 · 止于 1/4 · 会话收官）**：① **用户令"跑完结束·别连续跑了"——引擎停机**：批六十八仅发首题 `cod/46`（`code_missing_parameter`@frontend 20 步 · **六项链全满 · 参数序六连**），余三题（svc/13 · perf/12 · tt-runtime/31）未发、批次止于 1/4。② **停机账：轮次 102 · 覆盖 269/754 · JRA 268/269**（唯一余项 = ttperf34 记档）+ 序滑点观察位七例；满族三（tt-svc · boutique/infrastructure · tt-perf）。③ 后续批次待用户发令（连续跑模式撤销，恢复批间报数）。
+
 
 
 

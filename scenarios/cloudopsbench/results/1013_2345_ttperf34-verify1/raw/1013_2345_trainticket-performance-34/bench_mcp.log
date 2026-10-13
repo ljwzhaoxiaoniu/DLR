@@ -1,0 +1,68 @@
+INFO:     Started server process [20132]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:53311 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53312 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:53311 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53313 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53320 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53322 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:53330 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:53340 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53340 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53340 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-ui-dashboard"}
+INFO:     127.0.0.1:53350 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-auth-service"}
+INFO:     127.0.0.1:53350 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53350 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58291 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58291 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-auth-service"}
+INFO:     127.0.0.1:58291 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:58291 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-preserve-service"}
+INFO:     127.0.0.1:58298 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58298 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-preserve-service"}
+INFO:     127.0.0.1:58298 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-security-service"}
+INFO:     127.0.0.1:58300 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58300 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-security-service"}
+INFO:     127.0.0.1:58300 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62607 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62607 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62607 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62607 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64266 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"kube-proxy"}
+INFO:     127.0.0.1:64266 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"kubelet"}
+INFO:     127.0.0.1:64266 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64266 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-preserve-service"}
+INFO:     127.0.0.1:56210 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-security-service"}
+INFO:     127.0.0.1:56210 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-preserve-service","port":14568}
+INFO:     127.0.0.1:56210 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-security-service","port":11188}
+INFO:     127.0.0.1:56210 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56222 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56222 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-ui-dashboard"}
+INFO:     127.0.0.1:56222 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-order-service"}
+INFO:     127.0.0.1:54069 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-order-service"}
+INFO:     127.0.0.1:54069 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-order-service"}
+INFO:     127.0.0.1:54069 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-order-service","port":12031}
+INFO:     127.0.0.1:54454 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54454 - "POST /mcp HTTP/1.1" 200 OK

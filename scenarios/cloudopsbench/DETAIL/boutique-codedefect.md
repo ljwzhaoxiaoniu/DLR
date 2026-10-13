@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **45/98** 题：JRA ✅45 ❌0 ｜ 证据链全闭 45 ｜ token 中位 330,738 ｜ 生成 2026-10-13T15:40:50.356Z
+> 本家族已跑 **46/98** 题：JRA ✅46 ❌0 ｜ 证据链全闭 46 ｜ token 中位 330,738 ｜ 生成 2026-10-13T15:50:07.086Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -52,6 +52,7 @@
 | [43](#case-43) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0962 | 53 | 1,415,438 | 0 | 0 | 1013_2325_inorder4-v3b65 | 全对·链闭 |
 | [44](#case-44) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1515 | 34 | 948,495 | 0 | 0 | 1013_2331_inorder4-v3b66 | 全对·链闭 |
 | [45](#case-45) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 21 | 298,509 | 0 | 0 | 1013_2337_inorder4-v3b67 | 全对·链闭 |
+| [46](#case-46) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 219,165 | 0 | 0 | 1013_2345_inorder4-v3b68 | 全对·链闭 |
 
 ## 证据正文
 
@@ -369,4 +370,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 21 · tokens 298,509
 - **raw 日志**：[results/1013_2337_inorder4-v3b67/raw/1013_2337_boutique-codedefect-45](../results/1013_2337_inorder4-v3b67/raw/1013_2337_boutique-codedefect-45/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All boutique pods are 2/2 Running with 0 restarts and clean Normal events (no scheduling/startup/mount/image/probe mechanism), so the break is functional. Alerts flag frontend success rate 95.2%->56.4% with all failing business actions (/product/{id} x433, /cart x180, /setCurrency x175, / x92) returning HTTP 500, and frontend error logs (1053) all funnel into 'failed to convert currency ... Cannot read properties of null (reading units)' plus 'failed to convert currency for shipping cost'. The call-graph walk anchored at the symptom side (frontend -> currencyservice) shows the callee currencys
+
+### case-46
+
+- **结论**：`app/frontend` + `code_missing_parameter` ｜ 标签 `app/frontend` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2105 · steps 20 · tokens 219,165
+- **raw 日志**：[results/1013_2345_inorder4-v3b68/raw/1013_2345_boutique-codedefect-46](../results/1013_2345_inorder4-v3b68/raw/1013_2345_boutique-codedefect-46/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods were 2/2 Running with RESTARTS 0 and the frontend pod Ready=True (no scheduling/startup/probe break). Alerts all pointed at the entry service frontend (503 Service Unavailable: POST /cart x234, GET /cart x172, /product/{id} x15, /setCurrency x6, /cart/checkout x4). Frontend's own logs carry the failing business call: 399x 'http: panic serving ...: mismatching currency codes' with the stack money.Must /src/money/money.go:85 <- main.(*frontendServer).viewCartHandler /src/handlers.go:316, i.e. money.Sum rejected two Money values whose currency_code differ and money.Must panic
 

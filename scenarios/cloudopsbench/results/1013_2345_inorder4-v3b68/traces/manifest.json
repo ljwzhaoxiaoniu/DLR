@@ -1,0 +1,9 @@
+[
+  {
+    "case": "boutique/codedefect/46",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1013_2345_inorder4-v3b68\\raw\\1013_2345_boutique-codedefect-46",
+    "steps": 19,
+    "has_final_answer": true,
+    "predictions": 3
+  }
+]

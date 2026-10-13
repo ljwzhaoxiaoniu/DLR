@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **47/47** 题：JRA ✅46 ❌1 ｜ 证据链全闭 46 ｜ token 中位 304,738 ｜ 生成 2026-10-13T15:40:50.356Z
+> 本家族已跑 **47/47** 题：JRA ✅46 ❌1 ｜ 证据链全闭 46 ｜ token 中位 304,738 ｜ 生成 2026-10-13T15:50:07.086Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -40,7 +40,7 @@
 | [31](#case-31) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1818 | 23 | 345,078 | 0 | 0 | 1013_2203_inorder4-v3b49 | 全对·链闭 |
 | [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.375 | 17 | 236,382 | 0 | 0 | 1013_2210_inorder4-v3b50 | 全对·链闭 |
 | [33](#case-33) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 335,749 | 0 | 0 | 1013_2214_inorder4-v3b51 | 全对·链闭 |
-| [34](#case-34) | 0 | 1 | 0 | 0.5 | 0.5 | 0 | 0.0732 | 42 | 1,529,218 | 0 | 0 | 1013_2217_inorder4-v3b52 | 未命中 |
+| [34](#case-34) | 0 | 1 | 0 | 0.5 | 0.5 | 0 | 0.075 | 41 | 1,136,487 | 0.025 | 0 | 1013_2345_ttperf34-verify1 | 未命中 |
 | [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 111,650 | 0 | 0 | 1013_2229_inorder4-v3b53 | 全对·链闭 |
 | [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 264,687 | 0 | 0 | 1013_2235_inorder4-v3b54 | 全对·链闭 |
 | [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 21 | 223,685 | 0 | 0 | 1013_2240_inorder4-v3b55 | 全对·链闭 |
@@ -290,10 +290,10 @@
 
 ### case-34
 
-- **结论**：`app/ts-security-service` + `pod_network_delay` ｜ 标签 `app/ts-user-service` + `pod_network_delay`（✗ 与标签不符）
-- **流程**：MC 0.5 · EOC 0.5 · ECR 0 · EE 0.0732 · steps 42 · tokens 1,529,218
-- **raw 日志**：[results/1013_2217_inorder4-v3b52/raw/1013_2218_trainticket-performance-34](../results/1013_2217_inorder4-v3b52/raw/1013_2218_trainticket-performance-34/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Alerts: ts-ui-dashboard LATENCY_DEGRADATION [Slow Response] p90 0.00ms->194400.00ms (Peak 273840.30ms) plus ts-auth-service LATENCY_MISSING (a metric hole only: ts-auth-service's own logs show [getToken][success] logins in ~100ms inside the injection window, so it is not the fault). The dashboard (entry nginx) returned 504 'upstream timed out (110) while reading response header from upstream, upstream http://10.68.32.132:18888/...' only for POST /api/v1/preserveservice/preserve while contacts/travel/assurance/login all returned 200 within the same instants -> the slowdown is confined to the pr
+- **结论**：`app/ts-order-service` + `pod_network_delay` ｜ 标签 `app/ts-user-service` + `pod_network_delay`（✗ 与标签不符）
+- **流程**：MC 0.5 · EOC 0.5 · ECR 0 · EE 0.075 · steps 41 · tokens 1,136,487
+- **raw 日志**：[results/1013_2345_ttperf34-verify1/raw/1013_2345_trainticket-performance-34](../results/1013_2345_ttperf34-verify1/raw/1013_2345_trainticket-performance-34/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (metric surface) name ts-ui-dashboard with a p90-only latency blow-up (Normal=0.00ms -> Current=194400.00ms, 'New Spike') plus a ts-auth-service LATENCY_MISSING hole; auth is provably healthy (successful token logins returning 200 in ~100ms), so the hole does not name the case. ts-ui-dashboard's nginx error log shows 60s 'upstream timed out' 504s for exactly two API families - POST /api/v1/orderservice/order/refresh (a stream inside the injection window 13:59:58-14:01:05) and POST /api/v1/preserveservice/preserve - while /contactservice, /travelservice, /assuranceservice and /users/logi
 
 ### case-35
 
