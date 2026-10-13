@@ -229,6 +229,51 @@ for (const f of families) {
     L.push("");
   }
   fs.writeFileSync(path.join(detailDir, famFile(f)), L.join("\n") + "\n", "utf8");
+
+  // 同内容的 HTML 浏览版（家族名从总视图点进来的落点）
+  const famCss = `:root { --surface:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781; --grid:#e1e0d9; --border:rgba(11,11,11,0.08); --dlr:#2a78d6; --good:#0ca30c; }
+@media (prefers-color-scheme: dark) { :root:where(:not([data-theme="light"])) { --surface:#1a1a19; --page:#0d0d0d; --ink:#fff; --ink-2:#c3c2b7; --muted:#898781; --grid:#2c2c2a; --border:rgba(255,255,255,0.08); --dlr:#3987e5; --good:#2fbf2f; } }
+* { box-sizing:border-box; margin:0; padding:0; } body { max-width:1080px; margin:0 auto; padding:48px 28px 72px; font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; font-size:16px; line-height:1.6; color:var(--ink); background:var(--page); }
+.hero { font-size:clamp(26px,4vw,40px); font-weight:800; letter-spacing:-0.02em; } .hero em { font-style:normal; color:var(--dlr); }
+.deck { color:var(--ink-2); margin-top:12px; } .muted { color:var(--muted); font-size:13.5px; }
+.section-title { font-size:clamp(19px,2.4vw,26px); font-weight:750; margin:40px 0 16px; } .section-title em { font-style:normal; color:var(--dlr); }
+table { width:100%; border-collapse:collapse; background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; font-size:13.5px; }
+th, td { padding:8px 11px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; } th { font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); } tr:last-child td { border-bottom:none; }
+code { font-size:13px; color:var(--dlr); } a { color:var(--dlr); } a:hover { text-decoration-thickness:2px; } .ok { color:var(--good); }
+details { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 18px; margin:10px 0; } details summary { cursor:pointer; font-size:14.5px; } details ul { margin:10px 0 4px; padding-left:20px; font-size:14px; color:var(--ink-2); }
+.note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }`;
+  const H = [];
+  H.push(`<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>评测明细 · ${familyDisplay(f)} — cloudopsbench</title><style>${famCss}</style></head><body>`);
+  H.push(`<p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>`);
+  H.push(`<h1 class="hero">评测明细 · <em>${familyDisplay(f)}</em></h1>`);
+  H.push(`<p class="deck">已跑 <b>${a.n}/${total}</b> 题：JRA ✅${a.jra} ❌${a.n - a.jra} ｜ 证据链全闭 ${a.chain} ｜ token 中位 ${tok(famMed)} ｜ 口径与列义同总账 ｜ 生成 ${now}</p>`);
+  H.push(`<h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>`);
+  H.push(`<table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>`);
+  for (const e of entries) {
+    const g = (k) => fmt(e.metrics?.[k]);
+    const jra = Number(e.metrics?.JRA) === 1;
+    const rd = rawDirFor(e);
+    const rawCell = rd ? `<a href="../${rd}" title="raw 日志（ndjson / mcp.jsonl / meta）">${rd.replace(/\/$/, "").split("/raw/")[1] || "raw"}</a>` : "—";
+    H.push(`<tr><td><a href="#case-${e.case_name}"><code>${e.case_name}</code></a></td><td>${g("CA")}</td><td>${g("FA")}</td><td>${jra ? '<span class="ok">✅</span>' : g("JRA")}</td><td>${g("MC")}</td><td>${g("EOC")}</td><td>${g("ECR")}</td><td>${g("EE")}</td><td>${g("steps")}</td><td>${tok(e.tokens?.total)}</td><td>${g("RAR")}</td><td>${g("invalid_actions")}</td><td class="muted">${e.round}</td><td>${rawCell}</td></tr>`);
+  }
+  H.push(`</table>`);
+  H.push(`<h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>`);
+  for (const e of entries) {
+    const gt = e.ground_truth || {};
+    const p1 = (e.top_3_predictions || [])[0] || {};
+    const verdict = p1.fault_object === gt.fault_object && p1.root_cause === gt.root_cause ? "✓ 逐字命中" : "✗ 与标签不符";
+    let summary = "";
+    const tracePath = path.join(resultsDir, e.round, "traces", e.sysdir, MODEL, e.category, e.case_name, `${e.case_name}.json`);
+    try { summary = String(JSON.parse(fs.readFileSync(tracePath, "utf8")).final_answer?.key_evidence_summary || "").slice(0, 600); } catch { /* 无 traces */ }
+    const rd = rawDirFor(e);
+    H.push(`<details id="case-${e.case_name}"><summary><b>case-${e.case_name}</b> · <code>${p1.fault_object ?? ""}</code> + <code>${p1.root_cause ?? ""}</code>（${verdict}） · MC ${fmt(e.metrics?.MC)} · EOC ${fmt(e.metrics?.EOC)} · ECR ${fmt(e.metrics?.ECR)} · ${fmt(e.metrics?.steps)} 步</summary><ul>`);
+    if (e.error) H.push(`<li><b>错误</b>：${String(e.error).replace(/[<>&]/g, "")}</li>`);
+    if (summary) H.push(`<li><b>摘要</b>：${summary.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]))}</li>`);
+    if (rd) H.push(`<li><b>raw 日志</b>：<a href="../${rd}">${rd.replace(/\/$/, "")}</a></li>`);
+    H.push(`</ul></details>`);
+  }
+  H.push(`</body></html>`);
+  fs.writeFileSync(path.join(detailDir, famFile(f).replace(/\.md$/, ".html")), H.join("\n") + "\n", "utf8");
 }
 
 // ── ⑦ DETAIL.md（总账；定性观察手写区保留）──────────────────────────
@@ -305,7 +350,7 @@ const famRows = familiesSorted.map((f) => {
   const done = latestAll.filter((e) => e.family === f).length;
   const p = barPct(done, total);
   return `<div class="fam">
-    <div class="fam__name">${familyDisplay(f)}</div>
+    <div class="fam__name"><a href="DETAIL/${famFile(f).replace(/\.md$/, ".html")}" title="逐题统计（HTML）">${familyDisplay(f)}</a></div>
     <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:${Math.min(p, 100)}%"></div></div></div>
     <div class="fam__num">${done}/${total} · ${p}%</div>
   </div>`;
@@ -420,6 +465,7 @@ const overviewHtml = `<!DOCTYPE html>
 
 ${showcaseHtml}
 <h2 class="section-title">跑题覆盖度 · <em>逐家族进度</em></h2>
+<p class="muted">点家族名 → 该家族逐题统计页（HTML，含每题 raw 日志）；下方逐题明细表里点题名 → 该题 raw 运行目录。</p>
 ${famRows}
 
 <h2 class="section-title">逐题明细 · <em>去重取最新</em></h2>
