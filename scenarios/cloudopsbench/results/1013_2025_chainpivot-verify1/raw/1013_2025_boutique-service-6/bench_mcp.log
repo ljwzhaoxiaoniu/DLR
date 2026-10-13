@@ -1,0 +1,104 @@
+INFO:     Started server process [26324]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:49673 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49674 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:49673 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49675 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64307 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64310 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64316 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:64316 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64316 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64316 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64316 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:62096 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"frontend"}
+INFO:     127.0.0.1:62096 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62096 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"checkoutservice"}
+INFO:     127.0.0.1:51429 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"checkoutservice","port":5050}
+INFO:     127.0.0.1:51429 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"frontend"}
+INFO:     127.0.0.1:51429 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"cartservice"}
+INFO:     127.0.0.1:64128 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"paymentservice"}
+INFO:     127.0.0.1:64128 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"shippingservice"}
+INFO:     127.0.0.1:64128 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"currencyservice"}
+INFO:     127.0.0.1:64128 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"emailservice"}
+INFO:     127.0.0.1:64128 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"productcatalogservice"}
+INFO:     127.0.0.1:64128 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64128 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"adservice"}
+INFO:     127.0.0.1:61622 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"recommendationservice"}
+INFO:     127.0.0.1:61622 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"redis-cart"}
+INFO:     127.0.0.1:61622 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:61622 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61622 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-03","service_name":"kube-proxy"}
+INFO:     127.0.0.1:50831 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kube-proxy"}
+INFO:     127.0.0.1:50831 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50831 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"adservice","port":9555}
+INFO:     127.0.0.1:50831 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"recommendationservice","port":8080}
+INFO:     127.0.0.1:50831 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"checkoutservice"}
+INFO:     127.0.0.1:56595 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56595 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"productcatalogservice"}
+INFO:     127.0.0.1:56605 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56605 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"productcatalogservice","port":3551}
+INFO:     127.0.0.1:56605 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"productcatalogservice","port":3550}
+INFO:     127.0.0.1:56605 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56610 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"recommendationservice"}
+INFO:     127.0.0.1:56610 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56610 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57175 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57175 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57175 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50832 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:50832 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61104 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50899 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50899 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60670 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60670 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60670 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"cartservice"}
+INFO:     127.0.0.1:63491 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"currencyservice"}
+INFO:     127.0.0.1:63491 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"paymentservice"}
+INFO:     127.0.0.1:63491 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"shippingservice"}
+INFO:     127.0.0.1:63491 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"emailservice"}
+INFO:     127.0.0.1:63491 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"adservice"}
+INFO:     127.0.0.1:63528 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"redis-cart"}
+INFO:     127.0.0.1:63528 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63528 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-03","service_name":"kubelet"}
+INFO:     127.0.0.1:56346 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-03","service_name":"containerd"}
+INFO:     127.0.0.1:56346 - "POST /mcp HTTP/1.1" 200 OK

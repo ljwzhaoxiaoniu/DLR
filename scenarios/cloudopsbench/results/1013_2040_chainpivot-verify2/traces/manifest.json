@@ -1,0 +1,16 @@
+[
+  {
+    "case": "boutique/service/8",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1013_2040_chainpivot-verify2\\raw\\1013_2040_boutique-service-8",
+    "steps": 18,
+    "has_final_answer": true,
+    "predictions": 3
+  },
+  {
+    "case": "boutique/codedefect/16",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1013_2040_chainpivot-verify2\\raw\\1013_2040_boutique-codedefect-16",
+    "steps": 66,
+    "has_final_answer": true,
+    "predictions": 3
+  }
+]
