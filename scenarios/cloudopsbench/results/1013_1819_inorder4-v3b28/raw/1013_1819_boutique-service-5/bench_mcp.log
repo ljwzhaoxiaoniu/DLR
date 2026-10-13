@@ -1,0 +1,45 @@
+INFO:     Started server process [4176]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:53049 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53050 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:53049 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53051 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53055 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53057 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53055 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:53055 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53055 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53055 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:53055 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"productcatalogservice","port":3550}
+INFO:     127.0.0.1:53068 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"cartservice","port":7070}
+INFO:     127.0.0.1:53068 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"redis-cart","port":6379}
+INFO:     127.0.0.1:53068 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"cartservice"}
+INFO:     127.0.0.1:53068 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"frontend"}
+INFO:     127.0.0.1:53068 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"cartservice"}
+INFO:     127.0.0.1:53074 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"productcatalogservice"}
+INFO:     127.0.0.1:53074 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"redis-cart"}
+INFO:     127.0.0.1:53074 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53074 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53074 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53074 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:53074 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53091 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53091 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53091 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"frontend"}
+INFO:     127.0.0.1:53094 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"checkoutservice"}
+INFO:     127.0.0.1:53094 - "POST /mcp HTTP/1.1" 200 OK

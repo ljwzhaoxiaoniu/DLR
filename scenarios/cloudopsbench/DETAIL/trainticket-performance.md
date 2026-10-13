@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **11/47** 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 319,046 ｜ 生成 2026-10-13T10:18:40.426Z
+> 本家族已跑 **12/47** 题：JRA ✅12 ❌0 ｜ 证据链全闭 12 ｜ token 中位 343,666 ｜ 生成 2026-10-13T10:28:30.289Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -18,6 +18,7 @@
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 343,666 | 0 | 0 | 1013_1633_inorder4-v3b23 | 全对·链闭 |
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 304,738 | 0 | 0 | 1013_1645_inorder4-v3b24 | 全对·链闭 |
 | [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 356,222 | 0 | 0 | 1013_1805_inorder4-v3b26 | 全对·链闭 |
+| [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 25 | 850,385 | 0 | 0 | 1013_1825_dual2-verify1 | 全对·链闭 |
 
 ## 证据正文
 
@@ -97,4 +98,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1875 · steps 17 · tokens 356,222
 - **raw 日志**：[results/1013_1805_inorder4-v3b26/raw/1013_1806_trainticket-performance-11](../results/1013_1805_inorder4-v3b26/raw/1013_1806_trainticket-performance-11/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts surface (metric chain per L3): 5 LATENCY_DEGRADATION rows, no RESOURCE_SATURATION. ts-seat-service is the most anomalous and the only one with THROUGHPUT_DROP: p50 19.72ms -> 3065.48ms (+15445.4%), p90 66.40 -> 4613.10ms, RPS 2.30 -> 0.44 (-81.0%). Dependency graph shows ui-dashboard -> gateway -> {preserve, travel} -> seat, so the alerted set is exactly ts-seat-service plus every caller that calls it (ts-preserve-service p50 463.24 -> 8416.67ms; ts-travel-service p90 209.04 -> 8925.00ms; ts-gateway-service p90 372.82 -> 5860.00ms; ts-ui-dashboard p90 391.18 -> 5800.00ms), while seat's 
+
+### case-12
+
+- **结论**：`app/ts-security-service` + `pod_network_delay` ｜ 标签 `app/ts-security-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 25 · tokens 850,385
+- **raw 日志**：[results/1013_1825_dual2-verify1/raw/1013_1825_trainticket-performance-12](../results/1013_1825_dual2-verify1/raw/1013_1825_trainticket-performance-12/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (window 17:24:33~17:26:28) show LATENCY_DEGRADATION on a single call chain ui-dashboard(p90 431->5205ms) -> gateway-service(p90 435->5128ms) -> preserve-service(p50 483->7443ms, +1442%) -> ts-security-service; the deepest alerted service and the largest deviation is ts-security-service (p50 100.00ms->7027.09ms, +6927.1%; p90 425->9405ms), and its caller preserve-service shows the SAME added delay (+6961ms), i.e. a constant delay riding on ts-security-service's own latency with the downstream server-side latency clean (ts-order-service carries no latency alert). Application-side logs pro
 

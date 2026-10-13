@@ -1,6 +1,6 @@
 # 评测明细 · boutique/runtime — cloudopsbench
 
-> 本家族已跑 **5/45** 题：JRA ✅5 ❌0 ｜ 证据链全闭 5 ｜ token 中位 61,752 ｜ 生成 2026-10-13T10:18:40.426Z
+> 本家族已跑 **6/45** 题：JRA ✅6 ❌0 ｜ 证据链全闭 6 ｜ token 中位 61,752 ｜ 生成 2026-10-13T10:28:30.289Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -12,6 +12,7 @@
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 10 | 61,152 | 0 | 0 | 1013_1122_inorder4-v3b9 | 全对·链闭 |
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 11 | 62,072 | 0 | 0 | 1013_1248_inorder4-v3b13 | 全对·链闭 |
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 10 | 60,382 | 0 | 0 | 1013_1520_inorder4-v3b17 | 全对·链闭 |
+| [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 10 | 60,547 | 0 | 0 | 1013_1819_inorder4-v3b28 | 全对·链闭 |
 
 ## 证据正文
 
@@ -49,4 +50,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 10 · tokens 60,382
 - **raw 日志**：[results/1013_1520_inorder4-v3b17/raw/1013_1520_boutique-runtime-5](../results/1013_1520_inorder4-v3b17/raw/1013_1520_boutique-runtime-5/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Only paymentservice pod (paymentservice-597747d4d8-jbdgb on worker-02) is an outlier in the boutique pods listing with RESTARTS=2 while all other 10 pods show 0. Its pod detail shows Last State Terminated with Reason: Error / Exit Code 137, and kubelet events state verbatim: 'Liveness probe failed: Get "http://172.20.2.186:50051/": net/http: HTTP/1.x transport connection broken: malformed HTTP response "\x00\x00\x00\x04..."' followed by 'Container server failed liveness probe, will be restarted' (x3). The malformed response bytes are HTTP/2 frame prefixes, showing the container speaks gRPC/HTT
+
+### case-6
+
+- **结论**：`app/productcatalogservice` + `liveness_probe_incorrect_protocol` ｜ 标签 `app/productcatalogservice` + `liveness_probe_incorrect_protocol`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 10 · tokens 60,547
+- **raw 日志**：[results/1013_1819_inorder4-v3b28/raw/1013_1819_boutique-runtime-6](../results/1013_1819_inorder4-v3b28/raw/1013_1819_boutique-runtime-6/)（ndjson / mcp.jsonl / meta）
+- **摘要**：productcatalogservice pod (productcatalogservice-747b447754-r49cw, worker-02) is the only outlier with RESTARTS 2 (30s ago) / Restart Count 3 and Ready False, while all other 10 boutique services show RESTARTS 0. Pod events bind the mechanism verbatim: 'Liveness probe failed: Get "http://172.20.2.192:3550/": net/http: HTTP/1.x transport connection broken: malformed HTTP response "\x00\x00\x06\x04..."' (x9) followed by 'Container server failed liveness probe, will be restarted' (x3), with Last State Terminated Reason Error Exit Code 2. Config cross-check (GetAppYAML) shows the liveness probe is
 

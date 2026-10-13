@@ -1,6 +1,6 @@
 # 评测明细 · boutique/service — cloudopsbench
 
-> 本家族已跑 **4/54** 题：JRA ✅4 ❌0 ｜ 证据链全闭 4 ｜ token 中位 262,983 ｜ 生成 2026-10-13T10:18:40.426Z
+> 本家族已跑 **5/54** 题：JRA ✅5 ❌0 ｜ 证据链全闭 5 ｜ token 中位 213,813 ｜ 生成 2026-10-13T10:28:30.289Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -11,6 +11,7 @@
 | [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1333 | 46 | 292,901 | 0 | 0 | 1013_1122_inorder4-v3b9 | 全对·链闭 |
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 110,899 | 0 | 0 | 1013_1248_inorder4-v3b13 | 全对·链闭 |
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2069 | 30 | 262,983 | 0 | 0 | 1013_1520_inorder4-v3b17 | 全对·链闭 |
+| [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.24 | 26 | 213,813 | 0 | 0 | 1013_1819_inorder4-v3b28 | 全对·链闭 |
 
 ## 证据正文
 
@@ -41,4 +42,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2069 · steps 30 · tokens 262,983
 - **raw 日志**：[results/1013_1520_inorder4-v3b17/raw/1013_1520_boutique-service-4](../results/1013_1520_inorder4-v3b17/raw/1013_1520_boutique-service-4/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom 'Partial Service Unreachability' in ns boutique. Object layer is fully healthy: 11/11 pods 1/1 Running with RESTARTS=0, all deployments 1/1 AVAILABLE, no namespace Warning events, every Service has populated Endpoints, and CheckServiceConnectivity(productcatalogservice:3550) returned open/Connection Succeeded - so scheduling, startup, probes, Service selector and port mapping are all correct. Caller-side logs localize the break to the address layer: frontend logged 54x 'failed to get product recommendations' carrying recommendationservice's internal error, and recommendationservice log
+
+### case-5
+
+- **结论**：`app/cartservice` + `service_env_var_address_mismatch` ｜ 标签 `app/cartservice` + `service_env_var_address_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.24 · steps 26 · tokens 213,813
+- **raw 日志**：[results/1013_1819_inorder4-v3b28/raw/1013_1819_boutique-service-5](../results/1013_1819_inorder4-v3b28/raw/1013_1819_boutique-service-5/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Object layer clean (all 11 boutique pods 1/1 Running, 0 restarts; GetAlerts: no anomalies), so the break is in the address layer. Caller logs localize it: frontend error ratio 25.07% and cartservice error ratio 36.98% (3 patterns x 71 hits) all read 'UnableToConnect on redis-cart:6380' with serverEndpoint: redis-cart:6380, clientName: cartservice-8445cf8447-xtncn, producing HTTP 500 on /cart and /product/*. Connectivity probe to redis-cart:6379 succeeds while 6380 is not exposed: the redis-cart Service declares port/targetPort 6379 and its container listens on 6379. Config confirmation: cartse
 

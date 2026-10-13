@@ -13,13 +13,14 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/service</em></h1>
-<p class="deck">已跑 <b>4/54</b> 题：JRA ✅4 ❌0 ｜ 证据链全闭 4 ｜ token 中位 262,983 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T10:18:40.426Z</p>
+<p class="deck">已跑 <b>5/54</b> 题：JRA ✅5 ❌0 ｜ 证据链全闭 5 ｜ token 中位 213,813 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T10:28:30.289Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4</td><td>16</td><td>115,616</td><td>0</td><td>0</td><td class="muted">1012_1447_inorder4-v3b2</td><td><a href="../results/1012_1447_inorder4-v3b2/raw/1012_1448_boutique-service-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1448_boutique-service-1</a></td></tr>
 <tr><td><a href="#case-2"><code>2</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1333</td><td>46</td><td>292,901</td><td>0</td><td>0</td><td class="muted">1013_1122_inorder4-v3b9</td><td><a href="../results/1013_1122_inorder4-v3b9/raw/1013_1122_boutique-service-2/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1122_boutique-service-2</a></td></tr>
 <tr><td><a href="#case-3"><code>3</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>110,899</td><td>0</td><td>0</td><td class="muted">1013_1248_inorder4-v3b13</td><td><a href="../results/1013_1248_inorder4-v3b13/raw/1013_1248_boutique-service-3/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1248_boutique-service-3</a></td></tr>
 <tr><td><a href="#case-4"><code>4</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2069</td><td>30</td><td>262,983</td><td>0</td><td>0</td><td class="muted">1013_1520_inorder4-v3b17</td><td><a href="../results/1013_1520_inorder4-v3b17/raw/1013_1520_boutique-service-4/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1520_boutique-service-4</a></td></tr>
+<tr><td><a href="#case-5"><code>5</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.24</td><td>26</td><td>213,813</td><td>0</td><td>0</td><td class="muted">1013_1819_inorder4-v3b28</td><td><a href="../results/1013_1819_inorder4-v3b28/raw/1013_1819_boutique-service-5/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1819_boutique-service-5</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/cartservice</code> + <code>service_env_var_address_mismatch</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 16 步</summary><ul>
@@ -229,6 +230,58 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/productcatalogservice&quot;,
    &quot;root_cause&quot;: &quot;service_env_var_address_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-5"><summary><b>case-5</b> · <code>app/cartservice</code> + <code>service_env_var_address_mismatch</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 26 步</summary><ul>
+<li><b>摘要</b>：Object layer clean (all 11 boutique pods 1/1 Running, 0 restarts; GetAlerts: no anomalies), so the break is in the address layer. Caller logs localize it: frontend error ratio 25.07% and cartservice error ratio 36.98% (3 patterns x 71 hits) all read 'UnableToConnect on redis-cart:6380' with serverEndpoint: redis-cart:6380, clientName: cartservice-8445cf8447-xtncn, producing HTTP 500 on /cart and /product/*. Connectivity probe to redis-cart:6379 succeeds while 6380 is not exposed: the redis-cart Service declares port/targetPort 6379 and its container listens on 6379. Config confirmation: cartse</li>
+<li><b>raw 日志</b>：<a href="../results/1013_1819_inorder4-v3b28/raw/1013_1819_boutique-service-5/">results/1013_1819_inorder4-v3b28/raw/1013_1819_boutique-service-5</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;services&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>9</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;productcatalogservice&quot;,&quot;port&quot;:3550,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;cartservice&quot;,&quot;port&quot;:7070,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>11</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;redis-cart&quot;,&quot;port&quot;:6379,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;productcatalogservice&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;redis-cart&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>19</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;cartservice-8445cf8447-xtncn&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>21</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true,&quot;resource_type&quot;:&quot;pods&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;services&quot;}</code></td></tr>
+<tr><td>23</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+<tr><td>24</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>25</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Object layer clean (all 11 boutique pods 1/1 Running, 0 restarts; GetAlerts: no anomalies), so the break is in the address layer. Caller logs localize it: frontend error ratio 25.07% and cartservice error ratio 36.98% (3 patterns x 71 hits) all read 'UnableToConnect on redis-cart:6380' with serverEndpoint: redis-cart:6380, clientName: cartservice-8445cf8447-xtncn, producing HTTP 500 on /cart and /product/*. Connectivity probe to redis-cart:6379 succeeds while 6380 is not exposed: the redis-cart Service declares port/targetPort 6379 and its container listens on 6379. Config confirmation: cartservice Deployment env REDIS_ADDR = 'redis-cart:6380' (expected redis-cart:6379), read both from GetAppYAML(cartservice) and from the pod sheet (Restart Count 0, Ready True, no k8s Warning events in the namespace) - so the defect is cartservice's downstream address environment variable, not redis-cart's Service port mapping. Transient frontend 'no such host' DNS lines were ruled out (productcatalogservice has no error logs, connectivity Succeeded, pages serve normally, and all frontend/checkoutservice env addresses match their Service ports).&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;service_env_var_address_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/redis-cart&quot;,
+   &quot;root_cause&quot;: &quot;service_port_mapping_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/productcatalogservice&quot;,
+   &quot;root_cause&quot;: &quot;service_dns_resolution_failure&quot;
   }
  ]
 }</pre>

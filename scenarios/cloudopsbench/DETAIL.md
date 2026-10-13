@@ -13,15 +13,15 @@
 | boutique/codedefect | 98 | 11 | 87 | 11.2% |
 | boutique/infrastructure | 40 | 10 | 30 | 25.0% |
 | boutique/performance | 29 | 8 | 21 | 27.6% |
-| boutique/runtime | 45 | 5 | 40 | 11.1% |
+| boutique/runtime | 45 | 6 | 39 | 13.3% |
 | boutique/scheduling | 164 | 11 | 153 | 6.7% |
-| boutique/service | 54 | 4 | 50 | 7.4% |
+| boutique/service | 54 | 5 | 49 | 9.3% |
 | boutique/startup | 62 | 4 | 58 | 6.5% |
-| train-ticket/performance | 47 | 11 | 36 | 23.4% |
+| train-ticket/performance | 47 | 12 | 35 | 25.5% |
 | train-ticket/runtime | 96 | 14 | 82 | 14.6% |
-| train-ticket/service | 37 | 13 | 24 | 35.1% |
+| train-ticket/service | 37 | 14 | 23 | 37.8% |
 | train-ticket/startup | 24 | 11 | 13 | 45.8% |
-| **合计** | **754** | **108** | **646** | **14.3%** |
+| **合计** | **754** | **112** | **642** | **14.9%** |
 
 ## 汇总（去重 · 取最新）
 
@@ -29,22 +29,22 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 108 / 108（100.0%） |
-| CA（组件命中） | 108 / 108（100.0%） |
-| FA（故障型命中） | 108 / 108（100.0%） |
-| ECR（证据链全闭） | 107 / 108（99.1%） |
+| JRA（联合命中） | 112 / 112（100.0%） |
+| CA（组件命中） | 112 / 112（100.0%） |
+| FA（故障型命中） | 112 / 112（100.0%） |
+| ECR（证据链全闭） | 111 / 112（99.1%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 0.9977 | 0.9846 | 0.9907 | 0.2975 | 19.1389 | 0.0004 | 0.0185 |
+| 0.9978 | 0.9851 | 0.9911 | 0.2957 | 19.2679 | 0.0004 | 0.0179 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 295,832 / 200,618 | 54,365 / 2,181,512 | 75% |
+| 307,284 / 203,615 | 54,365 / 2,181,512 | 75% |
 
 ## 分家族索引
 
@@ -54,13 +54,13 @@
 | boutique/codedefect | 98 | 11 | 11 | 11 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
 | boutique/infrastructure | 40 | 10 | 10 | 10 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
 | boutique/performance | 29 | 8 | 8 | 8 | [boutique-performance.md](DETAIL/boutique-performance.md) |
-| boutique/runtime | 45 | 5 | 5 | 5 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
+| boutique/runtime | 45 | 6 | 6 | 6 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
 | boutique/scheduling | 164 | 11 | 11 | 11 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
-| boutique/service | 54 | 4 | 4 | 4 | [boutique-service.md](DETAIL/boutique-service.md) |
+| boutique/service | 54 | 5 | 5 | 5 | [boutique-service.md](DETAIL/boutique-service.md) |
 | boutique/startup | 62 | 4 | 4 | 4 | [boutique-startup.md](DETAIL/boutique-startup.md) |
-| train-ticket/performance | 47 | 11 | 11 | 11 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
+| train-ticket/performance | 47 | 12 | 12 | 12 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
 | train-ticket/runtime | 96 | 14 | 14 | 14 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
-| train-ticket/service | 37 | 13 | 13 | 13 | [trainticket-service.md](DETAIL/trainticket-service.md) |
+| train-ticket/service | 37 | 14 | 14 | 14 | [trainticket-service.md](DETAIL/trainticket-service.md) |
 | train-ticket/startup | 24 | 11 | 11 | 11 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
 
 ## 定性观察
@@ -125,6 +125,10 @@
 > **2026-10-13 · 轮次 1013_1805_inorder4-v3b26 + gateway2-verify1（批二十六 · 3/4 + 网关 §2 句修复闭环）**：① 覆盖 104/754。② cod/11 `code_memory_leak`（16 步全满）· inf/10 `containerd@worker-02`（11 步）· tt-perf/11 `pod_network_delay`（17 步）全满。③ **tsv/13 破连（§2 措辞网关）**：判型翻车——把**受害者的报错当代码缺陷**（ts-payment-service 收到 misroute 的外来请求 → 日志报参数缺失 → 判 `code_missing_parameter`），路由表（M2）整步未读 → JRA 0 · ECR 0。④ 处置（破连即修一轮）：§2 网关句对齐 §1 形态钉（路由表 = gateway 自家 `GetAppYAML`）+ 补判别线「外来请求异常 = misroute 症状，不是代码缺陷，先审计路由表」→ rebuild+重启 → **gateway2-verify1 复跑 34 步六项全满**——规程第二次闭环。⑤ 会话：失败轮入档。
 
 > **2026-10-13 · 轮次 1013_1810_inorder4-v3b27（批二十七 · 4/4 六项全满）**：① 覆盖 108/754，**JRA 108/108**。② per/8 `pod_cpu_overload`（20 步）· sch/11 `node_cordon_mismatch`（17 步）· tt-startup/11 `missing_secret_binding`（15 步）全满。③ tt-runtime/14 `db_readonly_mode` **39 步长链全闭**（迄今最长之一）。④ 与 tsv/13 修复轮管道化并发执行（引擎模式：谁空接谁）。
+
+> **2026-10-13 · 轮次 1013_1819_inorder4-v3b28 + dual2-verify1（批二十八 · 2/4 + 双题修复闭环）**：① 覆盖 112/754。② runtime/6 `liveness_probe_incorrect_protocol`（10 步 · 「Service abnormal restart.」模板二验）· service/5 `service_env_var_address_mismatch`（26 步）全满。③ **双破连**：(a) tt-perf/12 —— **5 条告警并存**（security +6927% 为主异常；gateway/dashboard/preserve 是上游涟漪；ts-order 一条 0.12s 微小 cpu 限流为旁枝）——agent 照 §3 饱和分支抓了 ts-order 旁枝 → 判 `pod_network_delay`→真值应是 security（对象+机制双错）→ 补 §3 **「多告警 = 取主异常（最深·最大偏差的那个，呼者延迟是涟漪；非主异常的孤行饱和 = 旁枝噪声）」**句；(b) tt-svc/14 —— tsv/13 修复前同款翻车（读 gateway 日志未读 gateway 配置）→ 修复句已在节、**复跑一轮验证**。④ → rebuild+重启 → **dual2-verify1 双题复跑 25/30 步六项全满**——规程第三次+第四次闭环（并行双修）。⑤ 会话：两失败轮入档。
+
+
 
 
 

@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **13/37** 题：JRA ✅13 ❌0 ｜ 证据链全闭 13 ｜ token 中位 465,479 ｜ 生成 2026-10-13T10:18:40.426Z
+> 本家族已跑 **14/37** 题：JRA ✅14 ❌0 ｜ 证据链全闭 14 ｜ token 中位 666,312 ｜ 生成 2026-10-13T10:28:30.289Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -19,6 +19,7 @@
 | [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2963 | 28 | 707,393 | 0 | 0 | 1013_1640_gatewayyaml-verify1 | 全对·链闭 |
 | [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2927 | 42 | 2,104,083 | 0 | 0 | 1013_1645_inorder4-v3b24 | 全对·链闭 |
 | [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2121 | 34 | 2,181,512 | 0 | 0 | 1013_1810_gateway2-verify1 | 全对·链闭 |
+| [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2414 | 30 | 1,341,232 | 0 | 0 | 1013_1825_dual2-verify1 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
 
 ## 证据正文
@@ -106,6 +107,13 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2121 · steps 34 · tokens 2,181,512
 - **raw 日志**：[results/1013_1810_gateway2-verify1/raw/1013_1810_trainticket-service-13](../results/1013_1810_gateway2-verify1/raw/1013_1810_trainticket-service-13/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All train-ticket workloads read clean on the object layer (deployments 1/1 AVAILABLE, pods 2/2 Running; connectivity probes to ts-gateway-service:18888, ts-ui-dashboard:8080, ts-payment-service:19001, ts-preserve-service:14568 all 'Connection Succeeded'), so the break is in the address layer. The gateway's own manifest (ConfigMap ts-gateway-service-config, application.yml) holds the route table, and one route's Path and target disagree: '- id: route / uri: lb://${USER_SERVICE_HOST:ts-user-service} / Path=/api/v1/routeservice/**' — a routeservice Path wired to ts-user-service, while every other
+
+### case-14
+
+- **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2414 · steps 30 · tokens 1,341,232
+- **raw 日志**：[results/1013_1825_dual2-verify1/raw/1013_1826_trainticket-service-14](../results/1013_1825_dual2-verify1/raw/1013_1826_trainticket-service-14/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Object layer is fully healthy: all 41 ts-* deployments 1/1 AVAILABLE, every pod 2/2 Running, every Service has endpoints, and TCP probes to ts-gateway-service:18888 and ts-user-service:12342 succeed from all three workers — so the break is not in pods/deployments/endpoints/connectivity. Auditing the gateway route table line by line (GetAppYAML(ts-gateway-service) == live ConfigMap ts-gateway-service-config) shows exactly one Path-to-target mismatch among 41 routes: id 'route' with Path=/api/v1/routeservice/** has uri lb://${USER_SERVICE_HOST:ts-user-service}, i.e. the prefix denoting the route
 
 ### case-25
 
