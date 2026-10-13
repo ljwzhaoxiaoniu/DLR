@@ -1,0 +1,9 @@
+[
+  {
+    "case": "boutique/startup/3",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1013_1245_imagecls-verify1\\raw\\1013_1246_boutique-startup-3",
+    "steps": 13,
+    "has_final_answer": true,
+    "predictions": 3
+  }
+]
