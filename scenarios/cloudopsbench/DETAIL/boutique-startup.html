@@ -8,10 +8,12 @@ table { width:100%; border-collapse:collapse; background:var(--surface); border:
 th, td { padding:8px 11px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; } th { font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); } tr:last-child td { border-bottom:none; }
 code { font-size:13px; color:var(--dlr); } a { color:var(--dlr); } a:hover { text-decoration-thickness:2px; } .ok { color:var(--good); }
 details { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 18px; margin:10px 0; } details summary { cursor:pointer; font-size:14.5px; } details ul { margin:10px 0 4px; padding-left:20px; font-size:14px; color:var(--ink-2); }
+details p { font-size:14px; color:var(--ink-2); margin:7px 0; }
+pre { white-space:pre-wrap; word-break:break-word; background:var(--page); border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:12.8px; line-height:1.55; font-family:ui-monospace,Consolas,monospace; color:var(--ink); margin:8px 0; }
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/startup</em></h1>
-<p class="deck">已跑 <b>4/62</b> 题：JRA ✅4 ❌0 ｜ 证据链全闭 4 ｜ token 中位 83,339 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:20:29.295Z</p>
+<p class="deck">已跑 <b>4/62</b> 题：JRA ✅4 ❌0 ｜ 证据链全闭 4 ｜ token 中位 83,339 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:25:34.981Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>10</td><td>58,131</td><td>0</td><td>0</td><td class="muted">1012_1447_inorder4-v3b2</td><td><a href="../results/1012_1447_inorder4-v3b2/raw/1012_1449_boutique-startup-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1449_boutique-startup-1</a></td></tr>
@@ -21,19 +23,158 @@ details { background:var(--surface); border:1px solid var(--border); border-radi
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/adservice</code> + <code>image_registry_dns_failure</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 10 步</summary><ul>
-<li><b>摘要</b>：namespace boutique 首轮 pods 扫描中唯一离群对象为 adservice-7b5ff9bbd7-r2s5r：READY 0/1、STATUS ErrImagePull，其余 10 个 pod 均 1/1 Running；Deployment adservice 为 0/1 AVAILABLE 且 Endpoints(adservice) 为空。DescribeResource(pod) events 原文显示容器从未启动，断点在镜像获取环节而非调度：Pulling image "ghost-registry.example.net/google-samples/microservices-demo/adservice:v0.10.3" 后 Failed，failed to resolve reference ... dial tcp: lookup ghost-registry.example.net on 127.0.0.53:53: no such host，随后 BackOff -&gt; ImagePullBackOff。GetAppYAML(adservice) 确认 Pod 模板 image 即为该主机名（并非 tag/仓库路径错误，也无 manifest unknown），ServiceAccount adservice 已存在、探针 grpc:955</li>
+<li><b>摘要</b>：namespace boutique 首轮 pods 扫描中唯一离群对象为 adservice-7b5ff9bbd7-r2s5r：READY 0/1、STATUS ErrImagePull，其余 10 个 pod 均 1/1 Running；Deployment adservice 为 0/1 AVAILABLE 且 Endpoints(adservice) 为空。DescribeResource(pod) events 原文显示容器从未启动，断点在镜像获取环节而非调度：Pulling image &quot;ghost-registry.example.net/google-samples/microservices-demo/adservice:v0.10.3&quot; 后 Failed，failed to resolve reference ... dial tcp: lookup ghost-registry.example.net on 127.0.0.53:53: no such host，随后 BackOff -&gt; ImagePullBackOff。GetAppYAML(adservice) 确认 Pod 模板 image 即为该主机名（并非 tag/仓库路径错误，也无 manifest unknown），ServiceAccount adservice 已存在、探针 grpc:955</li>
 <li><b>raw 日志</b>：<a href="../results/1012_1447_inorder4-v3b2/raw/1012_1449_boutique-startup-1/">results/1012_1447_inorder4-v3b2/raw/1012_1449_boutique-startup-1</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>2</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;adservice-7b5ff9bbd7-r2s5r&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;namespace boutique 首轮 pods 扫描中唯一离群对象为 adservice-7b5ff9bbd7-r2s5r：READY 0/1、STATUS ErrImagePull，其余 10 个 pod 均 1/1 Running；Deployment adservice 为 0/1 AVAILABLE 且 Endpoints(adservice) 为空。DescribeResource(pod) events 原文显示容器从未启动，断点在镜像获取环节而非调度：Pulling image \&quot;ghost-registry.example.net/google-samples/microservices-demo/adservice:v0.10.3\&quot; 后 Failed，failed to resolve reference ... dial tcp: lookup ghost-registry.example.net on 127.0.0.53:53: no such host，随后 BackOff -&gt; ImagePullBackOff。GetAppYAML(adservice) 确认 Pod 模板 image 即为该主机名（并非 tag/仓库路径错误，也无 manifest unknown），ServiceAccount adservice 已存在、探针 grpc:9555 与 Service port 9555 一致；同一节点 worker-03 上 checkoutservice/productcatalogservice/redis-cart 均拉取成功并 Running，排除节点级 DNS/容器运行时故障；GetAlerts() 无指标类异常。故故障域为 app/adservice 的镜像仓库 DNS 解析失败，导致服务不可用。&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/adservice&quot;,
+   &quot;root_cause&quot;: &quot;image_registry_dns_failure&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/adservice&quot;,
+   &quot;root_cause&quot;: &quot;incorrect_image_reference&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/adservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_image_pull_secret&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-2"><summary><b>case-2</b> · <code>app/cartservice</code> + <code>image_registry_dns_failure</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
-<li><b>摘要</b>：Only cartservice is broken: pods listing shows 'cartservice-59798f66d6-87776 0/1 ImagePullBackOff' (all other 10 boutique pods 1/1 Running); deployments show cartservice 0/1 AVAILABLE; endpoints/cartservice is empty and CheckServiceConnectivity(cartservice:7070) = Connection Failed, which is the reported availability disruption. The mechanism event is verbatim: 'Failed to pull image "ghost-registry.example.net/google-samples/microservices-demo/cartservice:v0.10.3": failed to resolve reference ...: dial tcp: lookup ghost-registry.example.net on 127.0.0.53:53: no such host' -&gt; ErrImagePull -&gt; Im</li>
+<li><b>摘要</b>：Only cartservice is broken: pods listing shows 'cartservice-59798f66d6-87776 0/1 ImagePullBackOff' (all other 10 boutique pods 1/1 Running); deployments show cartservice 0/1 AVAILABLE; endpoints/cartservice is empty and CheckServiceConnectivity(cartservice:7070) = Connection Failed, which is the reported availability disruption. The mechanism event is verbatim: 'Failed to pull image &quot;ghost-registry.example.net/google-samples/microservices-demo/cartservice:v0.10.3&quot;: failed to resolve reference ...: dial tcp: lookup ghost-registry.example.net on 127.0.0.53:53: no such host' -&gt; ErrImagePull -&gt; Im</li>
 <li><b>raw 日志</b>：<a href="../results/1012_2040_inorder4-v3b8/raw/1012_2158_boutique-startup-2/">results/1012_2040_inorder4-v3b8/raw/1012_2158_boutique-startup-2</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;cartservice-59798f66d6-87776&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;ImagePullBackOff: Failed to pull image, failed to resolve reference, dial tcp: lookup registry host: no such host&quot;}</code></td></tr>
+<tr><td>10</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;ImagePullBackOff image pull failure registry DNS resolution incorrect image reference cartservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>12</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;cartservice&quot;,&quot;port&quot;:7070,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;name&quot;:&quot;cartservice&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Only cartservice is broken: pods listing shows 'cartservice-59798f66d6-87776 0/1 ImagePullBackOff' (all other 10 boutique pods 1/1 Running); deployments show cartservice 0/1 AVAILABLE; endpoints/cartservice is empty and CheckServiceConnectivity(cartservice:7070) = Connection Failed, which is the reported availability disruption. The mechanism event is verbatim: 'Failed to pull image \&quot;ghost-registry.example.net/google-samples/microservices-demo/cartservice:v0.10.3\&quot;: failed to resolve reference ...: dial tcp: lookup ghost-registry.example.net on 127.0.0.53:53: no such host' -&gt; ErrImagePull -&gt; ImagePullBackOff. The config face confirms the root cause: cartservice's Deployment image points at the fictional registry host 'ghost-registry.example.net' (annotated '# Modified: Referencing fictional domain'), so the registry hostname cannot be resolved by DNS and no container is ever created; meanwhile Service selector (app=cartservice, 7070-&gt;7070), ServiceAccount and the previously working image (us-central1-docker.pkg.dev/...) are all correct, so the break is the image-registry DNS address, not scheduling, probes, mounts or service addressing.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;image_registry_dns_failure&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;incorrect_image_reference&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/adservice&quot;,
+   &quot;root_cause&quot;: &quot;image_registry_dns_failure&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-3"><summary><b>case-3</b> · <code>app/checkoutservice</code> + <code>image_registry_dns_failure</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 14 步</summary><ul>
-<li><b>摘要</b>：checkoutservice is the only one of the 12 boutique services with an empty Endpoints list (GetResources endpoints) and an active TCP probe to checkoutservice:5050 returned 'Connection Failed', matching the partial-unreachability symptom; the pod listing shows the single outlier checkoutservice-7bbc84d447-gfr6r as 0/1 ErrImagePull on worker-03 while all other pods are 1/1 Running. The pod's Warning events and its deployment 0/1 AVAILABLE state show the container never started: kubelet 'Failed to pull image "ghost-registry.example.net/google-samples/microservices-demo/checkoutservice:v0.10.3" ...</li>
+<li><b>摘要</b>：checkoutservice is the only one of the 12 boutique services with an empty Endpoints list (GetResources endpoints) and an active TCP probe to checkoutservice:5050 returned 'Connection Failed', matching the partial-unreachability symptom; the pod listing shows the single outlier checkoutservice-7bbc84d447-gfr6r as 0/1 ErrImagePull on worker-03 while all other pods are 1/1 Running. The pod's Warning events and its deployment 0/1 AVAILABLE state show the container never started: kubelet 'Failed to pull image &quot;ghost-registry.example.net/google-samples/microservices-demo/checkoutservice:v0.10.3&quot; ...</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1245_imagecls-verify1/raw/1013_1246_boutique-startup-3/">results/1013_1245_imagecls-verify1/raw/1013_1246_boutique-startup-3</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;checkoutservice-7bbc84d447-gfr6r&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>9</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;,&quot;port&quot;:5050,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;label_selector&quot;:&quot;app=checkoutservice&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;deployments&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>12</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-03&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;checkoutservice is the only one of the 12 boutique services with an empty Endpoints list (GetResources endpoints) and an active TCP probe to checkoutservice:5050 returned 'Connection Failed', matching the partial-unreachability symptom; the pod listing shows the single outlier checkoutservice-7bbc84d447-gfr6r as 0/1 ErrImagePull on worker-03 while all other pods are 1/1 Running. The pod's Warning events and its deployment 0/1 AVAILABLE state show the container never started: kubelet 'Failed to pull image \&quot;ghost-registry.example.net/google-samples/microservices-demo/checkoutservice:v0.10.3\&quot; ... failed to resolve reference ... dial tcp: lookup ghost-registry.example.net on 127.0.0.53:53: no such host' (ErrImagePull -&gt; ImagePullBackOff). GetAppYAML(checkoutservice) confirms the image reference points at the unresolvable registry host ghost-registry.example.net, and the Service selector app=checkoutservice matches the pod labels, so the break is at the image registry DNS resolution step, not in Service addressing. Node worker-03 kubelet is active/running and the pod was successfully scheduled, ruling out node/scheduler causes; no metric alerts were present, ruling out performance faults.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;image_registry_dns_failure&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;incorrect_image_reference&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_image_pull_secret&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-4"><summary><b>case-4</b> · <code>app/frontend</code> + <code>image_registry_dns_failure</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 12 步</summary><ul>
-<li><b>摘要</b>：Symptom side: CheckServiceConnectivity(frontend:80) returned 'Connection Failed' while all 11 other boutique services remained healthy, and the deployments listing showed only 'frontend 0/1 AVAILABLE'. Object layer: pod frontend-7968b59db9-zs7zp was the unique outlier (0/1 ErrImagePull, then ImagePullBackOff) on worker-03, with PodScheduled=True so no scheduling/capacity cause. Mechanism event (kubelet on worker-03): 'Failed to pull image "ghost-registry.example.net/google-samples/microservices-demo/frontend:v0.10.3": ... dial tcp: lookup ghost-registry.example.net on 127.0.0.53:53: no such ho</li>
+<li><b>摘要</b>：Symptom side: CheckServiceConnectivity(frontend:80) returned 'Connection Failed' while all 11 other boutique services remained healthy, and the deployments listing showed only 'frontend 0/1 AVAILABLE'. Object layer: pod frontend-7968b59db9-zs7zp was the unique outlier (0/1 ErrImagePull, then ImagePullBackOff) on worker-03, with PodScheduled=True so no scheduling/capacity cause. Mechanism event (kubelet on worker-03): 'Failed to pull image &quot;ghost-registry.example.net/google-samples/microservices-demo/frontend:v0.10.3&quot;: ... dial tcp: lookup ghost-registry.example.net on 127.0.0.53:53: no such ho</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1503_inorder4-v3b16/raw/1013_1504_boutique-startup-4/">results/1013_1503_inorder4-v3b16/raw/1013_1504_boutique-startup-4</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;frontend-7968b59db9-zs7zp&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>10</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:80,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom side: CheckServiceConnectivity(frontend:80) returned 'Connection Failed' while all 11 other boutique services remained healthy, and the deployments listing showed only 'frontend 0/1 AVAILABLE'. Object layer: pod frontend-7968b59db9-zs7zp was the unique outlier (0/1 ErrImagePull, then ImagePullBackOff) on worker-03, with PodScheduled=True so no scheduling/capacity cause. Mechanism event (kubelet on worker-03): 'Failed to pull image \&quot;ghost-registry.example.net/google-samples/microservices-demo/frontend:v0.10.3\&quot;: ... dial tcp: lookup ghost-registry.example.net on 127.0.0.53:53: no such host' — a registry hostname that cannot be resolved, not 'manifest unknown' (bad reference) nor 'unauthorized' (pull secret). Namespace events surface showed no other Warning, binding the mechanism to frontend alone. Config face: GetAppYAML(frontend) confirms the pod template image is exactly ghost-registry.example.net/google-samples/microservices-demo/frontend:v0.10.3 and its Service selector/port (app=frontend, 80-&gt;8080) is correct, so the break is in image-registry DNS resolution, not in the address layer. Because the container never started (empty Container ID, 0 restarts), the Service had no ready endpoint, producing the reported partial unreachability.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;image_registry_dns_failure&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;incorrect_image_reference&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;missing_image_pull_secret&quot;
+  }
+ ]
+}</pre>
+</details>
 </body></html>

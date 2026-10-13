@@ -8,10 +8,12 @@ table { width:100%; border-collapse:collapse; background:var(--surface); border:
 th, td { padding:8px 11px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; } th { font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); } tr:last-child td { border-bottom:none; }
 code { font-size:13px; color:var(--dlr); } a { color:var(--dlr); } a:hover { text-decoration-thickness:2px; } .ok { color:var(--good); }
 details { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 18px; margin:10px 0; } details summary { cursor:pointer; font-size:14.5px; } details ul { margin:10px 0 4px; padding-left:20px; font-size:14px; color:var(--ink-2); }
+details p { font-size:14px; color:var(--ink-2); margin:7px 0; }
+pre { white-space:pre-wrap; word-break:break-word; background:var(--page); border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:12.8px; line-height:1.55; font-family:ui-monospace,Consolas,monospace; color:var(--ink); margin:8px 0; }
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/codedefect</em></h1>
-<p class="deck">已跑 <b>10/98</b> 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 181,235 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:20:29.295Z</p>
+<p class="deck">已跑 <b>10/98</b> 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 181,235 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:25:34.981Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3077</td><td>14</td><td>129,107</td><td>0</td><td>0</td><td class="muted">1012_1415_inorder4-v3</td><td><a href="../results/1012_1415_inorder4-v3/raw/1012_1417_boutique-codedefect-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1417_boutique-codedefect-1</a></td></tr>
@@ -29,41 +31,409 @@ details { background:var(--surface); border:1px solid var(--border); border-radi
 <details id="case-1"><summary><b>case-1</b> · <code>app/checkoutservice</code> + <code>code_wrong_argument_order</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 14 步</summary><ul>
 <li><b>摘要</b>：Pods scan in namespace boutique shows the only outlier is checkoutservice-7c8866657f-db778: RESTARTS 4 (61s ago), age 2m31s, while all other 10 pods have 0 restarts. kubectl describe shows the 'server' container Last State Terminated with Reason=Error, Exit Code=2 (not 137, so not OOMKilled), and a kubelet event 'Warning BackOff (x5 over 2m11s) Back-off restarting failed container server'; probes (grpc 5050) match the container port, so probe/scheduling/image/volume causes are excluded. Container logs of the previous instance show 'panic: mismatching currency codes' raised from money.Must at m</li>
 <li><b>raw 日志</b>：<a href="../results/1012_1415_inorder4-v3/raw/1012_1417_boutique-codedefect-1/">results/1012_1415_inorder4-v3/raw/1012_1417_boutique-codedefect-1</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>2</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>3</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;checkoutservice-7c8866657f-db778&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;money/money.go&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Pods scan in namespace boutique shows the only outlier is checkoutservice-7c8866657f-db778: RESTARTS 4 (61s ago), age 2m31s, while all other 10 pods have 0 restarts. kubectl describe shows the 'server' container Last State Terminated with Reason=Error, Exit Code=2 (not 137, so not OOMKilled), and a kubelet event 'Warning BackOff (x5 over 2m11s) Back-off restarting failed container server'; probes (grpc 5050) match the container port, so probe/scheduling/image/volume causes are excluded. Container logs of the previous instance show 'panic: mismatching currency codes' raised from money.Must at money/money.go:85, called by main.(*checkoutService).PlaceOrder at main.go:294 (money.Sum returns ErrMismatchingCurrency when the two Money currency codes differ); a Go panic exits with code 2, exactly matching the observed crash-loop. Source inspection shows PlaceOrder swaps the arguments: 'userID, userCurrency = userCurrency, userID', so the user-currency slot carries the user UUID into convertCurrency/prepOrderItems, producing OrderItems/ShippingCost whose currency code is the UUID while the order total is initialized with req.UserCurrency (GBP int the log), and the first money.Must(money.Sum(total, *prep.shippingCostLocalized)) panics. Downstream currencyservice logs only 'conversion request successful' with no errors (healthy), and alerts (pointers) confirm the blast radius: frontend POST /cart/checkout 500 with 162 occurrences, plus paymentservice and emailservice 'AVAILABILITY_MISSING' because checkout crashes before chargeCard/sendOrderConfirmation, i.e. they receive zero traffic. Root cause: application code passes arguments in the wrong order in checkoutservice PlaceOrder, panicking the container and disrupting service availability.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_argument_order&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_return&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_return&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-2"><summary><b>case-2</b> · <code>app/checkoutservice</code> + <code>code_wrong_argument_order</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
 <li><b>摘要</b>：checkoutservice pod (checkoutservice-7c8866657f-927cq, worker-01) is the only outlier in the pods listing: 1/2 Ready, RESTARTS 4 (50s ago), ContainersReady=False, with kubelet events 'Back-off restarting failed container server'. The container 'server' last termination state is Reason=Error ExitCode=2; its logs end in 'panic: mismatching currency codes' at money.Must (money/money.go:85) called from main.(*checkoutService).PlaceOrder (main.go:294). Source inspection of checkoutservice/main.go shows PlaceOrder swaps the two variables right after reading them (userID, userCurrency = userCurrency,</li>
 <li><b>raw 日志</b>：<a href="../results/1012_1846_inorder4-v3b4/raw/1012_1850_boutique-codedefect-2/">results/1012_1846_inorder4-v3b4/raw/1012_1850_boutique-codedefect-2</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;checkoutservice-7c8866657f-927cq&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;money/money.go&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>14</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;,&quot;port&quot;:5050,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;checkoutservice pod (checkoutservice-7c8866657f-927cq, worker-01) is the only outlier in the pods listing: 1/2 Ready, RESTARTS 4 (50s ago), ContainersReady=False, with kubelet events 'Back-off restarting failed container server'. The container 'server' last termination state is Reason=Error ExitCode=2; its logs end in 'panic: mismatching currency codes' at money.Must (money/money.go:85) called from main.(*checkoutService).PlaceOrder (main.go:294). Source inspection of checkoutservice/main.go shows PlaceOrder swaps the two variables right after reading them (userID, userCurrency = userCurrency, userID) before calling prepareOrderItemsAndShippingQuoteFromCart, so the user ID is used as the target currency code; the localized shipping cost then carries that wrong currency code and money.Sum(TRY-total, it) returns ErrMismatchingCurrency, which Must panics on. The panic exits with code 2, so the container crash-loops and the pod never becomes Ready; CheckServiceConnectivity(checkoutservice:5050) returns 'Connection Failed' (empty endpoints), and the caller frontend logs 178x 'POST /cart/checkout - failed to complete the order: rpc error: code = Unavailable desc = no healthy upstream'. The alerts on paymentservice/emailservice (AVAILABILITY_MISSING, success_rate vanished) are downstream pointers that no traffic arrives because checkout is dead. Deployment config (image wangyl2128/checkoutservice-v2:latest, selector app=checkoutservice, port 5050-&gt;5050, serviceAccount present, gRPC probes on 5050) is consistent, excluding scheduling/admission/addressing/probe causes and leaving the application code as the break point.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_argument_order&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_return&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_return&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-3"><summary><b>case-3</b> · <code>app/checkoutservice</code> + <code>code_wrong_argument_order</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
 <li><b>摘要</b>：Outlier scan of boutique pods: only checkoutservice-7c8866657f-hpwj6 is 1/2 READY with 4 restarts; the reported disruption enters from frontend ('POST /cart/checkout' 500 x167) whose call edge goes to checkoutservice. Pod detail/events show container 'server' Last State Terminated Reason=Error Exit Code=2 and kubelet 'Warning BackOff ... Back-off restarting failed container server in pod checkoutservice-7c8866657f-hpwj6'. Error logs show the sole pattern 'panic: mismatching currency codes' with stack money.Must(/src/money/money.go:85) &lt;- checkoutService.PlaceOrder(/src/main.go:294). Source clo</li>
 <li><b>raw 日志</b>：<a href="../results/1012_1935_tidy-verify1/raw/1012_1936_boutique-codedefect-3/">results/1012_1935_tidy-verify1/raw/1012_1936_boutique-codedefect-3</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;checkoutservice-7c8866657f-hpwj6&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetRecentLogs</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;money/money.go&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Outlier scan of boutique pods: only checkoutservice-7c8866657f-hpwj6 is 1/2 READY with 4 restarts; the reported disruption enters from frontend ('POST /cart/checkout' 500 x167) whose call edge goes to checkoutservice. Pod detail/events show container 'server' Last State Terminated Reason=Error Exit Code=2 and kubelet 'Warning BackOff ... Back-off restarting failed container server in pod checkoutservice-7c8866657f-hpwj6'. Error logs show the sole pattern 'panic: mismatching currency codes' with stack money.Must(/src/money/money.go:85) &lt;- checkoutService.PlaceOrder(/src/main.go:294). Source close-out: main.go PlaceOrder contains the swapped assignment 'userID, userCurrency = userCurrency, userID' before prepareOrderItemsAndShippingQuoteFromCart, so convertCurrency localizes the shipping cost with toCode=userID while total.CurrencyCode stays req.UserCurrency ('EUR'), making money.Sum return ErrMismatchingCurrency and money.Must panic. Probes (grpc:5050) and serviceAccount are intact and exit code is 2 (not 137), excluding probe/port/OOM/SA causes; paymentservice/emailservice 'success_rate vanished' alerts are downstream effects of checkout aborting before Charge/SendOrderConfirmation.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_argument_order&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_return&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_missing_parameter&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-4"><summary><b>case-4</b> · <code>app/checkoutservice</code> + <code>code_wrong_argument_order</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 16 步</summary><ul>
 <li><b>摘要</b>：checkoutservice pod checkoutservice-7c8866657f-68dwf is the sole outlier (READY 1/2, STATUS Error, 4 restarts); its server container terminated with Reason=Error Exit Code=2 and logs show 'panic: mismatching currency codes' at money.Must (money/money.go:85) called from PlaceOrder (main.go:294). Source code shows the injected defect in main.go PlaceOrder: 'userID, userCurrency = userCurrency, userID' swaps the two arguments before prepareOrderItemsAndShippingQuoteFromCart, so prices are converted to an invalid currency code while the order total keeps req.UserCurrency, making money.Sum return E</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1448_chainhead-verify2/raw/1013_1448_boutique-codedefect-4/">results/1013_1448_chainhead-verify2/raw/1013_1448_boutique-codedefect-4</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;,&quot;top_k&quot;:2}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;checkoutservice-7c8866657f-68dwf&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;money/money.go&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;checkoutservice pod checkoutservice-7c8866657f-68dwf is the sole outlier (READY 1/2, STATUS Error, 4 restarts); its server container terminated with Reason=Error Exit Code=2 and logs show 'panic: mismatching currency codes' at money.Must (money/money.go:85) called from PlaceOrder (main.go:294). Source code shows the injected defect in main.go PlaceOrder: 'userID, userCurrency = userCurrency, userID' swaps the two arguments before prepareOrderItemsAndShippingQuoteFromCart, so prices are converted to an invalid currency code while the order total keeps req.UserCurrency, making money.Sum return ErrMismatchingCurrency and Must panic. Pod events confirm 'Warning BackOff: Back-off restarting failed container server', Deployment checkoutservice is 0/1 AVAILABLE, image pulls and grpc probes (port 5050) and all env addresses are correct, excluding image/probe/addressing causes. Frontend /cart/checkout reports 185 HTTP 500s and paymentservice/emailservice alerts show AVAILABILITY_MISSING (traffic vanished) as downstream victims.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_argument_order&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_return&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_missing_parameter&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-5"><summary><b>case-5</b> · <code>app/checkoutservice</code> + <code>code_busy_loop</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
 <li><b>摘要</b>：GetAlerts() shows a single anomaly entity: checkoutservice — RESOURCE_SATURATION [cpu] Normal=0.00 -&gt; Current=0.07 cores (+4631%), RESOURCE_SATURATION [cpu_cfs] 0.396s throttled, and LATENCY_DEGRADATION p50 Normal=18.62ms -&gt; Current=750.00ms (peak=754.35ms). Object-layer exclusion is clean: all 11 boutique pods are 2/2 Running with RESTARTS=0, GetErrorLogs(checkoutservice) is empty, and all 4 nodes are Ready with 8 allocatable CPU cores and no taints/pressure, so node capacity, scheduling and probe paths are ruled out — the break is at the metric level on checkoutservice. GetSourceCode(checkou</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1225_inorder4-v3b11/raw/1013_1225_boutique-codedefect-5/">results/1013_1225_inorder4-v3b11/raw/1013_1225_boutique-codedefect-5</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;checkoutservice CPU saturation latency degradation pod cpu overload&quot;}</code></td></tr>
+<tr><td>11</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;GetAlerts() shows a single anomaly entity: checkoutservice — RESOURCE_SATURATION [cpu] Normal=0.00 -&gt; Current=0.07 cores (+4631%), RESOURCE_SATURATION [cpu_cfs] 0.396s throttled, and LATENCY_DEGRADATION p50 Normal=18.62ms -&gt; Current=750.00ms (peak=754.35ms). Object-layer exclusion is clean: all 11 boutique pods are 2/2 Running with RESTARTS=0, GetErrorLogs(checkoutservice) is empty, and all 4 nodes are Ready with 8 allocatable CPU cores and no taints/pressure, so node capacity, scheduling and probe paths are ruled out — the break is at the metric level on checkoutservice. GetSourceCode(checkoutservice, main.go) closes the mechanism: PlaceOrder() begins with a pure CPU spin-wait loop 'start := time.Now(); for { if time.Now().Sub(start) &gt; 500*time.Millisecond { break } }' that burns 500ms of CPU per order (no sleep), matching the +4631% CPU rise with CFS throttling and the ~500ms additive latency (18.62ms -&gt; 750ms incl. downstream RPCs). The deployment was repeatedly rolled on image wangyl2128/checkoutservice-v2:latest, confirming checkoutservice as the fault subject; App YAML shows cpu limit 200m (no resource-capacity defect) and all checkoutservice events are Normal.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_busy_loop&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_artificial_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-6"><summary><b>case-6</b> · <code>app/checkoutservice</code> + <code>code_busy_loop</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
 <li><b>摘要</b>：Alert on checkoutservice: RESOURCE_SATURATION [cpu_cfs] 0.332s throttled, [cpu] 0.00 -&gt; 0.06 cores (+5117.2%), LATENCY_DEGRADATION p50 18.75ms -&gt; 752.94ms (+3915.3%). Object layer excluded by anchor: all boutique pods 2/2 Running with 0 RESTARTS, no warning mechanism events (no OOMKilled/FailedScheduling/FailedMount/probe failures) on the current checkoutservice pod checkoutservice-6cd8767b6d-hznfp; GetAppYAML shows normal 100m/200m cpu request/limit, gRPC health probes on 5050 and matching Service targetPort, so probe/port/reference/quota causes are ruled out. Break is in the code surface: ma</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1413_inorder4-v3b15/raw/1013_1413_boutique-codedefect-6/">results/1013_1413_inorder4-v3b15/raw/1013_1413_boutique-codedefect-6</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>7</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResourceTags_placeholder</code></td><td><code>{&quot;placeholder&quot;:&quot;x&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;money/money.go&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;name&quot;:&quot;checkoutservice-6cd8767b6d-hznfp&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Alert on checkoutservice: RESOURCE_SATURATION [cpu_cfs] 0.332s throttled, [cpu] 0.00 -&gt; 0.06 cores (+5117.2%), LATENCY_DEGRADATION p50 18.75ms -&gt; 752.94ms (+3915.3%). Object layer excluded by anchor: all boutique pods 2/2 Running with 0 RESTARTS, no warning mechanism events (no OOMKilled/FailedScheduling/FailedMount/probe failures) on the current checkoutservice pod checkoutservice-6cd8767b6d-hznfp; GetAppYAML shows normal 100m/200m cpu request/limit, gRPC health probes on 5050 and matching Service targetPort, so probe/port/reference/quota causes are ruled out. Break is in the code surface: main.go PlaceOrder contains a CPU-intensive busy-wait spin loop ('start := time.Now(); for { if time.Now().Sub(start) &gt; 500*time.Millisecond { break } }') burning CPU for 500ms per order with no sleep. Logs close both halves: [PlaceOrder] 11:36:00.151959 -&gt; payment went through 11:36:00.724975 (+573ms), and 11:36:01.094855 -&gt; 11:36:01.632348 (+537ms), matching the ~734ms p50 degradation and the CFS throttling. money.go MultiplySlow is the unchanged upstream implementation, not the injected fault.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_busy_loop&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_artificial_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-7"><summary><b>case-7</b> · <code>app/checkoutservice</code> + <code>code_busy_loop</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 13 步</summary><ul>
 <li><b>摘要</b>：Telemetry chain (L2 consensus qid=12): the only active alert pins entity checkoutservice with RESOURCE_SATURATION [cpu] Normal=0.00 -&gt; Current=0.07 cores (+5260.9%), RESOURCE_SATURATION [cpu_cfs] Val=0.408s throttled, and LATENCY_DEGRADATION p50 24.08ms -&gt; 752.02ms (+3023.1%, peak 758.26ms). Object-layer exclusion is clean: all 11 boutique pods are 2/2 Running with RESTARTS=0 (checkoutservice-6cd8767b6d-9kbtf alive 0 restarts), GetErrorLogs(checkoutservice) returns no error logs, and recent logs show only normal [PlaceOrder]/payment/email entries, so no probe/OOM/scheduling/startup break exist</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1536_inorder4-v3b19/raw/1013_1536_boutique-codedefect-7/">results/1013_1536_inorder4-v3b19/raw/1013_1536_boutique-codedefect-7</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;money/money.go&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Telemetry chain (L2 consensus qid=12): the only active alert pins entity checkoutservice with RESOURCE_SATURATION [cpu] Normal=0.00 -&gt; Current=0.07 cores (+5260.9%), RESOURCE_SATURATION [cpu_cfs] Val=0.408s throttled, and LATENCY_DEGRADATION p50 24.08ms -&gt; 752.02ms (+3023.1%, peak 758.26ms). Object-layer exclusion is clean: all 11 boutique pods are 2/2 Running with RESTARTS=0 (checkoutservice-6cd8767b6d-9kbtf alive 0 restarts), GetErrorLogs(checkoutservice) returns no error logs, and recent logs show only normal [PlaceOrder]/payment/email entries, so no probe/OOM/scheduling/startup break exists. Code surface closes the case: checkoutservice main.go PlaceOrder starts with a spin-wait 'start := time.Now(); for { if time.Now().Sub(start) &gt; 500*time.Millisecond { break } }' - a CPU-intensive busy loop (absent upstream) that burns CPU for 500ms on every PlaceOrder, matching the cfs throttling (container cpu limit 200m per GetAppYAML) and the ~+500-730ms p50 latency shift. money/money.go MultiplySlow is original upstream code, not the injection.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_busy_loop&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_artificial_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-8"><summary><b>case-8</b> · <code>app/checkoutservice</code> + <code>code_busy_loop</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
 <li><b>摘要</b>：Alert on entity checkoutservice: RESOURCE_SATURATION [cpu_cfs] 0.380s throttled, CPU Normal=0.00 -&gt; Current=0.07 cores (+4730%), and LATENCY_DEGRADATION p50 19.50ms -&gt; 750.00ms (+3745.8%). Object layer excludes infra faults: all boutique pods 2/2 Running with RESTARTS 0; checkoutservice pod Ready=True, Restart Count 0, limits cpu 200m, grpc probes 5050 healthy; recent logs show successful PlaceOrder/payment/email flow with no error logs; dependency edges frontend-&gt;checkoutservice-&gt;{productcatalog,shipping,currency,payment,email,cart} intact. Code face reveals the break: checkoutservice main.go</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1623_inorder4-v3b21/raw/1013_1623_boutique-codedefect-8/">results/1013_1623_inorder4-v3b21/raw/1013_1623_boutique-codedefect-8</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;checkoutservice-6cd8767b6d-9nxv6&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Alert on entity checkoutservice: RESOURCE_SATURATION [cpu_cfs] 0.380s throttled, CPU Normal=0.00 -&gt; Current=0.07 cores (+4730%), and LATENCY_DEGRADATION p50 19.50ms -&gt; 750.00ms (+3745.8%). Object layer excludes infra faults: all boutique pods 2/2 Running with RESTARTS 0; checkoutservice pod Ready=True, Restart Count 0, limits cpu 200m, grpc probes 5050 healthy; recent logs show successful PlaceOrder/payment/email flow with no error logs; dependency edges frontend-&gt;checkoutservice-&gt;{productcatalog,shipping,currency,payment,email,cart} intact. Code face reveals the break: checkoutservice main.go PlaceOrder() executes a 500ms CPU-burning spin-wait ('start := time.Now(); for { if time.Now().Sub(start) &gt; 500*time.Millisecond { break } }') before any downstream call, which explains exactly the CPU saturation/CFS throttling plus the ~730ms latency inflation without errors or restarts. The fault arrived with the newest checkoutservice rollout (ReplicaSet checkoutservice-6cd8767b6d, deployed ~3m ago vs ~6m for other services).&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_busy_loop&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_artificial_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-9"><summary><b>case-9</b> · <code>app/checkoutservice</code> + <code>code_artificial_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 16 步</summary><ul>
 <li><b>摘要</b>：Symptom 'Service Performance Degradation.' entered the telemetry chain (L2 qid12). The sole alert names entity checkoutservice with LATENCY_DEGRADATION: p50 19.07ms -&gt; 3750.00ms (+19564%), p90 48.57ms -&gt; 4750.00ms. Object-layer exclusion is clean: all 11 boutique pods are 2/2 Running with RESTARTS 0, GetErrorLogs(checkoutservice) is empty, CheckServiceConnectivity(checkoutservice:5050) succeeds, and namespace events show no scheduling/mount/image-pull/probe failures -&gt; no object-layer break, so the break is in the application path of the alerted entity. Mechanism face: checkoutservice main.go </li>
 <li><b>raw 日志</b>：<a href="../results/1013_1633_inorder4-v3b23/raw/1013_1633_boutique-codedefect-9/">results/1013_1633_inorder4-v3b23/raw/1013_1633_boutique-codedefect-9</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;money/money.go&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>14</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;,&quot;port&quot;:5050,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom 'Service Performance Degradation.' entered the telemetry chain (L2 qid12). The sole alert names entity checkoutservice with LATENCY_DEGRADATION: p50 19.07ms -&gt; 3750.00ms (+19564%), p90 48.57ms -&gt; 4750.00ms. Object-layer exclusion is clean: all 11 boutique pods are 2/2 Running with RESTARTS 0, GetErrorLogs(checkoutservice) is empty, CheckServiceConnectivity(checkoutservice:5050) succeeds, and namespace events show no scheduling/mount/image-pull/probe failures -&gt; no object-layer break, so the break is in the application path of the alerted entity. Mechanism face: checkoutservice main.go getUserCart() (critical path of PlaceOrder) contains an injected 'time.Sleep(time.Millisecond * time.Duration(3000))' blocking call, i.e. a 3-second artificial delay. Logs corroborate literally: every '[PlaceOrder]' entry is followed by 'payment went through' ~3.0s later (17:05:07.679 -&gt; 17:05:10.687; 17:05:14.192 -&gt; 17:05:17.202; 17:05:16.965 -&gt; 17:05:19.975), matching the 3750ms p50 alert. Configuration face: deployment runs image wangyl2128/checkoutservice-v2:latest with normal resource limits (100m/64Mi -&gt; 200m/128Mi) and working grpc:5050 probes; downstream dependencies are all healthy and no other service is alerted. Root cause = injected 3s artificial delay in checkoutservice application code; victim = app/checkoutservice.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_artificial_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_busy_loop&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-10"><summary><b>case-10</b> · <code>app/checkoutservice</code> + <code>code_artificial_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 14 步</summary><ul>
 <li><b>摘要</b>：Symptom 'Service Performance Degradation.' enters the telemetry chain. GetAlerts() returns a single anomaly on entity checkoutservice: LATENCY_DEGRADATION [Slow Response], p50 18.66ms -&gt; 3750.00ms (+19995.4%), p90 64.03ms -&gt; 4750.00ms. Object-layer exclusion is clean: GetResources(pods, boutique) shows all 11 boutique pods 2/2 Running with RESTARTS 0, including checkoutservice-57d5fbd5f5-c9s88; GetErrorLogs(checkoutservice) returns no error logs and the container log shows a normal PlaceOrder -&gt; payment went through -&gt; order confirmation email sent flow; GetAppYAML(checkoutservice) shows corre</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1645_inorder4-v3b24/raw/1013_1645_boutique-codedefect-10/">results/1013_1645_inorder4-v3b24/raw/1013_1645_boutique-codedefect-10</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Performance Degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>13</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom 'Service Performance Degradation.' enters the telemetry chain. GetAlerts() returns a single anomaly on entity checkoutservice: LATENCY_DEGRADATION [Slow Response], p50 18.66ms -&gt; 3750.00ms (+19995.4%), p90 64.03ms -&gt; 4750.00ms. Object-layer exclusion is clean: GetResources(pods, boutique) shows all 11 boutique pods 2/2 Running with RESTARTS 0, including checkoutservice-57d5fbd5f5-c9s88; GetErrorLogs(checkoutservice) returns no error logs and the container log shows a normal PlaceOrder -&gt; payment went through -&gt; order confirmation email sent flow; GetAppYAML(checkoutservice) shows correct probes (gRPC :5050), correct downstream env addresses and a matching Service selector/port (5050-&gt;5050); namespace events show only transient rollout churn (serviceaccount lookup / probe connection-refused during restarts), with no FailedScheduling/FailedMount/image-pull/OOM mechanism. The exact break is on the code face: GetSourceCode(checkoutservice, main.go) contains an injected blocking statement `time.Sleep(time.Millisecond * time.Duration(3000))` as the first action of the PlaceOrder handler (upstream microservices-demo has no such sleep), and the workload runs the custom image wangyl2128/checkoutservice-v2:latest. A 3s blocking delay on the request critical path exactly explains p50 3750ms = 3s sleep + ~750ms normal work and p90 4750ms, with no errors, no restarts and no resource signal. The degradation tracks the service (its pods ran on both worker-02 and worker-01 while the anomaly persisted), so the victim is the app, not a node.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_artificial_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  }
+ ]
+}</pre>
+</details>
 </body></html>

@@ -8,10 +8,12 @@ table { width:100%; border-collapse:collapse; background:var(--surface); border:
 th, td { padding:8px 11px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; } th { font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); } tr:last-child td { border-bottom:none; }
 code { font-size:13px; color:var(--dlr); } a { color:var(--dlr); } a:hover { text-decoration-thickness:2px; } .ok { color:var(--good); }
 details { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 18px; margin:10px 0; } details summary { cursor:pointer; font-size:14.5px; } details ul { margin:10px 0 4px; padding-left:20px; font-size:14px; color:var(--ink-2); }
+details p { font-size:14px; color:var(--ink-2); margin:7px 0; }
+pre { white-space:pre-wrap; word-break:break-word; background:var(--page); border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:12.8px; line-height:1.55; font-family:ui-monospace,Consolas,monospace; color:var(--ink); margin:8px 0; }
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/service</em></h1>
-<p class="deck">已跑 <b>12/37</b> 题：JRA ✅12 ❌0 ｜ 证据链全闭 12 ｜ token 中位 465,479 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:20:29.295Z</p>
+<p class="deck">已跑 <b>12/37</b> 题：JRA ✅12 ❌0 ｜ 证据链全闭 12 ｜ token 中位 465,479 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:25:34.981Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-2"><code>2</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3158</td><td>20</td><td>681,352</td><td>0</td><td>0</td><td class="muted">1012_2010_attr-verify1</td><td><a href="../results/1012_2010_attr-verify1/raw/1012_2010_trainticket-service-2/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_2010_trainticket-service-2</a></td></tr>
@@ -31,49 +33,594 @@ details { background:var(--surface); border:1px solid var(--border); border-radi
 <details id="case-2"><summary><b>case-2</b> · <code>app/ts-gateway-service</code> + <code>gateway_misrouted</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 20 步</summary><ul>
 <li><b>摘要</b>：All 47 pods in train-ticket are 2/2 Running with no alert and no scheduling/admission/startup warning events, and the supposed victim is healthy: ts-order-service:12031 answers TCP from worker-01/02/03 (Connection Succeeded), its Service ports/targetPort=12031 and selector app=ts-order-service match its pod. The break is therefore at the address layer: line-by-line audit of the gateway route table (ConfigMap ts-gateway-service-config inside GetAppYAML(ts-gateway-service)) shows route id 'order' with Path=/api/v1/orderservice/** wired to uri 'lb://${ROUTE_SERVICE_HOST:ts-route-service}' - point</li>
 <li><b>raw 日志</b>：<a href="../results/1012_2010_attr-verify1/raw/1012_2010_trainticket-service-2/">results/1012_2010_attr-verify1/raw/1012_2010_trainticket-service-2</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-order-service&quot;,&quot;port&quot;:8080,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>11</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;,&quot;port&quot;:18888,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-order-service&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>15</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>16</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-order-service&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;port&quot;:12031}</code></td></tr>
+<tr><td>17</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>18</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;gateway route table path points to the wrong service, one route mis-wired, report which object as the faulty component&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>19</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;ts-gateway-service route table misrouted gateway_misrouted victim object&quot;,&quot;top_k&quot;:5}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All 47 pods in train-ticket are 2/2 Running with no alert and no scheduling/admission/startup warning events, and the supposed victim is healthy: ts-order-service:12031 answers TCP from worker-01/02/03 (Connection Succeeded), its Service ports/targetPort=12031 and selector app=ts-order-service match its pod. The break is therefore at the address layer: line-by-line audit of the gateway route table (ConfigMap ts-gateway-service-config inside GetAppYAML(ts-gateway-service)) shows route id 'order' with Path=/api/v1/orderservice/** wired to uri 'lb://${ROUTE_SERVICE_HOST:ts-route-service}' - pointing at ts-route-service instead of ts-order-service, while every other route's Path matches its target (e.g. 'route' Path=/api/v1/routeservice/** -&gt; ts-route-service, 'order-other' -&gt; ts-order-other-service via ORDER_OTHER_SERVICE_HOST). Hence /api/v1/orderservice/** is mis-routed and partially unreachable although ts-order-service is fully healthy; caller ts-ui-dashboard logs show 499s on the order/preserve path. The faulty component is the owner of the route table (the gateway); the mis-wired target service is the victim, not the break.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-ui-dashboard&quot;,
+   &quot;root_cause&quot;: &quot;service_dns_resolution_failure&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-3"><summary><b>case-3</b> · <code>app/ts-gateway-service</code> + <code>gateway_misrouted</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 19 步</summary><ul>
 <li><b>摘要</b>：Reachability is partial: ts-ui-dashboard serving other paths 200 (contactservice, travelservice, assuranceservice) while preserveservice returns 499; pods are all 2/2 Running with services/selectors/ports correct, so no workload/node break. The break is in the address layer: the gateway ConfigMap ts-gateway-service-config (application.yml) owns 41 routes and exactly one violates 'each route's Path must point at the service its Path names' - route id 'order' has Path=/api/v1/orderservice/** but uri lb://${TRAVEL_SERVICE_HOST:ts-travel-service}. The nacos ConfigMap contains only NACOS_ADDRS and </li>
 <li><b>raw 日志</b>：<a href="../results/1013_1040_rank1-verify1/raw/1013_1040_trainticket-service-3/">results/1013_1040_rank1-verify1/raw/1013_1040_trainticket-service-3</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;nacos&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>16</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Reachability is partial: ts-ui-dashboard serving other paths 200 (contactservice, travelservice, assuranceservice) while preserveservice returns 499; pods are all 2/2 Running with services/selectors/ports correct, so no workload/node break. The break is in the address layer: the gateway ConfigMap ts-gateway-service-config (application.yml) owns 41 routes and exactly one violates 'each route's Path must point at the service its Path names' - route id 'order' has Path=/api/v1/orderservice/** but uri lb://${TRAVEL_SERVICE_HOST:ts-travel-service}. The nacos ConfigMap contains only NACOS_ADDRS and the deployment defines no *_SERVICE_HOST env vars, so the literal default applies and /api/v1/orderservice/** traffic is routed to ts-travel-service instead of ts-order-service, leaving the order path (and thus ts-order-service) unreachable through the gateway while all other paths remain healthy. The mis-wiring resides in the gateway's own route table; ts-order-service is the affected target, not the break. The ts-ui-dashboard nginx 'host not found in upstream ts-gateway-service' + BackOff events are a transient startup race after the namespace redeploy (~5m old Services) and not the persistent fault.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-travel-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-4"><summary><b>case-4</b> · <code>app/ts-gateway-service</code> + <code>gateway_misrouted</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 19 步</summary><ul>
 <li><b>摘要</b>：All train-ticket pods are 2/2 Running with no Pending/CrashLoop/ImagePull failures, and namespace events contain only rollout churn (Killing / 503 readiness / Backoff), so scheduling, admission, image, mount, probe, node and quota surfaces are excluded. Alerts report HTTPError('404 Client Error: Not Found') on POST /api/v1/orderservice/order/refresh (entry_service ts-order-service, 20 occurrences each), and TCP checks succeed to both ts-order-service:12031 and ts-price-service:16579 from worker-01/02/03 - a live backend answering 404 proves an addressing/routing break, not a connectivity break</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1122_inorder4-v3b9/raw/1013_1127_trainticket-service-4/">results/1013_1122_inorder4-v3b9/raw/1013_1127_trainticket-service-4</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;nacos&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>16</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>17</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-order-service&quot;,&quot;port&quot;:12031,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>18</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-price-service&quot;,&quot;port&quot;:16579,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All train-ticket pods are 2/2 Running with no Pending/CrashLoop/ImagePull failures, and namespace events contain only rollout churn (Killing / 503 readiness / Backoff), so scheduling, admission, image, mount, probe, node and quota surfaces are excluded. Alerts report HTTPError('404 Client Error: Not Found') on POST /api/v1/orderservice/order/refresh (entry_service ts-order-service, 20 occurrences each), and TCP checks succeed to both ts-order-service:12031 and ts-price-service:16579 from worker-01/02/03 - a live backend answering 404 proves an addressing/routing break, not a connectivity break. Auditing the gateway route table (ConfigMap ts-gateway-service-config) line by line isolates exactly one self-inconsistent entry: route id 'order' with predicate Path=/api/v1/orderservice/** is wired to uri lb://${PRICE_SERVICE_HOST:ts-price-service} instead of ts-order-service (all other 40 routes, e.g. order-other -&gt; ts-order-other-service, price -&gt; ts-price-service, are consistent). Callers therefore hit ts-price-service, which exposes only /api/v1/priceservice/** and returns 404, while ts-order-service logs stay clean and error-free because no order request ever reaches it.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-price-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-5"><summary><b>case-5</b> · <code>app/ts-gateway-service</code> + <code>gateway_misrouted</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 23 步</summary><ul>
-<li><b>摘要</b>：Symptom: 'Service Availability Disruption.' Caller-side evidence: ts-ui-dashboard nginx log shows repeated 'POST /api/v1/preserveservice/preserve HTTP/1.1" 404 131' (alert: 20 occurrences, entry_service ts-preserve-service) while all other /api/v1/* calls return 200. Object layer is clean: all pods 2/2 Running except ts-ui-dashboard (3 restarts, caused by a transient nginx 'host not found in upstream ts-gateway-service' during rollout, now Ready), namespace events contain no FailedScheduling/FailedCreate/FailedMount/image-pull; ts-preserve-service has no error logs and CheckServiceConnectivity</li>
+<li><b>摘要</b>：Symptom: 'Service Availability Disruption.' Caller-side evidence: ts-ui-dashboard nginx log shows repeated 'POST /api/v1/preserveservice/preserve HTTP/1.1&quot; 404 131' (alert: 20 occurrences, entry_service ts-preserve-service) while all other /api/v1/* calls return 200. Object layer is clean: all pods 2/2 Running except ts-ui-dashboard (3 restarts, caused by a transient nginx 'host not found in upstream ts-gateway-service' during rollout, now Ready), namespace events contain no FailedScheduling/FailedCreate/FailedMount/image-pull; ts-preserve-service has no error logs and CheckServiceConnectivity</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1225_inorder4-v3b11/raw/1013_1226_trainticket-service-5/">results/1013_1225_inorder4-v3b11/raw/1013_1226_trainticket-service-5</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;,&quot;port&quot;:14568,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-preserve-service&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>18</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-food-service&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-food-service&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;nacos&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>21</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>22</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-ui-dashboard-554844f867-xrmkh&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom: 'Service Availability Disruption.' Caller-side evidence: ts-ui-dashboard nginx log shows repeated 'POST /api/v1/preserveservice/preserve HTTP/1.1\&quot; 404 131' (alert: 20 occurrences, entry_service ts-preserve-service) while all other /api/v1/* calls return 200. Object layer is clean: all pods 2/2 Running except ts-ui-dashboard (3 restarts, caused by a transient nginx 'host not found in upstream ts-gateway-service' during rollout, now Ready), namespace events contain no FailedScheduling/FailedCreate/FailedMount/image-pull; ts-preserve-service has no error logs and CheckServiceConnectivity(ts-preserve-service:14568) succeeds from worker-01/02/03, with its Service selector app=ts-preserve-service matching pod labels. The break is in the address layer: the gateway route table (ConfigMap ts-gateway-service-config, mounted into ts-gateway-service) wires route id 'preserve' as 'uri: lb://${FOOD_SERVICE_HOST:ts-food-service}' for 'Path=/api/v1/preserveservice/**' instead of ts-preserve-service, while all 42 other routes match their intended targets. The 'nacos' ConfigMap referenced via envFrom contains only NACOS_ADDRS (no *_HOST overrides), so the URI falls back to the literal ts-food-service, which has no /api/v1/preserveservice/preserve endpoint and answers the 131-byte Spring 404 seen at the caller. Requests to the preserve API are therefore misrouted to the wrong backend even though ts-preserve-service itself is healthy.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-preserve-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;service_env_var_address_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-6"><summary><b>case-6</b> · <code>app/ts-gateway-service</code> + <code>gateway_misrouted</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 24 步</summary><ul>
 <li><b>摘要</b>：Alert points at entry_service=ts-preserve-service: POST /api/v1/preserveservice/preserve returns 404 Not Found (20 occurrences). Yet ts-preserve-service is fully healthy: pod 2/2 Running with 0 restarts, endpoints bound at 172.20.3.154:14568, TCP connectivity succeeds from worker-01/02/03, and its error log is empty - so the request never reaches it. The namespace-wide pod scan shows no pending/crash/image-pull/mount anomaly and the events surface carries no Warning naming the preserve chain. The break is in the address layer: in ts-gateway-service-config (ConfigMap of app ts-gateway-service) </li>
 <li><b>raw 日志</b>：<a href="../results/1013_1248_inorder4-v3b13/raw/1013_1249_trainticket-service-6/">results/1013_1248_inorder4-v3b13/raw/1013_1249_trainticket-service-6</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;services&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;,&quot;port&quot;:14568,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;services&quot;,&quot;name&quot;:&quot;ts-food-delivery-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-wait-order-service&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-food-delivery-service&quot;}</code></td></tr>
+<tr><td>20</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;gateway route table misrouted, request 404 Not Found, victim service unreachable&quot;}</code></td></tr>
+<tr><td>21</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;ts-gateway-service routing config misrouted to ts-preserve-service, service availability disruption&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>23</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Alert points at entry_service=ts-preserve-service: POST /api/v1/preserveservice/preserve returns 404 Not Found (20 occurrences). Yet ts-preserve-service is fully healthy: pod 2/2 Running with 0 restarts, endpoints bound at 172.20.3.154:14568, TCP connectivity succeeds from worker-01/02/03, and its error log is empty - so the request never reaches it. The namespace-wide pod scan shows no pending/crash/image-pull/mount anomaly and the events surface carries no Warning naming the preserve chain. The break is in the address layer: in ts-gateway-service-config (ConfigMap of app ts-gateway-service) the route 'preserve' is declared as uri: lb://${ORDER_SERVICE_HOST:ts-order-service} while its predicate is Path=/api/v1/preserveservice/**, i.e. the only route in the 40-route table whose uri target service differs from the owner of its Path prefix (sibling 'preserve-other' correctly points to ts-preserve-other-service). Traffic for the preserve path is therefore rewired into ts-order-service, whose logs contain only its own handlers (getOrderById/saveChanges/queryOrders/modifyOrder) and no preserve controller, hence the 404. Root cause: mis-wired gateway route (gateway_misrouted) on the route table's owner ts-gateway-service; ts-preserve-service is the victim that loses its availability.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-preserve-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;service_env_var_address_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-7"><summary><b>case-7</b> · <code>app/ts-gateway-service</code> + <code>gateway_misrouted</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 19 步</summary><ul>
-<li><b>摘要</b>：All 44 train-ticket pods read 2/2 Running/Ready with no Pending/CrashLoop and ts-preserve-service:14568 is reachable from every node (CheckServiceConnectivity: Connection Succeeded; no error logs), yet the UI-dashboard nginx access log shows 20x "POST /api/v1/preserveservice/preserve HTTP/1.1" 404 while every sibling path (orderservice/order/refresh, inside_pay_service/inside_payment, cancelservice, users/login) returns 200. Line-by-line audit of the gateway route table (configmap ts-gateway-service-config, AGE 5m55s vs 9d for all other configmaps) shows exactly one mis-paired entry: id=preser</li>
+<li><b>摘要</b>：All 44 train-ticket pods read 2/2 Running/Ready with no Pending/CrashLoop and ts-preserve-service:14568 is reachable from every node (CheckServiceConnectivity: Connection Succeeded; no error logs), yet the UI-dashboard nginx access log shows 20x &quot;POST /api/v1/preserveservice/preserve HTTP/1.1&quot; 404 while every sibling path (orderservice/order/refresh, inside_pay_service/inside_payment, cancelservice, users/login) returns 200. Line-by-line audit of the gateway route table (configmap ts-gateway-service-config, AGE 5m55s vs 9d for all other configmaps) shows exactly one mis-paired entry: id=preser</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1413_inorder4-v3b15/raw/1013_1415_trainticket-service-7/">results/1013_1413_inorder4-v3b15/raw/1013_1415_trainticket-service-7</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetRecentLogs</code></td><td><code>{&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>9</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;,&quot;port&quot;:14568,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetRecentLogs</code></td><td><code>{&quot;service_name&quot;:&quot;ts-route-service&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>16</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;gateway route table mis-wired target which object to report as victim gateway_misrouted 404 preserveservice&quot;,&quot;namespace&quot;:&quot;kubernetes&quot;}</code></td></tr>
+<tr><td>17</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;gateway route table owner mis-wired target victim which object should be reported as the fault object&quot;,&quot;namespace&quot;:&quot;kubernetes&quot;,&quot;top_k&quot;:8}</code></td></tr>
+<tr><td>18</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;ts-gateway-service route table misroute preserve route target ts-route-service 404&quot;,&quot;top_k&quot;:6}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All 44 train-ticket pods read 2/2 Running/Ready with no Pending/CrashLoop and ts-preserve-service:14568 is reachable from every node (CheckServiceConnectivity: Connection Succeeded; no error logs), yet the UI-dashboard nginx access log shows 20x \&quot;POST /api/v1/preserveservice/preserve HTTP/1.1\&quot; 404 while every sibling path (orderservice/order/refresh, inside_pay_service/inside_payment, cancelservice, users/login) returns 200. Line-by-line audit of the gateway route table (configmap ts-gateway-service-config, AGE 5m55s vs 9d for all other configmaps) shows exactly one mis-paired entry: id=preserve, Path=/api/v1/preserveservice/** but uri: lb://${ROUTE_SERVICE_HOST:ts-route-service} instead of ts-preserve-service - so preserveservice traffic is delivered to ts-route-service, which only serves /api/v1/routeservice/** and answers 404. Every other route's Path matches its uri target. The break therefore resides in the gateway's routing configuration (the table's owner), not in any unhealthy workload; ts-preserve-service is merely the victim whose endpoint was mis-wired away.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-preserve-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-ui-dashboard&quot;,
+   &quot;root_cause&quot;: &quot;service_dns_resolution_failure&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-8"><summary><b>case-8</b> · <code>app/ts-gateway-service</code> + <code>gateway_misrouted</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 19 步</summary><ul>
 <li><b>摘要</b>：ts-ui-dashboard (nginx, fronting ts-gateway-service) logs POST /api/v1/preserveservice/preserve -&gt; 404 (13 occurrences, alert entry_service=ts-preserve-service) while every sibling path at the same timestamps returns 200 (cancel/login/travelservice/assuranceservice), i.e. only the preserve path is unreachable. The target itself is healthy: ts-preserve-service pod 2/2 Running, Nacos 'register finished', CheckServiceConnectivity(ts-preserve-service:14568) succeeded from worker-01/02/03, and its container log shows startup only — it never receives any preserve request. The break is the address la</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1520_inorder4-v3b17/raw/1013_1523_trainticket-service-8/">results/1013_1520_inorder4-v3b17/raw/1013_1523_trainticket-service-8</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>10</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>14</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;,&quot;port&quot;:14568,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;ts-ui-dashboard (nginx, fronting ts-gateway-service) logs POST /api/v1/preserveservice/preserve -&gt; 404 (13 occurrences, alert entry_service=ts-preserve-service) while every sibling path at the same timestamps returns 200 (cancel/login/travelservice/assuranceservice), i.e. only the preserve path is unreachable. The target itself is healthy: ts-preserve-service pod 2/2 Running, Nacos 'register finished', CheckServiceConnectivity(ts-preserve-service:14568) succeeded from worker-01/02/03, and its container log shows startup only — it never receives any preserve request. The break is the address layer: GetAppYAML(ts-gateway-service) exposes the route table ts-gateway-service-config where the single mismatched entry is '- id: preserve / uri: lb://${TRAVEL_SERVICE_HOST:ts-travel-service} / Path=/api/v1/preserveservice/**' — the Path names the preserve service but the route forwards to ts-travel-service (which has no such handler, hence 404); its correctly wired neighbour is 'preserve-other -&gt; ts-preserve-other-service'. Events surface shows no FailedScheduling/FailedCreate/FailedMount/image-pull (only pod-churn Killing/Started and ts-ui-dashboard nginx-upstream BackOff during the mass-restart cycles), so the mechanism is the gateway route table, not scheduling, image or probe.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-preserve-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;service_dns_resolution_failure&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-9"><summary><b>case-9</b> · <code>app/ts-gateway-service</code> + <code>gateway_misrouted</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 21 步</summary><ul>
 <li><b>摘要</b>：L3 SOP reachability chain. Symptom side: GetAlerts shows POST /api/v1/preserveservice/preserve -&gt; HTTPError('404 Client Error: Not Found') x13 against ts-preserve-service, while GetErrorLogs(ts-preserve-service) returns 'No error logs found' (traffic never reaches it). Object layer healthy: all pods 2/2 Running with no Pending/FailedCreate/FailedScheduling/image-pull errors, deployments ts-preserve-service and ts-gateway-service both 1/1 AVAILABLE (up-to-date 1, available 1), and endpoints ts-preserve-service bound at 172.20.2.242:14568 - so this is NOT a scheduling/startup/probe/selector-bind</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1536_inorder4-v3b19/raw/1013_1537_trainticket-service-9/">results/1013_1536_inorder4-v3b19/raw/1013_1537_trainticket-service-9</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-food-delivery-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>18</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-ui-dashboard-554844f867-r7kcg&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-food-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;L3 SOP reachability chain. Symptom side: GetAlerts shows POST /api/v1/preserveservice/preserve -&gt; HTTPError('404 Client Error: Not Found') x13 against ts-preserve-service, while GetErrorLogs(ts-preserve-service) returns 'No error logs found' (traffic never reaches it). Object layer healthy: all pods 2/2 Running with no Pending/FailedCreate/FailedScheduling/image-pull errors, deployments ts-preserve-service and ts-gateway-service both 1/1 AVAILABLE (up-to-date 1, available 1), and endpoints ts-preserve-service bound at 172.20.2.242:14568 - so this is NOT a scheduling/startup/probe/selector-binding fault. Address layer is the break: the ts-gateway-service-config route table (GetAppYAML ts-gateway-service) has exactly one route whose uri contradicts the service its Path names: '- id: preserve / uri: lb://${FOOD_SERVICE_HOST:ts-food-service} / predicates: - Path=/api/v1/preserveservice/**', whereas the sibling route '- id: food / uri: lb://${FOOD_SERVICE_HOST:ts-food-service} / Path=/api/v1/foodservice/**' and '- id: preserve-other / uri: lb://${PRESERVE_OTHER_SERVICE_HOST:ts-preserve-other-service} / Path=/api/v1/preserveotherservice/**' show the correct pattern. Requests to /api/v1/preserveservice/** are therefore load-balanced to ts-food-service, which has no such path and answers 404 Not Found to the caller, while the healthy ts-preserve-service receives no traffic -&gt; Partial Service Unreachability. Closure: GetResources(events, namespace=train-ticket) shows only historical rollout Killing/probe-failure noise with no K8s Warning naming any routing object, consistent with a config-plane (route table) break, so the mechanism is carried and read at the config face. Per SOP the gateway (table owner) is the component at rank 1; the mis-wired target is the victim.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-preserve-service&quot;,
+   &quot;root_cause&quot;: &quot;service_env_var_address_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-wait-order-service&quot;,
+   &quot;root_cause&quot;: &quot;service_dns_resolution_failure&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-10"><summary><b>case-10</b> · <code>app/ts-gateway-service</code> + <code>gateway_misrouted</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 24 步</summary><ul>
 <li><b>摘要</b>：All train-ticket workloads are 2/2 Running/Ready and every Service endpoint is bound, so the break is not at the workload or network layer. Reading the address layer: ConfigMap ts-gateway-service-config (owner ts-gateway-service) contains exactly one route whose uri does not match the service its Path names -- route id 'route' with Path=/api/v1/routeservice/** has uri lb://${PRICE_SERVICE_HOST:ts-price-service} (sibling 'price' route is Path=/api/v1/priceservice/** -&gt; lb://ts-price-service), so it should be ${ROUTE_SERVICE_HOST:ts-route-service}. No route in the table targets ts-route-service </li>
 <li><b>raw 日志</b>：<a href="../results/1013_1623_inorder4-v3b21/raw/1013_1624_trainticket-service-10/">results/1013_1623_inorder4-v3b21/raw/1013_1624_trainticket-service-10</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-payment-service&quot;,&quot;port&quot;:19001,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>17</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-ui-dashboard-554844f867-dqp65&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-route-service&quot;}</code></td></tr>
+<tr><td>23</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-route-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All train-ticket workloads are 2/2 Running/Ready and every Service endpoint is bound, so the break is not at the workload or network layer. Reading the address layer: ConfigMap ts-gateway-service-config (owner ts-gateway-service) contains exactly one route whose uri does not match the service its Path names -- route id 'route' with Path=/api/v1/routeservice/** has uri lb://${PRICE_SERVICE_HOST:ts-price-service} (sibling 'price' route is Path=/api/v1/priceservice/** -&gt; lb://ts-price-service), so it should be ${ROUTE_SERVICE_HOST:ts-route-service}. No route in the table targets ts-route-service at all, therefore every gateway-fronted call to /api/v1/routeservice/** misses ts-route-service and is delivered to ts-price-service: partial (single-path) service unreachability. The misrouted target itself is healthy (ts-route-service pod 2/2 Running, endpoints 172.20.2.138:11178 bound, no error logs) and no namespace Warning event points at it, confirming the fault resides in the gateway route table rather than in the target workload. Excluded collateral: the ts-inside-payment-service 500 alert traces to ts-payment-service NonUniqueResultException (query did not return a unique result: 5) while TCP connectivity to ts-payment-service:19001 succeeds and endpoints are bound -- environment/data noise without a clean List A mapping. ts-ui-dashboard's 'host not found in upstream ts-gateway-service' is a self-healing rollout race repeated in every generation, not persistent.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-route-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-price-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-11"><summary><b>case-11</b> · <code>app/ts-gateway-service</code> + <code>gateway_misrouted</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 28 步</summary><ul>
-<li><b>摘要</b>：All workloads are healthy: 43/43 pods Running 2/2 (only ts-ui-dashboard shows 3 restarts, from a transient startup nginx 'host not found in upstream "ts-gateway-service"'), all deployments 1/1 AVAILABLE, every Service has bound endpoints, TCP connectivity to ts-payment-service:19001 succeeds from worker-01/02/03, and the event surface shows no FailedScheduling/FailedCreate/FailedMount/image-pull mechanism events. The address layer is therefore the first failing surface: in the gateway's own manifest (ConfigMap ts-gateway-service-config, read via GetAppYAML(ts-gateway-service)) the route entry </li>
+<li><b>摘要</b>：All workloads are healthy: 43/43 pods Running 2/2 (only ts-ui-dashboard shows 3 restarts, from a transient startup nginx 'host not found in upstream &quot;ts-gateway-service&quot;'), all deployments 1/1 AVAILABLE, every Service has bound endpoints, TCP connectivity to ts-payment-service:19001 succeeds from worker-01/02/03, and the event surface shows no FailedScheduling/FailedCreate/FailedMount/image-pull mechanism events. The address layer is therefore the first failing surface: in the gateway's own manifest (ConfigMap ts-gateway-service-config, read via GetAppYAML(ts-gateway-service)) the route entry </li>
 <li><b>raw 日志</b>：<a href="../results/1013_1640_gatewayyaml-verify1/raw/1013_1640_trainticket-service-11/">results/1013_1640_gatewayyaml-verify1/raw/1013_1640_trainticket-service-11</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-payment-service&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>18</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-payment-service&quot;,&quot;port&quot;:19001,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-food-service&quot;}</code></td></tr>
+<tr><td>23</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-route-service&quot;}</code></td></tr>
+<tr><td>24</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-route-service&quot;}</code></td></tr>
+<tr><td>25</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>26</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;nacos&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>27</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-gateway-service-88868597f-q6ljt&quot;,&quot;output_yaml&quot;:false}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All workloads are healthy: 43/43 pods Running 2/2 (only ts-ui-dashboard shows 3 restarts, from a transient startup nginx 'host not found in upstream \&quot;ts-gateway-service\&quot;'), all deployments 1/1 AVAILABLE, every Service has bound endpoints, TCP connectivity to ts-payment-service:19001 succeeds from worker-01/02/03, and the event surface shows no FailedScheduling/FailedCreate/FailedMount/image-pull mechanism events. The address layer is therefore the first failing surface: in the gateway's own manifest (ConfigMap ts-gateway-service-config, read via GetAppYAML(ts-gateway-service)) the route entry id 'route' declares predicates Path=/api/v1/routeservice/** but uri=lb://${FOOD_SERVICE_HOST:ts-food-service} - it points at ts-food-service instead of ts-route-service, while all other 40 routes point at the service their Path names; the nacos ConfigMap only defines NACOS_ADDRS, so no *_SERVICE_HOST override exists and the entry really resolves to ts-food-service at runtime. Traffic for /api/v1/routeservice/** can never reach ts-route-service (ts-route-service logs only in-cluster Nacos-direct [getRouteById] calls and never a gateway-forwarded route query), i.e. the route service is unreachable through the gateway = the reported partial service unreachability. The gateway (owner of the mis-wired table) is the break; ts-route-service is the victim. The single alert (TS-inside-payment 500 on /api/v1/inside_pay_service/inside_payment) is only a pointer and traces to ts-payment-service's 'query did not return a unique result: 5' (NonUniqueResultException) with 'paymentTemp Already Exists' at startup, i.e. duplicated persisted rows in the 15h-old tsdb-mysql - a data-state artifact, not an unreachability break, and it is kept as a lower-ranked alternative.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-route-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-payment-service&quot;,
+   &quot;root_cause&quot;: &quot;code_missing_parameter&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-12"><summary><b>case-12</b> · <code>app/ts-gateway-service</code> + <code>gateway_misrouted</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 42 步</summary><ul>
 <li><b>摘要</b>：Object layer fully healthy: 42/42 Deployments 1/1, every Pod 2/2 Running, no Pending/FailedScheduling/FailedCreate/FailedMount/image-pull errors, no namespace ResourceQuota, every Service has endpoints (ts-route-service 10.68.191.150:11178 open on worker-01/02/03) — scheduling/startup/admission/quota stages are excluded. The single alert (HTTP 500 on ts-inside-payment-service POST /api/v1/inside_pay_service/inside_payment, 5 occurrences) traces to 5 concurrent-request NonUniqueResultException rows in ts-payment-service, a load-induced data flake that matches no injectable root cause. Auditing </li>
 <li><b>raw 日志</b>：<a href="../results/1013_1645_inorder4-v3b24/raw/1013_1646_trainticket-service-12/">results/1013_1645_inorder4-v3b24/raw/1013_1646_trainticket-service-12</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-inside-payment-service&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;services&quot;,&quot;name&quot;:&quot;ts-payment-service&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>15</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-ui-dashboard-554844f867-vc9l8&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;resourcequotas&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>23</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>24</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
+<tr><td>25</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-payment-service&quot;,&quot;port&quot;:19001,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>26</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;,&quot;port&quot;:18673,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>27</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>28</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+<tr><td>29</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;services&quot;}</code></td></tr>
+<tr><td>30</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;namespace&quot;:&quot;kubernetes&quot;,&quot;question&quot;:&quot;query did not return a unique result NonUniqueResultException IncorrectResultSizeDataAccessException 500 payment service&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>31</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;namespace&quot;:&quot;kubernetes&quot;,&quot;question&quot;:&quot;nginx host not found in upstream service DNS resolution failure container exit code 1&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>32</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;ts-food-delivery-service missing Service object DNS resolution failure by caller ts-food-service&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>33</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-food-delivery-service&quot;,&quot;resource_type&quot;:&quot;services&quot;}</code></td></tr>
+<tr><td>34</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-food-delivery-service&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+<tr><td>35</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>36</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;port&quot;:11178,&quot;service_name&quot;:&quot;ts-route-service&quot;}</code></td></tr>
+<tr><td>37</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true,&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;name&quot;:&quot;ts-gateway-service-config&quot;}</code></td></tr>
+<tr><td>38</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-route-service&quot;}</code></td></tr>
+<tr><td>39</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-food-delivery-service&quot;}</code></td></tr>
+<tr><td>40</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-food-delivery-service&quot;}</code></td></tr>
+<tr><td>41</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pods&quot;,&quot;show_labels&quot;:true,&quot;name&quot;:&quot;ts-food-delivery-service-5b898fdbbf-nw5zf&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Object layer fully healthy: 42/42 Deployments 1/1, every Pod 2/2 Running, no Pending/FailedScheduling/FailedCreate/FailedMount/image-pull errors, no namespace ResourceQuota, every Service has endpoints (ts-route-service 10.68.191.150:11178 open on worker-01/02/03) — scheduling/startup/admission/quota stages are excluded. The single alert (HTTP 500 on ts-inside-payment-service POST /api/v1/inside_pay_service/inside_payment, 5 occurrences) traces to 5 concurrent-request NonUniqueResultException rows in ts-payment-service, a load-induced data flake that matches no injectable root cause. Auditing the address layer line by line on the gateway route table (configmap ts-gateway-service-config mounted as /config/application.yml) exposes exactly one mis-wiring: '- id: route  uri: lb://${ORDER_SERVICE_HOST:ts-order-service}  Path=/api/v1/routeservice/**' — the /api/v1/routeservice/** path is bound to the ORDER service's address env var instead of ROUTE_SERVICE_HOST/ts-route-service (its uri duplicates the id:order route verbatim), while all other 40 routes each use their own *_SERVICE_HOST var (route-plan→ROUTE_PLAN_SERVICE_HOST, seat→SEAT_SERVICE_HOST, ...). The intendd target ts-route-service is itself healthy and serving getRouteById, so probes succeed while the path cannot reach its backend = incorrect gateway routing (gateway_misrouted), the break living in the gateway route table.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-route-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-25"><summary><b>case-25</b> · <code>app/ts-gateway-service</code> + <code>service_dns_resolution_failure</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 23 步</summary><ul>
 <li><b>摘要</b>：ts-gateway-service is the only workload in train-ticket that is unavailable: pod ts-gateway-service-5d577b65bb-4p686 shows READY 0/2 with 4 restarts, app container Terminated/Reason=Error/ExitCode=1, and the Service has no ready endpoints (GetResources endpoints -&gt; empty ENDPOINTS), so callers get 503 (alert: POST /api/v1/users/login via ts-auth-service -&gt; 503 Service Unavailable) and connectivity probes to ts-gateway-service:18888 fail from all three nodes. Its previous-container log shows the crash mechanism: 'nacos registry, ts-gateway-service register failed ... NacosException: Client not </li>
 <li><b>raw 日志</b>：<a href="../results/1012_1521_l3-tweak1/raw/1012_1521_trainticket-service-25/">results/1012_1521_l3-tweak1/raw/1012_1521_trainticket-service-25</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>7</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-gateway-service-5d577b65bb-4p686&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;,&quot;port&quot;:8080,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>11</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;nacos&quot;,&quot;port&quot;:8848,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>12</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;,&quot;port&quot;:18888,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;kube-system&quot;,&quot;resource_type&quot;:&quot;services&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-auth-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-auth-service&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetResources</code></td><td><code>{&quot;name&quot;:&quot;nacos&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true,&quot;resource_type&quot;:&quot;configmaps&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetResources</code></td><td><code>{&quot;name&quot;:&quot;ts-gateway-service&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+<tr><td>22</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;ts-gateway-service&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;ts-gateway-service is the only workload in train-ticket that is unavailable: pod ts-gateway-service-5d577b65bb-4p686 shows READY 0/2 with 4 restarts, app container Terminated/Reason=Error/ExitCode=1, and the Service has no ready endpoints (GetResources endpoints -&gt; empty ENDPOINTS), so callers get 503 (alert: POST /api/v1/users/login via ts-auth-service -&gt; 503 Service Unavailable) and connectivity probes to ts-gateway-service:18888 fail from all three nodes. Its previous-container log shows the crash mechanism: 'nacos registry, ts-gateway-service register failed ... NacosException: Client not connected, current status:STARTING' (failFast=true -&gt; exit 1, crash loop), and its istio-proxy logs show every in-pod DNS query timing out: 'lookup istiod.istio-system.svc on 10.255.1.254:53: read udp 172.20.1.243:59640-&gt;10.255.1.254:53: i/o timeout' (21x) plus 'failed to sign CSR ... lookup ... i/o timeout' (16x). The configuration close confirms the mechanism: GetAppYAML(ts-gateway-service) uniquely sets spec.template.spec.dnsPolicy='None' with dnsConfig.nameservers=[10.255.1.254], whereas ts-auth-service and ts-ui-dashboard carry no dnsPolicy/dnsConfig (default ClusterFirst) and have zero error logs; ConfigMap/nacos NACOS_ADDRS is shared and correct, and nacos:8848 is reachable from all three nodes (debug pod Connection Succeeded), while the node worker-01 itself is healthy (Ready, no taints/pressure) and its other 14 pods run 2/2 with 0 restarts. So the pod cannot resolve *.svc.cluster.local, Nacos registration fails, the container exits 1 in a loop and the Service never becomes reachable.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;service_dns_resolution_failure&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;service_env_var_address_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 </body></html>

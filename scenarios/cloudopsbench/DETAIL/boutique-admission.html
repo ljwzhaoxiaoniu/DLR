@@ -8,10 +8,12 @@ table { width:100%; border-collapse:collapse; background:var(--surface); border:
 th, td { padding:8px 11px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; } th { font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); } tr:last-child td { border-bottom:none; }
 code { font-size:13px; color:var(--dlr); } a { color:var(--dlr); } a:hover { text-decoration-thickness:2px; } .ok { color:var(--good); }
 details { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 18px; margin:10px 0; } details summary { cursor:pointer; font-size:14.5px; } details ul { margin:10px 0 4px; padding-left:20px; font-size:14px; color:var(--ink-2); }
+details p { font-size:14px; color:var(--ink-2); margin:7px 0; }
+pre { white-space:pre-wrap; word-break:break-word; background:var(--page); border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:12.8px; line-height:1.55; font-family:ui-monospace,Consolas,monospace; color:var(--ink); margin:8px 0; }
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/admission</em></h1>
-<p class="deck">已跑 <b>6/58</b> 题：JRA ✅6 ❌0 ｜ 证据链全闭 5 ｜ token 中位 82,218 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:20:29.295Z</p>
+<p class="deck">已跑 <b>6/58</b> 题：JRA ✅6 ❌0 ｜ 证据链全闭 5 ｜ token 中位 82,218 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:25:34.981Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.6</td><td>16</td><td>81,626</td><td>0</td><td>0</td><td class="muted">1012_1458_l3-verify3</td><td><a href="../results/1012_1458_l3-verify3/raw/1012_1458_boutique-admission-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1458_boutique-admission-1</a></td></tr>
@@ -25,25 +27,247 @@ details { background:var(--surface); border:1px solid var(--border); border-radi
 <details id="case-1"><summary><b>case-1</b> · <code>app/adservice</code> + <code>missing_service_account</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 16 步</summary><ul>
 <li><b>摘要</b>：Caller side: frontend logs show 126x 'failed to get ads: rpc error: code = Unavailable ... dial tcp 10.68.76.205:9555: connect: connection refused'; live probe CheckServiceConnectivity(adservice,9555,boutique) = Connection Failed and endpoints adservice = &lt;none&gt;, while all other 11 services have backends (partial unreachability). Object layer: adservice is the only service with no pod, deployment adservice 0/1 with UP-TO-DATE 0 (no Pod object ever created =&gt; creation/admission stage, not scheduling). Mechanism event (owner chain): ReplicaSet adservice-6f86c56644 condition ReplicaFailure=True F</li>
 <li><b>raw 日志</b>：<a href="../results/1012_1458_l3-verify3/raw/1012_1458_boutique-admission-1/">results/1012_1458_l3-verify3/raw/1012_1458_boutique-admission-1</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>8</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;adservice&quot;,&quot;port&quot;:9555,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>11</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;deployment&quot;,&quot;name&quot;:&quot;adservice&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;replicasets&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;label_selector&quot;:&quot;app=adservice&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;serviceaccounts&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>15</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;replicaset&quot;,&quot;name&quot;:&quot;adservice-6f86c56644&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Caller side: frontend logs show 126x 'failed to get ads: rpc error: code = Unavailable ... dial tcp 10.68.76.205:9555: connect: connection refused'; live probe CheckServiceConnectivity(adservice,9555,boutique) = Connection Failed and endpoints adservice = &lt;none&gt;, while all other 11 services have backends (partial unreachability). Object layer: adservice is the only service with no pod, deployment adservice 0/1 with UP-TO-DATE 0 (no Pod object ever created =&gt; creation/admission stage, not scheduling). Mechanism event (owner chain): ReplicaSet adservice-6f86c56644 condition ReplicaFailure=True FailedCreate, event 'Error creating: pods \&quot;adservice-6f86c56644-\&quot; is forbidden: error looking up service account boutique/services: serviceaccount \&quot;services\&quot; not found'. Configuration closure (both halves): pod template references serviceAccountName: services (GetAppYAML + describe), but GetResources(serviceaccounts, namespace=boutique) lists adservice, cartservice, checkoutservice, currencyservice, default, emailservice, frontend, paymentservice, productcatalogservice, recommendationservice, shippingservice — no 'services' account exists.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/adservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/adservice&quot;,
+   &quot;root_cause&quot;: &quot;service_selector_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/adservice&quot;,
+   &quot;root_cause&quot;: &quot;incorrect_image_reference&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-2"><summary><b>case-2</b> · <code>app/cartservice</code> + <code>missing_service_account</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 16 步</summary><ul>
-<li><b>摘要</b>：cartservice is the only service in namespace boutique with no running pod: GetResources(pods, label_selector=app=cartservice) returns 'No matching pods found' and the deployment lists as 0/1 READY, 0 UP-TO-DATE, 0 AVAILABLE while 1 is desired. Its Deployment condition shows ReplicaFailure=True (FailedCreate) and the new ReplicaSet cartservice-d68b7d767 (0/1 replicas created) emits 'Error creating: pods "cartservice-d68b7d767-" is forbidden: error looking up service account boutique/cartservices: serviceaccount "cartservices" not found' (x15 over 101s). The configuration close confirms the mism</li>
+<li><b>摘要</b>：cartservice is the only service in namespace boutique with no running pod: GetResources(pods, label_selector=app=cartservice) returns 'No matching pods found' and the deployment lists as 0/1 READY, 0 UP-TO-DATE, 0 AVAILABLE while 1 is desired. Its Deployment condition shows ReplicaFailure=True (FailedCreate) and the new ReplicaSet cartservice-d68b7d767 (0/1 replicas created) emits 'Error creating: pods &quot;cartservice-d68b7d767-&quot; is forbidden: error looking up service account boutique/cartservices: serviceaccount &quot;cartservices&quot; not found' (x15 over 101s). The configuration close confirms the mism</li>
 <li><b>raw 日志</b>：<a href="../results/1012_1846_inorder4-v3b4/raw/1012_1846_boutique-admission-2/">results/1012_1846_inorder4-v3b4/raw/1012_1846_boutique-admission-2</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;cartservice&quot;,&quot;port&quot;:7070,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;label_selector&quot;:&quot;app=cartservice&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>10</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>11</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;deployment&quot;,&quot;name&quot;:&quot;cartservice&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;replicasets&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;label_selector&quot;:&quot;app=cartservice&quot;}</code></td></tr>
+<tr><td>13</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;replicaset&quot;,&quot;name&quot;:&quot;cartservice-d68b7d767&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;serviceaccounts&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;cartservice is the only service in namespace boutique with no running pod: GetResources(pods, label_selector=app=cartservice) returns 'No matching pods found' and the deployment lists as 0/1 READY, 0 UP-TO-DATE, 0 AVAILABLE while 1 is desired. Its Deployment condition shows ReplicaFailure=True (FailedCreate) and the new ReplicaSet cartservice-d68b7d767 (0/1 replicas created) emits 'Error creating: pods \&quot;cartservice-d68b7d767-\&quot; is forbidden: error looking up service account boutique/cartservices: serviceaccount \&quot;cartservices\&quot; not found' (x15 over 101s). The configuration close confirms the mismatch: GetAppYAML(cartservice) sets spec.template.spec.serviceAccountName: cartservices, while GetResources(serviceaccounts, boutique) lists only 'cartservice' (with the YAML's own ServiceAccount manifest declaring metadata.name: cartservice) - the reference name has a spurious trailing 's'. With no pod ever created, the Service endpoints have no backing pod, so a TCP probe to cartservice:7070 fails and callers report 199 errors including 163x 'could not retrieve cart: ... dial tcp 10.68.11.33:7070: connect: connection refused' and 8x checkout cart failure. The break is at the pod-creation admission stage, not scheduling/image/probe, and is confined to cartservice (no active metric anomalies for other services).&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;service_port_mapping_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;deployment_zero_replicas&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-3"><summary><b>case-3</b> · <code>app/checkoutservice</code> + <code>missing_service_account</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 18 步</summary><ul>
-<li><b>摘要</b>：checkoutservice has no pod instance while all other 10 boutique services are 1/1 Running with 0 restarts. GetResources(deployments) shows checkoutservice 0/1 (UP-TO-DATE 0, AVAILABLE 0) and its ReplicaSet checkoutservice-d4d5bb7d8 CURRENT=0, i.e. the pod was never created. Deployment/RS events give the mechanism: 'FailedCreate ... pods "checkoutservice-d4d5bb7d8-" is forbidden: error looking up service account boutique/checkoutservices: serviceaccount "checkoutservices" not found' (x15 over 101s), with condition ReplicaFailure=True/FailedCreate. The configuration closure confirms the mismatch:</li>
+<li><b>摘要</b>：checkoutservice has no pod instance while all other 10 boutique services are 1/1 Running with 0 restarts. GetResources(deployments) shows checkoutservice 0/1 (UP-TO-DATE 0, AVAILABLE 0) and its ReplicaSet checkoutservice-d4d5bb7d8 CURRENT=0, i.e. the pod was never created. Deployment/RS events give the mechanism: 'FailedCreate ... pods &quot;checkoutservice-d4d5bb7d8-&quot; is forbidden: error looking up service account boutique/checkoutservices: serviceaccount &quot;checkoutservices&quot; not found' (x15 over 101s), with condition ReplicaFailure=True/FailedCreate. The configuration closure confirms the mismatch:</li>
 <li><b>raw 日志</b>：<a href="../results/1012_1907_l3-tweak2/raw/1012_1907_boutique-admission-3/">results/1012_1907_l3-tweak2/raw/1012_1907_boutique-admission-3</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;deployment&quot;,&quot;name&quot;:&quot;checkoutservice&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;replicasets&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;serviceaccounts&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>15</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;replicaset&quot;,&quot;name&quot;:&quot;checkoutservice-d4d5bb7d8&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>16</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;,&quot;port&quot;:5050,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequotas&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;checkoutservice has no pod instance while all other 10 boutique services are 1/1 Running with 0 restarts. GetResources(deployments) shows checkoutservice 0/1 (UP-TO-DATE 0, AVAILABLE 0) and its ReplicaSet checkoutservice-d4d5bb7d8 CURRENT=0, i.e. the pod was never created. Deployment/RS events give the mechanism: 'FailedCreate ... pods \&quot;checkoutservice-d4d5bb7d8-\&quot; is forbidden: error looking up service account boutique/checkoutservices: serviceaccount \&quot;checkoutservices\&quot; not found' (x15 over 101s), with condition ReplicaFailure=True/FailedCreate. The configuration closure confirms the mismatch: the pod template declares serviceAccountName: checkoutservices (plural), but the namespace's serviceaccounts are adservice/cartservice/checkoutservice(singular)/currencyservice/default/emailservice/frontend/paymentservice/productcatalogservice/recommendationservice/shippingservice — no 'checkoutservices'. Consequent evidence: endpoints checkoutservice &lt;none&gt; and CheckServiceConnectivity(checkoutservice:5050, boutique) = Connection Failed, matching the reported service availability disruption. resourcequotas in the namespace are empty, excluding quota-based admission blocks.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;deployment_zero_replicas&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-4"><summary><b>case-4</b> · <code>app/currencyservice</code> + <code>missing_service_account</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 13 步</summary><ul>
 <li><b>摘要</b>：frontend error logs (202x) show 'could not retrieve currencies: rpc error: code = Unavailable ... dial tcp 10.68.161.153:7000: connect: connection refused' (currencyservice ClusterIP:7000), and CheckServiceConnectivity(currencyservice:7000) returned Connection Failed. The pods listing (-o wide) contains only 10 of 11 boutique services: no currencyservice pod exists at all, and GetResources(pods,label_selector=app=currencyservice) is empty. Deployment currencyservice shows READY 0/1 and UP-TO-DATE 0 (no pod ever created, so not a start/probe/image issue). Namespace events carry the mechanism ve</li>
 <li><b>raw 日志</b>：<a href="../results/1012_1935_tidy-verify1/raw/1012_1935_boutique-admission-4/">results/1012_1935_tidy-verify1/raw/1012_1935_boutique-admission-4</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;label_selector&quot;:&quot;app=currencyservice&quot;,&quot;show_labels&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;currencyservice&quot;,&quot;port&quot;:7000,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;serviceaccounts&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;frontend error logs (202x) show 'could not retrieve currencies: rpc error: code = Unavailable ... dial tcp 10.68.161.153:7000: connect: connection refused' (currencyservice ClusterIP:7000), and CheckServiceConnectivity(currencyservice:7000) returned Connection Failed. The pods listing (-o wide) contains only 10 of 11 boutique services: no currencyservice pod exists at all, and GetResources(pods,label_selector=app=currencyservice) is empty. Deployment currencyservice shows READY 0/1 and UP-TO-DATE 0 (no pod ever created, so not a start/probe/image issue). Namespace events carry the mechanism verbatim: 'Warning FailedCreate replicaset/currencyservice-d98678d66 Error creating: pods \&quot;currencyservice-d98678d66-\&quot; is forbidden: error looking up service account boutique/currencyservices: serviceaccount \&quot;currencyservices\&quot; not found'. Closure on the referenced config: GetAppYAML(currencyservice) sets serviceAccountName: currencyservices (plural), while GetResources(serviceaccounts,boutique) shows only currencyservice (singular), default, etc. — 'currencyservices' does not exist. Admission rejects pod creation -&gt; 0 endpoints -&gt; connection refused -&gt; availability disruption.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
+   &quot;root_cause&quot;: &quot;deployment_zero_replicas&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
+   &quot;root_cause&quot;: &quot;service_selector_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-5"><summary><b>case-5</b> · <code>app/emailservice</code> + <code>missing_service_account</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
-<li><b>摘要</b>：emailservice is the only drained workload: deployment 0/1 (UP-TO-DATE 0, AVAILABLE 0), no pods match app=emailservice, Endpoints '&lt;none&gt;' for Service emailservice (ClusterIP 10.68.1.25, port 5000-&gt;8080), and CheckServiceConnectivity(emailservice,5000) returned 'Connection Failed'. All other boutique services are 1/1 Running with 0 restarts. The mechanism event names the cause verbatim: 'Warning FailedCreate replicaset/emailservice-69777f4f8b: Error creating: pods "emailservice-69777f4f8b-" is forbidden: error looking up service account boutique/emailservices: serviceaccount "emailservices" not</li>
+<li><b>摘要</b>：emailservice is the only drained workload: deployment 0/1 (UP-TO-DATE 0, AVAILABLE 0), no pods match app=emailservice, Endpoints '&lt;none&gt;' for Service emailservice (ClusterIP 10.68.1.25, port 5000-&gt;8080), and CheckServiceConnectivity(emailservice,5000) returned 'Connection Failed'. All other boutique services are 1/1 Running with 0 restarts. The mechanism event names the cause verbatim: 'Warning FailedCreate replicaset/emailservice-69777f4f8b: Error creating: pods &quot;emailservice-69777f4f8b-&quot; is forbidden: error looking up service account boutique/emailservices: serviceaccount &quot;emailservices&quot; not</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1458_chainhead-verify2c/raw/1013_1458_boutique-admission-5/">results/1013_1458_chainhead-verify2c/raw/1013_1458_boutique-admission-5</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;services&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;pods&quot;,&quot;label_selector&quot;:&quot;app=emailservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;emailservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;serviceaccounts&quot;}</code></td></tr>
+<tr><td>13</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;emailservice&quot;,&quot;port&quot;:5000,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;resourcequotas&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;emailservice is the only drained workload: deployment 0/1 (UP-TO-DATE 0, AVAILABLE 0), no pods match app=emailservice, Endpoints '&lt;none&gt;' for Service emailservice (ClusterIP 10.68.1.25, port 5000-&gt;8080), and CheckServiceConnectivity(emailservice,5000) returned 'Connection Failed'. All other boutique services are 1/1 Running with 0 restarts. The mechanism event names the cause verbatim: 'Warning FailedCreate replicaset/emailservice-69777f4f8b: Error creating: pods \&quot;emailservice-69777f4f8b-\&quot; is forbidden: error looking up service account boutique/emailservices: serviceaccount \&quot;emailservices\&quot; not found'. Configuration confirmation: GetAppYAML(emailservice) sets template.spec.serviceAccountName: emailservices (plural), while the namespace's ServiceAccount listing contains only 'emailservice' (singular) - the referenced ServiceAccount does not exist, so admission rejects pod creation and the pod is never created. No ResourceQuota exists in the namespace, ruling out quota-based admission failures.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/emailservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/emailservice&quot;,
+   &quot;root_cause&quot;: &quot;deployment_zero_replicas&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/emailservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-6"><summary><b>case-6</b> · <code>app/frontend</code> + <code>missing_service_account</code>（✓ 逐字命中） · MC 0.75 · EOC 0 · ECR 0 · 12 步</summary><ul>
-<li><b>摘要</b>：Inventory entry: frontend is the only workload with no pod at all — GetResources(pods) lists 10 boutique services Running 1/1 but zero frontend-* pods. Workload state confirms it is drained (deployment frontend 0/1 READY, UP-TO-DATE 0, AVAILABLE 0) with Conditions ReplicaFailure=True / reason FailedCreate and NewReplicaSet frontend-fbbd6d5f5 (0/1 replicas created). The mechanism event names the object verbatim: 'Warning FailedCreate replicaset/frontend-fbbd6d5f5 — Error creating: pods "frontend-fbbd6d5f5-" is forbidden: error looking up service account boutique/frontend-missing: serviceaccount</li>
+<li><b>摘要</b>：Inventory entry: frontend is the only workload with no pod at all — GetResources(pods) lists 10 boutique services Running 1/1 but zero frontend-* pods. Workload state confirms it is drained (deployment frontend 0/1 READY, UP-TO-DATE 0, AVAILABLE 0) with Conditions ReplicaFailure=True / reason FailedCreate and NewReplicaSet frontend-fbbd6d5f5 (0/1 replicas created). The mechanism event names the object verbatim: 'Warning FailedCreate replicaset/frontend-fbbd6d5f5 — Error creating: pods &quot;frontend-fbbd6d5f5-&quot; is forbidden: error looking up service account boutique/frontend-missing: serviceaccount</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1515_workload-verify2/raw/1013_1515_boutique-admission-6/">results/1013_1515_workload-verify2/raw/1013_1515_boutique-admission-6</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;serviceaccounts&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>11</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;deployment&quot;,&quot;name&quot;:&quot;frontend&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Inventory entry: frontend is the only workload with no pod at all — GetResources(pods) lists 10 boutique services Running 1/1 but zero frontend-* pods. Workload state confirms it is drained (deployment frontend 0/1 READY, UP-TO-DATE 0, AVAILABLE 0) with Conditions ReplicaFailure=True / reason FailedCreate and NewReplicaSet frontend-fbbd6d5f5 (0/1 replicas created). The mechanism event names the object verbatim: 'Warning FailedCreate replicaset/frontend-fbbd6d5f5 — Error creating: pods \&quot;frontend-fbbd6d5f5-\&quot; is forbidden: error looking up service account boutique/frontend-missing: serviceaccount \&quot;frontend-missing\&quot; not found'. Config confirmation closes the chain: GetAppYAML(frontend) template declares serviceAccountName: frontend-missing while GetResources(serviceaccounts, namespace=boutique) contains only frontend (no frontend-missing). So the pods are never admitted, the frontend Service has no ready backend despite frontend/frontend-external Services existing, and the storefront entry point is unreachable while every backend service stays healthy — matching 'Partial Service Unreachability'.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;deployment_zero_replicas&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;service_selector_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
 </body></html>

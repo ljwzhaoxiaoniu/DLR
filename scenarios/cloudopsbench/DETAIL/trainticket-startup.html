@@ -8,10 +8,12 @@ table { width:100%; border-collapse:collapse; background:var(--surface); border:
 th, td { padding:8px 11px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; } th { font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); } tr:last-child td { border-bottom:none; }
 code { font-size:13px; color:var(--dlr); } a { color:var(--dlr); } a:hover { text-decoration-thickness:2px; } .ok { color:var(--good); }
 details { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 18px; margin:10px 0; } details summary { cursor:pointer; font-size:14.5px; } details ul { margin:10px 0 4px; padding-left:20px; font-size:14px; color:var(--ink-2); }
+details p { font-size:14px; color:var(--ink-2); margin:7px 0; }
+pre { white-space:pre-wrap; word-break:break-word; background:var(--page); border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:12.8px; line-height:1.55; font-family:ui-monospace,Consolas,monospace; color:var(--ink); margin:8px 0; }
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/startup</em></h1>
-<p class="deck">已跑 <b>10/24</b> 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 267,264 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:20:29.295Z</p>
+<p class="deck">已跑 <b>10/24</b> 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 267,264 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:25:34.981Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>13</td><td>73,363</td><td>0</td><td>0</td><td class="muted">1012_1458_l3-verify3</td><td><a href="../results/1012_1458_l3-verify3/raw/1012_1459_trainticket-startup-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1459_trainticket-startup-1</a></td></tr>
@@ -27,43 +29,390 @@ details { background:var(--surface); border:1px solid var(--border); border-radi
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/ts-assurance-service</code> + <code>missing_secret_binding</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 13 步</summary><ul>
-<li><b>摘要</b>：Only ts-assurance-service is affected: pod ts-assurance-service-f84b798d-h2tkp shows 0/1 READY with STATUS CreateContainerConfigError (Pending, Restart Count 0, empty Container ID =&gt; container never started), and Service ts-assurance-service has an EMPTY endpoints list (the only business Service with no endpoints). Connectivity probes to ts-assurance-service:18888 failed on worker-01/02/03, and the alert records HTTP 503 on GET /api/v1/assuranceservice/assurances/types (85 occurrences). Pod events give the mechanism: kubelet 'Error: secret "ts-assurance-mysql" not found' (x12) while the image </li>
+<li><b>摘要</b>：Only ts-assurance-service is affected: pod ts-assurance-service-f84b798d-h2tkp shows 0/1 READY with STATUS CreateContainerConfigError (Pending, Restart Count 0, empty Container ID =&gt; container never started), and Service ts-assurance-service has an EMPTY endpoints list (the only business Service with no endpoints). Connectivity probes to ts-assurance-service:18888 failed on worker-01/02/03, and the alert records HTTP 503 on GET /api/v1/assuranceservice/assurances/types (85 occurrences). Pod events give the mechanism: kubelet 'Error: secret &quot;ts-assurance-mysql&quot; not found' (x12) while the image </li>
 <li><b>raw 日志</b>：<a href="../results/1012_1458_l3-verify3/raw/1012_1459_trainticket-startup-1/">results/1012_1458_l3-verify3/raw/1012_1459_trainticket-startup-1</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>7</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-assurance-service-f84b798d-h2tkp&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-assurance-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-assurance-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;secrets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>11</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-assurance-service&quot;,&quot;port&quot;:18888,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Only ts-assurance-service is affected: pod ts-assurance-service-f84b798d-h2tkp shows 0/1 READY with STATUS CreateContainerConfigError (Pending, Restart Count 0, empty Container ID =&gt; container never started), and Service ts-assurance-service has an EMPTY endpoints list (the only business Service with no endpoints). Connectivity probes to ts-assurance-service:18888 failed on worker-01/02/03, and the alert records HTTP 503 on GET /api/v1/assuranceservice/assurances/types (85 occurrences). Pod events give the mechanism: kubelet 'Error: secret \&quot;ts-assurance-mysql\&quot; not found' (x12) while the image was already pulled successfully (scheduling and image-pull excluded). The configuration half closes the chain: the Deployment template declares envFrom.secretRef.name=ts-assurance-mysql (Optional: false), yet the namespace secret listing contains every other '*-mysql' secret (ts-auth-mysql ... ts-wait-order-mysql) but NO ts-assurance-mysql. Missing Secret binding =&gt; CreateContainerConfigError =&gt; pod never Ready =&gt; empty endpoints =&gt; partial service unreachability.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-assurance-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-assurance-service&quot;,
+   &quot;root_cause&quot;: &quot;mysql_invalid_credentials&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-assurance-service&quot;,
+   &quot;root_cause&quot;: &quot;service_selector_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-2"><summary><b>case-2</b> · <code>app/ts-auth-service</code> + <code>missing_secret_binding</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 13 步</summary><ul>
-<li><b>摘要</b>：Alert: POST /api/v1/users/login on entry service ts-auth-service returned 503 (370 occurrences). Connectivity test to ts-auth-service:12340 failed from worker-01/02/03. Pod listing shows the only outlier: ts-auth-service-796f849c7c-6gkj9 0/1 CreateContainerConfigError (0 restarts); Deployment ts-auth-service reports Available=False / MinimumReplicasUnavailable / unavailableReplicas=1. Kubelet mechanism event (verbatim, x12) and the namespace Warning row: 'Error: secret "ts-auth-mysql1" not found'. Config closure: the Deployment pod template uses envFrom secretRef name 'ts-auth-mysql1' (also in</li>
+<li><b>摘要</b>：Alert: POST /api/v1/users/login on entry service ts-auth-service returned 503 (370 occurrences). Connectivity test to ts-auth-service:12340 failed from worker-01/02/03. Pod listing shows the only outlier: ts-auth-service-796f849c7c-6gkj9 0/1 CreateContainerConfigError (0 restarts); Deployment ts-auth-service reports Available=False / MinimumReplicasUnavailable / unavailableReplicas=1. Kubelet mechanism event (verbatim, x12) and the namespace Warning row: 'Error: secret &quot;ts-auth-mysql1&quot; not found'. Config closure: the Deployment pod template uses envFrom secretRef name 'ts-auth-mysql1' (also in</li>
 <li><b>raw 日志</b>：<a href="../results/1012_2040_inorder4-v3b8/raw/1012_2159_trainticket-startup-2/">results/1012_2040_inorder4-v3b8/raw/1012_2159_trainticket-startup-2</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;,&quot;top_k&quot;:2}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-auth-service-796f849c7c-6gkj9&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-auth-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-auth-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;secrets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>11</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-auth-service&quot;,&quot;port&quot;:12340,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-auth-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Alert: POST /api/v1/users/login on entry service ts-auth-service returned 503 (370 occurrences). Connectivity test to ts-auth-service:12340 failed from worker-01/02/03. Pod listing shows the only outlier: ts-auth-service-796f849c7c-6gkj9 0/1 CreateContainerConfigError (0 restarts); Deployment ts-auth-service reports Available=False / MinimumReplicasUnavailable / unavailableReplicas=1. Kubelet mechanism event (verbatim, x12) and the namespace Warning row: 'Error: secret \&quot;ts-auth-mysql1\&quot; not found'. Config closure: the Deployment pod template uses envFrom secretRef name 'ts-auth-mysql1' (also in last-applied-configuration), while the namespace secrets listing contains 'ts-auth-mysql' (Opaque, DATA 5) and NO 'ts-auth-mysql1'. The referenced Secret object is absent, so the container can never be created (env injection stage fails before start), no Ready endpoint exists, and the login path returns 503.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-auth-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-assurance-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-config-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-3"><summary><b>case-3</b> · <code>app/ts-config-service</code> + <code>missing_secret_binding</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 17 步</summary><ul>
-<li><b>摘要</b>：ts-config-service is the only unreachable service: connectivity probes to ts-config-service:15679 fail from worker-01/02/03 while sibling services (ts-travel-service:12346, ts-basic-service:15680) succeed, and its Deployment is the only one at 0/1 (AVAILABLE 0). Object layer shows pod ts-config-service-5cc47cd465-5v4d6 in status CreateContainerConfigError (0/1, container State Waiting/Reason CreateContainerConfigError, image already pulled). Mechanism event from kubelet: Warning Failed (x12) 'Error: secret "ts-config-mysql1" not found'. Config closure: GetAppYAML(ts-config-service) declares en</li>
+<li><b>摘要</b>：ts-config-service is the only unreachable service: connectivity probes to ts-config-service:15679 fail from worker-01/02/03 while sibling services (ts-travel-service:12346, ts-basic-service:15680) succeed, and its Deployment is the only one at 0/1 (AVAILABLE 0). Object layer shows pod ts-config-service-5cc47cd465-5v4d6 in status CreateContainerConfigError (0/1, container State Waiting/Reason CreateContainerConfigError, image already pulled). Mechanism event from kubelet: Warning Failed (x12) 'Error: secret &quot;ts-config-mysql1&quot; not found'. Config closure: GetAppYAML(ts-config-service) declares en</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1134_inorder4-v3b10/raw/1013_1138_trainticket-startup-3/">results/1013_1134_inorder4-v3b10/raw/1013_1138_trainticket-startup-3</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-config-service-5cc47cd465-5v4d6&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-config-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;secrets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-config-service&quot;,&quot;port&quot;:15679,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>14</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;port&quot;:12346,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;port&quot;:15680,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;ts-config-service&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;ts-config-service is the only unreachable service: connectivity probes to ts-config-service:15679 fail from worker-01/02/03 while sibling services (ts-travel-service:12346, ts-basic-service:15680) succeed, and its Deployment is the only one at 0/1 (AVAILABLE 0). Object layer shows pod ts-config-service-5cc47cd465-5v4d6 in status CreateContainerConfigError (0/1, container State Waiting/Reason CreateContainerConfigError, image already pulled). Mechanism event from kubelet: Warning Failed (x12) 'Error: secret \&quot;ts-config-mysql1\&quot; not found'. Config closure: GetAppYAML(ts-config-service) declares envFrom.secretRef.name=ts-config-mysql1, but the namespace secret listing contains only ts-config-mysql (5 keys) and no ts-config-mysql1 — the referenced Secret binding does not exist, so the container can never be created, the pod never becomes Ready, the Service selector app=ts-config-service has no usable endpoint, and the service is unreachable.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-config-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-config-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-travel-service&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_return&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-4"><summary><b>case-4</b> · <code>app/ts-consign-service</code> + <code>missing_secret_binding</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 11 步</summary><ul>
-<li><b>摘要</b>：Caller-side reachability confirms the outage: CheckServiceConnectivity(ts-consign-service:16111) failed from debug pods on worker-01/02/03, and GetAlerts returned 0 alerts. The pods listing (wide) shows exactly one outlier among 47 pods: ts-consign-service-855b6bfd98-gsh82 is 0/1 with STATUS=CreateContainerConfigError while all other pods are 1/1 Running. Its pod detail shows container State 'Waiting / Reason: CreateContainerConfigError' with an empty Container ID (container never created) and the kubelet event 'Warning Failed (x12 over 4m58s): Error: secret "ts-consign-mysql2" not found', alo</li>
+<li><b>摘要</b>：Caller-side reachability confirms the outage: CheckServiceConnectivity(ts-consign-service:16111) failed from debug pods on worker-01/02/03, and GetAlerts returned 0 alerts. The pods listing (wide) shows exactly one outlier among 47 pods: ts-consign-service-855b6bfd98-gsh82 is 0/1 with STATUS=CreateContainerConfigError while all other pods are 1/1 Running. Its pod detail shows container State 'Waiting / Reason: CreateContainerConfigError' with an empty Container ID (container never created) and the kubelet event 'Warning Failed (x12 over 4m58s): Error: secret &quot;ts-consign-mysql2&quot; not found', alo</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1235_inorder4-v3b12/raw/1013_1238_trainticket-startup-4/">results/1013_1235_inorder4-v3b12/raw/1013_1238_trainticket-startup-4</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-consign-service-855b6bfd98-gsh82&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-consign-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;secrets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-consign-service&quot;,&quot;port&quot;:16111,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Caller-side reachability confirms the outage: CheckServiceConnectivity(ts-consign-service:16111) failed from debug pods on worker-01/02/03, and GetAlerts returned 0 alerts. The pods listing (wide) shows exactly one outlier among 47 pods: ts-consign-service-855b6bfd98-gsh82 is 0/1 with STATUS=CreateContainerConfigError while all other pods are 1/1 Running. Its pod detail shows container State 'Waiting / Reason: CreateContainerConfigError' with an empty Container ID (container never created) and the kubelet event 'Warning Failed (x12 over 4m58s): Error: secret \&quot;ts-consign-mysql2\&quot; not found', alongside a successful Scheduled event and a 'Pulled' image event — so scheduling and image pull are healthy and the break is at config-reference resolution. GetAppYAML(ts-consign-service) shows the pod template references envFrom secretRef name 'ts-consign-mysql2' while the namespace Secret listing contains only 'ts-consign-mysql' (Opaque, 5 keys) and no 'ts-consign-mysql2' anywhere: the Deployment is bound to a non-existent Secret name, so the container config can never be built, the pod never becomes Ready, and the service has no ready endpoints. Node-side components report normally and no quota/namespace anomaly is present, ruling out node/namespace root causes.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-consign-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-consign-service&quot;,
+   &quot;root_cause&quot;: &quot;mysql_invalid_credentials&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-consign-service&quot;,
+   &quot;root_cause&quot;: &quot;service_dns_resolution_failure&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-5"><summary><b>case-5</b> · <code>app/ts-contacts-service</code> + <code>missing_secret_binding</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 12 步</summary><ul>
-<li><b>摘要</b>：Symptom side: GetAlerts shows entry_service ts-contacts-service returning HTTP 503 (92 occurrences) on /api/v1/contactservice/contacts/account/{userId}, and CheckServiceConnectivity(ts-contacts-service:12347) fails from debug pods on worker-01/02/03. Object layer: the only outlier row in the train-ticket pod listing is ts-contacts-service-5cbbccffcb-gn4qm 0/1 CreateContainerConfigError (all other workloads 1/1 Running), so the node side is not the break. Mechanism/event surface: kubectl-describe events read verbatim 'Warning Failed ... Error: secret "ts-contacts-mysql" not found' (x12 over 4m5</li>
+<li><b>摘要</b>：Symptom side: GetAlerts shows entry_service ts-contacts-service returning HTTP 503 (92 occurrences) on /api/v1/contactservice/contacts/account/{userId}, and CheckServiceConnectivity(ts-contacts-service:12347) fails from debug pods on worker-01/02/03. Object layer: the only outlier row in the train-ticket pod listing is ts-contacts-service-5cbbccffcb-gn4qm 0/1 CreateContainerConfigError (all other workloads 1/1 Running), so the node side is not the break. Mechanism/event surface: kubectl-describe events read verbatim 'Warning Failed ... Error: secret &quot;ts-contacts-mysql&quot; not found' (x12 over 4m5</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1343_inorder4-v3b14/raw/1013_1346_trainticket-startup-5/">results/1013_1343_inorder4-v3b14/raw/1013_1346_trainticket-startup-5</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-contacts-service-5cbbccffcb-gn4qm&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-contacts-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;secrets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-contacts-service&quot;,&quot;port&quot;:12347,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-contacts-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom side: GetAlerts shows entry_service ts-contacts-service returning HTTP 503 (92 occurrences) on /api/v1/contactservice/contacts/account/{userId}, and CheckServiceConnectivity(ts-contacts-service:12347) fails from debug pods on worker-01/02/03. Object layer: the only outlier row in the train-ticket pod listing is ts-contacts-service-5cbbccffcb-gn4qm 0/1 CreateContainerConfigError (all other workloads 1/1 Running), so the node side is not the break. Mechanism/event surface: kubectl-describe events read verbatim 'Warning Failed ... Error: secret \&quot;ts-contacts-mysql\&quot; not found' (x12 over 4m59s) from kubelet while Scheduled and Pulled are Normal, and GetErrorLogs reports 'container ts-contacts-service ... is waiting to start: CreateContainerConfigError'. Config surface: GetAppYAML(ts-contacts-service) declares envFrom.secretRef.name=ts-contacts-mysql, but the namespace secrets listing contains only ts-contacts-mysql2 (Opaque, 5 keys) with no ts-contacts-mysql at all (every other service follows the unsuffixed '&lt;svc&gt;-mysql' naming). The dangling secretRef prevents container creation, so the pod never becomes Ready, the Service has no endpoints, and callers observe 503/connection failure.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-contacts-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-contacts-service&quot;,
+   &quot;root_cause&quot;: &quot;service_dns_resolution_failure&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-contacts-service&quot;,
+   &quot;root_cause&quot;: &quot;mysql_invalid_credentials&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-6"><summary><b>case-6</b> · <code>app/ts-delivery-service</code> + <code>missing_secret_binding</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 12 步</summary><ul>
 <li><b>摘要</b>：Reachability chain closed on ts-delivery-service. Symptom side: active TCP probe to ts-delivery-service:18808 failed from all three workers (worker-01/02/03 'Connection Failed'), while GetAlerts is clean (no metric-side pointer). Object layer: the pod listing's only outlier is ts-delivery-service-78fc79dcf6-dpqs5 with '0/1 CreateContainerConfigError' (all other 48 pods 1/1 Running), and GetResources(deployments -o wide) shows ts-delivery-service as the only drained workload, 0/1 AVAILABLE. Mechanism event (kubelet, on the exact pod and in the namespace events surface): 'Warning Failed ... Erro</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1503_inorder4-v3b16/raw/1013_1505_trainticket-startup-6/">results/1013_1503_inorder4-v3b16/raw/1013_1505_trainticket-startup-6</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-delivery-service-78fc79dcf6-dpqs5&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-delivery-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;secrets&quot;}</code></td></tr>
+<tr><td>10</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-delivery-service&quot;,&quot;port&quot;:18808,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;deployments&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Reachability chain closed on ts-delivery-service. Symptom side: active TCP probe to ts-delivery-service:18808 failed from all three workers (worker-01/02/03 'Connection Failed'), while GetAlerts is clean (no metric-side pointer). Object layer: the pod listing's only outlier is ts-delivery-service-78fc79dcf6-dpqs5 with '0/1 CreateContainerConfigError' (all other 48 pods 1/1 Running), and GetResources(deployments -o wide) shows ts-delivery-service as the only drained workload, 0/1 AVAILABLE. Mechanism event (kubelet, on the exact pod and in the namespace events surface): 'Warning Failed ... Error: secret \&quot;ts-delivery-mysql\&quot; not found' (x12 over 4m59s); pod state Waiting/Reason=CreateContainerConfigError, Ready=False, ContainersReady=False, Restart Count=0 =&gt; the container is never created (rules out crash loop, probes, scheduling, image pull, node/capacity faults). Config face: GetAppYAML(ts-delivery-service) declares envFrom.secretRef.name=ts-delivery-mysql (Optional: false), while the referenced object's own listing GetResources(secrets, train-ticket) contains every peer Secret (ts-auth-mysql, ts-payment-mysql, ts-ticket-office-mysql, ...) but NOT ts-delivery-mysql. So the break is a missing Secret binding, leaving the Service without ready endpoints and producing the reported partial unreachability. Older 'ts-auth-mysql1' / 'ts-payment-mysql2' / 'ts-ticket-office-mysql' warnings in the event stream belong to already-recovered replicas (those deployments are now 1/1 AVAILABLE); ts-delivery-service is the only workload still failing in this snapshot.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-delivery-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-delivery-service&quot;,
+   &quot;root_cause&quot;: &quot;service_selector_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-delivery-service&quot;,
+   &quot;root_cause&quot;: &quot;mysql_invalid_credentials&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-7"><summary><b>case-7</b> · <code>app/ts-food-delivery-service</code> + <code>missing_secret_binding</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 11 步</summary><ul>
-<li><b>摘要</b>：Namespace-level pods scan shows a single outlier: ts-food-delivery-service-bdcf5577f-v4x6f is 0/1 in CreateContainerConfigError on worker-01 while all other 47 pods are 1/1 Running. Its pod detail gives the mechanism verbatim: kubelet 'Warning Failed ... Error: secret "ts-food-delivery-mysq1" not found' (x12), State Waiting/Reason CreateContainerConfigError, with PodScheduled=True and image already pulled, so scheduling and image pull are fine and the break is at container-config reference resolution. The config face confirms it: the deployment's envFrom secretRef is 'ts-food-delivery-mysq1' (</li>
+<li><b>摘要</b>：Namespace-level pods scan shows a single outlier: ts-food-delivery-service-bdcf5577f-v4x6f is 0/1 in CreateContainerConfigError on worker-01 while all other 47 pods are 1/1 Running. Its pod detail gives the mechanism verbatim: kubelet 'Warning Failed ... Error: secret &quot;ts-food-delivery-mysq1&quot; not found' (x12), State Waiting/Reason CreateContainerConfigError, with PodScheduled=True and image already pulled, so scheduling and image pull are fine and the break is at container-config reference resolution. The config face confirms it: the deployment's envFrom secretRef is 'ts-food-delivery-mysq1' (</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1524_inorder4-v3b18/raw/1013_1527_trainticket-startup-7/">results/1013_1524_inorder4-v3b18/raw/1013_1527_trainticket-startup-7</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-food-delivery-service-bdcf5577f-v4x6f&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-food-delivery-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;secrets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-food-delivery-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Namespace-level pods scan shows a single outlier: ts-food-delivery-service-bdcf5577f-v4x6f is 0/1 in CreateContainerConfigError on worker-01 while all other 47 pods are 1/1 Running. Its pod detail gives the mechanism verbatim: kubelet 'Warning Failed ... Error: secret \&quot;ts-food-delivery-mysq1\&quot; not found' (x12), State Waiting/Reason CreateContainerConfigError, with PodScheduled=True and image already pulled, so scheduling and image pull are fine and the break is at container-config reference resolution. The config face confirms it: the deployment's envFrom secretRef is 'ts-food-delivery-mysq1' (typo, trailing digit 1) while the Secret that actually exists (GetResources secrets) is 'ts-food-delivery-mysql'; the referenced name is absent from the secret listing. The other transient 'secret ... not found' warnings (ts-travel/ts-station/ts-train-food/ts-contacts-mysql) all recovered to Running, leaving this pod the sole persistent failure. Effect: the container is never created, so the service has no ready endpoint and its upstream caller ts-gateway-service hits the unavailable route, presenting as Service Availability Disruption.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-food-delivery-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-food-delivery-service&quot;,
+   &quot;root_cause&quot;: &quot;service_env_var_address_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-food-delivery-service&quot;,
+   &quot;root_cause&quot;: &quot;service_selector_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-8"><summary><b>case-8</b> · <code>app/ts-food-service</code> + <code>missing_secret_binding</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 12 步</summary><ul>
-<li><b>摘要</b>：Pods listing shows a single outlier: ts-food-service-6b7777876d-2h6dc is 0/1 in CreateContainerConfigError while all other train-ticket pods are 1/1 Running. Its pod sheet shows the container Waiting with Reason=CreateContainerConfigError and the kubelet event verbatim: 'Error: secret "ts-food-mysql" not found' (x12 over 5m), while the image was already present (ruling out image pull). The Deployment ts-food-service spec shows envFrom secretRef name=ts-food-mysql; the secrets listing contains every other '&lt;svc&gt;-mysql' secret but ts-food-mysql is absent — the only missing referenced object. The</li>
+<li><b>摘要</b>：Pods listing shows a single outlier: ts-food-service-6b7777876d-2h6dc is 0/1 in CreateContainerConfigError while all other train-ticket pods are 1/1 Running. Its pod sheet shows the container Waiting with Reason=CreateContainerConfigError and the kubelet event verbatim: 'Error: secret &quot;ts-food-mysql&quot; not found' (x12 over 5m), while the image was already present (ruling out image pull). The Deployment ts-food-service spec shows envFrom secretRef name=ts-food-mysql; the secrets listing contains every other '&lt;svc&gt;-mysql' secret but ts-food-mysql is absent — the only missing referenced object. The</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1541_inorder4-v3b20/raw/1013_1543_trainticket-startup-8/">results/1013_1541_inorder4-v3b20/raw/1013_1543_trainticket-startup-8</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-food-service-6b7777876d-2h6dc&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;secrets&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-food-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-food-service&quot;,&quot;port&quot;:18856,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Pods listing shows a single outlier: ts-food-service-6b7777876d-2h6dc is 0/1 in CreateContainerConfigError while all other train-ticket pods are 1/1 Running. Its pod sheet shows the container Waiting with Reason=CreateContainerConfigError and the kubelet event verbatim: 'Error: secret \&quot;ts-food-mysql\&quot; not found' (x12 over 5m), while the image was already present (ruling out image pull). The Deployment ts-food-service spec shows envFrom secretRef name=ts-food-mysql; the secrets listing contains every other '&lt;svc&gt;-mysql' secret but ts-food-mysql is absent — the only missing referenced object. The Service ts-food-service declares port 18856 and an active connectivity probe to ts-food-service:18856 from worker-01/02/03 all returned Connection Failed (no Ready endpoints). Caller-side corroboration: the alert shows HTTP 500 on POST /api/v1/preserveservice/preserve with entry service ts-preserve-service, whose dependency graph includes a call edge to ts-food-service. Mechanism event + events surface + the referenced config object all converge on the missing Secret binding in ts-food-service's pod template.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-food-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-food-service&quot;,
+   &quot;root_cause&quot;: &quot;service_selector_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-user-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-9"><summary><b>case-9</b> · <code>app/ts-notification-service</code> + <code>missing_secret_binding</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 14 步</summary><ul>
 <li><b>摘要</b>：Symptom side first: connectivity probe to the Service-declared port ts-notification-service:17853 fails from worker-01/02/03 ('Connection Failed') and the Service ts-notification-service has an EMPTY ENDPOINTS list, while its upstream callers are ts-gateway-service and ts-cancel-service. The pods inventory (only legitimate full scan) shows exactly one outlier: ts-notification-service-5fd4cd4dcd-2vbnx 0/1 CreateContainerConfigError (all other 47 pods 1/1 Running -&gt; 'Partial'). Owner chain: Deployment/ts-notification-service replicas=1, unavailableReplicas=1, Available=False (MinimumReplicasUnav</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1628_inorder4-v3b22/raw/1013_1631_trainticket-startup-9/">results/1013_1628_inorder4-v3b22/raw/1013_1631_trainticket-startup-9</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;,&quot;top_k&quot;:2}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-notification-service-5fd4cd4dcd-2vbnx&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-notification-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;name&quot;:&quot;ts-notification-service&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-notification-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;secrets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>12</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-notification-service&quot;,&quot;port&quot;:17853,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;name&quot;:&quot;ts-notification-service&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom side first: connectivity probe to the Service-declared port ts-notification-service:17853 fails from worker-01/02/03 ('Connection Failed') and the Service ts-notification-service has an EMPTY ENDPOINTS list, while its upstream callers are ts-gateway-service and ts-cancel-service. The pods inventory (only legitimate full scan) shows exactly one outlier: ts-notification-service-5fd4cd4dcd-2vbnx 0/1 CreateContainerConfigError (all other 47 pods 1/1 Running -&gt; 'Partial'). Owner chain: Deployment/ts-notification-service replicas=1, unavailableReplicas=1, Available=False (MinimumReplicasUnavailable), so replicas are not zero. Mechanism event on the pod: kubelet 'Warning Failed (x12 over 5m) Error: secret \&quot;ts-notification-mysql\&quot; not found' with container Waiting/CreateContainerConfigError, Container ID empty and Restart Count 0, i.e. the container was never created (startup/admission stage, not probe or scheduling). Config face confirms the template references it: envFrom secretRef name=ts-notification-mysql (Optional not set = false). Referenced-object listing confirms the gap: the namespace holds a full set of ts-&lt;svc&gt;-mysql Secrets but NO ts-notification-mysql. The events surface repeats 'Error: secret \&quot;ts-notification-mysql\&quot; not found' bound to pod/ts-notification-service-5fd4cd4dcd-2vbnx. A same-class warning on ts-train-service (ts-train-mysql) is already resolved (secret exists, pod 1/1 Running), so the persisting break is the notification path. Root cause: the SecretBinding referenced by the workload is missing, so the Pod can never start and the Service stays without endpoints.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-notification-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-notification-service&quot;,
+   &quot;root_cause&quot;: &quot;readiness_probe_incorrect_timing&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-train-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-10"><summary><b>case-10</b> · <code>app/ts-order-other-service</code> + <code>missing_secret_binding</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 12 步</summary><ul>
-<li><b>摘要</b>：Symptom 'Partial Service Unreachability.' - inventory listing shows the single outlier pod ts-order-other-service-5fdd56f7f9-r5kch as 0/1 CreateContainerConfigError (Ready=False, ContainersReady=False, State: Waiting) while all 46 other pods are 1/1 Running. Its Service ts-order-other-service (port 12032/targetPort 12032, selector app=ts-order-other-service) has an EMPTY endpoints list, i.e. the service is genuinely unreachable. kubelet mechanism event (x12 over 5m1s): 'Error: secret "ts-order-other-mysql1" not found'; image Pulled and Scheduled succeeded, so scheduling/image/probe layers are </li>
+<li><b>摘要</b>：Symptom 'Partial Service Unreachability.' - inventory listing shows the single outlier pod ts-order-other-service-5fdd56f7f9-r5kch as 0/1 CreateContainerConfigError (Ready=False, ContainersReady=False, State: Waiting) while all 46 other pods are 1/1 Running. Its Service ts-order-other-service (port 12032/targetPort 12032, selector app=ts-order-other-service) has an EMPTY endpoints list, i.e. the service is genuinely unreachable. kubelet mechanism event (x12 over 5m1s): 'Error: secret &quot;ts-order-other-mysql1&quot; not found'; image Pulled and Scheduled succeeded, so scheduling/image/probe layers are </li>
 <li><b>raw 日志</b>：<a href="../results/1013_1656_inorder4-v3b25/raw/1013_1658_trainticket-startup-10/">results/1013_1656_inorder4-v3b25/raw/1013_1658_trainticket-startup-10</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-order-other-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-order-other-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-order-other-service-5fdd56f7f9-r5kch&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-other-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;secrets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom 'Partial Service Unreachability.' - inventory listing shows the single outlier pod ts-order-other-service-5fdd56f7f9-r5kch as 0/1 CreateContainerConfigError (Ready=False, ContainersReady=False, State: Waiting) while all 46 other pods are 1/1 Running. Its Service ts-order-other-service (port 12032/targetPort 12032, selector app=ts-order-other-service) has an EMPTY endpoints list, i.e. the service is genuinely unreachable. kubelet mechanism event (x12 over 5m1s): 'Error: secret \&quot;ts-order-other-mysql1\&quot; not found'; image Pulled and Scheduled succeeded, so scheduling/image/probe layers are excluded. The namespace events surface binds this Warning verbatim to pod/ts-order-other-service-5fdd56f7f9-r5kch. Config closure: GetAppYAML(ts-order-other-service) pod template declares envFrom secretRef name 'ts-order-other-mysql1' (extra trailing '1'), while the secrets listing only contains 'ts-order-other-mysql' (created 5m45s, holding ORDER_OTHER_MYSQL_HOST=tsdb-mysql-leader etc.). The reference therefore cannot resolve, the container never starts, endpoints stay empty, and callers (alert entry ts-preserve-service, POST /api/v1/preserveservice/preserve -&gt; HTTPError 500, 92 occurrences) cannot reach it. All other ts-*-mysql secrets exist and their pods are Ready, excluding node/namespace-level faults.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-order-other-service&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-order-other-service&quot;,
+   &quot;root_cause&quot;: &quot;mysql_invalid_credentials&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-preserve-service&quot;,
+   &quot;root_cause&quot;: &quot;service_env_var_address_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
 </body></html>

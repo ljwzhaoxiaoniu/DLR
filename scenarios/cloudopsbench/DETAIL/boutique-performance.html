@@ -8,10 +8,12 @@ table { width:100%; border-collapse:collapse; background:var(--surface); border:
 th, td { padding:8px 11px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; } th { font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); } tr:last-child td { border-bottom:none; }
 code { font-size:13px; color:var(--dlr); } a { color:var(--dlr); } a:hover { text-decoration-thickness:2px; } .ok { color:var(--good); }
 details { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 18px; margin:10px 0; } details summary { cursor:pointer; font-size:14.5px; } details ul { margin:10px 0 4px; padding-left:20px; font-size:14px; color:var(--ink-2); }
+details p { font-size:14px; color:var(--ink-2); margin:7px 0; }
+pre { white-space:pre-wrap; word-break:break-word; background:var(--page); border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:12.8px; line-height:1.55; font-family:ui-monospace,Consolas,monospace; color:var(--ink); margin:8px 0; }
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/performance</em></h1>
-<p class="deck">已跑 <b>7/29</b> 题：JRA ✅7 ❌0 ｜ 证据链全闭 7 ｜ token 中位 156,035 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:20:29.295Z</p>
+<p class="deck">已跑 <b>7/29</b> 题：JRA ✅7 ❌0 ｜ 证据链全闭 7 ｜ token 中位 156,035 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:25:34.981Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>16</td><td>127,303</td><td>0</td><td>0</td><td class="muted">1012_1415_inorder4-v3</td><td><a href="../results/1012_1415_inorder4-v3/raw/1012_1418_boutique-performance-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1418_boutique-performance-1</a></td></tr>
@@ -26,29 +28,329 @@ details { background:var(--surface); border:1px solid var(--border); border-radi
 <details id="case-1"><summary><b>case-1</b> · <code>app/adservice</code> + <code>pod_cpu_overload</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 16 步</summary><ul>
 <li><b>摘要</b>：All 11 boutique pods are Running 2/2 with 0 restarts and all deployments 1/1 AVAILABLE (no scheduling/crash/probe/image/SA/PVC breakpoint). Alert pointer: Service/adservice ABNORMAL - cpu_cfs throttled 0.824s, cpu core Normal=0.03 -&gt; Current=0.16 cores (+375%), adservice p95 latency Normal=4.85ms -&gt; Current=70.04ms (+1343%). Anchor-confirmed: adservice pod (worker-02) limits cpu=200m/requests 100m with idle leaf-service baseline ~0.03 cores, yet observed 0.16 cores causing CFS throttling and 13x latency increase. Code surface (AdService.java getAds/getRandomAds) contains no busy loop or artifi</li>
 <li><b>raw 日志</b>：<a href="../results/1012_1415_inorder4-v3/raw/1012_1418_boutique-performance-1/">results/1012_1415_inorder4-v3/raw/1012_1418_boutique-performance-1</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>2</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>3</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>6</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;adservice&quot;,&quot;file_path&quot;:&quot;src/main/java/hipstershop/AdService.java&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;adservice-d68dfc56-lbcrz&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>13</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;adservice&quot;,&quot;port&quot;:9555,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All 11 boutique pods are Running 2/2 with 0 restarts and all deployments 1/1 AVAILABLE (no scheduling/crash/probe/image/SA/PVC breakpoint). Alert pointer: Service/adservice ABNORMAL - cpu_cfs throttled 0.824s, cpu core Normal=0.03 -&gt; Current=0.16 cores (+375%), adservice p95 latency Normal=4.85ms -&gt; Current=70.04ms (+1343%). Anchor-confirmed: adservice pod (worker-02) limits cpu=200m/requests 100m with idle leaf-service baseline ~0.03 cores, yet observed 0.16 cores causing CFS throttling and 13x latency increase. Code surface (AdService.java getAds/getRandomAds) contains no busy loop or artificial delay, and connectivity to adservice:9555 succeeds, excluding code/address/protocol faults. Node worker-02 stays at only 4.91% CPU (8 allocatable cores, no taints/pressure, kubelet active), so its minor CPU rise is a downstream effect rather than a node-capacity or node-network fault. Breakpoint = the CPU resource load observation on the adservice workload itself.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/adservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/adservice&quot;,
+   &quot;root_cause&quot;: &quot;code_busy_loop&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;node/worker-02&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-2"><summary><b>case-2</b> · <code>app/cartservice</code> + <code>pod_cpu_overload</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 28 步</summary><ul>
 <li><b>摘要</b>：Telemetry-chain closure (per L2 consensus for 'Service latency increased significantly'): object layer is entirely clean — all 11 boutique pods 2/2 Running with RESTARTS=0, all 26 namespace events Normal (no Warning), 4 nodes Ready with no pressure/taint, kubelet on worker-01 healthy, cartservice:7070 connectivity OK, selector/port match, pod has no config/probe/volume anomaly. The break is at the metric level on cartservice: GetAlerts shows cartservice RESOURCE_SATURATION cpu_cfs 0.811s (Throttled) and cpu core 0.02 -&gt; 0.16 cores (+544.6%) against its 200m CPU limit (requests 100m, QoS Bursta</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1134_inorder4-v3b10/raw/1013_1134_boutique-performance-2/">results/1013_1134_inorder4-v3b10/raw/1013_1134_boutique-performance-2</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service latency increased significantly&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service latency increased significantly&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service latency increased significantly&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;redis-cart&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;,&quot;file_path&quot;:&quot;src/services/CartService.cs&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;,&quot;file_path&quot;:&quot;src/cartstore/RedisCartStore.cs&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;,&quot;file_path&quot;:&quot;src/Startup.cs&quot;}</code></td></tr>
+<tr><td>17</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;cartservice-7c5f46fc47-5jrjd&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;,&quot;file_path&quot;:&quot;src/Program.cs&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>20</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;,&quot;file_path&quot;:&quot;src/services/HealthCheckService.cs&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;,&quot;file_path&quot;:&quot;src/cartstore/ICartStore.cs&quot;}</code></td></tr>
+<tr><td>22</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;cartservice&quot;,&quot;port&quot;:7070,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>23</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>24</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>25</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+<tr><td>26</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>27</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Telemetry-chain closure (per L2 consensus for 'Service latency increased significantly'): object layer is entirely clean — all 11 boutique pods 2/2 Running with RESTARTS=0, all 26 namespace events Normal (no Warning), 4 nodes Ready with no pressure/taint, kubelet on worker-01 healthy, cartservice:7070 connectivity OK, selector/port match, pod has no config/probe/volume anomaly. The break is at the metric level on cartservice: GetAlerts shows cartservice RESOURCE_SATURATION cpu_cfs 0.811s (Throttled) and cpu core 0.02 -&gt; 0.16 cores (+544.6%) against its 200m CPU limit (requests 100m, QoS Burstable), together with LATENCY_DEGRADATION cartservice-p95 10.77ms -&gt; 83.83ms (+678.2%). The latency propagates exactly along the call edges (GetServiceDependencies: cartservice upstream = frontend + checkoutservice), which are the other two alerted entities (checkoutservice-p95 +310.8%, frontend-p95 +287.4%), making cartservice the origin of the escalation cluster. cartservice code (CartService.cs, RedisCartStore.cs, Startup.cs, Program.cs, HealthCheckService.cs) is stock v0.10.3 with no busy loop or artificial delay, logs are healthy and error-free, redis-cart downstream is normal, and frontend error ratio is 0.0001 (2 'context canceled' long-tail errors), confirming a pure CPU-saturation-induced performance degradation on the cartservice pod rather than any config, code, or dependency fault.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;code_busy_loop&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-3"><summary><b>case-3</b> · <code>app/checkoutservice</code> + <code>pod_cpu_overload</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 16 步</summary><ul>
 <li><b>摘要</b>：Metric-surface case: GetAlerts shows the anomaly is owned by checkoutservice — RESOURCE_SATURATION [cpu_cfs] Val: 0.703s (Throttled), RESOURCE_SATURATION [cpu core] Normal=0.01 cores -&gt; Current=0.15 cores (+1985.6%), and LATENCY_DEGRADATION checkoutservice-p95 28.83ms -&gt; 93.18ms (+223.2%); the only other alert is a mild knock-on on its host (Node worker-02 cpu 3.15% -&gt; 5.12%). The pods face closes it: checkoutservice container 'server' runs with limits cpu=200m / requests cpu=100m, so its sampled 0.15 cores (~75% of limit) triggers CFS throttling that explains the added latency. Object layer i</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1343_inorder4-v3b14/raw/1013_1343_boutique-performance-3/">results/1013_1343_inorder4-v3b14/raw/1013_1343_boutique-performance-3</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>8</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;checkoutservice-dbcdcb5fb-crqwc&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;money/money.go&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>15</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Metric-surface case: GetAlerts shows the anomaly is owned by checkoutservice — RESOURCE_SATURATION [cpu_cfs] Val: 0.703s (Throttled), RESOURCE_SATURATION [cpu core] Normal=0.01 cores -&gt; Current=0.15 cores (+1985.6%), and LATENCY_DEGRADATION checkoutservice-p95 28.83ms -&gt; 93.18ms (+223.2%); the only other alert is a mild knock-on on its host (Node worker-02 cpu 3.15% -&gt; 5.12%). The pods face closes it: checkoutservice container 'server' runs with limits cpu=200m / requests cpu=100m, so its sampled 0.15 cores (~75% of limit) triggers CFS throttling that explains the added latency. Object layer is pure exclusion: all 11 boutique pods 2/2 Running with RESTARTS 0, all deployments 1/1 AVAILABLE, DescribeResource(checkoutservice-dbcdcb5fb-crqwc) shows Ready=True and Restart Count 0 with no termination state, and GetResources(events, namespace=boutique) contains no Warning rows (no FailedCreate/FailedScheduling/FailedMount/probe/OOM events). Node scope excluded: kubelet on worker-02 is active (running) and its other pods are clean; status is synchronized with 0.01-core baseline, so the CPU rise is on the checkoutservice pod, not the node. Error logs empty and the code surface shows only the stock upstream MultiplySlow helper, giving no support to a code defect.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_busy_loop&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-4"><summary><b>case-4</b> · <code>app/currencyservice</code> + <code>pod_cpu_overload</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 18 步</summary><ul>
 <li><b>摘要</b>：Object layer is clean (all 11 boutique pods 2/2 Running, RESTARTS=0; currencyservice pod events only Normal Scheduled/Pulled/Created/Started, Restart Count 0, no probe/OOM/scheduling warnings) and namespace events contain no Warning tied to this workload, so the break is at the metric/telemetry level, not an object or health break. GetAlerts() isolates the single resource-level anomaly to currencyservice: RESOURCE_SATURATION [cpu_cfs] Val=1.081s (Throttled) plus RESOURCE_SATURATION [cpu core] Normal=0.04 cores -&gt; Current=0.17 cores (+318.0%), together with LATENCY_DEGRADATION p95 3.69ms -&gt; 73.</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1524_inorder4-v3b18/raw/1013_1524_boutique-performance-4/">results/1013_1524_inorder4-v3b18/raw/1013_1524_boutique-performance-4</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service latency increased significantly&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service latency increased significantly&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service latency increased significantly&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;currencyservice&quot;,&quot;file_path&quot;:&quot;server.js&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequotas&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>15</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;currencyservice&quot;,&quot;port&quot;:7000,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>17</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;currencyservice-5cd6467fc4-8lfb9&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Object layer is clean (all 11 boutique pods 2/2 Running, RESTARTS=0; currencyservice pod events only Normal Scheduled/Pulled/Created/Started, Restart Count 0, no probe/OOM/scheduling warnings) and namespace events contain no Warning tied to this workload, so the break is at the metric/telemetry level, not an object or health break. GetAlerts() isolates the single resource-level anomaly to currencyservice: RESOURCE_SATURATION [cpu_cfs] Val=1.081s (Throttled) plus RESOURCE_SATURATION [cpu core] Normal=0.04 cores -&gt; Current=0.17 cores (+318.0%), together with LATENCY_DEGRADATION p95 3.69ms -&gt; 73.49ms (+1891.2%). frontend (p95 29.76ms -&gt; 213.74ms) and checkoutservice (p95 26.13ms -&gt; 185.35ms) show latency-only anomalies, and GetServiceDependencies confirms currencyservice is a leaf service whose upstream callers are exactly frontend and checkoutservice, so its latency is the origin rather than a victim effect (frontend error ratio only 2/19398 = 0.0001 'context canceled'). currencyservice logs are all successful conversions with no error logs, excluding error-class faults; server.js contains only JSON table lookups and fixed-point math with no busy loop or artificial delay, excluding code-level causes; the pod's 200m CPU limit versus 100m request is the binding constraint that produces CFS throttling. Node layer is excluded (all 4 nodes Ready, no pressure, 8 CPU allocatable each; co-located worker-01 services on the same node show no CPU saturation) and namespace quota is excluded (no ResourceQuota in boutique). Mechanism: excessive Pod CPU load on currencyservice hits its 200m CPU limit, CFS throttles the gRPC server, response latency inflates and propagates to frontend and checkoutservice.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
+   &quot;root_cause&quot;: &quot;code_busy_loop&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-5"><summary><b>case-5</b> · <code>app/emailservice</code> + <code>pod_cpu_overload</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 19 步</summary><ul>
 <li><b>摘要</b>：Object layer is clean (all 11 boutique pods Running 2/2, 0 restarts, no Warning events, emailservice:5000 TCP open), so the break is metric-level. Alerts show the anomaly concentrated in the emailservice pod cgroup: RESOURCE_SATURATION [cpu_cfs] 0.618s Throttled and cpu core Normal=0.00 -&gt; Current=0.15 cores (+4182.4%), plus LATENCY_DEGRADATION emailservice-p95 4.80ms -&gt; 78.30ms (+1532.7%); its upstream caller checkoutservice shows only propagated LATENCY_DEGRADATION (p95 24.30ms -&gt; 85.41ms, +251.5%) with fully successful PlaceOrder/payment/email log lines, and emailservice has no error logs. </li>
 <li><b>raw 日志</b>：<a href="../results/1013_1541_inorder4-v3b20/raw/1013_1541_boutique-performance-5/">results/1013_1541_inorder4-v3b20/raw/1013_1541_boutique-performance-5</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service latency increased significantly&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service latency increased significantly&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service latency increased significantly&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;emailservice&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;emailservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;emailservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;emailservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;emailservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;emailservice&quot;,&quot;file_path&quot;:&quot;email_server.py&quot;}</code></td></tr>
+<tr><td>13</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;emailservice-7dc7d85bcb-sgrck&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>15</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>16</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;emailservice&quot;,&quot;port&quot;:5000,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;money/money.go&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Object layer is clean (all 11 boutique pods Running 2/2, 0 restarts, no Warning events, emailservice:5000 TCP open), so the break is metric-level. Alerts show the anomaly concentrated in the emailservice pod cgroup: RESOURCE_SATURATION [cpu_cfs] 0.618s Throttled and cpu core Normal=0.00 -&gt; Current=0.15 cores (+4182.4%), plus LATENCY_DEGRADATION emailservice-p95 4.80ms -&gt; 78.30ms (+1532.7%); its upstream caller checkoutservice shows only propagated LATENCY_DEGRADATION (p95 24.30ms -&gt; 85.41ms, +251.5%) with fully successful PlaceOrder/payment/email log lines, and emailservice has no error logs. DescribeResource on emailservice-7dc7d85bcb-sgrck shows the server container throttled against its 200m CPU limit (0.15 cores ~= 75% of limit), while GetAppYAML(emailservice) shows an intact image/SA/port/probe config and the code slot (email_server.py, checkoutservice main.go + money/money.go) contains no injected busy loop or artificial delay. Therefore the excess CPU load is inside the emailservice pod, and checkoutservice's latency is downstream propagation.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/emailservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/emailservice&quot;,
+   &quot;root_cause&quot;: &quot;code_busy_loop&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;node/worker-02&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-6"><summary><b>case-6</b> · <code>app/frontend</code> + <code>pod_cpu_overload</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 30 步</summary><ul>
 <li><b>摘要</b>：Telemetry chain closure: the only active alert is on Service 'frontend' with 'RESOURCE_SATURATION [cpu_cfs] | Val: 1.333s (Throttled)' and 'RESOURCE_SATURATION [cpu core] | Normal=0.07 -&gt; Current=0.16 cores (+138.1%)' accompanied by 'LATENCY_DEGRADATION frontend-p50: 15.87ms -&gt; 45.00ms, frontend-p95: 27.67ms -&gt; 271.36ms'. Object-layer exclusion found no break: all 11 boutique pods are Running with READY 2/2 and RESTARTS=0, all deployments are 1/1 AVAILABLE, all namespace events are Normal (no FailedScheduling/FailedMount/FailedCreate/image-pull/probe events), all 4 nodes are Ready with MemoryP</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1628_inorder4-v3b22/raw/1013_1628_boutique-performance-6/">results/1013_1628_inorder4-v3b22/raw/1013_1628_boutique-performance-6</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service latency increased significantly&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service latency increased significantly&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service latency increased significantly&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>11</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;frontend-6778bd7b8b-dtd4f&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;handlers.go&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;productcatalogservice&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;recommendationservice&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;rpc.go&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;recommendationservice&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>23</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;money/money.go&quot;}</code></td></tr>
+<tr><td>24</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;middleware.go&quot;}</code></td></tr>
+<tr><td>25</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>26</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>27</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;deployment_details.go&quot;}</code></td></tr>
+<tr><td>28</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;packaging_info.go&quot;}</code></td></tr>
+<tr><td>29</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;validator/validator.go&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Telemetry chain closure: the only active alert is on Service 'frontend' with 'RESOURCE_SATURATION [cpu_cfs] | Val: 1.333s (Throttled)' and 'RESOURCE_SATURATION [cpu core] | Normal=0.07 -&gt; Current=0.16 cores (+138.1%)' accompanied by 'LATENCY_DEGRADATION frontend-p50: 15.87ms -&gt; 45.00ms, frontend-p95: 27.67ms -&gt; 271.36ms'. Object-layer exclusion found no break: all 11 boutique pods are Running with READY 2/2 and RESTARTS=0, all deployments are 1/1 AVAILABLE, all namespace events are Normal (no FailedScheduling/FailedMount/FailedCreate/image-pull/probe events), all 4 nodes are Ready with MemoryPressure/DiskPressure/PIDPressure=False and no relevant taints, and all downstream services (currencyservice, productcatalogservice, cartservice, recommendationservice, adservice) report no error logs. The break is therefore at the metric plane: frontend's container CPU usage (0.16 cores) runs against its 200m CPU limit, producing 1.333s of CFS throttling; the 100ms CFS period explains the p95 blow-up to 271ms while p50 rose only mildly. Frontend's full source set (main.go, handlers.go, rpc.go, middleware.go, money/money.go, deployment_details.go, packaging_info.go, validator/validator.go) was read and is stock, with no busy loop or artificial delay injected, ruling out an application-code latency cause and pointing to excessive Pod-level CPU load on frontend.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;code_busy_loop&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;node/worker-01&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-7"><summary><b>case-7</b> · <code>app/paymentservice</code> + <code>pod_cpu_overload</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 19 步</summary><ul>
 <li><b>摘要</b>：Alerts: paymentservice RESOURCE_SATURATION [cpu_cfs] Val 0.614s (Throttled), [cpu core] Normal=0.00 -&gt; Current=0.16 cores (+4141.0%), LATENCY_DEGRADATION paymentservice-p95latency Normal=4.81ms -&gt; Current=60.66ms (+1161.3%); node worker-02 only echoes it (cpu util 3.03% -&gt; 5.12%). GetAppYAML(paymentservice) closes the saturation reading: container 'server' limits cpu=200m/requests 100m, so current usage 160m rides the cgroup quota and causes the CFS throttling that degrades p95 latency. Object layer excluded: 11 pods all 2/2 Running with RESTARTS 0 (paymentservice-869f9f96cd-k259k Ready, Resta</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1656_inorder4-v3b25/raw/1013_1656_boutique-performance-7/">results/1013_1656_inorder4-v3b25/raw/1013_1656_boutique-performance-7</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;label_selector&quot;:&quot;app=paymentservice&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;paymentservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>9</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;paymentservice-869f9f96cd-k259k&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;paymentservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;paymentservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;paymentservice&quot;,&quot;file_path&quot;:&quot;code/paymentservice/charge.js&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;paymentservice&quot;,&quot;file_path&quot;:&quot;code/paymentservice/server.js&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;paymentservice&quot;,&quot;file_path&quot;:&quot;charge.js&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;paymentservice&quot;,&quot;file_path&quot;:&quot;server.js&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Alerts: paymentservice RESOURCE_SATURATION [cpu_cfs] Val 0.614s (Throttled), [cpu core] Normal=0.00 -&gt; Current=0.16 cores (+4141.0%), LATENCY_DEGRADATION paymentservice-p95latency Normal=4.81ms -&gt; Current=60.66ms (+1161.3%); node worker-02 only echoes it (cpu util 3.03% -&gt; 5.12%). GetAppYAML(paymentservice) closes the saturation reading: container 'server' limits cpu=200m/requests 100m, so current usage 160m rides the cgroup quota and causes the CFS throttling that degrades p95 latency. Object layer excluded: 11 pods all 2/2 Running with RESTARTS 0 (paymentservice-869f9f96cd-k259k Ready, Restart Count 0, only Normal events), all deployments 1/1 AVAILABLE, Service 50051/TCP selector matched, 4 nodes Ready with no pressure and 8 allocatable cores at ~5% utilization (so not node CPU capacity), namespace events carry no Warning rows. Code surface (charge.js/server.js) is stock upstream with no busy loop, so the load sits on the pod's own CPU budget.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/paymentservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/paymentservice&quot;,
+   &quot;root_cause&quot;: &quot;code_busy_loop&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/paymentservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 </body></html>

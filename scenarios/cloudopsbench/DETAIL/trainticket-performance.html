@@ -8,10 +8,12 @@ table { width:100%; border-collapse:collapse; background:var(--surface); border:
 th, td { padding:8px 11px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; } th { font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); } tr:last-child td { border-bottom:none; }
 code { font-size:13px; color:var(--dlr); } a { color:var(--dlr); } a:hover { text-decoration-thickness:2px; } .ok { color:var(--good); }
 details { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 18px; margin:10px 0; } details summary { cursor:pointer; font-size:14.5px; } details ul { margin:10px 0 4px; padding-left:20px; font-size:14px; color:var(--ink-2); }
+details p { font-size:14px; color:var(--ink-2); margin:7px 0; }
+pre { white-space:pre-wrap; word-break:break-word; background:var(--page); border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:12.8px; line-height:1.55; font-family:ui-monospace,Consolas,monospace; color:var(--ink); margin:8px 0; }
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/performance</em></h1>
-<p class="deck">已跑 <b>10/47</b> 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 319,046 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:20:29.295Z</p>
+<p class="deck">已跑 <b>10/47</b> 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 319,046 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:25:34.981Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1429</td><td>36</td><td>442,283</td><td>0</td><td>1</td><td class="muted">1012_1512_inorder4-v3b3</td><td><a href="../results/1012_1512_inorder4-v3b3/raw/1012_1516_trainticket-performance-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1516_trainticket-performance-1</a></td></tr>
@@ -29,41 +31,488 @@ details { background:var(--surface); border:1px solid var(--border); border-radi
 <details id="case-1"><summary><b>case-1</b> · <code>app/ts-basic-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 36 步</summary><ul>
 <li><b>摘要</b>：Telemetry-chain case: all 48 pods Running 2/2 with no crashloops, all deployments 1/1, TCP connectivity to ts-basic-service:15680 / ts-travel-service:12346 / ts-preserve-service:14568 succeeded from all three workers, all nodes Ready with no pressure/taints and kubelet/kube-proxy/containerd active, and no error logs in any queried service (pure latency, zero errors/restarts). Within the single window 14:21:06-14:22:56 the alerts show the call chain ui-dashboard -&gt; gateway -&gt; preserve -&gt; travel -&gt; basic degrading in a monotone cascade: ts-basic-service p50 36.38ms -&gt; 7327.59ms (+20039.9%, p90 4</li>
 <li><b>raw 日志</b>：<a href="../results/1012_1512_inorder4-v3b3/raw/1012_1516_trainticket-performance-1/">results/1012_1512_inorder4-v3b3/raw/1012_1516_trainticket-performance-1</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-basic-service&quot;,&quot;port&quot;:8080,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>13</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>14</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+<tr><td>15</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;containerd&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>17</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-consign-service&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-station-food-service&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>23</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>24</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>25</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;port&quot;:15680,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>26</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;port&quot;:12346,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>27</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;port&quot;:14568,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>28</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+<tr><td>29</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;ts-basic-service-57fb684696-6nfpd&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pod&quot;}</code></td></tr>
+<tr><td>30</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;ts-consign-service-846bdf46cc-v8m9c&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pod&quot;}</code></td></tr>
+<tr><td>31</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;ts-station-food-service-d99b9b859-mslsn&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pod&quot;}</code></td></tr>
+<tr><td>32</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;ts-preserve-service-6bccdc5454-tscfj&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pod&quot;}</code></td></tr>
+<tr><td>33</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;excessive Pod network latency pod_network_delay latency degradation of one service and its callers&quot;,&quot;namespace&quot;:&quot;kubernetes&quot;}</code></td></tr>
+<tr><td>34</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;How to distinguish pod_network_delay from code_artificial_delay and pod_cpu_overload when all pods are Running and no errors&quot;,&quot;namespace&quot;:&quot;kubernetes&quot;}</code></td></tr>
+<tr><td>35</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;ts-basic-service latency degradation throughput drop telemetry surface service latency metric&quot;,&quot;top_k&quot;:8}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Telemetry-chain case: all 48 pods Running 2/2 with no crashloops, all deployments 1/1, TCP connectivity to ts-basic-service:15680 / ts-travel-service:12346 / ts-preserve-service:14568 succeeded from all three workers, all nodes Ready with no pressure/taints and kubelet/kube-proxy/containerd active, and no error logs in any queried service (pure latency, zero errors/restarts). Within the single window 14:21:06-14:22:56 the alerts show the call chain ui-dashboard -&gt; gateway -&gt; preserve -&gt; travel -&gt; basic degrading in a monotone cascade: ts-basic-service p50 36.38ms -&gt; 7327.59ms (+20039.9%, p90 49.17 -&gt; 9465.52ms, RPS -73.9%), ts-travel-service p90 91.10 -&gt; 8909.09ms, ts-preserve-service p50 177.11 -&gt; 19677.42ms, ts-gateway-service p90 181.72 -&gt; 10545.45ms (Peak 13897ms), ts-ui-dashboard p90 182.04 -&gt; 10705.88ms, plus packet-rate collapse (-57~60%) on ts-consign-service / ts-station-food-service as collateral of the throttled request flow. ts-basic-service is the DEEPEST alerted service and NONE of its four downstreams (ts-route-service, ts-station-service, ts-train-service, ts-price-service) is alerted, so the latency is generated at its own boundary, not inherited from below; its added delay is constant and uniform (~7.3-7.5s band, p50 7.33s vs Peak 7.5s). Mechanism side: its own logs show millisecond request handling and ~6ms round trips to downstreams, its alert carries no CPU/memory saturation category, and caller peaks are capped (gateway Peak 13.9s &lt; preserve p50 19.7s), so this is a fixed delay on the Pod's network path rather than application blocking, a probe/refs fault, or a node-wide fault. Verdict: app/ts-basic-service - excessive Pod network latency.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-basic-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-basic-service&quot;,
+   &quot;root_cause&quot;: &quot;code_artificial_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;node/worker-01&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-2"><summary><b>case-2</b> · <code>app/ts-contacts-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 23 步</summary><ul>
 <li><b>摘要</b>：Alerts (14:37:43~14:39:38) hit exactly the transitive caller chain of ts-contacts-service: ts-contacts-service (p50 7.52ms -&gt; 4750ms, +63081%; RPS 1.56 -&gt; 0.53, -66.1%), plus its callers ts-preserve-service (p50 202ms -&gt; 7500ms), ts-gateway-service (p90 199ms -&gt; 5318ms) and ts-ui-dashboard (p90 199ms -&gt; 4927ms). GetServiceDependencies confirms ui-dashboard -&gt; gateway -&gt; preserve -&gt; contacts, and since gateway fans out to 37 downstreams and preserve to 10, only a break at the leaf ts-contacts-service can explain the alerted set. Object layer is fully clean: all pods Running/Ready, ts-contacts-s</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1122_inorder4-v3b9/raw/1013_1125_trainticket-performance-2/">results/1013_1122_inorder4-v3b9/raw/1013_1125_trainticket-performance-2</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-contacts-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-contacts-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-contacts-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-contacts-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-contacts-service&quot;,&quot;port&quot;:12347,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>12</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;,&quot;port&quot;:12345,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-03&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>17</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-contacts-service-7fc68f4bbc-jqnnw&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Alerts (14:37:43~14:39:38) hit exactly the transitive caller chain of ts-contacts-service: ts-contacts-service (p50 7.52ms -&gt; 4750ms, +63081%; RPS 1.56 -&gt; 0.53, -66.1%), plus its callers ts-preserve-service (p50 202ms -&gt; 7500ms), ts-gateway-service (p90 199ms -&gt; 5318ms) and ts-ui-dashboard (p90 199ms -&gt; 4927ms). GetServiceDependencies confirms ui-dashboard -&gt; gateway -&gt; preserve -&gt; contacts, and since gateway fans out to 37 downstreams and preserve to 10, only a break at the leaf ts-contacts-service can explain the alerted set. Object layer is fully clean: all pods Running/Ready, ts-contacts-service 0 restarts, pod events all Normal (no FailedCreate/FailedScheduling/FailedMount/image-pull), TCP connectivity to ts-contacts-service:12347 succeeds from worker-01/02/03, and the container logs show millisecond-fast handler completion with zero errors (GetErrorLogs empty). So the break is at the metric/performance level: ~4.7-5s of pure added latency with no errors, no restarts and no object-level fault, i.e. delay on the ts-contacts-service Pod network path, which propagates upward as latency and throughput drop on the caller chain.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-contacts-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-contacts-service&quot;,
+   &quot;root_cause&quot;: &quot;code_artificial_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;node/worker-03&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-3"><summary><b>case-3</b> · <code>app/ts-food-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 30 步</summary><ul>
 <li><b>摘要</b>：Telemetry chain closure: 4 identical-window (2026-03-16 14:54:22~14:56:12) LATENCY_DEGRADATION alerts, all on the single call chain ui-dashboard -&gt; gateway-service -&gt; preserve-service -&gt; food-service, with ts-food-service the leaf and worst hit (p50 17.70ms -&gt; 7500.00ms, +42269.3%; p90 23.86ms -&gt; 9500.00ms, Current=Peak), inherited by preserve-service (p50 218.62 -&gt; 7500ms), gateway-service (p90 215.02 -&gt; 5465.52ms) and ui-dashboard (p90 211.96 -&gt; 5107.14ms). Object layer excluded: all 49 pods Running with 0 restarts, ts-food-service pod 2/2 Ready, ContainersReady=True, no last termination sta</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1225_inorder4-v3b11/raw/1013_1228_trainticket-performance-3/">results/1013_1225_inorder4-v3b11/raw/1013_1228_trainticket-performance-3</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-food-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-food-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-food-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-food-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-food-service-59c58c74cc-5hnrq&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-food-service&quot;,&quot;port&quot;:18856,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>15</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;,&quot;port&quot;:14568,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>17</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>19</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-03&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>20</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-03&quot;,&quot;service_name&quot;:&quot;containerd&quot;}</code></td></tr>
+<tr><td>21</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;ts-food-service latency degradation slow response&quot;}</code></td></tr>
+<tr><td>22</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;,&quot;top_k&quot;:10}</code></td></tr>
+<tr><td>23</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>24</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>25</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>26</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>27</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>28</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>29</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-train-food-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Telemetry chain closure: 4 identical-window (2026-03-16 14:54:22~14:56:12) LATENCY_DEGRADATION alerts, all on the single call chain ui-dashboard -&gt; gateway-service -&gt; preserve-service -&gt; food-service, with ts-food-service the leaf and worst hit (p50 17.70ms -&gt; 7500.00ms, +42269.3%; p90 23.86ms -&gt; 9500.00ms, Current=Peak), inherited by preserve-service (p50 218.62 -&gt; 7500ms), gateway-service (p90 215.02 -&gt; 5465.52ms) and ui-dashboard (p90 211.96 -&gt; 5107.14ms). Object layer excluded: all 49 pods Running with 0 restarts, ts-food-service pod 2/2 Ready, ContainersReady=True, no last termination state, pod events only Normal Scheduled/Pulled/Created/Started, and no Warning row anywhere in the namespace during the alert window. Node layer excluded: all 4 nodes Ready without pressure, worker-03 kube-proxy/containerd active, TCP connectivity to ts-food-service:18856 open from all three workers, and every other service co-located on worker-03 shows no alert (a gateway- or node-wide fault would have alarmed many of gateway's 38 downstreams). Mechanism: no error logs in any chain service, business flow succeeds, and the handler itself completes in ~7ms while the metric reads 7.5-9.5s with p90-p50 spreading to 2000ms (baseline spread 6ms) - additive latency outside the application handler, on the pod network path, multiplied along the caller chain. Therefore the break is metric-level and localized to the ts-food-service pod.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-food-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-food-service&quot;,
+   &quot;root_cause&quot;: &quot;code_artificial_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-food-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-4"><summary><b>case-4</b> · <code>app/ts-gateway-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 22 步</summary><ul>
 <li><b>摘要</b>：Alerts (metric surface) show LATENCY_DEGRADATION only on ts-gateway-service (p50 27.03ms -&gt; 1928.57ms, +7035.6%; p90 204.84 -&gt; 8000.00ms) and on its only caller ts-ui-dashboard (p50 29.71ms -&gt; 1928.57ms, the identical added ~1.9s), while all 38 downstream services of the gateway stay free of latency degradation and no RESOURCE_SATURATION rows exist. The object layer is clean/exclusionary: all pods Running, READY 2/2, RESTARTS 0, nodes Ready with no taints, no FailedCreate/FailedScheduling/FailedMount/image-pull events in the 15:11-15:12 alert window, gateway Service selector app=ts-gateway-ser</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1328_quality-verify1/raw/1013_1328_trainticket-performance-4/">results/1013_1328_quality-verify1/raw/1013_1328_trainticket-performance-4</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>9</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-gateway-service-ddc65b886-xlrgz&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>14</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>15</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;port&quot;:18888,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;port&quot;:8080,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>17</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;port&quot;:8080,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>18</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;port&quot;:8080,&quot;service_name&quot;:&quot;ts-user-service&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>20</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Alerts (metric surface) show LATENCY_DEGRADATION only on ts-gateway-service (p50 27.03ms -&gt; 1928.57ms, +7035.6%; p90 204.84 -&gt; 8000.00ms) and on its only caller ts-ui-dashboard (p50 29.71ms -&gt; 1928.57ms, the identical added ~1.9s), while all 38 downstream services of the gateway stay free of latency degradation and no RESOURCE_SATURATION rows exist. The object layer is clean/exclusionary: all pods Running, READY 2/2, RESTARTS 0, nodes Ready with no taints, no FailedCreate/FailedScheduling/FailedMount/image-pull events in the 15:11-15:12 alert window, gateway Service selector app=ts-gateway-service matches pod labels, port 18888 reachable and Succeeded from all three worker nodes, kube-proxy on worker-01 active. Topology is ts-ui-dashboard -&gt; ts-gateway-service -&gt; 38 downstreams, so the fixed delay rides on the gateway pod's own server-side latency with the caller seeing the same added delay and downstream latencies clean, and the cluster-wide ~50% pps / ~65% RPS drop is the downstream consequence of the slowed single entry point rather than a node-scoped network fault (drop alerts span worker-01/02/03).&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;node/worker-01&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-ui-dashboard&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-5"><summary><b>case-5</b> · <code>app/ts-inside-payment-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 18 步</summary><ul>
 <li><b>摘要</b>：Symptom 'Service quality degradation.' enters the metric surface: GetAlerts shows no RESOURCE_SATURATION rows, only latency degradation on the single call chain ts-ui-dashboard -&gt; ts-gateway-service -&gt; ts-cancel-service -&gt; ts-inside-payment-service. The deepest node of that chain, ts-inside-payment-service, has the largest anomaly (p50 22.93ms -&gt; 7166.67ms, +31154.5%; p90 64.29ms -&gt; 20333.33ms, +31529.5%), and its callers inherit the same added delay (ts-cancel-service p90 150.77ms -&gt; 21666.67ms +14270.8%; ts-gateway-service p90 +3851.6%; ts-ui-dashboard p90 +4305.0%), while its own downstream</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1413_inorder4-v3b15/raw/1013_1414_trainticket-performance-5/">results/1013_1413_inorder4-v3b15/raw/1013_1414_trainticket-performance-5</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-cancel-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-cancel-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom 'Service quality degradation.' enters the metric surface: GetAlerts shows no RESOURCE_SATURATION rows, only latency degradation on the single call chain ts-ui-dashboard -&gt; ts-gateway-service -&gt; ts-cancel-service -&gt; ts-inside-payment-service. The deepest node of that chain, ts-inside-payment-service, has the largest anomaly (p50 22.93ms -&gt; 7166.67ms, +31154.5%; p90 64.29ms -&gt; 20333.33ms, +31529.5%), and its callers inherit the same added delay (ts-cancel-service p90 150.77ms -&gt; 21666.67ms +14270.8%; ts-gateway-service p90 +3851.6%; ts-ui-dashboard p90 +4305.0%), while its own downstreams (ts-payment-service, ts-order-service, ts-order-other-service) carry no latency alert - server-side latencies downstream stay clean. Its application logs show normal, fast local processing (e.g. 15:30:14.435 pay -&gt; 15:30:14.459 result = 24ms) against a measured 7s/20s latency, so the added time sits on that pod's network path, not in code and not on CPU/memory. Object layer is clean and serves as exclusion evidence: all pods Running with RESTARTS 0, deployments AVAILABLE 1/1, endpoint bound (ts-inside-payment-service -&gt; 172.20.3.36:18673), all nodes Ready, no FailedCreate/FailedScheduling/FailedMount/image-pull events. The fault is not node-scope: the other pods on worker-03 (ts-user-service, ts-order-other-service, ts-price-service, ts-route-service, ts-news-service, ts-auth-service, etc.) show no latency degradation; the system-wide THROUGHPUT_DROP (-38%~-46% RPS) and TRAFFIC_ANOMALY [Network Drop] rows are the downstream consequence of callers blocking on the delayed service.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-inside-payment-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-cancel-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;node/worker-03&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-6"><summary><b>case-6</b> · <code>app/ts-order-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 19 步</summary><ul>
 <li><b>摘要</b>：Metric-surface incident: GetAlerts shows LATENCY_DEGRADATION on the preserve-booking path only (ts-order-service p50 9.44ms-&gt;3881.58ms, ts-seat-service 17.65-&gt;3906.25ms, ts-security-service 39.11-&gt;3750.00ms, ts-travel-service p90 98.74-&gt;11000ms, ts-preserve-service p50 295.1-&gt;30000ms, ts-gateway-service p90 227.8-&gt;39000ms, ts-ui-dashboard p90 229.6-&gt;34500ms) plus a cluster-wide ~50-70% pps 'Network Drop' on every service. Object layer is excluded: all pods Running/READY 2/2, RESTARTS 0, nodes Ready with no taints/pressure, namespace events contain no mechanism Warnings (no FailedCreate/FailedM</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1520_inorder4-v3b17/raw/1013_1521_trainticket-performance-6/">results/1013_1520_inorder4-v3b17/raw/1013_1521_trainticket-performance-6</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;,&quot;top_k&quot;:2}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation. LATENCY_DEGRADATION p50/p90 jump by a fixed amount, callers see same added delay, no saturation rows&quot;,&quot;namespace&quot;:&quot;kubernetes&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>12</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;node network delay vs pod network delay discrimination: same latency/packet anomaly across every pod on one node&quot;,&quot;namespace&quot;:&quot;kubernetes&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>13</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-security-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Metric-surface incident: GetAlerts shows LATENCY_DEGRADATION on the preserve-booking path only (ts-order-service p50 9.44ms-&gt;3881.58ms, ts-seat-service 17.65-&gt;3906.25ms, ts-security-service 39.11-&gt;3750.00ms, ts-travel-service p90 98.74-&gt;11000ms, ts-preserve-service p50 295.1-&gt;30000ms, ts-gateway-service p90 227.8-&gt;39000ms, ts-ui-dashboard p90 229.6-&gt;34500ms) plus a cluster-wide ~50-70% pps 'Network Drop' on every service. Object layer is excluded: all pods Running/READY 2/2, RESTARTS 0, nodes Ready with no taints/pressure, namespace events contain no mechanism Warnings (no FailedCreate/FailedMount/image-pull/scheduling failures), and no RESOURCE_SATURATION alerts exist (so not a resource fault). Call-graph arithmetic pins the fixed ~3.8s increment to ts-order-service: it is a leaf (no downstream calls, DB only), its own p50 jumps by exactly +3.87s, and its two direct callers ts-seat-service (+3.89s) and ts-security-service (+3.71s) inherit that same added delay, while deeper callers accumulate multiples (travel ~x3, preserve ~x8, gateway/ui ~x9-10). ts-order-other-service, called in parallel by the same callers (seat/security/preserve), shows NO latency degradation (only -37.8% pps), which excludes a delay on the callers' pods or on the worker-01 node network. Conclusion: a fixed network-path delay on the ts-order-service pod, with the front-end latency and global throughput collapse being downstream effects.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;node/worker-01&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-7"><summary><b>case-7</b> · <code>app/ts-payment-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 25 步</summary><ul>
 <li><b>摘要</b>：Metrics-surface incident (L3 wording 'Service quality degradation.'): GetAlerts shows LATENCY_DEGRADATION on ts-payment-service (p50 16.96ms -&gt; 5000.00ms, +29389%; p90 23.79ms -&gt; 9000.00ms, Peak 9136.36ms) mirrored by its caller ts-inside-payment-service (p90 89.68ms -&gt; 8488.44ms), plus a mild RESOURCE_SATURATION [cpu_cfs] 0.073s row on ts-order-service within the same 16:01:06-16:02:56 window. Topology: ts-inside-payment-service -&gt; ts-payment-service (leaf, no downstream). The ~5s added latency rides on ts-payment-service's own latency (p50 current is exactly 5000.00ms) and its caller sees th</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1536_inorder4-v3b19/raw/1013_1537_trainticket-performance-7/">results/1013_1536_inorder4-v3b19/raw/1013_1537_trainticket-performance-7</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-payment-service&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>12</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-order-service-dd54d5df9-jrzlb&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>18</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-payment-service&quot;,&quot;port&quot;:19001,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>19</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-order-service&quot;,&quot;port&quot;:12031,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>20</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-payment-service-666d596f87-b5p7f&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>23</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>24</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Metrics-surface incident (L3 wording 'Service quality degradation.'): GetAlerts shows LATENCY_DEGRADATION on ts-payment-service (p50 16.96ms -&gt; 5000.00ms, +29389%; p90 23.79ms -&gt; 9000.00ms, Peak 9136.36ms) mirrored by its caller ts-inside-payment-service (p90 89.68ms -&gt; 8488.44ms), plus a mild RESOURCE_SATURATION [cpu_cfs] 0.073s row on ts-order-service within the same 16:01:06-16:02:56 window. Topology: ts-inside-payment-service -&gt; ts-payment-service (leaf, no downstream). The ~5s added latency rides on ts-payment-service's own latency (p50 current is exactly 5000.00ms) and its caller sees the same added delay, while its downstream server-side latency stays clean (ts-order-service handlers log 5-60ms success lines, no error logs, no latency alert on it), and ts-payment-service has no CPU/memory saturation row of its own -&gt; the delay sits on the ts-payment-service pod's network path. Object layer is pure exclusion evidence: all train-ticket pods 2/2 Running with RESTARTS 0, ts-payment-service pod Ready/RestartCount 0, no FailedCreate/FailedMount/image-pull/probe mechanism events, TCP connectivity to ts-payment-service:19001 and ts-order-service:12031 succeeds from worker-01/02/03, service selector/port/targetPort intact, all 4 nodes Ready with no pressure/taint mismatch, probes/resources/env/secret refs in the app YAML all valid. The DB-layer NonUniqueResultException rows and the 500s propagated to ts-inside-payment-service during the same window are retry/duplicate-write consequences of the added latency, not a configuration root cause.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-payment-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-8"><summary><b>case-8</b> · <code>app/ts-preserve-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 18 步</summary><ul>
 <li><b>摘要</b>：Alerts report pure LATENCY_DEGRADATION [Slow Response] with zero RESOURCE_SATURATION rows: ts-preserve-service p50 376.71ms-&gt;7500.00ms (+1890.9%) and p90 562.50ms-&gt;9750.00ms (+1633.3%), with its upstream callers ts-gateway-service (p90 306.25ms-&gt;5537.50ms, +1708.2%) and ts-ui-dashboard (p90 305.62ms-&gt;5487.50ms, +1695.5%) showing the same added delay. Service dependency chain is browser -&gt; ts-ui-dashboard -&gt; ts-gateway-service -&gt; ts-preserve-service -&gt; 10 downstream services, and every one of ts-preserve-service's downstream services stays clean, while ts-preserve-service's own p50 increase (+7</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1623_inorder4-v3b21/raw/1013_1624_trainticket-performance-8/">results/1013_1623_inorder4-v3b21/raw/1013_1624_trainticket-performance-8</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;nodes&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-preserve-service-6bccdc5454-hxc4w&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-preserve-service&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>17</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;,&quot;port&quot;:14568,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Alerts report pure LATENCY_DEGRADATION [Slow Response] with zero RESOURCE_SATURATION rows: ts-preserve-service p50 376.71ms-&gt;7500.00ms (+1890.9%) and p90 562.50ms-&gt;9750.00ms (+1633.3%), with its upstream callers ts-gateway-service (p90 306.25ms-&gt;5537.50ms, +1708.2%) and ts-ui-dashboard (p90 305.62ms-&gt;5487.50ms, +1695.5%) showing the same added delay. Service dependency chain is browser -&gt; ts-ui-dashboard -&gt; ts-gateway-service -&gt; ts-preserve-service -&gt; 10 downstream services, and every one of ts-preserve-service's downstream services stays clean, while ts-preserve-service's own p50 increase (+7123ms) exceeds its caller gateway's (+5231ms), which is impossible if the delay originated upstream - so the delay originates at ts-preserve-service and is inherited by its callers. Object layer is fully excluded: pods listing shows all workloads Running 2/2 with RESTARTS 0, all nodes Ready, namespace events contain only routine redeploy churn (Killing/Created/Started) with no FailedScheduling/FailedMount/image-pull/OOMKilled mechanism events, and there is no container restart (no previous terminated container). Addressing/config is also excluded: Service ts-preserve-service maps port 14568 -&gt; targetPort 14568 with selector app=ts-preserve-service matching the pod label, and CheckServiceConnectivity to 10.68.86.145:14568 succeeds from debug pods on worker-01, worker-02 and worker-03, proving reachability with added latency rather than a selector/port/protocol fault. The node scope is excluded because the alerted set spans worker-01 (ts-gateway-service) and worker-02 (ts-preserve-service, ts-ui-dashboard) and the ~18 other pods on worker-02 are all unaffected. The break is therefore a constant network-path delay on the ts-preserve-service pod.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-preserve-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;node/worker-02&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-9"><summary><b>case-9</b> · <code>app/ts-price-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 18 步</summary><ul>
 <li><b>摘要</b>：Alerts are latency-only (no saturation rows) on 6 services: ts-price-service p50 5.95ms-&gt;2436.17ms (+40864.7%) / p90 9.19-&gt;4476.74ms, ts-basic-service p50 38.70-&gt;3750ms, ts-travel-service p90 152.45-&gt;4463.41ms, ts-preserve-service p50 389.83-&gt;7500ms, ts-gateway-service p90 325.74-&gt;5344.44ms, ts-ui-dashboard p90 331.76-&gt;5052.63ms. The alerted set is exactly the caller closure of ts-price-service: dependency graph shows ts-price-service is a LEAF (no downstream) called only by ts-gateway-service and ts-basic-service; basic's other downstreams (route/station/train) are completely clean, which exc</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1633_inorder4-v3b23/raw/1013_1634_trainticket-performance-9/">results/1013_1633_inorder4-v3b23/raw/1013_1634_trainticket-performance-9</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-price-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-price-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;name&quot;:&quot;ts-price-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;deployments&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>17</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Alerts are latency-only (no saturation rows) on 6 services: ts-price-service p50 5.95ms-&gt;2436.17ms (+40864.7%) / p90 9.19-&gt;4476.74ms, ts-basic-service p50 38.70-&gt;3750ms, ts-travel-service p90 152.45-&gt;4463.41ms, ts-preserve-service p50 389.83-&gt;7500ms, ts-gateway-service p90 325.74-&gt;5344.44ms, ts-ui-dashboard p90 331.76-&gt;5052.63ms. The alerted set is exactly the caller closure of ts-price-service: dependency graph shows ts-price-service is a LEAF (no downstream) called only by ts-gateway-service and ts-basic-service; basic's other downstreams (route/station/train) are completely clean, which excludes a delay on basic's own pod path (its outbound calls would have inflated them too). Server-side handlers are healthy: ts-price-service log pairs (controller/service entry) share the same millisecond, and ts-basic-service's whole queryForTravel flow runs 16:37:20.708-&gt;20.733 (~25ms) while its observed RPC latency is 3.75s -&gt; the added seconds ride on the network path, not on code/CPU. Object layer is clean exclusion evidence: all pods 2/2 Running with RESTARTS 0 (ts-price-service-6c4b77845-t7tr2 2/2 Running, 0 restarts), endpoints bound (172.20.3.73:16579), all deployments AVAILABLE 1/1, no FailedCreate/FailedScheduling/FailedMount/image-pull mechanism events, all 4 nodes Ready with no pressure/cordon; the affected pods span worker-01/02/03, ruling out any node-scope network fault.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-price-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-basic-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;node/worker-03&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-10"><summary><b>case-10</b> · <code>app/ts-route-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 18 步</summary><ul>
 <li><b>摘要</b>：L3 SOP for this wording says the signal is on the metric surface: alerts first, object layer only for exclusion. GetAlerts returns 18 abnormal services with NO RESOURCE_SATURATION row (latency/throughput/traffic only). The unique outlier is ts-route-service: p50 7.55ms -&gt; 8026.32ms (+106152.5%, peak 9791.67ms), p90 9.60ms -&gt; 21000ms (+218729.8%) — i.e. a constant ~8s delay added onto its own server-side latency. GetServiceDependencies shows ts-route-service is a LEAF node with no downstream calls, so its latency jump cannot be inherited from anything it calls, while every other latency-degrade</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1645_inorder4-v3b24/raw/1013_1646_trainticket-performance-10/">results/1013_1645_inorder4-v3b24/raw/1013_1646_trainticket-performance-10</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-route-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-route-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-route-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-route-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-route-service&quot;,&quot;port&quot;:11178,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>16</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-03&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>17</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-03&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;L3 SOP for this wording says the signal is on the metric surface: alerts first, object layer only for exclusion. GetAlerts returns 18 abnormal services with NO RESOURCE_SATURATION row (latency/throughput/traffic only). The unique outlier is ts-route-service: p50 7.55ms -&gt; 8026.32ms (+106152.5%, peak 9791.67ms), p90 9.60ms -&gt; 21000ms (+218729.8%) — i.e. a constant ~8s delay added onto its own server-side latency. GetServiceDependencies shows ts-route-service is a LEAF node with no downstream calls, so its latency jump cannot be inherited from anything it calls, while every other latency-degraded service (ts-basic-service p50 18974ms, ts-preserve-service p50 21875ms, ts-travel-service p90 25555ms, ts-gateway-service p90 11375ms, ts-ui-dashboard p90 11250ms) sits strictly UPSTREAM of ts-route-service in the call graph (high-throughput drop of ~-46~-62% across the namespace is the resulting cascade). Object layer is excluded: all 47 pods Running READY 2/2 with RESTARTS 0, nodes Ready with no pressure/taints anomalies, namespace events contain no FailedCreate/FailedScheduling/FailedMount/image-pull mechanism, only rollout churn. Reachability is fine: TCP connect to ts-route-service 10.68.104.11:11178 succeeds from worker-01/02/03, kubelet and kube-proxy on worker-03 are active, and GetAppYAML(ts-route-service) shows a valid tcpSocket:11178 probe, sane resources and a bound ts-route-mysql secret. ts-route-service logs show it actively serving getRouteById requests with multi-second gaps between handler entries (16:53:40.784 -&gt; 16:53:46.305 = 5.5s) and zero error logs — the process is alive and working, only the response path is slow. First observed-vs-expected break: ts-route-service's own network path carries an added delay, which its callers inherit.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-route-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;node/worker-03&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-route-service&quot;,
+   &quot;root_cause&quot;: &quot;code_artificial_delay&quot;
+  }
+ ]
+}</pre>
+</details>
 </body></html>

@@ -241,6 +241,8 @@ table { width:100%; border-collapse:collapse; background:var(--surface); border:
 th, td { padding:8px 11px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; } th { font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); } tr:last-child td { border-bottom:none; }
 code { font-size:13px; color:var(--dlr); } a { color:var(--dlr); } a:hover { text-decoration-thickness:2px; } .ok { color:var(--good); }
 details { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 18px; margin:10px 0; } details summary { cursor:pointer; font-size:14.5px; } details ul { margin:10px 0 4px; padding-left:20px; font-size:14px; color:var(--ink-2); }
+details p { font-size:14px; color:var(--ink-2); margin:7px 0; }
+pre { white-space:pre-wrap; word-break:break-word; background:var(--page); border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:12.8px; line-height:1.55; font-family:ui-monospace,Consolas,monospace; color:var(--ink); margin:8px 0; }
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }`;
   const H = [];
   H.push(`<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>评测明细 · ${familyDisplay(f)} — cloudopsbench</title><style>${famCss}</style></head><body>`);
@@ -262,15 +264,26 @@ details { background:var(--surface); border:1px solid var(--border); border-radi
     const gt = e.ground_truth || {};
     const p1 = (e.top_3_predictions || [])[0] || {};
     const verdict = p1.fault_object === gt.fault_object && p1.root_cause === gt.root_cause ? "✓ 逐字命中" : "✗ 与标签不符";
-    let summary = "";
+    let tr = null;
     const tracePath = path.join(resultsDir, e.round, "traces", e.sysdir, MODEL, e.category, e.case_name, `${e.case_name}.json`);
-    try { summary = String(JSON.parse(fs.readFileSync(tracePath, "utf8")).final_answer?.key_evidence_summary || "").slice(0, 600); } catch { /* 无 traces */ }
+    try { tr = JSON.parse(fs.readFileSync(tracePath, "utf8")); } catch { /* 无 traces */ }
+    const summary = String(tr?.final_answer?.key_evidence_summary || "").slice(0, 600);
     const rd = rawDirFor(e);
-    H.push(`<details id="case-${e.case_name}"><summary><b>case-${e.case_name}</b> · <code>${p1.fault_object ?? ""}</code> + <code>${p1.root_cause ?? ""}</code>（${verdict}） · MC ${fmt(e.metrics?.MC)} · EOC ${fmt(e.metrics?.EOC)} · ECR ${fmt(e.metrics?.ECR)} · ${fmt(e.metrics?.steps)} 步</summary><ul>`);
-    if (e.error) H.push(`<li><b>错误</b>：${String(e.error).replace(/[<>&]/g, "")}</li>`);
-    if (summary) H.push(`<li><b>摘要</b>：${summary.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]))}</li>`);
-    if (rd) H.push(`<li><b>raw 日志</b>：<a href="../${rd}">${rd.replace(/\/$/, "")}</a></li>`);
-    H.push(`</ul></details>`);
+    H.push(`<details id="case-${e.case_name}"><summary><b>case-${e.case_name}</b> · <code>${esc(p1.fault_object)}</code> + <code>${esc(p1.root_cause)}</code>（${verdict}） · MC ${fmt(e.metrics?.MC)} · EOC ${fmt(e.metrics?.EOC)} · ECR ${fmt(e.metrics?.ECR)} · ${fmt(e.metrics?.steps)} 步</summary><ul>`);
+    if (e.error) H.push(`<li><b>错误</b>：${esc(e.error)}</li>`);
+    if (summary) H.push(`<li><b>摘要</b>：${esc(summary)}</li>`);
+    if (rd) H.push(`<li><b>raw 日志</b>：<a href="../${rd}">${esc(rd.replace(/\/$/, ""))}</a></li>`);
+    H.push(`</ul>`);
+    if (Array.isArray(tr?.steps) && tr.steps.length) {
+      H.push(`<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>`);
+      for (const s of tr.steps) {
+        const inp = typeof s.action_input === "string" ? s.action_input : JSON.stringify(s.action_input || {});
+        H.push(`<tr><td>${esc(s.step_id)}</td><td><code>${esc(s.action_name)}</code></td><td><code>${esc(String(inp).slice(0, 200))}</code></td></tr>`);
+      }
+      H.push(`</table>`);
+    }
+    if (tr?.final_answer) H.push(`<p><b>报告原文</b>（契约 JSON）：</p><pre>${esc(JSON.stringify(tr.final_answer, null, 1))}</pre>`);
+    H.push(`</details>`);
   }
   H.push(`</body></html>`);
   fs.writeFileSync(path.join(detailDir, famFile(f).replace(/\.md$/, ".html")), H.join("\n") + "\n", "utf8");
@@ -336,6 +349,7 @@ fs.writeFileSync(detailPath, D.join("\n") + "\n", "utf8");
 const overviewPath = path.join(SCENARIO, "overview.html");
 const barPct = (done, total) => (total ? Math.round((done / total) * 1000) / 10 : 0);
 // 该题最新一轮的 raw 运行目录（overview / 家族页相对路径用）；找不到则返回空串
+function esc(s) { return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
 function rawDirFor(e) {
   const [sysdir, cat] = e.family.split("/");
   const rawRoot = path.join(resultsDir, e.round, "raw");

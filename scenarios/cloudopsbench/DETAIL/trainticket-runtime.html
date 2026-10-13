@@ -8,10 +8,12 @@ table { width:100%; border-collapse:collapse; background:var(--surface); border:
 th, td { padding:8px 11px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap; } th { font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); } tr:last-child td { border-bottom:none; }
 code { font-size:13px; color:var(--dlr); } a { color:var(--dlr); } a:hover { text-decoration-thickness:2px; } .ok { color:var(--good); }
 details { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 18px; margin:10px 0; } details summary { cursor:pointer; font-size:14.5px; } details ul { margin:10px 0 4px; padding-left:20px; font-size:14px; color:var(--ink-2); }
+details p { font-size:14px; color:var(--ink-2); margin:7px 0; }
+pre { white-space:pre-wrap; word-break:break-word; background:var(--page); border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:12.8px; line-height:1.55; font-family:ui-monospace,Consolas,monospace; color:var(--ink); margin:8px 0; }
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/runtime</em></h1>
-<p class="deck">已跑 <b>13/96</b> 题：JRA ✅13 ❌0 ｜ 证据链全闭 13 ｜ token 中位 521,337 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:20:29.295Z</p>
+<p class="deck">已跑 <b>13/96</b> 题：JRA ✅13 ❌0 ｜ 证据链全闭 13 ｜ token 中位 521,337 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:25:34.981Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>26</td><td>265,656</td><td>0</td><td>0</td><td class="muted">1012_1512_inorder4-v3b3</td><td><a href="../results/1012_1512_inorder4-v3b3/raw/1012_1514_trainticket-runtime-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1514_trainticket-runtime-1</a></td></tr>
@@ -32,53 +34,690 @@ details { background:var(--surface); border:1px solid var(--border); border-radi
 <details id="case-1"><summary><b>case-1</b> · <code>app/tsdb-mysql</code> + <code>db_connection_exhaustion</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 26 步</summary><ul>
 <li><b>摘要</b>：Widespread availability disruption: 14 train-ticket services (ts-notification/order-other/payment/price/route/security/station/station-food/train/train-food/travel/travel2/user/wait-order-service) are 0/1 READY in CrashLoopBackOff (RESTARTS 10) spread evenly across worker-01/02/03, with no scheduling events (PodScheduled True, no FailedScheduling/FailedCreate). Pod logs close the mechanism at the shared downstream: 'java.sql.SQLNonTransientConnectionException: Too many connections' / 'SQL Error: 1040, SQLState: 08004' when building the Hibernate SessionFactory ('Unable to open JDBC Connection </li>
 <li><b>raw 日志</b>：<a href="../results/1012_1512_inorder4-v3b3/raw/1012_1514_trainticket-runtime-1/">results/1012_1512_inorder4-v3b3/raw/1012_1514_trainticket-runtime-1</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-train-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-train-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-train-service-79b45885dd-29dh7&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-user-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-food-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;statefulsets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;secrets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-train-service&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>19</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;secrets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>20</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;statefulsets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>21</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;tsdb-mysql-0&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>23</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequotas&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>24</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-food-service&quot;}</code></td></tr>
+<tr><td>25</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql-0&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Widespread availability disruption: 14 train-ticket services (ts-notification/order-other/payment/price/route/security/station/station-food/train/train-food/travel/travel2/user/wait-order-service) are 0/1 READY in CrashLoopBackOff (RESTARTS 10) spread evenly across worker-01/02/03, with no scheduling events (PodScheduled True, no FailedScheduling/FailedCreate). Pod logs close the mechanism at the shared downstream: 'java.sql.SQLNonTransientConnectionException: Too many connections' / 'SQL Error: 1040, SQLState: 08004' when building the Hibernate SessionFactory ('Unable to open JDBC Connection for DDL execution'), exit code 1. All apps point correctly at tsdb-mysql-leader:3306 (secret env), so this is not addressing/credential failure. Server side confirms the exhaustion: tsdb-mysql mysql container log is 57% (1506/2641) '[Warning] Too many connections', and the DB pod's own readiness probe fails with 'ERROR 1040 (HY000): Too many connections' (x48), i.e. MySQL rejects every new session including its own probes. tsdb-mysql is 3/3 Ready with 0 mysql restarts, max_connections=65535 configured and no ResourceQuota in the namespace, so the fault is the database connection capacity being exhausted, not a node, quota or pod-lifecycle fault.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;db_connection_exhaustion&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-train-service&quot;,
+   &quot;root_cause&quot;: &quot;db_connection_exhaustion&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;container_memory_limit_too_low&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-2"><summary><b>case-2</b> · <code>app/tsdb-mysql</code> + <code>db_connection_exhaustion</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 37 步</summary><ul>
 <li><b>摘要</b>：13/40 train-ticket Deployments show 0/1 AVAILABLE and their pods are CrashLoopBackOff (RESTARTS=5, exit code 1) spread across worker-01/02/03; CheckServiceConnectivity to ts-user-service:12342 and ts-price-service:16579 fails from all three nodes ('Connection Failed'). Client container logs show 'HikariPool-1 - Exception during pool initialization ... java.sql.SQLNonTransientConnectionException: Too many connections' (SQL Error: 1040, SQLState: 08004) -&gt; 'Unable to open JDBC Connection for DDL execution' -&gt; 'Application run failed'. Server-side closure: tsdb-mysql error log contains 484 occurr</li>
 <li><b>raw 日志</b>：<a href="../results/1012_1846_inorder4-v3b4/raw/1012_1850_trainticket-runtime-2/">results/1012_1846_inorder4-v3b4/raw/1012_1850_trainticket-runtime-2</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-user-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-user-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-user-service-b795844f6-shkxl&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-price-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-user-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;statefulsets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>15</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;tsdb-mysql&quot;,&quot;port&quot;:3306,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>16</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;port&quot;:3306,&quot;service_name&quot;:&quot;tsdb-mysql-leader&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;configmaps&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-security-service&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetResources</code></td><td><code>{&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true,&quot;resource_type&quot;:&quot;configmaps&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetResources</code></td><td><code>{&quot;name&quot;:&quot;nacosdb-mysql&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true,&quot;resource_type&quot;:&quot;configmaps&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetResources</code></td><td><code>{&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true,&quot;resource_type&quot;:&quot;statefulsets&quot;}</code></td></tr>
+<tr><td>23</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;tsdb-mysql-0&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pod&quot;}</code></td></tr>
+<tr><td>24</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;nacosdb-mysql&quot;}</code></td></tr>
+<tr><td>25</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-price-service&quot;}</code></td></tr>
+<tr><td>26</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>27</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-security-service&quot;}</code></td></tr>
+<tr><td>28</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>29</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>30</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-plan-service&quot;}</code></td></tr>
+<tr><td>31</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;service&quot;}</code></td></tr>
+<tr><td>32</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;port&quot;:12342,&quot;service_name&quot;:&quot;ts-user-service&quot;}</code></td></tr>
+<tr><td>33</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;resourcequotas&quot;}</code></td></tr>
+<tr><td>34</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;port&quot;:16579,&quot;service_name&quot;:&quot;ts-price-service&quot;}</code></td></tr>
+<tr><td>35</td><td><code>GetResources</code></td><td><code>{&quot;name&quot;:&quot;nacosdb-mysql&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true,&quot;resource_type&quot;:&quot;statefulsets&quot;}</code></td></tr>
+<tr><td>36</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;13/40 train-ticket Deployments show 0/1 AVAILABLE and their pods are CrashLoopBackOff (RESTARTS=5, exit code 1) spread across worker-01/02/03; CheckServiceConnectivity to ts-user-service:12342 and ts-price-service:16579 fails from all three nodes ('Connection Failed'). Client container logs show 'HikariPool-1 - Exception during pool initialization ... java.sql.SQLNonTransientConnectionException: Too many connections' (SQL Error: 1040, SQLState: 08004) -&gt; 'Unable to open JDBC Connection for DDL execution' -&gt; 'Application run failed'. Server-side closure: tsdb-mysql error log contains 484 occurrences of '[Warning] Too many connections', and the DB's own readiness probe fails with 'Warning Unhealthy ... Readiness probe failed: ERROR 1040 (HY000): Too many connections' on tsdb-mysql-0 (leader, Service tsdb-mysql-leader endpoint 172.20.2.81:3306). Mechanism+config halves both read: all client Secrets correctly target tsdb-mysql-leader:3306 with valid credentials (rule out addressing/port/credential mismatches), TCP 3306 is open from every node, no node fault (all nodes Ready, no taints/pressure, no Pending pods), no ResourceQuota objects, and the tsdb-mysql StatefulSet/ConfigMap are structurally identical to the healthy nacosdb-mysql twin - the break is the database's exhausted concurrent-connection capacity, which rejects new sessions so late-starting clients can never build their pools.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;db_connection_exhaustion&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-user-service&quot;,
+   &quot;root_cause&quot;: &quot;db_connection_exhaustion&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-order-other-service&quot;,
+   &quot;root_cause&quot;: &quot;db_connection_exhaustion&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-3"><summary><b>case-3</b> · <code>app/tsdb-mysql</code> + <code>db_connection_exhaustion</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 23 步</summary><ul>
 <li><b>摘要</b>：Namespace train-ticket: 13 DB-dependent services (ts-order-other, ts-payment, ts-price, ts-route, ts-security, ts-station-food, ts-train, ts-travel, ts-travel2, ts-user, ts-wait-order CrashLoopBackOff; ts-station-service and ts-train-food-service 0/1 Running with 4 restarts) across worker-01/02/03 all fail identically at JPA/Hibernate pool init: 'java.sql.SQLNonTransientConnectionException: Too many connections', 'SQL Error: 1040, SQLState: 08004'. Namespace events bind the mechanism to the DB: 'pod/tsdb-mysql-0 Readiness probe failed: ERROR 1040 (HY000): Too many connections' and the same for</li>
 <li><b>raw 日志</b>：<a href="../results/1012_1923_l1l2-verify2/raw/1012_1923_trainticket-runtime-3/">results/1012_1923_l1l2-verify2/raw/1012_1923_trainticket-runtime-3</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-other-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-other-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-security-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-station-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;statefulsets&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;configmaps&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-other-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetResources</code></td><td><code>{&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true,&quot;resource_type&quot;:&quot;configmaps&quot;}</code></td></tr>
+<tr><td>17</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;tsdb-mysql-0&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pod&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetResources</code></td><td><code>{&quot;name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true,&quot;resource_type&quot;:&quot;services&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pods&quot;,&quot;show_labels&quot;:true}</code></td></tr>
+<tr><td>20</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>21</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;port&quot;:3306,&quot;service_name&quot;:&quot;tsdb-mysql-leader&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;resourcequotas&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Namespace train-ticket: 13 DB-dependent services (ts-order-other, ts-payment, ts-price, ts-route, ts-security, ts-station-food, ts-train, ts-travel, ts-travel2, ts-user, ts-wait-order CrashLoopBackOff; ts-station-service and ts-train-food-service 0/1 Running with 4 restarts) across worker-01/02/03 all fail identically at JPA/Hibernate pool init: 'java.sql.SQLNonTransientConnectionException: Too many connections', 'SQL Error: 1040, SQLState: 08004'. Namespace events bind the mechanism to the DB: 'pod/tsdb-mysql-0 Readiness probe failed: ERROR 1040 (HY000): Too many connections' and the same for tsdb-mysql-2, and tsdb-mysql's own log streams '[Warning] Too many connections'. tsdb-mysql-leader Service (selector app=tsdb-mysql, role=leader -&gt; tsdb-mysql-2) resolves and its 3306 port accepts TCP from all three nodes (CheckServiceConnectivity: open/Connection Succeeded), so addressing, Service selector, port, DNS, credentials (1040 not 1045) and node network are excluded; no ResourceQuota exists in the namespace. The ConfigMap tsdb-mysql reads max_connections=65535, i.e. the global connection ceiling was not lowered but is exhausted by clients, so the single carrier of the break is the tsdb-mysql database service unit (leader instance tsdb-mysql-2), whose connection exhaustion makes every client fail at startup.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;db_connection_exhaustion&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;db_connection_exhaustion&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;container_memory_limit_too_low&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-4"><summary><b>case-4</b> · <code>app/tsdb-mysql</code> + <code>db_connection_exhaustion</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 20 步</summary><ul>
 <li><b>摘要</b>：Namespace train-ticket shows a cluster-wide reachability break, not a node/app-local one: 13 business pods (ts-price, ts-route, ts-security, ts-station, ts-station-food, ts-train, ts-train-food, ts-travel, ts-travel2, ts-user, ts-wait-order, ts-order-other, ts-payment) are in CrashLoopBackOff spread across worker-01/02/03, with no FailedScheduling/FailedCreate/FailedMount/image-pull events. Caller-side logs (ts-price-service, ts-user-service) show HikariPool-1 pool initialization failing with java.sql.SQLNonTransientConnectionException 'Too many connections' (SQL Error 1040, SQLState 08004), w</li>
 <li><b>raw 日志</b>：<a href="../results/1012_1935_tidy-verify1/raw/1012_1937_trainticket-runtime-4/">results/1012_1935_tidy-verify1/raw/1012_1937_trainticket-runtime-4</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-price-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-price-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-user-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>12</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;tsdb-mysql-0&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>13</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;port&quot;:3306,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;statefulsets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>17</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql-1&quot;}</code></td></tr>
+<tr><td>18</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;db_connection_exhaustion database connections exhausted Too many connections tsdb-mysql&quot;,&quot;namespace&quot;:&quot;cloudopsbench&quot;}</code></td></tr>
+<tr><td>19</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;database connection exhaustion Too many connections tsdb-mysql readiness probe failed&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Namespace train-ticket shows a cluster-wide reachability break, not a node/app-local one: 13 business pods (ts-price, ts-route, ts-security, ts-station, ts-station-food, ts-train, ts-train-food, ts-travel, ts-travel2, ts-user, ts-wait-order, ts-order-other, ts-payment) are in CrashLoopBackOff spread across worker-01/02/03, with no FailedScheduling/FailedCreate/FailedMount/image-pull events. Caller-side logs (ts-price-service, ts-user-service) show HikariPool-1 pool initialization failing with java.sql.SQLNonTransientConnectionException 'Too many connections' (SQL Error 1040, SQLState 08004), which aborts JPA EntityManagerFactory init and kills the app at startup. The carrier of the mechanism is the shared database: GetErrorLogs(tsdb-mysql) reports 349 '[Warning] Too many connections' lines on the server side, and namespace events bind it to concrete instances - pod/tsdb-mysql-0, tsdb-mysql-1, tsdb-mysql-2 all have 'Readiness probe failed: ERROR 1040 (HY000): Too many connections'. TCP connectivity to tsdb-mysql-leader:3306 succeeds from all three workers, so DNS/Service/port mapping is intact and the refusal is application-level connection exhaustion, not addressing. Configuration close: StatefulSet tsdb-mysql (3 replicas, radondb/percona:5.7.34 on 3306, readiness 'mysql -uroot -e SELECT 1') sources its connection ceiling from the mounted ConfigMap tsdb-mysql (/etc/mysql/conf.d/node.cnf). Root cause: the shared MySQL service tsdb-mysql exhausted its available connections, so every business service that must open a DB connection at startup fails and crash-loops.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;db_connection_exhaustion&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;mysql_invalid_credentials&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;db_connection_exhaustion&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-5"><summary><b>case-5</b> · <code>app/tsdb-mysql</code> + <code>db_connection_exhaustion</code>（✓ 逐字命中） · MC 1 · EOC 0.6667 · ECR 1 · 36 步</summary><ul>
 <li><b>摘要</b>：Shared DB tsdb-mysql is up and TCP-reachable (tsdb-mysql-leader endpoint 172.20.3.55:3306 on leader pod tsdb-mysql-2; connectivity test from all three nodes: 'open / Connection Succeeded'), but it refuses new sessions: its own log is 337/1470 lines (23%) of '[Warning] Too many connections' and its readiness probe fails with 'ERROR 1040 (HY000): Too many connections'. Consequently 10 deployments (ts-route/ts-security/ts-station/ts-station-food/ts-train/ts-train-food/ts-travel/ts-travel2/ts-user/ts-wait-order-service) are 0/1 AVAILABLE with pods Error/CrashLoopBackOff (3 restarts, BackOff events</li>
 <li><b>raw 日志</b>：<a href="../results/1012_2000_case-verify1/raw/1012_2004_trainticket-runtime-5/">results/1012_2000_case-verify1/raw/1012_2004_trainticket-runtime-5</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-train-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-station-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>10</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;tsdb-mysql-0&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pod&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-train-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>13</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-train-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;db_connection_exhaustion Too many connections&quot;,&quot;namespace&quot;:&quot;kubernetes&quot;}</code></td></tr>
+<tr><td>15</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;tsdb-mysql database connections exhausted Too many connections max_connections&quot;,&quot;top_k&quot;:6}</code></td></tr>
+<tr><td>16</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-user-service&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;services&quot;,&quot;name&quot;:&quot;tsdb-mysql-leader&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetResources</code></td><td><code>{&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true,&quot;resource_type&quot;:&quot;statefulsets&quot;}</code></td></tr>
+<tr><td>22</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;port&quot;:3306,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>23</td><td><code>GetResources</code></td><td><code>{&quot;name&quot;:&quot;nacos&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true,&quot;resource_type&quot;:&quot;configmaps&quot;}</code></td></tr>
+<tr><td>24</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;configmaps&quot;}</code></td></tr>
+<tr><td>25</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;secrets&quot;}</code></td></tr>
+<tr><td>26</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>27</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>28</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;tsdb-mysql-1&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pod&quot;}</code></td></tr>
+<tr><td>29</td><td><code>GetResources</code></td><td><code>{&quot;name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+<tr><td>30</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;nacosdb-mysql&quot;}</code></td></tr>
+<tr><td>31</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pods&quot;,&quot;show_labels&quot;:true}</code></td></tr>
+<tr><td>32</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>33</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-price-service&quot;}</code></td></tr>
+<tr><td>34</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-config-service&quot;}</code></td></tr>
+<tr><td>35</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-user-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Shared DB tsdb-mysql is up and TCP-reachable (tsdb-mysql-leader endpoint 172.20.3.55:3306 on leader pod tsdb-mysql-2; connectivity test from all three nodes: 'open / Connection Succeeded'), but it refuses new sessions: its own log is 337/1470 lines (23%) of '[Warning] Too many connections' and its readiness probe fails with 'ERROR 1040 (HY000): Too many connections'. Consequently 10 deployments (ts-route/ts-security/ts-station/ts-station-food/ts-train/ts-train-food/ts-travel/ts-travel2/ts-user/ts-wait-order-service) are 0/1 AVAILABLE with pods Error/CrashLoopBackOff (3 restarts, BackOff events): client logs show 'HikariPool-1 - Exception during pool initialization ... SQLNonTransientConnectionException: Too many connections', 'SQL Error: 1040, SQLState: 08004' -&gt; 'Unable to build Hibernate SessionFactory ... Unable to open JDBC Connection for DDL execution' -&gt; 'Application run failed'. Client DB bindings (ts-train-mysql/ts-user-mysql/ts-order-mysql) are identical to healthy peers (tsdb-mysql-leader:3306, db ts, user ts), so credentials/port/addressing faults are excluded; nacosdb-mysql and healthy DB clients (order/basic/price/config) show no errors, so the exhaustion is specific to tsdb-mysql; its declared node.cnf max_connections=65535 while the running server already rejects at thread id ~539 confirms the DB-side connection capacity is the break point.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;db_connection_exhaustion&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-user-service&quot;,
+   &quot;root_cause&quot;: &quot;db_connection_exhaustion&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-station-service&quot;,
+   &quot;root_cause&quot;: &quot;db_connection_exhaustion&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-6"><summary><b>case-6</b> · <code>app/tsdb-mysql</code> + <code>db_readonly_mode</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 23 步</summary><ul>
 <li><b>摘要</b>：Namespace train-ticket: alerts show 52x 500 on POST /api/v1/inside_pay_service/inside_payment (ts-inside-payment-service) and 9x 500 on POST /api/v1/preserveservice/preserve (ts-preserve-service). Caller logs trace the failures one hop down: ts-inside-payment-service -&gt; 'HttpServerErrorException: 500 ... path:/api/v1/paymentservice/payment' (65x) and ts-preserve-service -&gt; '500 ... path:/api/v1/orderservice/order' (9x). The downstream writer services themselves carry the decisive mechanism: ts-payment-service and ts-order-service both log 'SQL Error: 1290, SQLState: HY000' + 'The MySQL server </li>
 <li><b>raw 日志</b>：<a href="../results/1013_1134_inorder4-v3b10/raw/1013_1137_trainticket-runtime-6/">results/1013_1134_inorder4-v3b10/raw/1013_1137_trainticket-runtime-6</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>12</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;statefulset&quot;,&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>14</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;port&quot;:3306,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>18</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>19</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;tsdb-mysql-0&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>20</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;tsdb-mysql-2&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-voucher-service&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-other-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Namespace train-ticket: alerts show 52x 500 on POST /api/v1/inside_pay_service/inside_payment (ts-inside-payment-service) and 9x 500 on POST /api/v1/preserveservice/preserve (ts-preserve-service). Caller logs trace the failures one hop down: ts-inside-payment-service -&gt; 'HttpServerErrorException: 500 ... path:/api/v1/paymentservice/payment' (65x) and ts-preserve-service -&gt; '500 ... path:/api/v1/orderservice/order' (9x). The downstream writer services themselves carry the decisive mechanism: ts-payment-service and ts-order-service both log 'SQL Error: 1290, SQLState: HY000' + 'The MySQL server is running with the --read-only option so it cannot execute this statement' (65x / 52x) followed by JpaSystemException: could not execute statement -&gt; HTTP 500. Two independent writers rejected by the same shared DB point the break at the database layer. Configuration confirms the target: ts-payment-service's secret sets PAYMENT_MYSQL_HOST=tsdb-mysql-leader:3306, and the tsdb-mysql StatefulSet (radondb/percona:5.7.34 with Xenon HA) has tsdb-mysql-0 labeled role=leader (the instance behind tsdb-mysql-leader, with followers replicating from tsdb-mysql-0). CheckServiceConnectivity(tsdb-mysql-leader:3306) succeeded from worker-01/02/03, so DNS/port/credentials are fine - the server is up but rejects write statements, i.e. it is running in read-only mode. Object layer shows all pods 1/1 Running with no FailedScheduling/FailedCreate/FailedMount/image-pull events, and namespace events contain only probe/BackOff warnings during startup, excluding scheduling, admission, mount and image faults.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;db_connection_exhaustion&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-payment-service&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-7"><summary><b>case-7</b> · <code>app/tsdb-mysql</code> + <code>db_readonly_mode</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 22 步</summary><ul>
 <li><b>摘要</b>：All train-ticket pods are 1/1 Running with zero restarts, so the break is not probe/scheduling/startup. Caller-side logs pin the mechanism: ts-payment-service and ts-order-service both emit 'SQL Error: 1290, SQLState: HY000' + 'The MySQL server is running with the --read-only option so it cannot execute this statement' (68 and 54 occurrences), then throw JpaSystemException 'could not execute statement' and return HTTP 500. These 500s propagate upward exactly along the reported alerts: ts-inside-payment-service -&gt; /api/v1/paymentservice/payment (54x 'Process payment' 500) and ts-preserve-servic</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1235_inorder4-v3b12/raw/1013_1237_trainticket-runtime-7/">results/1013_1235_inorder4-v3b12/raw/1013_1237_trainticket-runtime-7</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;,&quot;top_k&quot;:2}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;statefulsets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>16</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>19</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;show_labels&quot;:true}</code></td></tr>
+<tr><td>20</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>21</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;tsdb-mysql-0&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All train-ticket pods are 1/1 Running with zero restarts, so the break is not probe/scheduling/startup. Caller-side logs pin the mechanism: ts-payment-service and ts-order-service both emit 'SQL Error: 1290, SQLState: HY000' + 'The MySQL server is running with the --read-only option so it cannot execute this statement' (68 and 54 occurrences), then throw JpaSystemException 'could not execute statement' and return HTTP 500. These 500s propagate upward exactly along the reported alerts: ts-inside-payment-service -&gt; /api/v1/paymentservice/payment (54x 'Process payment' 500) and ts-preserve-service -&gt; /api/v1/orderservice/order (11x 'Create ticket order' 500). The config face binds the write path to the DB app: PAYMENT_MYSQL_HOST and ORDER_MYSQL_HOST are both 'tsdb-mysql-leader' (port 3306), and the tsdb-mysql-leader Service selector (app=tsdb-mysql, release=tsdb, role=leader) is satisfied only by pod tsdb-mysql-0, whose mysql container is Running/Ready with restarts=0 and a bound PVC (data-tsdb-mysql-0). So the victim is the tsdb-mysql database app unit, whose MySQL server rejects all statements in read-only mode; every DB-writing service (order, payment) fails and transaction flows become unavailable.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;db_connection_exhaustion&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;service_selector_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-8"><summary><b>case-8</b> · <code>app/tsdb-mysql</code> + <code>db_readonly_mode</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 37 步</summary><ul>
 <li><b>摘要</b>：Symptom side: alerts point to ts-inside-payment-service ('Process payment') and ts-preserve-service ('Create ticket order') returning HTTPError 500; their caller logs show downstream 500s from /api/v1/paymentservice/payment (ts-payment-service) and /api/v1/orderservice/order (ts-order-service) plus 'getTickets failed'. Object layer is clean: all 51 pods 1/1 Running, no Pending/CrashLoop/ImagePull/Mount anomalies, and no FailedCreate/FailedScheduling/FailedMount events in the namespace. The break is at the statement level: ts-payment-service (68x) and ts-order-service (52x) both log 'SQL Error:</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1343_inorder4-v3b14/raw/1013_1344_trainticket-runtime-8/">results/1013_1343_inorder4-v3b14/raw/1013_1344_trainticket-runtime-8</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>8</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-contacts-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-other-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-assurance-service&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-execute-service&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-user-service&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-other-service&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>23</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql-follower&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>24</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;statefulsets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>25</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;tsdb-mysql-0&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>26</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;tsdb-mysql-1&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>27</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;tsdb-mysql-2&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>28</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;port&quot;:3306,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>29</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;tsdb-mysql-follower&quot;,&quot;port&quot;:3306,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>30</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>31</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>32</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;output_yaml&quot;:true,&quot;resource_type&quot;:&quot;configmaps&quot;}</code></td></tr>
+<tr><td>33</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;The MySQL server is running with the --read-only option so it cannot execute this statement&quot;,&quot;namespace&quot;:&quot;kubernetes&quot;}</code></td></tr>
+<tr><td>34</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;MySQL server read-only mode, database rejects write statements, service 500 errors&quot;}</code></td></tr>
+<tr><td>35</td><td><code>GetResources</code></td><td><code>{&quot;name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+<tr><td>36</td><td><code>GetResources</code></td><td><code>{&quot;name&quot;:&quot;tsdb-mysql-follower&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom side: alerts point to ts-inside-payment-service ('Process payment') and ts-preserve-service ('Create ticket order') returning HTTPError 500; their caller logs show downstream 500s from /api/v1/paymentservice/payment (ts-payment-service) and /api/v1/orderservice/order (ts-order-service) plus 'getTickets failed'. Object layer is clean: all 51 pods 1/1 Running, no Pending/CrashLoop/ImagePull/Mount anomalies, and no FailedCreate/FailedScheduling/FailedMount events in the namespace. The break is at the statement level: ts-payment-service (68x) and ts-order-service (52x) both log 'SQL Error: 1290, SQLState: HY000' + 'The MySQL server is running with the --read-only option so it cannot execute this statement' -&gt; JpaSystemException: could not execute statement. Addressing is verified correct, not the cause: all MySQL secrets (ts-order-mysql, ts-payment-mysql, ts-order-other-mysql) point to tsdb-mysql-leader:3306 db 'ts' user 'ts'; tsdb-mysql-leader endpoints bind to 172.20.3.145 (tsdb-mysql-2, labelled role=leader) and tsdb-mysql-follower to the other two pods; TCP probes to both leader and follower :3306 succeed from all three workers. MySQL logs show the leader pod (server-id 102) is the semi-sync replication master ('Semi-sync replication enabled on the master', binlog_dump to slave_server 100/101), yet its mysqld rejects writes as read-only. Therefore the shared business database tsdb-mysql has been placed in read-only mode, rejecting all writes for the shared 'ts' schema, which propagates as 500s through ts-order-service and ts-payment-service and surfaces as partial service unreachability at ts-preserve-service / ts-inside-payment-service.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;service_selector_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-9"><summary><b>case-9</b> · <code>app/tsdb-mysql</code> + <code>db_readonly_mode</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 28 步</summary><ul>
 <li><b>摘要</b>：All 51 pods are Running/Ready with no Pending/FailedCreate/FailedMount/image-pull outlier, excluding scheduling, admission, image and probe faults; the break is in the data layer. Alerts show HTTP 500 on POST /api/v1/inside_pay_service/inside_payment (ts-inside-payment-service, 53x) and /api/v1/preserveservice/preserve (ts-preserve-service, 14x). Caller logs show downstream 500s: ts-inside-payment-service -&gt; /api/v1/paymentservice/payment 500, ts-preserve-service -&gt; /api/v1/orderservice/order 500. The named downstream services' own logs carry the mechanism verbatim: ts-payment-service (66x) an</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1503_inorder4-v3b16/raw/1013_1505_trainticket-runtime-9/">results/1013_1503_inorder4-v3b16/raw/1013_1505_trainticket-runtime-9</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;services&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>16</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;services&quot;,&quot;name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>17</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pods&quot;,&quot;name&quot;:&quot;tsdb-mysql-0&quot;,&quot;show_labels&quot;:true}</code></td></tr>
+<tr><td>19</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pods&quot;,&quot;name&quot;:&quot;tsdb-mysql-1&quot;,&quot;show_labels&quot;:true}</code></td></tr>
+<tr><td>20</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pods&quot;,&quot;name&quot;:&quot;tsdb-mysql-2&quot;,&quot;show_labels&quot;:true}</code></td></tr>
+<tr><td>21</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;port&quot;:3306,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-other-service&quot;}</code></td></tr>
+<tr><td>23</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-user-service&quot;}</code></td></tr>
+<tr><td>24</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-contacts-service&quot;}</code></td></tr>
+<tr><td>25</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>26</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;tsdb-mysql-2&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pod&quot;}</code></td></tr>
+<tr><td>27</td><td><code>GetResources</code></td><td><code>{&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;statefulsets&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All 51 pods are Running/Ready with no Pending/FailedCreate/FailedMount/image-pull outlier, excluding scheduling, admission, image and probe faults; the break is in the data layer. Alerts show HTTP 500 on POST /api/v1/inside_pay_service/inside_payment (ts-inside-payment-service, 53x) and /api/v1/preserveservice/preserve (ts-preserve-service, 14x). Caller logs show downstream 500s: ts-inside-payment-service -&gt; /api/v1/paymentservice/payment 500, ts-preserve-service -&gt; /api/v1/orderservice/order 500. The named downstream services' own logs carry the mechanism verbatim: ts-payment-service (66x) and ts-order-service (55x) both log 'SQL Error: 1290, SQLState: HY000' and 'The MySQL server is running with the --read-only option so it cannot execute this statement', surfacing as JpaSystemException and then HTTP 500. Config confirms both writers target ORDER_MYSQL_HOST/PAYMENT_MYSQL_HOST=tsdb-mysql-leader:3306, whose Service selector is app=tsdb-mysql,release=tsdb,role=leader; pod labels show only tsdb-mysql-2 carries role=leader (tsdb-mysql-0/1 are role=follower), and CheckServiceConnectivity to tsdb-mysql-leader:3306 is 'open / Connection Succeeded' from worker-01/02/03, so the endpoint is reachable but refuses writes. Namespace Warning events bind the fault to the tsdb-mysql instances: readiness probe failures 'ERROR 2002 (HY000): Can't connect to local MySQL server through socket /var/run/mysqld/mysqld.sock' and 'container is in CONTAINER_EXITED state' on tsdb-mysql-0/1/2, FailedPostStartHook and 'Back-off restarting failed container xenon' on tsdb-mysql-1, and xenon Restart Count 1 on tsdb-mysql-2 in the 3-replica percona 5.7.34 + xenon StatefulSet (semi-sync: 'Semi-sync replication enabled on the master', 'Start semi-sync binlog_dump to slave (server_id: 100/101)'). The database therefore serves read-only, all writes are rejected with 1290, and the write-path services return 500 upward, i.e. partial service unavailability.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;service_selector_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-payment-service&quot;,
+   &quot;root_cause&quot;: &quot;service_env_var_address_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-10"><summary><b>case-10</b> · <code>app/tsdb-mysql</code> + <code>db_readonly_mode</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 24 步</summary><ul>
 <li><b>摘要</b>：All train-ticket pods are 1/1 Running with 0 restarts (no scheduling/startup/probe breakpoint). Alerts point to 500s on ts-inside-payment-service (/api/v1/paymentservice/payment) and ts-preserve-service (/api/v1/orderservice/order). Downstream logs name the mechanism verbatim: ts-payment-service and ts-order-service both log 'o.h.engine.jdbc.spi.SqlExceptionHelper: SQL Error: 1290, SQLState: HY000' and 'The MySQL server is running with the --read-only option so it cannot execute this statement', then 'JpaSystemException: could not execute statement' -&gt; HTTP 500. The write path is pinned by con</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1524_inorder4-v3b18/raw/1013_1525_trainticket-runtime-10/">results/1013_1524_inorder4-v3b18/raw/1013_1525_trainticket-runtime-10</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>18</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;show_labels&quot;:true}</code></td></tr>
+<tr><td>19</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql-leader&quot;}</code></td></tr>
+<tr><td>20</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;tsdb-mysql-0&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>23</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All train-ticket pods are 1/1 Running with 0 restarts (no scheduling/startup/probe breakpoint). Alerts point to 500s on ts-inside-payment-service (/api/v1/paymentservice/payment) and ts-preserve-service (/api/v1/orderservice/order). Downstream logs name the mechanism verbatim: ts-payment-service and ts-order-service both log 'o.h.engine.jdbc.spi.SqlExceptionHelper: SQL Error: 1290, SQLState: HY000' and 'The MySQL server is running with the --read-only option so it cannot execute this statement', then 'JpaSystemException: could not execute statement' -&gt; HTTP 500. The write path is pinned by config: Secret ts-payment-mysql sets PAYMENT_MYSQL_HOST=tsdb-mysql-leader:3306, and Service tsdb-mysql-leader (selector app=tsdb-mysql, role=leader) resolves to endpoint 172.20.2.229:3306 = pod tsdb-mysql-0 (role=leader); tsdb-mysql-1/2 are followers in a healthy replication topology (CHANGE MASTER TO tsdb-mysql-0). So the DB instance serving application writes is in read-only mode, rejecting every write and cascading 5xx upward as an availability disruption.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-payment-service&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-11"><summary><b>case-11</b> · <code>app/tsdb-mysql</code> + <code>db_readonly_mode</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 23 步</summary><ul>
 <li><b>摘要</b>：All pods are 1/1 Running with no Pending/crash/probe outliers, ruling out scheduling/startup/probe breaks. The reachability chain breaks on the DB write path: ts-payment-service logs 'SQL Error: 1290, SQLState: HY000' + 'The MySQL server is running with the --read-only option so it cannot execute this statement' (62x, then JpaSystemException 'could not execute statement'), and ts-order-service logs the identical read-only rejection (44x) — two independent writers, each with its own Secret both pointing at tsdb-mysql-leader:3306, are rejected by the same server, so the break is not service-loca</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1541_inorder4-v3b20/raw/1013_1543_trainticket-runtime-11/">results/1013_1541_inorder4-v3b20/raw/1013_1543_trainticket-runtime-11</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-inside-payment-service&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;statefulsets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>16</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>18</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;tsdb-mysql-0&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>20</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;port&quot;:3306,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All pods are 1/1 Running with no Pending/crash/probe outliers, ruling out scheduling/startup/probe breaks. The reachability chain breaks on the DB write path: ts-payment-service logs 'SQL Error: 1290, SQLState: HY000' + 'The MySQL server is running with the --read-only option so it cannot execute this statement' (62x, then JpaSystemException 'could not execute statement'), and ts-order-service logs the identical read-only rejection (44x) — two independent writers, each with its own Secret both pointing at tsdb-mysql-leader:3306, are rejected by the same server, so the break is not service-local. tsdb-mysql-leader:3306 is TCP-reachable (Connection Succeeded from worker-01/02/03) and pod tsdb-mysql-0 (label role=leader) is Running/Ready, so it is not connectivity/port/addressing but a server-side read-only rejection. The 500s propagate upward: ts-inside-payment-service gets 500 from /api/v1/paymentservice/payment and ts-preserve-service from /api/v1/orderservice/order, while their own Services/Endpoints (18673&lt;-&gt;18673, selectors matched) are healthy — hence the fault resides in app tsdb-mysql in read-only mode.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-payment-service&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-12"><summary><b>case-12</b> · <code>app/tsdb-mysql</code> + <code>db_readonly_mode</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 22 步</summary><ul>
 <li><b>摘要</b>：Alerts show HTTP 500 on 'Process payment' (ts-inside-payment-service) and 'Create ticket order' (ts-preserve-service). Caller logs pin the downstream targets: ts-preserve-service -&gt; ts-order-service /api/v1/orderservice/order 500, ts-inside-payment-service -&gt; ts-payment-service /api/v1/paymentservice/payment 500. Those target pods are 1/1 Running, 0 restarts, probes passing, but their own error logs show 'SQL Error: 1290, SQLState: HY000' / 'The MySQL server is running with the --read-only option so it cannot execute this statement' (52x and 67x) followed by JpaSystemException could not execut</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1628_inorder4-v3b22/raw/1013_1630_trainticket-runtime-12/">results/1013_1628_inorder4-v3b22/raw/1013_1630_trainticket-runtime-12</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>11</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;tsdb-mysql-0&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;statefulsets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;show_labels&quot;:true}</code></td></tr>
+<tr><td>19</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>20</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;configmaps&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>21</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql-leader&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Alerts show HTTP 500 on 'Process payment' (ts-inside-payment-service) and 'Create ticket order' (ts-preserve-service). Caller logs pin the downstream targets: ts-preserve-service -&gt; ts-order-service /api/v1/orderservice/order 500, ts-inside-payment-service -&gt; ts-payment-service /api/v1/paymentservice/payment 500. Those target pods are 1/1 Running, 0 restarts, probes passing, but their own error logs show 'SQL Error: 1290, SQLState: HY000' / 'The MySQL server is running with the --read-only option so it cannot execute this statement' (52x and 67x) followed by JpaSystemException could not execute statement. Both services write via Secret host tsdb-mysql-leader:3306, whose selector role=leader yields endpoint 172.20.2.101:3306 = tsdb-mysql-0 (sole pod with label role=leader), so writes do reach the leader-labeled DB pod and are refused for being read-only. The tsdb-mysql StatefulSet was recreated ~10m ago with churn: all three pods RESTARTS 1 (5m20s ago), xenon container restarted, PVCs re-provisioned, DB logs show semi-sync replication/leader churn, and namespace events show Warning Unhealthy on tsdb-mysql-0/1/2 (CONTAINER_EXITED, 'Can't connect to local MySQL server through socket'). No FailedScheduling/FailedCreate/FailedMount/image-pull events and all nodes Ready with no taints/pressure, excluding app/node-admission and scheduling causes. Net: the ts database is in read-only mode, so write transactions from ts-order-service and ts-payment-service fail with 500s while reads succeed - the reported partial unreachability.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;mysql_invalid_credentials&quot;
+  }
+ ]
+}</pre>
+</details>
 <details id="case-13"><summary><b>case-13</b> · <code>app/tsdb-mysql</code> + <code>db_readonly_mode</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 30 步</summary><ul>
 <li><b>摘要</b>：All train-ticket pods are Running/Ready with 0 restarts (no scheduling/startup/probe break), and TCP connectivity to tsdb-mysql-leader:3306 succeeds from every worker. The break is at the persistence layer: two independent services report SQL Error 1290 / SQLState HY000 'The MySQL server is running with the --read-only option so it cannot execute this statement' (ts-payment-service 68x, ts-order-service 56x), surfacing as JpaSystemException/GenericJDBCException -&gt; HTTP 500 cascading to ts-inside-payment-service (54x 'Process payment') and ts-preserve-service (12x 'Create ticket order'). Servic</li>
 <li><b>raw 日志</b>：<a href="../results/1013_1656_inorder4-v3b25/raw/1013_1657_trainticket-runtime-13/">results/1013_1656_inorder4-v3b25/raw/1013_1657_trainticket-runtime-13</a></li>
-</ul></details>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>10</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;tsdb-mysql&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;statefulsets&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>20</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;show_labels&quot;:true}</code></td></tr>
+<tr><td>23</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>24</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>25</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
+<tr><td>26</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-user-service&quot;}</code></td></tr>
+<tr><td>27</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-consign-service&quot;}</code></td></tr>
+<tr><td>28</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>29</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;tsdb-mysql-leader&quot;,&quot;port&quot;:3306,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All train-ticket pods are Running/Ready with 0 restarts (no scheduling/startup/probe break), and TCP connectivity to tsdb-mysql-leader:3306 succeeds from every worker. The break is at the persistence layer: two independent services report SQL Error 1290 / SQLState HY000 'The MySQL server is running with the --read-only option so it cannot execute this statement' (ts-payment-service 68x, ts-order-service 56x), surfacing as JpaSystemException/GenericJDBCException -&gt; HTTP 500 cascading to ts-inside-payment-service (54x 'Process payment') and ts-preserve-service (12x 'Create ticket order'). Service specs route all writes to tsdb-mysql-leader (selector app=tsdb-mysql,role=leader -&gt; tsdb-mysql-1), and the DB statefulset instances carry the matching Warning events (Unhealthy readiness probes, CONTAINER_EXITED, 'ERROR 2002 Can't connect to local MySQL server'). Fault resides in the tsdb-mysql database unit, which is serving in read-only mode.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/tsdb-mysql&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-payment-service&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;db_readonly_mode&quot;
+  }
+ ]
+}</pre>
+</details>
 </body></html>
