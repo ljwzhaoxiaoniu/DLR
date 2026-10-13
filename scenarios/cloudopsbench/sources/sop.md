@@ -38,3 +38,14 @@ This wording is overloaded — it walks the SAME reachability chain whichever st
    - **Image pull / mount / probe errors** → the matching config face.
    - **Everything healthy but probes diverge** → the address layer: audit the routing config (the gateway's route table, Path ↔ target line by line); probing is confirmation, not scanning. **The component to report is the gateway (the table's owner) — the mis-wired target is the victim, not the break.**
 4. **Close properly before you conclude — all three:** the mechanism event; the events surface (`GetResources(events)` — for multi-instance workloads the Warning row names the replica that carries it); and the config the mechanism points at.
+
+### When asked: "Service quality degradation."
+
+This wording lives on the metric surface — the alerts name the case, and the object layer is only the exclusion. Read the alerts first, and the case you land on decides:
+
+1. **Alerts first.** `GetAlerts` tells you whose anomaly it is, which kind (latency / saturation / throughput / traffic), and at what scope. Unlike the reachability wordings, opening from the object layer here is not troubleshooting — the signal is in the metrics.
+2. **Deal with the case you land on:**
+   - **Saturation rows on one service** (`RESOURCE_SATURATION [cpu_cfs]` / `[cpu core]` / memory) → it's a resource fault on that service's pods: read its pods face (usage vs limits) to close.
+   - **A constant delay riding on one service's own latency** — its p50/p90 jump by a fixed amount, its callers see the same added delay, its downstream server-side latencies stay clean, no saturation rows → `pod_network_delay`: the delay sits on that pod's network path. Don't reach for a code explanation — an artificial delay *in code* is a code-defect (a different wording, and it has to be shown from the code surface); under this wording a delay case is network-side.
+   - **The same latency / packet anomaly across every pod on one node** (scope it with the pods listing's NODE column) → it's a node-scope network fault: read the node objects (conditions / node runtime services) to close.
+3. **Close by excluding the object layer.** The pods / deployments / services / endpoints / nodes listings show everything else healthy — RESTARTS 0, AVAILABLE 1/1, endpoints bound, nodes Ready, no mechanism events. The anomaly lives in the metric surface; the object layer is your exclusion evidence.
