@@ -12,16 +12,16 @@
 | boutique/admission | 58 | 6 | 52 | 10.3% |
 | boutique/codedefect | 98 | 7 | 91 | 7.1% |
 | boutique/infrastructure | 40 | 6 | 34 | 15.0% |
-| boutique/performance | 29 | 4 | 25 | 13.8% |
+| boutique/performance | 29 | 5 | 24 | 17.2% |
 | boutique/runtime | 45 | 5 | 40 | 11.1% |
-| boutique/scheduling | 164 | 7 | 157 | 4.3% |
+| boutique/scheduling | 164 | 8 | 156 | 4.9% |
 | boutique/service | 54 | 4 | 50 | 7.4% |
 | boutique/startup | 62 | 4 | 58 | 6.5% |
 | train-ticket/performance | 47 | 7 | 40 | 14.9% |
-| train-ticket/runtime | 96 | 10 | 86 | 10.4% |
+| train-ticket/runtime | 96 | 11 | 85 | 11.5% |
 | train-ticket/service | 37 | 9 | 28 | 24.3% |
-| train-ticket/startup | 24 | 7 | 17 | 29.2% |
-| **合计** | **754** | **76** | **678** | **10.1%** |
+| train-ticket/startup | 24 | 8 | 16 | 33.3% |
+| **合计** | **754** | **80** | **674** | **10.6%** |
 
 ## 汇总（去重 · 取最新）
 
@@ -29,22 +29,22 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 76 / 76（100.0%） |
-| CA（组件命中） | 76 / 76（100.0%） |
-| FA（故障型命中） | 76 / 76（100.0%） |
-| ECR（证据链全闭） | 75 / 76（98.7%） |
+| JRA（联合命中） | 80 / 80（100.0%） |
+| CA（组件命中） | 80 / 80（100.0%） |
+| FA（故障型命中） | 80 / 80（100.0%） |
+| ECR（证据链全闭） | 79 / 80（98.8%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 0.9967 | 0.9781 | 0.9868 | 0.3008 | 18.8026 | 0.0006 | 0.0263 |
+| 0.9969 | 0.9792 | 0.9875 | 0.301 | 18.7625 | 0.0005 | 0.025 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 254,161 / 198,922 | 58,131 / 1,133,738 | 72% |
+| 255,044 / 203,615 | 58,131 / 1,133,738 | 73% |
 
 ## 分家族索引
 
@@ -53,15 +53,15 @@
 | boutique/admission | 58 | 6 | 6 | 5 | [boutique-admission.md](DETAIL/boutique-admission.md) |
 | boutique/codedefect | 98 | 7 | 7 | 7 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
 | boutique/infrastructure | 40 | 6 | 6 | 6 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
-| boutique/performance | 29 | 4 | 4 | 4 | [boutique-performance.md](DETAIL/boutique-performance.md) |
+| boutique/performance | 29 | 5 | 5 | 5 | [boutique-performance.md](DETAIL/boutique-performance.md) |
 | boutique/runtime | 45 | 5 | 5 | 5 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
-| boutique/scheduling | 164 | 7 | 7 | 7 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
+| boutique/scheduling | 164 | 8 | 8 | 8 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
 | boutique/service | 54 | 4 | 4 | 4 | [boutique-service.md](DETAIL/boutique-service.md) |
 | boutique/startup | 62 | 4 | 4 | 4 | [boutique-startup.md](DETAIL/boutique-startup.md) |
 | train-ticket/performance | 47 | 7 | 7 | 7 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
-| train-ticket/runtime | 96 | 10 | 10 | 10 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
+| train-ticket/runtime | 96 | 11 | 11 | 11 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
 | train-ticket/service | 37 | 9 | 9 | 9 | [trainticket-service.md](DETAIL/trainticket-service.md) |
-| train-ticket/startup | 24 | 7 | 7 | 7 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
+| train-ticket/startup | 24 | 8 | 8 | 8 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
 
 ## 定性观察
 
@@ -109,6 +109,9 @@
 > **2026-10-13 · 轮次 1013_1524_inorder4-v3b18（批十八 · 2 路续跑 · 4/4 六项全满）**：① 覆盖 72/754，**JRA 72/72**。② **又一新措辞模板首验全满**：boutique/performance/4「Service latency increased significantly」（第六模板 · 无 L3 节）`pod_cpu_overload`（18 步六项全满）。③ scheduling/7 `node_cordon_mismatch`（**Pending 序句复验位** · 20 步全满）· tt-runtime/10 `db_readonly_mode`（24 步全满；RAR 0.043 = 一次重复调用，效率常态）· tt-startup/7 `missing_secret_binding`（11 步全满）。④ **两批连续 8/8 六项全满**（批十七+十八）——2 路模式零重试全绿；EOC 记档列不变（infra/4 · tt-runtime/5 · admission/6）。
 
 > **2026-10-13 · 轮次 1013_1536_inorder4-v3b19（批十九 · 2 路续跑 · 4/4 六项全满）**：① 覆盖 76/754，**JRA 76/76**。② **网关条款第八连**：tt-service/9 `gateway_misrouted`（21 步六项全满）。③ boutique/codedefect/7 `code_busy_loop`（13 步全满）· boutique/infrastructure/6 `containerd_unavailable@worker-02`（13 步全满 · 节点域）· tt-performance/7 `pod_network_delay`（25 步全满）。④ **批十七/十八/十九三连 12/12 六项全满**——2 路管道化（端口空档即接题）已成默认节奏。
+
+> **2026-10-13 · 轮次 1013_1541_inorder4-v3b20（批二十 · 2 路续跑 · 4/4 六项全满）**：① 覆盖 80/754，**JRA 80/80**。② boutique/performance/5「Service latency increased significantly」第二例 `pod_cpu_overload`（19 步全满——第六模板饱和分支稳）。③ scheduling/8 `node_cordon_mismatch`（18 步全满）· tt-runtime/11 `db_readonly_mode`（23 步全满）· tt-startup/8 `missing_secret_binding`（12 步全满）。④ **四连 16/16 六项全满**（批十七–二十）——零重试。
+
 
 
 

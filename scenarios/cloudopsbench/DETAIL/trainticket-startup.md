@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/startup — cloudopsbench
 
-> 本家族已跑 **7/24** 题：JRA ✅7 ❌0 ｜ 证据链全闭 7 ｜ token 中位 267,264 ｜ 生成 2026-10-13T07:40:30.583Z
+> 本家族已跑 **8/24** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 269,596 ｜ 生成 2026-10-13T07:44:31.176Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -14,6 +14,7 @@
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 267,264 | 0 | 0 | 1013_1343_inorder4-v3b14 | 全对·链闭 |
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 269,596 | 0 | 0 | 1013_1503_inorder4-v3b16 | 全对·链闭 |
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5 | 11 | 264,001 | 0 | 0 | 1013_1524_inorder4-v3b18 | 全对·链闭 |
+| [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 374,643 | 0 | 0 | 1013_1541_inorder4-v3b20 | 全对·链闭 |
 
 ## 证据正文
 
@@ -58,4 +59,10 @@
 - **结论**：`app/ts-food-delivery-service` + `missing_secret_binding` ｜ 标签 `app/ts-food-delivery-service` + `missing_secret_binding`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.5 · steps 11 · tokens 264,001
 - **摘要**：Namespace-level pods scan shows a single outlier: ts-food-delivery-service-bdcf5577f-v4x6f is 0/1 in CreateContainerConfigError on worker-01 while all other 47 pods are 1/1 Running. Its pod detail gives the mechanism verbatim: kubelet 'Warning Failed ... Error: secret "ts-food-delivery-mysq1" not found' (x12), State Waiting/Reason CreateContainerConfigError, with PodScheduled=True and image already pulled, so scheduling and image pull are fine and the break is at container-config reference resolution. The config face confirms it: the deployment's envFrom secretRef is 'ts-food-delivery-mysq1' (
+
+### case-8
+
+- **结论**：`app/ts-food-service` + `missing_secret_binding` ｜ 标签 `app/ts-food-service` + `missing_secret_binding`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4545 · steps 12 · tokens 374,643
+- **摘要**：Pods listing shows a single outlier: ts-food-service-6b7777876d-2h6dc is 0/1 in CreateContainerConfigError while all other train-ticket pods are 1/1 Running. Its pod sheet shows the container Waiting with Reason=CreateContainerConfigError and the kubelet event verbatim: 'Error: secret "ts-food-mysql" not found' (x12 over 5m), while the image was already present (ruling out image pull). The Deployment ts-food-service spec shows envFrom secretRef name=ts-food-mysql; the secrets listing contains every other '<svc>-mysql' secret but ts-food-mysql is absent — the only missing referenced object. The
 

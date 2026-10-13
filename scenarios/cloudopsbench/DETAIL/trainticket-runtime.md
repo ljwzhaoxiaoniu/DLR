@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **10/96** 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 535,723 ｜ 生成 2026-10-13T07:40:30.583Z
+> 本家族已跑 **11/96** 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 521,337 ｜ 生成 2026-10-13T07:44:31.176Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -17,6 +17,7 @@
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 37 | 631,353 | 0 | 0 | 1013_1343_inorder4-v3b14 | 全对·链闭 |
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4074 | 28 | 644,230 | 0 | 0 | 1013_1503_inorder4-v3b16 | 全对·链闭 |
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3913 | 24 | 409,060 | 0.0435 | 0 | 1013_1524_inorder4-v3b18 | 全对·链闭 |
+| [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 23 | 347,660 | 0 | 0 | 1013_1541_inorder4-v3b20 | 全对·链闭 |
 
 ## 证据正文
 
@@ -79,4 +80,10 @@
 - **结论**：`app/tsdb-mysql` + `db_readonly_mode` ｜ 标签 `app/tsdb-mysql` + `db_readonly_mode`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3913 · steps 24 · tokens 409,060
 - **摘要**：All train-ticket pods are 1/1 Running with 0 restarts (no scheduling/startup/probe breakpoint). Alerts point to 500s on ts-inside-payment-service (/api/v1/paymentservice/payment) and ts-preserve-service (/api/v1/orderservice/order). Downstream logs name the mechanism verbatim: ts-payment-service and ts-order-service both log 'o.h.engine.jdbc.spi.SqlExceptionHelper: SQL Error: 1290, SQLState: HY000' and 'The MySQL server is running with the --read-only option so it cannot execute this statement', then 'JpaSystemException: could not execute statement' -> HTTP 500. The write path is pinned by con
+
+### case-11
+
+- **结论**：`app/tsdb-mysql` + `db_readonly_mode` ｜ 标签 `app/tsdb-mysql` + `db_readonly_mode`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3636 · steps 23 · tokens 347,660
+- **摘要**：All pods are 1/1 Running with no Pending/crash/probe outliers, ruling out scheduling/startup/probe breaks. The reachability chain breaks on the DB write path: ts-payment-service logs 'SQL Error: 1290, SQLState: HY000' + 'The MySQL server is running with the --read-only option so it cannot execute this statement' (62x, then JpaSystemException 'could not execute statement'), and ts-order-service logs the identical read-only rejection (44x) — two independent writers, each with its own Secret both pointing at tsdb-mysql-leader:3306, are rejected by the same server, so the break is not service-loca
 

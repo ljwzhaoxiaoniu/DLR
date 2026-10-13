@@ -1,6 +1,6 @@
 # 评测明细 · boutique/performance — cloudopsbench
 
-> 本家族已跑 **4/29** 题：JRA ✅4 ❌0 ｜ 证据链全闭 4 ｜ token 中位 146,989 ｜ 生成 2026-10-13T07:40:30.583Z
+> 本家族已跑 **5/29** 题：JRA ✅5 ❌0 ｜ 证据链全闭 5 ｜ token 中位 146,989 ｜ 生成 2026-10-13T07:44:31.176Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -11,6 +11,7 @@
 | [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1852 | 28 | 289,569 | 0 | 0 | 1013_1134_inorder4-v3b10 | 全对·链闭 |
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 134,179 | 0 | 0 | 1013_1343_inorder4-v3b14 | 全对·链闭 |
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 146,989 | 0 | 0 | 1013_1524_inorder4-v3b18 | 全对·链闭 |
+| [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 234,408 | 0 | 0 | 1013_1541_inorder4-v3b20 | 全对·链闭 |
 
 ## 证据正文
 
@@ -37,4 +38,10 @@
 - **结论**：`app/currencyservice` + `pod_cpu_overload` ｜ 标签 `app/currencyservice` + `pod_cpu_overload`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2353 · steps 18 · tokens 146,989
 - **摘要**：Object layer is clean (all 11 boutique pods 2/2 Running, RESTARTS=0; currencyservice pod events only Normal Scheduled/Pulled/Created/Started, Restart Count 0, no probe/OOM/scheduling warnings) and namespace events contain no Warning tied to this workload, so the break is at the metric/telemetry level, not an object or health break. GetAlerts() isolates the single resource-level anomaly to currencyservice: RESOURCE_SATURATION [cpu_cfs] Val=1.081s (Throttled) plus RESOURCE_SATURATION [cpu core] Normal=0.04 cores -> Current=0.17 cores (+318.0%), together with LATENCY_DEGRADATION p95 3.69ms -> 73.
+
+### case-5
+
+- **结论**：`app/emailservice` + `pod_cpu_overload` ｜ 标签 `app/emailservice` + `pod_cpu_overload`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 234,408
+- **摘要**：Object layer is clean (all 11 boutique pods Running 2/2, 0 restarts, no Warning events, emailservice:5000 TCP open), so the break is metric-level. Alerts show the anomaly concentrated in the emailservice pod cgroup: RESOURCE_SATURATION [cpu_cfs] 0.618s Throttled and cpu core Normal=0.00 -> Current=0.15 cores (+4182.4%), plus LATENCY_DEGRADATION emailservice-p95 4.80ms -> 78.30ms (+1532.7%); its upstream caller checkoutservice shows only propagated LATENCY_DEGRADATION (p95 24.30ms -> 85.41ms, +251.5%) with fully successful PlaceOrder/payment/email log lines, and emailservice has no error logs. 
 
