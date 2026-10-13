@@ -79,15 +79,22 @@
 <li>「Symptom wording → entry chain — 'Service Availability Disruption.' uses the SAME reachability chain (it is overloaded across scheduling / startup / admission stages): walk caller logs → endpoints → pods; when the pods surface shows the pod never became ready, read its phase and events (FailedScheduling / FailedCreate / FailedMount / image-pull / probe) and follow that mechanism to the matching object surface. <b>Discriminate on the chain, not on the wording.</b>」</li>
 <li>锚 <code>chain:reachability</code> · 来源 case：boutique/scheduling/1 · startup/1 · admission/1</li>
 </ul></div>
-<div class="tier"><span class="tier__tag">L1 · DLR</span><span class="tier__title">数据源级 · 对象 / 观测面 / 按锚 read 模板 → 给取数落点</span>
-<pre>LE  emailservice（服务）          调用关系面 → GetServiceDependencies(service_name=emailservice)
-                                    upstream = checkoutservice：症状的入口
+<div class="tier"><span class="tier__tag">L1 · DLR</span><span class="tier__title">数据源级 · LE ◀ PE ◀ ARCS → 实体 / 观测面 / 按锚读法模板</span>
+<pre>构图：LE（业务对象） ◀─1:N 容器── PE（语境视图） ◀─ARCS（A 锚 · R 行空间 · C 列 · S 补注）── 快照资源
+       A 锚 = 取数 WHERE 键（剪枝）；R: null = 行对行；S = 面的读法模板
+
+LE  emailservice（服务）
+  PE  依赖图面        ARCS  A: 1:N · key=service_name（锚 = 对象名）
+                            S: GetServiceDependencies(service_name=emailservice)
+                            → upstream = checkoutservice（症状的入口）
 LE  emailservice-deploy（载体）
-      deployment 面   replicas 0/1 · config_refs（serviceAccountName 缺失 → FailedCreate）
-                      read: GetAppYAML(app_name=emailservice)
-      pods 面         phase / restarts / events（离群行）
-                      read: GetResources(pods, label_selector=app=emailservice)</pre>
-<p>图只存 <b>schema 级</b>（对象 / 面 / 读法）；实例数据（名字、状态、报文）一律经基准工具实查——<b>模型是导航，不是数据</b>。</p></div>
+  PE  deployment 面   ARCS  A: 1:1 · key=app_label        R: null
+                            S: replicas 0/1 · config_refs（serviceAccountName 缺失 → FailedCreate）
+                            read: GetAppYAML(app_name=emailservice)
+  PE  pods 面         ARCS  A: 1:N · key=app_label        R: null
+                            S: phase / restarts / events（离群行）
+                            read: GetResources(pods, label_selector=app=emailservice)</pre>
+<p>图只存 <b>schema 级</b>（LE / PE / 锚 / 读法）；实例数据（名字、状态、报文）一律经基准工具实查——<b>模型是导航，不是数据</b>。</p></div>
 <div class="note">这题的链 = 三级协作的结果：清单点名 <code>emailservice</code> 缺 pod → 受害者信号（endpoints / 连通性）→ workload 态 0/1 → 事件 <code>FailedCreate</code>（SA 缺）→ <code>GetAppYAML</code> 收口 = 证据链闭合（JRA / MC / EOC / ECR 全 1）。<a href="DETAIL/boutique-admission.md#case-5">明细</a> · <a href="results/1013_1458_chainhead-verify2c/raw/1013_1458_boutique-admission-5/">raw 日志</a></div>
 
 <h2 class="section-title">跑题覆盖度 · <em>逐家族进度</em></h2>
@@ -256,6 +263,6 @@ LE  emailservice-deploy（载体）
 <tr><td><a href="results/1013_1628_inorder4-v3b22/raw/1013_1631_trainticket-startup-9/" title="raw 日志（ndjson / mcp.jsonl / meta）"><code>train-ticket/startup/9</code></a></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3846</td><td>14</td><td>193,872</td><td class="muted">1013_1628_ino</td></tr>
 <tr><td><a href="results/1013_1656_inorder4-v3b25/raw/1013_1658_trainticket-startup-10/" title="raw 日志（ndjson / mcp.jsonl / meta）"><code>train-ticket/startup/10</code></a></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4545</td><td>12</td><td>171,036</td><td class="muted">1013_1656_ino</td></tr>
 </table>
-<div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="results/STATS.md">STATS.md</a> · <a href="DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="DETAIL/">DETAIL/</a>）。生成 2026-10-13T09:11:39.342Z</div>
+<div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="results/STATS.md">STATS.md</a> · <a href="DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="DETAIL/">DETAIL/</a>）。生成 2026-10-13T09:17:20.900Z</div>
 </body>
 </html>
