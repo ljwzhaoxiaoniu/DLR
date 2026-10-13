@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **8/96** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 535,723 ｜ 生成 2026-10-13T07:00:05.466Z
+> 本家族已跑 **9/96** 题：JRA ✅9 ❌0 ｜ 证据链全闭 9 ｜ token 中位 535,723 ｜ 生成 2026-10-13T07:06:58.986Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -15,6 +15,7 @@
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3182 | 23 | 477,041 | 0 | 0 | 1013_1134_inorder4-v3b10 | 全对·链闭 |
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.381 | 22 | 521,337 | 0 | 0 | 1013_1235_inorder4-v3b12 | 全对·链闭 |
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 37 | 631,353 | 0 | 0 | 1013_1343_inorder4-v3b14 | 全对·链闭 |
+| [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4074 | 28 | 644,230 | 0 | 0 | 1013_1503_inorder4-v3b16 | 全对·链闭 |
 
 ## 证据正文
 
@@ -65,4 +66,10 @@
 - **结论**：`app/tsdb-mysql` + `db_readonly_mode` ｜ 标签 `app/tsdb-mysql` + `db_readonly_mode`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 37 · tokens 631,353
 - **摘要**：Symptom side: alerts point to ts-inside-payment-service ('Process payment') and ts-preserve-service ('Create ticket order') returning HTTPError 500; their caller logs show downstream 500s from /api/v1/paymentservice/payment (ts-payment-service) and /api/v1/orderservice/order (ts-order-service) plus 'getTickets failed'. Object layer is clean: all 51 pods 1/1 Running, no Pending/CrashLoop/ImagePull/Mount anomalies, and no FailedCreate/FailedScheduling/FailedMount events in the namespace. The break is at the statement level: ts-payment-service (68x) and ts-order-service (52x) both log 'SQL Error:
+
+### case-9
+
+- **结论**：`app/tsdb-mysql` + `db_readonly_mode` ｜ 标签 `app/tsdb-mysql` + `db_readonly_mode`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4074 · steps 28 · tokens 644,230
+- **摘要**：All 51 pods are Running/Ready with no Pending/FailedCreate/FailedMount/image-pull outlier, excluding scheduling, admission, image and probe faults; the break is in the data layer. Alerts show HTTP 500 on POST /api/v1/inside_pay_service/inside_payment (ts-inside-payment-service, 53x) and /api/v1/preserveservice/preserve (ts-preserve-service, 14x). Caller logs show downstream 500s: ts-inside-payment-service -> /api/v1/paymentservice/payment 500, ts-preserve-service -> /api/v1/orderservice/order 500. The named downstream services' own logs carry the mechanism verbatim: ts-payment-service (66x) an
 

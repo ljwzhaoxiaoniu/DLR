@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/startup — cloudopsbench
 
-> 本家族已跑 **5/24** 题：JRA ✅5 ❌0 ｜ 证据链全闭 5 ｜ token 中位 267,264 ｜ 生成 2026-10-13T07:00:05.466Z
+> 本家族已跑 **6/24** 题：JRA ✅6 ❌0 ｜ 证据链全闭 6 ｜ token 中位 269,596 ｜ 生成 2026-10-13T07:06:58.986Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -12,6 +12,7 @@
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 378,044 | 0 | 0 | 1013_1134_inorder4-v3b10 | 全对·链闭 |
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5 | 11 | 252,217 | 0 | 0 | 1013_1235_inorder4-v3b12 | 全对·链闭 |
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 267,264 | 0 | 0 | 1013_1343_inorder4-v3b14 | 全对·链闭 |
+| [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 269,596 | 0 | 0 | 1013_1503_inorder4-v3b16 | 全对·链闭 |
 
 ## 证据正文
 
@@ -44,4 +45,10 @@
 - **结论**：`app/ts-contacts-service` + `missing_secret_binding` ｜ 标签 `app/ts-contacts-service` + `missing_secret_binding`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4545 · steps 12 · tokens 267,264
 - **摘要**：Symptom side: GetAlerts shows entry_service ts-contacts-service returning HTTP 503 (92 occurrences) on /api/v1/contactservice/contacts/account/{userId}, and CheckServiceConnectivity(ts-contacts-service:12347) fails from debug pods on worker-01/02/03. Object layer: the only outlier row in the train-ticket pod listing is ts-contacts-service-5cbbccffcb-gn4qm 0/1 CreateContainerConfigError (all other workloads 1/1 Running), so the node side is not the break. Mechanism/event surface: kubectl-describe events read verbatim 'Warning Failed ... Error: secret "ts-contacts-mysql" not found' (x12 over 4m5
+
+### case-6
+
+- **结论**：`app/ts-delivery-service` + `missing_secret_binding` ｜ 标签 `app/ts-delivery-service` + `missing_secret_binding`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4545 · steps 12 · tokens 269,596
+- **摘要**：Reachability chain closed on ts-delivery-service. Symptom side: active TCP probe to ts-delivery-service:18808 failed from all three workers (worker-01/02/03 'Connection Failed'), while GetAlerts is clean (no metric-side pointer). Object layer: the pod listing's only outlier is ts-delivery-service-78fc79dcf6-dpqs5 with '0/1 CreateContainerConfigError' (all other 48 pods 1/1 Running), and GetResources(deployments -o wide) shows ts-delivery-service as the only drained workload, 0/1 AVAILABLE. Mechanism event (kubelet, on the exact pod and in the namespace events surface): 'Warning Failed ... Erro
 
