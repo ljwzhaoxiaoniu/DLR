@@ -1,0 +1,8 @@
+system: boutique
+category: codedefect
+case: 31
+query: Service Availability Disruption.
+rc: 0
+stamp: 1013_2229
+tsm_mcp: http://127.0.0.1:28796/mcp
+bench_mcp: http://127.0.0.1:8000/mcp

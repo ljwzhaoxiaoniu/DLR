@@ -1,12 +1,13 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **36/37** 题：JRA ✅36 ❌0 ｜ 证据链全闭 36 ｜ token 中位 501,550 ｜ 生成 2026-10-13T14:29:10.547Z
+> 本家族已跑 **37/37** 题：JRA ✅37 ❌0 ｜ 证据链全闭 37 ｜ token 中位 500,404 ｜ 生成 2026-10-13T14:35:03.877Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
 
 | 案例 | CA | FA | JRA | MC | EOC | ECR | EE | steps | tokens | RAR | inv | 轮次 | 备注 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| [1](#case-1) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4667 | 16 | 374,767 | 0 | 0 | 1013_2229_inorder4-v3b53 | 全对·链闭 |
 | [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 681,352 | 0 | 0 | 1012_2010_attr-verify1 | 全对·链闭 |
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 1,133,738 | 0 | 0 | 1013_1040_rank1-verify1 | 全对·链闭 |
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 373,034 | 0 | 0 | 1013_1122_inorder4-v3b9 | 全对·链闭 |
@@ -45,6 +46,13 @@
 | [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 21 | 490,553 | 0 | 0 | 1013_2217_inorder4-v3b52 | 全对·链闭 |
 
 ## 证据正文
+
+### case-1
+
+- **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4667 · steps 16 · tokens 374,767
+- **raw 日志**：[results/1013_2229_inorder4-v3b53/raw/1013_2233_trainticket-service-1](../results/1013_2229_inorder4-v3b53/raw/1013_2233_trainticket-service-1/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Chain: symptom side first -> the only active alert is a 404 from the order API (POST /api/v1/orderservice/order/refresh, 20 occurrences, HTTPError('404 Client Error: Not Found')), i.e. an HTTP 404, not a connection refusal. Object layer is clean for both candidate services: pods ts-order-service and ts-food-service are 2/2 Running with 0 restarts, deployments 1/1/1 AVAILABLE, Service ts-order-service maps 12031->12031 with selector app=ts-order-service, and CheckServiceConnectivity to ts-order-service:12031 succeeds from worker-01/02/03 (Connection Succeeded); ts-order-service logs show normal
 
 ### case-2
 

@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **30/98** 题：JRA ✅30 ❌0 ｜ 证据链全闭 30 ｜ token 中位 254,844 ｜ 生成 2026-10-13T14:29:10.547Z
+> 本家族已跑 **31/98** 题：JRA ✅31 ❌0 ｜ 证据链全闭 31 ｜ token 中位 254,844 ｜ 生成 2026-10-13T14:35:03.877Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -37,6 +37,7 @@
 | [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2381 | 22 | 356,032 | 0 | 0 | 1013_2210_inorder4-v3b50 | 全对·链闭 |
 | [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 177,788 | 0 | 0 | 1013_2214_inorder4-v3b51 | 全对·链闭 |
 | [30](#case-30) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1579 | 39 | 1,081,143 | 0.0526 | 0 | 1013_2217_inorder4-v3b52 | 全对·链闭 |
+| [31](#case-31) | 1 | 1 | 1 | 1 | 1 | 1 | 0.119 | 43 | 334,856 | 0 | 0 | 1013_2229_inorder4-v3b53 | 全对·链闭 |
 
 ## 证据正文
 
@@ -249,4 +250,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1579 · steps 39 · tokens 1,081,143
 - **raw 日志**：[results/1013_2217_inorder4-v3b52/raw/1013_2217_boutique-codedefect-30](../results/1013_2217_inorder4-v3b52/raw/1013_2217_boutique-codedefect-30/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All boutique workload objects read healthy (11 pods 2/2 Running, RESTARTS 0, deployments 1/1 AVAILABLE, all Services with bound Endpoints, correct selectors/targetPorts, and successful TCP connectivity checks on every declared port), so no scheduling/startup/admission/address-layer break exists. The break is at the request-payload/code level: cartservice error logs are 766/2807 lines (27.3%) of 'AddItemAsync called with userId=66VCHSJNUP, productId=fb13bad5-dc1f-420a-b87d-c53033adb784, quantity=9' - a product ID sitting in the userId slot and a session UUID in the productId slot - matching fro
+
+### case-31
+
+- **结论**：`app/frontend` + `code_wrong_argument_order` ｜ 标签 `app/frontend` + `code_wrong_argument_order`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.119 · steps 43 · tokens 334,856
+- **raw 日志**：[results/1013_2229_inorder4-v3b53/raw/1013_2229_boutique-codedefect-31](../results/1013_2229_inorder4-v3b53/raw/1013_2229_boutique-codedefect-31/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Object/address layers are clean: all 11 pods 2/2 Running with 0 restarts, all 11 Deployments 1/1 AVAILABLE, every Service has endpoints bound, and active TCP probes to all 11 service:port pairs returned 'Connection Succeeded' — excluding scheduling, image-pull, probe, selector, port-mapping and DNS faults. The break is on the code surface: cartservice error logs are flooded (761/2844 lines, ratio 0.268) with a single pattern showing every add-to-cart arriving with arguments inverted — 'AddItemAsync called with userId=9SIQT8TOJO, productId=4fe51a56-1a94-43ce-be91-5958ce17d236, quantity=5', i.e.
 

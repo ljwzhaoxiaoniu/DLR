@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **34/47** 题：JRA ✅33 ❌1 ｜ 证据链全闭 33 ｜ token 中位 304,738 ｜ 生成 2026-10-13T14:29:10.547Z
+> 本家族已跑 **35/47** 题：JRA ✅34 ❌1 ｜ 证据链全闭 34 ｜ token 中位 301,957 ｜ 生成 2026-10-13T14:35:03.877Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -41,6 +41,7 @@
 | [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.375 | 17 | 236,382 | 0 | 0 | 1013_2210_inorder4-v3b50 | 全对·链闭 |
 | [33](#case-33) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 335,749 | 0 | 0 | 1013_2214_inorder4-v3b51 | 全对·链闭 |
 | [34](#case-34) | 0 | 1 | 0 | 0.5 | 0.5 | 0 | 0.0732 | 42 | 1,529,218 | 0 | 0 | 1013_2217_inorder4-v3b52 | 未命中 |
+| [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 111,650 | 0 | 0 | 1013_2229_inorder4-v3b53 | 全对·链闭 |
 
 ## 证据正文
 
@@ -281,4 +282,11 @@
 - **流程**：MC 0.5 · EOC 0.5 · ECR 0 · EE 0.0732 · steps 42 · tokens 1,529,218
 - **raw 日志**：[results/1013_2217_inorder4-v3b52/raw/1013_2218_trainticket-performance-34](../results/1013_2217_inorder4-v3b52/raw/1013_2218_trainticket-performance-34/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts: ts-ui-dashboard LATENCY_DEGRADATION [Slow Response] p90 0.00ms->194400.00ms (Peak 273840.30ms) plus ts-auth-service LATENCY_MISSING (a metric hole only: ts-auth-service's own logs show [getToken][success] logins in ~100ms inside the injection window, so it is not the fault). The dashboard (entry nginx) returned 504 'upstream timed out (110) while reading response header from upstream, upstream http://10.68.32.132:18888/...' only for POST /api/v1/preserveservice/preserve while contacts/travel/assurance/login all returned 200 within the same instants -> the slowdown is confined to the pr
+
+### case-35
+
+- **结论**：`app/ts-basic-service` + `pod_network_delay` ｜ 标签 `app/ts-basic-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 111,650
+- **raw 日志**：[results/1013_2229_inorder4-v3b53/raw/1013_2231_trainticket-performance-35](../results/1013_2229_inorder4-v3b53/raw/1013_2231_trainticket-performance-35/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (6 rows, same window 22:28:53~22:31:28) name ts-basic-service as the epicenter: it is the only latency row moving BOTH percentiles (p50 38.97->6833.33ms +17434.4%, p90 53.89->9366.67ms +17281.4%) with the steepest p90 escalation; the other four latency rows move p90 only (ts-gateway-service +1626.8%, ts-travel-service +1445.6%, ts-ui-dashboard +1637.7%) or less steeply (ts-preserve-service), i.e. partial-traffic ripples. Topology closes it: every flagged service is a path through ts-basic-service (gateway->basic, preserve->basic, travel->basic, ui-dashboard->gateway->basic), while gatew
 

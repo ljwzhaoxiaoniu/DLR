@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **29/40** 题：JRA ✅29 ❌0 ｜ 证据链全闭 29 ｜ token 中位 125,844 ｜ 生成 2026-10-13T14:29:10.547Z
+> 本家族已跑 **30/40** 题：JRA ✅30 ❌0 ｜ 证据链全闭 30 ｜ token 中位 125,844 ｜ 生成 2026-10-13T14:35:03.877Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -36,6 +36,7 @@
 | [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 134,232 | 0 | 0 | 1013_2210_inorder4-v3b50 | 全对·链闭 |
 | [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 89,399 | 0 | 0 | 1013_2214_inorder4-v3b51 | 全对·链闭 |
 | [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 125,901 | 0 | 0 | 1013_2217_inorder4-v3b52 | 全对·链闭 |
+| [30](#case-30) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 99,048 | 0 | 0 | 1013_2229_inorder4-v3b53 | 全对·链闭 |
 
 ## 证据正文
 
@@ -241,4 +242,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 125,901
 - **raw 日志**：[results/1013_2217_inorder4-v3b52/raw/1013_2217_boutique-infrastructure-29](../results/1013_2217_inorder4-v3b52/raw/1013_2217_boutique-infrastructure-29/)（ndjson / mcp.jsonl / meta）
 - **摘要**：shippingservice is unreachable (CheckServiceConnectivity shippingservice:50051 = Connection Failed; endpoints/shippingservice = <none>) because its only pod shippingservice-7ff54bf6b6-5b4tc is stuck Pending, 0/1, with no node assigned and ZERO events - i.e. no FailedScheduling reason at all, meaning nothing ever attempted to bind it. The node side is clean: all three workers are Ready, untainted (taints []) with abundant allocatable (8 CPU / ~15Gi each), and the pod's spec carries no nodeSelector/affinity/tolerations. The break is on the control plane: CheckNodeServiceStatus(master, kube-sched
+
+### case-30
+
+- **结论**：`node/worker-01` + `kubelet_unavailable` ｜ 标签 `node/worker-01` + `kubelet_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 16 · tokens 99,048
+- **raw 日志**：[results/1013_2229_inorder4-v3b53/raw/1013_2230_boutique-infrastructure-30](../results/1013_2229_inorder4-v3b53/raw/1013_2230_boutique-infrastructure-30/)（ndjson / mcp.jsonl / meta）
+- **摘要**：worker-01's kubelet is dead: CheckNodeServiceStatus(worker-01, kubelet) shows 'inactive (dead) since Fri 2025-12-05 15:03:23 CST', its log ending mid-sync of boutique/adservice-69ccdc578f-7qkqh ('No sandbox for pod can be found' then 'Stopped Kubernetes Kubelet'), while worker-02's kubelet is active. GetClusterConfiguration shows worker-01 status Unknown with taints node.kubernetes.io/unreachable:NoSchedule/NoExecute while master/worker-02/worker-03 are Ready, and the namespace event surface carries five 'NodeNotReady' warnings for exactly the pods on worker-01. The reachability symptom matche
 
