@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **24/40** 题：JRA ✅24 ❌0 ｜ 证据链全闭 24 ｜ token 中位 127,753 ｜ 生成 2026-10-13T13:56:26.531Z
+> 本家族已跑 **25/40** 题：JRA ✅25 ❌0 ｜ 证据链全闭 25 ｜ token 中位 113,077 ｜ 生成 2026-10-13T14:05:31.873Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -31,6 +31,7 @@
 | [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1429 | 22 | 155,346 | 0 | 0 | 1013_2143_inf22-verify2 | 全对·链闭 |
 | [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 92,595 | 0 | 0 | 1013_2141_inorder4-v3b46 | 全对·链闭 |
 | [24](#case-24) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.2308 | 14 | 88,573 | 0 | 0 | 1013_2150_inorder4-v3b47 | 全对·链闭 |
+| [25](#case-25) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.1875 | 17 | 113,077 | 0 | 0 | 1013_2156_inorder4-v3b48 | 全对·链闭 |
 
 ## 证据正文
 
@@ -201,4 +202,11 @@
 - **流程**：MC 1 · EOC 0.6667 · ECR 1 · EE 0.2308 · steps 14 · tokens 88,573
 - **raw 日志**：[results/1013_2150_inorder4-v3b47/raw/1013_2152_boutique-infrastructure-24](../results/1013_2150_inorder4-v3b47/raw/1013_2152_boutique-infrastructure-24/)（ndjson / mcp.jsonl / meta）
 - **摘要**：frontend pod frontend-c884c5787-lnqxr is the lone outlier (0/1 Pending, Node <none>, Events: <none>, no '0/N nodes are available' condition) while all other boutique pods are 1/1 Running; frontend deployment reads 0/1 UP-TO-DATE=1 AVAILABLE=0. All three workers are Ready, untainted, no pressure, with ~8 CPU/15Gi allocatable (GetClusterConfiguration), so cordon/taint/capacity/affinity classes are excluded and nothing on the node side blocked it. CheckNodeServiceStatus(master, kube-scheduler) shows 'Active: inactive (dead)' with 'Stopped Kubernetes Scheduler' and 'Requested to terminate, exiting
+
+### case-25
+
+- **结论**：`node/master` + `kube_scheduler_unavailable` ｜ 标签 `node/master` + `kube_scheduler_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.6667 · ECR 1 · EE 0.1875 · steps 17 · tokens 113,077
+- **raw 日志**：[results/1013_2156_inorder4-v3b48/raw/1013_2157_boutique-infrastructure-25](../results/1013_2156_inorder4-v3b48/raw/1013_2157_boutique-infrastructure-25/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side: CheckServiceConnectivity(paymentservice:50051) = 'Connection Failed' and Service paymentservice shows empty Endpoints, while the other 10 boutique services are reachable ('Partial' unreachability). Object layer: the only outlier pod is paymentservice-78c5996648-hn8w6, 0/1 Pending for 82s with Node=<none>; DescribeResource shows Status Pending, Node <none> and Events: <none> - no '0/N nodes are available' scheduling condition at all, i.e. no scheduling attempt was ever made; deployment paymentservice is 0/1 available with 1 up-to-date (replicas not zero). Node layer: GetClusterCon
 

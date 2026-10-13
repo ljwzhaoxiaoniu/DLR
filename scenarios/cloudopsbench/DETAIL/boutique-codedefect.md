@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **25/98** 题：JRA ✅24 ❌1 ｜ 证据链全闭 24 ｜ token 中位 245,322 ｜ 生成 2026-10-13T13:56:26.531Z
+> 本家族已跑 **26/98** 题：JRA ✅26 ❌0 ｜ 证据链全闭 26 ｜ token 中位 248,815 ｜ 生成 2026-10-13T14:05:31.873Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -30,8 +30,9 @@
 | [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 149,851 | 0 | 0 | 1013_2110_inorder4-v3b43 | 全对·链闭 |
 | [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 325,537 | 0 | 0 | 1013_2114_inorder4-v3b44 | 全对·链闭 |
 | [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 330,738 | 0 | 0 | 1013_2133_inorder4-v3b45 | 全对·链闭 |
-| [24](#case-24) | 0 | 0 | 0 | 0.8 | 0.4 | 0 | 0.1538 | 27 | 333,623 | 0 | 0 | 1013_2150_cod24-verify1 | 未命中 |
+| [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1724 | 30 | 514,584 | 0 | 0 | 1013_2200_cod24-verify2 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 26 | 446,652 | 0 | 0 | 1013_2150_inorder4-v3b47 | 全对·链闭 |
+| [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 26 | 374,809 | 0 | 0 | 1013_2156_inorder4-v3b48 | 全对·链闭 |
 
 ## 证据正文
 
@@ -198,10 +199,10 @@
 
 ### case-24
 
-- **结论**：`node/worker-02` + `node_network_delay` ｜ 标签 `app/checkoutservice` + `code_wrong_return`（✗ 与标签不符）
-- **流程**：MC 0.8 · EOC 0.4 · ECR 0 · EE 0.1538 · steps 27 · tokens 333,623
-- **raw 日志**：[results/1013_2150_cod24-verify1/raw/1013_2150_boutique-codedefect-24](../results/1013_2150_cod24-verify1/raw/1013_2150_boutique-codedefect-24/)（ndjson / mcp.jsonl / meta）
-- **摘要**：All 11 boutique workloads read 2/2 Running with 0 restarts and no Pending/pull/mount failures, so the break is not scheduling/startup/config. The symptom side localizes to the checkoutservice outbound edge: frontend error logs carry 197/6198 (3.18%) POST /cart/checkout failures with 'rpc error: code = Internal desc = failed to charge card: connect error', and the alert flags emailservice ABNORMAL / AVAILABILITY_MISSING (success_rate vanished). Both implicated callees sit on worker-02 (paymentservice 172.20.2.62, emailservice 172.20.2.61) while the caller checkoutservice runs on worker-01. Thei
+- **结论**：`app/checkoutservice` + `code_wrong_return` ｜ 标签 `app/checkoutservice` + `code_wrong_return`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1724 · steps 30 · tokens 514,584
+- **raw 日志**：[results/1013_2200_cod24-verify2/raw/1013_2200_boutique-codedefect-24](../results/1013_2200_cod24-verify2/raw/1013_2200_boutique-codedefect-24/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All pods 2/2 Running with 0 restarts, all Service endpoints bound, and connectivity to emailservice:5000 and paymentservice:50051 both open, so no scheduling/startup/transport fault exists. The break is on the checkoutservice->paymentservice charge edge: frontend logs 'failed to complete the order: rpc error: code = Internal desc = failed to charge card: connect error.' while paymentservice simultaneously logs successful charges ('Transaction processed: visa ending 0013 ... 16:51:24.068' against the frontend error at 16:51:24.069). The code surface confirms it: checkoutservice/main.go chargeCa
 
 ### case-25
 
@@ -209,4 +210,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 26 · tokens 446,652
 - **raw 日志**：[results/1013_2150_inorder4-v3b47/raw/1013_2150_boutique-codedefect-25](../results/1013_2150_inorder4-v3b47/raw/1013_2150_boutique-codedefect-25/)（ndjson / mcp.jsonl / meta）
 - **摘要**：frontend error logs carry 176x 'POST /cart/checkout -> failed to complete the order: rpc error: code = Internal desc = failed to charge card: charge card error.' while the object layer is clean (all 11 pods Running 2/2, RESTARTS 0). The dependency walk (frontend -> checkoutservice -> paymentservice) plus the downstream reads exonerate the callees: paymentservice error logs are empty, its charge.js/server.js are pristine, its log stream shows continuous successes ('Transaction processed: visa ending ...'), and its 50051 port is reachable; emailservice is healthy too (error logs empty, normal 'r
+
+### case-26
+
+- **结论**：`app/checkoutservice` + `code_wrong_return` ｜ 标签 `app/checkoutservice` + `code_wrong_return`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 26 · tokens 374,809
+- **raw 日志**：[results/1013_2156_inorder4-v3b48/raw/1013_2157_boutique-codedefect-26](../results/1013_2156_inorder4-v3b48/raw/1013_2157_boutique-codedefect-26/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Caller-side trail localizes the break on the checkoutservice -> paymentservice charge edge: frontend logs 193x POST /cart/checkout 500 with 'failed to complete the order: rpc error: code = Internal desc = failed to charge card: charge card error.', while paymentservice logs show charges succeeding ('Transaction processed: visa ending 5734 ...') and checkoutservice's error logs are empty; emailservice requests stop at 12:01:36 (orders die before the confirmation-email step) and all endpoints bind normally (emailservice 172.20.2.203:8080, paymentservice 172.20.2.202:50051; CheckServiceConnectivi
 

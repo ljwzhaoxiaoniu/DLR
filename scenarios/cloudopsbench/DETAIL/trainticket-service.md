@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **31/37** 题：JRA ✅31 ❌0 ｜ 证据链全闭 31 ｜ token 中位 522,118 ｜ 生成 2026-10-13T13:56:26.531Z
+> 本家族已跑 **32/37** 题：JRA ✅32 ❌0 ｜ 证据链全闭 32 ｜ token 中位 522,118 ｜ 生成 2026-10-13T14:05:31.873Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -38,6 +38,7 @@
 | [30](#case-30) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 21 | 522,118 | 0 | 0 | 1013_2133_inorder4-v3b45 | 全对·链闭 |
 | [31](#case-31) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 500,404 | 0 | 0 | 1013_2141_inorder4-v3b46 | 全对·链闭 |
 | [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 26 | 984,705 | 0 | 0 | 1013_2150_inorder4-v3b47 | 全对·链闭 |
+| [33](#case-33) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 21 | 366,893 | 0 | 0 | 1013_2156_inorder4-v3b48 | 全对·链闭 |
 
 ## 证据正文
 
@@ -257,4 +258,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 26 · tokens 984,705
 - **raw 日志**：[results/1013_2150_inorder4-v3b47/raw/1013_2153_trainticket-service-32](../results/1013_2150_inorder4-v3b47/raw/1013_2153_trainticket-service-32/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Only one object-layer outlier exists in train-ticket: pod ts-seat-service-594847b77f-rsbbh is 0/2 Running with 4 restarts and its Service ts-seat-service (18898) has an EMPTY endpoints list (availability disruption). Its own logs show startup death at registration: 'NacosServiceRegistry: nacos registry, ts-seat-service register failed ... NacosException: Client not connected, current status:STARTING' -> 'Application run failed', container Last State Terminated Reason Error Exit Code 1, Restart Count 4; the co-located istio-proxy shows the same root form of failure - name resolution timeouts: '
+
+### case-33
+
+- **结论**：`app/ts-security-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-security-service` + `service_dns_resolution_failure`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3 · steps 21 · tokens 366,893
+- **raw 日志**：[results/1013_2156_inorder4-v3b48/raw/1013_2158_trainticket-service-33](../results/1013_2156_inorder4-v3b48/raw/1013_2158_trainticket-service-33/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 47 pods in train-ticket are 2/2 Running except ts-security-service-865558cd4f-g2hs7 (0/2, Error, RESTARTS 4, worker-01); synthetic alert reports HTTP 500 on 'Create ticket order' via ts-preserve-service, which calls ts-security-service. The victim's own signals: CheckServiceConnectivity on ts-security-service:11188 (its declared spec port) fails from all three workers, and endpoints ts-security-service has an empty ENDPOINTS list. Pod record shows the app container Terminated Reason=Error Exit Code 1, and previous logs give the mechanism verbatim: java.net.UnknownHostException: tsdb-mysql-
 
