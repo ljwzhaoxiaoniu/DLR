@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **33/40** 题：JRA ✅33 ❌0 ｜ 证据链全闭 33 ｜ token 中位 123,672 ｜ 生成 2026-10-13T14:48:34.071Z
+> 本家族已跑 **34/40** 题：JRA ✅34 ❌0 ｜ 证据链全闭 34 ｜ token 中位 125,844 ｜ 生成 2026-10-13T14:52:31.865Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -40,6 +40,7 @@
 | [31](#case-31) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 99,780 | 0 | 0 | 1013_2235_inorder4-v3b54 | 全对·链闭 |
 | [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 140,955 | 0 | 0 | 1013_2240_inorder4-v3b55 | 全对·链闭 |
 | [33](#case-33) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 123,672 | 0 | 0 | 1013_2245_inorder4-v3b56 | 全对·链闭 |
+| [34](#case-34) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 127,753 | 0 | 0 | 1013_2249_inorder4-v3b57 | 全对·链闭 |
 
 ## 证据正文
 
@@ -273,4 +274,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2778 · steps 19 · tokens 123,672
 - **raw 日志**：[results/1013_2245_inorder4-v3b56/raw/1013_2245_boutique-infrastructure-33](../results/1013_2245_inorder4-v3b56/raw/1013_2245_boutique-infrastructure-33/)（ndjson / mcp.jsonl / meta）
 - **摘要**：currencyservice Service has <none> endpoints and a connectivity probe on its declared port 7000 fails; frontend logs carry 404x 'could not retrieve currencies: rpc error: code = Unavailable ... dial tcp 10.68.127.51:7000: connect: connection refused'. Its pod currencyservice-769fddbbdd-z2bjw is stuck 0/1 ContainerCreating on worker-02 (PodScheduled=True, no mount/image/probe events). worker-02 shows Ready=Unknown with reason NodeStatusUnknown 'Kubelet stopped posting node status.', unreachable:NoSchedule/NoExecute taints and a NodeNotReady event; CheckNodeServiceStatus(worker-02, kubelet) repo
+
+### case-34
+
+- **结论**：`node/worker-01` + `kubelet_unavailable` ｜ 标签 `node/worker-01` + `kubelet_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 127,753
+- **raw 日志**：[results/1013_2249_inorder4-v3b57/raw/1013_2249_boutique-infrastructure-34](../results/1013_2249_inorder4-v3b57/raw/1013_2249_boutique-infrastructure-34/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods show Running 1/1 with 0 restarts and no alerts, yet Endpoints are selectively empty: adservice, currencyservice, paymentservice, recommendationservice, shippingservice have NO endpoints while cartservice/checkoutservice/frontend/productcatalogservice/redis-cart/emailservice are bound. The split is exactly node-shaped: every pod on worker-01 is unreachable, every pod on worker-02 is fine — hence 'Partial'. worker-01 is NotReady with Ready=Unknown, Reason=NodeStatusUnknown, Message='Kubelet stopped posting node status.', and carries node.kubernetes.io/unreachable:NoSchedule/
 

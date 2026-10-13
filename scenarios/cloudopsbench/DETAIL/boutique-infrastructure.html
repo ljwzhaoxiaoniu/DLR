@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/infrastructure</em></h1>
-<p class="deck">已跑 <b>33/40</b> 题：JRA ✅33 ❌0 ｜ 证据链全闭 33 ｜ token 中位 123,672 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:48:34.071Z</p>
+<p class="deck">已跑 <b>34/40</b> 题：JRA ✅34 ❌0 ｜ 证据链全闭 34 ｜ token 中位 125,844 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:52:31.865Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>96,876</td><td>0</td><td>0</td><td class="muted">1012_1458_l3-verify3</td><td><a href="../results/1012_1458_l3-verify3/raw/1012_1459_boutique-infrastructure-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1459_boutique-infrastructure-1</a></td></tr>
@@ -49,6 +49,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-31"><code>31</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2941</td><td>18</td><td>99,780</td><td>0</td><td>0</td><td class="muted">1013_2235_inorder4-v3b54</td><td><a href="../results/1013_2235_inorder4-v3b54/raw/1013_2235_boutique-infrastructure-31/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2235_boutique-infrastructure-31</a></td></tr>
 <tr><td><a href="#case-32"><code>32</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2778</td><td>19</td><td>140,955</td><td>0</td><td>0</td><td class="muted">1013_2240_inorder4-v3b55</td><td><a href="../results/1013_2240_inorder4-v3b55/raw/1013_2240_boutique-infrastructure-32/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2240_boutique-infrastructure-32</a></td></tr>
 <tr><td><a href="#case-33"><code>33</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2778</td><td>19</td><td>123,672</td><td>0</td><td>0</td><td class="muted">1013_2245_inorder4-v3b56</td><td><a href="../results/1013_2245_inorder4-v3b56/raw/1013_2245_boutique-infrastructure-33/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2245_boutique-infrastructure-33</a></td></tr>
+<tr><td><a href="#case-34"><code>34</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1667</td><td>19</td><td>127,753</td><td>0</td><td>0</td><td class="muted">1013_2249_inorder4-v3b57</td><td><a href="../results/1013_2249_inorder4-v3b57/raw/1013_2249_boutique-infrastructure-34/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2249_boutique-infrastructure-34</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>node/worker-01</code> + <code>containerd_unavailable</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
@@ -1544,6 +1545,51 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
    &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-34"><summary><b>case-34</b> · <code>node/worker-01</code> + <code>kubelet_unavailable</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 19 步</summary><ul>
+<li><b>摘要</b>：All 11 boutique pods show Running 1/1 with 0 restarts and no alerts, yet Endpoints are selectively empty: adservice, currencyservice, paymentservice, recommendationservice, shippingservice have NO endpoints while cartservice/checkoutservice/frontend/productcatalogservice/redis-cart/emailservice are bound. The split is exactly node-shaped: every pod on worker-01 is unreachable, every pod on worker-02 is fine — hence 'Partial'. worker-01 is NotReady with Ready=Unknown, Reason=NodeStatusUnknown, Message='Kubelet stopped posting node status.', and carries node.kubernetes.io/unreachable:NoSchedule/</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2249_inorder4-v3b57/raw/1013_2249_boutique-infrastructure-34/">results/1013_2249_inorder4-v3b57/raw/1013_2249_boutique-infrastructure-34</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;nodes&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>10</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;node&quot;,&quot;name&quot;:&quot;worker-01&quot;}</code></td></tr>
+<tr><td>11</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+<tr><td>12</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;containerd&quot;}</code></td></tr>
+<tr><td>13</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>14</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>16</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:9555,&quot;service_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>17</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:7000,&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>18</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:7070,&quot;service_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All 11 boutique pods show Running 1/1 with 0 restarts and no alerts, yet Endpoints are selectively empty: adservice, currencyservice, paymentservice, recommendationservice, shippingservice have NO endpoints while cartservice/checkoutservice/frontend/productcatalogservice/redis-cart/emailservice are bound. The split is exactly node-shaped: every pod on worker-01 is unreachable, every pod on worker-02 is fine — hence 'Partial'. worker-01 is NotReady with Ready=Unknown, Reason=NodeStatusUnknown, Message='Kubelet stopped posting node status.', and carries node.kubernetes.io/unreachable:NoSchedule/NoExecute taints (GetClusterConfiguration shows status Unknown). CheckNodeServiceStatus(worker-01, kubelet) returns 'Active: inactive (dead) since 15:33:56' with journal tail 'Stopping Kubernetes Kubelet... / Deactivated successfully. / Stopped Kubernetes Kubelet.', while the same node's containerd and kube-proxy are both 'active (running)' (worker-02 kubelet is active for contrast). Namespace events bind the mechanism verbatim to the affected objects: five 'Warning NodeNotReady pod/&lt;adservice|currencyservice|paymentservice|recommendationservice|shippingservice&gt; Node is not ready' lines matching the kubelet stop time. Live probes on the Services' declared ports reproduce it: adservice:9555 Connection Failed, currencyservice:7000 Connection Failed, cartservice:7070 (worker-02) open. Chain: kubelet stopped -&gt; node heartbeat lost -&gt; unreachable taints -&gt; endpoint controller drops worker-01 pod IPs -&gt; empty Endpoints -&gt; partial service unreachability. A FailedCreate 'serviceaccount emailservice not found' event is stale setup history (the emailservice pod exists and is 1/1 Running with endpoints bound), so the admission story is dropped.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;node/worker-01&quot;,
+   &quot;root_cause&quot;: &quot;kubelet_unavailable&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;node/worker-01&quot;,
+   &quot;root_cause&quot;: &quot;containerd_unavailable&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;node/worker-01&quot;,
+   &quot;root_cause&quot;: &quot;kube_proxy_unavailable&quot;
   }
  ]
 }</pre>

@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/performance</em></h1>
-<p class="deck">已跑 <b>38/47</b> 题：JRA ✅37 ❌1 ｜ 证据链全闭 37 ｜ token 中位 301,957 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:48:34.071Z</p>
+<p class="deck">已跑 <b>39/47</b> 题：JRA ✅38 ❌1 ｜ 证据链全闭 38 ｜ token 中位 301,957 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:52:31.865Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1429</td><td>36</td><td>442,283</td><td>0</td><td>1</td><td class="muted">1012_1512_inorder4-v3b3</td><td><a href="../results/1012_1512_inorder4-v3b3/raw/1012_1516_trainticket-performance-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1516_trainticket-performance-1</a></td></tr>
@@ -54,6 +54,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-36"><code>36</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2727</td><td>12</td><td>264,687</td><td>0</td><td>0</td><td class="muted">1013_2235_inorder4-v3b54</td><td><a href="../results/1013_2235_inorder4-v3b54/raw/1013_2236_trainticket-performance-36/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2236_trainticket-performance-36</a></td></tr>
 <tr><td><a href="#case-37"><code>37</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>21</td><td>223,685</td><td>0</td><td>0</td><td class="muted">1013_2240_inorder4-v3b55</td><td><a href="../results/1013_2240_inorder4-v3b55/raw/1013_2241_trainticket-performance-37/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2241_trainticket-performance-37</a></td></tr>
 <tr><td><a href="#case-38"><code>38</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2308</td><td>14</td><td>461,392</td><td>0</td><td>0</td><td class="muted">1013_2245_inorder4-v3b56</td><td><a href="../results/1013_2245_inorder4-v3b56/raw/1013_2246_trainticket-performance-38/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2246_trainticket-performance-38</a></td></tr>
+<tr><td><a href="#case-39"><code>39</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1667</td><td>19</td><td>540,637</td><td>0</td><td>0</td><td class="muted">1013_2249_inorder4-v3b57</td><td><a href="../results/1013_2249_inorder4-v3b57/raw/1013_2250_trainticket-performance-39/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2250_trainticket-performance-39</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/ts-basic-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 36 步</summary><ul>
@@ -1766,6 +1767,51 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;node/worker-02&quot;,
    &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-39"><summary><b>case-39</b> · <code>app/ts-order-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 19 步</summary><ul>
+<li><b>摘要</b>：17 alerts in window 23:39:22-23:41:12: system-wide TRAFFIC_ANOMALY[Network Drop] plus LATENCY_DEGRADATION/THROUGHPUT_DROP, with NO RESOURCE_SATURATION row (not a saturation surface) and no restart/OOM/FailedScheduling/FailedMount mechanism events. Percentile shape isolates the epicenter: ts-gateway-service and ts-ui-dashboard moved only p90 (partial-traffic ripples), while ts-order-service (p50 308ms-&gt;9844ms, p90 2061ms-&gt;25875ms), ts-seat-service, ts-travel-service, ts-preserve-service and ts-security-service moved both p50 and p90. GetServiceDependencies shows ts-order-service is the deepest </li>
+<li><b>raw 日志</b>：<a href="../results/1013_2249_inorder4-v3b57/raw/1013_2250_trainticket-performance-39/">results/1013_2249_inorder4-v3b57/raw/1013_2250_trainticket-performance-39</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-security-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>17</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;17 alerts in window 23:39:22-23:41:12: system-wide TRAFFIC_ANOMALY[Network Drop] plus LATENCY_DEGRADATION/THROUGHPUT_DROP, with NO RESOURCE_SATURATION row (not a saturation surface) and no restart/OOM/FailedScheduling/FailedMount mechanism events. Percentile shape isolates the epicenter: ts-gateway-service and ts-ui-dashboard moved only p90 (partial-traffic ripples), while ts-order-service (p50 308ms-&gt;9844ms, p90 2061ms-&gt;25875ms), ts-seat-service, ts-travel-service, ts-preserve-service and ts-security-service moved both p50 and p90. GetServiceDependencies shows ts-order-service is the deepest node ('No confirmed downstream calls'), and every other both-percentile latency row is its direct or transitive caller (seat-&gt;order, security-&gt;order, preserve-&gt;{travel,seat,order,security}, travel-&gt;seat, gateway-&gt;*, dashboard-&gt;gateway), with delay accumulating up the chain (order +9.5s, seat +11.5s, travel +18.4s, preserve +41s) - so ts-seat-service is excluded because its own callee ts-order-service is equally loud (no quiet intermediate hop), leaving ts-order-service as the only self-consistent source: a constant added delay on its own pod network path with no monitored downstream to blame and no saturation. Object layer is clean (all pods Running/2-2, RESTARTS 0 except the entry ripple on ts-ui-dashboard; nodes Ready, no taints, no FailedScheduling/FailedMount/image-pull/OOM), and worker-03 neighbours of ts-order-service (travel-plan, auth, rebook, inside-payment, consign, ticket-office) show no latency at all, excluding a node-scope network fault. Caller-side log closes it: ts-ui-dashboard nginx 'upstream timed out (110) while reading response header from upstream ... POST /api/v1/preserveservice/preserve -&gt; 10.68.108.52:18888'. ts-order-service logs show successful business operations with zero error logs, ruling out MySQL credential/port/connection-exhaustion causes and confirming a network-path delay.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-seat-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-travel-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
   }
  ]
 }</pre>

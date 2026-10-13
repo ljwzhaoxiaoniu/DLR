@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **19/96** 题：JRA ✅19 ❌0 ｜ 证据链全闭 19 ｜ token 中位 517,218 ｜ 生成 2026-10-13T14:48:34.071Z
+> 本家族已跑 **20/96** 题：JRA ✅20 ❌0 ｜ 证据链全闭 20 ｜ token 中位 519,918 ｜ 生成 2026-10-13T14:52:31.865Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -26,6 +26,7 @@
 | [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.125 | 25 | 613,053 | 0 | 0 | 1013_2235_inorder4-v3b54 | 全对·链闭 |
 | [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 193,963 | 0 | 0 | 1013_2240_inorder4-v3b55 | 全对·链闭 |
 | [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1071 | 29 | 389,833 | 0 | 0 | 1013_2245_inorder4-v3b56 | 全对·链闭 |
+| [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 519,918 | 0 | 0 | 1013_2249_inorder4-v3b57 | 全对·链闭 |
 
 ## 证据正文
 
@@ -161,4 +162,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1071 · steps 29 · tokens 389,833
 - **raw 日志**：[results/1013_2245_inorder4-v3b56/raw/1013_2246_trainticket-runtime-19](../results/1013_2245_inorder4-v3b56/raw/1013_2246_trainticket-runtime-19/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom-side first: ts-preserve-service logs 'java.lang.IllegalArgumentException: Service Instance cannot be null' (a downstream call resolving to no instance), with alerts on /preserveservice/preserve (10x 500). The namespace pod inventory has no outlier except the complete absence of any ts-food-service pod while all other ts-* workloads run 2/2. Probing every downstream of ts-preserve-service on the port its Service declares: all 9 others (ts-basic 15680, ts-security 11188, ts-contacts 12347, ts-user 12342, ts-travel 12346, ts-seat 18898, ts-assurance 18888, ts-consign 16111, ts-order 12031
+
+### case-20
+
+- **结论**：`app/ts-gateway-service` + `deployment_zero_replicas` ｜ 标签 `app/ts-gateway-service` + `deployment_zero_replicas`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2353 · steps 18 · tokens 519,918
+- **raw 日志**：[results/1013_2249_inorder4-v3b57/raw/1013_2250_trainticket-runtime-20](../results/1013_2249_inorder4-v3b57/raw/1013_2250_trainticket-runtime-20/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side first: ts-ui-dashboard caller logs repeat 'POST /api/v1/users/login HTTP/1.1" 503' (alert: 30x HTTPError 503 Service Unavailable on /api/v1/users/login), while connectivity probes show ts-auth-service:12340 open from worker-01/02/03 but ts-gateway-service:18888 Connection Failed from all three nodes. Object-layer scan shows the single outlier: deployment ts-gateway-service is 0/0 (UP-TO-DATE 0, AVAILABLE 0) while all other 43 workloads are 1/1, and endpoints list shows 'ts-gateway-service <none>' whereas every other service has bound endpoint IPs. Mechanism event (named on the obj
 

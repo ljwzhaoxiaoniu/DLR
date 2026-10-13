@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **38/47** 题：JRA ✅37 ❌1 ｜ 证据链全闭 37 ｜ token 中位 301,957 ｜ 生成 2026-10-13T14:48:34.071Z
+> 本家族已跑 **39/47** 题：JRA ✅38 ❌1 ｜ 证据链全闭 38 ｜ token 中位 301,957 ｜ 生成 2026-10-13T14:52:31.865Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -45,6 +45,7 @@
 | [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 264,687 | 0 | 0 | 1013_2235_inorder4-v3b54 | 全对·链闭 |
 | [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 21 | 223,685 | 0 | 0 | 1013_2240_inorder4-v3b55 | 全对·链闭 |
 | [38](#case-38) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 461,392 | 0 | 0 | 1013_2245_inorder4-v3b56 | 全对·链闭 |
+| [39](#case-39) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 540,637 | 0 | 0 | 1013_2249_inorder4-v3b57 | 全对·链闭 |
 
 ## 证据正文
 
@@ -313,4 +314,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2308 · steps 14 · tokens 461,392
 - **raw 日志**：[results/1013_2245_inorder4-v3b56/raw/1013_2246_trainticket-performance-38](../results/1013_2245_inorder4-v3b56/raw/1013_2246_trainticket-performance-38/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts name ts-inside-payment-service as the epicenter: LATENCY_DEGRADATION with BOTH percentiles moving (p50 363.23ms -> 8333.33ms, +2194.2%; p90 6184.73ms -> 22000.00ms, +255.7%) plus an INBOUND TRAFFIC SURGE (23.35pps -> 55.80pps, +139.0%). The second alert (ts-order-service, RESOURCE_SATURATION [cpu_cfs] 0.435s Throttled) is a bare saturation row with NO latency of its own, and ts-order-service is the epicenter's direct downstream neighbour (GetServiceDependencies: ts-inside-payment-service -> ts-payment-service, ts-order-service, ts-order-other-service) whose server-side latency stays cle
+
+### case-39
+
+- **结论**：`app/ts-order-service` + `pod_network_delay` ｜ 标签 `app/ts-order-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 540,637
+- **raw 日志**：[results/1013_2249_inorder4-v3b57/raw/1013_2250_trainticket-performance-39](../results/1013_2249_inorder4-v3b57/raw/1013_2250_trainticket-performance-39/)（ndjson / mcp.jsonl / meta）
+- **摘要**：17 alerts in window 23:39:22-23:41:12: system-wide TRAFFIC_ANOMALY[Network Drop] plus LATENCY_DEGRADATION/THROUGHPUT_DROP, with NO RESOURCE_SATURATION row (not a saturation surface) and no restart/OOM/FailedScheduling/FailedMount mechanism events. Percentile shape isolates the epicenter: ts-gateway-service and ts-ui-dashboard moved only p90 (partial-traffic ripples), while ts-order-service (p50 308ms->9844ms, p90 2061ms->25875ms), ts-seat-service, ts-travel-service, ts-preserve-service and ts-security-service moved both p50 and p90. GetServiceDependencies shows ts-order-service is the deepest 
 

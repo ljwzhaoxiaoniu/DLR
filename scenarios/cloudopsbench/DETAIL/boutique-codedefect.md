@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **34/98** 题：JRA ✅34 ❌0 ｜ 证据链全闭 34 ｜ token 中位 325,537 ｜ 生成 2026-10-13T14:48:34.071Z
+> 本家族已跑 **35/98** 题：JRA ✅35 ❌0 ｜ 证据链全闭 35 ｜ token 中位 300,857 ｜ 生成 2026-10-13T14:52:31.865Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -41,6 +41,7 @@
 | [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1136 | 45 | 831,616 | 0 | 0 | 1013_2235_inorder4-v3b54 | 全对·链闭 |
 | [33](#case-33) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1111 | 46 | 1,073,129 | 0 | 0 | 1013_2240_inorder4-v3b55 | 全对·链闭 |
 | [34](#case-34) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 382,069 | 0 | 0 | 1013_2245_inorder4-v3b56 | 全对·链闭 |
+| [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1364 | 23 | 285,528 | 0 | 0 | 1013_2249_inorder4-v3b57 | 全对·链闭 |
 
 ## 证据正文
 
@@ -281,4 +282,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 382,069
 - **raw 日志**：[results/1013_2245_inorder4-v3b56/raw/1013_2245_boutique-codedefect-34](../results/1013_2245_inorder4-v3b56/raw/1013_2245_boutique-codedefect-34/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts point to frontend: RESOURCE_SATURATION [cpu_cfs] 1.170s throttled, [cpu] 0.01->0.13 cores (+1323.1%), LATENCY_DEGRADATION p50 20.39ms->2172.22ms (+10552.3%) plus 503s on / and /product/{id}. Object layer is clean (all boutique pods 2/2 Running, RESTARTS 0; nodes Ready, no taints/pressure), so the break is inside the frontend workload itself. Downstreams are healthy (adservice serving 'received ad request' steadily with no error logs; the 231 'failed to get ads' are the stock 100ms ad deadline, the rest are 'context canceled' = client giving up on slow frontend responses). Root cause fou
+
+### case-35
+
+- **结论**：`app/frontend` + `code_busy_loop` ｜ 标签 `app/frontend` + `code_busy_loop`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1364 · steps 23 · tokens 285,528
+- **raw 日志**：[results/1013_2249_inorder4-v3b57/raw/1013_2249_boutique-codedefect-35](../results/1013_2249_inorder4-v3b57/raw/1013_2249_boutique-codedefect-35/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Service Performance Degradation.' enters the telemetry chain (L2 consensus). GetAlerts shows entity=frontend for 11:40:25-11:43:00: RESOURCE_SATURATION [cpu_cfs] 1.204s throttled, CPU 0.01 -> 0.13 cores (+1506.3%), LATENCY_DEGRADATION p50 24.73ms -> 2235.31ms (+8939.2%); plus frontend-entry 503s. Object layer is excluded as a K8s fault: all 11 pods Running 2/2 with RESTARTS=0, no OOMKilled/Pending/probe kills; nodes all Ready with no Pressure/cordon. The break is in the frontend business code: handlers.go chooseAd() contains an injected busy-wait spin 'start := time.Now(); for { if ti
 
