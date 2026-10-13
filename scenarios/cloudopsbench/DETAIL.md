@@ -10,18 +10,18 @@
 | 家族 | 全量 | 已跑 | 剩余 | 覆盖 |
 |---|---|---|---|---|
 | boutique/admission | 58 | 6 | 52 | 10.3% |
-| boutique/codedefect | 98 | 8 | 90 | 8.2% |
-| boutique/infrastructure | 40 | 7 | 33 | 17.5% |
+| boutique/codedefect | 98 | 9 | 89 | 9.2% |
+| boutique/infrastructure | 40 | 8 | 32 | 20.0% |
 | boutique/performance | 29 | 6 | 23 | 20.7% |
 | boutique/runtime | 45 | 5 | 40 | 11.1% |
 | boutique/scheduling | 164 | 9 | 155 | 5.5% |
 | boutique/service | 54 | 4 | 50 | 7.4% |
 | boutique/startup | 62 | 4 | 58 | 6.5% |
-| train-ticket/performance | 47 | 8 | 39 | 17.0% |
+| train-ticket/performance | 47 | 9 | 38 | 19.1% |
 | train-ticket/runtime | 96 | 12 | 84 | 12.5% |
-| train-ticket/service | 37 | 10 | 27 | 27.0% |
+| train-ticket/service | 37 | 11 | 26 | 29.7% |
 | train-ticket/startup | 24 | 9 | 15 | 37.5% |
-| **合计** | **754** | **88** | **666** | **11.7%** |
+| **合计** | **754** | **92** | **662** | **12.2%** |
 
 ## 汇总（去重 · 取最新）
 
@@ -29,38 +29,38 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 88 / 88（100.0%） |
-| CA（组件命中） | 88 / 88（100.0%） |
-| FA（故障型命中） | 88 / 88（100.0%） |
-| ECR（证据链全闭） | 87 / 88（98.9%） |
+| JRA（联合命中） | 92 / 92（100.0%） |
+| CA（组件命中） | 92 / 92（100.0%） |
+| FA（故障型命中） | 92 / 92（100.0%） |
+| ECR（证据链全闭） | 90 / 92（97.8%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 0.9972 | 0.9811 | 0.9886 | 0.3003 | 18.8068 | 0.0005 | 0.0227 |
+| 0.9937 | 0.9783 | 0.9783 | 0.3004 | 18.8696 | 0.0005 | 0.0217 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 259,611 / 204,578 | 58,131 / 1,133,738 | 73% |
+| 266,054 / 204,578 | 58,131 / 1,133,738 | 73% |
 
 ## 分家族索引
 
 | 家族 | 全量 | 已跑 | JRA | 链全闭 | 明细 |
 |---|---|---|---|---|---|
 | boutique/admission | 58 | 6 | 6 | 5 | [boutique-admission.md](DETAIL/boutique-admission.md) |
-| boutique/codedefect | 98 | 8 | 8 | 8 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
-| boutique/infrastructure | 40 | 7 | 7 | 7 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
+| boutique/codedefect | 98 | 9 | 9 | 9 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
+| boutique/infrastructure | 40 | 8 | 8 | 8 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
 | boutique/performance | 29 | 6 | 6 | 6 | [boutique-performance.md](DETAIL/boutique-performance.md) |
 | boutique/runtime | 45 | 5 | 5 | 5 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
 | boutique/scheduling | 164 | 9 | 9 | 9 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
 | boutique/service | 54 | 4 | 4 | 4 | [boutique-service.md](DETAIL/boutique-service.md) |
 | boutique/startup | 62 | 4 | 4 | 4 | [boutique-startup.md](DETAIL/boutique-startup.md) |
-| train-ticket/performance | 47 | 8 | 8 | 8 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
+| train-ticket/performance | 47 | 9 | 9 | 9 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
 | train-ticket/runtime | 96 | 12 | 12 | 12 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
-| train-ticket/service | 37 | 10 | 10 | 10 | [trainticket-service.md](DETAIL/trainticket-service.md) |
+| train-ticket/service | 37 | 11 | 11 | 10 | [trainticket-service.md](DETAIL/trainticket-service.md) |
 | train-ticket/startup | 24 | 9 | 9 | 9 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
 
 ## 定性观察
@@ -115,6 +115,9 @@
 > **2026-10-13 · 轮次 1013_1546_inorder4-v3b21（批二十一 · 2 路续跑 · 4/4 六项全满）**：① 覆盖 84/754，**JRA 84/84**。② **网关条款第九连**：tt-service/10 `gateway_misrouted`（24 步全满）。③ boutique/codedefect/8 `code_busy_loop`（15 步）· infrastructure/7 `containerd_unavailable@worker-01`（12 步）· tt-performance/8 `pod_network_delay`（18 步）全满。④ **五连 20/20 六项全满**（批十七–二十一）——零重试。
 
 > **2026-10-13 · 轮次 1013_1628_inorder4-v3b22（批二十二 · 2 路续跑 · 4/4 六项全满）**：① 覆盖 88/754，**JRA 88/88**。② boutique/performance/6「latency increased」第三例 `pod_cpu_overload`（30 步全满——第六模板饱和分支三验稳）· scheduling/9 `node_cordon_mismatch`（19 步）· tt-runtime/12 `db_readonly_mode`（22 步）· tt-startup/9 `missing_secret_binding`（14 步）全满。③ **六连 24/24 六项全满**（批十七–二十二）——零重试。
+
+> **2026-10-13 · 轮次 1013_1633_inorder4-v3b23（批二十三 · 2 路续跑 · 3/4 六项全满 · 一例 ECR 0）**：① 覆盖 92/754，**JRA 92/92**。② **cod/9 判型试金石过**：`code_artificial_delay`（「Service Performance Degradation.」措辞下——代码面证实类；tt-perf/4 的镜像双胞胎方向，16 步六项全满）。③ inf/8 `containerd@worker-02`（12 步）· tt-perf/9 `pod_network_delay`（18 步）全满。④ **tt-service/11 破连**：JRA ✓（网关判型第十连）但 **M2 未读**——金标准 M2 唯一形态 = `GetAppYAML(ts-gateway-service)`（路由表载体）；本轮 34 步长链走偏到 payment/order 分支，读了 gateway 日志/端点/连通性/configmap 而未做该 YAML 读 → MC 0.667 · ECR 0（收口没走完类）。候选微修：§1 网关句钉「路由表读法 = gateway 自家 `GetAppYAML`」（待令，先记档）。⑤ 会话：ts-service/11 入档。
+
 
 
 

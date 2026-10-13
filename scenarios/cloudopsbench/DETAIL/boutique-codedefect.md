@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **8/98** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 181,778 ｜ 生成 2026-10-13T08:32:23.004Z
+> 本家族已跑 **9/98** 题：JRA ✅9 ❌0 ｜ 证据链全闭 9 ｜ token 中位 181,235 ｜ 生成 2026-10-13T08:37:23.454Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -15,6 +15,7 @@
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 163,551 | 0 | 1 | 1013_1413_inorder4-v3b15 | 全对·链闭 |
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 13 | 181,778 | 0 | 0 | 1013_1536_inorder4-v3b19 | 全对·链闭 |
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 254,844 | 0 | 0 | 1013_1623_inorder4-v3b21 | 全对·链闭 |
+| [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 166,187 | 0 | 0 | 1013_1633_inorder4-v3b23 | 全对·链闭 |
 
 ## 证据正文
 
@@ -65,4 +66,10 @@
 - **结论**：`app/checkoutservice` + `code_busy_loop` ｜ 标签 `app/checkoutservice` + `code_busy_loop`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 254,844
 - **摘要**：Alert on entity checkoutservice: RESOURCE_SATURATION [cpu_cfs] 0.380s throttled, CPU Normal=0.00 -> Current=0.07 cores (+4730%), and LATENCY_DEGRADATION p50 19.50ms -> 750.00ms (+3745.8%). Object layer excludes infra faults: all boutique pods 2/2 Running with RESTARTS 0; checkoutservice pod Ready=True, Restart Count 0, limits cpu 200m, grpc probes 5050 healthy; recent logs show successful PlaceOrder/payment/email flow with no error logs; dependency edges frontend->checkoutservice->{productcatalog,shipping,currency,payment,email,cart} intact. Code face reveals the break: checkoutservice main.go
+
+### case-9
+
+- **结论**：`app/checkoutservice` + `code_artificial_delay` ｜ 标签 `app/checkoutservice` + `code_artificial_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 166,187
+- **摘要**：Symptom 'Service Performance Degradation.' entered the telemetry chain (L2 qid12). The sole alert names entity checkoutservice with LATENCY_DEGRADATION: p50 19.07ms -> 3750.00ms (+19564%), p90 48.57ms -> 4750.00ms. Object-layer exclusion is clean: all 11 boutique pods are 2/2 Running with RESTARTS 0, GetErrorLogs(checkoutservice) is empty, CheckServiceConnectivity(checkoutservice:5050) succeeds, and namespace events show no scheduling/mount/image-pull/probe failures -> no object-layer break, so the break is in the application path of the alerted entity. Mechanism face: checkoutservice main.go 
 

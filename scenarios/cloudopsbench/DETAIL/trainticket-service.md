@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **10/37** 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 460,035 ｜ 生成 2026-10-13T08:32:23.004Z
+> 本家族已跑 **11/37** 题：JRA ✅11 ❌0 ｜ 证据链全闭 10 ｜ token 中位 460,035 ｜ 生成 2026-10-13T08:37:23.454Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -16,6 +16,7 @@
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 364,342 | 0 | 0 | 1013_1520_inorder4-v3b17 | 全对·链闭 |
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.35 | 21 | 295,786 | 0 | 0 | 1013_1536_inorder4-v3b19 | 全对·链闭 |
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2609 | 24 | 666,312 | 0 | 0 | 1013_1623_inorder4-v3b21 | 全对·链闭 |
+| [11](#case-11) | 1 | 1 | 1 | 0.6667 | 0.6667 | 0 | 0.2647 | 35 | 1,044,088 | 0 | 0 | 1013_1633_inorder4-v3b23 | 结果对·链未闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
 
 ## 证据正文
@@ -73,6 +74,12 @@
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2609 · steps 24 · tokens 666,312
 - **摘要**：All train-ticket workloads are 2/2 Running/Ready and every Service endpoint is bound, so the break is not at the workload or network layer. Reading the address layer: ConfigMap ts-gateway-service-config (owner ts-gateway-service) contains exactly one route whose uri does not match the service its Path names -- route id 'route' with Path=/api/v1/routeservice/** has uri lb://${PRICE_SERVICE_HOST:ts-price-service} (sibling 'price' route is Path=/api/v1/priceservice/** -> lb://ts-price-service), so it should be ${ROUTE_SERVICE_HOST:ts-route-service}. No route in the table targets ts-route-service 
+
+### case-11
+
+- **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
+- **流程**：MC 0.6667 · EOC 0.6667 · ECR 0 · EE 0.2647 · steps 35 · tokens 1,044,088
+- **摘要**：No service names itself in the symptom, so the inventory listing was the entry: all 45 workloads are 2/2 Running and the only outlier is ts-ui-dashboard (3 restarts). Endpoints listing shows every Service populated (ts-gateway-service 172.20.1.98:18888, ts-route-service 172.20.2.219:11178) and all Deployments are 1/1 AVAILABLE, and active TCP probes from worker-01/02/03 succeed to ts-gateway-service:18888, ts-inside-payment-service:18673, ts-payment-service:19001 and ts-ui-dashboard:8080 -- so the break is not L3/L4 reachability, endpoints, replicas or capacity. The alert's caller-side complai
 
 ### case-25
 

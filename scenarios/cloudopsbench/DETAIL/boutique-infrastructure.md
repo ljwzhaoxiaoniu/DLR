@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **7/40** 题：JRA ✅7 ❌0 ｜ 证据链全闭 7 ｜ token 中位 96,876 ｜ 生成 2026-10-13T08:32:23.004Z
+> 本家族已跑 **8/40** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 96,876 ｜ 生成 2026-10-13T08:37:23.454Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -14,6 +14,7 @@
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 100,063 | 0 | 0 | 1013_1413_inorder4-v3b15 | 全对·链闭 |
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4167 | 13 | 76,649 | 0 | 0 | 1013_1536_inorder4-v3b19 | 全对·链闭 |
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 77,500 | 0 | 0 | 1013_1623_inorder4-v3b21 | 全对·链闭 |
+| [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 77,283 | 0 | 0 | 1013_1633_inorder4-v3b23 | 全对·链闭 |
 
 ## 证据正文
 
@@ -58,4 +59,10 @@
 - **结论**：`node/worker-01` + `containerd_unavailable` ｜ 标签 `node/worker-01` + `containerd_unavailable`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4545 · steps 12 · tokens 77,500
 - **摘要**：Pods on worker-01 (adservice, currencyservice, productcatalogservice, recommendationservice, redis-cart) are all stuck at 0/2 Init:0/1 while every pod on worker-02 is 2/2 Running — a node-scoped outlier. The pod event surface shows the mechanism verbatim on worker-01 pods: 'Warning FailedCreatePodSandBox: Failed to create pod sandbox: rpc error: code = Unavailable desc = "... dial unix /run/containerd/containerd.sock: connect: no such file or directory"' (PodScheduled=True, so scheduling succeeded). CheckNodeServiceStatus(worker-01, containerd) returns 'Active: inactive (dead) since Fri 2026-0
+
+### case-8
+
+- **结论**：`node/worker-02` + `containerd_unavailable` ｜ 标签 `node/worker-02` + `containerd_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4545 · steps 12 · tokens 77,283
+- **摘要**：Symptom 'Partial Service Unreachability': 6 of 11 boutique pods (adservice, cartservice, checkoutservice, currencyservice, productcatalogservice, shippingservice) are stuck at Init:0/1 with no pod IP, all of them scheduled on worker-02, while every worker-01 pod is 2/2 Running. Namespace events show 'Warning FailedCreatePodSandBox ... dial unix /run/containerd/containerd.sock: connect: no such file or directory' for each worker-02 pod. On worker-02: containerd.service is 'Active: inactive (dead) since Fri 2026-01-02 13:00:51 CST' (runtime socket gone, only leftover shims), while kubelet is sti
 
