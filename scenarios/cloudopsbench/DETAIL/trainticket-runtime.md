@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **6/96** 题：JRA ✅6 ❌0 ｜ 证据链全闭 6 ｜ token 中位 535,723 ｜ 生成 2026-10-13T04:31:23.874Z
+> 本家族已跑 **7/96** 题：JRA ✅7 ❌0 ｜ 证据链全闭 7 ｜ token 中位 521,337 ｜ 生成 2026-10-13T04:39:04.795Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -13,6 +13,7 @@
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 517,218 | 0 | 0 | 1012_1935_tidy-verify1 | 全对·链闭 |
 | [5](#case-5) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.1429 | 36 | 800,099 | 0 | 0 | 1012_2000_case-verify1 | 全对·链闭 |
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3182 | 23 | 477,041 | 0 | 0 | 1013_1134_inorder4-v3b10 | 全对·链闭 |
+| [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.381 | 22 | 521,337 | 0 | 0 | 1013_1235_inorder4-v3b12 | 全对·链闭 |
 
 ## 证据正文
 
@@ -51,4 +52,10 @@
 - **结论**：`app/tsdb-mysql` + `db_readonly_mode` ｜ 标签 `app/tsdb-mysql` + `db_readonly_mode`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3182 · steps 23 · tokens 477,041
 - **摘要**：Namespace train-ticket: alerts show 52x 500 on POST /api/v1/inside_pay_service/inside_payment (ts-inside-payment-service) and 9x 500 on POST /api/v1/preserveservice/preserve (ts-preserve-service). Caller logs trace the failures one hop down: ts-inside-payment-service -> 'HttpServerErrorException: 500 ... path:/api/v1/paymentservice/payment' (65x) and ts-preserve-service -> '500 ... path:/api/v1/orderservice/order' (9x). The downstream writer services themselves carry the decisive mechanism: ts-payment-service and ts-order-service both log 'SQL Error: 1290, SQLState: HY000' + 'The MySQL server 
+
+### case-7
+
+- **结论**：`app/tsdb-mysql` + `db_readonly_mode` ｜ 标签 `app/tsdb-mysql` + `db_readonly_mode`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.381 · steps 22 · tokens 521,337
+- **摘要**：All train-ticket pods are 1/1 Running with zero restarts, so the break is not probe/scheduling/startup. Caller-side logs pin the mechanism: ts-payment-service and ts-order-service both emit 'SQL Error: 1290, SQLState: HY000' + 'The MySQL server is running with the --read-only option so it cannot execute this statement' (68 and 54 occurrences), then throw JpaSystemException 'could not execute statement' and return HTTP 500. These 500s propagate upward exactly along the reported alerts: ts-inside-payment-service -> /api/v1/paymentservice/payment (54x 'Process payment' 500) and ts-preserve-servic
 

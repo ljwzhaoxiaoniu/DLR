@@ -50,18 +50,18 @@
 <h1 class="hero">TSM × Cloud-OpsBench · <em>总视图</em></h1>
 <p class="deck">三级语义建模（L1 对象/面 · L2 读法 · L3 走链）驱动的 K8s 根因诊断——快照确定性回放（锚 ea05daf），结果为上游 scorer 原口径。本页由 <code>eval/stats.mjs</code> 每次重建自动刷新。</p>
 <div class="stat-row">
-  <div class="stat"><div class="stat__value">44/754</div><div class="stat__label">跑题覆盖度</div><div class="stat__note">5.8%</div></div>
-  <div class="stat stat--good"><div class="stat__value">44/44</div><div class="stat__label">JRA 联合命中</div><div class="stat__note">CA 44 · FA 44</div></div>
-  <div class="stat stat--good"><div class="stat__value">44/44</div><div class="stat__label">证据链全闭</div><div class="stat__note">MC 1 · EOC 0.9678</div></div>
-  <div class="stat"><div class="stat__value">186,507</div><div class="stat__label">token 中位 / 题</div><div class="stat__note">平均 263,477 · cache 读 76%</div></div>
+  <div class="stat"><div class="stat__value">48/754</div><div class="stat__label">跑题覆盖度</div><div class="stat__note">6.4%</div></div>
+  <div class="stat stat--good"><div class="stat__value">47/48</div><div class="stat__label">JRA 联合命中</div><div class="stat__note">CA 48 · FA 47</div></div>
+  <div class="stat stat--good"><div class="stat__value">48/48</div><div class="stat__label">证据链全闭</div><div class="stat__note">MC 1 · EOC 0.9549</div></div>
+  <div class="stat"><div class="stat__value">186,507</div><div class="stat__label">token 中位 / 题</div><div class="stat__note">平均 260,834 · cache 读 76%</div></div>
 </div>
 <p class="muted" style="margin-top:12px; line-height:1.75;"><b>指标示意</b>：<b>结果分</b> —— CA 组件命中 · FA 故障类型命中 · <b>JRA 联合命中（CA+FA，主指标）</b>；<b>流程分</b> —— MC 里程碑覆盖（该查的检查点走到没）· EOC 证据顺序一致（查证链是否按序闭合）· ECR 证据闭合率 · EE 证据效率（证据步 ÷ 总步）；<b>过程</b> —— steps 步数 · RAR 重复动作率 · inv 无效动作。结果分与流程分互相独立：结论对 ≠ 过程满分（个别题 EOC &lt; 1 = 证据链顺序/覆盖未满分，判定仍可为对）。</p>
 
 <h2 class="section-title">跑题覆盖度 · <em>逐家族进度</em></h2>
 <div class="fam">
     <div class="fam__name">boutique/admission</div>
-    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:6.9%"></div></div></div>
-    <div class="fam__num">4/58 · 6.9%</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:8.6%"></div></div></div>
+    <div class="fam__num">5/58 · 8.6%</div>
   </div>
 <div class="fam">
     <div class="fam__name">boutique/codedefect</div>
@@ -95,8 +95,8 @@
   </div>
 <div class="fam">
     <div class="fam__name">boutique/startup</div>
-    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:3.2%"></div></div></div>
-    <div class="fam__num">2/62 · 3.2%</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:4.8%"></div></div></div>
+    <div class="fam__num">3/62 · 4.8%</div>
   </div>
 <div class="fam">
     <div class="fam__name">train-ticket/performance</div>
@@ -105,8 +105,8 @@
   </div>
 <div class="fam">
     <div class="fam__name">train-ticket/runtime</div>
-    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:6.3%"></div></div></div>
-    <div class="fam__num">6/96 · 6.3%</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:7.3%"></div></div></div>
+    <div class="fam__num">7/96 · 7.3%</div>
   </div>
 <div class="fam">
     <div class="fam__name">train-ticket/service</div>
@@ -115,8 +115,8 @@
   </div>
 <div class="fam">
     <div class="fam__name">train-ticket/startup</div>
-    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:12.5%"></div></div></div>
-    <div class="fam__num">3/24 · 12.5%</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:16.7%"></div></div></div>
+    <div class="fam__num">4/24 · 16.7%</div>
   </div>
 
 <h2 class="section-title">逐题明细 · <em>去重取最新</em></h2>
@@ -126,6 +126,7 @@
 <tr><td><code>boutique/admission/2</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.6</td><td>16</td><td>104,662</td><td class="muted">1012_1846_ino</td></tr>
 <tr><td><code>boutique/admission/3</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.5294</td><td>18</td><td>102,119</td><td class="muted">1012_1907_l3-</td></tr>
 <tr><td><code>boutique/admission/4</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.5833</td><td>13</td><td>68,497</td><td class="muted">1012_1935_tid</td></tr>
+<tr><td><code>boutique/admission/5</code></td><td><span class="ok">✅</span></td><td>1</td><td>0.25</td><td>1</td><td>0.4167</td><td>13</td><td>65,359</td><td class="muted">1013_1235_ino</td></tr>
 <tr><td><code>boutique/codedefect/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3077</td><td>14</td><td>129,107</td><td class="muted">1012_1415_ino</td></tr>
 <tr><td><code>boutique/codedefect/2</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>126,973</td><td class="muted">1012_1846_ino</td></tr>
 <tr><td><code>boutique/codedefect/3</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>198,922</td><td class="muted">1012_1935_tid</td></tr>
@@ -149,6 +150,7 @@
 <tr><td><code>boutique/service/2</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1333</td><td>46</td><td>292,901</td><td class="muted">1013_1122_ino</td></tr>
 <tr><td><code>boutique/startup/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>10</td><td>58,131</td><td class="muted">1012_1447_ino</td></tr>
 <tr><td><code>boutique/startup/2</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>186,507</td><td class="muted">1012_2040_ino</td></tr>
+<tr><td><code>boutique/startup/3</code></td><td>0</td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>16</td><td>88,144</td><td class="muted">1013_1235_ino</td></tr>
 <tr><td><code>train-ticket/performance/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1429</td><td>36</td><td>442,283</td><td class="muted">1012_1512_ino</td></tr>
 <tr><td><code>train-ticket/performance/2</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1818</td><td>23</td><td>294,060</td><td class="muted">1013_1122_ino</td></tr>
 <tr><td><code>train-ticket/performance/3</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1379</td><td>30</td><td>453,560</td><td class="muted">1013_1225_ino</td></tr>
@@ -158,6 +160,7 @@
 <tr><td><code>train-ticket/runtime/4</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2105</td><td>20</td><td>517,218</td><td class="muted">1012_1935_tid</td></tr>
 <tr><td><code>train-ticket/runtime/5</code></td><td><span class="ok">✅</span></td><td>1</td><td>0.6667</td><td>1</td><td>0.1429</td><td>36</td><td>800,099</td><td class="muted">1012_2000_cas</td></tr>
 <tr><td><code>train-ticket/runtime/6</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3182</td><td>23</td><td>477,041</td><td class="muted">1013_1134_ino</td></tr>
+<tr><td><code>train-ticket/runtime/7</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.381</td><td>22</td><td>521,337</td><td class="muted">1013_1235_ino</td></tr>
 <tr><td><code>train-ticket/service/2</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3158</td><td>20</td><td>681,352</td><td class="muted">1012_2010_att</td></tr>
 <tr><td><code>train-ticket/service/3</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1667</td><td>19</td><td>1,133,738</td><td class="muted">1013_1040_ran</td></tr>
 <tr><td><code>train-ticket/service/4</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2778</td><td>19</td><td>373,034</td><td class="muted">1013_1122_ino</td></tr>
@@ -166,7 +169,8 @@
 <tr><td><code>train-ticket/startup/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>13</td><td>73,363</td><td class="muted">1012_1458_l3-</td></tr>
 <tr><td><code>train-ticket/startup/2</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4167</td><td>13</td><td>274,127</td><td class="muted">1012_2040_ino</td></tr>
 <tr><td><code>train-ticket/startup/3</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3125</td><td>17</td><td>378,044</td><td class="muted">1013_1134_ino</td></tr>
+<tr><td><code>train-ticket/startup/4</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.5</td><td>11</td><td>252,217</td><td class="muted">1013_1235_ino</td></tr>
 </table>
-<div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="results/STATS.md">STATS.md</a> · <a href="DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="DETAIL/">DETAIL/</a>）。生成 2026-10-13T04:31:23.874Z</div>
+<div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="results/STATS.md">STATS.md</a> · <a href="DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="DETAIL/">DETAIL/</a>）。生成 2026-10-13T04:39:04.795Z</div>
 </body>
 </html>

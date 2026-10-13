@@ -1,6 +1,6 @@
 # 评测明细 · boutique/admission — cloudopsbench
 
-> 本家族已跑 **4/58** 题：JRA ✅4 ❌0 ｜ 证据链全闭 4 ｜ token 中位 102,119 ｜ 生成 2026-10-13T04:31:23.874Z
+> 本家族已跑 **5/58** 题：JRA ✅5 ❌0 ｜ 证据链全闭 5 ｜ token 中位 81,626 ｜ 生成 2026-10-13T04:39:04.795Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -11,6 +11,7 @@
 | [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.6 | 16 | 104,662 | 0 | 0 | 1012_1846_inorder4-v3b4 | 全对·链闭 |
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5294 | 18 | 102,119 | 0 | 0 | 1012_1907_l3-tweak2 | 全对·链闭 |
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5833 | 13 | 68,497 | 0 | 0 | 1012_1935_tidy-verify1 | 全对·链闭 |
+| [5](#case-5) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.4167 | 13 | 65,359 | 0 | 0 | 1013_1235_inorder4-v3b12 | 全对·链闭 |
 
 ## 证据正文
 
@@ -37,4 +38,10 @@
 - **结论**：`app/currencyservice` + `missing_service_account` ｜ 标签 `app/currencyservice` + `missing_service_account`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.5833 · steps 13 · tokens 68,497
 - **摘要**：frontend error logs (202x) show 'could not retrieve currencies: rpc error: code = Unavailable ... dial tcp 10.68.161.153:7000: connect: connection refused' (currencyservice ClusterIP:7000), and CheckServiceConnectivity(currencyservice:7000) returned Connection Failed. The pods listing (-o wide) contains only 10 of 11 boutique services: no currencyservice pod exists at all, and GetResources(pods,label_selector=app=currencyservice) is empty. Deployment currencyservice shows READY 0/1 and UP-TO-DATE 0 (no pod ever created, so not a start/probe/image issue). Namespace events carry the mechanism ve
+
+### case-5
+
+- **结论**：`app/emailservice` + `missing_service_account` ｜ 标签 `app/emailservice` + `missing_service_account`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.25 · ECR 1 · EE 0.4167 · steps 13 · tokens 65,359
+- **摘要**：emailservice has zero Pods in the boutique pods listing while all other 10 services run 1/1 with 0 restarts; deployment emailservice shows READY 0/1, UP-TO-DATE 0, AVAILABLE 0 with replicas=1 desired. The namespace events surface carries the mechanism verbatim: 'Warning FailedCreate replicaset/emailservice-69777f4f8b  Error creating: pods "emailservice-69777f4f8b-" is forbidden: error looking up service account boutique/emailservices: serviceaccount "emailservices" not found'. Config face confirms the mismatch: GetAppYAML(emailservice) sets serviceAccountName: emailservices (plural), while Get
 

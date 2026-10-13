@@ -9,19 +9,19 @@
 
 | 家族 | 全量 | 已跑 | 剩余 | 覆盖 |
 |---|---|---|---|---|
-| boutique/admission | 58 | 4 | 54 | 6.9% |
+| boutique/admission | 58 | 5 | 53 | 8.6% |
 | boutique/codedefect | 98 | 5 | 93 | 5.1% |
 | boutique/infrastructure | 40 | 4 | 36 | 10.0% |
 | boutique/performance | 29 | 2 | 27 | 6.9% |
 | boutique/runtime | 45 | 3 | 42 | 6.7% |
 | boutique/scheduling | 164 | 5 | 159 | 3.0% |
 | boutique/service | 54 | 2 | 52 | 3.7% |
-| boutique/startup | 62 | 2 | 60 | 3.2% |
+| boutique/startup | 62 | 3 | 59 | 4.8% |
 | train-ticket/performance | 47 | 3 | 44 | 6.4% |
-| train-ticket/runtime | 96 | 6 | 90 | 6.3% |
+| train-ticket/runtime | 96 | 7 | 89 | 7.3% |
 | train-ticket/service | 37 | 5 | 32 | 13.5% |
-| train-ticket/startup | 24 | 3 | 21 | 12.5% |
-| **合计** | **754** | **44** | **710** | **5.8%** |
+| train-ticket/startup | 24 | 4 | 20 | 16.7% |
+| **合计** | **754** | **48** | **706** | **6.4%** |
 
 ## 汇总（去重 · 取最新）
 
@@ -29,39 +29,39 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 44 / 44（100.0%） |
-| CA（组件命中） | 44 / 44（100.0%） |
-| FA（故障型命中） | 44 / 44（100.0%） |
-| ECR（证据链全闭） | 44 / 44（100.0%） |
+| JRA（联合命中） | 47 / 48（97.9%） |
+| CA（组件命中） | 48 / 48（100.0%） |
+| FA（故障型命中） | 47 / 48（97.9%） |
+| ECR（证据链全闭） | 48 / 48（100.0%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 1 | 0.9678 | 1 | 0.2866 | 19.5 | 0 | 0.0227 |
+| 1 | 0.9549 | 1 | 0.2939 | 19.1667 | 0 | 0.0208 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 263,477 / 186,507 | 58,131 / 1,133,738 | 76% |
+| 260,834 / 186,507 | 58,131 / 1,133,738 | 76% |
 
 ## 分家族索引
 
 | 家族 | 全量 | 已跑 | JRA | 链全闭 | 明细 |
 |---|---|---|---|---|---|
-| boutique/admission | 58 | 4 | 4 | 4 | [boutique-admission.md](DETAIL/boutique-admission.md) |
+| boutique/admission | 58 | 5 | 5 | 5 | [boutique-admission.md](DETAIL/boutique-admission.md) |
 | boutique/codedefect | 98 | 5 | 5 | 5 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
 | boutique/infrastructure | 40 | 4 | 4 | 4 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
 | boutique/performance | 29 | 2 | 2 | 2 | [boutique-performance.md](DETAIL/boutique-performance.md) |
 | boutique/runtime | 45 | 3 | 3 | 3 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
 | boutique/scheduling | 164 | 5 | 5 | 5 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
 | boutique/service | 54 | 2 | 2 | 2 | [boutique-service.md](DETAIL/boutique-service.md) |
-| boutique/startup | 62 | 2 | 2 | 2 | [boutique-startup.md](DETAIL/boutique-startup.md) |
+| boutique/startup | 62 | 3 | 2 | 3 | [boutique-startup.md](DETAIL/boutique-startup.md) |
 | train-ticket/performance | 47 | 3 | 3 | 3 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
-| train-ticket/runtime | 96 | 6 | 6 | 6 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
+| train-ticket/runtime | 96 | 7 | 7 | 7 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
 | train-ticket/service | 37 | 5 | 5 | 5 | [trainticket-service.md](DETAIL/trainticket-service.md) |
-| train-ticket/startup | 24 | 3 | 3 | 3 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
+| train-ticket/startup | 24 | 4 | 4 | 4 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
 
 ## 定性观察
 
@@ -89,6 +89,9 @@
 > **2026-10-13 · 轮次 1013_1134_inorder4-v3b10（批十 · 4/4 全对 · MC/EOC/ECR 全闭 · 无重试）**：① 覆盖 40/754，**JRA 40/40**。② **新机制族首验**：tt-runtime/6 `db_readonly_mode`（tsdb-mysql · 23 步）——DB 只读态（StatefulSet 载体读法复用），链闭。③ scheduling/5 `node_cordon_mismatch`（paymentservice · 17 步）= 节点类第三例全闭；performance/2 `pod_cpu_overload`（cartservice · 28 步）= 性能显现类第二例；tt-startup/3 `missing_secret_binding`（ts-config-service · 17 步）。④ 批九 + 批十连续 8 题全满（**40/40 链闭**）——L3 两节与提交条款在未见题上的泛化持续成立。
 
 > **2026-10-13 · 轮次 1013_1225_inorder4-v3b11（批十一 · 4/4 JRA · 一例流程滑点）**：① 覆盖 44/754，**JRA 44/44**。② **tt-service/5 = 网关 misroute 第四题**：提交条款下首跑即中（`ts-gateway-service` ✓ · 23 步）——条款泛化第四连。③ **infrastructure/4**（`node/worker-02·containerd_unavailable` · 节点类第四例）**EOC 0.667 留观**：链闭（ECR 1）但次序滑点再现（节点类「通用面先于具体机理」的序；同族 infra/1 曾 0.667、修复轮后全闭）——先记，不扑评分器。④ codedefect/5 `code_busy_loop`（15 步）、tt-performance/3 `pod_network_delay`（30 步）全满。
+
+> **2026-10-13 · 轮次 1013_1235_inorder4-v3b12（批十二 · 3/4 · startup/3 判型翻车）**：① 覆盖 48/754，JRA 47/48。② **startup/3 miss**（批八以来首个）：组件对（checkoutservice）、判型错——镜像指向虚构域名 `ghost-registry.example.net`（事件 `lookup … no such host`）；agent 推理「DNS 本身正常（其他服务拉得动）→ 是引用错」→ rank1 报 `incorrect_image_reference`（正解 `image_registry_dns_failure` 被放 rank2）——**v2 时代 startup/1 同一对混淆的再现**（b2 翻案那次无 L3、靠事件消息分类判对；本次命中节 image 分支仅有「读配置面」、无定类判别线，或助偏）。③ admission/5 `missing_service_account`（EOC 0.25 · 13 步）、tt-runtime/7 `db_readonly_mode`（22 步 · 与 /6 连续同型）、tt-startup/4 `missing_secret_binding`（11 步）全满。④ 处置：该节 image-pull 分支补「拉取消息定类 + rank1 跟随」判别线 → 待确认后 rebuild+复跑对表。
+
 
 
 
