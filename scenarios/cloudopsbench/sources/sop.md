@@ -33,7 +33,7 @@ This wording is overloaded — it walks the SAME reachability chain whichever st
 1. **Start from the complaint.** Caller-side error logs / connectivity against the named service; then the endpoints binding. Don't open with a workload scan.
 2. **Then the workload, pruned.** The pods (state + events) → owner chain. Node-scoped problem? Read the pods listing in its **wide form** first — the NODE column is your pointer.
 3. **Deal with the case you land on:**
-   - **Pod Pending / unschedulable** → node side, **and read general before specific**: nodes listing / `GetClusterConfiguration` / node events / kubelet status FIRST, then the suspected component (containerd, kube-proxy, …). Jumping straight at the suspected service reads out of order.
+   - **Pod Pending / unschedulable** → **first take the pod's own reason** — `DescribeResource(pod)` carries the `N nodes are available…` line that names the blocker; only then the node side, and read general before specific there: nodes listing / `GetClusterConfiguration` / node events / kubelet status, then the suspected component (containerd, kube-proxy, …). The pod's reason comes before any node-side read; jumping straight at the suspected service reads out of order.
    - **Pod never created** → admission side (the event names the referenced object; template reference + object listing).
    - **Image pull / mount / probe errors** → the matching config face.
    - **Everything healthy but probes diverge** → the address layer: audit the routing config (the gateway's route table, Path ↔ target line by line); probing is confirmation, not scanning. **The component to report is the gateway (the table's owner) — the mis-wired target is the victim, not the break.**
