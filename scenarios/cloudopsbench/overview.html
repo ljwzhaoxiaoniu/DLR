@@ -50,10 +50,10 @@
 <h1 class="hero">TSM × Cloud-OpsBench · <em>总视图</em></h1>
 <p class="deck">三级语义建模（L1 对象/面 · L2 读法 · L3 走链）驱动的 K8s 根因诊断——快照确定性回放（锚 ea05daf），结果为上游 scorer 原口径。本页由 <code>eval/stats.mjs</code> 每次重建自动刷新。</p>
 <div class="stat-row">
-  <div class="stat"><div class="stat__value">28/754</div><div class="stat__label">跑题覆盖度</div><div class="stat__note">3.7%</div></div>
-  <div class="stat stat--good"><div class="stat__value">28/28</div><div class="stat__label">JRA 联合命中</div><div class="stat__note">CA 28 · FA 28</div></div>
-  <div class="stat stat--good"><div class="stat__value">28/28</div><div class="stat__label">证据链全闭</div><div class="stat__note">MC 1 · EOC 0.9613</div></div>
-  <div class="stat"><div class="stat__value">127,303</div><div class="stat__label">token 中位 / 题</div><div class="stat__note">平均 228,608 · cache 读 79%</div></div>
+  <div class="stat"><div class="stat__value">32/754</div><div class="stat__label">跑题覆盖度</div><div class="stat__note">4.2%</div></div>
+  <div class="stat stat--good"><div class="stat__value">31/32</div><div class="stat__label">JRA 联合命中</div><div class="stat__note">CA 31 · FA 32</div></div>
+  <div class="stat stat--good"><div class="stat__value">32/32</div><div class="stat__label">证据链全闭</div><div class="stat__note">MC 1 · EOC 0.9661</div></div>
+  <div class="stat"><div class="stat__value">129,107</div><div class="stat__label">token 中位 / 题</div><div class="stat__note">平均 250,915 · cache 读 79%</div></div>
 </div>
 
 <h2 class="section-title">跑题覆盖度 · <em>逐家族进度</em></h2>
@@ -79,8 +79,8 @@
   </div>
 <div class="fam">
     <div class="fam__name">boutique/runtime</div>
-    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:2.2%"></div></div></div>
-    <div class="fam__num">1/45 · 2.2%</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:4.4%"></div></div></div>
+    <div class="fam__num">2/45 · 4.4%</div>
   </div>
 <div class="fam">
     <div class="fam__name">boutique/scheduling</div>
@@ -94,8 +94,8 @@
   </div>
 <div class="fam">
     <div class="fam__name">boutique/startup</div>
-    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:1.6%"></div></div></div>
-    <div class="fam__num">1/62 · 1.6%</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:3.2%"></div></div></div>
+    <div class="fam__num">2/62 · 3.2%</div>
   </div>
 <div class="fam">
     <div class="fam__name">train-ticket/performance</div>
@@ -109,13 +109,13 @@
   </div>
 <div class="fam">
     <div class="fam__name">train-ticket/service</div>
-    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:5.4%"></div></div></div>
-    <div class="fam__num">2/37 · 5.4%</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:8.1%"></div></div></div>
+    <div class="fam__num">3/37 · 8.1%</div>
   </div>
 <div class="fam">
     <div class="fam__name">train-ticket/startup</div>
-    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:4.2%"></div></div></div>
-    <div class="fam__num">1/24 · 4.2%</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:8.3%"></div></div></div>
+    <div class="fam__num">2/24 · 8.3%</div>
   </div>
 
 <h2 class="section-title">逐轮 · <em>结果与消耗</em></h2>
@@ -136,6 +136,7 @@
 <tr><td><code>1012_1941_ino</code></td><td>4</td><td>3</td><td>0.7292</td><td>1</td><td>35.25</td><td>4,406,715</td></tr>
 <tr><td><code>1012_2000_cas</code></td><td>3</td><td>2</td><td>0.6389</td><td>1</td><td>27.3333</td><td>3,132,165</td></tr>
 <tr><td><code>1012_2010_att</code></td><td>1</td><td>1</td><td>1</td><td>1</td><td>20</td><td>681,352</td></tr>
+<tr><td><code>1012_2040_ino</code></td><td>4</td><td>3</td><td>1</td><td>1</td><td>16</td><td>1,628,262</td></tr>
 </table>
 
 <h2 class="section-title">逐题明细 · <em>去重取最新</em></h2>
@@ -154,12 +155,14 @@
 <tr><td><code>boutique/infrastructure/3</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>16</td><td>79,206</td><td class="muted">1012_1941_ino</td></tr>
 <tr><td><code>boutique/performance/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>16</td><td>127,303</td><td class="muted">1012_1415_ino</td></tr>
 <tr><td><code>boutique/runtime/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>10</td><td>61,752</td><td class="muted">1012_1512_ino</td></tr>
+<tr><td><code>boutique/runtime/2</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>10</td><td>122,722</td><td class="muted">1012_2040_ino</td></tr>
 <tr><td><code>boutique/scheduling/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2353</td><td>18</td><td>115,405</td><td class="muted">1012_1415_ino</td></tr>
 <tr><td><code>boutique/scheduling/2</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.12</td><td>26</td><td>203,615</td><td class="muted">1012_1846_ino</td></tr>
 <tr><td><code>boutique/scheduling/3</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3077</td><td>14</td><td>84,424</td><td class="muted">1012_1856_ino</td></tr>
 <tr><td><code>boutique/scheduling/4</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1429</td><td>22</td><td>153,471</td><td class="muted">1012_1928_ino</td></tr>
 <tr><td><code>boutique/service/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4</td><td>16</td><td>115,616</td><td class="muted">1012_1447_ino</td></tr>
 <tr><td><code>boutique/startup/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>10</td><td>58,131</td><td class="muted">1012_1447_ino</td></tr>
+<tr><td><code>boutique/startup/2</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>186,507</td><td class="muted">1012_2040_ino</td></tr>
 <tr><td><code>train-ticket/performance/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1429</td><td>36</td><td>442,283</td><td class="muted">1012_1512_ino</td></tr>
 <tr><td><code>train-ticket/runtime/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>26</td><td>265,656</td><td class="muted">1012_1512_ino</td></tr>
 <tr><td><code>train-ticket/runtime/2</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1944</td><td>37</td><td>554,007</td><td class="muted">1012_1846_ino</td></tr>
@@ -167,9 +170,11 @@
 <tr><td><code>train-ticket/runtime/4</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2105</td><td>20</td><td>517,218</td><td class="muted">1012_1935_tid</td></tr>
 <tr><td><code>train-ticket/runtime/5</code></td><td><span class="ok">✅</span></td><td>1</td><td>0.6667</td><td>1</td><td>0.1429</td><td>36</td><td>800,099</td><td class="muted">1012_2000_cas</td></tr>
 <tr><td><code>train-ticket/service/2</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3158</td><td>20</td><td>681,352</td><td class="muted">1012_2010_att</td></tr>
+<tr><td><code>train-ticket/service/3</code></td><td>0</td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>26</td><td>1,044,906</td><td class="muted">1012_2040_ino</td></tr>
 <tr><td><code>train-ticket/service/25</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2727</td><td>23</td><td>204,578</td><td class="muted">1012_1521_l3-</td></tr>
 <tr><td><code>train-ticket/startup/1</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>13</td><td>73,363</td><td class="muted">1012_1458_l3-</td></tr>
+<tr><td><code>train-ticket/startup/2</code></td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4167</td><td>13</td><td>274,127</td><td class="muted">1012_2040_ino</td></tr>
 </table>
-<div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="results/STATS.md">STATS.md</a> · <a href="DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="DETAIL/">DETAIL/</a>）。生成 2026-10-12T12:12:14.194Z</div>
+<div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="results/STATS.md">STATS.md</a> · <a href="DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="DETAIL/">DETAIL/</a>）。生成 2026-10-12T14:02:56.778Z</div>
 </body>
 </html>
