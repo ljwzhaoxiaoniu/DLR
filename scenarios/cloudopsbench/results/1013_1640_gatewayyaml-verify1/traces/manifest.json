@@ -1,0 +1,9 @@
+[
+  {
+    "case": "trainticket/service/11",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1013_1640_gatewayyaml-verify1\\raw\\1013_1640_trainticket-service-11",
+    "steps": 27,
+    "has_final_answer": true,
+    "predictions": 3
+  }
+]

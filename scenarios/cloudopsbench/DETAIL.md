@@ -32,19 +32,19 @@
 | JRA（联合命中） | 92 / 92（100.0%） |
 | CA（组件命中） | 92 / 92（100.0%） |
 | FA（故障型命中） | 92 / 92（100.0%） |
-| ECR（证据链全闭） | 90 / 92（97.8%） |
+| ECR（证据链全闭） | 91 / 92（98.9%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 0.9937 | 0.9783 | 0.9783 | 0.3004 | 18.8696 | 0.0005 | 0.0217 |
+| 0.9973 | 0.9819 | 0.9891 | 0.3007 | 18.7935 | 0.0005 | 0.0217 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 266,054 / 204,578 | 58,131 / 1,133,738 | 73% |
+| 262,395 / 204,578 | 58,131 / 1,133,738 | 73% |
 
 ## 分家族索引
 
@@ -60,7 +60,7 @@
 | boutique/startup | 62 | 4 | 4 | 4 | [boutique-startup.md](DETAIL/boutique-startup.md) |
 | train-ticket/performance | 47 | 9 | 9 | 9 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
 | train-ticket/runtime | 96 | 12 | 12 | 12 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
-| train-ticket/service | 37 | 11 | 11 | 10 | [trainticket-service.md](DETAIL/trainticket-service.md) |
+| train-ticket/service | 37 | 11 | 11 | 11 | [trainticket-service.md](DETAIL/trainticket-service.md) |
 | train-ticket/startup | 24 | 9 | 9 | 9 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
 
 ## 定性观察
@@ -116,7 +116,8 @@
 
 > **2026-10-13 · 轮次 1013_1628_inorder4-v3b22（批二十二 · 2 路续跑 · 4/4 六项全满）**：① 覆盖 88/754，**JRA 88/88**。② boutique/performance/6「latency increased」第三例 `pod_cpu_overload`（30 步全满——第六模板饱和分支三验稳）· scheduling/9 `node_cordon_mismatch`（19 步）· tt-runtime/12 `db_readonly_mode`（22 步）· tt-startup/9 `missing_secret_binding`（14 步）全满。③ **六连 24/24 六项全满**（批十七–二十二）——零重试。
 
-> **2026-10-13 · 轮次 1013_1633_inorder4-v3b23（批二十三 · 2 路续跑 · 3/4 六项全满 · 一例 ECR 0）**：① 覆盖 92/754，**JRA 92/92**。② **cod/9 判型试金石过**：`code_artificial_delay`（「Service Performance Degradation.」措辞下——代码面证实类；tt-perf/4 的镜像双胞胎方向，16 步六项全满）。③ inf/8 `containerd@worker-02`（12 步）· tt-perf/9 `pod_network_delay`（18 步）全满。④ **tt-service/11 破连**：JRA ✓（网关判型第十连）但 **M2 未读**——金标准 M2 唯一形态 = `GetAppYAML(ts-gateway-service)`（路由表载体）；本轮 34 步长链走偏到 payment/order 分支，读了 gateway 日志/端点/连通性/configmap 而未做该 YAML 读 → MC 0.667 · ECR 0（收口没走完类）。候选微修：§1 网关句钉「路由表读法 = gateway 自家 `GetAppYAML`」（待令，先记档）。⑤ 会话：ts-service/11 入档。
+> **2026-10-13 · 轮次 1013_1633_inorder4-v3b23（批二十三 · 2 路续跑 · 3/4 六项全满 · 一例 ECR 0）**：① 覆盖 92/754，**JRA 92/92**。② **cod/9 判型试金石过**：`code_artificial_delay`（「Service Performance Degradation.」措辞下——代码面证实类；tt-perf/4 的镜像双胞胎方向，16 步六项全满）。③ inf/8 `containerd@worker-02`（12 步）· tt-perf/9 `pod_network_delay`（18 步）全满。④ **tt-service/11 破连**：JRA ✓（网关判型第十连）但 **M2 未读**——金标准 M2 唯一形态 = `GetAppYAML(ts-gateway-service)`（路由表载体）；本轮 34 步长链走偏到 payment/order 分支，读了 gateway 日志/端点/连通性/configmap 而未做该 YAML 读 → MC 0.667 · ECR 0（收口没走完类）。⑤ 会话：ts-service/11 入档。⑥ **破连即修一轮（用户 10-13 定规程：加 L3 句后复跑，仍不过即记档）**：§1 网关句钉「路由表 = gateway 自家 `GetAppYAML`（日志/端点/清单不算）」→ **gatewayyaml-verify1 复跑 28 步六项全满**（MC/ECR/EOC 0.667/0/0.667 → 全 1）——规程首执行即闭环。
+
 
 
 
