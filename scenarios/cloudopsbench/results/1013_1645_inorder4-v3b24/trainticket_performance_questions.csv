@@ -1,0 +1,2 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+trainticket/performance/10,1.0,1.0,1.0,1.0,1.0,1.0,0.23529411764705882,18.0,0.0,0.0,app/ts-route-service,pod_network_delay,app/ts-route-service,pod_network_delay,

@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **9/98** 题：JRA ✅9 ❌0 ｜ 证据链全闭 9 ｜ token 中位 181,235 ｜ 生成 2026-10-13T08:43:25.195Z
+> 本家族已跑 **10/98** 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 181,235 ｜ 生成 2026-10-13T08:52:40.926Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -16,6 +16,7 @@
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 13 | 181,778 | 0 | 0 | 1013_1536_inorder4-v3b19 | 全对·链闭 |
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 254,844 | 0 | 0 | 1013_1623_inorder4-v3b21 | 全对·链闭 |
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 166,187 | 0 | 0 | 1013_1633_inorder4-v3b23 | 全对·链闭 |
+| [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 180,151 | 0 | 0 | 1013_1645_inorder4-v3b24 | 全对·链闭 |
 
 ## 证据正文
 
@@ -72,4 +73,10 @@
 - **结论**：`app/checkoutservice` + `code_artificial_delay` ｜ 标签 `app/checkoutservice` + `code_artificial_delay`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 166,187
 - **摘要**：Symptom 'Service Performance Degradation.' entered the telemetry chain (L2 qid12). The sole alert names entity checkoutservice with LATENCY_DEGRADATION: p50 19.07ms -> 3750.00ms (+19564%), p90 48.57ms -> 4750.00ms. Object-layer exclusion is clean: all 11 boutique pods are 2/2 Running with RESTARTS 0, GetErrorLogs(checkoutservice) is empty, CheckServiceConnectivity(checkoutservice:5050) succeeds, and namespace events show no scheduling/mount/image-pull/probe failures -> no object-layer break, so the break is in the application path of the alerted entity. Mechanism face: checkoutservice main.go 
+
+### case-10
+
+- **结论**：`app/checkoutservice` + `code_artificial_delay` ｜ 标签 `app/checkoutservice` + `code_artificial_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2308 · steps 14 · tokens 180,151
+- **摘要**：Symptom 'Service Performance Degradation.' enters the telemetry chain. GetAlerts() returns a single anomaly on entity checkoutservice: LATENCY_DEGRADATION [Slow Response], p50 18.66ms -> 3750.00ms (+19995.4%), p90 64.03ms -> 4750.00ms. Object-layer exclusion is clean: GetResources(pods, boutique) shows all 11 boutique pods 2/2 Running with RESTARTS 0, including checkoutservice-57d5fbd5f5-c9s88; GetErrorLogs(checkoutservice) returns no error logs and the container log shows a normal PlaceOrder -> payment went through -> order confirmation email sent flow; GetAppYAML(checkoutservice) shows corre
 

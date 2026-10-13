@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **11/37** 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 460,035 ｜ 生成 2026-10-13T08:43:25.195Z
+> 本家族已跑 **12/37** 题：JRA ✅12 ❌0 ｜ 证据链全闭 12 ｜ token 中位 465,479 ｜ 生成 2026-10-13T08:52:40.926Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -17,6 +17,7 @@
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.35 | 21 | 295,786 | 0 | 0 | 1013_1536_inorder4-v3b19 | 全对·链闭 |
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2609 | 24 | 666,312 | 0 | 0 | 1013_1623_inorder4-v3b21 | 全对·链闭 |
 | [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2963 | 28 | 707,393 | 0 | 0 | 1013_1640_gatewayyaml-verify1 | 全对·链闭 |
+| [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2927 | 42 | 2,104,083 | 0 | 0 | 1013_1645_inorder4-v3b24 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
 
 ## 证据正文
@@ -80,6 +81,12 @@
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2963 · steps 28 · tokens 707,393
 - **摘要**：All workloads are healthy: 43/43 pods Running 2/2 (only ts-ui-dashboard shows 3 restarts, from a transient startup nginx 'host not found in upstream "ts-gateway-service"'), all deployments 1/1 AVAILABLE, every Service has bound endpoints, TCP connectivity to ts-payment-service:19001 succeeds from worker-01/02/03, and the event surface shows no FailedScheduling/FailedCreate/FailedMount/image-pull mechanism events. The address layer is therefore the first failing surface: in the gateway's own manifest (ConfigMap ts-gateway-service-config, read via GetAppYAML(ts-gateway-service)) the route entry 
+
+### case-12
+
+- **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2927 · steps 42 · tokens 2,104,083
+- **摘要**：Object layer fully healthy: 42/42 Deployments 1/1, every Pod 2/2 Running, no Pending/FailedScheduling/FailedCreate/FailedMount/image-pull errors, no namespace ResourceQuota, every Service has endpoints (ts-route-service 10.68.191.150:11178 open on worker-01/02/03) — scheduling/startup/admission/quota stages are excluded. The single alert (HTTP 500 on ts-inside-payment-service POST /api/v1/inside_pay_service/inside_payment, 5 occurrences) traces to 5 concurrent-request NonUniqueResultException rows in ts-payment-service, a load-induced data flake that matches no injectable root cause. Auditing 
 
 ### case-25
 

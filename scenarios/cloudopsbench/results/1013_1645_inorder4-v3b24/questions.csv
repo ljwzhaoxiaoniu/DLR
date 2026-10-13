@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/10,1.0,1.0,1.0,1.0,1.0,1.0,0.23076923076923078,14.0,0.0,0.0,app/checkoutservice,code_artificial_delay,app/checkoutservice,code_artificial_delay,
+boutique/infrastructure/9,1.0,1.0,1.0,1.0,1.0,1.0,0.2857142857142857,15.0,0.0,0.0,node/worker-01,containerd_unavailable,node/worker-01,containerd_unavailable,
+trainticket/performance/10,1.0,1.0,1.0,1.0,1.0,1.0,0.23529411764705882,18.0,0.0,0.0,app/ts-route-service,pod_network_delay,app/ts-route-service,pod_network_delay,
+trainticket/service/12,1.0,1.0,1.0,1.0,1.0,1.0,0.2926829268292683,42.0,0.0,0.0,app/ts-gateway-service,gateway_misrouted,app/ts-gateway-service,gateway_misrouted,

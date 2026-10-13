@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **9/47** 题：JRA ✅9 ❌0 ｜ 证据链全闭 9 ｜ token 中位 319,046 ｜ 生成 2026-10-13T08:43:25.195Z
+> 本家族已跑 **10/47** 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 319,046 ｜ 生成 2026-10-13T08:52:40.926Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -16,6 +16,7 @@
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2083 | 25 | 319,046 | 0 | 0 | 1013_1536_inorder4-v3b19 | 全对·链闭 |
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 270,805 | 0 | 0 | 1013_1623_inorder4-v3b21 | 全对·链闭 |
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 343,666 | 0 | 0 | 1013_1633_inorder4-v3b23 | 全对·链闭 |
+| [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 304,738 | 0 | 0 | 1013_1645_inorder4-v3b24 | 全对·链闭 |
 
 ## 证据正文
 
@@ -72,4 +73,10 @@
 - **结论**：`app/ts-price-service` + `pod_network_delay` ｜ 标签 `app/ts-price-service` + `pod_network_delay`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2941 · steps 18 · tokens 343,666
 - **摘要**：Alerts are latency-only (no saturation rows) on 6 services: ts-price-service p50 5.95ms->2436.17ms (+40864.7%) / p90 9.19->4476.74ms, ts-basic-service p50 38.70->3750ms, ts-travel-service p90 152.45->4463.41ms, ts-preserve-service p50 389.83->7500ms, ts-gateway-service p90 325.74->5344.44ms, ts-ui-dashboard p90 331.76->5052.63ms. The alerted set is exactly the caller closure of ts-price-service: dependency graph shows ts-price-service is a LEAF (no downstream) called only by ts-gateway-service and ts-basic-service; basic's other downstreams (route/station/train) are completely clean, which exc
+
+### case-10
+
+- **结论**：`app/ts-route-service` + `pod_network_delay` ｜ 标签 `app/ts-route-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2353 · steps 18 · tokens 304,738
+- **摘要**：L3 SOP for this wording says the signal is on the metric surface: alerts first, object layer only for exclusion. GetAlerts returns 18 abnormal services with NO RESOURCE_SATURATION row (latency/throughput/traffic only). The unique outlier is ts-route-service: p50 7.55ms -> 8026.32ms (+106152.5%, peak 9791.67ms), p90 9.60ms -> 21000ms (+218729.8%) — i.e. a constant ~8s delay added onto its own server-side latency. GetServiceDependencies shows ts-route-service is a LEAF node with no downstream calls, so its latency jump cannot be inherited from anything it calls, while every other latency-degrade
 

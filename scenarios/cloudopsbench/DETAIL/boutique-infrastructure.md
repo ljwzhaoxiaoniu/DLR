@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **8/40** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 96,876 ｜ 生成 2026-10-13T08:43:25.195Z
+> 本家族已跑 **9/40** 题：JRA ✅9 ❌0 ｜ 证据链全闭 9 ｜ token 中位 93,919 ｜ 生成 2026-10-13T08:52:40.926Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -15,6 +15,7 @@
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4167 | 13 | 76,649 | 0 | 0 | 1013_1536_inorder4-v3b19 | 全对·链闭 |
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 77,500 | 0 | 0 | 1013_1623_inorder4-v3b21 | 全对·链闭 |
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 77,283 | 0 | 0 | 1013_1633_inorder4-v3b23 | 全对·链闭 |
+| [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 93,919 | 0 | 0 | 1013_1645_inorder4-v3b24 | 全对·链闭 |
 
 ## 证据正文
 
@@ -65,4 +66,10 @@
 - **结论**：`node/worker-02` + `containerd_unavailable` ｜ 标签 `node/worker-02` + `containerd_unavailable`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4545 · steps 12 · tokens 77,283
 - **摘要**：Symptom 'Partial Service Unreachability': 6 of 11 boutique pods (adservice, cartservice, checkoutservice, currencyservice, productcatalogservice, shippingservice) are stuck at Init:0/1 with no pod IP, all of them scheduled on worker-02, while every worker-01 pod is 2/2 Running. Namespace events show 'Warning FailedCreatePodSandBox ... dial unix /run/containerd/containerd.sock: connect: no such file or directory' for each worker-02 pod. On worker-02: containerd.service is 'Active: inactive (dead) since Fri 2026-01-02 13:00:51 CST' (runtime socket gone, only leftover shims), while kubelet is sti
+
+### case-9
+
+- **结论**：`node/worker-01` + `containerd_unavailable` ｜ 标签 `node/worker-01` + `containerd_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 93,919
+- **摘要**：Namespace boutique shows a node-scoped outage: all 7 pods assigned to worker-01 (adservice, currencyservice, emailservice, productcatalogservice, redis-cart, shippingservice) are stuck 0/1 ContainerCreating, while every pod on worker-02 is 1/1 Running. Their pod events and the namespace events surface all carry the identical Warning FailedCreatePodSandBox with 'rpc error: code = Unavailable ... dial unix /run/containerd/containerd.sock: connect: no such file or directory' (pods are PodScheduled=True and Initialized=True, so scheduling/admission are fine). Node worker-01 is NotReady with condit
 
