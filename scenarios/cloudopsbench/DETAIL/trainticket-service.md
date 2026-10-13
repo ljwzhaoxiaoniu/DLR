@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **35/37** 题：JRA ✅35 ❌0 ｜ 证据链全闭 35 ｜ token 中位 501,550 ｜ 生成 2026-10-13T14:16:40.173Z
+> 本家族已跑 **36/37** 题：JRA ✅36 ❌0 ｜ 证据链全闭 36 ｜ token 中位 501,550 ｜ 生成 2026-10-13T14:29:10.547Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -42,6 +42,7 @@
 | [34](#case-34) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 380,698 | 0 | 0 | 1013_2203_inorder4-v3b49 | 全对·链闭 |
 | [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 526,268 | 0 | 0 | 1013_2210_inorder4-v3b50 | 全对·链闭 |
 | [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 315,331 | 0 | 0 | 1013_2214_inorder4-v3b51 | 全对·链闭 |
+| [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 21 | 490,553 | 0 | 0 | 1013_2217_inorder4-v3b52 | 全对·链闭 |
 
 ## 证据正文
 
@@ -289,4 +290,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 16 · tokens 315,331
 - **raw 日志**：[results/1013_2214_inorder4-v3b51/raw/1013_2215_trainticket-service-36](../results/1013_2214_inorder4-v3b51/raw/1013_2215_trainticket-service-36/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Pod inventory names exactly one outlier: ts-travel-service-5b5d9f9746-pxbqv (0/2, Error, 4 restarts, node worker-02), matching the alert 'ts-travel-service -> /api/v1/travelservice/trips/left -> HTTPError 503' (17 occurrences). The victim's own signal is a total in-pod DNS failure: app container last run 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' and istio-proxy 'dial tcp: lookup istiod.istio-system.svc on 10.255.4.254:53: read udp 172.20.2.14:38306->10.255.4.254:53: i/o timeout'. Connectivity probe to the port its Service declares (12346) fails fr
+
+### case-37
+
+- **结论**：`app/ts-user-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-user-service` + `service_dns_resolution_failure`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3 · steps 21 · tokens 490,553
+- **raw 日志**：[results/1013_2217_inorder4-v3b52/raw/1013_2220_trainticket-service-37](../results/1013_2217_inorder4-v3b52/raw/1013_2220_trainticket-service-37/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only outlier in the namespace inventory: pod ts-user-service-55f7958bd-gvl47 = 0/2 Error, CrashLoopBackOff, Restart Count 4, Last State Terminated Error Exit Code 1. Its container log reads 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' inside 'HikariPool-1 - Exception during pool initialization' / 'Unable to build Hibernate SessionFactory', and its in-pod istio-proxy shows 'lookup istiod.istio-system.svc on 10.255.2.254:53 ... i/o timeout' - i.e. the whole pod's resolver is dead. The config face confirms it: the ts-user-service Deployment is the only 
 

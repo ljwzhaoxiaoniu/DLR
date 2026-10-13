@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/infrastructure</em></h1>
-<p class="deck">已跑 <b>28/40</b> 题：JRA ✅28 ❌0 ｜ 证据链全闭 28 ｜ token 中位 125,844 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:16:40.173Z</p>
+<p class="deck">已跑 <b>29/40</b> 题：JRA ✅29 ❌0 ｜ 证据链全闭 29 ｜ token 中位 125,844 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:29:10.547Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>96,876</td><td>0</td><td>0</td><td class="muted">1012_1458_l3-verify3</td><td><a href="../results/1012_1458_l3-verify3/raw/1012_1459_boutique-infrastructure-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1459_boutique-infrastructure-1</a></td></tr>
@@ -44,6 +44,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-26"><code>26</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2143</td><td>15</td><td>125,844</td><td>0</td><td>0</td><td class="muted">1013_2203_inorder4-v3b49</td><td><a href="../results/1013_2203_inorder4-v3b49/raw/1013_2204_boutique-infrastructure-26/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2204_boutique-infrastructure-26</a></td></tr>
 <tr><td><a href="#case-27"><code>27</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1667</td><td>19</td><td>134,232</td><td>0</td><td>0</td><td class="muted">1013_2210_inorder4-v3b50</td><td><a href="../results/1013_2210_inorder4-v3b50/raw/1013_2210_boutique-infrastructure-27/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2210_boutique-infrastructure-27</a></td></tr>
 <tr><td><a href="#case-28"><code>28</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2143</td><td>15</td><td>89,399</td><td>0</td><td>0</td><td class="muted">1013_2214_inorder4-v3b51</td><td><a href="../results/1013_2214_inorder4-v3b51/raw/1013_2214_boutique-infrastructure-28/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2214_boutique-infrastructure-28</a></td></tr>
+<tr><td><a href="#case-29"><code>29</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2143</td><td>15</td><td>125,901</td><td>0</td><td>0</td><td class="muted">1013_2217_inorder4-v3b52</td><td><a href="../results/1013_2217_inorder4-v3b52/raw/1013_2217_boutique-infrastructure-29/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2217_boutique-infrastructure-29</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>node/worker-01</code> + <code>containerd_unavailable</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
@@ -1322,6 +1323,47 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;node/master&quot;,
    &quot;root_cause&quot;: &quot;kubelet_unavailable&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-29"><summary><b>case-29</b> · <code>node/master</code> + <code>kube_scheduler_unavailable</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
+<li><b>摘要</b>：shippingservice is unreachable (CheckServiceConnectivity shippingservice:50051 = Connection Failed; endpoints/shippingservice = &lt;none&gt;) because its only pod shippingservice-7ff54bf6b6-5b4tc is stuck Pending, 0/1, with no node assigned and ZERO events - i.e. no FailedScheduling reason at all, meaning nothing ever attempted to bind it. The node side is clean: all three workers are Ready, untainted (taints []) with abundant allocatable (8 CPU / ~15Gi each), and the pod's spec carries no nodeSelector/affinity/tolerations. The break is on the control plane: CheckNodeServiceStatus(master, kube-sched</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2217_inorder4-v3b52/raw/1013_2217_boutique-infrastructure-29/">results/1013_2217_inorder4-v3b52/raw/1013_2217_boutique-infrastructure-29</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;shippingservice-7ff54bf6b6-5b4tc&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;nodes&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;master&quot;,&quot;service_name&quot;:&quot;kube-scheduler&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;shippingservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;shippingservice&quot;,&quot;port&quot;:50051,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;serviceaccounts&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;name&quot;:&quot;shippingservice&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;shippingservice is unreachable (CheckServiceConnectivity shippingservice:50051 = Connection Failed; endpoints/shippingservice = &lt;none&gt;) because its only pod shippingservice-7ff54bf6b6-5b4tc is stuck Pending, 0/1, with no node assigned and ZERO events - i.e. no FailedScheduling reason at all, meaning nothing ever attempted to bind it. The node side is clean: all three workers are Ready, untainted (taints []) with abundant allocatable (8 CPU / ~15Gi each), and the pod's spec carries no nodeSelector/affinity/tolerations. The break is on the control plane: CheckNodeServiceStatus(master, kube-scheduler) shows 'Active: inactive (dead) since Tue 2025-12-02 21:41:15 CST' with systemd 'Stopped Kubernetes Scheduler'. Timing confirms: the scheduler died ~111s ago while the pod was created only 81s ago (all Running pods are 2m+ old, predating the stop), so no scheduling attempt was ever recorded. The Warning FailedCreate 'serviceaccount shippingservice not found' is setup history, not the mechanism - the serviceaccounts listing shows shippingservice present (age 95s) and the pod was created successfully afterwards; the Service selector app=shippingservice matches the pod labels.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;node/master&quot;,
+   &quot;root_cause&quot;: &quot;kube_scheduler_unavailable&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/shippingservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/shippingservice&quot;,
+   &quot;root_cause&quot;: &quot;node_cordon_mismatch&quot;
   }
  ]
 }</pre>

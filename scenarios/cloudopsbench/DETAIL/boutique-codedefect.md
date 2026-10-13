@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **29/98** 题：JRA ✅29 ❌0 ｜ 证据链全闭 29 ｜ token 中位 248,815 ｜ 生成 2026-10-13T14:16:40.173Z
+> 本家族已跑 **30/98** 题：JRA ✅30 ❌0 ｜ 证据链全闭 30 ｜ token 中位 254,844 ｜ 生成 2026-10-13T14:29:10.547Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -36,6 +36,7 @@
 | [27](#case-27) | 1 | 1 | 1 | 1 | 0.4 | 1 | 0.1852 | 28 | 587,242 | 0 | 0 | 1013_2203_inorder4-v3b49 | 全对·链闭 |
 | [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2381 | 22 | 356,032 | 0 | 0 | 1013_2210_inorder4-v3b50 | 全对·链闭 |
 | [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 177,788 | 0 | 0 | 1013_2214_inorder4-v3b51 | 全对·链闭 |
+| [30](#case-30) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1579 | 39 | 1,081,143 | 0.0526 | 0 | 1013_2217_inorder4-v3b52 | 全对·链闭 |
 
 ## 证据正文
 
@@ -241,4 +242,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 177,788
 - **raw 日志**：[results/1013_2214_inorder4-v3b51/raw/1013_2214_boutique-codedefect-29](../results/1013_2214_inorder4-v3b51/raw/1013_2214_boutique-codedefect-29/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Telemetry-chain closure. GetAlerts returned exactly one ABNORMAL entity: Service checkoutservice (2026-05-19 11:05:50~11:08:25) with two anomaly classes: RESOURCE_SATURATION [cpu] Normal=0.00 cores -> Current=0.01 cores (+720.3%) and FILESYSTEM_WRITE_SURGE [fs_write_bytes] Normal=0.00B/s -> Current=13305.23B/s (New Spike, Peak=55334.06B/s). Object-layer exclusion: the full boutique pod listing shows all 11 pods 2/2 Running with RESTARTS=0 and no Pending/CrashLoop/NotReady rows, so no scheduling/startup/probe break exists; GetErrorLogs(checkoutservice) returned 'No error logs found' and GetRece
+
+### case-30
+
+- **结论**：`app/frontend` + `code_wrong_argument_order` ｜ 标签 `app/frontend` + `code_wrong_argument_order`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1579 · steps 39 · tokens 1,081,143
+- **raw 日志**：[results/1013_2217_inorder4-v3b52/raw/1013_2217_boutique-codedefect-30](../results/1013_2217_inorder4-v3b52/raw/1013_2217_boutique-codedefect-30/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All boutique workload objects read healthy (11 pods 2/2 Running, RESTARTS 0, deployments 1/1 AVAILABLE, all Services with bound Endpoints, correct selectors/targetPorts, and successful TCP connectivity checks on every declared port), so no scheduling/startup/admission/address-layer break exists. The break is at the request-payload/code level: cartservice error logs are 766/2807 lines (27.3%) of 'AddItemAsync called with userId=66VCHSJNUP, productId=fb13bad5-dc1f-420a-b87d-c53033adb784, quantity=9' - a product ID sitting in the userId slot and a session UUID in the productId slot - matching fro
 

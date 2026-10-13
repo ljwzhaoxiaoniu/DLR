@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **28/40** 题：JRA ✅28 ❌0 ｜ 证据链全闭 28 ｜ token 中位 125,844 ｜ 生成 2026-10-13T14:16:40.173Z
+> 本家族已跑 **29/40** 题：JRA ✅29 ❌0 ｜ 证据链全闭 29 ｜ token 中位 125,844 ｜ 生成 2026-10-13T14:29:10.547Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -35,6 +35,7 @@
 | [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 125,844 | 0 | 0 | 1013_2203_inorder4-v3b49 | 全对·链闭 |
 | [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 134,232 | 0 | 0 | 1013_2210_inorder4-v3b50 | 全对·链闭 |
 | [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 89,399 | 0 | 0 | 1013_2214_inorder4-v3b51 | 全对·链闭 |
+| [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 125,901 | 0 | 0 | 1013_2217_inorder4-v3b52 | 全对·链闭 |
 
 ## 证据正文
 
@@ -233,4 +234,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 89,399
 - **raw 日志**：[results/1013_2214_inorder4-v3b51/raw/1013_2214_boutique-infrastructure-28](../results/1013_2214_inorder4-v3b51/raw/1013_2214_boutique-infrastructure-28/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Namespace boutique inventory shows a single outlier: pod redis-cart-589d486f78-ghstg is 0/1 Pending with 'Node: <none>' and NO scheduling line/event at all (DescribeResource Events: <none>), while deployment redis-cart reports 0/1 AVAILABLE and endpoints/redis-cart shows ENDPOINTS <none> and CheckServiceConnectivity(redis-cart:6379) returns 'Connection Failed'. No node-side blocker exists: workers worker-01/02/03 are Ready with no taints and no pressure (master's unschedulable taint is by design), and the PVC redis-cart-pvc is Bound to redis-cart-pv (2Gi RWO, storageClassName '' matched), so s
+
+### case-29
+
+- **结论**：`node/master` + `kube_scheduler_unavailable` ｜ 标签 `node/master` + `kube_scheduler_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 125,901
+- **raw 日志**：[results/1013_2217_inorder4-v3b52/raw/1013_2217_boutique-infrastructure-29](../results/1013_2217_inorder4-v3b52/raw/1013_2217_boutique-infrastructure-29/)（ndjson / mcp.jsonl / meta）
+- **摘要**：shippingservice is unreachable (CheckServiceConnectivity shippingservice:50051 = Connection Failed; endpoints/shippingservice = <none>) because its only pod shippingservice-7ff54bf6b6-5b4tc is stuck Pending, 0/1, with no node assigned and ZERO events - i.e. no FailedScheduling reason at all, meaning nothing ever attempted to bind it. The node side is clean: all three workers are Ready, untainted (taints []) with abundant allocatable (8 CPU / ~15Gi each), and the pod's spec carries no nodeSelector/affinity/tolerations. The break is on the control plane: CheckNodeServiceStatus(master, kube-sched
 

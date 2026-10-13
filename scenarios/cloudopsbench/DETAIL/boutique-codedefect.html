@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/codedefect</em></h1>
-<p class="deck">已跑 <b>29/98</b> 题：JRA ✅29 ❌0 ｜ 证据链全闭 29 ｜ token 中位 248,815 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:16:40.173Z</p>
+<p class="deck">已跑 <b>30/98</b> 题：JRA ✅30 ❌0 ｜ 证据链全闭 30 ｜ token 中位 254,844 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:29:10.547Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3077</td><td>14</td><td>129,107</td><td>0</td><td>0</td><td class="muted">1012_1415_inorder4-v3</td><td><a href="../results/1012_1415_inorder4-v3/raw/1012_1417_boutique-codedefect-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1417_boutique-codedefect-1</a></td></tr>
@@ -45,6 +45,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-27"><code>27</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.4</td><td>1</td><td>0.1852</td><td>28</td><td>587,242</td><td>0</td><td>0</td><td class="muted">1013_2203_inorder4-v3b49</td><td><a href="../results/1013_2203_inorder4-v3b49/raw/1013_2203_boutique-codedefect-27/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2203_boutique-codedefect-27</a></td></tr>
 <tr><td><a href="#case-28"><code>28</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2381</td><td>22</td><td>356,032</td><td>0</td><td>0</td><td class="muted">1013_2210_inorder4-v3b50</td><td><a href="../results/1013_2210_inorder4-v3b50/raw/1013_2210_boutique-codedefect-28/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2210_boutique-codedefect-28</a></td></tr>
 <tr><td><a href="#case-29"><code>29</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2143</td><td>15</td><td>177,788</td><td>0</td><td>0</td><td class="muted">1013_2214_inorder4-v3b51</td><td><a href="../results/1013_2214_inorder4-v3b51/raw/1013_2214_boutique-codedefect-29/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2214_boutique-codedefect-29</a></td></tr>
+<tr><td><a href="#case-30"><code>30</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1579</td><td>39</td><td>1,081,143</td><td>0.0526</td><td>0</td><td class="muted">1013_2217_inorder4-v3b52</td><td><a href="../results/1013_2217_inorder4-v3b52/raw/1013_2217_boutique-codedefect-30/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2217_boutique-codedefect-30</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/checkoutservice</code> + <code>code_wrong_argument_order</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 14 步</summary><ul>
@@ -1420,6 +1421,71 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
    &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-30"><summary><b>case-30</b> · <code>app/frontend</code> + <code>code_wrong_argument_order</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 39 步</summary><ul>
+<li><b>摘要</b>：All boutique workload objects read healthy (11 pods 2/2 Running, RESTARTS 0, deployments 1/1 AVAILABLE, all Services with bound Endpoints, correct selectors/targetPorts, and successful TCP connectivity checks on every declared port), so no scheduling/startup/admission/address-layer break exists. The break is at the request-payload/code level: cartservice error logs are 766/2807 lines (27.3%) of 'AddItemAsync called with userId=66VCHSJNUP, productId=fb13bad5-dc1f-420a-b87d-c53033adb784, quantity=9' - a product ID sitting in the userId slot and a session UUID in the productId slot - matching fro</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2217_inorder4-v3b52/raw/1013_2217_boutique-codedefect-30/">results/1013_2217_inorder4-v3b52/raw/1013_2217_boutique-codedefect-30</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;show_labels&quot;:true}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>15</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>16</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;adservice&quot;,&quot;port&quot;:9555,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>17</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;productcatalogservice&quot;,&quot;port&quot;:3550,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>18</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;cartservice&quot;,&quot;port&quot;:7070,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>19</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;currencyservice&quot;,&quot;port&quot;:7000,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>20</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;recommendationservice&quot;,&quot;port&quot;:8080,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>21</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;redis-cart&quot;,&quot;port&quot;:6379,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;productcatalogservice&quot;}</code></td></tr>
+<tr><td>23</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>24</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>25</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>26</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>27</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>28</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>29</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;productcatalogservice&quot;}</code></td></tr>
+<tr><td>30</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>31</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>32</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>33</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>34</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>35</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;handlers.go&quot;}</code></td></tr>
+<tr><td>36</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;rpc.go&quot;}</code></td></tr>
+<tr><td>37</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;,&quot;file_path&quot;:&quot;src/services/CartService.cs&quot;}</code></td></tr>
+<tr><td>38</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;,&quot;file_path&quot;:&quot;src/cartstore/RedisCartStore.cs&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All boutique workload objects read healthy (11 pods 2/2 Running, RESTARTS 0, deployments 1/1 AVAILABLE, all Services with bound Endpoints, correct selectors/targetPorts, and successful TCP connectivity checks on every declared port), so no scheduling/startup/admission/address-layer break exists. The break is at the request-payload/code level: cartservice error logs are 766/2807 lines (27.3%) of 'AddItemAsync called with userId=66VCHSJNUP, productId=fb13bad5-dc1f-420a-b87d-c53033adb784, quantity=9' - a product ID sitting in the userId slot and a session UUID in the productId slot - matching frontend's own log at the same instant ('adding to cart','product':'66VCHSJNUP','quantity':9) and yielding frontend errors 'could not retrieve product: rpc error: code = Canceled desc = context canceled' (HTTP 500) plus the reported 503s on /product/{id} (20), /cart (7) and POST /cart (2). The code surface proves the fault's home: frontend/handlers.go addToCartHandler swaps the two variables ('userID, productID = productID, userID') right before calling insertCart, which maps them to AddItemRequest{UserId: userID, Item.ProductId: productID}; cartservice/src/services/CartService.cs and RedisCartStore.cs forward and key on userId in the correct order, so the malformed call is created by the caller app/frontend (a custom wangyl2128/frontend-v2:latest image) and the cart is stored under the product ID with a bogus productId item, breaking cart/product views.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_argument_order&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_argument_order&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_return&quot;
   }
  ]
 }</pre>

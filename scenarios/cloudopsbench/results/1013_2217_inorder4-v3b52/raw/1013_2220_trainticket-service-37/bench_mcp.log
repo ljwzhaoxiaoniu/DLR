@@ -1,0 +1,36 @@
+INFO:     Started server process [25756]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:50867 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50868 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:50867 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50869 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50872 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50874 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:50872 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50872 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-user-service"}
+INFO:     127.0.0.1:64834 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64834 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64834 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-preserve-service"}
+INFO:     127.0.0.1:64834 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64846 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64846 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:64846 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"tsdb-mysql-leader","port":3306}
+INFO:     127.0.0.1:64846 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-user-service"}
+INFO:     127.0.0.1:64846 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64852 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-order-service"}
+INFO:     127.0.0.1:64852 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64852 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64852 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-user-service","port":12342}
+INFO:     127.0.0.1:57962 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-preserve-service"}
+INFO:     127.0.0.1:57962 - "POST /mcp HTTP/1.1" 200 OK
