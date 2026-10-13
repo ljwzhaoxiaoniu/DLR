@@ -58,10 +58,10 @@
 <h1 class="hero">TSM × Cloud-OpsBench · <em>总视图</em></h1>
 <p class="deck">三级语义建模（L1 对象/面 · L2 读法 · L3 走链）驱动的 K8s 根因诊断——快照确定性回放（锚 ea05daf），结果为上游 scorer 原口径。本页由 <code>eval/stats.mjs</code> 每次重建自动刷新。</p>
 <div class="stat-row">
-  <div class="stat"><div class="stat__value">120/754</div><div class="stat__label">跑题覆盖度</div><div class="stat__note">15.9%</div></div>
-  <div class="stat stat--good"><div class="stat__value">120/120</div><div class="stat__label">JRA 联合命中</div><div class="stat__note">CA 120 · FA 120</div></div>
-  <div class="stat stat--good"><div class="stat__value">119/120</div><div class="stat__label">证据链全闭</div><div class="stat__note">MC 0.9979 · EOC 0.9861</div></div>
-  <div class="stat"><div class="stat__value">204,578</div><div class="stat__label">token 中位 / 题</div><div class="stat__note">平均 309,532 · cache 读 75%</div></div>
+  <div class="stat"><div class="stat__value">124/754</div><div class="stat__label">跑题覆盖度</div><div class="stat__note">16.4%</div></div>
+  <div class="stat stat--good"><div class="stat__value">124/124</div><div class="stat__label">JRA 联合命中</div><div class="stat__note">CA 124 · FA 124</div></div>
+  <div class="stat stat--good"><div class="stat__value">123/124</div><div class="stat__label">证据链全闭</div><div class="stat__note">MC 0.998 · EOC 0.9866</div></div>
+  <div class="stat"><div class="stat__value">207,450</div><div class="stat__label">token 中位 / 题</div><div class="stat__note">平均 316,110 · cache 读 75%</div></div>
 </div>
 <p class="muted" style="margin-top:12px; line-height:1.75;"><b>指标示意</b>：<b>结果分</b> —— CA 组件命中 · FA 故障类型命中 · <b>JRA 联合命中（CA+FA，主指标）</b>；<b>流程分</b> —— MC 里程碑覆盖（该查的检查点走到没）· EOC 证据顺序一致（查证链是否按序闭合）· ECR 证据闭合率 · EE 证据效率（证据步 ÷ 总步）；<b>过程</b> —— steps 步数 · RAR 重复动作率 · inv 无效动作。结果分与流程分互相独立：结论对 ≠ 过程满分（个别题 EOC &lt; 1 = 证据链顺序/覆盖未满分，判定仍可为对）。</p>
 
@@ -106,13 +106,13 @@ LE  emailservice-deploy（载体）
   </div>
 <div class="fam">
     <div class="fam__name"><a href="DETAIL/boutique-codedefect.html" title="逐题统计（HTML）">boutique/codedefect</a></div>
-    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:12.2%"></div></div></div>
-    <div class="fam__num">12/98 · 12.2%</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:13.3%"></div></div></div>
+    <div class="fam__num">13/98 · 13.3%</div>
   </div>
 <div class="fam">
     <div class="fam__name"><a href="DETAIL/boutique-infrastructure.html" title="逐题统计（HTML）">boutique/infrastructure</a></div>
-    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:27.5%"></div></div></div>
-    <div class="fam__num">11/40 · 27.5%</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:30%"></div></div></div>
+    <div class="fam__num">12/40 · 30%</div>
   </div>
 <div class="fam">
     <div class="fam__name"><a href="DETAIL/boutique-performance.html" title="逐题统计（HTML）">boutique/performance</a></div>
@@ -141,8 +141,8 @@ LE  emailservice-deploy（载体）
   </div>
 <div class="fam">
     <div class="fam__name"><a href="DETAIL/trainticket-performance.html" title="逐题统计（HTML）">train-ticket/performance</a></div>
-    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:27.7%"></div></div></div>
-    <div class="fam__num">13/47 · 27.7%</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:29.8%"></div></div></div>
+    <div class="fam__num">14/47 · 29.8%</div>
   </div>
 <div class="fam">
     <div class="fam__name"><a href="DETAIL/trainticket-runtime.html" title="逐题统计（HTML）">train-ticket/runtime</a></div>
@@ -151,8 +151,8 @@ LE  emailservice-deploy（载体）
   </div>
 <div class="fam">
     <div class="fam__name"><a href="DETAIL/trainticket-service.html" title="逐题统计（HTML）">train-ticket/service</a></div>
-    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:40.5%"></div></div></div>
-    <div class="fam__num">15/37 · 40.5%</div>
+    <div class="fam__bar"><div class="bar"><div class="bar__fill" style="width:43.2%"></div></div></div>
+    <div class="fam__num">16/37 · 43.2%</div>
   </div>
 <div class="fam">
     <div class="fam__name"><a href="DETAIL/trainticket-startup.html" title="逐题统计（HTML）">train-ticket/startup</a></div>
@@ -164,18 +164,18 @@ LE  emailservice-deploy（载体）
 <table>
 <tr><th>家族</th><th>全量</th><th>已跑</th><th>覆盖</th><th>JRA</th><th>证据链全闭</th><th>token 中位</th></tr>
 <tr><td><a href="DETAIL/boutique-admission.html" title="逐题统计（HTML）"><code>boutique/admission</code></a></td><td>58</td><td>6</td><td>10.3%</td><td><span class="ok">✅ 6</span></td><td>5</td><td>82,218</td></tr>
-<tr><td><a href="DETAIL/boutique-codedefect.html" title="逐题统计（HTML）"><code>boutique/codedefect</code></a></td><td>98</td><td>12</td><td>12.2%</td><td><span class="ok">✅ 12</span></td><td>12</td><td>181,778</td></tr>
-<tr><td><a href="DETAIL/boutique-infrastructure.html" title="逐题统计（HTML）"><code>boutique/infrastructure</code></a></td><td>40</td><td>11</td><td>27.5%</td><td><span class="ok">✅ 11</span></td><td>11</td><td>93,919</td></tr>
+<tr><td><a href="DETAIL/boutique-codedefect.html" title="逐题统计（HTML）"><code>boutique/codedefect</code></a></td><td>98</td><td>13</td><td>13.3%</td><td><span class="ok">✅ 13</span></td><td>13</td><td>181,778</td></tr>
+<tr><td><a href="DETAIL/boutique-infrastructure.html" title="逐题统计（HTML）"><code>boutique/infrastructure</code></a></td><td>40</td><td>12</td><td>30%</td><td><span class="ok">✅ 12</span></td><td>12</td><td>96,876</td></tr>
 <tr><td><a href="DETAIL/boutique-performance.html" title="逐题统计（HTML）"><code>boutique/performance</code></a></td><td>29</td><td>9</td><td>31%</td><td><span class="ok">✅ 9</span></td><td>9</td><td>170,422</td></tr>
 <tr><td><a href="DETAIL/boutique-runtime.html" title="逐题统计（HTML）"><code>boutique/runtime</code></a></td><td>45</td><td>6</td><td>13.3%</td><td><span class="ok">✅ 6</span></td><td>6</td><td>61,752</td></tr>
 <tr><td><a href="DETAIL/boutique-scheduling.html" title="逐题统计（HTML）"><code>boutique/scheduling</code></a></td><td>164</td><td>12</td><td>7.3%</td><td><span class="ok">✅ 12</span></td><td>12</td><td>131,524</td></tr>
 <tr><td><a href="DETAIL/boutique-service.html" title="逐题统计（HTML）"><code>boutique/service</code></a></td><td>54</td><td>5</td><td>9.3%</td><td><span class="ok">✅ 5</span></td><td>5</td><td>213,813</td></tr>
 <tr><td><a href="DETAIL/boutique-startup.html" title="逐题统计（HTML）"><code>boutique/startup</code></a></td><td>62</td><td>4</td><td>6.5%</td><td><span class="ok">✅ 4</span></td><td>4</td><td>83,339</td></tr>
-<tr><td><a href="DETAIL/trainticket-performance.html" title="逐题统计（HTML）"><code>train-ticket/performance</code></a></td><td>47</td><td>13</td><td>27.7%</td><td><span class="ok">✅ 13</span></td><td>13</td><td>319,046</td></tr>
+<tr><td><a href="DETAIL/trainticket-performance.html" title="逐题统计（HTML）"><code>train-ticket/performance</code></a></td><td>47</td><td>14</td><td>29.8%</td><td><span class="ok">✅ 14</span></td><td>14</td><td>343,666</td></tr>
 <tr><td><a href="DETAIL/trainticket-runtime.html" title="逐题统计（HTML）"><code>train-ticket/runtime</code></a></td><td>96</td><td>15</td><td>15.6%</td><td><span class="ok">✅ 15</span></td><td>15</td><td>521,337</td></tr>
-<tr><td><a href="DETAIL/trainticket-service.html" title="逐题统计（HTML）"><code>train-ticket/service</code></a></td><td>37</td><td>15</td><td>40.5%</td><td><span class="ok">✅ 15</span></td><td>15</td><td>666,312</td></tr>
+<tr><td><a href="DETAIL/trainticket-service.html" title="逐题统计（HTML）"><code>train-ticket/service</code></a></td><td>37</td><td>16</td><td>43.2%</td><td><span class="ok">✅ 16</span></td><td>16</td><td>681,352</td></tr>
 <tr><td><a href="DETAIL/trainticket-startup.html" title="逐题统计（HTML）"><code>train-ticket/startup</code></a></td><td>24</td><td>12</td><td>50%</td><td><span class="ok">✅ 12</span></td><td>12</td><td>264,001</td></tr>
 </table>
-<div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="results/STATS.md">STATS.md</a> · <a href="DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="DETAIL/">DETAIL/</a>）。生成 2026-10-13T10:38:21.754Z</div>
+<div class="note">口径：结果/流程分取自上游 scorer（无人工翻盘）；tokens = input + cache_read + cache_write + output（raw ndjson 逐轮求和）。文字版台账：<a href="results/STATS.md">STATS.md</a> · <a href="DETAIL.md">DETAIL.md</a>（逐题证据按家族拆 <a href="DETAIL/">DETAIL/</a>）。生成 2026-10-13T10:42:30.373Z</div>
 </body>
 </html>

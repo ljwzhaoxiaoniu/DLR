@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **13/47** 题：JRA ✅13 ❌0 ｜ 证据链全闭 13 ｜ token 中位 319,046 ｜ 生成 2026-10-13T10:38:21.754Z
+> 本家族已跑 **14/47** 题：JRA ✅14 ❌0 ｜ 证据链全闭 14 ｜ token 中位 343,666 ｜ 生成 2026-10-13T10:42:30.373Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -20,6 +20,7 @@
 | [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 356,222 | 0 | 0 | 1013_1805_inorder4-v3b26 | 全对·链闭 |
 | [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 25 | 850,385 | 0 | 0 | 1013_1825_dual2-verify1 | 全对·链闭 |
 | [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 207,450 | 0 | 0 | 1013_1831_inorder4-v3b29 | 全对·链闭 |
+| [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1818 | 23 | 395,607 | 0 | 0 | 1013_1839_inorder4-v3b31 | 全对·链闭 |
 
 ## 证据正文
 
@@ -113,4 +114,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 207,450
 - **raw 日志**：[results/1013_1831_inorder4-v3b29/raw/1013_1832_trainticket-performance-13](../results/1013_1831_inorder4-v3b29/raw/1013_1832_trainticket-performance-13/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom 'Service quality degradation.' enters the metric surface: GetAlerts (all rows in the same 2026-03-16 17:41:15~17:43:10 window) shows latency/throughput anomalies only - NO RESOURCE_SATURATION rows - so this is not a resource fault. Dependency chain ts-ui-dashboard -> ts-gateway-service -> ts-preserve-service -> ts-travel-service -> ts-basic-service -> ts-station-service identifies ts-station-service as the deepest node of the call direction and the carrier of the largest deviation: p50 3.31ms -> 2477.27ms (+74810.0%), p90 6.64 -> 4492.19ms, while it is a Leaf Node (GetServiceDependenci
+
+### case-14
+
+- **结论**：`app/ts-train-service` + `pod_network_delay` ｜ 标签 `app/ts-train-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1818 · steps 23 · tokens 395,607
+- **raw 日志**：[results/1013_1839_inorder4-v3b31/raw/1013_1840_trainticket-performance-14](../results/1013_1839_inorder4-v3b31/raw/1013_1840_trainticket-performance-14/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Metric-surface case: 7 alerts in window 2026-03-16 17:57:56~17:59:46. ts-train-service (a call-graph LEAF: 'Upstream: gateway/travel/travel2/basic/travel-plan/rebook; Downstream: (Leaf Node - No downstream calls)') carries by far the largest deviation: p50 6.71ms->2453.12ms (+36478.3%), p90 9.67ms->4483.33ms (+46258.5%), and every other latency alert is one of its callers (ts-basic-service +9346% p50, ts-travel-service +1964% p90, ts-preserve-service +1400% p50, ts-gateway-service +983.8%, ts-ui-dashboard +960.6%), i.e. the added delay accumulates hop-by-hop (leaf +2.4s -> basic +3.7s -> trave
 

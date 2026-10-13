@@ -1,0 +1,43 @@
+INFO:     Started server process [20348]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:62337 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62338 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:62337 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62339 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50062 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50065 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50073 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:50073 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50080 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50080 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50080 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:50081 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50081 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"cartservice"}
+INFO:     127.0.0.1:50086 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50086 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"redis-cart","port":6379}
+INFO:     127.0.0.1:50086 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"cartservice","port":7070}
+INFO:     127.0.0.1:50086 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"kube-proxy"}
+INFO:     127.0.0.1:56591 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"kubelet"}
+INFO:     127.0.0.1:56591 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"containerd"}
+INFO:     127.0.0.1:56591 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:56591 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56592 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"productcatalogservice","port":3550}
+INFO:     127.0.0.1:56592 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kube-proxy"}
+INFO:     127.0.0.1:56592 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-03","service_name":"kube-proxy"}
+INFO:     127.0.0.1:56592 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49675 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49675 - "POST /mcp HTTP/1.1" 200 OK

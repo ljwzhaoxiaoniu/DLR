@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **15/37** 题：JRA ✅15 ❌0 ｜ 证据链全闭 15 ｜ token 中位 666,312 ｜ 生成 2026-10-13T10:38:21.754Z
+> 本家族已跑 **16/37** 题：JRA ✅16 ❌0 ｜ 证据链全闭 16 ｜ token 中位 681,352 ｜ 生成 2026-10-13T10:42:30.373Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -21,6 +21,7 @@
 | [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2121 | 34 | 2,181,512 | 0 | 0 | 1013_1810_gateway2-verify1 | 全对·链闭 |
 | [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2414 | 30 | 1,341,232 | 0 | 0 | 1013_1825_dual2-verify1 | 全对·链闭 |
 | [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 930,757 | 0 | 0 | 1013_1831_inorder4-v3b29 | 全对·链闭 |
+| [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2273 | 23 | 1,188,029 | 0 | 0 | 1013_1839_inorder4-v3b31 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
 
 ## 证据正文
@@ -122,6 +123,13 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1875 · steps 17 · tokens 930,757
 - **raw 日志**：[results/1013_1831_inorder4-v3b29/raw/1013_1832_trainticket-service-15](../results/1013_1831_inorder4-v3b29/raw/1013_1832_trainticket-service-15/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Object layer is clean: all train-ticket pods read 2/2 Running with no Pending/CrashLoop/FailedScheduling/FailedCreate/FailedMount/image-pull events, so scheduling/startup/runtime are excluded. The address layer is the breakpoint: in the gateway ConfigMap ts-gateway-service-config (spring.cloud.gateway.routes) the route id 'travel' declares Path=/api/v1/travelservice/** but its uri is lb://${USER_SERVICE_HOST:ts-user-service}, i.e. travel search traffic is sent to ts-user-service instead of ts-travel-service (all sibling routes travel2/travel-plan/user are self-consistent). This matches the mis
+
+### case-16
+
+- **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2273 · steps 23 · tokens 1,188,029
+- **raw 日志**：[results/1013_1839_inorder4-v3b31/raw/1013_1840_trainticket-service-16](../results/1013_1839_inorder4-v3b31/raw/1013_1840_trainticket-service-16/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom wording named no service, so the inventory listing was the entry: all 47 pods Running/Ready with the only restart outlier being ts-ui-dashboard (3, transient nginx 'host not found in upstream ts-gateway-service' at pod start). Caller-side signal: ts-ui-dashboard nginx access log shows repeated 'POST /api/v1/travelservice/trips/left HTTP/1.1" 404 131' while sibling paths return 200, matching the alert (business_action 'Search ticket', entry_service ts-travel-service, /api/v1/travelservice/trips/left, 19 occurrences, HTTP 404 Not Found). The break is in the address layer, not in either c
 
 ### case-25
 
