@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **10/40** 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 93,919 ｜ 生成 2026-10-13T10:28:30.289Z
+> 本家族已跑 **11/40** 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 93,919 ｜ 生成 2026-10-13T10:34:12.977Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -17,6 +17,7 @@
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 77,283 | 0 | 0 | 1013_1633_inorder4-v3b23 | 全对·链闭 |
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 93,919 | 0 | 0 | 1013_1645_inorder4-v3b24 | 全对·链闭 |
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 11 | 54,365 | 0 | 0 | 1013_1805_inorder4-v3b26 | 全对·链闭 |
+| [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.381 | 22 | 169,478 | 0 | 0 | 1013_1831_inorder4-v3b29 | 全对·链闭 |
 
 ## 证据正文
 
@@ -89,4 +90,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4 · steps 11 · tokens 54,365
 - **raw 日志**：[results/1013_1805_inorder4-v3b26/raw/1013_1805_boutique-infrastructure-10](../results/1013_1805_inorder4-v3b26/raw/1013_1805_boutique-infrastructure-10/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All 5 pods scheduled on worker-02 (cartservice, checkoutservice, frontend, productcatalogservice, recommendationservice) are stuck 0/1 ContainerCreating while all worker-01 pods are Running — a node-partitioned, 'partial' outage. Pod events show 'Warning FailedCreatePodSandBox: rpc error: code = Unavailable ... dial unix /run/containerd/containerd.sock: connect: no such file or directory', and worker-02's kubelet logs repeatedly report 'Skipping pod synchronization err=container runtime is down', 'GenericPLEG: Unable to retrieve pods' and 'ImageFsInfo from image service failed' on the same mis
+
+### case-11
+
+- **结论**：`node/worker-01` + `kube_proxy_unavailable` ｜ 标签 `node/worker-01` + `kube_proxy_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.381 · steps 22 · tokens 169,478
+- **raw 日志**：[results/1013_1831_inorder4-v3b29/raw/1013_1831_boutique-infrastructure-11](../results/1013_1831_inorder4-v3b29/raw/1013_1831_boutique-infrastructure-11/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts, all 11 deployments 1/1 AVAILABLE, and all service endpoints bind correctly, so the workload/admission layer is clean. Frontend (on worker-01) logs 197/867 errors (22.7%) with HTTP 500: 'dial tcp 10.68.20.26:3550: i/o timeout' (productcatalogservice) and 'dial tcp 10.68.52.125:5050: i/o timeout' (checkoutservice) plus 'lookup currencyservice on 169.254.20.10:53: no such host'. Dialing ClusterIPs (not pod IPs) points the break at the Service forwarding path. CheckServiceConnectivity decisively shows currencyservice:7000, productcatalogservice
 

@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **12/47** 题：JRA ✅12 ❌0 ｜ 证据链全闭 12 ｜ token 中位 343,666 ｜ 生成 2026-10-13T10:28:30.289Z
+> 本家族已跑 **13/47** 题：JRA ✅13 ❌0 ｜ 证据链全闭 13 ｜ token 中位 319,046 ｜ 生成 2026-10-13T10:34:12.977Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -19,6 +19,7 @@
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 304,738 | 0 | 0 | 1013_1645_inorder4-v3b24 | 全对·链闭 |
 | [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 356,222 | 0 | 0 | 1013_1805_inorder4-v3b26 | 全对·链闭 |
 | [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 25 | 850,385 | 0 | 0 | 1013_1825_dual2-verify1 | 全对·链闭 |
+| [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 207,450 | 0 | 0 | 1013_1831_inorder4-v3b29 | 全对·链闭 |
 
 ## 证据正文
 
@@ -105,4 +106,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 25 · tokens 850,385
 - **raw 日志**：[results/1013_1825_dual2-verify1/raw/1013_1825_trainticket-performance-12](../results/1013_1825_dual2-verify1/raw/1013_1825_trainticket-performance-12/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts (window 17:24:33~17:26:28) show LATENCY_DEGRADATION on a single call chain ui-dashboard(p90 431->5205ms) -> gateway-service(p90 435->5128ms) -> preserve-service(p50 483->7443ms, +1442%) -> ts-security-service; the deepest alerted service and the largest deviation is ts-security-service (p50 100.00ms->7027.09ms, +6927.1%; p90 425->9405ms), and its caller preserve-service shows the SAME added delay (+6961ms), i.e. a constant delay riding on ts-security-service's own latency with the downstream server-side latency clean (ts-order-service carries no latency alert). Application-side logs pro
+
+### case-13
+
+- **结论**：`app/ts-station-service` + `pod_network_delay` ｜ 标签 `app/ts-station-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 207,450
+- **raw 日志**：[results/1013_1831_inorder4-v3b29/raw/1013_1832_trainticket-performance-13](../results/1013_1831_inorder4-v3b29/raw/1013_1832_trainticket-performance-13/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Service quality degradation.' enters the metric surface: GetAlerts (all rows in the same 2026-03-16 17:41:15~17:43:10 window) shows latency/throughput anomalies only - NO RESOURCE_SATURATION rows - so this is not a resource fault. Dependency chain ts-ui-dashboard -> ts-gateway-service -> ts-preserve-service -> ts-travel-service -> ts-basic-service -> ts-station-service identifies ts-station-service as the deepest node of the call direction and the carrier of the largest deviation: p50 3.31ms -> 2477.27ms (+74810.0%), p90 6.64 -> 4492.19ms, while it is a Leaf Node (GetServiceDependenci
 

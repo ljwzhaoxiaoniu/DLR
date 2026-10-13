@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **11/98** 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 181,235 ｜ 生成 2026-10-13T10:28:30.289Z
+> 本家族已跑 **12/98** 题：JRA ✅12 ❌0 ｜ 证据链全闭 12 ｜ token 中位 181,778 ｜ 生成 2026-10-13T10:34:12.977Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -18,6 +18,7 @@
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 166,187 | 0 | 0 | 1013_1633_inorder4-v3b23 | 全对·链闭 |
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 180,151 | 0 | 0 | 1013_1645_inorder4-v3b24 | 全对·链闭 |
 | [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 200,618 | 0 | 0 | 1013_1805_inorder4-v3b26 | 全对·链闭 |
+| [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2609 | 24 | 248,815 | 0 | 0 | 1013_1831_inorder4-v3b29 | 全对·链闭 |
 
 ## 证据正文
 
@@ -97,4 +98,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 200,618
 - **raw 日志**：[results/1013_1805_inorder4-v3b26/raw/1013_1805_boutique-codedefect-11](../results/1013_1805_inorder4-v3b26/raw/1013_1805_boutique-codedefect-11/)（ndjson / mcp.jsonl / meta）
 - **摘要**：boutique pods listing shows a single outlier: checkoutservice-548bb9d487-pqdm2 1/2 CrashLoopBackOff, 3 restarts, while all other 10 services are 2/2 Running with 0 restarts; Deployment checkoutservice is 0/1 AVAILABLE and CheckServiceConnectivity(checkoutservice:5050) returns 'Connection Failed'. Its pod sheet gives the mechanism: container 'server' Last State Terminated Reason=OOMKilled Exit Code=137 with limits memory 128Mi, finished 16:16:11 immediately after the last '[PlaceOrder]' log line at 16:16:10; namespace events add 'Warning BackOff: Back-off restarting failed container server in p
+
+### case-12
+
+- **结论**：`app/checkoutservice` + `code_missing_parameter` ｜ 标签 `app/checkoutservice` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2609 · steps 24 · tokens 248,815
+- **raw 日志**：[results/1013_1831_inorder4-v3b29/raw/1013_1831_boutique-codedefect-12](../results/1013_1831_inorder4-v3b29/raw/1013_1831_boutique-codedefect-12/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are 2/2 Running with 0 restarts and every Deployment 1/1 AVAILABLE, so no workload/node-level break exists. Emailservice is healthy (endpoints 172.20.2.17:8080 bound, TCP probe on its declared port 5000 'open / Connection Succeeded', normal request logs) yet its request stream stops ~22:39:08, matching the AVAILABILITY_MISSING alert window. The discriminator is the error chain: frontend logs 'failed to complete the order: rpc error: code = Internal desc = failed to charge card: could not charge the card: ... Cannot read properties of null (reading credit_card_number)' (199
 

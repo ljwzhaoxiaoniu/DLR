@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/12,1.0,1.0,1.0,1.0,1.0,1.0,0.2608695652173913,24.0,0.0,0.0,app/checkoutservice,code_missing_parameter,app/checkoutservice,code_missing_parameter,
+boutique/infrastructure/11,1.0,1.0,1.0,1.0,1.0,1.0,0.38095238095238093,22.0,0.0,0.0,node/worker-01,kube_proxy_unavailable,node/worker-01,kube_proxy_unavailable,
+trainticket/performance/13,1.0,1.0,1.0,1.0,1.0,1.0,0.2,16.0,0.0,0.0,app/ts-station-service,pod_network_delay,app/ts-station-service,pod_network_delay,
+trainticket/service/15,1.0,1.0,1.0,1.0,1.0,1.0,0.1875,17.0,0.0,0.0,app/ts-gateway-service,gateway_misrouted,app/ts-gateway-service,gateway_misrouted,
