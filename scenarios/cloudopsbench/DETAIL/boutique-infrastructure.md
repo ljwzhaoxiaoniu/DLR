@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **23/40** 题：JRA ✅23 ❌0 ｜ 证据链全闭 23 ｜ token 中位 127,753 ｜ 生成 2026-10-13T13:53:12.772Z
+> 本家族已跑 **24/40** 题：JRA ✅24 ❌0 ｜ 证据链全闭 24 ｜ token 中位 127,753 ｜ 生成 2026-10-13T13:56:26.531Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -30,6 +30,7 @@
 | [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0909 | 34 | 399,815 | 0 | 0 | 1013_2114_inorder4-v3b44 | 全对·链闭 |
 | [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1429 | 22 | 155,346 | 0 | 0 | 1013_2143_inf22-verify2 | 全对·链闭 |
 | [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 92,595 | 0 | 0 | 1013_2141_inorder4-v3b46 | 全对·链闭 |
+| [24](#case-24) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.2308 | 14 | 88,573 | 0 | 0 | 1013_2150_inorder4-v3b47 | 全对·链闭 |
 
 ## 证据正文
 
@@ -193,4 +194,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 92,595
 - **raw 日志**：[results/1013_2141_inorder4-v3b46/raw/1013_2143_boutique-infrastructure-23](../results/1013_2141_inorder4-v3b46/raw/1013_2143_boutique-infrastructure-23/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Only emailservice is anomalous: pod emailservice-c86b9b8f6-92zg7 is Pending on 1/1 replicas while all other 10 boutique pods are 1/1 Running. Its own sheet shows Node: <none>, Status: Pending, Events: <none> and NO '0/N nodes are available' scheduling condition, while GetClusterConfiguration shows worker-01/02/03 all Ready with no taints (only master carries the by-design unschedulable taint) -> nothing ever attempted to schedule it. The control-plane read closes it: CheckNodeServiceStatus(master, kube-scheduler) = 'Active: inactive (dead) since Tue 2025-12-02 21:23:01 CST', 'Stopped Kubernete
+
+### case-24
+
+- **结论**：`node/master` + `kube_scheduler_unavailable` ｜ 标签 `node/master` + `kube_scheduler_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.6667 · ECR 1 · EE 0.2308 · steps 14 · tokens 88,573
+- **raw 日志**：[results/1013_2150_inorder4-v3b47/raw/1013_2152_boutique-infrastructure-24](../results/1013_2150_inorder4-v3b47/raw/1013_2152_boutique-infrastructure-24/)（ndjson / mcp.jsonl / meta）
+- **摘要**：frontend pod frontend-c884c5787-lnqxr is the lone outlier (0/1 Pending, Node <none>, Events: <none>, no '0/N nodes are available' condition) while all other boutique pods are 1/1 Running; frontend deployment reads 0/1 UP-TO-DATE=1 AVAILABLE=0. All three workers are Ready, untainted, no pressure, with ~8 CPU/15Gi allocatable (GetClusterConfiguration), so cordon/taint/capacity/affinity classes are excluded and nothing on the node side blocked it. CheckNodeServiceStatus(master, kube-scheduler) shows 'Active: inactive (dead)' with 'Stopped Kubernetes Scheduler' and 'Requested to terminate, exiting
 

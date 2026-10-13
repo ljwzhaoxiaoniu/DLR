@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **24/98** 题：JRA ✅23 ❌1 ｜ 证据链全闭 23 ｜ token 中位 245,322 ｜ 生成 2026-10-13T13:53:12.772Z
+> 本家族已跑 **25/98** 题：JRA ✅24 ❌1 ｜ 证据链全闭 24 ｜ token 中位 245,322 ｜ 生成 2026-10-13T13:56:26.531Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -31,6 +31,7 @@
 | [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 325,537 | 0 | 0 | 1013_2114_inorder4-v3b44 | 全对·链闭 |
 | [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 330,738 | 0 | 0 | 1013_2133_inorder4-v3b45 | 全对·链闭 |
 | [24](#case-24) | 0 | 0 | 0 | 0.8 | 0.4 | 0 | 0.1538 | 27 | 333,623 | 0 | 0 | 1013_2150_cod24-verify1 | 未命中 |
+| [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 26 | 446,652 | 0 | 0 | 1013_2150_inorder4-v3b47 | 全对·链闭 |
 
 ## 证据正文
 
@@ -201,4 +202,11 @@
 - **流程**：MC 0.8 · EOC 0.4 · ECR 0 · EE 0.1538 · steps 27 · tokens 333,623
 - **raw 日志**：[results/1013_2150_cod24-verify1/raw/1013_2150_boutique-codedefect-24](../results/1013_2150_cod24-verify1/raw/1013_2150_boutique-codedefect-24/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All 11 boutique workloads read 2/2 Running with 0 restarts and no Pending/pull/mount failures, so the break is not scheduling/startup/config. The symptom side localizes to the checkoutservice outbound edge: frontend error logs carry 197/6198 (3.18%) POST /cart/checkout failures with 'rpc error: code = Internal desc = failed to charge card: connect error', and the alert flags emailservice ABNORMAL / AVAILABILITY_MISSING (success_rate vanished). Both implicated callees sit on worker-02 (paymentservice 172.20.2.62, emailservice 172.20.2.61) while the caller checkoutservice runs on worker-01. Thei
+
+### case-25
+
+- **结论**：`app/checkoutservice` + `code_wrong_return` ｜ 标签 `app/checkoutservice` + `code_wrong_return`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 26 · tokens 446,652
+- **raw 日志**：[results/1013_2150_inorder4-v3b47/raw/1013_2150_boutique-codedefect-25](../results/1013_2150_inorder4-v3b47/raw/1013_2150_boutique-codedefect-25/)（ndjson / mcp.jsonl / meta）
+- **摘要**：frontend error logs carry 176x 'POST /cart/checkout -> failed to complete the order: rpc error: code = Internal desc = failed to charge card: charge card error.' while the object layer is clean (all 11 pods Running 2/2, RESTARTS 0). The dependency walk (frontend -> checkoutservice -> paymentservice) plus the downstream reads exonerate the callees: paymentservice error logs are empty, its charge.js/server.js are pristine, its log stream shows continuous successes ('Transaction processed: visa ending ...'), and its 50051 port is reachable; emailservice is healthy too (error logs empty, normal 'r
 

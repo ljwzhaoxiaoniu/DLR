@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **28/47** 题：JRA ✅28 ❌0 ｜ 证据链全闭 28 ｜ token 中位 294,060 ｜ 生成 2026-10-13T13:53:12.772Z
+> 本家族已跑 **29/47** 题：JRA ✅29 ❌0 ｜ 证据链全闭 29 ｜ token 中位 294,060 ｜ 生成 2026-10-13T13:56:26.531Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -35,6 +35,7 @@
 | [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 11 | 185,640 | 0.1 | 0 | 1013_2133_perf26-verify1 | 全对·链闭 |
 | [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 160,103 | 0 | 0 | 1013_2133_inorder4-v3b45 | 全对·链闭 |
 | [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 206,042 | 0 | 0 | 1013_2141_inorder4-v3b46 | 全对·链闭 |
+| [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 700,398 | 0 | 0 | 1013_2150_inorder4-v3b47 | 全对·链闭 |
 
 ## 证据正文
 
@@ -233,4 +234,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2353 · steps 18 · tokens 206,042
 - **raw 日志**：[results/1013_2141_inorder4-v3b46/raw/1013_2144_trainticket-performance-28](../results/1013_2141_inorder4-v3b46/raw/1013_2144_trainticket-performance-28/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts (metric surface) show latency degradation on ts-route-service with BOTH percentiles moving (p50 7.66ms->8224.79ms, p90 9.78ms->21100.00ms, steepest p90 escalation +215624.4%), on ts-basic-service with both percentiles moving (p50 40.22ms->18501.83ms, p90 72.00ms->27700.37ms), and on ts-travel-service with p90 only (partial-traffic ripple). GetServiceDependencies shows ts-route-service is a LEAF (no downstream calls) whose upstream callers are exactly ts-basic-service and ts-travel-service, i.e. every rippling row is a direct neighbor of ts-route-service; the alternative candidate ts-bas
+
+### case-29
+
+- **结论**：`app/ts-seat-service` + `pod_network_delay` ｜ 标签 `app/ts-seat-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 700,398
+- **raw 日志**：[results/1013_2150_inorder4-v3b47/raw/1013_2153_trainticket-performance-29](../results/1013_2150_inorder4-v3b47/raw/1013_2153_trainticket-performance-29/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (12:36:16-12:38:06) show ts-seat-service as the only entity whose latency row moves BOTH percentiles (p50 222.24->3409.09ms, p90 1689.06->4727.27ms) with a fixed added increment (~+3187ms p50 / +3038ms p90) - the constant-delay signature; ts-travel-service moves only p90 (+303.9%) and ts-preserve-service only p50, i.e. partial-traffic ripples. GetServiceDependencies closes the graph: both ripples are DIRECT upstream callers of ts-seat-service, so no quiet intermediate hop is needed, while any order-service-centric source would require one. The only saturation row (RESOURCE_SATURATION cp
 

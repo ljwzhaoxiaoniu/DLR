@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/performance</em></h1>
-<p class="deck">已跑 <b>28/47</b> 题：JRA ✅28 ❌0 ｜ 证据链全闭 28 ｜ token 中位 294,060 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T13:53:12.772Z</p>
+<p class="deck">已跑 <b>29/47</b> 题：JRA ✅29 ❌0 ｜ 证据链全闭 29 ｜ token 中位 294,060 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T13:56:26.531Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1429</td><td>36</td><td>442,283</td><td>0</td><td>1</td><td class="muted">1012_1512_inorder4-v3b3</td><td><a href="../results/1012_1512_inorder4-v3b3/raw/1012_1516_trainticket-performance-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1516_trainticket-performance-1</a></td></tr>
@@ -44,6 +44,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-26"><code>26</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4</td><td>11</td><td>185,640</td><td>0.1</td><td>0</td><td class="muted">1013_2133_perf26-verify1</td><td><a href="../results/1013_2133_perf26-verify1/raw/1013_2133_trainticket-performance-26/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2133_trainticket-performance-26</a></td></tr>
 <tr><td><a href="#case-27"><code>27</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2727</td><td>12</td><td>160,103</td><td>0</td><td>0</td><td class="muted">1013_2133_inorder4-v3b45</td><td><a href="../results/1013_2133_inorder4-v3b45/raw/1013_2135_trainticket-performance-27/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2135_trainticket-performance-27</a></td></tr>
 <tr><td><a href="#case-28"><code>28</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2353</td><td>18</td><td>206,042</td><td>0</td><td>0</td><td class="muted">1013_2141_inorder4-v3b46</td><td><a href="../results/1013_2141_inorder4-v3b46/raw/1013_2144_trainticket-performance-28/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2144_trainticket-performance-28</a></td></tr>
+<tr><td><a href="#case-29"><code>29</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>16</td><td>700,398</td><td>0</td><td>0</td><td class="muted">1013_2150_inorder4-v3b47</td><td><a href="../results/1013_2150_inorder4-v3b47/raw/1013_2153_trainticket-performance-29/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2153_trainticket-performance-29</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/ts-basic-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 36 步</summary><ul>
@@ -1298,6 +1299,48 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/ts-basic-service&quot;,
    &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-29"><summary><b>case-29</b> · <code>app/ts-seat-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 16 步</summary><ul>
+<li><b>摘要</b>：Alerts (12:36:16-12:38:06) show ts-seat-service as the only entity whose latency row moves BOTH percentiles (p50 222.24-&gt;3409.09ms, p90 1689.06-&gt;4727.27ms) with a fixed added increment (~+3187ms p50 / +3038ms p90) - the constant-delay signature; ts-travel-service moves only p90 (+303.9%) and ts-preserve-service only p50, i.e. partial-traffic ripples. GetServiceDependencies closes the graph: both ripples are DIRECT upstream callers of ts-seat-service, so no quiet intermediate hop is needed, while any order-service-centric source would require one. The only saturation row (RESOURCE_SATURATION cp</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2150_inorder4-v3b47/raw/1013_2153_trainticket-performance-29/">results/1013_2150_inorder4-v3b47/raw/1013_2153_trainticket-performance-29</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-preserve-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Alerts (12:36:16-12:38:06) show ts-seat-service as the only entity whose latency row moves BOTH percentiles (p50 222.24-&gt;3409.09ms, p90 1689.06-&gt;4727.27ms) with a fixed added increment (~+3187ms p50 / +3038ms p90) - the constant-delay signature; ts-travel-service moves only p90 (+303.9%) and ts-preserve-service only p50, i.e. partial-traffic ripples. GetServiceDependencies closes the graph: both ripples are DIRECT upstream callers of ts-seat-service, so no quiet intermediate hop is needed, while any order-service-centric source would require one. The only saturation row (RESOURCE_SATURATION cpu_cfs 0.589s Throttled on ts-order-service) carries NO latency row of its own and therefore is collateral noise, not the epicenter. Object layer fully excludes object faults: pods listing all 2/2 Running with RESTARTS 0 (ts-seat-service-5fc7c67c7f-58w4g 2/2/0 on worker-02), all deployments 1/1 AVAILABLE, namespace events contain no FailedCreate/FailedScheduling/FailedMount/image-pull/OOMKilled mechanism, ts-seat-service YAML shows replicas 1, containerPort 18898 matching Service port 18898 and selector app=ts-seat-service with a tcpSocket:18898 readiness probe, and worker-02 kube-proxy is active(running). Downstream server-side latencies (ts-order-service, ts-order-other-service, ts-config-service) stay clean and seat logs show successful downstream calls, so the break is a fixed-latency injection on the ts-seat-service pod network path (metric surface only).&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-seat-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;node/worker-02&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
   }
  ]
 }</pre>
