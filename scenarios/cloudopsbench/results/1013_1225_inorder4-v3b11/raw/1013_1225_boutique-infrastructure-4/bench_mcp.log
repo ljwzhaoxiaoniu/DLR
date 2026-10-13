@@ -1,0 +1,28 @@
+INFO:     Started server process [18640]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:54082 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54083 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:54082 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54084 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54087 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54089 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:54096 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:54096 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54096 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54102 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54102 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"productcatalogservice"}
+INFO:     127.0.0.1:54102 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54111 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"containerd"}
+INFO:     127.0.0.1:54111 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54111 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54111 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"containerd"}
+INFO:     127.0.0.1:54116 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"kubelet"}
+INFO:     127.0.0.1:54116 - "POST /mcp HTTP/1.1" 200 OK
