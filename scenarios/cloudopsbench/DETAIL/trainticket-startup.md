@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/startup — cloudopsbench
 
-> 本家族已跑 **8/24** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 269,596 ｜ 生成 2026-10-13T08:27:22.324Z
+> 本家族已跑 **9/24** 题：JRA ✅9 ❌0 ｜ 证据链全闭 9 ｜ token 中位 267,264 ｜ 生成 2026-10-13T08:32:23.004Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -15,6 +15,7 @@
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 269,596 | 0 | 0 | 1013_1503_inorder4-v3b16 | 全对·链闭 |
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5 | 11 | 264,001 | 0 | 0 | 1013_1524_inorder4-v3b18 | 全对·链闭 |
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 374,643 | 0 | 0 | 1013_1541_inorder4-v3b20 | 全对·链闭 |
+| [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3846 | 14 | 193,872 | 0 | 0 | 1013_1628_inorder4-v3b22 | 全对·链闭 |
 
 ## 证据正文
 
@@ -65,4 +66,10 @@
 - **结论**：`app/ts-food-service` + `missing_secret_binding` ｜ 标签 `app/ts-food-service` + `missing_secret_binding`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4545 · steps 12 · tokens 374,643
 - **摘要**：Pods listing shows a single outlier: ts-food-service-6b7777876d-2h6dc is 0/1 in CreateContainerConfigError while all other train-ticket pods are 1/1 Running. Its pod sheet shows the container Waiting with Reason=CreateContainerConfigError and the kubelet event verbatim: 'Error: secret "ts-food-mysql" not found' (x12 over 5m), while the image was already present (ruling out image pull). The Deployment ts-food-service spec shows envFrom secretRef name=ts-food-mysql; the secrets listing contains every other '<svc>-mysql' secret but ts-food-mysql is absent — the only missing referenced object. The
+
+### case-9
+
+- **结论**：`app/ts-notification-service` + `missing_secret_binding` ｜ 标签 `app/ts-notification-service` + `missing_secret_binding`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3846 · steps 14 · tokens 193,872
+- **摘要**：Symptom side first: connectivity probe to the Service-declared port ts-notification-service:17853 fails from worker-01/02/03 ('Connection Failed') and the Service ts-notification-service has an EMPTY ENDPOINTS list, while its upstream callers are ts-gateway-service and ts-cancel-service. The pods inventory (only legitimate full scan) shows exactly one outlier: ts-notification-service-5fd4cd4dcd-2vbnx 0/1 CreateContainerConfigError (all other 47 pods 1/1 Running -> 'Partial'). Owner chain: Deployment/ts-notification-service replicas=1, unavailableReplicas=1, Available=False (MinimumReplicasUnav
 

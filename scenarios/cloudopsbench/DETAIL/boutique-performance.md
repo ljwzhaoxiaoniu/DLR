@@ -1,6 +1,6 @@
 # 评测明细 · boutique/performance — cloudopsbench
 
-> 本家族已跑 **5/29** 题：JRA ✅5 ❌0 ｜ 证据链全闭 5 ｜ token 中位 146,989 ｜ 生成 2026-10-13T08:27:22.324Z
+> 本家族已跑 **6/29** 题：JRA ✅6 ❌0 ｜ 证据链全闭 6 ｜ token 中位 234,408 ｜ 生成 2026-10-13T08:32:23.004Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -12,6 +12,7 @@
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 134,179 | 0 | 0 | 1013_1343_inorder4-v3b14 | 全对·链闭 |
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 146,989 | 0 | 0 | 1013_1524_inorder4-v3b18 | 全对·链闭 |
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 234,408 | 0 | 0 | 1013_1541_inorder4-v3b20 | 全对·链闭 |
+| [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1379 | 30 | 293,289 | 0 | 0 | 1013_1628_inorder4-v3b22 | 全对·链闭 |
 
 ## 证据正文
 
@@ -44,4 +45,10 @@
 - **结论**：`app/emailservice` + `pod_cpu_overload` ｜ 标签 `app/emailservice` + `pod_cpu_overload`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 234,408
 - **摘要**：Object layer is clean (all 11 boutique pods Running 2/2, 0 restarts, no Warning events, emailservice:5000 TCP open), so the break is metric-level. Alerts show the anomaly concentrated in the emailservice pod cgroup: RESOURCE_SATURATION [cpu_cfs] 0.618s Throttled and cpu core Normal=0.00 -> Current=0.15 cores (+4182.4%), plus LATENCY_DEGRADATION emailservice-p95 4.80ms -> 78.30ms (+1532.7%); its upstream caller checkoutservice shows only propagated LATENCY_DEGRADATION (p95 24.30ms -> 85.41ms, +251.5%) with fully successful PlaceOrder/payment/email log lines, and emailservice has no error logs. 
+
+### case-6
+
+- **结论**：`app/frontend` + `pod_cpu_overload` ｜ 标签 `app/frontend` + `pod_cpu_overload`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1379 · steps 30 · tokens 293,289
+- **摘要**：Telemetry chain closure: the only active alert is on Service 'frontend' with 'RESOURCE_SATURATION [cpu_cfs] | Val: 1.333s (Throttled)' and 'RESOURCE_SATURATION [cpu core] | Normal=0.07 -> Current=0.16 cores (+138.1%)' accompanied by 'LATENCY_DEGRADATION frontend-p50: 15.87ms -> 45.00ms, frontend-p95: 27.67ms -> 271.36ms'. Object-layer exclusion found no break: all 11 boutique pods are Running with READY 2/2 and RESTARTS=0, all deployments are 1/1 AVAILABLE, all namespace events are Normal (no FailedScheduling/FailedMount/FailedCreate/image-pull/probe events), all 4 nodes are Ready with MemoryP
 

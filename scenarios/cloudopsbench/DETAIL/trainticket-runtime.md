@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **11/96** 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 521,337 ｜ 生成 2026-10-13T08:27:22.324Z
+> 本家族已跑 **12/96** 题：JRA ✅12 ❌0 ｜ 证据链全闭 12 ｜ token 中位 535,723 ｜ 生成 2026-10-13T08:32:23.004Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -18,6 +18,7 @@
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4074 | 28 | 644,230 | 0 | 0 | 1013_1503_inorder4-v3b16 | 全对·链闭 |
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3913 | 24 | 409,060 | 0.0435 | 0 | 1013_1524_inorder4-v3b18 | 全对·链闭 |
 | [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 23 | 347,660 | 0 | 0 | 1013_1541_inorder4-v3b20 | 全对·链闭 |
+| [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4286 | 22 | 554,907 | 0 | 0 | 1013_1628_inorder4-v3b22 | 全对·链闭 |
 
 ## 证据正文
 
@@ -86,4 +87,10 @@
 - **结论**：`app/tsdb-mysql` + `db_readonly_mode` ｜ 标签 `app/tsdb-mysql` + `db_readonly_mode`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3636 · steps 23 · tokens 347,660
 - **摘要**：All pods are 1/1 Running with no Pending/crash/probe outliers, ruling out scheduling/startup/probe breaks. The reachability chain breaks on the DB write path: ts-payment-service logs 'SQL Error: 1290, SQLState: HY000' + 'The MySQL server is running with the --read-only option so it cannot execute this statement' (62x, then JpaSystemException 'could not execute statement'), and ts-order-service logs the identical read-only rejection (44x) — two independent writers, each with its own Secret both pointing at tsdb-mysql-leader:3306, are rejected by the same server, so the break is not service-loca
+
+### case-12
+
+- **结论**：`app/tsdb-mysql` + `db_readonly_mode` ｜ 标签 `app/tsdb-mysql` + `db_readonly_mode`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4286 · steps 22 · tokens 554,907
+- **摘要**：Alerts show HTTP 500 on 'Process payment' (ts-inside-payment-service) and 'Create ticket order' (ts-preserve-service). Caller logs pin the downstream targets: ts-preserve-service -> ts-order-service /api/v1/orderservice/order 500, ts-inside-payment-service -> ts-payment-service /api/v1/paymentservice/payment 500. Those target pods are 1/1 Running, 0 restarts, probes passing, but their own error logs show 'SQL Error: 1290, SQLState: HY000' / 'The MySQL server is running with the --read-only option so it cannot execute this statement' (52x and 67x) followed by JpaSystemException could not execut
 
