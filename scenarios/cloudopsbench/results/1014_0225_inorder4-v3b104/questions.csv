@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/82,1.0,1.0,1.0,1.0,1.0,1.0,0.2,16.0,0.0,0.0,app/productcatalogservice,code_excessive_file_writes,app/productcatalogservice,code_excessive_file_writes,
+boutique/service/48,1.0,1.0,1.0,1.0,1.0,1.0,0.3684210526315789,20.0,0.0,0.0,app/cartservice,service_selector_mismatch,app/cartservice,service_selector_mismatch,
+boutique/startup/12,1.0,1.0,1.0,1.0,1.0,1.0,0.2,16.0,0.0,0.0,app/productcatalogservice,image_registry_dns_failure,app/productcatalogservice,image_registry_dns_failure,
+trainticket/runtime/66,1.0,1.0,1.0,1.0,1.0,1.0,0.5263157894736842,20.0,0.0,0.0,app/ts-order-other-service,mysql_invalid_port,app/ts-order-other-service,mysql_invalid_port,

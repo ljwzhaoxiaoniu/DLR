@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/71,1.0,0.0,0.0,1.0,1.0,1.0,0.16666666666666666,25.0,0.0,0.0,app/productcatalogservice,code_wrong_return,app/productcatalogservice,code_missing_parameter,
+boutique/service/37,1.0,1.0,1.0,1.0,1.0,1.0,0.4,16.0,0.0,0.0,app/redis-cart,service_selector_mismatch,app/redis-cart,service_selector_mismatch,
+trainticket/runtime/55,1.0,1.0,1.0,1.0,1.0,1.0,0.22727272727272727,23.0,0.0,0.0,app/ts-user-service,mysql_invalid_credentials,app/ts-user-service,mysql_invalid_credentials,
+trainticket/startup/20,1.0,1.0,1.0,1.0,1.0,1.0,0.45454545454545453,12.0,0.0,0.0,app/ts-travel2-service,missing_secret_binding,app/ts-travel2-service,missing_secret_binding,

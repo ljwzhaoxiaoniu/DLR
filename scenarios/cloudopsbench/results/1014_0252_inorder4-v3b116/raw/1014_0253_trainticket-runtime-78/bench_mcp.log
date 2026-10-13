@@ -1,0 +1,30 @@
+INFO:     Started server process [24308]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:58588 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58589 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:58588 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58590 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58593 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58595 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55393 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:55393 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55393 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55393 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-user-service"}
+INFO:     127.0.0.1:55393 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55393 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64858 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64858 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64858 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"tsdb-mysql-leader","port":3306}
+INFO:     127.0.0.1:64858 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64871 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"tsdb-mysql-leader","port":34024}
+INFO:     127.0.0.1:64871 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64875 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64875 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54225 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54225 - "POST /mcp HTTP/1.1" 200 OK

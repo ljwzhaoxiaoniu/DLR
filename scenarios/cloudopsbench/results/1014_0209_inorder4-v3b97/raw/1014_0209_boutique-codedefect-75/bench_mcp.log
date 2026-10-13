@@ -1,0 +1,27 @@
+INFO:     Started server process [15632]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:59038 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59040 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:59038 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59042 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54083 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54087 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:54097 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54097 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54097 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"productcatalogservice"}
+INFO:     127.0.0.1:54097 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"productcatalogservice"}
+INFO:     127.0.0.1:54097 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54097 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57602 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57602 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"recommendationservice"}
+INFO:     127.0.0.1:57602 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57602 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58418 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58418 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58418 - "POST /mcp HTTP/1.1" 200 OK

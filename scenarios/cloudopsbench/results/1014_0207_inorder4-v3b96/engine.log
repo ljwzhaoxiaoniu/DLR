@@ -1,0 +1,168 @@
+[2026-10-14 02:07:20] inorder4-v3b96 · 4 题 · 2 路 → scenarios/cloudopsbench/results/1014_0207_inorder4-v3b96
+[02:07:20] boutique/codedefect/74 第 1 遍 (:8000)
+[02:07:20] boutique/service/40 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-codedefect-74）…
+[start] 基准诊断 MCP（boutique-service-40）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8001/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_0207_inorder4-v3b96/raw/1014_0207_boutique-service-40
+[02:08:10] trainticket/runtime/58 第 1 遍 (:8001)
+[start] 基准诊断 MCP（trainticket-runtime-58）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8001/mcp ok (10 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_0207_inorder4-v3b96/raw/1014_0207_boutique-codedefect-74
+[02:08:41] trainticket/startup/23 第 1 遍 (:8000)
+[start] 基准诊断 MCP（trainticket-startup-23）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8000/mcp ok (10 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_0207_inorder4-v3b96/raw/1014_0208_trainticket-runtime-58
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_0207_inorder4-v3b96/raw/1014_0208_trainticket-startup-23
+[02:09:18] grade + stats
+[grade] runs=4 → out=scenarios/cloudopsbench/results/1014_0207_inorder4-v3b96
+[convert] boutique/codedefect/74 → scenarios\cloudopsbench\results\1014_0207_inorder4-v3b96\traces\boutique\dsh-tsm\codedefect\74\74.json  steps=19 final=有 preds=3
+[convert] boutique/service/40 → scenarios\cloudopsbench\results\1014_0207_inorder4-v3b96\traces\boutique\dsh-tsm\service\40\40.json  steps=23 final=有 preds=3
+[convert] trainticket/runtime/58 → scenarios\cloudopsbench\results\1014_0207_inorder4-v3b96\traces\trainticket\dsh-tsm\runtime\58\58.json  steps=17 final=有 preds=3
+[convert] trainticket/startup/23 → scenarios\cloudopsbench\results\1014_0207_inorder4-v3b96\traces\trainticket\dsh-tsm\startup\23\23.json  steps=11 final=有 preds=3
+[convert] manifest → scenarios\cloudopsbench\results\1014_0207_inorder4-v3b96\traces\manifest.json（共 4 条）
+[grade] 评分组: boutique/codedefect
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: boutique
+fault_category: codedefect
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\boutique\codedefect
+agent_root: scenarios\cloudopsbench\results\1014_0207_inorder4-v3b96\traces\boutique\dsh-tsm\codedefect
+--------------------------------------------------------------------------------
+total_cases: 98
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 1.0
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.1579
+steps (Average Diagnostic Steps per Case): 20.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] boutique_codedefect: scenarios\cloudopsbench\results\1014_0207_inorder4-v3b96\boutique_codedefect_questions.csv
+[grade] 评分组: boutique/service
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: boutique
+fault_category: service
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\boutique\service
+agent_root: scenarios\cloudopsbench\results\1014_0207_inorder4-v3b96\traces\boutique\dsh-tsm\service
+--------------------------------------------------------------------------------
+total_cases: 54
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 1.0
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.3913
+steps (Average Diagnostic Steps per Case): 24.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] boutique_service: scenarios\cloudopsbench\results\1014_0207_inorder4-v3b96\boutique_service_questions.csv
+[grade] 评分组: train-ticket/runtime
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: train-ticket
+fault_category: runtime
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\trainticket\runtime
+agent_root: scenarios\cloudopsbench\results\1014_0207_inorder4-v3b96\traces\trainticket\dsh-tsm\runtime
+--------------------------------------------------------------------------------
+total_cases: 96
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 0.8
+EOC (Evidence-Order Consistency): 0.6
+ECR (Evidence Closure Rate): 0.0
+EE (Evidence Efficiency): 0.4706
+steps (Average Diagnostic Steps per Case): 18.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] trainticket_runtime: scenarios\cloudopsbench\results\1014_0207_inorder4-v3b96\trainticket_runtime_questions.csv
+[grade] 评分组: train-ticket/startup
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: train-ticket
+fault_category: startup
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\trainticket\startup
+agent_root: scenarios\cloudopsbench\results\1014_0207_inorder4-v3b96\traces\trainticket\dsh-tsm\startup
+--------------------------------------------------------------------------------
+total_cases: 24
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 1.0
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.4545
+steps (Average Diagnostic Steps per Case): 12.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] trainticket_startup: scenarios\cloudopsbench\results\1014_0207_inorder4-v3b96\trainticket_startup_questions.csv
+
+[grade] 完成
+  summary.md   : scenarios/cloudopsbench/results/1014_0207_inorder4-v3b96/summary.md
+  questions.csv: scenarios/cloudopsbench/results/1014_0207_inorder4-v3b96/questions.csv
+  traces/      : scenarios/cloudopsbench/results/1014_0207_inorder4-v3b96/traces
+[stats] 轮次 130 · 覆盖 381/754 · JRA 370/381
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\results\STATS.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL/*.md（12 个家族）
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\overview.html
+  + session-f092ed15-05c0-…  boutique/codedefect/74  1014_0207_boutique-codedefect-74
+  + session-362d9488-bb9a-…  boutique/service/40  1014_0207_boutique-service-40
+  + session-a5348061-7565-…  trainticket/runtime/58  1014_0208_trainticket-runtime-58
+  + session-f5933b04-c326-…  trainticket/startup/23  1014_0208_trainticket-startup-23
+[sync] 扫到 run 432（无 session 0）· 新登记 4 · 清出 0（避重叠）· 跳过已归组 72 · 解除归档 0 · 全量组共 367
+[ws] 已写 D:\Code_Proj\DLR Proj\DSH-based Agent Service\.dsh-home\storages\workspace.json（备份 .bak-1014_020928）
+[retire] 目标 1 条 → 「归档」（D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob-archive）
+  ✓ session-a5348061-7565-…  [cloudopsbench-all]  D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob
+  → session-a5348061-7565-…  D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob → D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob-archive
+[ws] 已写 D:\Code_Proj\DLR Proj\DSH-based Agent Service\.dsh-home\storages\workspace.json（备份 .bak-1014_020929）
+[retire] 完成 1 条 · 复核 cwd 1/1 · 备份/还原：D:\Code_Proj\DLR Proj\tmp_scripts\cob_session_retire_20261014_020929
+[提示] dsh web 重启后可见（bash "DSH-based Agent Service/dsh_dlr/run_web.sh"）

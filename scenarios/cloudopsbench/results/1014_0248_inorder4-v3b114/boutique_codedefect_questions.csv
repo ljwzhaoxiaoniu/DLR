@@ -1,0 +1,2 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/92,1.0,1.0,1.0,1.0,1.0,1.0,0.18181818181818182,23.0,0.045454545454545456,0.0,app/shippingservice,code_excessive_file_reads,app/shippingservice,code_excessive_file_reads,

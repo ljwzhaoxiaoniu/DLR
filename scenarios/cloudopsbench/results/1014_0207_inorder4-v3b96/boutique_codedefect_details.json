@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "74",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\codedefect\\74\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_0207_inorder4-v3b96\\traces\\boutique\\dsh-tsm\\codedefect\\74\\74.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Application_Code_Defect",
+      "fault_object": "app/productcatalogservice",
+      "root_cause": "code_excessive_file_reads"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/productcatalogservice",
+        "root_cause": "code_excessive_file_reads"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/productcatalogservice",
+        "root_cause": "container_memory_limit_too_low"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/productcatalogservice",
+        "root_cause": "code_memory_leak"
+      }
+    ],
+    "tool_call_count": 19,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.15789473684210525,
+      "steps": 20.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

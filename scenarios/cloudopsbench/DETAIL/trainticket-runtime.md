@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **54/96** 题：JRA ✅54 ❌0 ｜ 证据链全闭 42 ｜ token 中位 435,734 ｜ 生成 2026-10-13T18:00:01.919Z
+> 本家族已跑 **80/96** 题：JRA ✅80 ❌0 ｜ 证据链全闭 58 ｜ token 中位 409,364 ｜ 生成 2026-10-13T18:58:20.406Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -61,6 +61,32 @@
 | [52](#case-52) | 1 | 1 | 1 | 0.5 | 0.25 | 0 | 0.2 | 16 | 311,634 | 0 | 0 | 1014_0153_inorder4-v3b90 | 结果对·链未闭 |
 | [53](#case-53) | 1 | 1 | 1 | 0.75 | 0.75 | 0 | 0.3333 | 16 | 498,040 | 0 | 0 | 1014_0155_inorder4-v3b91 | 结果对·链未闭 |
 | [54](#case-54) | 1 | 1 | 1 | 0.75 | 0.75 | 0 | 0.3077 | 14 | 292,074 | 0 | 0 | 1014_0158_inorder4-v3b92 | 结果对·链未闭 |
+| [55](#case-55) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2273 | 23 | 388,114 | 0 | 0 | 1014_0200_inorder4-v3b93 | 全对·链闭 |
+| [56](#case-56) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4167 | 13 | 180,103 | 0 | 0 | 1014_0202_inorder4-v3b94 | 全对·链闭 |
+| [57](#case-57) | 1 | 1 | 1 | 0.8 | 0.6 | 0 | 0.4615 | 14 | 203,898 | 0 | 0 | 1014_0205_inorder4-v3b95 | 结果对·链未闭 |
+| [58](#case-58) | 1 | 1 | 1 | 0.8 | 0.6 | 0 | 0.4706 | 18 | 243,635 | 0 | 0 | 1014_0207_inorder4-v3b96 | 结果对·链未闭 |
+| [59](#case-59) | 1 | 1 | 1 | 0.8 | 0.6 | 0 | 0.4545 | 23 | 489,686 | 0 | 0 | 1014_0209_inorder4-v3b97 | 结果对·链未闭 |
+| [60](#case-60) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5882 | 18 | 260,302 | 0 | 0 | 1014_0211_inorder4-v3b98 | 全对·链闭 |
+| [61](#case-61) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4118 | 18 | 365,900 | 0 | 0 | 1014_0214_inorder4-v3b99 | 全对·链闭 |
+| [62](#case-62) | 1 | 1 | 1 | 0.8 | 0.6 | 0 | 0.5 | 21 | 335,320 | 0 | 0 | 1014_0216_inorder4-v3b100 | 结果对·链未闭 |
+| [63](#case-63) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5 | 19 | 335,407 | 0 | 0 | 1014_0218_inorder4-v3b101 | 全对·链闭 |
+| [64](#case-64) | 1 | 1 | 1 | 1 | 1 | 1 | 0.35 | 21 | 398,880 | 0 | 0 | 1014_0221_inorder4-v3b102 | 全对·链闭 |
+| [65](#case-65) | 1 | 1 | 1 | 1 | 1 | 1 | 0.225 | 41 | 1,058,031 | 0.05 | 0 | 1014_0223_inorder4-v3b103 | 全对·链闭 |
+| [66](#case-66) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5263 | 20 | 261,416 | 0 | 0 | 1014_0225_inorder4-v3b104 | 全对·链闭 |
+| [67](#case-67) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4706 | 18 | 243,427 | 0 | 0 | 1014_0228_inorder4-v3b105 | 全对·链闭 |
+| [68](#case-68) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4091 | 23 | 418,009 | 0 | 0 | 1014_0229_inorder4-v3b106 | 全对·链闭 |
+| [69](#case-69) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4444 | 19 | 273,524 | 0 | 0 | 1014_0232_inorder4-v3b107 | 全对·链闭 |
+| [70](#case-70) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 16 | 213,009 | 0 | 0 | 1014_0234_inorder4-v3b108 | 全对·链闭 |
+| [71](#case-71) | 1 | 1 | 1 | 1 | 1 | 1 | 0.45 | 21 | 474,511 | 0 | 0 | 1014_0236_inorder4-v3b109 | 全对·链闭 |
+| [72](#case-72) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4375 | 17 | 523,662 | 0 | 0 | 1014_0238_inorder4-v3b110 | 全对·链闭 |
+| [73](#case-73) | 1 | 1 | 1 | 0.8 | 0.2 | 0 | 0.4 | 16 | 187,973 | 0 | 0 | 1014_0241_inorder4-v3b111 | 结果对·链未闭 |
+| [74](#case-74) | 1 | 1 | 1 | 0.8 | 0.6 | 0 | 0.3333 | 28 | 664,467 | 0.0741 | 0 | 1014_0243_inorder4-v3b112 | 结果对·链未闭 |
+| [75](#case-75) | 1 | 1 | 1 | 0.8 | 0.6 | 0 | 0.4211 | 20 | 270,780 | 0 | 0 | 1014_0245_inorder4-v3b113 | 结果对·链未闭 |
+| [76](#case-76) | 1 | 1 | 1 | 0.8 | 0.6 | 0 | 0.5294 | 18 | 247,085 | 0 | 0 | 1014_0248_inorder4-v3b114 | 结果对·链未闭 |
+| [77](#case-77) | 1 | 1 | 1 | 0.8 | 0.6 | 0 | 0.4 | 16 | 216,900 | 0 | 0 | 1014_0250_inorder4-v3b115 | 结果对·链未闭 |
+| [78](#case-78) | 1 | 1 | 1 | 0.8 | 0.6 | 0 | 0.4211 | 20 | 300,183 | 0 | 0 | 1014_0252_inorder4-v3b116 | 结果对·链未闭 |
+| [79](#case-79) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1579 | 20 | 633,424 | 0.0526 | 0 | 1014_0254_inorder4-v3b117 | 全对·链闭 |
+| [80](#case-80) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 12 | 271,594 | 0 | 0 | 1014_0256_inorder4-v3b118 | 全对·链闭 |
 
 ## 证据正文
 
@@ -441,4 +467,186 @@
 - **流程**：MC 0.75 · EOC 0.75 · ECR 0 · EE 0.3077 · steps 14 · tokens 292,074
 - **raw 日志**：[results/1014_0158_inorder4-v3b92/raw/1014_0158_trainticket-runtime-54](../results/1014_0158_inorder4-v3b92/raw/1014_0158_trainticket-runtime-54/)（ndjson / mcp.jsonl / meta）
 - **摘要**：ts-travel-service-55fd6fc94d-sfbc6 on worker-01 shows READY 0/1, STATUS CrashLoopBackOff, RESTARTS 4, last termination 'Error' Exit Code 1; its own logs carry 'java.sql.SQLException: Access denied for user 'ts'@'172.20.1.165' (using password: YES)', 'SQL Error: 1045, SQLState: 28000', HikariPool-1 pool initialization failure and 'Application run failed' — a credential-level failure with TCP/port already reached. GetAppYAML(ts-travel-service) shows envFrom secretRef ts-travel-mysql (present in the namespace with 5 keys) carrying TRAVEL_MYSQL_HOST=tsdb-mysql-leader, PORT 3306, USER ts, PASSWORD 
+
+### case-55
+
+- **结论**：`app/ts-user-service` + `mysql_invalid_credentials` ｜ 标签 `app/ts-user-service` + `mysql_invalid_credentials`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2273 · steps 23 · tokens 388,114
+- **raw 日志**：[results/1014_0200_inorder4-v3b93/raw/1014_0201_trainticket-runtime-55](../results/1014_0200_inorder4-v3b93/raw/1014_0201_trainticket-runtime-55/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-user-service is the only offline workload in train-ticket: pod ts-user-service-b795844f6-4dczn is 0/1 CrashLoopBackOff (4 restarts), Last State Terminated/Error exit code 1, and its Service has an empty ENDPOINTS list with TCP 12342 failing from worker-01/02/03. Container logs show java.sql.SQLException 'Access denied for user 'ts'@'172.20.3.35' (using password: YES)' / SQL Error 1045 SQLState 28000 -> 'Unable to open JDBC Connection for DDL execution' -> 'Unable to build Hibernate SessionFactory' -> 'Application run failed', so the process aborts before it can listen. The Deployment source
+
+### case-56
+
+- **结论**：`app/ts-voucher-service` + `mysql_invalid_credentials` ｜ 标签 `app/ts-voucher-service` + `mysql_invalid_credentials`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4167 · steps 13 · tokens 180,103
+- **raw 日志**：[results/1014_0202_inorder4-v3b94/raw/1014_0203_trainticket-runtime-56](../results/1014_0202_inorder4-v3b94/raw/1014_0203_trainticket-runtime-56/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only outlier in the train-ticket namespace pod listing is ts-voucher-service-5b8bd94c88-g25t5 (0/1, CrashLoopBackOff, 5 restarts, worker-03); all other 47 pods are 1/1 Running. Its pod sheet shows Last State Terminated with Reason Error / Exit Code 1, container created and started 5x (image already present, no FailedCreate/FailedMount/probe/image-pull event) — so scheduling, admission, mount and image paths are all clean. Its own error log reads verbatim: pymysql.err.OperationalError: (1045, "Access denied for user 'ts'@'172.20.3.10' (using password: YES)"), and the DB server side independentl
+
+### case-57
+
+- **结论**：`app/ts-assurance-service` + `mysql_invalid_port` ｜ 标签 `app/ts-assurance-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 0.8 · EOC 0.6 · ECR 0 · EE 0.4615 · steps 14 · tokens 203,898
+- **raw 日志**：[results/1014_0205_inorder4-v3b95/raw/1014_0206_trainticket-runtime-57](../results/1014_0205_inorder4-v3b95/raw/1014_0206_trainticket-runtime-57/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-assurance-service pod (ts-assurance-service-85577d9b4d-gnn7w) is 0/1 CrashLoopBackOff with 4 restarts, exit code 1 (non-OOM, non-probe); kubelet events show 'Back-off restarting failed container'. Its error logs show HikariPool-1 pool initialization failure: 'CommunicationsException: Communications link failure' caused by 'java.net.ConnectException: Connection refused' against MySQL, killing startup ('Failed to initialize JPA EntityManagerFactory'), matching the 503 (83x) reported on /api/v1/assuranceservice/assurances/types. The config surface is the break: secret ts-assurance-mysql sets A
+
+### case-58
+
+- **结论**：`app/ts-auth-service` + `mysql_invalid_port` ｜ 标签 `app/ts-auth-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 0.8 · EOC 0.6 · ECR 0 · EE 0.4706 · steps 18 · tokens 243,635
+- **raw 日志**：[results/1014_0207_inorder4-v3b96/raw/1014_0208_trainticket-runtime-58](../results/1014_0207_inorder4-v3b96/raw/1014_0208_trainticket-runtime-58/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-auth-service is the only outlier in the namespace: pod ts-auth-service-7689b8d556-gmft2 is 0/1 CrashLoopBackOff (4 restarts, Last State Terminated/Error, exit 1), and the ts-gateway-service alert shows 503 on POST /api/v1/users/login with entry_service ts-auth-service. Its container logs are a startup DB failure: 'HikariPool-1 - Exception during pool initialization' -> 'com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure' -> 'Caused by: java.net.ConnectException: Connection refused (Connection refused)' -> 'Application run failed'. The address comes from envFro
+
+### case-59
+
+- **结论**：`app/ts-config-service` + `mysql_invalid_port` ｜ 标签 `app/ts-config-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 0.8 · EOC 0.6 · ECR 0 · EE 0.4545 · steps 23 · tokens 489,686
+- **raw 日志**：[results/1014_0209_inorder4-v3b97/raw/1014_0210_trainticket-runtime-59](../results/1014_0209_inorder4-v3b97/raw/1014_0210_trainticket-runtime-59/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert named ts-preserve-service 500s on POST /api/v1/preserveservice/preserve. Inventory scan showed exactly one outlier: pod ts-config-service-778646698d-qmbf9 = 0/1 CrashLoopBackOff (4 restarts, Exit Code 1); its Service endpoints list is EMPTY, so callers cannot reach it. Container logs: com.mysql.cj.jdbc.exceptions.CommunicationsException 'Communications link failure' caused by java.net.ConnectException 'Connection refused (Connection refused)', failing 'Unable to open JDBC Connection for DDL execution'. Config face: GetAppYAML(ts-config-service) secret ts-config-mysql has CONFIG_MYSQL_HOS
+
+### case-60
+
+- **结论**：`app/ts-contacts-service` + `mysql_invalid_port` ｜ 标签 `app/ts-contacts-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.5882 · steps 18 · tokens 260,302
+- **raw 日志**：[results/1014_0211_inorder4-v3b98/raw/1014_0212_trainticket-runtime-60](../results/1014_0211_inorder4-v3b98/raw/1014_0212_trainticket-runtime-60/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side: alert shows 503 on ts-contacts-service 'Get contacts' API. Object layer: only outlier in train-ticket pods is ts-contacts-service-878884888-q6btj (0/1 CrashLoopBackOff, 4 restarts, BackOff event), and its Service endpoints list is EMPTY, so callers get 503. Pod logs: 'HikariPool-1 - Exception during pool initialization' / 'Communications link failure' / 'Caused by: java.net.ConnectException: Connection refused', SQLState 08S01 - a rejected TCP connect, not credentials (no Access denied) and not DNS (no Unknown host). config: the pod takes its DB address from Secret ts-contacts-my
+
+### case-61
+
+- **结论**：`app/ts-delivery-service` + `mysql_invalid_port` ｜ 标签 `app/ts-delivery-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4118 · steps 18 · tokens 365,900
+- **raw 日志**：[results/1014_0214_inorder4-v3b99/raw/1014_0215_trainticket-runtime-61](../results/1014_0214_inorder4-v3b99/raw/1014_0215_trainticket-runtime-61/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pod ts-delivery-service-787cbf858d-2hs67 (ns train-ticket, node worker-01) is the only non-Running pod in the namespace: 0/1 CrashLoopBackOff, 4 restarts, last termination exit code 1. Its logs show startup DB failure: 'Caused by: java.net.ConnectException: Connection refused' -> 'CJCommunicationsException: Communications link failure' -> 'Failed to initialize JPA EntityManagerFactory ... Unable to open JDBC Connection' -> 'Application run failed'. The referenced Secret ts-delivery-mysql sets DELIVERY_MYSQL_HOST=tsdb-mysql-leader with DELIVERY_MYSQL_PORT=34006, but the live Service tsdb-mysql-
+
+### case-62
+
+- **结论**：`app/ts-food-delivery-service` + `mysql_invalid_port` ｜ 标签 `app/ts-food-delivery-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 0.8 · EOC 0.6 · ECR 0 · EE 0.5 · steps 21 · tokens 335,320
+- **raw 日志**：[results/1014_0216_inorder4-v3b100/raw/1014_0217_trainticket-runtime-62](../results/1014_0216_inorder4-v3b100/raw/1014_0217_trainticket-runtime-62/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only outlier in the train-ticket namespace inventory: pod ts-food-delivery-service-d7f948cf4-kzzn8 is 0/1 CrashLoopBackOff (4 restarts, last state Terminated exit code 1), while all other 50 pods are 1/1 Running. Its logs show com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure / Caused by java.net.ConnectException: Connection refused, followed by 'Unable to open JDBC Connection for DDL execution' and 'Application run failed'. The service's datasource Secret ts-food-delivery-mysql sets FOOD_DELIVERY_MYSQL_PORT='34007', but the referenced Service tsdb-mysql-leader 
+
+### case-63
+
+- **结论**：`app/ts-food-service` + `mysql_invalid_port` ｜ 标签 `app/ts-food-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.5 · steps 19 · tokens 335,407
+- **raw 日志**：[results/1014_0218_inorder4-v3b101/raw/1014_0219_trainticket-runtime-63](../results/1014_0218_inorder4-v3b101/raw/1014_0219_trainticket-runtime-63/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-food-service is the sole outlier in the namespace: Deployment 0/1 AVAILABLE, pod ts-food-service-6bdb8b7ddb-m7p6z 0/1 CrashLoopBackOff with 4 restarts, Last State Terminated/Reason Error/Exit Code 1, and its Service 'ts-food-service' has an EMPTY Endpoints list (10.68.139.200:18856 resolves but has no ready backend) - matching 'Partial Service Unreachability'. Scheduling/image pull are healthy (PodScheduled True, image 'already present'), so the break is at container startup: logs show 'CommunicationsException: Communications link failure' from HikariCP checkFailFast during Spring JPA Entit
+
+### case-64
+
+- **结论**：`app/ts-inside-payment-service` + `mysql_invalid_port` ｜ 标签 `app/ts-inside-payment-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.35 · steps 21 · tokens 398,880
+- **raw 日志**：[results/1014_0221_inorder4-v3b102/raw/1014_0222_trainticket-runtime-64](../results/1014_0221_inorder4-v3b102/raw/1014_0222_trainticket-runtime-64/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Service Availability Disruption.' shows as 503 from POST /api/v1/inside_pay_service/inside_payment against ts-inside-payment-service. Cluster-wide pod scan shows exactly one outlier: ts-inside-payment-service-5d5bd5c84d-5hfgx 0/1 CrashLoopBackOff (Restart Count 4, Last State Terminated Reason Error Exit Code 1, Ready False; Warning BackOff 'Back-off restarting failed container'). Its container log is decisive: 'HikariPool-1 - Exception during pool initialization' -> 'Caused by: java.net.ConnectException: Connection refused (Connection refused)' -> 'Unable to open JDBC Connection for D
+
+### case-65
+
+- **结论**：`app/ts-notification-service` + `mysql_invalid_port` ｜ 标签 `app/ts-notification-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.225 · steps 41 · tokens 1,058,031
+- **raw 日志**：[results/1014_0223_inorder4-v3b103/raw/1014_0224_trainticket-runtime-65](../results/1014_0223_inorder4-v3b103/raw/1014_0224_trainticket-runtime-65/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace-wide pod scan (the only legitimate full listing) shows a single outlier: ts-notification-service-675d7d65b4-bdt28 is 0/1 CrashLoopBackOff with 4 restarts (last state Terminated/Error/Exit Code 1), all other 44 pods 1/1 Running. Its own container log carries the failing call: 'Caused by: java.net.ConnectException: Connection refused' inside com.mysql.cj.jdbc.CommunicationsException -> 'Unable to open JDBC Connection for DDL execution' -> 'Application run failed'; the pod sheet and namespace events bind it literarily ('Back-off restarting failed container ts-notification-service in pod
+
+### case-66
+
+- **结论**：`app/ts-order-other-service` + `mysql_invalid_port` ｜ 标签 `app/ts-order-other-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.5263 · steps 20 · tokens 261,416
+- **raw 日志**：[results/1014_0225_inorder4-v3b104/raw/1014_0226_trainticket-runtime-66](../results/1014_0225_inorder4-v3b104/raw/1014_0226_trainticket-runtime-66/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom entry: alert on POST /api/v1/preserveservice/preserve via entry_service ts-preserve-service returning HTTP 500 (partial unreachability). Pod inventory outlier (only non-Ready row): ts-order-other-service-77f574b58b-gqrnq 0/1 CrashLoopBackOff, 4 restarts, Last State Terminated Reason=Error ExitCode=1. Its own logs read verbatim: 'Caused by: java.net.ConnectException: Connection refused (Connection refused)', 'com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure', 'HikariPool-1 - Exception during pool initialization', 'Failed to initialize JPA EntityManagerFa
+
+### case-67
+
+- **结论**：`app/ts-order-service` + `mysql_invalid_port` ｜ 标签 `app/ts-order-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4706 · steps 18 · tokens 243,427
+- **raw 日志**：[results/1014_0228_inorder4-v3b105/raw/1014_0228_trainticket-runtime-67](../results/1014_0228_inorder4-v3b105/raw/1014_0228_trainticket-runtime-67/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pod inventory shows a single outlier: ts-order-service-57d9f6ffbd-ptbwc is 0/1 CrashLoopBackOff (4 restarts). Its logs/error patterns show startup failure: HikariPool pool initialization exception -> com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure -> Caused by java.net.ConnectException: Connection refused, then 'Failed to initialize JPA EntityManagerFactory ... Application run failed', pod state Terminated Reason=Error Exit Code=1. The address face explains it: ts-order-service takes its DB address from Secret ts-order-mysql, which sets ORDER_MYSQL_HOST=tsdb-m
+
+### case-68
+
+- **结论**：`app/ts-payment-service` + `mysql_invalid_port` ｜ 标签 `app/ts-payment-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4091 · steps 23 · tokens 418,009
+- **raw 日志**：[results/1014_0229_inorder4-v3b106/raw/1014_0230_trainticket-runtime-68](../results/1014_0229_inorder4-v3b106/raw/1014_0230_trainticket-runtime-68/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only ts-payment-service is not ready in train-ticket: pod ts-payment-service-76d7d44b5b-2bvw2 is 0/1 CrashLoopBackOff (4 restarts on worker-03), Last State Terminated Reason=Error Exit Code 1, with event 'BackOff restarting failed container ts-payment-service'. Its logs show HikariPool-1 pool initialization failure -> com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure -> Caused by: java.net.ConnectException: Connection refused, then 'Failed to initialize JPA EntityManagerFactory' and 'Application run failed'. The DB address comes from envFrom secret ts-payment-my
+
+### case-69
+
+- **结论**：`app/ts-price-service` + `mysql_invalid_port` ｜ 标签 `app/ts-price-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4444 · steps 19 · tokens 273,524
+- **raw 日志**：[results/1014_0232_inorder4-v3b107/raw/1014_0233_trainticket-runtime-69](../results/1014_0232_inorder4-v3b107/raw/1014_0233_trainticket-runtime-69/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom: POST /api/v1/preserveservice/preserve returns HTTP 500 (entry_service ts-preserve-service). Pod inventory shows exactly one outlier: ts-price-service-69f84bfbc4-qcf2l 0/1 CrashLoopBackOff (4 restarts, exit code 1); event surface binds it: 'Warning BackOff Back-off restarting failed container ts-price-service in pod ts-price-service-69f84bfbc4-qcf2l'. Its logs: 'HikariPool-1 - Exception during pool initialization' -> 'Communications link failure' -> 'Caused by: java.net.ConnectException: Connection refused (Connection refused)' -> 'Failed to initialize JPA EntityManagerFactory / Applic
+
+### case-70
+
+- **结论**：`app/ts-route-service` + `mysql_invalid_port` ｜ 标签 `app/ts-route-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4 · steps 16 · tokens 213,009
+- **raw 日志**：[results/1014_0234_inorder4-v3b108/raw/1014_0235_trainticket-runtime-70](../results/1014_0234_inorder4-v3b108/raw/1014_0235_trainticket-runtime-70/)（ndjson / mcp.jsonl / meta）
+- **摘要**：In namespace train-ticket only one pod is an outlier: ts-route-service-84fdb67598-pvp7g shows 0/1 CrashLoopBackOff (Restart Count 4, Last State Terminated Reason Error Exit Code 1), while all other 43 pods are 1/1 Running. The pod was successfully scheduled to worker-02 and the image was already present, so this is not scheduling/pull/admission. Its container log shows the actual break: 'HikariPool-1 - Exception during pool initialization', 'com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure', 'Caused by: java.net.ConnectException: Connection refused (Connection 
+
+### case-71
+
+- **结论**：`app/ts-security-service` + `mysql_invalid_port` ｜ 标签 `app/ts-security-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.45 · steps 21 · tokens 474,511
+- **raw 日志**：[results/1014_0236_inorder4-v3b109/raw/1014_0237_trainticket-runtime-71](../results/1014_0236_inorder4-v3b109/raw/1014_0237_trainticket-runtime-71/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Partial Service Unreachability.' traced to a single outlier in the train-ticket pods inventory: ts-security-service-64cb5fb74d-sjbz4 0/1 CrashLoopBackOff (4 restarts), while all other pods are 1/1 Running. Caller side: alert on ts-preserve-service POST /api/v1/preserveservice/preserve (94x HTTP 500) and its error log 'java.lang.IllegalArgumentException: Service Instance cannot be null' (downstream ts-security-service has no ready instance). Pod sheet: Exit Code 1, Reason Error, Warning BackOff 'Back-off restarting failed container ts-security-service'; scheduling/pull/mount all Normal
+
+### case-72
+
+- **结论**：`app/ts-station-food-service` + `mysql_invalid_port` ｜ 标签 `app/ts-station-food-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4375 · steps 17 · tokens 523,662
+- **raw 日志**：[results/1014_0238_inorder4-v3b110/raw/1014_0239_trainticket-runtime-72](../results/1014_0238_inorder4-v3b110/raw/1014_0239_trainticket-runtime-72/)（ndjson / mcp.jsonl / meta）
+- **摘要**：namespace train-ticket 中唯一离群 Pod 为 ts-station-food-service-68497bf65b-d5ptz（0/1, CrashLoopBackOff, RESTARTS 4）；其 pod 详情 Last State=Terminated Reason=Error Exit Code=1，事件仅有 kubelet 'Back-off restarting failed container'（调度/镜像/挂载均 Normal，排除调度与启动前置类故障）。容器日志显示 Spring/Hibernate 启动期 HikariPool.checkFailFast 建连失败：'Communications link failure' -> 'java.net.ConnectException: Connection refused'，即 TCP 层无监听。该服务 env 由 Secret ts-station-food-mysql 注入，其中 STATION_FOOD_MYSQL_HOST=tsdb-mysql-leader 正确，但 STATION_FOOD_MYSQL_PORT='34017' 异常；连通性实测 tsdb-mysql-leader:34017 = Connection failed，而 tsdb-mysql-leader:330
+
+### case-73
+
+- **结论**：`app/ts-station-service` + `mysql_invalid_port` ｜ 标签 `app/ts-station-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 0.8 · EOC 0.2 · ECR 0 · EE 0.4 · steps 16 · tokens 187,973
+- **raw 日志**：[results/1014_0241_inorder4-v3b111/raw/1014_0242_trainticket-runtime-73](../results/1014_0241_inorder4-v3b111/raw/1014_0242_trainticket-runtime-73/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace train-ticket pods listing shows a single outlier: ts-station-service-fd984464d-lbpfp 0/1 CrashLoopBackOff (4 restarts) on worker-02, while all other 44 workloads are 1/1 Running; the alert pointer (ts-preserve-service -> HTTP 500 on order creation) and the station dependency agree. Pod sheet: Last State Terminated, Reason Error, Exit Code 1 (not OOMKilled/137), PodScheduled True, deployment ts-station-service Available=False (MinimumReplicasUnavailable), so this is an application startup failure, not scheduling/quota/entrypoint. Container logs (current and previous) show Spring/Hiber
+
+### case-74
+
+- **结论**：`app/ts-train-food-service` + `mysql_invalid_port` ｜ 标签 `app/ts-train-food-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 0.8 · EOC 0.6 · ECR 0 · EE 0.3333 · steps 28 · tokens 664,467
+- **raw 日志**：[results/1014_0243_inorder4-v3b112/raw/1014_0244_trainticket-runtime-74](../results/1014_0243_inorder4-v3b112/raw/1014_0244_trainticket-runtime-74/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only outlier in the train-ticket pod inventory: ts-train-food-service-54754ff6f6-phsqh is 0/1 CrashLoopBackOff (4 restarts, worker-03) while all other 43 pods are 1/1 Running; its Endpoints listing is empty (Service ts-train-food-service 10.68.218.177:19999 has no ready backend), which is the observed partial unreachability. Pod sheet: Last State Terminated, Exit Code 1; container logs show 'HikariPool-1 - Exception during pool initialization' -> 'CommunicationsException: Communications link failure' -> 'java.net.ConnectException: Connection refused (Connection refused)' -> 'Application run fa
+
+### case-75
+
+- **结论**：`app/ts-train-service` + `mysql_invalid_port` ｜ 标签 `app/ts-train-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 0.8 · EOC 0.6 · ECR 0 · EE 0.4211 · steps 20 · tokens 270,780
+- **raw 日志**：[results/1014_0245_inorder4-v3b113/raw/1014_0246_trainticket-runtime-75](../results/1014_0245_inorder4-v3b113/raw/1014_0246_trainticket-runtime-75/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom-side entry: alert on ts-preserve-service POST /api/v1/preserveservice/preserve returning 500 (63x), with caller logs showing 500 from /api/v1/travelservice/trip_detail and 'getTickets failed'. Inventory outlier: only pod ts-train-service-79b45885dd-xd4wx is 0/1 CrashLoopBackOff (4 restarts, exit code 1). Direct probe: ts-train-service:14567 refused from all three workers, while tsdb-mysql-leader:3306 is open/successful from all workers and tsdb-mysql pods are 3/3 Running (DB healthy). Container logs: HikariPool-1 pool init failure, com.mysql.cj.jdbc.exceptions.CommunicationsException, 
+
+### case-76
+
+- **结论**：`app/ts-travel2-service` + `mysql_invalid_port` ｜ 标签 `app/ts-travel2-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 0.8 · EOC 0.6 · ECR 0 · EE 0.5294 · steps 18 · tokens 247,085
+- **raw 日志**：[results/1014_0248_inorder4-v3b114/raw/1014_0248_trainticket-runtime-76](../results/1014_0248_inorder4-v3b114/raw/1014_0248_trainticket-runtime-76/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace train-ticket pods listing shows exactly one outlier: ts-travel2-service-c56664fd-f7ddw 0/1 CrashLoopBackOff (4 restarts) on worker-03, while all other ~49 pods are 1/1 Running. Pod describe gives Last State Terminated/Error exit code 1 and event 'Warning BackOff - Back-off restarting failed container'; container logs show Spring Boot aborting at startup: 'HikariPool-1 - Exception during pool initialization' -> com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure -> Caused by: java.net.ConnectException: Connection refused (not 'Access denied'), then 'Faile
+
+### case-77
+
+- **结论**：`app/ts-travel-service` + `mysql_invalid_port` ｜ 标签 `app/ts-travel-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 0.8 · EOC 0.6 · ECR 0 · EE 0.4 · steps 16 · tokens 216,900
+- **raw 日志**：[results/1014_0250_inorder4-v3b115/raw/1014_0251_trainticket-runtime-77](../results/1014_0250_inorder4-v3b115/raw/1014_0251_trainticket-runtime-77/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-travel-service is the sole outlier pod (ts-travel-service-55fd6fc94d-dlhf4, 0/1, CrashLoopBackOff, 4 restarts) and its Service endpoints list is empty, matching the partial-unreachability symptom and the ts-preserve-service POST /preserveservice/preserve 500s. Its logs show HikariPool-1 pool initialization failure: com.mysql.cj.jdbc.exceptions.CommunicationsException -> Caused by: java.net.ConnectException: Connection refused, followed by 'Application run failed' (Failed to initialize JPA EntityManagerFactory), so the container exits and back-off loops (event: Warning BackOff pod/ts-travel-
+
+### case-78
+
+- **结论**：`app/ts-user-service` + `mysql_invalid_port` ｜ 标签 `app/ts-user-service` + `mysql_invalid_port`（✓ 逐字命中）
+- **流程**：MC 0.8 · EOC 0.6 · ECR 0 · EE 0.4211 · steps 20 · tokens 300,183
+- **raw 日志**：[results/1014_0252_inorder4-v3b116/raw/1014_0253_trainticket-runtime-78](../results/1014_0252_inorder4-v3b116/raw/1014_0253_trainticket-runtime-78/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Reachability chain closed on ts-user-service. Pod list outlier: ts-user-service-b795844f6-v5kft 0/1 CrashLoopBackOff (4 restarts); DescribeResource shows Last State Terminated Reason=Error Exit Code=1, Readiness tcpSocket:12342 never satisfied, event 'BackOff restarting failed container ts-user-service', Deployment ts-user-service Available=False (MinimumReplicasUnavailable, unavailableReplicas:1), so its Service has no endpoints -> partial unreachability (caller ts-preserve-service returns HTTP 500 on /api/v1/preserveservice/preserve). Container logs pin the mechanism: 'HikariPool-1 - Excepti
+
+### case-79
+
+- **结论**：`app/ts-assurance-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-assurance-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1579 · steps 20 · tokens 633,424
+- **raw 日志**：[results/1014_0254_inorder4-v3b117/raw/1014_0255_trainticket-runtime-79](../results/1014_0254_inorder4-v3b117/raw/1014_0255_trainticket-runtime-79/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert + endpoints + connectivity all point at ts-assurance-service (503, empty ENDPOINTS, Connection Failed from all 3 workers). Pod ts-assurance-service-5df4cbbdc-5wkbb is 1/2 Ready with 4 restarts; the app container (containerPort 18888) exits with code 1 in a BackOff loop. Its logs read verbatim: 'APPLICATION FAILED TO START ... Web server failed to start. Port 18888 was already in use' (PortInUseException). The injected istio-proxy sidecar in the same pod already owns that port: annotation proxy.istio.io/config '{"statusPort": 18888}' and proxy log 'Apply proxy config from annotation { "st
+
+### case-80
+
+- **结论**：`app/ts-basic-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-basic-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3636 · steps 12 · tokens 271,594
+- **raw 日志**：[results/1014_0256_inorder4-v3b118/raw/1014_0257_trainticket-runtime-80](../results/1014_0256_inorder4-v3b118/raw/1014_0257_trainticket-runtime-80/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods listing in train-ticket shows a single outlier: ts-basic-service-664d46695c-v75jc is 1/2 CrashLoopBackOff with 4 restarts on worker-01 (all other 48 pods Running/Ready). DescribeResource on that pod: app container State=Waiting/CrashLoopBackOff, Last State Terminated Reason=Error Exit Code=1, Ready=False, containerPort 15680/TCP, while the injected istio-proxy sidecar carries annotation proxy.istio.io/config { "statusPort": 15680 } and logs 'Opening status port 15680'. GetRecentLogs/GetErrorLogs of ts-basic-service give the mechanism verbatim: 'Tomcat initialized with port(s): 15680 (http
 

@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/76,1.0,1.0,1.0,1.0,1.0,1.0,0.21052631578947367,20.0,0.0,0.0,app/productcatalogservice,code_wrong_return,app/productcatalogservice,code_wrong_return,
+boutique/service/42,1.0,1.0,1.0,1.0,1.0,1.0,0.35294117647058826,18.0,0.0,0.0,app/currencyservice,service_selector_mismatch,app/currencyservice,service_selector_mismatch,
+boutique/startup/6,1.0,1.0,1.0,1.0,1.0,1.0,0.15789473684210525,20.0,0.0,0.0,app/redis-cart,image_registry_dns_failure,app/redis-cart,image_registry_dns_failure,
+trainticket/runtime/60,1.0,1.0,1.0,1.0,1.0,1.0,0.5882352941176471,18.0,0.0,0.0,app/ts-contacts-service,mysql_invalid_port,app/ts-contacts-service,mysql_invalid_port,

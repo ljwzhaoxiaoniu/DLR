@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/77,1.0,1.0,1.0,1.0,1.0,1.0,0.2222222222222222,19.0,0.0,0.0,app/productcatalogservice,code_wrong_return,app/productcatalogservice,code_wrong_return,
+boutique/service/43,1.0,1.0,1.0,1.0,1.0,1.0,0.4117647058823529,18.0,0.0,0.0,app/paymentservice,service_selector_mismatch,app/paymentservice,service_selector_mismatch,
+boutique/startup/7,1.0,1.0,1.0,1.0,1.0,1.0,0.21428571428571427,15.0,0.0,0.0,app/checkoutservice,image_registry_dns_failure,app/checkoutservice,image_registry_dns_failure,
+trainticket/runtime/61,1.0,1.0,1.0,1.0,1.0,1.0,0.4117647058823529,18.0,0.0,0.0,app/ts-delivery-service,mysql_invalid_port,app/ts-delivery-service,mysql_invalid_port,

@@ -1,0 +1,8 @@
+system: boutique
+category: startup
+case: 21
+query: Partial Service Unreachability.
+rc: 0
+stamp: 1014_0247
+tsm_mcp: http://127.0.0.1:28796/mcp
+bench_mcp: http://127.0.0.1:8000/mcp

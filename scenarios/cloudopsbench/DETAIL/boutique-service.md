@@ -1,6 +1,6 @@
 # 评测明细 · boutique/service — cloudopsbench
 
-> 本家族已跑 **36/54** 题：JRA ✅36 ❌0 ｜ 证据链全闭 35 ｜ token 中位 110,899 ｜ 生成 2026-10-13T18:00:01.919Z
+> 本家族已跑 **54/54** 题：JRA ✅54 ❌0 ｜ 证据链全闭 52 ｜ token 中位 109,173 ｜ 生成 2026-10-13T18:58:20.406Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -43,6 +43,24 @@
 | [34](#case-34) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 121,932 | 0 | 0 | 1014_0153_inorder4-v3b90 | 全对·链闭 |
 | [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 103,344 | 0 | 0 | 1014_0155_inorder4-v3b91 | 全对·链闭 |
 | [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5 | 15 | 83,798 | 0 | 0 | 1014_0158_inorder4-v3b92 | 全对·链闭 |
+| [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 16 | 87,695 | 0 | 0 | 1014_0200_inorder4-v3b93 | 全对·链闭 |
+| [38](#case-38) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4667 | 16 | 93,510 | 0 | 0 | 1014_0202_inorder4-v3b94 | 全对·链闭 |
+| [39](#case-39) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5 | 15 | 83,453 | 0 | 0 | 1014_0205_inorder4-v3b95 | 全对·链闭 |
+| [40](#case-40) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3913 | 24 | 138,541 | 0 | 0 | 1014_0207_inorder4-v3b96 | 全对·链闭 |
+| [41](#case-41) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5385 | 14 | 83,220 | 0 | 0 | 1014_0209_inorder4-v3b97 | 全对·链闭 |
+| [42](#case-42) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3529 | 18 | 109,858 | 0 | 0 | 1014_0211_inorder4-v3b98 | 全对·链闭 |
+| [43](#case-43) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4118 | 18 | 89,954 | 0 | 0 | 1014_0214_inorder4-v3b99 | 全对·链闭 |
+| [44](#case-44) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4286 | 15 | 103,178 | 0 | 0 | 1014_0216_inorder4-v3b100 | 全对·链闭 |
+| [45](#case-45) | 1 | 1 | 1 | 1 | 1 | 0 | 0.3125 | 17 | 101,090 | 0 | 0 | 1014_0218_inorder4-v3b101 | 结果对·链未闭 |
+| [46](#case-46) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3684 | 20 | 159,813 | 0 | 0 | 1014_0221_inorder4-v3b102 | 全对·链闭 |
+| [47](#case-47) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3846 | 14 | 68,003 | 0 | 0 | 1014_0223_inorder4-v3b103 | 全对·链闭 |
+| [48](#case-48) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3684 | 20 | 116,477 | 0 | 0 | 1014_0225_inorder4-v3b104 | 全对·链闭 |
+| [49](#case-49) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5385 | 14 | 84,498 | 0 | 0 | 1014_0228_inorder4-v3b105 | 全对·链闭 |
+| [50](#case-50) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 16 | 106,025 | 0 | 0 | 1014_0229_inorder4-v3b106 | 全对·链闭 |
+| [51](#case-51) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3478 | 24 | 163,375 | 0 | 0 | 1014_0232_inorder4-v3b107 | 全对·链闭 |
+| [52](#case-52) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3889 | 19 | 105,728 | 0 | 0 | 1014_0234_inorder4-v3b108 | 全对·链闭 |
+| [53](#case-53) | 1 | 1 | 1 | 1 | 1 | 1 | 0.375 | 17 | 110,601 | 0 | 0 | 1014_0236_inorder4-v3b109 | 全对·链闭 |
+| [54](#case-54) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4375 | 17 | 93,636 | 0 | 0 | 1014_0238_inorder4-v3b110 | 全对·链闭 |
 
 ## 证据正文
 
@@ -297,4 +315,130 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.5 · steps 15 · tokens 83,798
 - **raw 日志**：[results/1014_0158_inorder4-v3b92/raw/1014_0158_boutique-service-36](../results/1014_0158_inorder4-v3b92/raw/1014_0158_boutique-service-36/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts, so no workload-plane fault. The break is at the Service/Endpoints layer: GetResources(endpoints,ns=boutique) shows productcatalogservice = <none>, the only Service with no bound endpoints. DescribeResource(service/productcatalogservice) shows Selector: app=productcatalog_service, while the pod and Deployment template labels are app=productcatalogservice (no underscore) - the selector never matches its own pods, so no endpoints are created. Caller side confirms: frontend error logs report 92+80 occurrences of 'could not retrieve products/pro
+
+### case-37
+
+- **结论**：`app/redis-cart` + `service_selector_mismatch` ｜ 标签 `app/redis-cart` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4 · steps 16 · tokens 87,695
+- **raw 日志**：[results/1014_0200_inorder4-v3b93/raw/1014_0200_boutique-service-37](../results/1014_0200_inorder4-v3b93/raw/1014_0200_boutique-service-37/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Workload layer is clean: all 11 boutique pods are 1/1 Running with 0 restarts and all deployments 1/1 AVAILABLE, and no metric alerts fire. The single outlier is at the addressing layer: the redis-cart Service shows ENDPOINTS '<none>' while every other service has a backend IP. DescribeResource(service redis-cart) shows 'Selector: app=redis_cart' (underscore) and empty Endpoints, whereas the redis-cart pod carries label 'app=redis-cart' (hyphen, confirmed via pods --show-labels) and GetAppYAML(redis-cart) shows the Deployment pod template labeled 'app: redis-cart' while the Service spec.select
+
+### case-38
+
+- **结论**：`app/shippingservice` + `service_selector_mismatch` ｜ 标签 `app/shippingservice` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4667 · steps 16 · tokens 93,510
+- **raw 日志**：[results/1014_0202_inorder4-v3b94/raw/1014_0202_boutique-service-38](../results/1014_0202_inorder4-v3b94/raw/1014_0202_boutique-service-38/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts, so no workload-side fault exists. The symptom-side caller log (frontend) is dominated by 124x 'failed to get shipping quote: rpc error: code = Unavailable ... dial tcp 10.68.12.251:50051: connect: connection refused', and 10.68.12.251:50051 is exactly the shippingservice ClusterIP/port. The endpoints listing shows 'shippingservice  <none>' while every other Service maps to a pod IP, and an active probe CheckServiceConnectivity(shippingservice, 50051) returns Connection Failed. DescribeResource(service shippingservice) shows Selector: app=sh
+
+### case-39
+
+- **结论**：`app/adservice` + `service_selector_mismatch` ｜ 标签 `app/adservice` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.5 · steps 15 · tokens 83,453
+- **raw 日志**：[results/1014_0205_inorder4-v3b95/raw/1014_0205_boutique-service-39](../results/1014_0205_inorder4-v3b95/raw/1014_0205_boutique-service-39/)（ndjson / mcp.jsonl / meta）
+- **摘要**：adservice Service is the single outlier: its endpoints are <none> while all 11 other Services in boutique are bound to pod IPs. The Service selector is 'application=adservice' whereas the adservice pod and its Deployment template carry label 'app=adservice' (verified: pod adservice-84dbdf99d-zlgfk LABELS app=adservice; GetAppYAML adservice shows Service spec.selector 'application: adservice' vs template labels 'app: adservice'). No Endpoints controller can therefore select the pod, so connection to the ClusterIP on the port the Service declares fails: CheckServiceConnectivity(adservice:9555) =
+
+### case-40
+
+- **结论**：`app/cartservice` + `service_selector_mismatch` ｜ 标签 `app/cartservice` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3913 · steps 24 · tokens 138,541
+- **raw 日志**：[results/1014_0207_inorder4-v3b96/raw/1014_0207_boutique-service-40](../results/1014_0207_inorder4-v3b96/raw/1014_0207_boutique-service-40/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom-side: frontend (the outermost caller of cartservice) error logs carry 172 occurrences of 'dial tcp 10.68.16.141:7070: connect: connection refused' (cartservice ClusterIP + declared port) with http.resp.status 500; CheckServiceConnectivity(cartservice,7070) returned 'Connection Failed'. Address layer: GetResources(endpoints) shows 'cartservice <none>' — the only Service with no backends — while its pod cartservice-685745b96c-v2rp4 is 1/1 Running, Ready:True, Restart Count:0. Config confirmation: DescribeResource(service/cartservice) shows 'Selector: application=cartservice', GetResource
+
+### case-41
+
+- **结论**：`app/checkoutservice` + `service_selector_mismatch` ｜ 标签 `app/checkoutservice` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.5385 · steps 14 · tokens 83,220
+- **raw 日志**：[results/1014_0209_inorder4-v3b97/raw/1014_0209_boutique-service-41](../results/1014_0209_inorder4-v3b97/raw/1014_0209_boutique-service-41/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are Running 1/1 with 0 restarts and no alerts, so the workload layer is clean; the break is in the address layer. The endpoints listing shows the outlier: 'checkoutservice  <none>' while every other Service binds correctly. DescribeResource(service checkoutservice) shows Selector: application=checkoutservice, but the pod's labels are app=checkoutservice (Deployment pod template label app: checkoutservice, per GetAppYAML). The selector key 'application' matches no pod label, so no endpoints are programmed and the ClusterIP 10.68.145.159:5050 has no backend. Caller-side conf
+
+### case-42
+
+- **结论**：`app/currencyservice` + `service_selector_mismatch` ｜ 标签 `app/currencyservice` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3529 · steps 18 · tokens 109,858
+- **raw 日志**：[results/1014_0211_inorder4-v3b98/raw/1014_0211_boutique-service-42](../results/1014_0211_inorder4-v3b98/raw/1014_0211_boutique-service-42/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts and no alerts, excluding workload/scheduling/probe faults; the break is at the addressing layer. The currencyservice Service is the only outlier: its spec.selector is 'application: currencyservice' while every other Service uses 'app=<name>' and the currencyservice pod actually carries labels 'app=currencyservice,pod-template-hash=75686c9564' (no 'application' key). Its Endpoints listing is '<none>' (all other 11 endpoints bind correctly), active TCP probe to its own declared port 7000 fails ('Connection Failed'), and frontend caller logs sh
+
+### case-43
+
+- **结论**：`app/paymentservice` + `service_selector_mismatch` ｜ 标签 `app/paymentservice` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4118 · steps 18 · tokens 89,954
+- **raw 日志**：[results/1014_0214_inorder4-v3b99/raw/1014_0214_boutique-service-43](../results/1014_0214_inorder4-v3b99/raw/1014_0214_boutique-service-43/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Frontend caller error logs (99x) show 'failed to charge card ... dial tcp 10.68.245.30:50051: connect: connection refused' on /cart/checkout. Object layer: all 11 boutique pods are 1/1 Running with 0 RESTARTS, but the Service surface is the outlier - 'endpoints' listing shows paymentservice = <none> while every other Service has a bound endpoint; live probe CheckServiceConnectivity(paymentservice, 50051) = Connection Failed, whereas shippingservice:50051 and checkoutservice:5050 are open. Mechanism: DescribeResource(service paymentservice) reads 'Selector: application=paymentservice', while th
+
+### case-44
+
+- **结论**：`app/productcatalogservice` + `service_selector_mismatch` ｜ 标签 `app/productcatalogservice` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4286 · steps 15 · tokens 103,178
+- **raw 日志**：[results/1014_0216_inorder4-v3b100/raw/1014_0216_boutique-service-44](../results/1014_0216_inorder4-v3b100/raw/1014_0216_boutique-service-44/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Frontend error logs repeatedly show 'could not retrieve products/product: rpc error: code = Unavailable ... dial tcp 10.68.202.177:3550: connect: connection refused' (10.68.202.177 = productcatalogservice ClusterIP, port 3550 as declared by its Service). All 11 boutique pods are 1/1 Running with 0 restarts, but the endpoints listing shows 'productcatalogservice   <none>' while every other Service has endpoints, and an active probe on port 3550 returns 'Connection Failed'. DescribeResource(service/productcatalogservice) reads 'Labels: app=productcatalogservice' but 'Selector: application=produc
+
+### case-45
+
+- **结论**：`app/recommendationservice` + `service_selector_mismatch` ｜ 标签 `app/recommendationservice` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 0 · EE 0.3125 · steps 17 · tokens 101,090
+- **raw 日志**：[results/1014_0218_inorder4-v3b101/raw/1014_0218_boutique-service-45](../results/1014_0218_inorder4-v3b101/raw/1014_0218_boutique-service-45/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All pods in boutique are 1/1 Running with 0 restarts and no alerts fire, so the break is not scheduling/startup/OOM. The endpoints listing isolates the single outlier: 'recommendationservice <none>' while every other Service has a populated endpoint, although its pod recommendationservice-7df9c5b676-bj6q9 is Running 1/1 Ready on worker-01. Victim-side confirmation: CheckServiceConnectivity(recommendationservice, 8080) returns 'Connection Failed', and the caller-side frontend error log shows 'rpc error: code = Unavailable desc = ... dial tcp 10.68.64.86:8080: connect: connection refused' (10.68
+
+### case-46
+
+- **结论**：`app/redis-cart` + `service_selector_mismatch` ｜ 标签 `app/redis-cart` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3684 · steps 20 · tokens 159,813
+- **raw 日志**：[results/1014_0221_inorder4-v3b102/raw/1014_0221_boutique-service-46](../results/1014_0221_inorder4-v3b102/raw/1014_0221_boutique-service-46/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts (no workload-side outlier), but the Endpoints surface shows a single outlier: redis-cart has NO endpoints (Endpoints object Subsets empty) while its pod redis-cart-68db7b6f97-qmsxn runs 1/1 on 172.20.1.45. Cause is a selector-key mismatch: Service redis-cart spec.selector is 'application: redis-cart', but the pod/deployment template labels are 'app: redis-cart', so no pod is ever selected and the ClusterIP has no backends (baseline check: productcatalogservice's Service correctly uses selector 'app=productcatalogservice'). Caller-side eviden
+
+### case-47
+
+- **结论**：`app/shippingservice` + `service_selector_mismatch` ｜ 标签 `app/shippingservice` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3846 · steps 14 · tokens 68,003
+- **raw 日志**：[results/1014_0223_inorder4-v3b103/raw/1014_0223_boutique-service-47](../results/1014_0223_inorder4-v3b103/raw/1014_0223_boutique-service-47/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts and no alerts, yet connectivity to shippingservice:50051 fails (CheckServiceConnectivity -> Connection Failed). DescribeResource(service/shippingservice) shows 'Selector: application=shippingservice' with empty 'Endpoints:', while its pods (e.g. shippingservice-7cbfcb6d68-47wzk) are labeled 'app=shippingservice' and the Deployment's own selector is 'app=shippingservice'. The Service selector key 'application' matches no pod label, so the endpoint set is empty; GetAppYAML(shippingservice) confirms the same mismatch in the Service manifest (sp
+
+### case-48
+
+- **结论**：`app/cartservice` + `service_selector_mismatch` ｜ 标签 `app/cartservice` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3684 · steps 20 · tokens 116,477
+- **raw 日志**：[results/1014_0225_inorder4-v3b104/raw/1014_0225_boutique-service-48](../results/1014_0225_inorder4-v3b104/raw/1014_0225_boutique-service-48/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts and no alerts, so the workload layer is clean; the break is at the address layer. The cartservice Service is the only outlier: its selector is 'app=cartservice,env=production' while its ENDPOINTS read '<none>' (every other Service has backends, e.g. productcatalogservice 172.20.1.83:3550). The cartservice pod listing shows only label 'app=cartservice,pod-template-hash=79b49f5555', and the cartservice manifest confirms the pod template labels only 'app: cartservice' — the extra 'env=production' selector term matches no backend, so the Service
+
+### case-49
+
+- **结论**：`app/checkoutservice` + `service_selector_mismatch` ｜ 标签 `app/checkoutservice` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.5385 · steps 14 · tokens 84,498
+- **raw 日志**：[results/1014_0228_inorder4-v3b105/raw/1014_0228_boutique-service-49](../results/1014_0228_inorder4-v3b105/raw/1014_0228_boutique-service-49/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts (workload layer clean, no Pending/CrashLoop/image/probe outlier). The endpoints listing shows exactly one outlier: 'checkoutservice  <none>' — no backend subsets, confirmed by DescribeResource(endpoints/checkoutservice) with an empty Subsets field. CheckServiceConnectivity(checkoutservice, 5050) returns 'Connection Failed', and the caller-side logs (GetErrorLogs frontend) show 164 identical errors: 'rpc error: code = Unavailable ... dial tcp 10.68.36.46:5050: connect: connection refused' on POST /cart/checkout — the DNS name resolved to the 
+
+### case-50
+
+- **结论**：`app/currencyservice` + `service_selector_mismatch` ｜ 标签 `app/currencyservice` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4 · steps 16 · tokens 106,025
+- **raw 日志**：[results/1014_0229_inorder4-v3b106/raw/1014_0230_boutique-service-50](../results/1014_0229_inorder4-v3b106/raw/1014_0230_boutique-service-50/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Frontend (entrypoint caller) error logs carry the dominant failure pattern (133/178 errors, 18.7%): 'could not retrieve currencies: rpc error: code = Unavailable ... dial tcp 10.68.78.209:7000: connect: connection refused' — 10.68.78.209 is the currencyservice ClusterIP on its declared gRPC port 7000. The endpoints listing shows currencyservice is the ONLY Service in the namespace with '<none>' endpoints while all 10 others are bound; CheckServiceConnectivity(currencyservice:7000) returned 'Connection Failed'. GetAppYAML(currencyservice) exposes the mechanism: the Service selector requires '{a
+
+### case-51
+
+- **结论**：`app/paymentservice` + `service_selector_mismatch` ｜ 标签 `app/paymentservice` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3478 · steps 24 · tokens 163,375
+- **raw 日志**：[results/1014_0232_inorder4-v3b107/raw/1014_0232_boutique-service-51](../results/1014_0232_inorder4-v3b107/raw/1014_0232_boutique-service-51/)（ndjson / mcp.jsonl / meta）
+- **摘要**：frontend /cart/checkout returns 500 with 'failed to charge card ... dial tcp 10.68.148.209:50051: connect: connection refused' (99 hits, dominant in the live log tail), and 10.68.148.209:50051 is the paymentservice ClusterIP. kubectl get endpoints shows paymentservice as '<none>' while every other Service in boutique has a bound pod IP; CheckServiceConnectivity(paymentservice:50051) = Connection Failed while shippingservice/checkoutservice/adservice/currencyservice probes all succeed (hence 'partial'). The workload itself is healthy: paymentservice Deployment 1/1 AVAILABLE, pod 1/1 Running wit
+
+### case-52
+
+- **结论**：`app/recommendationservice` + `service_selector_mismatch` ｜ 标签 `app/recommendationservice` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3889 · steps 19 · tokens 105,728
+- **raw 日志**：[results/1014_0234_inorder4-v3b108/raw/1014_0234_boutique-service-52](../results/1014_0234_inorder4-v3b108/raw/1014_0234_boutique-service-52/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are Running 1/1 with 0 restarts (no workload/scheduling/probe fault), but the endpoints listing shows recommendationservice with '<none>' endpoints. DescribeResource(service, recommendationservice) shows Selector 'app=recommendationservice,env=production' with empty Endpoints, while its pod recommendationservice-7df9c5b676-ctwzd carries only labels 'app=recommendationservice,pod-template-hash=7df9c5b676' and GetAppYAML confirms the Deployment pod template labels only 'app: recommendationservice' - the extra 'env=production' selector key matches no pod, so no EndpointSlice 
+
+### case-53
+
+- **结论**：`app/redis-cart` + `service_selector_mismatch` ｜ 标签 `app/redis-cart` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.375 · steps 17 · tokens 110,601
+- **raw 日志**：[results/1014_0236_inorder4-v3b109/raw/1014_0236_boutique-service-53](../results/1014_0236_inorder4-v3b109/raw/1014_0236_boutique-service-53/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods read Running/1-1 Ready with 0 restarts and no alerts, so scheduling/startup/probe/OOM mechanisms are excluded; the break is in the address/endpoints layer. Caller-side logs lead: frontend errors (149/594, 25.1%) top pattern 'could not retrieve cart / failed to add to cart ... Can't access cart storage ... UnableToConnect on redis-cart:6379', and cartservice errors (237/640, 37.0%) top pattern 'UnableToConnect on redis-cart:6379/Interactive, state: Connecting, last-heartbeat: never'. Probed on the victim's own declared port, CheckServiceConnectivity(redis-cart, 6379) = Conn
+
+### case-54
+
+- **结论**：`app/shippingservice` + `service_selector_mismatch` ｜ 标签 `app/shippingservice` + `service_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4375 · steps 17 · tokens 93,636
+- **raw 日志**：[results/1014_0238_inorder4-v3b110/raw/1014_0238_boutique-service-54](../results/1014_0238_inorder4-v3b110/raw/1014_0238_boutique-service-54/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Partial Service Unreachability' localized to shippingservice: frontend error logs' dominant pattern (129x) is 'failed to get shipping quote: rpc error: code = Unavailable ... dial tcp 10.68.64.58:50051: connect: connection refused', where 10.68.64.58 is shippingservice's ClusterIP. All 11 pods are 1/1 Running with 0 restarts (no workload break), but the endpoints listing shows 'shippingservice  <none>' while every other service has endpoints, and DescribeResource(service shippingservice) reports 'Selector: app=shippingservice,env=production' with empty Endpoints. GetAppYAML(shippingse
 

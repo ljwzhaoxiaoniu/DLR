@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/93,1.0,1.0,1.0,1.0,1.0,1.0,0.15,21.0,0.0,0.0,app/shippingservice,code_excessive_file_reads,app/shippingservice,code_excessive_file_reads,
+boutique/runtime/14,1.0,1.0,1.0,1.0,1.0,1.0,0.38461538461538464,14.0,0.0,0.0,app/productcatalogservice,liveness_probe_incorrect_port,app/productcatalogservice,liveness_probe_incorrect_port,
+boutique/startup/23,1.0,1.0,1.0,1.0,1.0,1.0,0.3,11.0,0.0,0.0,app/frontend,incorrect_image_reference,app/frontend,incorrect_image_reference,
+trainticket/runtime/77,1.0,1.0,1.0,0.8,0.6,0.0,0.4,16.0,0.0,0.0,app/ts-travel-service,mysql_invalid_port,app/ts-travel-service,mysql_invalid_port,

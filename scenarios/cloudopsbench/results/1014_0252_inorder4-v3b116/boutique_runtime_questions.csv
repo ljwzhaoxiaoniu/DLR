@@ -1,0 +1,2 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/runtime/15,1.0,1.0,1.0,1.0,1.0,1.0,0.25,13.0,0.0,0.0,app/recommendationservice,liveness_probe_incorrect_port,app/recommendationservice,liveness_probe_incorrect_port,

@@ -1,0 +1,8 @@
+system: boutique
+category: runtime
+case: 16
+query: Service abnormal restart.
+rc: 0
+stamp: 1014_0254
+tsm_mcp: http://127.0.0.1:28796/mcp
+bench_mcp: http://127.0.0.1:8001/mcp

@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **70/98** 题：JRA ✅65 ❌5 ｜ 证据链全闭 70 ｜ token 中位 325,537 ｜ 生成 2026-10-13T18:00:01.919Z
+> 本家族已跑 **96/98** 题：JRA ✅90 ❌6 ｜ 证据链全闭 96 ｜ token 中位 298,509 ｜ 生成 2026-10-13T18:58:20.406Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -77,6 +77,32 @@
 | [68](#case-68) | 1 | 1 | 1 | 1 | 1 | 1 | 0.12 | 26 | 536,882 | 0 | 0 | 1014_0153_inorder4-v3b90 | 全对·链闭 |
 | [69](#case-69) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1364 | 23 | 197,392 | 0 | 0 | 1014_0155_inorder4-v3b91 | 全对·链闭 |
 | [70](#case-70) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 250,409 | 0 | 0 | 1014_0158_inorder4-v3b92 | 全对·链闭 |
+| [71](#case-71) | 1 | 0 | 0 | 1 | 1 | 1 | 0.1667 | 25 | 532,300 | 0 | 0 | 1014_0200_inorder4-v3b93 | 未命中 |
+| [72](#case-72) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2222 | 19 | 524,599 | 0.0556 | 0 | 1014_0202_inorder4-v3b94 | 全对·链闭 |
+| [73](#case-73) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1765 | 18 | 163,011 | 0 | 0 | 1014_0205_inorder4-v3b95 | 全对·链闭 |
+| [74](#case-74) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1579 | 20 | 432,179 | 0 | 0 | 1014_0207_inorder4-v3b96 | 全对·链闭 |
+| [75](#case-75) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 254,210 | 0 | 0 | 1014_0209_inorder4-v3b97 | 全对·链闭 |
+| [76](#case-76) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 237,072 | 0 | 0 | 1014_0211_inorder4-v3b98 | 全对·链闭 |
+| [77](#case-77) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2222 | 19 | 301,512 | 0 | 0 | 1014_0214_inorder4-v3b99 | 全对·链闭 |
+| [78](#case-78) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1905 | 22 | 243,503 | 0 | 0 | 1014_0216_inorder4-v3b100 | 全对·链闭 |
+| [79](#case-79) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1818 | 23 | 419,522 | 0 | 0 | 1014_0218_inorder4-v3b101 | 全对·链闭 |
+| [80](#case-80) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.16 | 26 | 722,191 | 0 | 0 | 1014_0221_inorder4-v3b102 | 全对·链闭 |
+| [81](#case-81) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 204,146 | 0 | 0 | 1014_0223_inorder4-v3b103 | 全对·链闭 |
+| [82](#case-82) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 159,393 | 0 | 0 | 1014_0225_inorder4-v3b104 | 全对·链闭 |
+| [83](#case-83) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 179,349 | 0 | 0 | 1014_0228_inorder4-v3b105 | 全对·链闭 |
+| [84](#case-84) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 168,724 | 0 | 0 | 1014_0229_inorder4-v3b106 | 全对·链闭 |
+| [85](#case-85) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1765 | 18 | 188,088 | 0 | 0 | 1014_0232_inorder4-v3b107 | 全对·链闭 |
+| [86](#case-86) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 193,948 | 0 | 0 | 1014_0234_inorder4-v3b108 | 全对·链闭 |
+| [87](#case-87) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 168,606 | 0 | 0 | 1014_0236_inorder4-v3b109 | 全对·链闭 |
+| [88](#case-88) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1429 | 29 | 423,624 | 0.0357 | 0 | 1014_0238_inorder4-v3b110 | 全对·链闭 |
+| [89](#case-89) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 233,265 | 0 | 0 | 1014_0241_inorder4-v3b111 | 全对·链闭 |
+| [90](#case-90) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 267,974 | 0 | 0 | 1014_0243_inorder4-v3b112 | 全对·链闭 |
+| [91](#case-91) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 331,553 | 0 | 0 | 1014_0245_inorder4-v3b113 | 全对·链闭 |
+| [92](#case-92) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1818 | 23 | 446,352 | 0.0455 | 0 | 1014_0248_inorder4-v3b114 | 全对·链闭 |
+| [93](#case-93) | 1 | 1 | 1 | 1 | 1 | 1 | 0.15 | 21 | 456,238 | 0 | 0 | 1014_0250_inorder4-v3b115 | 全对·链闭 |
+| [94](#case-94) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 422,940 | 0 | 0 | 1014_0252_inorder4-v3b116 | 全对·链闭 |
+| [95](#case-95) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1579 | 20 | 185,574 | 0 | 0 | 1014_0254_inorder4-v3b117 | 全对·链闭 |
+| [96](#case-96) | 1 | 1 | 1 | 1 | 1 | 1 | 0.15 | 21 | 211,381 | 0 | 0 | 1014_0256_inorder4-v3b118 | 全对·链闭 |
 
 ## 证据正文
 
@@ -569,4 +595,186 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 250,409
 - **raw 日志**：[results/1014_0158_inorder4-v3b92/raw/1014_0158_boutique-codedefect-70](../results/1014_0158_inorder4-v3b92/raw/1014_0158_boutique-codedefect-70/)（ndjson / mcp.jsonl / meta）
 - **摘要**：productcatalogservice pod (8458b87d48-7r7l6, worker-01) is the only outlier: 1/2 READY, CrashLoopBackOff, 4 restarts. Doc evidence: server container Last State Terminated Reason=OOMKilled ExitCode=137, memory limit 128Mi, event 'Warning BackOff restarting failed container server'; container dies ~1s after start while logging 'loading catalog from local products.json file...'. Caller side: frontend logs 546x/545x 'rpc error: code = Unavailable desc = no healthy upstream' for /product/{id} and /, and CheckServiceConnectivity(productcatalogservice:3550, its own declared Service port) = Connection
+
+### case-71
+
+- **结论**：`app/productcatalogservice` + `code_wrong_return` ｜ 标签 `app/productcatalogservice` + `code_missing_parameter`（✗ 与标签不符）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 25 · tokens 532,300
+- **raw 日志**：[results/1014_0200_inorder4-v3b93/raw/1014_0200_boutique-codedefect-71](../results/1014_0200_inorder4-v3b93/raw/1014_0200_boutique-codedefect-71/)（ndjson / mcp.jsonl / meta）
+- **摘要**：boutique 全部 Pod 2/2 Running 且 RESTARTS=0，唯一离群行是 productcatalogservice 的 Pod 年龄(2m25s vs 其余~5m35s，因滚动替换为 wangyl2128/productcatalogservice-v2:latest)。frontend 唯一错误 pattern 588 条: 'could not retrieve product: rpc error: code = NotFound desc = no product with ID '(空 ID)，对应 GET /product/{id} 500，Success Rate 90.5%->65.0%；productcatalogservice 自身错误日志干净。调用图(frontend -> recommendationservice/checkoutservice -> productcatalogservice)确认 productcatalogservice 为叶子被调方。其源码 product_catalog.go 中 GetProduct 在 `productID := req.Id` 之后有 `productID = ""` —— 请求 ID 被抹掉，循环永不命中，对每个合法商品 ID 都返回 status.Errorf(codes.NotF
+
+### case-72
+
+- **结论**：`app/productcatalogservice` + `code_excessive_file_reads` ｜ 标签 `app/productcatalogservice` + `code_excessive_file_reads`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2222 · steps 19 · tokens 524,599
+- **raw 日志**：[results/1014_0202_inorder4-v3b94/raw/1014_0202_boutique-codedefect-72](../results/1014_0202_inorder4-v3b94/raw/1014_0202_boutique-codedefect-72/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (symptom pointer) show LATENCY_DEGRADATION on productcatalogservice (p90 3.05ms -> 2126.90ms, +69543%) plus 500s and latency at frontend (p90 2162ms, success 90.5%->38.4%) and recommendationservice; the object-layer scan shows exactly one outlier among 11 boutique pods: productcatalogservice-6df94d8f6b-4n75r 1/2 OOMKilled with 4 restarts (all others 2/2 Running/0), and pod detail shows server container Terminated Reason=OOMKilled Exit Code=137 Restart Count=4, with namespace event 'Warning BackOff pod/productcatalogservice-6df94d8f6b-4n75r Back-off restarting failed container server'. T
+
+### case-73
+
+- **结论**：`app/productcatalogservice` + `code_excessive_file_reads` ｜ 标签 `app/productcatalogservice` + `code_excessive_file_reads`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1765 · steps 18 · tokens 163,011
+- **raw 日志**：[results/1014_0205_inorder4-v3b95/raw/1014_0205_boutique-codedefect-73](../results/1014_0205_inorder4-v3b95/raw/1014_0205_boutique-codedefect-73/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts flag latency degradation on productcatalogservice (p90 2.61ms -> 1458.43ms, +55735.9%, peak 3970.86ms) plus upstream frontend (success 100%->37.5%, p90 391ms->1750ms, HTTP 500 on '/' and '/product/{id}') and recommendationservice (p50 3.33ms->3392.86ms). Object-layer scan of boutique pods shows exactly one outlier: productcatalogservice-6df94d8f6b-vjgld 1/2 OOMKilled, 4 restarts, container 'server' Terminated Reason=OOMKilled Exit Code=137 with 128Mi limit, and kubelet event 'BackOff - Back-off restarting failed container server'. GetServiceDependencies shows productcatalogservice is th
+
+### case-74
+
+- **结论**：`app/productcatalogservice` + `code_excessive_file_reads` ｜ 标签 `app/productcatalogservice` + `code_excessive_file_reads`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1579 · steps 20 · tokens 432,179
+- **raw 日志**：[results/1014_0207_inorder4-v3b96/raw/1014_0207_boutique-codedefect-74](../results/1014_0207_inorder4-v3b96/raw/1014_0207_boutique-codedefect-74/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom chain: frontend success rate 95.2%->38.5% with 483+468 HTTP 500s, productcatalogservice p90 latency 2.40ms->1950.00ms, recommendationservice p50 3.38ms->2499.34ms (recommendationservice -> productcatalogservice call edge, so degradation propagates downstream). Object-layer scan of boutique pods shows exactly one outlier: productcatalogservice-6df94d8f6b-nmz5q is 1/2, STATUS OOMKilled, RESTARTS 4, worker-01, while all 10 other services are 2/2 Running with 0 restarts. Pod detail: container 'server' in CrashLoopBackOff, Last State Terminated Reason=OOMKilled Exit Code=137, Restart Count=
+
+### case-75
+
+- **结论**：`app/productcatalogservice` + `code_excessive_file_reads` ｜ 标签 `app/productcatalogservice` + `code_excessive_file_reads`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1875 · steps 17 · tokens 254,210
+- **raw 日志**：[results/1014_0209_inorder4-v3b97/raw/1014_0209_boutique-codedefect-75](../results/1014_0209_inorder4-v3b97/raw/1014_0209_boutique-codedefect-75/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts: productcatalogservice LATENCY_DEGRADATION p90 2.37ms->1944.01ms (+81856.6%), recommendationservice p50 3.39ms->2200ms, frontend ERROR_SPIKE Success Rate 100%->41.7% with HTTP 500 on '/' and '/product/{id}'. Object layer is NOT normal: pods listing shows the only outlier is productcatalogservice-6df94d8f6b-rgpsx with RESTARTS 4 (all other 10 pods RESTARTS 0); describe shows the 'server' container Last State Terminated Reason=OOMKilled Exit Code=137, dying ~6s after each start (15:30:08 -> 15:30:14) with event 'Warning BackOff Back-off restarting failed container server'. Caller-side clo
+
+### case-76
+
+- **结论**：`app/productcatalogservice` + `code_wrong_return` ｜ 标签 `app/productcatalogservice` + `code_wrong_return`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2105 · steps 20 · tokens 237,072
+- **raw 日志**：[results/1014_0211_inorder4-v3b98/raw/1014_0211_boutique-codedefect-76](../results/1014_0211_inorder4-v3b98/raw/1014_0211_boutique-codedefect-76/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique: all 11 pods 2/2 Running with 0 restarts, yet frontend's own error log carries 553 identical entries 'could not retrieve product: rpc error: code = Unknown desc = Query product error.' on GET /product/{id}, matching the alert 'ERROR_SPIKE [Success Rate Drop] frontend 90.5% -> 66.6%' and 'HTTPError 500 /product/{id} (553 occurrences)'. The dependency walk from the symptom side (GetServiceDependencies(frontend)) lands on productcatalogservice, whose pod is Ready=True with Restart Count 0 and whose logs are clean (gRPC server at :3550, 'successfully parsed product catalog json'
+
+### case-77
+
+- **结论**：`app/productcatalogservice` + `code_wrong_return` ｜ 标签 `app/productcatalogservice` + `code_wrong_return`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2222 · steps 19 · tokens 301,512
+- **raw 日志**：[results/1014_0214_inorder4-v3b99/raw/1014_0214_boutique-codedefect-77](../results/1014_0214_inorder4-v3b99/raw/1014_0214_boutique-codedefect-77/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods read Running 2/2 with 0 restarts (no scheduling/startup/probe break), yet alerts flag frontend Success Rate Drop 90.5%->66.3% and recommendationservice AVAILABILITY_MISSING on business action GET /product/{id} (561 occurrences, HTTP 500). frontend's own log carries the failing call verbatim: 560x 'could not retrieve product: rpc error: code = NotFound desc = no product with ID OLJCESPC7Z' plus 1 transient 'Connection refused' at pod start. GetServiceDependencies(frontend) anchors the walk to downstream productcatalogservice. The suspect pod productcatalogservice-68b9c7b49-
+
+### case-78
+
+- **结论**：`app/productcatalogservice` + `code_wrong_return` ｜ 标签 `app/productcatalogservice` + `code_wrong_return`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1905 · steps 22 · tokens 243,503
+- **raw 日志**：[results/1014_0216_inorder4-v3b100/raw/1014_0216_boutique-codedefect-78](../results/1014_0216_inorder4-v3b100/raw/1014_0216_boutique-codedefect-78/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side: alerts flag frontend ERROR_SPIKE (success rate 100.0% -> 68.2%) on GET /product/{id} and recommendationservice AVAILABILITY_MISSING (success_rate vanished). frontend caller logs (550 occurrences) read 'could not retrieve product: rpc error: code = NotFound desc = no product with ID 9SIQT8TOJO' followed by HTTP 500, plus one transient 'code = Unavailable ... Connection refused' at 12:15:19. Object layer: all pods 2/2 Running with 0 restarts; only outlier is productcatalogservice-68b9c7b49-5nnm7 (AGE 2m26s vs ~5m37s for the rest) on worker-01, and CheckServiceConnectivity(productca
+
+### case-79
+
+- **结论**：`app/productcatalogservice` + `code_wrong_return` ｜ 标签 `app/productcatalogservice` + `code_wrong_return`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1818 · steps 23 · tokens 419,522
+- **raw 日志**：[results/1014_0218_inorder4-v3b101/raw/1014_0218_boutique-codedefect-79](../results/1014_0218_inorder4-v3b101/raw/1014_0218_boutique-codedefect-79/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Service Availability Disruption.' traced along the reachability chain: frontend's own error log carries 545/546 errors 'could not retrieve product: rpc error: code = NotFound desc = no product with ID L9ECAV7KIM' for http.req.path=/product/L9ECAV7KIM (caller passed the same ID, so no caller-side parameter fault), and alerts show frontend success rate dropping 95.2% -> 64.5%. The topology walk (GetServiceDependencies(frontend)) locates the callee productcatalogservice. The object layer is fully healthy: all pods 2/2 Running with 0 restarts, productcatalogservice pod Ready=True with onl
+
+### case-80
+
+- **结论**：`app/productcatalogservice` + `code_wrong_return` ｜ 标签 `app/productcatalogservice` + `code_wrong_return`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.25 · ECR 1 · EE 0.16 · steps 26 · tokens 722,191
+- **raw 日志**：[results/1014_0221_inorder4-v3b102/raw/1014_0221_boutique-codedefect-80](../results/1014_0221_inorder4-v3b102/raw/1014_0221_boutique-codedefect-80/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts flagged frontend ERROR_SPIKE (success rate 90.5% -> 65.9%) with business action 'View product detail' /product/{id} failing 567x with HTTP 500. frontend logs show every GET /product/{valid-catalog-id} (6E92ZMYYFZ, L9ECAV7KIM, LS4PSXUNUM, 1YMWWN1N4O) returning 'rpc error: code = NotFound desc = no product with ID ...' while GET / returned 200 (ListProducts works) - so only GetProduct is broken. The callee's object layer and addressing layer are clean: pod productcatalogservice-68b9c7b49-zwvdk is 2/2 Ready with 0 restarts and no Unhealthy/FailedMount events; Service selector app=productca
+
+### case-81
+
+- **结论**：`app/productcatalogservice` + `code_excessive_file_writes` ｜ 标签 `app/productcatalogservice` + `code_excessive_file_writes`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 204,146
+- **raw 日志**：[results/1014_0223_inorder4-v3b103/raw/1014_0223_boutique-codedefect-81](../results/1014_0223_inorder4-v3b103/raw/1014_0223_boutique-codedefect-81/)（ndjson / mcp.jsonl / meta）
+- **摘要**：GetAlerts() returned exactly one anomaly, on Service productcatalogservice (2026-05-18 18:18:09~18:20:44): 'RESOURCE_SATURATION [cpu] | Normal=0.00 cores -> Current=0.02 cores (+811.7%)' plus 'FILESYSTEM_WRITE_SURGE [fs_write_bytes] | Normal=0.00B/s -> Current=83767.90B/s (New Spike) | Peak=213689.87B/s'. Object-layer exclusion is clean (GetResources pods: productcatalogservice-bfb6d56f-p7dhz 2/2 Running, 0 restarts; GetErrorLogs = 'No error logs found'; CheckServiceConnectivity productcatalogservice:3550 = 'open / Connection Succeeded'; frontend caller logs 200 OK in 18-22ms), so the break is
+
+### case-82
+
+- **结论**：`app/productcatalogservice` + `code_excessive_file_writes` ｜ 标签 `app/productcatalogservice` + `code_excessive_file_writes`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 159,393
+- **raw 日志**：[results/1014_0225_inorder4-v3b104/raw/1014_0225_boutique-codedefect-82](../results/1014_0225_inorder4-v3b104/raw/1014_0225_boutique-codedefect-82/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Telemetry chain: the only active alert targets productcatalogservice (2026-05-19 11:19:31~11:22:06) with RESOURCE_SATURATION [cpu] Normal=0.00 -> Current=0.02 cores (+833.9%) and FILESYSTEM_WRITE_SURGE [fs_write_bytes] Normal=0.00B/s -> Current=50200.70B/s (New Spike, Peak=112064.67B/s). Object-layer exclusion is clean and therefore not the break: pods listing shows productcatalogservice-bfb6d56f-n75l8 2/2 Running with 0 restarts, no error logs, normal gRPC start ('starting grpc server at :3550', 'successfully parsed product catalog json'). The newly rolled ReplicaSet productcatalogservice-bfb
+
+### case-83
+
+- **结论**：`app/productcatalogservice` + `code_excessive_file_writes` ｜ 标签 `app/productcatalogservice` + `code_excessive_file_writes`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 179,349
+- **raw 日志**：[results/1014_0228_inorder4-v3b105/raw/1014_0228_boutique-codedefect-83](../results/1014_0228_inorder4-v3b105/raw/1014_0228_boutique-codedefect-83/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert (GetAlerts) fires only on service productcatalogservice: RESOURCE_SATURATION [cpu] Normal=0.00 cores -> Current=0.02 cores (+857.6%) and FILESYSTEM_WRITE_SURGE [fs_write_bytes] Normal=0.00B/s -> Current=130908.56B/s (New Spike) Peak=365007.86B/s. Object layer is clean and therefore excludes an object-level break: all boutique pods are 2/2 Running with RESTARTS=0, and pod productcatalogservice-bfb6d56f-8v9xt is Ready=True with Restart Count 0 and only Normal events (Scheduled/Pulled/Created/Started), no Warning. Logs are clean (no error logs; normal startup 'loading catalog from local pro
+
+### case-84
+
+- **结论**：`app/productcatalogservice` + `code_excessive_file_writes` ｜ 标签 `app/productcatalogservice` + `code_excessive_file_writes`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 168,724
+- **raw 日志**：[results/1014_0229_inorder4-v3b106/raw/1014_0230_boutique-codedefect-84](../results/1014_0229_inorder4-v3b106/raw/1014_0230_boutique-codedefect-84/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Telemetry-chain closure for 'Service Performance Degradation.': GetAlerts() returns exactly one anomaly on Service/productcatalogservice (window 15:56:11~15:58:46) with RESOURCE_SATURATION [cpu] 'Normal=0.00 cores -> Current=0.02 cores (+783.2%)' and FILESYSTEM_WRITE_SURGE [fs_write_bytes] 'Current=144055.34B/s (New Spike) | Peak=292748.64B/s'. Object-layer exclusion is clean: all 11 pods are 2/2 Running with RESTARTS=0, all deployments 1/1 AVAILABLE, productcatalogservice logs show only normal startup lines, zero error logs, and the namespace events surface shows no scheduling/mount/create/pr
+
+### case-85
+
+- **结论**：`app/shippingservice` + `code_busy_loop` ｜ 标签 `app/shippingservice` + `code_busy_loop`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1765 · steps 18 · tokens 188,088
+- **raw 日志**：[results/1014_0232_inorder4-v3b107/raw/1014_0232_boutique-codedefect-85](../results/1014_0232_inorder4-v3b107/raw/1014_0232_boutique-codedefect-85/)（ndjson / mcp.jsonl / meta）
+- **摘要**：L2 consensus (exact wording 'Service Performance Degradation.') routes to the telemetry chain: alerts -> object-layer exclusion -> metric reading. Alerts name shippingservice: RESOURCE_SATURATION [cpu] 0.00 -> 0.14 cores (+14130.8%), RESOURCE_SATURATION [cpu_cfs] 1.218s throttled, LATENCY_DEGRADATION p50 0.42ms -> 798.72ms (peak 827ms). Object layer excludes every object fault: all boutique pods 2/2 Running with RESTARTS=0, shippingservice pod Ready=True Restart Count=0, no OOMKilled/Unhealthy/Killing or FailedScheduling/FailedMount events for it, node worker-01 CPU only 5.15% -> 9.08% (node n
+
+### case-86
+
+- **结论**：`app/shippingservice` + `code_busy_loop` ｜ 标签 `app/shippingservice` + `code_busy_loop`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1875 · steps 17 · tokens 193,948
+- **raw 日志**：[results/1014_0234_inorder4-v3b108/raw/1014_0234_boutique-codedefect-86](../results/1014_0234_inorder4-v3b108/raw/1014_0234_boutique-codedefect-86/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts on entity shippingservice show RESOURCE_SATURATION [cpu_cfs] Val=1.167s throttled + cpu 0.00->0.13 cores (+12912.5%) together with LATENCY_DEGRADATION p50 0.36ms->781.25ms (+217518.2%) and p90 3.79ms->1363.16ms; node worker-01 only rose to 6.61% CPU, so the fault is pod-internal, not node-level. Object-layer exclusion is clean: pod shippingservice-85588b6c75-dwm2l is 2/2 Running with RESTARTS=0 and only a transient startup-probe warning at creation, TCP 172.20.1.103:50051 is open (Connection Succeeded), and error logs are 0.1% (two benign startup info lines) - so liveness/probes/address
+
+### case-87
+
+- **结论**：`app/shippingservice` + `code_busy_loop` ｜ 标签 `app/shippingservice` + `code_busy_loop`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 168,606
+- **raw 日志**：[results/1014_0236_inorder4-v3b109/raw/1014_0236_boutique-codedefect-87](../results/1014_0236_inorder4-v3b109/raw/1014_0236_boutique-codedefect-87/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All object-layer surfaces for boutique are clean (all pods 2/2 Running, RESTARTS=0; no FailedCreate/FailedScheduling/FailedMount/image-pull events; shippingservice probes/SA/Service selector/port all consistent), so the break is not at the object layer. GetAlerts() flags entity shippingservice as ABNORMAL with RESOURCE_SATURATION [cpu_cfs] 'Val=1.082s throttled', RESOURCE_SATURATION [cpu] 'Normal=0.00 cores -> Current=0.12 cores (+9995.8%)' and LATENCY_DEGRADATION 'p50 0.44ms -> 784.67ms (+178233.2%)', plus node worker-01 cpu 4.99%->8.70%; the shippingservice pod (172.20.1.244) runs on worker-
+
+### case-88
+
+- **结论**：`app/shippingservice` + `code_busy_loop` ｜ 标签 `app/shippingservice` + `code_busy_loop`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1429 · steps 29 · tokens 423,624
+- **raw 日志**：[results/1014_0238_inorder4-v3b110/raw/1014_0238_boutique-codedefect-88](../results/1014_0238_inorder4-v3b110/raw/1014_0238_boutique-codedefect-88/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Telemetry chain: GetAlerts names Service/shippingservice with RESOURCE_SATURATION [cpu_cfs] Val=1.069s throttled, cpu Normal=0.00 -> Current=0.12 cores (+11812.5%) and LATENCY_DEGRADATION p50 0.39ms -> 775.59ms (Peak 800.65ms); Node/worker-01 cpu 4.90%->7.92% is collateral because the shippingservice pod runs on worker-01. Object layer excluded: all boutique pods 2/2 Running with 0 restarts, TCP check to shippingservice:50051 succeeded (172.20.1.125:50051 open), ContainersReady=True, no FailedScheduling/FailedCreate/FailedMount/probe mechanism events - so the break is not scheduling, reachabil
+
+### case-89
+
+- **结论**：`app/shippingservice` + `code_artificial_delay` ｜ 标签 `app/shippingservice` + `code_artificial_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 233,265
+- **raw 日志**：[results/1014_0241_inorder4-v3b111/raw/1014_0241_boutique-codedefect-89](../results/1014_0241_inorder4-v3b111/raw/1014_0241_boutique-codedefect-89/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Telemetry chain (L2 consensus qid=12): alerts name frontend (p90 36.88ms->4370.16ms) and shippingservice (p50 0.44ms->3721.67ms, p90 4.09ms->4744.33ms). Object layer is clean - all 11 boutique pods 2/2 Running with RESTARTS 0, so the break is not lifecycle/scheduling/config/probe: no Warning event binds any mechanism to shippingservice, only routine rollout+probe transients. shippingservice is a LEAF (upstream frontend, checkoutservice). Caller side closes: frontend logs 21x 'failed to get shipping quote: rpc error: code = Canceled desc = context canceled'. Mechanism surface: shippingservice m
+
+### case-90
+
+- **结论**：`app/shippingservice` + `code_memory_leak` ｜ 标签 `app/shippingservice` + `code_memory_leak`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 267,974
+- **raw 日志**：[results/1014_0243_inorder4-v3b112/raw/1014_0243_boutique-codedefect-90](../results/1014_0243_inorder4-v3b112/raw/1014_0243_boutique-codedefect-90/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Object layer: shippingservice-db6465f5d-sk8rt is the sole outlier (1/2 CrashLoopBackOff, RESTARTS 3) and deployment shippingservice is the only 0/1 AVAILABLE workload; alerts show frontend success rate 99.9%->78.8% and 500s on /cart and /cart/checkout. Victim's own signal: Service declares port 50051/targetPort 50051, containerPort 50051, PORT=50051 and the app logs 'Shipping Service listening on port :50051' after already serving GetQuote/ShipOrder requests, so ports/probes/addressing/image pull are all intact. Mechanism event: DescribeResource(pod) shows container server Last State Terminate
+
+### case-91
+
+- **结论**：`app/shippingservice` + `code_excessive_file_reads` ｜ 标签 `app/shippingservice` + `code_excessive_file_reads`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 331,553
+- **raw 日志**：[results/1014_0245_inorder4-v3b113/raw/1014_0245_boutique-codedefect-91](../results/1014_0245_inorder4-v3b113/raw/1014_0245_boutique-codedefect-91/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Service Performance Degradation.' enters the telemetry chain: alert on shippingservice LATENCY_DEGRADATION (p90 4.15ms -> 2777.17ms, +66819.9%) plus frontend success-rate drop (100%->73.8%) with HTTP 500 on /cart. Object-layer scan isolated exactly one outlier: pod shippingservice-7b5c459cdd-cw46j 1/2 CrashLoopBackOff, RESTARTS 3 (all other 10 boutique pods 2/2 Running, 0 restarts). describe shows container 'server' Last State Terminated Reason=OOMKilled ExitCode=137 after only ~14s uptime, with kubelet Warning BackOff 'Back-off restarting failed container server'. Config cross-check 
+
+### case-92
+
+- **结论**：`app/shippingservice` + `code_excessive_file_reads` ｜ 标签 `app/shippingservice` + `code_excessive_file_reads`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1818 · steps 23 · tokens 446,352
+- **raw 日志**：[results/1014_0248_inorder4-v3b114/raw/1014_0248_boutique-codedefect-92](../results/1014_0248_inorder4-v3b114/raw/1014_0248_boutique-codedefect-92/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert points at shippingservice: LATENCY_DEGRADATION p90 4.01ms -> 2019.74ms (+50267.6%), with frontend ERROR_SPIKE 100%->71.8% and frontend logs 'failed to get shipping quote: rpc error: code = Unavailable desc = no healthy upstream' on /cart (HTTP 500), so the victim is the leaf service shippingservice. Object layer shows the only outlier pod shippingservice-7b5c459cdd-hlf6v (1/2 READY, CrashLoopBackOff, restarts=3, node worker-01) while all other 10 boutique services are 2/2 Running with 0 restarts; DescribeResource gives Last State Terminated / Reason OOMKilled / Exit Code 137, restarts ev
+
+### case-93
+
+- **结论**：`app/shippingservice` + `code_excessive_file_reads` ｜ 标签 `app/shippingservice` + `code_excessive_file_reads`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.15 · steps 21 · tokens 456,238
+- **raw 日志**：[results/1014_0250_inorder4-v3b115/raw/1014_0250_boutique-codedefect-93](../results/1014_0250_inorder4-v3b115/raw/1014_0250_boutique-codedefect-93/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts: shippingservice LATENCY_DEGRADATION p90 3.14ms -> 2087.50ms (peak 3175ms, +66380.9%) and frontend success rate 95.2% -> 73.4%. Pod listing shows the single outlier shippingservice-7b5c459cdd-dphmz 1/2 CrashLoopBackOff with 3 restarts (all other pods 2/2 Running, 0 restarts). kubectl describe shows container 'server' Last State Terminated: Reason OOMKilled, Exit Code 137, restarting ~16s after each start, with limits cpu 200m/memory 128Mi; namespace events bind it: 'Warning BackOff ... Back-off restarting failed container server in pod shippingservice-7b5c459cdd-dphmz_boutique'. No Reso
+
+### case-94
+
+- **结论**：`app/shippingservice` + `code_excessive_file_reads` ｜ 标签 `app/shippingservice` + `code_excessive_file_reads`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 422,940
+- **raw 日志**：[results/1014_0252_inorder4-v3b116/raw/1014_0252_boutique-codedefect-94](../results/1014_0252_inorder4-v3b116/raw/1014_0252_boutique-codedefect-94/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert: shippingservice LATENCY_DEGRADATION p90 3.92ms -> 2871.09ms (peak 5352ms), with frontend success rate 95.2% -> 72.1% and /cart 500s. Object layer exclusion: only shippingservice-7b5c459cdd-7fwff is 1/2 CrashLoopBackOff (all other pods 2/2 Running, 0 restarts); its 'server' container last state Terminated / OOMKilled / exit 137 with 3 restarts on a 128Mi limit, and pod events show 'Back-off restarting failed container server'. New ReplicaSet shippingservice-7b5c459cdd was rolled out ~3m before the incident. Previous-container logs show a burst of '[GetQuote] received request' with virtua
+
+### case-95
+
+- **结论**：`app/shippingservice` + `code_excessive_file_writes` ｜ 标签 `app/shippingservice` + `code_excessive_file_writes`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1579 · steps 20 · tokens 185,574
+- **raw 日志**：[results/1014_0254_inorder4-v3b117/raw/1014_0254_boutique-codedefect-95](../results/1014_0254_inorder4-v3b117/raw/1014_0254_boutique-codedefect-95/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert on entity shippingservice: FILESYSTEM_WRITE_SURGE [fs_write_bytes] Normal=0.00B/s -> Current=131503.41B/s (New Spike, Peak=351574.14B/s) plus RESOURCE_SATURATION [cpu] 0.00 -> 0.02 cores (+1871.7%), window 19:13:15~19:15:50 matching the current pod's lifetime. Object layer for the same entity is fully normal, so the fault is not at the object layer: pod shippingservice-f6f49b76b-7svph is 2/2 Running with RESTARTS=0 (no OOMKill/CrashLoop/probe failure), deployment shippingservice is 1/1 AVAILABLE with no FailedCreate/FailedScheduling for it, readiness/liveness grpc:50051 match containerPo
+
+### case-96
+
+- **结论**：`app/shippingservice` + `code_excessive_file_writes` ｜ 标签 `app/shippingservice` + `code_excessive_file_writes`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.15 · steps 21 · tokens 211,381
+- **raw 日志**：[results/1014_0256_inorder4-v3b118/raw/1014_0256_boutique-codedefect-96](../results/1014_0256_inorder4-v3b118/raw/1014_0256_boutique-codedefect-96/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Telemetry chain (L2 qid=12): alerts first, then object-layer exclusion. Alerts flagged shippingservice with FILESYSTEM_WRITE_SURGE [fs_write_bytes] Normal=0.00B/s -> Current=133560.76B/s (New Spike, Peak=281034.62B/s) plus RESOURCE_SATURATION [cpu] 0.00 -> 0.02 cores (+1800%), window 11:26:26~11:29:01. Object layer is clean for all 11 pods (2/2 Running, RESTARTS=0), so no scheduling/restart/probe break; the only outlier is the freshly recreated shippingservice pod (AGE 2m31s vs ~5m41s for all others), matching namespace events 'Scaled up replica set shippingservice-f6f49b76b' / 'Scaled down re
 

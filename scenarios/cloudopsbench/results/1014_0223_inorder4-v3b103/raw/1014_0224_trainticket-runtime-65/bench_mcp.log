@@ -1,0 +1,53 @@
+INFO:     Started server process [3524]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:53704 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53705 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:53704 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53706 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50508 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50510 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50514 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:50514 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50518 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50518 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-notification-service"}
+INFO:     127.0.0.1:50518 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50518 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-notification-service"}
+INFO:     127.0.0.1:50527 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50527 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50527 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-notification-service"}
+INFO:     127.0.0.1:50527 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"tsdb-mysql-leader","port":3306}
+INFO:     127.0.0.1:64743 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"tsdb-mysql-leader","port":34010}
+INFO:     127.0.0.1:64743 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64743 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64743 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63936 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:63936 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63936 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63936 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63936 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:63936 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63946 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63946 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63946 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63946 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63949 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63949 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63949 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63949 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63584 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63584 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63584 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63584 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63590 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63590 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63590 - "POST /mcp HTTP/1.1" 200 OK

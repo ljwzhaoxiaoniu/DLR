@@ -1,0 +1,2 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/service/51,1.0,1.0,1.0,1.0,1.0,1.0,0.34782608695652173,24.0,0.0,0.0,app/paymentservice,service_selector_mismatch,app/paymentservice,service_selector_mismatch,
