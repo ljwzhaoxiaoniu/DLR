@@ -1,6 +1,6 @@
 # 评测明细 · boutique/admission — cloudopsbench
 
-> 本家族已跑 **5/58** 题：JRA ✅5 ❌0 ｜ 证据链全闭 5 ｜ token 中位 81,626 ｜ 生成 2026-10-13T06:17:23.231Z
+> 本家族已跑 **5/58** 题：JRA ✅5 ❌0 ｜ 证据链全闭 5 ｜ token 中位 82,218 ｜ 生成 2026-10-13T07:00:05.466Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -11,7 +11,7 @@
 | [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.6 | 16 | 104,662 | 0 | 0 | 1012_1846_inorder4-v3b4 | 全对·链闭 |
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5294 | 18 | 102,119 | 0 | 0 | 1012_1907_l3-tweak2 | 全对·链闭 |
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5833 | 13 | 68,497 | 0 | 0 | 1012_1935_tidy-verify1 | 全对·链闭 |
-| [5](#case-5) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.4167 | 13 | 65,359 | 0 | 0 | 1013_1235_inorder4-v3b12 | 全对·链闭 |
+| [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5 | 15 | 82,218 | 0 | 0 | 1013_1458_chainhead-verify2c | 全对·链闭 |
 
 ## 证据正文
 
@@ -42,6 +42,6 @@
 ### case-5
 
 - **结论**：`app/emailservice` + `missing_service_account` ｜ 标签 `app/emailservice` + `missing_service_account`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 0.25 · ECR 1 · EE 0.4167 · steps 13 · tokens 65,359
-- **摘要**：emailservice has zero Pods in the boutique pods listing while all other 10 services run 1/1 with 0 restarts; deployment emailservice shows READY 0/1, UP-TO-DATE 0, AVAILABLE 0 with replicas=1 desired. The namespace events surface carries the mechanism verbatim: 'Warning FailedCreate replicaset/emailservice-69777f4f8b  Error creating: pods "emailservice-69777f4f8b-" is forbidden: error looking up service account boutique/emailservices: serviceaccount "emailservices" not found'. Config face confirms the mismatch: GetAppYAML(emailservice) sets serviceAccountName: emailservices (plural), while Get
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.5 · steps 15 · tokens 82,218
+- **摘要**：emailservice is the only drained workload: deployment 0/1 (UP-TO-DATE 0, AVAILABLE 0), no pods match app=emailservice, Endpoints '<none>' for Service emailservice (ClusterIP 10.68.1.25, port 5000->8080), and CheckServiceConnectivity(emailservice,5000) returned 'Connection Failed'. All other boutique services are 1/1 Running with 0 restarts. The mechanism event names the cause verbatim: 'Warning FailedCreate replicaset/emailservice-69777f4f8b: Error creating: pods "emailservice-69777f4f8b-" is forbidden: error looking up service account boutique/emailservices: serviceaccount "emailservices" not
 

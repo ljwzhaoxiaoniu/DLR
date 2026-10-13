@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **6/98** 题：JRA ✅6 ❌0 ｜ 证据链全闭 6 ｜ token 中位 181,235 ｜ 生成 2026-10-13T06:17:23.231Z
+> 本家族已跑 **6/98** 题：JRA ✅6 ❌0 ｜ 证据链全闭 6 ｜ token 中位 181,235 ｜ 生成 2026-10-13T07:00:05.466Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -10,7 +10,7 @@
 | [1](#case-1) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 129,107 | 0 | 0 | 1012_1415_inorder4-v3 | 全对·链闭 |
 | [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 126,973 | 0 | 0 | 1012_1846_inorder4-v3b4 | 全对·链闭 |
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 198,922 | 0 | 0 | 1012_1935_tidy-verify1 | 全对·链闭 |
-| [4](#case-4) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.3077 | 14 | 311,683 | 0 | 0 | 1012_2000_case-verify1 | 全对·链闭 |
+| [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 207,400 | 0 | 0 | 1013_1448_chainhead-verify2 | 全对·链闭 |
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 181,235 | 0 | 0 | 1013_1225_inorder4-v3b11 | 全对·链闭 |
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 163,551 | 0 | 1 | 1013_1413_inorder4-v3b15 | 全对·链闭 |
 
@@ -37,8 +37,8 @@
 ### case-4
 
 - **结论**：`app/checkoutservice` + `code_wrong_argument_order` ｜ 标签 `app/checkoutservice` + `code_wrong_argument_order`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 0.25 · ECR 1 · EE 0.3077 · steps 14 · tokens 311,683
-- **摘要**：checkoutservice pod checkoutservice-7c8866657f-68dwf is 1/2 Error with RESTARTS 4 on worker-01; container 'server' terminated with Exit Code 2 and kubelet event 'Back-off restarting failed container server'. Logs show 'panic: mismatching currency codes' raised in money.Must (money/money.go:85) called from main.(*checkoutService).PlaceOrder (main.go:294), matching money.Sum's ErrMismatchingCurrency whose condition is l.GetCurrencyCode() != r.GetCurrencyCode(). Code inspection of checkoutservice main.go shows the injected argument-order defect: 'userID, userCurrency = userCurrency, userID' immed
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 207,400
+- **摘要**：checkoutservice pod checkoutservice-7c8866657f-68dwf is the sole outlier (READY 1/2, STATUS Error, 4 restarts); its server container terminated with Reason=Error Exit Code=2 and logs show 'panic: mismatching currency codes' at money.Must (money/money.go:85) called from PlaceOrder (main.go:294). Source code shows the injected defect in main.go PlaceOrder: 'userID, userCurrency = userCurrency, userID' swaps the two arguments before prepareOrderItemsAndShippingQuoteFromCart, so prices are converted to an invalid currency code while the order total keeps req.UserCurrency, making money.Sum return E
 
 ### case-5
 

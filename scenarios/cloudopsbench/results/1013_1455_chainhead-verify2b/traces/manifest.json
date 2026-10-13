@@ -1,0 +1,9 @@
+[
+  {
+    "case": "boutique/admission/5",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1013_1455_chainhead-verify2b\\raw\\1013_1455_boutique-admission-5",
+    "steps": 12,
+    "has_final_answer": true,
+    "predictions": 3
+  }
+]

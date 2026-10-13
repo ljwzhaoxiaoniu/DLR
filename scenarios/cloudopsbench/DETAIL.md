@@ -38,13 +38,13 @@
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 1 | 0.9639 | 1 | 0.2938 | 18.9667 | 0 | 0.0333 |
+| 1 | 0.9889 | 1 | 0.2945 | 19.0333 | 0 | 0.0333 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 259,017 / 186,507 | 58,131 / 1,133,738 | 74% |
+| 257,560 / 186,507 | 58,131 / 1,133,738 | 74% |
 
 ## 分家族索引
 
@@ -96,7 +96,11 @@
 
 > **2026-10-13 · 轮次 1013_1343_inorder4-v3b14（批十四 · 4/4 JRA · 新节泛化首验 · 一例 EOC 留观）**：① 覆盖 56/754，**JRA 56/56**。② **新节泛化首验过**：boutique/performance/3 `pod_cpu_overload`（16 步）——「Service quality degradation.」节在 boutique 侧（饱和分支）落对。③ **scheduling/6 EOC 0.667（节点类第三次）**：解剖 = 单处倒位——`GetClusterConfiguration`（金链 M3 素材）先于 pod 详情（M2 调度理由）一步读出；非评分器严格性类，为可修序。④ tt-runtime/8 `db_readonly_mode`（37 步长链全闭）、tt-startup/5 `missing_secret_binding`（12 步）全满。⑤ 处置：该节 Pending 分支补序句（`f564f73`：pod 自身调度理由先读、节点域证据随后）→ rebuild + 探针 → 复跑 **14 步 EOC 1.0**（倒位消除）——JRA 56/56 且流程分全清。
 
-> **2026-10-13 · 轮次 1013_1413_inorder4-v3b15（批十五 · 4/4 全对 · MC/EOC/ECR 全满）**：① 覆盖 60/754，**JRA 60/60**。② **infra/4 EOC 留观未复现（结案）**：infra/5 同措辞同机制（`containerd_unavailable@worker-01` · 17 步）**EOC 1.0**——0.667 判定为孤立滑点、非系统性问题。③ **quality 节 TT 侧第二验过**：tt-performance/5 `pod_network_delay`（ts-inside-payment · 18 步）——继 tt-perf/4 修复后的未解剖独立样本，rank1 直接落对。④ **网关条款第六连**：tt-service/7 `gateway_misrouted`（ts-gateway-service · 19 步）首跑即中。⑤ boutique/codedefect/6 `code_busy_loop`（15 步）——代码族无 L3 节连续 6/6 稳；1 次 invalid = 虚构工具名（`GetResourceTags_placeholder`，自纠，模型产物非建模问题）。⑥ 全程零重试；全批墙钟 4m15s（含 grade+stats），单题 15–19 步。⑦ 会话 sync 与「不满→归档」新口径首次对撞（retire 过的 raw 配对会话被例行扫描捞回、assertDisjoint 拒写）→ `sessions.mjs` 避重叠守卫推广至任何其他组（跳过已归组 24 · 新登记 4）——批内例行恢复无感。⑧ 批十六起跑批改 **2 路并发**（`COB_MCP_PORT` 8000/8001，无需改码——用户定）。
+> **2026-10-13 · 轮次 1013_1413_inorder4-v3b15（批十五 · 4/4 全对 · MC/EOC/ECR 全满）**：① 覆盖 60/754，**JRA 60/60**。② **infra/4 EOC 留观未复现（结案）**：infra/5 同措辞同机制（`containerd_unavailable@worker-01` · 17 步）**EOC 1.0**——0.667 判定为孤立滑点、非系统性问题。③ **quality 节 TT 侧第二验过**：tt-performance/5 `pod_network_delay`（ts-inside-payment · 18 步）——继 tt-perf/4 修复后的未解剖独立样本，rank1 直接落对。④ **网关条款第六连**：tt-service/7 `gateway_misrouted`（ts-gateway-service · 19 步）首跑即中。⑤ boutique/codedefect/6 `code_busy_loop`（15 步）——代码族无 L3 节连续 6/6 稳；1 次 invalid = 虚构工具名（`GetResourceTags_placeholder`，自纠，模型产物非建模问题）。⑥ 全程零重试；全批墙钟 4m15s（含 grade+stats），单题 15–19 步。⑦ 会话 sync 与「不满→归档」新口径首次对撞（retire 过的 raw 配对会话被例行扫描捞回、assertDisjoint 拒写）→ `sessions.mjs` 避重叠守卫推广至任何其他组（跳过已归组 24 · 新登记 4）——批内例行恢复无感。⑧ 批十六起跑批改 **2 路并发**（env 成对：`COB_MCP_PORT` + `CLOUDOPSBENCH_MCP_PORT` 缺一不可——只给前者服务仍绑 8000、撞端口踩过；用户定）。
+
+> **2026-10-13 · 轮次 chainhead-verify1/2/2b/2c（EOC 双题修复收官 · codedefect/4 + admission/5 六项全满）**：① **机理反推完成**（探针 `tmp_scripts/cob_eoc_probe.py` 复用上游 evaluator + 金轨自评模式）：EOC = 严格单遍级联——里程碑仅当前置先收才进 `ordered`，M0 形态迟到即整链塌 1/4；清单式 admissible 带 `name:""` 键位要求（模型最小参数调用永不命中，金轨靠具体形态兑现：`DescribeResource(pod)` / endpoints / 连通性）。② **金轨自评（合不合理判据）**：codedefect/4 金轨 EOC 1.0（M0 = pod 详情、第 2 步即读）；**admission/5 金轨反而 MC 0.75**（path1 漏 M1 · path2 漏 M3——弱标签，我跑却可达 1.0）；infra/4 金轨 1.0（干净标签，我跑 0.667 = 真序滑点）；**tt-runtime/5 金轨两路皆漏 M2**（MC 0.667——弱标签；我跑 MC 1.0 · EOC 0.667 = 真序滑点）。③ **修（全落「Service Availability Disruption.」节——admission 家族两措辞混用 31/27，首轮曾误加第一节目、已回撤）**：code 分支钉「pod 详情先读 · 批内领跑」→ **codedefect/4 verify2 六项全 1.0**；无名措辞钉「受害者信号领跑（非关题确认）」+ never-created 分支同句 → 序到位后连踩两坑：猜端口 8080（实为 5000）→ v4 再钉「端口从 Service spec 取 · endpoints 免猜测形态」→ **admission/5 verify2c 六项全 1.0**（M0@endpoints → M1@按锚 pods → M2@events → M3@YAML 级联全序）。④ 花絮：verify2 契约 JSON 未转义引号 → 围栏 parse 失败 → JRA 0（上游提取器同严格、无修复通道——按交付失败重置跑）。⑤ **EOC 账**：原位 4 处非满 → 2 处收官（codedefect/4 · admission/5），余 infra/4 · tt-runtime/5 **记档不追**（用户 10-13「不强求」）；EOC 均值 0.9639→0.9889。⑥ 批十六仍待令。
+
+
 
 
 

@@ -1,0 +1,16 @@
+[
+  {
+    "case": "boutique/admission/5",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1013_1448_chainhead-verify2\\raw\\1013_1448_boutique-admission-5",
+    "steps": 11,
+    "has_final_answer": false,
+    "predictions": 0
+  },
+  {
+    "case": "boutique/codedefect/4",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1013_1448_chainhead-verify2\\raw\\1013_1448_boutique-codedefect-4",
+    "steps": 15,
+    "has_final_answer": true,
+    "predictions": 3
+  }
+]
