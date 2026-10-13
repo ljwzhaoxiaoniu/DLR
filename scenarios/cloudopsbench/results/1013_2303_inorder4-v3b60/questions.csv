@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/38,1.0,1.0,1.0,1.0,1.0,1.0,0.14285714285714285,22.0,0.0,0.0,app/frontend,code_artificial_delay,app/frontend,code_artificial_delay,
+boutique/infrastructure/37,1.0,1.0,1.0,1.0,1.0,1.0,0.2608695652173913,24.0,0.0,0.0,node/worker-01,kubelet_unavailable,node/worker-01,kubelet_unavailable,
+trainticket/performance/42,1.0,1.0,1.0,1.0,1.0,1.0,0.16666666666666666,25.0,0.0,0.0,app/ts-route-service,pod_network_delay,app/ts-route-service,pod_network_delay,
+trainticket/runtime/23,1.0,1.0,1.0,1.0,1.0,1.0,0.2857142857142857,15.0,0.0,0.0,app/ts-payment-service,deployment_zero_replicas,app/ts-payment-service,deployment_zero_replicas,

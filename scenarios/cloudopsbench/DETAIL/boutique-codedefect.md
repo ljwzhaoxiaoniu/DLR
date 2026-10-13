@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **37/98** 题：JRA ✅37 ❌0 ｜ 证据链全闭 37 ｜ token 中位 300,857 ｜ 生成 2026-10-13T15:02:27.142Z
+> 本家族已跑 **38/98** 题：JRA ✅38 ❌0 ｜ 证据链全闭 38 ｜ token 中位 325,537 ｜ 生成 2026-10-13T15:08:00.868Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -44,6 +44,7 @@
 | [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1364 | 23 | 285,528 | 0 | 0 | 1013_2249_inorder4-v3b57 | 全对·链闭 |
 | [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1579 | 20 | 394,816 | 0 | 0 | 1013_2253_inorder4-v3b58 | 全对·链闭 |
 | [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 240,302 | 0 | 0 | 1013_2258_inorder4-v3b59 | 全对·链闭 |
+| [38](#case-38) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1429 | 22 | 452,396 | 0 | 0 | 1013_2303_inorder4-v3b60 | 全对·链闭 |
 
 ## 证据正文
 
@@ -305,4 +306,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 240,302
 - **raw 日志**：[results/1013_2258_inorder4-v3b59/raw/1013_2258_boutique-codedefect-37](../results/1013_2258_inorder4-v3b59/raw/1013_2258_boutique-codedefect-37/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts localize the break to frontend: RESOURCE_SATURATION [cpu] Normal=0.01 -> Current=0.14 cores (+1576.1%), RESOURCE_SATURATION [cpu_cfs] 1.254s throttled, LATENCY_DEGRADATION p50 22.19ms -> 2351.29ms (+10497.1%), with 503s on GET / and GET /product/{id}. Object-layer exclusion is clean: all 11 boutique pods 2/2 Running with RESTARTS=0, frontend pod Ready=True, Restart Count 0, probes passing, no FailedScheduling/FailedMount/FailedCreate or OOM events, and frontend's resource config (cpu limit 200m, request 100m) is unchanged. Closure is at the code surface: frontend handlers.go chooseAd() 
+
+### case-38
+
+- **结论**：`app/frontend` + `code_artificial_delay` ｜ 标签 `app/frontend` + `code_artificial_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1429 · steps 22 · tokens 452,396
+- **raw 日志**：[results/1013_2303_inorder4-v3b60/raw/1013_2303_boutique-codedefect-38](../results/1013_2303_inorder4-v3b60/raw/1013_2303_boutique-codedefect-38/)（ndjson / mcp.jsonl / meta）
+- **摘要**：frontend is the alerted entity: GetAlerts reports LATENCY_DEGRADATION on service frontend, p90 latency Normal=147.04ms -> Current=2555.00ms (+1637.6%, peak 2981.82ms) in window 17:30:08~17:32:43, with 31 accompanying 503 errors across '/' , '/product/{id}', '/cart', '/cart/checkout', '/setCurrency'. Object layer is clean (GetResources pods: all 11 pods Running 2/2, RESTARTS=0; DescribeResource frontend-556cf89656-q7b9p: Ready True, Restart Count 0, only Normal Scheduled/Pulled/Created/Started events), so the break is not scheduling/probe/resource. Node and infra layer excluded (all 4 nodes Rea
 

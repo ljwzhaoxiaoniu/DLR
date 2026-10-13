@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/runtime</em></h1>
-<p class="deck">已跑 <b>22/96</b> 题：JRA ✅22 ❌0 ｜ 证据链全闭 22 ｜ token 中位 517,218 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T15:02:27.142Z</p>
+<p class="deck">已跑 <b>23/96</b> 题：JRA ✅23 ❌0 ｜ 证据链全闭 23 ｜ token 中位 490,757 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T15:08:00.868Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>26</td><td>265,656</td><td>0</td><td>0</td><td class="muted">1012_1512_inorder4-v3b3</td><td><a href="../results/1012_1512_inorder4-v3b3/raw/1012_1514_trainticket-runtime-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1514_trainticket-runtime-1</a></td></tr>
@@ -38,6 +38,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-20"><code>20</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2353</td><td>18</td><td>519,918</td><td>0</td><td>0</td><td class="muted">1013_2249_inorder4-v3b57</td><td><a href="../results/1013_2249_inorder4-v3b57/raw/1013_2250_trainticket-runtime-20/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2250_trainticket-runtime-20</a></td></tr>
 <tr><td><a href="#case-21"><code>21</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.5</td><td>1</td><td>0.3636</td><td>12</td><td>255,702</td><td>0</td><td>0</td><td class="muted">1013_2253_inorder4-v3b58</td><td><a href="../results/1013_2253_inorder4-v3b58/raw/1013_2255_trainticket-runtime-21/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2255_trainticket-runtime-21</a></td></tr>
 <tr><td><a href="#case-22"><code>22</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2941</td><td>18</td><td>409,364</td><td>0</td><td>0</td><td class="muted">1013_2258_inorder4-v3b59</td><td><a href="../results/1013_2258_inorder4-v3b59/raw/1013_2301_trainticket-runtime-22/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2301_trainticket-runtime-22</a></td></tr>
+<tr><td><a href="#case-23"><code>23</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>205,969</td><td>0</td><td>0</td><td class="muted">1013_2303_inorder4-v3b60</td><td><a href="../results/1013_2303_inorder4-v3b60/raw/1013_2305_trainticket-runtime-23/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2305_trainticket-runtime-23</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/tsdb-mysql</code> + <code>db_connection_exhaustion</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 26 步</summary><ul>
@@ -1155,6 +1156,47 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
    &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-23"><summary><b>case-23</b> · <code>app/ts-payment-service</code> + <code>deployment_zero_replicas</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
+<li><b>摘要</b>：Reachability chain closed on ts-payment-service. (1) Symptom side: no pod exists for ts-payment-service in the pods inventory while every other pod is Running 2/2, and CheckServiceConnectivity on its Service-declared port 19001 fails from all three workers (worker-01/02/03: Connection Failed). (2) Endpoints listing: 'ts-payment-service   &lt;none&gt;'. (3) Owner chain break: live Deployment 'ts-payment-service' reads READY 0/0, UP-TO-DATE 0, AVAILABLE 0, and its live spec.replicas is 0 (generation 2) whereas kubectl.kubernetes.io/last-applied-configuration still declares replicas: 1. (4) Mechanism e</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2303_inorder4-v3b60/raw/1013_2305_trainticket-runtime-23/">results/1013_2303_inorder4-v3b60/raw/1013_2305_trainticket-runtime-23</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true,&quot;resource_type&quot;:&quot;services&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-payment-service&quot;,&quot;port&quot;:19001,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-payment-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-payment-service&quot;,&quot;output_wide&quot;:true,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;name&quot;:&quot;ts-payment-service&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_yaml&quot;:true,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Reachability chain closed on ts-payment-service. (1) Symptom side: no pod exists for ts-payment-service in the pods inventory while every other pod is Running 2/2, and CheckServiceConnectivity on its Service-declared port 19001 fails from all three workers (worker-01/02/03: Connection Failed). (2) Endpoints listing: 'ts-payment-service   &lt;none&gt;'. (3) Owner chain break: live Deployment 'ts-payment-service' reads READY 0/0, UP-TO-DATE 0, AVAILABLE 0, and its live spec.replicas is 0 (generation 2) whereas kubectl.kubernetes.io/last-applied-configuration still declares replicas: 1. (4) Mechanism event names the object verbatim: 'ScalingReplicaSet deployment/ts-payment-service Scaled down replica set ts-payment-service-666d596f87 to 0 from 1' plus 'Deleted pod: ts-payment-service-666d596f87-gwptq' and its container Killing lines; the namespace event surface contains no FailedCreate/FailedScheduling/FailedMount/image-pull/probe Warning for ts-payment-service, ruling out admission, scheduling, image and probe causes. (5) Config closure: Service selector app=ts-payment-service matches the pod template labels, Service port 19001 matches containerPort 19001, and referenced secret ts-payment-mysql / configMap nacos exist - so the empty endpoints are explained solely by the zero replica count. Upstream callers ts-gateway-service and ts-inside-payment-service (GetServiceDependencies) are the ones observing the partial unreachability.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-payment-service&quot;,
+   &quot;root_cause&quot;: &quot;deployment_zero_replicas&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-payment-service&quot;,
+   &quot;root_cause&quot;: &quot;service_selector_mismatch&quot;
   }
  ]
 }</pre>

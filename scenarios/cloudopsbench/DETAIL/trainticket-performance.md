@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **41/47** 题：JRA ✅40 ❌1 ｜ 证据链全闭 40 ｜ token 中位 299,756 ｜ 生成 2026-10-13T15:02:27.142Z
+> 本家族已跑 **42/47** 题：JRA ✅41 ❌1 ｜ 证据链全闭 41 ｜ token 中位 301,957 ｜ 生成 2026-10-13T15:08:00.868Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -48,6 +48,7 @@
 | [39](#case-39) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 540,637 | 0 | 0 | 1013_2249_inorder4-v3b57 | 全对·链闭 |
 | [40](#case-40) | 1 | 1 | 1 | 1 | 1 | 1 | 0.15 | 21 | 299,756 | 0 | 0 | 1013_2253_inorder4-v3b58 | 全对·链闭 |
 | [41](#case-41) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 216,649 | 0 | 0 | 1013_2258_inorder4-v3b59 | 全对·链闭 |
+| [42](#case-42) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 25 | 359,493 | 0 | 0 | 1013_2303_inorder4-v3b60 | 全对·链闭 |
 
 ## 证据正文
 
@@ -337,4 +338,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 216,649
 - **raw 日志**：[results/1013_2258_inorder4-v3b59/raw/1013_2259_trainticket-performance-41](../results/1013_2258_inorder4-v3b59/raw/1013_2259_trainticket-performance-41/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts (GetAlerts) place the case on the metric surface: ts-preserve-service LATENCY_DEGRADATION p90 Normal=8983.07ms -> Current=22000.00ms (+144.9%, Peak 26000.00ms) is the steepest escalation = primary anomaly; ts-ui-dashboard p90 2732.14ms -> 5958.33ms (+118.1%) is its ripple; ts-order-service shows only a bare RESOURCE_SATURATION [cpu_cfs] 'Val: 0.375s (Throttled)' with no latency row of its own = collateral noise per L3. GetServiceDependencies closes it: ts-ui-dashboard -> ts-gateway-service -> ts-preserve-service (caller sees the same added delay), while ts-preserve-service's own downstr
+
+### case-42
+
+- **结论**：`app/ts-route-service` + `pod_network_delay` ｜ 标签 `app/ts-route-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 25 · tokens 359,493
+- **raw 日志**：[results/1013_2303_inorder4-v3b60/raw/1013_2304_trainticket-performance-42](../results/1013_2303_inorder4-v3b60/raw/1013_2304_trainticket-performance-42/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (metric surface, per the exact-matched L3 rule) show latency rows on ts-route-service (p50 7.50ms->8103.45ms, p90 9.50ms->22000ms), ts-basic-service (40.00ms->16571.43ms / 72.69ms->27314.29ms), ts-preserve-service (5647.11->21250.00ms / 24126.89->51000.00ms) and a p90-only partial ripple on ts-travel-service, plus throughput/network-drop ripples (config, contacts, gateway, ui-dashboard) and a bare cpu_cfs throttle on ts-order-service with no latency of its own (collateral). GetServiceDependencies shows ts-route-service is a LEAF (no downstream calls) while ts-basic-service, ts-travel-se
 

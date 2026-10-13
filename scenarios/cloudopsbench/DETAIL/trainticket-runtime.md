@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **22/96** 题：JRA ✅22 ❌0 ｜ 证据链全闭 22 ｜ token 中位 517,218 ｜ 生成 2026-10-13T15:02:27.142Z
+> 本家族已跑 **23/96** 题：JRA ✅23 ❌0 ｜ 证据链全闭 23 ｜ token 中位 490,757 ｜ 生成 2026-10-13T15:08:00.868Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -29,6 +29,7 @@
 | [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 519,918 | 0 | 0 | 1013_2249_inorder4-v3b57 | 全对·链闭 |
 | [21](#case-21) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.3636 | 12 | 255,702 | 0 | 0 | 1013_2253_inorder4-v3b58 | 全对·链闭 |
 | [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 409,364 | 0 | 0 | 1013_2258_inorder4-v3b59 | 全对·链闭 |
+| [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 205,969 | 0 | 0 | 1013_2303_inorder4-v3b60 | 全对·链闭 |
 
 ## 证据正文
 
@@ -185,4 +186,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2941 · steps 18 · tokens 409,364
 - **raw 日志**：[results/1013_2258_inorder4-v3b59/raw/1013_2301_trainticket-runtime-22](../results/1013_2258_inorder4-v3b59/raw/1013_2301_trainticket-runtime-22/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom 'Service Availability Disruption.' on namespace train-ticket localizes to ts-order-service. Alerts report 503 Service Unavailable on ts-order-service endpoints (Refresh order list / Refresh orders for cancel, 20 occurrences each) and 500 from upstream ts-preserve-service. The namespace-wide pod inventory (the legitimate full scan) shows every other workload Running 2/2 with 0 restarts, while ts-order-service has NO pod at all (GetResources pods → NotFound) and no logs. Reachability is broken exactly on its own declared port: CheckServiceConnectivity ts-order-service:12031 fails from wo
+
+### case-23
+
+- **结论**：`app/ts-payment-service` + `deployment_zero_replicas` ｜ 标签 `app/ts-payment-service` + `deployment_zero_replicas`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 205,969
+- **raw 日志**：[results/1013_2303_inorder4-v3b60/raw/1013_2305_trainticket-runtime-23](../results/1013_2303_inorder4-v3b60/raw/1013_2305_trainticket-runtime-23/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Reachability chain closed on ts-payment-service. (1) Symptom side: no pod exists for ts-payment-service in the pods inventory while every other pod is Running 2/2, and CheckServiceConnectivity on its Service-declared port 19001 fails from all three workers (worker-01/02/03: Connection Failed). (2) Endpoints listing: 'ts-payment-service   <none>'. (3) Owner chain break: live Deployment 'ts-payment-service' reads READY 0/0, UP-TO-DATE 0, AVAILABLE 0, and its live spec.replicas is 0 (generation 2) whereas kubectl.kubernetes.io/last-applied-configuration still declares replicas: 1. (4) Mechanism e
 
