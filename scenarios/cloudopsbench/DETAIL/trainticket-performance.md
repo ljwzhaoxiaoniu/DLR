@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **7/47** 题：JRA ✅7 ❌0 ｜ 证据链全闭 7 ｜ token 中位 319,046 ｜ 生成 2026-10-13T07:44:31.176Z
+> 本家族已跑 **8/47** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 319,046 ｜ 生成 2026-10-13T08:27:22.324Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -14,6 +14,7 @@
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 224,570 | 0 | 0 | 1013_1413_inorder4-v3b15 | 全对·链闭 |
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 301,957 | 0 | 0 | 1013_1520_inorder4-v3b17 | 全对·链闭 |
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2083 | 25 | 319,046 | 0 | 0 | 1013_1536_inorder4-v3b19 | 全对·链闭 |
+| [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 270,805 | 0 | 0 | 1013_1623_inorder4-v3b21 | 全对·链闭 |
 
 ## 证据正文
 
@@ -58,4 +59,10 @@
 - **结论**：`app/ts-payment-service` + `pod_network_delay` ｜ 标签 `app/ts-payment-service` + `pod_network_delay`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2083 · steps 25 · tokens 319,046
 - **摘要**：Metrics-surface incident (L3 wording 'Service quality degradation.'): GetAlerts shows LATENCY_DEGRADATION on ts-payment-service (p50 16.96ms -> 5000.00ms, +29389%; p90 23.79ms -> 9000.00ms, Peak 9136.36ms) mirrored by its caller ts-inside-payment-service (p90 89.68ms -> 8488.44ms), plus a mild RESOURCE_SATURATION [cpu_cfs] 0.073s row on ts-order-service within the same 16:01:06-16:02:56 window. Topology: ts-inside-payment-service -> ts-payment-service (leaf, no downstream). The ~5s added latency rides on ts-payment-service's own latency (p50 current is exactly 5000.00ms) and its caller sees th
+
+### case-8
+
+- **结论**：`app/ts-preserve-service` + `pod_network_delay` ｜ 标签 `app/ts-preserve-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2941 · steps 18 · tokens 270,805
+- **摘要**：Alerts report pure LATENCY_DEGRADATION [Slow Response] with zero RESOURCE_SATURATION rows: ts-preserve-service p50 376.71ms->7500.00ms (+1890.9%) and p90 562.50ms->9750.00ms (+1633.3%), with its upstream callers ts-gateway-service (p90 306.25ms->5537.50ms, +1708.2%) and ts-ui-dashboard (p90 305.62ms->5487.50ms, +1695.5%) showing the same added delay. Service dependency chain is browser -> ts-ui-dashboard -> ts-gateway-service -> ts-preserve-service -> 10 downstream services, and every one of ts-preserve-service's downstream services stays clean, while ts-preserve-service's own p50 increase (+7
 

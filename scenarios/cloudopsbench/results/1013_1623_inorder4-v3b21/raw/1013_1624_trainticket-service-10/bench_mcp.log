@@ -1,0 +1,41 @@
+INFO:     Started server process [22768]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:58330 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58331 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:58330 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58332 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58336 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58338 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:58341 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58341 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-inside-payment-service"}
+INFO:     127.0.0.1:58341 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-ui-dashboard"}
+INFO:     127.0.0.1:58341 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-inside-payment-service"}
+INFO:     127.0.0.1:58341 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-payment-service"}
+INFO:     127.0.0.1:58341 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58341 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-payment-service"}
+INFO:     127.0.0.1:58341 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-payment-service","port":19001}
+INFO:     127.0.0.1:63113 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63113 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-payment-service"}
+INFO:     127.0.0.1:63113 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63113 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63118 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63118 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63118 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-gateway-service"}
+INFO:     127.0.0.1:52937 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-inside-payment-service"}
+INFO:     127.0.0.1:52937 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52937 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-route-service"}
+INFO:     127.0.0.1:52941 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52941 - "POST /mcp HTTP/1.1" 200 OK
