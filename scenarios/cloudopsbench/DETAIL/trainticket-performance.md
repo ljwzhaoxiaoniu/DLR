@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **30/47** 题：JRA ✅30 ❌0 ｜ 证据链全闭 30 ｜ token 中位 301,957 ｜ 生成 2026-10-13T14:05:31.873Z
+> 本家族已跑 **31/47** 题：JRA ✅31 ❌0 ｜ 证据链全闭 31 ｜ token 中位 301,957 ｜ 生成 2026-10-13T14:09:57.216Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -37,6 +37,7 @@
 | [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 206,042 | 0 | 0 | 1013_2141_inorder4-v3b46 | 全对·链闭 |
 | [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 700,398 | 0 | 0 | 1013_2150_inorder4-v3b47 | 全对·链闭 |
 | [30](#case-30) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2609 | 24 | 524,234 | 0 | 0 | 1013_2203_ttperf30-verify1 | 全对·链闭 |
+| [31](#case-31) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1818 | 23 | 345,078 | 0 | 0 | 1013_2203_inorder4-v3b49 | 全对·链闭 |
 
 ## 证据正文
 
@@ -249,4 +250,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2609 · steps 24 · tokens 524,234
 - **raw 日志**：[results/1013_2203_ttperf30-verify1/raw/1013_2203_trainticket-performance-30](../results/1013_2203_ttperf30-verify1/raw/1013_2203_trainticket-performance-30/)（ndjson / mcp.jsonl / meta）
 - **摘要**：GetAlerts: 5 rows in window 2026-03-20 12:52:59-12:54:54, all RESOURCE_SATURATION (sub-core, e.g. ts-user-service cpu core 0.01->0.02 cores, ts-order-service 'cpu_cfs Val: 0.732s (Throttled)'), with NO latency row anywhere in the set. Per the L3 rule for this wording (metric surface, alerts first) a bare cpu_cfs with no normal shows no movement and sub-core percentages are sub-noise; the only row carrying a deviation beyond saturation is ts-security-service's TRAFFIC_ANOMALY [Network Surge] Inbound Normal=5.06pps -> Current=12.71pps (+151.4%), Outbound Normal=5.37pps -> Current=13.41pps (+149.
+
+### case-31
+
+- **结论**：`app/ts-station-service` + `pod_network_delay` ｜ 标签 `app/ts-station-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1818 · steps 23 · tokens 345,078
+- **raw 日志**：[results/1013_2203_inorder4-v3b49/raw/1013_2206_trainticket-performance-31](../results/1013_2203_inorder4-v3b49/raw/1013_2206_trainticket-performance-31/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (13:09:43~13:11:38) show two latency rows whose p50 AND p90 both move: ts-station-service (p50 3.86ms->3105.56ms, +80417%; p90 8.56ms->4618.16ms, +53875.7%, the steepest p90 escalation) and ts-basic-service (p50 38.75->7500ms; p90 49.75->9500ms); ts-travel-service moves its p90 only (partial-traffic ripple). GetServiceDependencies closes the graph: ts-station-service is a LEAF called by ts-gateway-service and ts-basic-service, whereas ts-basic-service calls ts-station-service — an upstream/caller delay cannot raise the server-side latency of a downstream leaf, so the two both-percentile
 

@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/27,1.0,1.0,1.0,1.0,0.4,1.0,0.18518518518518517,28.0,0.0,0.0,app/checkoutservice,code_wrong_return,app/checkoutservice,code_wrong_return,
+boutique/infrastructure/26,1.0,1.0,1.0,1.0,1.0,1.0,0.21428571428571427,15.0,0.0,0.0,node/master,kube_scheduler_unavailable,node/master,kube_scheduler_unavailable,
+trainticket/performance/31,1.0,1.0,1.0,1.0,1.0,1.0,0.18181818181818182,23.0,0.0,0.0,app/ts-station-service,pod_network_delay,app/ts-station-service,pod_network_delay,
+trainticket/service/34,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,16.0,0.0,0.0,app/ts-station-service,service_dns_resolution_failure,app/ts-station-service,service_dns_resolution_failure,

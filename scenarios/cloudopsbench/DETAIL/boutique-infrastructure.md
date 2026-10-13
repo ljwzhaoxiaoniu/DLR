@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **25/40** 题：JRA ✅25 ❌0 ｜ 证据链全闭 25 ｜ token 中位 113,077 ｜ 生成 2026-10-13T14:05:31.873Z
+> 本家族已跑 **26/40** 题：JRA ✅26 ❌0 ｜ 证据链全闭 26 ｜ token 中位 125,844 ｜ 生成 2026-10-13T14:09:57.216Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -32,6 +32,7 @@
 | [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 92,595 | 0 | 0 | 1013_2141_inorder4-v3b46 | 全对·链闭 |
 | [24](#case-24) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.2308 | 14 | 88,573 | 0 | 0 | 1013_2150_inorder4-v3b47 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.1875 | 17 | 113,077 | 0 | 0 | 1013_2156_inorder4-v3b48 | 全对·链闭 |
+| [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 125,844 | 0 | 0 | 1013_2203_inorder4-v3b49 | 全对·链闭 |
 
 ## 证据正文
 
@@ -209,4 +210,11 @@
 - **流程**：MC 1 · EOC 0.6667 · ECR 1 · EE 0.1875 · steps 17 · tokens 113,077
 - **raw 日志**：[results/1013_2156_inorder4-v3b48/raw/1013_2157_boutique-infrastructure-25](../results/1013_2156_inorder4-v3b48/raw/1013_2157_boutique-infrastructure-25/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom side: CheckServiceConnectivity(paymentservice:50051) = 'Connection Failed' and Service paymentservice shows empty Endpoints, while the other 10 boutique services are reachable ('Partial' unreachability). Object layer: the only outlier pod is paymentservice-78c5996648-hn8w6, 0/1 Pending for 82s with Node=<none>; DescribeResource shows Status Pending, Node <none> and Events: <none> - no '0/N nodes are available' scheduling condition at all, i.e. no scheduling attempt was ever made; deployment paymentservice is 0/1 available with 1 up-to-date (replicas not zero). Node layer: GetClusterCon
+
+### case-26
+
+- **结论**：`node/master` + `kube_scheduler_unavailable` ｜ 标签 `node/master` + `kube_scheduler_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 125,844
+- **raw 日志**：[results/1013_2203_inorder4-v3b49/raw/1013_2204_boutique-infrastructure-26](../results/1013_2203_inorder4-v3b49/raw/1013_2204_boutique-infrastructure-26/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique: only outlier in the pods inventory is productcatalogservice-ddb46fc86-h9klx (0/1 Pending, Node <none>); its endpoints listing is <none> and deployment productcatalogservice reads 0/1 AVAILABLE, i.e. the availability disruption. The pod's own detail carries NO scheduling reason line (Events: <none>, no 'N nodes are available' message), while all three workers are Ready with no taints and ample allocatable (8 CPU / ~15.6Gi each) and the pod specifies no nodeSelector/affinity - so nothing failed to schedule, nothing is attempting to schedule. The closing read is the control pl
 

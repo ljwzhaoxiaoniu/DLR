@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **26/98** 题：JRA ✅26 ❌0 ｜ 证据链全闭 26 ｜ token 中位 248,815 ｜ 生成 2026-10-13T14:05:31.873Z
+> 本家族已跑 **27/98** 题：JRA ✅27 ❌0 ｜ 证据链全闭 27 ｜ token 中位 248,815 ｜ 生成 2026-10-13T14:09:57.216Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -33,6 +33,7 @@
 | [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1724 | 30 | 514,584 | 0 | 0 | 1013_2200_cod24-verify2 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 26 | 446,652 | 0 | 0 | 1013_2150_inorder4-v3b47 | 全对·链闭 |
 | [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 26 | 374,809 | 0 | 0 | 1013_2156_inorder4-v3b48 | 全对·链闭 |
+| [27](#case-27) | 1 | 1 | 1 | 1 | 0.4 | 1 | 0.1852 | 28 | 587,242 | 0 | 0 | 1013_2203_inorder4-v3b49 | 全对·链闭 |
 
 ## 证据正文
 
@@ -217,4 +218,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 26 · tokens 374,809
 - **raw 日志**：[results/1013_2156_inorder4-v3b48/raw/1013_2157_boutique-codedefect-26](../results/1013_2156_inorder4-v3b48/raw/1013_2157_boutique-codedefect-26/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Caller-side trail localizes the break on the checkoutservice -> paymentservice charge edge: frontend logs 193x POST /cart/checkout 500 with 'failed to complete the order: rpc error: code = Internal desc = failed to charge card: charge card error.', while paymentservice logs show charges succeeding ('Transaction processed: visa ending 5734 ...') and checkoutservice's error logs are empty; emailservice requests stop at 12:01:36 (orders die before the confirmation-email step) and all endpoints bind normally (emailservice 172.20.2.203:8080, paymentservice 172.20.2.202:50051; CheckServiceConnectivi
+
+### case-27
+
+- **结论**：`app/checkoutservice` + `code_wrong_return` ｜ 标签 `app/checkoutservice` + `code_wrong_return`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.4 · ECR 1 · EE 0.1852 · steps 28 · tokens 587,242
+- **raw 日志**：[results/1013_2203_inorder4-v3b49/raw/1013_2203_boutique-codedefect-27](../results/1013_2203_inorder4-v3b49/raw/1013_2203_boutique-codedefect-27/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Reachability chain break localized on the code surface. Object layer is clean: all 11 deployments 1/1, all pods 2/2 Running with RESTARTS 0, every Service endpoint bound, so no scheduling/startup/admission/probe fault. Symptom side: frontend error logs carry 164 failures, all 'POST /cart/checkout' -> "failed to complete the order: rpc error: code = Internal desc = failed to charge card: charge card error." The callee paymentservice is healthy and its own logs show every charge succeeding ('PaymentService#Charge invoked' immediately followed by 'Transaction processed: visa ending ...'), with NO
 

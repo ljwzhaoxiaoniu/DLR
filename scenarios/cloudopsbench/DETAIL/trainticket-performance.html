@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/performance</em></h1>
-<p class="deck">已跑 <b>30/47</b> 题：JRA ✅30 ❌0 ｜ 证据链全闭 30 ｜ token 中位 301,957 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:05:31.873Z</p>
+<p class="deck">已跑 <b>31/47</b> 题：JRA ✅31 ❌0 ｜ 证据链全闭 31 ｜ token 中位 301,957 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:09:57.216Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1429</td><td>36</td><td>442,283</td><td>0</td><td>1</td><td class="muted">1012_1512_inorder4-v3b3</td><td><a href="../results/1012_1512_inorder4-v3b3/raw/1012_1516_trainticket-performance-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1516_trainticket-performance-1</a></td></tr>
@@ -46,6 +46,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-28"><code>28</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2353</td><td>18</td><td>206,042</td><td>0</td><td>0</td><td class="muted">1013_2141_inorder4-v3b46</td><td><a href="../results/1013_2141_inorder4-v3b46/raw/1013_2144_trainticket-performance-28/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2144_trainticket-performance-28</a></td></tr>
 <tr><td><a href="#case-29"><code>29</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>16</td><td>700,398</td><td>0</td><td>0</td><td class="muted">1013_2150_inorder4-v3b47</td><td><a href="../results/1013_2150_inorder4-v3b47/raw/1013_2153_trainticket-performance-29/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2153_trainticket-performance-29</a></td></tr>
 <tr><td><a href="#case-30"><code>30</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2609</td><td>24</td><td>524,234</td><td>0</td><td>0</td><td class="muted">1013_2203_ttperf30-verify1</td><td><a href="../results/1013_2203_ttperf30-verify1/raw/1013_2203_trainticket-performance-30/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2203_trainticket-performance-30</a></td></tr>
+<tr><td><a href="#case-31"><code>31</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1818</td><td>23</td><td>345,078</td><td>0</td><td>0</td><td class="muted">1013_2203_inorder4-v3b49</td><td><a href="../results/1013_2203_inorder4-v3b49/raw/1013_2206_trainticket-performance-31/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2206_trainticket-performance-31</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/ts-basic-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 36 步</summary><ul>
@@ -1387,6 +1388,55 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 2,
    &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
    &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;node/worker-02&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-31"><summary><b>case-31</b> · <code>app/ts-station-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 23 步</summary><ul>
+<li><b>摘要</b>：Alerts (13:09:43~13:11:38) show two latency rows whose p50 AND p90 both move: ts-station-service (p50 3.86ms-&gt;3105.56ms, +80417%; p90 8.56ms-&gt;4618.16ms, +53875.7%, the steepest p90 escalation) and ts-basic-service (p50 38.75-&gt;7500ms; p90 49.75-&gt;9500ms); ts-travel-service moves its p90 only (partial-traffic ripple). GetServiceDependencies closes the graph: ts-station-service is a LEAF called by ts-gateway-service and ts-basic-service, whereas ts-basic-service calls ts-station-service — an upstream/caller delay cannot raise the server-side latency of a downstream leaf, so the two both-percentile</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2203_inorder4-v3b49/raw/1013_2206_trainticket-performance-31/">results/1013_2203_inorder4-v3b49/raw/1013_2206_trainticket-performance-31</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-station-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-station-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>12</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-station-service&quot;,&quot;port&quot;:12345,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>13</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-basic-service&quot;,&quot;port&quot;:15680,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-station-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;ts-basic-service and ts-station-service both show p50 and p90 latency jumps (7500ms/9500ms vs 3105ms/4618ms); which service is the epicenter of the delay — the caller ts-basic-service or </code></td></tr>
+<tr><td>17</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;pod network delay victim service latency p50 p90 epicenter ts-basic-service ts-station-service&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>18</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-station-service&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>21</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>22</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;containerd&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Alerts (13:09:43~13:11:38) show two latency rows whose p50 AND p90 both move: ts-station-service (p50 3.86ms-&gt;3105.56ms, +80417%; p90 8.56ms-&gt;4618.16ms, +53875.7%, the steepest p90 escalation) and ts-basic-service (p50 38.75-&gt;7500ms; p90 49.75-&gt;9500ms); ts-travel-service moves its p90 only (partial-traffic ripple). GetServiceDependencies closes the graph: ts-station-service is a LEAF called by ts-gateway-service and ts-basic-service, whereas ts-basic-service calls ts-station-service — an upstream/caller delay cannot raise the server-side latency of a downstream leaf, so the two both-percentile rows can only be one epicenter (ts-station-service) plus its direct caller's ripple, amplified because ts-basic-service issues two sequential station calls per request (logs: two [checkStationExists] per queryForTravel =&gt; ~2x3105ms=6210/p50, 2x4618ms=9236/p90, matching the observed 7500/9500). ts-travel-service's p90-only row is the direct-neighbour ripple through ts-basic-service. Saturation rows (ts-order-service cpu_cfs throttled 0.674s; ts-train/ts-user 0.01-&gt;0.02 cores) carry no latency of their own =&gt; collateral noise; ts-inside-payment-service is a traffic row with no latency. Object layer is the exclusion: all pods 2/2 Running, RESTARTS 0, endpoints bound, active TCP probes to ts-station-service:12345 and ts-basic-service:15680 open from worker-01/02/03 (latency, not reachability); all 4 nodes Ready with no pressure/taints and worker-02 kube-proxy/containerd active (not a node-scope fault - only 3 of ~19 worker-02 pods are touched); no Warning events inside the anomaly window; app YAMLs (ports, probes, secret refs) normal and no error logs. The delay therefore sits on the ts-station-service pod's network path.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-station-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-basic-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
   },
   {
    &quot;rank&quot;: 3,
