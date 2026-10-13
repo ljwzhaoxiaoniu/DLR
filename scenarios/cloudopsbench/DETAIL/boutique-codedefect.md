@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **17/98** 题：JRA ✅17 ❌0 ｜ 证据链全闭 17 ｜ token 中位 200,618 ｜ 生成 2026-10-13T12:48:02.877Z
+> 本家族已跑 **19/98** 题：JRA ✅19 ❌0 ｜ 证据链全闭 19 ｜ token 中位 207,400 ｜ 生成 2026-10-13T13:05:37.488Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -24,6 +24,8 @@
 | [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 31 | 382,747 | 0 | 0 | 1013_2025_chainpivot-verify1 | 全对·链闭 |
 | [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0909 | 67 | 1,911,726 | 0.0152 | 0 | 1013_2040_chainpivot-verify2 | 全对·链闭 |
 | [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1724 | 30 | 365,254 | 0 | 0 | 1013_2042_inorder4-v3b39 | 全对·链闭 |
+| [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1351 | 38 | 650,011 | 0 | 0 | 1013_2049_inorder4-v3b40 | 全对·链闭 |
+| [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 386,921 | 0 | 0 | 1013_2059_inorder4-v3b41 | 全对·链闭 |
 
 ## 证据正文
 
@@ -145,4 +147,18 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1724 · steps 30 · tokens 365,254
 - **raw 日志**：[results/1013_2042_inorder4-v3b39/raw/1013_2042_boutique-codedefect-17](../results/1013_2042_inorder4-v3b39/raw/1013_2042_boutique-codedefect-17/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Object layer clean: all 11 boutique pods 2/2 Running with 0 RESTARTS; checkoutservice:5050 connectivity probe 'open / Connection Succeeded'; GetAppYAML(checkoutservice) shows sane replicas, port 5050, gRPC probes and CART_SERVICE_ADDR=cartservice:7070, so addressing/config are not the break. The malformed-request trail is isolated to cartservice logs: 208/1832 (11.35%) entries matching 'GetCartAsync called with userId=' (EMPTY userId), each emitted immediately before 'EmptyCartAsync called with userId=<real id>' in the checkout flow. Code surface proves the mechanism in checkoutservice/main.go
+
+### case-18
+
+- **结论**：`app/checkoutservice` + `code_missing_parameter` ｜ 标签 `app/checkoutservice` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1351 · steps 38 · tokens 650,011
+- **raw 日志**：[results/1013_2049_inorder4-v3b40/raw/1013_2049_boutique-codedefect-18](../results/1013_2049_inorder4-v3b40/raw/1013_2049_boutique-codedefect-18/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Object layer clean (all 11 pods 2/2 Running, RESTARTS=0, deployments 1/1 AVAILABLE, endpoints bound, TCP probes on checkoutservice:5050 and cartservice:7070 both open) rules out scheduling/startup/admission/addressing faults; the alert TRAFFIC_ANOMALY [Network Surge] +244% points at checkoutservice. Error-log scan: every service clean except cartservice, whose log stream carries 178 rows of the pattern 'GetCartAsync called with userId=' with an EMPTY userId (malformed-request trail on the downstream callee). Topology walk GetServiceDependencies(checkoutservice) -> cartservice localizes the edg
+
+### case-19
+
+- **结论**：`app/checkoutservice` + `code_missing_parameter` ｜ 标签 `app/checkoutservice` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3158 · steps 20 · tokens 386,921
+- **raw 日志**：[results/1013_2059_inorder4-v3b41/raw/1013_2059_boutique-codedefect-19](../results/1013_2059_inorder4-v3b41/raw/1013_2059_boutique-codedefect-19/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods scan in boutique showed a single outlier: shippingservice-799cbfbc76-bl72b 1/2 Error with 4 restarts (CrashLoopBackOff), and deployment shippingservice 0/1 AVAILABLE while every other workload is 1/1. Its server container last terminated with Reason=Error ExitCode=2, kubelet event 'BackOff restarting failed container server'. Container logs show '[ShipOrder] received request' followed by 'panic: runtime error: invalid memory address or nil pointer dereference / [signal SIGSEGV]' in main.(*server).ShipOrder at /src/main.go:153, i.e. the handler dereferenced an unset in.Address. Topology wa
 

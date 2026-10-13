@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/performance</em></h1>
-<p class="deck">已跑 <b>21/47</b> 题：JRA ✅21 ❌0 ｜ 证据链全闭 21 ｜ token 中位 294,060 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T12:48:02.877Z</p>
+<p class="deck">已跑 <b>23/47</b> 题：JRA ✅23 ❌0 ｜ 证据链全闭 23 ｜ token 中位 294,060 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T13:05:37.488Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1429</td><td>36</td><td>442,283</td><td>0</td><td>1</td><td class="muted">1012_1512_inorder4-v3b3</td><td><a href="../results/1012_1512_inorder4-v3b3/raw/1012_1516_trainticket-performance-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1516_trainticket-performance-1</a></td></tr>
@@ -37,6 +37,8 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-19"><code>19</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1667</td><td>13</td><td>184,004</td><td>0</td><td>0</td><td class="muted">1013_2008_inorder4-v3b37</td><td><a href="../results/1013_2008_inorder4-v3b37/raw/1013_2010_trainticket-performance-19/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2010_trainticket-performance-19</a></td></tr>
 <tr><td><a href="#case-20"><code>20</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3571</td><td>15</td><td>213,402</td><td>0</td><td>0</td><td class="muted">1013_2012_inorder4-v3b38</td><td><a href="../results/1013_2012_inorder4-v3b38/raw/1013_2029_trainticket-performance-20/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2029_trainticket-performance-20</a></td></tr>
 <tr><td><a href="#case-21"><code>21</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2727</td><td>12</td><td>258,331</td><td>0</td><td>0</td><td class="muted">1013_2042_inorder4-v3b39</td><td><a href="../results/1013_2042_inorder4-v3b39/raw/1013_2044_trainticket-performance-21/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2044_trainticket-performance-21</a></td></tr>
+<tr><td><a href="#case-22"><code>22</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2222</td><td>28</td><td>625,309</td><td>0</td><td>0</td><td class="muted">1013_2059_lmdecoy-verify1</td><td><a href="../results/1013_2059_lmdecoy-verify1/raw/1013_2059_trainticket-performance-22/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2059_trainticket-performance-22</a></td></tr>
+<tr><td><a href="#case-23"><code>23</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2143</td><td>15</td><td>150,648</td><td>0</td><td>0</td><td class="muted">1013_2059_inorder4-v3b41</td><td><a href="../results/1013_2059_inorder4-v3b41/raw/1013_2102_trainticket-performance-23/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2102_trainticket-performance-23</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/ts-basic-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 36 步</summary><ul>
@@ -991,6 +993,101 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
   {
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;node/worker-01&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-22"><summary><b>case-22</b> · <code>app/ts-gateway-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 28 步</summary><ul>
+<li><b>摘要</b>：Symptom 'Service quality degradation.' lives on the metric surface (L3 exact match): 21 alerts in one window 22:10:28-22:12:18 show a whole-system Network Drop sweep (in/out pps -40%~-66% on every service, THROUGHPUT_DROP [RPS] -60%~-78%) with NO saturation row and no genuine latency row (only a LATENCY_MISSING collection hole on ts-payment-service). The dependency graph is browser -&gt; ts-ui-dashboard -&gt; ts-gateway-service -&gt; all 38 backends, so ts-gateway-service is the point every request flows through and carries the system's total traffic (Inbound 667.58 pps, max of all services) plus the r</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2059_lmdecoy-verify1/raw/1013_2059_trainticket-performance-22/">results/1013_2059_lmdecoy-verify1/raw/1013_2059_trainticket-performance-22</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;,&quot;top_k&quot;:2}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;nodes&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-ui-dashboard-554844f867-2z25h&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;services&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-gateway-service&quot;}</code></td></tr>
+<tr><td>21</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-gateway-service&quot;,&quot;port&quot;:18888,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>22</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;,&quot;port&quot;:8080,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>23</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-03&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>24</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-03&quot;,&quot;service_name&quot;:&quot;containerd&quot;}</code></td></tr>
+<tr><td>25</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;ts-gateway-service-ddc65b886-d8vpt&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pod&quot;}</code></td></tr>
+<tr><td>26</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>27</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom 'Service quality degradation.' lives on the metric surface (L3 exact match): 21 alerts in one window 22:10:28-22:12:18 show a whole-system Network Drop sweep (in/out pps -40%~-66% on every service, THROUGHPUT_DROP [RPS] -60%~-78%) with NO saturation row and no genuine latency row (only a LATENCY_MISSING collection hole on ts-payment-service). The dependency graph is browser -&gt; ts-ui-dashboard -&gt; ts-gateway-service -&gt; all 38 backends, so ts-gateway-service is the point every request flows through and carries the system's total traffic (Inbound 667.58 pps, max of all services) plus the runaway deviation of the sweep (RPS 5.92 -&gt; 1.30 req/s = -78.0%, the largest in the alert set), while its caller ts-ui-dashboard deviates less (-68.0%) =&gt; the gateway's collapse is the source and all other alerts are the ripple. Contemporaneous with that exact window, the gateway pod's istio-proxy logged repeated TCP-level write failures ('failed to scraping and writing envoy metrics: write tcp 172.20.3.215:15020-&gt;172.20.3.74:42110: write: broken pipe', 22:10:39-22:12:24), i.e. a network-path failure on the funnel pod. The object layer is pure exclusion evidence: 42 deployments AVAILABLE 1/1, all pods 2/2 Running, gateway pod RESTARTS 0 and Ready, no FailedCreate/FailedScheduling/FailedMount/image-pull/OOMKill events, nodes master/worker-01..03 Ready with kube-proxy and containerd active, and CheckServiceConnectivity to ts-gateway-service:18888 and ts-ui-dashboard:8080 succeeds from all three workers (no selector/port/DNS break; worker-03-hosted services are not the deepest drops, excluding a single-node fault as epicenter).&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-gateway-service&quot;,
+   &quot;root_cause&quot;: &quot;gateway_misrouted&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-ui-dashboard&quot;,
+   &quot;root_cause&quot;: &quot;service_dns_resolution_failure&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-23"><summary><b>case-23</b> · <code>app/ts-inside-payment-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
+<li><b>摘要</b>：Alerts identify ts-inside-payment-service as the primary anomaly (epicenter): its own p50 latency went 42.42ms -&gt; 13725.49ms (+32253.1%) and p90 196.00ms -&gt; 26745.10ms (+13545.5%, peak 27400ms) with RPS 1.01 -&gt; 0.29 (-71.0%) - a runaway deviation far larger than its callers' ripples (ts-cancel-service p90 +4925.6%, ts-gateway-service p90 +868.8%, ts-ui-dashboard p90 +1292.9%), confirming it as the source, not the victim of propagation. Its downstream callees (ts-payment-service, ts-order-service, ts-order-other-service) show no server-side latency rows, and there is no saturation row on ts-ins</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2059_inorder4-v3b41/raw/1013_2102_trainticket-performance-23/">results/1013_2059_inorder4-v3b41/raw/1013_2102_trainticket-performance-23</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-ticket-office-service-6fd78bd9df-27d5h&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-inside-payment-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>12</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-inside-payment-service&quot;,&quot;port&quot;:18673,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>13</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>14</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;containerd&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Alerts identify ts-inside-payment-service as the primary anomaly (epicenter): its own p50 latency went 42.42ms -&gt; 13725.49ms (+32253.1%) and p90 196.00ms -&gt; 26745.10ms (+13545.5%, peak 27400ms) with RPS 1.01 -&gt; 0.29 (-71.0%) - a runaway deviation far larger than its callers' ripples (ts-cancel-service p90 +4925.6%, ts-gateway-service p90 +868.8%, ts-ui-dashboard p90 +1292.9%), confirming it as the source, not the victim of propagation. Its downstream callees (ts-payment-service, ts-order-service, ts-order-other-service) show no server-side latency rows, and there is no saturation row on ts-inside-payment-service itself (the bare RESOURCE_SATURATION [cpu_cfs] 0.353s lands on ts-order-service, a non-epicenter service with no latency rise of its own -&gt; collateral noise). Object layer excludes all mechanism faults: pods listing shows READY 2/2, STATUS Running, RESTARTS 0 for every train-ticket service (the only outlier, ts-ticket-office-service, has no alert and its hourly Normal restart events are unrelated), namespace events contain zero Warning rows (no FailedCreate/FailedScheduling/FailedMount/image-pull/probe), TCP connectivity to ts-inside-payment-service:18673 succeeds from all three nodes, and worker-02 kube-proxy/containerd are active (running). The affected objects span worker-01/02/03, so this is not a node-scope network fault. A fixed added delay riding on one service's own latency, propagated equally to all its callers, with clean downstream and no saturation -&gt; a pod-level network path delay on ts-inside-payment-service.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-inside-payment-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;node/worker-02&quot;,
    &quot;root_cause&quot;: &quot;node_network_delay&quot;
   }
  ]

@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/codedefect</em></h1>
-<p class="deck">已跑 <b>17/98</b> 题：JRA ✅17 ❌0 ｜ 证据链全闭 17 ｜ token 中位 200,618 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T12:48:02.877Z</p>
+<p class="deck">已跑 <b>19/98</b> 题：JRA ✅19 ❌0 ｜ 证据链全闭 19 ｜ token 中位 207,400 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T13:05:37.488Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3077</td><td>14</td><td>129,107</td><td>0</td><td>0</td><td class="muted">1012_1415_inorder4-v3</td><td><a href="../results/1012_1415_inorder4-v3/raw/1012_1417_boutique-codedefect-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1417_boutique-codedefect-1</a></td></tr>
@@ -33,6 +33,8 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-15"><code>15</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1667</td><td>31</td><td>382,747</td><td>0</td><td>0</td><td class="muted">1013_2025_chainpivot-verify1</td><td><a href="../results/1013_2025_chainpivot-verify1/raw/1013_2025_boutique-codedefect-15/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2025_boutique-codedefect-15</a></td></tr>
 <tr><td><a href="#case-16"><code>16</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.0909</td><td>67</td><td>1,911,726</td><td>0.0152</td><td>0</td><td class="muted">1013_2040_chainpivot-verify2</td><td><a href="../results/1013_2040_chainpivot-verify2/raw/1013_2040_boutique-codedefect-16/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2040_boutique-codedefect-16</a></td></tr>
 <tr><td><a href="#case-17"><code>17</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1724</td><td>30</td><td>365,254</td><td>0</td><td>0</td><td class="muted">1013_2042_inorder4-v3b39</td><td><a href="../results/1013_2042_inorder4-v3b39/raw/1013_2042_boutique-codedefect-17/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2042_boutique-codedefect-17</a></td></tr>
+<tr><td><a href="#case-18"><code>18</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1351</td><td>38</td><td>650,011</td><td>0</td><td>0</td><td class="muted">1013_2049_inorder4-v3b40</td><td><a href="../results/1013_2049_inorder4-v3b40/raw/1013_2049_boutique-codedefect-18/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2049_boutique-codedefect-18</a></td></tr>
+<tr><td><a href="#case-19"><code>19</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3158</td><td>20</td><td>386,921</td><td>0</td><td>0</td><td class="muted">1013_2059_inorder4-v3b41</td><td><a href="../results/1013_2059_inorder4-v3b41/raw/1013_2059_boutique-codedefect-19/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2059_boutique-codedefect-19</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/checkoutservice</code> + <code>code_wrong_argument_order</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 14 步</summary><ul>
@@ -829,6 +831,116 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/cartservice&quot;,
    &quot;root_cause&quot;: &quot;code_missing_parameter&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-18"><summary><b>case-18</b> · <code>app/checkoutservice</code> + <code>code_missing_parameter</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 38 步</summary><ul>
+<li><b>摘要</b>：Object layer clean (all 11 pods 2/2 Running, RESTARTS=0, deployments 1/1 AVAILABLE, endpoints bound, TCP probes on checkoutservice:5050 and cartservice:7070 both open) rules out scheduling/startup/admission/addressing faults; the alert TRAFFIC_ANOMALY [Network Surge] +244% points at checkoutservice. Error-log scan: every service clean except cartservice, whose log stream carries 178 rows of the pattern 'GetCartAsync called with userId=' with an EMPTY userId (malformed-request trail on the downstream callee). Topology walk GetServiceDependencies(checkoutservice) -&gt; cartservice localizes the edg</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2049_inorder4-v3b40/raw/1013_2049_boutique-codedefect-18/">results/1013_2049_inorder4-v3b40/raw/1013_2049_boutique-codedefect-18</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;productcatalogservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;shippingservice&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;paymentservice&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;emailservice&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;recommendationservice&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;redis-cart&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;services&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+<tr><td>23</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>24</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;checkoutservice-7fc85cc97b-jtnv8&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>25</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;,&quot;port&quot;:5050,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>26</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;cartservice&quot;,&quot;port&quot;:7070,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>27</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>28</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>29</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>30</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>31</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;serviceaccounts&quot;}</code></td></tr>
+<tr><td>32</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+<tr><td>33</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;rpc.go&quot;}</code></td></tr>
+<tr><td>34</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;,&quot;file_path&quot;:&quot;src/services/CartService.cs&quot;}</code></td></tr>
+<tr><td>35</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>36</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;pods&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>37</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;services&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Object layer clean (all 11 pods 2/2 Running, RESTARTS=0, deployments 1/1 AVAILABLE, endpoints bound, TCP probes on checkoutservice:5050 and cartservice:7070 both open) rules out scheduling/startup/admission/addressing faults; the alert TRAFFIC_ANOMALY [Network Surge] +244% points at checkoutservice. Error-log scan: every service clean except cartservice, whose log stream carries 178 rows of the pattern 'GetCartAsync called with userId=' with an EMPTY userId (malformed-request trail on the downstream callee). Topology walk GetServiceDependencies(checkoutservice) -&gt; cartservice localizes the edge, and the code surface gives the smoking gun in checkoutservice/main.go getUserCart: the parameter is discarded (`userID = \&quot;\&quot;`) before `GetCart(ctx, &amp;pb.GetCartRequest{UserId: userID})`, i.e. the required userId parameter is omitted from the outbound request; frontend/rpc.go passes userID through untouched. Config face (checkoutservice Deployment CART_SERVICE_ADDR=cartservice:7070, grpc probes on 5050) is correct, and all ServiceAccounts exist, so the recurring 'FailedCreate: serviceaccount not found' events are stale setup history, not the mechanism.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_missing_parameter&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;code_missing_parameter&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_argument_order&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-19"><summary><b>case-19</b> · <code>app/checkoutservice</code> + <code>code_missing_parameter</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 20 步</summary><ul>
+<li><b>摘要</b>：Pods scan in boutique showed a single outlier: shippingservice-799cbfbc76-bl72b 1/2 Error with 4 restarts (CrashLoopBackOff), and deployment shippingservice 0/1 AVAILABLE while every other workload is 1/1. Its server container last terminated with Reason=Error ExitCode=2, kubelet event 'BackOff restarting failed container server'. Container logs show '[ShipOrder] received request' followed by 'panic: runtime error: invalid memory address or nil pointer dereference / [signal SIGSEGV]' in main.(*server).ShipOrder at /src/main.go:153, i.e. the handler dereferenced an unset in.Address. Topology wa</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2059_inorder4-v3b41/raw/1013_2059_boutique-codedefect-19/">results/1013_2059_inorder4-v3b41/raw/1013_2059_boutique-codedefect-19</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;shippingservice-799cbfbc76-bl72b&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;shippingservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;shippingservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;shippingservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;shippingservice&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;shippingservice&quot;}</code></td></tr>
+<tr><td>13</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;shippingservice&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Pods scan in boutique showed a single outlier: shippingservice-799cbfbc76-bl72b 1/2 Error with 4 restarts (CrashLoopBackOff), and deployment shippingservice 0/1 AVAILABLE while every other workload is 1/1. Its server container last terminated with Reason=Error ExitCode=2, kubelet event 'BackOff restarting failed container server'. Container logs show '[ShipOrder] received request' followed by 'panic: runtime error: invalid memory address or nil pointer dereference / [signal SIGSEGV]' in main.(*server).ShipOrder at /src/main.go:153, i.e. the handler dereferenced an unset in.Address. Topology walk places checkoutservice as the ShipOrder caller, and its source code (checkoutservice/main.go shipOrder) literally sets 'address = nil' before building &amp;pb.ShipOrderRequest{Address: address, Items: items}, so the required Address parameter is omitted in the outgoing call. Config surfaces confirm the transport itself is sound (SHIPPING_SERVICE_ADDR=shippingservice:50051, Service selector app=shippingservice, port/targetPort 50051, grpc probes on 50051), and caller-side evidence shows frontend 500s on /cart and /cart/checkout plus emailservice success-rate vanishing because the checkout flow aborts at the shipOrder step. Thus the fault resides in checkoutservice's code (missing required request parameter) and the availability loss is borne by shippingservice.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_missing_parameter&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/shippingservice&quot;,
+   &quot;root_cause&quot;: &quot;code_missing_parameter&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_argument_order&quot;
   }
  ]
 }</pre>

@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **23/37** 题：JRA ✅23 ❌0 ｜ 证据链全闭 23 ｜ token 中位 555,827 ｜ 生成 2026-10-13T12:48:02.877Z
+> 本家族已跑 **25/37** 题：JRA ✅25 ❌0 ｜ 证据链全闭 25 ｜ token 中位 541,741 ｜ 生成 2026-10-13T13:05:37.488Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -29,7 +29,9 @@
 | [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3684 | 20 | 734,488 | 0 | 0 | 1013_2025_chainpivot-verify1 | 全对·链闭 |
 | [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 528,847 | 0 | 0 | 1013_2012_inorder4-v3b38 | 全对·链闭 |
 | [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 555,827 | 0 | 0 | 1013_2042_inorder4-v3b39 | 全对·链闭 |
+| [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.375 | 17 | 456,606 | 0 | 0 | 1013_2049_inorder4-v3b40 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
+| [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 541,741 | 0 | 0 | 1013_2059_inorder4-v3b41 | 全对·链闭 |
 
 ## 证据正文
 
@@ -187,10 +189,24 @@
 - **raw 日志**：[results/1013_2042_inorder4-v3b39/raw/1013_2045_trainticket-service-23](../results/1013_2042_inorder4-v3b39/raw/1013_2045_trainticket-service-23/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Only ts-contacts-service is broken: pod ts-contacts-service-5cfbc8875-8fwnq is 0/2 CrashLoopBackOff with 4 restarts (app container Last State Terminated/Error exit 1, istio-proxy never Ready), while all other train-ticket pods are 2/2 Running. Its logs show 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' -> 'Communications link failure' -> HikariPool init failure -> app exit 1, and its istio-proxy shows 'lookup ... on 10.255.3.254:53 ... i/o timeout', i.e. the pod cannot resolve any name. GetAppYAML(ts-contacts-service) shows the deployment uniquely pin
 
+### case-24
+
+- **结论**：`app/ts-food-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-food-service` + `service_dns_resolution_failure`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.375 · steps 17 · tokens 456,606
+- **raw 日志**：[results/1013_2049_inorder4-v3b40/raw/1013_2051_trainticket-service-24](../results/1013_2049_inorder4-v3b40/raw/1013_2051_trainticket-service-24/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pod listing outlier: ts-food-service-74f4df4f7-djvnb 0/2 CrashLoopBackOff (4 restarts, exit code 1, not OOM). Service ts-food-service has NO endpoints and CheckServiceConnectivity on its declared port 18856 fails from worker-01/02/03. App log: 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' -> HikariPool init failure -> JPA EntityManagerFactory failure -> 'Application run failed'. Same-pod istio-proxy log: 'lookup istiod.istio-system.svc on 10.255.18.254:53 ... i/o timeout', showing the configured resolver does not answer. GetAppYAML(ts-food-service) sh
+
 ### case-25
 
 - **结论**：`app/ts-gateway-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-gateway-service` + `service_dns_resolution_failure`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 23 · tokens 204,578
 - **raw 日志**：[results/1012_1521_l3-tweak1/raw/1012_1521_trainticket-service-25](../results/1012_1521_l3-tweak1/raw/1012_1521_trainticket-service-25/)（ndjson / mcp.jsonl / meta）
 - **摘要**：ts-gateway-service is the only workload in train-ticket that is unavailable: pod ts-gateway-service-5d577b65bb-4p686 shows READY 0/2 with 4 restarts, app container Terminated/Reason=Error/ExitCode=1, and the Service has no ready endpoints (GetResources endpoints -> empty ENDPOINTS), so callers get 503 (alert: POST /api/v1/users/login via ts-auth-service -> 503 Service Unavailable) and connectivity probes to ts-gateway-service:18888 fail from all three nodes. Its previous-container log shows the crash mechanism: 'nacos registry, ts-gateway-service register failed ... NacosException: Client not 
+
+### case-26
+
+- **结论**：`app/ts-inside-payment-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-inside-payment-service` + `service_dns_resolution_failure`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2941 · steps 18 · tokens 541,741
+- **raw 日志**：[results/1013_2059_inorder4-v3b41/raw/1013_2104_trainticket-service-26](../results/1013_2059_inorder4-v3b41/raw/1013_2104_trainticket-service-26/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only outlier in the pods listing: ts-inside-payment-service-5ddd559466-pfrhl 0/2 CrashLoopBackOff, 4 restarts, Last State Terminated Exit Code 1; alert points to the same service (503 from entry ts-inside-payment-service). Its app container logs show java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution -> HikariPool pool init failure -> JPA/Hibernate init failure -> 'Application run failed'; its istio-proxy likewise fails all DNS lookups (lookup istiod.istio-system.svc on 10.255.8.254:53: i/o timeout). The DB target itself is fine: Service tsdb-mysql-leader ex
 

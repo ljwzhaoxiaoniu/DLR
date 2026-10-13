@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/infrastructure</em></h1>
-<p class="deck">已跑 <b>16/40</b> 题：JRA ✅16 ❌0 ｜ 证据链全闭 16 ｜ token 中位 107,349 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T12:48:02.877Z</p>
+<p class="deck">已跑 <b>18/40</b> 题：JRA ✅18 ❌0 ｜ 证据链全闭 18 ｜ token 中位 110,448 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T13:05:37.488Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>96,876</td><td>0</td><td>0</td><td class="muted">1012_1458_l3-verify3</td><td><a href="../results/1012_1458_l3-verify3/raw/1012_1459_boutique-infrastructure-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1459_boutique-infrastructure-1</a></td></tr>
@@ -32,6 +32,8 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-14"><code>14</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.381</td><td>22</td><td>127,921</td><td>0</td><td>0</td><td class="muted">1013_2008_inorder4-v3b37</td><td><a href="../results/1013_2008_inorder4-v3b37/raw/1013_2008_boutique-infrastructure-14/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2008_boutique-infrastructure-14</a></td></tr>
 <tr><td><a href="#case-15"><code>15</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3214</td><td>29</td><td>204,295</td><td>0</td><td>0</td><td class="muted">1013_2012_inorder4-v3b38</td><td><a href="../results/1013_2012_inorder4-v3b38/raw/1013_2012_boutique-infrastructure-15/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2012_boutique-infrastructure-15</a></td></tr>
 <tr><td><a href="#case-16"><code>16</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>19</td><td>127,753</td><td>0</td><td>0</td><td class="muted">1013_2042_inorder4-v3b39</td><td><a href="../results/1013_2042_inorder4-v3b39/raw/1013_2043_boutique-infrastructure-16/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2043_boutique-infrastructure-16</a></td></tr>
+<tr><td><a href="#case-17"><code>17</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.5667</td><td>31</td><td>150,940</td><td>0</td><td>0</td><td class="muted">1013_2049_inorder4-v3b40</td><td><a href="../results/1013_2049_inorder4-v3b40/raw/1013_2049_boutique-infrastructure-17/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2049_boutique-infrastructure-17</a></td></tr>
+<tr><td><a href="#case-18"><code>18</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4</td><td>21</td><td>131,291</td><td>0</td><td>0</td><td class="muted">1013_2059_inorder4-v3b41</td><td><a href="../results/1013_2059_inorder4-v3b41/raw/1013_2101_boutique-infrastructure-18/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2101_boutique-infrastructure-18</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>node/worker-01</code> + <code>containerd_unavailable</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
@@ -725,6 +727,110 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 </table>
 <p><b>报告原文</b>（契约 JSON）：</p><pre>{
  &quot;key_evidence_summary&quot;: &quot;All 11 boutique pods are 1/1 Running with 0 restarts and no alerts or Warning events, so the fault is at the reachability layer, not scheduling/startup/probe. Caller-side logs anchor on the cart path: frontend reports 'failed to complete the order ... cart failure ... transport: Error while dialing: dial tcp 10.68.139.239:7070: i/o timeout' (checkoutservice on worker-02 dialing the cartservice ClusterIP), and cartservice logs 198 errors / ratio 0.3694 ending in 'It was not possible to connect to the redis server(s). ConnectTimeout, serverEndpoint: redis-cart:6379, clientName: cartservice-7c5f46fc47-fd27k' (worker-02 pod dialing the redis-cart ClusterIP). Active TCP probes make the break node-scoped: cartservice:7070 and redis-cart:6379 both succeed from debug pods on worker-01 and worker-03 ('open / Connection Succeeded') and both fail only from the debug pod on worker-02 ('punt! Terminated / Connection Failed') - two unrelated VIPs failing on one node, so not a selector/port issue. Mechanism closure: CheckNodeServiceStatus shows kube-proxy on worker-02 'Active: inactive (dead) since Fri 2026-01-02 16:16:34 CST' (Process ... code=killed, signal=TERM), while worker-01 and worker-03 kube-proxy are active (running) and worker-02's kubelet and containerd are active (running) with the node Ready and untainted. With kube-proxy dead on worker-02, Service ClusterIP DNAT is no longer programmed there, so every pod on worker-02 times out dialing any Service VIP (cartservice -&gt; redis-cart and checkoutservice -&gt; cartservice), while the same VIPs are reachable from other nodes - the Service Availability Disruption on the cart path.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;node/worker-02&quot;,
+   &quot;root_cause&quot;: &quot;kube_proxy_unavailable&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;node/worker-02&quot;,
+   &quot;root_cause&quot;: &quot;node_network_packet_loss&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;node/worker-02&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-17"><summary><b>case-17</b> · <code>node/worker-01</code> + <code>kube_proxy_unavailable</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 31 步</summary><ul>
+<li><b>摘要</b>：All 11 boutique pods are Running 1/1 with 0 RESTARTS, all deployments 1/1 AVAILABLE, all endpoints bound, and no alerts - the object layer is clean. Active TCP probes of each service's own declared port diverge strictly by node: every probe from the worker-01 debug pod fails ('punt! / Terminated / Connection Failed') across all 11 services, while identical probes from worker-02 and worker-03 succeed ('open / Connection Succeeded'), so the break follows the node and severs ClusterIP reachability node-wide. The mechanism is read directly: kube-proxy.service on worker-01 is 'Active: inactive (dea</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2049_inorder4-v3b40/raw/1013_2049_boutique-infrastructure-17/">results/1013_2049_inorder4-v3b40/raw/1013_2049_boutique-infrastructure-17</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;adservice&quot;,&quot;port&quot;:9555,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;cartservice&quot;,&quot;port&quot;:7070,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>11</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;,&quot;port&quot;:5050,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;currencyservice&quot;,&quot;port&quot;:7000,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;emailservice&quot;,&quot;port&quot;:5000,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;frontend&quot;,&quot;port&quot;:80,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>15</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;paymentservice&quot;,&quot;port&quot;:50051,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>16</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;productcatalogservice&quot;,&quot;port&quot;:3550,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>17</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;recommendationservice&quot;,&quot;port&quot;:8080,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>18</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;redis-cart&quot;,&quot;port&quot;:6379,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>19</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;shippingservice&quot;,&quot;port&quot;:50051,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>20</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>21</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>22</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-03&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>23</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+<tr><td>24</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;containerd&quot;}</code></td></tr>
+<tr><td>25</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>26</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>27</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;node&quot;,&quot;name&quot;:&quot;worker-01&quot;}</code></td></tr>
+<tr><td>28</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;label_selector&quot;:&quot;app=currencyservice&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>29</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;serviceaccounts&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>30</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;show_labels&quot;:true}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All 11 boutique pods are Running 1/1 with 0 RESTARTS, all deployments 1/1 AVAILABLE, all endpoints bound, and no alerts - the object layer is clean. Active TCP probes of each service's own declared port diverge strictly by node: every probe from the worker-01 debug pod fails ('punt! / Terminated / Connection Failed') across all 11 services, while identical probes from worker-02 and worker-03 succeed ('open / Connection Succeeded'), so the break follows the node and severs ClusterIP reachability node-wide. The mechanism is read directly: kube-proxy.service on worker-01 is 'Active: inactive (dead) since Fri 2026-01-02 15:56:16 CST' with 'Process: ... (code=killed, signal=TERM)' and journal showing 'Caches are synced' then 'Stopping/Stopped Kubernetes Kube-Proxy Server', whereas kube-proxy on worker-02 and worker-03 is 'active (running)'. The worker-01 node record shows Ready with kubelet and containerd both active (running), no taints and no cordon, excluding scheduling/kubelet/runtime causes; node events show repeated kube-proxy 'Normal Starting' restarts. The Warning FailedCreate events about serviceaccount 'currencyservice'/'emailservice' not found are stale setup history - both serviceaccounts exist in the listing and both pods run.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;node/worker-01&quot;,
+   &quot;root_cause&quot;: &quot;kube_proxy_unavailable&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;node/worker-01&quot;,
+   &quot;root_cause&quot;: &quot;node_network_packet_loss&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;node/worker-01&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-18"><summary><b>case-18</b> · <code>node/worker-02</code> + <code>kube_proxy_unavailable</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 21 步</summary><ul>
+<li><b>摘要</b>：Pod/Deployment/Service/Endpoints listings are all uniformly healthy (all pods 1/1 Running, 0 restarts, all deployments 1/1 AVAILABLE, all endpoints populated), so the break is not in the workload layer. Caller-side read (frontend error logs, 197 errors) shows simultaneous address-layer failures: 'lookup productcatalogservice on 169.254.20.10:53: no such host' (85x), 'lookup currencyservice ... no such host' (76x), and 'dial tcp 10.68.159.24:5050: i/o timeout' (34x). Per-node connectivity probes on the ports each Service declares show that from worker-02 every service probe FAILS ('punt! Termin</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2059_inorder4-v3b41/raw/1013_2101_boutique-infrastructure-18/">results/1013_2059_inorder4-v3b41/raw/1013_2101_boutique-infrastructure-18</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>10</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;productcatalogservice&quot;,&quot;port&quot;:3550,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>11</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;currencyservice&quot;,&quot;port&quot;:7000,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;,&quot;port&quot;:5050,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>14</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>15</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+<tr><td>16</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;containerd&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>18</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>19</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-03&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;serviceaccounts&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Pod/Deployment/Service/Endpoints listings are all uniformly healthy (all pods 1/1 Running, 0 restarts, all deployments 1/1 AVAILABLE, all endpoints populated), so the break is not in the workload layer. Caller-side read (frontend error logs, 197 errors) shows simultaneous address-layer failures: 'lookup productcatalogservice on 169.254.20.10:53: no such host' (85x), 'lookup currencyservice ... no such host' (76x), and 'dial tcp 10.68.159.24:5050: i/o timeout' (34x). Per-node connectivity probes on the ports each Service declares show that from worker-02 every service probe FAILS ('punt! Terminated / Connection Failed' for productcatalogservice:3550, currencyservice:7000, checkoutservice:5050) while the same probes from worker-01 and worker-03 all succeed ('open / Connection Succeeded') - localizing the break to node/worker-02's Service-forwarding path (the frontend pod runs on worker-02, hence it is the reporter). The mechanism surface confirms it: on worker-02, 'kube-proxy.service - Active: inactive (dead) since Fri 2026-01-02 16:11:29 CST' with 'code=killed, signal=TERM', whereas worker-01 and worker-03 kube-proxy are 'active (running)'; worker-02's kubelet and containerd are both healthy. With kube-proxy dead on worker-02, ClusterIP DNAT/IPVS rules are no longer maintained, so ClusterIP dials from that node time out and node-local DNS forwarding through the ClusterIP breaks (no such host), exactly matching the caller errors. Namespace events contain no relevant Warning (only a self-healed recommendationservice FailedCreate), and the node is Ready with no taints and ample capacity, excluding scheduling/capacity causes.&quot;,
  &quot;top_3_predictions&quot;: [
   {
    &quot;rank&quot;: 1,

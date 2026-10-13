@@ -1,0 +1,8 @@
+system: boutique
+category: infrastructure
+case: 18
+query: Partial Service Unreachability.
+rc: 0
+stamp: 1013_2101
+tsm_mcp: http://127.0.0.1:28796/mcp
+bench_mcp: http://127.0.0.1:8001/mcp

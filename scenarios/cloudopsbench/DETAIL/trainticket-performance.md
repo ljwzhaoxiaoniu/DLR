@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **21/47** 题：JRA ✅21 ❌0 ｜ 证据链全闭 21 ｜ token 中位 294,060 ｜ 生成 2026-10-13T12:48:02.877Z
+> 本家族已跑 **23/47** 题：JRA ✅23 ❌0 ｜ 证据链全闭 23 ｜ token 中位 294,060 ｜ 生成 2026-10-13T13:05:37.488Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -28,6 +28,8 @@
 | [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 13 | 184,004 | 0 | 0 | 1013_2008_inorder4-v3b37 | 全对·链闭 |
 | [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3571 | 15 | 213,402 | 0 | 0 | 1013_2012_inorder4-v3b38 | 全对·链闭 |
 | [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 258,331 | 0 | 0 | 1013_2042_inorder4-v3b39 | 全对·链闭 |
+| [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2222 | 28 | 625,309 | 0 | 0 | 1013_2059_lmdecoy-verify1 | 全对·链闭 |
+| [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 150,648 | 0 | 0 | 1013_2059_inorder4-v3b41 | 全对·链闭 |
 
 ## 证据正文
 
@@ -177,4 +179,18 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 12 · tokens 258,331
 - **raw 日志**：[results/1013_2042_inorder4-v3b39/raw/1013_2044_trainticket-performance-21](../results/1013_2042_inorder4-v3b39/raw/1013_2044_trainticket-performance-21/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts name ts-food-service as the primary anomaly: LATENCY_DEGRADATION with p50 17.50ms->7500.00ms (+42757.1%) and p90 23.50ms->9500.00ms (+40325.5%), an order of magnitude larger than the ripple rises of its callers ts-preserve-service (+556.4%), ts-gateway-service (+468.1%) and ts-ui-dashboard (+422.0%), whose dependency graph (GetServiceDependencies) shows ts-gateway-service/ts-preserve-service as upstream callers of ts-food-service. Its downstream services (ts-travel-service, ts-station-food-service, ts-train-food-service) show clean server-side latencies, and ts-food-service has no satur
+
+### case-22
+
+- **结论**：`app/ts-gateway-service` + `pod_network_delay` ｜ 标签 `app/ts-gateway-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2222 · steps 28 · tokens 625,309
+- **raw 日志**：[results/1013_2059_lmdecoy-verify1/raw/1013_2059_trainticket-performance-22](../results/1013_2059_lmdecoy-verify1/raw/1013_2059_trainticket-performance-22/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Service quality degradation.' lives on the metric surface (L3 exact match): 21 alerts in one window 22:10:28-22:12:18 show a whole-system Network Drop sweep (in/out pps -40%~-66% on every service, THROUGHPUT_DROP [RPS] -60%~-78%) with NO saturation row and no genuine latency row (only a LATENCY_MISSING collection hole on ts-payment-service). The dependency graph is browser -> ts-ui-dashboard -> ts-gateway-service -> all 38 backends, so ts-gateway-service is the point every request flows through and carries the system's total traffic (Inbound 667.58 pps, max of all services) plus the r
+
+### case-23
+
+- **结论**：`app/ts-inside-payment-service` + `pod_network_delay` ｜ 标签 `app/ts-inside-payment-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 150,648
+- **raw 日志**：[results/1013_2059_inorder4-v3b41/raw/1013_2102_trainticket-performance-23](../results/1013_2059_inorder4-v3b41/raw/1013_2102_trainticket-performance-23/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts identify ts-inside-payment-service as the primary anomaly (epicenter): its own p50 latency went 42.42ms -> 13725.49ms (+32253.1%) and p90 196.00ms -> 26745.10ms (+13545.5%, peak 27400ms) with RPS 1.01 -> 0.29 (-71.0%) - a runaway deviation far larger than its callers' ripples (ts-cancel-service p90 +4925.6%, ts-gateway-service p90 +868.8%, ts-ui-dashboard p90 +1292.9%), confirming it as the source, not the victim of propagation. Its downstream callees (ts-payment-service, ts-order-service, ts-order-other-service) show no server-side latency rows, and there is no saturation row on ts-ins
 

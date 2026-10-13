@@ -10,18 +10,18 @@
 | 家族 | 全量 | 已跑 | 剩余 | 覆盖 |
 |---|---|---|---|---|
 | boutique/admission | 58 | 7 | 51 | 12.1% |
-| boutique/codedefect | 98 | 17 | 81 | 17.3% |
-| boutique/infrastructure | 40 | 16 | 24 | 40.0% |
+| boutique/codedefect | 98 | 19 | 79 | 19.4% |
+| boutique/infrastructure | 40 | 18 | 22 | 45.0% |
 | boutique/performance | 29 | 9 | 20 | 31.0% |
 | boutique/runtime | 45 | 9 | 36 | 20.0% |
 | boutique/scheduling | 164 | 12 | 152 | 7.3% |
 | boutique/service | 54 | 8 | 46 | 14.8% |
 | boutique/startup | 62 | 5 | 57 | 8.1% |
-| train-ticket/performance | 47 | 21 | 26 | 44.7% |
+| train-ticket/performance | 47 | 23 | 24 | 48.9% |
 | train-ticket/runtime | 96 | 16 | 80 | 16.7% |
-| train-ticket/service | 37 | 23 | 14 | 62.2% |
+| train-ticket/service | 37 | 25 | 12 | 67.6% |
 | train-ticket/startup | 24 | 13 | 11 | 54.2% |
-| **合计** | **754** | **156** | **598** | **20.7%** |
+| **合计** | **754** | **164** | **590** | **21.8%** |
 
 ## 汇总（去重 · 取最新）
 
@@ -29,38 +29,38 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 156 / 156（100.0%） |
-| CA（组件命中） | 156 / 156（100.0%） |
-| FA（故障型命中） | 156 / 156（100.0%） |
-| ECR（证据链全闭） | 155 / 156（99.4%） |
+| JRA（联合命中） | 164 / 164（100.0%） |
+| CA（组件命中） | 164 / 164（100.0%） |
+| FA（故障型命中） | 164 / 164（100.0%） |
+| ECR（证据链全闭） | 163 / 164（99.4%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 0.9984 | 0.9845 | 0.9936 | 0.2903 | 19.9295 | 0.0005 | 0.0192 |
+| 0.9985 | 0.9853 | 0.9939 | 0.2916 | 20.1037 | 0.0004 | 0.0183 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 325,750 / 213,402 | 54,365 / 2,181,512 | 74% |
+| 328,722 / 213,813 | 54,365 / 2,181,512 | 74% |
 
 ## 分家族索引
 
 | 家族 | 全量 | 已跑 | JRA | 链全闭 | 明细 |
 |---|---|---|---|---|---|
 | boutique/admission | 58 | 7 | 7 | 6 | [boutique-admission.md](DETAIL/boutique-admission.md) |
-| boutique/codedefect | 98 | 17 | 17 | 17 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
-| boutique/infrastructure | 40 | 16 | 16 | 16 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
+| boutique/codedefect | 98 | 19 | 19 | 19 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
+| boutique/infrastructure | 40 | 18 | 18 | 18 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
 | boutique/performance | 29 | 9 | 9 | 9 | [boutique-performance.md](DETAIL/boutique-performance.md) |
 | boutique/runtime | 45 | 9 | 9 | 9 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
 | boutique/scheduling | 164 | 12 | 12 | 12 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
 | boutique/service | 54 | 8 | 8 | 8 | [boutique-service.md](DETAIL/boutique-service.md) |
 | boutique/startup | 62 | 5 | 5 | 5 | [boutique-startup.md](DETAIL/boutique-startup.md) |
-| train-ticket/performance | 47 | 21 | 21 | 21 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
+| train-ticket/performance | 47 | 23 | 23 | 23 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
 | train-ticket/runtime | 96 | 16 | 16 | 16 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
-| train-ticket/service | 37 | 23 | 23 | 23 | [trainticket-service.md](DETAIL/trainticket-service.md) |
+| train-ticket/service | 37 | 25 | 25 | 25 | [trainticket-service.md](DETAIL/trainticket-service.md) |
 | train-ticket/startup | 24 | 13 | 13 | 13 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
 
 ## 定性观察
@@ -155,6 +155,14 @@
 > **2026-10-13 晚 · 轮次 1013_2012_inorder4-v3b38（批三十八 · 3/4 六项全满 · cod16 破连即修）**：① 覆盖 152/754。② inf/15（29 步）· tt-perf/20（15 步）· tt-svc/22（20 步）全满。③ **cod16 破连（JRA 0/FA 0）**：对象对（checkoutservice）判型错——环境含**陈旧 FailedCreate/"serviceaccount not found" 诱饵事件**（SA 现已在清单、负载全健康；金轨完全不读事件面、直奔代码），agent 被带偏报 `missing_service_account`，70 步未碰代码面 → 进 verify2 修。
 
 > **2026-10-13 晚 · 轮次 1013_2042_inorder4-v3b39（批三十九 · 4/4 六项全满 · 枢轴泛化首证）**：① 覆盖 156/754，**JRA 156/156**（轮次 64）。② **cod17 = 枢轴条款全新题首证**：M2(GSD)@11 领衔 → 30 步六项链全 1.0（同形链未解剖新题）。③ inf/16 `kube_proxy_unavailable@worker-02`（19 步）· tt-perf/21 `pod_network_delay`（12 步）· tt-svc/23 `service_dns_resolution_failure`（20 步）全满。④ 修复后连续 6 题（5 复跑 + 1 新题）六项链全 1.0——EOC 观察位 service 族三例全部收官。
+
+> **2026-10-13 晚 · 轮次 1013_2049_inorder4-v3b40（批四十 · 3/4 六项全满 · ttperf22 破连）**：① 覆盖 160/754。② cod/18（38 步）· inf/17 `kube_proxy_unavailable@worker-01`（31 步）· tt-svc/24 `service_dns_resolution_failure`（17 步）全满。③ **ttperf22 破连（JRA 0）**：判型对（`pod_network_delay`）对象错——报 ts-payment-service vs 真值 ts-gateway-service；agent 锚在唯一 `LATENCY_MISSING` 行（"Metrics dropped to zero/NaN after injection"）+ payment 日志空洞 52 步长链。④ 解剖（全库扫描 754）：**`LATENCY_MISSING` 行全库仅 3 例（perf/22 · perf/24 · perf/34），三例全 ≠ 真值对象**——系统性采集伪影（注入窗内指标掉 NaN），非故障指纹。
+
+> **2026-10-13 晚 · 修复轮 lmdecoy-verify1（ttperf22 修复 · 第 10 次规程闭环）**：① §3 补两句：**LM 伪影句**（"a `LATENCY_MISSING` row … is a hole the collection left in the injection window, not a service's deviation — it never names the case"）+ **系统级扫掠震中句**（"a whole-system network-drop sweep with no latency row → the epicenter is the point every request flows through — its collapse is the source, the rest is the ripple"）。② rebuild + 探针（§3 双句 ✓ 无跨节泄漏）→ 复跑 **ttperf22 六项链全 1.0**（52→28 步，rank1 = ts-gateway-service ✓）。
+
+> **2026-10-13 晚 · 轮次 1013_2059_inorder4-v3b41（批四十一 · 4/4 六项全满）**：① 覆盖 164/754，**JRA 164/164**（轮次 67）。② cod/19 `code_missing_parameter`（20 步）· inf/18 `kube_proxy_unavailable@worker-02`（21 步）· tt-perf/23 `pod_network_delay`（15 步 · §3 修后首新题）· tt-svc/26 `service_dns_resolution_failure`（18 步）全满。③ LM 战役内嵌（ttperf22 修复轮与批四十一管道并发）。
+
+
 
 
 

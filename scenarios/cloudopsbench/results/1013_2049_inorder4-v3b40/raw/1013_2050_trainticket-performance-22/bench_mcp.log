@@ -1,0 +1,86 @@
+INFO:     Started server process [3748]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:49800 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49801 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:49800 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49802 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49806 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49808 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:49806 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49816 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:49816 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49834 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kube-proxy"}
+INFO:     127.0.0.1:49834 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"kube-proxy"}
+INFO:     127.0.0.1:49834 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-03","service_name":"kube-proxy"}
+INFO:     127.0.0.1:49834 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"master","service_name":"kube-proxy"}
+INFO:     127.0.0.1:49834 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kubelet"}
+INFO:     127.0.0.1:49834 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"kubelet"}
+INFO:     127.0.0.1:49834 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-03","service_name":"kubelet"}
+INFO:     127.0.0.1:49834 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"containerd"}
+INFO:     127.0.0.1:49834 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"containerd"}
+INFO:     127.0.0.1:49834 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-03","service_name":"containerd"}
+INFO:     127.0.0.1:49834 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-payment-service"}
+INFO:     127.0.0.1:49845 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-ui-dashboard"}
+INFO:     127.0.0.1:49845 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49845 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-gateway-service"}
+INFO:     127.0.0.1:49845 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-inside-payment-service"}
+INFO:     127.0.0.1:49857 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-order-service"}
+INFO:     127.0.0.1:49857 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"tsdb-mysql"}
+INFO:     127.0.0.1:49857 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-preserve-service"}
+INFO:     127.0.0.1:49857 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-auth-service"}
+INFO:     127.0.0.1:49857 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61684 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61684 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-payment-service"}
+INFO:     127.0.0.1:61684 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-inside-payment-service"}
+INFO:     127.0.0.1:61684 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50152 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50152 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50152 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-payment-service","port":19001}
+INFO:     127.0.0.1:50152 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"tsdb-mysql-leader","port":3306}
+INFO:     127.0.0.1:50152 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-execute-service"}
+INFO:     127.0.0.1:54978 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-cancel-service"}
+INFO:     127.0.0.1:54978 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-rebook-service"}
+INFO:     127.0.0.1:54978 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-travel-service"}
+INFO:     127.0.0.1:54978 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-consign-service"}
+INFO:     127.0.0.1:54978 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-seat-service"}
+INFO:     127.0.0.1:54978 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59735 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59735 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59735 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52990 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52990 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52990 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52990 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52990 - "POST /mcp HTTP/1.1" 200 OK

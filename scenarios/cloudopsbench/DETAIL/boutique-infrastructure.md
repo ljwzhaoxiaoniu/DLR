@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **16/40** 题：JRA ✅16 ❌0 ｜ 证据链全闭 16 ｜ token 中位 107,349 ｜ 生成 2026-10-13T12:48:02.877Z
+> 本家族已跑 **18/40** 题：JRA ✅18 ❌0 ｜ 证据链全闭 18 ｜ token 中位 110,448 ｜ 生成 2026-10-13T13:05:37.488Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -23,6 +23,8 @@
 | [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.381 | 22 | 127,921 | 0 | 0 | 1013_2008_inorder4-v3b37 | 全对·链闭 |
 | [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3214 | 29 | 204,295 | 0 | 0 | 1013_2012_inorder4-v3b38 | 全对·链闭 |
 | [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 127,753 | 0 | 0 | 1013_2042_inorder4-v3b39 | 全对·链闭 |
+| [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5667 | 31 | 150,940 | 0 | 0 | 1013_2049_inorder4-v3b40 | 全对·链闭 |
+| [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 21 | 131,291 | 0 | 0 | 1013_2059_inorder4-v3b41 | 全对·链闭 |
 
 ## 证据正文
 
@@ -137,4 +139,18 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 19 · tokens 127,753
 - **raw 日志**：[results/1013_2042_inorder4-v3b39/raw/1013_2043_boutique-infrastructure-16](../results/1013_2042_inorder4-v3b39/raw/1013_2043_boutique-infrastructure-16/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts and no alerts or Warning events, so the fault is at the reachability layer, not scheduling/startup/probe. Caller-side logs anchor on the cart path: frontend reports 'failed to complete the order ... cart failure ... transport: Error while dialing: dial tcp 10.68.139.239:7070: i/o timeout' (checkoutservice on worker-02 dialing the cartservice ClusterIP), and cartservice logs 198 errors / ratio 0.3694 ending in 'It was not possible to connect to the redis server(s). ConnectTimeout, serverEndpoint: redis-cart:6379, clientName: cartservice-7c5f4
+
+### case-17
+
+- **结论**：`node/worker-01` + `kube_proxy_unavailable` ｜ 标签 `node/worker-01` + `kube_proxy_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.5667 · steps 31 · tokens 150,940
+- **raw 日志**：[results/1013_2049_inorder4-v3b40/raw/1013_2049_boutique-infrastructure-17](../results/1013_2049_inorder4-v3b40/raw/1013_2049_boutique-infrastructure-17/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are Running 1/1 with 0 RESTARTS, all deployments 1/1 AVAILABLE, all endpoints bound, and no alerts - the object layer is clean. Active TCP probes of each service's own declared port diverge strictly by node: every probe from the worker-01 debug pod fails ('punt! / Terminated / Connection Failed') across all 11 services, while identical probes from worker-02 and worker-03 succeed ('open / Connection Succeeded'), so the break follows the node and severs ClusterIP reachability node-wide. The mechanism is read directly: kube-proxy.service on worker-01 is 'Active: inactive (dea
+
+### case-18
+
+- **结论**：`node/worker-02` + `kube_proxy_unavailable` ｜ 标签 `node/worker-02` + `kube_proxy_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4 · steps 21 · tokens 131,291
+- **raw 日志**：[results/1013_2059_inorder4-v3b41/raw/1013_2101_boutique-infrastructure-18](../results/1013_2059_inorder4-v3b41/raw/1013_2101_boutique-infrastructure-18/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pod/Deployment/Service/Endpoints listings are all uniformly healthy (all pods 1/1 Running, 0 restarts, all deployments 1/1 AVAILABLE, all endpoints populated), so the break is not in the workload layer. Caller-side read (frontend error logs, 197 errors) shows simultaneous address-layer failures: 'lookup productcatalogservice on 169.254.20.10:53: no such host' (85x), 'lookup currencyservice ... no such host' (76x), and 'dial tcp 10.68.159.24:5050: i/o timeout' (34x). Per-node connectivity probes on the ports each Service declares show that from worker-02 every service probe FAILS ('punt! Termin
 
