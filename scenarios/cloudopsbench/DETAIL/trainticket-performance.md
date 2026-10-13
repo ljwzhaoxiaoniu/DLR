@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **36/47** 题：JRA ✅35 ❌1 ｜ 证据链全闭 35 ｜ token 中位 301,957 ｜ 生成 2026-10-13T14:39:29.238Z
+> 本家族已跑 **37/47** 题：JRA ✅36 ❌1 ｜ 证据链全闭 36 ｜ token 中位 294,060 ｜ 生成 2026-10-13T14:44:44.670Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -43,6 +43,7 @@
 | [34](#case-34) | 0 | 1 | 0 | 0.5 | 0.5 | 0 | 0.0732 | 42 | 1,529,218 | 0 | 0 | 1013_2217_inorder4-v3b52 | 未命中 |
 | [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 111,650 | 0 | 0 | 1013_2229_inorder4-v3b53 | 全对·链闭 |
 | [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 264,687 | 0 | 0 | 1013_2235_inorder4-v3b54 | 全对·链闭 |
+| [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 21 | 223,685 | 0 | 0 | 1013_2240_inorder4-v3b55 | 全对·链闭 |
 
 ## 证据正文
 
@@ -297,4 +298,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 12 · tokens 264,687
 - **raw 日志**：[results/1013_2235_inorder4-v3b54/raw/1013_2236_trainticket-performance-36](../results/1013_2235_inorder4-v3b54/raw/1013_2236_trainticket-performance-36/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts (metric surface) carry a ~7.5-10s near-constant added delay riding on ts-contacts-service: it is the ONLY service whose p50 AND p90 both moved (p50 18.85ms -> 7500.00ms, +39683.6%; p90 92.28ms -> 10000.00ms, +10736.8%), i.e. the delay covers all of its traffic, and it carries the steepest p90 escalation - the epicenter. Its direct upstreams named by GetServiceDependencies (ts-gateway-service, ts-preserve-service) plus the front-end (ts-ui-dashboard) show p90-only latency rises (+1218.8% / +284.9% / +1253.9%) = partial-traffic ripple, while ts-contacts-service is a leaf with no downstrea
+
+### case-37
+
+- **结论**：`app/ts-food-service` + `pod_network_delay` ｜ 标签 `app/ts-food-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 21 · tokens 223,685
+- **raw 日志**：[results/1013_2240_inorder4-v3b55/raw/1013_2241_trainticket-performance-37](../results/1013_2240_inorder4-v3b55/raw/1013_2241_trainticket-performance-37/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (22:57:16~22:59:51) show ts-food-service with BOTH percentiles deviating and the steepest escalation (p50 18.41ms->6829.27ms, +36997.4%; p90 28.75ms->9365.85ms, +32476.9%), marking it the epicenter; the other rows are ripples on its path (ts-gateway-service p90 only 1023.08->5250ms; ts-preserve-service p50 1812.50->7316.64ms; ts-ui-dashboard p90 941.99->5175ms), and ts-order-service's bare '[cpu_cfs] Val: 0.306s (Throttled)' carries no latency of its own -> collateral. GetServiceDependencies confirms ts-food-service's direct callers are exactly ts-gateway-service/ts-preserve-service/ts-
 

@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **31/40** 题：JRA ✅31 ❌0 ｜ 证据链全闭 31 ｜ token 中位 113,077 ｜ 生成 2026-10-13T14:39:29.238Z
+> 本家族已跑 **32/40** 题：JRA ✅32 ❌0 ｜ 证据链全闭 32 ｜ token 中位 125,844 ｜ 生成 2026-10-13T14:44:44.670Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -38,6 +38,7 @@
 | [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 125,901 | 0 | 0 | 1013_2217_inorder4-v3b52 | 全对·链闭 |
 | [30](#case-30) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 99,048 | 0 | 0 | 1013_2229_inorder4-v3b53 | 全对·链闭 |
 | [31](#case-31) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 99,780 | 0 | 0 | 1013_2235_inorder4-v3b54 | 全对·链闭 |
+| [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 140,955 | 0 | 0 | 1013_2240_inorder4-v3b55 | 全对·链闭 |
 
 ## 证据正文
 
@@ -257,4 +258,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2941 · steps 18 · tokens 99,780
 - **raw 日志**：[results/1013_2235_inorder4-v3b54/raw/1013_2235_boutique-infrastructure-31](../results/1013_2235_inorder4-v3b54/raw/1013_2235_boutique-infrastructure-31/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom 'Partial Service Unreachability' localized to cartservice: endpoints/cartservice shows ENDPOINTS <none> and CheckServiceConnectivity(cartservice:7070) returns 'Connection Failed'. Its pod cartservice-57fd8b5d44-rvsr8 is 0/1 ContainerCreating with no IP and no Container ID, PodScheduled=True/Initialized=True, pinned to worker-01 via nodeSelector kubernetes.io/hostname=worker-01. The pod's sheet and worker-01 kubelet log show the kubelet was handling this exact pod (SyncLoop ADD, 'No sandbox for pod can be found. Need to start a new one', volume mount succeeded) and then stopped: 'Active
+
+### case-32
+
+- **结论**：`node/worker-01` + `kubelet_unavailable` ｜ 标签 `node/worker-01` + `kubelet_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2778 · steps 19 · tokens 140,955
+- **raw 日志**：[results/1013_2240_inorder4-v3b55/raw/1013_2240_boutique-infrastructure-32](../results/1013_2240_inorder4-v3b55/raw/1013_2240_boutique-infrastructure-32/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods listing shows a single outlier: checkoutservice-59664766bc-lmm4p 0/1 ContainerCreating on worker-01 (all other 11 pods 1/1 Running). Victim-side signal: endpoints/checkoutservice = <none>, connectivity probe to its own declared port (Service spec port 5050) = Connection Failed, and caller frontend's error log reads 'dial tcp 192.168.0.222:10250: connect: connection refused' (worker-01, kubelet API port). Pod sheet shows PodScheduled=True with only a Normal Scheduled event (no scheduling failure), so scheduling/capacity causes are excluded. Node side: GetClusterConfiguration reports worker
 

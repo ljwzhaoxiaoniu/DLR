@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **32/98** 题：JRA ✅32 ❌0 ｜ 证据链全闭 32 ｜ token 中位 300,857 ｜ 生成 2026-10-13T14:39:29.238Z
+> 本家族已跑 **33/98** 题：JRA ✅33 ❌0 ｜ 证据链全闭 33 ｜ token 中位 300,857 ｜ 生成 2026-10-13T14:44:44.670Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -39,6 +39,7 @@
 | [30](#case-30) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1579 | 39 | 1,081,143 | 0.0526 | 0 | 1013_2217_inorder4-v3b52 | 全对·链闭 |
 | [31](#case-31) | 1 | 1 | 1 | 1 | 1 | 1 | 0.119 | 43 | 334,856 | 0 | 0 | 1013_2229_inorder4-v3b53 | 全对·链闭 |
 | [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1136 | 45 | 831,616 | 0 | 0 | 1013_2235_inorder4-v3b54 | 全对·链闭 |
+| [33](#case-33) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1111 | 46 | 1,073,129 | 0 | 0 | 1013_2240_inorder4-v3b55 | 全对·链闭 |
 
 ## 证据正文
 
@@ -265,4 +266,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1136 · steps 45 · tokens 831,616
 - **raw 日志**：[results/1013_2235_inorder4-v3b54/raw/1013_2235_boutique-codedefect-32](../results/1013_2235_inorder4-v3b54/raw/1013_2235_boutique-codedefect-32/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Entry service frontend emits 503s on /product/{id} and /cart while every object-layer surface is healthy: all 11 pods 2/2 Running with 0 restarts, all endpoints bound, all deployments 1/1, 4 nodes Ready/untouched, and live TCP probes to all 8 downstream ports succeed. The only anomalous trail sits in cartservice logs (713/2657 log lines), which show AddItemAsync called with userId=<10-char product id> and productId=<session UUID> -- exactly the swap of frontend's own request fields (product=OLJCESPC7Z, session=deb5f24d-1373-4ee9-af47-3e7523a241c7), while its GetCartAsync calls carry correct se
+
+### case-33
+
+- **结论**：`app/frontend` + `code_wrong_argument_order` ｜ 标签 `app/frontend` + `code_wrong_argument_order`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1111 · steps 46 · tokens 1,073,129
+- **raw 日志**：[results/1013_2240_inorder4-v3b55/raw/1013_2240_boutique-codedefect-33](../results/1013_2240_inorder4-v3b55/raw/1013_2240_boutique-codedefect-33/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side: alerts show 503 'Service Unavailable' recorded at the frontend entry for GET /product/{id} (16x) and GET /cart (10x). Object layer is otherwise clean: all 11 boutique pods 2/2 Running with 0 restarts, all deployments 1/1 AVAILABLE, all Service endpoints bound, all downstream port probes (frontend:80, productcatalogservice:3550, cartservice:7070, redis-cart:6379, currencyservice:7000, adservice:9555, recommendation:8080, shipping/checkout/payment:50051, email:5000) succeed, nodes Ready/untinted. frontend's own error logs are clean and its main.go/middleware.go are stock, so the ma
 

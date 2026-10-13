@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/codedefect</em></h1>
-<p class="deck">已跑 <b>32/98</b> 题：JRA ✅32 ❌0 ｜ 证据链全闭 32 ｜ token 中位 300,857 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:39:29.238Z</p>
+<p class="deck">已跑 <b>33/98</b> 题：JRA ✅33 ❌0 ｜ 证据链全闭 33 ｜ token 中位 300,857 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T14:44:44.670Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3077</td><td>14</td><td>129,107</td><td>0</td><td>0</td><td class="muted">1012_1415_inorder4-v3</td><td><a href="../results/1012_1415_inorder4-v3/raw/1012_1417_boutique-codedefect-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1417_boutique-codedefect-1</a></td></tr>
@@ -48,6 +48,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-30"><code>30</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1579</td><td>39</td><td>1,081,143</td><td>0.0526</td><td>0</td><td class="muted">1013_2217_inorder4-v3b52</td><td><a href="../results/1013_2217_inorder4-v3b52/raw/1013_2217_boutique-codedefect-30/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2217_boutique-codedefect-30</a></td></tr>
 <tr><td><a href="#case-31"><code>31</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.119</td><td>43</td><td>334,856</td><td>0</td><td>0</td><td class="muted">1013_2229_inorder4-v3b53</td><td><a href="../results/1013_2229_inorder4-v3b53/raw/1013_2229_boutique-codedefect-31/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2229_boutique-codedefect-31</a></td></tr>
 <tr><td><a href="#case-32"><code>32</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1136</td><td>45</td><td>831,616</td><td>0</td><td>0</td><td class="muted">1013_2235_inorder4-v3b54</td><td><a href="../results/1013_2235_inorder4-v3b54/raw/1013_2235_boutique-codedefect-32/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2235_boutique-codedefect-32</a></td></tr>
+<tr><td><a href="#case-33"><code>33</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1111</td><td>46</td><td>1,073,129</td><td>0</td><td>0</td><td class="muted">1013_2240_inorder4-v3b55</td><td><a href="../results/1013_2240_inorder4-v3b55/raw/1013_2240_boutique-codedefect-33/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2240_boutique-codedefect-33</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/checkoutservice</code> + <code>code_wrong_argument_order</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 14 步</summary><ul>
@@ -1628,6 +1629,78 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/frontend&quot;,
    &quot;root_cause&quot;: &quot;code_wrong_return&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-33"><summary><b>case-33</b> · <code>app/frontend</code> + <code>code_wrong_argument_order</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 46 步</summary><ul>
+<li><b>摘要</b>：Symptom side: alerts show 503 'Service Unavailable' recorded at the frontend entry for GET /product/{id} (16x) and GET /cart (10x). Object layer is otherwise clean: all 11 boutique pods 2/2 Running with 0 restarts, all deployments 1/1 AVAILABLE, all Service endpoints bound, all downstream port probes (frontend:80, productcatalogservice:3550, cartservice:7070, redis-cart:6379, currencyservice:7000, adservice:9555, recommendation:8080, shipping/checkout/payment:50051, email:5000) succeed, nodes Ready/untinted. frontend's own error logs are clean and its main.go/middleware.go are stock, so the ma</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2240_inorder4-v3b55/raw/1013_2240_boutique-codedefect-33/">results/1013_2240_inorder4-v3b55/raw/1013_2240_boutique-codedefect-33</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>11</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;frontend&quot;,&quot;port&quot;:80,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;productcatalogservice&quot;,&quot;port&quot;:3550,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;cartservice&quot;,&quot;port&quot;:7070,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:9555,&quot;service_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>15</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:8080,&quot;service_name&quot;:&quot;recommendationservice&quot;}</code></td></tr>
+<tr><td>16</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:7000,&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>17</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:50051,&quot;service_name&quot;:&quot;shippingservice&quot;}</code></td></tr>
+<tr><td>18</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:5050,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>19</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:6379,&quot;service_name&quot;:&quot;redis-cart&quot;}</code></td></tr>
+<tr><td>20</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:5000,&quot;service_name&quot;:&quot;emailservice&quot;}</code></td></tr>
+<tr><td>21</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:50051,&quot;service_name&quot;:&quot;paymentservice&quot;}</code></td></tr>
+<tr><td>22</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>23</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+<tr><td>24</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;ingresses&quot;}</code></td></tr>
+<tr><td>25</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>26</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;frontend-697587b5d-qfrj4&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;pod&quot;}</code></td></tr>
+<tr><td>27</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true,&quot;resource_type&quot;:&quot;pods&quot;}</code></td></tr>
+<tr><td>28</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;namespaces&quot;}</code></td></tr>
+<tr><td>29</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>30</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>31</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;productcatalogservice&quot;}</code></td></tr>
+<tr><td>32</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>33</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;redis-cart&quot;}</code></td></tr>
+<tr><td>34</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>35</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;recommendationservice&quot;}</code></td></tr>
+<tr><td>36</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>37</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;shippingservice&quot;}</code></td></tr>
+<tr><td>38</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;paymentservice&quot;}</code></td></tr>
+<tr><td>39</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;emailservice&quot;}</code></td></tr>
+<tr><td>40</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>41</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>42</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;rpc.go&quot;}</code></td></tr>
+<tr><td>43</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;handlers.go&quot;}</code></td></tr>
+<tr><td>44</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;main.go&quot;}</code></td></tr>
+<tr><td>45</td><td><code>GetSourceCode</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;,&quot;file_path&quot;:&quot;middleware.go&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom side: alerts show 503 'Service Unavailable' recorded at the frontend entry for GET /product/{id} (16x) and GET /cart (10x). Object layer is otherwise clean: all 11 boutique pods 2/2 Running with 0 restarts, all deployments 1/1 AVAILABLE, all Service endpoints bound, all downstream port probes (frontend:80, productcatalogservice:3550, cartservice:7070, redis-cart:6379, currencyservice:7000, adservice:9555, recommendation:8080, shipping/checkout/payment:50051, email:5000) succeed, nodes Ready/untinted. frontend's own error logs are clean and its main.go/middleware.go are stock, so the malformed-request trail sits with the callee: cartservice (stock upstream image cartservice:v0.10.3) repeatedly logs 'AddItemAsync called with userId=0PUK6V6EV0, productId=8cd56b5a-700d-4110-8a11-4b3528c81c23, quantity=8' - i.e. userId carries a PRODUCT id and productId carries the SESSION UUID, matching byte-for-byte the frontend request log at the same instant ('adding to cart','product':'0PUK6V6EV0','session':'8cd56b5a-...'). GetErrorLogs(cartservice) reports 717/2683 lines (26.7%) in that single malformed-call pattern while all other 9 services have zero error logs. Code surface proves the origin: frontend/handlers.go addToCartHandler contains an injected line absent from upstream - 'userID, productID = productID, userID' - right before fe.insertCart(userID, productID, qty), which sends AddItemRequest{UserId: productID, Item.ProductId: sessionID}. Consequence: the cart write lands under a product-ID key with an unresolvable session UUID as product_id, so the user's session cart is always empty and cart-related entrypoints (/cart, /product/{id} cart_size) fail for users. First 'observed != expected' slot: the frontend-&gt;cartservice call arguments (code layer), not scheduling/startup/admission/addressing (all of those faces read clean).&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_argument_order&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_return&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;code_wrong_argument_order&quot;
   }
  ]
 }</pre>

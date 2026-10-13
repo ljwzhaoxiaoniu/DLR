@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/33,1.0,1.0,1.0,1.0,1.0,1.0,0.1111111111111111,46.0,0.0,0.0,app/frontend,code_wrong_argument_order,app/frontend,code_wrong_argument_order,
+boutique/infrastructure/32,1.0,1.0,1.0,1.0,1.0,1.0,0.2777777777777778,19.0,0.0,0.0,node/worker-01,kubelet_unavailable,node/worker-01,kubelet_unavailable,
+trainticket/performance/37,1.0,1.0,1.0,1.0,1.0,1.0,0.2,21.0,0.0,0.0,app/ts-food-service,pod_network_delay,app/ts-food-service,pod_network_delay,
+trainticket/runtime/18,1.0,1.0,1.0,1.0,1.0,1.0,0.3076923076923077,14.0,0.0,0.0,app/ts-contacts-service,deployment_zero_replicas,app/ts-contacts-service,deployment_zero_replicas,
