@@ -1,6 +1,6 @@
 # 评测明细 · boutique/performance — cloudopsbench
 
-> 本家族已跑 **7/29** 题：JRA ✅7 ❌0 ｜ 证据链全闭 7 ｜ token 中位 156,035 ｜ 生成 2026-10-13T09:27:44.512Z
+> 本家族已跑 **8/29** 题：JRA ✅8 ❌0 ｜ 证据链全闭 8 ｜ token 中位 170,422 ｜ 生成 2026-10-13T10:18:40.426Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -14,6 +14,7 @@
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 234,408 | 0 | 0 | 1013_1541_inorder4-v3b20 | 全对·链闭 |
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1379 | 30 | 293,289 | 0 | 0 | 1013_1628_inorder4-v3b22 | 全对·链闭 |
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 156,035 | 0 | 0 | 1013_1656_inorder4-v3b25 | 全对·链闭 |
+| [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 170,422 | 0 | 0 | 1013_1810_inorder4-v3b27 | 全对·链闭 |
 
 ## 证据正文
 
@@ -65,4 +66,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 19 · tokens 156,035
 - **raw 日志**：[results/1013_1656_inorder4-v3b25/raw/1013_1656_boutique-performance-7](../results/1013_1656_inorder4-v3b25/raw/1013_1656_boutique-performance-7/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts: paymentservice RESOURCE_SATURATION [cpu_cfs] Val 0.614s (Throttled), [cpu core] Normal=0.00 -> Current=0.16 cores (+4141.0%), LATENCY_DEGRADATION paymentservice-p95latency Normal=4.81ms -> Current=60.66ms (+1161.3%); node worker-02 only echoes it (cpu util 3.03% -> 5.12%). GetAppYAML(paymentservice) closes the saturation reading: container 'server' limits cpu=200m/requests 100m, so current usage 160m rides the cgroup quota and causes the CFS throttling that degrades p95 latency. Object layer excluded: 11 pods all 2/2 Running with RESTARTS 0 (paymentservice-869f9f96cd-k259k Ready, Resta
+
+### case-8
+
+- **结论**：`app/productcatalogservice` + `pod_cpu_overload` ｜ 标签 `app/productcatalogservice` + `pod_cpu_overload`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2105 · steps 20 · tokens 170,422
+- **raw 日志**：[results/1013_1810_inorder4-v3b27/raw/1013_1810_boutique-performance-8](../results/1013_1810_inorder4-v3b27/raw/1013_1810_boutique-performance-8/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts are the pointer: productcatalogservice carries the only saturation rows (RESOURCE_SATURATION [cpu_cfs] Val: 1.095s (Throttled); [cpu core] Normal=0.03 -> Current=0.16 cores, +482.0%) plus LATENCY_DEGRADATION p95 0.57ms -> 47.93ms (+8348.7%); the three remaining alerts (frontend +354.9%, checkoutservice +149.3%, recommendationservice +1346.0%) are exactly its upstream callers per GetServiceDependencies(productcatalogservice) [Upstream: frontend, checkoutservice, recommendationservice; leaf, no downstream], so they are propagation, not epicenter. Object layer is fully clean = exclusion ev
 

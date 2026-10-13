@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/startup — cloudopsbench
 
-> 本家族已跑 **10/24** 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 267,264 ｜ 生成 2026-10-13T09:27:44.512Z
+> 本家族已跑 **11/24** 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 264,001 ｜ 生成 2026-10-13T10:18:40.426Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -17,6 +17,7 @@
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 374,643 | 0 | 0 | 1013_1541_inorder4-v3b20 | 全对·链闭 |
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3846 | 14 | 193,872 | 0 | 0 | 1013_1628_inorder4-v3b22 | 全对·链闭 |
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 171,036 | 0 | 0 | 1013_1656_inorder4-v3b25 | 全对·链闭 |
+| [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3571 | 15 | 165,408 | 0 | 0 | 1013_1810_inorder4-v3b27 | 全对·链闭 |
 
 ## 证据正文
 
@@ -89,4 +90,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4545 · steps 12 · tokens 171,036
 - **raw 日志**：[results/1013_1656_inorder4-v3b25/raw/1013_1658_trainticket-startup-10](../results/1013_1656_inorder4-v3b25/raw/1013_1658_trainticket-startup-10/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom 'Partial Service Unreachability.' - inventory listing shows the single outlier pod ts-order-other-service-5fdd56f7f9-r5kch as 0/1 CreateContainerConfigError (Ready=False, ContainersReady=False, State: Waiting) while all 46 other pods are 1/1 Running. Its Service ts-order-other-service (port 12032/targetPort 12032, selector app=ts-order-other-service) has an EMPTY endpoints list, i.e. the service is genuinely unreachable. kubelet mechanism event (x12 over 5m1s): 'Error: secret "ts-order-other-mysql1" not found'; image Pulled and Scheduled succeeded, so scheduling/image/probe layers are 
+
+### case-11
+
+- **结论**：`app/ts-order-service` + `missing_secret_binding` ｜ 标签 `app/ts-order-service` + `missing_secret_binding`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3571 · steps 15 · tokens 165,408
+- **raw 日志**：[results/1013_1810_inorder4-v3b27/raw/1013_1813_trainticket-startup-11](../results/1013_1810_inorder4-v3b27/raw/1013_1813_trainticket-startup-11/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-order-service is the single outlier in the namespace: pod ts-order-service-6c6b786d8-kqmpg shows 0/1 READY with STATUS CreateContainerConfigError, Restart Count 0. Its Service ts-order-service (port/targetPort 12031) has an EMPTY endpoints list, and an active TCP probe on 12031 fails from worker-01/02/03, matching caller-side 503 alerts on ts-order-service /refresh. The pod's deployment ts-order-service reports Available=False (MinimumReplicasUnavailable) with unavailableReplicas: 1. Mechanism event is explicit in both the pod's event section and the namespace event surface: Warning Failed 
 

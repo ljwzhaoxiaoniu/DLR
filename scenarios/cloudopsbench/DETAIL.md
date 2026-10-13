@@ -10,18 +10,18 @@
 | 家族 | 全量 | 已跑 | 剩余 | 覆盖 |
 |---|---|---|---|---|
 | boutique/admission | 58 | 6 | 52 | 10.3% |
-| boutique/codedefect | 98 | 10 | 88 | 10.2% |
-| boutique/infrastructure | 40 | 9 | 31 | 22.5% |
-| boutique/performance | 29 | 7 | 22 | 24.1% |
+| boutique/codedefect | 98 | 11 | 87 | 11.2% |
+| boutique/infrastructure | 40 | 10 | 30 | 25.0% |
+| boutique/performance | 29 | 8 | 21 | 27.6% |
 | boutique/runtime | 45 | 5 | 40 | 11.1% |
-| boutique/scheduling | 164 | 10 | 154 | 6.1% |
+| boutique/scheduling | 164 | 11 | 153 | 6.7% |
 | boutique/service | 54 | 4 | 50 | 7.4% |
 | boutique/startup | 62 | 4 | 58 | 6.5% |
-| train-ticket/performance | 47 | 10 | 37 | 21.3% |
-| train-ticket/runtime | 96 | 13 | 83 | 13.5% |
-| train-ticket/service | 37 | 12 | 25 | 32.4% |
-| train-ticket/startup | 24 | 10 | 14 | 41.7% |
-| **合计** | **754** | **100** | **654** | **13.3%** |
+| train-ticket/performance | 47 | 11 | 36 | 23.4% |
+| train-ticket/runtime | 96 | 14 | 82 | 14.6% |
+| train-ticket/service | 37 | 13 | 24 | 35.1% |
+| train-ticket/startup | 24 | 11 | 13 | 45.8% |
+| **合计** | **754** | **108** | **646** | **14.3%** |
 
 ## 汇总（去重 · 取最新）
 
@@ -29,39 +29,39 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 100 / 100（100.0%） |
-| CA（组件命中） | 100 / 100（100.0%） |
-| FA（故障型命中） | 100 / 100（100.0%） |
-| ECR（证据链全闭） | 99 / 100（99.0%） |
+| JRA（联合命中） | 108 / 108（100.0%） |
+| CA（组件命中） | 108 / 108（100.0%） |
+| FA（故障型命中） | 108 / 108（100.0%） |
+| ECR（证据链全闭） | 107 / 108（99.1%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 0.9975 | 0.9833 | 0.99 | 0.2994 | 18.98 | 0.0004 | 0.02 |
+| 0.9977 | 0.9846 | 0.9907 | 0.2975 | 19.1389 | 0.0004 | 0.0185 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 278,131 / 203,615 | 58,131 / 2,104,083 | 74% |
+| 295,832 / 200,618 | 54,365 / 2,181,512 | 75% |
 
 ## 分家族索引
 
 | 家族 | 全量 | 已跑 | JRA | 链全闭 | 明细 |
 |---|---|---|---|---|---|
 | boutique/admission | 58 | 6 | 6 | 5 | [boutique-admission.md](DETAIL/boutique-admission.md) |
-| boutique/codedefect | 98 | 10 | 10 | 10 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
-| boutique/infrastructure | 40 | 9 | 9 | 9 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
-| boutique/performance | 29 | 7 | 7 | 7 | [boutique-performance.md](DETAIL/boutique-performance.md) |
+| boutique/codedefect | 98 | 11 | 11 | 11 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
+| boutique/infrastructure | 40 | 10 | 10 | 10 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
+| boutique/performance | 29 | 8 | 8 | 8 | [boutique-performance.md](DETAIL/boutique-performance.md) |
 | boutique/runtime | 45 | 5 | 5 | 5 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
-| boutique/scheduling | 164 | 10 | 10 | 10 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
+| boutique/scheduling | 164 | 11 | 11 | 11 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
 | boutique/service | 54 | 4 | 4 | 4 | [boutique-service.md](DETAIL/boutique-service.md) |
 | boutique/startup | 62 | 4 | 4 | 4 | [boutique-startup.md](DETAIL/boutique-startup.md) |
-| train-ticket/performance | 47 | 10 | 10 | 10 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
-| train-ticket/runtime | 96 | 13 | 13 | 13 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
-| train-ticket/service | 37 | 12 | 12 | 12 | [trainticket-service.md](DETAIL/trainticket-service.md) |
-| train-ticket/startup | 24 | 10 | 10 | 10 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
+| train-ticket/performance | 47 | 11 | 11 | 11 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
+| train-ticket/runtime | 96 | 14 | 14 | 14 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
+| train-ticket/service | 37 | 13 | 13 | 13 | [trainticket-service.md](DETAIL/trainticket-service.md) |
+| train-ticket/startup | 24 | 11 | 11 | 11 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
 
 ## 定性观察
 
@@ -121,6 +121,12 @@
 > **2026-10-13 · 轮次 1013_1645_inorder4-v3b24（批二十四 · 2 路续跑 · 4/4 六项全满）**：① 覆盖 96/754，**JRA 96/96**。② cod/10 `code_artificial_delay` 第二例（14 步全满——镜像双胞胎判型复验稳）· inf/9 `containerd@worker-01`（15 步）· tt-perf/10 `pod_network_delay`（18 步）全满。③ **tt-service/12 网关 42 步长链全闭**（§2 措辞、无新钉句——原条款独立复验；网关条款第十一连）。④ 破连后下一批即刻回绿（四连中断即复位）。
 
 > **2026-10-13 · 轮次 1013_1656_inorder4-v3b25（批二十五 · 2 路续跑 · 4/4 六项全满 · 覆盖 100/754 达成）**：① **覆盖 100/754（13.3%）· JRA 100/100**（六项全满 97/100，余 3 = 记档列 infra/4 · tt-runtime/5 · admission/6）。② per/7 `pod_cpu_overload`（19 步全满）· sch/10 `node_cordon_mismatch`（19 步全满）· tt-runtime/13 `db_readonly_mode`（30 步全满）· tt-startup/10 `missing_secret_binding`（12 步全满）。③ 用户令「凑个 100」单批即达。
+
+> **2026-10-13 · 轮次 1013_1805_inorder4-v3b26 + gateway2-verify1（批二十六 · 3/4 + 网关 §2 句修复闭环）**：① 覆盖 104/754。② cod/11 `code_memory_leak`（16 步全满）· inf/10 `containerd@worker-02`（11 步）· tt-perf/11 `pod_network_delay`（17 步）全满。③ **tsv/13 破连（§2 措辞网关）**：判型翻车——把**受害者的报错当代码缺陷**（ts-payment-service 收到 misroute 的外来请求 → 日志报参数缺失 → 判 `code_missing_parameter`），路由表（M2）整步未读 → JRA 0 · ECR 0。④ 处置（破连即修一轮）：§2 网关句对齐 §1 形态钉（路由表 = gateway 自家 `GetAppYAML`）+ 补判别线「外来请求异常 = misroute 症状，不是代码缺陷，先审计路由表」→ rebuild+重启 → **gateway2-verify1 复跑 34 步六项全满**——规程第二次闭环。⑤ 会话：失败轮入档。
+
+> **2026-10-13 · 轮次 1013_1810_inorder4-v3b27（批二十七 · 4/4 六项全满）**：① 覆盖 108/754，**JRA 108/108**。② per/8 `pod_cpu_overload`（20 步）· sch/11 `node_cordon_mismatch`（17 步）· tt-startup/11 `missing_secret_binding`（15 步）全满。③ tt-runtime/14 `db_readonly_mode` **39 步长链全闭**（迄今最长之一）。④ 与 tsv/13 修复轮管道化并发执行（引擎模式：谁空接谁）。
+
+
 
 
 

@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/scheduling</em></h1>
-<p class="deck">已跑 <b>10/164</b> 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 130,741 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:27:44.512Z</p>
+<p class="deck">已跑 <b>11/164</b> 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 130,741 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T10:18:40.426Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2353</td><td>18</td><td>115,405</td><td>0</td><td>0</td><td class="muted">1012_1415_inorder4-v3</td><td><a href="../results/1012_1415_inorder4-v3/raw/1012_1416_boutique-scheduling-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1416_boutique-scheduling-1</a></td></tr>
@@ -26,6 +26,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-8"><code>8</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2353</td><td>18</td><td>130,578</td><td>0</td><td>0</td><td class="muted">1013_1541_inorder4-v3b20</td><td><a href="../results/1013_1541_inorder4-v3b20/raw/1013_1541_boutique-scheduling-8/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1541_boutique-scheduling-8</a></td></tr>
 <tr><td><a href="#case-9"><code>9</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1667</td><td>19</td><td>130,741</td><td>0</td><td>0</td><td class="muted">1013_1628_inorder4-v3b22</td><td><a href="../results/1013_1628_inorder4-v3b22/raw/1013_1628_boutique-scheduling-9/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1628_boutique-scheduling-9</a></td></tr>
 <tr><td><a href="#case-10"><code>10</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1667</td><td>19</td><td>186,153</td><td>0</td><td>0</td><td class="muted">1013_1656_inorder4-v3b25</td><td><a href="../results/1013_1656_inorder4-v3b25/raw/1013_1656_boutique-scheduling-10/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1656_boutique-scheduling-10</a></td></tr>
+<tr><td><a href="#case-11"><code>11</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1875</td><td>17</td><td>132,905</td><td>0</td><td>0</td><td class="muted">1013_1810_inorder4-v3b27</td><td><a href="../results/1013_1810_inorder4-v3b27/raw/1013_1811_boutique-scheduling-11/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1811_boutique-scheduling-11</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/cartservice</code> + <code>node_cordon_mismatch</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 18 步</summary><ul>
@@ -471,6 +472,49 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
    &quot;root_cause&quot;: &quot;taint_toleration_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-11"><summary><b>case-11</b> · <code>app/currencyservice</code> + <code>node_cordon_mismatch</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 17 步</summary><ul>
+<li><b>摘要</b>：Symptom side: frontend caller errors 'could not retrieve currencies: rpc error ... dial tcp 10.68.108.3:7000: connect: connection refused' (153/165 errors) and CheckServiceConnectivity(currencyservice:7000) = Connection Failed; upstream env CURRENCY_SERVICE_ADDR=currencyservice:7000. Object layer: the only outlier pod is currencyservice-6f654d5956-ff8rt 0/1 Pending (all 10 other boutique pods 1/1 Running) and deployment currencyservice is 0/1 available. Mechanism event on the pod: Warning FailedScheduling '0/4 nodes are available: 2 node(s) didn't match Pod's node affinity/selector, 2 node(s) </li>
+<li><b>raw 日志</b>：<a href="../results/1013_1810_inorder4-v3b27/raw/1013_1811_boutique-scheduling-11/">results/1013_1810_inorder4-v3b27/raw/1013_1811_boutique-scheduling-11</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;currencyservice-6f654d5956-ff8rt&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;nodes&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;node&quot;,&quot;name&quot;:&quot;worker-01&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>16</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;currencyservice&quot;,&quot;port&quot;:7000,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom side: frontend caller errors 'could not retrieve currencies: rpc error ... dial tcp 10.68.108.3:7000: connect: connection refused' (153/165 errors) and CheckServiceConnectivity(currencyservice:7000) = Connection Failed; upstream env CURRENCY_SERVICE_ADDR=currencyservice:7000. Object layer: the only outlier pod is currencyservice-6f654d5956-ff8rt 0/1 Pending (all 10 other boutique pods 1/1 Running) and deployment currencyservice is 0/1 available. Mechanism event on the pod: Warning FailedScheduling '0/4 nodes are available: 2 node(s) didn't match Pod's node affinity/selector, 2 node(s) were unschedulable' - i.e. one node MATCHED the selector but was rejected as unschedulable. Config/node closure: currencyservice pod spec carries Node-Selectors hardware-type=gpu (GetAppYAML shows 'nodeSelector: hardware-type: gpu'; adservice/frontend have none), the label hardware-type=gpu exists ONLY on worker-01, and worker-01 is 'Ready,SchedulingDisabled' with taint node.kubernetes.io/unschedulable:NoSchedule and Unschedulable: true, with active cordon churn in its own events (NodeNotSchedulable x5 / NodeSchedulable x4 over 15m). Chain: worker-01 cordoned -&gt; the only selector-matching node rejects the pod -&gt; currencyservice Pending, no Ready endpoint -&gt; currencyservice:7000 connection refused -&gt; partial service unreachability.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
+   &quot;root_cause&quot;: &quot;node_cordon_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
+   &quot;root_cause&quot;: &quot;node_selector_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
+   &quot;root_cause&quot;: &quot;node_affinity_mismatch&quot;
   }
  ]
 }</pre>

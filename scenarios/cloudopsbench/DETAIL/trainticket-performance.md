@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **10/47** 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 319,046 ｜ 生成 2026-10-13T09:27:44.512Z
+> 本家族已跑 **11/47** 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 319,046 ｜ 生成 2026-10-13T10:18:40.426Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -17,6 +17,7 @@
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 270,805 | 0 | 0 | 1013_1623_inorder4-v3b21 | 全对·链闭 |
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 343,666 | 0 | 0 | 1013_1633_inorder4-v3b23 | 全对·链闭 |
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 304,738 | 0 | 0 | 1013_1645_inorder4-v3b24 | 全对·链闭 |
+| [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 356,222 | 0 | 0 | 1013_1805_inorder4-v3b26 | 全对·链闭 |
 
 ## 证据正文
 
@@ -89,4 +90,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2353 · steps 18 · tokens 304,738
 - **raw 日志**：[results/1013_1645_inorder4-v3b24/raw/1013_1646_trainticket-performance-10](../results/1013_1645_inorder4-v3b24/raw/1013_1646_trainticket-performance-10/)（ndjson / mcp.jsonl / meta）
 - **摘要**：L3 SOP for this wording says the signal is on the metric surface: alerts first, object layer only for exclusion. GetAlerts returns 18 abnormal services with NO RESOURCE_SATURATION row (latency/throughput/traffic only). The unique outlier is ts-route-service: p50 7.55ms -> 8026.32ms (+106152.5%, peak 9791.67ms), p90 9.60ms -> 21000ms (+218729.8%) — i.e. a constant ~8s delay added onto its own server-side latency. GetServiceDependencies shows ts-route-service is a LEAF node with no downstream calls, so its latency jump cannot be inherited from anything it calls, while every other latency-degrade
+
+### case-11
+
+- **结论**：`app/ts-seat-service` + `pod_network_delay` ｜ 标签 `app/ts-seat-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1875 · steps 17 · tokens 356,222
+- **raw 日志**：[results/1013_1805_inorder4-v3b26/raw/1013_1806_trainticket-performance-11](../results/1013_1805_inorder4-v3b26/raw/1013_1806_trainticket-performance-11/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts surface (metric chain per L3): 5 LATENCY_DEGRADATION rows, no RESOURCE_SATURATION. ts-seat-service is the most anomalous and the only one with THROUGHPUT_DROP: p50 19.72ms -> 3065.48ms (+15445.4%), p90 66.40 -> 4613.10ms, RPS 2.30 -> 0.44 (-81.0%). Dependency graph shows ui-dashboard -> gateway -> {preserve, travel} -> seat, so the alerted set is exactly ts-seat-service plus every caller that calls it (ts-preserve-service p50 463.24 -> 8416.67ms; ts-travel-service p90 209.04 -> 8925.00ms; ts-gateway-service p90 372.82 -> 5860.00ms; ts-ui-dashboard p90 391.18 -> 5800.00ms), while seat's 
 

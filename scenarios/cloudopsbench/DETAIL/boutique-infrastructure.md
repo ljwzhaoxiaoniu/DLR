@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **9/40** 题：JRA ✅9 ❌0 ｜ 证据链全闭 9 ｜ token 中位 93,919 ｜ 生成 2026-10-13T09:27:44.512Z
+> 本家族已跑 **10/40** 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 93,919 ｜ 生成 2026-10-13T10:18:40.426Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -16,6 +16,7 @@
 | [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 77,500 | 0 | 0 | 1013_1623_inorder4-v3b21 | 全对·链闭 |
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4545 | 12 | 77,283 | 0 | 0 | 1013_1633_inorder4-v3b23 | 全对·链闭 |
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 93,919 | 0 | 0 | 1013_1645_inorder4-v3b24 | 全对·链闭 |
+| [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 11 | 54,365 | 0 | 0 | 1013_1805_inorder4-v3b26 | 全对·链闭 |
 
 ## 证据正文
 
@@ -81,4 +82,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 93,919
 - **raw 日志**：[results/1013_1645_inorder4-v3b24/raw/1013_1645_boutique-infrastructure-9](../results/1013_1645_inorder4-v3b24/raw/1013_1645_boutique-infrastructure-9/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Namespace boutique shows a node-scoped outage: all 7 pods assigned to worker-01 (adservice, currencyservice, emailservice, productcatalogservice, redis-cart, shippingservice) are stuck 0/1 ContainerCreating, while every pod on worker-02 is 1/1 Running. Their pod events and the namespace events surface all carry the identical Warning FailedCreatePodSandBox with 'rpc error: code = Unavailable ... dial unix /run/containerd/containerd.sock: connect: no such file or directory' (pods are PodScheduled=True and Initialized=True, so scheduling/admission are fine). Node worker-01 is NotReady with condit
+
+### case-10
+
+- **结论**：`node/worker-02` + `containerd_unavailable` ｜ 标签 `node/worker-02` + `containerd_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4 · steps 11 · tokens 54,365
+- **raw 日志**：[results/1013_1805_inorder4-v3b26/raw/1013_1805_boutique-infrastructure-10](../results/1013_1805_inorder4-v3b26/raw/1013_1805_boutique-infrastructure-10/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 5 pods scheduled on worker-02 (cartservice, checkoutservice, frontend, productcatalogservice, recommendationservice) are stuck 0/1 ContainerCreating while all worker-01 pods are Running — a node-partitioned, 'partial' outage. Pod events show 'Warning FailedCreatePodSandBox: rpc error: code = Unavailable ... dial unix /run/containerd/containerd.sock: connect: no such file or directory', and worker-02's kubelet logs repeatedly report 'Skipping pod synchronization err=container runtime is down', 'GenericPLEG: Unable to retrieve pods' and 'ImageFsInfo from image service failed' on the same mis
 

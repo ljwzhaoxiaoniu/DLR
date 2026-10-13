@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/performance/8,1.0,1.0,1.0,1.0,1.0,1.0,0.21052631578947367,20.0,0.0,0.0,app/productcatalogservice,pod_cpu_overload,app/productcatalogservice,pod_cpu_overload,
+boutique/scheduling/11,1.0,1.0,1.0,1.0,1.0,1.0,0.1875,17.0,0.0,0.0,app/currencyservice,node_cordon_mismatch,app/currencyservice,node_cordon_mismatch,
+trainticket/startup/11,1.0,1.0,1.0,1.0,1.0,1.0,0.35714285714285715,15.0,0.0,0.0,app/ts-order-service,missing_secret_binding,app/ts-order-service,missing_secret_binding,
+trainticket/runtime/14,1.0,1.0,1.0,1.0,1.0,1.0,0.3684210526315789,39.0,0.0,0.0,app/tsdb-mysql,db_readonly_mode,app/tsdb-mysql,db_readonly_mode,

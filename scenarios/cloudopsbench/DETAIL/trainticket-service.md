@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **12/37** 题：JRA ✅12 ❌0 ｜ 证据链全闭 12 ｜ token 中位 465,479 ｜ 生成 2026-10-13T09:27:44.512Z
+> 本家族已跑 **13/37** 题：JRA ✅13 ❌0 ｜ 证据链全闭 13 ｜ token 中位 465,479 ｜ 生成 2026-10-13T10:18:40.426Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -18,6 +18,7 @@
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2609 | 24 | 666,312 | 0 | 0 | 1013_1623_inorder4-v3b21 | 全对·链闭 |
 | [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2963 | 28 | 707,393 | 0 | 0 | 1013_1640_gatewayyaml-verify1 | 全对·链闭 |
 | [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2927 | 42 | 2,104,083 | 0 | 0 | 1013_1645_inorder4-v3b24 | 全对·链闭 |
+| [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2121 | 34 | 2,181,512 | 0 | 0 | 1013_1810_gateway2-verify1 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
 
 ## 证据正文
@@ -98,6 +99,13 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2927 · steps 42 · tokens 2,104,083
 - **raw 日志**：[results/1013_1645_inorder4-v3b24/raw/1013_1646_trainticket-service-12](../results/1013_1645_inorder4-v3b24/raw/1013_1646_trainticket-service-12/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Object layer fully healthy: 42/42 Deployments 1/1, every Pod 2/2 Running, no Pending/FailedScheduling/FailedCreate/FailedMount/image-pull errors, no namespace ResourceQuota, every Service has endpoints (ts-route-service 10.68.191.150:11178 open on worker-01/02/03) — scheduling/startup/admission/quota stages are excluded. The single alert (HTTP 500 on ts-inside-payment-service POST /api/v1/inside_pay_service/inside_payment, 5 occurrences) traces to 5 concurrent-request NonUniqueResultException rows in ts-payment-service, a load-induced data flake that matches no injectable root cause. Auditing 
+
+### case-13
+
+- **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2121 · steps 34 · tokens 2,181,512
+- **raw 日志**：[results/1013_1810_gateway2-verify1/raw/1013_1810_trainticket-service-13](../results/1013_1810_gateway2-verify1/raw/1013_1810_trainticket-service-13/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All train-ticket workloads read clean on the object layer (deployments 1/1 AVAILABLE, pods 2/2 Running; connectivity probes to ts-gateway-service:18888, ts-ui-dashboard:8080, ts-payment-service:19001, ts-preserve-service:14568 all 'Connection Succeeded'), so the break is in the address layer. The gateway's own manifest (ConfigMap ts-gateway-service-config, application.yml) holds the route table, and one route's Path and target disagree: '- id: route / uri: lb://${USER_SERVICE_HOST:ts-user-service} / Path=/api/v1/routeservice/**' — a routeservice Path wired to ts-user-service, while every other
 
 ### case-25
 

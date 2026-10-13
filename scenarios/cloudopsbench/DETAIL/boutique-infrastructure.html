@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/infrastructure</em></h1>
-<p class="deck">已跑 <b>9/40</b> 题：JRA ✅9 ❌0 ｜ 证据链全闭 9 ｜ token 中位 93,919 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T09:27:44.512Z</p>
+<p class="deck">已跑 <b>10/40</b> 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 93,919 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T10:18:40.426Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>96,876</td><td>0</td><td>0</td><td class="muted">1012_1458_l3-verify3</td><td><a href="../results/1012_1458_l3-verify3/raw/1012_1459_boutique-infrastructure-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1459_boutique-infrastructure-1</a></td></tr>
@@ -25,6 +25,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-7"><code>7</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4545</td><td>12</td><td>77,500</td><td>0</td><td>0</td><td class="muted">1013_1623_inorder4-v3b21</td><td><a href="../results/1013_1623_inorder4-v3b21/raw/1013_1623_boutique-infrastructure-7/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1623_boutique-infrastructure-7</a></td></tr>
 <tr><td><a href="#case-8"><code>8</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4545</td><td>12</td><td>77,283</td><td>0</td><td>0</td><td class="muted">1013_1633_inorder4-v3b23</td><td><a href="../results/1013_1633_inorder4-v3b23/raw/1013_1633_boutique-infrastructure-8/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1633_boutique-infrastructure-8</a></td></tr>
 <tr><td><a href="#case-9"><code>9</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>93,919</td><td>0</td><td>0</td><td class="muted">1013_1645_inorder4-v3b24</td><td><a href="../results/1013_1645_inorder4-v3b24/raw/1013_1645_boutique-infrastructure-9/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1645_boutique-infrastructure-9</a></td></tr>
+<tr><td><a href="#case-10"><code>10</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4</td><td>11</td><td>54,365</td><td>0</td><td>0</td><td class="muted">1013_1805_inorder4-v3b26</td><td><a href="../results/1013_1805_inorder4-v3b26/raw/1013_1805_boutique-infrastructure-10/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1805_boutique-infrastructure-10</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>node/worker-01</code> + <code>containerd_unavailable</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
@@ -389,6 +390,43 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;node/worker-01&quot;,
    &quot;root_cause&quot;: &quot;node_network_packet_loss&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-10"><summary><b>case-10</b> · <code>node/worker-02</code> + <code>containerd_unavailable</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 11 步</summary><ul>
+<li><b>摘要</b>：All 5 pods scheduled on worker-02 (cartservice, checkoutservice, frontend, productcatalogservice, recommendationservice) are stuck 0/1 ContainerCreating while all worker-01 pods are Running — a node-partitioned, 'partial' outage. Pod events show 'Warning FailedCreatePodSandBox: rpc error: code = Unavailable ... dial unix /run/containerd/containerd.sock: connect: no such file or directory', and worker-02's kubelet logs repeatedly report 'Skipping pod synchronization err=container runtime is down', 'GenericPLEG: Unable to retrieve pods' and 'ImageFsInfo from image service failed' on the same mis</li>
+<li><b>raw 日志</b>：<a href="../results/1013_1805_inorder4-v3b26/raw/1013_1805_boutique-infrastructure-10/">results/1013_1805_inorder4-v3b26/raw/1013_1805_boutique-infrastructure-10</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;,&quot;top_k&quot;:2}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;,&quot;top_k&quot;:5}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;frontend-657dd795f-m6578&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;nodes&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+<tr><td>10</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;containerd&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All 5 pods scheduled on worker-02 (cartservice, checkoutservice, frontend, productcatalogservice, recommendationservice) are stuck 0/1 ContainerCreating while all worker-01 pods are Running — a node-partitioned, 'partial' outage. Pod events show 'Warning FailedCreatePodSandBox: rpc error: code = Unavailable ... dial unix /run/containerd/containerd.sock: connect: no such file or directory', and worker-02's kubelet logs repeatedly report 'Skipping pod synchronization err=container runtime is down', 'GenericPLEG: Unable to retrieve pods' and 'ImageFsInfo from image service failed' on the same missing socket. Node listing confirms worker-02 STATUS=NotReady with CONTAINER-RUNTIME containerd://Unknown (vs containerd://1.7.23 on worker-01/03), and CheckNodeServiceStatus(worker-02, containerd) shows 'Active: inactive (dead) ... Stopped containerd container runtime', while kubelet.service itself is active (running). Root cause is therefore the container runtime being unavailable on node worker-02, not a kubelet or application-level fault.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;node/worker-02&quot;,
+   &quot;root_cause&quot;: &quot;containerd_unavailable&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;node/worker-02&quot;,
+   &quot;root_cause&quot;: &quot;kubelet_unavailable&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;node/worker-02&quot;,
+   &quot;root_cause&quot;: &quot;kube_proxy_unavailable&quot;
   }
  ]
 }</pre>

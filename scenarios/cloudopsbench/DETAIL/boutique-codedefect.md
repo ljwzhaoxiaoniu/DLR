@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **10/98** 题：JRA ✅10 ❌0 ｜ 证据链全闭 10 ｜ token 中位 181,235 ｜ 生成 2026-10-13T09:27:44.512Z
+> 本家族已跑 **11/98** 题：JRA ✅11 ❌0 ｜ 证据链全闭 11 ｜ token 中位 181,235 ｜ 生成 2026-10-13T10:18:40.426Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -17,6 +17,7 @@
 | [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 254,844 | 0 | 0 | 1013_1623_inorder4-v3b21 | 全对·链闭 |
 | [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 166,187 | 0 | 0 | 1013_1633_inorder4-v3b23 | 全对·链闭 |
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 180,151 | 0 | 0 | 1013_1645_inorder4-v3b24 | 全对·链闭 |
+| [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 200,618 | 0 | 0 | 1013_1805_inorder4-v3b26 | 全对·链闭 |
 
 ## 证据正文
 
@@ -89,4 +90,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2308 · steps 14 · tokens 180,151
 - **raw 日志**：[results/1013_1645_inorder4-v3b24/raw/1013_1645_boutique-codedefect-10](../results/1013_1645_inorder4-v3b24/raw/1013_1645_boutique-codedefect-10/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom 'Service Performance Degradation.' enters the telemetry chain. GetAlerts() returns a single anomaly on entity checkoutservice: LATENCY_DEGRADATION [Slow Response], p50 18.66ms -> 3750.00ms (+19995.4%), p90 64.03ms -> 4750.00ms. Object-layer exclusion is clean: GetResources(pods, boutique) shows all 11 boutique pods 2/2 Running with RESTARTS 0, including checkoutservice-57d5fbd5f5-c9s88; GetErrorLogs(checkoutservice) returns no error logs and the container log shows a normal PlaceOrder -> payment went through -> order confirmation email sent flow; GetAppYAML(checkoutservice) shows corre
+
+### case-11
+
+- **结论**：`app/checkoutservice` + `code_memory_leak` ｜ 标签 `app/checkoutservice` + `code_memory_leak`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 200,618
+- **raw 日志**：[results/1013_1805_inorder4-v3b26/raw/1013_1805_boutique-codedefect-11](../results/1013_1805_inorder4-v3b26/raw/1013_1805_boutique-codedefect-11/)（ndjson / mcp.jsonl / meta）
+- **摘要**：boutique pods listing shows a single outlier: checkoutservice-548bb9d487-pqdm2 1/2 CrashLoopBackOff, 3 restarts, while all other 10 services are 2/2 Running with 0 restarts; Deployment checkoutservice is 0/1 AVAILABLE and CheckServiceConnectivity(checkoutservice:5050) returns 'Connection Failed'. Its pod sheet gives the mechanism: container 'server' Last State Terminated Reason=OOMKilled Exit Code=137 with limits memory 128Mi, finished 16:16:11 immediately after the last '[PlaceOrder]' log line at 16:16:10; namespace events add 'Warning BackOff: Back-off restarting failed container server in p
 
