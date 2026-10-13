@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **23/98** 题：JRA ✅23 ❌0 ｜ 证据链全闭 23 ｜ token 中位 207,400 ｜ 生成 2026-10-13T13:44:53.278Z
+> 本家族已跑 **24/98** 题：JRA ✅23 ❌1 ｜ 证据链全闭 23 ｜ token 中位 245,322 ｜ 生成 2026-10-13T13:53:12.772Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -30,6 +30,7 @@
 | [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 149,851 | 0 | 0 | 1013_2110_inorder4-v3b43 | 全对·链闭 |
 | [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 325,537 | 0 | 0 | 1013_2114_inorder4-v3b44 | 全对·链闭 |
 | [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 330,738 | 0 | 0 | 1013_2133_inorder4-v3b45 | 全对·链闭 |
+| [24](#case-24) | 0 | 0 | 0 | 0.8 | 0.4 | 0 | 0.1538 | 27 | 333,623 | 0 | 0 | 1013_2150_cod24-verify1 | 未命中 |
 
 ## 证据正文
 
@@ -193,4 +194,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 330,738
 - **raw 日志**：[results/1013_2133_inorder4-v3b45/raw/1013_2133_boutique-codedefect-23](../results/1013_2133_inorder4-v3b45/raw/1013_2133_boutique-codedefect-23/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts converge on checkoutservice: RESOURCE_SATURATION cpu_cfs 1.094s throttled, cpu 0.00->0.12 cores (+6393.5%), LATENCY_DEGRADATION p50 18.67->4334.76ms / p90 47.33->9127.39ms; frontend (its caller) shows p90 49.32->1268.67ms. Object layer excludes infra faults: all 11 boutique pods Running with RESTARTS 0, so the break is at the metric/code level; namespace events bind the mechanism to the checkoutservice instance (repeatedly re-created replica sets, liveness/readiness probe 'context deadline exceeded', 'Back-off restarting failed container server'), and frontend logs show 'failed to compl
+
+### case-24
+
+- **结论**：`node/worker-02` + `node_network_delay` ｜ 标签 `app/checkoutservice` + `code_wrong_return`（✗ 与标签不符）
+- **流程**：MC 0.8 · EOC 0.4 · ECR 0 · EE 0.1538 · steps 27 · tokens 333,623
+- **raw 日志**：[results/1013_2150_cod24-verify1/raw/1013_2150_boutique-codedefect-24](../results/1013_2150_cod24-verify1/raw/1013_2150_boutique-codedefect-24/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique workloads read 2/2 Running with 0 restarts and no Pending/pull/mount failures, so the break is not scheduling/startup/config. The symptom side localizes to the checkoutservice outbound edge: frontend error logs carry 197/6198 (3.18%) POST /cart/checkout failures with 'rpc error: code = Internal desc = failed to charge card: connect error', and the alert flags emailservice ABNORMAL / AVAILABILITY_MISSING (success_rate vanished). Both implicated callees sit on worker-02 (paymentservice 172.20.2.62, emailservice 172.20.2.61) while the caller checkoutservice runs on worker-01. Thei
 

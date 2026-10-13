@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/codedefect</em></h1>
-<p class="deck">已跑 <b>23/98</b> 题：JRA ✅23 ❌0 ｜ 证据链全闭 23 ｜ token 中位 207,400 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T13:44:53.278Z</p>
+<p class="deck">已跑 <b>24/98</b> 题：JRA ✅23 ❌1 ｜ 证据链全闭 23 ｜ token 中位 245,322 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T13:53:12.772Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3077</td><td>14</td><td>129,107</td><td>0</td><td>0</td><td class="muted">1012_1415_inorder4-v3</td><td><a href="../results/1012_1415_inorder4-v3/raw/1012_1417_boutique-codedefect-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1417_boutique-codedefect-1</a></td></tr>
@@ -39,6 +39,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-21"><code>21</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1875</td><td>17</td><td>149,851</td><td>0</td><td>0</td><td class="muted">1013_2110_inorder4-v3b43</td><td><a href="../results/1013_2110_inorder4-v3b43/raw/1013_2110_boutique-codedefect-21/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2110_boutique-codedefect-21</a></td></tr>
 <tr><td><a href="#case-22"><code>22</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2308</td><td>14</td><td>325,537</td><td>0</td><td>0</td><td class="muted">1013_2114_inorder4-v3b44</td><td><a href="../results/1013_2114_inorder4-v3b44/raw/1013_2114_boutique-codedefect-22/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2114_boutique-codedefect-22</a></td></tr>
 <tr><td><a href="#case-23"><code>23</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>16</td><td>330,738</td><td>0</td><td>0</td><td class="muted">1013_2133_inorder4-v3b45</td><td><a href="../results/1013_2133_inorder4-v3b45/raw/1013_2133_boutique-codedefect-23/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2133_boutique-codedefect-23</a></td></tr>
+<tr><td><a href="#case-24"><code>24</code></a></td><td>0</td><td>0</td><td>0</td><td>0.8</td><td>0.4</td><td>0</td><td>0.1538</td><td>27</td><td>333,623</td><td>0</td><td>0</td><td class="muted">1013_2150_cod24-verify1</td><td><a href="../results/1013_2150_cod24-verify1/raw/1013_2150_boutique-codedefect-24/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2150_boutique-codedefect-24</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/checkoutservice</code> + <code>code_wrong_argument_order</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 14 步</summary><ul>
@@ -1111,6 +1112,59 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
    &quot;root_cause&quot;: &quot;code_busy_loop&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-24"><summary><b>case-24</b> · <code>node/worker-02</code> + <code>node_network_delay</code>（✗ 与标签不符） · MC 0.8 · EOC 0.4 · ECR 0 · 27 步</summary><ul>
+<li><b>摘要</b>：All 11 boutique workloads read 2/2 Running with 0 restarts and no Pending/pull/mount failures, so the break is not scheduling/startup/config. The symptom side localizes to the checkoutservice outbound edge: frontend error logs carry 197/6198 (3.18%) POST /cart/checkout failures with 'rpc error: code = Internal desc = failed to charge card: connect error', and the alert flags emailservice ABNORMAL / AVAILABILITY_MISSING (success_rate vanished). Both implicated callees sit on worker-02 (paymentservice 172.20.2.62, emailservice 172.20.2.61) while the caller checkoutservice runs on worker-01. Thei</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2150_cod24-verify1/raw/1013_2150_boutique-codedefect-24/">results/1013_2150_cod24-verify1/raw/1013_2150_boutique-codedefect-24</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;services&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;emailservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;emailservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;emailservice&quot;,&quot;port&quot;:5000,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>15</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:50051,&quot;service_name&quot;:&quot;paymentservice&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;paymentservice&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;paymentservice&quot;}</code></td></tr>
+<tr><td>18</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>19</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>20</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;checkoutservice-789d5b7f78-z2mzl&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;pod&quot;}</code></td></tr>
+<tr><td>21</td><td><code>ListCodeFiles</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>22</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>23</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;containerd&quot;}</code></td></tr>
+<tr><td>24</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>25</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+<tr><td>26</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;emailservice&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;All 11 boutique workloads read 2/2 Running with 0 restarts and no Pending/pull/mount failures, so the break is not scheduling/startup/config. The symptom side localizes to the checkoutservice outbound edge: frontend error logs carry 197/6198 (3.18%) POST /cart/checkout failures with 'rpc error: code = Internal desc = failed to charge card: connect error', and the alert flags emailservice ABNORMAL / AVAILABILITY_MISSING (success_rate vanished). Both implicated callees sit on worker-02 (paymentservice 172.20.2.62, emailservice 172.20.2.61) while the caller checkoutservice runs on worker-01. Their object layer reads clean: checkoutservice env PAYMENT_SERVICE_ADDR=paymentservice:50051 and EMAIL_SERVICE_ADDR=emailservice:5000 match the Services' ports/targetPorts, selectors match, pods are Ready with Restart Count 0, and error logs are empty. The namespace event surface binds the mechanism to worker-02: every 'Unhealthy ... context deadline exceeded (Client.Timeout exceeded while awaiting headers)' probe failure targets a 172.20.2.x pod and repeats across all incarnations of paymentservice (172.20.2.33/.41/.48/.55/.62) and adservice (172.20.2.23/.30/.38/.45/.52), while no 172.20.1.x (worker-01) pod ever times out. worker-02 is Ready, untainted, with 8 CPU and MemoryPressure/DiskPressure/PIDPressure=False, and its kubelet/containerd/kube-proxy are all active and healthy, excluding component and capacity faults. TCP probes to paymentservice:50051 and emailservice:5000 both returned Connection Succeeded while 1s-timeout probes to the same pods failed 'awaiting headers' (handshake completed, response late) - the signature of added network latency on worker-02, not refusal, resets, service-VIP/kube-proxy breakage, or a per-pod fault.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;node/worker-02&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;node/worker-02&quot;,
+   &quot;root_cause&quot;: &quot;node_network_packet_loss&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/paymentservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
   }
  ]
 }</pre>

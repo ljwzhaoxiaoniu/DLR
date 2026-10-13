@@ -1,0 +1,41 @@
+INFO:     Started server process [24656]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:54987 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54988 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:54987 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54989 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63856 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63858 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63864 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:63864 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63864 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"emailservice"}
+INFO:     127.0.0.1:63864 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"checkoutservice"}
+INFO:     127.0.0.1:63864 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"emailservice"}
+INFO:     127.0.0.1:63864 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"emailservice","port":5000}
+INFO:     127.0.0.1:63864 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"emailservice"}
+INFO:     127.0.0.1:63864 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63864 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63864 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"checkoutservice"}
+INFO:     127.0.0.1:63864 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63864 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:63864 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"checkoutservice"}
+INFO:     127.0.0.1:63864 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"paymentservice"}
+INFO:     127.0.0.1:63864 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"paymentservice","port":50051}
+INFO:     127.0.0.1:63864 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57383 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57383 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57385 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54478 - "POST /mcp HTTP/1.1" 200 OK

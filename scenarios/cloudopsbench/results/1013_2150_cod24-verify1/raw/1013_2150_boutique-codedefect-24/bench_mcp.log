@@ -1,0 +1,49 @@
+INFO:     Started server process [25724]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:64621 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64622 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:64621 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64623 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64632 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64637 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51283 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:51283 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51292 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"emailservice"}
+INFO:     127.0.0.1:51292 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"checkoutservice"}
+INFO:     127.0.0.1:51292 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"emailservice"}
+INFO:     127.0.0.1:51292 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"emailservice","port":5000}
+INFO:     127.0.0.1:51292 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"frontend"}
+INFO:     127.0.0.1:51292 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:51292 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51292 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"checkoutservice"}
+INFO:     127.0.0.1:62153 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"paymentservice","port":50051}
+INFO:     127.0.0.1:62153 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"paymentservice"}
+INFO:     127.0.0.1:62153 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"paymentservice"}
+INFO:     127.0.0.1:62153 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:56622 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56622 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56622 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57081 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"kube-proxy"}
+INFO:     127.0.0.1:57081 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"containerd"}
+INFO:     127.0.0.1:57081 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57081 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"kubelet"}
+INFO:     127.0.0.1:52509 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"emailservice"}
+INFO:     127.0.0.1:52509 - "POST /mcp HTTP/1.1" 200 OK

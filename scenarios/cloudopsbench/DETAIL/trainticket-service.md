@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **29/37** 题：JRA ✅29 ❌0 ｜ 证据链全闭 29 ｜ token 中位 522,118 ｜ 生成 2026-10-13T13:44:53.278Z
+> 本家族已跑 **30/37** 题：JRA ✅30 ❌0 ｜ 证据链全闭 30 ｜ token 中位 522,118 ｜ 生成 2026-10-13T13:53:12.772Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -36,6 +36,7 @@
 | [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 486,562 | 0 | 0 | 1013_2110_inorder4-v3b43 | 全对·链闭 |
 | [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4211 | 20 | 325,996 | 0 | 0 | 1013_2114_inorder4-v3b44 | 全对·链闭 |
 | [30](#case-30) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 21 | 522,118 | 0 | 0 | 1013_2133_inorder4-v3b45 | 全对·链闭 |
+| [31](#case-31) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 500,404 | 0 | 0 | 1013_2141_inorder4-v3b46 | 全对·链闭 |
 
 ## 证据正文
 
@@ -241,4 +242,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 21 · tokens 522,118
 - **raw 日志**：[results/1013_2133_inorder4-v3b45/raw/1013_2137_trainticket-service-30](../results/1013_2133_inorder4-v3b45/raw/1013_2137_trainticket-service-30/)（ndjson / mcp.jsonl / meta）
 - **摘要**：ts-price-service is the only outlier workload (pod ts-price-service-69f6579f8-xv9gc, 0/2 READY, STATUS Error, 4 restarts, CrashLoopBackOff with Last State Terminated exit code 1 on node worker-01). Its container log shows 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' during HikariPool/Hibernate initialization, so the failure is at name resolution, not at the database: the Service tsdb-mysql-leader (10.68.188.173:3306) exists and a TCP probe from debug pods on worker-01/02/03 returns 'Connection Succeeded' on all three nodes, and a probe on the victim'
+
+### case-31
+
+- **结论**：`app/ts-route-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-route-service` + `service_dns_resolution_failure`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3158 · steps 20 · tokens 500,404
+- **raw 日志**：[results/1013_2141_inorder4-v3b46/raw/1013_2147_trainticket-service-31](../results/1013_2141_inorder4-v3b46/raw/1013_2147_trainticket-service-31/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Inventory: pod/ts-route-service-6d9b8cb654-wjpjn is the sole outlier (0/2, Error, CrashLoopBackOff, restart 4), and endpoints/ts-route-service is empty; a probe on its Service port 11178 fails from worker-01/02/03 while the identically-shaped ts-travel-service:12346 succeeds -> partial unreachability isolated to one service. Its previous log dies on java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution (CJCommunicationsException -> HikariPool-1 init failure -> Hibernate SessionFactory -> exit code 1), and its istio-proxy shows the same address-layer break (look
 

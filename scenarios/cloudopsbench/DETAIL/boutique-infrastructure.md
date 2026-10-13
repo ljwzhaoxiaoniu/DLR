@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **22/40** 题：JRA ✅22 ❌0 ｜ 证据链全闭 22 ｜ token 中位 127,921 ｜ 生成 2026-10-13T13:44:53.278Z
+> 本家族已跑 **23/40** 题：JRA ✅23 ❌0 ｜ 证据链全闭 23 ｜ token 中位 127,753 ｜ 生成 2026-10-13T13:53:12.772Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -29,6 +29,7 @@
 | [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1111 | 28 | 177,400 | 0.037 | 0 | 1013_2110_inorder4-v3b43 | 全对·链闭 |
 | [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0909 | 34 | 399,815 | 0 | 0 | 1013_2114_inorder4-v3b44 | 全对·链闭 |
 | [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1429 | 22 | 155,346 | 0 | 0 | 1013_2143_inf22-verify2 | 全对·链闭 |
+| [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 92,595 | 0 | 0 | 1013_2141_inorder4-v3b46 | 全对·链闭 |
 
 ## 证据正文
 
@@ -185,4 +186,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1429 · steps 22 · tokens 155,346
 - **raw 日志**：[results/1013_2143_inf22-verify2/raw/1013_2143_boutique-infrastructure-22](../results/1013_2143_inf22-verify2/raw/1013_2143_boutique-infrastructure-22/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Reachability chain closed on currencyservice: its Endpoints are '<none>' while every other boutique service is bound, a TCP probe on its declared port 7000 fails, and frontend caller logs show 388 errors 'dial tcp 10.68.249.177:7000: connect: connection refused'. The workload outlier is pod currencyservice-5c6fdf7ccb-tc4gk (0/1 Pending) with deployment currencyservice 0/1 AVAILABLE; the pod's own sheet shows 'Node: <none>' and 'Events: <none>' with NO '0/N nodes are available' scheduling line, meaning no scheduling attempt was ever made. The control plane is the break: CheckNodeServiceStatus(m
+
+### case-23
+
+- **结论**：`node/master` + `kube_scheduler_unavailable` ｜ 标签 `node/master` + `kube_scheduler_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 16 · tokens 92,595
+- **raw 日志**：[results/1013_2141_inorder4-v3b46/raw/1013_2143_boutique-infrastructure-23](../results/1013_2141_inorder4-v3b46/raw/1013_2143_boutique-infrastructure-23/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only emailservice is anomalous: pod emailservice-c86b9b8f6-92zg7 is Pending on 1/1 replicas while all other 10 boutique pods are 1/1 Running. Its own sheet shows Node: <none>, Status: Pending, Events: <none> and NO '0/N nodes are available' scheduling condition, while GetClusterConfiguration shows worker-01/02/03 all Ready with no taints (only master carries the by-design unschedulable taint) -> nothing ever attempted to schedule it. The control-plane read closes it: CheckNodeServiceStatus(master, kube-scheduler) = 'Active: inactive (dead) since Tue 2025-12-02 21:23:01 CST', 'Stopped Kubernete
 

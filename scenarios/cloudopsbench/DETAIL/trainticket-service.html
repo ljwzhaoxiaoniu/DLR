@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/service</em></h1>
-<p class="deck">已跑 <b>29/37</b> 题：JRA ✅29 ❌0 ｜ 证据链全闭 29 ｜ token 中位 522,118 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T13:44:53.278Z</p>
+<p class="deck">已跑 <b>30/37</b> 题：JRA ✅30 ❌0 ｜ 证据链全闭 30 ｜ token 中位 522,118 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T13:53:12.772Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-2"><code>2</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3158</td><td>20</td><td>681,352</td><td>0</td><td>0</td><td class="muted">1012_2010_attr-verify1</td><td><a href="../results/1012_2010_attr-verify1/raw/1012_2010_trainticket-service-2/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_2010_trainticket-service-2</a></td></tr>
@@ -45,6 +45,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-28"><code>28</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2941</td><td>18</td><td>486,562</td><td>0</td><td>0</td><td class="muted">1013_2110_inorder4-v3b43</td><td><a href="../results/1013_2110_inorder4-v3b43/raw/1013_2112_trainticket-service-28/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2112_trainticket-service-28</a></td></tr>
 <tr><td><a href="#case-29"><code>29</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4211</td><td>20</td><td>325,996</td><td>0</td><td>0</td><td class="muted">1013_2114_inorder4-v3b44</td><td><a href="../results/1013_2114_inorder4-v3b44/raw/1013_2118_trainticket-service-29/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2118_trainticket-service-29</a></td></tr>
 <tr><td><a href="#case-30"><code>30</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.25</td><td>21</td><td>522,118</td><td>0</td><td>0</td><td class="muted">1013_2133_inorder4-v3b45</td><td><a href="../results/1013_2133_inorder4-v3b45/raw/1013_2137_trainticket-service-30/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2137_trainticket-service-30</a></td></tr>
+<tr><td><a href="#case-31"><code>31</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3158</td><td>20</td><td>500,404</td><td>0</td><td>0</td><td class="muted">1013_2141_inorder4-v3b46</td><td><a href="../results/1013_2141_inorder4-v3b46/raw/1013_2147_trainticket-service-31/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2147_trainticket-service-31</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-2"><summary><b>case-2</b> · <code>app/ts-gateway-service</code> + <code>gateway_misrouted</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 20 步</summary><ul>
@@ -1434,6 +1435,52 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;node/worker-01&quot;,
    &quot;root_cause&quot;: &quot;node_network_packet_loss&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-31"><summary><b>case-31</b> · <code>app/ts-route-service</code> + <code>service_dns_resolution_failure</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 20 步</summary><ul>
+<li><b>摘要</b>：Inventory: pod/ts-route-service-6d9b8cb654-wjpjn is the sole outlier (0/2, Error, CrashLoopBackOff, restart 4), and endpoints/ts-route-service is empty; a probe on its Service port 11178 fails from worker-01/02/03 while the identically-shaped ts-travel-service:12346 succeeds -&gt; partial unreachability isolated to one service. Its previous log dies on java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution (CJCommunicationsException -&gt; HikariPool-1 init failure -&gt; Hibernate SessionFactory -&gt; exit code 1), and its istio-proxy shows the same address-layer break (look</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2141_inorder4-v3b46/raw/1013_2147_trainticket-service-31/">results/1013_2141_inorder4-v3b46/raw/1013_2147_trainticket-service-31</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-route-service&quot;,&quot;output_yaml&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;name&quot;:&quot;ts-route-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-route-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-route-service&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-route-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;kube-system&quot;,&quot;resource_type&quot;:&quot;services&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>14</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-route-service-6d9b8cb654-wjpjn&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-route-plan-service&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-route-plan-service&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>18</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-route-service&quot;,&quot;port&quot;:11178,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>19</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-travel-service&quot;,&quot;port&quot;:12346,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Inventory: pod/ts-route-service-6d9b8cb654-wjpjn is the sole outlier (0/2, Error, CrashLoopBackOff, restart 4), and endpoints/ts-route-service is empty; a probe on its Service port 11178 fails from worker-01/02/03 while the identically-shaped ts-travel-service:12346 succeeds -&gt; partial unreachability isolated to one service. Its previous log dies on java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution (CJCommunicationsException -&gt; HikariPool-1 init failure -&gt; Hibernate SessionFactory -&gt; exit code 1), and its istio-proxy shows the same address-layer break (lookup istiod.istio-system.svc on 10.255.11.254:53: i/o timeout, x68 errors, proxy not Ready). Config face: GetAppYAML(ts-route-service) uniquely sets dnsPolicy: None with dnsConfig.nameservers [10.255.11.254], an address outside the cluster service CIDR (all ClusterIPs are 10.68.0.0/16), so every lookup from this pod times out. Healthy peer ts-travel-service has no DNS override and uses the same DB host tsdb-mysql-leader (Service 10.68.188.173:3306, tsdb-mysql pods 4/4 Running), so the DB/address reference is valid and only resolution is broken; worker-01 co-tenants are all 2/2 Running, excluding a node-wide fault. Events bind the mechanism verbatim to that pod: 'Startup probe failed: dial tcp 172.20.1.67:15021: connect: connection refused (x310)'. Alerts on ts-preserve-service /preserve 500 sit on the gateway-&gt;travel-plan-&gt;route-plan-&gt;ts-route-service path, consistent with this drained leaf.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-route-service&quot;,
+   &quot;root_cause&quot;: &quot;service_dns_resolution_failure&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;node/worker-01&quot;,
+   &quot;root_cause&quot;: &quot;node_network_packet_loss&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-route-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
   }
  ]
 }</pre>
