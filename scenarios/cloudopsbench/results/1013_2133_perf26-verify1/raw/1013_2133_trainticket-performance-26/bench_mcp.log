@@ -1,0 +1,21 @@
+INFO:     Started server process [14868]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:65023 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65024 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:65023 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65025 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65032 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65034 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:65328 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-preserve-service"}
+INFO:     127.0.0.1:65340 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65340 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65340 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:65340 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52625 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:52625 - "POST /mcp HTTP/1.1" 200 OK

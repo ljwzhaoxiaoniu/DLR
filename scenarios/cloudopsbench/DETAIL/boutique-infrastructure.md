@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **20/40** 题：JRA ✅20 ❌0 ｜ 证据链全闭 20 ｜ token 中位 127,753 ｜ 生成 2026-10-13T13:13:39.005Z
+> 本家族已跑 **21/40** 题：JRA ✅21 ❌0 ｜ 证据链全闭 21 ｜ token 中位 127,753 ｜ 生成 2026-10-13T13:35:55.674Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -27,6 +27,7 @@
 | [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 21 | 131,291 | 0 | 0 | 1013_2059_inorder4-v3b41 | 全对·链闭 |
 | [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.12 | 26 | 208,511 | 0 | 0 | 1013_2106_inorder4-v3b42 | 全对·链闭 |
 | [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1111 | 28 | 177,400 | 0.037 | 0 | 1013_2110_inorder4-v3b43 | 全对·链闭 |
+| [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0909 | 34 | 399,815 | 0 | 0 | 1013_2114_inorder4-v3b44 | 全对·链闭 |
 
 ## 证据正文
 
@@ -169,4 +170,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1111 · steps 28 · tokens 177,400
 - **raw 日志**：[results/1013_2110_inorder4-v3b43/raw/1013_2110_boutique-infrastructure-20](../results/1013_2110_inorder4-v3b43/raw/1013_2110_boutique-infrastructure-20/)（ndjson / mcp.jsonl / meta）
 - **摘要**：boutique inventory has exactly one outlier: pod cartservice-79b49f5555-mmhv4 (0/1 Pending, Node:<none>, Events:<none>), while the other 10 workloads are 1/1 Running. Service-side signal confirms the disruption: CheckServiceConnectivity(cartservice:7070)=Connection Failed, deployment cartservice 0/1 available (Available=False MinimumReplicasUnavailable), so the cartservice Service has no ready endpoints. The break is the scheduler: CheckNodeServiceStatus(master, kube-scheduler) shows 'Active: inactive (dead) since Tue 2025-12-02 21:13:59 CST' with 'Scheduling queue is closed' / 'Requested to te
+
+### case-21
+
+- **结论**：`node/master` + `kube_scheduler_unavailable` ｜ 标签 `node/master` + `kube_scheduler_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.0909 · steps 34 · tokens 399,815
+- **raw 日志**：[results/1013_2114_inorder4-v3b44/raw/1013_2114_boutique-infrastructure-21](../results/1013_2114_inorder4-v3b44/raw/1013_2114_boutique-infrastructure-21/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side: frontend caller logs show 'failed to complete the order: ... dial tcp 10.68.129.244:5050: connect: connection refused' (checkoutservice ClusterIP) and CheckServiceConnectivity(checkoutservice:5050) returns 'Connection Failed' - only 1 of 11 services is unreachable. Object layer: the single outlier pod checkoutservice-8445f8b6cb-58chn is 0/1 Pending with Node:<none>, and its own Events are empty (no scheduling event at all); owner chain deployment/checkoutservice is 0/1 available (Available=False MinimumReplicasUnavailable), RS 1 current/1 desired / 1 Waiting. Scheduling blockers 
 

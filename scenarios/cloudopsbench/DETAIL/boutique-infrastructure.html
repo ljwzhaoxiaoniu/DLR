@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/infrastructure</em></h1>
-<p class="deck">已跑 <b>20/40</b> 题：JRA ✅20 ❌0 ｜ 证据链全闭 20 ｜ token 中位 127,753 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T13:13:39.005Z</p>
+<p class="deck">已跑 <b>21/40</b> 题：JRA ✅21 ❌0 ｜ 证据链全闭 21 ｜ token 中位 127,753 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T13:35:55.674Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2857</td><td>15</td><td>96,876</td><td>0</td><td>0</td><td class="muted">1012_1458_l3-verify3</td><td><a href="../results/1012_1458_l3-verify3/raw/1012_1459_boutique-infrastructure-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1459_boutique-infrastructure-1</a></td></tr>
@@ -36,6 +36,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-18"><code>18</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4</td><td>21</td><td>131,291</td><td>0</td><td>0</td><td class="muted">1013_2059_inorder4-v3b41</td><td><a href="../results/1013_2059_inorder4-v3b41/raw/1013_2101_boutique-infrastructure-18/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2101_boutique-infrastructure-18</a></td></tr>
 <tr><td><a href="#case-19"><code>19</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.12</td><td>26</td><td>208,511</td><td>0</td><td>0</td><td class="muted">1013_2106_inorder4-v3b42</td><td><a href="../results/1013_2106_inorder4-v3b42/raw/1013_2106_boutique-infrastructure-19/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2106_boutique-infrastructure-19</a></td></tr>
 <tr><td><a href="#case-20"><code>20</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1111</td><td>28</td><td>177,400</td><td>0.037</td><td>0</td><td class="muted">1013_2110_inorder4-v3b43</td><td><a href="../results/1013_2110_inorder4-v3b43/raw/1013_2110_boutique-infrastructure-20/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2110_boutique-infrastructure-20</a></td></tr>
+<tr><td><a href="#case-21"><code>21</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.0909</td><td>34</td><td>399,815</td><td>0</td><td>0</td><td class="muted">1013_2114_inorder4-v3b44</td><td><a href="../results/1013_2114_inorder4-v3b44/raw/1013_2114_boutique-infrastructure-21/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2114_boutique-infrastructure-21</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>node/worker-01</code> + <code>containerd_unavailable</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
@@ -953,6 +954,66 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
   {
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;node_cordon_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-21"><summary><b>case-21</b> · <code>node/master</code> + <code>kube_scheduler_unavailable</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 34 步</summary><ul>
+<li><b>摘要</b>：Symptom side: frontend caller logs show 'failed to complete the order: ... dial tcp 10.68.129.244:5050: connect: connection refused' (checkoutservice ClusterIP) and CheckServiceConnectivity(checkoutservice:5050) returns 'Connection Failed' - only 1 of 11 services is unreachable. Object layer: the single outlier pod checkoutservice-8445f8b6cb-58chn is 0/1 Pending with Node:&lt;none&gt;, and its own Events are empty (no scheduling event at all); owner chain deployment/checkoutservice is 0/1 available (Available=False MinimumReplicasUnavailable), RS 1 current/1 desired / 1 Waiting. Scheduling blockers </li>
+<li><b>raw 日志</b>：<a href="../results/1013_2114_inorder4-v3b44/raw/1013_2114_boutique-infrastructure-21/">results/1013_2114_inorder4-v3b44/raw/1013_2114_boutique-infrastructure-21</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>6</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;checkoutservice-8445f8b6cb-58chn&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;nodes&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>8</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;serviceaccounts&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;replicasets&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;label_selector&quot;:&quot;app=checkoutservice&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;label_selector&quot;:&quot;app=checkoutservice&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>15</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;master&quot;,&quot;service_name&quot;:&quot;kube-scheduler&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>17</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;,&quot;port&quot;:5050,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>18</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;deployment&quot;,&quot;name&quot;:&quot;checkoutservice&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>19</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;kube-system&quot;}</code></td></tr>
+<tr><td>20</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>21</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>22</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;replicaset&quot;,&quot;name&quot;:&quot;checkoutservice-8445f8b6cb&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>23</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;master&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+<tr><td>24</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+<tr><td>25</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;master&quot;,&quot;service_name&quot;:&quot;containerd&quot;}</code></td></tr>
+<tr><td>26</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>27</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>28</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>29</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-ui-dashboard&quot;}</code></td></tr>
+<tr><td>30</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-ui-dashboard&quot;,&quot;port&quot;:8080,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>31</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;master&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>32</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>33</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-03&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom side: frontend caller logs show 'failed to complete the order: ... dial tcp 10.68.129.244:5050: connect: connection refused' (checkoutservice ClusterIP) and CheckServiceConnectivity(checkoutservice:5050) returns 'Connection Failed' - only 1 of 11 services is unreachable. Object layer: the single outlier pod checkoutservice-8445f8b6cb-58chn is 0/1 Pending with Node:&lt;none&gt;, and its own Events are empty (no scheduling event at all); owner chain deployment/checkoutservice is 0/1 available (Available=False MinimumReplicasUnavailable), RS 1 current/1 desired / 1 Waiting. Scheduling blockers were excluded: all 4 nodes Ready, workers untainted, no nodeSelector/affinity/anti-affinity, no volumes/PVC, ample allocatable capacity (8 CPU / ~15Gi per node, ~600m used). Break point: CheckNodeServiceStatus(master, kube-scheduler) is 'Active: inactive (dead) since Tue 2025-12-02 21:17:00' with 'Stopped Kubernetes Scheduler', while master kubelet/containerd/kube-proxy and worker-01/worker-03 kubelet/kube-proxy are all active (running, 6h) - the scheduler is the only stopped critical component, so the pod is created but can never be bound. The namespace Warning event 'FailedCreate: serviceaccount \&quot;checkoutservice\&quot; not found' was only a transient: the SA now exists in the serviceaccounts listing and the RS recorded 'SuccessfulCreate', so admission is no longer the blocker; the unreachability persists at the binding stage.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;node/master&quot;,
+   &quot;root_cause&quot;: &quot;kube_scheduler_unavailable&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
    &quot;root_cause&quot;: &quot;node_cordon_mismatch&quot;
   }
  ]

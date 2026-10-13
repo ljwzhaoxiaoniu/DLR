@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **25/47** 题：JRA ✅25 ❌0 ｜ 证据链全闭 25 ｜ token 中位 301,957 ｜ 生成 2026-10-13T13:13:39.005Z
+> 本家族已跑 **26/47** 题：JRA ✅26 ❌0 ｜ 证据链全闭 26 ｜ token 中位 301,957 ｜ 生成 2026-10-13T13:35:55.674Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -32,6 +32,7 @@
 | [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 150,648 | 0 | 0 | 1013_2059_inorder4-v3b41 | 全对·链闭 |
 | [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1538 | 14 | 343,773 | 0 | 0 | 1013_2106_inorder4-v3b42 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 322,359 | 0 | 0 | 1013_2110_inorder4-v3b43 | 全对·链闭 |
+| [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 11 | 185,640 | 0.1 | 0 | 1013_2133_perf26-verify1 | 全对·链闭 |
 
 ## 证据正文
 
@@ -209,4 +210,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2778 · steps 19 · tokens 322,359
 - **raw 日志**：[results/1013_2110_inorder4-v3b43/raw/1013_2112_trainticket-performance-25](../results/1013_2110_inorder4-v3b43/raw/1013_2112_trainticket-performance-25/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Metric-surface wording: GetAlerts shows the epicenter is ts-payment-service with the runaway deviation — LATENCY_DEGRADATION p50 16.12ms -> 6477.27ms (+40069.1%), p90 23.25 -> 9295.45ms (+39880.5%) plus ERROR_SPIKE success 100% -> 81.7%; its caller ts-inside-payment-service shows only the rippled rise (p90 518.75 -> 7625ms, +1369.9%), and ts-order-service's bare RESOURCE_SATURATION cpu_cfs 0.836s row carries no latency of its own (collateral noise, not the case). GetServiceDependencies(ts-payment-service) shows it is a LEAF ('No downstream calls'), so nothing downstream can explain its own 40x
+
+### case-26
+
+- **结论**：`app/ts-preserve-service` + `pod_network_delay` ｜ 标签 `app/ts-preserve-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4 · steps 11 · tokens 185,640
+- **raw 日志**：[results/1013_2133_perf26-verify1/raw/1013_2133_trainticket-performance-26](../results/1013_2133_perf26-verify1/raw/1013_2133_trainticket-performance-26/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts in window 11:46:04~11:47:54 show ts-preserve-service as the only LATENCY_DEGRADATION row moving BOTH percentiles (p50 3571.43ms->8453.99ms +136.7%, p90 10500.00ms->23627.85ms +125.0%) = the epicenter; ts-basic-service and ts-food-service moved only p90 (49.15->1145.55ms, 23.50->1750.00ms) i.e. partial-traffic ripples, and every one of them is a direct graph neighbor of ts-preserve-service (GetServiceDependencies: downstream ts-basic/ts-food/ts-order/ts-assurance), so no quiet intermediate hop is needed. The ts-order-service cpu_cfs throttled row and the ts-assurance-service cpu core +68
 
