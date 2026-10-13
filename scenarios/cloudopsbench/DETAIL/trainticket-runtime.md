@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **15/96** 题：JRA ✅15 ❌0 ｜ 证据链全闭 15 ｜ token 中位 521,337 ｜ 生成 2026-10-13T10:42:30.373Z
+> 本家族已跑 **16/96** 题：JRA ✅16 ❌0 ｜ 证据链全闭 16 ｜ token 中位 521,337 ｜ 生成 2026-10-13T10:47:17.868Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -22,6 +22,7 @@
 | [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2759 | 30 | 476,723 | 0 | 0 | 1013_1656_inorder4-v3b25 | 全对·链闭 |
 | [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3684 | 39 | 875,225 | 0 | 0 | 1013_1810_inorder4-v3b27 | 全对·链闭 |
 | [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2692 | 27 | 490,757 | 0 | 0 | 1013_1834_inorder4-v3b30 | 全对·链闭 |
+| [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1538 | 14 | 260,976 | 0 | 1 | 1013_1845_triple-verify1 | 全对·链闭 |
 
 ## 证据正文
 
@@ -129,4 +130,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2692 · steps 27 · tokens 490,757
 - **raw 日志**：[results/1013_1834_inorder4-v3b30/raw/1013_1836_trainticket-runtime-15](../results/1013_1834_inorder4-v3b30/raw/1013_1836_trainticket-runtime-15/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All train-ticket pods are Running and 1/1 ready (no restarts, no Pending/FailedScheduling/FailedCreate/FailedMount/image-pull events), and tsdb-mysql-leader:3306 is TCP-open from worker-01/02/03, so the break is not scheduling, networking, DNS, Service-selector or port mapping. The alerts (Process payment / Create ticket order, 500) are only pointers; the caller-side logs descend one leaf: ts-payment-service logs 'SQL Error: 1290, SQLState: HY000' + 'The MySQL server is running with the --read-only option so it cannot execute this statement' (67x) and ts-order-service logs the identical 1290/r
+
+### case-16
+
+- **结论**：`app/ts-assurance-service` + `deployment_zero_replicas` ｜ 标签 `app/ts-assurance-service` + `deployment_zero_replicas`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1538 · steps 14 · tokens 260,976
+- **raw 日志**：[results/1013_1845_triple-verify1/raw/1013_1846_trainticket-runtime-16](../results/1013_1845_triple-verify1/raw/1013_1846_trainticket-runtime-16/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert: GET /api/v1/assuranceservice/assurances/types -> 'HTTPError(503 Server Error: Service Unavailable)' on entry service ts-assurance-service. Inventory: no ts-assurance-service pod exists while every other train-ticket workload is 2/2 Running with 0 restarts. Victim signal: endpoints/ts-assurance-service = <none>, and caller-side ts-gateway-service logs repeat 'No servers available for service: ts-assurance-service'. Workload break: Deployment ts-assurance-service spec.replicas=0 (generation 2) although its stored last-applied config and GetAppYAML specify replicas=1. Mechanism event: 'Sca
 

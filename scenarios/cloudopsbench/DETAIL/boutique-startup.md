@@ -1,6 +1,6 @@
 # 评测明细 · boutique/startup — cloudopsbench
 
-> 本家族已跑 **4/62** 题：JRA ✅4 ❌0 ｜ 证据链全闭 4 ｜ token 中位 83,339 ｜ 生成 2026-10-13T10:42:30.373Z
+> 本家族已跑 **5/62** 题：JRA ✅5 ❌0 ｜ 证据链全闭 5 ｜ token 中位 66,407 ｜ 生成 2026-10-13T10:47:17.868Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -11,6 +11,7 @@
 | [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 186,507 | 0 | 0 | 1012_2040_inorder4-v3b8 | 全对·链闭 |
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 83,339 | 0 | 0 | 1013_1245_imagecls-verify1 | 全对·链闭 |
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 66,407 | 0 | 0 | 1013_1503_inorder4-v3b16 | 全对·链闭 |
+| [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 13 | 65,786 | 0 | 0 | 1013_1842_inorder4-v3b32 | 全对·链闭 |
 
 ## 证据正文
 
@@ -41,4 +42,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 12 · tokens 66,407
 - **raw 日志**：[results/1013_1503_inorder4-v3b16/raw/1013_1504_boutique-startup-4](../results/1013_1503_inorder4-v3b16/raw/1013_1504_boutique-startup-4/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Symptom side: CheckServiceConnectivity(frontend:80) returned 'Connection Failed' while all 11 other boutique services remained healthy, and the deployments listing showed only 'frontend 0/1 AVAILABLE'. Object layer: pod frontend-7968b59db9-zs7zp was the unique outlier (0/1 ErrImagePull, then ImagePullBackOff) on worker-03, with PodScheduled=True so no scheduling/capacity cause. Mechanism event (kubelet on worker-03): 'Failed to pull image "ghost-registry.example.net/google-samples/microservices-demo/frontend:v0.10.3": ... dial tcp: lookup ghost-registry.example.net on 127.0.0.53:53: no such ho
+
+### case-5
+
+- **结论**：`app/productcatalogservice` + `image_registry_dns_failure` ｜ 标签 `app/productcatalogservice` + `image_registry_dns_failure`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 13 · tokens 65,786
+- **raw 日志**：[results/1013_1842_inorder4-v3b32/raw/1013_1843_boutique-startup-5](../results/1013_1842_inorder4-v3b32/raw/1013_1843_boutique-startup-5/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only one workload is out: pods listing shows productcatalogservice-67655fb89c-jmg58 at 0/1 with STATUS ErrImagePull/ImagePullBackOff, and its owner deployment app=productcatalogservice reports 0/1 READY, 0 AVAILABLE; all other 10 boutique services are 1/1 Running. This matches the 'partial' nature of the symptom: productcatalogservice's Service has NO endpoints bound (GetResources endpoints → empty ENDPOINTS) and an active probe on its declared port 3550 fails (CheckServiceConnectivity productcatalogservice:3550 → Connection Failed), so no container ever became Ready. The kubelet mechanism eve
 

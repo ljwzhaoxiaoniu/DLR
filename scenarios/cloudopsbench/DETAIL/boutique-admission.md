@@ -1,6 +1,6 @@
 # 评测明细 · boutique/admission — cloudopsbench
 
-> 本家族已跑 **6/58** 题：JRA ✅6 ❌0 ｜ 证据链全闭 5 ｜ token 中位 82,218 ｜ 生成 2026-10-13T10:42:30.373Z
+> 本家族已跑 **7/58** 题：JRA ✅7 ❌0 ｜ 证据链全闭 6 ｜ token 中位 82,218 ｜ 生成 2026-10-13T10:47:17.868Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -13,6 +13,7 @@
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5833 | 13 | 68,497 | 0 | 0 | 1012_1935_tidy-verify1 | 全对·链闭 |
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5 | 15 | 82,218 | 0 | 0 | 1013_1458_chainhead-verify2c | 全对·链闭 |
 | [6](#case-6) | 1 | 1 | 1 | 0.75 | 0 | 0 | 0.4545 | 12 | 67,891 | 0 | 0 | 1013_1515_workload-verify2 | 结果对·链未闭 |
+| [7](#case-7) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.5 | 13 | 85,806 | 0 | 0 | 1013_1845_triple-verify1 | 全对·链闭 |
 
 ## 证据正文
 
@@ -57,4 +58,11 @@
 - **流程**：MC 0.75 · EOC 0 · ECR 0 · EE 0.4545 · steps 12 · tokens 67,891
 - **raw 日志**：[results/1013_1515_workload-verify2/raw/1013_1515_boutique-admission-6](../results/1013_1515_workload-verify2/raw/1013_1515_boutique-admission-6/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Inventory entry: frontend is the only workload with no pod at all — GetResources(pods) lists 10 boutique services Running 1/1 but zero frontend-* pods. Workload state confirms it is drained (deployment frontend 0/1 READY, UP-TO-DATE 0, AVAILABLE 0) with Conditions ReplicaFailure=True / reason FailedCreate and NewReplicaSet frontend-fbbd6d5f5 (0/1 replicas created). The mechanism event names the object verbatim: 'Warning FailedCreate replicaset/frontend-fbbd6d5f5 — Error creating: pods "frontend-fbbd6d5f5-" is forbidden: error looking up service account boutique/frontend-missing: serviceaccount
+
+### case-7
+
+- **结论**：`app/paymentservice` + `missing_service_account` ｜ 标签 `app/paymentservice` + `missing_service_account`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.25 · ECR 1 · EE 0.5 · steps 13 · tokens 85,806
+- **raw 日志**：[results/1013_1845_triple-verify1/raw/1013_1845_boutique-admission-7](../results/1013_1845_triple-verify1/raw/1013_1845_boutique-admission-7/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Reachability chain walked from the inventory entry (no service named in the symptom): all 10 running pods were 1/1 Running with 0 restarts, but the deployments listing showed the single outlier 'paymentservice 0/1 0 0' — no Pod ever created — and its Service was the only one with empty endpoints ('paymentservice <none>'), while its selector (app=paymentservice) and port (50051) were correct. The namespace events surface handed over the mechanism literally: 'Warning FailedCreate replicaset/paymentservice-f8f957d54 Error creating: pods "paymentservice-f8f957d54-" is forbidden: error looking up s
 
