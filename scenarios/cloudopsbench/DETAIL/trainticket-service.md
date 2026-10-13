@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **19/37** 题：JRA ✅19 ❌0 ｜ 证据链全闭 19 ｜ token 中位 666,312 ｜ 生成 2026-10-13T12:03:34.899Z
+> 本家族已跑 **20/37** 题：JRA ✅20 ❌0 ｜ 证据链全闭 20 ｜ token 中位 666,312 ｜ 生成 2026-10-13T12:07:15.900Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -25,6 +25,7 @@
 | [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 21 | 382,197 | 0 | 0 | 1013_1848_inorder4-v3b33 | 全对·链闭 |
 | [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.24 | 26 | 1,087,938 | 0 | 0 | 1013_1955_inorder4-v3b34 | 全对·链闭 |
 | [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 414,398 | 0 | 0 | 1013_2000_inorder4-v3b35 | 全对·链闭 |
+| [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 296,753 | 0 | 0 | 1013_2004_inorder4-v3b36 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
 
 ## 证据正文
@@ -154,6 +155,13 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 19 · tokens 414,398
 - **raw 日志**：[results/1013_2000_inorder4-v3b35/raw/1013_2002_trainticket-service-19](../results/1013_2000_inorder4-v3b35/raw/1013_2002_trainticket-service-19/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alert: 503 Service Unavailable on POST /api/v1/travelservice/trips/left (entry_service ts-travel-service, 10 occurrences). ts-ui-dashboard nginx access log reproduces it verbatim ('POST /api/v1/travelservice/trips/left HTTP/1.1" 503 153', 16:00:30-32), and ts-gateway-service logs at the same second: 'WARN RoundRobinLoadBalancer : No servers available for service: ts-nonexistent-travel-backend'. The gateway's own route table (ConfigMap ts-gateway-service-config, mounted into ts-gateway-service) carries the mis-wired entry: route id 'travel', Path=/api/v1/travelservice/**, uri=lb://ts-nonexisten
+
+### case-20
+
+- **结论**：`app/ts-assurance-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-assurance-service` + `service_dns_resolution_failure`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 296,753
+- **raw 日志**：[results/1013_2004_inorder4-v3b36/raw/1013_2006_trainticket-service-20](../results/1013_2004_inorder4-v3b36/raw/1013_2006_trainticket-service-20/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom: ts-assurance-service returns 503 (alert: GET /api/v1/assuranceservice/assurances/types, 17 occurrences). Pod inventory outlier: ts-assurance-service-7d97f6cf77-xw4dz 0/2 CrashLoopBackOff, 4 restarts; all other workloads 2/2 Running. Service ts-assurance-service (port 18888 -> targetPort 18888, selector app=ts-assurance-service) has an EMPTY endpoints list, explaining the 503. Container logs: 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' -> HikariPool init failure -> Exit Code 1. The sidecar in the same pod pins the break to the resolver: 'dia
 
 ### case-25
 

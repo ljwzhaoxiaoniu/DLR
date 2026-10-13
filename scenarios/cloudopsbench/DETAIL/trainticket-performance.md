@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **17/47** 题：JRA ✅17 ❌0 ｜ 证据链全闭 17 ｜ token 中位 304,738 ｜ 生成 2026-10-13T12:03:34.899Z
+> 本家族已跑 **18/47** 题：JRA ✅18 ❌0 ｜ 证据链全闭 18 ｜ token 中位 304,738 ｜ 生成 2026-10-13T12:07:15.900Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -24,6 +24,7 @@
 | [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 197,634 | 0 | 0 | 1013_1855_multi2-verify1 | 全对·链闭 |
 | [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 188,088 | 0 | 0 | 1013_1955_inorder4-v3b34 | 全对·链闭 |
 | [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 195,228 | 0 | 0 | 1013_2000_inorder4-v3b35 | 全对·链闭 |
+| [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 17 | 258,590 | 0 | 0 | 1013_2004_inorder4-v3b36 | 全对·链闭 |
 
 ## 证据正文
 
@@ -145,4 +146,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 195,228
 - **raw 日志**：[results/1013_2000_inorder4-v3b35/raw/1013_2000_trainticket-performance-17](../results/1013_2000_inorder4-v3b35/raw/1013_2000_trainticket-performance-17/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Alerts name ts-assurance-service with LATENCY_DEGRADATION [Slow Response]: p90 7.86ms -> 2112.50ms (+26762.9%), peak 2167.35ms - a fixed ~2.1s additive delay on that service's own latency, with no saturation row of its own; the only other alert is a bare RESOURCE_SATURATION [cpu_cfs] 0.255s on ts-order-service, which has no latency deviation of its own (collateral noise per L3). ts-assurance-service is a leaf service (GetServiceDependencies: no downstream calls), so no downstream server-side latency can explain the shift; TCP connectivity to ts-assurance-service:18888 succeeds from worker-01/0
+
+### case-18
+
+- **结论**：`app/ts-basic-service` + `pod_network_delay` ｜ 标签 `app/ts-basic-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 17 · tokens 258,590
+- **raw 日志**：[results/1013_2004_inorder4-v3b36/raw/1013_2005_trainticket-performance-18](../results/1013_2004_inorder4-v3b36/raw/1013_2005_trainticket-performance-18/)（ndjson / mcp.jsonl / meta）
+- **摘要**：GetAlerts shows a single runaway epicenter: ts-basic-service p50 38.94ms -> 6806.17ms (+17377.7%) and p90 52.50ms -> 9361.24ms (+17730.9%) with RPS -54.1%, dwarfing its callers' ripples (ts-preserve-service +2233.3%, ts-travel-service p90 +2501.7%) which are all upstream callers of ts-basic-service per GetServiceDependencies. A constant added delay (~6.8-9.3s) rides on that service's own latency while its downstream services (ts-route-service, ts-station-service, ts-train-service, ts-price-service) stay clean and it carries no saturation row; its own container logs show ms-level processing (21
 

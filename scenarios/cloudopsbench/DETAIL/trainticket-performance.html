@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/performance</em></h1>
-<p class="deck">已跑 <b>17/47</b> 题：JRA ✅17 ❌0 ｜ 证据链全闭 17 ｜ token 中位 304,738 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T12:03:34.899Z</p>
+<p class="deck">已跑 <b>18/47</b> 题：JRA ✅18 ❌0 ｜ 证据链全闭 18 ｜ token 中位 304,738 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T12:07:15.900Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1429</td><td>36</td><td>442,283</td><td>0</td><td>1</td><td class="muted">1012_1512_inorder4-v3b3</td><td><a href="../results/1012_1512_inorder4-v3b3/raw/1012_1516_trainticket-performance-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1516_trainticket-performance-1</a></td></tr>
@@ -33,6 +33,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-15"><code>15</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2143</td><td>15</td><td>197,634</td><td>0</td><td>0</td><td class="muted">1013_1855_multi2-verify1</td><td><a href="../results/1013_1855_multi2-verify1/raw/1013_1855_trainticket-performance-15/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1855_trainticket-performance-15</a></td></tr>
 <tr><td><a href="#case-16"><code>16</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.3333</td><td>16</td><td>188,088</td><td>0</td><td>0</td><td class="muted">1013_1955_inorder4-v3b34</td><td><a href="../results/1013_1955_inorder4-v3b34/raw/1013_1956_trainticket-performance-16/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1956_trainticket-performance-16</a></td></tr>
 <tr><td><a href="#case-17"><code>17</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2143</td><td>15</td><td>195,228</td><td>0</td><td>0</td><td class="muted">1013_2000_inorder4-v3b35</td><td><a href="../results/1013_2000_inorder4-v3b35/raw/1013_2000_trainticket-performance-17/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2000_trainticket-performance-17</a></td></tr>
+<tr><td><a href="#case-18"><code>18</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.25</td><td>17</td><td>258,590</td><td>0</td><td>0</td><td class="muted">1013_2004_inorder4-v3b36</td><td><a href="../results/1013_2004_inorder4-v3b36/raw/1013_2005_trainticket-performance-18/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_2005_trainticket-performance-18</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/ts-basic-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 36 步</summary><ul>
@@ -827,6 +828,49 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;node/worker-01&quot;,
    &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-18"><summary><b>case-18</b> · <code>app/ts-basic-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 17 步</summary><ul>
+<li><b>摘要</b>：GetAlerts shows a single runaway epicenter: ts-basic-service p50 38.94ms -&gt; 6806.17ms (+17377.7%) and p90 52.50ms -&gt; 9361.24ms (+17730.9%) with RPS -54.1%, dwarfing its callers' ripples (ts-preserve-service +2233.3%, ts-travel-service p90 +2501.7%) which are all upstream callers of ts-basic-service per GetServiceDependencies. A constant added delay (~6.8-9.3s) rides on that service's own latency while its downstream services (ts-route-service, ts-station-service, ts-train-service, ts-price-service) stay clean and it carries no saturation row; its own container logs show ms-level processing (21</li>
+<li><b>raw 日志</b>：<a href="../results/1013_2004_inorder4-v3b36/raw/1013_2005_trainticket-performance-18/">results/1013_2004_inorder4-v3b36/raw/1013_2005_trainticket-performance-18</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;nodes&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
+<tr><td>13</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;ts-basic-service&quot;,&quot;port&quot;:15680,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>14</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>15</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kubelet&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;GetAlerts shows a single runaway epicenter: ts-basic-service p50 38.94ms -&gt; 6806.17ms (+17377.7%) and p90 52.50ms -&gt; 9361.24ms (+17730.9%) with RPS -54.1%, dwarfing its callers' ripples (ts-preserve-service +2233.3%, ts-travel-service p90 +2501.7%) which are all upstream callers of ts-basic-service per GetServiceDependencies. A constant added delay (~6.8-9.3s) rides on that service's own latency while its downstream services (ts-route-service, ts-station-service, ts-train-service, ts-price-service) stay clean and it carries no saturation row; its own container logs show ms-level processing (21:06:25.507 -&gt; .533), so the added delay is not application-side. The lone RESOURCE_SATURATION [cpu_cfs] row sits on ts-order-service, which is not the epicenter and has no latency rise of its own = collateral noise. Object layer is exclusion evidence only: all pods 2/2 Running with RESTARTS 0, ts-basic-service pod 9b2gn on worker-01, endpoints bound (CheckServiceConnectivity Succeeded from worker-01/02/03), all 4 nodes Ready with no pressure/cordon, kubelet and kube-proxy active, and namespace events contain no FailedCreate/FailedScheduling/FailedMount/image-pull/probe-failure mechanism events. The anomaly is scoped to this single pod, not to one node's pods, so the fault resides on ts-basic-service's pod network path.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/ts-basic-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;node/worker-01&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
   }
  ]
 }</pre>

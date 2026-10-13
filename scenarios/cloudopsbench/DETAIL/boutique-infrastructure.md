@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **12/40** 题：JRA ✅12 ❌0 ｜ 证据链全闭 12 ｜ token 中位 96,876 ｜ 生成 2026-10-13T12:03:34.899Z
+> 本家族已跑 **13/40** 题：JRA ✅13 ❌0 ｜ 证据链全闭 13 ｜ token 中位 96,876 ｜ 生成 2026-10-13T12:07:15.900Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -19,6 +19,7 @@
 | [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 11 | 54,365 | 0 | 0 | 1013_1805_inorder4-v3b26 | 全对·链闭 |
 | [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.381 | 22 | 169,478 | 0 | 0 | 1013_1831_inorder4-v3b29 | 全对·链闭 |
 | [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 25 | 224,905 | 0 | 0 | 1013_1839_inorder4-v3b31 | 全对·链闭 |
+| [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 34 | 233,765 | 0 | 0 | 1013_2004_inorder4-v3b36 | 全对·链闭 |
 
 ## 证据正文
 
@@ -105,4 +106,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 25 · tokens 224,905
 - **raw 日志**：[results/1013_1839_inorder4-v3b31/raw/1013_1839_boutique-infrastructure-12](../results/1013_1839_inorder4-v3b31/raw/1013_1839_boutique-infrastructure-12/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Node-scoped reachability break on worker-02. Active TCP probes from worker-02 fail to EVERY ClusterIP Service (redis-cart:6379, cartservice:7070, productcatalogservice:3550 all 'Connection Failed'), while the same probes succeed from worker-01 and worker-03. CheckNodeServiceStatus(worker-02, kube-proxy) shows 'Active: inactive (dead) since Fri 2026-01-02 15:46:13 CST' (killed, signal=TERM), whereas kube-proxy is active(running) on worker-01/worker-03 and kubelet/containerd on worker-02 are active(running) with the node Ready. Consequently cartservice, which runs on worker-02, cannot reach redi
+
+### case-13
+
+- **结论**：`node/worker-01` + `kube_proxy_unavailable` ｜ 标签 `node/worker-01` + `kube_proxy_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 34 · tokens 233,765
+- **raw 日志**：[results/1013_2004_inorder4-v3b36/raw/1013_2004_boutique-infrastructure-13](../results/1013_2004_inorder4-v3b36/raw/1013_2004_boutique-infrastructure-13/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Object layer clean: all 11 boutique pods 1/1 Running with 0 restarts, all Deployments 1/1 AVAILABLE, all Service selectors app=<name> with endpoints bound; node worker-01 Ready with kubelet/containerd/flannel healthy. Active TCP probes from a debug pod on worker-01 to EVERY service ClusterIP (cartservice:7070, currencyservice:7000, checkoutservice:5050, shippingservice:50051, redis-cart:6379) return 'Connection Failed', while the same probes from worker-02 and worker-03 return 'open / Connection Succeeded' - a node-scoped, not service-scoped, reachability break. The mechanism is read directly:
 

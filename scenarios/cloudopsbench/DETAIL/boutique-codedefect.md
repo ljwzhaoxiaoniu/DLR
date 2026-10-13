@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **13/98** 题：JRA ✅13 ❌0 ｜ 证据链全闭 13 ｜ token 中位 181,778 ｜ 生成 2026-10-13T12:03:34.899Z
+> 本家族已跑 **14/98** 题：JRA ✅14 ❌0 ｜ 证据链全闭 14 ｜ token 中位 198,922 ｜ 生成 2026-10-13T12:07:15.900Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -20,6 +20,7 @@
 | [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 200,618 | 0 | 0 | 1013_1805_inorder4-v3b26 | 全对·链闭 |
 | [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2609 | 24 | 248,815 | 0 | 0 | 1013_1831_inorder4-v3b29 | 全对·链闭 |
 | [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 245,322 | 0 | 0 | 1013_1839_inorder4-v3b31 | 全对·链闭 |
+| [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 17 | 300,857 | 0 | 0 | 1013_2004_inorder4-v3b36 | 全对·链闭 |
 
 ## 证据正文
 
@@ -113,4 +114,11 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 23 · tokens 245,322
 - **raw 日志**：[results/1013_1839_inorder4-v3b31/raw/1013_1839_boutique-codedefect-13](../results/1013_1839_inorder4-v3b31/raw/1013_1839_boutique-codedefect-13/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All 11 boutique pods are 2/2 Running with 0 restarts, so the object layer (scheduling/startup/admission/probe) is clean. Alerts flag paymentservice and emailservice AVAILABILITY_MISSING, and frontend POST /cart/checkout returns 500. frontend error logs (171x) read: 'failed to complete the order: rpc error: code = Internal desc = failed to prepare order: failed to convert price of "1YMWWN1N4O" to CAD'. currencyservice error logs (171x) read: 'conversion request failed: TypeError: Cannot read properties of null (reading units)', i.e. the Convert RPC arrives with from = null, while all other conv
+
+### case-14
+
+- **结论**：`app/checkoutservice` + `code_missing_parameter` ｜ 标签 `app/checkoutservice` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 17 · tokens 300,857
+- **raw 日志**：[results/1013_2004_inorder4-v3b36/raw/1013_2004_boutique-codedefect-14](../results/1013_2004_inorder4-v3b36/raw/1013_2004_boutique-codedefect-14/)（ndjson / mcp.jsonl / meta）
+- **摘要**：checkoutservice-7558b7bbfc-pqrck is the only outlier in the pods inventory (1/2 READY, STATUS CrashLoopBackOff, RESTARTS 2), while all other boutique pods are 2/2 Running with 0 restarts. Its own record shows the server container Last State Terminated with Reason=Error Exit Code=2, and the pod events surface the mechanism verbatim: 'Back-off restarting failed container server'. Container logs carry the decisive evidence: '[PlaceOrder] user_id=... user_currency="EUR"' followed by 'panic: mismatching currency codes' at money.Must (money/money.go:85) from PlaceOrder (main.go:294). The code surfac
 
