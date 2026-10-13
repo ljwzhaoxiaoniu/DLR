@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **5/98** 题：JRA ✅5 ❌0 ｜ 证据链全闭 5 ｜ token 中位 181,235 ｜ 生成 2026-10-13T05:51:12.889Z
+> 本家族已跑 **6/98** 题：JRA ✅6 ❌0 ｜ 证据链全闭 6 ｜ token 中位 181,235 ｜ 生成 2026-10-13T06:17:23.231Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -12,6 +12,7 @@
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 198,922 | 0 | 0 | 1012_1935_tidy-verify1 | 全对·链闭 |
 | [4](#case-4) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.3077 | 14 | 311,683 | 0 | 0 | 1012_2000_case-verify1 | 全对·链闭 |
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 181,235 | 0 | 0 | 1013_1225_inorder4-v3b11 | 全对·链闭 |
+| [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 163,551 | 0 | 1 | 1013_1413_inorder4-v3b15 | 全对·链闭 |
 
 ## 证据正文
 
@@ -44,4 +45,10 @@
 - **结论**：`app/checkoutservice` + `code_busy_loop` ｜ 标签 `app/checkoutservice` + `code_busy_loop`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 181,235
 - **摘要**：GetAlerts() shows a single anomaly entity: checkoutservice — RESOURCE_SATURATION [cpu] Normal=0.00 -> Current=0.07 cores (+4631%), RESOURCE_SATURATION [cpu_cfs] 0.396s throttled, and LATENCY_DEGRADATION p50 Normal=18.62ms -> Current=750.00ms (peak=754.35ms). Object-layer exclusion is clean: all 11 boutique pods are 2/2 Running with RESTARTS=0, GetErrorLogs(checkoutservice) is empty, and all 4 nodes are Ready with 8 allocatable CPU cores and no taints/pressure, so node capacity, scheduling and probe paths are ruled out — the break is at the metric level on checkoutservice. GetSourceCode(checkou
+
+### case-6
+
+- **结论**：`app/checkoutservice` + `code_busy_loop` ｜ 标签 `app/checkoutservice` + `code_busy_loop`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 163,551
+- **摘要**：Alert on checkoutservice: RESOURCE_SATURATION [cpu_cfs] 0.332s throttled, [cpu] 0.00 -> 0.06 cores (+5117.2%), LATENCY_DEGRADATION p50 18.75ms -> 752.94ms (+3915.3%). Object layer excluded by anchor: all boutique pods 2/2 Running with 0 RESTARTS, no warning mechanism events (no OOMKilled/FailedScheduling/FailedMount/probe failures) on the current checkoutservice pod checkoutservice-6cd8767b6d-hznfp; GetAppYAML shows normal 100m/200m cpu request/limit, gRPC health probes on 5050 and matching Service targetPort, so probe/port/reference/quota causes are ruled out. Break is in the code surface: ma
 

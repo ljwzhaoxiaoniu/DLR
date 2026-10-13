@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **6/37** 题：JRA ✅6 ❌0 ｜ 证据链全闭 6 ｜ token 中位 460,035 ｜ 生成 2026-10-13T05:51:12.889Z
+> 本家族已跑 **7/37** 题：JRA ✅7 ❌0 ｜ 证据链全闭 7 ｜ token 中位 460,035 ｜ 生成 2026-10-13T06:17:23.231Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -12,6 +12,7 @@
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 373,034 | 0 | 0 | 1013_1122_inorder4-v3b9 | 全对·链闭 |
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 460,035 | 0 | 0 | 1013_1225_inorder4-v3b11 | 全对·链闭 |
 | [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3478 | 24 | 437,347 | 0 | 0 | 1013_1248_inorder4-v3b13 | 全对·链闭 |
+| [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 465,479 | 0 | 0 | 1013_1413_inorder4-v3b15 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
 
 ## 证据正文
@@ -45,6 +46,12 @@
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3478 · steps 24 · tokens 437,347
 - **摘要**：Alert points at entry_service=ts-preserve-service: POST /api/v1/preserveservice/preserve returns 404 Not Found (20 occurrences). Yet ts-preserve-service is fully healthy: pod 2/2 Running with 0 restarts, endpoints bound at 172.20.3.154:14568, TCP connectivity succeeds from worker-01/02/03, and its error log is empty - so the request never reaches it. The namespace-wide pod scan shows no pending/crash/image-pull/mount anomaly and the events surface carries no Warning naming the preserve chain. The break is in the address layer: in ts-gateway-service-config (ConfigMap of app ts-gateway-service) 
+
+### case-7
+
+- **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2778 · steps 19 · tokens 465,479
+- **摘要**：All 44 train-ticket pods read 2/2 Running/Ready with no Pending/CrashLoop and ts-preserve-service:14568 is reachable from every node (CheckServiceConnectivity: Connection Succeeded; no error logs), yet the UI-dashboard nginx access log shows 20x "POST /api/v1/preserveservice/preserve HTTP/1.1" 404 while every sibling path (orderservice/order/refresh, inside_pay_service/inside_payment, cancelservice, users/login) returns 200. Line-by-line audit of the gateway route table (configmap ts-gateway-service-config, AGE 5m55s vs 9d for all other configmaps) shows exactly one mis-paired entry: id=preser
 
 ### case-25
 

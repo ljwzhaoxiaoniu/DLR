@@ -1,0 +1,56 @@
+[
+  {
+    "case_name": "6",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\codedefect\\6\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1013_1413_inorder4-v3b15\\traces\\boutique\\dsh-tsm\\codedefect\\6\\6.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Application_Code_Defect",
+      "fault_object": "app/checkoutservice",
+      "root_cause": "code_busy_loop"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "code_busy_loop"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "pod_cpu_overload"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "code_artificial_delay"
+      }
+    ],
+    "tool_call_count": 14,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [
+      {
+        "step_id": 9,
+        "action_name": "GetResourceTags_placeholder",
+        "action_input": {
+          "placeholder": "x"
+        },
+        "reason": "tool_error",
+        "error": "Error: unknown tool \"mcp__cloudops-tools__GetResourceTags_placeholder\""
+      }
+    ],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.21428571428571427,
+      "steps": 15.0,
+      "RAR": 0.0,
+      "invalid_actions": 1.0
+    }
+  }
+]

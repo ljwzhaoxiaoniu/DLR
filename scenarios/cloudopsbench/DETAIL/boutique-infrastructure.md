@@ -1,6 +1,6 @@
 # 评测明细 · boutique/infrastructure — cloudopsbench
 
-> 本家族已跑 **4/40** 题：JRA ✅4 ❌0 ｜ 证据链全闭 4 ｜ token 中位 107,349 ｜ 生成 2026-10-13T05:51:12.889Z
+> 本家族已跑 **5/40** 题：JRA ✅5 ❌0 ｜ 证据链全闭 5 ｜ token 中位 100,063 ｜ 生成 2026-10-13T06:17:23.231Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -11,6 +11,7 @@
 | [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 107,349 | 0 | 0 | 1012_1856_inorder4-v3b5 | 全对·链闭 |
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 79,206 | 0 | 0 | 1012_1941_inorder4-v3b7 | 全对·链闭 |
 | [4](#case-4) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.2667 | 16 | 110,448 | 0 | 0 | 1013_1225_inorder4-v3b11 | 全对·链闭 |
+| [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 100,063 | 0 | 0 | 1013_1413_inorder4-v3b15 | 全对·链闭 |
 
 ## 证据正文
 
@@ -37,4 +38,10 @@
 - **结论**：`node/worker-02` + `containerd_unavailable` ｜ 标签 `node/worker-02` + `containerd_unavailable`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 0.6667 · ECR 1 · EE 0.2667 · steps 16 · tokens 110,448
 - **摘要**：Partial unreachability is scoped exactly to the pods scheduled on worker-02. frontend caller logs show 'rpc error: code = Unavailable desc = no healthy upstream' for productcatalogservice (107x), currencyservice (80x) and checkoutservice (32x). Pod listing: adservice/cartservice/emailservice/frontend/redis-cart on worker-01 are 2/2 Running, while all 6 pods on worker-02 (checkoutservice, currencyservice, paymentservice, productcatalogservice, recommendationservice, shippingservice) are stuck 0/2 Init:0/1 with no PodIP. Pod and namespace events name the mechanism verbatim: 'Warning FailedCreate
+
+### case-5
+
+- **结论**：`node/worker-01` + `containerd_unavailable` ｜ 标签 `node/worker-01` + `containerd_unavailable`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 100,063
+- **摘要**：Partial unreachability is node-scoped, not service-scoped. Connectivity probe: adservice:9555 -> 'Connection Failed' while productcatalogservice:3550 (172.20.2.80, worker-02) -> open/'Connection Succeeded'. Pods listing: all 5 pods on worker-01 (frontend, adservice, paymentservice, shippingservice, redis-cart) are stuck '0/2 Init:0/1' with no pod IP, while all 6 pods on worker-02 are '2/2 Running'. Mechanism event, verbatim in both pod describe and namespace events (Warning FailedCreatePodSandBox): 'Failed to create pod sandbox: rpc error: code = Unavailable desc = ... dial unix /run/container
 
