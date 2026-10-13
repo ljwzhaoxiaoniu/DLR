@@ -82,6 +82,8 @@
 
 > **2026-10-12 · 轮次 1012_1941_inorder4-v3b7 + 1012_2000_case-verify1 + 1012_2010_attr-verify1（批七战役 · tt-service/2 三枪修一题）**：① 批七 3/4——**首个真 miss** `tt-service/2`（网关 misroute：预测 food-delivery·dns ✗；**89 步、47 次探测轰炸**）。② **三枪**：case-by-case 判别线重写（L3，用户定调「对着解决 + 讲人话」）+ L2 kid9 网关路由表读法（`Path ↔ uri` 逐条核对，针 = `order` 路由指向 route-service）→ 复跑 32 步：机制对了（`gateway_misrouted` ✓）、组件仍错（报了受害者 order）→ kid9/sop 补「**报路由表的主人（网关）；被错配目标是受害者不是断点**」→ **attr-verify1 20 步全满**（JRA/MC/EOC/ECR 全 1）。③ 两道 EOC 小滑（codedefect/4 0.25 两轮不变 · tt-runtime/5 0.667）：解剖显示**首次命中序其实干净**——EOC 匹配含超出 first-match 的严格性成分，口径未完全反推，**不再为此调参**（守住不扑评分器的线），记档。④ **28/28 JRA 恢复全满。**
 
+> **2026-10-12 → 10-13 · 轮次 1012_2040_inorder4-v3b8 + 1013_1040_rank1-verify1（批八 + rank1 提交条款验证）**：① 批八 3/4——`tt-service/3`（同族网关 misroute 新题）**正文叙述全对**（break = 网关·表主人；mis-wired 目标 = 受害者 order），**但 top_3 rank1 填了受害者**：条款在命中节内且被复述——病灶 = **提交落笔未跟随结论**（非知识/检索缺口）。② 处置：该节再钉「When you submit: rank 1 names the gateway — the victim may sit lower in the list, never at rank 1」→ L3 rebuild + 重启 + 探针（has-new-clause ✓）→ 复跑 **19 步全满**（rank1 网关 · 受害者在 rank2 备选 · 错配目标 rank3；dashboard nginx BackOff 判为瞬时竞态）。③ 花絮：批八首遍 boutique/runtime/2 卡 77 分钟被 runner 判失败（产物其实完整、rc=0）→ 第 2 遍 48s 过，取第 2 遍。④ **JRA 32/32**（轮次 17 · 覆盖 32/754）。⑤ 教训记档：**叙述对 ≠ 提交对**——条款要钉到提交字段（与「判定只看结论句」互为镜像）。
+
 
 
 
