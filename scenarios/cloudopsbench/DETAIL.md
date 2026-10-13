@@ -29,22 +29,22 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 131 / 132（99.2%） |
-| CA（组件命中） | 131 / 132（99.2%） |
-| FA（故障型命中） | 131 / 132（99.2%） |
-| ECR（证据链全闭） | 130 / 132（98.5%） |
+| JRA（联合命中） | 132 / 132（100.0%） |
+| CA（组件命中） | 132 / 132（100.0%） |
+| FA（故障型命中） | 132 / 132（100.0%） |
+| ECR（证据链全闭） | 131 / 132（99.2%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 0.9943 | 0.9741 | 0.9848 | 0.2911 | 19.5227 | 0.0005 | 0.0227 |
+| 0.9981 | 0.9779 | 0.9924 | 0.2918 | 19.4545 | 0.0005 | 0.0227 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 310,988 / 207,450 | 54,365 / 2,181,512 | 74% |
+| 309,967 / 207,400 | 54,365 / 2,181,512 | 74% |
 
 ## 分家族索引
 
@@ -58,7 +58,7 @@
 | boutique/scheduling | 164 | 12 | 12 | 12 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
 | boutique/service | 54 | 6 | 6 | 6 | [boutique-service.md](DETAIL/boutique-service.md) |
 | boutique/startup | 62 | 5 | 5 | 5 | [boutique-startup.md](DETAIL/boutique-startup.md) |
-| train-ticket/performance | 47 | 15 | 14 | 14 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
+| train-ticket/performance | 47 | 15 | 15 | 15 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
 | train-ticket/runtime | 96 | 16 | 16 | 16 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
 | train-ticket/service | 37 | 17 | 17 | 17 | [trainticket-service.md](DETAIL/trainticket-service.md) |
 | train-ticket/startup | 24 | 13 | 13 | 13 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
@@ -137,6 +137,9 @@
 > **2026-10-13 · 轮次 1013_1842_inorder4-v3b32 + triple-verify1（批三十二 · JRA 全对 · 三处流程滑点 → 二修一记档）**：① 覆盖 128/754，**JRA 128/128**。② 全对：adm/7（13 步）· bst/5（13 步）· tru/16（14 步）· tst/13（15 步）。③ 流程滑点三例（结果全对、关键形态读得晚）：**tst/13**（收口 Missing：M3=`GetAppYAML(ts-price-service)` 未读 → ECR 0）+ **tru/16**（M0@10 晚于 M1@7 → EOC 0.5）+ **adm/7**（M0@12 末位 → EOC 0.25）→ triple-verify1 复跑一轮：**tst/13 ✓ tru/16 ✓ 六项全满**（复跑即闭）；**adm/7 EOC 0.25 复现**（两轮同值 = 非随机）→ 按规程**记档**（M0-末位类，与 admission/6 同谱；4 号记档列）。④ tru/16 复跑 1 次 invalid（记观察）。⑤ 会话：4 条不满入档。
 
 > **2026-10-13 · 轮次 1013_1848_inorder4-v3b33（批三十三 · 2/4 六项全满 · 一破连一序滑点 · 用户令「跑完停一下」收工）**：① 覆盖 132/754，**JRA 131/132**。② runtime/7（11 步）· tt-svc/17 `gateway_misrouted`（21 步 · 网关判别稳）全满。③ **tt-perf/15 破连**：多告警场景里抓了 ts-order-service 旁枝（判 `pod_cpu_overload`；**真值 ts-travel-service `pod_network_delay` 就在它 rank2**）——tpe/12 修复前同款；§3 多告警判别句已在节，按规程下一步 = 复跑一轮（待令）。④ boutique/service/6 EOC 0.5（46 步长链、纯序滑点，记观察）。⑤ 会话：两不满入档。
+
+> **2026-10-13 · 轮次 1013_1855_multi2-verify1（tpe/15 手工复跑 · 六项全满）**：① §3 多告警句 v2（**读数字**：主异常占比碾压涟漪 · 孤立 `cpu_cfs` 无自身延迟 = 旁枝 · 真饱和 = 限流＋自身延迟同升——以已过例 per/4·per/5 的实测告警形态定标）→ **手工单跑 15 步六项全满**（真值 ts-travel-service `pod_network_delay`，+29927% 碾压行正确落位）。② **JRA 132/132 恢复**——规程第 8 次闭环；批三十三正式净收官 3/4（service/6 46 步 EOC 0.5 记观察）。
+
 
 
 

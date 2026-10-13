@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **15/47** 题：JRA ✅14 ❌1 ｜ 证据链全闭 14 ｜ token 中位 332,420 ｜ 生成 2026-10-13T10:52:37.081Z
+> 本家族已跑 **15/47** 题：JRA ✅15 ❌0 ｜ 证据链全闭 15 ｜ token 中位 319,046 ｜ 生成 2026-10-13T10:56:45.571Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -21,7 +21,7 @@
 | [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 25 | 850,385 | 0 | 0 | 1013_1825_dual2-verify1 | 全对·链闭 |
 | [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 207,450 | 0 | 0 | 1013_1831_inorder4-v3b29 | 全对·链闭 |
 | [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1818 | 23 | 395,607 | 0 | 0 | 1013_1839_inorder4-v3b31 | 全对·链闭 |
-| [15](#case-15) | 0 | 0 | 0 | 0.5 | 0.5 | 0 | 0.1304 | 24 | 332,420 | 0 | 0 | 1013_1848_inorder4-v3b33 | 未命中 |
+| [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 197,634 | 0 | 0 | 1013_1855_multi2-verify1 | 全对·链闭 |
 
 ## 证据正文
 
@@ -125,8 +125,8 @@
 
 ### case-15
 
-- **结论**：`app/ts-order-service` + `pod_cpu_overload` ｜ 标签 `app/ts-travel-service` + `pod_network_delay`（✗ 与标签不符）
-- **流程**：MC 0.5 · EOC 0.5 · ECR 0 · EE 0.1304 · steps 24 · tokens 332,420
-- **raw 日志**：[results/1013_1848_inorder4-v3b33/raw/1013_1848_trainticket-performance-15](../results/1013_1848_inorder4-v3b33/raw/1013_1848_trainticket-performance-15/)（ndjson / mcp.jsonl / meta）
-- **摘要**：All 7 alerts share one window (18:14:37~18:16:27). Six are LATENCY_DEGRADATION ripples, and the only resource-level anomaly is ts-order-service: RESOURCE_SATURATION [cpu_cfs] Val: 0.226s (Throttled). Call-direction check via GetServiceDependencies shows ts-order-service is the sink (no downstream), and its direct callers ts-seat-service (+1870.9%), ts-preserve-service (p50 458->7565ms) and ts-gateway-service (+1174.4%) are all alerted, with the ripple continuing upward to ts-travel-service (+29927.2% p50) and ts-ui-dashboard (+1195.0%) - i.e. the latency alerts ripple from order-service. The p
+- **结论**：`app/ts-travel-service` + `pod_network_delay` ｜ 标签 `app/ts-travel-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 197,634
+- **raw 日志**：[results/1013_1855_multi2-verify1/raw/1013_1855_trainticket-performance-15](../results/1013_1855_multi2-verify1/raw/1013_1855_trainticket-performance-15/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (window 18:14:37~18:16:27) show one runaway deviation: ts-travel-service p50 7.50ms->2252.04ms (+29927.2%), p90 189.01ms->8913.17ms (+4615.7%); its callers ts-preserve-service (+1550.2%), ts-gateway-service (+1174.4%), ts-ui-dashboard (+1195.0%) rise only as ripples, and its two direct downstreams ts-basic-service (+2615.8%) and ts-seat-service (+1870.9%) are also lifted, so the common denominator is ts-travel-service's own network path. The delay is not in code: travel's raw logs show each seat call handled internally in ~13-30ms. It is not a node-scope fault: all 4 nodes are Ready wit
 

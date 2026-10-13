@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>train-ticket/performance</em></h1>
-<p class="deck">已跑 <b>15/47</b> 题：JRA ✅14 ❌1 ｜ 证据链全闭 14 ｜ token 中位 332,420 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T10:52:37.081Z</p>
+<p class="deck">已跑 <b>15/47</b> 题：JRA ✅15 ❌0 ｜ 证据链全闭 15 ｜ token 中位 319,046 ｜ 口径与列义同总账 ｜ 生成 2026-10-13T10:56:45.571Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1429</td><td>36</td><td>442,283</td><td>0</td><td>1</td><td class="muted">1012_1512_inorder4-v3b3</td><td><a href="../results/1012_1512_inorder4-v3b3/raw/1012_1516_trainticket-performance-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1516_trainticket-performance-1</a></td></tr>
@@ -30,7 +30,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-12"><code>12</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1667</td><td>25</td><td>850,385</td><td>0</td><td>0</td><td class="muted">1013_1825_dual2-verify1</td><td><a href="../results/1013_1825_dual2-verify1/raw/1013_1825_trainticket-performance-12/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1825_trainticket-performance-12</a></td></tr>
 <tr><td><a href="#case-13"><code>13</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2</td><td>16</td><td>207,450</td><td>0</td><td>0</td><td class="muted">1013_1831_inorder4-v3b29</td><td><a href="../results/1013_1831_inorder4-v3b29/raw/1013_1832_trainticket-performance-13/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1832_trainticket-performance-13</a></td></tr>
 <tr><td><a href="#case-14"><code>14</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.1818</td><td>23</td><td>395,607</td><td>0</td><td>0</td><td class="muted">1013_1839_inorder4-v3b31</td><td><a href="../results/1013_1839_inorder4-v3b31/raw/1013_1840_trainticket-performance-14/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1840_trainticket-performance-14</a></td></tr>
-<tr><td><a href="#case-15"><code>15</code></a></td><td>0</td><td>0</td><td>0</td><td>0.5</td><td>0.5</td><td>0</td><td>0.1304</td><td>24</td><td>332,420</td><td>0</td><td>0</td><td class="muted">1013_1848_inorder4-v3b33</td><td><a href="../results/1013_1848_inorder4-v3b33/raw/1013_1848_trainticket-performance-15/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1848_trainticket-performance-15</a></td></tr>
+<tr><td><a href="#case-15"><code>15</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.2143</td><td>15</td><td>197,634</td><td>0</td><td>0</td><td class="muted">1013_1855_multi2-verify1</td><td><a href="../results/1013_1855_multi2-verify1/raw/1013_1855_trainticket-performance-15/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1855_trainticket-performance-15</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/ts-basic-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 36 步</summary><ul>
@@ -705,52 +705,43 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
  ]
 }</pre>
 </details>
-<details id="case-15"><summary><b>case-15</b> · <code>app/ts-order-service</code> + <code>pod_cpu_overload</code>（✗ 与标签不符） · MC 0.5 · EOC 0.5 · ECR 0 · 24 步</summary><ul>
-<li><b>摘要</b>：All 7 alerts share one window (18:14:37~18:16:27). Six are LATENCY_DEGRADATION ripples, and the only resource-level anomaly is ts-order-service: RESOURCE_SATURATION [cpu_cfs] Val: 0.226s (Throttled). Call-direction check via GetServiceDependencies shows ts-order-service is the sink (no downstream), and its direct callers ts-seat-service (+1870.9%), ts-preserve-service (p50 458-&gt;7565ms) and ts-gateway-service (+1174.4%) are all alerted, with the ripple continuing upward to ts-travel-service (+29927.2% p50) and ts-ui-dashboard (+1195.0%) - i.e. the latency alerts ripple from order-service. The p</li>
-<li><b>raw 日志</b>：<a href="../results/1013_1848_inorder4-v3b33/raw/1013_1848_trainticket-performance-15/">results/1013_1848_inorder4-v3b33/raw/1013_1848_trainticket-performance-15</a></li>
+<details id="case-15"><summary><b>case-15</b> · <code>app/ts-travel-service</code> + <code>pod_network_delay</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 15 步</summary><ul>
+<li><b>摘要</b>：Alerts (window 18:14:37~18:16:27) show one runaway deviation: ts-travel-service p50 7.50ms-&gt;2252.04ms (+29927.2%), p90 189.01ms-&gt;8913.17ms (+4615.7%); its callers ts-preserve-service (+1550.2%), ts-gateway-service (+1174.4%), ts-ui-dashboard (+1195.0%) rise only as ripples, and its two direct downstreams ts-basic-service (+2615.8%) and ts-seat-service (+1870.9%) are also lifted, so the common denominator is ts-travel-service's own network path. The delay is not in code: travel's raw logs show each seat call handled internally in ~13-30ms. It is not a node-scope fault: all 4 nodes are Ready wit</li>
+<li><b>raw 日志</b>：<a href="../results/1013_1855_multi2-verify1/raw/1013_1855_trainticket-performance-15/">results/1013_1855_multi2-verify1/raw/1013_1855_trainticket-performance-15</a></li>
 </ul>
 <table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
 <tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
 <tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
 <tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service quality degradation.&quot;}</code></td></tr>
 <tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
-<tr><td>5</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
-<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
-<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
-<tr><td>8</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
-<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
-<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;nodes&quot;,&quot;output_wide&quot;:true}</code></td></tr>
-<tr><td>11</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
-<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
-<tr><td>13</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
-<tr><td>14</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
-<tr><td>15</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
-<tr><td>16</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-order-service&quot;}</code></td></tr>
-<tr><td>17</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-basic-service&quot;}</code></td></tr>
-<tr><td>18</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
-<tr><td>19</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
-<tr><td>20</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
-<tr><td>21</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;pod&quot;,&quot;name&quot;:&quot;ts-order-service-dd54d5df9-52jsr&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
-<tr><td>22</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
-<tr><td>23</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;ts-seat-service&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>9</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-01&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>10</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-02&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>11</td><td><code>CheckNodeServiceStatus</code></td><td><code>{&quot;node_name&quot;:&quot;worker-03&quot;,&quot;service_name&quot;:&quot;kube-proxy&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;train-ticket&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetRecentLogs</code></td><td><code>{&quot;namespace&quot;:&quot;train-ticket&quot;,&quot;service_name&quot;:&quot;ts-travel-service&quot;}</code></td></tr>
 </table>
 <p><b>报告原文</b>（契约 JSON）：</p><pre>{
- &quot;key_evidence_summary&quot;: &quot;All 7 alerts share one window (18:14:37~18:16:27). Six are LATENCY_DEGRADATION ripples, and the only resource-level anomaly is ts-order-service: RESOURCE_SATURATION [cpu_cfs] Val: 0.226s (Throttled). Call-direction check via GetServiceDependencies shows ts-order-service is the sink (no downstream), and its direct callers ts-seat-service (+1870.9%), ts-preserve-service (p50 458-&gt;7565ms) and ts-gateway-service (+1174.4%) are all alerted, with the ripple continuing upward to ts-travel-service (+29927.2% p50) and ts-ui-dashboard (+1195.0%) - i.e. the latency alerts ripple from order-service. The pod_network_delay branch is excluded by L3's own conditions: for the largest-deviation service ts-travel-service its downstream server-side latencies are NOT clean (ts-basic-service p90 48.87-&gt;1327.27ms, ts-seat-service p90 78.90-&gt;1555.00ms) and a saturation row exists, and the added latency is not a fixed amount (p50 +2244ms vs p90 +8724ms). Node scope is excluded because alerted pods span worker-01/02/03 while many same-node pods (ts-travel2, ts-train, ts-route-plan, ts-voucher...) are clean. Object layer is fully excluded: all deployments AVAILABLE 1/1, all pods Running 2/2 with RESTARTS 0 for every alerted service, nodes all Ready, no FailedScheduling/FailedMount/image-pull/OOM events (only rolling-restart Killing/startup-probe noise), and no error logs for any candidate. Config confirms the mechanism: ts-order-service container limit cpu=500m is saturated while its logs show sustained CPU-heavy work (queryOrders over 3985 orders, getSoldTickets building lists of thousands of tickets), producing CFS throttling on that pod and the measured latency blow-up along seat-&gt;preserve-&gt;gateway-&gt;ui.&quot;,
+ &quot;key_evidence_summary&quot;: &quot;Alerts (window 18:14:37~18:16:27) show one runaway deviation: ts-travel-service p50 7.50ms-&gt;2252.04ms (+29927.2%), p90 189.01ms-&gt;8913.17ms (+4615.7%); its callers ts-preserve-service (+1550.2%), ts-gateway-service (+1174.4%), ts-ui-dashboard (+1195.0%) rise only as ripples, and its two direct downstreams ts-basic-service (+2615.8%) and ts-seat-service (+1870.9%) are also lifted, so the common denominator is ts-travel-service's own network path. The delay is not in code: travel's raw logs show each seat call handled internally in ~13-30ms. It is not a node-scope fault: all 4 nodes are Ready with no taints, kube-proxy active on worker-01/02/03, and the alerted objects span worker-01/02/03 (not one node). It is not a resource fault: travel itself has no saturation row (limits 500m/512Mi normal); the bare cpu_cfs row on ts-order-service (0.226s, no latency of its own) is collateral noise. Object layer is the exclusion evidence: all pods 2/2 Running, RESTARTS 0, no FailedScheduling/FailedMount/image-pull events - only rolling-update Killing/ScalingReplicaSet and transient startup-probe warnings; ts-travel-service YAML (port 12346, tcpSocket readiness probe, ts-travel-mysql secret, nacos configmap) is intact. Conclusion: fixed added delay riding on ts-travel-service's pod network path = pod_network_delay.&quot;,
  &quot;top_3_predictions&quot;: [
   {
    &quot;rank&quot;: 1,
-   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
-   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
-  },
-  {
-   &quot;rank&quot;: 2,
    &quot;fault_object&quot;: &quot;app/ts-travel-service&quot;,
    &quot;root_cause&quot;: &quot;pod_network_delay&quot;
   },
   {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;node/worker-01&quot;,
+   &quot;root_cause&quot;: &quot;node_network_delay&quot;
+  },
+  {
    &quot;rank&quot;: 3,
-   &quot;fault_object&quot;: &quot;app/ts-order-service&quot;,
-   &quot;root_cause&quot;: &quot;code_busy_loop&quot;
+   &quot;fault_object&quot;: &quot;app/ts-seat-service&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
   }
  ]
 }</pre>
