@@ -303,11 +303,6 @@ const caseRows = [...latestAll].sort((a, b) => a.family.localeCompare(b.family) 
   const g = (k) => fmt(e.metrics?.[k]);
   return `<tr><td><code>${familyDisplay(e.family)}/${e.case_name}</code></td><td>${g("JRA") === "1" ? '<span class="ok">✅</span>' : g("JRA")}</td><td>${g("MC")}</td><td>${g("EOC")}</td><td>${g("ECR")}</td><td>${g("EE")}</td><td>${g("steps")}</td><td>${tok(e.tokens?.total)}</td><td class="muted">${e.round.slice(0, 13)}</td></tr>`;
 }).join("\n");
-const roundRows = rounds.map((r) => {
-  const a = aggregate(r.entries);
-  const tSum = r.entries.reduce((n, e) => n + (e.tokens?.total || 0), 0);
-  return `<tr><td><code>${r.id.slice(0, 13)}</code></td><td>${a.n}</td><td>${a.jra}</td><td>${fmt(a.EOC)}</td><td>${fmt(a.ECR)}</td><td>${fmt(a.steps)}</td><td>${tok(tSum)}</td></tr>`;
-}).join("\n");
 const overviewHtml = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -368,12 +363,6 @@ const overviewHtml = `<!DOCTYPE html>
 
 <h2 class="section-title">跑题覆盖度 · <em>逐家族进度</em></h2>
 ${famRows}
-
-<h2 class="section-title">逐轮 · <em>结果与消耗</em></h2>
-<table>
-<tr><th>轮次</th><th>题数</th><th>JRA</th><th>EOC</th><th>ECR</th><th>steps</th><th>tokens</th></tr>
-${roundRows}
-</table>
 
 <h2 class="section-title">逐题明细 · <em>去重取最新</em></h2>
 <table>

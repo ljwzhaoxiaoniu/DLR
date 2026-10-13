@@ -5,7 +5,7 @@
  * 产出：
  *   results/stats.svg   综合统计图（评定〔500 题口径 + 已跑放大〕/ 跑题覆盖度 / 效率指标）
  *   results/STATS.md    同一份统计的文字版
- *   场景 overview.html  总视图（自动生成，与 DETAIL.md 同级：关键数卡片 + 逐库覆盖度进度条 + 逐轮 + 逐库明细）
+ *   场景 overview.html  总视图（自动生成，与 DETAIL.md 同级：关键数卡片 + 逐库覆盖度进度条 + 逐库明细；逐轮等过程数据只在 STATS.md/DETAIL.md）
  *   场景 DETAIL.md      评测明细文档（与 README 并列；见 dev/detail.ts）
  *   场景 README         两个标记块同步：实测结果（stats:）+ 错题记录（mistakes:）
  *
@@ -382,9 +382,6 @@ const famBars = dbRows.map(({ db, done, total, pctv }) =>
 const dbTable = dbRows.map(({ db, rs, pctv }) =>
   `<tr><td><a href="DETAIL/${esc(db)}.md"><code>${esc(db)}</code></a></td><td>${rs.length}</td><td>${rs.filter((r) => r.ruling === "CORRECT").length}</td><td>${rs.filter((r) => r.ruling === "OVERTURNED").length}</td><td>${rs.filter((r) => r.ruling === "WRONG").length}</td><td>${rs.filter((r) => r.ruling === "PENDING").length}</td><td>${fmt(medOf(rs.map((r) => r.tokens)))}</td><td>${pctv}%</td></tr>`
 ).join("\n");
-const roundTable = byRun.map(({ run, rs }) =>
-  `<tr><td><code>${run}</code></td><td>${rs.length}</td><td>${rTally(rs, "CORRECT")}</td><td>${rTally(rs, "OVERTURNED")}</td><td>${rTally(rs, "WRONG")}</td><td>${rTally(rs, "PENDING")}</td><td>${fmt(rs.reduce((n, r) => n + r.tokens, 0))}</td></tr>`
-).join("\n");
 const dashboardHtml = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -444,12 +441,6 @@ const dashboardHtml = `<!DOCTYPE html>
 
 <h2 class="section-title">跑题覆盖度 · <em>逐库进度</em></h2>
 ${famBars}
-
-<h2 class="section-title">逐轮 · <em>评定与消耗</em></h2>
-<table>
-<tr><th>轮次</th><th>题数</th><th>✅</th><th>🔁</th><th>❌</th><th>⚠️</th><th>tokens</th></tr>
-${roundTable}
-</table>
 
 <h2 class="section-title">逐库明细 · <em>去重取最新</em></h2>
 <table>
