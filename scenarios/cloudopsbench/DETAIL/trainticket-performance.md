@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **4/47** 题：JRA ✅3 ❌1 ｜ 证据链全闭 4 ｜ token 中位 453,560 ｜ 生成 2026-10-13T04:56:54.383Z
+> 本家族已跑 **4/47** 题：JRA ✅4 ❌0 ｜ 证据链全闭 4 ｜ token 中位 442,283 ｜ 生成 2026-10-13T05:30:38.570Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -10,7 +10,7 @@
 | [1](#case-1) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1429 | 36 | 442,283 | 0 | 1 | 1012_1512_inorder4-v3b3 | 全对·链闭 |
 | [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1818 | 23 | 294,060 | 0 | 0 | 1013_1122_inorder4-v3b9 | 全对·链闭 |
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1379 | 30 | 453,560 | 0 | 0 | 1013_1225_inorder4-v3b11 | 全对·链闭 |
-| [4](#case-4) | 1 | 0 | 0 | 1 | 1 | 1 | 0.1463 | 42 | 1,301,123 | 0 | 0 | 1013_1248_inorder4-v3b13 | 未命中 |
+| [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2381 | 22 | 346,155 | 0 | 0 | 1013_1328_quality-verify1 | 全对·链闭 |
 
 ## 证据正文
 
@@ -34,7 +34,7 @@
 
 ### case-4
 
-- **结论**：`app/ts-gateway-service` + `code_artificial_delay` ｜ 标签 `app/ts-gateway-service` + `pod_network_delay`（✗ 与标签不符）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1463 · steps 42 · tokens 1,301,123
-- **摘要**：Telemetry-chain closure: GetAlerts shows LATENCY_DEGRADATION on exactly two entities on the same request path (loadgen -> ts-ui-dashboard -> ts-gateway-service): ts-gateway-service p50 27.03ms->1928.57ms (+7035.6%), p90 204.84ms->8000.00ms, peak 55500ms; ts-ui-dashboard identical (1928.57ms/8000ms/55500ms). The other 19 monitored services show only TRAFFIC_ANOMALY [Network Drop] (in/out pps ~-40~-55%) and THROUGHPUT_DROP (RPS -63~-78%) with NO latency anomaly, i.e. all gateway->backend call edges stay clean and the added ~1.9s delay sits in the gateway's own handling path (heavy 8s/55.5s tail 
+- **结论**：`app/ts-gateway-service` + `pod_network_delay` ｜ 标签 `app/ts-gateway-service` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2381 · steps 22 · tokens 346,155
+- **摘要**：Alerts (metric surface) show LATENCY_DEGRADATION only on ts-gateway-service (p50 27.03ms -> 1928.57ms, +7035.6%; p90 204.84 -> 8000.00ms) and on its only caller ts-ui-dashboard (p50 29.71ms -> 1928.57ms, the identical added ~1.9s), while all 38 downstream services of the gateway stay free of latency degradation and no RESOURCE_SATURATION rows exist. The object layer is clean/exclusionary: all pods Running, READY 2/2, RESTARTS 0, nodes Ready with no taints, no FailedCreate/FailedScheduling/FailedMount/image-pull events in the 15:11-15:12 alert window, gateway Service selector app=ts-gateway-ser
 
