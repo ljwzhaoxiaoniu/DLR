@@ -38,13 +38,13 @@
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 1 | 0.9554 | 1 | 0.2946 | 19.125 | 0 | 0.0179 |
+| 1 | 0.9613 | 1 | 0.2951 | 19.0893 | 0 | 0.0179 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 260,555 / 186,507 | 58,131 / 1,133,738 | 75% |
+| 260,488 / 186,507 | 58,131 / 1,133,738 | 75% |
 
 ## 分家族索引
 
@@ -94,7 +94,8 @@
 
 > **2026-10-13 · 轮次 1013_1248_inorder4-v3b13（批十三 · 3/4 · tt-performance/4 判型翻车）**：① 覆盖 52/754，JRA 51/52。② **tt-performance/4 miss**：组件对（ts-gateway-service）、判型错——p50 27ms→1928ms **恒定延迟**、下游服务边全净、无饱和；agent 推「延迟在网关自身处理路径 → `code_artificial_delay`」（正解 `pod_network_delay` 在 rank2）——42 步长链，MC/EOC/ECR 全 1（纯判型失分）。③ 症状措辞 = **第三个模板「Service quality degradation.」**（L3 无节、本次未命中）；全库真值分布：该措辞下 boutique = pod_network_delay 7 + pod_cpu_overload 4，tt = **pod_network_delay 47/47**；**`code_artificial_delay` 全库仅存在于 boutique/codedefect（另一措辞「Service Performance Degradation.」、靠代码面证实）**——判类有硬依据。④ 其余全满：boutique/runtime/4 `liveness_probe_incorrect_protocol`（11 步）· boutique/service/3 `service_env_var_address_mismatch`（15 步）· tt-service/6 `gateway_misrouted`（**条款第五连** · 24 步）。⑤ 处置：开「Service quality degradation.」新节（`384656e`：alert 面定案 + 延迟类=网络侧 + 代码排除句 + 节点域分支 + 对象层排除收口）→ L3 3 节 rebuild + 探针 → 复跑 **22 步全满**（rank1 = `pod_network_delay` ✓，42→22 步）——**JRA 52/52 恢复**。
 
-> **2026-10-13 · 轮次 1013_1343_inorder4-v3b14（批十四 · 4/4 JRA · 新节泛化首验 · 一例 EOC 留观）**：① 覆盖 56/754，**JRA 56/56**。② **新节泛化首验过**：boutique/performance/3 `pod_cpu_overload`（16 步）——「Service quality degradation.」节在 boutique 侧（饱和分支）落对。③ **scheduling/6 EOC 0.667（节点类第三次）**：解剖 = 单处倒位——`GetClusterConfiguration`（金链 M3 素材）先于 pod 详情（M2 调度理由）一步读出；非评分器严格性类，为可修序。④ tt-runtime/8 `db_readonly_mode`（37 步长链全闭）、tt-startup/5 `missing_secret_binding`（12 步）全满。⑤ 待定：在该节 Pending 分支补「pod 自身调度理由先读、节点域证据随后」序句 + 复跑对表。
+> **2026-10-13 · 轮次 1013_1343_inorder4-v3b14（批十四 · 4/4 JRA · 新节泛化首验 · 一例 EOC 留观）**：① 覆盖 56/754，**JRA 56/56**。② **新节泛化首验过**：boutique/performance/3 `pod_cpu_overload`（16 步）——「Service quality degradation.」节在 boutique 侧（饱和分支）落对。③ **scheduling/6 EOC 0.667（节点类第三次）**：解剖 = 单处倒位——`GetClusterConfiguration`（金链 M3 素材）先于 pod 详情（M2 调度理由）一步读出；非评分器严格性类，为可修序。④ tt-runtime/8 `db_readonly_mode`（37 步长链全闭）、tt-startup/5 `missing_secret_binding`（12 步）全满。⑤ 处置：该节 Pending 分支补序句（`f564f73`：pod 自身调度理由先读、节点域证据随后）→ rebuild + 探针 → 复跑 **14 步 EOC 1.0**（倒位消除）——JRA 56/56 且流程分全清。
+
 
 
 

@@ -1,6 +1,6 @@
 # 评测明细 · boutique/scheduling — cloudopsbench
 
-> 本家族已跑 **6/164** 题：JRA ✅6 ❌0 ｜ 证据链全闭 6 ｜ token 中位 115,405 ｜ 生成 2026-10-13T05:47:05.805Z
+> 本家族已跑 **6/164** 题：JRA ✅6 ❌0 ｜ 证据链全闭 6 ｜ token 中位 115,405 ｜ 生成 2026-10-13T05:51:12.889Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -12,7 +12,7 @@
 | [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 84,424 | 0 | 0 | 1012_1856_inorder4-v3b5 | 全对·链闭 |
 | [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1429 | 22 | 153,471 | 0 | 0 | 1012_1928_inorder4-v3b6 | 全对·链闭 |
 | [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 103,798 | 0 | 0 | 1013_1134_inorder4-v3b10 | 全对·链闭 |
-| [6](#case-6) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.2 | 16 | 86,588 | 0 | 0 | 1013_1343_inorder4-v3b14 | 全对·链闭 |
+| [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 82,842 | 0 | 0 | 1013_1350_order-verify1 | 全对·链闭 |
 
 ## 证据正文
 
@@ -49,6 +49,6 @@
 ### case-6
 
 - **结论**：`app/productcatalogservice` + `node_cordon_mismatch` ｜ 标签 `app/productcatalogservice` + `node_cordon_mismatch`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 0.6667 · ECR 1 · EE 0.2 · steps 16 · tokens 86,588
-- **摘要**：productcatalogservice 3/3 副本 Pending 且 NODE=<none>，deployment 0/3 AVAILABLE，endpoints/productcatalogservice 为空；Pod 事件原文 'FailedScheduling: 0/4 nodes are available: 4 node(s) were unschedulable'；nodes 全部 Ready,SchedulingDisabled，node/worker-01 Unschedulable=true 且事件 NodeNotSchedulable 93s ago（cordon 晚于其他服务实例的调度，早于 productcatalogservice 副本创建）；节点本身健康（kubelet Ready、无 Pressure、CPU 仅 11% 已分配），Pod spec 无 nodeSelector/affinity/taint 相关配置，排除了容量、引用与探针类原因。调用侧闭环：frontend 182 条错误均为 'dial tcp 10.68.235.126:3550: connect: connection refused'，连通性探测失败。
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2308 · steps 14 · tokens 82,842
+- **摘要**：Caller-side symptom enters from frontend: 180/182 error logs are 'could not retrieve products/product: rpc error code=Unavailable ... dial tcp 10.68.235.126:3550: connect: connection refused', and CheckServiceConnectivity(productcatalogservice:3550) returns Connection Failed. The only outlier in the workload scan is productcatalogservice: deployment 0/3 AVAILABLE, all three pods (ddb46fc86-2fqgv/69krc/xm7ln) 0/1 Pending with no node assigned, while all other 10 services are 1/1 Running. The pod's own reason is 'FailedScheduling ... 0/4 nodes are available: 4 node(s) were unschedulable' - the s
 
