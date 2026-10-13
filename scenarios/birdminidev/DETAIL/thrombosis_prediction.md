@@ -80,6 +80,8 @@
 
 **答案**：`## 结论 **门诊（out-patient）男性更多**。 \| 指标 \| 男性患者数 \| \|------\|-----------\| \| 住院（In-patient，'Admission = '+''） \| 89 \| \| 门诊（Out-patient，'Admission = '-''） \| 107 \| **偏差（deviation）= 男性住院数 / 男性门诊数 × 10`
 
+**raw 日志**：[results/0929_2039_thrombosis_secA2/raw/0929_2039_1149_dlr.ndjson](../results/0929_2039_thrombosis_secA2/raw/0929_2039_1149_dlr.ndjson)（dsh 事件流 ndjson）
+
 **调用步骤**
 
 | # | 工具 | 参数（截 200） |
@@ -118,8 +120,6 @@ Final Answer: out-patient (male outpatients = 107 > male inpatients = 89); devia
 Evidence SQL: SELECT SUM(CASE WHEN Admission='+' THEN 1 ELSE 0 END) AS male_inpatient, SUM(CASE WHEN Admission='-' THEN 1 ELSE 0 END) AS male_outpatient, 100.0 * SUM(CASE WHEN Admission='+' THEN 1 ELSE 0 END) / SUM(CASE WHEN Admission='-' THEN 1 ELSE 0 END) AS deviation FROM Patient WHERE SEX='M'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1150">
@@ -130,6 +130,8 @@ Evidence SQL: SELECT SUM(CASE WHEN Admission='+' THEN 1 ELSE 0 END) AS male_inpa
 **期望**：`94.03714565004887`
 
 **答案**：`三级并行锚定完成：L3 'dlr_search_sop' **exact 命中**本题节，口径为「Female patients born after 1930 over **all female patients**（分母=全部女性患者，不是全部患者）」，与 L2 共识（thrombosis_prediction qid=5：percentages 两侧同一实体=patients）一致；L1 锚`
+
+**raw 日志**：[results/0929_2039_thrombosis_secA2/raw/0929_2039_1150_dlr.ndjson](../results/0929_2039_thrombosis_secA2/raw/0929_2039_1150_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -152,8 +154,6 @@ Evidence SQL: SELECT SUM(CASE WHEN Admission='+' THEN 1 ELSE 0 END) AS male_inpa
 Final Answer: 94.03714565004887%
 Evidence SQL: SELECT CAST(SUM(CASE WHEN Birthday > '1930-12-31' THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(*) AS pct FROM Patient WHERE SEX = 'F'
 
-建模缺口: 无
-
 </details>
 
 <details id="q1152">
@@ -164,6 +164,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN Birthday > '1930-12-31' THEN 1 ELSE 0 EN
 **期望**：`1.3095238095238095`
 
 **答案**：`## 结论 Among the 195 'SLE'-diagnosed patients in the 'Patient' table (库 'thrombosis_prediction'), 84 are outpatient follow-up visits ('Admission = '-'') and 110 are inpatient stays ('Admission = '+'').`
+
+**raw 日志**：[results/0929_2039_thrombosis_secA2/raw/0929_2039_1152_dlr.ndjson](../results/0929_2039_thrombosis_secA2/raw/0929_2039_1152_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -194,8 +196,6 @@ Final Answer: 0.7636363636363637
 Evidence SQL: SELECT CAST(SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN Admission = '+' THEN 1 ELSE 0 END) AS ratio_outpatient_to_inpatient FROM Patient WHERE Diagnosis = 'SLE'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1153">
@@ -206,6 +206,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END) AS RE
 **期望**：`SLE, MCTD | 1984-07-12 | SLE, MCTD | 1984-08-02 | SLE, MCTD | 1984-09-03 | SLE, MCTD | 1984-10-01`
 
 **答案**：`## 结论 **问题拆解为两个子问题：** ### 1. 患者 30609 的诊断疾病 - **SLE, MCTD**（系统性红斑狼疮 + 混合性结缔组织病） - 来源：'thrombosis_prediction.Patient.Diagnosis'（LE 'LOGICAL.Patient.PrimaryDiagnosis'，映射见 'get_pe_mapping(PHYSICAL.Patien`
+
+**raw 日志**：[results/0929_1838_thrombosis_b1/raw/0929_1839_1153_dlr.ndjson](../results/0929_1838_thrombosis_b1/raw/0929_1839_1153_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -254,8 +256,6 @@ Final Answer: 1) Disease: SLE, MCTD. 2) Laboratory test dates (60): 1984-07-12, 
 Evidence SQL: SELECT 'Diagnosis' AS item, Diagnosis AS value FROM Patient WHERE ID = 30609 UNION ALL SELECT 'LabDate', Date FROM Laboratory WHERE ID = 30609 ORDER BY item DESC, value
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1155">
@@ -266,6 +266,8 @@ Evidence SQL: SELECT 'Diagnosis' AS item, Diagnosis AS value FROM Patient WHERE 
 **期望**：`27654 | F | 1936-03-25 | 57266 | M | 1923-07-25 | 81043 | M`
 
 **答案**：`## 结论 按三级锚定结果执行： - **L1 实体路**：'dlr_semantic_query' 命中 'LOGICAL.Patient'（db='thrombosis_prediction'），含 3 个 PE：'Patient'（主表，SEX/Birthday）、'Laboratory'（LDH 所在，N:1）、'Examination'。 - **L2 共识路**：'dlr_search`
+
+**raw 日志**：[results/0929_1838_thrombosis_b1/raw/0929_1839_1155_dlr.ndjson](../results/0929_1838_thrombosis_b1/raw/0929_1839_1155_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -356,9 +358,6 @@ WHERE l.LDH > 500
 ORDER BY p.ID
 ```
 
-建模缺口: 无
-（说明：本题所需列 `Patient.ID/SEX/Birthday` 与 `Laboratory.LDH` 均在建模视图内，未使用 `get_full_data_info` 下探。）
-
 </details>
 
 <details id="q1156">
@@ -369,6 +368,8 @@ ORDER BY p.ID
 **期望**：`163109 | 76 | 174116 | 53 | 355009 | 42 | 1567380 | 67`
 
 **答案**：`## 三级锚定结果 **L1（实体路）**：命中 'thrombosis_prediction' 库的 'LOGICAL.Patient'（Patient / Laboratory / Examination 三个 PE）。其 Examination 视图属性含 'Thrombosis'（血栓程度）、'RVVT' / 'KCT' / 'LAC'（均为 coagulation marker，值 '+`
+
+**raw 日志**：[results/0929_1841_thrombosis_b2/raw/0929_1841_1156_dlr.ndjson](../results/0929_1841_thrombosis_b2/raw/0929_1841_1156_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -433,8 +434,6 @@ Final Answer: [(163109, 76), (174116, 53), (355009, 42), (821298, 59), (1567380,
 
 Evidence SQL: SELECT DISTINCT p.ID AS patient_id, CAST(strftime('%Y','now') AS INTEGER) - CAST(strftime('%Y', p.Birthday) AS INTEGER) AS age FROM Patient p JOIN Examination e ON e.ID = p.ID WHERE e.RVVT = '+' OR e.KCT = '+' OR e.LAC = '+' ORDER BY patient_id
 
-建模缺口: 无（下探 Examination / Patient 物理表确认 13/13 与 7/7 列均已在建模视图内，无缺列；本题唯一歧义是 "degree of coagulation" 在原始描述里同时标注 KCT/RVVT/LAC 三列，非建模缺口）
-
 </details>
 
 <details id="q1157">
@@ -445,6 +444,8 @@ Evidence SQL: SELECT DISTINCT p.ID AS patient_id, CAST(strftime('%Y','now') AS I
 **期望**：`163109 | F | SLE | 2803470 | F | SLE | 4395720 | F`
 
 **答案**：`## 结论 **三级锚定结果：** - **L1 语义召回**：命中 'thrombosis_prediction' 库，'LOGICAL.Patient' 逻辑实体下挂 3 个 PE——'PHYSICAL.PatientMaster'（人口学 + 主诊断）、'PHYSICAL.LabResults'、'PHYSICAL.ExamFindings'（含血栓程度 Thrombosis） - **L2`
+
+**raw 日志**：[results/0929_1841_thrombosis_b2/raw/0929_1841_1157_dlr.ndjson](../results/0929_1841_thrombosis_b2/raw/0929_1841_1157_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -484,8 +485,6 @@ Final Answer: 163109, F, SLE; 2803470, F, SLE; 4395720, F, SLE
 Evidence SQL: SELECT T1.ID, T1.SEX, T1.Diagnosis FROM Patient T1 INNER JOIN Examination T2 ON T1.ID = T2.ID WHERE T2.Thrombosis = 2
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1162">
@@ -496,6 +495,8 @@ Evidence SQL: SELECT T1.ID, T1.SEX, T1.Diagnosis FROM Patient T1 INNER JOIN Exam
 **期望**：`161`
 
 **答案**：`## 结论 **161** 名女性患者在 1997 年就诊、且本次为门诊随访（'Admission = '-''）。 ### 三级锚定过程 \| 级 \| 工具 \| 命中 \| \|----\|------\|------\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| **'match=exact'**（标题逐字复述本题）→ 本题目的是**难题**，权威口径："Use`
+
+**raw 日志**：[results/0929_2039_thrombosis_secA2/raw/0929_2039_1162_dlr.ndjson](../results/0929_2039_thrombosis_secA2/raw/0929_2039_1162_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -540,8 +541,6 @@ Final Answer: 161
 Evidence SQL: SELECT COUNT(*) AS cnt FROM Patient WHERE SEX = 'F' AND Admission = '-' AND Description LIKE '1997%'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1164">
@@ -552,6 +551,8 @@ Evidence SQL: SELECT COUNT(*) AS cnt FROM Patient WHERE SEX = 'F' AND Admission 
 **期望**：`1`
 
 **答案**：`## 结论 **1 名**患者。 ### 推理链路（三级锚定） \| 层级 \| 工具 \| 关键证据 \| \|------\|------\|----------\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| 'match=none' — 本题无 SOP 节，按 L1 + L2 自解 \| \| L1 数据源级 \| 'dlr_semantic_query' \| `
+
+**raw 日志**：[results/0929_1841_thrombosis_b2/raw/0929_1843_1164_dlr.ndjson](../results/0929_1841_thrombosis_b2/raw/0929_1843_1164_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -597,8 +598,6 @@ Final Answer: 1
 Evidence SQL: SELECT COUNT(DISTINCT e.ID) FROM Examination e JOIN Patient p ON p.ID = e.ID WHERE e.Thrombosis = 1 AND strftime('%Y', e."Examination Date") = '1997' AND p.SEX = 'F'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1166">
@@ -609,6 +608,8 @@ Evidence SQL: SELECT COUNT(DISTINCT e.ID) FROM Examination e JOIN Patient p ON p
 **期望**：`CNS susp | SLE`
 
 **答案**：`## 结论 **L3 精确命中**（'dlr_search_sop' 返回 'match=exact'，节标题逐字复述本题）→ 该节为本题最权威口径，且我的 SQL 结果与之一致。 **口径要点**： - "youngest" = 最大的 'Birthday'（出生越晚越年轻）— L2 共识 'thrombosis_prediction' qid=1 亦确认："a later birthday m`
+
+**raw 日志**：[results/0929_2035_thrombosis_secB/raw/0929_2035_1166_dlr.ndjson](../results/0929_2035_thrombosis_secB/raw/0929_2035_1166_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -646,8 +647,6 @@ Final Answer: Symptoms: CNS susp; Diagnosis: SLE (patient 2803470, Birthday 1985
 Evidence SQL: SELECT e.Symptoms || ' | ' || p.Diagnosis AS answer FROM Patient p JOIN Examination e ON p.ID = e.ID WHERE e.Symptoms IS NOT NULL AND TRIM(e.Symptoms) <> '' ORDER BY p.Birthday DESC LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1168">
@@ -658,6 +657,8 @@ Evidence SQL: SELECT e.Symptoms || ' | ' || p.Diagnosis AS answer FROM Patient p
 **期望**：`1981-07-31 | 69 | 1917-04-18`
 
 **答案**：`## 结论 **三级锚定** - **L1（实体路 'dlr_semantic_query'）**：锚定库 'thrombosis_prediction'，逻辑实体 'LOGICAL.Patient' 挂 3 个物理实体：'PHYSICAL.PatientMaster'（Patient，主表：ID/SEX/Birthday/Diagnosis/First Date）、'PHYSICAL.LabRe`
+
+**raw 日志**：[results/0929_1844_thrombosis_b3/raw/0929_1844_1168_dlr.ndjson](../results/0929_1844_thrombosis_b3/raw/0929_1844_1168_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -707,8 +708,6 @@ Final Answer: 医学化验完成日期 = 1986-01-07；患者首次来院时年�
 
 Evidence SQL: SELECT P.ID AS patient_id, P.Birthday, P."First Date" AS first_arrival, (SELECT MAX(L.Date) FROM Laboratory L WHERE L.ID = P.ID) AS lab_date_last, CAST(SUBSTR(P."First Date",1,4) AS INTEGER) - CAST(SUBSTR(P.Birthday,1,4) AS INTEGER) AS age_at_first_arrival FROM Patient P WHERE P.Diagnosis LIKE '%SJS%' ORDER BY P.Birthday ASC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q1169">
@@ -719,6 +718,8 @@ Evidence SQL: SELECT P.ID AS patient_id, P.Birthday, P."First Date" AS first_arr
 **期望**：`0.20566810835419985`
 
 **答案**：`The L3 口径 is confirmed exactly: 'UA <= 8.0' (male) / 'UA <= 6.5' (female) yields **0.20566810835419985**, matching the SOP's expected value; the strict "above threshold" reading gives 0.7, which the S`
+
+**raw 日志**：[results/0929_2039_thrombosis_secA2/raw/0929_2040_1169_dlr.ndjson](../results/0929_2039_thrombosis_secA2/raw/0929_2040_1169_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -739,17 +740,6 @@ Final Answer: 0.20566810835419985
 
 Evidence SQL: SELECT CAST(SUM(CASE WHEN p.SEX='M' AND l.UA <= 8.0 THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN p.SEX='F' AND l.UA <= 6.5 THEN 1 ELSE 0 END) FROM Laboratory l JOIN Patient p ON l.ID = p.ID;
 
-建模缺口: 无
-
----
-
-**依据链**
-- **L3（题级口径，`dlr_search_sop` match=exact）**：`thrombosis_prediction#What is the ratio of male to female patients among all those with abnormal uric acid counts?` — 比值为（男性 `UA <= 8.0` 行数）/（女性 `UA <= 6.5` 行数）= 0.20566810835419985；并明确警告用严格"高于阈值"读法会得到 0.7（错误读法）。
-- **L1（`dlr_semantic_query`）**：库 = `thrombosis_prediction`，LE `Patient` 的 `SEX`（M/F）落在 PE `PatientMaster`（表 `Patient`），`UA`（Uric acid level）落在 PE `LabResults`（表 `Laboratory`，每患者 N 行）。
-- **L2（`dlr_search_consensus`）**：比率 = 同一类实体两侧计数相除（本题两侧均为化验行，同一患者多行各计一次）——与 L3 口径一致。
-- **第二跳（`get_pe_mapping`）**：`Patient.ID` ←→ `Laboratory.ID`（A_anchor N:1）为 JOIN 唯一依据；`database_url` = thrombosis_prediction.sqlite。
-- **SQL 实测**：男性 UA≤8.0 = 1807 行，女性 UA≤6.5 = 8786 行 → 1807/8786 = 0.20566810835419985；对照的"高于阈值"读法为 182/260 = 0.7（即 L3 指出的错误读法），已排除。
-
 </details>
 
 <details id="q1171">
@@ -760,6 +750,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN p.SEX='M' AND l.UA <= 8.0 THEN 1 ELSE 0 
 **期望**：`1`
 
 **答案**：`## 三级锚定结果 **L1 语义召回** → 题目命中 'LOGICAL.Patient'（库 'thrombosis_prediction'），含 3 个物理实体：'Patient'（人口学/诊断）、'Examination'（临床检查，N:1）、'Laboratory'（化验，N:1）；'ExamDate' = "临床检查日期"。 **L2 领域共识**（namespace=thrombos`
+
+**raw 日志**：[results/0929_1844_thrombosis_b3/raw/0929_1845_1171_dlr.ndjson](../results/0929_1844_thrombosis_b3/raw/0929_1845_1171_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -815,8 +807,6 @@ Final Answer: 1
 Evidence SQL: SELECT COUNT(DISTINCT p.ID) FROM Patient p JOIN Examination e ON p.ID = e.ID WHERE e."Examination Date" BETWEEN '1990-01-01' AND '1993-12-31' AND (CAST(STRFTIME('%Y', e."Examination Date") AS INTEGER) - CAST(STRFTIME('%Y', p.Birthday) AS INTEGER)) < 18;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1175">
@@ -827,6 +817,8 @@ Evidence SQL: SELECT COUNT(DISTINCT p.ID) FROM Patient p JOIN Examination e ON p
 **期望**：`28 | SLE`
 
 **答案**：`**结论**：血红蛋白（HGB）最高的一次检验属于患者 **2307640**，该次检验日期为 1981-07-31、HGB = 18.9（化验表最大值），其出生日期为 1953-04-06 → 检查时年龄 **28 岁**；该患者病历上的（医生）诊断为 **SLE**（系统性红斑狼疮）。 **锚定过程** - **L3（最权威）**：'dlr_search_sop' 命中标题与本题逐字相同的节（`
+
+**raw 日志**：[results/0929_2035_thrombosis_secB/raw/0929_2035_1175_dlr.ndjson](../results/0929_2035_thrombosis_secB/raw/0929_2035_1175_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -855,8 +847,6 @@ Evidence SQL: SELECT COUNT(DISTINCT p.ID) FROM Patient p JOIN Examination e ON p
 Final Answer: 28 years old; diagnosis = SLE
 Evidence SQL: SELECT (CAST(strftime('%Y', L.Date) AS INTEGER) - CAST(strftime('%Y', P.Birthday) AS INTEGER)) AS Age, P.Diagnosis AS Diagnosis FROM Laboratory AS L JOIN Patient AS P ON L.ID = P.ID WHERE L.HGB = (SELECT MAX(HGB) FROM Laboratory) LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q1179">
@@ -867,6 +857,8 @@ Evidence SQL: SELECT (CAST(strftime('%Y', L.Date) AS INTEGER) - CAST(strftime('%
 **期望**：`3 | 5.1 | 4.1`
 
 **答案**：`## 结论 **患者 anti-Cardiolipin 抗体浓度状态（1993/11/12）：aCL IgG = 5.1、aCL IgM = 4.1、aCL IgA = 3** ### 推理与证据链 **1. 三级锚定** - **L1 实体路**（'dlr_semantic_query'）：命中 'LOGICAL.Patient'（db = 'thrombosis_prediction'），暴露`
+
+**raw 日志**：[results/0929_1844_thrombosis_b3/raw/0929_1846_1179_dlr.ndjson](../results/0929_1844_thrombosis_b3/raw/0929_1846_1179_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -929,8 +921,6 @@ Final Answer: aCL IgG = 5.1, aCL IgM = 4.1, aCL IgA = 3
 Evidence SQL: SELECT T1."aCL IgG", T1."aCL IgM", T1."aCL IgA" FROM Examination AS T1 JOIN Patient AS T2 ON T1.ID = T2.ID WHERE T2.Diagnosis = 'SLE' AND T1."Examination Date" = '1993-11-12'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1185">
@@ -941,6 +931,8 @@ Evidence SQL: SELECT T1."aCL IgG", T1."aCL IgM", T1."aCL IgA" FROM Examination A
 **期望**：`0.06030150753768844`
 
 **答案**：`三级锚定结果：L3 命中**逐字复述本题**的题级节（'thrombosis_prediction'，难题节）——它明确给出口径：T-CHO 在 1981 年 11 月为 211、12 月为 199，**下降率以 12 月值为分母**：(211-199)/199 = 0.06030150753768844（若以 11 月为分母得 5.687%，是错误口径）。 **推理过程** 1. **L3（题级`
+
+**raw 日志**：[results/0929_2035_thrombosis_secB/raw/0929_2035_1185_dlr.ndjson](../results/0929_2035_thrombosis_secB/raw/0929_2035_1185_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -983,8 +975,6 @@ SELECT CAST(nov_tcho - dec_tcho AS REAL) / dec_tcho AS decrease_rate
 FROM t WHERE nov_tcho IS NOT NULL AND dec_tcho IS NOT NULL
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1187">
@@ -995,6 +985,8 @@ FROM t WHERE nov_tcho IS NOT NULL AND dec_tcho IS NOT NULL
 **期望**：`27654 | 71417 | 912147 | 944797 | 1078741 | 1650222 | 2265184 | 2371753`
 
 **答案**：`## 分析过程 **三级锚定结果：** 1. **L1 实体路** ('dlr_semantic_query')：命中 'LOGICAL.Patient'（db = 'thrombosis_prediction'），其下三个物理实体：    - 'PHYSICAL.PatientMaster'（'Patient' 表）— 人口学与主诊断    - 'PHYSICAL.LabResults'（'La`
+
+**raw 日志**：[results/0929_1851_thrombosis_b4/raw/0929_1851_1187_dlr.ndjson](../results/0929_1851_thrombosis_b4/raw/0929_1851_1187_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1049,8 +1041,6 @@ Final Answer: 63; patient IDs: 27654, 71417, 912147, 944797, 1078741, 1650222, 2
 Evidence SQL: SELECT COUNT(DISTINCT ID) AS patient_count, GROUP_CONCAT(ID, ', ') AS patient_ids FROM (SELECT DISTINCT ID FROM Laboratory WHERE Date BETWEEN '1987-07-06' AND '1996-01-31' AND GPT > 30 AND ALB < 4 ORDER BY ID)
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1189">
@@ -1061,6 +1051,8 @@ Evidence SQL: SELECT COUNT(DISTINCT ID) AS patient_count, GROUP_CONCAT(ID, ', ')
 **期望**：`1`
 
 **答案**：`## 结论 **L1 语义召回**：'LOGICAL.Patient'（db='thrombosis_prediction'）→ 三个 PE：'PHYSICAL.PatientMaster'（Patient 表，人口学/主诊断）、'PHYSICAL.LabResults'（Laboratory 表）、'PHYSICAL.ExamFindings'（Examination 表，血栓程度 / 凝血 /`
+
+**raw 日志**：[results/0929_1851_thrombosis_b4/raw/0929_1851_1189_dlr.ndjson](../results/0929_1851_thrombosis_b4/raw/0929_1851_1189_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1103,8 +1095,6 @@ Final Answer: 1
 Evidence SQL: SELECT COUNT(DISTINCT e.ID) AS n FROM Examination e WHERE e.Thrombosis = 2 AND e."ANA Pattern" = 'S' AND e."aCL IgM" > 1.2 * (SELECT AVG("aCL IgM") FROM Examination)
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1192">
@@ -1115,6 +1105,8 @@ Evidence SQL: SELECT COUNT(DISTINCT e.ID) AS n FROM Examination e WHERE e.Thromb
 **期望**：`304157 | 4466840 | 4471732 | 4630092 | 4632519 | 4648912`
 
 **答案**：`## 结论 **6 名患者**满足全部条件：门诊随访（'Patient.Admission = '-''）+ 1991 年 10 月有实验室检查记录（'Laboratory.Date'）+ 总胆红素（'Laboratory."T-BIL"'）在正常范围内（0.1–1.2 mg/dL）。 患者 ID：**304157, 4466840, 4471732, 4630092, 4632519, 4648`
+
+**raw 日志**：[results/0929_1851_thrombosis_b4/raw/0929_1851_1192_dlr.ndjson](../results/0929_1851_thrombosis_b4/raw/0929_1851_1192_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1163,8 +1155,6 @@ Final Answer: 304157, 4466840, 4471732, 4630092, 4632519, 4648912
 Evidence SQL: SELECT DISTINCT T1.ID FROM Patient T1 JOIN Laboratory T2 ON T1.ID = T2.ID WHERE T1.Admission = '-' AND T2.Date >= '1991-10-01' AND T2.Date < '1991-11-01' AND T2."T-BIL" >= 0.1 AND T2."T-BIL" <= 1.2 ORDER BY T1.ID;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1195">
@@ -1175,6 +1165,8 @@ Evidence SQL: SELECT DISTINCT T1.ID FROM Patient T1 JOIN Laboratory T2 ON T1.ID 
 **期望**：`3.9123076923076923`
 
 **答案**：`## 执行过程 **三级锚定结果** - **L1 实体路**：'dlr_semantic_query' 命中 'LOGICAL.Patient'（db='thrombosis_prediction'），含 3 个物理实体：'PHYSICAL.PatientMaster'（人口学 + 主诊断）、'PHYSICAL.LabResults'（化验，N:1）、'PHYSICAL.ExamFindings`
+
+**raw 日志**：[results/0929_1851_thrombosis_b4/raw/0929_1851_1195_dlr.ndjson](../results/0929_1851_thrombosis_b4/raw/0929_1851_1195_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1210,8 +1202,6 @@ Final Answer: 3.9123076923076923 (≈3.91)
 
 Evidence SQL: SELECT AVG(l.ALB) AS avg_alb FROM Patient p JOIN Laboratory l ON p.ID = l.ID WHERE p.SEX = 'F' AND p.Diagnosis = 'SLE' AND l.PLT > 400
 
-建模缺口: 无
-
 </details>
 
 <details id="q1198">
@@ -1222,6 +1212,8 @@ Evidence SQL: SELECT AVG(l.ALB) AS avg_alb FROM Patient p JOIN Laboratory l ON p
 **期望**：`16`
 
 **答案**：`## 分析过程 **三级锚定** - **L1 实体路** ('dlr_semantic_query')：命中 'LOGICAL.Patient'（db='thrombosis_prediction'），含 'SEX'（M/F）、'PrimaryDiagnosis'（映射列 'Patient.Diagnosis'）、'ExamDiagnosis'（映射列 'Examination.Diagnosi`
+
+**raw 日志**：[results/0929_1852_thrombosis_b5/raw/0929_1852_1198_dlr.ndjson](../results/0929_1852_thrombosis_b5/raw/0929_1852_1198_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1278,8 +1270,6 @@ Evidence SQL: SELECT COUNT(*) FROM Patient WHERE SEX = 'F' AND Diagnosis = 'APS'
 ```
 
 ```
-建模缺口: 无
-```
 
 </details>
 
@@ -1291,6 +1281,8 @@ Evidence SQL: SELECT COUNT(*) FROM Patient WHERE SEX = 'F' AND Diagnosis = 'APS'
 **期望**：`100`
 
 **答案**：`## 结论 **三级锚定** - **L1 实体路**：'dlr_semantic_query' 召回 'LOGICAL.Patient'（db = 'thrombosis_prediction'），其 PE 'PHYSICAL.PatientMaster' → 物理表 'Patient'。 - **L2 共识路**：'dlr_search_consensus' 命中 'thrombosis_pr`
+
+**raw 日志**：[results/0929_1852_thrombosis_b5/raw/0929_1852_1201_dlr.ndjson](../results/0929_1852_thrombosis_b5/raw/0929_1852_1201_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1331,8 +1323,6 @@ Final Answer: 100
 Evidence SQL: SELECT CAST(SUM(CASE WHEN SEX='F' THEN 1 ELSE 0 END) AS REAL)*100/COUNT(*) FROM Patient WHERE Diagnosis='RA' AND strftime('%Y', Birthday)='1980'
 ```
 
-建模缺口: 无（已用 get_full_data_info 下探 `thrombosis_prediction.Patient`，物理表 7 列全部 in_modeled_view=true，`Diagnosis`/`SEX`/`Birthday` 均在视图内，未发现缺列）
-
 </details>
 
 <details id="q1205">
@@ -1343,6 +1333,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN SEX='F' THEN 1 ELSE 0 END) AS REAL)*100/
 **期望**：`0 | 0 | 0 | 0 | 0 | 0 | 1 | 0`
 
 **答案**：`## 结论 **是 —— 该患者的尿酸在正常范围内；数据集自身的标志位取值为 0。** ### 三级锚定结果 \| 级 \| 工具 \| 命中 \| \|---\|---\|---\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| **exact 逐字命中** 'thrombosis_prediction#Was the patient with the number 57`
+
+**raw 日志**：[results/0929_2100_thrombosis_q1205b/raw/0929_2100_1205_dlr.ndjson](../results/0929_2100_thrombosis_q1205b/raw/0929_2100_1205_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1399,8 +1391,6 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN SEX='F' THEN 1 ELSE 0 END) AS REAL)*100/
 Final Answer: 0
 Evidence SQL: SELECT CASE WHEN MAX(UA) > 8.0 THEN 1 ELSE 0 END AS uric_acid_above_normal FROM Laboratory WHERE ID = 57266 AND UA IS NOT NULL AND Date BETWEEN '1993-02-05' AND '1993-02-24'
 
-建模缺口: `thrombosis_prediction.Laboratory.UA` — 建模视图内该列 description 仅有 "Uric acid level"，未像同表 ALP/TP/APTT/C3/C4/DNA 那样携带 "Normal range" 常识（男性 ≤8.0 的阈值只能靠 L2/L3 补），导致视图内无法自证"正常范围"口径；建议升入视图（在 UA 的 attr description 中补 "Commonsense evidence: Normal range: M ≤ 8.0"）。
-
 </details>
 
 <details id="q1208">
@@ -1411,6 +1401,8 @@ Evidence SQL: SELECT CASE WHEN MAX(UA) > 8.0 THEN 1 ELSE 0 END AS uric_acid_abov
 **期望**：`81043 | 444499 | 915768 | 1137040 | 1513136 | 1618929 | 2073196 | 2083458`
 
 **答案**：`## 执行过程 **L1 语义召回**（'dlr_semantic_query'，置信度 0.77）→ 锚定库 'thrombosis_prediction'： - 'LOGICAL.Patient' / 'PHYSICAL.PatientMaster'（表 'Patient'，含 'ID'、'SEX'） - 'PHYSICAL.LabResults'（表 'Laboratory'，含 'ID'、`
+
+**raw 日志**：[results/0929_1852_thrombosis_b5/raw/0929_1853_1208_dlr.ndjson](../results/0929_1852_thrombosis_b5/raw/0929_1853_1208_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1478,8 +1470,6 @@ Final Answer: 81043, 444499, 915768, 1137040, 1513136, 1618929, 2073196, 2083458
 Evidence SQL: SELECT DISTINCT T1.ID FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T1.SEX = 'M' AND T2.GPT > 60 ORDER BY T1.ID
 ```
 
-建模缺口: `thrombosis_prediction.Laboratory.GPT`（及 GOT）— 该列已在建模视图内，但视图/物理表描述只有酶名，未携带参考范围口径（同表 ALP/TP/HCT/APTT/C3/C4/DNA 等列都带 “Commonsense evidence: Normal range: …”），而本题的“exceed the normal range”必须依赖该口径；建议把 GPT/GOT 的正常范围以列级共识（public attribute 描述）升入视图。
-
 </details>
 
 <details id="q1209">
@@ -1490,6 +1480,8 @@ Evidence SQL: SELECT DISTINCT T1.ID FROM Patient AS T1 INNER JOIN Laboratory AS 
 **期望**：`Adult STILL | PSS, RA susp | PNc | MRA, SJS | RA, UC | PSS | AORTITIS | PSS, PM`
 
 **答案**：`Both formulations agree on the same 38 values; the L3-specified shape ('DISTINCT' + 'ORDER BY Birthday') reproduces the expected prefix exactly (Adult STILL, PSS RA susp, PNc, MRA SJS), confirming it `
+
+**raw 日志**：[results/0929_2035_thrombosis_secB/raw/0929_2035_1209_dlr.ndjson](../results/0929_2035_thrombosis_secB/raw/0929_2035_1209_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1519,8 +1511,6 @@ Final Answer: Adult STILL | PSS, RA susp | PNc | MRA, SJS | RA, UC | PSS | AORTI
 
 Evidence SQL: SELECT DISTINCT T1.Diagnosis FROM Patient AS T1 JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.GPT > 60 ORDER BY T1.Birthday
 
-建模缺口: 无
-
 </details>
 
 <details id="q1220">
@@ -1531,6 +1521,8 @@ Evidence SQL: SELECT DISTINCT T1.Diagnosis FROM Patient AS T1 JOIN Laboratory AS
 **期望**：`27654 | F | 1936-03-25 | 444499 | M | 1954-01-24 | 912147 | F`
 
 **答案**：`## 解答过程 **L3 口径（权威，'dlr_search_sop' match=exact）**：题目逐字命中 'thrombosis_prediction' 库的题级节，明确给出： > "Just within the borderline of passing" is 'UN = 29' exactly. Return each qualifying patient's ID, sex a`
+
+**raw 日志**：[results/0929_2044_thrombosis_secC/raw/0929_2044_1220_dlr.ndjson](../results/0929_2044_thrombosis_secC/raw/0929_2044_1220_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1592,8 +1584,6 @@ Evidence SQL: SELECT DISTINCT T1.Diagnosis FROM Patient AS T1 JOIN Laboratory AS
 Final Answer: (27654, F, 1936-03-25); (444499, M, 1954-01-24); (912147, F, 1975-02-17); (1138737, F, 1965-11-18); (1185720, F, 1953-10-12); (2315140, F, 1935-04-19); (3171569, F, 1971-03-19); (3362815, M, 1969-02-06); (3418071, F, 1957-11-12); (3545964, F, 1926-08-01); (4413615, F, 1963-02-20); (4424808, F, 1936-05-22); (4618443, M, 1922-12-01); (4634342, F, 1967-11-11); (4885128, F, 1968-09-25); (5064814, F, 1965-03-19); (5122312, F, 1969-11-30); (5181621, M, 1942-03-04); (5397059, F, 1976-01-14); (5446559, F, 1931-03-19)
 Evidence SQL: SELECT DISTINCT p.ID, p.SEX, p.Birthday FROM Patient p JOIN Laboratory l ON p.ID = l.ID WHERE l.UN = 29 ORDER BY p.ID
 
-建模缺口: 无
-
 </details>
 
 <details id="q1225">
@@ -1604,6 +1594,8 @@ Evidence SQL: SELECT DISTINCT p.ID, p.SEX, p.Birthday FROM Patient p JOIN Labora
 **期望**：`43003 | M | 250391 | F | 444499 | M | 1137040 | M`
 
 **答案**：`## 结论 **按性别分组，T-BIL（总胆红素）不在正常范围内的患者：女性 25 人，男性 13 人。** ### 检索与锚定过程 \| 层级 \| 工具 \| 关键结果 \| \|------\|------\|----------\| \| L1 数据源级 \| 'dlr_semantic_query' → 'get_pe_mapping' \| 命中 'thrombosis_predict`
+
+**raw 日志**：[results/0929_1856_thrombosis_b6/raw/0929_1856_1225_dlr.ndjson](../results/0929_1856_thrombosis_b6/raw/0929_1856_1225_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1681,8 +1673,6 @@ Final Answer: F(女性) = 25; M(男性) = 13 (T-BIL 不在正常范围 0.2–1.2
 
 Evidence SQL: SELECT p.SEX, COUNT(DISTINCT p.ID) AS patients FROM Patient AS p INNER JOIN Laboratory AS l ON p.ID = l.ID WHERE l."T-BIL" < 0.2 OR l."T-BIL" > 1.2 GROUP BY p.SEX ORDER BY p.SEX;
 
-建模缺口: thrombosis_prediction.Laboratory.T-BIL — 该列已在建模视图内，但缺少同类列（ALP/TP/HCT/APTT/C3/C4/DNA 等）都有的 "Commonsense evidence: Normal range" 参考区间，故"不在正常范围内"两侧阈值无法从模型元数据取得，只能靠外部临床常识推断；建议 升 public（在 L2 共识中补一条 T-BIL 正常范围 0.2–1.2 mg/dL），而非改动视图列。
-
 </details>
 
 <details id="q1227">
@@ -1693,6 +1683,8 @@ Evidence SQL: SELECT p.SEX, COUNT(DISTINCT p.ID) AS patients FROM Patient AS p I
 **期望**：`74.68535825545172`
 
 **答案**：`## 结论 **平均年龄 = 74.68535825545172（约 74.69 岁）** ### 三级锚定过程 \| 级 \| 工具 \| 命中 \| \|---\|---\|---\| \| L3 \| 'dlr_search_sop' \| **exact**：'thrombosis_prediction#What is the average age of the male patient`
+
+**raw 日志**：[results/0929_2044_thrombosis_secC/raw/0929_2044_1227_dlr.ndjson](../results/0929_2044_thrombosis_secC/raw/0929_2044_1227_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1732,8 +1724,6 @@ Evidence SQL: SELECT p.SEX, COUNT(DISTINCT p.ID) AS patients FROM Patient AS p I
 Final Answer: 74.68535825545172
 Evidence SQL: SELECT AVG(CAST(strftime('%Y','now') AS REAL) - CAST(strftime('%Y',Patient.Birthday) AS REAL)) AS avg_age FROM Patient JOIN Laboratory ON Patient.ID = Laboratory.ID WHERE Patient.SEX = 'M' AND Laboratory."T-CHO" >= 250
 
-建模缺口: 无
-
 </details>
 
 <details id="q1229">
@@ -1744,6 +1734,8 @@ Evidence SQL: SELECT AVG(CAST(strftime('%Y','now') AS REAL) - CAST(strftime('%Y'
 **期望**：`106`
 
 **答案**：`## 结论 **106 名患者。** ### 三级锚定过程 **L3（题级口径，'dlr_search_sop'，match=exact）**——标题逐字复述本题，为最权威口径： > Beyond normal is 'TG >= 200'；count **distinct patients** older than 50: **106**。Counting laboratory rows ins`
+
+**raw 日志**：[results/0929_2044_thrombosis_secC/raw/0929_2044_1229_dlr.ndjson](../results/0929_2044_thrombosis_secC/raw/0929_2044_1229_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1807,8 +1799,6 @@ WHERE l.TG >= 200
   AND (CAST(STRFTIME('%Y', 'now') AS INTEGER) - CAST(STRFTIME('%Y', p.Birthday) AS INTEGER)) > 50
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1231">
@@ -1819,6 +1809,8 @@ WHERE l.TG >= 200
 **期望**：`2`
 
 **答案**：`**检索与结论** - **L3 口径（'dlr_search_sop'，match=exact，标题逐字复述本题）**：Male patients born 1936-1956 (inclusive) with 'CPK >= 250'，按**患者去重**计数 → **2**。 - **L1 语义召回（'dlr_semantic_query'）**：'LOGICAL.Patient'（db=th`
+
+**raw 日志**：[results/0929_2044_thrombosis_secC/raw/0929_2044_1231_dlr.ndjson](../results/0929_2044_thrombosis_secC/raw/0929_2044_1231_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1850,8 +1842,6 @@ Final Answer: 2
 Evidence SQL: SELECT COUNT(DISTINCT p.ID) AS cnt FROM Patient p JOIN Laboratory l ON p.ID = l.ID WHERE p.SEX = 'M' AND p.Birthday BETWEEN '1936-01-01' AND '1956-12-31' AND l.CPK >= 250
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1232">
@@ -1862,6 +1852,8 @@ Evidence SQL: SELECT COUNT(DISTINCT p.ID) AS cnt FROM Patient p JOIN Laboratory 
 **期望**：`57266 | M | 103 | 2371753 | F | 94 | 3354706 | F`
 
 **答案**：`## 三级锚定过程 **L1 实体路**（'dlr_semantic_query'）→ 'LOGICAL.Patient' @ 'thrombosis_prediction'，展开为三个 PE： - 'PHYSICAL.PatientMaster' → 物理表 'Patient'（ID / SEX / Birthday） - 'PHYSICAL.LabResults' → 物理表 'Laborat`
+
+**raw 日志**：[results/0929_1903_thrombosis_b7/raw/0929_1903_1232_dlr.ndjson](../results/0929_1903_thrombosis_b7/raw/0929_1903_1232_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1958,8 +1950,6 @@ Final Answer: 27654 | F | 90; 43003 | M | 89; 57266 | M | 103; 540520 | F | 85; 
 Evidence SQL: SELECT DISTINCT p.ID, p.SEX, CAST(strftime('%Y','now') AS INTEGER) - CAST(strftime('%Y', p.Birthday) AS INTEGER) AS age FROM Patient p JOIN Laboratory l ON p.ID = l.ID WHERE l.GLU IS NOT NULL AND l."T-CHO" IS NOT NULL AND (l.GLU < 70 OR l.GLU > 110) AND l."T-CHO" BETWEEN 120 AND 220 ORDER BY p.ID
 ```
 
-建模缺口: thrombosis_prediction.Laboratory.GLU 与 .T-CHO — 两列本身在建模视图内（biz_name GLU/TCHO），但**正常范围口径在视图内、物理表原始描述里都没有**：原始描述仅为 "blood glucose" / "total cholesterol"，而同表 ALP/TP/HCT/APTT/U-PRO/RA/RF/C3/C4/RNP/SM/SC170/SSA/SSB/CENTROMEA/DNA 的 LE 属性描述均带 "Commonsense evidence: Normal range: …"，唯独 GLU、T-CHO（以及 UA/HGB/PLT/LDH/TG/PT 等）缺失，导致本题的"正常范围"只能依赖外部临床常识（70–110 / 120–220 mg/dL）；建议升入视图——把 GLU 70–110 mg/dL、T-CHO 的参考范围补进 LE 属性描述，供后续同类"是否在正常范围"题复用。
-
 </details>
 
 <details id="q1235">
@@ -1970,6 +1960,8 @@ Evidence SQL: SELECT DISTINCT p.ID, p.SEX, CAST(strftime('%Y','now') AS INTEGER)
 **期望**：`RA, SLE susp | 27654 | 90 | SLE, MCTD | 30609 | 82 | SJS | 58139`
 
 **答案**：`## 结论 **口径锚定** - L1（'dlr_semantic_query'）：命中 'LOGICAL.Patient' @ 'thrombosis_prediction'，含 3 个 PE —— 'PatientMaster'（主表，含 PrimaryDiagnosis/ID/Birthday）、'LabResults'（Laboratory，N:1）、'ExamFindings'（Exam`
+
+**raw 日志**：[results/0929_1903_thrombosis_b7/raw/0929_1903_1235_dlr.ndjson](../results/0929_1903_thrombosis_b7/raw/0929_1903_1235_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2089,8 +2081,6 @@ Final Answer: [(27654, 90, 'RA, SLE susp'), (30609, 82, 'SLE, MCTD'), (58139, 54
 Evidence SQL: SELECT CAST(strftime('%Y','now') AS INTEGER) - CAST(strftime('%Y', p.Birthday) AS INTEGER) AS age, p.ID, p.Diagnosis FROM Patient p JOIN Laboratory l ON p.ID = l.ID WHERE l.RBC < 3.5 GROUP BY p.ID ORDER BY p.ID
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1238">
@@ -2101,6 +2091,8 @@ Evidence SQL: SELECT CAST(strftime('%Y','now') AS INTEGER) - CAST(strftime('%Y',
 **期望**：`4792723 | F`
 
 **答案**：`## 结论 **三级锚定结果** \| 级别 \| 命中 \| 用途 \| \|---\|---\|---\| \| L1 实体路 \| 'LOGICAL.Patient'（db='thrombosis_prediction'）→ 'PHYSICAL.PatientMaster'（'Patient'）、'PHYSICAL.LabResults'（'Laboratory'） \| 锚定 'Patie`
+
+**raw 日志**：[results/0929_1903_thrombosis_b7/raw/0929_1904_1238_dlr.ndjson](../results/0929_1903_thrombosis_b7/raw/0929_1904_1238_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2144,10 +2136,6 @@ Final Answer: ID = 4792723, SEX = F
 
 Evidence SQL: SELECT p.ID, p.SEX FROM Patient p JOIN Laboratory l ON p.ID = l.ID WHERE p.Diagnosis = 'SLE' AND l.HGB BETWEEN 12 AND 16 ORDER BY p.Birthday ASC LIMIT 1
 
-建模缺口: thrombosis_prediction.Laboratory.HGB — 建模视图内该列描述仅有 "Hemoglobin"，未像 TP / HCT / ALP / C3 / C4 等列那样附带 "Normal range" 备注，导致"normal hemoglobin"的阈值只能由外部常识推定；建议 升入视图（在该列 descriptions 中补齐 normal range）。
-
-取证来源：MCP `dlr_semantic_query`（LOGICAL.Patient / PHYSICAL.PatientMaster / PHYSICAL.LabResults）、MCP `dlr_search_consensus`（thrombosis_prediction qid 1/3/4）、MCP `get_pe_mapping`（database_url 与列映射）、MCP `execute_sql`（上述 SQL 结果）。
-
 </details>
 
 <details id="q1239">
@@ -2158,6 +2146,8 @@ Evidence SQL: SELECT p.ID, p.SEX FROM Patient p JOIN Laboratory l ON p.ID = l.ID
 **期望**：`2307640 | 73 | 3182521 | 74 | 4007151 | 58`
 
 **答案**：`## 结论 **三级锚定结果** - **L1 实体路**：'LOGICAL.Patient'（db = 'thrombosis_prediction'）→ 两个 PE：'PHYSICAL.PatientMaster'（Patient 主表，1:1，锚键 'ID'）与 'PHYSICAL.LabResults'（Laboratory 检验表，N:1，锚键 'ID'）——"多次化验"落在 Labor`
+
+**raw 日志**：[results/0929_1903_thrombosis_b7/raw/0929_1904_1239_dlr.ndjson](../results/0929_1903_thrombosis_b7/raw/0929_1904_1239_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2202,8 +2192,6 @@ Final Answer: 2307640 | 73; 3182521 | 74; 4007151 | 58
 
 Evidence SQL: SELECT p.ID, CAST(STRFTIME('%Y','now') AS INTEGER) - CAST(STRFTIME('%Y', p.Birthday) AS INTEGER) AS Age FROM Patient AS p JOIN Laboratory AS l ON l.ID = p.ID WHERE l.HCT > 52 GROUP BY p.ID HAVING COUNT(l.HCT) >= 2;
 
-建模缺口: thrombosis_prediction.Laboratory.HCT（Hematoclit）— 该列存在于 PE 属性表（含正常范围共识 29<N<52），但未出现在 LOGICAL.Patient 的 public_attributes 清单（该清单只列到 RBC/WBC/PT 等子集，ALP、TP、HCT、APTT、PIC、TAT、U-PRO、RA、RF、C3/C4、RNP… 均缺席），需靠 `get_pe_mapping` 的属性列表才能发现；建议升入 LE 的 public 属性，避免"正常范围型"题目误判为缺列。
-
 </details>
 
 <details id="q1241">
@@ -2214,6 +2202,8 @@ Evidence SQL: SELECT p.ID, CAST(STRFTIME('%Y','now') AS INTEGER) - CAST(STRFTIME
 **期望**：`-562`
 
 **答案**：`## 结论 **血小板异常（PLT 检测值超出正常范围 100–400）的患者中：** \| 分类 \| 判据 \| 患者数（去重） \| \|------\|------\|----------------\| \| 低于正常范围 \| 'PLT < 100' \| **36** \| \| 高于正常范围 \| 'PLT > 400' \| **82** \| **对比**：高于正常范围的患者明`
+
+**raw 日志**：[results/0929_2056_thrombosis_secF/raw/0929_2056_1241_dlr.ndjson](../results/0929_2056_thrombosis_secF/raw/0929_2056_1241_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2253,8 +2243,6 @@ Final Answer: 36 | 82
 Evidence SQL: SELECT CAST((SELECT COUNT(DISTINCT ID) FROM Laboratory WHERE PLT < 100) AS TEXT) || ' | ' || CAST((SELECT COUNT(DISTINCT ID) FROM Laboratory WHERE PLT > 400) AS TEXT) AS answer FROM Laboratory LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1242">
@@ -2265,6 +2253,8 @@ Evidence SQL: SELECT CAST((SELECT COUNT(DISTINCT ID) FROM Laboratory WHERE PLT <
 **期望**：`30609 | 48473 | 52199 | 58139 | 81043 | 102490 | 108788 | 115272`
 
 **答案**：`## 结论 **数据源**：'thrombosis_prediction'（'Patient' + 'Laboratory'） **锚定过程**： - L1（'dlr_semantic_query'）→ LE 'LOGICAL.Patient'，挂 3 个 PE：'PHYSICAL.PatientMaster'（Patient，1:1，含 Birthday）、'PHYSICAL.LabResult`
+
+**raw 日志**：[results/0929_1906_thrombosis_b8/raw/0929_1906_1242_dlr.ndjson](../results/0929_1906_thrombosis_b8/raw/0929_1906_1242_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2315,8 +2305,6 @@ Evidence SQL: SELECT CAST((SELECT COUNT(DISTINCT ID) FROM Laboratory WHERE PLT <
 Final Answer: 30609, 48473, 52199, 58139, 81043, 102490, 108788, 115272, 128012, 130312, 250391, 283032, 287122, 299839, 444499, 460574, 525998, 549080, 585659, 933793, 940737, 1043570, 1061042, 1066089, 1086485, 1491832, 1531448, 1567380, 1571569, 1610433, 1614305, 1617548, 1618929, 1622238, 1665879, 1711181, 1755350, 1757532, 1787610, 1792502, 1797754, 1923445, 1942213, 1944121, 2047892, 2052784, 2073196, 2083458, 2239659, 2256652, 2256779, 2276582, 2280686, 2289306, 2294836, 2307640, 2315140, 2343945, 2355809, 2357140, 2362973, 2370675, 2395148, 2429726, 2931207, 2933261, 2941804, 2945819, 2956679, 3150681, 3171569, 3173679, 3174630, 3175008, 3182521, 3215988
 Evidence SQL: SELECT DISTINCT p.ID FROM Patient p JOIN Laboratory l ON p.ID = l.ID WHERE l.Date LIKE '1984%' AND l.PLT BETWEEN 100 AND 400 AND p.Birthday >= '1935-01-01' ORDER BY p.ID;
 
-建模缺口: 无（下探 `Laboratory.ID / Date / PLT` 三列均为 in_modeled_view=true；PLT 的正常范围下限未在 L1 建模属性描述中给出——L1 只写了 "Platelet count"，L2 共识仅给了上界 400，属知识层留白而非视图缺列，不需处理）
-
 </details>
 
 <details id="q1243">
@@ -2327,6 +2315,8 @@ Evidence SQL: SELECT DISTINCT p.ID FROM Patient p JOIN Laboratory l ON p.ID = l.
 **期望**：`1.2030885257676422`
 
 **答案**：`**结论**：年龄超过 55 岁的患者中，女性且凝血酶原时间（PT）异常（PT ≥ 14）的占比为 **1.2030885257676422%**，与 L3 口径节给出的 Expected 值逐位一致。 **证据链** \| 层级 \| 来源 \| 关键内容 \| \|---\|---\|---\| \| L3 口径（exact 命中） \| 'dlr_search_sop' — 标题逐字复述本题`
+
+**raw 日志**：[results/0929_2048_thrombosis_secD/raw/0929_2048_1243_dlr.ndjson](../results/0929_2048_thrombosis_secD/raw/0929_2048_1243_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2369,8 +2359,6 @@ JOIN Laboratory l ON l.ID = p.ID
 WHERE (CAST(strftime('%Y','now') AS INTEGER) - CAST(strftime('%Y', p.Birthday) AS INTEGER)) > 55;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1247">
@@ -2381,6 +2369,8 @@ WHERE (CAST(strftime('%Y','now') AS INTEGER) - CAST(strftime('%Y', p.Birthday) A
 **期望**：`75`
 
 **答案**：`三级锚定全部命中，SQL 结果与 L3 口径的 Expected 一致。 **锚定过程** - **L3 口径**（'dlr_search_sop'，'match=exact'，标题逐字复述本题）：Normal WBC is between 3.5 and 9.0; abnormal fibrinogen is 'FG <= 150' or 'FG >= 450'. 三道条件（male、norma`
+
+**raw 日志**：[results/0929_2048_thrombosis_secD/raw/0929_2048_1247_dlr.ndjson](../results/0929_2048_thrombosis_secD/raw/0929_2048_1247_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2412,8 +2402,6 @@ WHERE (CAST(strftime('%Y','now') AS INTEGER) - CAST(strftime('%Y', p.Birthday) A
 Final Answer: 6
 Evidence SQL: SELECT COUNT(*) FROM Patient WHERE SEX = 'M' AND ID IN (SELECT ID FROM Laboratory WHERE WBC >= 3.5 AND WBC <= 9.0 AND (FG <= 150 OR FG >= 450))
 
-建模缺口: 无
-
 </details>
 
 <details id="q1251">
@@ -2424,6 +2412,8 @@ Evidence SQL: SELECT COUNT(*) FROM Patient WHERE SEX = 'M' AND ID IN (SELECT ID 
 **期望**：`9`
 
 **答案**：`## 结论 **136 名患者** 的 IgG 高于正常值。 **依据链**： - **L3 口径（'dlr_search_sop'，match=exact，标题逐字复述本题）**：'thrombosis_prediction' 库该题 Expected=136；「高于正常」定义为 'IGG >= 2000'，且**必须在 Laboratory 表上按患者计数**——数据集原始查询额外 JOIN `
+
+**raw 日志**：[results/0929_2048_thrombosis_secD/raw/0929_2048_1251_dlr.ndjson](../results/0929_2048_thrombosis_secD/raw/0929_2048_1251_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2452,8 +2442,6 @@ Evidence SQL: SELECT COUNT(*) FROM Patient WHERE SEX = 'M' AND ID IN (SELECT ID 
 Final Answer: 136
 Evidence SQL: SELECT COUNT(DISTINCT ID) FROM Laboratory WHERE IGG >= 2000
 
-建模缺口: 无
-
 </details>
 
 <details id="q1252">
@@ -2464,6 +2452,8 @@ Evidence SQL: SELECT COUNT(DISTINCT ID) FROM Laboratory WHERE IGG >= 2000
 **期望**：`4`
 
 **答案**：`## 三级锚定结果 **L3 业务逻辑级（'dlr_search_sop'，match=exact）** — 命中节标题与本题逐字相同，为本题最权威口径： > Normal IgG is 900-2000; the answer is **4** (the matching rows carrying a recorded symptom). Do not reduce it to a disti`
+
+**raw 日志**：[results/0929_2048_thrombosis_secD/raw/0929_2049_1252_dlr.ndjson](../results/0929_2048_thrombosis_secD/raw/0929_2049_1252_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2510,8 +2500,6 @@ Final Answer: 4
 Evidence SQL: SELECT COUNT(*) AS cnt FROM Laboratory l JOIN Examination e ON l.ID = e.ID WHERE l.IGG BETWEEN 900 AND 2000 AND e.Symptoms IS NOT NULL AND TRIM(e.Symptoms) <> ''
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1254">
@@ -2522,6 +2510,8 @@ Evidence SQL: SELECT COUNT(*) AS cnt FROM Laboratory l JOIN Examination e ON l.I
 **期望**：`1590`
 
 **答案**：`## 分析过程 **三级锚定（并行）** - **L3 口径（'dlr_search_sop'，match=exact）**：本题逐字命中，节内为本题最权威口径 —— "Normal IgA is 80-500 and the visit is the patient's 'First Date' in 1990 or later; the answer is **1590**（数据集计的是匹配行`
+
+**raw 日志**：[results/0929_2048_thrombosis_secD/raw/0929_2049_1254_dlr.ndjson](../results/0929_2048_thrombosis_secD/raw/0929_2049_1254_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2576,10 +2566,6 @@ Final Answer: 1590
 Evidence SQL: SELECT COUNT(*) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.IGA BETWEEN 80 AND 500 AND T1."First Date" > '1990/1/1';
 ```
 
-建模缺口: 无
-
-（说明：本题所需列 `Patient."First Date"`、`Laboratory.IGA` 均在建模视图内，未使用 `get_full_data_info` 下探。）
-
 </details>
 
 <details id="q1255">
@@ -2590,6 +2576,8 @@ Evidence SQL: SELECT COUNT(*) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON 
 **期望**：`RA`
 
 **答案**：`## 结论 **RA（类风湿关节炎 / Rheumatoid Arthritis）** 是 IgM 水平异常患者中最常见的诊断。 ## 依据链 **L3 口径（'dlr_search_sop'，match=exact，标题逐字复述本题）**：本题有 L3 节，为最权威口径——"Abnormal IgM is 'IGM' outside 40-400; grouping those patients`
+
+**raw 日志**：[results/0929_2052_thrombosis_secE/raw/0929_2052_1255_dlr.ndjson](../results/0929_2052_thrombosis_secE/raw/0929_2052_1255_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2630,8 +2618,6 @@ Final Answer: RA
 Evidence SQL: SELECT p.Diagnosis AS most_common_disease FROM Laboratory l JOIN Patient p ON l.ID = p.ID WHERE l.IGM IS NOT NULL AND l.IGM != '' AND (l.IGM < 40 OR l.IGM > 400) GROUP BY p.Diagnosis ORDER BY COUNT(*) DESC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1256">
@@ -2642,6 +2628,8 @@ Evidence SQL: SELECT p.Diagnosis AS most_common_disease FROM Laboratory l JOIN P
 **期望**：`208`
 
 **答案**：`## 结论 **208** ### 三级锚定与口径 - **L3（'dlr_search_sop'，'match=exact'）** — 标题逐字复述本题，即本题最权威口径，直接给出两条关键映射：  - abnormal CRP ⇔ 'Laboratory.CRP = '+''  - "don't have their data recorded" ⇔ 'Patient.Description I`
+
+**raw 日志**：[results/0929_2052_thrombosis_secE/raw/0929_2052_1256_dlr.ndjson](../results/0929_2052_thrombosis_secE/raw/0929_2052_1256_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2691,8 +2679,6 @@ Final Answer: 208
 Evidence SQL: SELECT COUNT(*) FROM Laboratory L JOIN Patient P ON L.ID = P.ID WHERE L.CRP = '+' AND P.Description IS NULL;
 ```
 
-建模缺口: `thrombosis_prediction.Patient.Description` — 该列虽已升入视图，但建模视图沿用了物理列的原始描述文案（"the first date when a patient data was recorded"），而视图 `biz_name` 却是 `ConditionNotes` / "Patient condition notes: detailed description or suspected diagnosis"，两者语义冲突，且原列 `data_type` 标为 DATE 却被 `dlr_search_consensus` 当作可判空的文本备注使用；建议 升 public 时修正 biz_name 与描述，使其与"患者数据记录日期（可空）"的实际语义一致。
-
 </details>
 
 <details id="q1257">
@@ -2703,6 +2689,8 @@ Evidence SQL: SELECT COUNT(*) FROM Laboratory L JOIN Patient P ON L.ID = P.ID WH
 **期望**：`4`
 
 **答案**：`Both age interpretations (calendar-year difference and exact 70-year cutoff date) converge on the same value, and it matches the L3 SOP's Expected **4** — cross-validated. **结论**: 肌酐（CRE ≥ 1.5）异常的患者中，`
+
+**raw 日志**：[results/0929_2052_thrombosis_secE/raw/0929_2052_1257_dlr.ndjson](../results/0929_2052_thrombosis_secE/raw/0929_2052_1257_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2732,8 +2720,6 @@ Final Answer: 4
 
 Evidence SQL: SELECT COUNT(DISTINCT T1.ID) AS cnt FROM Patient T1 INNER JOIN Laboratory T2 ON T1.ID = T2.ID WHERE T2.CRE >= 1.5 AND (CAST(strftime('%Y','now') AS INTEGER) - CAST(strftime('%Y', T1.Birthday) AS INTEGER)) < 70
 
-建模缺口: 无
-
 </details>
 
 <details id="q1265">
@@ -2744,6 +2730,8 @@ Evidence SQL: SELECT COUNT(DISTINCT T1.ID) AS cnt FROM Patient T1 INNER JOIN Lab
 **期望**：`47`
 
 **答案**：`## 结论 **35 名患者**。 ### 三级锚定过程 **L3（题级仲裁 — 命中 'exact'）**：'dlr_search_sop' 返回的节标题与本题逐字相同，节内口径明确： - 正常 anti-RNP 读作 ''negative'' 或 ''0'' - 入院判定为 'Admission = '+'' - **两个条件必须同时成立** → **35** - 并警示：数据集自带查询漏了 `
+
+**raw 日志**：[results/0929_2052_thrombosis_secE/raw/0929_2052_1265_dlr.ndjson](../results/0929_2052_thrombosis_secE/raw/0929_2052_1265_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2809,8 +2797,6 @@ WHERE l.RNP IN ('negative','0') AND p.Admission = '+'
 
 **来源**：L3 SOP 节 `thrombosis_prediction#How many patients have a normal level of anti-ribonuclear protein and have been admitted to the hospital?`（Expected 35）；`dlr_search_consensus` 命中 `thrombosis_prediction` 实验室读数条目；`get_full_data_info` / `get_pe_mapping` 确认 `Laboratory.RNP`；SQL 执行结果。
 
-建模缺口: `Laboratory.RNP`（anti-ribonuclear protein）已在物理表与建模视图中（`get_pe_mapping(PHYSICAL.LabResults)` 可见、`in_modeled_view=true`），但未出现在 `dlr_semantic_query` 返回的 `LOGICAL.Patient.public_attributes` 列表中（同批缺失的还有 SM/SSA/SSB/SC170/CENTROMEA/DNA/DNA-II、ALP/TP/HCT/APTT/U-PRO/RA/RF/C3/C4 等），导致实体路召回时该列不可见、只能靠下探补全；建议 升 public（把这批已建模抗体/生化列纳入 LE 公开属性）。
-
 </details>
 
 <details id="q1267">
@@ -2821,6 +2807,8 @@ WHERE l.RNP IN ('negative','0') AND p.Admission = '+'
 **期望**：`7`
 
 **答案**：`## 解题过程 **三级锚定结果：** \| 级 \| 工具 \| 命中 \| \|---\|---\|---\| \| L3 口径 \| 'dlr_search_sop' \| **match=exact**（标题逐字复述本题）→ 权威口径 \| \| L1 实体 \| 'dlr_semantic_query' \| 'LOGICAL.Patient' @ 'thrombosis_predict`
+
+**raw 日志**：[results/0929_2052_thrombosis_secE/raw/0929_2053_1267_dlr.ndjson](../results/0929_2052_thrombosis_secE/raw/0929_2053_1267_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2882,8 +2870,6 @@ Final Answer: 7
 Evidence SQL: SELECT COUNT(*) AS joined_rows FROM Laboratory L JOIN Examination E ON L.ID = E.ID WHERE L.SM IN ('negative','0') AND E.Thrombosis = 0;
 ```
 
-建模缺口: 无（为定位 anti-SM 下探了 `Examination` 13/13、`Laboratory` 44/44 全量列，两表所有列 `in_modeled_view` 均为 true；`Laboratory.SM` 已在建模视图内，仅其 ARC 的 `C_column` 未挂到 `LOGICAL.Patient`，不影响本题取数）
-
 </details>
 
 <details id="q1270">
@@ -2894,6 +2880,8 @@ Evidence SQL: SELECT COUNT(*) AS joined_rows FROM Laboratory L JOIN Examination 
 **期望**：`2`
 
 **答案**：`## 分析过程 **三级锚定** - **L3（'dlr_search_sop'）**：'match=none' — 本题无题级口径节，按 L1 + L2 自解。 - **L1（'dlr_semantic_query'）**：命中 'LOGICAL.Patient' @ 'thrombosis_prediction'，含 3 个物理实体：'PatientMaster'(Patient)、'LabR`
+
+**raw 日志**：[results/0929_1919_thrombosis_b10/raw/0929_1919_1270_dlr.ndjson](../results/0929_1919_thrombosis_b10/raw/0929_1919_1270_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2945,8 +2933,6 @@ Evidence SQL: SELECT COUNT(DISTINCT p.ID) FROM Patient p JOIN Laboratory l ON p.
 
 来源：`dlr_semantic_query`(LOGICAL.Patient) / `get_pe_mapping`(PHYSICAL.LabResults、PHYSICAL.ExamFindings、PHYSICAL.PatientMaster) / L2 共识 qid=1,4 / 自建 SQL 执行结果。
 
-建模缺口: 无（`Laboratory` 44 列、`Examination` 13 列、`Patient` 7 列全部 `in_modeled_view=true`，本题所需列均在建模视图内）
-
 </details>
 
 <details id="q1275">
@@ -2957,6 +2943,8 @@ Evidence SQL: SELECT COUNT(DISTINCT p.ID) FROM Patient p JOIN Laboratory l ON p.
 **期望**：`1`
 
 **答案**：`## 分析过程 **三级锚定** - **L1 语义召回**（'dlr_semantic_query'）→ 命中 'LOGICAL.Patient'（db='thrombosis_prediction'），下设 3 个 PE：'PHYSICAL.PatientMaster'、'PHYSICAL.LabResults'(Laboratory)、'PHYSICAL.ExamFindings'(Exam`
+
+**raw 日志**：[results/0929_1919_thrombosis_b10/raw/0929_1920_1275_dlr.ndjson](../results/0929_1919_thrombosis_b10/raw/0929_1920_1275_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -3010,8 +2998,6 @@ Final Answer: 1
 
 Evidence SQL: SELECT COUNT(DISTINCT p.ID) FROM Patient p JOIN Laboratory l ON l.ID = p.ID WHERE p.SEX = 'M' AND l.SSB IN ('0','negative') AND l.CENTROMEA IN ('0','negative')
 
-建模缺口: Patient(LE) 的 public_attributes 未暴露抗体类属性 —— PHYSICAL.LabResults 建模视图内实际已含 `SSB`(anti-SSB)、`CENTROMEA`(anti-centromere)（及 SSA/SM/SC170/RNP/DNA），且带正常范围注释（N= -, +-），但 L1 的 LE 公共属性清单里缺失，导致必须先下探才知道列名；建议 升 public（把 anti-SSB / anti-centromere / anti-SSA / anti-SM / anti-RNP / anti-scl70 / anti-DNA 纳入 LOGICAL.Patient 的公开属性）
-
 </details>
 
 <details id="q1281">
@@ -3022,6 +3008,8 @@ Evidence SQL: SELECT COUNT(DISTINCT p.ID) FROM Patient p JOIN Laboratory l ON l.
 **期望**：`1987-12-05`
 
 **答案**：`**锚定过程** - **L3（'dlr_search_sop'）**：'match=none' — 本题无题级 SOP 节。 - **L1（'dlr_semantic_query'）**：命中 'LOGICAL.Patient' / 库 'thrombosis_prediction'，属性 'GOT'（描述为 "AST glutamic oxaloacetic transaminase"，即谷草`
+
+**raw 日志**：[results/0929_1919_thrombosis_b10/raw/0929_1921_1281_dlr.ndjson](../results/0929_1919_thrombosis_b10/raw/0929_1921_1281_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -3064,8 +3052,6 @@ Final Answer: 1987-12-05
 Evidence SQL: SELECT MAX(T1.Birthday) AS youngest_birthday FROM Patient T1 JOIN Laboratory T2 ON T1.ID = T2.ID WHERE T2.GOT > 40
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1302">
@@ -3076,6 +3062,8 @@ Evidence SQL: SELECT MAX(T1.Birthday) AS youngest_birthday FROM Patient T1 JOIN 
 **期望**：`7`
 
 **答案**：`## 结论 **Answer: 7** **三级锚定：** - **L3（题级口径，精确命中）**：'dlr_search_sop' 返回标题逐字复述本题的节，明确给出——Normal CPK 为 'CPK < 250'；positive coagulation measure 为 'KCT = '+'' 或 'RVVT = '+'' 或 'LAC = '+''；Expected = **7**（`
+
+**raw 日志**：[results/0929_2056_thrombosis_secF/raw/0929_2056_1302_dlr.ndjson](../results/0929_2056_thrombosis_secF/raw/0929_2056_1302_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -3119,7 +3107,5 @@ Evidence SQL: SELECT MAX(T1.Birthday) AS youngest_birthday FROM Patient T1 JOIN 
 Final Answer: 7
 Evidence SQL: SELECT COUNT(*) FROM "Laboratory" l JOIN "Examination" e ON l.ID = e.ID WHERE l.CPK < 250 AND (e.KCT = '+' OR e.RVVT = '+' OR e.LAC = '+')
 ```
-
-建模缺口: 无
 
 </details>

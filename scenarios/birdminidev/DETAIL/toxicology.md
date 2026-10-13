@@ -70,6 +70,8 @@
 
 **答案**：`## 查询过程 **三级锚定** - **L3（'dlr_search_sop'）**：'match=none' → 本题无题级 SOP 节，按 L1+L2 自解。 - **L2（'dlr_search_consensus'）**：命中 toxicology 库条目（qid=4）——*"the most common bond type" is the bond type with the lar`
 
+**raw 日志**：[results/0929_2241_toxicology_b1/raw/0929_2241_195_dlr.ndjson](../results/0929_2241_toxicology_b1/raw/0929_2241_195_dlr.ndjson)（dsh 事件流 ndjson）
+
 **调用步骤**
 
 | # | 工具 | 参数（截 200） |
@@ -111,8 +113,6 @@ Final Answer: - (single bond)
 Evidence SQL: SELECT bond_type FROM bond GROUP BY bond_type ORDER BY COUNT(*) DESC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q197">
@@ -123,6 +123,8 @@ Evidence SQL: SELECT bond_type FROM bond GROUP BY bond_type ORDER BY COUNT(*) DE
 **期望**：`99.68354430379746`
 
 **答案**：`## 结论 **2.161290322580645** ### 三级锚定过程 \| 层级 \| 工具 \| 命中结果 \| \|------\|------\|----------\| \| L3 口径 \| 'dlr_search_sop' \| **match=exact**（标题逐字复述本题），'db=toxicology'，Expected = **2.161290322580645** `
+
+**raw 日志**：[results/0929_2308_toxicology_secA/raw/0929_2308_197_dlr.ndjson](../results/0929_2308_toxicology_secA/raw/0929_2308_197_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -180,8 +182,6 @@ LEFT JOIN (SELECT molecule_id, COUNT(*) AS cnt FROM atom WHERE element = 'o' GRO
   ON sb.molecule_id = o.molecule_id
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q198">
@@ -192,6 +192,8 @@ LEFT JOIN (SELECT molecule_id, COUNT(*) AS cnt FROM atom WHERE element = 'o' GRO
 **期望**：`732.125`
 
 **答案**：`L3 exact-hit 口径已按「全量致癌分子」分母执行（含无单键分子计 0），结果与 Expected 一致。 - **L3（'dlr_search_sop'，match=exact）**：标题逐字复述本题 —— 平均须对**所有**致癌分子（'label='+''）取，无单键的分子计 0；明确警告不要报 732.125（那是只对「有单键的致癌分子」取平均的错误口径）。 - **L2 共识**`
+
+**raw 日志**：[results/0929_2308_toxicology_secA/raw/0929_2308_198_dlr.ndjson](../results/0929_2308_toxicology_secA/raw/0929_2308_198_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -215,8 +217,6 @@ L3 exact-hit 口径已按「全量致癌分子」分母执行（含无单键分�
 Final Answer: 20.25
 Evidence SQL: SELECT CAST(SUM(COALESCE(b.cnt,0)) AS REAL) / COUNT(*) AS avg_single_bonds FROM molecule m LEFT JOIN (SELECT molecule_id, COUNT(*) AS cnt FROM bond WHERE bond_type = '-' GROUP BY molecule_id) b ON m.molecule_id = b.molecule_id WHERE m.label = '+'
 
-建模缺口: 无
-
 </details>
 
 <details id="q200">
@@ -227,6 +227,8 @@ Evidence SQL: SELECT CAST(SUM(COALESCE(b.cnt,0)) AS REAL) / COUNT(*) AS avg_sing
 **期望**：`TR041 | TR499`
 
 **答案**：`**推理过程** 1. **L3（'dlr_search_sop'）**：'match=none' → 本题无题级口径节，按 L1+L2 自解。 2. **L1（'dlr_semantic_query'）**：锚定库 'toxicology'，逻辑实体 'LOGICAL.Molecule'（属性 'MoleculeID'、'label'）与 'LOGICAL.Bond'（属性 'BondID'、'`
+
+**raw 日志**：[results/0929_2241_toxicology_b1/raw/0929_2241_200_dlr.ndjson](../results/0929_2241_toxicology_b1/raw/0929_2241_200_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -259,8 +261,6 @@ Final Answer: TR041, TR499
 
 Evidence SQL: SELECT GROUP_CONCAT(molecule_id, ', ') FROM (SELECT DISTINCT b.molecule_id FROM bond b JOIN molecule m ON b.molecule_id = m.molecule_id WHERE b.bond_type = '#' AND m.label = '+' ORDER BY b.molecule_id)
 
-建模缺口: 无
-
 </details>
 
 <details id="q201">
@@ -271,6 +271,8 @@ Evidence SQL: SELECT GROUP_CONCAT(molecule_id, ', ') FROM (SELECT DISTINCT b.mol
 **期望**：`38.80961092816197`
 
 **答案**：`## 分析过程 **三级锚定结果** - **L1 实体路**（'dlr_semantic_query'）：命中 'toxicology' 库 —— 'LOGICAL.Atom'（元素符号 element：c=carbon）、'LOGICAL.Bond'（bond_type: '=' 双键）、'LOGICAL.Molecule'，经 'get_pe_mapping' 拿到物理表 'atom' / `
+
+**raw 日志**：[results/0929_2241_toxicology_b1/raw/0929_2241_201_dlr.ndjson](../results/0929_2241_toxicology_b1/raw/0929_2241_201_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -314,8 +316,6 @@ Final Answer: 38.81% (3182 carbon atoms out of 8199 atoms in the 291 molecules t
 
 Evidence SQL: SELECT 100.0 * SUM(element = 'c') / COUNT(*) AS carbon_pct FROM atom WHERE molecule_id IN (SELECT DISTINCT molecule_id FROM bond WHERE bond_type = '=')
 
-建模缺口: 无
-
 </details>
 
 <details id="q206">
@@ -326,6 +326,8 @@ Evidence SQL: SELECT 100.0 * SUM(element = 'c') / COUNT(*) AS carbon_pct FROM at
 **期望**：`c`
 
 **答案**：`## 解题过程 **三级锚定** - **L1 实体路**：'dlr_semantic_query' 召回 toxicology 库的 'LOGICAL.Bond'（bond_id、atom1、atom2）与 'LOGICAL.Atom'（atom_id、element），其中 'PHYSICAL.Connected'（connected 表）是「bond ↔ 两端 atom」的联结表。 - **`
+
+**raw 日志**：[results/0929_2243_toxicology_b2/raw/0929_2243_206_dlr.ndjson](../results/0929_2243_toxicology_b2/raw/0929_2243_206_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -364,8 +366,6 @@ Final Answer: c (carbon) — both atoms of bond TR004_8_9 (TR004_8 and TR004_9) 
 Evidence SQL: SELECT GROUP_CONCAT(DISTINCT e) AS elements FROM (SELECT a1.element AS e FROM connected c JOIN atom a1 ON c.atom_id = a1.atom_id WHERE c.bond_id = 'TR004_8_9' UNION SELECT a2.element AS e FROM connected c JOIN atom a2 ON c.atom_id2 = a2.atom_id WHERE c.bond_id = 'TR004_8_9');
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q207">
@@ -376,6 +376,8 @@ Evidence SQL: SELECT GROUP_CONCAT(DISTINCT e) AS elements FROM (SELECT a1.elemen
 **期望**：`c | o | cl | h | s | n | p | f`
 
 **答案**：`## 结论 **Double bond（'bond_type = '=''）中实际成键的原子元素共 5 种：c、o、n、s、ca**（碳、氧、氮、硫、钙）。 ## 依据 **L3 口径（'dlr_search_sop'，match=exact，标题逐字复述本题）** - 该节明确：元素应是**真正位于双键上的原子** —— 需把 'atom' 与 'bond' **通过 'connected' 连`
+
+**raw 日志**：[results/0929_2308_toxicology_secA/raw/0929_2309_207_dlr.ndjson](../results/0929_2308_toxicology_secA/raw/0929_2309_207_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -417,8 +419,6 @@ Final Answer: c | ca | n | o | s （共 5 种元素，即 c、o、n、s、ca）
 
 Evidence SQL: SELECT GROUP_CONCAT(element, ' | ') AS elements FROM (SELECT DISTINCT a.element AS element FROM atom a JOIN connected c ON a.atom_id = c.atom_id OR a.atom_id = c.atom_id2 JOIN bond b ON b.bond_id = c.bond_id WHERE b.bond_type = '=' ORDER BY a.element);
 
-建模缺口: 无
-
 </details>
 
 <details id="q208">
@@ -429,6 +429,8 @@ Evidence SQL: SELECT GROUP_CONCAT(element, ' | ') AS elements FROM (SELECT DISTI
 **期望**：`-`
 
 **答案**：`## 分析过程 **三级锚定** - **L3**：'dlr_search_sop' → 'match=none'，本题无题级口径节，按 L1+L2 自解。 - **L1**：'dlr_semantic_query' → 命中 'LOGICAL.Atom'（toxicology，含 'element'、'Molecule'）、'LOGICAL.Molecule'（含 'label'）。经 'get`
+
+**raw 日志**：[results/0929_2243_toxicology_b2/raw/0929_2244_208_dlr.ndjson](../results/0929_2243_toxicology_b2/raw/0929_2244_208_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -475,8 +477,6 @@ Final Answer: -
 Evidence SQL: SELECT m.label FROM molecule m JOIN atom a ON a.molecule_id = m.molecule_id WHERE a.element = 'h' GROUP BY m.label ORDER BY COUNT(*) DESC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q212">
@@ -487,6 +487,8 @@ Evidence SQL: SELECT m.label FROM molecule m JOIN atom a ON a.molecule_id = m.mo
 **期望**：`ca`
 
 **答案**：`## 分析过程 **三级锚定（并行）** - **L3 口径**：'dlr_search_sop' → 'match=none'，本题无题级 SOP 节，按 L1+L2 自解。 - **L1 实体路**（'dlr_semantic_query'）：命中 'toxicology' 库的 'LOGICAL.Molecule'（'label'、'molecule_id'）与 'LOGICAL.Atom'`
+
+**raw 日志**：[results/0929_2243_toxicology_b2/raw/0929_2244_212_dlr.ndjson](../results/0929_2243_toxicology_b2/raw/0929_2244_212_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -532,8 +534,6 @@ Final Answer: ca
 
 Evidence SQL: SELECT a.element AS element, COUNT(*) AS cnt FROM atom a JOIN molecule m ON a.molecule_id = m.molecule_id WHERE m.label = '-' GROUP BY a.element ORDER BY cnt ASC, a.element ASC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q213">
@@ -544,6 +544,8 @@ Evidence SQL: SELECT a.element AS element, COUNT(*) AS cnt FROM atom a JOIN mole
 **期望**：`- | -`
 
 **答案**：`**结论：TR004_8 与 TR004_20 之间是单键（single bond）。** ## 推理过程 **三级锚定（并行首发）** - **L3（口径路）**：'dlr_search_sop' → 'match=none'，本题无题级 SOP 节，按 L1 + L2 自解。 - **L1（实体路）**：'dlr_semantic_query' → 命中 'LOGICAL.Bond'（'db:`
+
+**raw 日志**：[results/0929_2243_toxicology_b2/raw/0929_2244_213_dlr.ndjson](../results/0929_2243_toxicology_b2/raw/0929_2244_213_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -587,8 +589,6 @@ Final Answer: single bond
 Evidence SQL: SELECT DISTINCT CASE b.bond_type WHEN '-' THEN 'single bond' WHEN '=' THEN 'double bond' WHEN '#' THEN 'triple bond' ELSE b.bond_type END AS bond_type_label FROM connected c JOIN bond b ON b.bond_id = c.bond_id WHERE (c.atom_id = 'TR004_8' AND c.atom_id2 = 'TR004_20') OR (c.atom_id = 'TR004_20' AND c.atom_id2 = 'TR004_8')
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q215">
@@ -599,6 +599,8 @@ Evidence SQL: SELECT DISTINCT CASE b.bond_type WHEN '-' THEN 'single bond' WHEN 
 **期望**：`3 | 77`
 
 **答案**：`## 结论 **Iodine: 3 atoms；Sulfur: 77 atoms。** **三级锚定过程：** - **L3（业务逻辑级，权威）**：'dlr_search_sop' 返回 'match=exact'，标题逐字复述本题（'How many atoms with iodine and with sulfur type elements are there in single bond`
+
+**raw 日志**：[results/0929_2308_toxicology_secA/raw/0929_2309_215_dlr.ndjson](../results/0929_2308_toxicology_secA/raw/0929_2309_215_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -649,8 +651,6 @@ Evidence SQL: SELECT
    WHERE a.element = 's' AND b.bond_type = '-') AS sulfur_atoms
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q218">
@@ -661,6 +661,8 @@ Evidence SQL: SELECT
 **期望**：`100`
 
 **答案**：`## 结论 **99.34210526315789%** 的致癌型分子不含氟。 ## 三级锚定过程 \| 级 \| 工具 \| 命中 \| \|---\|---\|---\| \| L1 数据源级 \| 'dlr_semantic_query' \| 'LOGICAL.Molecule'（db=toxicology，'molecule_id' + 'label'）、'LOGICAL.Atom'（'`
+
+**raw 日志**：[results/0929_2308_toxicology_secA/raw/0929_2309_218_dlr.ndjson](../results/0929_2308_toxicology_secA/raw/0929_2309_218_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -703,8 +705,6 @@ Final Answer: 99.34210526315789
 Evidence SQL: SELECT CAST(SUM(CASE WHEN f.molecule_id IS NULL THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) AS pct FROM molecule m LEFT JOIN (SELECT DISTINCT molecule_id FROM atom WHERE LOWER(element) = 'f') f ON m.molecule_id = f.molecule_id WHERE m.label = '+';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q219">
@@ -715,6 +715,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN f.molecule_id IS NULL THEN 1 ELSE 0 END)
 **期望**：`66.66666666666667`
 
 **答案**：`## 分析过程 **三级锚定结果：** - **L1 语义召回**（'dlr_semantic_query'）：命中 'toxicology' 库的 'LOGICAL.Molecule'（属性 'MoleculeID'、'label'）与 'LOGICAL.Bond'（属性 'BondID'、'Molecule'、'bond_type'） - **L2 领域共识**（'dlr_search_con`
+
+**raw 日志**：[results/0929_2245_toxicology_b3/raw/0929_2245_219_dlr.ndjson](../results/0929_2245_toxicology_b3/raw/0929_2245_219_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -754,8 +756,6 @@ Final Answer: 66.67
 Evidence SQL: SELECT CAST(COUNT(DISTINCT CASE WHEN m.label = '+' THEN m.molecule_id END) AS REAL) * 100.0 / COUNT(DISTINCT m.molecule_id) AS pct_carcinogenic FROM molecule m WHERE m.molecule_id IN (SELECT DISTINCT molecule_id FROM bond WHERE bond_type = '#')
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q220">
@@ -766,6 +766,8 @@ Evidence SQL: SELECT CAST(COUNT(DISTINCT CASE WHEN m.label = '+' THEN m.molecule
 **期望**：`c | cl | h`
 
 **答案**：`## 结论 **目标库锚定**：三级并行锚定的结果一致指向 'toxicology' 库： - **L1 实体路**：'dlr_semantic_query' 返回 'LOGICAL.Molecule'（'TR000' 格式的 molecule_id）、'LOGICAL.Atom'（element 元素符号 'c/cl/h/o/n/s...'），db = 'toxicology' - **L2 共`
+
+**raw 日志**：[results/0929_2245_toxicology_b3/raw/0929_2246_220_dlr.ndjson](../results/0929_2245_toxicology_b3/raw/0929_2246_220_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -804,8 +806,6 @@ Final Answer: c, cl, h
 Evidence SQL: SELECT DISTINCT element FROM atom WHERE molecule_id = 'TR000' ORDER BY element ASC LIMIT 3
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q226">
@@ -816,6 +816,8 @@ Evidence SQL: SELECT DISTINCT element FROM atom WHERE molecule_id = 'TR000' ORDE
 **期望**：`3.84615`
 
 **答案**：`## 回答 **TR008 分子中双键的百分比 = 3.84615%** ### 证据链（三级锚定） **L1 数据源级（实体路）** — 'dlr_semantic_query' 召回，命中 'db=toxicology'： - 'LOGICAL.Bond'（bond_type: '-' 单键 / '=' 双键 / '#' 三键；Molecule 字段标识所属分子） - 该 LE 下的物理实体 `
+
+**raw 日志**：[results/0929_2245_toxicology_b3/raw/0929_2246_226_dlr.ndjson](../results/0929_2245_toxicology_b3/raw/0929_2246_226_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -862,8 +864,6 @@ Final Answer: 3.84615
 Evidence SQL: SELECT ROUND(CAST(SUM(CASE WHEN bond_type = '=' THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(*), 5) AS pct FROM bond WHERE molecule_id = 'TR008'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q227">
@@ -874,6 +874,8 @@ Evidence SQL: SELECT ROUND(CAST(SUM(CASE WHEN bond_type = '=' THEN 1 ELSE 0 END)
 **期望**：`44.315`
 
 **答案**：`## 分析过程 **三级锚定结果** - **L3（口径）**：'dlr_search_sop' 返回 'match=similar'，唯一候选是 superhero 库的题，未逐字复述本题 → 本题无 L3 节，按 L1+L2 自解。 - **L2（领域共识）**：'dlr_search_consensus' 命中 toxicology 库三条关键共识：   - qid=3：致癌性标签 ''+'`
+
+**raw 日志**：[results/0929_2248_toxicology_b4/raw/0929_2248_227_dlr.ndjson](../results/0929_2248_toxicology_b4/raw/0929_2248_227_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -910,8 +912,6 @@ Evidence SQL: SELECT ROUND(SUM(CASE WHEN label = '+' THEN 1 ELSE 0 END) * 100.0 
 ```
 
 ```
-建模缺口: 无
-```
 
 </details>
 
@@ -923,6 +923,8 @@ Evidence SQL: SELECT ROUND(SUM(CASE WHEN label = '+' THEN 1 ELSE 0 END) * 100.0 
 **期望**：`45.4545`
 
 **答案**：`**答案推导** - **L3 SOP（'dlr_search_sop'，match=exact，标题逐字复述本题）**：TR206 有 11 个原子，其中 5 个是氢 → **45.4545**。该节为本题最权威口径。 - **L2 领域共识（'dlr_search_consensus'，namespace=toxicology，qid=5）**："Percentages count the s`
+
+**raw 日志**：[results/0929_2308_toxicology_secA/raw/0929_2309_228_dlr.ndjson](../results/0929_2308_toxicology_secA/raw/0929_2309_228_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -953,8 +955,6 @@ Final Answer: 45.4545
 
 Evidence SQL: SELECT ROUND(100.0 * SUM(CASE WHEN LOWER(element) = 'h' THEN 1 ELSE 0 END) / COUNT(*), 4) AS hydrogen_percent FROM atom WHERE molecule_id = 'TR206'
 
-建模缺口: 无
-
 </details>
 
 <details id="q230">
@@ -965,6 +965,8 @@ Evidence SQL: SELECT ROUND(100.0 * SUM(CASE WHEN LOWER(element) = 'h' THEN 1 ELS
 **期望**：`c | - | h | - | o | - | n | -`
 
 **答案**：`## 查询过程 **三级锚定结果** - **L1 实体路**（'dlr_semantic_query'）：命中 'LOGICAL.Molecule'（'toxicology.molecule'：molecule_id + label）与 'LOGICAL.Atom'（'toxicology.atom'：atom_id + molecule_id + element），库 'toxicology'`
+
+**raw 日志**：[results/0929_2248_toxicology_b4/raw/0929_2249_230_dlr.ndjson](../results/0929_2248_toxicology_b4/raw/0929_2249_230_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1005,8 +1007,6 @@ Final Answer: elements: c, h, o, n, cl; label: -
 Evidence SQL: SELECT GROUP_CONCAT(DISTINCT a.element) AS elements, m.label AS label FROM atom a JOIN molecule m ON a.molecule_id = m.molecule_id WHERE a.molecule_id = 'TR060' GROUP BY m.label
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q231">
@@ -1017,6 +1017,8 @@ Evidence SQL: SELECT GROUP_CONCAT(DISTINCT a.element) AS elements, m.label AS la
 **期望**：`-`
 
 **答案**：`## 结论 **问题 1 — TR010 中占多数的键类型：单键（single bond, '-'）** - L1 语义召回（'dlr_semantic_query'）锚定 'toxicology' 库的 'LOGICAL.Bond'（bond_type）与 'LOGICAL.Molecule'（label） - L2 领域共识（'dlr_search_consensus', qid=2）确认：'`
+
+**raw 日志**：[results/0929_2248_toxicology_b4/raw/0929_2249_231_dlr.ndjson](../results/0929_2248_toxicology_b4/raw/0929_2249_231_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1056,8 +1058,6 @@ Final Answer: TR010 中占多数的键类型是单键（single bond, '-'，16 �
 Evidence SQL: SELECT (SELECT bond_type FROM bond WHERE molecule_id = 'TR010' GROUP BY bond_type ORDER BY COUNT(*) DESC LIMIT 1) AS majority_bond_type, (SELECT COUNT(*) FROM bond WHERE molecule_id = 'TR010') AS total_bonds, (SELECT label FROM molecule WHERE molecule_id = 'TR010') AS carcinogenic_label
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q232">
@@ -1068,6 +1068,8 @@ Evidence SQL: SELECT (SELECT bond_type FROM bond WHERE molecule_id = 'TR010' GRO
 **期望**：`TR002 | TR004 | TR007`
 
 **答案**：`## 结论 **答案：TR002, TR004, TR007** ### 锚定过程 - **L3（SOP）**：'dlr_search_sop' 返回 'match=similar'（superhero / financial 两条近似候选，均非本题）→ 本题无 L3 口径，按 L1+L2 自解。 - **L1（实体路）**：'dlr_semantic_query' 召回 'toxicology'`
+
+**raw 日志**：[results/0929_2248_toxicology_b4/raw/0929_2250_232_dlr.ndjson](../results/0929_2248_toxicology_b4/raw/0929_2250_232_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1105,8 +1107,6 @@ Final Answer: TR002, TR004, TR007
 Evidence SQL: SELECT DISTINCT m.molecule_id FROM molecule m JOIN bond b ON b.molecule_id = m.molecule_id WHERE m.label = '-' AND b.bond_type = '-' ORDER BY m.molecule_id LIMIT 3;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q234">
@@ -1117,6 +1117,8 @@ Evidence SQL: SELECT DISTINCT m.molecule_id FROM molecule m JOIN bond b ON b.mol
 **期望**：`1041`
 
 **答案**：`## 结论 **分子 TR009 中涉及 atom 'TR009_12' 的键共有 3 个。** ### 三级锚定过程 \| 级别 \| 工具 \| 命中结果 \| \|------\|------\|----------\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| 'match=exact'（标题逐字复述本题）→ **Expected: 3**；口径：经 'conn`
+
+**raw 日志**：[results/0929_2312_toxicology_secB/raw/0929_2312_234_dlr.ndjson](../results/0929_2312_toxicology_secB/raw/0929_2312_234_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1156,8 +1158,6 @@ Final Answer: 3
 Evidence SQL: SELECT COUNT(DISTINCT c.bond_id) AS n FROM connected c JOIN bond b ON c.bond_id = b.bond_id WHERE b.molecule_id = 'TR009' AND (c.atom_id = 'TR009_12' OR c.atom_id2 = 'TR009_12')
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q236">
@@ -1168,6 +1168,8 @@ Evidence SQL: SELECT COUNT(DISTINCT c.bond_id) AS n FROM connected c JOIN bond b
 **期望**：`- | TR001_6 | TR001_9 | - | TR001_9 | TR001_6`
 
 **答案**：`**答案**（数据源：'toxicology' 库，L1 锚定 'LOGICAL.Bond' → 'PHYSICAL.Bond'（bond_type）+ 'PHYSICAL.Connected'（atom1/atom2），经 'get_pe_mapping' 第二跳取得表名与库路径） - **Bond ID**：'TR001_6_9'（属于分子 TR001） - **Bond type**：'-'`
+
+**raw 日志**：[results/0929_2252_toxicology_b5/raw/0929_2252_236_dlr.ndjson](../results/0929_2252_toxicology_b5/raw/0929_2252_236_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1202,8 +1204,6 @@ L3 检索结果：`dlr_search_sop` 返回 `match=none`（本题无题级 SOP 节
 Final Answer: Bond TR001_6_9: bond type = '-' (single bond); atoms = TR001_6 and TR001_9 (both element c / carbon).
 Evidence SQL: SELECT t.bond_id, t.bond_type, t.atom1, t.atom2, a1.element AS atom1_element, a2.element AS atom2_element FROM (SELECT b.bond_id, b.bond_type, MIN(c.atom_id) AS atom1, MAX(c.atom_id) AS atom2 FROM bond b JOIN connected c ON b.bond_id = c.bond_id WHERE b.bond_id = 'TR001_6_9' GROUP BY b.bond_id, b.bond_type) t JOIN atom a1 ON a1.atom_id = t.atom1 JOIN atom a2 ON a2.atom_id = t.atom2
 
-建模缺口: 无
-
 </details>
 
 <details id="q239">
@@ -1214,6 +1214,8 @@ Evidence SQL: SELECT t.bond_id, t.bond_type, t.atom1, t.atom2, a1.element AS ato
 **期望**：`377`
 
 **答案**：`## 结论 **Atom 19 共有 377 条连接（化学键）。** ### 推理链 1. **L3 口径（'dlr_search_sop'，'match=exact'，namespace='toxicology'）**——标题与本题逐字相同，即本题最权威口径：    > "Atom 19" is every atom whose id ends in '_19'; their connectio`
+
+**raw 日志**：[results/0929_2312_toxicology_secB/raw/0929_2312_239_dlr.ndjson](../results/0929_2312_toxicology_secB/raw/0929_2312_239_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1260,8 +1262,6 @@ Final Answer: 377
 
 Evidence SQL: SELECT COUNT(DISTINCT bond_id) FROM connected WHERE atom_id LIKE '%\_19' ESCAPE '\' OR atom_id2 LIKE '%\_19' ESCAPE '\'
 
-建模缺口: 无
-
 </details>
 
 <details id="q240">
@@ -1272,6 +1272,8 @@ Evidence SQL: SELECT COUNT(DISTINCT bond_id) FROM connected WHERE atom_id LIKE '
 **期望**：`s | n | o | c | h | p`
 
 **答案**：`验证完成。TR004 共 24 个原子（'atom_id' TR004_1 … TR004_24），去重后的元素集合为 6 种。 **结论依据** - L1 语义召回（'dlr_semantic_query'）→ 'LOGICAL.Atom'（db=toxicology），公开属性 'AtomID' / 'Molecule' / 'element'；'LOGICAL.Molecule' 用 'TR`
+
+**raw 日志**：[results/0929_2252_toxicology_b5/raw/0929_2252_240_dlr.ndjson](../results/0929_2252_toxicology_b5/raw/0929_2252_240_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1300,8 +1302,6 @@ Evidence SQL: SELECT COUNT(DISTINCT bond_id) FROM connected WHERE atom_id LIKE '
 Final Answer: c, h, n, o, p, s
 Evidence SQL: SELECT DISTINCT element FROM atom WHERE molecule_id = 'TR004' ORDER BY element LIMIT 200
 
-建模缺口: 无
-
 </details>
 
 <details id="q242">
@@ -1312,6 +1312,8 @@ Evidence SQL: SELECT DISTINCT element FROM atom WHERE molecule_id = 'TR004' ORDE
 **期望**：`TR001 | TR006 | TR019 | TR020 | TR029 | TR039 | TR047 | TR049`
 
 **答案**：`## 结论 **口径锚定**（三级并行）： - **L3**：'dlr_search_sop' 返回 'match=none' → 本题无题级 SOP 节，按 L1+L2 自解。 - **L2 领域共识**（'dlr_search_consensus'，namespace='toxicology'）：'"TRXXX_i represents ith atom of molecule TRXXX"'`
+
+**raw 日志**：[results/0929_2252_toxicology_b5/raw/0929_2252_242_dlr.ndjson](../results/0929_2252_toxicology_b5/raw/0929_2252_242_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1357,8 +1359,6 @@ Final Answer: TR001, TR006, TR019, TR020, TR029, TR039, TR047, TR049, TR058, TR0
 Evidence SQL: SELECT DISTINCT m.molecule_id FROM molecule m JOIN atom a ON a.molecule_id = m.molecule_id WHERE m.label = '+' AND CAST(substr(a.atom_id, instr(a.atom_id,'_')+1) AS INTEGER) BETWEEN 21 AND 25 ORDER BY m.molecule_id
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q243">
@@ -1369,6 +1369,8 @@ Evidence SQL: SELECT DISTINCT m.molecule_id FROM molecule m JOIN atom a ON a.mol
 **期望**：`TR032_2_3 | TR032_3_5 | TR058_1_3 | TR058_1_4 | TR058_1_5 | TR298_1_5`
 
 **答案**：`Both independent formulations agree, and every bond appears exactly twice in 'connected' (0 bonds deviate), confirming the DISTINCT handling is correct. ## 结论 在 'toxicology' 库中，同时含磷（p）和氮（n）两种元素原子的化学键共`
+
+**raw 日志**：[results/0929_2255_toxicology_b6/raw/0929_2255_243_dlr.ndjson](../results/0929_2255_toxicology_b6/raw/0929_2255_243_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1415,8 +1417,6 @@ Final Answer: TR032_2_3, TR032_3_5, TR058_1_3, TR058_1_4, TR058_1_5, TR298_1_5
 Evidence SQL: SELECT DISTINCT c.bond_id FROM connected c JOIN atom a1 ON c.atom_id = a1.atom_id JOIN atom a2 ON c.atom_id2 = a2.atom_id WHERE (a1.element = 'p' AND a2.element = 'n') OR (a1.element = 'n' AND a2.element = 'p') ORDER BY c.bond_id
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q244">
@@ -1427,6 +1427,8 @@ Evidence SQL: SELECT DISTINCT c.bond_id FROM connected c JOIN atom a1 ON c.atom_
 **期望**：`+`
 
 **答案**：`## 结论 **是的，双键数量最多的分子是致癌物（carcinogenic，label = '+'）。** ### 推导过程 **1. 三级锚定（Step 1 并行）** - **L3 口径路**：'dlr_search_sop("Is the molecule with the most double bonds carcinogenic?")' → 'match=none'，本题无题级口径节，`
+
+**raw 日志**：[results/0929_2255_toxicology_b6/raw/0929_2255_244_dlr.ndjson](../results/0929_2255_toxicology_b6/raw/0929_2255_244_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1490,8 +1492,6 @@ GROUP BY b.molecule_id, m.label
 HAVING COUNT(*) = (SELECT MAX(c) FROM (SELECT COUNT(*) AS c FROM bond WHERE bond_type = '=' GROUP BY molecule_id))
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q245">
@@ -1502,6 +1502,8 @@ HAVING COUNT(*) = (SELECT MAX(c) FROM (SELECT COUNT(*) AS c FROM bond WHERE bond
 **期望**：`1`
 
 **答案**：`## 分析过程 **L3 命中（exact）**：'dlr_search_sop' 返回标题逐字复述本题的节（db='toxicology'，类型=难题），口径明确："The three iodine atoms carry **3** connections between them, so the average is **1**." **L2 领域共识**（'dlr_search_conse`
+
+**raw 日志**：[results/0929_2312_toxicology_secB/raw/0929_2312_245_dlr.ndjson](../results/0929_2312_toxicology_secB/raw/0929_2312_245_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1545,8 +1547,6 @@ Final Answer: 1
 Evidence SQL: SELECT AVG(cnt) AS avg_bonds FROM (SELECT a.atom_id, COUNT(DISTINCT c.bond_id) AS cnt FROM atom a JOIN connected c ON (c.atom_id = a.atom_id OR c.atom_id2 = a.atom_id) WHERE a.element = 'i' GROUP BY a.atom_id)
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q247">
@@ -1557,6 +1557,8 @@ Evidence SQL: SELECT AVG(cnt) AS avg_bonds FROM (SELECT a.atom_id, COUNT(DISTINC
 **期望**：`na | zn | k`
 
 **答案**：`Both independent approaches agree, and the counts reconcile (9,111 atoms − 9,073 bonded atoms = 38 unbonded, matching 3+1+1+32+1). **推理链（三级锚定）：** - **L1 实体路**（'dlr_semantic_query'，db=toxicology）：命中 'L`
+
+**raw 日志**：[results/0929_2255_toxicology_b6/raw/0929_2255_247_dlr.ndjson](../results/0929_2255_toxicology_b6/raw/0929_2255_247_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1588,8 +1590,6 @@ Final Answer: cl, h, k, na, zn
 
 Evidence SQL: SELECT DISTINCT a.element FROM atom a WHERE a.atom_id NOT IN (SELECT atom_id FROM connected UNION SELECT atom_id2 FROM connected) ORDER BY a.element
 
-建模缺口: 无
-
 </details>
 
 <details id="q248">
@@ -1600,6 +1600,8 @@ Evidence SQL: SELECT DISTINCT a.element FROM atom a WHERE a.atom_id NOT IN (SELE
 **期望**：`TR041_10 | TR041_7 | TR041_7 | TR041_10 | TR041_8 | TR041_9 | TR041_9 | TR041_8`
 
 **答案**：`## 结论 **库：'toxicology'**（L1 召回 'LOGICAL.Bond' / 'LOGICAL.Atom' + L2 共识均指向该库；L3 'dlr_search_sop' = 'match=none'，本题无题级 SOP，按 L1+L2 自解） **口径依据（L2 领域共识，namespace=toxicology）** - qid=2：「Bond types: ''='' i`
+
+**raw 日志**：[results/0929_2255_toxicology_b6/raw/0929_2256_248_dlr.ndjson](../results/0929_2255_toxicology_b6/raw/0929_2256_248_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1644,8 +1646,6 @@ Evidence SQL: SELECT DISTINCT a.element FROM atom a WHERE a.atom_id NOT IN (SELE
 Final Answer: TR041_10 (n), TR041_7 (c), TR041_8 (c), TR041_9 (n)
 Evidence SQL: SELECT DISTINCT a.atom_id, a.element FROM bond b JOIN connected c ON b.bond_id = c.bond_id JOIN atom a ON a.atom_id = c.atom_id WHERE b.molecule_id = 'TR041' AND b.bond_type = '#' ORDER BY a.atom_id
 
-建模缺口: 无
-
 </details>
 
 <details id="q249">
@@ -1656,6 +1656,8 @@ Evidence SQL: SELECT DISTINCT a.atom_id, a.element FROM bond b JOIN connected c 
 **期望**：`h | c`
 
 **答案**：`## 结论 'TR144_8_19' 是一条 bond id（'TRxxx_A1_A2' 格式，L2 共识 toxicology-qid1 明确：bond 形如 'TR004_8_9'，atom 形如 'TR004_8'），它连接的两个原子是 **TR144_8** 和 **TR144_19**（同属分子 TR144）。 从 'connected'（bond–atom junction：'atom`
+
+**raw 日志**：[results/0929_2259_toxicology_b7/raw/0929_2259_249_dlr.ndjson](../results/0929_2259_toxicology_b7/raw/0929_2259_249_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1696,8 +1698,6 @@ Final Answer: c and h (carbon and hydrogen) — atom TR144_8 is element c, atom 
 Evidence SQL: SELECT GROUP_CONCAT(DISTINCT a.element) FROM connected c JOIN atom a ON a.atom_id IN (c.atom_id, c.atom_id2) WHERE c.bond_id = 'TR144_8_19'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q253">
@@ -1708,6 +1708,8 @@ Evidence SQL: SELECT GROUP_CONCAT(DISTINCT a.element) FROM connected c JOIN atom
 **期望**：`n | c | y | p`
 
 **答案**：`## 结论 **锚定过程（三级并行）** \| 级 \| 工具 \| 结果 \| \|---\|---\|---\| \| L3 业务逻辑 \| 'dlr_search_sop' \| 'match=none' → 本题无题级口径节，按 L1+L2 自解 \| \| L1 数据源 \| 'dlr_semantic_query' \| 命中 'LOGICAL.Bond'（db='toxicology`
+
+**raw 日志**：[results/0929_2259_toxicology_b7/raw/0929_2259_253_dlr.ndjson](../results/0929_2259_toxicology_b7/raw/0929_2259_253_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1767,8 +1769,6 @@ Final Answer: n, c, c, n, c, n, c, n, y, p
 Evidence SQL: SELECT atom.element FROM atom JOIN connected ON atom.atom_id = connected.atom_id JOIN bond ON connected.bond_id = bond.bond_id WHERE bond.bond_type = '#' ORDER BY bond.bond_id, atom.atom_id LIMIT 50
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q255">
@@ -1779,6 +1779,8 @@ Evidence SQL: SELECT atom.element FROM atom JOIN connected ON atom.atom_id = con
 **期望**：`39.75203`
 
 **答案**：`## 结论 **单一键（single bond）中致癌分子的键占比 = 39.75203%** ### 语义锚定过程 \| 级别 \| 工具 \| 命中内容 \| \|------\|------\|----------\| \| L1 数据源级 \| 'dlr_semantic_query' → 库 'toxicology' \| 'LOGICAL.Bond'（'bond_type'：'-' 单`
+
+**raw 日志**：[results/0929_2259_toxicology_b7/raw/0929_2259_255_dlr.ndjson](../results/0929_2259_toxicology_b7/raw/0929_2259_255_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1826,8 +1828,6 @@ Final Answer: 39.75203
 Evidence SQL: SELECT ROUND(CAST(SUM(CASE WHEN m.label = '+' THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(*), 5) AS pct_carcinogenic_single_bonds FROM bond b JOIN molecule m ON b.molecule_id = m.molecule_id WHERE b.bond_type = '-'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q260">
@@ -1838,6 +1838,8 @@ Evidence SQL: SELECT ROUND(CAST(SUM(CASE WHEN m.label = '+' THEN 1 ELSE 0 END) A
 **期望**：`1`
 
 **答案**：`三级交叉验证一致，结果为 **1**，与 L3 命中节的 Expected 完全吻合。 - **L3 口径（exact 命中）**：'Triple bond is bond_type = '#''；统计**带有三键的分子内部**的磷/溴原子数 → Expected **1** - **L1 实体路**：'LOGICAL.Atom'(element/molecule_id)、'LOGICAL.Bon`
+
+**raw 日志**：[results/0929_2312_toxicology_secB/raw/0929_2312_260_dlr.ndjson](../results/0929_2312_toxicology_secB/raw/0929_2312_260_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1864,8 +1866,6 @@ Evidence SQL: SELECT ROUND(CAST(SUM(CASE WHEN m.label = '+' THEN 1 ELSE 0 END) A
 Final Answer: 1
 Evidence SQL: SELECT COUNT(*) FROM atom WHERE LOWER(element) IN ('p','br') AND molecule_id IN (SELECT molecule_id FROM bond WHERE bond_type = '#')
 
-建模缺口: 无
-
 </details>
 
 <details id="q263">
@@ -1876,6 +1876,8 @@ Evidence SQL: SELECT COUNT(*) FROM atom WHERE LOWER(element) IN ('p','br') AND m
 **期望**：`2.6840451814272206`
 
 **答案**：`三级锚定完成，L3 为 'exact' 命中（标题逐字复述本题），并已用 SQL 闭环验证。 ## 执行过程 **L3 口径（最权威，'dlr_search_sop' match=exact）** - 范围：*single bond molecules* = 含至少一个 'bond_type = '-'' 的分子；**每个分子只计一次** - 分子内取"氯原子数 / 全部原子数 × 100" - `
+
+**raw 日志**：[results/0929_2312_toxicology_secB/raw/0929_2312_263_dlr.ndjson](../results/0929_2312_toxicology_secB/raw/0929_2312_263_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1924,8 +1926,6 @@ Evidence SQL: SELECT COUNT(*) FROM atom WHERE LOWER(element) IN ('p','br') AND m
 Final Answer: 3.4823684499615513
 Evidence SQL: SELECT 100.0 * SUM(CASE WHEN a.element = 'cl' THEN 1 ELSE 0 END) / COUNT(*) FROM atom a WHERE a.molecule_id IN (SELECT DISTINCT molecule_id FROM bond WHERE bond_type = '-')
 
-建模缺口: 无
-
 </details>
 
 <details id="q268">
@@ -1936,6 +1936,8 @@ Evidence SQL: SELECT 100.0 * SUM(CASE WHEN a.element = 'cl' THEN 1 ELSE 0 END) /
 **期望**：`c | o`
 
 **答案**：`## 结论 **Bond 'TR001_10_11'** 两端连接的两个原子及其元素为： \| atom_id \| element \| 元素名 \| \|---\|---\|---\| \| 'TR001_10' \| 'c' \| carbon（碳） \| \| 'TR001_11' \| 'o' \| oxygen（氧） \| 该键的键型为 '='（double bond，双键）。 ## `
+
+**raw 日志**：[results/0929_2303_toxicology_b8/raw/0929_2303_268_dlr.ndjson](../results/0929_2303_toxicology_b8/raw/0929_2303_268_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1979,8 +1981,6 @@ Final Answer: carbon (c) and oxygen (o) —— bond TR001_10_11 connects atom TR
 Evidence SQL: SELECT GROUP_CONCAT(element, ' and ') AS elements FROM (SELECT DISTINCT a.element AS element FROM connected c JOIN atom a ON a.atom_id IN (c.atom_id, c.atom_id2) WHERE c.bond_id = 'TR001_10_11' ORDER BY a.element)
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q273">
@@ -1991,6 +1991,8 @@ Evidence SQL: SELECT GROUP_CONCAT(element, ' and ') AS elements FROM (SELECT DIS
 **期望**：`3.1419284940411703`
 
 **答案**：`## 结论 致癌分子（'label = '+''）中，氯元素（chlorine，'element = 'cl''）原子占这些分子**全部原子**的百分比为 **3.1419284940411703%**（约 3.14%）。 即：116 个氯原子 ÷ 3692 个原子（全部属于致癌分子的原子）× 100。 **口径说明**：按 L3 SOP 节（'match=exact'，标题逐字复述本题）——「C`
+
+**raw 日志**：[results/0929_2312_toxicology_secB/raw/0929_2313_273_dlr.ndjson](../results/0929_2312_toxicology_secB/raw/0929_2313_273_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2026,8 +2028,6 @@ Final Answer: 3.1419284940411703
 Evidence SQL: SELECT 100.0 * SUM(CASE WHEN LOWER(a.element) = 'cl' THEN 1 ELSE 0 END) / COUNT(*) AS pct_chlorine FROM atom a JOIN molecule m ON a.molecule_id = m.molecule_id WHERE m.label = '+'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q281">
@@ -2038,6 +2038,8 @@ Evidence SQL: SELECT 100.0 * SUM(CASE WHEN LOWER(a.element) = 'cl' THEN 1 ELSE 0
 **期望**：`cl | c | br | n | o | s | h | f`
 
 **答案**：`**结论**：对每个致癌分子（'molecule.label = '+''，共识 qid=3：'+' 即致癌）取其**第 4 个原子**（原子编号规则：'TRXXX_i' 表示分子 TRXXX 的第 i 个原子 → 'atom_id = molecule_id \|\| '_4''），按元素（'atom.element'）汇总计数： \| element \| count \| \|---\|--`
+
+**raw 日志**：[results/0929_2303_toxicology_b8/raw/0929_2304_281_dlr.ndjson](../results/0929_2303_toxicology_b8/raw/0929_2304_281_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2076,8 +2078,6 @@ Evidence SQL: SELECT 100.0 * SUM(CASE WHEN LOWER(a.element) = 'cl' THEN 1 ELSE 0
 Final Answer: c
 Evidence SQL: SELECT a.element FROM atom a JOIN molecule m ON a.molecule_id = m.molecule_id WHERE m.label = '+' AND a.atom_id = a.molecule_id || '_4' GROUP BY a.element ORDER BY COUNT(*) DESC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q282">
@@ -2088,6 +2088,8 @@ Evidence SQL: SELECT a.element FROM atom a JOIN molecule m ON a.molecule_id = m.
 **期望**：`0.3617021276595745 | +`
 
 **答案**：`## 结论 **三级锚定** - **L1 语义召回**（'dlr_semantic_query'，db=toxicology）：命中 'LOGICAL.Molecule'（属性 'MoleculeID'、'label'）与 'LOGICAL.Atom'（属性 'AtomID'、'Molecule'、'element'），经第二跳 'get_pe_mapping' 落到 'toxicology.a`
+
+**raw 日志**：[results/0929_2303_toxicology_b8/raw/0929_2304_282_dlr.ndjson](../results/0929_2303_toxicology_b8/raw/0929_2304_282_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2122,8 +2124,6 @@ Evidence SQL: SELECT a.element FROM atom a JOIN molecule m ON a.molecule_id = m.
 Final Answer: ratio = 0.3617021276595745, label = +
 Evidence SQL: SELECT CAST(SUM(CASE WHEN a.element = 'h' THEN 1 ELSE 0 END) AS REAL) / COUNT(*) AS ratio, MAX(m.label) AS label FROM atom a JOIN molecule m ON a.molecule_id = m.molecule_id WHERE a.molecule_id = 'TR006'
 
-建模缺口: 无
-
 </details>
 
 <details id="q327">
@@ -2134,6 +2134,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN a.element = 'h' THEN 1 ELSE 0 END) AS RE
 **期望**：`TR002 | TR004 | TR007 | TR008 | TR009 | TR010 | TR011 | TR012`
 
 **答案**：`校验通过：'molecule.label' 仅有 '+'(致癌，152) 与 '-'(非致癌，191) 两值（L2 共识 qid=3 确认 '-' = 非致癌）。ARC 锚键 'atom.molecule_id → molecule.molecule_id' (N:1) 用于统计每个分子的原子数。 Final Answer: TR002, TR004, TR007, TR008, TR009, T`
+
+**raw 日志**：[results/0929_2303_toxicology_b8/raw/0929_2304_327_dlr.ndjson](../results/0929_2303_toxicology_b8/raw/0929_2304_327_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2154,7 +2156,5 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN a.element = 'h' THEN 1 ELSE 0 END) AS RE
 Final Answer: TR002, TR004, TR007, TR008, TR009, TR010, TR011, TR012, TR014, TR015, TR017, TR021, TR022, TR023, TR024, TR025, TR030, TR031, TR032, TR033, TR034, TR035, TR036, TR040, TR045, TR046, TR048, TR050, TR051, TR056, TR059, TR060, TR061, TR064, TR066, TR068, TR071, TR073, TR074, TR077, TR078, TR082, TR083, TR090, TR091, TR096, TR098, TR101, TR102, TR103, TR104, TR107, TR109, TR112, TR113, TR114, TR117, TR120, TR121, TR122, TR123, TR124, TR125, TR126, TR129, TR131, TR132, TR133, TR134, TR135, TR136, TR137, TR138, TR139, TR141, TR143, TR145, TR146, TR147, TR148, TR150, TR151, TR156, TR157, TR158, TR159, TR161, TR165, TR166, TR168, TR169, TR171, TR172, TR173, TR174, TR175, TR177, TR178, TR179, TR180, TR183, TR184, TR185, TR187, TR191, TR192, TR195, TR200, TR203, TR204, TR208, TR211, TR212, TR214, TR219, TR220, TR223, TR228, TR233, TR235, TR236, TR247, TR255, TR263, TR272, TR275, TR276, TR281, TR284, TR293, TR305, TR307, TR312, TR314, TR322, TR330, TR333, TR335, TR336, TR343, TR344, TR348, TR352, TR353, TR354, TR357, TR370, TR371, TR373, TR377, TR378, TR379, TR387, TR394, TR395, TR396, TR401, TR403, TR406, TR412, TR424, TR425, TR427, TR431, TR433, TR435, TR437, TR438, TR439, TR442, TR445, TR446, TR455, TR459, TR461, TR464, TR472, TR473, TR477, TR478, TR480, TR481, TR484, TR490, TR493, TR501
 
 Evidence SQL: SELECT a.molecule_id, COUNT(*) AS atom_cnt FROM atom a JOIN molecule m ON a.molecule_id = m.molecule_id WHERE m.label = '-' GROUP BY a.molecule_id HAVING COUNT(*) > 5 ORDER BY a.molecule_id
-
-建模缺口: 无
 
 </details>

@@ -88,6 +88,8 @@
 
 **答案**：`I now have the complete, verified result. Retrieving it confirmed the L3 spec exactly. ## 口径确认（三级锚定） **L3（题级仲裁，'dlr_search_sop' match=exact，标题逐字复述本题）** 给出本题最权威口径： - "Incredibly powerful foils" = **同时*`
 
+**raw 日志**：[results/0929_1308_card_games_q340/raw/0929_1308_340_dlr.ndjson](../results/0929_1308_card_games_q340/raw/0929_1308_340_dlr.ndjson)（dsh 事件流 ndjson）
+
 **调用步骤**
 
 | # | 工具 | 参数（截 200） |
@@ -142,10 +144,6 @@ Evidence SQL: SELECT id FROM cards WHERE cardKingdomFoilId IS NOT NULL AND cardK
 
 > 注：以上 Evidence SQL 单独执行即返回全部 25,061 行（升序 id 全表），与 L3 节期望的行数/卡名数逐项吻合（25,061 / 17,544）。本组合下唯一的结果集承载通道受 200 行截断限制，故上方 Final Answer 内联其起始段。
 
-建模缺口: 无
-
-（补充说明：本题用到的 `cards.cardKingdomFoilId`、`cards.cardKingdomId`、`cards.id`、`cards.name` 均**已在建模视图内**（`get_pe_mapping(PHYSICAL.Card)` 的 attributes 中可见），未使用 `get_full_data_info` 下探，故建模缺口为无。）
-
 </details>
 
 <details id="q341">
@@ -156,6 +154,8 @@ Evidence SQL: SELECT id FROM cards WHERE cardKingdomFoilId IS NOT NULL AND cardK
 **期望**：`23004 | 25350 | 25355 | 25357 | 25359 | 25361 | 33094 | 33095`
 
 **答案**：`## 结论 **52 张**（52 个不同牌名的无边框（borderless）印刷，来自 72 个印刷版本）。 **口径链（三级锚定）** - **L3（题级仲裁，'dlr_search_sop' match=exact，标题与本题逐字相同）**：本题节明确 "Powerful foils" = 同时拥有 Card Kingdom 卡牌 ID 与 Card Kingdom 闪卡 ID 的印刷（**`
+
+**raw 日志**：[results/0929_1133_qids_340_341_344_345_346/raw/0929_1133_341_dlr.ndjson](../results/0929_1133_qids_340_341_344_345_346/raw/0929_1133_341_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -189,8 +189,6 @@ Evidence SQL: SELECT id FROM cards WHERE cardKingdomFoilId IS NOT NULL AND cardK
 Final Answer: 52
 Evidence SQL: SELECT COUNT(DISTINCT name) FROM cards WHERE borderColor = 'borderless' AND NOT (cardKingdomFoilId IS NOT NULL AND cardKingdomId IS NOT NULL)
 
-建模缺口: 无
-
 </details>
 
 <details id="q344">
@@ -201,6 +199,8 @@ Evidence SQL: SELECT COUNT(DISTINCT name) FROM cards WHERE borderColor = 'border
 **期望**：`17983 | 18058 | 29523 | 38736 | 38737`
 
 **答案**：`**结论**：gladiator 赛制中被禁的 mythic 稀有度牌张（按**每次印刷的 print id** 计）共 5 张印刷品，对应 2 个牌名： \| PrintID \| 牌名 \| rarity \| format \| status \| \|---\|---\|---\|---\|---\| \| 17983 \| Oko, Thief of Crowns \| mythic \`
+
+**raw 日志**：[results/0929_1133_qids_340_341_344_345_346/raw/0929_1133_344_dlr.ndjson](../results/0929_1133_qids_340_341_344_345_346/raw/0929_1133_344_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -235,8 +235,6 @@ Final Answer: 17983 | 18058 | 29523 | 38736 | 38737
 
 Evidence SQL: SELECT group_concat(id, ' | ') FROM (SELECT c.id FROM cards c JOIN legalities l ON c.uuid = l.uuid WHERE l.format = 'gladiator' AND l.status = 'Banned' AND c.rarity = 'mythic' ORDER BY c.id)
 
-建模缺口: 无
-
 </details>
 
 <details id="q345">
@@ -247,6 +245,8 @@ Evidence SQL: SELECT group_concat(id, ' | ') FROM (SELECT c.id FROM cards c JOIN
 **期望**：`Legal | Restricted | Banned`
 
 **答案**：`**结论**：type 为 'Artifact'（纯神器）、且 'side IS NULL'（单面卡，没有同卡多面）的卡牌，在 **vintage** 赛制下的合法性状态共有三种，分布如下： \| status \| card count \| \|---\|---\| \| Legal \| 2812 \| \| Restricted \| 151 \| \| Banned \| 14 \| *`
+
+**raw 日志**：[results/0929_1133_qids_340_341_344_345_346/raw/0929_1133_345_dlr.ndjson](../results/0929_1133_qids_340_341_344_345_346/raw/0929_1133_345_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -281,8 +281,6 @@ Final Answer: Legal: 2812 cards; Restricted: 151 cards; Banned: 14 cards
 Evidence SQL: SELECT l.status, COUNT(DISTINCT c.uuid) AS cnt FROM cards c JOIN legalities l ON l.uuid = c.uuid WHERE c.type = 'Artifact' AND c.side IS NULL AND l.format = 'vintage' GROUP BY l.status ORDER BY cnt DESC;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q346">
@@ -293,6 +291,8 @@ Evidence SQL: SELECT l.status, COUNT(DISTINCT c.uuid) AS cnt FROM cards c JOIN l
 **期望**：`5 | Rebecca Guay | 6 | Rob Alexander | 10 | Daren Bader | 11 | Thomas M. Baxa`
 
 **答案**：`## 结论 三级锚定结果：'dlr_search_sop' **精确命中**本题（标题逐字复述），该节给出三条权威口径；'dlr_search_consensus' 的 card_games#37（Legal for X = format='X' AND status='Legal'）与 #50（'id' 为 each printing 的行标识）与 L3 相互印证。 **L3 口径执行情况：**`
+
+**raw 日志**：[results/0929_1133_qids_340_341_344_345_346/raw/0929_1134_346_dlr.ndjson](../results/0929_1133_qids_340_341_344_345_346/raw/0929_1134_346_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -360,8 +360,6 @@ Final Answer: 29936 rows of (card_id, artist) where power is unknown (NULL or '*
 Evidence SQL: SELECT DISTINCT c.id AS card_id, c.artist FROM cards c JOIN legalities l ON c.uuid = l.uuid WHERE l.format = 'commander' AND l.status = 'Legal' AND (c.power IS NULL OR c.power = '*') ORDER BY c.id
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q347">
@@ -372,6 +370,8 @@ Evidence SQL: SELECT DISTINCT c.id AS card_id, c.artist FROM cards c JOIN legali
 **期望**：`29 | You can’t put an Aura card from your hand onto the battlefield this way if that Aura can’t legally enchant Academy Researchers. For example, you can’t put an Aura with “enchant land” or “enchant green creature” onto the battlefield attached to Academy Res | 0 | 3872 | This card now has Enchant Swamp, which works exactly like any other Enchant ability. This means it can only be cast targeting a Swamp, and it will be put into its owner’s graveyard if the permanent it’s attached to ever stops being a Swamp. | 0 | 6651 | Cycling is an activated ability. Effects that interact with activated abilities (such as Stifle or Rings of Brighthearth) will interact with cycling. Effects that interact with spells (such as Remove Soul or Faerie Tauntings) will not.`
 
 **答案**：`## 结论 **1. 插画师锚定（L2 共识 qid 45 强制口径）**：题面里的 "Stephen Daniel" 存在拼写偏差，'cards.artist' 中实际写作 **'Stephen Daniele'**（共识原文：「'Stephen Daniel' should be searched as 'Stephen Daniele'」）。按此口径命中 **74 个印刷版本 / 30 个不`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1200_347_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1200_347_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -420,8 +420,6 @@ Final Answer: Cards illustrated by "Stephen Daniel" = artist 'Stephen Daniele' (
 
 Evidence SQL: SELECT c.name AS card, c.hasContentWarning AS missing_or_degraded, COUNT(DISTINCT r.text) AS n_rulings, GROUP_CONCAT(DISTINCT r.text) AS ruling_texts FROM cards c LEFT JOIN rulings r ON c.uuid = r.uuid WHERE c.artist = 'Stephen Daniele' GROUP BY c.name ORDER BY n_rulings DESC, c.name
 
-建模缺口: 无
-
 </details>
 
 <details id="q349">
@@ -432,6 +430,8 @@ Evidence SQL: SELECT c.name AS card, c.hasContentWarning AS missing_or_degraded,
 **期望**：`Serrated Arrows | John Avon | 1`
 
 **答案**：`## 结论 **Teferi's Protection（艺术家：Chase Stone）** —— 它拥有最多的 ruling 信息（**27 条 ruling**），且该卡**是促销印刷版**（isPromo = 1）。 ### 推理与证据链 1. **L3 口径（最权威）**：'dlr_search_sop' 对本题返回 'match=exact'，命中节标题逐字复述本题，明确：以「每张卡挂载`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1200_349_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1200_349_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -480,8 +480,6 @@ SELECT t.name || ' | ' || t.artist || ' | ' || t.cnt || ' rulings | promotional 
 FROM top t;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q352">
@@ -492,6 +490,8 @@ FROM top t;
 **期望**：`8.773399659641314`
 
 **答案**：`## 结论 **35.38%** 的卡牌有简体中文版本。 ### 三级锚定过程 **L3 口径（权威，'match=exact'）** — 'dlr_search_sop' 返回的节标题与本题逐字相同，明确给出两条关键口径： 1. **分子分母同为「卡牌」单位**：有简中印刷的卡牌数 ÷ 全部卡牌数，每张卡只计一次。foreign_data 每张卡每种语言一行，所以分母是**卡牌数（DISTINC`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1200_352_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1200_352_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -537,8 +537,6 @@ Final Answer: 35.38
 Evidence SQL: SELECT ROUND(CAST(COUNT(DISTINCT uuid) AS REAL) * 100.0 / (SELECT COUNT(DISTINCT uuid) FROM cards), 2) AS pct FROM foreign_data WHERE language = 'Chinese Simplified'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q356">
@@ -549,6 +547,8 @@ Evidence SQL: SELECT ROUND(CAST(COUNT(DISTINCT uuid) AS REAL) * 100.0 / (SELECT 
 **期望**：`429`
 
 **答案**：`## 结论 **429 张卡牌拥有无限力量（infinite power）。** ### 口径依据（三级锚定） \| 级别 \| 命中 \| 内容 \| \|------\|------\|------\| \| L3 业务逻辑级 \| 'dlr_search_sop' → 'match=exact'（标题逐字复述本题） \| "Infinite power" 是本数据集对无限力量的写法：'pow`
+
+**raw 日志**：[results/0929_1303_card_games_sec4/raw/0929_1303_356_dlr.ndjson](../results/0929_1303_card_games_sec4/raw/0929_1303_356_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -586,8 +586,6 @@ Final Answer: 429
 Evidence SQL: SELECT COUNT(*) AS infinite_power_cards FROM cards WHERE power = '*'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q358">
@@ -598,6 +596,8 @@ Evidence SQL: SELECT COUNT(*) AS infinite_power_cards FROM cards WHERE power = '
 **期望**：`black`
 
 **答案**：`All printings of "Ancestor's Chosen" resolve to a single border color. **查询过程：** 1. **L1 实体路** 'dlr_semantic_query' → 锚定 'LOGICAL.Card' / 'PHYSICAL.Card'（db=card_games，表 'cards'） 2. **L2 共识路** 'dlr_se`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1200_358_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1200_358_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -628,8 +628,6 @@ Final Answer: black
 Evidence SQL: SELECT DISTINCT name, borderColor FROM cards WHERE name = 'Ancestor''s Chosen'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q366">
@@ -640,6 +638,8 @@ Evidence SQL: SELECT DISTINCT name, borderColor FROM cards WHERE name = 'Ancesto
 **期望**：`commander | duel | legacy | modern | pauper | penny | premodern | vintage`
 
 **答案**：`## 结论 **Benalish Knight 的规则（rules text / 印刷异能）为：Flash 与 First strike。** 依据链路（三级并行锚定）： - **L3（最权威）**：'dlr_search_sop' 返回 'match=exact'，节标题逐字复述本题 'card_games#What is the rule of playing card "Benalish K`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1200_366_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1200_366_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -675,8 +675,6 @@ Evidence SQL: SELECT DISTINCT name, borderColor FROM cards WHERE name = 'Ancesto
 Final Answer: Flash | First strike
 Evidence SQL: SELECT DISTINCT substr(keywords, instr(keywords, ',') + 1) || ' | ' || substr(keywords, 1, instr(keywords, ',') - 1) AS rule FROM cards WHERE name = 'Benalish Knight'
 
-建模缺口: 无
-
 </details>
 
 <details id="q368">
@@ -687,6 +685,8 @@ Evidence SQL: SELECT DISTINCT substr(keywords, instr(keywords, ',') + 1) || ' | 
 **期望**：`0.42413149836331`
 
 **答案**：`**答案推导** - **L2 领域共识（qid 32）**：'borderless cards' → 'cards.borderColor = 'borderless''。 - **L2 领域共识（qid 49，口径权威）**："Percentage of X in Y" = 'COUNT(DISTINCT uuid WHERE X) * 100.0 / COUNT(DISTINCT uuid)`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1200_368_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1200_368_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -719,8 +719,6 @@ Evidence SQL:
 SELECT COUNT(DISTINCT CASE WHEN borderColor = 'borderless' THEN uuid END) * 100.0 / COUNT(DISTINCT uuid) AS pct_borderless FROM cards
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q371">
@@ -731,6 +729,8 @@ SELECT COUNT(DISTINCT CASE WHEN borderColor = 'borderless' THEN uuid END) * 100.
 **期望**：`10`
 
 **答案**：`## 结论 **83.65%** — 故事焦点（Story Spotlight）卡牌中，有法文印制的卡牌占比。 ### 三级锚定过程 \| 级 \| 工具 \| 命中结果 \| \|---\|---\|---\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| **match=exact**（标题逐字复述本题）→ 该节为本题最权威口径：分母=全部 Story Spotligh`
+
+**raw 日志**：[results/0929_1303_card_games_sec4/raw/0929_1304_371_dlr.ndjson](../results/0929_1303_card_games_sec4/raw/0929_1304_371_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -772,8 +772,6 @@ Final Answer: 83.65
 Evidence SQL: SELECT COUNT(DISTINCT CASE WHEN f.language = 'French' THEN c.uuid END) * 100.0 / COUNT(DISTINCT c.uuid) AS pct_french FROM cards c LEFT JOIN foreign_data f ON c.uuid = f.uuid WHERE c.isStorySpotlight = 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q377">
@@ -784,6 +782,8 @@ Evidence SQL: SELECT COUNT(DISTINCT CASE WHEN f.language = 'French' THEN c.uuid 
 **期望**：`3`
 
 **答案**：`**锚定过程** - **L2 领域共识**（'dlr_search_consensus' qid=35，namespace=card_games）逐条给了本题口径：''Original type of Summon - Angel'' → 'originalType = 'Summon - Angel''；''Subtype other than Angel'' → 'subtypes != '`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1201_377_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1201_377_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -812,8 +812,6 @@ Final Answer: 3
 
 Evidence SQL: SELECT COUNT(*) FROM cards WHERE originalType = 'Summon - Angel' AND subtypes != 'Angel'
 
-建模缺口: 无
-
 </details>
 
 <details id="q379">
@@ -824,6 +822,8 @@ Evidence SQL: SELECT COUNT(*) FROM cards WHERE originalType = 'Summon - Angel' A
 **期望**：`14440 | 14441 | 14442 | 14443 | 14444 | 14445 | 14446 | 14447`
 
 **答案**：`## 结论 **L2 领域共识**（'dlr_search_consensus'，namespace='card_games'，qid 33）明确给出术语映射：**"Duel Deck: 'Duel deck a' refers to duelDeck = 'a'"**；qid 50 补充：问"list card ids"时必须返回**每个 printing 的 id**（'cards.id'），`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1201_379_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1201_379_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -869,8 +869,6 @@ Final Answer: 共 804 个 id（duelDeck = 'a'）：
 
 Evidence SQL: SELECT id FROM cards WHERE duelDeck = 'a' ORDER BY id
 
-建模缺口: 无
-
 </details>
 
 <details id="q383">
@@ -881,6 +879,8 @@ Evidence SQL: SELECT id FROM cards WHERE duelDeck = 'a' ORDER BY id
 **期望**：`258`
 
 **答案**：`三级锚定完成，结果与 L3 口径一致。 **锚定与执行过程** \| 层级 \| 工具 \| 关键返回 \| \|------\|------\|----------\| \| L3 业务逻辑 \| 'dlr_search_sop' \| **match=exact** —「How many of the banned cards are white border?」节，Expected=89，并`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1201_383_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1201_383_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -918,8 +918,6 @@ Final Answer: 89
 Evidence SQL: SELECT COUNT(DISTINCT c.uuid) AS white_banned_cards FROM cards c JOIN legalities l ON c.uuid = l.uuid WHERE l.status = 'Banned' AND c.borderColor = 'white'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q391">
@@ -930,6 +928,8 @@ Evidence SQL: SELECT COUNT(DISTINCT c.uuid) AS white_banned_cards FROM cards c J
 **期望**：`Executioner's Capsule | Immortal Coil | Onyx Goblet | Netherborn Altar | Scepter of Fugue | Wishclaw Talisman | Bloodsoaked Altar | Witch's Cauldron`
 
 **答案**：`## 结论 **8 张卡牌**同时满足三个条件（原始牌面类型为 Artifact、颜色纯黑、有外语翻译版本）： \| # \| Card name \| \|---\|-----------\| \| 1 \| Bloodsoaked Altar \| \| 2 \| Executioner's Capsule \| \| 3 \| Immortal Coil \| \| 4 \| Netherb`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1201_391_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1201_391_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -997,8 +997,6 @@ Final Answer: Bloodsoaked Altar, Executioner's Capsule, Immortal Coil, Netherbor
 Evidence SQL: SELECT DISTINCT c.name FROM cards c JOIN foreign_data f ON f.uuid = c.uuid WHERE c.originalType = 'Artifact' AND c.colors = 'B' ORDER BY c.name
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q397">
@@ -1009,6 +1007,8 @@ Evidence SQL: SELECT DISTINCT c.name FROM cards c JOIN foreign_data f ON f.uuid 
 **期望**：`{5}{W}{W} | {4}{W} | {3}{W} | {3}{W} | {W} | {5}{W} | {2}{W} | {2}{W}`
 
 **答案**：`All three levels converge. Verification complete: - **L3 (exact match)**: report the **distinct mana costs with the count of printings**. - **L2 consensus**: 'available in paper and mtgo' → 'availabil`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1201_397_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1201_397_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1040,8 +1040,6 @@ Final Answer: The distinct mana costs of the 11,446 printings matching (layout='
 
 Evidence SQL: SELECT manaCost, COUNT(*) AS printing_count FROM cards WHERE layout='normal' AND frameVersion='2003' AND borderColor='black' AND availability='mtgo,paper' GROUP BY manaCost ORDER BY printing_count DESC
 
-建模缺口: 无
-
 </details>
 
 <details id="q402">
@@ -1052,6 +1050,8 @@ Evidence SQL: SELECT manaCost, COUNT(*) AS printing_count FROM cards WHERE layou
 **期望**：`0.18302770053852382`
 
 **答案**：`## 解答 **三级锚定结果** \| 级别 \| 工具 \| 命中内容 \| \|------\|------\|----------\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| **'match=exact'**：标题逐字复述本题。该节明确——"does not have a text box" = **textless**（isTextless=1）；Story`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1202_402_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1202_402_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1088,8 +1088,6 @@ Final Answer: 0% (0.0%) of Story Spotlight cards do not have a text box — 0 ou
 
 Evidence SQL: SELECT COUNT(*) AS story_spotlight_cards, SUM(CASE WHEN isTextless = 1 THEN 1 ELSE 0 END) AS textless_cards, ROUND(100.0 * SUM(CASE WHEN isTextless = 1 THEN 1 ELSE 0 END) / COUNT(*), 2) AS pct_textless, IFNULL(GROUP_CONCAT(CASE WHEN isTextless = 1 THEN id END), '') AS textless_ids FROM cards WHERE isStorySpotlight = 1;
 
-建模缺口: 无
-
 </details>
 
 <details id="q405">
@@ -1100,6 +1098,8 @@ Evidence SQL: SELECT COUNT(*) AS story_spotlight_cards, SUM(CASE WHEN isTextless
 **期望**：`7`
 
 **答案**：`**查询过程** - **L1 实体路**：召回 'LOGICAL.CardSet'（→ 'PHYSICAL.Set'，表 'sets'，含 'block' 列）与 'LOGICAL.SetTranslation'（→ 'PHYSICAL.SetTranslation'，表 'set_translations'，'setCode' + 'language'），均属 'card_games' 库。 `
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1202_405_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1202_405_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1133,8 +1133,6 @@ Final Answer: 7
 
 Evidence SQL: SELECT COUNT(DISTINCT s.code) FROM sets s JOIN set_translations t ON t.setCode = s.code WHERE s.block = 'Commander' AND t.language = 'Portuguese (Brazil)';
 
-建模缺口: 无
-
 </details>
 
 <details id="q407">
@@ -1145,6 +1143,8 @@ Evidence SQL: SELECT COUNT(DISTINCT s.code) FROM sets s JOIN set_translations t 
 **期望**：`Human,Rebel | Legendary | Angel | Legendary | Merfolk,Wizard | Legendary | Vampire,Noble | Legendary`
 
 **答案**：`## 结论 **L3 口径（精确命中，最权威）**：'dlr_search_sop' 返回的节标题与本题逐字相同（'card_games#Lists all types of cards in German.'，match=exact），其口径为： > "Types of cards **in German**" asks for the type names as they read in Ge`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1202_407_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1202_407_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1190,8 +1190,6 @@ Final Answer: 2149
 Evidence SQL: SELECT COUNT(DISTINCT type) AS german_card_types FROM foreign_data WHERE language = 'German' AND type IS NOT NULL AND TRIM(type) <> '';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q408">
@@ -1202,6 +1200,8 @@ Evidence SQL: SELECT COUNT(DISTINCT type) AS german_card_types FROM foreign_data
 **期望**：`1382`
 
 **答案**：`三级锚定完成，L3 精确命中本题口径，SQL 闭环验证一致。 **口径依据（L3 命中节，标题逐字复述本题）** - "unknown power cards" = 'cards.power' 缺失（NULL）**或** 记为 '*'（两者都算 unknown） - "contain info about the triggered ability" = 该卡的 **rulings** 文本中出现`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1202_408_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1202_408_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1240,8 +1240,6 @@ WHERE (c.power IS NULL OR c.power = '*')
   AND r.text LIKE '%triggered ability%';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q409">
@@ -1252,6 +1250,8 @@ WHERE (c.power IS NULL OR c.power = '*')
 **期望**：`16`
 
 **答案**：`MCP 服务在最后几次调用中开始超时，但我需要的两条关键 SQL 都已成功执行并返回结果，结论不受影响。 ## 三级锚定结果 **L3（'dlr_search_sop'）**：'match=similar'，命中的三节标题均未逐字复述本题 → 本题无 L3 权威节，按 L1+L2 自解（其中"unknown power cards contain info about the triggered `
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1202_409_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1202_409_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1314,8 +1314,6 @@ MCP 服务在最后几次调用中开始超时，但我需要的两条关键 SQL
 Final Answer: 16
 Evidence SQL: SELECT COUNT(*) AS n FROM cards c WHERE c.side IS NULL AND c.uuid IN (SELECT uuid FROM legalities WHERE format = 'premodern') AND c.uuid IN (SELECT uuid FROM rulings WHERE text = 'This is a triggered mana ability.')
 
-建模缺口: 无
-
 </details>
 
 <details id="q412">
@@ -1326,6 +1324,8 @@ Evidence SQL: SELECT COUNT(*) AS n FROM cards c WHERE c.side IS NULL AND c.uuid 
 **期望**：`Escouade de balistes | Reya Aubevenant | Tisseuse d'esprit | Étrangleur mou | Vampire de Mephidross | Assassin de la Forteresse | Dragon mage | Dragon mage`
 
 **答案**：`All three levels cross-validated. The L3 section (exact title match) confirms the four filters, and my SQL produced exactly the counts it predicted (50 printings / 42 distinct French names). **Reasoni`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1202_412_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1202_412_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1368,8 +1368,6 @@ Final Answer: Acolyte de l'obsidienne; Ange déchu; Ange lumineux; Ange vengeres
 
 Evidence SQL: SELECT DISTINCT fd.name AS french_name FROM cards c JOIN foreign_data fd ON fd.uuid = c.uuid WHERE c.types = 'Creature' AND c.layout = 'normal' AND c.borderColor = 'black' AND c.artist = 'Matthew D. Wilson' AND fd.language = 'French' ORDER BY fd.name
 
-建模缺口: 无
-
 </details>
 
 <details id="q414">
@@ -1380,6 +1378,8 @@ Evidence SQL: SELECT DISTINCT fd.name AS french_name FROM cards c JOIN foreign_d
 **期望**：`Chinese Simplified | Chinese Traditional | French | German | Italian | Japanese | Korean | Portuguese (Brazil)`
 
 **答案**：`## 回答 **锚定过程（三级并行）** \| 级 \| 结果 \| \|---\|---\| \| L2 共识（'dlr_search_consensus', namespace=card_games） \| qid=38：「'set of N cards' → 'sets.baseSetSize = N'；'block' → 'sets.block'」；qid=39：「**set 级翻译在 '`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1202_414_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1202_414_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1419,8 +1419,6 @@ Final Answer: Dissension (DIS) — 该 set 被翻译成 10 种语言：Chinese S
 Evidence SQL: SELECT st.language FROM sets s JOIN set_translations st ON st.setCode = s.code WHERE s.block = 'Ravnica' AND s.baseSetSize = 180
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q415">
@@ -1431,6 +1429,8 @@ Evidence SQL: SELECT st.language FROM sets s JOIN set_translations st ON st.setC
 **期望**：`100`
 
 **答案**：`## 结论 **100%** ### 三级锚定过程 \| 级别 \| 工具 \| 命中结果 \| \|------\|------\|----------\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| **'match=exact'** — 标题逐字复述本题，口径即本题最权威：'"format commander and legal status"' = 该卡在 com`
+
+**raw 日志**：[results/0929_1200_card_games_b2_11/raw/0929_1203_415_dlr.ndjson](../results/0929_1200_card_games_b2_11/raw/0929_1203_415_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1472,8 +1472,6 @@ Final Answer: 100
 Evidence SQL: SELECT 100.0 * SUM(CASE WHEN c.hasContentWarning = 0 THEN 1 ELSE 0 END) / COUNT(*) AS pct_no_content_warning FROM legalities l JOIN cards c ON c.uuid = l.uuid WHERE l.format = 'commander' AND l.status = 'Legal'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q416">
@@ -1484,6 +1482,8 @@ Evidence SQL: SELECT 100.0 * SUM(CASE WHEN c.hasContentWarning = 0 THEN 1 ELSE 0
 **期望**：`12.975290140452374`
 
 **答案**：`三级锚定全部一致，且 L3 的 Expected 与 SQL 结果吻合。 **口径来源（L3 精确命中）**：'dlr_search_sop' 命中节标题逐字复述本题 → 'card_games' 库，'Expected: 47.96'。 - "Cards without power" = 'power' 缺失（NULL）或记为 '*' - "In French" = 该卡有法语版本（'forei`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1251_416_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1251_416_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1519,8 +1519,6 @@ Final Answer: 47.96
 Evidence SQL: SELECT (SELECT COUNT(DISTINCT f.uuid) FROM foreign_data f JOIN cards c ON c.uuid = f.uuid WHERE f.language = 'French' AND (c.power IS NULL OR c.power = '*')) * 100.0 / (SELECT COUNT(DISTINCT uuid) FROM cards WHERE power IS NULL OR power = '*') AS pct_french
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q422">
@@ -1531,6 +1529,8 @@ Evidence SQL: SELECT (SELECT COUNT(DISTINCT f.uuid) FROM foreign_data f JOIN car
 **期望**：`French`
 
 **答案**：`**结论**：multiverse number 149934 对应的卡牌语言是 **French（法语）**。 **推导过程** 1. **L1 语义召回**（'dlr_semantic_query'）：命中 'card_games' 库，'LOGICAL.CardExtension' 的 PE 'PHYSICAL.ForeignData'（'foreign_data' 表）持有 'langua`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1251_422_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1251_422_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1562,8 +1562,6 @@ Final Answer: French
 Evidence SQL: SELECT language FROM foreign_data WHERE multiverseid = 149934
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q424">
@@ -1574,6 +1572,8 @@ Evidence SQL: SELECT language FROM foreign_data WHERE multiverseid = 149934
 **期望**：`0.20238639963394459`
 
 **答案**：`## 结论 **0.2024**（115 / 56822 张牌） ### 三级锚定过程 \| 层级 \| 工具 \| 命中结果 \| \|------\|------\|----------\| \| **L3 业务逻辑级** \| 'dlr_search_sop' \| **'match=exact'** — 标题逐字复述本题，为本题最权威口径 \| \| **L2 领域共识级** \| 'dl`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1252_424_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1252_424_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1619,8 +1619,6 @@ Final Answer: 0.2024
 Evidence SQL: SELECT ROUND(100.0 * SUM(CASE WHEN isTextless = 1 AND layout = 'normal' THEN 1 ELSE 0 END) / COUNT(*), 4) AS proportion FROM cards;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q427">
@@ -1631,6 +1629,8 @@ Evidence SQL: SELECT ROUND(100.0 * SUM(CASE WHEN isTextless = 1 AND layout = 'no
 **期望**：`Chinese Simplified | Chinese Traditional | French | German | Italian | Japanese | Korean | Portuguese (Brazil)`
 
 **答案**：`## 结论推导过程 **三级锚定结果：** - **L3（口径路）**：'dlr_search_sop' 返回 'match=similar'，两个候选节标题均非逐字复述本题 → 本题无 L3 节，按 L1+L2 自解。 - **L2（evidence 路）**：命中 'card_games' 库两条权威共识（score 0.74/0.72）：   - qid 38：*"Set known as `
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1252_427_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1252_427_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1666,8 +1666,6 @@ Final Answer: ARC（Archenemy）集合共有 10 种语言：Chinese Simplified, 
 
 Evidence SQL: SELECT GROUP_CONCAT(language, ', ') FROM (SELECT t.language FROM sets s JOIN set_translations t ON t.setCode = s.code WHERE s.code = 'ARC' AND s.mcmName = 'Archenemy' ORDER BY t.language)
 
-建模缺口: 无
-
 </details>
 
 <details id="q440">
@@ -1678,6 +1676,8 @@ Evidence SQL: SELECT GROUP_CONCAT(language, ', ') FROM (SELECT t.language FROM s
 **期望**：`Portuguese (Brazil)`
 
 **答案**：`## 推理过程 **三级并行锚定结果：** \| 级 \| 结果 \| \|---\|---\| \| L3 SOP \| 'match=none' — 本题无题级口径节，按 L1+L2 自解 \| \| L1 语义召回 \| 命中 'LOGICAL.CardExtension' → 'PHYSICAL.ForeignData'（'foreign_data'，db='card_games'） \|`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1252_440_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1252_440_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1722,8 +1722,6 @@ Final Answer: Portuguese (Brazil)
 Evidence SQL: SELECT DISTINCT language FROM foreign_data WHERE name = 'A Pedra Fellwar'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q459">
@@ -1734,6 +1732,8 @@ Evidence SQL: SELECT DISTINCT language FROM foreign_data WHERE name = 'A Pedra F
 **期望**：`Serra Angel`
 
 **答案**：`**结论：Serra Angel 的花费更高（converted mana cost 5 vs. 2）。** **三级锚定过程：** - **L1 语义召回**：命中 'LOGICAL.Card' → 'PHYSICAL.Card'（表 'cards'，库 'card_games'），视图内含 'name'（卡牌身份）与 'convertedManaCost' 两列 - **L2 领域共识**：q`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1252_459_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1252_459_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1769,8 +1769,6 @@ Final Answer: Serra Angel
 Evidence SQL: SELECT name FROM cards WHERE name IN ('Serra Angel','Shrine Keeper') GROUP BY name ORDER BY MAX(convertedManaCost) DESC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q462">
@@ -1781,6 +1779,8 @@ Evidence SQL: SELECT name FROM cards WHERE name IN ('Serra Angel','Shrine Keeper
 **期望**：`Set Base Decima Edizione | Sentenza`
 
 **答案**：`Cross-verified: the card "Ancestor's Chosen" exists in three sets (10E, JUD, UMA), but only two of those sets carry an Italian localisation — matching the L3 SOP note that the answer is exactly two tr`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1252_462_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1252_462_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1812,10 +1812,6 @@ Final Answer: Set Base Decima Edizione; Sentenza
 
 Evidence SQL: SELECT st.setCode, st.language, st.translation FROM set_translations st WHERE st.setCode IN (SELECT DISTINCT setCode FROM cards WHERE name = 'Ancestor''s Chosen') AND st.language = 'Italian'
 
-建模缺口: 无
-
-（说明：`set_translations` 已建模为 PE `PHYSICAL.SetTranslation`，四列均在建模视图内，本题无需额外下探；对 `PHYSICAL.SetTranslation` 的调用属正常第二跳映射，不构成缺口。）
-
 </details>
 
 <details id="q465">
@@ -1826,6 +1822,8 @@ Evidence SQL: SELECT st.setCode, st.language, st.translation FROM set_translatio
 **期望**：`YES`
 
 **答案**：`## 结论 **是的，有韩语版本。** 按 L3 口径（'dlr_search_sop' 精确命中本题，标题逐字相同）：这题问的不是卡牌名翻译，而是**系列（set）名的语言本地化**——"Ancestor's Chosen" 存在于多个系列中，需要逐个系列去问"该系列有没有韩语名"。 ### 证据链 1. **锚定实体**（'dlr_semantic_query'，db=card_games） `
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1252_465_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1252_465_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1879,8 +1877,6 @@ JOIN set_translations st ON st.setCode = c.setCode
 WHERE c.name = 'Ancestor''s Chosen' AND st.language = 'Korean'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q466">
@@ -1891,6 +1887,8 @@ WHERE c.name = 'Ancestor''s Chosen' AND st.language = 'Korean'
 **期望**：`12`
 
 **答案**：`## 结论 **Hauptset Zehnte Edition** 是「Tenth Edition」的**德文集合名**，需经集合翻译表定位集合代码，再统计该集合中 artist 为 Adam Rex 的卡牌数。 **证据链**： 1. **L3 口径（精确命中）** — 'dlr_search_sop' 返回标题逐字复述本题的节：'"Hauptset Zehnte Edition" is a s`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1253_466_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1253_466_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1925,8 +1923,6 @@ WHERE c.name = 'Ancestor''s Chosen' AND st.language = 'Korean'
 Final Answer: 12
 Evidence SQL: SELECT COUNT(*) FROM cards WHERE setCode = '10E' AND artist = 'Adam Rex'
 
-建模缺口: 无（`set_translations` / PE `PHYSICAL.SetTranslation` 四列均已在建模视图内；本题首次 L1 语义召回未把 SetTranslation 结构召回出来，属召回覆盖问题而非建模缺口，`get_full_data_info` 确认无需升列）
-
 </details>
 
 <details id="q468">
@@ -1937,6 +1933,8 @@ Evidence SQL: SELECT COUNT(*) FROM cards WHERE setCode = '10E' AND artist = 'Ada
 **期望**：`核心系列第八版`
 
 **答案**：`**结论**：set "Eighth Edition"（set code '8ED'）的简体中文译名为 **核心系列第八版**。 **推导过程（三级锚定）**： - **L1 实体路**：'dlr_semantic_query(db="card_games")' 召回 'LOGICAL.SetTranslation'（PE 'set_translations'）与 'LOGICAL.CardSet`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1253_468_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1253_468_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1967,8 +1965,6 @@ Evidence SQL: SELECT COUNT(*) FROM cards WHERE setCode = '10E' AND artist = 'Ada
 Final Answer: 核心系列第八版
 Evidence SQL: SELECT t.translation FROM sets s JOIN set_translations t ON t.setCode = s.code WHERE s.name = 'Eighth Edition' AND t.language = 'Chinese Simplified' LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q469">
@@ -1979,6 +1975,8 @@ Evidence SQL: SELECT t.translation FROM sets s JOIN set_translations t ON t.setC
 **期望**：`YES | YES | YES | YES | YES | NO | YES | YES`
 
 **答案**：`## 结论 **Yes** —— 印有 "Angel of Mercy" 的系列中，有系列确实登陆了 Magic: The Gathering Online。 ### 依据链 \| 级 \| 来源 \| 内容 \| \|---\|---\|---\| \| L1 数据源级 \| 'dlr_semantic_query' \| 锚定库 'card_games'；'LOGICAL.Card'（PE='`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1254_469_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1254_469_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2036,8 +2034,6 @@ WHERE c.name = 'Angel of Mercy'
   AND s.mtgoCode IS NOT NULL AND s.mtgoCode <> ''
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q472">
@@ -2048,6 +2044,8 @@ WHERE c.name = 'Angel of Mercy'
 **期望**：`1`
 
 **答案**：`**结论**：block 为 "Ice Age" 的系列共 5 个（Alliances、Coldsnap、Coldsnap Theme Decks、Ice Age、Coldsnap Promos）。其中只有 **1** 个真正带有意大利语译文——Coldsnap（意大利语名 "Ondata Glaciale"）。Ice Age（ICE）虽然在 'set_translations' 里有 Itali`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1254_472_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1254_472_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2074,8 +2072,6 @@ WHERE c.name = 'Angel of Mercy'
 Final Answer: 1
 Evidence SQL: SELECT COUNT(DISTINCT s.code) AS sets_with_italian_translation FROM sets s JOIN set_translations t ON t.setCode = s.code WHERE s.block = 'Ice Age' AND t.language = 'Italian' AND t.translation IS NOT NULL AND TRIM(t.translation) <> ''
 
-建模缺口: 无
-
 </details>
 
 <details id="q473">
@@ -2086,6 +2082,8 @@ Evidence SQL: SELECT COUNT(DISTINCT s.code) AS sets_with_italian_translation FRO
 **期望**：`NO | NO | NO | NO | NO`
 
 **答案**：`## 结论 **No（否）** —— 含 "Adarkar Valkyrie" 的卡牌所在的所有系列都**并非**"仅在美国境外发售"。 ### 依据 - **L2 领域共识**（'dlr_search_consensus'，qid=38，namespace=card_games）："'Only available outside the US' means **isForeignOnly = 1`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1254_473_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1254_473_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2129,8 +2127,6 @@ Final Answer: No — 含 Adarkar Valkyrie 的 5 个系列（C14, C18, CSP, MMA, 
 Evidence SQL: SELECT DISTINCT s.code, s.name, s.isForeignOnly FROM cards c JOIN sets s ON c.setCode = s.code WHERE c.name = 'Adarkar Valkyrie'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q474">
@@ -2141,6 +2137,8 @@ Evidence SQL: SELECT DISTINCT s.code, s.name, s.isForeignOnly FROM cards c JOIN 
 **期望**：`30`
 
 **答案**：`查询返回 30，与 L3 权威口径完全一致。 **推导过程** - L1 语义召回定位两个物理实体：'card_games.sets'（PHYSICAL.Set，'code' / 'baseSetSize'）与 'card_games.set_translations'（PHYSICAL.SetTranslation，'setCode' / 'language' / 'translation'） `
+
+**raw 日志**：[results/0929_1303_card_games_sec4/raw/0929_1304_474_dlr.ndjson](../results/0929_1303_card_games_sec4/raw/0929_1304_474_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2169,8 +2167,6 @@ Final Answer: 30
 Evidence SQL: SELECT COUNT(DISTINCT s.code) AS n FROM sets s JOIN set_translations st ON st.setCode = s.code WHERE st.language = 'Italian' AND st.translation IS NOT NULL AND s.baseSetSize < 100
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q477">
@@ -2181,6 +2177,8 @@ Evidence SQL: SELECT COUNT(DISTINCT s.code) AS n FROM sets s JOIN set_translatio
 **期望**：`Chippy | Jeremy Jarvis`
 
 **答案**：`## 结论 在 **Coldsnap**（CSP，155 张牌）中，**Jeremy Jarvis 和 Chippy** 设计过牌；**Aaron Miller 没有**。 证据明细（按艺术家统计 Coldsnap 内的牌数）： \| 艺术家 \| Coldsnap 中设计的牌数 \| \|---\|---\| \| Jeremy Jarvis \| 3 \| \| Chippy \| 2 \| `
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1255_477_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1255_477_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2222,8 +2220,6 @@ Final Answer: Jeremy Jarvis, Chippy
 Evidence SQL: SELECT DISTINCT c.artist FROM cards c WHERE c.setCode = (SELECT code FROM sets WHERE name = 'Coldsnap') AND c.artist IN ('Jeremy Jarvis','Aaron Miller','Chippy') ORDER BY c.artist
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q479">
@@ -2234,6 +2230,8 @@ Evidence SQL: SELECT DISTINCT c.artist FROM cards c WHERE c.setCode = (SELECT co
 **期望**：`6`
 
 **答案**：`## 结论 **6 张。** ### 推理链（三级锚定） - **L3（'dlr_search_sop'）**：'match=similar'，两条候选均未逐字复述本题 → 本题**无 L3 节**，按 L1+L2 自解。 - **L2（'dlr_search_consensus'，namespace=card_games）**：   - qid 47：'converted mana cost h`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1255_479_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1255_479_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2290,8 +2288,6 @@ Final Answer: 6
 
 Evidence SQL: SELECT COUNT(*) AS unknown_power_cards FROM cards c JOIN sets s ON c.setCode = s.code WHERE s.name = 'Coldsnap' AND c.convertedManaCost > 5 AND (c.power IS NULL OR c.power = '*')
 
-建模缺口: 无
-
 </details>
 
 <details id="q480">
@@ -2302,6 +2298,8 @@ Evidence SQL: SELECT COUNT(*) AS unknown_power_cards FROM cards c JOIN sets s ON
 **期望**：`"La volontà di tutti, eseguita per mano mia." | Sancito da generazioni di forza.`
 
 **答案**：`**锚定过程** - **L1 语义召回**：'LOGICAL.CardExtension' → 'PHYSICAL.ForeignData'（'foreign_data'，外语翻译），库 'card_games'；'LOGICAL.Card' → 'PHYSICAL.Card'（'cards'）。 - **L2 领域共识**（qid=39, namespace=card_games）：卡片级翻译`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1255_480_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1255_480_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2339,8 +2337,6 @@ Final Answer: Sancito da generazioni di forza. (Judgment, JUD) / "La volontà di
 Evidence SQL: SELECT c.name, c.setCode, s.name AS set_name, fd.language, fd.flavorText FROM cards c JOIN foreign_data fd ON fd.uuid = c.uuid LEFT JOIN sets s ON s.code = c.setCode WHERE c.name = 'Ancestor''s Chosen' AND fd.language = 'Italian'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q483">
@@ -2357,6 +2353,8 @@ La creatura incantata non può bloccare e le sue abilità attivate non possono e
 Mantenimento cumulativo {S} (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di mantenimento per ogni segnalino epoca presente su di esso. {S} può essere pag | Mantenimento cumulativo—Metti in fondo al grimorio del proprietario due carte bersaglio presenti in un singolo cimitero. (All'inizio del tuo mantenimento, metti un segnalino epoca su questo permanente, poi sacrificalo a meno che tu paghi il suo costo di m`
 
 **答案**：`L3 exact hit confirmed the expected count, and the SQL matches it exactly (149 non-empty Italian texts out of 155 cards in CSP/Coldsnap). ## Answer **Set:** Coldsnap (set code 'CSP', baseSetSize = 155`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1256_483_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1256_483_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2538,8 +2536,6 @@ Final Answer: 149 (there are 149 Italian text rulings for the 155 cards of the C
 
 Evidence SQL: SELECT COUNT(*) FROM cards c JOIN sets s ON c.setCode = s.code JOIN foreign_data f ON f.uuid = c.uuid AND f.language = 'Italian' WHERE s.name = 'Coldsnap' AND f.text IS NOT NULL AND TRIM(f.text) <> '';
 
-建模缺口: 无
-
 </details>
 
 <details id="q484">
@@ -2550,6 +2546,8 @@ Evidence SQL: SELECT COUNT(*) FROM cards c JOIN sets s ON c.setCode = s.code JOI
 **期望**：`Sunscour | Commandeer | Jokulmorder | Rimefeather Owl | Herald of Leshrac | Soul Spike | Tresserhorn Skyknight | Fury of the Horde`
 
 **答案**：`## Result **L3 (SOP) exact hit** — the section title verbatim restates this question, so it is the authoritative spec: in *Coldsnap* the highest converted mana cost is **7**, shared by **twelve** card`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1256_484_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1256_484_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2596,8 +2594,6 @@ Final Answer: Devastazione Solare | Requisire | Jokulmorder | Gufo Gelopiuma | A
 Evidence SQL: SELECT GROUP_CONCAT(fd.name, ' | ') AS italian_names FROM cards c JOIN sets s ON s.code = c.setCode JOIN foreign_data fd ON fd.uuid = c.uuid AND fd.language = 'Italian' WHERE s.name = 'Coldsnap' AND c.convertedManaCost = (SELECT MAX(c2.convertedManaCost) FROM cards c2 JOIN sets s2 ON s2.code = c2.setCode WHERE s2.name = 'Coldsnap')
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q486">
@@ -2608,6 +2604,8 @@ Evidence SQL: SELECT GROUP_CONCAT(fd.name, ' | ') AS italian_names FROM cards c 
 **期望**：`7.741935483870968`
 
 **答案**：`**结论**：Coldsnap（集合代码 CSP，共 155 张卡）中，转换法术力费用（convertedManaCost）等于 7 的卡有 12 张，占比 **7.74%**。 **推理依据** - L1 语义召回：'LOGICAL.Card'（→ 'cards' 表，含 'convertedManaCost'、'setCode'）/ 'LOGICAL.CardSet'（→ 'sets' 表，含`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1256_486_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1256_486_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2637,8 +2635,6 @@ Final Answer: 7.74
 Evidence SQL: SELECT COUNT(DISTINCT CASE WHEN c.convertedManaCost = 7 THEN c.uuid END) * 100.0 / COUNT(DISTINCT c.uuid) AS pct FROM cards c JOIN sets s ON c.setCode = s.code WHERE s.name = 'Coldsnap'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q487">
@@ -2649,6 +2645,8 @@ Evidence SQL: SELECT COUNT(DISTINCT CASE WHEN c.convertedManaCost = 7 THEN c.uui
 **期望**：`100`
 
 **答案**：`## 结论 **Coldsnap (CSP) 中"incredibly powerful"卡牌的百分比为 100%。** ### 三级锚定过程 \| 级 \| 工具 \| 命中内容 \| \|---\|---\|---\| \| L3 \| 'dlr_search_sop' \| 'match=similar'（2 条近似候选，标题均未逐字复述本题）→ **本题无 L3 节**，按 L1+L2 自`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1256_487_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1256_487_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2697,8 +2695,6 @@ Final Answer: 100
 Evidence SQL: SELECT COUNT(DISTINCT CASE WHEN cardKingdomFoilId IS NOT NULL AND cardKingdomId IS NOT NULL THEN uuid END) * 100.0 / COUNT(DISTINCT uuid) AS pct_powerful_in_coldsnap FROM cards WHERE setCode = 'CSP'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q518">
@@ -2709,6 +2705,8 @@ Evidence SQL: SELECT COUNT(DISTINCT CASE WHEN cardKingdomFoilId IS NOT NULL AND 
 **期望**：`legacy | Balance | legacy | Crusade | legacy | Ancestral Recall | legacy | Time Walk`
 
 **答案**：`## 结论 **最高 banned 数量的 play format 是 'legacy'，共 546 条 banned 记录。** ### 依据（三级锚定） - **L3 业务逻辑（'dlr_search_sop'，match=exact，标题逐字复述本题）**：明确给出「The format is **legacy** — **546 cards** are banned in it」，并要求「`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1257_518_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1257_518_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2769,8 +2767,6 @@ Final Answer: legacy | 546 | card names banned in legacy (546 name entries; ×N 
 Evidence SQL: SELECT l.format AS format, c.name AS card_name FROM legalities l JOIN cards c ON c.uuid = l.uuid WHERE l.status = 'Banned' AND l.format = (SELECT format FROM legalities WHERE status = 'Banned' GROUP BY format ORDER BY COUNT(*) DESC, format ASC LIMIT 1) ORDER BY c.name LIMIT 546
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q522">
@@ -2781,6 +2777,8 @@ Evidence SQL: SELECT l.format AS format, c.name AS card_name FROM legalities l J
 **期望**：`Sol Ring | duel | Sol Ring | legacy`
 
 **答案**：`**结论：EDHRec 排名第 1 的卡是 Sol Ring（魔戒之环）。** 它在两个赛制中被禁用：**duel** 与 **legacy**。 - 排名依据（L2 共识 qid=40）：“Ranked 1st on EDHRec” → 'cards.edhrecRank = 1'。 - 'cards' 表中 'edhrecRank = 1' 的共有 33 行，但按 L2 共识 qid=50（同`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1257_522_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1257_522_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2808,8 +2806,6 @@ Evidence SQL: SELECT l.format AS format, c.name AS card_name FROM legalities l J
 Final Answer: Sol Ring — banned play formats: duel, legacy
 Evidence SQL: SELECT DISTINCT c.name AS card_name, l.format AS banned_play_format FROM cards c JOIN legalities l ON c.uuid = l.uuid WHERE c.edhrecRank = 1 AND l.status = 'Banned' ORDER BY c.name, l.format
 
-建模缺口: 无
-
 </details>
 
 <details id="q528">
@@ -2820,6 +2816,8 @@ Evidence SQL: SELECT DISTINCT c.name AS card_name, l.format AS banned_play_forma
 **期望**：`Act of Heroism | commander | Act of Heroism | duel | Act of Heroism | legacy | Act of Heroism | modern`
 
 **答案**：`已完成三级锚定与 SQL 闭环。 ## 结论 **集合识别**：'Hour of Devastation' 是 set 的 **name**（code = 'HOU'，expansion，2017-07-14）——来源 'sets' 表。 该集合共 **219 个 printing（uuid）**、**199 个不同牌名**；这 219 张牌在 'legalities' 中共 **1,890 条记`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1258_528_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1258_528_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2893,8 +2891,6 @@ Total = 199 distinct card names (44+29+26+24+24+24+10+6+5+5+1+1).
 Evidence SQL: WITH p AS (SELECT c.name AS name, (SELECT GROUP_CONCAT(format,',') FROM (SELECT format FROM legalities l WHERE l.uuid=c.uuid AND l.status='Legal' ORDER BY format)) AS fmts FROM cards c WHERE c.setCode='HOU'), d AS (SELECT DISTINCT name, fmts FROM p) SELECT fmts, COUNT(*) AS n_names, GROUP_CONCAT(name, ' | ') AS names FROM d GROUP BY fmts ORDER BY n_names DESC, fmts
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q529">
@@ -2905,6 +2901,8 @@ Evidence SQL: WITH p AS (SELECT c.name AS name, (SELECT GROUP_CONCAT(format,',')
 **期望**：`Tenth Edition | Fourth Edition | Fifth Dawn | Fifth Edition | Classic Sixth Edition | Seventh Edition | Eighth Edition | Ninth Edition`
 
 **答案**：`三级锚定完成：L3 SOP **精确命中**本题（'match=exact'），L2 共识确认了 set 级翻译在 'set_translations' 表（language/translation，按 setCode 关联），L1 召回锁定 'LOGICAL.SetTranslation' + 'LOGICAL.CardSet'。 关键口径（来自 L3 节，最权威）：**每个 set 在每个语言`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1258_529_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1258_529_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2932,8 +2930,6 @@ Final Answer: Duel Decks: Zendikar vs. Eldrazi | Duel Decks: Blessed vs. Cursed
 Evidence SQL: SELECT s.name FROM sets s WHERE EXISTS (SELECT 1 FROM set_translations st WHERE st.setCode = s.code AND st.language = 'Korean' AND st.translation IS NOT NULL AND TRIM(st.translation) <> '') AND NOT EXISTS (SELECT 1 FROM set_translations st2 WHERE st2.setCode = s.code AND st2.language = 'Japanese' AND st2.translation IS NOT NULL AND TRIM(st2.translation) <> '')
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q530">
@@ -2944,6 +2940,8 @@ Evidence SQL: SELECT s.name FROM sets s WHERE EXISTS (SELECT 1 FROM set_translat
 **期望**：`1997 | Blinking Spirit | NO | 1997 | Kjeldoran Royal Guard | NO | 1997 | Enervate`
 
 **答案**：`## 结论 Allen Williams 参与绘制的牌共有 **136 个印刷版本（printings）**、55 个不同牌名，横跨 **4 种 frame style**（卡框版本）。按 L3 口径，"frame styles" 即每个印刷版本携带的 'frameVersion'，"cards Allen Williams worked on" 即 'artist = 'Allen Willia`
+
+**raw 日志**：[results/0929_1251_card_games_rerun26b/raw/0929_1258_530_dlr.ndjson](../results/0929_1251_card_games_rerun26b/raw/0929_1258_530_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2997,7 +2995,5 @@ Final Answer: Allen Williams worked on 4 frame styles — 1993, 1997, 2003, and 
 Banned cards: none — 0 of these printings carry status = 'Banned'.
 Evidence SQL: SELECT c.frameVersion, COUNT(*) AS printings, COUNT(DISTINCT c.name) AS distinct_cards, GROUP_CONCAT(DISTINCT c.name) AS card_names, (SELECT COUNT(DISTINCT c2.id) FROM cards c2 JOIN legalities l ON l.uuid = c2.uuid WHERE c2.artist = 'Allen Williams' AND l.status = 'Banned') AS banned_printings FROM cards c WHERE c.artist = 'Allen Williams' GROUP BY c.frameVersion ORDER BY c.frameVersion;
 ```
-
-建模缺口: 无
 
 </details>

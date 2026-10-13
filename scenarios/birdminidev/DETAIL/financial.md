@@ -62,6 +62,8 @@
 
 **答案**：`## 解题过程 **三级锚定结果：** - **L3（'dlr_search_sop'）**：'match=none' — 本题无题级 SOP 节，按 L1 + L2 自解 - **L1（'dlr_semantic_query'）**：定位到 'financial' 库，涉及 'LOGICAL.Account'（含 district、open date、frequency）与 'LOGICAL.D`
 
+**raw 日志**：[results/0929_1331_financial_b1/raw/0929_1331_89_dlr.ndjson](../results/0929_1331_financial_b1/raw/0929_1331_89_dlr.ndjson)（dsh 事件流 ndjson）
+
 **调用步骤**
 
 | # | 工具 | 参数（截 200） |
@@ -105,8 +107,6 @@
 Final Answer: 13
 Evidence SQL: SELECT COUNT(*) AS n FROM account a JOIN district d ON a.district_id = d.district_id WHERE a.frequency = 'POPLATEK PO OBRATU' AND d.A3 = 'east Bohemia'
 
-建模缺口: 无
-
 </details>
 
 <details id="q92">
@@ -117,6 +117,8 @@ Evidence SQL: SELECT COUNT(*) AS n FROM account a JOIN district d ON a.district_
 **期望**：`69`
 
 **答案**：`## 结论 **69 个 district** 的（female）平均工资落在 6000–10000 之间。 ## 三级锚定过程 **L1 语义召回**（'dlr_semantic_query'）：唯一同时具备 "district + 平均工资" 的结构体是 'financial' 库的 'LOGICAL.District' / 'PHYSICAL.District'（表 'district'，列`
+
+**raw 日志**：[results/0929_1331_financial_b1/raw/0929_1331_92_dlr.ndjson](../results/0929_1331_financial_b1/raw/0929_1331_92_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -178,8 +180,6 @@ WHERE c.gender = 'F' AND d.A11 > 6000 AND d.A11 < 10000;
 
 来源：`mcp__semantic-core__dlr_semantic_query`（PHYSICAL.District / PHYSICAL.Client）、`mcp__semantic-core__dlr_search_consensus`（financial qid=1、qid=3）、`mcp__semantic-core__get_full_data_info`（district、client 全列）、`mcp__semantic-core__execute_sql`（financial.sqlite）。
 
-建模缺口: 无（已下探 financial.district 与 financial.client 全列，均 100% 在建模视图内，无缺口；district 表本身不含任何性别化工资列，题面 "female" 只能由 client.gender 承载，属数据固有语义而非建模缺失）
-
 </details>
 
 <details id="q93">
@@ -190,6 +190,8 @@ WHERE c.gender = 'F' AND d.A11 > 6000 AND d.A11 < 10000;
 **期望**：`280`
 
 **答案**：`## 结论 **280 名**男性客户居住在 North Bohemia（北波希米亚）且其所在地区的平均薪资（A11）大于 8000。 ### 锚定与验证过程 \| 层级 \| 结果 \| \|------\|------\| \| L3 SOP（'dlr_search_sop'） \| 'match=none' — 本题无题级口径节，按 L1+L2 自解 \| \| L1 语义召回（'dlr_s`
+
+**raw 日志**：[results/0929_1331_financial_b1/raw/0929_1331_93_dlr.ndjson](../results/0929_1331_financial_b1/raw/0929_1331_93_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -236,8 +238,6 @@ Final Answer: 280
 Evidence SQL: SELECT COUNT(*) AS male_customers FROM client c JOIN district d ON c.district_id = d.district_id WHERE c.gender = 'M' AND d.A3 = 'north Bohemia' AND d.A11 > 8000
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q94">
@@ -248,6 +248,8 @@ Evidence SQL: SELECT COUNT(*) AS male_customers FROM client c JOIN district d ON
 **期望**：`6 | 4431`
 
 **答案**：`## 回答 **口径（L3 命中，逐字复述本题）**：'dlr_search_sop' 返回 'match=exact' 的节，Expected = '3214 \| 4431'。两个条件各锁定一个对象：先在 'district' 中取平均工资 'A11' 最低的区（district_id = 67，A11 = 8110），再在该区内的女性客户（'gender = 'F''）中取最年长者（'bir`
+
+**raw 日志**：[results/0929_1354_financial_secA/raw/0929_1354_94_dlr.ndjson](../results/0929_1354_financial_secA/raw/0929_1354_94_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -285,8 +287,6 @@ Final Answer: 3214 | 4431
 Evidence SQL: SELECT (SELECT d.account_id FROM client c JOIN disp d ON c.client_id = d.client_id WHERE c.gender = 'F' AND c.district_id = (SELECT district_id FROM district WHERE A11 = (SELECT MIN(A11) FROM district)) ORDER BY c.birth_date ASC LIMIT 1) AS account_number, (SELECT MAX(A11) - MIN(A11) FROM district) AS salary_gap
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q95">
@@ -297,6 +297,8 @@ Evidence SQL: SELECT (SELECT d.account_id FROM client c JOIN disp d ON c.client_
 **期望**：`2836`
 
 **答案**：`## 结论 **账户号：1372** ## 推理链（三级锚定） **L3 口径（'dlr_search_sop'，match=exact）** — 命中节标题逐字复述本题，为最权威口径： > 两个条件作用于同一个人：先选 **household 平均工资 'A11' 最高的 district**，再在里面取 'birth_date' 最大（最年轻）的客户，其账号为 **1372**。 > 该节同时`
+
+**raw 日志**：[results/0929_1354_financial_secA/raw/0929_1354_95_dlr.ndjson](../results/0929_1354_financial_secA/raw/0929_1354_95_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -356,8 +358,6 @@ ORDER BY c.birth_date DESC, d.account_id ASC
 LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q98">
@@ -368,6 +368,8 @@ LIMIT 1;
 **期望**：`176`
 
 **答案**：`已完成三级锚定与 SQL 闭环。 **锚定过程** - **L1（实体路）**：'dlr_semantic_query' 命中 'LOGICAL.Loan'（db='financial'，属性 'amount' 贷款额、'date' 放款批准日期）与 'LOGICAL.Account'（属性 'frequency' 对账单频率）；经 'get_pe_mapping' 拿到物理表 'financia`
+
+**raw 日志**：[results/0929_1333_financial_b2/raw/0929_1334_98_dlr.ndjson](../results/0929_1333_financial_b2/raw/0929_1334_98_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -400,8 +402,6 @@ Final Answer: 176
 
 Evidence SQL: SELECT T2.account_id FROM loan AS T1 JOIN account AS T2 ON T1.account_id = T2.account_id WHERE T1.date LIKE '1997%' AND T2.frequency = 'POPLATEK TYDNE' ORDER BY T1.amount ASC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q99">
@@ -412,6 +412,8 @@ Evidence SQL: SELECT T2.account_id FROM loan AS T1 JOIN account AS T2 ON T1.acco
 **期望**：`10451`
 
 **答案**：`**查询解析** - **L2 领域共识**（'financial' 命名空间，qid=4）："loan validity beyond 12 months" = 'loan.duration > 12'（loan duration unit: month）。 - **L1 实体路**：'LOGICAL.Loan'（PHYSICAL.Loan → 'financial.loan'，锚键 'acco`
+
+**raw 日志**：[results/0929_1333_financial_b2/raw/0929_1334_99_dlr.ndjson](../results/0929_1333_financial_b2/raw/0929_1334_99_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -442,8 +444,6 @@ Final Answer: 10451
 
 Evidence SQL: SELECT l.account_id FROM loan l JOIN account a ON l.account_id = a.account_id WHERE l.duration > 12 AND a.date LIKE '1993%' AND l.amount = (SELECT MAX(l2.amount) FROM loan l2 JOIN account a2 ON l2.account_id = a2.account_id WHERE l2.duration > 12 AND a2.date LIKE '1993%')
 
-建模缺口: 无
-
 </details>
 
 <details id="q100">
@@ -454,6 +454,8 @@ Evidence SQL: SELECT l.account_id FROM loan l JOIN account a ON l.account_id = a
 **期望**：`8`
 
 **答案**：`## 结论 **8 名**。 ### 口径分解（三级锚定） - **L2 领域共识**（'dlr_search_consensus', namespace='financial', qid=1）：*"customers" 即银行的 clients；性别取值为 'F'（女）/ 'M'（男）；账户持有人是通过 disp 拥有账户的 client* —— 因此"female customers" → '`
+
+**raw 日志**：[results/0929_1333_financial_b2/raw/0929_1334_100_dlr.ndjson](../results/0929_1333_financial_b2/raw/0929_1334_100_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -497,8 +499,6 @@ Final Answer: 8
 Evidence SQL: SELECT COUNT(DISTINCT c.client_id) FROM client c JOIN district d ON c.district_id = d.district_id JOIN disp dp ON dp.client_id = c.client_id WHERE d.A2 = 'Sokolov' AND c.gender = 'F' AND c.birth_date < '1950-01-01';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q112">
@@ -509,6 +509,8 @@ Evidence SQL: SELECT COUNT(DISTINCT c.client_id) FROM client c JOIN district d O
 **期望**：`Tachov`
 
 **答案**：`**结论：Tachov** 推理与证据链： 1. **L1 语义召回**（'dlr_semantic_query'）：命中库 'financial'，相关逻辑实体为 'LOGICAL.Client'（gender / birth_date / district of residence）、'LOGICAL.Account'（位于某 district 的账户）、'LOGICAL.District'（`
+
+**raw 日志**：[results/0929_1333_financial_b2/raw/0929_1334_112_dlr.ndjson](../results/0929_1333_financial_b2/raw/0929_1334_112_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -541,8 +543,6 @@ Evidence SQL: SELECT COUNT(DISTINCT c.client_id) FROM client c JOIN district d O
 Final Answer: Tachov
 Evidence SQL: SELECT d.A2 FROM client c JOIN disp ON disp.client_id = c.client_id JOIN account a ON a.account_id = disp.account_id JOIN district d ON d.district_id = a.district_id WHERE c.gender = 'F' AND c.birth_date = '1976-01-29'
 
-建模缺口: 无
-
 </details>
 
 <details id="q115">
@@ -553,6 +553,8 @@ Evidence SQL: SELECT d.A2 FROM client c JOIN disp ON disp.client_id = c.client_i
 **期望**：`44.26229508196721`
 
 **答案**：`## 结论 **南波希米亚（south Bohemia）人口最多的分支 → 男性客户占比 = 40%** ### 三级锚定过程 \| 层级 \| 工具 \| 关键命中 \| \|------\|------\|----------\| \| **L3 业务逻辑级** \| 'dlr_search_sop' \| **'match=exact'** —— 标题逐字复述本题；本节即本题最权威口径 \|`
+
+**raw 日志**：[results/0929_1354_financial_secA/raw/0929_1355_115_dlr.ndjson](../results/0929_1354_financial_secA/raw/0929_1355_115_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -603,8 +605,6 @@ WHERE d.A3 = 'south Bohemia'
   AND CAST(d.A4 AS INTEGER) = (SELECT MAX(CAST(A4 AS INTEGER)) FROM district WHERE A3 = 'south Bohemia')
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q116">
@@ -615,6 +615,8 @@ WHERE d.A3 = 'south Bohemia'
 **期望**：`430.45454545454544`
 
 **答案**：`## 结论 **锚定过程（三级）** - **L1 语义召回**（'dlr_semantic_query'）：定位到 'LOGICAL.Loan'(PHYSICAL.Loan)、'LOGICAL.Account'(PHYSICAL.Account / Disp)、'LOGICAL.Transaction'(PHYSICAL.Trans)，库为 'financial'。 - **L2 领域共识**（`
+
+**raw 日志**：[results/0929_1335_financial_b3/raw/0929_1335_116_dlr.ndjson](../results/0929_1335_financial_b3/raw/0929_1335_116_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -663,8 +665,6 @@ Final Answer: 430.45
 Evidence SQL: SELECT (CAST(b2.balance AS REAL) - CAST(b1.balance AS REAL)) / CAST(b1.balance AS REAL) * 100 AS increase_rate FROM (SELECT t.balance FROM trans t WHERE t.account_id = 1787 AND t.date = '1998-12-27' ORDER BY t.trans_id DESC LIMIT 1) AS b2, (SELECT t.balance FROM trans t WHERE t.account_id = 1787 AND t.date = '1993-03-22' ORDER BY t.trans_id LIMIT 1) AS b1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q117">
@@ -675,6 +675,8 @@ Evidence SQL: SELECT (CAST(b2.balance AS REAL) - CAST(b1.balance AS REAL)) / CAS
 **期望**：`18.01559415907576`
 
 **答案**：`## 查询过程 **三级锚定结果** - **L3 口径路**（'dlr_search_sop'）：'match=none' — 本题无专节，按 L1+L2 自解。 - **L2 领域共识路**（'dlr_search_consensus'，命中 'financial' 库条目）：*"a loan paid with no issue is a contract that finished wit`
+
+**raw 日志**：[results/0929_1335_financial_b3/raw/0929_1335_117_dlr.ndjson](../results/0929_1335_financial_b3/raw/0929_1335_117_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -709,8 +711,6 @@ Final Answer: 18.02%
 Evidence SQL: SELECT SUM(CASE WHEN status='A' THEN amount ELSE 0 END)*100.0/SUM(amount) AS pct FROM loan;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q118">
@@ -721,6 +721,8 @@ Evidence SQL: SELECT SUM(CASE WHEN status='A' THEN amount ELSE 0 END)*100.0/SUM(
 **期望**：`46.885245901639344`
 
 **答案**：`The result matches the L3 authoritative expected value exactly. **Reasoning chain:** - **L1** ('dlr_semantic_query'): target = 'LOGICAL.Loan' → 'PHYSICAL.Loan' (table 'loan', db 'financial'), with 'am`
+
+**raw 日志**：[results/0929_1354_financial_secA/raw/0929_1355_118_dlr.ndjson](../results/0929_1354_financial_secA/raw/0929_1355_118_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -753,8 +755,6 @@ SELECT 100.0 * SUM(CASE WHEN status = 'C' THEN 1 ELSE 0 END) / COUNT(*) AS pct F
 Final Answer: 46.885245901639344
 Evidence SQL: SELECT 100.0 * SUM(CASE WHEN status = 'C' THEN 1 ELSE 0 END) / COUNT(*) AS pct FROM loan WHERE amount < 100000
 
-建模缺口: 无
-
 </details>
 
 <details id="q119">
@@ -765,6 +765,8 @@ Evidence SQL: SELECT 100.0 * SUM(CASE WHEN status = 'C' THEN 1 ELSE 0 END) / COU
 **期望**：`66 | Rychnov nad Kneznou | east Bohemia | 273 | Karlovy Vary | west Bohemia | 485 | Kutna Hora`
 
 **答案**：`## 结论 **口径锚定** - L1 语义召回（'dlr_semantic_query'）锁定库 'financial'，涉及 'LOGICAL.Account'（account 表：account_id / district_id / date / frequency）与 'LOGICAL.District'（district 表：A2=名称、A3=区域）。 - 'get_pe_mapping`
+
+**raw 日志**：[results/0929_1350_financial_b7/raw/0929_1350_119_dlr.ndjson](../results/0929_1350_financial_b7/raw/0929_1350_119_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -821,8 +823,6 @@ Final Answer: [(66, 'Rychnov nad Kneznou', 'east Bohemia'), (273, 'Karlovy Vary'
 Evidence SQL: SELECT a.account_id, d.A2 AS district_name, d.A3 AS region FROM account a JOIN district d ON a.district_id = d.district_id WHERE a.frequency = 'POPLATEK PO OBRATU' AND a.date LIKE '1993%' ORDER BY a.account_id
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q120">
@@ -833,6 +833,8 @@ Evidence SQL: SELECT a.account_id, d.A2 AS district_name, d.A3 AS region FROM ac
 **期望**：`14 | POPLATEK MESICNE | 76 | POPLATEK MESICNE | 80 | POPLATEK MESICNE | 84 | POPLATEK PO OBRATU`
 
 **答案**：`## 三级锚定过程 **L1 语义召回** → 命中 'financial' 库：'LOGICAL.Account'（PE 'account'）、'LOGICAL.Disp'（持有人授权，OWNER/DISPONENT）、'LOGICAL.District'（A3 = Region）、'LOGICAL.Client'。 **L2 领域共识**（namespace=financial）→ 采信两条直`
+
+**raw 日志**：[results/0929_1350_financial_b7/raw/0929_1350_120_dlr.ndjson](../results/0929_1350_financial_b7/raw/0929_1350_120_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -893,8 +895,6 @@ Final Answer: 364 accounts held by clients (disp.type='OWNER') in the 'east Bohe
 Evidence SQL: SELECT GROUP_CONCAT(account_id || ':' || frequency, ', ') FROM (SELECT DISTINCT a.account_id AS account_id, a.frequency AS frequency FROM account a JOIN district d ON a.district_id=d.district_id JOIN disp dp ON dp.account_id=a.account_id WHERE d.A3='east Bohemia' AND a.date>='1995-01-01' AND a.date<='2000-12-31' AND dp.type='OWNER' ORDER BY a.account_id)
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q125">
@@ -905,6 +905,8 @@ Evidence SQL: SELECT GROUP_CONCAT(account_id || ':' || frequency, ', ') FROM (SE
 **期望**：`40 | 39.25925925925924 | 115 | 22.49999999999999 | 20 | null | 11.666666666666677 | null`
 
 **答案**：`## 语义锚定过程 **L1（数据源级）** — 'dlr_semantic_query' → 库 'financial'： - 'LOGICAL.Loan' ('loan')：'status' = 'D' 即 *running contract, client in debt*（题目"still running where client in debt"的字面定义） - 'LOGICAL.Acc`
+
+**raw 日志**：[results/0929_1335_financial_b3/raw/0929_1335_125_dlr.ndjson](../results/0929_1335_financial_b3/raw/0929_1335_125_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -973,8 +975,6 @@ Final Answer: Beroun 16.32; Beroun 16.32; Blansko 42.4; Brno - mesto 22.5; Brno 
 Evidence SQL: SELECT d.A2 AS district, ROUND((d.A13 - d.A12) / d.A12 * 100, 2) AS pct_unemp_increment_1995_96 FROM loan l JOIN account a ON l.account_id = a.account_id JOIN district d ON a.district_id = d.district_id WHERE l.status = 'D' ORDER BY d.A2
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q128">
@@ -985,6 +985,8 @@ Evidence SQL: SELECT d.A2 AS district, ROUND((d.A13 - d.A12) / d.A12 * 100, 2) A
 **期望**：`Hl.m. Praha | 324 | Karvina | 88 | Ostrava - mesto | 84 | Brno - mesto | 75`
 
 **答案**：`已验证：第 9 名（37）与第 10 名（34）之间无并列，截断位置唯一确定。 ## 结论 按女性客户（account holders）**人数降序**排列的 Top 9 地区： \| # \| 地区 (District) \| 女性客户数 \| \|---\|---\|---\| \| 1 \| Hl.m. Praha \| 324 \| \| 2 \| Karvina \| 88 \| \| `
+
+**raw 日志**：[results/0929_1354_financial_secA/raw/0929_1355_128_dlr.ndjson](../results/0929_1354_financial_secA/raw/0929_1355_128_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1032,8 +1034,6 @@ Final Answer: 1. Hl.m. Praha - 324; 2. Karvina - 88; 3. Ostrava - mesto - 84; 4.
 Evidence SQL: SELECT d.A2 AS district_name, COUNT(*) AS female_count FROM client c JOIN district d ON c.district_id = d.district_id WHERE c.gender = 'F' GROUP BY d.district_id, d.A2 ORDER BY female_count DESC LIMIT 9
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q129">
@@ -1044,6 +1044,8 @@ Evidence SQL: SELECT d.A2 AS district_name, COUNT(*) AS female_count FROM client
 **期望**：`Benesov | Beroun | Blansko | Breclav | Brno - mesto | Brno - venkov | Bruntal | Ceska Lipa`
 
 **答案**：`三级锚定全部命中，且结果与 L3 Expected 逐字一致。 **口径确认（L3，'dlr_search_sop' match=exact，标题逐字复述本题）**： - "Top ten withdrawals (non-credit card) by district" = 按各地区非信用卡取款**总金额**降序排名 - 过滤条件：'type = 'VYDAJ''（withdrawal）、'o`
+
+**raw 日志**：[results/0929_1356_financial_secB/raw/0929_1356_129_dlr.ndjson](../results/0929_1356_financial_secB/raw/0929_1356_129_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1104,8 +1106,6 @@ LIMIT 10;
 Final Answer: Hl.m. Praha | Karvina | Ostrava - mesto | Zlin | Olomouc | Frydek - Mistek | Brno - mesto | Usti nad Orlici | Rychnov nad Kneznou | Brno - venkov
 Evidence SQL: SELECT d.A2 AS district_name, SUM(t.amount) AS total_withdrawal FROM trans t JOIN account a ON t.account_id = a.account_id JOIN district d ON a.district_id = d.district_id WHERE t.type = 'VYDAJ' AND t.operation <> 'VYBER KARTOU' AND t.date LIKE '1996-01%' GROUP BY d.A2 ORDER BY total_withdrawal DESC LIMIT 10;
 
-建模缺口: 无
-
 </details>
 
 <details id="q136">
@@ -1116,6 +1116,8 @@ Evidence SQL: SELECT d.A2 AS district_name, SUM(t.amount) AS total_withdrawal FR
 **期望**：`65`
 
 **答案**：`## 推理过程 **L1 语义召回**（'dlr_semantic_query'，本题命中 'financial' 库）： - 'LOGICAL.Loan' → 'PHYSICAL.Loan'（'financial.loan'）：'amount'（贷款金额）、'date'（**贷款批准日期**，YYYY-MM-DD）、'status'、锚键 'account_id' - 'LOGICAL.Acco`
+
+**raw 日志**：[results/0929_1339_financial_b4/raw/0929_1339_136_dlr.ndjson](../results/0929_1339_financial_b4/raw/0929_1339_136_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1159,8 +1161,6 @@ Final Answer: 65
 Evidence SQL: SELECT COUNT(*) AS approved_loan_count FROM loan AS l JOIN account AS a ON l.account_id = a.account_id WHERE a.frequency = 'POPLATEK MESICNE' AND l.amount >= 250000 AND l.date >= '1995-01-01' AND l.date <= '1997-12-31'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q137">
@@ -1171,6 +1171,8 @@ Evidence SQL: SELECT COUNT(*) AS approved_loan_count FROM loan AS l JOIN account
 **期望**：`47`
 
 **答案**：`**答案：47 个账户** **三级锚定过程** - **L3（'dlr_search_sop'，match=exact）**：标题逐字复述本题 → 本题权威口径：「running contract」= status **''C'' 或 ''D''**（''D'' 表示客户欠款的运行中合同，仍属 running）；统计 **district 1** 下持有这两种状态合同的账户数 = **47**；`
+
+**raw 日志**：[results/0929_1356_financial_secB/raw/0929_1356_137_dlr.ndjson](../results/0929_1356_financial_secB/raw/0929_1356_137_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1201,8 +1203,6 @@ Evidence SQL: SELECT COUNT(*) AS approved_loan_count FROM loan AS l JOIN account
 Final Answer: 47
 Evidence SQL: SELECT COUNT(DISTINCT a.account_id) FROM account a JOIN loan l ON a.account_id = l.account_id WHERE a.district_id = 1 AND l.status IN ('C','D')
 
-建模缺口: 无
-
 </details>
 
 <details id="q138">
@@ -1213,6 +1213,8 @@ Evidence SQL: SELECT COUNT(DISTINCT a.account_id) FROM account a JOIN loan l ON 
 **期望**：`96`
 
 **答案**：`**推理过程** 1. **L3**：'dlr_search_sop' 返回 'match=none'（本题无题级口径节）。 2. **L1/L2 锚定**：实体路指向 'financial' 库 —— 'LOGICAL.District'（Crimes95 = 列 'A15'）、'LOGICAL.Client'（gender 'M'/'F'，district_id = 客户居住区）。 3. **`
+
+**raw 日志**：[results/0929_1339_financial_b4/raw/0929_1340_138_dlr.ndjson](../results/0929_1339_financial_b4/raw/0929_1340_138_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1246,8 +1248,6 @@ Final Answer: 96
 
 Evidence SQL: `SELECT COUNT(*) AS male_clients FROM client WHERE gender = 'M' AND district_id = (SELECT district_id FROM district ORDER BY A15 DESC LIMIT 1 OFFSET 1)`
 
-建模缺口: 无
-
 </details>
 
 <details id="q145">
@@ -1258,6 +1258,8 @@ Evidence SQL: `SELECT COUNT(*) AS male_clients FROM client WHERE gender = 'M' AN
 **期望**：`14 | 14 | 14 | 14 | 14 | 14 | 33 | 33`
 
 **答案**：`## 结论 **L3 精确命中**（'dlr_search_sop' 返回 'match=exact'，节标题逐字复述本题，'db=financial'），按该节日径执行： **口径要点（来自 L3 节 + L2 共识）** - "Transactions on the credit card" = 'trans.operation = 'VYBER KARTOU''（信用卡取现），而非 ''VY`
+
+**raw 日志**：[results/0929_1356_financial_secB/raw/0929_1356_145_dlr.ndjson](../results/0929_1356_financial_secB/raw/0929_1356_145_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1307,8 +1309,6 @@ Final Answer: 799 accounts — account_ids (ascending): 14, 33, 34, 43, 48, 51, 
 Evidence SQL: SELECT COUNT(DISTINCT account_id) FROM trans WHERE operation='VYBER KARTOU' AND date LIKE '1998%' AND amount < (SELECT AVG(amount) FROM trans WHERE date LIKE '1998%')
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q149">
@@ -1319,6 +1319,8 @@ Evidence SQL: SELECT COUNT(DISTINCT account_id) FROM trans WHERE operation='VYBE
 **期望**：`DISPONENT | DISPONENT | DISPONENT | DISPONENT | DISPONENT | DISPONENT | DISPONENT | DISPONENT`
 
 **答案**：`## 三级锚定结果 **L1 实体路**（'dlr_semantic_query' → 'get_pe_mapping'，db=financial） - 'LOGICAL.Account' → PE 'account'（account_id / district_id / date / frequency） - 'LOGICAL.District' → PE 'district'（A11 = Av`
+
+**raw 日志**：[results/0929_1343_financial_b5/raw/0929_1343_149_dlr.ndjson](../results/0929_1343_financial_b5/raw/0929_1343_149_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1367,8 +1369,6 @@ Final Answer: DISPONENT
 
 Evidence SQL: SELECT DISTINCT d.type FROM disp d JOIN account a ON d.account_id = a.account_id JOIN district dt ON a.district_id = dt.district_id WHERE dt.A11 > 8000 AND dt.A11 <= 9000 AND d.type <> 'OWNER' ORDER BY d.type
 
-建模缺口: 无
-
 </details>
 
 <details id="q152">
@@ -1379,6 +1379,8 @@ Evidence SQL: SELECT DISTINCT d.type FROM disp d JOIN account a ON d.account_id 
 **期望**：`29670.44951923077`
 
 **答案**：`**结论**：1995 年犯罪数（'district.A15'）超过 4000、且该区至少有一个账户的开户日期在 1997 年及以后的区，共 **26 个**，它们的 1995 年犯罪数平均值为 **9675.038461538461**。 **依据链**： - **L3（'dlr_search_sop'，match=exact，标题逐字复述本题）**：明确口径——候选是 **distinct d`
+
+**raw 日志**：[results/0929_1356_financial_secB/raw/0929_1356_152_dlr.ndjson](../results/0929_1356_financial_secB/raw/0929_1356_152_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1407,8 +1409,6 @@ Final Answer: 9675.038461538461
 Evidence SQL: SELECT AVG(A15) AS avg_crimes95 FROM district WHERE A15 > 4000 AND district_id IN (SELECT DISTINCT district_id FROM account WHERE date >= '1997-01-01')
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q159">
@@ -1419,6 +1419,8 @@ Evidence SQL: SELECT AVG(A15) AS avg_crimes95 FROM district WHERE A15 > 4000 AND
 **期望**：`816173 | 816174 | 816175 | 816181 | 816185 | 816186 | 816187 | 816188`
 
 **答案**：`**结论**：客户 3356 名下有账户 2779；该账户中「现金取款」交易（'operation = 'VYBER'' = withdrawal in cash，且 'type = 'VYDAJ'' = withdrawal）共 **140 笔**，金额合计 **646 415 CZK**。 **口径锚定（证据链）** - L1 语义召回（'dlr_semantic_query'，db=fina`
+
+**raw 日志**：[results/0929_1343_financial_b5/raw/0929_1343_159_dlr.ndjson](../results/0929_1343_financial_b5/raw/0929_1343_159_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1464,8 +1466,6 @@ Evidence SQL: SELECT AVG(A15) AS avg_crimes95 FROM district WHERE A15 > 4000 AND
 Final Answer: 140 rows — [800, 2400, 4320, 600, 3480, 1560, 1440, 4680, 1440, 2880, 5400, 2640, 5040, 3240, 3240, 4680, 4560, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 7900, 9700, 15600, 14400, 15800, 15400, 10400, 13500, 5200, 8100, 8600, 3000, 9300, 7000, 10600, 10400, 13100, 2700, 4500, 9900, 12900, 9600, 11000, 7700, 8000, 10700, 8000, 11200, 11600, 6600, 7100, 5500, 6900, 13800, 15000, 8000, 11500, 3500, 7000, 11300, 8700, 10800, 8200, 7200, 14300, 7700, 7000, 11400, 7500, 8400, 11700, 7000, 6400, 6800, 10900, 7200, 14400, 12100, 9200, 7100, 10700, 16400]（共 140 笔，合计 646415 CZK）
 Evidence SQL: SELECT t.amount FROM trans AS t INNER JOIN disp AS d ON t.account_id = d.account_id WHERE d.client_id = 3356 AND t.operation = 'VYBER' ORDER BY t.trans_id LIMIT 300
 
-建模缺口: 无
-
 </details>
 
 <details id="q168">
@@ -1476,6 +1476,8 @@ Evidence SQL: SELECT t.amount FROM trans AS t INNER JOIN disp AS d ON t.account_
 **期望**：`49.609984399375975`
 
 **答案**：`The L3-authoritative reading (client's own district) yields exactly the expected value **49.609984399375975%**; the 'disp'-based reading yields 50.39 (the documented wrong reading). **Evidence chain:*`
+
+**raw 日志**：[results/0929_1356_financial_secB/raw/0929_1357_168_dlr.ndjson](../results/0929_1356_financial_secB/raw/0929_1357_168_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1506,8 +1508,6 @@ Final Answer: 49.609984399375975
 Evidence SQL: SELECT SUM(CASE WHEN gender='F' THEN 1 ELSE 0 END)*100.0/COUNT(*) AS pct_women, COUNT(*) AS total_clients FROM client WHERE district_id IN (SELECT district_id FROM district WHERE A11 > 10000)
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q169">
@@ -1518,6 +1518,8 @@ Evidence SQL: SELECT SUM(CASE WHEN gender='F' THEN 1 ELSE 0 END)*100.0/COUNT(*) 
 **期望**：`25.300191222790616`
 
 **答案**：`## 计算过程 **1. 三级锚定结果** - **L1（实体路）**：命中库 'financial'；LE 结构为 'Client'（gender M/F）—'Account'（经 'disp' 授权表，含 'type' = OWNER/DISPONENT）—'Loan'（amount、date）。 - **L2（evidence 路，'financial' 命名空间权威规则）**：   - q`
+
+**raw 日志**：[results/0929_1343_financial_b5/raw/0929_1343_169_dlr.ndjson](../results/0929_1343_financial_b5/raw/0929_1343_169_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1587,8 +1589,6 @@ Final Answer: 25.3002
 Evidence SQL: SELECT ROUND((SUM(CASE WHEN strftime('%Y', l.date)='1997' THEN l.amount ELSE 0 END) - SUM(CASE WHEN strftime('%Y', l.date)='1996' THEN l.amount ELSE 0 END)) * 100.0 / SUM(CASE WHEN strftime('%Y', l.date)='1996' THEN l.amount ELSE 0 END), 4) AS growth_rate_pct FROM loan l JOIN disp d ON d.account_id = l.account_id AND d.type = 'OWNER' JOIN client c ON c.client_id = d.client_id WHERE c.gender = 'M' AND strftime('%Y', l.date) IN ('1996','1997')
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q173">
@@ -1599,6 +1599,8 @@ Evidence SQL: SELECT ROUND((SUM(CASE WHEN strftime('%Y', l.date)='1997' THEN l.a
 **期望**：`POPLATEK MESICNE | POJISTNE`
 
 **答案**：`## 结论 **子问题 1：账户 3 多久取一次对账单 / 要求银行出具对账单？** 账户 3 的 'frequency' 为 'POPLATEK MESICNE' —— 即**每月出具一次（monthly issuance）**。该口径来自 L1 映射中 'financial.account.frequency' 列的描述： > 'POPLATEK PO OBRATU' = issuance a`
+
+**raw 日志**：[results/0929_1346_financial_b6/raw/0929_1346_173_dlr.ndjson](../results/0929_1346_financial_b6/raw/0929_1346_173_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1642,8 +1644,6 @@ Final Answer: 账户3的对账单频率 = POPLATEK MESICNE（每月出具 / mont
 Evidence SQL: SELECT 'account 3 statement frequency' AS item, frequency AS value FROM account WHERE account_id = 3 UNION ALL SELECT 'aim of debiting 3539 (k_symbol)', k_symbol FROM trans WHERE account_id = 3 AND type = 'VYDAJ' AND amount = 3539 GROUP BY k_symbol
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q186">
@@ -1654,6 +1654,8 @@ Evidence SQL: SELECT 'account 3 statement frequency' AS item, frequency AS value
 **期望**：`52.63157894736842`
 
 **答案**：`**三级锚定结果** - **L3（口径，exact 命中）**：'financial' 库该题节明确——"requests weekly statements" = 客户持有 'frequency = 'POPLATEK TYDNE''（每周寄送）的账户，客户与账户通过 'disp' 关联；份额按**客户**计数（一个客户持多个周账单账户也只算一次），既定值 **52.1276595744680`
+
+**raw 日志**：[results/0929_1403_financial_q186/raw/0929_1403_186_dlr.ndjson](../results/0929_1403_financial_q186/raw/0929_1403_186_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1691,8 +1693,6 @@ JOIN account a ON a.account_id = d.account_id
 WHERE a.frequency = 'POPLATEK TYDNE'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q189">
@@ -1703,6 +1703,8 @@ WHERE a.frequency = 'POPLATEK TYDNE'
 **期望**：`1743`
 
 **答案**：`## 推理过程 **三级锚定（并行）** - **L3（口径路）**：'dlr_search_sop' 返回 'match=exact'，标题逐字复述本题 → 该节即本题权威口径：*按 **birth_date 升序（最老优先）、再按客户所在区的平均工资 A11 升序** 排序，取第一条；账号为 **1743**。并提示错误读法（先取最低工资区、再取区内最老客户）会得到 3214。* - **L1`
+
+**raw 日志**：[results/0929_1359_financial_secC/raw/0929_1359_189_dlr.ndjson](../results/0929_1359_financial_secC/raw/0929_1359_189_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1737,8 +1739,6 @@ Final Answer: 1743
 Evidence SQL: SELECT a.account_id FROM client c JOIN district d ON c.district_id = d.district_id JOIN disp dp ON dp.client_id = c.client_id JOIN account a ON a.account_id = dp.account_id WHERE c.gender = 'F' ORDER BY c.birth_date ASC, d.A11 ASC LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q192">
@@ -1749,6 +1749,8 @@ Evidence SQL: SELECT a.account_id FROM client c JOIN district d ON c.district_id
 **期望**：`192836.57142857142`
 
 **答案**：`## 结论 **192836.57142857142** ### 三级锚定过程 \| 级 \| 工具 \| 结果 \| \|---\|---\|---\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| **'match=exact'** — 标题逐字复述本题，命中该节，为本题最权威口径 \| \| L2 领域共识级 \| 'dlr_search_consensus' \| `
+
+**raw 日志**：[results/0929_1359_financial_secC/raw/0929_1359_192_dlr.ndjson](../results/0929_1359_financial_secC/raw/0929_1359_192_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1808,8 +1810,6 @@ Final Answer: 192836.57142857142
 Evidence SQL: SELECT AVG(CAST(l.amount AS REAL)) FROM loan l JOIN account a ON l.account_id = a.account_id WHERE l.status IN ('C','D') AND a.frequency = 'POPLATEK PO OBRATU';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q194">
@@ -1820,6 +1820,8 @@ Evidence SQL: SELECT AVG(CAST(l.amount AS REAL)) FROM loan l JOIN account a ON l
 **期望**：`9 | 91 | 41 | 58 | 79 | 57 | 326 | 59`
 
 **答案**：`## 三级锚定结果 \| 层级 \| 工具 \| 命中要点 \| \|---\|---\|---\| \| L3 口径 \| 'dlr_search_sop' \| 'match=similar'，仅 card_games 近似候选，**标题未复述本题 → 无 L3 节**，按 L1+L2 自解 \| \| L2 共识 \| 'dlr_search_consensus'（financial qid`
+
+**raw 日志**：[results/0929_1346_financial_b6/raw/0929_1347_194_dlr.ndjson](../results/0929_1346_financial_b6/raw/0929_1347_194_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1877,7 +1879,5 @@ Evidence SQL: SELECT AVG(CAST(l.amount AS REAL)) FROM loan l JOIN account a ON l
 Final Answer: 9|91, 41|58, 79|57, 326|59, 548|89, 562|51, 694|90, 886|78, 928|75, 1067|74, 1089|87, 1133|68, 1179|96, 1220|73, 1246|64, 1289|80, 1388|64, 1452|86, 1453|60, 1536|59, 1579|63, 1629|60, 1668|77, 1707|75, 1718|88, 1777|63, 1799|67, 1811|87, 1812|79, 1842|83, 1876|75, 1930|92, 2058|55, 2122|56, 2125|51, 2156|60, 2265|49, 2320|75, 2388|55, 2445|57, 2489|51, 2688|59, 2715|69, 2815|96, 2820|60, 2911|94, 2951|76, 2958|51, 2977|63, 3075|85, 3128|82, 3134|88, 3136|63, 3236|66, 3253|80, 3292|86, 3378|69, 3414|79, 3448|72, 3465|84, 3581|59, 3601|88, 3667|55, 3753|67, 3824|55, 3944|90, 4100|71, 4405|67, 4522|76, 4553|81, 4559|68, 4701|85, 4862|83, 5128|63, 5253|80, 5978|82, 7127|69, 7286|56, 7683|80, 9641|81, 9717|74, 10912|63, 11331|82, 12079|54, 12810|62, 12843|73, 12943|56, 13095|76
 
 Evidence SQL: SELECT group_concat(client_id || '|' || age, ', ') AS answer FROM (SELECT c.client_id AS client_id, CAST(strftime('%Y','now') AS INT) - CAST(strftime('%Y', c.birth_date) AS INT) AS age FROM client c JOIN disp d ON c.client_id = d.client_id JOIN card cd ON cd.disp_id = d.disp_id WHERE cd.type = 'gold' AND d.type = 'OWNER' ORDER BY c.client_id)
-
-建模缺口: 无（对 financial.client 下探 `get_full_data_info`：client_id / gender / birth_date / district_id 四列均已 `in_modeled_view=true`，无缺口；年龄须由 birth_date 现算，属口径问题而非建模缺列）
 
 </details>

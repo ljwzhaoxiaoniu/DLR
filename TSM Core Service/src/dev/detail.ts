@@ -188,6 +188,14 @@ export function buildDetail(): Mistake[] {
     return [PLACEHOLDER];
   }
 
+  /** 该题最新一轮的 raw 日志文件（分库文件在 DETAIL/ 子目录，故相对路径带 ../） */
+  const rawFileFor = (run: string, qid: string): string => {
+    try {
+      const hit = fs.readdirSync(path.join(resultsDir, run, "raw")).filter((f) => f.endsWith(`_${qid}_dlr.ndjson`)).sort().pop();
+      return hit ? `results/${run}/raw/${hit}` : "";
+    } catch { return ""; }
+  };
+
   /** 逐题明细块（分库文件内；`id` 供校验表锚点跳转） */
   const blockOf = (a: Agg): string => {
     const g = goldValues(Number(a.qid), a.db);
@@ -203,6 +211,8 @@ export function buildDetail(): Mistake[] {
       `**答案**：${a.final.trim() ? `\`${cell(a.final).slice(0, 200).replace(/`/g, "'")}\`` : "_（无 final 文本）_"}`,
       "",
     ];
+    const rf = rawFileFor(a.runDir, a.qid);
+    if (rf) lines.push(`**raw 日志**：[${rf}](../${rf})（dsh 事件流 ndjson）`, "");
     if (a.trace.length) {
       lines.push("**调用步骤**", "", "| # | 工具 | 参数（截 200） |", "|---|---|---|");
       a.trace.forEach((t, i) => lines.push(`| ${i + 1} | \`${t.tool}\` | \`${t.input.replace(/`/g, "'")}\` |`));

@@ -97,6 +97,8 @@
 
 **答案**：`## 查询过程 **三级锚定** - **L1 实体路**（'dlr_semantic_query'）：命中 'LOGICAL.DriverRaceData' → PE 'PHYSICAL.Qualifying'（'qualifying' 表，db=formula_1），以及 'LOGICAL.Driver' → PE 'PHYSICAL.Driver'（'drivers' 表）。 - **L2 `
 
+**raw 日志**：[results/0929_1446_formula1_b1/raw/0929_1446_846_dlr.ndjson](../results/0929_1446_formula1_b1/raw/0929_1446_846_dlr.ndjson)（dsh 事件流 ndjson）
+
 **调用步骤**
 
 | # | 工具 | 参数（截 200） |
@@ -136,8 +138,6 @@ Final Answer: coulthard | fisichella | vettel | sutil | davidson | sato
 Evidence SQL: SELECT d.driverRef FROM qualifying q JOIN drivers d ON q.driverId = d.driverId WHERE q.raceId = 20 AND q.q1 IS NOT NULL AND q.q2 IS NULL ORDER BY q.position
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q847">
@@ -148,6 +148,8 @@ Evidence SQL: SELECT d.driverRef FROM qualifying q JOIN drivers d ON q.driverId 
 **期望**：`Fisichella`
 
 **答案**：`**结论**：Race 19（2008 巴林大奖赛）第二节排位赛（Q2）最快圈速的车手是 **Kimi Räikkönen**，圈速 '1:34.188'，姓氏为 **Räikkönen**。 **三级锚定依据**： - **L3（'dlr_search_sop'，'match=exact'，逐字复述本题）**：该节明确给出本题口径与陷阱 —— 最佳 Q2 圈速是 race 19 中**最小的非空`
+
+**raw 日志**：[results/0929_1528_formula1_secA/raw/0929_1528_847_dlr.ndjson](../results/0929_1528_formula1_secA/raw/0929_1528_847_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -178,8 +180,6 @@ Final Answer: Räikkönen
 Evidence SQL: SELECT d.surname FROM qualifying q JOIN drivers d ON q.driverId = d.driverId WHERE q.raceId = 19 AND q.q2 IS NOT NULL AND TRIM(q.q2) <> '' ORDER BY q.q2 ASC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q850">
@@ -190,6 +190,8 @@ Evidence SQL: SELECT d.surname FROM qualifying q JOIN drivers d ON q.driverId = 
 **期望**：`German Grand Prix | European Grand Prix | Luxembourg Grand Prix`
 
 **答案**：`## 结论 **German Grand Prix（德国大奖赛）** —— 这是在德国赛道上举办的大奖赛。 ## 推理过程 **三级锚定** - **L1 语义召回**（'dlr_semantic_query'）：命中 'LOGICAL.Race'（db='formula_1'，PE='races'，属性 RaceID/Year/Name/Circuit Id）与 'LOGICAL.Circuit`
+
+**raw 日志**：[results/0929_1446_formula1_b1/raw/0929_1446_850_dlr.ndjson](../results/0929_1446_formula1_b1/raw/0929_1446_850_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -235,8 +237,6 @@ Final Answer: German Grand Prix
 Evidence SQL: SELECT r.name FROM races r JOIN circuits c ON r.circuitId = c.circuitId WHERE c.country = 'Germany' GROUP BY r.name ORDER BY COUNT(*) DESC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q854">
@@ -247,6 +247,8 @@ Evidence SQL: SELECT r.name FROM races r JOIN circuits c ON r.circuitId = c.circ
 **期望**：`-34.9272 | 138.617`
 
 **答案**：`## 查询过程 **三级锚定** - **L1 实体路**：'dlr_semantic_query' 召回 'LOGICAL.Race'（races，含 Name/Year/Circuit Id）与 'LOGICAL.Circuit'（circuits），库为 'formula_1' - **L2 共识路**：'dlr_search_consensus(namespace=formula_1)' `
+
+**raw 日志**：[results/0929_1446_formula1_b1/raw/0929_1446_854_dlr.ndjson](../results/0929_1446_formula1_b1/raw/0929_1446_854_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -288,8 +290,6 @@ Final Answer: (-34.9272, 138.617)  — latitude -34.9272, longitude 138.617 (Ade
 Evidence SQL: SELECT c.lat, c.lng FROM races r JOIN circuits c ON r.circuitId = c.circuitId WHERE r.name = 'Australian Grand Prix'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q857">
@@ -300,6 +300,8 @@ Evidence SQL: SELECT c.lat, c.lng FROM races r JOIN circuits c ON r.circuitId = 
 **期望**：`24.4672 | 54.6031`
 
 **答案**：`## 结论 **Abu Dhabi Grand Prix** 的赛道坐标为 **(24.4672, 54.6031)**（纬度 lat = 24.4672，经度 lng = 54.6031）。 ## 推理过程 **三级并行锚定** \| 级 \| 工具 \| 结果 \| \|----\|------\|------\| \| L1 数据源级 \| 'dlr_semantic_query' \| 命`
+
+**raw 日志**：[results/0929_1446_formula1_b1/raw/0929_1447_857_dlr.ndjson](../results/0929_1446_formula1_b1/raw/0929_1447_857_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -341,8 +343,6 @@ Final Answer: (24.4672, 54.6031)
 Evidence SQL: SELECT DISTINCT '(' || c.lat || ', ' || c.lng || ')' AS coordinate FROM races r JOIN circuits c ON r.circuitId = c.circuitId WHERE r.name = 'Abu Dhabi Grand Prix'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q859">
@@ -353,6 +353,8 @@ Evidence SQL: SELECT DISTINCT '(' || c.lat || ', ' || c.lng || ')' AS coordinate
 **期望**：`1:23.796`
 
 **答案**：`**结论**：Bruno Senna 在第 354 场（2010 年巴西大奖赛，2010-11-07）排位赛中的 Q1 成绩为 **1:23.796**（其 Q2/Q3 为空，即 Q1 被淘汰）。 **锚定过程** - L3：'dlr_search_sop' 返回 'match=none' — 本题无题级口径节，按 L1+L2 自解。 - L1：'dlr_semantic_query'（db=fo`
+
+**raw 日志**：[results/0929_1449_formula1_b2/raw/0929_1449_859_dlr.ndjson](../results/0929_1449_formula1_b2/raw/0929_1449_859_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -386,8 +388,6 @@ Final Answer: 1:23.796
 Evidence SQL: SELECT q1 FROM qualifying WHERE raceId = 354 AND driverId = (SELECT driverId FROM drivers WHERE forename='Bruno' AND surname='Senna')
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q861">
@@ -398,6 +398,8 @@ Evidence SQL: SELECT q1 FROM qualifying WHERE raceId = 354 AND driverId = (SELEC
 **期望**：`3 | 5`
 
 **答案**：`## 结论 **Race 903（2018 年澳大利亚大奖赛）Q3** 中，圈速以 '1:54' 开头的有两位车手，题目问的 "his number" 指的是车手的**车号（driver number）**： \| 车手 \| Q3 时间 \| 车号 \| \|------\|---------\|------\| \| Daniel Ricciardo \| 1:54.455 \| **3** `
+
+**raw 日志**：[results/0929_1528_formula1_secA/raw/0929_1528_861_dlr.ndjson](../results/0929_1528_formula1_secA/raw/0929_1528_861_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -437,8 +439,6 @@ Final Answer: 3 and 5
 Evidence SQL: SELECT d.number FROM qualifying q JOIN drivers d ON q.driverId = d.driverId WHERE q.raceId = 903 AND q.q3 LIKE '1:54%' ORDER BY q.q3
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q862">
@@ -449,6 +449,8 @@ Evidence SQL: SELECT d.number FROM qualifying q JOIN drivers d ON q.driverId = d
 **期望**：`12`
 
 **答案**：`## 结论 **2007 年巴林大奖赛（Bahrain Grand Prix）共有 12 名车手未完赛（not finished）。** ## 推理过程 **1. 三级并行锚定** - **L1 实体路**（'dlr_semantic_query'）：锁定 'formula_1' 库 —— 'LOGICAL.DriverRaceData'（含 PE 'results' = 比赛结果）与 'LOGI`
+
+**raw 日志**：[results/0929_1449_formula1_b2/raw/0929_1449_862_dlr.ndjson](../results/0929_1449_formula1_b2/raw/0929_1449_862_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -496,8 +498,6 @@ Final Answer: 12
 Evidence SQL: SELECT COUNT(*) AS not_finished_drivers FROM results res JOIN races r ON r.raceId = res.raceId WHERE r.year = 2007 AND r.name = 'Bahrain Grand Prix' AND res.time IS NULL
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q865">
@@ -508,6 +508,8 @@ Evidence SQL: SELECT COUNT(*) AS not_finished_drivers FROM results res JOIN race
 **期望**：`Jean-Pierre | Beltoise`
 
 **答案**：`## 解题路径 **三级锚定：** - **L3（SOP）**：'match=none' — 本题无题级口径节，按 L1+L2 自解（常态）。 - **L1（数据源级）**：'dlr_semantic_query' 全局召回 → 命中 'formula_1' 库的 'LOGICAL.DriverRaceData'（PE：'results'、'qualifying'、'lapTimes'）与 'LO`
+
+**raw 日志**：[results/0929_1449_formula1_b2/raw/0929_1450_865_dlr.ndjson](../results/0929_1449_formula1_b2/raw/0929_1450_865_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -553,8 +555,6 @@ Final Answer: Jean-Pierre Beltoise
 
 Evidence SQL: SELECT d.forename || ' ' || d.surname AS oldest_driver FROM results r JOIN drivers d ON r.driverId = d.driverId WHERE r.raceId = 592 AND r.time IS NOT NULL ORDER BY d.dob ASC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q866">
@@ -565,6 +565,8 @@ Evidence SQL: SELECT d.forename || ' ' || d.surname AS oldest_driver FROM result
 **期望**：`David | Coulthard | http://en.wikipedia.org/wiki/David_Coulthard | Jarno | Trulli | http://en.wikipedia.org/wiki/Jarno_Trulli | Jenson | Button`
 
 **答案**：`## 查询过程 **三级锚定** - **L3（口径路，'dlr_search_sop' → 'match=exact'，标题逐字复述本题）**：'formula_1#Who was the player that got the lap time of 0:01:27 in the race No. 161? Show his introduction website.' —— 口径：在 'la`
+
+**raw 日志**：[results/0929_1528_formula1_secA/raw/0929_1528_866_dlr.ndjson](../results/0929_1528_formula1_secA/raw/0929_1528_866_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -609,8 +611,6 @@ Final Answer: David Coulthard — http://en.wikipedia.org/wiki/David_Coulthard (
 Evidence SQL: SELECT d.forename || ' ' || d.surname AS driver_name, d.url FROM drivers d JOIN lapTimes lt ON lt.driverId = d.driverId WHERE lt.raceId = 161 AND lt.time LIKE '1:27%' GROUP BY d.driverId, d.forename, d.surname, d.url ORDER BY d.driverId
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q868">
@@ -621,6 +621,8 @@ Evidence SQL: SELECT d.forename || ' ' || d.surname AS driver_name, d.url FROM d
 **期望**：`2.76083 | 101.738`
 
 **答案**：`**结论**：Malaysian Grand Prix（马来西亚大奖赛）举办地为 **Sepang International Circuit（雪邦国际赛道）**，位于马来西亚吉隆坡（Kuala Lumpur, Malaysia）。**坐标：纬度 2.76083，经度 101.738**（即 2.76083, 101.738）。 **证据链** - L2 领域共识（'dlr_search_cons`
+
+**raw 日志**：[results/0929_1456_formula1_b3/raw/0929_1456_868_dlr.ndjson](../results/0929_1456_formula1_b3/raw/0929_1456_868_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -649,8 +651,6 @@ Evidence SQL: SELECT d.forename || ' ' || d.surname AS driver_name, d.url FROM d
 Final Answer: Sepang International Circuit, Kuala Lumpur, Malaysia — coordinates (2.76083, 101.738)
 Evidence SQL: SELECT c.name || ' — ' || c.location || ', ' || c.country || ' — coordinates: (' || c.lat || ', ' || c.lng || ')' AS answer FROM races r JOIN circuits c ON r.circuitId = c.circuitId WHERE r.name = 'Malaysian Grand Prix' GROUP BY c.circuitId;
 
-建模缺口: 无
-
 </details>
 
 <details id="q869">
@@ -661,6 +661,8 @@ Evidence SQL: SELECT c.name || ' — ' || c.location || ', ' || c.country || ' �
 **期望**：`http://en.wikipedia.org/wiki/Red_Bull_Racing`
 
 **答案**：`## 分析过程 **三级锚定结果：** \| 层级 \| 工具 \| 关键命中 \| \|------\|------\|----------\| \| L3 SOP \| 'dlr_search_sop' \| 'match=similar'，两条候选（european_football_2 / codebase_community 的百分比题）**均未逐字复述本题** → 本题无 L3 节，按`
+
+**raw 日志**：[results/0929_1456_formula1_b3/raw/0929_1456_869_dlr.ndjson](../results/0929_1456_formula1_b3/raw/0929_1456_869_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -710,8 +712,6 @@ Final Answer: http://en.wikipedia.org/wiki/Red_Bull_Racing
 
 Evidence SQL: SELECT c.url AS introduction_website FROM constructorResults cr JOIN constructors c ON c.constructorId = cr.constructorId WHERE cr.raceId = 9 ORDER BY cr.points DESC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q872">
@@ -722,6 +722,8 @@ Evidence SQL: SELECT c.url AS introduction_website FROM constructorResults cr JO
 **期望**：`HAM`
 
 **答案**：`## 解题过程 **三级锚定** - **L1 实体路**（'dlr_semantic_query'）：命中 'formula_1' 库 —— 'LOGICAL.DriverRaceData'（PE: 'qualifying' / 'results' / 'lapTimes'，属性 'Driver'=driverId、'Race'=raceId）与 'LOGICAL.Driver'（PE: 'dr`
+
+**raw 日志**：[results/0929_1456_formula1_b3/raw/0929_1456_872_dlr.ndjson](../results/0929_1456_formula1_b3/raw/0929_1456_872_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -769,8 +771,6 @@ Final Answer: HAM
 Evidence SQL: SELECT d.code FROM qualifying q JOIN drivers d ON d.driverId = q.driverId WHERE q.raceId = 45 AND q.q3 LIKE '1:33%';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q875">
@@ -781,6 +781,8 @@ Evidence SQL: SELECT d.code FROM qualifying q JOIN drivers d ON d.driverId = q.d
 **期望**：`http://en.wikipedia.org/wiki/2014_Formula_One_season`
 
 **答案**：`## 查询过程 1. **L1 语义召回** ('dlr_semantic_query', 无 db 全局)：锁定 'formula_1' 库，命中 'LOGICAL.Race' → 'PHYSICAL.Race'（表 'races'），含属性 'RaceID'、'Year'、'url'。 2. **L2 领域共识** ('dlr_search_consensus', namespace=form`
+
+**raw 日志**：[results/0929_1456_formula1_b3/raw/0929_1456_875_dlr.ndjson](../results/0929_1456_formula1_b3/raw/0929_1456_875_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -819,9 +821,6 @@ Final Answer: http://en.wikipedia.org/wiki/2014_Formula_One_season
 Evidence SQL: SELECT s.url FROM seasons s JOIN races r ON r.year = s.year WHERE r.raceId = 901;
 ```
 
-建模缺口: formula_1.seasons.url — `seasons` 表整体未进入建模视图（无 PE，modeled_view_count=0），而 "season page" 恰需该表；建议升入视图新增 PE `PHYSICAL.Season`（锚键 year，含 year/url）
-建模缺口: formula_1.seasons.year — 同上，未进视图；建议随 PE `PHYSICAL.Season` 一并升入视图
-
 </details>
 
 <details id="q877">
@@ -832,6 +831,8 @@ Evidence SQL: SELECT s.url FROM seasons s JOIN races r ON r.year = s.year WHERE 
 **期望**：`Sergio | Pérez`
 
 **答案**：`## 结论 **Sergio Pérez**（1990-01-26 出生）是 872 号比赛（2012 年 Malaysian Grand Prix 场次）全部完赛车手中最年轻的一位。 ## 推理过程（三级锚定） **L1 数据源级**：'dlr_semantic_query' 召回 'LOGICAL.DriverRaceData'（含 'PHYSICAL.Result' = 'results' `
+
+**raw 日志**：[results/0929_1456_formula1_b3/raw/0929_1456_877_dlr.ndjson](../results/0929_1456_formula1_b3/raw/0929_1456_877_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -882,8 +883,6 @@ ORDER BY d.dob DESC
 LIMIT 1
 ```
 
-建模缺口: `status.statusId` / `status.status` — `status` 表未进入建模视图（`get_full_data_info` 显示 `modeled_view_count = 0`，两张列均 `in_modeled_view: false`），但 `results.statusId` 的描述已指明"其类别描述见 status 表"，本题必须读 `status` 才能把 statusId=1 还原为 'Finished'；建议升入视图（至少作为 `LOGICAL.Status` 挂一个 PE，或在 `results.statusId` 上补值域映射枚举）。
-
 </details>
 
 <details id="q879">
@@ -894,6 +893,8 @@ LIMIT 1
 **期望**：`Italian`
 
 **答案**：`**结论**：最快圈速（fastest lap speed）的保持者是 Rubens Barrichello，其国籍为 **Brazilian（巴西）**。 **依据** - **L3 口径**（'dlr_search_sop'，标题逐字复述本题，match=exact）：该节明确指出 "fastest lap speed" 是 'fastestLapSpeed' 的**最大数值**（257.32`
+
+**raw 日志**：[results/0929_1528_formula1_secA/raw/0929_1528_879_dlr.ndjson](../results/0929_1528_formula1_secA/raw/0929_1528_879_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -924,8 +925,6 @@ Final Answer: Brazilian
 Evidence SQL: SELECT d.nationality FROM results r JOIN drivers d ON r.driverId = d.driverId WHERE r.fastestLapSpeed IS NOT NULL AND TRIM(r.fastestLapSpeed) <> '' ORDER BY CAST(r.fastestLapSpeed AS REAL) DESC LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q880">
@@ -936,6 +935,8 @@ Evidence SQL: SELECT d.nationality FROM results r JOIN drivers d ON r.driverId =
 **期望**：`32.50155167390781`
 
 **答案**：`**解题过程** - **L3 口径（'dlr_search_sop'，match=exact，标题逐字复述本题）**：di Resta 在 race 853 的最快圈速为 **236.841**、race 854 为 **159.864**；百分比**以 853 为分母**：(236.841 − 159.864) × 100 / 236.841 = **32.50155167390781**（若`
+
+**raw 日志**：[results/0929_1528_formula1_secA/raw/0929_1528_880_dlr.ndjson](../results/0929_1528_formula1_secA/raw/0929_1528_880_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -963,8 +964,6 @@ Evidence SQL: SELECT d.nationality FROM results r JOIN drivers d ON r.driverId =
 Final Answer: 32.50155167390781
 Evidence SQL: SELECT (CAST(a.fastestLapSpeed AS REAL) - CAST(b.fastestLapSpeed AS REAL)) * 100.0 / CAST(a.fastestLapSpeed AS REAL) AS pct_faster FROM results a JOIN results b ON b.driverId = a.driverId AND b.raceId = 854 JOIN drivers d ON d.driverId = a.driverId WHERE a.raceId = 853 AND d.forename = 'Paul' AND d.surname = 'di Resta'
 
-建模缺口: 无
-
 </details>
 
 <details id="q881">
@@ -975,6 +974,8 @@ Evidence SQL: SELECT (CAST(a.fastestLapSpeed AS REAL) - CAST(b.fastestLapSpeed A
 **期望**：`17.24137931034483`
 
 **答案**：`## 结论 **题目日期定位**：'races.date = '1983-07-16'' → raceId **460**，1983 年第 9 站 **British Grand Prix**（MCP 'get_pe_mapping' → 'formula_1.races'，SQL 验证）。 **口径（严格遵守 L2 领域共识）**： - 'formula_1' 共识 qid=2：「a resul`
+
+**raw 日志**：[results/0929_1457_formula1_b4/raw/0929_1457_881_dlr.ndjson](../results/0929_1457_formula1_b4/raw/0929_1457_881_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1028,8 +1029,6 @@ Final Answer: 17.24137931034483
 Evidence SQL: SELECT CAST(SUM(CASE WHEN r.time IS NOT NULL THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(r.driverId) AS completion_rate_pct FROM results r JOIN races ra ON r.raceId = ra.raceId WHERE ra.date = '1983-07-16'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q884">
@@ -1040,6 +1039,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN r.time IS NOT NULL THEN 1 ELSE 0 END) AS
 **期望**：`British Grand Prix | Monaco Grand Prix | Indianapolis 500`
 
 **答案**：`三级锚定完成，结果如下： **锚定过程** - **L1 实体路**：召回 'LOGICAL.Race'（db=formula_1）→ PE 'PHYSICAL.Race'（表 'races'），含列 'year'、'name'、'date'；'database_url' 由 'get_pe_mapping' 取得。 - **L2 共识路**：formula_1 的「Time readings」条`
+
+**raw 日志**：[results/0929_1457_formula1_b4/raw/0929_1457_884_dlr.ndjson](../results/0929_1457_formula1_b4/raw/0929_1457_884_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1069,8 +1070,6 @@ Final Answer: British Grand Prix | Indianapolis 500 | Monaco Grand Prix
 Evidence SQL: SELECT name FROM races WHERE substr(date,1,7) = (SELECT substr(MIN(date),1,7) FROM races) ORDER BY name
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q892">
@@ -1081,6 +1080,8 @@ Evidence SQL: SELECT name FROM races WHERE substr(date,1,7) = (SELECT substr(MIN
 **期望**：`Sebastian | Vettel | 397`
 
 **答案**：`三级锚定交叉验证一致： - **L3（'dlr_search_sop'，'match=exact'）**：本题命中节明确口径——"the most points scored" 是 'driverStandings' 表中的**最大单值**（不是把各轮积分累加成的职业生涯总分，那会得到上千的错值）。 - **L2（'dlr_search_consensus'，namespace=formula_1`
+
+**raw 日志**：[results/0929_1530_formula1_secB/raw/0929_1530_892_dlr.ndjson](../results/0929_1530_formula1_secB/raw/0929_1530_892_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1109,8 +1110,6 @@ Final Answer: Sebastian Vettel, 397
 Evidence SQL: SELECT d.forename || ' ' || d.surname AS full_name, CAST(ds.points AS INTEGER) AS points FROM driverStandings ds JOIN drivers d ON ds.driverId = d.driverId ORDER BY ds.points DESC LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q894">
@@ -1121,6 +1120,8 @@ Evidence SQL: SELECT d.forename || ' ' || d.surname AS full_name, CAST(ds.points
 **期望**：`67411 | Lewis | Hamilton | Austrian Grand Prix`
 
 **答案**：`**三级锚定结果** - **L1 语义召回**：命中 'formula_1' 库的 'LOGICAL.Race'（races）与 'LOGICAL.DriverRaceData'（含 'PHYSICAL.LapTime' / lapTimes）；第二跳 'get_pe_mapping' 拿到 'database_url' 与列（'lapTimes.driverId/raceId/lap/posi`
+
+**raw 日志**：[results/0929_1459_formula1_b5/raw/0929_1459_894_dlr.ndjson](../results/0929_1459_formula1_b5/raw/0929_1459_894_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1152,8 +1153,6 @@ Final Answer: Lewis Hamilton — Austrian Grand Prix (2017), best lap time 1:07.
 
 Evidence SQL: SELECT d.forename || ' ' || d.surname AS driver, r.name AS race, lt.time AS best_lap_time, lt.milliseconds FROM lapTimes lt JOIN drivers d ON d.driverId = lt.driverId JOIN races r ON r.raceId = lt.raceId WHERE lt.milliseconds = (SELECT MIN(milliseconds) FROM lapTimes WHERE milliseconds IS NOT NULL);
 
-建模缺口: 无
-
 </details>
 
 <details id="q895">
@@ -1164,6 +1163,8 @@ Evidence SQL: SELECT d.forename || ' ' || d.surname AS driver, r.name AS race, l
 **期望**：`109398.54838709677`
 
 **答案**：`## 结论 Lewis Hamilton 在 2009 年马来西亚大奖赛（Malaysian Grand Prix）的**平均圈速 = 109 398.55 毫秒**（≈ 1 分 49.399 秒，即 '1:49.399'）。 ### 三级锚定过程 \| 级别 \| 工具 \| 结果 \| \|------\|------\|------\| \| L3 业务逻辑 \| 'dlr_search_s`
+
+**raw 日志**：[results/0929_1459_formula1_b5/raw/0929_1459_895_dlr.ndjson](../results/0929_1459_formula1_b5/raw/0929_1459_895_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1216,8 +1217,6 @@ Final Answer: 109398.54838709677
 Evidence SQL: SELECT AVG(lt.milliseconds) AS avg_lap_time_ms FROM lapTimes lt JOIN races r ON r.raceId = lt.raceId JOIN drivers d ON d.driverId = lt.driverId WHERE r.year = 2009 AND r.name = 'Malaysian Grand Prix' AND d.forename = 'Lewis' AND d.surname = 'Hamilton';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q896">
@@ -1228,6 +1227,8 @@ Evidence SQL: SELECT AVG(lt.milliseconds) AS avg_lap_time_ms FROM lapTimes lt JO
 **期望**：`73.2394366197183`
 
 **答案**：`L3 精确命中，与 SQL 闭环结果一致。 **口径（L3 逐字命中）**：Hamilton 的 **standings 行**（'driverStandings'，surname = Hamilton，赛季年份 ≥ 2010）；其中 'position != 1' 的行数 ÷ 全部行数 × 100。L3 明确提示：换用 race-results 表（'results.positionOrder'`
+
+**raw 日志**：[results/0929_1530_formula1_secB/raw/0929_1530_896_dlr.ndjson](../results/0929_1530_formula1_secB/raw/0929_1530_896_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1257,8 +1258,6 @@ Final Answer: 73.2394366197183
 Evidence SQL: SELECT 100.0 * SUM(CASE WHEN ds.position <> 1 THEN 1 ELSE 0 END) / COUNT(*) AS pct FROM driverStandings ds JOIN drivers d ON ds.driverId = d.driverId JOIN races r ON ds.raceId = r.raceId WHERE d.surname = 'Hamilton' AND r.year >= 2010;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q897">
@@ -1269,6 +1268,8 @@ Evidence SQL: SELECT 100.0 * SUM(CASE WHEN ds.position <> 1 THEN 1 ELSE 0 END) /
 **期望**：`Michael | Schumacher | German | 148`
 
 **答案**：`## 结论 **Michael Schumacher（迈克尔·舒马赫）** — 德国人（German），最高积分为 **148 分**（2004 赛季车手年度总积分）。 **推理链（三级锚定）** - **L1 语义召回**（'dlr_semantic_query', db=formula_1）：定位到 'LOGICAL.Driver'（drivers）、'LOGICAL.DriverRaceDa`
+
+**raw 日志**：[results/0929_1459_formula1_b5/raw/0929_1459_897_dlr.ndjson](../results/0929_1459_formula1_b5/raw/0929_1459_897_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1309,8 +1310,6 @@ Evidence SQL: SELECT 100.0 * SUM(CASE WHEN ds.position <> 1 THEN 1 ELSE 0 END) /
 Final Answer: Michael Schumacher — German (Germany) — maximum points: 148 (2004 season)
 Evidence SQL: WITH w AS (SELECT r.driverId, COUNT(*) AS wins FROM results r WHERE r.positionOrder=1 GROUP BY r.driverId ORDER BY wins DESC LIMIT 1) SELECT d.forename||' '||d.surname AS driver_name, d.nationality, (SELECT MAX(ds.points) FROM driverStandings ds WHERE ds.driverId=w.driverId) AS max_points FROM w JOIN drivers d ON d.driverId=w.driverId
 
-建模缺口: 无
-
 </details>
 
 <details id="q898">
@@ -1321,6 +1320,8 @@ Evidence SQL: WITH w AS (SELECT r.driverId, COUNT(*) AS wins FROM results r WHER
 **期望**：`40 | Kamui | Kobayashi`
 
 **答案**：`三级锚定结果（L1 实体路：'db=formula_1'，'LOGICAL.Driver' / 'PHYSICAL.Driver'；L2 共识：'formula_1' 命名 "full name = forename + surname"、"country can be named as a nationality"、跨库通用规则 "'youngest' 是最晚的出生日期"、"age = 当前年份`
+
+**raw 日志**：[results/0929_1459_formula1_b5/raw/0929_1459_898_dlr.ndjson](../results/0929_1459_formula1_b5/raw/0929_1459_898_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1351,8 +1352,6 @@ Evidence SQL: WITH w AS (SELECT r.driverId, COUNT(*) AS wins FROM results r WHER
 Final Answer: 40; Kamui Kobayashi
 Evidence SQL: SELECT forename || ' ' || surname AS driver_name, CAST(strftime('%Y','now') AS INTEGER) - CAST(substr(dob,1,4) AS INTEGER) AS age FROM drivers WHERE nationality = 'Japanese' ORDER BY dob DESC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q901">
@@ -1363,6 +1362,8 @@ Evidence SQL: SELECT forename || ' ' || surname AS driver_name, CAST(strftime('%
 **期望**：`Autodromo Nazionale di Monza | Monza | Circuit de Spa-Francorchamps | Spa | Autódromo José Carlos Pace | São Paulo`
 
 **答案**：`## 查询过程 **三级锚定：** - **L1 语义召回**（'dlr_semantic_query'）：命中 'LOGICAL.Race'（PE 'races'）与 'LOGICAL.Circuit'（PE 'circuits'），均属 'formula_1' 库 - **L2 领域共识**（'dlr_search_consensus'，namespace=formula_1）：   - qi`
+
+**raw 日志**：[results/0929_1500_formula1_b6/raw/0929_1500_901_dlr.ndjson](../results/0929_1500_formula1_b6/raw/0929_1500_901_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1407,8 +1408,6 @@ Final Answer: Italian Grand Prix — Autodromo Nazionale di Monza — Monza; Bel
 Evidence SQL: SELECT r.name AS race_name, c.name AS circuit_name, c.location, r.date FROM races r JOIN circuits c ON r.circuitId = c.circuitId WHERE r.year = 2005 AND strftime('%m', r.date) = '09' ORDER BY r.date
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q902">
@@ -1419,6 +1418,8 @@ Evidence SQL: SELECT r.name AS race_name, c.name AS circuit_name, c.location, r.
 **期望**：`Malaysian Grand Prix | Brazilian Grand Prix | San Marino Grand Prix | Spanish Grand Prix | Austrian Grand Prix | Monaco Grand Prix | Canadian Grand Prix | European Grand Prix`
 
 **答案**：`L3 精确命中（'match=exact'），其节明示 "Track number" 指**车手积分榜名次** 'driverStandings.position < 20'（而非 race results 里的发车位/完赛位），并预告"用 results 表会得到另一组 5 场"——正是陷阱。 **查询路径**（L1 锚定 → get_pe_mapping 第二跳 → SQL 闭环）： - 'L`
+
+**raw 日志**：[results/0929_1530_formula1_secB/raw/0929_1530_902_dlr.ndjson](../results/0929_1530_formula1_secB/raw/0929_1530_902_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1449,8 +1450,6 @@ Final Answer: 15 races — Malaysian Grand Prix, Brazilian Grand Prix, San Marin
 
 Evidence SQL: SELECT COUNT(DISTINCT r.name) AS n, GROUP_CONCAT(DISTINCT r.name) AS races FROM driverStandings ds JOIN drivers d ON ds.driverId = d.driverId JOIN races r ON ds.raceId = r.raceId WHERE d.forename = 'Alex' AND d.surname = 'Yoong' AND ds.position < 20
 
-建模缺口: 无
-
 </details>
 
 <details id="q904">
@@ -1461,6 +1460,8 @@ Evidence SQL: SELECT COUNT(DISTINCT r.name) AS n, GROUP_CONCAT(DISTINCT r.name) 
 **期望**：`Austrian Grand Prix | 2003`
 
 **答案**：`**结论**：Michael Schumacher 的最快单圈出现在 **2003 年奥地利大奖赛（Austrian Grand Prix）**。 **推理与证据链** \| 级 \| 结果 \| \|---\|---\| \| L1 数据源级 \| 'dlr_semantic_query'（db=formula_1）召回 'LOGICAL.Race'（Year/Name）、'LOGICAL.Dr`
+
+**raw 日志**：[results/0929_1500_formula1_b6/raw/0929_1500_904_dlr.ndjson](../results/0929_1500_formula1_b6/raw/0929_1500_904_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1501,8 +1502,6 @@ Final Answer: Austrian Grand Prix, 2003
 Evidence SQL: SELECT r.name AS race, r.year AS year FROM lapTimes lt JOIN drivers d ON lt.driverId = d.driverId JOIN races r ON lt.raceId = r.raceId WHERE d.forename = 'Michael' AND d.surname = 'Schumacher' ORDER BY lt.milliseconds ASC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q906">
@@ -1513,6 +1512,8 @@ Evidence SQL: SELECT r.name AS race, r.year AS year FROM lapTimes lt JOIN driver
 **期望**：`Malaysian Grand Prix | 14`
 
 **答案**：`**Lewis Hamilton's first race (as recorded in this dataset):** the **Malaysian Grand Prix** (2007, round 2), where he recorded **8 points**. **How this was anchored (three-level):** - **L3 (口径, author`
+
+**raw 日志**：[results/0929_1530_formula1_secB/raw/0929_1530_906_dlr.ndjson](../results/0929_1530_formula1_secB/raw/0929_1530_906_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1552,8 +1553,6 @@ ORDER BY r.year ASC, r.round ASC
 LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q909">
@@ -1564,6 +1563,8 @@ LIMIT 1;
 **期望**：`52.17391304347826`
 
 **答案**：`## 回答 **口径锚定**（三级并行）： - **L3 SOP**：'match=none' — 本题无题级口径节，按 L1+L2 自解 - **L1 实体路**（'dlr_semantic_query'，db=formula_1）：命中 'LOGICAL.Race'（PE 'formula_1.races'）与 'LOGICAL.Circuit'（PE 'formula_1.circuits'`
+
+**raw 日志**：[results/0929_1500_formula1_b6/raw/0929_1501_909_dlr.ndjson](../results/0929_1500_formula1_b6/raw/0929_1501_909_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1601,8 +1602,6 @@ FROM races r JOIN circuits c ON r.circuitId = c.circuitId
 WHERE r.name = 'European Grand Prix';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q910">
@@ -1613,6 +1612,8 @@ WHERE r.name = 'European Grand Prix';
 **期望**：`52.0786 | -1.01694`
 
 **答案**：`**结论（证据驱动）** **问题**：Silverstone Circuit 的位置坐标是什么？ **三级锚定** - **L3（'dlr_search_sop'）**：'match=none' —— 本题无题级 SOP 节，按 L1 + L2 自解。 - **L1（'dlr_semantic_query'）**：候选实体 'LOGICAL.Circuit' / 'PHYSICAL.Circui`
+
+**raw 日志**：[results/0929_1502_formula1_b7/raw/0929_1502_910_dlr.ndjson](../results/0929_1502_formula1_b7/raw/0929_1502_910_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1650,8 +1651,6 @@ Final Answer: (52.0786, -1.01694)  — latitude 52.0786, longitude -1.01694
 Evidence SQL: SELECT lat, lng FROM circuits WHERE name = 'Silverstone Circuit'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q912">
@@ -1662,6 +1661,8 @@ Evidence SQL: SELECT lat, lng FROM circuits WHERE name = 'Silverstone Circuit'
 **期望**：`marina_bay`
 
 **答案**：`**结论：Marina Bay Street Circuit 的 reference name 是 'marina_bay'。** 推理链（三级锚定）： - **L1 实体路**：'dlr_semantic_query' 命中 'LOGICAL.Circuit'（db='formula_1'，PE='PHYSICAL.Circuit' / 表 'circuits'，描述 "Circuit info`
+
+**raw 日志**：[results/0929_1502_formula1_b7/raw/0929_1502_912_dlr.ndjson](../results/0929_1502_formula1_b7/raw/0929_1502_912_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1688,8 +1689,6 @@ Evidence SQL: SELECT lat, lng FROM circuits WHERE name = 'Silverstone Circuit'
 Final Answer: marina_bay
 Evidence SQL: SELECT circuitRef FROM circuits WHERE name = 'Marina Bay Street Circuit'
 
-建模缺口: 无
-
 </details>
 
 <details id="q915">
@@ -1700,6 +1699,8 @@ Evidence SQL: SELECT circuitRef FROM circuits WHERE name = 'Marina Bay Street Ci
 **期望**：`French`
 
 **答案**：`## 结论 **年龄最大的车手来自法国（France）。** ## 推理与证据 **三级锚定** - **L1 语义召回**（'dlr_semantic_query'）：命中库 'formula_1'，逻辑实体 'LOGICAL.Driver'（物理实体 'PHYSICAL.Driver' → 表 'drivers'，"Driver master data"，含 'dob' 出生日期与 'nati`
+
+**raw 日志**：[results/0929_1502_formula1_b7/raw/0929_1502_915_dlr.ndjson](../results/0929_1502_formula1_b7/raw/0929_1502_915_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1739,8 +1740,6 @@ Evidence SQL: SELECT circuitRef FROM circuits WHERE name = 'Marina Bay Street Ci
 Final Answer: France（车手表中 nationality 存值为 "French"，车手 Philippe Étancelin，出生日期 1896-12-28）
 Evidence SQL: SELECT d.nationality FROM drivers d WHERE d.dob IS NOT NULL ORDER BY d.dob ASC LIMIT 1;
 
-建模缺口: 无
-
 </details>
 
 <details id="q928">
@@ -1751,6 +1750,8 @@ Evidence SQL: SELECT d.nationality FROM drivers d WHERE d.dob IS NOT NULL ORDER 
 **期望**：`Fernando | Alonso | alonso`
 
 **答案**：`**结论：Fernando Alonso，参考名 'alonso'。** 依据链： 1. **L3 业务逻辑级（'dlr_search_sop'，match=exact，标题逐字复述本题）**：本题最权威口径明确——承载 "ranked the first" 的列是 **'results.rank'**，2007 年加拿大大奖赛中 rank 1 是 **Fernando Alonso**，参考名 `
+
+**raw 日志**：[results/0929_1530_formula1_secB/raw/0929_1531_928_dlr.ndjson](../results/0929_1530_formula1_secB/raw/0929_1531_928_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1782,8 +1783,6 @@ Final Answer: alonso
 Evidence SQL: SELECT d.driverRef FROM results r JOIN races ra ON r.raceId = ra.raceId JOIN drivers d ON r.driverId = d.driverId WHERE ra.year = 2007 AND ra.name = 'Canadian Grand Prix' AND r.rank = 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q930">
@@ -1794,6 +1793,8 @@ Evidence SQL: SELECT d.driverRef FROM results r JOIN races ra ON r.raceId = ra.r
 **期望**：`Chinese Grand Prix | Malaysian Grand Prix | Japanese Grand Prix | Chinese Grand Prix | Spanish Grand Prix | Belgian Grand Prix | Brazilian Grand Prix | Abu Dhabi Grand Prix`
 
 **答案**：`## 三级锚定 **L3（口径）**：'dlr_search_sop' → 'match=none'，本题无题级 SOP 节，按 L1+L2 自解。 **L2（领域共识，权威）**：'dlr_search_consensus' 在 'formula_1' 命中 —— *"Result status readings: … 'ranked highest' means the smallest ra`
+
+**raw 日志**：[results/0929_1502_formula1_b7/raw/0929_1502_930_dlr.ndjson](../results/0929_1502_formula1_b7/raw/0929_1502_930_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1861,8 +1862,6 @@ Final Answer: Chinese Grand Prix
 
 Evidence SQL: SELECT r.name FROM results res JOIN races r ON res.raceId = r.raceId JOIN drivers d ON res.driverId = d.driverId WHERE d.forename = 'Lewis' AND d.surname = 'Hamilton' AND res.rank >= 1 ORDER BY res.rank ASC, res.resultId ASC LIMIT 1;
 
-建模缺口: 无
-
 </details>
 
 <details id="q931">
@@ -1873,6 +1872,8 @@ Evidence SQL: SELECT r.name FROM results res JOIN races r ON res.raceId = r.race
 **期望**：`202.484`
 
 **答案**：`**解析与执行** - **L2 领域共识**（'formula_1'，qid=2）明确："fastest lap speed" is the **MAX lap speed**（不是 MIN 时间）；且 "a question naming a Grand Prix means the race with that name"（qid=4）。 - **L1 锚定**：'LOGICAL.Drive`
+
+**raw 日志**：[results/0929_1506_formula1_b8/raw/0929_1506_931_dlr.ndjson](../results/0929_1506_formula1_b8/raw/0929_1506_931_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1908,8 +1909,6 @@ JOIN races ra ON r.raceId = ra.raceId
 WHERE ra.year = 2009 AND ra.name = 'Spanish Grand Prix';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q933">
@@ -1920,6 +1919,8 @@ WHERE ra.year = 2009 AND ra.name = 'Spanish Grand Prix';
 **期望**：`1`
 
 **答案**：`**推理路径** - **L1 实体路**：'dlr_semantic_query(db=formula_1)' 召回 'LOGICAL.Race'（races：year/name）、'LOGICAL.Driver'（drivers：forename/surname）、'LOGICAL.DriverRaceData' → 'PHYSICAL.Result'（results：position、pos`
+
+**raw 日志**：[results/0929_1506_formula1_b8/raw/0929_1506_933_dlr.ndjson](../results/0929_1506_formula1_b8/raw/0929_1506_933_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1958,8 +1959,6 @@ Final Answer: 1
 Evidence SQL: SELECT res.positionOrder AS final_rank FROM results res JOIN drivers d ON res.driverId = d.driverId JOIN races ra ON res.raceId = ra.raceId WHERE d.forename = 'Lewis' AND d.surname = 'Hamilton' AND ra.year = 2008 AND ra.name = 'Chinese Grand Prix'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q937">
@@ -1970,6 +1969,8 @@ Evidence SQL: SELECT res.positionOrder AS final_rank FROM results res JOIN drive
 **期望**：`+16.445`
 
 **答案**：`三级锚定结果交叉一致，证据链完整： - **L3（'dlr_search_sop'，'match=exact'，标题逐字复述本题）**：明确题面中的赛名是**乱码**（"AustChineseralian" → 实为 **Chinese Grand Prix**），且"ranked second"对应 **'results.rank = 2'**（不是 'position = 2'），Expect`
+
+**raw 日志**：[results/0929_1534_formula1_secC/raw/0929_1534_937_dlr.ndjson](../results/0929_1534_formula1_secC/raw/0929_1534_937_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1997,8 +1998,6 @@ Final Answer: +16.445
 
 Evidence SQL: SELECT res.time FROM results res JOIN races r ON res.raceId = r.raceId WHERE r.year = 2008 AND r.name LIKE '%Chinese Grand Prix%' AND res.rank = 2
 
-建模缺口: 无
-
 </details>
 
 <details id="q940">
@@ -2009,6 +2008,8 @@ Evidence SQL: SELECT res.time FROM results res JOIN races r ON res.raceId = r.ra
 **期望**：`14`
 
 **答案**：`## 分析过程 **三级锚定结果** - **L3 (dlr_search_sop)**：'match=none' — 本题无题级 SOP 节，按 L1 + L2 自解（常态）。 - **L1 (dlr_semantic_query)**：命中 'formula_1' 库的 'LOGICAL.Race'（races）、'LOGICAL.DriverRaceData'（results）、'LOGIC`
+
+**raw 日志**：[results/0929_1506_formula1_b8/raw/0929_1506_940_dlr.ndjson](../results/0929_1506_formula1_b8/raw/0929_1506_940_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2046,8 +2047,6 @@ Final Answer: 14
 Evidence SQL: SELECT COUNT(DISTINCT res.driverId) AS finishers_with_f1_races FROM results res JOIN races r ON r.raceId = res.raceId WHERE r.year = 2008 AND r.name = 'Chinese Grand Prix' AND res.time IS NOT NULL AND res.driverId IN (SELECT x.driverId FROM results x)
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q944">
@@ -2058,6 +2057,8 @@ Evidence SQL: SELECT COUNT(DISTINCT res.driverId) AS finishers_with_f1_races FRO
 **期望**：`null`
 
 **答案**：`## 结论 **2008 年澳大利亚大奖赛在数据集中不存在**，因此无法计算冠军与最后一名车手之间的速度差百分比——该题的正确答案是"数据中缺失该场比赛，不存在这个数值"。 ## 三级锚定结果 \| 层级 \| 工具 \| 关键发现 \| \|------\|------\|----------\| \| **L3 业务逻辑级** \| 'dlr_search_sop' \| **'match=e`
+
+**raw 日志**：[results/0929_1534_formula1_secC/raw/0929_1534_944_dlr.ndjson](../results/0929_1534_formula1_secC/raw/0929_1534_944_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2103,8 +2104,6 @@ Evidence SQL: SELECT COUNT(DISTINCT res.driverId) AS finishers_with_f1_races FRO
 Final Answer: The 2008 Australian Grand Prix is not in the dataset (the 2008 season has no round 1; the `races` table contains no 2008 Australian Grand Prix at all, and the name only appears for 1985–1995), so the race has no result rows and the percentage cannot be computed — no value exists.
 Evidence SQL: SELECT (SELECT COUNT(*) FROM races WHERE year = 2008 AND name = 'Australian Grand Prix') AS matching_2008_aus_gp_races, (SELECT COUNT(*) FROM results WHERE raceId IN (SELECT raceId FROM races WHERE year = 2008 AND name = 'Australian Grand Prix')) AS matching_result_rows, (SELECT MIN(round) FROM races WHERE year = 2008) AS first_2008_round
 
-建模缺口: 无
-
 </details>
 
 <details id="q945">
@@ -2115,6 +2114,8 @@ Evidence SQL: SELECT (SELECT COUNT(*) FROM races WHERE year = 2008 AND name = 'A
 **期望**：`1`
 
 **答案**：`**分析过程** - **L3（口径路）**：'dlr_search_sop' 返回 'match=none' —— 本题无题级 SOP 节，按 L1 + L2 自解。 - **L1（实体路）**：'dlr_semantic_query' 召回 'LOGICAL.Circuit'（db='formula_1'），属性 'CircuitID'；经 'get_pe_mapping(PHYSICAL.C`
+
+**raw 日志**：[results/0929_1512_formula1_b9/raw/0929_1512_945_dlr.ndjson](../results/0929_1512_formula1_b9/raw/0929_1512_945_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2144,8 +2145,6 @@ Final Answer: 1
 Evidence SQL: SELECT COUNT(*) AS circuit_count FROM circuits WHERE location = 'Adelaide' AND country = 'Australia'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q948">
@@ -2156,6 +2155,8 @@ Evidence SQL: SELECT COUNT(*) AS circuit_count FROM circuits WHERE location = 'A
 **期望**：`497`
 
 **答案**：`## 分析过程 **三级锚定** - **L1（实体路）**：'dlr_semantic_query' → 'LOGICAL.Constructor'（PE 'formula_1.constructors'）与 'LOGICAL.ConstructorRaceData'（PE 'formula_1.constructorStandings'），库为 'formula_1'。 - **L2（共识路）`
+
+**raw 日志**：[results/0929_1512_formula1_b9/raw/0929_1512_948_dlr.ndjson](../results/0929_1512_formula1_b9/raw/0929_1512_948_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2194,8 +2195,6 @@ Evidence SQL: SELECT COUNT(*) AS circuit_count FROM circuits WHERE location = 'A
 Final Answer: 497
 Evidence SQL: SELECT MAX(cs.points) AS max_points FROM constructorStandings cs JOIN constructors c ON c.constructorId = cs.constructorId WHERE c.nationality = 'British'
 
-建模缺口: 无
-
 </details>
 
 <details id="q950">
@@ -2206,6 +2205,8 @@ Evidence SQL: SELECT MAX(cs.points) AS max_points FROM constructorStandings cs J
 **期望**：`Ligier | Jordan | Larrousse | Brabham | Dallara | Minardi`
 
 **答案**：`**结论** 在 race 291（1992 年巴西大奖赛 Brazilian Grand Prix，第 3 站）中，得 0 分的车队（constructor）共 **11 支**： Brabham、Dallara、Fondmetal、Jordan、Larrousse、Ligier、March、McLaren、Minardi、Team Lotus、Tyrrell **锚定过程与证据** \| 级别`
+
+**raw 日志**：[results/0929_1512_formula1_b9/raw/0929_1512_950_dlr.ndjson](../results/0929_1512_formula1_b9/raw/0929_1512_950_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2250,8 +2251,6 @@ Final Answer: Brabham | Dallara | Fondmetal | Jordan | Larrousse | Ligier | Marc
 Evidence SQL: SELECT c.name FROM constructorResults cr JOIN constructors c ON cr.constructorId = c.constructorId WHERE cr.raceId = 291 AND cr.points = 0 ORDER BY c.name
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q951">
@@ -2262,6 +2261,8 @@ Evidence SQL: SELECT c.name FROM constructorResults cr JOIN constructors c ON cr
 **期望**：`2`
 
 **答案**：`## 结论 **1** 个日本车队在正好 2 场比赛（积分榜行）中拿到 0 分。 ### 三级锚定过程 \| 级别 \| 工具 \| 结果 \| \|------\|------\|------\| \| **L3 业务逻辑级** \| 'dlr_search_sop' \| **exact 命中**（标题逐字复述本题），Expected = '1'。节内明确两点：① 唯一符合条件的日本车队是 *`
+
+**raw 日志**：[results/0929_1534_formula1_secC/raw/0929_1534_951_dlr.ndjson](../results/0929_1534_formula1_secC/raw/0929_1534_951_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2324,8 +2325,6 @@ FROM (
 );
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q954">
@@ -2336,6 +2335,8 @@ FROM (
 **期望**：`29.032258064516128`
 
 **答案**：`## 分析过程 **三级锚定结果：** \| 级别 \| 命中情况 \| \|------\|---------\| \| L1 实体路 \| 'dlr_semantic_query' 命中 'formula_1' 库：'LOGICAL.Driver'(drivers)、'LOGICAL.DriverRaceData'(results 等)、'LOGICAL.Race'(races) \| \| `
+
+**raw 日志**：[results/0929_1512_formula1_b9/raw/0929_1513_954_dlr.ndjson](../results/0929_1512_formula1_b9/raw/0929_1513_954_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2387,8 +2388,6 @@ Final Answer: 29.03
 Evidence SQL: SELECT CAST(SUM(CASE WHEN r.time IS NOT NULL THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(*) AS completion_percentage FROM results r JOIN drivers d ON r.driverId = d.driverId JOIN races ra ON r.raceId = ra.raceId WHERE d.nationality = 'Japanese' AND ra.year BETWEEN 2007 AND 2009
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q955">
@@ -2399,6 +2398,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN r.time IS NOT NULL THEN 1 ELSE 0 END) AS
 **期望**：`1950 | 9712.01842857143 | 1951 | 10870.343222222224 | 1952 | 11061.26325 | 1953 | 10828.015666666666`
 
 **答案**：`## 推理路径 **L3（'dlr_search_sop'）**：'match=none' —— 本题无题级 SOP 节，按 L1 + L2 自解。 **L1（'dlr_semantic_query'）**：全局召回锁定库 'formula_1'；收口后召回到 'LOGICAL.Race'（races：year/raceId）与 'LOGICAL.DriverRaceData'（results：完`
+
+**raw 日志**：[results/0929_1513_formula1_b10/raw/0929_1513_955_dlr.ndjson](../results/0929_1513_formula1_b10/raw/0929_1513_955_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2455,8 +2456,6 @@ Final Answer: [(1950, 9712.60), (1951, 10870.53), (1952, 11061.58), (1953, 10828
 Evidence SQL: SELECT r.year, ROUND(AVG(res.milliseconds) / 1000.0, 2) AS avg_seconds FROM results res JOIN races r ON res.raceId = r.raceId WHERE res.positionOrder = 1 AND r.year < 1975 GROUP BY r.year ORDER BY r.year;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q959">
@@ -2467,6 +2466,8 @@ Evidence SQL: SELECT r.year, ROUND(AVG(res.milliseconds) / 1000.0, 2) AS avg_sec
 **期望**：`18 | 42 | 11 | 17 | 49 | 40 | 16 | 37`
 
 **答案**：`## 结论 **2009 赛季冠军（各分站冠军）的最快圈号**，按比赛顺序（raceId 升序）依次为 16 个值： **18, 42, 11, 17, 49, 40, 16, 37, 16, 39, 42, 48, 36, 43, 25, 54** 题目要求给出整个列表（单值不是答案）。 ## 依据链 \| 层级 \| 工具 \| 关键结论 \| \|------\|------\|------`
+
+**raw 日志**：[results/0929_1534_formula1_secC/raw/0929_1534_959_dlr.ndjson](../results/0929_1534_formula1_secC/raw/0929_1534_959_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2512,8 +2513,6 @@ Final Answer: 18, 42, 11, 17, 49, 40, 16, 37, 16, 39, 42, 48, 36, 43, 25, 54
 Evidence SQL: SELECT GROUP_CONCAT(r.fastestLap, ', ') AS fastest_lap_numbers FROM results r JOIN races ra ON r.raceId = ra.raceId WHERE ra.year = 2009 AND r.time LIKE '%:%:%' ORDER BY r.raceId
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q960">
@@ -2524,6 +2523,8 @@ Evidence SQL: SELECT GROUP_CONCAT(r.fastestLap, ', ') AS fastest_lap_numbers FRO
 **期望**：`199.6415625`
 
 **答案**：`## 分析过程 **三级锚定** - **L3（口径路）**：'dlr_search_sop' 返回 'match=none' — 本题无题级 SOP 节，按 L1+L2 自解。 - **L1（实体路）**：'dlr_semantic_query' 命中 'formula_1' 库，'LOGICAL.DriverRaceData'（PE：'results' / 'qualifying' / 'la`
+
+**raw 日志**：[results/0929_1513_formula1_b10/raw/0929_1514_960_dlr.ndjson](../results/0929_1513_formula1_b10/raw/0929_1514_960_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2562,8 +2563,6 @@ Final Answer: 199.6415625
 
 Evidence SQL: SELECT AVG(CAST(r.fastestLapSpeed AS REAL)) AS avg_fastest_lap_speed FROM results r JOIN races ra ON ra.raceId = r.raceId WHERE ra.year = 2009 AND ra.name = 'Spanish Grand Prix'
 
-建模缺口: 无
-
 </details>
 
 <details id="q962">
@@ -2574,6 +2573,8 @@ Evidence SQL: SELECT AVG(CAST(r.fastestLapSpeed AS REAL)) AS avg_fastest_lap_spe
 **期望**：`64.88474742520843`
 
 **答案**：`## 结论 **100%** ### 三级锚定过程 \| 级别 \| 工具 \| 结果 \| \|------\|------\|------\| \| **L3 业务逻辑级** \| 'dlr_search_sop' \| **'match=exact'** — 该节标题与本题逐字相同，是本题最权威口径：Expected = **100**；并按 **driver** 计数（2000–2005 `
+
+**raw 日志**：[results/0929_1534_formula1_secC/raw/0929_1534_962_dlr.ndjson](../results/0929_1534_formula1_secC/raw/0929_1534_962_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2629,8 +2630,6 @@ SELECT 100.0 * COUNT(DISTINCT CASE
 FROM scope s JOIN drivers d ON d.driverId = s.driverId
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q963">
@@ -2641,6 +2640,8 @@ FROM scope s JOIN drivers d ON d.driverId = s.driverId
 **期望**：`23295`
 
 **答案**：`**结果** - **L3 口径（'dlr_search_sop'，match=exact）**：标题逐字复述本题，Expected=9；明确要求 **count drivers（不同车手），不是 count lap records**，时间比较用数值（'milliseconds < 120000'），并提醒不要报告数据集自带的 lap 行数（23295）。 - **L1 实体锚定（'dlr_se`
+
+**raw 日志**：[results/0929_1537_formula1_secD/raw/0929_1537_963_dlr.ndjson](../results/0929_1537_formula1_secD/raw/0929_1537_963_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2666,8 +2667,6 @@ FROM scope s JOIN drivers d ON d.driverId = s.driverId
 Final Answer: 9
 Evidence SQL: SELECT COUNT(DISTINCT d.driverId) FROM drivers d JOIN lapTimes l ON l.driverId = d.driverId WHERE d.nationality = 'French' AND l.milliseconds < 120000;
 
-建模缺口: 无
-
 </details>
 
 <details id="q964">
@@ -2678,6 +2677,8 @@ Evidence SQL: SELECT COUNT(DISTINCT d.driverId) FROM drivers d JOIN lapTimes l O
 **期望**：`SPE | null | null | null | null | null | null | null`
 
 **答案**：`The question resolves to 'formula_1' → 'drivers'. Cross-checking the three levels: - **L1** ('dlr_semantic_query'): top hit 'LOGICAL.Driver' @ 'formula_1' → PE 'drivers'; 'get_pe_mapping' gives 'datab`
+
+**raw 日志**：[results/0929_1516_formula1_b11/raw/0929_1516_964_dlr.ndjson](../results/0929_1516_formula1_b11/raw/0929_1516_964_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2714,8 +2715,6 @@ Final Answer: RSS, SPE
 
 Evidence SQL: SELECT code FROM drivers WHERE nationality = 'American' AND code IS NOT NULL ORDER BY code;
 
-建模缺口: 无
-
 </details>
 
 <details id="q967">
@@ -2726,6 +2725,8 @@ Evidence SQL: SELECT code FROM drivers WHERE nationality = 'American' AND code I
 **期望**：`1`
 
 **答案**：`## 锚定过程 **L1 实体路**：'dlr_semantic_query' 命中 'LOGICAL.Driver' → 'PHYSICAL.Driver'('formula_1.drivers', db=formula_1)，经 'get_pe_mapping' 取得库路径与列：'driverId / driverRef / nationality / forename / surname /`
+
+**raw 日志**：[results/0929_1516_formula1_b11/raw/0929_1516_967_dlr.ndjson](../results/0929_1516_formula1_b11/raw/0929_1516_967_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2770,8 +2771,6 @@ Final Answer: Top 3 youngest drivers (by latest date of birth) — code numbers:
 Evidence SQL: SELECT group_concat(code, ', ') AS code_numbers, group_concat(CAST(number AS TEXT), ', ') AS car_numbers, group_concat(nationality, ', ') AS nationalities, SUM(CASE WHEN nationality IN ('Dutch','Netherlandic','Netherlands') THEN 1 ELSE 0 END) AS netherlandic_count FROM (SELECT code, number, nationality FROM drivers WHERE dob IS NOT NULL ORDER BY dob DESC LIMIT 3)
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q971">
@@ -2782,6 +2781,8 @@ Evidence SQL: SELECT group_concat(code, ', ') AS code_numbers, group_concat(CAST
 **期望**：`brudes`
 
 **答案**：`## 结论 **Adolf Brudes** 是数据库中最年长的德国车手（出生于 1899-10-15），其 reference name 为 **'brudes'**。 **推理链路（三级锚定）：** - **L3 口径**：'dlr_search_sop' 返回 'match=none' — 本题无题级 SOP 节，按 L1 + L2 自解。 - **L1 实体路**：'dlr_semanti`
+
+**raw 日志**：[results/0929_1516_formula1_b11/raw/0929_1516_971_dlr.ndjson](../results/0929_1516_formula1_b11/raw/0929_1516_971_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2815,8 +2816,6 @@ Final Answer: brudes
 Evidence SQL: SELECT driverRef FROM drivers WHERE nationality = 'German' ORDER BY dob ASC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q972">
@@ -2827,6 +2826,8 @@ Evidence SQL: SELECT driverRef FROM drivers WHERE nationality = 'German' ORDER B
 **期望**：`14 | COU | 14 | COU | 14 | COU | 14 | COU`
 
 **答案**：`## 结论 题目要的是**所有**在 1971 年出生、并且在比赛中有"最快圈速记录"（'results.fastestLapTime' 非空）的车手——共 **4 位**，而不是圈速最快的那一位。 \| driverId \| code \| 姓名 \| 其最快圈速记录中的最佳值 \| \|---\|---\|---\|---\| \| 14 \| COU \| David Coulthard `
+
+**raw 日志**：[results/0929_1537_formula1_secD/raw/0929_1537_972_dlr.ndjson](../results/0929_1537_formula1_secD/raw/0929_1537_972_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2879,8 +2880,6 @@ Final Answer: 4 drivers born in 1971 with a recorded fastest lap — (14, COU) D
 Evidence SQL: SELECT DISTINCT d.driverId, d.code FROM drivers AS d JOIN results AS r ON r.driverId = d.driverId WHERE d.dob LIKE '1971%' AND r.fastestLapTime IS NOT NULL ORDER BY d.driverId
 ```
 
-建模缺口: 无（已用 `get_full_data_info` 下探 formula_1.results，其 18 列全部 `in_modeled_view=true`，本题所需的 `fastestLapTime`、`rank` 均已在建模视图内，无需补列）
-
 </details>
 
 <details id="q977">
@@ -2891,6 +2890,8 @@ Evidence SQL: SELECT DISTINCT d.driverId, d.code FROM drivers AS d JOIN results 
 **期望**：`2`
 
 **答案**：`## 三级锚定 **L1 语义召回**（'dlr_semantic_query'）→ 锁定 'formula_1' 库：'LOGICAL.DriverRaceData'（驱动 'PHYSICAL.Result' = results，含 statusId / raceId / time）+ 'LOGICAL.Race'（races）。 **L2 领域共识**（'dlr_search_consensu`
+
+**raw 日志**：[results/0929_1516_formula1_b11/raw/0929_1516_977_dlr.ndjson](../results/0929_1516_formula1_b11/raw/0929_1516_977_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2950,8 +2951,6 @@ Final Answer: 2
 Evidence SQL: SELECT COUNT(*) AS disqualified_finishers FROM results r JOIN status s ON r.statusId = s.statusId WHERE r.raceId BETWEEN 50 AND 100 AND s.status = 'Disqualified' AND r.time IS NOT NULL
 ```
 
-建模缺口: formula_1.status（statusId, status）— 该状态维表未被建模（get_full_data_info 显示 physical_entity_ids 为空、2 列 in_modeled_view 均为 false），而 `results.statusId` 又是外键、题目里的"disqualified"必须先经该表把文本名映射成 statusId，目前只能下探原始表；建议 升入视图（作为 status 维度 PE 暴露 statusId/status）。
-
 </details>
 
 <details id="q978">
@@ -2962,6 +2961,8 @@ Evidence SQL: SELECT COUNT(*) AS disqualified_finishers FROM results r JOIN stat
 **期望**：`Spielburg | 47.2197 | 14.7647 | Styria | 47.2039 | 14.7478`
 
 **答案**：`## 查询过程 **三级锚定** - **L3（'dlr_search_sop'）**：'match=none' — 本题无题级口径节，按 L1+L2 自解。 - **L1（'dlr_semantic_query'）**：命中 'LOGICAL.Circuit'（db='formula_1'，PE='PHYSICAL.Circuit' → 表 'circuits'）与 'LOGICAL.Race'`
+
+**raw 日志**：[results/0929_1520_formula1_b12/raw/0929_1520_978_dlr.ndjson](../results/0929_1520_formula1_b12/raw/0929_1520_978_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2997,8 +2998,6 @@ Evidence SQL: SELECT COUNT(*) AS disqualified_finishers FROM results r JOIN stat
 Final Answer: 3 circuits in Austria held races 30 times in total — A1-Ring (location: Spielburg, Austria; coordinates: 47.2197, 14.7647) held 25 times; Zeltweg (location: Styria, Austria; coordinates: 47.2039, 14.7478) held 1 time; Red Bull Ring (location: Spielburg, Austria; coordinates: 47.2197, 14.7647) held 4 times.
 Evidence SQL: SELECT c.name, c.location, c.lat, c.lng, COUNT(r.raceId) AS times_held FROM circuits c LEFT JOIN races r ON r.circuitId = c.circuitId WHERE c.country = 'Austria' GROUP BY c.circuitId, c.name, c.location, c.lat, c.lng ORDER BY times_held DESC
 
-建模缺口: 无
-
 </details>
 
 <details id="q981">
@@ -3009,6 +3008,8 @@ Evidence SQL: SELECT c.name, c.location, c.lat, c.lng, COUNT(r.raceId) AS times_
 **期望**：`2017 | Chinese Grand Prix | 2017-04-09 | 06:00:00`
 
 **答案**：`## 结论 **最年轻车手是 Lance Stroll**（生日 1998-10-29，全表 'drivers.dob' 最大值 — 按 L2 共识「生日更晚 = 更年轻」判定）；他在 **2017 年** 完成了自己的第一场排位赛： \| 项 \| 值 \| \|---\|---\| \| Year \| **2017** \| \| Race name \| **Chinese Grand P`
+
+**raw 日志**：[results/0929_1520_formula1_b12/raw/0929_1520_981_dlr.ndjson](../results/0929_1520_formula1_b12/raw/0929_1520_981_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -3057,8 +3058,6 @@ Final Answer: 2017, Chinese Grand Prix, 2017-04-09, 06:00:00
 Evidence SQL: SELECT d.forename || ' ' || d.surname AS youngest_driver, d.dob, r.year, r.name AS race_name, r.date, r.time FROM drivers d JOIN qualifying q ON q.driverId = d.driverId JOIN races r ON r.raceId = q.raceId WHERE d.driverId = (SELECT driverId FROM drivers ORDER BY dob DESC LIMIT 1) ORDER BY r.date ASC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q988">
@@ -3069,6 +3068,8 @@ Evidence SQL: SELECT d.forename || ' ' || d.surname AS youngest_driver, d.dob, r
 **期望**：`Nico | Rosberg | Adrian | Sutil | Timo | Glock`
 
 **答案**：`There are exactly three German drivers born 1980–1985 with pit stop records, so the top 3 is the complete set. **Findings:** - **Timo Glock** (born 1982-03-18) — 72 stops, avg 23,689.39 ms - **Adrian `
+
+**raw 日志**：[results/0929_1520_formula1_b12/raw/0929_1520_988_dlr.ndjson](../results/0929_1520_formula1_b12/raw/0929_1520_988_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -3102,8 +3103,6 @@ There are exactly three German drivers born 1980–1985 with pit stop records, s
 Final Answer: Timo Glock (avg pit stop 23689.39 ms), Adrian Sutil (avg pit stop 35102.22 ms), Nico Rosberg (avg pit stop 46321.91 ms)
 Evidence SQL: SELECT d.forename || ' ' || d.surname AS driver_name, d.nationality, d.dob, AVG(p.milliseconds) AS avg_pit_stop_ms FROM pitStops p JOIN drivers d ON p.driverId = d.driverId WHERE d.nationality = 'German' AND CAST(strftime('%Y', d.dob) AS INTEGER) BETWEEN 1980 AND 1985 GROUP BY d.driverId ORDER BY avg_pit_stop_ms ASC LIMIT 3;
 
-建模缺口: 无
-
 </details>
 
 <details id="q989">
@@ -3114,6 +3113,8 @@ Evidence SQL: SELECT d.forename || ' ' || d.surname AS driver_name, d.nationalit
 **期望**：`1:36:24.227`
 
 **答案**：`**Robert Kubica** won the 2008 Canadian Grand Prix, with a finish time of **1:36:24.227**. Anchor chain: - **L3 ('dlr_search_sop')**: 'match=none' — no题级 section for this question; solved via L1 + L2.`
+
+**raw 日志**：[results/0929_1520_formula1_b12/raw/0929_1520_989_dlr.ndjson](../results/0929_1520_formula1_b12/raw/0929_1520_989_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -3143,8 +3144,6 @@ Final Answer: Robert Kubica, 1:36:24.227
 Evidence SQL: SELECT r.year, r.name, d.forename || ' ' || d.surname AS driver, res.positionOrder, res.time, res.milliseconds FROM races r JOIN results res ON res.raceId = r.raceId JOIN drivers d ON d.driverId = res.driverId WHERE r.year = 2008 AND r.name = 'Canadian Grand Prix' AND res.positionOrder = 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q990">
@@ -3155,6 +3154,8 @@ Evidence SQL: SELECT r.year, r.name, d.forename || ' ' || d.surname AS driver, r
 **期望**：`mclaren | http://en.wikipedia.org/wiki/McLaren`
 
 **答案**：`## 查询过程 **三级并行锚定：** - **L1 语义召回**：命中 'formula_1' 库的 'LOGICAL.Constructor'（PE: 'constructors'）、'LOGICAL.Race'（PE: 'races'）、'LOGICAL.DriverRaceData'（PE: 'results'） - **L2 领域共识**（namespace='formula_1', q`
+
+**raw 日志**：[results/0929_1520_formula1_b12/raw/0929_1521_990_dlr.ndjson](../results/0929_1520_formula1_b12/raw/0929_1521_990_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -3193,8 +3194,6 @@ Final Answer: constructorRef = mclaren; website = http://en.wikipedia.org/wiki/M
 Evidence SQL: SELECT c.constructorRef, c.url FROM races r JOIN results res ON res.raceId = r.raceId JOIN constructors c ON c.constructorId = res.constructorId WHERE r.year = 2009 AND r.name = 'Singapore Grand Prix' AND res.positionOrder = 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q994">
@@ -3205,6 +3204,8 @@ Evidence SQL: SELECT c.constructorRef, c.url FROM races r JOIN results res ON re
 **期望**：`218.5 | McLaren | British`
 
 **答案**：`## 结论 **McLaren（迈凯伦）** 在 1980–2010 年间的摩纳哥大奖赛（Monaco Grand Prix）中车队总积分最高。 ### 三级锚定过程 \| 层级 \| 工具 \| 关键命中 \| \|------\|------\|----------\| \| **L1 数据源级** \| 'dlr_semantic_query' \| 收口到 'formula_1' 库：'L`
+
+**raw 日志**：[results/0929_1521_formula1_b13/raw/0929_1521_994_dlr.ndjson](../results/0929_1521_formula1_b13/raw/0929_1521_994_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -3266,8 +3267,6 @@ ORDER BY score DESC
 LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1001">
@@ -3278,6 +3277,8 @@ LIMIT 1;
 **期望**：`Felipe | Massa`
 
 **答案**：`## 结论 **Felipe Massa**（费利佩·马萨）。 ## 推理链（证据驱动） **1. 目标库锚定（L1 实体路）** 'dlr_semantic_query' 全局召回中，'LOGICAL.Race'（描述含 "qualifying results"）与 'LOGICAL.DriverRaceData'（PE='qualifying'）落在 'formula_1' 库；'LOGICA`
+
+**raw 日志**：[results/0929_1521_formula1_b13/raw/0929_1521_1001_dlr.ndjson](../results/0929_1521_formula1_b13/raw/0929_1521_1001_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -3325,8 +3326,6 @@ Final Answer: Felipe Massa
 Evidence SQL: SELECT d.forename || ' ' || d.surname FROM qualifying q JOIN drivers d ON q.driverId = d.driverId JOIN races r ON q.raceId = r.raceId JOIN circuits c ON r.circuitId = c.circuitId WHERE c.name = 'Marina Bay Street Circuit' AND r.year = 2008 AND q.q3 IS NOT NULL AND q.position = 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1002">
@@ -3337,6 +3336,8 @@ Evidence SQL: SELECT d.forename || ' ' || d.surname FROM qualifying q JOIN drive
 **期望**：`Lance | Stroll | Canadian | Chinese Grand Prix`
 
 **答案**：`## 结论 按三级锚定与 SQL 闭环，答案已收敛： **年轻车手全名：Lance Stroll**（'forename='Lance'' + 'surname='Stroll''，符合 L2 共识「full name = forename + surname」） **国籍：Canadian** **首次参加的比赛：Chinese Grand Prix**（2017 赛季第 2 站，2017-04`
+
+**raw 日志**：[results/0929_1521_formula1_b13/raw/0929_1521_1002_dlr.ndjson](../results/0929_1521_formula1_b13/raw/0929_1521_1002_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -3388,8 +3389,6 @@ Final Answer: Full name: Lance Stroll; Nationality: Canadian; First race joined:
 Evidence SQL: SELECT (d.forename || ' ' || d.surname) AS full_name, d.nationality, r.name AS first_race_name FROM drivers d JOIN results res ON res.driverId = d.driverId JOIN races r ON r.raceId = res.raceId WHERE d.driverId = (SELECT driverId FROM drivers ORDER BY dob DESC LIMIT 1) ORDER BY r.date ASC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1003">
@@ -3400,6 +3399,8 @@ Evidence SQL: SELECT (d.forename || ' ' || d.surname) AS full_name, d.nationalit
 **期望**：`2`
 
 **答案**：`## 分析过程 **三级锚定结果** - **L3（SOP）**：'match=none' → 本题无题级口径节，按 L1 + L2 自解。 - **L1（语义召回）**：命中 'formula_1' 库的 'LOGICAL.DriverRaceData'（PE：'results' / 'qualifying' / 'lapTimes'）、'LOGICAL.Race'（PE：'races'）、'L`
+
+**raw 日志**：[results/0929_1521_formula1_b13/raw/0929_1522_1003_dlr.ndjson](../results/0929_1521_formula1_b13/raw/0929_1522_1003_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -3449,8 +3450,6 @@ Final Answer: 2
 Evidence SQL: SELECT MAX(cnt) AS max_accidents_by_a_driver_in_canadian_gp FROM (SELECT COUNT(*) AS cnt FROM results r JOIN races ra ON ra.raceId = r.raceId JOIN status s ON s.statusId = r.statusId WHERE ra.name = 'Canadian Grand Prix' AND s.status LIKE '%Accident%' GROUP BY r.driverId)
 ```
 
-建模缺口: 表 `status`（列 `statusId`、`status`）— 该表未被建模为任何 PE/LE，`results.statusId` 的状态文字（如 "Accident"）无法通过建模视图取得，只能下探物理表；建议升入视图（作为 `formula_1.Status` 小维表，或在 `LOGICAL.DriverRaceData` 上暴露 `status` 文字属性）。
-
 </details>
 
 <details id="q1011">
@@ -3461,6 +3460,8 @@ Evidence SQL: SELECT MAX(cnt) AS max_accidents_by_a_driver_in_canadian_gp FROM (
 **期望**：`Nico | Hülkenberg | 807 | Daniel | Ricciardo | 817 | Adrian | Sutil`
 
 **答案**：`L3 口径命中（'match=exact'），且结果与 L3 节给出的前八名逐字一致，验证通过。 ## 结论依据 **L3 口径（'dlr_search_sop'，标题逐字复述本题）** > Rank the drivers by their **shortest lap** using the numeric 'milliseconds' column and take the top twen`
+
+**raw 日志**：[results/0929_1537_formula1_secD/raw/0929_1537_1011_dlr.ndjson](../results/0929_1537_formula1_secD/raw/0929_1537_1011_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -3522,8 +3523,6 @@ Final Answer: 1. Lewis Hamilton | 2. Daniel Ricciardo | 3. Kimi Räikkönen | 4.
 Evidence SQL: SELECT d.forename || ' ' || d.surname AS full_name, MIN(lt.milliseconds) AS shortest_ms FROM lapTimes lt JOIN drivers d ON d.driverId = lt.driverId GROUP BY lt.driverId ORDER BY shortest_ms ASC LIMIT 20
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1014">
@@ -3534,6 +3533,8 @@ Evidence SQL: SELECT d.forename || ' ' || d.surname AS full_name, MIN(lt.millise
 **期望**：`1:20.411`
 
 **答案**：`## Answer I anchored the question across all three levels first: \| 级 \| 工具 \| 命中 \| \|---\|---\|---\| \| L1 \| 'dlr_semantic_query' \| 库 'formula_1'：'LOGICAL.Circuit' → 'PHYSICAL.Circuit'(circuits)；'`
+
+**raw 日志**：[results/0929_1524_formula1_b14/raw/0929_1524_1014_dlr.ndjson](../results/0929_1524_formula1_b14/raw/0929_1524_1014_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -3602,7 +3603,5 @@ JOIN races r ON lt.raceId = r.raceId AND r.circuitId = rec.cid
 JOIN drivers d ON lt.driverId = d.driverId
 ORDER BY c.circuitId
 ```
-
-建模缺口: 无
 
 </details>

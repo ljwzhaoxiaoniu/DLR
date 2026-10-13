@@ -89,6 +89,8 @@
 
 **答案**：`## 结论 **2016 赛季进球最多的联赛是 Spain LIGA BBVA（西班牙甲级联赛），共 1043 球。** ### 三级锚定与推理链 \| 级别 \| 工具 \| 关键发现 \| \|------\|------\|----------\| \| L1 数据源级 \| 'dlr_semantic_query' \| 命中 'LOGICAL.Match'（含 'home_team_go`
 
+**raw 日志**：[results/0928_2045_qids_1025_1028_1029_1030_1031/raw/0928_2045_1025_dlr.ndjson](../results/0928_2045_qids_1025_1028_1029_1030_1031/raw/0928_2045_1025_dlr.ndjson)（dsh 事件流 ndjson）
+
 **调用步骤**
 
 | # | 工具 | 参数（截 200） |
@@ -142,8 +144,6 @@ Final Answer: Spain LIGA BBVA
 Evidence SQL: SELECT l.name FROM Match m JOIN League l ON m.league_id = l.id WHERE m.season = '2015/2016' GROUP BY l.name ORDER BY SUM(m.home_team_goal + m.away_team_goal) DESC LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1028">
@@ -154,6 +154,8 @@ Evidence SQL: SELECT l.name FROM Match m JOIN League l ON m.league_id = l.id WHE
 **期望**：`Celtic`
 
 **答案**：`## 结论 **苏格兰超级联赛（Scotland Premier League）2009/2010 赛季客场胜场最多的球队是并列第一：Rangers 与 Celtic，各 11 场。** 苏格兰足坛的"2010 赛季"在数据中记录为跨年标签 **2009/2010**（L1 属性 'LOGICAL.Match.season' 描述 + L2 共识 qid=7 均明确"the season is a`
+
+**raw 日志**：[results/0928_2045_qids_1025_1028_1029_1030_1031/raw/0928_2045_1028_dlr.ndjson](../results/0928_2045_qids_1025_1028_1029_1030_1031/raw/0928_2045_1028_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -201,8 +203,6 @@ Final Answer: Rangers | Celtic (tie, 11 away wins each)
 Evidence SQL: SELECT t.team_long_name, COUNT(*) AS away_wins FROM Match m JOIN League l ON m.league_id = l.id JOIN Team t ON m.away_team_api_id = t.team_api_id WHERE l.name = 'Scotland Premier League' AND m.season = '2009/2010' AND m.away_team_goal > m.home_team_goal GROUP BY t.team_long_name HAVING COUNT(*) = (SELECT MAX(c) FROM (SELECT COUNT(*) AS c FROM Match m2 JOIN League l2 ON m2.league_id = l2.id WHERE l2.name = 'Scotland Premier League' AND m2.season = '2009/2010' AND m2.away_team_goal > m2.home_team_goal GROUP BY m2.away_team_api_id)) ORDER BY t.team_long_name
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1029">
@@ -213,6 +213,8 @@ Evidence SQL: SELECT t.team_long_name, COUNT(*) AS away_wins FROM Match m JOIN L
 **期望**：`20 | 20 | 20 | 23`
 
 **答案**：`## 结论 题目里 "build-up play speed" 与 "speed in which attacks are put together" 是同一个球队属性（'Team_Attributes.buildUpPlaySpeed'），题目把同一个量说了两遍——L3 SOP 节（标题逐字复述本题，'match=exact'）与 L2 领域共识均确认这一点。 按 "highest" 取 **最`
+
+**raw 日志**：[results/0928_2045_qids_1025_1028_1029_1030_1031/raw/0928_2045_1029_dlr.ndjson](../results/0928_2045_qids_1025_1028_1029_1030_1031/raw/0928_2045_1029_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -251,8 +253,6 @@ Evidence SQL: SELECT t.team_long_name, COUNT(*) AS away_wins FROM Match m JOIN L
 Final Answer: 80 | 78 | 78 | 77
 Evidence SQL: SELECT buildUpPlaySpeed FROM Team_Attributes WHERE buildUpPlaySpeed IS NOT NULL ORDER BY buildUpPlaySpeed DESC LIMIT 4
 
-建模缺口: 无
-
 </details>
 
 <details id="q1030">
@@ -263,6 +263,8 @@ Evidence SQL: SELECT buildUpPlaySpeed FROM Team_Attributes WHERE buildUpPlaySpee
 **期望**：`France Ligue 1`
 
 **答案**：`三级锚定完成，结果唯一无并列。 **分析过程** - **L1 实体路**（'dlr_semantic_query'）：定位到 'european_football_2' 库的 'LOGICAL.Match'（含 'season' / 'home_team_goal' / 'away_team_goal' / 'league_id'）与 'LOGICAL.League'（含 'LeagueName`
+
+**raw 日志**：[results/0928_2045_qids_1025_1028_1029_1030_1031/raw/0928_2045_1030_dlr.ndjson](../results/0928_2045_qids_1025_1028_1029_1030_1031/raw/0928_2045_1030_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -306,8 +308,6 @@ Final Answer: France Ligue 1
 Evidence SQL: SELECT l.name AS league_name FROM Match m JOIN League l ON m.league_id = l.id WHERE m.season = '2015/2016' AND m.home_team_goal = m.away_team_goal GROUP BY l.name ORDER BY COUNT(*) DESC LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1031">
@@ -318,6 +318,8 @@ Evidence SQL: SELECT l.name AS league_name FROM Match m JOIN League l ON m.leagu
 **期望**：`36`
 
 **答案**：`## 结论 **36**（岁）。 **推理链路** \| 环节 \| 依据 \| \|------\|------\| \| 题库定位 \| L1 语义召回命中 'LOGICAL.Player'（db='european_football_2'），跨 PE 归并：'PHYSICAL.Player'（姓名/生日）+ 'PHYSICAL.PlayerAttribute'（sprint_speed 按日`
+
+**raw 日志**：[results/0928_2048_qids_1031/raw/0928_2048_1031_dlr.ndjson](../results/0928_2048_qids_1031/raw/0928_2048_1031_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -356,8 +358,6 @@ Final Answer: 36
 Evidence SQL: SELECT DISTINCT CAST(strftime('%Y','now') AS INTEGER) - CAST(strftime('%Y', p.birthday) AS INTEGER) AS age FROM Player p JOIN Player_Attributes pa ON p.player_api_id = pa.player_api_id WHERE pa.sprint_speed >= 97 AND strftime('%Y', pa.date) BETWEEN '2013' AND '2015'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1032">
@@ -368,6 +368,8 @@ Evidence SQL: SELECT DISTINCT CAST(strftime('%Y','now') AS INTEGER) - CAST(strft
 **期望**：`England Premier League | 3040`
 
 **答案**：`## 回答 **England Premier League** — 共 **3040 场**比赛。 ### 三级锚定过程 \| 级别 \| 工具 \| 结果 \| \|------\|------\|------\| \| L3 口径 \| 'dlr_search_sop' \| **'match=exact'（标题逐字复述本题）** — 命中 'european_football_2' 的本题`
+
+**raw 日志**：[results/0928_2047_qids_1032_1035_1036_1037_1039/raw/0928_2047_1032_dlr.ndjson](../results/0928_2047_qids_1032_1035_1036_1037_1039/raw/0928_2047_1032_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -408,8 +410,6 @@ Final Answer: England Premier League, 3040 matches (top count is a three-way tie
 Evidence SQL: SELECT l.name AS league_name, COUNT(*) AS matches_played FROM Match m JOIN League l ON m.league_id = l.id GROUP BY l.name ORDER BY matches_played DESC, league_name ASC LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1035">
@@ -420,6 +420,8 @@ Evidence SQL: SELECT l.name AS league_name, COUNT(*) AS matches_played FROM Matc
 **期望**：`434 | 77 | 614 | 1901 | 650 | 1861 | 229 | 111989`
 
 **答案**：`## 结论 **L3（'dlr_search_sop'）**：'match=similar'，候选题为"league with the highest matches"——与本题无关，无题级口径，按 L1+L2 自解。 **L2（'dlr_search_consensus'）**：命中 'european_football_2' 条目 qid=2 —— 球队战术评分按**带日期的记录**存储（bu`
+
+**raw 日志**：[results/0928_2047_qids_1032_1035_1036_1037_1039/raw/0928_2047_1035_dlr.ndjson](../results/0928_2047_qids_1032_1035_1036_1037_1039/raw/0928_2047_1035_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -448,8 +450,6 @@ Evidence SQL: SELECT l.name AS league_name, COUNT(*) AS matches_played FROM Matc
 Final Answer: 1, 3, 4, 7, 10, 13, 15, 17, 19, 21, 23, 25, 28, 31, 32, 34, 36, 38, 44, 46, 48, 52, 59, 62, 68, 69, 70, 71, 77, 78, 80, 81, 82, 86, 88, 106, 109, 110, 144, 160, 165, 166, 175, 181, 182, 200, 203, 206, 217, 219, 229, 232, 234, 236, 237, 240, 242, 243, 244, 246, 247, 260, 286, 378, 434, 435, 449, 450, 452, 453, 456, 457, 459, 462, 468, 472, 477, 479, 480, 481, 485, 573, 614, 650, 665, 673, 674, 675, 680, 681, 682, 873, 874, 898, 900, 1715, 1738, 1739, 1746, 1747, 1750, 1790, 1796, 1799, 1819, 1824, 1832, 1844, 1848, 1853, 1860, 1861, 1862, 1867, 1871, 1889, 1896, 1901, 1902, 1904, 1905, 1906, 1907, 1908, 1909, 1913, 1914, 1915, 1917, 1943, 1952, 1971, 10020, 10030, 15005, 100087, 100409, 100632, 100741, 100804, 100805, 100879, 110329, 110374, 110502, 110569, 110636, 110724, 110744, 110745, 110747, 110749, 110832, 111083, 111087, 111239, 111271, 111974, 111989, 112225, 112512
 Evidence SQL: SELECT DISTINCT team_fifa_api_id FROM Team_Attributes WHERE buildUpPlaySpeed > 50 AND buildUpPlaySpeed < 60 ORDER BY team_fifa_api_id
 
-建模缺口: 无
-
 </details>
 
 <details id="q1036">
@@ -460,6 +460,8 @@ Evidence SQL: SELECT DISTINCT team_fifa_api_id FROM Team_Attributes WHERE buildU
 **期望**：`Aberdeen | AC Ajaccio | Milan | UD Almería | Angers SCO | Aston Villa | Atalanta | Athletic Club de Bilbao`
 
 **答案**：`## 结论 **L3 精确命中**：'dlr_search_sop' 返回的节标题与本题逐字相同（'match=exact'），据此执行其口径： - "in 2012" = 球队属性记录 **自身 'date'** 落在 2012 年（'Team_Attributes.date'，同队当年可有多条记录） - "above-average" = 每条 2012 记录的 'buildUpPlayPas`
+
+**raw 日志**：[results/0928_2047_qids_1032_1035_1036_1037_1039/raw/0928_2047_1036_dlr.ndjson](../results/0928_2047_qids_1032_1035_1036_1037_1039/raw/0928_2047_1036_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -494,8 +496,6 @@ Evidence SQL: SELECT DISTINCT team_fifa_api_id FROM Team_Attributes WHERE buildU
 Final Answer: 128 teams — 1. FC Kaiserslautern, 1. FC Köln, 1. FSV Mainz 05, AC Ajaccio, AS Saint-Étienne, Aberdeen, Angers SCO, Aston Villa, Atalanta, Athletic Club de Bilbao, Atlético Madrid, BSC Young Boys, Bari, Bayer 04 Leverkusen, Beerschot AC, Birmingham City, Blackburn Rovers, Blackpool, Bologna, Bolton Wanderers, Borussia Mönchengladbach, CA Osasuna, Cagliari, Cardiff City, Catania, Celtic, Chievo Verona, Club Brugge KV, Cracovia, Córdoba CF, Dundee United, Dunfermline Athletic, ES Troyes AC, Eintracht Braunschweig, Elche CF, Empoli, Everton, Excelsior, FC Augsburg, FC Nantes, FC Porto, FC St. Pauli, FC Utrecht, Fiorentina, GKS Bełchatów, Genoa, Grasshopper Club Zürich, Hannover 96, Heart of Midlothian, Hellas Verona, Hércules Club de Fútbol, Inter, Inverness Caledonian Thistle, Jagiellonia Białystok, KRC Genk, KSV Cercle Brugge, KV Mechelen, KVC Westerlo, Kilmarnock, Korona Kielce, Lazio, Le Havre AC, Lecce, Lech Poznań, Lechia Gdańsk, Legia Warszawa, Levante UD, Lierse SK, Liverpool, Livorno, Manchester City, Manchester United, Middlesbrough, Milan, Motherwell, Napoli, Neuchâtel Xamax, Newcastle United, Norwich City, Novara, OGC Nice, Olympique Lyonnais, Olympique de Marseille, Oud-Heverlee Leuven, Pescara, Podbeskidzie Bielsko-Biała, Portsmouth, Queens Park Rangers, RAEC Mons, RC Celta de Vigo, RC Recreativo, RCD Mallorca, Real Valladolid, Reggio Calabria, Roda JC Kerkrade, Ruch Chorzów, SC Bastia, SC Freiburg, SC Heerenveen, SC Paderborn 07, SM Caen, SV Zulte-Waregem, Sassuolo, Servette FC, Sevilla FC, Siena, Sint-Truidense VV, Southampton, Sporting CP, Sporting Lokeren, St. Johnstone FC, St. Mirren, Stade Brestois 29, Standard de Liège, Stoke City, Sunderland, TSG 1899 Hoffenheim, Torino, Toulouse FC, UD Almería, VVV-Venlo, Valenciennes FC, VfL Wolfsburg, Watford, West Ham United, Widzew Łódź, Wolverhampton Wanderers, Śląsk Wrocław
 Evidence SQL: SELECT DISTINCT t.team_long_name FROM Team t JOIN Team_Attributes ta ON t.team_api_id = ta.team_api_id WHERE strftime('%Y', ta.date) = '2012' AND ta.buildUpPlayPassing > (SELECT AVG(buildUpPlayPassing) FROM Team_Attributes WHERE strftime('%Y', date) = '2012') ORDER BY t.team_long_name
 
-建模缺口: 无
-
 </details>
 
 <details id="q1037">
@@ -506,6 +506,8 @@ Evidence SQL: SELECT DISTINCT t.team_long_name FROM Team t JOIN Team_Attributes 
 **期望**：`24.56690504416995`
 
 **答案**：`## 结论 **在 1987–1992 年间出生的球员中，惯用左脚（preferred foot = left）的球员占比为 28.87%。** ## 推理链路（三级锚定） **L1 数据源级** — 'dlr_semantic_query' 命中 'LOGICAL.Player'（db='european_football_2'），它由两个 PE 归并而成： - 'PHYSICAL.Player`
+
+**raw 日志**：[results/0928_2047_qids_1032_1035_1036_1037_1039/raw/0928_2048_1037_dlr.ndjson](../results/0928_2047_qids_1032_1035_1036_1037_1039/raw/0928_2048_1037_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -571,8 +573,6 @@ JOIN Player_Attributes pa ON p.player_api_id = pa.player_api_id
 WHERE p.birthday BETWEEN '1987-01-01 00:00:00' AND '1992-12-31 00:00:00';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1039">
@@ -583,6 +583,8 @@ WHERE p.birthday BETWEEN '1987-01-01 00:00:00' AND '1992-12-31 00:00:00';
 **期望**：`61.57142857142857`
 
 **答案**：`**结论** - **实体锚定（L1 语义召回）**：'LOGICAL.Player'（db 'european_football_2'）——球员 FIFA 属性（含 'long_shots'）按日期多次记录；物理落地 'PHYSICAL.Player'（基本信息，锚键 'player_api_id'，1:1）与 'PHYSICAL.PlayerAttribute'（属性表，锚键 'player_`
+
+**raw 日志**：[results/0928_2047_qids_1032_1035_1036_1037_1039/raw/0928_2048_1039_dlr.ndjson](../results/0928_2047_qids_1032_1035_1036_1037_1039/raw/0928_2048_1039_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -615,8 +617,6 @@ Final Answer: 61.57142857142857
 Evidence SQL: SELECT AVG(pa.long_shots) AS avg_long_shots FROM Player p JOIN Player_Attributes pa ON p.player_api_id = pa.player_api_id WHERE p.player_name = 'Ahmed Samir Farag';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1040">
@@ -627,6 +627,8 @@ Evidence SQL: SELECT AVG(pa.long_shots) AS avg_long_shots FROM Player p JOIN Pla
 **期望**：`Michael Ballack | Fernando Llorente | John Terry | Naldo | Per Mertesacker | Luca Toni | Didier Drogba | Miroslav Klose`
 
 **答案**：`## 分析过程 **三级锚定结果：** - **L1（语义召回）**：锚定 'LOGICAL.Player'（库 'european_football_2'），由两个 PE 组成——'PHYSICAL.Player'（'player_name'、'height'）与 'PHYSICAL.PlayerAttribute'（'heading_accuracy'，按日期多条记录）。 - **L2（领域共`
+
+**raw 日志**：[results/0928_2113_qids_1040_1042_1044_1048_1057/raw/0928_2113_1040_dlr.ndjson](../results/0928_2113_qids_1040_1042_1044_1048_1057/raw/0928_2113_1040_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -673,8 +675,6 @@ Evidence SQL: SELECT AVG(pa.long_shots) AS avg_long_shots FROM Player p JOIN Pla
 Final Answer: Michael Ballack | Fernando Llorente | John Terry | Naldo | Luca Toni | Per Mertesacker | Didier Drogba | Miroslav Klose | Daniel van Buyten | Fernando Morientes
 Evidence SQL: SELECT p.player_name, AVG(pa.heading_accuracy) AS avg_heading_accuracy FROM Player p JOIN Player_Attributes pa ON p.player_api_id = pa.player_api_id WHERE p.height > 180 GROUP BY p.player_api_id, p.player_name ORDER BY avg_heading_accuracy DESC LIMIT 10;
 
-建模缺口: 无
-
 </details>
 
 <details id="q1042">
@@ -685,6 +685,8 @@ Evidence SQL: SELECT p.player_name, AVG(pa.heading_accuracy) AS avg_heading_accu
 **期望**：`Belgium Jupiler League | England Premier League | France Ligue 1 | Germany 1. Bundesliga | Italy Serie A | Netherlands Eredivisie | Poland Ekstraklasa | Portugal Liga ZON Sagres`
 
 **答案**：`All 11 leagues in the 2009/2010 season satisfy the condition. **过程说明** - L3（'dlr_search_sop'）返回 'match=similar'，无逐字复述本题的节 → 按 L1+L2 自解，但其中一条相似节确认了「2010 season 记作 2009/2010」这一口径。 - L1（'dlr_semantic_que`
+
+**raw 日志**：[results/0928_2113_qids_1040_1042_1044_1048_1057/raw/0928_2113_1042_dlr.ndjson](../results/0928_2113_qids_1040_1042_1044_1048_1057/raw/0928_2113_1042_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -710,8 +712,6 @@ All 11 leagues in the 2009/2010 season satisfy the condition.
 Final Answer: Belgium Jupiler League, England Premier League, France Ligue 1, Germany 1. Bundesliga, Italy Serie A, Netherlands Eredivisie, Poland Ekstraklasa, Portugal Liga ZON Sagres, Scotland Premier League, Spain LIGA BBVA, Switzerland Super League
 Evidence SQL: SELECT l.name FROM Match m JOIN League l ON m.league_id = l.id WHERE m.season = '2009/2010' GROUP BY l.name HAVING AVG(m.home_team_goal) > AVG(m.away_team_goal) ORDER BY l.name;
 
-建模缺口: 无
-
 </details>
 
 <details id="q1044">
@@ -722,6 +722,8 @@ Evidence SQL: SELECT l.name FROM Match m JOIN League l ON m.league_id = l.id WHE
 **期望**：`Chris Swailes | Dean Kiely | Edwin van der Sar | Sander Boschker`
 
 **答案**：`**查询过程与证据** - **L1 语义召回**（'dlr_semantic_query'）：命中逻辑实体 'LOGICAL.Player'（库 'european_football_2'），其物理落地 'PHYSICAL.Player'（表 'Player'）含属性 'player_name'、'birthday'（TEXT，形如 '1970-10-10 00:00:00'）。 - **L2 `
+
+**raw 日志**：[results/0928_2113_qids_1040_1042_1044_1048_1057/raw/0928_2113_1044_dlr.ndjson](../results/0928_2113_qids_1040_1042_1044_1048_1057/raw/0928_2113_1044_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -747,8 +749,6 @@ Final Answer: Chris Swailes, Dean Kiely, Edwin van der Sar, Sander Boschker
 
 Evidence SQL: SELECT DISTINCT player_name FROM Player WHERE strftime('%Y', birthday) = '1970' AND strftime('%m', birthday) = '10' ORDER BY player_name
 
-建模缺口: 无
-
 </details>
 
 <details id="q1048">
@@ -759,6 +759,8 @@ Evidence SQL: SELECT DISTINCT player_name FROM Player WHERE strftime('%Y', birth
 **期望**：`75`
 
 **答案**：`## 结论 **Gabriel Tamas 在 2011 年的 overall rating 为 75。** ### 三级锚定过程 \| 级别 \| 结果 \| \|------\|------\| \| **L1 数据源级** ('dlr_semantic_query') \| 命中 'LOGICAL.Player'（db = 'european_football_2'），有两个 PE：'PHY`
+
+**raw 日志**：[results/0928_2113_qids_1040_1042_1044_1048_1057/raw/0928_2114_1048_dlr.ndjson](../results/0928_2113_qids_1040_1042_1044_1048_1057/raw/0928_2114_1048_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -798,8 +800,6 @@ Final Answer: 75
 Evidence SQL: SELECT pa.overall_rating FROM Player p JOIN Player_Attributes pa ON p.player_api_id = pa.player_api_id WHERE p.player_name = 'Gabriel Tamas' AND strftime('%Y', pa.date) = '2011'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1057">
@@ -810,6 +810,8 @@ Evidence SQL: SELECT pa.overall_rating FROM Player p JOIN Player_Attributes pa O
 **期望**：`1.5041666666666667`
 
 **答案**：`## 结论 **波兰（Poland）联赛 2010/2011 赛季主队场均进球 = 1.5042**（361 个主场进球 / 240 场比赛）。 ### 三级锚定过程 \| 级别 \| 工具 \| 命中结果 \| \|------\|------\|----------\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| 'match=none' → 本题无题级口径节，按 L`
+
+**raw 日志**：[results/0928_2113_qids_1040_1042_1044_1048_1057/raw/0928_2114_1057_dlr.ndjson](../results/0928_2113_qids_1040_1042_1044_1048_1057/raw/0928_2114_1057_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -856,8 +858,6 @@ Final Answer: 1.5041666666666667
 Evidence SQL: SELECT CAST(AVG(m.home_team_goal) AS REAL) AS avg_home_goal FROM Match m JOIN League l ON m.league_id = l.id JOIN Country c ON l.country_id = c.id WHERE c.name = 'Poland' AND m.season = '2010/2011';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1058">
@@ -868,6 +868,8 @@ Evidence SQL: SELECT CAST(AVG(m.home_team_goal) AS REAL) AS avg_home_goal FROM M
 **期望**：`Min`
 
 **答案**：`## 分析与证据 **三级锚定结果** - **L1 语义召回**（'dlr_semantic_query'）：命中 'LOGICAL.Player'（european_football_2），含两个 PE —— 'PHYSICAL.Player'（'player_name'、'height'）与 'PHYSICAL.PlayerAttribute'（'finishing'，按 'date' 多次`
+
+**raw 日志**：[results/0928_2116_qids_1058_1068_1076_1078_1079/raw/0928_2116_1058_dlr.ndjson](../results/0928_2116_qids_1058_1068_1076_1078_1079/raw/0928_2116_1058_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -905,8 +907,6 @@ Final Answer: Juan Quero
 Evidence SQL: SELECT p.player_name, p.height, AVG(pa.finishing) AS avg_finishing FROM Player p JOIN Player_Attributes pa ON p.player_api_id = pa.player_api_id WHERE p.height IN ((SELECT MAX(height) FROM Player), (SELECT MIN(height) FROM Player)) GROUP BY p.player_api_id, p.player_name, p.height ORDER BY avg_finishing DESC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1068">
@@ -917,6 +917,8 @@ Evidence SQL: SELECT p.player_name, p.height, AVG(pa.finishing) AS avg_finishing
 **期望**：`68.85402657670379`
 
 **答案**：`三级锚定已完成（L3 无逐字命中节，按 L1+L2 自解）。 **锚定过程** - **L1（实体路）**：'dlr_semantic_query' → 'LOGICAL.Player'（european_football_2），挂两个 PE：'PHYSICAL.Player'（height 等基础信息）与 'PHYSICAL.PlayerAttribute'（overall_rating + 按`
+
+**raw 日志**：[results/0928_2116_qids_1058_1068_1076_1078_1079/raw/0928_2116_1068_dlr.ndjson](../results/0928_2116_qids_1058_1068_1076_1078_1079/raw/0928_2116_1068_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -950,8 +952,6 @@ Final Answer: 68.90135724487692
 Evidence SQL: SELECT AVG(T2.overall_rating) AS avg_overall_rating FROM Player AS T1 INNER JOIN Player_Attributes AS T2 ON T1.player_api_id = T2.player_api_id WHERE T1.height > 170 AND STRFTIME('%Y', T2.date) BETWEEN '2010' AND '2015'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1076">
@@ -963,6 +963,8 @@ Evidence SQL: SELECT AVG(T2.overall_rating) AS avg_overall_rating FROM Player AS
 **期望**：`0.7999999999999972`
 
 **答案**：`**结论**：两位球员的平均 ball control 分差为 **0.8**（Abdou Diallo 平均 49.4 > Aaron Appindangoye 平均 48.6）。 **证据链**： - L1 语义召回（'dlr_semantic_query'）：命中 'LOGICAL.Player'（库 'european_football_2'），其公开属性含 'player_name' 与`
+
+**raw 日志**：[results/0928_2116_qids_1058_1068_1076_1078_1079/raw/0928_2116_1076_dlr.ndjson](../results/0928_2116_qids_1058_1068_1076_1078_1079/raw/0928_2116_1076_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -997,8 +999,6 @@ Evidence SQL: SELECT ABS(
 ) AS ball_control_avg_diff;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1078">
@@ -1009,6 +1009,8 @@ Evidence SQL: SELECT ABS(
 **期望**：`Aaron Lennon`
 
 **答案**：`**结论**：Aaron Lennon 更年长。 - L1 锚定：'LOGICAL.Player' → 'PHYSICAL.Player'（european_football_2），属性 'player_name'、'birthday'（'get_pe_mapping'） - L2 共识（european_football_2，qid=5）："Player A is older than play`
+
+**raw 日志**：[results/0928_2116_qids_1058_1068_1076_1078_1079/raw/0928_2116_1078_dlr.ndjson](../results/0928_2116_qids_1058_1068_1076_1078_1079/raw/0928_2116_1078_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1032,8 +1034,6 @@ Evidence SQL: SELECT ABS(
 Final Answer: Aaron Lennon
 Evidence SQL: SELECT player_name FROM Player WHERE player_name IN ('Aaron Lennon','Abdelaziz Barrada') ORDER BY birthday LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q1079">
@@ -1044,6 +1044,8 @@ Evidence SQL: SELECT player_name FROM Player WHERE player_name IN ('Aaron Lennon
 **期望**：`Kristof van Hout`
 
 **答案**：`**结论**：最高的球员是 **Kristof van Hout**（身高 208）。 **证据链**： - **L1 实体路**（'dlr_semantic_query'）：命中 'LOGICAL.Player'（db='european_football_2'），含公开属性 'player_name'、'height'（"The player's height"）。 - **L2 eviden`
+
+**raw 日志**：[results/0928_2116_qids_1058_1068_1076_1078_1079/raw/0928_2116_1079_dlr.ndjson](../results/0928_2116_qids_1058_1068_1076_1078_1079/raw/0928_2116_1079_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1072,8 +1074,6 @@ Final Answer: Kristof van Hout
 
 Evidence SQL: SELECT player_name FROM Player ORDER BY height DESC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q1080">
@@ -1084,6 +1084,8 @@ Evidence SQL: SELECT player_name FROM Player ORDER BY height DESC LIMIT 1
 **期望**：`1569`
 
 **答案**：`## 分析过程 **三级锚定结果** - **L3（SOP）**：'match=none'（无逐字复述本题的节）；近邻候选是关于"right foot + lowest potential"的另一题，**不采用**其结论，但其中"数的是球员、而非一个人多条评分记录（counted once each）"的提醒对本库同族题有参考意义。 - **L2（领域共识，namespace=european_f`
+
+**raw 日志**：[results/0928_2124_qids_1080_1084_1088_1091_1092/raw/0928_2124_1080_dlr.ndjson](../results/0928_2124_qids_1080_1084_1088_1091_1092/raw/0928_2124_1080_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1120,8 +1122,6 @@ Final Answer: 189
 
 Evidence SQL: SELECT COUNT(DISTINCT player_api_id) AS left_foot_low_work_rate_players FROM Player_Attributes WHERE preferred_foot = 'left' AND attacking_work_rate = 'low'
 
-建模缺口: 无
-
 </details>
 
 <details id="q1084">
@@ -1132,6 +1132,8 @@ Evidence SQL: SELECT COUNT(DISTINCT player_api_id) AS left_foot_low_work_rate_pl
 **期望**：`892`
 
 **答案**：`## 结论 **问题拆解**：'born before 1986' × 'remain in his position and defense while the team attacked'（防守工作率）→ 计数对象是**球员**。 **三级锚定**： - **L1（'dlr_semantic_query'）**：命中 'LOGICAL.Player'（db='european_football`
+
+**raw 日志**：[results/0928_2124_qids_1080_1084_1088_1091_1092/raw/0928_2124_1084_dlr.ndjson](../results/0928_2124_qids_1080_1084_1088_1091_1092/raw/0928_2124_1084_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1168,8 +1170,6 @@ Final Answer: 892
 Evidence SQL: SELECT COUNT(DISTINCT p.player_api_id) AS n_players FROM Player AS p JOIN Player_Attributes AS pa ON p.player_api_id = pa.player_api_id WHERE pa.defensive_work_rate = 'high' AND CAST(strftime('%Y', p.birthday) AS INTEGER) < 1986
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1088">
@@ -1180,6 +1180,8 @@ Evidence SQL: SELECT COUNT(DISTINCT p.player_api_id) AS n_players FROM Player AS
 **期望**：`Aaron Hunt | Aaron Ramsey | Aatif Chahechouhe | Abdelkader Ghezzal | Abdoulaye Diallo Sadio,22 | Abel Hernandez | Abou Diaby | Abraham Guie Gneki`
 
 **答案**：`## 查询过程 **三级锚定（并行）** - **L1 实体路**：'dlr_semantic_query' → 'LOGICAL.Player'（db='european_football_2'），挂两个 PE：'PHYSICAL.Player'（姓名等基本信息）与 'PHYSICAL.PlayerAttribute'（FIFA 技能分，含 'Volleys'/'dribbling'）。 - *`
+
+**raw 日志**：[results/0928_2124_qids_1080_1084_1088_1091_1092/raw/0928_2124_1088_dlr.ndjson](../results/0928_2124_qids_1080_1084_1088_1091_1092/raw/0928_2124_1088_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1216,8 +1218,6 @@ Final Answer: 共 **1,105** 名球员的 volley 分与 dribbling 分同时 > 70�
 
 Evidence SQL: SELECT DISTINCT p.player_name FROM Player p JOIN Player_Attributes pa ON p.player_api_id = pa.player_api_id WHERE pa.volleys > 70 AND pa.dribbling > 70
 
-建模缺口: 无
-
 </details>
 
 <details id="q1091">
@@ -1228,6 +1228,8 @@ Evidence SQL: SELECT DISTINCT p.player_name FROM Player p JOIN Player_Attributes
 **期望**：`36`
 
 **答案**：`三级锚定结果： - **L1（'dlr_semantic_query'）**：锚定 'LOGICAL.Match'（属 league）+ 'LOGICAL.League'（LeagueName），库为 'european_football_2'。 - **L2（'dlr_search_consensus'，namespace=european_football_2，qid 7）**："The da`
+
+**raw 日志**：[results/0928_2124_qids_1080_1084_1088_1091_1092/raw/0928_2124_1091_dlr.ndjson](../results/0928_2124_qids_1080_1084_1088_1091_1092/raw/0928_2124_1091_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1261,8 +1263,6 @@ Final Answer: 36
 Evidence SQL: SELECT COUNT(*) AS match_count FROM Match m JOIN League l ON m.league_id = l.id WHERE l.name = 'Belgium Jupiler League' AND m.date LIKE '2009-04%'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1092">
@@ -1273,6 +1273,8 @@ Evidence SQL: SELECT COUNT(*) AS match_count FROM Match m JOIN League l ON m.lea
 **期望**：`England Premier League | France Ligue 1 | Italy Serie A | Spain LIGA BBVA`
 
 **答案**：`三级锚定完成，结论如下。 **判定路径** - **L3（'dlr_search_sop'）**：'match=similar' — 唯一近似节是"all time 最高场次"，**并非逐字复述本题**（本题限定 '2008/2009'），仅作背景：该节提示同类题存在并列、需交代 tie。 - **L2（'dlr_search_consensus'，namespace='european_foot`
+
+**raw 日志**：[results/0928_2124_qids_1080_1084_1088_1091_1092/raw/0928_2124_1092_dlr.ndjson](../results/0928_2124_qids_1080_1084_1088_1091_1092/raw/0928_2124_1092_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1313,8 +1315,6 @@ Evidence SQL: SELECT COUNT(*) AS match_count FROM Match m JOIN League l ON m.lea
 Final Answer: England Premier League (380 matches in 2008/2009; tied at 380 with France Ligue 1, Italy Serie A and Spain LIGA BBVA)
 Evidence SQL: SELECT l.name AS league_name FROM Match m JOIN League l ON m.league_id = l.id WHERE m.season = '2008/2009' GROUP BY l.id ORDER BY COUNT(*) DESC, l.id ASC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q1094">
@@ -1325,6 +1325,8 @@ Evidence SQL: SELECT l.name AS league_name FROM Match m JOIN League l ON m.leagu
 **期望**：`133.7260677466863`
 
 **答案**：`## 结论 **Ariel Borysiuk 的整体评分比 Paulin Puel 高 15.2542%。** ### 计算依据 按 L3 口径（'dlr_search_sop' 命中节，标题与本题逐字相同，'match=exact'）： > 球员评分是**带日期的观测序列**，不是单一数字；题目未给日期 → 取该球员的**当前评分 = 最近一次观测**。比较式为 '(Ariel − Paulin`
+
+**raw 日志**：[results/0928_2128_qids_1094_1096_1098_1102_1103/raw/0928_2128_1094_dlr.ndjson](../results/0928_2128_qids_1094_1096_1098_1102_1103/raw/0928_2128_1094_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1379,8 +1381,6 @@ FROM (SELECT pa.overall_rating AS rating
       ORDER BY pa.date DESC LIMIT 1) p
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1096">
@@ -1391,6 +1391,8 @@ FROM (SELECT pa.overall_rating AS rating
 **期望**：`61.666666666666664`
 
 **答案**：`**问题解析**：Pietro Marino 的平均综合评分（average overall rating）。 **三级锚定** - **L1 语义召回** → 逻辑实体 'LOGICAL.Player'（库 'european_football_2'），两个物理实体：'PHYSICAL.Player'（球员基本信息，锚键 1:1 'player_api_id'）与 'PHYSICAL.Playe`
+
+**raw 日志**：[results/0928_2128_qids_1094_1096_1098_1102_1103/raw/0928_2128_1096_dlr.ndjson](../results/0928_2128_qids_1094_1096_1098_1102_1103/raw/0928_2128_1096_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1429,8 +1431,6 @@ FROM (SELECT pa.overall_rating AS rating
 Final Answer: 61.67
 Evidence SQL: SELECT ROUND(AVG(CAST(pa.overall_rating AS REAL)), 2) AS avg_overall_rating FROM Player p JOIN Player_Attributes pa ON p.player_api_id = pa.player_api_id WHERE p.player_name = 'Pietro Marino';
 
-建模缺口: 无
-
 </details>
 
 <details id="q1098">
@@ -1441,6 +1441,8 @@ Evidence SQL: SELECT ROUND(AVG(CAST(pa.overall_rating AS REAL)), 2) AS avg_overa
 **期望**：`67 | Risky`
 
 **答案**：`**结论**：Ajax 的最高 chance creation passing 分数为 **67**，归类为 **Risky**。 **证据链** - L1 语义召回（'dlr_semantic_query'）：命中逻辑实体 'LOGICAL.Team'（db = 'european_football_2'），含属性 'ChanceCreationPassing'（"Amount of risk `
+
+**raw 日志**：[results/0928_2128_qids_1094_1096_1098_1102_1103/raw/0928_2128_1098_dlr.ndjson](../results/0928_2128_qids_1094_1096_1098_1102_1103/raw/0928_2128_1098_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1471,8 +1473,6 @@ Final Answer: Ajax's highest chance creation passing score is 67, classified as 
 
 Evidence SQL: SELECT t.team_long_name, ta.chanceCreationPassing AS max_chanceCreationPassing, ta.chanceCreationPassingClass FROM Team t JOIN Team_Attributes ta ON t.team_api_id = ta.team_api_id WHERE t.team_long_name = 'Ajax' ORDER BY ta.chanceCreationPassing DESC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q1102">
@@ -1483,6 +1483,8 @@ Evidence SQL: SELECT t.team_long_name, ta.chanceCreationPassing AS max_chanceCre
 **期望**：`Laurent Ciman`
 
 **答案**：`**查询路径与依据** - **L3（口径）**：'dlr_search_sop' 无逐字复述本题的节（'match=similar'，命中的是"左脚百分比""sprint speed"等近似题），故按 L1+L2 自解。 - **L1（实体）**：'dlr_semantic_query' 召回 'LOGICAL.Player'（库 'european_football_2'），含两个 PE：'P`
+
+**raw 日志**：[results/0928_2128_qids_1094_1096_1098_1102_1103/raw/0928_2128_1102_dlr.ndjson](../results/0928_2128_qids_1094_1096_1098_1102_1103/raw/0928_2128_1102_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1509,8 +1511,6 @@ Final Answer: Laurent Ciman
 
 Evidence SQL: SELECT p.player_name, p.birthday FROM Player p JOIN Player_Attributes pa ON pa.player_api_id = p.player_api_id WHERE pa.overall_rating = 77 AND date(pa.date) = '2016-06-23' ORDER BY p.birthday ASC LIMIT 1;
 
-建模缺口: 无
-
 </details>
 
 <details id="q1103">
@@ -1521,6 +1521,8 @@ Evidence SQL: SELECT p.player_name, p.birthday FROM Player p JOIN Player_Attribu
 **期望**：`75`
 
 **答案**：`**查询过程** 1. **L1 语义召回**：锁定库 'european_football_2'，逻辑实体 'LOGICAL.Player'（含 'overall_rating'、'RatingDate' 属性），挂两个 PE：'PHYSICAL.Player'（球员基本信息）与 'PHYSICAL.PlayerAttribute'（'Player_Attributes'，按日期tracked `
+
+**raw 日志**：[results/0928_2128_qids_1094_1096_1098_1102_1103/raw/0928_2128_1103_dlr.ndjson](../results/0928_2128_qids_1094_1096_1098_1102_1103/raw/0928_2128_1103_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1551,8 +1553,6 @@ Final Answer: 75
 Evidence SQL: SELECT a.overall_rating FROM Player p JOIN Player_Attributes a ON p.player_api_id = a.player_api_id WHERE p.player_name = 'Aaron Mooy' AND a.date = '2016-02-04 00:00:00'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1105">
@@ -1563,6 +1563,8 @@ Evidence SQL: SELECT a.overall_rating FROM Player p JOIN Player_Attributes a ON 
 **期望**：`medium`
 
 **答案**：`An exact match for the date exists. Verification: **L1 实体路** ('dlr_semantic_query', db=european_football_2) → 'LOGICAL.Player'（PE: 'Player' + 'Player_Attributes'，锚键 'player_api_id'，N:1） **L2 共识路** (qi`
+
+**raw 日志**：[results/0928_2132_qids_1105_1107_1110_1113_1114/raw/0928_2132_1105_dlr.ndjson](../results/0928_2132_qids_1105_1107_1110_1113_1114/raw/0928_2132_1105_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1599,8 +1601,6 @@ WHERE p.player_name = 'Francesco Migliore'
   AND pa.date = '2015-05-01 00:00:00'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1107">
@@ -1611,6 +1611,8 @@ WHERE p.player_name = 'Francesco Migliore'
 **期望**：`2016-04-21 00:00:00`
 
 **答案**：`## 结论 **Kevin Constant 最高 crossing 分数的首次日期为 2013-02-15。** ### 三级锚定过程 \| 级别 \| 工具 \| 命中 \| \|------\|------\|------\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| **match=exact** — 标题逐字复述本题；节内给出该球员的 highest cros`
+
+**raw 日志**：[results/0928_2132_qids_1105_1107_1110_1113_1114/raw/0928_2132_1107_dlr.ndjson](../results/0928_2132_qids_1105_1107_1110_1113_1114/raw/0928_2132_1107_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1670,8 +1672,6 @@ Final Answer: 2013-02-15
 
 Evidence SQL: SELECT p.player_name, pa.crossing, pa.date FROM Player_Attributes pa JOIN Player p ON pa.player_api_id = p.player_api_id WHERE p.player_name LIKE 'Kevin Constant%' ORDER BY pa.crossing DESC, pa.date ASC LIMIT 20
 
-建模缺口: 无
-
 </details>
 
 <details id="q1110">
@@ -1682,6 +1682,8 @@ Evidence SQL: SELECT p.player_name, pa.crossing, pa.date FROM Player_Attributes 
 **期望**：`Long`
 
 **答案**：`**结论：FC Lorient 在 2010-02-22 的 build-up play passing class 是 'Long'。** 锚定与证据链： - **L1 语义召回**（'dlr_semantic_query'）：命中 'LOGICAL.Team'（db='european_football_2'），其 PE 'Team_Attributes' 含属性 'BuildUpPlayPa`
+
+**raw 日志**：[results/0928_2132_qids_1105_1107_1110_1113_1114/raw/0928_2132_1110_dlr.ndjson](../results/0928_2132_qids_1105_1107_1110_1113_1114/raw/0928_2132_1110_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1710,8 +1712,6 @@ Evidence SQL: SELECT p.player_name, pa.crossing, pa.date FROM Player_Attributes 
 Final Answer: Long
 Evidence SQL: SELECT ta.buildUpPlayPassingClass FROM Team t JOIN Team_Attributes ta ON t.team_api_id = ta.team_api_id WHERE t.team_long_name = 'FC Lorient' AND ta.date = '2010-02-22 00:00:00'
 
-建模缺口: 无
-
 </details>
 
 <details id="q1113">
@@ -1722,6 +1722,8 @@ Evidence SQL: SELECT ta.buildUpPlayPassingClass FROM Team t JOIN Team_Attributes
 **期望**：`Press`
 
 **答案**：`**结论**：Hannover 96 在 2015/9/10 的防守侵略性等级（defence aggression class）为 **Press**（对应 defenceAggression 分值 50，落在 34–66 的 Press 区间）。 **依据链**： - L1 语义召回：命中 'LOGICAL.Team'（db = european_football_2），其属性 'Defenc`
+
+**raw 日志**：[results/0928_2137_qids_1113_1114/raw/0928_2137_1113_dlr.ndjson](../results/0928_2137_qids_1113_1114/raw/0928_2137_1113_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1749,8 +1751,6 @@ Evidence SQL: SELECT ta.buildUpPlayPassingClass FROM Team t JOIN Team_Attributes
 Final Answer: Press
 Evidence SQL: SELECT ta.defenceAggressionClass FROM Team t JOIN Team_Attributes ta ON t.team_api_id = ta.team_api_id WHERE t.team_long_name = 'Hannover 96' AND ta.date = '2015-09-10 00:00:00'
 
-建模缺口: 无
-
 </details>
 
 <details id="q1114">
@@ -1761,6 +1761,8 @@ Evidence SQL: SELECT ta.defenceAggressionClass FROM Team t JOIN Team_Attributes 
 **期望**：`75.39393939393939`
 
 **答案**：`## 结论 Marko Arnautovic 在 2007/2/22 – 2016/4/21 期间的平均 overall rating 为 **75.39393939393939**（≈75.39）。 **锚定与验证过程：** \| 层级 \| 工具 \| 结果 \| \|---\|---\|---\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| 'match=none'`
+
+**raw 日志**：[results/0928_2140_qids_1114/raw/0928_2140_1114_dlr.ndjson](../results/0928_2140_qids_1114/raw/0928_2140_1114_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1797,8 +1799,6 @@ Marko Arnautovic 在 2007/2/22 – 2016/4/21 期间的平均 overall rating 为 
 Final Answer: 75.39393939393939
 Evidence SQL: SELECT AVG(pa.overall_rating) AS avg_overall_rating FROM Player_Attributes pa JOIN Player p ON p.player_api_id = pa.player_api_id WHERE p.player_name = 'Marko Arnautovic' AND date(pa.date) BETWEEN '2007-02-22' AND '2016-04-21';
 
-建模缺口: 无
-
 </details>
 
 <details id="q1115">
@@ -1809,6 +1809,8 @@ Evidence SQL: SELECT AVG(pa.overall_rating) AS avg_overall_rating FROM Player_At
 **期望**：`25.31645569620253`
 
 **答案**：`**结论**：Landon Donovan 在 2013/7/12 的 overall rating 为 **79**，Jordan Bowery 为 **59**，前者比后者高 **33.9%**。 **锚定过程** - L1（'dlr_semantic_query'，db=european_football_2）：命中 'LOGICAL.Player'，其 PE 含 'PHYSICAL.Pla`
+
+**raw 日志**：[results/0928_2153_qids_1115_1116_1122_1124_1130/raw/0928_2153_1115_dlr.ndjson](../results/0928_2153_qids_1115_1116_1122_1124_1130/raw/0928_2153_1115_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1839,8 +1841,6 @@ Evidence SQL: SELECT AVG(pa.overall_rating) AS avg_overall_rating FROM Player_At
 Final Answer: 33.9
 Evidence SQL: SELECT ROUND((d.overall_rating - b.overall_rating) * 100.0 / b.overall_rating, 2) AS percentage_higher FROM (SELECT pa.overall_rating FROM Player p JOIN Player_Attributes pa ON p.player_api_id = pa.player_api_id WHERE p.player_name = 'Landon Donovan' AND pa.date = '2013-07-12 00:00:00') AS d, (SELECT pa.overall_rating FROM Player p JOIN Player_Attributes pa ON p.player_api_id = pa.player_api_id WHERE p.player_name = 'Jordan Bowery' AND pa.date = '2013-07-12 00:00:00') AS b
 
-建模缺口: 无
-
 </details>
 
 <details id="q1116">
@@ -1851,6 +1851,8 @@ Evidence SQL: SELECT ROUND((d.overall_rating - b.overall_rating) * 100.0 / b.ove
 **期望**：`Kristof van Hout`
 
 **答案**：`三级锚定结果： - **L1 语义召回**：'LOGICAL.Player'（db='european_football_2'），PE 'PHYSICAL.Player'，公开属性含 'player_name'、'height'（描述 "The player's height"）。 - **L2 领域共识**：跨库召回命中 'european_football_2'（qid=1/3/5），但无 h`
+
+**raw 日志**：[results/0928_2153_qids_1115_1116_1122_1124_1130/raw/0928_2153_1116_dlr.ndjson](../results/0928_2153_qids_1115_1116_1122_1124_1130/raw/0928_2153_1116_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1877,8 +1879,6 @@ Evidence SQL: SELECT ROUND((d.overall_rating - b.overall_rating) * 100.0 / b.ove
 Final Answer: Kristof van Hout (height 208)
 Evidence SQL: SELECT player_name FROM Player WHERE height = (SELECT MAX(height) FROM Player) ORDER BY player_name
 
-建模缺口: 无
-
 </details>
 
 <details id="q1122">
@@ -1889,6 +1889,8 @@ Evidence SQL: SELECT player_name FROM Player WHERE height = (SELECT MAX(height) 
 **期望**：`Lionel Messi`
 
 **答案**：`**题目口径（L3 精确命中）**：'dlr_search_sop' 返回 'match=exact'，节标题逐字复述本题（namespace: 'european_football_2'）。该节明确："the most strongest player" 指 **overall rating（综合评分）最高**的球员，而非 'strength' 列最高的球员；无日期条件时对全部记录取全局最大值。`
+
+**raw 日志**：[results/0928_2200_qids_1122/raw/0928_2200_1122_dlr.ndjson](../results/0928_2200_qids_1122/raw/0928_2200_1122_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1921,8 +1923,6 @@ Final Answer: Lionel Messi
 Evidence SQL: SELECT p.player_name FROM Player AS p JOIN Player_Attributes AS pa ON p.player_api_id = pa.player_api_id GROUP BY p.player_name ORDER BY MAX(pa.overall_rating) DESC, p.player_name ASC LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1124">
@@ -1933,6 +1933,8 @@ Evidence SQL: SELECT p.player_name FROM Player AS p JOIN Player_Attributes AS pa
 **期望**：`Aaron Cresswell | Aaron Lennon | Aaron Meijers | Aaron Niguez | Aaron Ramsey | Aaron Taylor-Sinclair | Aaron Wilbraham | Aatif Chahechouhe`
 
 **答案**：`## 结论 **"Tend to be attacking when their mates were doing attack moves"** 对应的是球员的**高进攻跑动积极性**——领域共识（'dlr_search_consensus' qid=4，namespace='european_football_2'）明确定义： > attacking work rate — **high**:`
+
+**raw 日志**：[results/0928_2153_qids_1115_1116_1122_1124_1130/raw/0928_2153_1124_dlr.ndjson](../results/0928_2153_qids_1115_1116_1122_1124_1130/raw/0928_2153_1124_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1973,8 +1975,6 @@ Aaron Cresswell, Aaron Lennon, Aaron Meijers, Aaron Niguez, Aaron Ramsey, Aaron 
 Final Answer: 3,339 名球员 —— 即 `Player_Attributes.attacking_work_rate = 'high'` 的去重球员名单（按 player_name 去重；示例：Aaron Cresswell, Aaron Lennon, Aaron Meijers, Aaron Niguez, Aaron Ramsey, Adam Johnson, Adam Lallana, Adam Smith, Adama Traore, Adel Taarabt, Adrian Mutu, …）
 Evidence SQL: SELECT COUNT(DISTINCT p.player_name) FROM Player p JOIN Player_Attributes pa ON p.player_api_id = pa.player_api_id WHERE pa.attacking_work_rate = 'high'
 
-建模缺口: 无
-
 </details>
 
 <details id="q1130">
@@ -1985,6 +1985,8 @@ Evidence SQL: SELECT COUNT(DISTINCT p.player_name) FROM Player p JOIN Player_Att
 **期望**：`HAA | ARK | ARL | ARS | BAR | BMU | BOL | BRE`
 
 **答案**：`Query returned 43 distinct team short names. **Reasoning chain:** - **L2 consensus** ('european_football_2', qid=2): chance creation passing class = **Safe (1-33) / Normal (34-66) / Risky (66-100)** —`
+
+**raw 日志**：[results/0928_2153_qids_1115_1116_1122_1124_1130/raw/0928_2153_1130_dlr.ndjson](../results/0928_2153_qids_1115_1116_1122_1124_1130/raw/0928_2153_1130_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2020,8 +2022,6 @@ Final Answer: ARK, ARL, ARS, BAR, BET, BMU, BOL, BRE, CAG, CAT, COR, COT, DUF, E
 
 Evidence SQL: SELECT DISTINCT t.team_short_name FROM Team_Attributes ta JOIN Team t ON t.team_api_id = ta.team_api_id WHERE ta.chanceCreationPassingClass = 'Safe' ORDER BY t.team_short_name;
 
-建模缺口: 无
-
 </details>
 
 <details id="q1133">
@@ -2032,6 +2032,8 @@ Evidence SQL: SELECT DISTINCT t.team_short_name FROM Team_Attributes ta JOIN Tea
 **期望**：`9`
 
 **答案**：`**答案：6** 依据与口径说明： \| 环节 \| 结论 \| 来源 \| \|------\|------\|------\| \| 实体 \| 'LOGICAL.Player' → 'PHYSICAL.Player'（'european_football_2'） \| 'dlr_semantic_query' / 'get_pe_mapping' \| \| 列 \| 'player_nam`
+
+**raw 日志**：[results/0928_2201_qids_1133_1134_1135_1136_1139/raw/0928_2201_1133_dlr.ndjson](../results/0928_2201_qids_1133_1134_1135_1136_1139/raw/0928_2201_1133_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2071,8 +2073,6 @@ Final Answer: 6
 Evidence SQL: SELECT COUNT(*) AS aaron_after_1990 FROM Player WHERE player_name LIKE 'Aaron%' AND birthday > '1990-12-31'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1134">
@@ -2083,6 +2083,8 @@ Evidence SQL: SELECT COUNT(*) AS aaron_after_1990 FROM Player WHERE player_name 
 **期望**：`1`
 
 **答案**：`**三级锚定结果** - **L3（'dlr_search_sop'，'match=exact'，标题逐字复述本题）**：本题属于 'european_football_2'；"player 6" 与 "player 23" 由 **rating 记录自身携带的记录标识**（'Player_Attributes.id'）确定，不是别处的 id；两个 id 各自只对应一条记录，故不存在聚合选择问题；`
+
+**raw 日志**：[results/0928_2201_qids_1133_1134_1135_1136_1139/raw/0928_2201_1134_dlr.ndjson](../results/0928_2201_qids_1133_1134_1135_1136_1139/raw/0928_2201_1134_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2111,8 +2113,6 @@ Evidence SQL: SELECT COUNT(*) AS aaron_after_1990 FROM Player WHERE player_name 
 Final Answer: 1
 Evidence SQL: SELECT (SELECT jumping FROM Player_Attributes WHERE id = 6) - (SELECT jumping FROM Player_Attributes WHERE id = 23) AS jumping_diff
 
-建模缺口: 无
-
 </details>
 
 <details id="q1135">
@@ -2123,6 +2123,8 @@ Evidence SQL: SELECT (SELECT jumping FROM Player_Attributes WHERE id = 6) - (SEL
 **期望**：`132235 | 132236 | 66213 | 66214`
 
 **答案**：`**三级锚定结果** - **L3（'dlr_search_sop'，match=exact）**：本题有逐字命中的题级口径节，两条关键读法：   1. **只算右脚球员**：'preferred_foot = 'right''；   2. **按「球员」计一次**：一名球员有多条按日期的属性记录，须去重后排序——四个最低者分别是 potential=39、42、44、44（两个 44 并列使集合`
+
+**raw 日志**：[results/0928_2201_qids_1133_1134_1135_1136_1139/raw/0928_2201_1135_dlr.ndjson](../results/0928_2201_qids_1133_1134_1135_1136_1139/raw/0928_2201_1135_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2155,8 +2157,6 @@ Final Answer: 41496 | 166963 | 8893 | 168342
 
 Evidence SQL: SELECT player_api_id FROM Player_Attributes WHERE preferred_foot = 'right' GROUP BY player_api_id ORDER BY MIN(potential) ASC, player_api_id ASC LIMIT 4
 
-建模缺口: 无
-
 </details>
 
 <details id="q1136">
@@ -2167,6 +2167,8 @@ Evidence SQL: SELECT player_api_id FROM Player_Attributes WHERE preferred_foot =
 **期望**：`3`
 
 **答案**：`三级锚定完成，SQL 结果与 L3 口径一致。 **执行链路** - **L3（'dlr_search_sop'，match=exact，标题逐字复述本题）**：本题最权威口径 —— ① "highest potential score for crossing" 指的是 **'crossing' 列的最高分**（不是 'potential' 列）；② "how many players" 要**`
+
+**raw 日志**：[results/0929_1118_qids_72_716_1136/raw/0929_1118_1136_dlr.ndjson](../results/0929_1118_qids_72_716_1136/raw/0929_1118_1136_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2209,8 +2211,6 @@ WHERE pa.preferred_foot = 'left'
   AND pa.crossing = (SELECT MAX(crossing) FROM Player_Attributes);
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1139">
@@ -2221,6 +2221,8 @@ WHERE pa.preferred_foot = 'left'
 **期望**：`1 | 1`
 
 **答案**：`Found it — one match on that date in the Belgium Jupiler League. **Chain of evidence:** - L1 'dlr_semantic_query' → 'LOGICAL.Match' (db 'european_football_2'): 'home_team_goal' / 'away_team_goal' / 'M`
+
+**raw 日志**：[results/0928_2201_qids_1133_1134_1135_1136_1139/raw/0928_2201_1139_dlr.ndjson](../results/0928_2201_qids_1133_1134_1135_1136_1139/raw/0928_2201_1139_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2248,8 +2250,6 @@ Final Answer: 1-1
 
 Evidence SQL: SELECT CAST(m.home_team_goal AS TEXT) || '-' || CAST(m.away_team_goal AS TEXT) AS final_score FROM Match m JOIN League l ON m.league_id = l.id WHERE m.date LIKE '2008-09-24%' AND l.name = 'Belgium Jupiler League'
 
-建模缺口: 无
-
 </details>
 
 <details id="q1141">
@@ -2260,6 +2260,8 @@ Evidence SQL: SELECT CAST(m.home_team_goal AS TEXT) || '-' || CAST(m.away_team_g
 **期望**：`Balanced | Fast`
 
 **答案**：`## 结论 **KSV Cercle Brugge 的速度等级是 Balanced（均衡型）**，不是 slow，也不是 fast。 ### 依据链 1. **L2 领域共识**（'dlr_search_consensus'，namespace=european_football_2，qid=2）：    "Team tactical scores are recorded per dated r`
+
+**raw 日志**：[results/0928_2205_qids_1141_1144_1145_1146_1147/raw/0928_2205_1141_dlr.ndjson](../results/0928_2205_qids_1141_1144_1145_1146_1147/raw/0928_2205_1141_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2306,8 +2308,6 @@ Final Answer: Balanced
 Evidence SQL: SELECT ta.buildUpPlaySpeedClass FROM Team t JOIN Team_Attributes ta ON t.team_api_id = ta.team_api_id WHERE t.team_long_name = 'KSV Cercle Brugge' GROUP BY ta.buildUpPlaySpeedClass ORDER BY COUNT(*) DESC LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1144">
@@ -2318,6 +2318,8 @@ Evidence SQL: SELECT ta.buildUpPlaySpeedClass FROM Team t JOIN Team_Attributes t
 **期望**：`98022 | 13 | 13`
 
 **答案**：`## 执行链路 **L3（'dlr_search_sop'，match=exact）** — 题面逐字命中本题节，为最权威口径： - 最重球员 = 最大 'weight'；其属性是**带日期的序列**，题面未给日期 → 取**当前（最新）那条记录**； - Expected：'13 \| 13'；参考解额外返回的 record id **不属于本题**，只报两个分数。 **L1（'dlr_sema`
+
+**raw 日志**：[results/0928_2205_qids_1141_1144_1145_1146_1147/raw/0928_2205_1144_dlr.ndjson](../results/0928_2205_qids_1141_1144_1145_1146_1147/raw/0928_2205_1144_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2358,8 +2360,6 @@ Final Answer: 13 | 13
 Evidence SQL: SELECT pa.finishing, pa.curve FROM Player p JOIN Player_Attributes pa ON p.player_api_id = pa.player_api_id WHERE p.weight = (SELECT MAX(weight) FROM Player) ORDER BY pa.date DESC LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1145">
@@ -2370,6 +2370,8 @@ Evidence SQL: SELECT pa.finishing, pa.curve FROM Player p JOIN Player_Attributes
 **期望**：`Spain LIGA BBVA | Italy Serie A | France Ligue 1 | England Premier League`
 
 **答案**：`**结论**：2015/2016 赛季（'season = '2015/2016''）比赛场次最多的前 4 个联赛是： \| 排名 \| 联赛 \| 场次 \| \|---\|---\|---\| \| 1 \| England Premier League \| 380 \| \| 2 \| France Ligue 1 \| 380 \| \| 3 \| Italy Serie A \| 38`
+
+**raw 日志**：[results/0928_2205_qids_1141_1144_1145_1146_1147/raw/0928_2205_1145_dlr.ndjson](../results/0928_2205_qids_1141_1144_1145_1146_1147/raw/0928_2205_1145_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2409,8 +2411,6 @@ Final Answer: England Premier League, France Ligue 1, Italy Serie A, Spain LIGA 
 Evidence SQL: SELECT l.name AS league_name, COUNT(*) AS game_count FROM Match m JOIN League l ON m.league_id = l.id WHERE m.season = '2015/2016' GROUP BY l.name ORDER BY game_count DESC, league_name LIMIT 4
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1146">
@@ -2421,6 +2421,8 @@ Evidence SQL: SELECT l.name AS league_name, COUNT(*) AS game_count FROM Match m 
 **期望**：`Paris Saint-Germain`
 
 **答案**：`**结论**：客场进球最多的球队是 **Paris Saint-Germain**。 **口径依据（L3，逐字命中）**：'dlr_search_sop' 返回 'match=exact' 的节（'european_football_2#Please provide the full name of the away team that scored the most goals.'，类型：难题）`
+
+**raw 日志**：[results/0928_2208_qids_1146_1148/raw/0928_2208_1146_dlr.ndjson](../results/0928_2208_qids_1146_1148/raw/0928_2208_1146_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2451,8 +2453,6 @@ Final Answer: Paris Saint-Germain
 Evidence SQL: SELECT t.team_long_name FROM Team t JOIN "Match" m ON m.away_team_api_id = t.team_api_id ORDER BY m.away_team_goal DESC LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1147">
@@ -2463,6 +2463,8 @@ Evidence SQL: SELECT t.team_long_name FROM Team t JOIN "Match" m ON m.away_team_
 **期望**：`Lionel Messi`
 
 **答案**：`Both readings confirmed against data; the L3 note explicitly resolves the trap ("strongest" = overall rating, not the literal 'strength' column, which tops out at 96 for Christopher Samba). The word "`
+
+**raw 日志**：[results/0928_2205_qids_1141_1144_1145_1146_1147/raw/0928_2205_1147_dlr.ndjson](../results/0928_2205_qids_1141_1144_1145_1146_1147/raw/0928_2205_1147_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2499,8 +2501,6 @@ ORDER BY pa.overall_rating DESC LIMIT 1;
 Final Answer: Lionel Messi
 Evidence SQL: SELECT p.player_name FROM Player_Attributes pa JOIN Player p ON p.player_api_id = pa.player_api_id ORDER BY pa.overall_rating DESC LIMIT 1;
 
-建模缺口: 无
-
 </details>
 
 <details id="q1148">
@@ -2511,6 +2511,8 @@ Evidence SQL: SELECT p.player_name FROM Player_Attributes pa JOIN Player p ON p.
 **期望**：`13.940797269238713`
 
 **答案**：`**结果说明** - **口径（L3 精确命中）**：'dlr_search_sop' 返回标题逐字复述本题的节（'european_football_2'），明确两点：   1. "overall strength of more than 70" 指球员的 **overall rating**（'Player_Attributes.overall_rating > 70'），不是字面同名的 '`
+
+**raw 日志**：[results/0928_2211_qids_1148/raw/0928_2211_1148_dlr.ndjson](../results/0928_2211_qids_1148/raw/0928_2211_1148_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2541,7 +2543,5 @@ Evidence SQL: SELECT p.player_name FROM Player_Attributes pa JOIN Player p ON p.
 Final Answer: 17.585895117540687
 Evidence SQL: SELECT 100.0 * COUNT(*) / (SELECT COUNT(*) FROM Player) AS pct FROM Player p WHERE p.height < 180 AND EXISTS (SELECT 1 FROM Player_Attributes pa WHERE pa.player_api_id = p.player_api_id AND pa.overall_rating > 70)
 ```
-
-建模缺口: 无
 
 </details>

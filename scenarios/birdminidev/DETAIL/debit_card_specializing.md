@@ -66,6 +66,8 @@
 
 **答案**：`## 结论 **EUR vs CZK 客户数之比 = 2002 / 30459 ≈ 0.0657**（即 EUR 客户约占 CZK 客户的 6.57%） ## 推演过程 **三级锚定** - **L1（实体路）**：'dlr_semantic_query' 召回 'LOGICAL.Customer'（db='debit_card_specializing'），其公开属性含 'Currency'（描`
 
+**raw 日志**：[results/0928_1405_qids_1471_1472_1473_1476_1479/raw/0928_1405_1471_dlr.ndjson](../results/0928_1405_qids_1471_1472_1473_1476_1479/raw/0928_1405_1471_dlr.ndjson)（dsh 事件流 ndjson）
+
 **调用步骤**
 
 | # | 工具 | 参数（截 200） |
@@ -108,8 +110,6 @@ Final Answer: 0.06572769953051644
 Evidence SQL: SELECT CAST(SUM(CASE WHEN Currency = 'EUR' THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN Currency = 'CZK' THEN 1 ELSE 0 END) AS ratio_eur_to_czk FROM customers;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1472">
@@ -120,6 +120,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN Currency = 'EUR' THEN 1 ELSE 0 END) AS R
 **期望**：`47273`
 
 **答案**：`**L3 命中（exact）**：本节逐字复述本题，其口径为本题最权威依据 —— "per LAM customer, add up that customer's 2012 monthly figures, then take the smallest year total. Do not sort the raw monthly figures and take the first row"。`
+
+**raw 日志**：[results/0928_1413_qids_1472/raw/0928_1413_1472_dlr.ndjson](../results/0928_1413_qids_1472/raw/0928_1413_1472_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -161,8 +163,6 @@ Final Answer: 47273 (LAM customer with total 2012 consumption of 0.74)
 
 Evidence SQL: SELECT c.CustomerID FROM customers c JOIN yearmonth y ON c.CustomerID = y.CustomerID WHERE c.Segment = 'LAM' AND y.Date BETWEEN '201201' AND '201212' GROUP BY c.CustomerID ORDER BY SUM(y.Consumption) ASC LIMIT 1;
 
-建模缺口: 无
-
 </details>
 
 <details id="q1473">
@@ -173,6 +173,8 @@ Evidence SQL: SELECT c.CustomerID FROM customers c JOIN yearmonth y ON c.Custome
 **期望**：`459.9562642870894`
 
 **答案**：`## 查询结论 **三级锚定结果** \| 级别 \| 命中 \| 内容 \| \|---\|---\|---\| \| L3 口径（'dlr_search_sop'） \| **match=exact** \| 标题逐字复述本题，**该节最权威** \| \| L1 实体（'dlr_semantic_query'） \| 'LOGICAL.Consumption' → 'PHYSICAL.Yea`
+
+**raw 日志**：[results/0928_1405_qids_1471_1472_1473_1476_1479/raw/0928_1405_1473_dlr.ndjson](../results/0928_1405_qids_1471_1472_1473_1476_1479/raw/0928_1405_1473_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -235,8 +237,6 @@ Final Answer: 5519.48
 Evidence SQL: SELECT AVG(ym.Consumption) AS avg_monthly_consumption_2013_SME FROM yearmonth AS ym JOIN customers AS c ON c.CustomerID = ym.CustomerID WHERE c.Segment = 'SME' AND ym.Date BETWEEN '201301' AND '201312';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1476">
@@ -247,6 +247,8 @@ Evidence SQL: SELECT AVG(ym.Consumption) AS avg_monthly_consumption_2013_SME FRO
 **期望**：`402524570.17`
 
 **答案**：`## 分析过程 **三级锚定结果：** - **L2 领域共识**（qid=16, namespace='debit_card_specializing'）："Gas consumption" = 客户每月在加油站的消费合计，单位为 CZK，即 'yearmonth.Consumption' 预计算月度汇总值——不是单笔交易金额，也不是某个油品品类的量。 - **L2 领域共识**（qid=17）`
+
+**raw 日志**：[results/0928_1405_qids_1471_1472_1473_1476_1479/raw/0928_1406_1476_dlr.ndjson](../results/0928_1405_qids_1471_1472_1473_1476_1479/raw/0928_1406_1476_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -284,8 +286,6 @@ Final Answer: 402524570.17
 Evidence SQL: SELECT SUM(CASE WHEN c.Currency = 'CZK' THEN y.Consumption ELSE 0 END) - SUM(CASE WHEN c.Currency = 'EUR' THEN y.Consumption ELSE 0 END) FROM yearmonth y JOIN customers c ON y.CustomerID = c.CustomerID WHERE y.Date LIKE '2012%';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1479">
@@ -296,6 +296,8 @@ Evidence SQL: SELECT SUM(CASE WHEN c.Currency = 'CZK' THEN y.Consumption ELSE 0 
 **期望**：`2013`
 
 **答案**：`## 结论 **2013 年**是 CZK（捷克克朗）支付的燃气消费额最高的年份。 ### 锚定过程 \| 层级 \| 结果 \| \|------\|------\| \| L3 SOP \| 'match=none' — 本题无题级口径，按 L1+L2 自解 \| \| L1 语义召回 \| 命中 'debit_card_specializing' 库：'LOGICAL.Consumption`
+
+**raw 日志**：[results/0928_1405_qids_1471_1472_1473_1476_1479/raw/0928_1406_1479_dlr.ndjson](../results/0928_1405_qids_1471_1472_1473_1476_1479/raw/0928_1406_1479_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -345,8 +347,6 @@ Final Answer: 2013
 Evidence SQL: SELECT CAST(SUBSTR(y.Date,1,4) AS INTEGER) AS Year FROM yearmonth AS y JOIN customers AS c ON y.CustomerID = c.CustomerID WHERE c.Currency = 'CZK' GROUP BY Year ORDER BY SUM(y.Consumption) DESC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1480">
@@ -357,6 +357,8 @@ Evidence SQL: SELECT CAST(SUBSTR(y.Date,1,4) AS INTEGER) AS Year FROM yearmonth 
 **期望**：`04`
 
 **答案**：`## 结论 **2013 年 SME（中小企业）客户的燃气消费峰值月份是 2013 年 4 月（201304）**，该月 SME 客户合计消费 **126,047,776.92 CZK**。 ### 推理与证据 1. **L1 语义召回**（'dlr_semantic_query'）：命中库 'debit_card_specializing'，逻辑实体 'LOGICAL.Consumption'（`
+
+**raw 日志**：[results/0928_1413_qids_1480_1481_1482_1483_1484/raw/0928_1413_1480_dlr.ndjson](../results/0928_1413_qids_1480_1481_1482_1483_1484/raw/0928_1413_1480_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -399,8 +401,6 @@ Final Answer: 201304
 Evidence SQL: SELECT ym.Date AS peak_month, SUM(ym.Consumption) AS total_consumption FROM yearmonth AS ym JOIN customers AS c ON ym.CustomerID = c.CustomerID WHERE c.Segment = 'SME' AND ym.Date LIKE '2013%' GROUP BY ym.Date ORDER BY SUM(ym.Consumption) DESC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1481">
@@ -411,6 +411,8 @@ Evidence SQL: SELECT ym.Date AS peak_month, SUM(ym.Consumption) AS total_consump
 **期望**：`0 | 582092.86 | -582092.86`
 
 **答案**：`三级锚定完成：L3 精确命中本题节（含 Expected），L1 锚定 'yearmonth' + 'customers'，L2 提供「consumption = 月度汇总支出（CZK）」口径。 **执行口径**（按 L3 精确命中节）： - 按客户汇总其 2013 年 CZK 消费总额（'Date LIKE '2013%''） - 每个 segment（SME/LAM/KAM）取 2013 总额`
+
+**raw 日志**：[results/0928_1413_qids_1480_1481_1482_1483_1484/raw/0928_1413_1481_dlr.ndjson](../results/0928_1413_qids_1480_1481_1482_1483_1484/raw/0928_1413_1481_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -468,8 +470,6 @@ SELECT
  (SELECT avg_cons FROM avg_seg WHERE seg='KAM') - (SELECT avg_cons FROM avg_seg WHERE seg='SME') AS KAM_SME
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1482">
@@ -480,6 +480,8 @@ SELECT
 **期望**：`545.4018999790969 | 681.5824574939339 | 708.1124062978664`
 
 **答案**：`## 结论 **最大增幅：SME**，**最小增幅：LAM**（KAM 居中）。 ### 三级锚定结果 - **L3（'dlr_search_sop'，'match=exact'，逐字复述本题）**——最权威口径：题目点名了币种，必须先把消费过滤到记账币种为 EUR 的客户（客户主数据 'Currency = 'EUR''）；参考解未按币种过滤，不是本题答案。加上该过滤后排序稳定：**SME 最大`
+
+**raw 日志**：[results/0928_1413_qids_1480_1481_1482_1483_1484/raw/0928_1413_1482_dlr.ndjson](../results/0928_1413_qids_1480_1481_1482_1483_1484/raw/0928_1413_1482_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -530,8 +532,6 @@ SELECT (SELECT Segment FROM p ORDER BY pct DESC LIMIT 1) AS biggest,
        ROUND((SELECT pct FROM p ORDER BY pct ASC LIMIT 1),2) AS lowest_pct;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1483">
@@ -542,6 +542,8 @@ SELECT (SELECT Segment FROM p ORDER BY pct DESC LIMIT 1) AS biggest,
 **期望**：`1224.96`
 
 **答案**：`Customer 6 has 13 monthly rows spanning '201203'–'201311', with all four months Aug–Nov 2013 present and no December record. The Aug–Nov window sums to 1224.96. **Reasoning chain** - **L1 (entity)**: `
+
+**raw 日志**：[results/0928_1413_qids_1480_1481_1482_1483_1484/raw/0928_1414_1483_dlr.ndjson](../results/0928_1413_qids_1480_1481_1482_1483_1484/raw/0928_1414_1483_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -571,8 +573,6 @@ Final Answer: 1224.96
 
 Evidence SQL: SELECT SUM(Consumption) AS total_consumption FROM yearmonth WHERE CustomerID = 6 AND Date BETWEEN '201308' AND '201311';
 
-建模缺口: 无
-
 </details>
 
 <details id="q1484">
@@ -583,6 +583,8 @@ Evidence SQL: SELECT SUM(Consumption) AS total_consumption FROM yearmonth WHERE 
 **期望**：`176`
 
 **答案**：`## 分析过程 **三级锚定** - **L3（SOP）**：'match=none'，本题无题级口径节，按 L1+L2 自解。 - **L1（实体路）**：命中 'LOGICAL.GasStation'（库 'debit_card_specializing'）→ 'PHYSICAL.GasStation' = 表 'gasstations'，公开属性 'GasStationID' / 'Coun`
+
+**raw 日志**：[results/0928_1413_qids_1480_1481_1482_1483_1484/raw/0928_1414_1484_dlr.ndjson](../results/0928_1413_qids_1480_1481_1482_1483_1484/raw/0928_1414_1484_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -619,8 +621,6 @@ Final Answer: 176
 
 Evidence SQL: SELECT (SELECT COUNT(*) FROM gasstations WHERE Segment = 'Discount' AND Country = 'CZE') - (SELECT COUNT(*) FROM gasstations WHERE Segment = 'Discount' AND Country = 'SVK') AS diff
 
-建模缺口: debit_card_specializing.gasstations.Segment — 该列虽由 `get_pe_mapping` 以 PE 属性返回，但未写入 ARC 的 `C_column`，也未出现在 LE `LOGICAL.GasStation` 的 public_attributes 中，导致 L1 召回只看到 Country/ChainID，本题的 "discount" 只能靠第二跳属性列表兜住；建议 升 public（补入 LE 公开属性与 C_column 映射）
-
 </details>
 
 <details id="q1486">
@@ -631,6 +631,8 @@ Evidence SQL: SELECT (SELECT COUNT(*) FROM gasstations WHERE Segment = 'Discount
 **期望**：`23505`
 
 **答案**：`## 结论 **是的，成立。** 在中小企业（SME）客群中，以捷克克朗（CZK）结算的客户数远多于以欧元（EUR）结算的客户数。 - SME + CZK：**25,134** 家 - SME + EUR：**1,629** 家 - 差额：**23,505 家** ## 证据链 \| 层级 \| 工具 \| 关键返回 \| \|------\|------\|----------\| \| L1 `
+
+**raw 日志**：[results/0928_1419_qids_1486_1490_1493_1498_1500/raw/0928_1419_1486_dlr.ndjson](../results/0928_1419_qids_1486_1490_1493_1498_1500/raw/0928_1419_1486_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -682,8 +684,6 @@ Final Answer: True — 23,505 more SMEs pay in Czech koruna (CZK) than in euros 
 Evidence SQL: SELECT COUNT(DISTINCT CASE WHEN Currency='CZK' THEN CustomerID END) - COUNT(DISTINCT CASE WHEN Currency='EUR' THEN CustomerID END) AS czk_minus_eur_sme FROM customers WHERE Segment='SME';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1490">
@@ -694,6 +694,8 @@ Evidence SQL: SELECT COUNT(DISTINCT CASE WHEN Currency='CZK' THEN CustomerID END
 **期望**：`98.5267932135058`
 
 **答案**：`The L3 SOP trap was decisive: an INNER JOIN would have given 3599/3611 = 99.67%, silently dropping the 47 LAM customers with no consumption records. **Reasoning chain:** - **L3 (exact match)** — 'debi`
+
+**raw 日志**：[results/0928_1419_qids_1486_1490_1493_1498_1500/raw/0928_1419_1490_dlr.ndjson](../results/0928_1419_qids_1486_1490_1493_1498_1500/raw/0928_1419_1490_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -727,8 +729,6 @@ LEFT JOIN (SELECT CustomerID, SUM(Consumption) AS total FROM yearmonth GROUP BY 
 WHERE c.Segment = 'LAM';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1493">
@@ -739,6 +739,8 @@ WHERE c.Segment = 'LAM';
 **期望**：`66.62300807683911`
 
 **答案**：`三级锚定结果一致，SQL 结果与 L3 节的 Expected 值（66.62）吻合。 **计算过程** - L3（'dlr_search_sop'，match=exact，标题逐字复述本题）：百分比按**客户**计数（一客户 = 分子分母各一个单位），且"customers"的范围**跟随本题自身的时间窗口**——本题是单月，故总体 = 该月有消费记录的客户（每个客户每月恰好一行）；该月无记录的`
+
+**raw 日志**：[results/0928_1419_qids_1486_1490_1493_1498_1500/raw/0928_1419_1493_dlr.ndjson](../results/0928_1419_qids_1486_1490_1493_1498_1500/raw/0928_1419_1493_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -765,8 +767,6 @@ WHERE c.Segment = 'LAM';
 Final Answer: 66.623% (≈66.62%) — 2012 年 2 月有消费记录的 18,324 名客户中，消费额超过 528.3 的占 66.623%
 Evidence SQL: `SELECT CAST(SUM(CASE WHEN Consumption > 528.3 THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(*) AS pct FROM yearmonth WHERE Date='201202';`
 
-建模缺口: 无
-
 </details>
 
 <details id="q1498">
@@ -777,6 +777,8 @@ Evidence SQL: `SELECT CAST(SUM(CASE WHEN Consumption > 528.3 THEN 1 ELSE 0 END) 
 **期望**：`51787161.74`
 
 **答案**：`## 回答 **问题**：What is the highest monthly consumption in the year 2012?（2012 年最高的单月消费额是多少？） **口径判定（三级锚定）** \| 级别 \| 工具 \| 命中与结论 \| \|------\|------\|------------\| \| L1 数据源级 \| 'dlr_semantic_query' \|`
+
+**raw 日志**：[results/0928_1419_qids_1486_1490_1493_1498_1500/raw/0928_1419_1498_dlr.ndjson](../results/0928_1419_qids_1486_1490_1493_1498_1500/raw/0928_1419_1498_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -814,8 +816,6 @@ Final Answer: 445279.69
 Evidence SQL: SELECT MAX(Consumption) AS max_monthly_consumption FROM yearmonth WHERE Date BETWEEN '201201' AND '201212';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1500">
@@ -826,6 +826,8 @@ Evidence SQL: SELECT MAX(Consumption) AS max_monthly_consumption FROM yearmonth 
 **期望**：`Nafta | Nafta | Provoz.nápl. | Natural | Nafta | Natural | Natural | Nemrz.kapal.`
 
 **答案**：`The query returns **zero rows**, exactly as the L3 SOP predicted. ## 结论 **没有产品在 2013 年 9 月被消费 —— 结果为空列表。** 依据链： 1. **L3 口径（'dlr_search_sop'，'match=exact'，标题逐字复述本题）**：明确说明个人消费流水（individual-purchase rec`
+
+**raw 日志**：[results/0928_1419_qids_1486_1490_1493_1498_1500/raw/0928_1419_1500_dlr.ndjson](../results/0928_1419_qids_1486_1490_1493_1498_1500/raw/0928_1419_1500_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -867,8 +869,6 @@ Final Answer: (empty list) — no products were consumed in September 2013; the 
 Evidence SQL: SELECT DISTINCT p.Description FROM transactions_1k t JOIN products p ON t.ProductID = p.ProductID WHERE t.Date >= '2013-09-01' AND t.Date <= '2013-09-30'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1501">
@@ -879,6 +879,8 @@ Evidence SQL: SELECT DISTINCT p.Description FROM transactions_1k t JOIN products
 **期望**：`CZE | SVK`
 
 **答案**：`**Verification complete.** **L3 SOP (exact match, authoritative):** The section "Please list the countries of the gas stations with transactions taken place in June, 2013." states: *"the individual-pu`
+
+**raw 日志**：[results/0928_1427_qids_1501_1505_1506_1507_1509/raw/0928_1427_1501_dlr.ndjson](../results/0928_1427_qids_1501_1505_1506_1507_1509/raw/0928_1427_1501_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -911,8 +913,6 @@ Final Answer: [] (empty list — no countries; no individual-purchase transactio
 Evidence SQL: SELECT DISTINCT g.Country FROM transactions_1k AS t JOIN gasstations AS g ON t.GasStationID = g.GasStationID WHERE t.Date >= '2013-06-01' AND t.Date < '2013-07-01'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1505">
@@ -923,6 +923,8 @@ Evidence SQL: SELECT DISTINCT g.Country FROM transactions_1k AS t JOIN gasstatio
 **期望**：`2730`
 
 **答案**：`All four L3 "established facts" reproduce exactly, confirming the anchoring is correct. ## 计算过程 **三级锚定结果** - **L3（口径路）**：'dlr_search_sop' **精确命中**本题（标题逐字相同），该节即权威口径 — 'debit_card_specializing'，Expecte`
+
+**raw 日志**：[results/0928_1828_qids_1505/raw/0928_1829_1505_dlr.ndjson](../results/0928_1828_qids_1505/raw/0928_1829_1505_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -968,8 +970,6 @@ Final Answer: 391
 Evidence SQL: SELECT COUNT(DISTINCT c.CustomerID) AS euro_customers_with_any_month_over_1000 FROM customers c JOIN yearmonth y ON c.CustomerID = y.CustomerID WHERE c.Currency = 'EUR' AND y.Consumption > 1000;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1506">
@@ -980,6 +980,8 @@ Evidence SQL: SELECT COUNT(DISTINCT c.CustomerID) AS euro_customers_with_any_mon
 **期望**：`Nafta | Provoz.nápl. | Natural | Nemrz.kapal. | Oleje,tuky | Diesel + | LPG | Mytí vozidel`
 
 **答案**：`**查询路径（三级锚定结果）** \| 级别 \| 命中 \| 用途 \| \|------\|------\|------\| \| L1 语义召回 \| 'LOGICAL.Product'（PE 'products'）、'LOGICAL.GasStation'（PE 'gasstations'）、'LOGICAL.Consumption'（PE 'transactions_1k'），均属 'd`
+
+**raw 日志**：[results/0928_1427_qids_1501_1505_1506_1507_1509/raw/0928_1427_1506_dlr.ndjson](../results/0928_1427_qids_1501_1505_1506_1507_1509/raw/0928_1427_1506_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1011,8 +1013,6 @@ Additivum、Autokosmet.、Autoprísluš.、Dalnic.popl.、Diesel +、Knihy,nov.�
 Final Answer: Additivum, Autokosmet., Autoprísluš., Dalnic.popl., Diesel +, Knihy,nov., LPG, Mytí vozidel, Nafta, Nafta Plus, Natural, Natural +, Natural Plus, Natural Spec, Nemrz.kapal., Obcerstvení, Oleje,tuky, Potraviny, Provoz.nápl., Zboží nesp., Zpr.nakupu
 Evidence SQL: SELECT DISTINCT p.Description FROM transactions_1k AS t JOIN gasstations AS g ON t.GasStationID = g.GasStationID JOIN products AS p ON t.ProductID = p.ProductID WHERE g.Country = 'CZE' ORDER BY p.Description
 
-建模缺口: 无
-
 </details>
 
 <details id="q1507">
@@ -1023,6 +1023,8 @@ Evidence SQL: SELECT DISTINCT p.Description FROM transactions_1k AS t JOIN gasst
 **期望**：`14:29:00 | 11:55:00`
 
 **答案**：`## 结论 问题拆解：要"列出 chain no. 11 的加油站上发生的交易的**不同时间**（disparate time）"。 **锚定过程（三级并行）** \| 级别 \| 工具 \| 命中 \| \|---\|---\|---\| \| L1 实体路 \| 'dlr_semantic_query' \| 'LOGICAL.GasStation'（gasstations：GasStatio`
+
+**raw 日志**：[results/0928_1427_qids_1501_1505_1506_1507_1509/raw/0928_1427_1507_dlr.ndjson](../results/0928_1427_qids_1501_1505_1506_1507_1509/raw/0928_1427_1507_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1064,8 +1066,6 @@ Final Answer: 11:55:00, 14:29:00
 Evidence SQL: SELECT DISTINCT t.Time FROM transactions_1k t JOIN gasstations g ON t.GasStationID = g.GasStationID WHERE g.ChainID = 11 ORDER BY t.Time
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1509">
@@ -1076,6 +1076,8 @@ Evidence SQL: SELECT DISTINCT t.Time FROM transactions_1k t JOIN gasstations g O
 **期望**：`933`
 
 **答案**：`## 查询过程 **三级锚定结果** - **L3（'dlr_search_sop'）**：'match=none'，本题无题级口径节 → 按 L1 + L2 自解 - **L1（'dlr_semantic_query'）**：命中库 'debit_card_specializing' 的 'Consumption'（PE = 'transactions_1k'，交易明细，含 'Date'/'Ga`
+
+**raw 日志**：[results/0928_1427_qids_1501_1505_1506_1507_1509/raw/0928_1427_1509_dlr.ndjson](../results/0928_1427_qids_1501_1505_1506_1507_1509/raw/0928_1427_1509_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1110,8 +1112,6 @@ Evidence SQL: SELECT DISTINCT t.Time FROM transactions_1k t JOIN gasstations g O
 Final Answer: 933
 Evidence SQL: SELECT COUNT(*) AS cnt FROM transactions_1k AS t JOIN gasstations AS g ON t.GasStationID = g.GasStationID WHERE g.Country = 'CZE' AND t.Date > '2012-01-01';
 
-建模缺口: 无
-
 </details>
 
 <details id="q1514">
@@ -1122,6 +1122,8 @@ Evidence SQL: SELECT COUNT(*) AS cnt FROM transactions_1k AS t JOIN gasstations 
 **期望**：`CZK`
 
 **答案**：`## 查询过程 **三级锚定：** - **L1 语义召回** → 命中 'debit_card_specializing' 库；'LOGICAL.Consumption'（PE: 'transactions_1k'，含 Date/Time）与 'LOGICAL.Customer'（PE: 'customers'，含 'Currency': CZK=Czech Koruna, EUR=Euro） `
+
+**raw 日志**：[results/0928_1829_qids_1514_1515_1521_1524_1525/raw/0928_1829_1514_dlr.ndjson](../results/0928_1829_qids_1514_1515_1521_1524_1525/raw/0928_1829_1514_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1162,8 +1164,6 @@ Final Answer: CZK
 Evidence SQL: SELECT DISTINCT c.Currency FROM transactions_1k t JOIN customers c ON t.CustomerID = c.CustomerID WHERE t.Date = '2012-08-24' AND t.Time = '16:25:00';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1515">
@@ -1174,6 +1174,8 @@ Evidence SQL: SELECT DISTINCT c.Currency FROM transactions_1k t JOIN customers c
 **期望**：`KAM`
 
 **答案**：`## 结论 **该客户在 2012/8/23 21:20:00 的细分（Segment）为 KAM（Key Account）。** ### 推理与证据链 **1. 三级锚定** - **L1 语义召回**（'dlr_semantic_query'）：定位到 'LOGICAL.Customer'（'PHYSICAL.Customer' / 'customers'，含 'Segment' 属性）与 '`
+
+**raw 日志**：[results/0928_1829_qids_1514_1515_1521_1524_1525/raw/0928_1829_1515_dlr.ndjson](../results/0928_1829_qids_1514_1515_1521_1524_1525/raw/0928_1829_1515_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1219,8 +1221,6 @@ Final Answer: KAM
 
 Evidence SQL: SELECT c.Segment FROM transactions_1k t JOIN customers c ON t.CustomerID = c.CustomerID WHERE t.Date = '2012-08-23' AND t.Time = '21:20:00'
 
-建模缺口: 无
-
 </details>
 
 <details id="q1521">
@@ -1231,6 +1231,8 @@ Evidence SQL: SELECT c.Segment FROM transactions_1k t JOIN customers c ON t.Cust
 **期望**：`14`
 
 **答案**：`The result matches the L3 Expected value (14). **推理链** - **L3（'dlr_search_sop'，match=exact）**：本题节明确 "Transactions" = 加油站单笔购买（'transactions_1k'），不是银行转账；"during 8:00-9:00" 过滤购买自身的时间；"happened in CZE" 是*`
+
+**raw 日志**：[results/0928_1829_qids_1514_1515_1521_1524_1525/raw/0928_1829_1521_dlr.ndjson](../results/0928_1829_qids_1514_1515_1521_1524_1525/raw/0928_1829_1521_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1259,8 +1261,6 @@ The result matches the L3 Expected value (14).
 Final Answer: 14
 Evidence SQL: SELECT COUNT(*) AS cze_transactions_8to9 FROM transactions_1k t JOIN gasstations g ON t.GasStationID = g.GasStationID WHERE t.Date = '2012-08-26' AND t.Time >= '08:00:00' AND t.Time < '09:00:00' AND g.Country = 'CZE'
 
-建模缺口: 无
-
 </details>
 
 <details id="q1524">
@@ -1271,6 +1271,8 @@ Evidence SQL: SELECT COUNT(*) AS cze_transactions_8to9 FROM transactions_1k t JO
 **期望**：`CZE`
 
 **答案**：`## 结论 **Nationality = CZE（捷克 / Czech Republic）** **依据链条：** 1. **L2 领域共识（qid=18，namespace=debit_card_specializing，命中本题口径）**：    - 本域中"customer's nationality"**不是客户记录上的字段**，而是指**交易发生地加油站的所在国家**；    - 问句`
+
+**raw 日志**：[results/0928_1829_qids_1514_1515_1521_1524_1525/raw/0928_1829_1524_dlr.ndjson](../results/0928_1829_qids_1514_1515_1521_1524_1525/raw/0928_1829_1524_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1308,8 +1310,6 @@ Final Answer: CZE
 
 Evidence SQL: SELECT g.Country FROM transactions_1k t JOIN gasstations g ON g.GasStationID = t.GasStationID WHERE t.Date = '2012-08-24' AND t.Price = 548.4
 
-建模缺口: 无
-
 </details>
 
 <details id="q1525">
@@ -1320,6 +1320,8 @@ Evidence SQL: SELECT g.Country FROM transactions_1k t JOIN gasstations g ON g.Ga
 **期望**：`1.6470588235294117`
 
 **答案**：`**答案：2.7027%** 三级锚定过程： - **L3（权威）**：'dlr_search_sop' 返回 'match=exact'，标题逐字复述本题 →"Percentage of customers = **customers**, not transactions"；分子 = 当日实际用 EUR 付款的客户（Currency 是客户属性，需当日真实有消费），分母 = 当日有交易的客户（`
+
+**raw 日志**：[results/0928_1829_qids_1514_1515_1521_1524_1525/raw/0928_1829_1525_dlr.ndjson](../results/0928_1829_qids_1514_1515_1521_1524_1525/raw/0928_1829_1525_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1348,8 +1350,6 @@ Final Answer: 2.7027
 
 Evidence SQL: SELECT 100.0 * COUNT(DISTINCT CASE WHEN c.Currency = 'EUR' THEN t.CustomerID END) / COUNT(DISTINCT t.CustomerID) AS pct FROM transactions_1k t JOIN customers c ON t.CustomerID = c.CustomerID WHERE t.Date = '2012-08-25';
 
-建模缺口: 无
-
 </details>
 
 <details id="q1526">
@@ -1360,6 +1360,8 @@ Evidence SQL: SELECT 100.0 * COUNT(DISTINCT CASE WHEN c.Currency = 'EUR' THEN t.
 **期望**：`null`
 
 **答案**：`## 结论 **三级锚定结果** \| 级 \| 命中 \| 关键口径 \| \|---\|---\|---\| \| L3 SOP \| 'match=exact'（标题逐字复述本题） \| 最权威，按节执行 \| \| L1 实体路 \| 'LOGICAL.Consumption' → 'PHYSICAL.Transaction'(transactions_1k) + 'PHYSICAL.Ye`
+
+**raw 日志**：[results/0928_1833_qids_1526_1528_1529_1531_1533/raw/0928_1833_1526_dlr.ndjson](../results/0928_1833_qids_1526_1528_1529_1531_1533/raw/0928_1833_1526_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1411,8 +1413,6 @@ SELECT (CAST((SELECT Tot FROM yr WHERE Yr='2012') - (SELECT Tot FROM yr WHERE Yr
         / (SELECT Tot FROM yr WHERE Yr='2012')) * 100 AS decrease_rate
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1528">
@@ -1423,6 +1423,8 @@ SELECT (CAST((SELECT Tot FROM yr WHERE Yr='2012') - (SELECT Tot FROM yr WHERE Yr
 **期望**：`35.68181818181818`
 
 **答案**：`## 结论 在 'Country = "SVK"' 的加油站中，**Premium** 段占整体的 **35.68%**。 **依据链（三级锚定）** \| 级 \| 结果 \| \|---\|---\| \| L1 实体路 \| 'get_full_data_info(debit_card_specializing.gasstations)' 显示含 4 列：GasStationID / Cha`
+
+**raw 日志**：[results/0928_1833_qids_1526_1528_1529_1531_1533/raw/0928_1833_1528_dlr.ndjson](../results/0928_1833_qids_1526_1528_1529_1531_1533/raw/0928_1833_1528_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1469,8 +1471,6 @@ Final Answer: 35.68181818181818
 Evidence SQL: SELECT CAST(SUM(CASE WHEN Segment = 'Premium' THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(*) AS premium_pct_svk FROM gasstations WHERE Country = 'SVK'
 ```
 
-建模缺口: gasstations.Segment — 该物理列存在且 in_modeled_view = true，但 LE `LOGICAL.GasStation` 的公开属性只暴露了 GasStationID / Country / ChainID（见 `get_le_attrs`），Segment 未在属性层暴露，导致「加油站连锁段位」这一业务概念无法从 L1 语义面直接检索到（本题必须先下探物理列才发现）；建议升入视图（在 LE 属性层补 `Segment` 属性）。
-
 </details>
 
 <details id="q1529">
@@ -1481,6 +1481,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN Segment = 'Premium' THEN 1 ELSE 0 END) A
 **期望**：`68740.2 | 3437.01`
 
 **答案**：`**答案（客户 38508，debit_card_specializing 库）** - 客户 "38508" 在加油站的消费总额：**5124646.35**（CZK） - 该客户 2012 年 1 月（201201）的消费额：**67156.94**（CZK） **口径依据（三级锚定）** 1. **L3（'dlr_search_sop'，match=exact，标题逐字复述本题）**：本节的`
+
+**raw 日志**：[results/0928_1833_qids_1526_1528_1529_1531_1533/raw/0928_1833_1529_dlr.ndjson](../results/0928_1833_qids_1526_1528_1529_1531_1533/raw/0928_1833_1529_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1510,8 +1512,6 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN Segment = 'Premium' THEN 1 ELSE 0 END) A
 Final Answer: 5124646.35 | 67156.94
 Evidence SQL: SELECT SUM(Consumption) AS total_spent, SUM(CASE WHEN Date = '201201' THEN Consumption ELSE 0 END) AS jan_2012 FROM yearmonth WHERE CustomerID = 38508;
 
-建模缺口: 无
-
 </details>
 
 <details id="q1531">
@@ -1522,6 +1522,8 @@ Evidence SQL: SELECT SUM(Consumption) AS total_spent, SUM(CASE WHEN Date = '2012
 **期望**：`12459 | 203.8560787354258 | CZK`
 
 **答案**：`## 结论 按 L3 精确命中节（'dlr_search_sop'，标题逐字复述本题，'match=exact'，Expected：'12459 \| 22.5452 \| CZK'）的口径执行： - **Top spending customer = 12459** — 依据是客户在**各加油站的月度总消费**（'yearmonth.Consumption' 按月汇总后取最大），**不是**四天`
+
+**raw 日志**：[results/0928_1833_qids_1526_1528_1529_1531_1533/raw/0928_1834_1531_dlr.ndjson](../results/0928_1833_qids_1526_1528_1529_1531_1533/raw/0928_1834_1531_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1564,8 +1566,6 @@ FROM customers c
 WHERE c.CustomerID = (SELECT CustomerID FROM yearmonth GROUP BY CustomerID ORDER BY SUM(Consumption) DESC LIMIT 1);
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1533">
@@ -1576,6 +1576,8 @@ WHERE c.CustomerID = (SELECT CustomerID FROM yearmonth GROUP BY CustomerID ORDER
 **期望**：`1903.2 | 88265.39 | 1129.2 | 126157.7 | 126157.7 | 58.19 | 1142.95 | 8878.07`
 
 **答案**：`## 三级锚定结果 **L3（'dlr_search_sop'，match=exact）** — 本题有权威口径节，逐字复述本题： - "Paid more than 29.00 per unit" 是**单价条件**：单价 = price / quantity，阈值作用于**除法结果**，不是 Price 原值 > 29 - "Consumption status in August 2012"`
+
+**raw 日志**：[results/0928_1833_qids_1526_1528_1529_1531_1533/raw/0928_1834_1533_dlr.ndjson](../results/0928_1833_qids_1526_1528_1529_1531_1533/raw/0928_1834_1533_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1626,7 +1628,5 @@ WHERE c.CustomerID = (SELECT CustomerID FROM yearmonth GROUP BY CustomerID ORDER
 Final Answer: 5443: 88265.39; 6768: 126157.7; 7626: 45937.22; 18831: 1903.2; 20447: 58.19; 23861: 8878.07; 24700: 69331.72; 45868: 1142.95; 46933: 1129.2
 Evidence SQL: SELECT ym.CustomerID, ym.Consumption FROM yearmonth ym WHERE ym.Date = '201208' AND ym.CustomerID IN (SELECT t.CustomerID FROM transactions_1k t WHERE t.ProductID = 5 AND t.Amount > 0 AND CAST(t.Price AS REAL) / t.Amount > 29.00) ORDER BY ym.CustomerID;
 ```
-
-建模缺口: 无
 
 </details>

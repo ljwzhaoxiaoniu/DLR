@@ -382,6 +382,29 @@ const famBars = dbRows.map(({ db, done, total, pctv }) =>
 const dbTable = dbRows.map(({ db, rs, pctv }) =>
   `<tr><td><a href="DETAIL/${esc(db)}.md"><code>${esc(db)}</code></a></td><td>${rs.length}</td><td>${rs.filter((r) => r.ruling === "CORRECT").length}</td><td>${rs.filter((r) => r.ruling === "OVERTURNED").length}</td><td>${rs.filter((r) => r.ruling === "WRONG").length}</td><td>${rs.filter((r) => r.ruling === "PENDING").length}</td><td>${fmt(medOf(rs.map((r) => r.tokens)))}</td><td>${pctv}%</td></tr>`
 ).join("\n");
+// 建模实例化展示（静态策展块：三级语义在一道题上的协同）——改内容直接改这里
+const showcaseHtml = `
+<h2 class="section-title">TSM 建模实例化 · <em>一道题看三级语义</em></h2>
+<p class="deck">以 <code>debit_card_specializing</code> q1490（「How many percent of LAM customer consumed more than 46.73?」· 数据集缺陷 · 难题 · SOP 裁定 🔁）为例：L3 定口径 → L2 给通用规则 → L1 指出实体与列语义 → 按 SOP 口径落成 SQL → 判定。</p>
+<div class="tier"><span class="tier__tag">L3 · SOP</span><span class="tier__title">业务逻辑级 · 题面措辞逐字命中一节 → 定口径</span>
+<ul>
+<li>Expected <b>98.3871</b>；类型 = 数据集问题 · 难题（gold 自身按 record 级公式，存在口径缺陷——SOP 裁定单独计数不并入正确）。</li>
+<li>「"Percent of customers" is counted <b>per customer</b>, not per customer-month record. One customer = one unit in both the numerator and the denominator, matched to the same caliber: Numerator — customers whose <b>total consumption</b> (added up across their monthly figures) exceeds the threshold; Denominator — <b>all</b> customers of that segment (customers with no consumption records count too). A customer list built by matching against the consumption records alone silently drops them and shrinks the denominator. Do not copy a record-level formula if you retrieved one.」</li>
+</ul></div>
+<div class="tier"><span class="tier__tag">L2 · CONSENSUS</span><span class="tier__title">领域共识 · 通用规则 → 定怎么算</span>
+<ul>
+<li>「Percentage Calculation: To calculate the percentage of a part relative to a total, use (Count of Part / Total Count) * 100%. When computing customer-level percentages, <b>the denominator must include ALL customers in the target group</b> — count from the customer master table directly or use LEFT JOIN, never INNER JOIN (which silently drops customers without matching records). When the condition involves a threshold on an aggregated measure (e.g., 'consumed more than X'), first compute the per-customer aggregate via SUM with GROUP BY, then apply the threshold on the aggregated result — do not compare individual rows to the threshold before aggregation.」</li>
+<li>来源 qids：1490 · 1493 · 1525 · 1481（规则自这批题归纳）</li>
+</ul></div>
+<div class="tier"><span class="tier__tag">L1 · DLR</span><span class="tier__title">数据源级 · 实体 / 列语义 → 给表与列</span>
+<pre>LE  Customer（客户）         1:1  customers
+      CustomerID · Segment（SME=Small Business / LAM=Local / KAM=Key Account）· Currency（CZK/EUR）
+LE  Consumption（消费）      1:N  yearmonth（月度账单，CZK）＋ transactions_1k（千条交易样本）
+      A 键 CustomerID ——「全量分母」的落点：从 Customer 主表直取（含无消费记录的客户）</pre>
+<p>L1 只写实体 / 列语义（schema 级）；口径由 L3 定、算法由 L2 给、取数由 agent 实查落成 SQL。</p></div>
+<div class="note">这题 = 三级协作的判定样本：L3 钉「逐客户 ＋ 全量分母」口径 → L2 给百分比通则（分母从主表取、先聚合后比阈值）→ L1 指出 Customer / Consumption 两张实体与列义 → 答案 98.3871 与 gold 的 record 级口径不符 → 按 SOP 裁定为正确（🔁 翻盘留档）。<a href="DETAIL/debit_card_specializing.md#q1490">明细</a> · <a href="results/0928_1419_qids_1486_1490_1493_1498_1500/raw/0928_1419_1490_dlr.ndjson">raw 日志</a></div>
+`;
+
 const dashboardHtml = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -427,6 +450,14 @@ const dashboardHtml = `<!DOCTYPE html>
   code { font-size: 13px; color: var(--dlr); }
   .note { border-left: 3px solid var(--dlr); padding: 12px 18px; background: var(--surface); border-radius: 0 10px 10px 0; font-size: 14.5px; color: var(--ink-2); margin-top: 26px; }
   a { color: var(--dlr); }
+  a:hover { text-decoration-thickness: 2px; }
+  .tier { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin: 14px 0; }
+  .tier__tag { display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em; color: var(--dlr); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; margin-right: 10px; vertical-align: 1px; }
+  .tier__title { font-weight: 700; font-size: 15.5px; }
+  .tier p, .tier li { font-size: 14.5px; color: var(--ink-2); margin-top: 8px; }
+  .tier ul { padding-left: 20px; }
+  .tier pre { white-space: pre-wrap; word-break: break-word; background: var(--page); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 12.8px; line-height: 1.6; margin-top: 10px; font-family: ui-monospace, "Cascadia Code", Consolas, monospace; color: var(--ink); }
+  .tier pre code { color: inherit; font-size: inherit; }
 </style>
 </head>
 <body>
@@ -439,6 +470,7 @@ const dashboardHtml = `<!DOCTYPE html>
   <div class="stat"><div class="stat__value">${avgFinal((r) => r.steps).toFixed(1)} / ${avgFinal((r) => r.tools).toFixed(1)}</div><div class="stat__label">步数 / 工具 均值</div><div class="stat__note">工具错误 ${avgFinal((r) => r.toolErrors).toFixed(2)}</div></div>
 </div>
 
+${showcaseHtml}
 <h2 class="section-title">跑题覆盖度 · <em>逐库进度</em></h2>
 ${famBars}
 

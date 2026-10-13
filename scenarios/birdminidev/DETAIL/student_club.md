@@ -73,6 +73,8 @@
 
 **答案**：`The query returned exactly one match. **结论过程：** - **L1 语义召回**：锚定 'LOGICAL.Member'（student_club）与 'LOGICAL.Major'，PE 分别为 'PHYSICAL.Member'（member 表）和 'PHYSICAL.Major'（major 表） - **L2 领域共识**（namespace=s`
 
+**raw 日志**：[results/0929_1554_student_club_b1/raw/0929_1555_1312_dlr.ndjson](../results/0929_1554_student_club_b1/raw/0929_1555_1312_dlr.ndjson)（dsh 事件流 ndjson）
+
 **调用步骤**
 
 | # | 工具 | 参数（截 200） |
@@ -101,8 +103,6 @@ Final Answer: Business
 
 Evidence SQL: SELECT m.first_name || ' ' || m.last_name AS full_name, mj.major_name FROM member m JOIN major mj ON m.link_to_major = mj.major_id WHERE m.first_name = 'Angela' AND m.last_name = 'Sanders' LIMIT 5
 
-建模缺口: 无
-
 </details>
 
 <details id="q1317">
@@ -113,6 +113,8 @@ Evidence SQL: SELECT m.first_name || ' ' || m.last_name AS full_name, mj.major_n
 **期望**：`7`
 
 **答案**：`**查询路径**（三级锚定） - **L3 口径**（'dlr_search_sop'）：'match=none' → 本题无题级 SOP 节，按 L1+L2 自解。 - **L1 实体路**（'dlr_semantic_query'）→ 定位 'student_club' 库：'LOGICAL.Member'（含 t-shirt size）／'LOGICAL.Attendance'（member`
+
+**raw 日志**：[results/0929_1554_student_club_b1/raw/0929_1555_1317_dlr.ndjson](../results/0929_1554_student_club_b1/raw/0929_1555_1317_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -148,8 +150,6 @@ Final Answer: 7
 Evidence SQL: SELECT COUNT(DISTINCT m.member_id) FROM member m JOIN attendance a ON m.member_id = a.link_to_member JOIN event e ON a.link_to_event = e.event_id WHERE e.event_name = 'Women''s Soccer' AND m.t_shirt_size = 'Medium'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1322">
@@ -160,6 +160,8 @@ Evidence SQL: SELECT COUNT(DISTINCT m.member_id) FROM member m JOIN attendance a
 **期望**：`1 | 1 | 1 | 1`
 
 **答案**：`**结论**：所有出席人数超过 10 人的学生社团活动中，类型为 Meeting（会议）的有 **4** 个。 **执行过程** 1. **L3 口径**（'dlr_search_sop'，match=exact，逐字复述本题）：Expected = 4；口径为「A meeting is an event with 'type = 'Meeting''；"attended by more than`
+
+**raw 日志**：[results/0929_1615_student_club_sec/raw/0929_1615_1322_dlr.ndjson](../results/0929_1615_student_club_sec/raw/0929_1615_1322_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -187,8 +189,6 @@ Evidence SQL: SELECT COUNT(DISTINCT m.member_id) FROM member m JOIN attendance a
 Final Answer: 4
 Evidence SQL: SELECT COUNT(*) AS cnt FROM event e WHERE LOWER(TRIM(e.type)) = 'meeting' AND e.event_id IN (SELECT link_to_event FROM attendance GROUP BY link_to_event HAVING COUNT(*) > 10)
 
-建模缺口: 无
-
 </details>
 
 <details id="q1323">
@@ -199,6 +199,8 @@ Evidence SQL: SELECT COUNT(*) AS cnt FROM event e WHERE LOWER(TRIM(e.type)) = 'm
 **期望**：`November Meeting | November Speaker | October Meeting | October Speaker | Registration | September Meeting | September Speaker | Yearly Kickoff`
 
 **答案**：`## 结论 **8 个活动**的出席人数超过 20 人，且都不是募捐活动（fundraiser）： \| 活动名称 \| 类型 \| 出席人数 \| \|---\|---\|---\| \| Registration \| Registration \| 30 \| \| Yearly Kickoff \| Meeting \| 30 \| \| October Speaker \| Guest `
+
+**raw 日志**：[results/0929_1554_student_club_b1/raw/0929_1555_1323_dlr.ndjson](../results/0929_1554_student_club_b1/raw/0929_1555_1323_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -251,8 +253,6 @@ Final Answer: Registration | Yearly Kickoff | October Speaker | September Speake
 Evidence SQL: SELECT e.event_name FROM event e JOIN attendance a ON a.link_to_event = e.event_id WHERE e.type <> 'Fundraiser' GROUP BY e.event_id, e.event_name HAVING COUNT(a.link_to_member) > 20 ORDER BY COUNT(a.link_to_member) DESC;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1331">
@@ -263,6 +263,8 @@ Evidence SQL: SELECT e.event_name FROM event e JOIN attendance a ON a.link_to_ev
 **期望**：`50`
 
 **答案**：`**结论**：Vice President（Phillip Cullen，member_id 'recD078PnS3x2doBe'）收到的资金为 **50 美元**。 **三级锚定过程**： - **L1 实体路**（'dlr_semantic_query'）：锁定库 'student_club'；'LOGICAL.Income'（Funds received by the club — amo`
+
+**raw 日志**：[results/0929_1554_student_club_b1/raw/0929_1555_1331_dlr.ndjson](../results/0929_1554_student_club_b1/raw/0929_1555_1331_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -298,8 +300,6 @@ Final Answer: 50
 Evidence SQL: SELECT SUM(i.amount) AS total_funds_received FROM member m JOIN income i ON i.link_to_member = m.member_id WHERE m.position = 'Vice President'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1334">
@@ -310,6 +310,8 @@ Evidence SQL: SELECT SUM(i.amount) AS total_funds_received FROM member m JOIN in
 **期望**：`Trent | Smith | Tyler | Hewitt | Annabella | Warren`
 
 **答案**：`三级锚定结果：L3 无本题节（'match=none'），L1 锁定 'student_club' 库（LE 'Member' + LE 'ZipCode'），L2 共识确认「full name = first name + last name」（kid qid=1, namespace=student_club）。 **口径推断**：题目问「grew up in Illinois state」的`
+
+**raw 日志**：[results/0929_1558_student_club_b2/raw/0929_1558_1334_dlr.ndjson](../results/0929_1558_student_club_b2/raw/0929_1558_1334_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -346,8 +348,6 @@ WHERE z.state = 'Illinois'
 ORDER BY full_name;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1338">
@@ -358,6 +358,8 @@ ORDER BY full_name;
 **期望**：`true | true | true`
 
 **答案**：`## 结论 **是的** —— October Meeting（2019-10-08）这一活动的每一笔支出都获得了批准（approved）。 ### 锚定过程（三级） \| 级 \| 命中 \| 用途 \| \|---\|---\|---\| \| L1 实体路 \| 'LOGICAL.Expense' / 'LOGICAL.Budget' / 'LOGICAL.Event'（db=student`
+
+**raw 日志**：[results/0929_1558_student_club_b2/raw/0929_1558_1338_dlr.ndjson](../results/0929_1558_student_club_b2/raw/0929_1558_1338_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -415,8 +417,6 @@ Final Answer: Yes — every expense in October Meeting on October 8, 2019 was ap
 
 Evidence SQL: SELECT CASE WHEN COUNT(*) = SUM(CASE WHEN LOWER(x.approved)='true' THEN 1 ELSE 0 END) THEN 'Yes' ELSE 'No (' || SUM(CASE WHEN LOWER(x.approved)='true' THEN 1 ELSE 0 END) || ' of ' || COUNT(*) || ' approved)' END AS each_expense_approved FROM expense x JOIN budget b ON x.link_to_budget = b.budget_id JOIN event e ON b.link_to_event = e.event_id WHERE e.event_name = 'October Meeting' AND e.event_date LIKE '2019-10-08%'
 
-建模缺口: 无
-
 </details>
 
 <details id="q1339">
@@ -427,6 +427,8 @@ Evidence SQL: SELECT CASE WHEN COUNT(*) = SUM(CASE WHEN LOWER(x.approved)='true'
 **期望**：`74.0775`
 
 **答案**：`## 分析过程 **三级锚定结果** - **L3（SOP）**：'dlr_search_sop' 返回 'match=none' → 本题无题级口径节，按 L1 映射 + L2 共识自解。 - **L1（语义召回）**：命中 'student_club' 库的 'LOGICAL.Expense'（member 花费）、'LOGICAL.Member'、'LOGICAL.Event'、'LOGIC`
+
+**raw 日志**：[results/0929_1558_student_club_b2/raw/0929_1558_1339_dlr.ndjson](../results/0929_1558_student_club_b2/raw/0929_1558_1339_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -468,8 +470,6 @@ Final Answer: 74.0775
 
 Evidence SQL: SELECT AVG(e.cost) AS avg_cost FROM expense e JOIN member m ON e.link_to_member = m.member_id WHERE m.first_name = 'Elijah' AND m.last_name = 'Allen' AND strftime('%m', e.expense_date) IN ('09','10')
 
-建模缺口: 无
-
 </details>
 
 <details id="q1340">
@@ -480,6 +480,8 @@ Evidence SQL: SELECT AVG(e.cost) AS avg_cost FROM expense e JOIN member m ON e.l
 **期望**：`2086.05`
 
 **答案**：`## 三级锚定结果 \| 级别 \| 工具 \| 结果 \| \|---\|---\|---\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| 'match=none' — 本题无题级 SOP 节，按 L1+L2 自解 \| \| L1 数据源级 \| 'dlr_semantic_query' \| 命中 'student_club' 库：'LOGICAL.Budget'（`
+
+**raw 日志**：[results/0929_1558_student_club_b2/raw/0929_1558_1340_dlr.ndjson](../results/0929_1558_student_club_b2/raw/0929_1558_1340_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -537,8 +539,6 @@ Final Answer: 2086.05
 Evidence SQL: SELECT SUM(CASE WHEN substr(e.event_date,1,4)='2019' THEN b.spent ELSE 0 END) - SUM(CASE WHEN substr(e.event_date,1,4)='2020' THEN b.spent ELSE 0 END) AS diff FROM budget b JOIN event e ON b.link_to_event = e.event_id;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1344">
@@ -549,6 +549,8 @@ Evidence SQL: SELECT SUM(CASE WHEN substr(e.event_date,1,4)='2019' THEN b.spent 
 **期望**：`Secured donations to help pay for speaker gifts.`
 
 **答案**：`**答案：** 2019/9/14 那笔 Fundraising（募捐）收入的 notes 是 **"Secured donations to help pay for speaker gifts."**（募集捐款用于支付演讲者礼品） **推理与证据链** 1. **L3 口径检索**（'dlr_search_sop'）：'match=none' — 本题无题级 SOP 节，按 L1 + L2 自`
+
+**raw 日志**：[results/0929_1558_student_club_b2/raw/0929_1558_1344_dlr.ndjson](../results/0929_1558_student_club_b2/raw/0929_1558_1344_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -581,8 +583,6 @@ Final Answer: Secured donations to help pay for speaker gifts.
 Evidence SQL: SELECT notes FROM income WHERE source = 'Fundraising' AND date_received = '2019-09-14'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1346">
@@ -593,6 +593,8 @@ Evidence SQL: SELECT notes FROM income WHERE source = 'Fundraising' AND date_rec
 **期望**：`928-555-2577`
 
 **答案**：`## 结论 **Carlo Jacobs 的电话号码是 928-555-2577。** ## 推理链路 **1. 三级并行锚定** - **L1 实体路**：'dlr_semantic_query' 召回 'LOGICAL.Member'（db='student_club'，描述为"Student club member — first_name, last_name, position, pho`
+
+**raw 日志**：[results/0929_1559_student_club_b3/raw/0929_1559_1346_dlr.ndjson](../results/0929_1559_student_club_b3/raw/0929_1559_1346_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -631,8 +633,6 @@ Final Answer: 928-555-2577
 Evidence SQL: SELECT phone FROM member WHERE first_name = 'Carlo' AND last_name = 'Jacobs'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1350">
@@ -643,6 +643,8 @@ Evidence SQL: SELECT phone FROM member WHERE first_name = 'Carlo' AND last_name 
 **期望**：`Closed`
 
 **答案**：`## 解析过程 **三级锚定** - **L3 ('dlr_search_sop')**：'match=similar'，唯一候选是 codebase_community 的题目，**未逐字复述本题** → 本题无 L3 节，按 L1+L2 自解。 - **L1 ('dlr_semantic_query', db=student_club)**：锚定 'LOGICAL.Expense'（expen`
+
+**raw 日志**：[results/0929_1559_student_club_b3/raw/0929_1559_1350_dlr.ndjson](../results/0929_1559_student_club_b3/raw/0929_1559_1350_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -680,8 +682,6 @@ Final Answer: Closed
 
 Evidence SQL: SELECT e.status FROM expense x JOIN budget b ON x.link_to_budget = b.budget_id JOIN event e ON b.link_to_event = e.event_id WHERE x.expense_description = 'Post Cards, Posters' AND x.expense_date = '2019-08-20'
 
-建模缺口: 无
-
 </details>
 
 <details id="q1351">
@@ -692,6 +692,8 @@ Evidence SQL: SELECT e.status FROM expense x JOIN budget b ON x.link_to_budget =
 **期望**：`Business Education`
 
 **答案**：`Query returned exactly one matching member. **结论**：Brent Thomason 的专业是 **Business Education**。 - **定位路径**：L1 语义召回（'dlr_semantic_query'）给出 'LOGICAL.Member'（含 first_name / last_name，描述注明 full name = fir`
+
+**raw 日志**：[results/0929_1559_student_club_b3/raw/0929_1559_1351_dlr.ndjson](../results/0929_1559_student_club_b3/raw/0929_1559_1351_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -719,8 +721,6 @@ Final Answer: Business Education
 Evidence SQL: SELECT m.first_name, m.last_name, j.major_name FROM member m JOIN major j ON m.link_to_major = j.major_id WHERE m.first_name = 'Brent' AND m.last_name = 'Thomason' LIMIT 5;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1352">
@@ -731,6 +731,8 @@ Evidence SQL: SELECT m.first_name, m.last_name, j.major_name FROM member m JOIN 
 **期望**：`1`
 
 **答案**：`## 结论 **1 名** —— Business 专业且穿 Medium 码 T 恤的社团成员只有 1 人。 ### 锚定过程 \| 级 \| 工具 \| 结果 \| \|---\|---\|---\| \| L3 \| 'dlr_search_sop' \| 'match=none'（本题无题级 SOP 节，按 L1+L2 自解） \| \| L1 \| 'dlr_semantic_query`
+
+**raw 日志**：[results/0929_1559_student_club_b3/raw/0929_1559_1352_dlr.ndjson](../results/0929_1559_student_club_b3/raw/0929_1559_1352_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -782,8 +784,6 @@ Final Answer: 1
 Evidence SQL: SELECT COUNT(*) FROM member AS m JOIN major AS j ON m.link_to_major = j.major_id WHERE j.major_name = 'Business' AND m.t_shirt_size = 'Medium'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1356">
@@ -794,6 +794,8 @@ Evidence SQL: SELECT COUNT(*) FROM member AS m JOIN major AS j ON m.link_to_majo
 **期望**：`Liberal Arts Program`
 
 **答案**：`## 解题过程 **三级锚定** - **L3 口径路**：'dlr_search_sop' 返回 'match=none' —— 本题无题级 SOP 节，按 L1 + L2 自解（常态）。 - **L1 实体路**：'dlr_semantic_query' 定库 'student_club'；关键实体 'LOGICAL.Member'（"member holds a position in th`
+
+**raw 日志**：[results/0929_1559_student_club_b3/raw/0929_1559_1356_dlr.ndjson](../results/0929_1559_student_club_b3/raw/0929_1559_1356_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -828,8 +830,6 @@ Final Answer: Liberal Arts Program
 Evidence SQL: SELECT ma.department FROM member m JOIN major ma ON m.link_to_major = ma.major_id WHERE m.position = 'President'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1357">
@@ -840,6 +840,8 @@ Evidence SQL: SELECT ma.department FROM member m JOIN major ma ON m.link_to_majo
 **期望**：`2019-10-02 | 2019-09-12`
 
 **答案**：`## 推理过程 **三级锚定** - **L3（口径）**：'dlr_search_sop' → 'match=none'，本题无题级 SOP 节，按 L1+L2 自解。 - **L1（实体）**：'dlr_semantic_query'（db='student_club'）召回 'Income'（"Funds received by the club — amount, source, date`
+
+**raw 日志**：[results/0929_1602_student_club_b4/raw/0929_1602_1357_dlr.ndjson](../results/0929_1602_student_club_b4/raw/0929_1602_1357_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -885,8 +887,6 @@ Evidence SQL: SELECT MIN(i.date_received) AS dues_paid_date FROM income i JOIN m
 
 补充说明（非 Final Answer）：该会员另有 2019-10-02 的一笔 $50 Dues 收款；题面为单数"the date"，取首次缴纳日 2019-09-12。数据来源：`mcp__semantic-core__dlr_search_consensus`（student_club qid 1/4）、`mcp__semantic-core__get_pe_mapping`（PHYSICAL.Income / PHYSICAL.Member）、`mcp__semantic-core__execute_sql`。
 
-建模缺口: 无
-
 </details>
 
 <details id="q1359">
@@ -897,6 +897,8 @@ Evidence SQL: SELECT MIN(i.date_received) AS dues_paid_date FROM income i JOIN m
 **期望**：`2.727272727272727`
 
 **答案**：`**结论**：题中的 "How many times ... more than" 问的是两个 Advertisement 预算的**倍数（比值）**，不是出现次数。 - L3 SOP（'dlr_search_sop'，match=exact，标题逐字复述本题）明示：这是 Yearly Kickoff 的 Advertisement 预算 ÷ October Meeting 的 Advertise`
+
+**raw 日志**：[results/0929_1615_student_club_sec/raw/0929_1615_1359_dlr.ndjson](../results/0929_1615_student_club_sec/raw/0929_1615_1359_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -925,8 +927,6 @@ Final Answer: 2.727272727272727
 Evidence SQL: SELECT CAST(MAX(CASE WHEN e.event_name = 'Yearly Kickoff' THEN b.amount END) AS REAL) / MAX(CASE WHEN e.event_name = 'October Meeting' THEN b.amount END) AS ratio FROM budget b JOIN event e ON b.link_to_event = e.event_id WHERE b.category = 'Advertisement' AND e.type = 'Meeting' AND e.event_name IN ('Yearly Kickoff','October Meeting')
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1361">
@@ -937,6 +937,8 @@ Evidence SQL: SELECT CAST(MAX(CASE WHEN e.event_name = 'Yearly Kickoff' THEN b.a
 **期望**：`600.11`
 
 **答案**：`Cross-checked: the L2 consensus for 'student_club' (qid 3) confirms an expense records its **cost** and its **description**, and expenses are funded by event budgets. The pizza expenses join cleanly t`
+
+**raw 日志**：[results/0929_1602_student_club_b4/raw/0929_1603_1361_dlr.ndjson](../results/0929_1602_student_club_b4/raw/0929_1603_1361_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -963,8 +965,6 @@ Final Answer: 600.11
 
 Evidence SQL: SELECT SUM(e.cost) AS total_pizza_cost FROM expense e JOIN budget b ON e.link_to_budget = b.budget_id JOIN event ev ON b.link_to_event = ev.event_id WHERE LOWER(e.expense_description) = 'pizza';
 
-建模缺口: 无
-
 </details>
 
 <details id="q1362">
@@ -975,6 +975,8 @@ Evidence SQL: SELECT SUM(e.cost) AS total_pizza_cost FROM expense e JOIN budget 
 **期望**：`7`
 
 **答案**：`## 结论 **Orange County, Virginia 共有 7 个城市（city）。** ### 三级锚定过程 \| 级别 \| 工具 \| 结果 \| \|------\|------\|------\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| 'match=none' — 本题无题级 SOP 节，按 L1+L2 自解 \| \| L1 数据源级 \| '`
+
+**raw 日志**：[results/0929_1602_student_club_b4/raw/0929_1603_1362_dlr.ndjson](../results/0929_1602_student_club_b4/raw/0929_1603_1362_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1036,8 +1038,6 @@ Final Answer: 7
 Evidence SQL: SELECT COUNT(DISTINCT city) FROM zip_code WHERE county = 'Orange County' AND state = 'Virginia';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1368">
@@ -1048,6 +1048,8 @@ Evidence SQL: SELECT COUNT(DISTINCT city) FROM zip_code WHERE county = 'Orange C
 **期望**：`Agricultural Education`
 
 **答案**：`**结论**：电话号为 "809-555-3360" 的人是 Dean O'Reilly（member_id = recQaxyXBQG5BBtD0），其专业是 **Agricultural Education**。 **证据链**： - **L1 语义召回**（'dlr_semantic_query'）：命中 'LOGICAL.Member'（student_club，含 phone、link `
+
+**raw 日志**：[results/0929_1602_student_club_b4/raw/0929_1603_1368_dlr.ndjson](../results/0929_1602_student_club_b4/raw/0929_1603_1368_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1077,8 +1079,6 @@ Final Answer: Agricultural Education
 Evidence SQL: SELECT j.major_name FROM member m JOIN major j ON m.link_to_major = j.major_id WHERE m.phone = '809-555-3360'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1371">
@@ -1089,6 +1089,8 @@ Evidence SQL: SELECT j.major_name FROM member m JOIN major j ON m.link_to_major 
 **期望**：`17`
 
 **答案**：`The event matches exactly one record, with 17 attendance records and 17 distinct members (no duplicates). Final Answer: 17 Evidence SQL:  '''sql SELECT COUNT(a.link_to_member) FROM attendance a JOIN e`
+
+**raw 日志**：[results/0929_1603_student_club_b5/raw/0929_1603_1371_dlr.ndjson](../results/0929_1603_student_club_b5/raw/0929_1603_1371_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1119,8 +1121,6 @@ SELECT COUNT(a.link_to_member) FROM attendance a JOIN event e ON a.link_to_event
 - **映射**（`get_pe_mapping`）：`attendance.link_to_event` → `event.event_id`（ARC 锚键），`attendance.link_to_member` 为成员键；两表同库 `student_club.sqlite`。
 - **验证**：先分组核对，`Women's Soccer` 唯一命中 `rec2N69DMcrqN9PJC`，出席记录 17 条、去重成员 17 人（无重复计数风险），故取 17。
 
-建模缺口: 无
-
 </details>
 
 <details id="q1375">
@@ -1131,6 +1131,8 @@ SELECT COUNT(a.link_to_member) FROM attendance a JOIN event e ON a.link_to_event
 **期望**：`Angela | Sanders | Dean | O'Reilly | Edwardo | Ing | Mccauley | Nash`
 
 **答案**：`三级锚定结果：L3 无逐字命中的节（仅 similar 候选，未采信）；L2 给出成员姓名口径；L1 锚定 'student_club' 库 'PHYSICAL.Member' + 'PHYSICAL.Major'。 **锚定与验证过程：** \| 步骤 \| 依据 \| 结论 \| \|------\|------\|------\| \| L1 语义召回 \| 'dlr_semantic_qu`
+
+**raw 日志**：[results/0929_1603_student_club_b5/raw/0929_1603_1375_dlr.ndjson](../results/0929_1603_student_club_b5/raw/0929_1603_1375_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1170,8 +1172,6 @@ Final Answer: Angela Sanders, Brent Thomason, Dean O'Reilly, Edwardo Ing, Mccaul
 Evidence SQL: SELECT m.first_name, m.last_name FROM member m JOIN major j ON m.link_to_major = j.major_id WHERE j.department = 'School of Applied Sciences, Technology and Education' ORDER BY m.first_name, m.last_name
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1376">
@@ -1182,6 +1182,8 @@ Evidence SQL: SELECT m.first_name, m.last_name FROM member m JOIN major j ON m.l
 **期望**：`September Speaker`
 
 **答案**：`**Anchor trail:** - **L1** 'dlr_semantic_query' → 'LOGICAL.Budget' / 'LOGICAL.Event', db 'student_club'; PE mapping gives 'budget.link_to_event' ↔ 'event.event_id', columns 'budget.spent', 'budget.amo`
+
+**raw 日志**：[results/0929_1603_student_club_b5/raw/0929_1604_1376_dlr.ndjson](../results/0929_1603_student_club_b5/raw/0929_1604_1376_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1210,8 +1212,6 @@ Final Answer: September Speaker
 Evidence SQL: SELECT e.event_name, b.category, b.spent, b.amount, CAST(b.spent AS REAL) / b.amount AS ratio FROM budget AS b INNER JOIN event AS e ON b.link_to_event = e.event_id WHERE e.status = 'Closed' ORDER BY ratio DESC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1378">
@@ -1222,6 +1222,8 @@ Evidence SQL: SELECT e.event_name, b.category, b.spent, b.amount, CAST(b.spent A
 **期望**：`327.07`
 
 **答案**：`**锚定过程** - **L3（'dlr_search_sop'）**：'match=none' — 本题无题级口径节，按 L1 + L2 自解。 - **L1（'dlr_semantic_query'）**：命中 'student_club' 库的 'LOGICAL.Budget'（"Event budget tracking — allocated amount, spent, remaini`
+
+**raw 日志**：[results/0929_1603_student_club_b5/raw/0929_1604_1378_dlr.ndjson](../results/0929_1603_student_club_b5/raw/0929_1604_1378_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1251,8 +1253,6 @@ Final Answer: 327.07
 Evidence SQL: SELECT MAX(spent) AS max_budget_spend FROM budget
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1380">
@@ -1263,6 +1263,8 @@ Evidence SQL: SELECT MAX(spent) AS max_budget_spend FROM budget
 **期望**：`1234.73`
 
 **答案**：`## 结论 **食物（Food）类别的总支出为 1234.73 美元。** ### 锚定过程 \| 层级 \| 工具 \| 命中 \| \|------\|------\|------\| \| L1 实体路 \| 'dlr_semantic_query' \| 'LOGICAL.Budget'（'student_club'）— 公开属性含 'Spent'（"the amount spent ou`
+
+**raw 日志**：[results/0929_1603_student_club_b5/raw/0929_1604_1380_dlr.ndjson](../results/0929_1603_student_club_b5/raw/0929_1604_1380_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1302,8 +1304,6 @@ Final Answer: 1234.73
 Evidence SQL: SELECT SUM(spent) FROM budget WHERE category = 'Food'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1381">
@@ -1314,6 +1314,8 @@ Evidence SQL: SELECT SUM(spent) FROM budget WHERE category = 'Food'
 **期望**：`Grant | Gilmour | Luisa | Guidi | Connor | Hilton | Sacha | Harrison`
 
 **答案**：`## 结论 **学生社团（student_club）中，出席活动超过 7 场（即 ≥8 场）的学生共 29 人**（按全名 = first name + last name，见 L2 领域共识；出席数按 attendance 表中的成员-活动记录去重计数）： Adela O'Gallagher, Adele Deleon, Amy Firth, Annabella Warren, Carlo Ja`
+
+**raw 日志**：[results/0929_1604_student_club_b6/raw/0929_1604_1381_dlr.ndjson](../results/0929_1604_student_club_b6/raw/0929_1604_1381_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1347,8 +1349,6 @@ Final Answer: Adela O'Gallagher | Adele Deleon | Amy Firth | Annabella Warren | 
 
 Evidence SQL: SELECT m.first_name || ' ' || m.last_name AS name FROM attendance a JOIN member m ON a.link_to_member = m.member_id GROUP BY m.member_id, m.first_name, m.last_name HAVING COUNT(DISTINCT a.link_to_event) > 7 ORDER BY name
 
-建模缺口: 无
-
 </details>
 
 <details id="q1387">
@@ -1359,6 +1359,8 @@ Evidence SQL: SELECT m.first_name || ' ' || m.last_name AS name FROM attendance 
 **期望**：`Sacha | Harrison | Elijah | Allen | Elijah | Allen | Sacha | Harrison`
 
 **答案**：`## 检索与锚定过程 **L3（口径路）**：'dlr_search_sop("Which student has been entrusted to manage the budget for the Yearly Kickoff?")' → 'match=none'，本题无题级口径节，按 L1+L2 自解。 **L2（领域共识路）**：跨库召回后收口到 'namespace=student_c`
+
+**raw 日志**：[results/0929_1604_student_club_b6/raw/0929_1604_1387_dlr.ndjson](../results/0929_1604_student_club_b6/raw/0929_1604_1387_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1452,8 +1454,6 @@ Evidence SQL: SELECT m.first_name || ' ' || m.last_name AS student FROM member A
 
 来源：`mcp__semantic-core__dlr_semantic_query`（LOGICAL.Member/Budget/Expense）+ `mcp__semantic-core__get_pe_mapping`（`student_club.member.position`、`student_club.expense.link_to_member/link_to_budget`、`student_club.budget.link_to_event`）+ L2 共识 `student_club` qid 1/3 + `mcp__semantic-core__execute_sql` 实测。
 
-建模缺口: `student_club.budget`（预算责任人/管理者列）— 物理表 budget 共 7 列（budget_id, category, spent, remaining, amount, event_status, link_to_event）已全部在建模视图内，源数据根本不存在"预算由谁负责/管理"的列；成员与预算之间只能经 `expense.link_to_member / link_to_budget` 间接关联，故"谁管理某事件预算"这类问题在语义层无法直接表达；建议 **不管**（源表无此信息，无法升入视图；如需支持此类问法，应在 LE 上显式声明 Member↔Budget 的推导关系（经 Expense）并在共识中登记口径）。
-
 </details>
 
 <details id="q1389">
@@ -1464,6 +1464,8 @@ Evidence SQL: SELECT m.first_name || ' ' || m.last_name AS student FROM member A
 **期望**：`November Speaker`
 
 **答案**：`## 结论 **November Speaker**（十一月演讲会）拥有最低的费用。 **三级锚定过程：** \| 级别 \| 结果 \| \|------\|------\| \| **L3 业务逻辑级** \| 'dlr_search_sop' **match=exact**（标题逐字复述本题）→ 本题权威口径：最低单笔 expense cost 为 **6**，由 **September /`
+
+**raw 日志**：[results/0929_1615_student_club_sec/raw/0929_1615_1389_dlr.ndjson](../results/0929_1615_student_club_sec/raw/0929_1615_1389_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1515,8 +1517,6 @@ Final Answer: November Speaker
 Evidence SQL: SELECT e.event_name FROM expense x JOIN budget b ON x.link_to_budget = b.budget_id JOIN event e ON b.link_to_event = e.event_id GROUP BY e.event_id, e.event_name ORDER BY MIN(x.cost) ASC, e.event_name ASC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1390">
@@ -1527,6 +1527,8 @@ Evidence SQL: SELECT e.event_name FROM expense x JOIN budget b ON x.link_to_budg
 **期望**：`21.530164665276477`
 
 **答案**：`## 结论 **Yearly Kickoff 活动的花费占所有活动总花费的 21.53%。** ### 推理链（三级锚定） - **L1 语义召回**：命中 'student_club' 库的三个相关实体 —— 'LOGICAL.Event'（event 表，含 'event_name'）、'LOGICAL.Budget'（budget 表，'link_to_event' 外键指向活动）、'LOG`
+
+**raw 日志**：[results/0929_1604_student_club_b6/raw/0929_1606_1390_dlr.ndjson](../results/0929_1604_student_club_b6/raw/0929_1606_1390_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1570,8 +1572,6 @@ Final Answer: 21.53%
 Evidence SQL: SELECT CAST(SUM(CASE WHEN e.event_name = 'Yearly Kickoff' THEN x.cost ELSE 0 END) AS REAL) * 100 / SUM(x.cost) AS pct FROM expense x JOIN budget b ON x.link_to_budget = b.budget_id JOIN event e ON b.link_to_event = e.event_id;
 ```
 
-建模缺口: 无（所需列 event.event_name、budget.link_to_event、expense.cost/link_to_budget 均在建模视图内，未下探物理表）。
-
 </details>
 
 <details id="q1392">
@@ -1582,6 +1582,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN e.event_name = 'Yearly Kickoff' THEN x.c
 **期望**：`School Appropration`
 
 **答案**：`**结论**：2019 年 9 月收到的资金中，金额最高的来源是 **School Appropration**（数据中的原始拼写，应为 "Appropriation"），当月合计 3,000 美元。 **推理链路** - **L3 口径**：'dlr_search_sop' 返回 'match=none' → 本题无题级节，按 L1 + L2 自解。 - **L1 实体锚定**：'dlr_sem`
+
+**raw 日志**：[results/0929_1604_student_club_b6/raw/0929_1606_1392_dlr.ndjson](../results/0929_1604_student_club_b6/raw/0929_1606_1392_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1620,8 +1622,6 @@ Final Answer: School Appropration
 Evidence SQL: SELECT source FROM income WHERE SUBSTR(date_received,1,7)='2019-09' GROUP BY source ORDER BY SUM(amount) DESC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1394">
@@ -1632,6 +1632,8 @@ Evidence SQL: SELECT source FROM income WHERE SUBSTR(date_received,1,7)='2019-09
 **期望**：`1`
 
 **答案**：`**结论**：Student_Club 中主修 'Physics Teaching' 的成员有 **1 人**（Sherri Ramsey，member_id = recxBj3tjKTGHqucS）。 **锚定过程**： - **L1 语义召回**：命中 'LOGICAL.Member'（'physical_entity_id=PHYSICAL.Member'，库 'student_club'，`
+
+**raw 日志**：[results/0929_1608_student_club_b7/raw/0929_1608_1394_dlr.ndjson](../results/0929_1608_student_club_b7/raw/0929_1608_1394_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1661,8 +1663,6 @@ Final Answer: 1
 
 Evidence SQL: SELECT COUNT(*) AS cnt FROM member m JOIN major j ON m.link_to_major = j.major_id WHERE j.major_name = 'Physics Teaching'
 
-建模缺口: 无
-
 </details>
 
 <details id="q1398">
@@ -1673,6 +1673,8 @@ Evidence SQL: SELECT COUNT(*) AS cnt FROM member m JOIN major j ON m.link_to_maj
 **期望**：`Yearly Kickoff`
 
 **答案**：`**结论：The event with the highest amount spent on advertisement is "Yearly Kickoff".** **推理链（三级锚定）** - **L1 实体路** ('dlr_semantic_query')：命中 'student_club' 库的 'LOGICAL.Budget'（budget 行含 amount / spent / `
+
+**raw 日志**：[results/0929_1608_student_club_b7/raw/0929_1608_1398_dlr.ndjson](../results/0929_1608_student_club_b7/raw/0929_1608_1398_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1705,8 +1707,6 @@ Final Answer: Yearly Kickoff
 Evidence SQL: SELECT e.event_name FROM budget b JOIN event e ON b.link_to_event = e.event_id WHERE LOWER(b.category) = 'advertisement' ORDER BY b.spent DESC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1399">
@@ -1717,6 +1717,8 @@ Evidence SQL: SELECT e.event_name FROM budget b JOIN event e ON b.link_to_event 
 **期望**：`YES | null | null | null | null | null | null | null`
 
 **答案**：`**结论：是，Maya Mclean 参加了 'Women's Soccer' 活动。** ### 查询过程与证据 **三级锚定** - **L1 语义召回**（'dlr_semantic_query'）：锁定库 'student_club'，命中三个逻辑实体——'LOGICAL.Attendance'（Member↔Event 多对多，public_attributes 为 'Event' / `
+
+**raw 日志**：[results/0929_1608_student_club_b7/raw/0929_1608_1399_dlr.ndjson](../results/0929_1608_student_club_b7/raw/0929_1608_1399_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1760,8 +1762,6 @@ Final Answer: Yes
 Evidence SQL: SELECT CASE WHEN COUNT(*) > 0 THEN 'Yes' ELSE 'No' END AS attended FROM member m JOIN attendance a ON a.link_to_member = m.member_id JOIN event e ON e.event_id = a.link_to_event WHERE m.first_name = 'Maya' AND m.last_name = 'Mclean' AND e.event_name = 'Women''s Soccer'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1401">
@@ -1772,6 +1772,8 @@ Evidence SQL: SELECT CASE WHEN COUNT(*) > 0 THEN 'Yes' ELSE 'No' END AS attended
 **期望**：`67.81`
 
 **答案**：`## 查询过程 **L1 语义召回**：'dlr_semantic_query' 全局召回定位到 'student_club' 库，收口后命中 'LOGICAL.Expense'（cost / description）、'LOGICAL.Budget'（FK to event）、'LOGICAL.Event'（event_name）。 **L2 领域共识**（'dlr_search_consens`
+
+**raw 日志**：[results/0929_1608_student_club_b7/raw/0929_1608_1401_dlr.ndjson](../results/0929_1608_student_club_b7/raw/0929_1608_1401_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1811,8 +1813,6 @@ Final Answer: 67.81
 Evidence SQL: SELECT T2.cost FROM event AS T1 JOIN budget AS T3 ON T1.event_id = T3.link_to_event JOIN expense AS T2 ON T3.budget_id = T2.link_to_budget WHERE T1.event_name = 'September Speaker' AND T2.expense_description = 'Posters';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1403">
@@ -1823,6 +1823,8 @@ Evidence SQL: SELECT T2.cost FROM event AS T1 JOIN budget AS T3 ON T1.event_id =
 **期望**：`September Speaker`
 
 **答案**：`**三级锚定结果** - **L1（语义召回）**：定位 'student_club' 库，实体 'LOGICAL.Budget'（PE 'PHYSICAL.Budget' → 表 'student_club.budget'，含 'amount' / 'spent' / 'remaining' / 'event_status'）与 'LOGICAL.Event'（PE 'PHYSICAL.Even`
+
+**raw 日志**：[results/0929_1608_student_club_b7/raw/0929_1608_1403_dlr.ndjson](../results/0929_1608_student_club_b7/raw/0929_1608_1403_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1860,8 +1862,6 @@ Evidence SQL: SELECT T2.cost FROM event AS T1 JOIN budget AS T3 ON T1.event_id =
 Final Answer: September Speaker
 Evidence SQL: SELECT e.event_name FROM budget b JOIN event e ON b.link_to_event = e.event_id WHERE e.status = 'Closed' ORDER BY b.remaining ASC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q1404">
@@ -1872,6 +1872,8 @@ Evidence SQL: SELECT e.event_name FROM budget b JOIN event e ON b.link_to_event 
 **期望**：`Meeting | 175.39`
 
 **答案**：`## 查询过程与结论 **三级锚定** - **L3（SOP）**：'match=similar'，候选项均属 debit_card_specializing，未逐字复述本题 → 本题无 L3 节，按 L1+L2 自解。 - **L1（语义召回）**：命中 'student_club' 库的 'LOGICAL.Expense'（cost / approved / Budget）、'LOGICAL.`
+
+**raw 日志**：[results/0929_1609_student_club_b8/raw/0929_1609_1404_dlr.ndjson](../results/0929_1609_student_club_b8/raw/0929_1609_1404_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1920,8 +1922,6 @@ Final Answer: Food: 121.14; Advertisement: 54.25 (total approved for the 'Octobe
 Evidence SQL: SELECT b.category AS expense_type, SUM(e.cost) AS total_approved FROM expense e JOIN budget b ON e.link_to_budget = b.budget_id JOIN event ev ON b.link_to_event = ev.event_id WHERE ev.event_name = 'October Meeting' AND e.approved = 'true' GROUP BY b.category ORDER BY total_approved DESC
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1405">
@@ -1932,6 +1932,8 @@ Evidence SQL: SELECT b.category AS expense_type, SUM(e.cost) AS total_approved F
 **期望**：`Parking | 10 | Speaker Gifts | 25 | Advertisement | 75 | Food | 150`
 
 **答案**：`已确认实体与口径，结果如下。 **锚定过程** - **L1 语义召回**（'dlr_semantic_query'）：命中 'student_club' 库的 'LOGICAL.Budget'（Event budget tracking — allocated amount, category per event）与 'LOGICAL.Event'（event_name）。 - **L2 领域共`
+
+**raw 日志**：[results/0929_1609_student_club_b8/raw/0929_1609_1405_dlr.ndjson](../results/0929_1609_student_club_b8/raw/0929_1609_1405_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1970,8 +1972,6 @@ Evidence SQL: SELECT b.category AS expense_type, SUM(e.cost) AS total_approved F
 Final Answer: Parking: 10; Speaker Gifts: 25; Advertisement: 75; Food: 150 (total budgeted for 'April Speaker' = 260)
 Evidence SQL: SELECT b.category, b.amount FROM budget b JOIN event e ON b.link_to_event = e.event_id WHERE e.event_name = 'April Speaker' ORDER BY b.amount ASC
 
-建模缺口: 无
-
 </details>
 
 <details id="q1409">
@@ -1982,6 +1982,8 @@ Evidence SQL: SELECT b.category, b.amount FROM budget b JOIN event e ON b.link_t
 **期望**：`122.06`
 
 **答案**：`## 结论 **2019/8/20 当天的总支出为 122.06 美元。** ### 三级锚定过程 \| 级别 \| 工具 \| 结果 \| \|------\|------\|------\| \| L1 数据源级 \| 'dlr_semantic_query' \| 命中 'LOGICAL.Expense'（库 'student_club'），公开属性含 'cost'（美元金额）、'expen`
+
+**raw 日志**：[results/0929_1609_student_club_b8/raw/0929_1609_1409_dlr.ndjson](../results/0929_1609_student_club_b8/raw/0929_1609_1409_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2020,8 +2022,6 @@ Final Answer: 122.06
 Evidence SQL: SELECT SUM(expense.cost) AS total_expense FROM expense WHERE expense.expense_date = '2019-08-20'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1410">
@@ -2032,6 +2032,8 @@ Evidence SQL: SELECT SUM(expense.cost) AS total_expense FROM expense WHERE expen
 **期望**：`Sacha | Harrison | 866.25`
 
 **答案**：`**锚定过程** - **L1（语义召回）**：命中 'student_club'，'LOGICAL.Member'（member 主表）+ 'LOGICAL.Expense'（含 'cost' 列，描述为 "The dollar amount of the expense"）。 - **L2（领域共识，namespace=student_club）**：命中「Member readings: a`
+
+**raw 日志**：[results/0929_1609_student_club_b8/raw/0929_1609_1410_dlr.ndjson](../results/0929_1609_student_club_b8/raw/0929_1609_1410_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2070,8 +2072,6 @@ Final Answer: Sacha Harrison | 866.25
 Evidence SQL: SELECT m.first_name || ' ' || m.last_name AS full_name, SUM(e.cost) AS total_cost FROM member m JOIN expense e ON e.link_to_member = m.member_id WHERE m.member_id = 'rec4BLdZHS2Blfp4v' GROUP BY m.member_id
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1411">
@@ -2082,6 +2082,8 @@ Evidence SQL: SELECT m.first_name || ' ' || m.last_name AS full_name, SUM(e.cost
 **期望**：`Post Cards, Posters | Posters | Water, chips, cookies | Posters | Water, chips, cookies | Pizza | Water, chips, cookies | Travel Mug`
 
 **答案**：`## 结论 **Sacha Harrison（member_id = 'rec4BLdZHS2Blfp4v'） incurred expenses of three kinds (budget categories): Advertisement, Food, Speaker Gifts.** ### 三级锚定过程 - **L3（'dlr_search_sop'）**：'match=none' —`
+
+**raw 日志**：[results/0929_1609_student_club_b8/raw/0929_1609_1411_dlr.ndjson](../results/0929_1609_student_club_b8/raw/0929_1609_1411_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2128,8 +2130,6 @@ Final Answer: Advertisement, Food, Speaker Gifts
 Evidence SQL: SELECT DISTINCT b.category FROM member AS m JOIN expense AS e ON e.link_to_member = m.member_id JOIN budget AS b ON b.budget_id = e.link_to_budget WHERE m.first_name = 'Sacha' AND m.last_name = 'Harrison' ORDER BY b.category
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1422">
@@ -2140,6 +2140,8 @@ Evidence SQL: SELECT DISTINCT b.category FROM member AS m JOIN expense AS e ON e
 **期望**：`Advertisement | Food | Speaker Gifts | Parking`
 
 **答案**：`**L3 SOP（'match=exact'，逐字复述本题）** 明确裁定："Category" 指事件的 **预算类别** 'budget.category'，不是 'event.type'；并给出预期为 Advertisement、Food、Speaker Gifts、Parking（四类全有）。 **锚定过程** - L1：'LOGICAL.Event'（PE 'PHYSICAL.Event`
+
+**raw 日志**：[results/0929_1615_student_club_sec/raw/0929_1615_1422_dlr.ndjson](../results/0929_1615_student_club_sec/raw/0929_1615_1422_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2169,8 +2171,6 @@ Evidence SQL: SELECT DISTINCT b.category FROM member AS m JOIN expense AS e ON e
 Final Answer: Advertisement, Food, Parking, Speaker Gifts
 Evidence SQL: SELECT DISTINCT b.category FROM event e JOIN budget b ON b.link_to_event = e.event_id WHERE e.location = 'MU 215' ORDER BY b.category
 
-建模缺口: 无
-
 </details>
 
 <details id="q1426">
@@ -2181,6 +2181,8 @@ Evidence SQL: SELECT DISTINCT b.category FROM event e JOIN budget b ON b.link_to
 **期望**：`Hewitt | Civil and Environmental Engineering Department | College of Engineering | Mclean | Civil and Environmental Engineering Department | College of Engineering`
 
 **答案**：`Anchored via L1 ('LOGICAL.Member' + 'LOGICAL.Major', db 'student_club') and L2 consensus (member's major = the major name; full name = first_name + last_name). L3 returned 'match=none' (no题级口径), so I `
+
+**raw 日志**：[results/0929_1610_student_club_b9/raw/0929_1610_1426_dlr.ndjson](../results/0929_1610_student_club_b9/raw/0929_1610_1426_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2213,8 +2215,6 @@ Final Answer: 2 members — Hewitt and Mclean; both major in Environmental Engin
 
 Evidence SQL: SELECT mem.last_name, maj.department, maj.college FROM member mem JOIN major maj ON mem.link_to_major = maj.major_id WHERE maj.major_name = 'Environmental Engineering'
 
-建模缺口: 无
-
 </details>
 
 <details id="q1427">
@@ -2225,6 +2225,8 @@ Evidence SQL: SELECT mem.last_name, maj.department, maj.college FROM member mem 
 **期望**：`Speaker Gifts | Guest Speaker | Food | Guest Speaker | Parking | Guest Speaker | Advertisement | Guest Speaker`
 
 **答案**：`**锚定结果（三级）** - **L3（'dlr_search_sop'）**：'match=none' — 本题无题级口径节，按 L1 + L2 自解。 - **L1（'dlr_semantic_query'）**：命中 'LOGICAL.Budget'（budget 行：Amount / Spent / Category，'db=student_club'）与 'LOGICAL.Event'（`
+
+**raw 日志**：[results/0929_1610_student_club_b9/raw/0929_1610_1427_dlr.ndjson](../results/0929_1610_student_club_b9/raw/0929_1610_1427_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2257,8 +2259,6 @@ MU 215 且类型为 Guest Speaker 的事件共 4 个：January Speaker、Februar
 
 Evidence SQL: SELECT DISTINCT b.category FROM event e JOIN budget b ON e.event_id = b.link_to_event WHERE e.location = 'MU 215' AND e.type = 'Guest Speaker' AND b.spent = 0 ORDER BY b.category
 
-建模缺口: 无
-
 </details>
 
 <details id="q1432">
@@ -2269,6 +2269,8 @@ Evidence SQL: SELECT DISTINCT b.category FROM event e JOIN budget b ON e.event_i
 **期望**：`100`
 
 **答案**：`## 结论 **100%** **三级锚定过程：** \| 级 \| 结果 \| \|---\|---\| \| L3 'dlr_search_sop' \| **match=exact**（标题逐字复述本题）→ 权威口径：总体 = 'position='Member'' **且** 't_shirt_size='Medium'' 的成员，其全部 10 条 income 记录金额均为 50，故百分`
+
+**raw 日志**：[results/0929_1615_student_club_sec/raw/0929_1616_1432_dlr.ndjson](../results/0929_1615_student_club_sec/raw/0929_1616_1432_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2309,8 +2311,6 @@ Evidence SQL: SELECT DISTINCT b.category FROM event e JOIN budget b ON e.event_i
 Final Answer: 100
 Evidence SQL: SELECT 100.0 * SUM(CASE WHEN i.amount = 50 THEN 1 ELSE 0 END) / COUNT(*) AS pct FROM income i JOIN member m ON i.link_to_member = m.member_id WHERE m.position = 'Member' AND m.t_shirt_size = 'Medium'
 
-建模缺口: 无
-
 </details>
 
 <details id="q1435">
@@ -2321,6 +2321,8 @@ Evidence SQL: SELECT 100.0 * SUM(CASE WHEN i.amount = 50 THEN 1 ELSE 0 END) / CO
 **期望**：`Women's Soccer | Football game`
 
 **答案**：`**分析过程** - **L1 实体路**：命中 'LOGICAL.Event'（库 'student_club'）→ 'PHYSICAL.Event'，映射表 'student_club.event'，'database_url' = .../student_club.sqlite - **L2 共识路**：'student_club' 的 "Event readings" 条目明确：事件以 '`
+
+**raw 日志**：[results/0929_1610_student_club_b9/raw/0929_1610_1435_dlr.ndjson](../results/0929_1610_student_club_b9/raw/0929_1610_1435_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2353,8 +2355,6 @@ Final Answer: Football game, Women's Soccer
 Evidence SQL: SELECT DISTINCT event_name FROM event WHERE type = 'Game' AND status = 'Closed' AND event_date >= '2019-03-15' AND event_date <= '2020-03-20' ORDER BY event_name;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1457">
@@ -2365,6 +2365,8 @@ Evidence SQL: SELECT DISTINCT event_name FROM event WHERE type = 'Game' AND stat
 **期望**：`Sacha | Harrison | 840-555-4781 | Phillip | Cullen | 905-555-5035 | Elijah | Allen`
 
 **答案**：`**查询路径与证据** 1. **L1 语义召回**（'dlr_semantic_query'）：本题落在库 'student_club'，核心实体 'LOGICAL.Member'（member 主表）与 'LOGICAL.Expense'（expense 表，含 'cost' 花费金额、'link_to_member' 花费人外键）。 2. **L2 领域共识**（'dlr_search_co`
+
+**raw 日志**：[results/0929_1613_student_club_b10/raw/0929_1613_1457_dlr.ndjson](../results/0929_1613_student_club_b10/raw/0929_1613_1457_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2408,8 +2410,6 @@ Final Answer:
 
 Evidence SQL: SELECT DISTINCT m.first_name || ' ' || m.last_name AS full_name, m.phone AS contact_number FROM member m JOIN expense e ON m.member_id = e.link_to_member WHERE e.cost > (SELECT AVG(cost) FROM expense) ORDER BY full_name
 
-建模缺口: 无
-
 </details>
 
 <details id="q1460">
@@ -2420,6 +2420,8 @@ Evidence SQL: SELECT DISTINCT m.first_name || ' ' || m.last_name AS full_name, m
 **期望**：`Elijah | Allen | 28.15`
 
 **答案**：`## 结论 **Elijah Allen — $28.15** ## 追溯过程 1. **三级并行锚定**：'dlr_search_sop' → 'match=none'（本题无 L3 节）；'dlr_semantic_query' 全局召回 → 命中 'student_club' 库的 'LOGICAL.Expense'（花费记录：cost / description / member）与 'L`
+
+**raw 日志**：[results/0929_1613_student_club_b10/raw/0929_1613_1460_dlr.ndjson](../results/0929_1613_student_club_b10/raw/0929_1613_1460_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2459,8 +2461,6 @@ Final Answer: Elijah Allen, 28.15
 Evidence SQL: SELECT m.first_name || ' ' || m.last_name AS full_name, e.cost FROM expense e JOIN member m ON e.link_to_member = m.member_id WHERE e.expense_description = 'Water, Veggie tray, supplies'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q1464">
@@ -2471,6 +2471,8 @@ Evidence SQL: SELECT m.first_name || ' ' || m.last_name AS full_name, e.cost FRO
 **期望**：`Sacha | Harrison | 50 | Carlo | Jacobs | 50`
 
 **答案**：`## 结论 **9/9/2019 收到资金的两位学生及其金额：** \| Full Name \| Amount Received \| \|-----------\|-----------------\| \| Sacha Harrison \| 50 \| \| Carlo Jacobs \| 50 \| **依据链：** - **L2 领域共识**（'dlr_search_consensus`
+
+**raw 日志**：[results/0929_1613_student_club_b10/raw/0929_1614_1464_dlr.ndjson](../results/0929_1613_student_club_b10/raw/0929_1614_1464_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2507,7 +2509,5 @@ Final Answer: Sacha Harrison | 50
 Carlo Jacobs | 50
 Evidence SQL: SELECT m.first_name || ' ' || m.last_name AS full_name, i.amount FROM income i JOIN member m ON i.link_to_member = m.member_id WHERE i.date_received = '2019-09-09'
 ```
-
-建模缺口: 无
 
 </details>

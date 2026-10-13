@@ -77,6 +77,8 @@
 
 **答案**：`## 回答 **3-D Man 的全部超能力**（共 4 项）： \| # \| 超能力 (power_name) \| \|---\|---\| \| 1 \| Agility \| \| 2 \| Stamina \| \| 3 \| Super Speed \| \| 4 \| Super Strength \| **锚定与推理链路** - **L1 语义召回**（'dlr_semantic`
 
+**raw 日志**：[results/0929_1625_superhero_b1/raw/0929_1625_717_dlr.ndjson](../results/0929_1625_superhero_b1/raw/0929_1625_717_dlr.ndjson)（dsh 事件流 ndjson）
+
 **调用步骤**
 
 | # | 工具 | 参数（截 200） |
@@ -119,8 +121,6 @@ Final Answer: Agility, Stamina, Super Speed, Super Strength
 
 Evidence SQL: SELECT p.power_name FROM hero_power hp JOIN superpower p ON p.id = hp.power_id WHERE hp.hero_id = (SELECT id FROM superhero WHERE superhero_name = '3-D Man') ORDER BY p.power_name
 
-建模缺口: 无
-
 </details>
 
 <details id="q719">
@@ -131,6 +131,8 @@ Evidence SQL: SELECT p.power_name FROM hero_power hp JOIN superpower p ON p.id =
 **期望**：`56`
 
 **答案**：`三级锚定完成：L1 与 L2 一致指向 'superhero' 库（L3 无本节，'match=none'）。L2 共识明确「Superpowers 是英雄拥有的命名能力」，且 L1 给出 'hero_power'（hero_id→superhero.id, power_id→superpower.id 的 N:N junction）与 'superpower.power_name' 的精确取值示`
+
+**raw 日志**：[results/0929_1625_superhero_b1/raw/0929_1625_719_dlr.ndjson](../results/0929_1625_superhero_b1/raw/0929_1625_719_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -159,8 +161,6 @@ Final Answer: 56
 
 Evidence SQL: SELECT COUNT(DISTINCT s.id) AS cnt FROM superhero s JOIN hero_power hp ON hp.hero_id = s.id JOIN superpower sp ON sp.id = hp.power_id WHERE sp.power_name = 'Super Strength' AND s.height_cm > 200;
 
-建模缺口: 无
-
 </details>
 
 <details id="q723">
@@ -171,6 +171,8 @@ Evidence SQL: SELECT COUNT(DISTINCT s.id) AS cnt FROM superhero s JOIN hero_powe
 **期望**：`83`
 
 **答案**：`## 结论 **83** 位蓝眼睛的超级英雄拥有 "Agility"（敏捷）超能力。 ## 三级锚定过程 \| 级别 \| 工具 \| 结果 \| \|------\|------\|------\| \| L1 数据源级 \| 'dlr_semantic_query' \| 锁定库 'superhero'；LE 'Superhero'（PE 'superhero'）眼颜色 FK→PE 'colo`
+
+**raw 日志**：[results/0929_1625_superhero_b1/raw/0929_1626_723_dlr.ndjson](../results/0929_1625_superhero_b1/raw/0929_1626_723_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -214,8 +216,6 @@ Final Answer: 83
 Evidence SQL: SELECT COUNT(DISTINCT s.id) AS cnt FROM superhero s JOIN colour c ON s.eye_colour_id = c.id JOIN hero_power hp ON hp.hero_id = s.id JOIN superpower sp ON sp.id = hp.power_id WHERE c.colour = 'Blue' AND sp.power_name = 'Agility'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q724">
@@ -226,6 +226,8 @@ Evidence SQL: SELECT COUNT(DISTINCT s.id) AS cnt FROM superhero s JOIN colour c 
 **期望**：`Adam Monroe | Adam Strange | Agent 13 | Alan Scott | Angel | Animal Man | Ant-Man | Ant-Man II`
 
 **答案**：`## 查询过程 **三级锚定结果：** - **L3（'dlr_search_sop'）**：'match=none' — 本题无题级口径节，按 L1 + L2 自解 - **L1（'dlr_semantic_query'）**：锚定库 'superhero'，逻辑实体 'Superhero'，物理实体 'PHYSICAL.Superhero'（英雄主表）与 'PHYSICAL.Colour'（颜`
+
+**raw 日志**：[results/0929_1625_superhero_b1/raw/0929_1626_724_dlr.ndjson](../results/0929_1625_superhero_b1/raw/0929_1626_724_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -261,8 +263,6 @@ Adam Monroe, Adam Strange, Agent 13, Alan Scott, Angel, Animal Man, Ant-Man, Ant
 Final Answer: Adam Monroe, Adam Strange, Agent 13, Alan Scott, Angel, Animal Man, Ant-Man, Ant-Man II, Anti-Venom, Aquababy, Aquaman, Arachne, Archangel, Batgirl VI, Binary, Black Canary, Black Canary II, Black Widow II, Boom-Boom, Booster Gold, Box III, Bullseye, Cannonball, Captain America, Captain Britain, Captain Mar-vell, Captain Marvel, Cat, Claire Bennet, Cypher, Dagger, Dash, Dazzler, Doctor Fate, Elle Bishop, Emma Frost, Enchantress, Flash II, Franklin Richards, Genesis, Green Lantern, Harley Quinn, Havok, Hawkeye, Human Torch, Husk, Invisible Woman, Iron Fist, James Bond, James Bond (Craig), Jennifer Kale, John Constantine, Kick-Ass, Killer Frost, Longshot, Luke Skywalker, Magog, Meltdown, Mister Zsasz, Mockingbird, Moonstone, Mr Immortal, Mr Incredible, Namora, Namorita, Niki Sanders, Ozymandias, Penance II, Power Girl, Pyro, Question, Rip Hunter, Ronin, Saturn Girl, Scarlet Spider, Sentry, Spider-Gwen, Star-Lord, Stargirl, Supergirl, Thor, Thor Girl, Thunderstrike, Trickster, Ultragirl, Valkyrie, Warbird, White Queen, Wonder Girl, Yellowjacket
 Evidence SQL: SELECT s.superhero_name FROM superhero s JOIN colour e ON s.eye_colour_id = e.id JOIN colour h ON s.hair_colour_id = h.id WHERE e.colour = 'Blue' AND h.colour = 'Blond'
 
-建模缺口: 无
-
 </details>
 
 <details id="q726">
@@ -273,6 +273,8 @@ Evidence SQL: SELECT s.superhero_name FROM superhero s JOIN colour e ON s.eye_co
 **期望**：`Surtur | 30480 | 1 | Ymir | 30480 | 1 | Bloodwraith | 3050`
 
 **答案**：`## 结论 **口径来源**：'dlr_search_sop' 精确命中本题（标题逐字相同，'match=exact'），该节为最权威口径： - 对 **全部** Marvel 英雄按记录身高降序排名，**不去重**，**相同身高共享同一名次**（即 'RANK()'，不是 'ROW_NUMBER()'） - 结果必须**一名英雄一行**（姓名、身高、名次各自成列），不得压成单个拼接字符串，也不得`
+
+**raw 日志**：[results/0929_1648_superhero_q726/raw/0929_1648_726_dlr.ndjson](../results/0929_1648_superhero_q726/raw/0929_1648_726_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -330,8 +332,6 @@ Surtur(30480, rank 1); Ymir(30480, rank 1); Bloodwraith(3050, rank 3); Utgard-Lo
 Evidence SQL: SELECT s.superhero_name AS hero_name, s.height_cm AS height_cm, RANK() OVER (ORDER BY s.height_cm DESC) AS height_rank FROM superhero s JOIN publisher p ON s.publisher_id = p.id WHERE p.publisher_name = 'Marvel Comics' ORDER BY s.height_cm DESC, s.superhero_name;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q728">
@@ -342,6 +342,8 @@ Evidence SQL: SELECT s.superhero_name AS hero_name, s.height_cm AS height_cm, RA
 **期望**：`Blue | 126 | 1 | Brown | 89 | 2 | No Colour | 47`
 
 **答案**：`## 执行过程 **三级锚定** - **L3（SOP）**：'match=none' → 本题无题级口径，按 L1 + L2 自解。 - **L1（语义召回）**：定位到 'superhero' 库的 'LOGICAL.Superhero'（含 'eye colour id' / 'publisher id'），并给出两条 JOIN 路径：'PHYSICAL.Colour'（颜色字典，'colo`
+
+**raw 日志**：[results/0929_1628_superhero_b2/raw/0929_1628_728_dlr.ndjson](../results/0929_1628_superhero_b2/raw/0929_1628_728_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -382,8 +384,6 @@ WHERE p.publisher_name = 'Marvel Comics'
 GROUP BY c.colour
 ORDER BY hero_count DESC, eye_colour
 
-建模缺口: 无
-
 </details>
 
 <details id="q730">
@@ -394,6 +394,8 @@ ORDER BY hero_count DESC, eye_colour
 **期望**：`3-D Man | A-Bomb | Abomination | Abraxas | Absorbing Man | Agent Zero | Air-Walker | Ajax`
 
 **答案**：`## 结论 在 'superhero' 库中，Marvel Comics 出版的、拥有 'Super Strength' 超能力的超级英雄共 **201 位**。 **锚定路径**： - L3（'dlr_search_sop'）：'match=none' — 本题无题级节，按 L1+L2 自解 - L1（'dlr_semantic_query'）：命中 'LOGICAL.Power'（超能力，经 `
+
+**raw 日志**：[results/0929_1628_superhero_b2/raw/0929_1628_730_dlr.ndjson](../results/0929_1628_superhero_b2/raw/0929_1628_730_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -433,8 +435,6 @@ Final Answer: 201 Marvel Comics superheroes with the 'Super Strength' power: 3-D
 
 Evidence SQL: SELECT GROUP_CONCAT(name, ', ') AS heroes FROM (SELECT s.superhero_name AS name FROM superhero s JOIN hero_power hp ON hp.hero_id = s.id JOIN superpower p ON p.id = hp.power_id JOIN publisher pub ON pub.id = s.publisher_id WHERE pub.publisher_name = 'Marvel Comics' AND p.power_name = 'Super Strength' ORDER BY s.superhero_name)
 
-建模缺口: 无
-
 </details>
 
 <details id="q732">
@@ -445,6 +445,8 @@ Evidence SQL: SELECT GROUP_CONCAT(name, ', ') AS heroes FROM (SELECT s.superhero
 **期望**：`Marvel Comics`
 
 **答案**：`## 三级锚定 \| 级 \| 结果 \| \|---\|---\| \| L1 数据源级 \| 'LOGICAL.Attribute' → 'PHYSICAL.HeroAttribute'（hero_id / attribute_id / attribute_value 联结表）+ 'PHYSICAL.Attribute'（字典）；'LOGICAL.Superhero' → 'PHYSICAL.`
+
+**raw 日志**：[results/0929_1628_superhero_b2/raw/0929_1629_732_dlr.ndjson](../results/0929_1628_superhero_b2/raw/0929_1629_732_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -485,8 +487,6 @@ Final Answer: Marvel Comics
 Evidence SQL: SELECT p.publisher_name FROM hero_attribute ha JOIN attribute a ON ha.attribute_id = a.id JOIN superhero s ON ha.hero_id = s.id JOIN publisher p ON s.publisher_id = p.id WHERE a.attribute_name = 'Speed' ORDER BY ha.attribute_value ASC LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q733">
@@ -497,6 +497,8 @@ Evidence SQL: SELECT p.publisher_name FROM hero_attribute ha JOIN attribute a ON
 **期望**：`2`
 
 **答案**：`三级锚定结果：L3 无命中（'match=none'）；L1 召回 'LOGICAL.Superhero'（db=superhero）；L2 共识 qid=1 明确「eye colour 经 colour 维表取色名；publisher 经 publisher 维表取 Marvel Comics / DC Comics」。 据此经 'get_pe_mapping' 拿到 'database_url`
+
+**raw 日志**：[results/0929_1628_superhero_b2/raw/0929_1629_733_dlr.ndjson](../results/0929_1628_superhero_b2/raw/0929_1629_733_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -523,8 +525,6 @@ Evidence SQL: SELECT p.publisher_name FROM hero_attribute ha JOIN attribute a ON
 Final Answer: 2
 Evidence SQL: SELECT COUNT(*) AS gold_marvel_heroes FROM superhero s JOIN colour c ON s.eye_colour_id = c.id JOIN publisher p ON s.publisher_id = p.id WHERE c.colour = 'Gold' AND p.publisher_name = 'Marvel Comics'
 
-建模缺口: 无
-
 </details>
 
 <details id="q736">
@@ -535,6 +535,8 @@ Evidence SQL: SELECT COUNT(*) AS gold_marvel_heroes FROM superhero s JOIN colour
 **期望**：`Ammo`
 
 **答案**：`**结论（superhero 库）** "dumbest"（最蠢）在本题的权威口径是**属性最小值**——L2 领域共识（namespace='superhero'，qid=2）明确给出：「"the fastest/strongest/bravest" is the maximum value of that attribute, "the slowest/**dumbest**" the min`
+
+**raw 日志**：[results/0929_1628_superhero_b2/raw/0929_1629_736_dlr.ndjson](../results/0929_1628_superhero_b2/raw/0929_1629_736_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -567,8 +569,6 @@ Evidence SQL: SELECT COUNT(*) AS gold_marvel_heroes FROM superhero s JOIN colour
 Final Answer: Ammo, Ando Masahashi, Jack-Jack (Intelligence = 35, 三者并列最低)
 Evidence SQL: SELECT GROUP_CONCAT(s.superhero_name, ', ') AS dumbest_heroes, MIN(ha.attribute_value) AS min_intelligence FROM hero_attribute ha JOIN attribute a ON ha.attribute_id = a.id JOIN superhero s ON ha.hero_id = s.id WHERE a.attribute_name = 'Intelligence' AND ha.attribute_value = (SELECT MIN(ha2.attribute_value) FROM hero_attribute ha2 JOIN attribute a2 ON ha2.attribute_id = a2.id WHERE a2.attribute_name = 'Intelligence')
 
-建模缺口: 无
-
 </details>
 
 <details id="q737">
@@ -579,6 +579,8 @@ Evidence SQL: SELECT GROUP_CONCAT(s.superhero_name, ', ') AS dumbest_heroes, MIN
 **期望**：`Mutant`
 
 **答案**：`**结论：Copycat 的种族是 Mutant（变种人）。** 查询路径（三级锚定）： - **L1 实体路**：'dlr_semantic_query(db=superhero)' 召回 'LOGICAL.Superhero'（物理表 'superhero'）与 'LOGICAL.HeroRace'（物理表 'race'，字典表），经 'get_pe_mapping' 拿到 'database`
+
+**raw 日志**：[results/0929_1629_superhero_b3/raw/0929_1629_737_dlr.ndjson](../results/0929_1629_superhero_b3/raw/0929_1629_737_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -609,8 +611,6 @@ Final Answer: Mutant
 Evidence SQL: SELECT r.race FROM superhero s JOIN race r ON s.race_id = r.id WHERE s.superhero_name = 'Copycat'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q738">
@@ -621,6 +621,8 @@ Evidence SQL: SELECT r.race FROM superhero s JOIN race r ON s.race_id = r.id WHE
 **期望**：`3-D Man | A-Bomb | Abe Sapien | Adam Monroe | Adam Strange | Agent 13 | Agent Bob | Agent Zero`
 
 **答案**：`## 结论 **371 个超级英雄记录（368 个不同的英雄名）的 durability 属性值小于 50。** ### 锚定与依据 \| 层级 \| 工具 \| 关键结果 \| \|------\|------\|----------\| \| L1 实体路 \| 'dlr_semantic_query' \| 命中 'LOGICAL.Superhero'（PE 'superhero'）与 'L`
+
+**raw 日志**：[results/0929_1629_superhero_b3/raw/0929_1629_738_dlr.ndjson](../results/0929_1629_superhero_b3/raw/0929_1629_738_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -668,8 +670,6 @@ Final Answer: 371 superheroes (368 distinct hero names) have a Durability attrib
 Evidence SQL: SELECT COUNT(*) AS hero_count, COUNT(DISTINCT s.superhero_name) AS distinct_name_count, GROUP_CONCAT(DISTINCT s.superhero_name) AS hero_names FROM superhero s JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id = a.id WHERE a.attribute_name = 'Durability' AND ha.attribute_value < 50;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q739">
@@ -680,6 +680,8 @@ Evidence SQL: SELECT COUNT(*) AS hero_count, COUNT(DISTINCT s.superhero_name) AS
 **期望**：`Black Flash | Blackwulf | Hela | Living Tribunal | One-Above-All | Poison Ivy | Spectre`
 
 **答案**：`**检索结果** - **L1 语义召回**：锚定 'superhero' 库的 'LOGICAL.Superhero'（英雄主记录）+ 'LOGICAL.Power'（英雄↔超能力多对多，经 'hero_power' 关联表）→ 'PHYSICAL.Superhero' / 'PHYSICAL.HeroPower' / 'PHYSICAL.Superpower'。 - **L2 领域共识**（s`
+
+**raw 日志**：[results/0929_1629_superhero_b3/raw/0929_1629_739_dlr.ndjson](../results/0929_1629_superhero_b3/raw/0929_1629_739_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -710,8 +712,6 @@ Final Answer: Black Flash, Blackwulf, Hela, Living Tribunal, One-Above-All, Pois
 
 Evidence SQL: SELECT s.superhero_name FROM superhero s JOIN hero_power hp ON hp.hero_id = s.id JOIN superpower sp ON sp.id = hp.power_id WHERE sp.power_name = 'Death Touch' ORDER BY s.superhero_name
 
-建模缺口: 无
-
 </details>
 
 <details id="q740">
@@ -722,6 +722,8 @@ Evidence SQL: SELECT s.superhero_name FROM superhero s JOIN hero_power hp ON hp.
 **期望**：`12`
 
 **答案**：`**答案：12** 查询路径（三级锚定）： - **L1 语义召回**：命中 'LOGICAL.Superhero' / 'LOGICAL.Attribute'（库 'superhero'），确定 'gender'（字典表）、'attribute'（属性字典，'attribute_name' 含 Strength）、'hero_attribute'（junction，含 'attribute_va`
+
+**raw 日志**：[results/0929_1629_superhero_b3/raw/0929_1630_740_dlr.ndjson](../results/0929_1629_superhero_b3/raw/0929_1630_740_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -754,8 +756,6 @@ Final Answer: 12
 
 Evidence SQL: SELECT COUNT(DISTINCT s.id) FROM superhero s JOIN gender g ON s.gender_id = g.id JOIN hero_attribute ha ON ha.hero_id = s.id JOIN attribute a ON a.id = ha.attribute_id WHERE g.gender = 'Female' AND a.attribute_name = 'Strength' AND ha.attribute_value = 100
 
-建模缺口: 无
-
 </details>
 
 <details id="q743">
@@ -766,6 +766,8 @@ Evidence SQL: SELECT COUNT(DISTINCT s.id) FROM superhero s JOIN gender g ON s.ge
 **期望**：`28.266666666666666 | 118`
 
 **答案**：`## 结论 **第一级锚定（L3 精确命中）**：'dlr_search_sop' 以 'match=exact' 返回本题专用口径节，明确仲裁：题面 "act in their own self-interest or make decisions based on their own moral code" 对应的是 **''Bad'' 阵营**（不是 Neutral）。 **SQL 验证结果`
+
+**raw 日志**：[results/0929_1643_superhero_secA/raw/0929_1643_743_dlr.ndjson](../results/0929_1643_superhero_secA/raw/0929_1643_743_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -811,8 +813,6 @@ Evidence SQL: SELECT (SELECT COUNT(*) * 100.0 FROM superhero s JOIN alignment a 
        (SELECT COUNT(*) FROM superhero s JOIN alignment a ON s.alignment_id = a.id JOIN publisher p ON s.publisher_id = p.id WHERE a.alignment = 'Bad' AND p.publisher_name = 'Marvel Comics') AS marvel_bad_count;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q744">
@@ -823,6 +823,8 @@ Evidence SQL: SELECT (SELECT COUNT(*) * 100.0 FROM superhero s JOIN alignment a 
 **期望**：`163`
 
 **答案**：`## 结论 **Marvel Comics 出版的超级英雄更多**，比 DC Comics 多 **163** 个。 ### 证据链 \| 步骤 \| 工具 \| 结果 \| \|---\|---\|---\| \| L1 实体锚定 \| 'dlr_semantic_query' \| 命中 'superhero' 库，'LOGICAL.Superhero'（含 'publisher id'）+ `
+
+**raw 日志**：[results/0929_1633_superhero_b4/raw/0929_1633_744_dlr.ndjson](../results/0929_1633_superhero_b4/raw/0929_1633_744_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -869,8 +871,6 @@ Final Answer: Marvel Comics has published more superheroes (387 vs DC Comics' 22
 Evidence SQL: SELECT (SELECT p.publisher_name FROM superhero s JOIN publisher p ON s.publisher_id = p.id GROUP BY p.publisher_name ORDER BY COUNT(*) DESC LIMIT 1) AS more_publisher, ABS((SELECT COUNT(*) FROM superhero s JOIN publisher p ON s.publisher_id = p.id WHERE p.publisher_name = 'DC Comics') - (SELECT COUNT(*) FROM superhero s JOIN publisher p ON s.publisher_id = p.id WHERE p.publisher_name = 'Marvel Comics')) AS diff_count;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q745">
@@ -881,6 +881,8 @@ Evidence SQL: SELECT (SELECT p.publisher_name FROM superhero s JOIN publisher p 
 **期望**：`20`
 
 **答案**：`## 三级锚定过程 \| 级别 \| 工具 \| 结果 \| \|---\|---\|---\| \| L1 实体路 \| 'dlr_semantic_query' \| 命中库 'superhero'：'LOGICAL.Superhero'（含 'publisher id'）、'PHYSICAL.Publisher'（出版商字典） \| \| L2 共识路 \| 'dlr_search_cons`
+
+**raw 日志**：[results/0929_1633_superhero_b4/raw/0929_1633_745_dlr.ndjson](../results/0929_1633_superhero_b4/raw/0929_1633_745_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -918,8 +920,6 @@ Final Answer: 20
 Evidence SQL: SELECT id FROM publisher WHERE publisher_name = 'Star Trek'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q747">
@@ -930,6 +930,8 @@ Evidence SQL: SELECT id FROM publisher WHERE publisher_name = 'Star Trek'
 **期望**：`122`
 
 **答案**：`## 结论 **122** 位超级英雄没有全名（'full_name' 为空）。 **口径依据（L2 领域共识，namespace=superhero, qid=1）**： > "A hero is named by the superhero name, and a missing real name means the full-name field is empty." → 「没有全名」= `
+
+**raw 日志**：[results/0929_1633_superhero_b4/raw/0929_1633_747_dlr.ndjson](../results/0929_1633_superhero_b4/raw/0929_1633_747_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -968,8 +970,6 @@ Final Answer: 122
 Evidence SQL: SELECT COUNT(*) AS cnt FROM superhero WHERE full_name IS NULL OR TRIM(full_name) = ''
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q750">
@@ -980,6 +980,8 @@ Evidence SQL: SELECT COUNT(*) AS cnt FROM superhero WHERE full_name IS NULL OR T
 **期望**：`60.77956989247312`
 
 **答案**：`## 结论 **所有女性超级英雄的平均体重 = 60.77956989247312 kg** ### 三级锚定过程 \| 级别 \| 工具 \| 命中信号 \| \|------\|------\|----------\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| **match=exact**（标题逐字复述本题）→ 权威口径：平均值对**全部**女性行按记录值计算，*`
+
+**raw 日志**：[results/0929_1643_superhero_secA/raw/0929_1643_750_dlr.ndjson](../results/0929_1643_superhero_secA/raw/0929_1643_750_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1026,8 +1028,6 @@ Final Answer: 60.77956989247312
 Evidence SQL: SELECT AVG(s.weight_kg) FROM superhero s JOIN gender g ON s.gender_id = g.id WHERE g.gender = 'Female'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q751">
@@ -1038,6 +1038,8 @@ Evidence SQL: SELECT AVG(s.weight_kg) FROM superhero s JOIN gender g ON s.gender
 **期望**：`Agility | Super Strength | Stamina | Super Speed | Accelerated Healing`
 
 **答案**：`三级锚定完成：L3 命中标题与本题逐字相同的节（'match=exact'），L1 锚定 'superhero' 库的 'Superhero / HeroPower / Superpower / Gender' 四个实体，L2 未覆盖本题（跨库召回无 superhero 条目），故按 L3 口径执行。 **执行路径** - L1 'dlr_semantic_query' → 'LOGICAL.Su`
+
+**raw 日志**：[results/0929_1643_superhero_secA/raw/0929_1643_751_dlr.ndjson](../results/0929_1643_superhero_secA/raw/0929_1643_751_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1080,8 +1082,6 @@ Final Answer: Agility, Super Strength, Stamina, Super Speed, Accelerated Healing
 
 Evidence SQL: SELECT sp.power_name FROM hero_power hp JOIN superhero s ON s.id = hp.hero_id JOIN gender g ON g.id = s.gender_id JOIN superpower sp ON sp.id = hp.power_id WHERE g.gender = 'Male' ORDER BY hp.rowid LIMIT 5
 
-建模缺口: 无
-
 </details>
 
 <details id="q753">
@@ -1092,6 +1092,8 @@ Evidence SQL: SELECT sp.power_name FROM hero_power hp JOIN superhero s ON s.id =
 **期望**：`Chuck Norris | Destroyer | Flash III | Goku | Green Goblin III | Indiana Jones | Judge Dredd | Mister Freeze`
 
 **答案**：`**锚定过程** \| 级别 \| 工具 \| 结果 \| \|------\|------\|------\| \| L3 口径路 \| 'dlr_search_sop' \| 'match=none' → 本题无 L3 节，按 L1+L2 自解 \| \| L1 实体路 \| 'dlr_semantic_query' \| 锚定 'LOGICAL.Superhero' @ db='superh`
+
+**raw 日志**：[results/0929_1633_superhero_b5/raw/0929_1633_753_dlr.ndjson](../results/0929_1633_superhero_b5/raw/0929_1633_753_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1130,8 +1132,6 @@ Final Answer: Chuck Norris, Destroyer, Flash III, Goku, Green Goblin III, Indian
 Evidence SQL: SELECT s.superhero_name FROM superhero s WHERE s.height_cm BETWEEN 170 AND 190 AND s.eye_colour_id = (SELECT id FROM colour WHERE colour = 'No Colour') ORDER BY s.superhero_name
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q758">
@@ -1142,6 +1142,8 @@ Evidence SQL: SELECT s.superhero_name FROM superhero s WHERE s.height_cm BETWEEN
 **期望**：`Blond | Brown | Black | Brown/White | No Colour`
 
 **答案**：`## 检索路径 \| 层级 \| 工具 \| 命中 \| \|---\|---\|---\| \| L1 实体路 \| 'dlr_semantic_query' \| 'LOGICAL.Superhero' @ db='superhero'（含 height_cm / hair colour id / race id），PE 'PHYSICAL.Superhero'、'PHYSICAL.Colou`
+
+**raw 日志**：[results/0929_1633_superhero_b5/raw/0929_1633_758_dlr.ndjson](../results/0929_1633_superhero_b5/raw/0929_1633_758_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1188,8 +1190,6 @@ Final Answer: Black, Blond, Brown, Brown/White, No Colour
 Evidence SQL: SELECT DISTINCT c.colour AS hair_colour FROM superhero s JOIN race r ON s.race_id = r.id JOIN colour c ON s.hair_colour_id = c.id WHERE s.height_cm = 185 AND r.race = 'Human' ORDER BY c.colour
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q760">
@@ -1200,6 +1200,8 @@ Evidence SQL: SELECT DISTINCT c.colour AS hair_colour FROM superhero s JOIN race
 **期望**：`60.869565217391305`
 
 **答案**：`**结论**：身高在 150–180 cm 之间的超级英雄共 230 位，其中 Marvel Comics 出版 140 位，占比 **60.87%**。 - L3：'dlr_search_sop' 返回 'match=none'，本题无题级口径节，按 L1+L2 自解。 - L1（'dlr_semantic_query'）：锚定 'LOGICAL.Superhero'（superhero 库），`
+
+**raw 日志**：[results/0929_1633_superhero_b5/raw/0929_1634_760_dlr.ndjson](../results/0929_1633_superhero_b5/raw/0929_1634_760_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1227,8 +1229,6 @@ Final Answer: 60.87%
 Evidence SQL: SELECT CAST(SUM(CASE WHEN p.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) AS pct, COUNT(*) AS total_in_range, SUM(CASE WHEN p.publisher_name = 'Marvel Comics' THEN 1 ELSE 0 END) AS marvel_cnt FROM superhero s JOIN publisher p ON s.publisher_id = p.id WHERE s.height_cm BETWEEN 150 AND 180
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q761">
@@ -1239,6 +1239,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN p.publisher_name = 'Marvel Comics' THEN 
 **期望**：`King Kong`
 
 **答案**：`## 查询结果 **口径判定**（三级锚定） - L3：'dlr_search_sop' 返回 'match=none' → 本题无题级节，按 L1+L2 自解。 - L2 领域共识（namespace='superhero'）：qid 4「百分比/比率的分母取**同一批实体**」；qid 3「height/weight 为数值，平均值在作用域内的英雄上取」。→ 分母 = **全体英雄**（不限性`
+
+**raw 日志**：[results/0929_1633_superhero_b5/raw/0929_1634_761_dlr.ndjson](../results/0929_1633_superhero_b5/raw/0929_1634_761_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1283,8 +1285,6 @@ Final Answer: King Kong
 
 Evidence SQL: SELECT s.superhero_name FROM superhero s JOIN gender g ON s.gender_id = g.id WHERE g.gender = 'Male' AND s.weight_kg > 0.79 * (SELECT AVG(weight_kg) FROM superhero) ORDER BY s.weight_kg DESC
 
-建模缺口: 无
-
 </details>
 
 <details id="q764">
@@ -1295,6 +1295,8 @@ Evidence SQL: SELECT s.superhero_name FROM superhero s JOIN gender g ON s.gender
 **期望**：`Agility | Super Strength | Stamina | Super Speed`
 
 **答案**：`我已完成三级锚定与查询闭环： - **L3（SOP 口径）**：'match=none'，本题无题级口径节，按 L1 + L2 自解。 - **L1 语义召回**：命中 'LOGICAL.Power'（superhero 库）——超能力字典，经 'PHYSICAL.HeroPower'（junction：hero_id → superhero.id，power_id → superpower.id`
+
+**raw 日志**：[results/0929_1633_superhero_b5/raw/0929_1634_764_dlr.ndjson](../results/0929_1633_superhero_b5/raw/0929_1634_764_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1320,8 +1322,6 @@ Final Answer: Agility, Stamina, Super Speed, Super Strength
 
 Evidence SQL: SELECT s.power_name FROM hero_power hp JOIN superpower s ON hp.power_id = s.id WHERE hp.hero_id = 1 ORDER BY s.power_name;
 
-建模缺口: 无
-
 </details>
 
 <details id="q765">
@@ -1332,6 +1332,8 @@ Evidence SQL: SELECT s.power_name FROM hero_power hp JOIN superpower s ON hp.pow
 **期望**：`127`
 
 **答案**：`**答案：127 个英雄拥有 Stealth（潜行）能力。** 推理过程： - **L3 口径检索**：'dlr_search_sop' 返回 'match=none' → 本题无题级 SOP 节，按 L1 + L2 自解。 - **L2 领域共识**（'superhero' 库 qid=2）："A hero's abilities are recorded as named attributes`
+
+**raw 日志**：[results/0929_1635_superhero_b6/raw/0929_1635_765_dlr.ndjson](../results/0929_1635_superhero_b6/raw/0929_1635_765_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1360,8 +1362,6 @@ Final Answer: 127
 
 Evidence SQL: SELECT COUNT(DISTINCT hp.hero_id) FROM hero_power hp JOIN superpower sp ON hp.power_id = sp.id WHERE sp.power_name = 'Stealth'
 
-建模缺口: 无
-
 </details>
 
 <details id="q766">
@@ -1372,6 +1372,8 @@ Evidence SQL: SELECT COUNT(DISTINCT hp.hero_id) FROM hero_power hp JOIN superpow
 **期望**：`Richard Milhouse Jones`
 
 **答案**：`## 结论 **Richard Milhouse Jones**（英雄名 A-Bomb，英雄 id = 2），其 Strength 属性值为 **100**（数据集中的最高值）。 ### 三级锚定过程 \| 级 \| 工具 \| 命中 \| \|---\|---\|---\| \| L1 数据源级 \| 'dlr_semantic_query'（全局召回，confidence 0.74 / 0.8`
+
+**raw 日志**：[results/0929_1635_superhero_b6/raw/0929_1635_766_dlr.ndjson](../results/0929_1635_superhero_b6/raw/0929_1635_766_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1421,8 +1423,6 @@ Final Answer: Richard Milhouse Jones
 Evidence SQL: SELECT s.full_name FROM hero_attribute ha JOIN attribute a ON a.id = ha.attribute_id JOIN superhero s ON s.id = ha.hero_id WHERE a.attribute_name = 'Strength' ORDER BY ha.attribute_value DESC, s.id ASC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q769">
@@ -1433,6 +1433,8 @@ Evidence SQL: SELECT s.full_name FROM hero_attribute ha JOIN attribute a ON a.id
 **期望**：`Dash`
 
 **答案**：`## 结论 **Dash** —— 黑马漫画（Dark Horse Comics）旗下耐久度（Durability）最高的超级英雄，属性值 **95**。 ### 执行路径与证据 1. **L3 口径检索**（'dlr_search_sop'）：'match=none' → 本题无题级 SOP 节，按 L1 映射 + L2 共识自解。 2. **L2 领域共识**（'dlr_search_cons`
+
+**raw 日志**：[results/0929_1635_superhero_b6/raw/0929_1635_769_dlr.ndjson](../results/0929_1635_superhero_b6/raw/0929_1635_769_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1473,8 +1475,6 @@ Final Answer: Dash
 Evidence SQL: SELECT s.superhero_name, ha.attribute_value FROM superhero s JOIN hero_attribute ha ON ha.hero_id = s.id JOIN attribute a ON a.id = ha.attribute_id JOIN publisher p ON p.id = s.publisher_id WHERE a.attribute_name = 'Durability' AND p.publisher_name = 'Dark Horse Comics' ORDER BY ha.attribute_value DESC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q772">
@@ -1485,6 +1485,8 @@ Evidence SQL: SELECT s.superhero_name, ha.attribute_value FROM superhero s JOIN 
 **期望**：`14 | 6 | 1 | 9 | 9 | 1 | 1 | 1`
 
 **答案**：`三级交叉验证完全一致（L1 实体路指向 'superhero' 库；L2 共识说明三色经 colour id 查字典、性别/出版商同理；L3 命中的节逐字复述本题）。执行结果与 L3 口径逐行吻合，且报告中用的是**颜色名**而非 id。 **查询结果（Dark Horse Comics 的女性超级英雄）** \| 英雄 \| 眼睛 \| 头发 \| 皮肤 \| \|---\|---\|---\|`
+
+**raw 日志**：[results/0929_1643_superhero_secA/raw/0929_1644_772_dlr.ndjson](../results/0929_1643_superhero_secA/raw/0929_1644_772_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1525,8 +1527,6 @@ Evidence SQL: SELECT s.superhero_name, ha.attribute_value FROM superhero s JOIN 
 Final Answer: Buffy — eyes Green, hair Blond, skin No Colour; Elastigirl — eyes Brown, hair Brown, skin No Colour; Liz Sherman — eyes No Colour, hair No Colour, skin No Colour; T-X — eyes No Colour, hair No Colour, skin Silver; Violet Parr — eyes Violet, hair Black, skin No Colour. Distinct colour names: Green | Blond | No Colour | Brown | Silver | Violet | Black
 Evidence SQL: SELECT s.superhero_name, e.colour AS eye_colour, h.colour AS hair_colour, k.colour AS skin_colour FROM superhero s JOIN colour e ON s.eye_colour_id = e.id JOIN colour h ON s.hair_colour_id = h.id JOIN colour k ON s.skin_colour_id = k.id JOIN gender g ON s.gender_id = g.id JOIN publisher p ON s.publisher_id = p.id WHERE g.gender = 'Female' AND p.publisher_name = 'Dark Horse Comics'
 
-建模缺口: 无
-
 </details>
 
 <details id="q773">
@@ -1537,6 +1537,8 @@ Evidence SQL: SELECT s.superhero_name, e.colour AS eye_colour, h.colour AS hair_
 **期望**：`Agent Zero | Marvel Comics | Alex Mercer | Wildstorm | Alex Woolsly | NBC - Heroes | Allan Quatermain | Wildstorm`
 
 **答案**：`## 分析过程 **三级并行锚定** - **L3（'dlr_search_sop'）**：'match=none' —— 本题无题级口径节，按 L1 + L2 自解。 - **L1（'dlr_semantic_query'）**：命中 'LOGICAL.Superhero'（db='superhero'），物理实体 'PHYSICAL.Superhero' / 'PHYSICAL.Colour'`
+
+**raw 日志**：[results/0929_1635_superhero_b6/raw/0929_1635_773_dlr.ndjson](../results/0929_1635_superhero_b6/raw/0929_1635_773_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1582,8 +1584,6 @@ Evidence SQL: SELECT s.superhero_name, e.colour AS eye_colour, h.colour AS hair_
 Final Answer: Beast — Marvel Comics; Beast Boy — DC Comics; Hulk — Marvel Comics; Purple Man — Marvel Comics
 Evidence SQL: SELECT s.superhero_name, p.publisher_name, c.colour FROM superhero s JOIN colour c ON c.id = s.eye_colour_id JOIN publisher p ON p.id = s.publisher_id WHERE s.eye_colour_id = s.hair_colour_id AND s.hair_colour_id = s.skin_colour_id AND c.colour <> 'No Colour'
 
-建模缺口: 无
-
 </details>
 
 <details id="q775">
@@ -1594,6 +1594,8 @@ Evidence SQL: SELECT s.superhero_name, p.publisher_name, c.colour FROM superhero
 **期望**：`2.4630541871921183`
 
 **答案**：`## 结论 **2.4630541871921183%** 的女性超级英雄是蓝色（皮肤）。 ## 三级锚定过程 \| 层级 \| 工具 \| 结果 \| \|------\|------\|------\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| **'match=exact'** —— 本节逐字复述本题，是本题最权威口径 \| \| L1 数据源级 \| 'dlr_`
+
+**raw 日志**：[results/0929_1644_superhero_secB/raw/0929_1644_775_dlr.ndjson](../results/0929_1644_superhero_secB/raw/0929_1644_775_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1641,8 +1643,6 @@ Final Answer: 2.4630541871921183
 Evidence SQL: SELECT CAST(SUM(CASE WHEN c.colour = 'Blue' THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) AS pct_blue_female_skin FROM superhero s JOIN gender g ON s.gender_id = g.id JOIN colour c ON s.skin_colour_id = c.id WHERE g.gender = 'Female';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q779">
@@ -1653,6 +1653,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN c.colour = 'Blue' THEN 1 ELSE 0 END) AS 
 **期望**：`44`
 
 **答案**：`**结论**：Amazo 这位英雄共有 **44** 个能力（powers）。 **依据** - L1 语义召回（'dlr_semantic_query'）：命中 'superhero' 库，'LOGICAL.Power'（Superpowers）经 'PHYSICAL.HeroPower'（'hero_power' 联结表，hero_id→superhero.id，power_id→superp`
+
+**raw 日志**：[results/0929_1636_superhero_b7/raw/0929_1636_779_dlr.ndjson](../results/0929_1636_superhero_b7/raw/0929_1636_779_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1680,8 +1682,6 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN c.colour = 'Blue' THEN 1 ELSE 0 END) AS 
 Final Answer: 44
 Evidence SQL: SELECT COUNT(DISTINCT hp.power_id) AS power_count FROM superhero s JOIN hero_power hp ON hp.hero_id = s.id WHERE s.superhero_name = 'Amazo'
 
-建模缺口: 无
-
 </details>
 
 <details id="q781">
@@ -1692,6 +1692,8 @@ Evidence SQL: SELECT COUNT(DISTINCT hp.power_id) AS power_count FROM superhero s
 **期望**：`178 | 198 | 175`
 
 **答案**：`**解析过程** 1. **L3（'dlr_search_sop'）**：'match=none' —— 本题无题级 SOP 节，按 L1 + L2 自解。 2. **L1（'dlr_semantic_query'）**：锚定 'LOGICAL.Superhero'（db='superhero'）。其公有属性含 'Height_cm'（"the height of the superhero，单位`
+
+**raw 日志**：[results/0929_1636_superhero_b7/raw/0929_1637_781_dlr.ndjson](../results/0929_1636_superhero_b7/raw/0929_1637_781_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1723,8 +1725,6 @@ Final Answer: 175, 178, 198
 Evidence SQL: SELECT T1.height_cm FROM superhero T1 JOIN colour T2 ON T1.eye_colour_id = T2.id WHERE LOWER(T2.colour) = 'amber' ORDER BY T1.height_cm
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q782">
@@ -1735,6 +1735,8 @@ Evidence SQL: SELECT T1.height_cm FROM superhero T1 JOIN colour T2 ON T1.eye_col
 **期望**：`Armor | Atom Girl | Bizarro | Galactus | General Zod | Match | Negasonic Teenage Warhead | Phantom Stranger`
 
 **答案**：`三级锚定结果： - **L3（SOP）**：'match=none' — 本题无题级口径节，按 L1+L2 自解。 - **L1（语义召回）**：命中库 'superhero'，逻辑实体 'Superhero' → 物理实体 'PHYSICAL.Superhero'（主记录）+ 'PHYSICAL.Colour'（颜色字典，'eye_colour_id'/'hair_colour_id'/'ski`
+
+**raw 日志**：[results/0929_1636_superhero_b7/raw/0929_1637_782_dlr.ndjson](../results/0929_1636_superhero_b7/raw/0929_1637_782_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1776,8 +1778,6 @@ Final Answer: Armor, Atom Girl, Bizarro, Galactus, General Zod, Match, Negasonic
 Evidence SQL: SELECT s.superhero_name FROM superhero s JOIN colour e ON s.eye_colour_id = e.id JOIN colour h ON s.hair_colour_id = h.id WHERE e.colour = 'Black' AND h.colour = 'Black' ORDER BY s.superhero_name
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q785">
@@ -1788,6 +1788,8 @@ Evidence SQL: SELECT s.superhero_name FROM superhero s JOIN colour e ON s.eye_co
 **期望**：`Ares | Bizarro | Black Flash | Brundlefly | Captain Cold | Copycat | Deadpool | Deathstroke`
 
 **答案**：`## 结论 **Neutral（中立）阵营的超级英雄共 28 位**，姓名如下： \| # \| 英雄名 \| # \| 英雄名 \| \|---\|--------\|---\|--------\| \| 1 \| Ares \| 15 \| Lobo \| \| 2 \| Bizarro \| 16 \| Lucifer Morningstar \| \| 3 \| Black Flash \`
+
+**raw 日志**：[results/0929_1636_superhero_b7/raw/0929_1637_785_dlr.ndjson](../results/0929_1636_superhero_b7/raw/0929_1637_785_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1844,8 +1846,6 @@ Final Answer: Ares, Bizarro, Black Flash, Brundlefly, Captain Cold, Copycat, Dea
 Evidence SQL: SELECT s.superhero_name FROM superhero s JOIN alignment a ON s.alignment_id = a.id WHERE a.alignment = 'Neutral' ORDER BY s.superhero_name
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q786">
@@ -1856,6 +1856,8 @@ Evidence SQL: SELECT s.superhero_name FROM superhero s JOIN alignment a ON s.ali
 **期望**：`63`
 
 **答案**：`Verification confirms the result: the maximum Strength value is 100, and exactly 63 heroes hold it. **推理链路** - **L1 语义召回** ('dlr_semantic_query')：锚定 'superhero' 库的 'LOGICAL.Attribute' —— 英雄属性（Intellig`
+
+**raw 日志**：[results/0929_1637_superhero_b8/raw/0929_1637_786_dlr.ndjson](../results/0929_1637_superhero_b8/raw/0929_1637_786_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1886,8 +1888,6 @@ Final Answer: 63
 Evidence SQL: SELECT COUNT(*) AS hero_count FROM hero_attribute ha JOIN attribute a ON ha.attribute_id = a.id WHERE a.attribute_name = 'Strength' AND ha.attribute_value = (SELECT MAX(ha2.attribute_value) FROM hero_attribute ha2 JOIN attribute a2 ON ha2.attribute_id = a2.id WHERE a2.attribute_name = 'Strength');
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q788">
@@ -1898,6 +1898,8 @@ Evidence SQL: SELECT COUNT(*) AS hero_count FROM hero_attribute ha JOIN attribut
 **期望**：`28.68217054263566`
 
 **答案**：`**结论**：Marvel Comics 出版的女英雄占其全部英雄的 **28.68%**。 **口径锚定（三级）** - **L3（最权威，'dlr_search_sop' match=exact）**：本题节标题逐字复述题面，明确口径——分母是 **Marvel 自己的英雄总数**（即"Marvel 英雄中女性的占比"），并指出"除以全体女英雄"得 54.95 是错误读法。执行结果 28.68`
+
+**raw 日志**：[results/0929_1644_superhero_secB/raw/0929_1644_788_dlr.ndjson](../results/0929_1644_superhero_secB/raw/0929_1644_788_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1927,8 +1929,6 @@ Final Answer: 28.68217054263566
 Evidence SQL: SELECT CAST(SUM(CASE WHEN g.gender = 'Female' THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(*) AS pct FROM superhero s JOIN gender g ON s.gender_id = g.id JOIN publisher p ON s.publisher_id = p.id WHERE p.publisher_name = 'Marvel Comics'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q790">
@@ -1939,6 +1939,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN g.gender = 'Female' THEN 1 ELSE 0 END) A
 **期望**：`351`
 
 **答案**：`## 查询过程 **三级锚定（Step 1 并行）** - **L3 口径**：'dlr_search_sop' 返回 'match=none' → 本题无题级 SOP 节，按 L1+L2 自解。 - **L1 实体路**：'dlr_semantic_query' 召回 'LOGICAL.Superhero'（db='superhero'），属性含 'Weight_kg'（"the weight `
+
+**raw 日志**：[results/0929_1637_superhero_b8/raw/0929_1638_790_dlr.ndjson](../results/0929_1637_superhero_b8/raw/0929_1638_790_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1978,8 +1980,6 @@ Final Answer: 351
 Evidence SQL: SELECT (SELECT weight_kg FROM superhero WHERE full_name = 'Emil Blonsky') - (SELECT weight_kg FROM superhero WHERE full_name = 'Charles Chandler') AS weight_diff
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q791">
@@ -1990,6 +1990,8 @@ Evidence SQL: SELECT (SELECT weight_kg FROM superhero WHERE full_name = 'Emil Bl
 **期望**：`247.04533333333333`
 
 **答案**：`Both figures reproduce the L3 SOP note exactly — confirming the caliber is unambiguous. **锚定过程（三级）** \| 级 \| 工具 \| 命中 \| \|---\|---\|---\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| **match=exact**，标题逐字复述本题（'`
+
+**raw 日志**：[results/0929_1644_superhero_secB/raw/0929_1644_791_dlr.ndjson](../results/0929_1644_superhero_secB/raw/0929_1644_791_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2031,8 +2033,6 @@ Final Answer: 247.04533333333333
 Evidence SQL: SELECT AVG(COALESCE(height_cm, 0)) FROM superhero
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q792">
@@ -2043,6 +2043,8 @@ Evidence SQL: SELECT AVG(COALESCE(height_cm, 0)) FROM superhero
 **期望**：`Accelerated Healing | Intelligence | Super Strength | Stamina | Super Speed | Invulnerability | Animation | Super Breath`
 
 **答案**：`The entity resolution is clean: 'Abomination' is a unique hero in 'superhero', and his powers come via the junction table 'hero_power' → dictionary 'superpower'. The query returned 8 distinct power na`
+
+**raw 日志**：[results/0929_1637_superhero_b8/raw/0929_1638_792_dlr.ndjson](../results/0929_1637_superhero_b8/raw/0929_1638_792_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2068,8 +2070,6 @@ Final Answer: Accelerated Healing; Intelligence; Super Strength; Stamina; Super 
 
 Evidence SQL: SELECT p.power_name FROM superhero s JOIN hero_power hp ON hp.hero_id = s.id JOIN superpower p ON p.id = hp.power_id WHERE s.superhero_name = 'Abomination';
 
-建模缺口: 无
-
 </details>
 
 <details id="q794">
@@ -2080,6 +2080,8 @@ Evidence SQL: SELECT p.power_name FROM superhero s JOIN hero_power hp ON hp.hero
 **期望**：`Air-Walker`
 
 **答案**：`## 结论 **"Fastest" 不唯一——40 位英雄的速度属性并列最高（Speed = 100）。** ### 三级锚定过程 \| 级 \| 工具 \| 结果 \| \|---\|---\|---\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| 'match=none' — 本题无题级节，按 L1+L2 自解 \| \| L1 数据源级 \| 'dlr_semant`
+
+**raw 日志**：[results/0929_1639_superhero_b9/raw/0929_1639_794_dlr.ndjson](../results/0929_1639_superhero_b9/raw/0929_1639_794_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2128,8 +2130,6 @@ Final Answer: 40 heroes tie at the maximum Speed attribute value of 100: Air-Wal
 Evidence SQL: SELECT GROUP_CONCAT(s.superhero_name, ', ') AS fastest_heroes, MAX(ha.attribute_value) AS max_speed FROM hero_attribute ha JOIN attribute a ON ha.attribute_id = a.id JOIN superhero s ON ha.hero_id = s.id WHERE a.attribute_name = 'Speed' AND ha.attribute_value = (SELECT MAX(ha2.attribute_value) FROM hero_attribute ha2 JOIN attribute a2 ON ha2.attribute_id = a2.id WHERE a2.attribute_name = 'Speed')
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q796">
@@ -2140,6 +2140,8 @@ Evidence SQL: SELECT GROUP_CONCAT(s.superhero_name, ', ') AS fastest_heroes, MAX
 **期望**：`Intelligence | 80 | Strength | 35 | Speed | 45 | Durability | 45`
 
 **答案**：`## 结论 **3-D Man**（superhero 库 'superhero.id = 1'）共拥有 **6 项属性**（该库 'attribute' 字典全量即 6 项：Intelligence / Strength / Speed / Durability / Power / Combat，每项覆盖全部 623 位英雄，无缺失）： \| 属性 Attribute \| 值 Value \|`
+
+**raw 日志**：[results/0929_1639_superhero_b9/raw/0929_1639_796_dlr.ndjson](../results/0929_1639_superhero_b9/raw/0929_1639_796_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2195,8 +2197,6 @@ Final Answer: Intelligence=80; Strength=35; Speed=45; Durability=45; Power=45; C
 Evidence SQL: SELECT s.id, s.superhero_name, GROUP_CONCAT(a.attribute_name || '=' || ha.attribute_value, '; ') AS attributes FROM superhero s JOIN hero_attribute ha ON ha.hero_id = s.id JOIN attribute a ON a.id = ha.attribute_id WHERE s.superhero_name = '3-D Man' GROUP BY s.id, s.superhero_name;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q797">
@@ -2207,6 +2207,8 @@ Evidence SQL: SELECT s.id, s.superhero_name, GROUP_CONCAT(a.attribute_name || '=
 **期望**：`Atlas | Atlas | Big Man | Bloodaxe | Blue Beetle | Blue Beetle II | Captain Epic | Chewbacca`
 
 **答案**：`## 查询过程 **三级锚定** - **L3（'dlr_search_sop'）**：'match=none' — 本题无题级口径节，按 L1 + L2 自解。 - **L1（'dlr_semantic_query'）**：命中 'LOGICAL.Superhero'（db='superhero'），含属性 'eye colour id' / 'hair colour id'，物理实体 'PHY`
+
+**raw 日志**：[results/0929_1639_superhero_b9/raw/0929_1639_797_dlr.ndjson](../results/0929_1639_superhero_b9/raw/0929_1639_797_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2243,8 +2245,6 @@ Final Answer: Atlas, Big Man, Bloodaxe, Blue Beetle, Blue Beetle II, Captain Epi
 Evidence SQL: SELECT DISTINCT s.superhero_name FROM superhero s JOIN colour e ON s.eye_colour_id = e.id JOIN colour h ON s.hair_colour_id = h.id WHERE e.colour = 'Blue' AND h.colour = 'Brown' ORDER BY s.superhero_name;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q798">
@@ -2255,6 +2255,8 @@ Evidence SQL: SELECT DISTINCT s.superhero_name FROM superhero s JOIN colour e ON
 **期望**：`DC Comics | DC Comics | DC Comics`
 
 **答案**：`Three-level anchoring converged on the 'superhero' DB, and all three characters resolve to the same publisher. **Anchoring summary** - **L3 (SOP)**: 'match=none' — no question-level clause exists for `
+
+**raw 日志**：[results/0929_1639_superhero_b9/raw/0929_1639_798_dlr.ndjson](../results/0929_1639_superhero_b9/raw/0929_1639_798_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2295,8 +2297,6 @@ Final Answer: DC Comics
 
 Evidence SQL: SELECT DISTINCT p.publisher_name FROM superhero s JOIN publisher p ON s.publisher_id = p.id WHERE s.superhero_name IN ('Hawkman','Karate Kid','Speedy');
 
-建模缺口: 无
-
 </details>
 
 <details id="q800">
@@ -2307,6 +2307,8 @@ Evidence SQL: SELECT DISTINCT p.publisher_name FROM superhero s JOIN publisher p
 **期望**：`31.2`
 
 **答案**：`## 结论 **31.2%** 的超级英雄有蓝色眼睛。 ### 推理链（三级锚定） \| 级别 \| 工具 \| 命中要点 \| \|------\|------\|----------\| \| L3 口径 \| 'dlr_search_sop' \| 'match=none' — 本题无题级 SOP 节，按 L1+L2 自解 \| \| L1 数据源 \| 'dlr_semantic_quer`
+
+**raw 日志**：[results/0929_1639_superhero_b9/raw/0929_1639_800_dlr.ndjson](../results/0929_1639_superhero_b9/raw/0929_1639_800_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2354,8 +2356,6 @@ Final Answer: 31.2
 Evidence SQL: SELECT SUM(CASE WHEN c.colour = 'Blue' THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS blue_eye_percentage FROM superhero s LEFT JOIN colour c ON s.eye_colour_id = c.id
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q801">
@@ -2366,6 +2366,8 @@ Evidence SQL: SELECT SUM(CASE WHEN c.colour = 'Blue' THEN 1 ELSE 0 END) * 100.0 
 **期望**：`2.5566502463054186`
 
 **答案**：`**查询过程** - **L1 语义召回**（'dlr_semantic_query'）：定位到库 'superhero'，逻辑实体 'Superhero'（含属性 'gender id'）与字典实体 'Gender'（'Gender' 值 Male/Female）。 - **L2 领域共识**（'dlr_search_consensus'，namespace='superhero'）：*"a r`
+
+**raw 日志**：[results/0929_1640_superhero_b10/raw/0929_1640_801_dlr.ndjson](../results/0929_1640_superhero_b10/raw/0929_1640_801_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2391,8 +2393,6 @@ Evidence SQL: SELECT SUM(CASE WHEN c.colour = 'Blue' THEN 1 ELSE 0 END) * 100.0 
 Final Answer: 2.5566502463054186 (男性英雄数 ÷ 女性英雄数)
 Evidence SQL: SELECT CAST(SUM(CASE WHEN g.gender = 'Male' THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN g.gender = 'Female' THEN 1 ELSE 0 END) AS male_female_ratio FROM superhero s JOIN gender g ON s.gender_id = g.id
 
-建模缺口: 无
-
 </details>
 
 <details id="q806">
@@ -2403,6 +2403,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN g.gender = 'Male' THEN 1 ELSE 0 END) AS 
 **期望**：`Brown`
 
 **答案**：`**查询结果** 在 'superhero' 库中，'superhero.full_name = 'Karen Beecher-Duncan'' 的英雄（Bumblebee，DC Comics）对应的眼睛颜色为 **Brown**。 **执行路径** - L1 'dlr_semantic_query'：锚定库 'superhero'，逻辑实体 'LOGICAL.Superhero'（英雄主记录，'`
+
+**raw 日志**：[results/0929_1640_superhero_b10/raw/0929_1640_806_dlr.ndjson](../results/0929_1640_superhero_b10/raw/0929_1640_806_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2430,8 +2432,6 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN g.gender = 'Male' THEN 1 ELSE 0 END) AS 
 Final Answer: Brown
 Evidence SQL: SELECT c.colour FROM superhero s JOIN colour c ON s.eye_colour_id = c.id WHERE s.full_name = 'Karen Beecher-Duncan'
 
-建模缺口: 无
-
 </details>
 
 <details id="q819">
@@ -2442,6 +2442,8 @@ Evidence SQL: SELECT c.colour FROM superhero s JOIN colour c ON s.eye_colour_id 
 **期望**：`-122`
 
 **答案**：`三级锚定完成：L3 精确命中（该节逐字复述本题），L1 锚定 'superhero' 库 LE 'Superhero' + 'Colour'，L2 共识确认 "no eye colour" = 颜色字典中的无颜色值。 **执行过程** 1. L3 口径（'dlr_search_sop', match=exact）："Missing weight data" 指 'weight_kg = 0' OR`
+
+**raw 日志**：[results/0929_1644_superhero_secB/raw/0929_1644_819_dlr.ndjson](../results/0929_1644_superhero_secB/raw/0929_1644_819_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2474,8 +2476,6 @@ Evidence SQL: SELECT SUM(CASE WHEN c.colour = 'Blue' THEN 1 ELSE 0 END) - SUM(CA
 
 （蓝眼 26 人 − 无眼色 148 人 = -122，即蓝眼英雄比无眼色英雄少 122 人。）
 
-建模缺口: 无
-
 </details>
 
 <details id="q822">
@@ -2486,6 +2486,8 @@ Evidence SQL: SELECT SUM(CASE WHEN c.colour = 'Blue' THEN 1 ELSE 0 END) - SUM(CA
 **期望**：`6`
 
 **答案**：`## 查询过程 **三级锚定** - **L1 实体路**（'dlr_semantic_query'）：命中 'LOGICAL.Superhero'（db='superhero'），其 PE 'PHYSICAL.Superhero' 描述为「Hero master — FK→colour/race/gender/publisher/alignment」；'PHYSICAL.Colour'「eye_`
+
+**raw 日志**：[results/0929_1640_superhero_b10/raw/0929_1640_822_dlr.ndjson](../results/0929_1640_superhero_b10/raw/0929_1640_822_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2522,8 +2524,6 @@ Final Answer: 6
 Evidence SQL: SELECT COUNT(*) FROM superhero s JOIN colour c ON s.skin_colour_id = c.id JOIN alignment a ON s.alignment_id = a.id WHERE c.colour = 'Green' AND a.alignment = 'Bad'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q824">
@@ -2534,6 +2534,8 @@ Evidence SQL: SELECT COUNT(*) FROM superhero s JOIN colour c ON s.skin_colour_id
 **期望**：`Crystal | Red Tornado | Tempest`
 
 **答案**：`## 结论 **目标库**：'superhero'（L1 语义召回命中 'LOGICAL.Power' / 'LOGICAL.Superhero'） **口径锚定**： - L1 召回指出"超能力字典"'PHYSICAL.Superpower'（'power_name'）与多对多连接表 'PHYSICAL.HeroPower'（'hero_id' → 'superhero.id'，'power_i`
+
+**raw 日志**：[results/0929_1640_superhero_b10/raw/0929_1640_824_dlr.ndjson](../results/0929_1640_superhero_b10/raw/0929_1640_824_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2579,8 +2581,6 @@ Final Answer: Crystal, Red Tornado, Tempest
 Evidence SQL: SELECT DISTINCT s.superhero_name FROM superhero s JOIN hero_power hp ON s.id = hp.hero_id JOIN superpower p ON hp.power_id = p.id WHERE p.power_name = 'Wind Control' ORDER BY s.superhero_name
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q825">
@@ -2591,6 +2591,8 @@ Evidence SQL: SELECT DISTINCT s.superhero_name FROM superhero s JOIN hero_power 
 **期望**：`Female`
 
 **答案**：`The query returns exactly one hero: **Phoenix**, with the power **Phoenix Force**, and gender **Female**. **Reasoning chain:** - **L3** ('dlr_search_sop'): 'match=none' — no题级口径 for this question; res`
+
+**raw 日志**：[results/0929_1641_superhero_b11/raw/0929_1641_825_dlr.ndjson](../results/0929_1641_superhero_b11/raw/0929_1641_825_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2621,8 +2623,6 @@ Final Answer: Female
 Evidence SQL: SELECT g.gender FROM superhero s JOIN hero_power hp ON hp.hero_id = s.id JOIN superpower p ON p.id = hp.power_id JOIN gender g ON g.id = s.gender_id WHERE p.power_name = 'Phoenix Force'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q829">
@@ -2633,6 +2633,8 @@ Evidence SQL: SELECT g.gender FROM superhero s JOIN hero_power hp ON hp.hero_id 
 **期望**：`-163`
 
 **答案**：`**结论**：Marvel Comics 创造的超级英雄更多。 - Marvel Comics：**387** 位 - DC Comics：**224** 位 **差异（DC − Marvel，带符号）**：224 − 387 = **−163**（负号表示 DC 少于 Marvel；若只报绝对值 163 会丢失方向，L3 口径明确要求带符号）。 来源： - L3 口径节（'dlr_search_`
+
+**raw 日志**：[results/0929_1644_superhero_secB/raw/0929_1645_829_dlr.ndjson](../results/0929_1644_superhero_secB/raw/0929_1645_829_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2664,7 +2666,5 @@ Evidence SQL: SELECT g.gender FROM superhero s JOIN hero_power hp ON hp.hero_id 
 Final Answer: Marvel Comics created more superheroes (387 vs DC's 224); the signed difference is -163 (DC minus Marvel).
 Evidence SQL: SELECT (SELECT COUNT(*) FROM superhero s JOIN publisher p ON s.publisher_id = p.id WHERE p.publisher_name = 'DC Comics') - (SELECT COUNT(*) FROM superhero s JOIN publisher p ON s.publisher_id = p.id WHERE p.publisher_name = 'Marvel Comics') AS dc_minus_marvel_diff
 ```
-
-建模缺口: 无
 
 </details>

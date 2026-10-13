@@ -55,6 +55,8 @@
 
 **答案**：`三级锚定均指向 'california_schools' 库，交叉验证一致： - **L1（实体路）**：'LOGICAL.SchoolPerformance'（PE 'satscores'，含 'AvgScrMath'，描述明确"Pre-computed average Math score"）与 'LOGICAL.School'（PE 'schools'，含 'Virtual'）。ARC 锚键`
 
+**raw 日志**：[results/0928_1116_qids_5_11_12_17_24/raw/0928_1116_5_dlr.ndjson](../results/0928_1116_qids_5_11_12_17_24/raw/0928_1116_5_dlr.ndjson)（dsh 事件流 ndjson）
+
 **调用步骤**
 
 | # | 工具 | 参数（截 200） |
@@ -88,8 +90,6 @@ Final Answer: 4
 Evidence SQL: SELECT COUNT(*) AS cnt FROM satscores AS s JOIN schools AS sc ON s.cds = sc.CDSCode WHERE s.AvgScrMath > 400 AND sc.Virtual = 'F'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q11">
@@ -100,6 +100,8 @@ Evidence SQL: SELECT COUNT(*) AS cnt FROM satscores AS s JOIN schools AS sc ON s
 **期望**：`01100170109835 | 01100170112607 | 01100170124172 | 01100170125567 | 01100176001788 | 01100176002000 | 01316170131763 | 01611190111765`
 
 **答案**：`## 结论 按 L3 口径（'dlr_search_sop' 命中节，标题逐字复述本题）与 L2 领域共识（'dlr_search_consensus' qid=11，namespace=california_schools）： - **"total enrollment" = 'Enrollment (K-12)' + 'Enrollment (Ages 5-17)' 两列相加**（只取任一列会`
+
+**raw 日志**：[results/0928_1116_qids_5_11_12_17_24/raw/0928_1116_11_dlr.ndjson](../results/0928_1116_qids_5_11_12_17_24/raw/0928_1116_11_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -141,8 +143,6 @@ Final Answer: The codes (CDSCode) of the schools whose total enrollment — `Enr
 
 Evidence SQL: SELECT s.CDSCode FROM frpm AS f INNER JOIN schools AS s ON f.CDSCode = s.CDSCode WHERE CAST(f."Enrollment (K-12)" AS REAL) + CAST(f."Enrollment (Ages 5-17)" AS REAL) > 500 ORDER BY s.CDSCode
 
-建模缺口: 无
-
 </details>
 
 <details id="q12">
@@ -153,6 +153,8 @@ Evidence SQL: SELECT s.CDSCode FROM frpm AS f INNER JOIN schools AS s ON f.CDSCo
 **期望**：`0.9049079754601227`
 
 **答案**：`**结果确认**：748 所 SAT 优秀率 > 0.3 的学校，最高 5-17 岁免费餐资格率为 **0.9049**（Middle College High，295/326）。 ## 推理过程 **三级锚定** - **L2 领域共识**（'dlr_search_consensus' 命中 qid 12，namespace='california_schools'，**逐字复述本题**）：  `
+
+**raw 日志**：[results/0928_1116_qids_5_11_12_17_24/raw/0928_1116_12_dlr.ndjson](../results/0928_1116_qids_5_11_12_17_24/raw/0928_1116_12_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -204,8 +206,6 @@ Final Answer: 0.9049079754601227
 Evidence SQL: SELECT MAX(CAST(f."Free Meal Count (Ages 5-17)" AS REAL) / f."Enrollment (Ages 5-17)") AS max_free_rate FROM frpm f JOIN satscores s ON f.CDSCode = s.cds WHERE s.NumTstTakr > 0 AND CAST(s.NumGE1500 AS REAL) / s.NumTstTakr > 0.3 AND f."Enrollment (Ages 5-17)" > 0;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q17">
@@ -216,6 +216,8 @@ Evidence SQL: SELECT MAX(CAST(f."Free Meal Count (Ages 5-17)" AS REAL) / f."Enro
 **期望**：`0210 | 630 | 1 | 0890 | 593 | 2 | 0290 | 582`
 
 **答案**：`## 结论 **口径锚定**（三级并行）： - **L2 领域共识**（qid=17，namespace=california_schools）**逐字命中本题**：*"Valid charter number means the number is not null"* → 必须过滤 'CharterNum IS NOT NULL'，否则会把 442 所非特许学校（CharterNum 为 NU`
+
+**raw 日志**：[results/0928_1116_qids_5_11_12_17_24/raw/0928_1116_17_dlr.ndjson](../results/0928_1116_qids_5_11_12_17_24/raw/0928_1116_17_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -311,8 +313,6 @@ Final Answer: [("0210",630),("0890",593),("0290",582),("0352",581),("0930",579),
 Evidence SQL: SELECT T2.CharterNum, T1.AvgScrWrite FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrWrite > 499 AND T2.CharterNum IS NOT NULL ORDER BY T1.AvgScrWrite DESC;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q23">
@@ -323,6 +323,8 @@ Evidence SQL: SELECT T2.CharterNum, T1.AvgScrWrite FROM satscores AS T1 INNER JO
 **期望**：`Alameda County Community | 313 West Winton Avenue | California School for the Deaf-Fremont | 39350 Gallaudet Drive | Alameda High | 2201 Encinal Avenue | Encinal High | 210 Central Avenue`
 
 **答案**：`## 结论 **L3 精确命中**（'dlr_search_sop' 返回标题与本题逐字相同的节，类型"难题"）：口径为 'Enrollment (K-12) - Enrollment (Ages 5-17) > 30'（严格大于，是下界），且**校名与地址必须取自 school master（'schools' 表）**，而不是 frpm 表（两表校名有两打以上行不一致）；答卷要求"给出计数 +`
+
+**raw 日志**：[results/0928_1135_qids_23_37_45_82_85/raw/0928_1135_23_dlr.ndjson](../results/0928_1135_qids_23_37_45_82_85/raw/0928_1135_23_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -363,8 +365,6 @@ Alameda County Community — 313 West Winton Avenue；California School for the 
 Final Answer: 1239 schools — the list above of (school name from `schools`.`School`, full street address from `schools`.`Street`) for every school where `CAST(frpm."Enrollment (K-12)" AS REAL) - CAST(frpm."Enrollment (Ages 5-17)" AS REAL) > 30`, joined on CDSCode; 3 of the 1239 master records have a NULL school name (addresses 3699 North Holly Avenue, 1130 Fifth Avenue, 555 Franklin Street).
 Evidence SQL: SELECT s.School, s.Street FROM frpm f JOIN schools s ON s.CDSCode = f.CDSCode WHERE CAST(f."Enrollment (K-12)" AS REAL) - CAST(f."Enrollment (Ages 5-17)" AS REAL) > 30 ORDER BY f.CDSCode;
 
-建模缺口: 无
-
 </details>
 
 <details id="q24">
@@ -375,6 +375,8 @@ Evidence SQL: SELECT s.School, s.Street FROM frpm f JOIN schools s ON s.CDSCode 
 **期望**：`FAME Public Charter | Envision Academy for Arts & Technology | Alameda Science and Technology Institute | Alameda High | Alternatives in Action | Encinal High | Albany High | REALM Charter High`
 
 **答案**：`## 三级锚定结果 \| 级别 \| 工具 \| 命中 \| \|---\|---\|---\| \| L1 数据源级 \| 'dlr_semantic_query' \| 'LOGICAL.SchoolPerformance'（db=california_schools），含 PE 'frpm' 与 'satscores'，公开属性 'FreeMeal_K12' / 'Enrollment_K1`
+
+**raw 日志**：[results/0928_1116_qids_5_11_12_17_24/raw/0928_1116_24_dlr.ndjson](../results/0928_1116_qids_5_11_12_17_24/raw/0928_1116_24_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -415,8 +417,6 @@ Evidence SQL: SELECT s.School, s.Street FROM frpm f JOIN schools s ON s.CDSCode 
 Final Answer: 1165 schools: APEX Academy | ARISE High | Abraham Lincoln High | Abraham Lincoln Senior High | Academies of Education and Empowerment at Carson High | Academy for Academic Excellence | Academy of Arts and Sciences | Academy of Careers and Exploration | Academy of Environmental & Social Policy (ESP) at Roosevelt High | Academy of Medical Arts at Carson High | Academy of the Redwoods | Adelanto High | Adolfo Camarillo High | Adrian Wilcox High | Alain Leroy Locke College Prep Academy | Alameda High | Alameda Science and Technology Institute | Albany High | Alexander Hamilton Senior High | Alhambra High | Alhambra Senior High | Alisal High | Alliance Cindy and Bill Simon Technology Academy High | Alliance College-Ready Academy High 16 | Alliance Collins Family College-Ready High | Alliance Dr. Olga Mohan High | Alliance Environmental Science and Technology High | Alliance Gertz-Ressler Richard Merkin 6-12 Complex | Alliance Health Services Academy High | Alliance Judy Ivie Burton Technology Academy High | Alliance Marc & Eva Stern Math and Science | Alliance Media Arts and Entertainment Design High | Alliance Ouchi-O'Donovan 6-12 Complex | Alliance Patti And Peter Neuwirth Leadership Academy | Alliance Renee and Meyer Luskin Academy High | Alliance Tennenbaum Family Technology High | Alta Loma High | Alta Vista Alternative High | Alternatives in Action | Amador High | American Canyon High | American High | American Indian Public High | Anaheim High | Analy High | Anderson High | Anderson Valley Junior-Senior High | Anderson W. Clark Magnet High | Andrew P. Hill High | Angelo Rodriguez High | Animo College Preparatory Academy | Animo Inglewood Charter High | Animo Jackie Robinson High | Animo Leadership High | Animo Pat Brown | Animo Ralph Bunche High | Animo South Los Angeles Charter | Animo Venice Charter High | Animo Watts College Preparatory Academy | Ann Sobrato High | Antelope High | Antelope Valley High | Antioch High | Anzar High | Apple Valley High | Applied Technology Center | Aptos High | Aragon High | Arcadia High | Arcata High | Argonaut High | Arleta High | Arlington High | Armijo High | Arnold O. Beckman High | Arroyo Grande High | Arroyo High | Arroyo High | Arroyo Valley High | Artesia High | Arthur A. Benjamin Health Professions High | Arvin High | Asawa (Ruth) San Francisco School of the Arts, A Public School. | Aspire Alexander Twilight Secondary Academy | Aspire Benjamin Holt College Preparatory Academy | Aspire Golden State College Preparatory Academy | Aspire Langston Hughes Academy | Aspire Lionel Wilson College Preparatory Academy | Aspire Pacific Academy | Atascadero High | Atwater High | Audeo Charter | Augustus F. Hawkins High B Community Health Advocates | Augustus F. Hawkins High C Responsible Indigenous Social Entrepreneurship | Avalon K-12 | Avenal High | Azusa High | Bakersfield High | Balboa High | Baldwin Park High | Banning High | Barstow High | Bassett Senior High | Bay Area Technology | Bear Creek High | Bear River High | Beaumont Senior High | Bell Gardens High | Bell Senior High | Bella Vista High | Bellflower High | Belmont SH-LA Teacher Preparatory Academy | Belmont Senior High | Benicia High | Benjamin Franklin Senior High | Berkeley High | Big Bear High | Biggs High | Birmingham Community Charter High | Bishop Union High | Bitney College Preparatory High | Blair High | Bloomington High | Bolsa Grande High | Bonita High | Bonita Vista Senior High | Borrego Springs High | Branham High | Brawley High | Brea-Olinda High | Bret Harte Union High | Bright Star Secondary Charter Academy | Buchanan High | Buena High | Buena Park High | Buhach Colony High | Bullard High | Burbank High | Burroughs High | Burroughs High | Burton (Phillip and Sala) Academic High | C. K. McClatchy High | CHAMPS - Charter HS of Arts-Multimedia & Performing | CORE Butte Charter | Cabrillo High | Cabrillo High | Cajon High | Calaveras High | Calexico High | California Academy of Mathematics and Science | California City High | California Connections Academy @ Ripon | California High | California Military Institute | California Virtual Academy @ Los Angeles | California Virtual Academy @ San Diego | Calipatria High | Calistoga Junior-Senior High | Camino Nuevo Charter High | Canoga Park Senior High | Canyon High | Canyon Springs High | Capistrano Connections Academy | Capistrano Valley High | Capuchino High | Carlmont High | Carlsbad High | Carpinteria Senior High | Carson Senior High | Caruthers High | Casa Grande High | Casa Roble Fundamental High | Castle Park Senior High | Castlemont High | Castro Valley High | Cathedral City High | Centennial High | Centennial High | Centennial High | Center High | Central City Value | Central High East Campus | Central Union High | Central Valley High | Central Valley High | Century High | Ceres High | Cerritos High | Cesar Chavez High | Cesar E. Chavez High | Cesar E. Chavez Learning Academies-Academy of Scientific Exploration (ASE) | Cesar E. Chavez Learning Academies-Arts,Theatre, Entertainment (ArTES) | Cesar E. Chavez Learning Academies-Social Justice Humanitas Academy | Cesar E. Chavez Learning Academies-Teacher Preparation Academy | Chaffey High | Channel Islands High | Chaparral High | Charter Community School Home Study Academy | Charter Oak High | Charter School of San Diego | Chatsworth Charter High | Chester Junior/Senior High | Chico High | Chino High | Chino Hills High | Chowchilla Union High | Christopher High | Chula Vista Senior High | Citrus Hill High | Citrus Valley High | City Arts and Tech High | City Honors College Preparatory Academy | City of Angels | Clairemont High | Claremont High | Clayton Valley Charter High | Clear Lake High | Cloverdale High | Clovis East High | Clovis High | Clovis North High | Clovis West High | Coachella Valley High | Coalinga High | Coast Union High | Coleman Tech Charter High | Colfax High | Coliseum College Prep Academy | College Park High | College Prep High | Colony High | Colton High | Colusa High | Communication and Technology at Diego Rivera Learning Complex | Compton High | Concord High | Connecting Waters Charter | Contreras Learning Center-Academic Leadership Community | Contreras Learning Center-Los Angeles School of Global Studies | Contreras Learning Center-School of Social Justice | Corcoran High | Cordova High | Corning High | Corona High | Costa Mesa High | Cosumnes Oaks High | Covina High | Crawford High | Crenshaw Arts-Technology Charter High | Crenshaw Science, Technology, Engineering, Math and Medicine Magnet | Crescenta Valley High | Culver City High | Cypress High | Da Vinci Design | Da Vinci Science | Dana Hills High | Daniel Pearl Journalism & Communications Magnet | David Starr Jordan Senior High | Davis Senior High | De Anza Senior High | Deer Valley High | Dehesa Charter | Del Campo High | Del Mar High | Del Norte High | Delano High | Delhi High | Delta Charter | Delta High | Denair High | Desert Hot Springs High | Desert Mirage High | Design Science Early College High | Diamond Ranch High | Dinuba High | Discovery Charter Preparatory No. 2 | District Office (23 district-level rows) | Dixon High | Dominguez High | Don Antonio Lugo High | Dos Palos High | Dos Pueblos Senior High | Downey High | Downtown Business High | Dozier-Libbey Medical High | Dr. Maya Angelou Community High | Dr. T. J. Owens Gilroy Early College Academy | Duarte High | Durham High | Eagle Rock High | Early College High | East Bakersfield High | East Bay Arts High | East Los Angeles Performing Arts Academy at Esteban E. Torres High No. 1 | East Los Angeles Renaissance Academy at Esteban E. Torres High No. 2 | East Nicolaus High | East Palo Alto Academy | East Union High | East Valley Senior High | Eastlake High | Eastside High | Edgewood High | Edison High | Edison High | Edward R. Roybal Learning Center | Eisenhower Senior High | El Cajon Valley High | El Camino Fundamental High | El Camino High | El Camino High | El Camino High | El Camino Real Charter High | El Capitan High | El Cerrito Senior High | El Diamante High | El Dorado High | El Dorado High | El Modena High | El Molino High | El Monte High | El Rancho High | El Toro High | Eleanor Roosevelt High | Elise P. Buckingham Charter Magnet High | Elizabeth Learning Center | Elk Grove High | Elsie Allen High | Elsinore High | Emery Secondary | Encina Preparatory High | Encinal High | Encore Jr./Sr. High School for the Performing and Visual Arts | Engineering and Technology Academy at Esteban E. Torres High No. 3 | Enterprise High | Environmental Charter High | Envision Academy for Arts & Technology | Erma Duncan Polytechnical High | Ernest Righetti High | Escalon High | Escondido Charter High | Escondido High | Esparto High | Esperanza High | Estancia High | Etiwanda High | Etna Union High | Eureka Senior High | Everest Public High | Everett Alvarez High | Evergreen Valley High | Excelsior Charter | Exeter Union High | FAME Public Charter | Fairfax Senior High | Fairfield High | Fall River Junior-Senior High | Fallbrook High | Farmersville High | Felicitas and Gonzalo Mendez High | Ferndale High | Fillmore Senior High | Firebaugh High | Florin High | Fontana A. B. Miller High | Fontana High | Foothill High | Foothill High | Foothill High | Foothill High | Foothill Technology High | Forest Charter | Foresthill High | Fort Bragg High | Fortuna Union High | Foshay Learning Center | Fountain Valley High | Fowler High | Francisco Bravo Medical Magnet High | Franklin High | Franklin High | Frazier Mountain High | Fred C. Beyer High | Frederick Douglass Academy High | Freedom High | Fremont Academy of Engineering and Design | Fremont High | Fremont High | Fresno High | Frontier High | Fullerton Union High | Futures High | Gabrielino High | Gahr (Richard) High | Galileo High | Galt High | Ganesha High | Garden Grove High | Gardena Senior High | Garey High | Gateway High | George Washington Carver School of Arts and Science | George Washington Preparatory High | Gilroy High | Gladstone High | Glen A. Wilson High | Glendale High | Glendora High | Golden Sierra Junior Senior High | Golden Valley High | Golden Valley High | Golden Valley High | Golden West High | Gompers Preparatory Academy | Gonzales High | Gorman Learning Center | Grace M. Davis High | Granada High | Granada Hills Charter High | Grand Terrace High School at the Ray Abril Jr. Educational Complex | Granite Hills High | Granite Hills High | Granite Hills High | Grant Union High | Green Design at Diego Rivera Learning Complex | Greenfield High | Gridley High | Grossmont High | Grossmont Middle College High | Grove | Grover Cleveland Charter High | Guajome Park Academy Charter | Guidance Charter | Gunderson High | Gustine High | Half Moon Bay High | Hallmark Charter | Hamilton High | Hamilton High | Hanford High | Hanford West High | Harbor High | Harbor Teacher Preparation Academy | Harmony Magnet Academy | Hawthorne High | Hawthorne Math and Science Academy | Hayward High | Healdsburg High | Health Careers Academy | Health Sciences High | Hector G. Godinez | Helen Bernstein High | Helix High | Hemet High | Henry High | Henry J. Kaiser High | Herbert Hoover High | Herbert Hoover High | Hercules High | Heritage High | Heritage High | Heritage Peak Charter | Hesperia High | High Tech High | High Tech High Chula Vista | High Tech High International | High Tech High Media Arts | High Tech High North County | High Tech LA | Highland High | Highland High | Highlands High | Hillsdale High | Hilltop Senior High | Hilmar High | Hiram W. Johnson High | Hollywood Senior High | Holtville High | Homestead High | Hoopa Valley High | Hoover High | Horizon Charter | Hueneme High | Hughson High | Humanitas Academy of Art and Technology at Esteban E. Torres High No. 4 | Humanities and Arts (HARTS) Academy of Los Angeles | Humphreys College Academy of Business, Law and Education | Huntington Beach High | Huntington Park Senior High | Impact Academy of Arts & Technology | Imperial High | Independence High | Independence High | Independence High | Inderkum High | Indian Springs High | Indio High | Inglewood High | Insight @ Los Angeles | Inspire School of Arts and Sciences | International Polytechnic High | International Studies Academy | International Studies Learning Center at Legacy High School Complex | Irvine High | Ivy Academia | James A. Garfield Senior High | James C. Enochs High | James Lick High | James Logan High | James Monroe High | Jefferson High | Jesse M. Bethel High | John A. Rowland High | John C. Fremont Senior High | John C. Kimball High | John F. Kennedy High | John F. Kennedy High | John F. Kennedy High | John F. Kennedy High | John F. Kennedy High | John H. Francis Polytechnic | John H. Glenn High | John H. Pitman High | John Marshall Senior High | John Muir High | John Swett High | John W. North High | Jordan High | Joseph A. Gregori High | Julian Charter | Jurupa Hills High | Jurupa Valley High | KIPP King Collegiate High | KIPP San Jose Collegiate | Katella High | Kearny Digital Media & Design | Kearny Eng, Innov & Design | Kearny International Business | Kearny SCT | Kelseyville High | Kennedy High | Kerman High | Kern Valley High | King City High | King-Chavez Community High | King/Drew Medical Magnet High | Kingsburg High | LIFE Academy | La Habra High | La Jolla High | La Mirada High | La Puente High | La Quinta High | La Quinta High | La Serna High | La Sierra High | Laguna Creek High | Laguna Hills High | Lakeside High | Lakewood High | Lancaster High | Las Plumas High | Lassen High | Lathrop High | Lawndale High | Le Grand High | Leadership High | Leadership Public Schools - Hayward | Leadership Public Schools - San Jose | Leadership Public Schools: Richmond | Lemoore High | Lemoore Middle College High | Lennox Mathematics, Science and Technology Academy | Leuzinger High | Liberty High | Liberty High | Liberty High | Liberty Ranch High | Lighthouse Community Charter High | Lincoln (Abraham) High | Lincoln High | Lincoln High | Lincoln High | Linda Esperanza Marquez High A Huntington Park Institute of Applied Medicine | Linda Esperanza Marquez High B LIBRA Academy | Linda Esperanza Marquez High C School of Social Justice | Linden High | Lindhurst High | Lindsay Senior High | Littlerock High | Live Oak High | Live Oak High | Livermore High | Livingston High | Loara High | Lodi High | Lompoc High | Los Altos High | Los Altos High | Los Amigos High | Los Angeles Academy of Arts & Enterprise Charter | Los Angeles Center for Enriched Studies | Los Angeles International Charter High | Los Angeles Leadership Academy | Los Angeles River at Sonia Sotomayor Learning Academies | Los Angeles Senior High | Los Banos High | Los Molinos High | Los Osos High | Lowell High | Lower Lake High | Luther Burbank High | Lynwood High | Madera High | Madera South High | Madison High | Magnolia High | Magnolia Science Academy | Magnolia Science Academy 2 | Magnolia Science Academy 3 | Magnolia Science Academy 4 | Making Waves Academy | Mammoth High | Manteca High | Manual Arts Senior High | Mar Vista Senior High | Marco Antonio Firebaugh High | Maria Carrillo High | Marina High | Marina High | Mariposa County High | Mark Keppel High | Marshall (Thurgood) High | Marshall Fundamental | Martin Luther King Jr. High | Marysville Charter Academy for the Arts | Marysville High | Math, Science, & Technology Magnet Academy at Roosevelt High | Maxwell Jr/Sr High | Mayfair High | Maywood Academy High | McFarland High | McKinleyville High | McLane High | Mendocino High | Mendota High | Menlo-Atherton High | Merced High | Merrill F. West High | Mesa Verde High | MetWest High | Middle College High | Middle College High | Middle College High | Middle College High | Middle College High | Middletown High | Millennium Charter | Millikan High | Mills High | Milpitas High | Minarets Charter High | Minarets High | Mira Loma High | Mira Mesa High | Mira Monte High | Mission Bay High | Mission High | Mission Hills High | Mission Oak High | Mission Viejo High | Mission Vista High | Modesto High | Modoc High | Monache High | Monrovia High | Montclair High | Monte Vista High | Montebello High | Monterey High | Monterey Trail High | Montgomery High | Montgomery Senior High | Moorpark High | Moreno Valley High | Morningside High | Morro Bay High | Morse High | Mount Miguel High | Mount Pleasant High | Mountain Empire High | Mountain Park | Mountain View High | Mountain View High | Mt. Carmel High | Mt. Diablo High | Mt. Eden High | Mt. Everest Academy | Mt. Shasta High | Mt. Whitney High | Murrieta Mesa High | Murrieta Valley High | NOVA Academy - Coachella | Napa High | Nathaniel Narbonne Senior High | Natomas Charter | Natomas High | Natomas Pacific Pathways Prep | Needles High | Nevada Union High | New Designs Charter | New Millennium Secondary | New Technology High | New Technology High | Newark Memorial High | Newbury Park High | Newport Harbor High | Nipomo High | Nogales High | Norco High | Nordhoff High | Norte Vista High | North High | North High | North Hollywood Senior High | North Monterey County High | North Salinas High | North Tahoe High | Northcoast Preparatory and Performing Arts Academy | Northridge Academy High | Northview High | Norwalk High | Nova Academy | Novato High | Nuview Bridge Early College High | O'Connell (John) High | OCCS:CHEP/PCHS | OCSA | Oak Grove High | Oak Hills High | Oakdale High | Oakland Charter High | Oakland High | Oakland Military Institute, College Preparatory Academy | Oakland Technical High | Oakland Unity High | Oakmont High | Ocean Grove Charter | Ocean View High | Oceana High | Oceanside High | Olympian High | Ontario High | Opportunities For Learning - Baldwin Park II | Opportunities for Learning - Baldwin Park | Opportunities for Learning - Santa Clarita | Options for Youth San Gabriel | Options for Youth-Burbank Charter | Options for Youth-San Bernardino | Options for Youth-San Juan | Options for Youth-Victorville Charter | Orange Cove High | Orange Glen High | Orange High | Orcutt Academy Charter | Orestimba High | Orland High | Orosi High | Oroville High | Orthopaedic Hospital | Oscar De La Hoya Animo Charter High | Otay Ranch Senior High | Oxford Academy | Oxnard High | PUC CA Academy for Liberal Studies Early College High | PUC Early College Academy for Leaders and Scholars (ECALS) | PUC Lakeview Charter High | Pacheco High | Pacific Grove High | Pacific High | Pacifica High | Pacifica High | Pajaro Valley High | Palisades Charter High | Palm Desert High | Palm Springs High | Palmdale High | Palo Verde High | Paloma Valley High | Palomares Academy of Health Science | Panorama High | Paradise Senior High | Paramount Academy | Paramount High | Parlier High | Pasadena High | Paso Robles High | Patriot High | Patterson High | Performing Arts Community at Diego Rivera Learning Complex | Perris High | Petaluma High | Peter Johansen High | Phineas Banning Senior High | Piedmont Hills High | Pierce High | Piner High | Pinole Valley High | Pioneer High | Pioneer High | Pioneer High | Pioneer Valley High | Pittsburg Senior High | Placer High | Pleasant Grove High | Pleasant Valley High | Point Arena High | Point Loma High | Polytechnic High | Polytechnic High | Pomona High | Ponderosa High | Port of Los Angeles High | Porterville High | Portola Junior/Senior High | Potter Valley High | Poway High | Preuss School UCSD | Prospect High | Public Service Community at Diego Rivera Learning Complex | Quartz Hill High | Quincy Junior/Senior High | REALM Charter High | RFK Community Schools- for the Visual Arts and Humanities | RFK Community Schools-Ambassador-Global Leadership | RFK Community Schools-Los Angeles High School of the Arts | RFK Community Schools-New Open World Academy K-12 | RFK Community Schools-UCLA Community K-12 | Ramon C. Cortines School of Visual and Performing Arts | Ramona High | Ramona High | Rancho Alamitos High | Rancho Buena Vista High | Rancho Cotate High | Rancho Cucamonga High | Rancho Dominguez Preparatory | Rancho Verde High | Red Bluff High | Redlands East Valley High | Redlands Senior High | Redondo Union High | Redwood Academy of Ukiah | Redwood High | Reedley High | Renaissance Arts Academy | Renaissance High School for the Arts | Reseda Senior High | Rialto High | Richmond High | Ridgeview High | Rim of the World Senior High | Rio Americano High | Rio Linda High | Rio Mesa High | Rio Vista High | Ripon High | River City High | River Springs Charter | River Valley High | Riverbank High | Riverdale High | Riverside Preparatory | Robert F. Kennedy High | Robert Fulton College Preparatory | Ronald E. McNair High | Roosevelt High | Rosamond High | Roseland Charter | Rosemead High | Rosemont High | Roseville High | Royal High | Ruben S. Ayala High | Rubidoux High | S.F. International High | SOAR High (Students On Academic Rise) | STEM Academy at Bernstein High | Sacramento Charter High | Saddleback High | Saint Helena High | Salinas High | San Benito High | San Bernardino High | San Clemente High | San Diego Business/Leadership | San Diego Early/Middle College | San Diego International Studies | San Diego MVP Arts | San Diego Metro Career and Tech | San Diego SCPA | San Diego Science and Technology | San Dimas High | San Fernando Senior High | San Francisco Flex Academy | San Gabriel High | San Gorgonio High | San Jacinto High | San Jacinto Valley Academy | San José High | San Juan High | San Juan Hills High | San Leandro High | San Lorenzo High | San Lorenzo Valley High | San Luis Obispo High | San Marcos High | San Marcos Senior High | San Marin High | San Mateo High | San Pasqual Academy | San Pasqual High | San Pedro Senior High | San Rafael High | San Ysidro High | Sanger High | Santa Ana High | Santa Barbara Senior High | Santa Clara High | Santa Clarita Valley International | Santa Cruz High | Santa Fe High | Santa Maria High | Santa Monica High | Santa Paula High | Santa Rosa Academy | Santa Rosa High | Santa Susana High | Santa Teresa High | Santa Ynez Valley Union High | Santana High | Santee Education Complex | Santiago High | Santiago High | Savanna High | School of Arts and Enterprise | School of Business and Tourism at Contreras Learning Complex | School of Engineering & Sciences | School of History and Dramatic Arts at Sonia Sotomayor Learning Academies | Schurr High | Science, Technology, Engineering, Arts and Mathematics at Legacy High School Complex | Scripps Ranch High | Seaside High | Segerstrom High | Selma High | Sequoia High | Serra High | Serrano High | Shadow Hills High | Shafter High | Shasta High | Sheldon High | Sherman Oaks Center for Enriched Studies | Sierra High | Sierra High | Sierra Pacific High | Sierra Vista High | Silver Creek High | Silver Valley High | Silverado High | Simi Valley High | Six Rivers Charter High | Skyline High | Social Justice Leadership Academy at Esteban E. Torres High No. 5 | Soledad High | Sonoma Valley High | Sonora High | Sonora High | Soquel High | South East High | South El Monte High | South Fork Junior - Senior High | South Gate Senior High | South High | South High | South Hills High | South Pasadena Senior High | South San Francisco High | South Sutter Charter | South Tahoe High | Southwest High | Southwest Senior High | Stagg Senior High | Steele Canyon High | Stockdale High | Stockton Collegiate International Secondary | Stockton Unified Early College Academy | Strathmore High | Student Empowerment Academy | Sultana High | Summerville High | Summit High | Summit Preparatory Charter High | Summit Public School: Rainier | Summit Public School: Tahoma | Sun Valley High | Sunny Hills High | Sunnyside High | Susan Miller Dorsey Senior High | Sutter High | Sweetwater High | Sylmar Senior High | Synergy Quantum Academy | Taft Union High | Tahoe Truckee High | Tahquitz High | Tehachapi High | Temecula Valley High | Temescal Canyon High | Temple City High | Tennyson High | Terra Linda High | Terra Nova High | The High School at Moorpark College | The MET | Theodore Roosevelt Senior High | Thirty-Second Street USC Performing Arts | Thomas Downey High | Thomas Jefferson Senior High | Thousand Oaks High | Tokay High | Tomales High | Torrance High | Tracy High | Tranquillity High | Trinity High | Troy High | Tulare Union High | Tulare Western High | Turlock High | Tustin High | Twentynine Palms High | Ukiah High | Ulysses S. Grant Senior High | Union Mine High | University City High | University High | University Preparatory | University Preparatory | University Preparatory Academy Charter | University Preparatory High | University Senior High | Upland High | Vacaville High | Valencia High | Valhalla High | Vallejo High | Valley Academy of Arts and Sciences | Valley Alternative Magnet | Valley Center High | Valley Charter High | Valley High | Valley High | Valley Oaks Charter | Valley View High | Van Nuys Senior High | Vanden High | Vasquez High | Vaughn Next Century Learning Center | Venice Senior High | Ventura High | Venture Academy | Verdugo Hills Senior High | Victor Valley High | View Park Preparatory Accelerated High | Villa Park High | Village Academy High School at Indian Hill | Vintage High | Visalia Charter Independent Study | Visions In Education | Vista High | Vista High (Alternative) | Vista Murrieta High | Vista del Lago High | Visual and Performing Arts at Legacy High School Complex | WESM Health/Sports Medicine | Wallenberg (Raoul) Traditional High | Wallis Annenberg High | Warren High | Wasco High | Washington (George) High | Washington High | Washington High | Waterford High | Watsonville High | Weber Institute | Weed High | West Adams Preparatory High | West Campus | West Covina High | West High | West High | West Hills High | West Shores High | West Valley High | West Valley High | Western High | Westlake High | Westminster High | Westmont High | Westmoor High | Weston Ranch High | Wheatland Union High | Whitmore Charter High | Whitney (Gretchen) High | Whitney High | Whittier High | Will C. Wood High | William & Marian Ghidotti High | William C. Overfelt High | William Howard Taft Charter High | William J. (Pete) Knight High | William S. Hart High | William Workman High | Williams Junior/Senior High | Willits High | Willow Glen High | Willows High | Wilmer Amina Carter High | Wilson High | Windsor High | Winters High | Woodbridge High | Woodcreek High | Woodlake High | Woodland Senior High | Woodrow Wilson Senior High | Woodside High | Yerba Buena High | Ygnacio Valley High | Yosemite High | Yreka High | Yuba City High | Yucaipa High | Yucca Valley High
 Evidence SQL: SELECT GROUP_CONCAT(school, ' | ') AS school_names FROM (SELECT f.`School Name` AS school FROM frpm f JOIN satscores s ON f.CDSCode = s.cds WHERE CAST(f.`Free Meal Count (K-12)` AS REAL) / f.`Enrollment (K-12)` > 0.1 AND s.NumGE1500 >= 1 ORDER BY f.`School Name`)
 
-建模缺口: 无
-
 </details>
 
 <details id="q25">
@@ -427,6 +427,8 @@ Evidence SQL: SELECT GROUP_CONCAT(school, ' | ') AS school_names FROM (SELECT f.
 **期望**：`Arlington High | null | John W. North High | null | Martin Luther King Jr. High | null | Polytechnic High | null`
 
 **答案**：`三级锚定交叉验证完成，结论如下。 **口径依据（L2 领域共识，qid=25，逐字复述本题）** - "average of average math" = 该校 AvgScrMath 的平均值（satscores 中 AvgScrMath 已是校内预计算均值，每校 1 行） - "schools in Riverside" → 'frpm."District Name" LIKE 'Rivers`
+
+**raw 日志**：[results/0928_1118_qids_25_26_27_28_31/raw/0928_1118_25_dlr.ndjson](../results/0928_1118_qids_25_26_27_28_31/raw/0928_1118_25_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -469,8 +471,6 @@ Evidence SQL: SELECT GROUP_CONCAT(school, ' | ') AS school_names FROM (SELECT f.
 Final Answer: Arlington High — (blank/no charter funding type); John W. North High — (blank); Martin Luther King Jr. High — (blank); Polytechnic High — (blank); Ramona High — (blank); River Springs Charter — Directly funded
 Evidence SQL: SELECT f."School Name" AS school_name, f."Charter Funding Type" AS funding_type FROM satscores AS s INNER JOIN frpm AS f ON s.cds = f.CDSCode WHERE f."District Name" LIKE 'Riverside%' GROUP BY s.cds HAVING AVG(s.AvgScrMath) > 400 ORDER BY f."School Name"
 
-建模缺口: 无
-
 </details>
 
 <details id="q26">
@@ -481,6 +481,8 @@ Evidence SQL: SELECT f."School Name" AS school_name, f."Charter Funding Type" AS
 **期望**：`Alisal High | 777 Williams Road | Salinas | CA | 93905-1907 | Everett Alvarez High | 1900 Independence Boulevard | Salinas`
 
 **答案**：`## 三级锚定结果 - **L1 语义召回**：'LOGICAL.SchoolPerformance'（PE='frpm'）+ 'LOGICAL.School'（PE='schools'），db='california_schools'，两表锚键 'CDSCode'（1:1）→ 经 'get_pe_mapping' 取得 'database_url' 与列名。 - **L2 领域共识**：命中本题`
+
+**raw 日志**：[results/0928_1118_qids_25_26_27_28_31/raw/0928_1118_26_dlr.ndjson](../results/0928_1118_qids_25_26_27_28_31/raw/0928_1118_26_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -533,8 +535,6 @@ Final Answer: 1) Alisal High — 777 Williams Road, Salinas, CA 93905-1907; 2) E
 Evidence SQL: SELECT s.School AS School, s.Street AS Street, s.City AS City, s.State AS State, s.Zip AS Zip, f."FRPM Count (Ages 5-17)" AS FRPM_5_17 FROM frpm AS f INNER JOIN schools AS s ON f.CDSCode = s.CDSCode WHERE s.County = 'Monterey' AND f."School Type" = 'High Schools (Public)' AND f."FRPM Count (Ages 5-17)" > 800 ORDER BY s.School
 ```
 
-建模缺口: frpm."Percent (%) Eligible FRPM (Ages 5-17)" / frpm."Percent (%) Eligible Free (Ages 5-17)" / frpm."Percent (%) Eligible FRPM (K-12)" — 物理表存在但未进建模视图（视图只放了 K-12 的 Percent Eligible Free）；建议 升入视图（同类“率”指标成组暴露更一致）。另 frpm."FRPM Count (Ages 5-17)" 在物理表 description 为空（其 K-12 同名列有 "Free or Reduced Price Meal Count" 说明），建议 升 public 时补描述。本题需用的列均在视图内，`get_full_data_info` 下探仅用于确认“ages 15-17”年龄段列不存在（frpm 只有 K-12 与 Ages 5-17 两档）——这是数据集本身缺列，非建模缺口，建议 不管。
-
 </details>
 
 <details id="q27">
@@ -545,6 +545,8 @@ Evidence SQL: SELECT s.School AS School, s.Street AS Street, s.City AS City, s.S
 **期望**：`FAME Public Charter | 505 | null | Envision Academy for Arts & Technology | 395 | (510) 596-8901 | Aspire California College Preparatory Academy | null`
 
 **答案**：`## 检索路径 **L3（'dlr_search_sop'，'match=exact'，标题逐字复述本题 → 本题最权威口径）** 给出四条关键口径： 1. "Communication number"＝学校的电话号码（无独立联系表）→ 'schools.Phone' 2. "opened after 1991"＝开办年为 1992 及以后；"closed before 2000"＝关闭日期早于 `
+
+**raw 日志**：[results/0928_1150_qids_27/raw/0928_1150_27_dlr.ndjson](../results/0928_1150_qids_27/raw/0928_1150_27_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1092,8 +1094,6 @@ Final Answer: 493 rows (school | AvgScrWrite | Phone), listed above in school-na
 Evidence SQL: SELECT s.School, t.AvgScrWrite, s.Phone FROM schools s JOIN satscores t ON s.CDSCode = t.cds WHERE (s.OpenDate >= '1992-01-01' OR s.ClosedDate < '2000-01-01') AND t.AvgScrWrite IS NOT NULL ORDER BY s.School;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q28">
@@ -1104,6 +1104,8 @@ Evidence SQL: SELECT s.School, t.AvgScrWrite, s.Phone FROM schools s JOIN satsco
 **期望**：`Mountain Oaks | 00 | Castle Rock | 00 | Charter Community School Home Study Academy | 00 | Clovis Online Charter | 54`
 
 **答案**：`## 口径锚定（三级） - **L3（精确命中，题级最权威）**：'dlr_search_sop' 返回 'match=exact'，本节明确：**"Locally funded" 必须取学校主表 'schools.FundingType = 'Locally funded''**，不能用 enrollment 表里同名域的 "Charter Funding Type"（用错列本题会少 8 所、多`
+
+**raw 日志**：[results/0928_1118_qids_25_26_27_28_31/raw/0928_1118_28_dlr.ndjson](../results/0928_1118_qids_25_26_27_28_31/raw/0928_1118_28_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1198,8 +1200,6 @@ YouthBuild Charter School of California — County Office of Education (COE); Co
 Evidence SQL: SELECT T2.School, T2.DOCType, T2.DOC, CAST(T1."Enrollment (K-12)" AS REAL) - CAST(T1."Enrollment (Ages 5-17)" AS REAL) AS diff FROM frpm AS T1 JOIN schools AS T2 ON T1.CDSCode = T2.CDSCode WHERE T2.FundingType = 'Locally funded' AND (CAST(T1."Enrollment (K-12)" AS REAL) - CAST(T1."Enrollment (Ages 5-17)" AS REAL)) > (SELECT AVG(CAST(f."Enrollment (K-12)" AS REAL) - CAST(f."Enrollment (Ages 5-17)" AS REAL)) FROM frpm AS f JOIN schools AS s ON f.CDSCode = s.CDSCode WHERE s.FundingType = 'Locally funded') ORDER BY diff DESC
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q31">
@@ -1210,6 +1210,8 @@ Evidence SQL: SELECT T2.School, T2.DOCType, T2.DOC, CAST(T1."Enrollment (K-12)" 
 **期望**：`0.1344364012409514 | 0.2905894519131334`
 
 **答案**：`三级锚定完成：L2 领域共识命中了本题原题（qid=31，逐字一致），口径为 'Free Meal Count (K-12)' / 'Enrollment (K-12)'；L1 召回定位到 'california_schools' 库的 'frpm' 表（LE: SchoolPerformance.Enrollment_K12 / FreeMeal_K12）；L3 仅有相似候选，无逐字复述本题的节`
+
+**raw 日志**：[results/0928_1118_qids_25_26_27_28_31/raw/0928_1118_31_dlr.ndjson](../results/0928_1118_qids_25_26_27_28_31/raw/0928_1118_31_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1237,8 +1239,6 @@ Evidence SQL: SELECT T2.School, T2.DOCType, T2.DOC, CAST(T1."Enrollment (K-12)" 
 Final Answer: 0.1344364012409514 (El Camino Real Charter High, 10th), 0.2905894519131334 (Eleanor Roosevelt High, 11th)
 Evidence SQL: SELECT "School Name" AS school, "Enrollment (K-12)" AS enrollment, "Free Meal Count (K-12)" AS free_meal, CAST("Free Meal Count (K-12)" AS REAL) / "Enrollment (K-12)" AS eligible_free_rate FROM frpm ORDER BY "Enrollment (K-12)" DESC LIMIT 2 OFFSET 9
 
-建模缺口: 无
-
 </details>
 
 <details id="q32">
@@ -1249,6 +1249,8 @@ Evidence SQL: SELECT "School Name" AS school, "Enrollment (K-12)" AS enrollment,
 **期望**：`0.9179476526796843 | 0.9993290841999329 | 0.8964987714987716 | 0.8958203368683718 | 0.9141803553469662`
 
 **答案**：`## 查询过程与依据 **三级锚定** \| 级 \| 命中 \| 结论 \| \|---\|---\|---\| \| L2 领域共识 \| qid 32 **逐字即本题**："grades 1-12 means K-12；Eligible free or reduced price meal rate for K-12 = 'FRPM Count (K-12)' / 'Enrollment (`
+
+**raw 日志**：[results/0928_1147_qids_27_32_83_85/raw/0928_1147_32_dlr.ndjson](../results/0928_1147_qids_27_32_83_85/raw/0928_1147_32_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1296,8 +1298,6 @@ Final Answer: [0.9179476526796843, 0.9993290841999329, 0.8964987714987716, 0.895
 Evidence SQL: SELECT CAST(f.`FRPM Count (K-12)` AS REAL)/f.`Enrollment (K-12)` AS rate FROM frpm f JOIN schools s ON f.CDSCode = s.CDSCode WHERE s.SOC = '66' ORDER BY f.`FRPM Count (K-12)` DESC LIMIT 5
 ```
 
-建模缺口: `schools.SOC / schools.SOCType` — 列已在建模视图内（`get_pe_mapping(PHYSICAL.School)` 可返回），但未挂到 `LOGICAL.School` 的任何公开属性上（C_column 里无 ownership code 语义位），本题的筛选条件只能靠物理列名直取；建议 升入 `LOGICAL.School` 公开属性（如 `OwnershipCode` / `OwnershipType`），使"school ownership/type"这一常用过滤口径可被 LE 级召回。
-
 </details>
 
 <details id="q36">
@@ -1308,6 +1308,8 @@ Evidence SQL: SELECT CAST(f.`FRPM Count (K-12)` AS REAL)/f.`Enrollment (K-12)` A
 **期望**：`Michelle | King | null | null | null | null`
 
 **答案**：`## 推理过程 **L2 领域共识命中（california_schools, qid=36，原题逐字复述本题）**： > "SAT Scores are greater or equal to 1500 refers to **NumGE1500**；full name means first name, last name；**There are at most 3 administrator`
+
+**raw 日志**：[results/0928_1123_qids_32_36_39_40_41/raw/0928_1123_36_dlr.ndjson](../results/0928_1123_qids_32_36_39_40_41/raw/0928_1123_36_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1348,8 +1350,6 @@ Evidence SQL: SELECT CAST(f.`FRPM Count (K-12)` AS REAL)/f.`Enrollment (K-12)` A
 Final Answer: Michelle King
 Evidence SQL: SELECT sc.AdmFName1 || ' ' || sc.AdmLName1 AS admin_full_name FROM satscores s JOIN schools sc ON s.cds = sc.CDSCode WHERE s.NumGE1500 = (SELECT MAX(NumGE1500) FROM satscores)
 
-建模缺口: 无
-
 </details>
 
 <details id="q37">
@@ -1360,6 +1360,8 @@ Evidence SQL: SELECT sc.AdmFName1 || ' ' || sc.AdmLName1 AS admin_full_name FROM
 **期望**：`2125 Jefferson Avenue | Berkeley | CA | 94703-1414`
 
 **答案**：`三级锚定完成：L3 精确命中（'match=exact'），L2 共识给出 "Excellence Rate = NumGE1500 / NumTstTakr；complete address has Street, City, State, Zip code"，L1 锚定 'PHYSICAL.SATScore'（satscores）与 'PHYSICAL.School'（schools），ARC`
+
+**raw 日志**：[results/0928_1135_qids_23_37_45_82_85/raw/0928_1135_37_dlr.ndjson](../results/0928_1135_qids_23_37_45_82_85/raw/0928_1135_37_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1391,8 +1393,6 @@ Final Answer: Street: 2125 Jefferson Avenue, City: Berkeley, Zip: 94703-1414, St
 
 Evidence SQL: SELECT s.Street, s.City, s.Zip, s.State FROM satscores t JOIN schools s ON s.CDSCode = t.cds ORDER BY CAST(t.NumGE1500 AS REAL)/t.NumTstTakr ASC LIMIT 1;
 
-建模缺口: 无
-
 </details>
 
 <details id="q39">
@@ -1403,6 +1403,8 @@ Evidence SQL: SELECT s.Street, s.City, s.Zip, s.State FROM satscores t JOIN scho
 **期望**：`137.88888888888889`
 
 **答案**：`三级交叉验证一致：L3 精确命中节给出 '137.88888888888889'（356 所 Fresno County 1980 年开办的学校，county 读法而非 city），我的 SQL 独立复算得到同一值。 验证要点： - **County 读法**：'schools.County='Fresno''（L1 'LOGICAL.School.County' → 'schools.Count`
+
+**raw 日志**：[results/0928_1137_qids_39_41_50_77/raw/0928_1137_39_dlr.ndjson](../results/0928_1137_qids_39_41_50_77/raw/0928_1137_39_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1434,8 +1436,6 @@ FROM schools s JOIN satscores ss ON s.CDSCode = ss.cds
 WHERE s.County='Fresno' AND s.OpenDate BETWEEN '1980-01-01' AND '1980-12-31';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q40">
@@ -1446,6 +1446,8 @@ WHERE s.County='Fresno' AND s.OpenDate BETWEEN '1980-01-01' AND '1980-12-31';
 **期望**：`(559) 248-5100`
 
 **答案**：`## 结论 **Fresno Unified 学区中阅读平均分最低的学校是 McLane High，电话是 (559) 248-5100。** ### 三级锚定过程 \| 层级 \| 工具 \| 命中与用途 \| \|------\|------\|-----------\| \| L1 数据源级 \| 'dlr_semantic_query' \| 锚定两个 LE：'LOGICAL.School`
+
+**raw 日志**：[results/0928_1123_qids_32_36_39_40_41/raw/0928_1123_40_dlr.ndjson](../results/0928_1123_qids_32_36_39_40_41/raw/0928_1123_40_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1501,8 +1503,6 @@ Final Answer: (559) 248-5100
 Evidence SQL: SELECT sc.Phone AS phone FROM satscores s JOIN schools sc ON sc.CDSCode = s.cds WHERE s.dname = 'Fresno Unified' AND s.AvgScrRead IS NOT NULL ORDER BY s.AvgScrRead ASC LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q41">
@@ -1513,6 +1513,8 @@ Evidence SQL: SELECT sc.Phone AS phone FROM satscores s JOIN schools sc ON sc.CD
 **期望**：`Dunlap Leadership Academy | Academy of Arts and Sciences: Fresno | Insight School of California | California Virtual Academy @ Kings | National University Academy, Armona | California Virtual Academy @ Los Angeles | Insight @ Los Angeles | Los Angeles County Online High`
 
 **答案**：`Query returned 34 schools — exactly matching the L3 spec's stated count (34 schools), confirming the pool definition (rank the exclusively-virtual schools themselves, not all schools filtered afterwar`
+
+**raw 日志**：[results/0928_1137_qids_39_41_50_77/raw/0928_1137_41_dlr.ndjson](../results/0928_1137_qids_39_41_50_77/raw/0928_1137_41_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1535,8 +1537,6 @@ Final Answer: Academy of Arts and Sciences; Academy of Arts and Sciences: Fresno
 
 Evidence SQL: SELECT SchoolName FROM (SELECT s.School AS SchoolName, RANK() OVER (PARTITION BY s.County ORDER BY sc.AvgScrRead DESC) AS rk FROM schools s JOIN satscores sc ON sc.cds = s.CDSCode WHERE s.Virtual = 'F') WHERE rk <= 5 ORDER BY SchoolName;
 
-建模缺口: 无
-
 </details>
 
 <details id="q45">
@@ -1547,6 +1547,8 @@ Evidence SQL: SELECT SchoolName FROM (SELECT s.School AS SchoolName, RANK() OVER
 **期望**：`Buchanan High | 507`
 
 **答案**：`**锚定过程** \| 级 \| 命中 \| 采用 \| \|---\|---\|---\| \| L1 \| 'LOGICAL.School'（schools：Administrator first/last name）、'LOGICAL.SchoolPerformance'（satscores：AvgScrWrite）\| 走 PE 映射得 'schools.CDSCode' ↔ 'satsc`
+
+**raw 日志**：[results/0928_1135_qids_23_37_45_82_85/raw/0928_1135_45_dlr.ndjson](../results/0928_1135_qids_23_37_45_82_85/raw/0928_1135_45_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1577,8 +1579,6 @@ Final Answer: Buchanan High | 507
 
 Evidence SQL: SELECT s.School, ss.AvgScrWrite FROM schools s JOIN satscores ss ON ss.cds = s.CDSCode WHERE s.AdmFName1 = 'Ricci' AND s.AdmLName1 = 'Ulrich'
 
-建模缺口: 无
-
 </details>
 
 <details id="q46">
@@ -1589,6 +1589,8 @@ Evidence SQL: SELECT s.School, ss.AvgScrWrite FROM schools s JOIN satscores ss O
 **期望**：`California School for the Deaf-Fremont`
 
 **答案**：`## 结论 **State Special Schools** 由 L2 领域共识（qid=46，原题逐字复述本题）锚定：'DOC = 31'；"grades 1 through 12" = **K-12**，对应 'Enrollment (K-12)' 列（描述明确为 "number of students in grades 1-12"）。 按 'DOC = 31' 过滤 'schools' `
+
+**raw 日志**：[results/0928_1127_qids_46_47_48_50_62/raw/0928_1127_46_dlr.ndjson](../results/0928_1127_qids_46_47_48_50_62/raw/0928_1127_46_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1625,8 +1627,6 @@ Final Answer: California School for the Deaf-Fremont
 Evidence SQL: SELECT s.School AS school_name FROM schools s JOIN frpm f ON s.CDSCode = f.CDSCode WHERE s.DOC = '31' ORDER BY f."Enrollment (K-12)" DESC LIMIT 1;
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q47">
@@ -1637,6 +1637,8 @@ Evidence SQL: SELECT s.School AS school_name FROM schools s JOIN frpm f ON s.CDS
 **期望**：`1.4166666666666667`
 
 **答案**：`## 分析过程 **三级锚定结果：** - **L3（SOP）**：'match=similar'，仅一条近似候选（Fresno 测试人数题），**非本题**，不采用。 - **L2（领域共识）**：**精确命中本题**（qid 47，同名原题，score 0.855，namespace='california_schools'），权威口径为：   - "Elementary School Dis`
+
+**raw 日志**：[results/0928_1127_qids_46_47_48_50_62/raw/0928_1127_47_dlr.ndjson](../results/0928_1127_qids_46_47_48_50_62/raw/0928_1127_47_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1673,8 +1675,6 @@ Final Answer: 1.4166666666666667
 Evidence SQL: SELECT CAST(COUNT(*) AS REAL) / 12 AS monthly_avg FROM schools WHERE County = 'Alameda' AND DOC = '52' AND OpenDate LIKE '1980%'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q48">
@@ -1685,6 +1685,8 @@ Evidence SQL: SELECT CAST(COUNT(*) AS REAL) / 12 AS monthly_avg FROM schools WHE
 **期望**：`0.5714285714285714`
 
 **答案**：`## 分析过程 **三级锚定结果：** - **L3（SOP）**：'match=none' — 本题无题级口径节，按 L1+L2 自解 - **L2（领域共识）**：'qid=48' 命中，其 'question' 字段**逐字复述本题**，且 'namespace=california_schools' 与目标库一致 → 采信。权威规则：**Elementary School District`
+
+**raw 日志**：[results/0928_1127_qids_46_47_48_50_62/raw/0928_1127_48_dlr.ndjson](../results/0928_1127_qids_46_47_48_50_62/raw/0928_1127_48_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1721,8 +1723,6 @@ Final Answer: 0.5714285714285714
 Evidence SQL: SELECT CAST(SUM(CASE WHEN DOC='54' THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN DOC='52' THEN 1 ELSE 0 END) AS ratio FROM schools WHERE County='Orange' AND StatusType='Merged';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q50">
@@ -1733,6 +1733,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN DOC='54' THEN 1 ELSE 0 END) AS REAL) / S
 **期望**：`25 Churchill Avenue | null`
 
 **答案**：`## 结论 **L3 精确命中**：'dlr_search_sop' 返回的节标题与本题逐字相同（'match=exact'），为本题最权威口径，按其执行。**L2 共识**亦确认同一规则（qid 50, namespace=california_schools）："Postal street and mailing street are synonyms" → postal street 取 '`
+
+**raw 日志**：[results/0928_1137_qids_39_41_50_77/raw/0928_1137_50_dlr.ndjson](../results/0928_1137_qids_39_41_50_77/raw/0928_1137_50_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1775,8 +1777,6 @@ Final Answer: postal street address = 25 Churchill Avenue；school name = (empty
 
 Evidence SQL: SELECT sc.School AS school_name, sc.MailStreet AS postal_street FROM satscores s JOIN schools sc ON sc.CDSCode = s.cds ORDER BY s.AvgScrMath DESC LIMIT 1 OFFSET 6
 
-建模缺口: 无
-
 </details>
 
 <details id="q62">
@@ -1787,6 +1787,8 @@ Evidence SQL: SELECT sc.School AS school_name, sc.MailStreet AS postal_street FR
 **期望**：`1`
 
 **答案**：`## 结论 **答案：1** ### 三级锚定过程 **L2 领域共识（决定性）** — 'dlr_search_consensus' 精确命中本题（原题逐字相同，qid=62，namespace='california_schools'）： > - non-chartered schools refer to schools whose **Charter = 0** > - K-12 mean`
+
+**raw 日志**：[results/0928_1127_qids_46_47_48_50_62/raw/0928_1127_62_dlr.ndjson](../results/0928_1127_qids_46_47_48_50_62/raw/0928_1127_62_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1836,8 +1838,6 @@ Final Answer: 1
 Evidence SQL: SELECT COUNT(*) AS n FROM schools s JOIN frpm f ON s.CDSCode = f.CDSCode WHERE s.County = 'Los Angeles' AND s.Charter = 0 AND CAST(f."Free Meal Count (K-12)" AS REAL) * 100.0 / CAST(f."Enrollment (K-12)" AS REAL) < 0.18
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q72">
@@ -1848,6 +1848,8 @@ Evidence SQL: SELECT COUNT(*) AS n FROM schools s JOIN frpm f ON s.CDSCode = f.C
 **期望**：`40 | 335`
 
 **答案**：`Verified — the SQL result matches the L3 spec's measured facts exactly. ## Answer For the 2014-2015 academic year, in Fremont, two schools carry the **State Special School** code ('EdOpsCode = 'SSS'')`
+
+**raw 日志**：[results/0929_1118_qids_72_716_1136/raw/0929_1118_72_dlr.ndjson](../results/0929_1118_qids_72_716_1136/raw/0929_1118_72_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1893,8 +1895,6 @@ WHERE s.EdOpsCode = 'SSS'
 ORDER BY s.School
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q77">
@@ -1905,6 +1905,8 @@ ORDER BY s.School
 **期望**：`White Oak Elementary | 3.755868544600939 | The Accelerated | 97.63888888888889`
 
 **答案**：`L3 精确命中，SQL 结果与 L3 的实测事实逐字一致。 **查证过程** 1. **L3（'dlr_search_sop'，match=exact）**：标题逐字复述本题 → 取其为权威口径。要点：    - "grade span K to 9" 匹配 **served** 年级跨度（school master 的 served 列，非 offered 列）    - "county of `
+
+**raw 日志**：[results/0928_1137_qids_39_41_50_77/raw/0928_1137_77_dlr.ndjson](../results/0928_1137_qids_39_41_50_77/raw/0928_1137_77_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1939,8 +1941,6 @@ Final Answer: 两所学校（county = Los Angeles, GSserved = K-9）：
 
 Evidence SQL: SELECT s.School, s.GSserved, s.County, f."FRPM Count (Ages 5-17)" * 100.0 / f."Enrollment (Ages 5-17)" AS pct_frpm_5_17 FROM schools s JOIN frpm f ON s.CDSCode = f.CDSCode WHERE s.County = 'Los Angeles' AND s.GSserved = 'K-9';
 
-建模缺口: 无
-
 </details>
 
 <details id="q79">
@@ -1951,6 +1951,8 @@ Evidence SQL: SELECT s.School, s.GSserved, s.County, f."FRPM Count (Ages 5-17)" 
 **期望**：`San Diego | 8`
 
 **答案**：`**结论**：San Diego 县胜出，共有 **8** 所"没有实体教学楼"的学校（Santa Barbara 县仅 1 所）。 **依据链** - L3（'dlr_search_sop'）：'match=none' → 本题无题级 SOP 节。 - L2（'dlr_search_consensus'，namespace=california_schools）：精确命中 qid 79，原题逐字`
+
+**raw 日志**：[results/0928_1132_qids_72_77_79_83_87/raw/0928_1132_79_dlr.ndjson](../results/0928_1132_qids_72_77_79_83_87/raw/0928_1132_79_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1978,8 +1980,6 @@ Evidence SQL: SELECT s.School, s.GSserved, s.County, f."FRPM Count (Ages 5-17)" 
 Final Answer: San Diego — 8 schools
 Evidence SQL: SELECT County, COUNT(DISTINCT CDSCode) AS cnt FROM schools WHERE County IN ('San Diego','Santa Barbara') AND Virtual = 'F' GROUP BY County ORDER BY cnt DESC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q82">
@@ -1990,6 +1990,8 @@ Evidence SQL: SELECT County, COUNT(DISTINCT CDSCode) AS cnt FROM schools WHERE C
 **期望**：`K-8`
 
 **答案**：`## 推理过程 **三级锚定结果：** \| 级 \| 工具 \| 命中 \| \|---\|---\|---\| \| L3 口径 \| 'dlr_search_sop' \| 'match=similar'，两个候选标题均未逐字复述本题 → **本题无 L3 节** \| \| L1 实体 \| 'dlr_semantic_query' \| 锚定 'california_schools' 库`
+
+**raw 日志**：[results/0928_1135_qids_23_37_45_82_85/raw/0928_1135_82_dlr.ndjson](../results/0928_1135_qids_23_37_45_82_85/raw/0928_1135_82_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2037,8 +2039,6 @@ Final Answer: K-8
 Evidence SQL: SELECT GSoffered FROM schools WHERE Longitude IS NOT NULL ORDER BY ABS(Longitude) DESC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q83">
@@ -2049,6 +2049,8 @@ Evidence SQL: SELECT GSoffered FROM schools WHERE Longitude IS NOT NULL ORDER BY
 **期望**：`Adelanto | 1`
 
 **答案**：`## 结论 **第一问 — 提供 Kindergarten–8 年级（K-8）学段且设有 magnet 项目的学校中，有多少所提供 Multiple Provision Types？** **1 所。** - 全库 'schools.Magnet = 1' 且 'schools.GSoffered = 'K-8'' 的学校共 **37 所**（L2 共识：'Magnet = 1' 即"提供 mag`
+
+**raw 日志**：[results/0928_1147_qids_27_32_83_85/raw/0928_1147_83_dlr.ndjson](../results/0928_1147_qids_27_32_83_85/raw/0928_1147_83_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2118,8 +2120,6 @@ Part 2: 537 cities with a Kindergarten-to-8th-grade (K-8) span, covering 1,292 K
 Evidence SQL: SELECT (SELECT COUNT(DISTINCT s.CDSCode) FROM schools s JOIN frpm f ON s.CDSCode = f.CDSCode WHERE s.Magnet = 1 AND s.GSoffered = 'K-8' AND f."NSLP Provision Status" = 'Multiple Provision Types') AS magnet_k8_multiple_provision_types, (SELECT COUNT(DISTINCT City) FROM schools WHERE GSoffered = 'K-8' AND City IS NOT NULL) AS num_cities_k8, (SELECT COUNT(*) FROM schools WHERE GSoffered = 'K-8') AS k8_schools_total
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q85">
@@ -2130,6 +2130,8 @@ Evidence SQL: SELECT (SELECT COUNT(DISTINCT s.CDSCode) FROM schools s JOIN frpm 
 **期望**：`70.15113350125945 | 64857`
 
 **答案**：`## 结论 **学校**：Buena Vista Elementary（Palmdale Elementary 学区，CDSCode '19648576108609'），其校长/管理员名字为 **Alusine**（'schools.AdmFName1'）。 **Percent (%) Eligible Free (K-12)** = 70.15113350125945 **District Co`
+
+**raw 日志**：[results/0928_1147_qids_27_32_83_85/raw/0928_1147_85_dlr.ndjson](../results/0928_1147_qids_27_32_83_85/raw/0928_1147_85_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2168,8 +2170,6 @@ FROM schools s JOIN frpm f ON s.CDSCode = f.CDSCode
 WHERE s.AdmFName1 = 'Alusine'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q87">
@@ -2180,6 +2180,8 @@ WHERE s.AdmFName1 = 'Alusine'
 **期望**：`a.lucero@realjourney.org | j.hernandez@realjourney.org`
 
 **答案**：`## 结论 按 L2 领域共识（qid=87，namespace=california_schools，逐字对应本题）给出的口径执行： \| 题面用词 \| 口径（L2 共识） \| 物理列 \| \|---\|---\|---\| \| Intermediate/Middle Schools（public） \| 'SOC = 62'（School Ownership Code，SOCType `
+
+**raw 日志**：[results/0928_1132_qids_72_77_79_83_87/raw/0928_1132_87_dlr.ndjson](../results/0928_1132_qids_72_77_79_83_87/raw/0928_1132_87_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2230,7 +2232,5 @@ WHERE s.AdmFName1 = 'Alusine'
 Final Answer: a.lucero@realjourney.org
 Evidence SQL: SELECT DISTINCT AdmEmail1 FROM schools WHERE County = 'San Bernardino' AND District = 'San Bernardino City Unified' AND OpenDate BETWEEN '2009-01-01' AND '2010-12-31' AND SOC = '62' AND DOC = '54' AND AdmEmail1 IS NOT NULL AND TRIM(AdmEmail1) <> ''
 ```
-
-建模缺口: `california_schools.schools.AdmEmail1`（administrator's email address）— 该列 `in_modeled_view=true`，但 L1 `dlr_semantic_query` 返回的 `LOGICAL.School.public_attributes` 与 `get_pe_mapping` 的 `C_column` 弧映射均未收录它（`C_column` 只映射到 `AdmLName1` 为止），导致"管理员邮箱"这一业务属性在看板上不可见、必须下探物理全量列才拿到；建议升 public（补进 `LOGICAL.School` 公开属性并补 `C_column` 映射 `LOGICAL.School.administrator's email address → schools.AdmEmail1`），同批可一并补 `DOC/SOC/SOCType/DOCType` 的公开属性暴露。
 
 </details>

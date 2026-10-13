@@ -81,6 +81,8 @@
 
 **答案**：`## 查询结果 **锚定过程** - **L3 业务逻辑级**：'dlr_search_sop' 返回 'match=none' — 本题无题级口径节，按 L1 + L2 自解。 - **L1 数据源级**：'dlr_semantic_query' 召回逻辑实体 'LOGICAL.User'（db='codebase_community'），描述含 DisplayName / Reputation`
 
+**raw 日志**：[results/0928_2215_qids_531_532_533_537_539/raw/0928_2215_531_dlr.ndjson](../results/0928_2215_qids_531_532_533_537_539/raw/0928_2215_531_dlr.ndjson)（dsh 事件流 ndjson）
+
 **调用步骤**
 
 | # | 工具 | 参数（截 200） |
@@ -114,8 +116,6 @@ Harlan 的声誉值 457 明显高于 Jarrod Dixon 的 101（约 4.5 倍），因
 Final Answer: Harlan
 Evidence SQL: SELECT DisplayName FROM users WHERE DisplayName IN ('Harlan','Jarrod Dixon') ORDER BY Reputation DESC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q532">
@@ -126,6 +126,8 @@ Evidence SQL: SELECT DisplayName FROM users WHERE DisplayName IN ('Harlan','Jarr
 **期望**：`Rob | Anubhav | Betamoo | dram | dcurtis | DavidDong | varuman | ennuikiller`
 
 **答案**：`## 查询过程（三级锚定） **L1 实体路** — 'dlr_semantic_query' 命中 'LOGICAL.User'（db='codebase_community'，PE='PHYSICAL.User' / 表 'users'），描述含 'DisplayName'、'CreationDate'（the creation date of the user account）；'get_p`
+
+**raw 日志**：[results/0928_2215_qids_531_532_533_537_539/raw/0928_2215_532_dlr.ndjson](../results/0928_2215_qids_531_532_533_537_539/raw/0928_2215_532_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -162,8 +164,6 @@ Final Answer: 0101amt, 0x8badf00d, 1.01pm, 10ToedSloth, 130490868091234, 1osmi, 
 
 Evidence SQL: SELECT GROUP_CONCAT(DisplayName, ', ') AS names FROM (SELECT DisplayName FROM users WHERE strftime('%Y', CreationDate) = '2011' ORDER BY DisplayName)
 
-建模缺口: 无
-
 </details>
 
 <details id="q533">
@@ -174,6 +174,8 @@ Evidence SQL: SELECT GROUP_CONCAT(DisplayName, ', ') AS names FROM (SELECT Displ
 **期望**：`4941`
 
 **答案**：`## 结论 **4,941 名用户**的最后访问时间**严格晚于** 2014-09-01。 ### 三级锚定过程 \| 级 \| 工具 \| 命中 \| \|---\|---\|---\| \| L1 实体路 \| 'dlr_semantic_query' \| 'LOGICAL.User'（db='codebase_community'）→ PE 'PHYSICAL.User'（表 'user`
+
+**raw 日志**：[results/0928_2218_qids_533/raw/0928_2218_533_dlr.ndjson](../results/0928_2218_qids_533/raw/0928_2218_533_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -214,8 +216,6 @@ Evidence SQL: SELECT GROUP_CONCAT(DisplayName, ', ') AS names FROM (SELECT Displ
 Final Answer: 4941
 Evidence SQL: SELECT COUNT(*) AS strictly_after FROM users WHERE DATE(LastAccessDate) > '2014-09-01';
 
-建模缺口: 无
-
 </details>
 
 <details id="q537">
@@ -226,6 +226,8 @@ Evidence SQL: SELECT COUNT(*) AS strictly_after FROM users WHERE DATE(LastAccess
 **期望**：`121`
 
 **答案**：`**结论**：用户 csgillespie 拥有 **121** 篇帖子。 **锚定过程** - **L3（'dlr_search_sop'）**：'match=none' —— 本题无题级口径节，按 L1 + L2 自解。 - **L1（'dlr_semantic_query'）**：跨库召回定位到 'codebase_community'；'LOGICAL.User'（DisplayName `
+
+**raw 日志**：[results/0928_2215_qids_531_532_533_537_539/raw/0928_2215_537_dlr.ndjson](../results/0928_2215_qids_531_532_533_537_539/raw/0928_2215_537_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -254,8 +256,6 @@ Evidence SQL: SELECT COUNT(*) AS strictly_after FROM users WHERE DATE(LastAccess
 Final Answer: 121
 Evidence SQL: SELECT COUNT(p.Id) AS post_count FROM users u JOIN posts p ON p.OwnerUserId = u.Id WHERE u.DisplayName = 'csgillespie'
 
-建模缺口: 无
-
 </details>
 
 <details id="q539">
@@ -266,6 +266,8 @@ Evidence SQL: SELECT COUNT(p.Id) AS post_count FROM users u JOIN posts p ON p.Ow
 **期望**：`csgillespie`
 
 **答案**：`## 结论 帖子 **"Eliciting priors from experts"** 的所有者是用户 **csgillespie**。 **证据链**： - **L1 实体路** ('dlr_semantic_query')：定位到库 'codebase_community'，命中 'LOGICAL.Post'（物理表 'PHYSICAL.Post' / 'posts'）与 'LOGICAL.`
+
+**raw 日志**：[results/0928_2215_qids_531_532_533_537_539/raw/0928_2215_539_dlr.ndjson](../results/0928_2215_qids_531_532_533_537_539/raw/0928_2215_539_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -300,8 +302,6 @@ Final Answer: csgillespie
 Evidence SQL: SELECT u.DisplayName FROM posts p JOIN users u ON u.Id = p.OwnerUserId WHERE p.Title = 'Eliciting priors from experts'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q544">
@@ -312,6 +312,8 @@ Evidence SQL: SELECT u.DisplayName FROM posts p JOIN users u ON u.Id = p.OwnerUs
 **期望**：`Abhilash`
 
 **答案**：`## 结论 题目问"最后编辑帖子 *Examples for teaching: Correlation does not mean causation* 的用户的 display name"。 **三级锚定过程：** \| 级别 \| 工具 \| 命中 \| \|------\|------\|------\| \| L1 数据源级 \| 'dlr_semantic_query' \| 'LOG`
+
+**raw 日志**：[results/0928_2227_qids_544_547_549_555_557/raw/0928_2227_544_dlr.ndjson](../results/0928_2227_qids_544_547_549_555_557/raw/0928_2227_544_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -354,8 +356,6 @@ FROM posts p
 JOIN users u ON u.Id = p.LastEditorUserId
 WHERE p.Title = 'Examples for teaching: Correlation does not mean causation'
 
-建模缺口: 无
-
 </details>
 
 <details id="q547">
@@ -366,6 +366,8 @@ WHERE p.Title = 'Examples for teaching: Correlation does not mean causation'
 **期望**：`1`
 
 **答案**：`**三级锚定结果** \| 级 \| 命中 \| 关键口径 \| \|---\|---\|---\| \| L1 实体路 \| 'codebase_community' 的 'LOGICAL.Post'（PHYSICAL.Post=posts）、'LOGICAL.User'（PHYSICAL.User=users） \| 'posts.OwnerUserId' ←→ 'users.Id'（ARC `
+
+**raw 日志**：[results/0928_2227_qids_544_547_549_555_557/raw/0928_2227_547_dlr.ndjson](../results/0928_2227_qids_544_547_549_555_557/raw/0928_2227_547_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -397,8 +399,6 @@ Final Answer: 1
 
 Evidence SQL: SELECT COUNT(*) AS cnt FROM posts p JOIN users u ON p.OwnerUserId = u.Id WHERE u.Age > 65 AND p.Score > 19;
 
-建模缺口: 无
-
 </details>
 
 <details id="q549">
@@ -409,6 +409,8 @@ Evidence SQL: SELECT COUNT(*) AS cnt FROM posts p JOIN users u ON p.OwnerUserId 
 **期望**：`Bayesian inference is a method of statistical inference which uses Bayes' theorem to find probability estimates of parameters or hypotheses.`
 
 **答案**：`## 查询过程 **三级锚定** - **L3（口径）**：'dlr_search_sop' 返回 'match=none' — 本题无题级 SOP 节，按 L1 + L2 自解。 - **L1（实体）**：'dlr_semantic_query' 命中 'LOGICAL.Tag'（db='codebase_community'，PE='tags'）——公开属性含 'TagName'、'Excer`
+
+**raw 日志**：[results/0928_2227_qids_544_547_549_555_557/raw/0928_2227_549_dlr.ndjson](../results/0928_2227_qids_544_547_549_555_557/raw/0928_2227_549_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -438,8 +440,6 @@ Final Answer: Post Id 20258 — "Bayesian inference is a method of statistical i
 
 Evidence SQL: SELECT p.Id, p.Body FROM tags t JOIN posts p ON p.Id = t.ExcerptPostId WHERE t.TagName = 'bayesian';
 
-建模缺口: 无
-
 </details>
 
 <details id="q555">
@@ -450,6 +450,8 @@ Evidence SQL: SELECT p.Id, p.Body FROM tags t JOIN posts p ON p.Id = t.ExcerptPo
 **期望**：`9`
 
 **答案**：`**结论**：用户 'csgillespie' 拥有 121 篇 posts，总得分 1089，平均分 **9.0**。 **证据链**： - **L1 语义召回** ('dlr_semantic_query')：命中 'codebase_community' 库，'LOGICAL.Post'（含 Score、OwnerUserId）→ 'PHYSICAL.Post'（表 'posts'）；'LO`
+
+**raw 日志**：[results/0928_2227_qids_544_547_549_555_557/raw/0928_2227_555_dlr.ndjson](../results/0928_2227_qids_544_547_549_555_557/raw/0928_2227_555_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -484,8 +486,6 @@ Evidence SQL: SELECT AVG(CAST(p.Score AS REAL)) AS avg_score FROM posts p JOIN u
 ```
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q557">
@@ -496,6 +496,8 @@ Evidence SQL: SELECT AVG(CAST(p.Score AS REAL)) AS avg_score FROM posts p JOIN u
 **期望**：`0.16899404073645824`
 
 **答案**：`## 分析过程 **三级锚定结果：** \| 级别 \| 工具 \| 结果 \| \|------\|------\|------\| \| L1 数据源级 \| 'dlr_semantic_query' \| 'codebase_community' 库：'LOGICAL.Post' → 'posts' 表；'LOGICAL.User' → 'users' 表 \| \| L2 领域共识级 \|`
+
+**raw 日志**：[results/0928_2227_qids_544_547_549_555_557/raw/0928_2227_557_dlr.ndjson](../results/0928_2227_qids_544_547_549_555_557/raw/0928_2227_557_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -545,8 +547,6 @@ Final Answer: 0.1657% (19 out of 11,465 posts with a score over 5 are owned by a
 
 Evidence SQL: `SELECT 100.0 * (SELECT COUNT(*) FROM posts p JOIN users u ON p.OwnerUserId = u.Id WHERE p.Score > 5 AND u.Age > 65) / (SELECT COUNT(*) FROM posts WHERE Score > 5) AS elder_owned_pct`
 
-建模缺口: 无
-
 </details>
 
 <details id="q563">
@@ -557,6 +557,8 @@ Evidence SQL: `SELECT 100.0 * (SELECT COUNT(*) FROM posts p JOIN users u ON p.Ow
 **期望**：`3`
 
 **答案**：`**解答过程** 1. **L1 语义召回**：命中 'codebase_community' 库，候选逻辑实体 'Post'（'PHYSICAL.Post' = 'posts'）、'PostInteraction'（'PHYSICAL.Comment' = 'comments'）。 2. **L2 领域共识**（qid=1）："user no. 3025" 即 UserId（非 DisplayN`
+
+**raw 日志**：[results/0928_2256_qids_563_565_567_568_571/raw/0928_2256_563_dlr.ndjson](../results/0928_2256_qids_563_565_567_568_571/raw/0928_2256_563_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -591,8 +593,6 @@ Final Answer: 3
 Evidence SQL: SELECT p.FavoriteCount FROM comments c JOIN posts p ON c.PostId = p.Id WHERE c.UserId = 3025 AND c.CreationDate LIKE '2014-04-23 20:29:39%'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q565">
@@ -603,6 +603,8 @@ Evidence SQL: SELECT p.FavoriteCount FROM comments c JOIN posts p ON c.PostId = 
 **期望**：`well-finished`
 
 **答案**：`## 结论 **是的，该帖子是 "well-finished"（已完成/已关闭）。** ## 推理过程 **1. 术语锚定（L2 领域共识）** - L2（codebase_community, qid=1）："Users are named in questions by their display name (or by id: *'user no. 3025'* is the **UserI`
+
+**raw 日志**：[results/0928_2256_qids_563_565_567_568_571/raw/0928_2256_565_dlr.ndjson](../results/0928_2256_qids_563_565_567_568_571/raw/0928_2256_565_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -650,8 +652,6 @@ Final Answer: Yes
 Evidence SQL: SELECT CASE WHEN p.ClosedDate IS NOT NULL AND TRIM(p.ClosedDate) <> '' THEN 'Yes' ELSE 'No' END AS well_finished FROM comments c JOIN posts p ON p.Id = c.PostId WHERE c.UserId = 23853 AND c.CreationDate LIKE '2013-07-12 09:08:18%'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q567">
@@ -662,6 +662,8 @@ Evidence SQL: SELECT CASE WHEN p.ClosedDate IS NOT NULL AND TRIM(p.ClosedDate) <
 **期望**：`2`
 
 **答案**：`## 结论 **Tiago Pasqualini 拥有 2 篇帖子。** ### 证据链 \| 层级 \| 命中内容 \| \|------\|---------\| \| L3 SOP \| 'match=none' — 本题无题级口径节，按 L1+L2 自解 \| \| L1 语义召回 \| 'LOGICAL.User' → 'PHYSICAL.User'（'codebase_communit`
+
+**raw 日志**：[results/0928_2256_qids_563_565_567_568_571/raw/0928_2256_567_dlr.ndjson](../results/0928_2256_qids_563_565_567_568_571/raw/0928_2256_567_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -700,8 +702,6 @@ Evidence SQL: SELECT CASE WHEN p.ClosedDate IS NOT NULL AND TRIM(p.ClosedDate) <
 Final Answer: 2
 Evidence SQL: SELECT COUNT(*) AS post_count FROM posts JOIN users ON posts.OwnerUserId = users.Id WHERE users.DisplayName = 'Tiago Pasqualini';
 
-建模缺口: 无
-
 </details>
 
 <details id="q568">
@@ -712,6 +712,8 @@ Evidence SQL: SELECT COUNT(*) AS post_count FROM posts JOIN users ON posts.Owner
 **期望**：`George Dontas`
 
 **答案**：`**结论**：投票 No.6347 由用户 **George Dontas** 投出。 **求解路径** 1. L1 语义召回定位到 'codebase_community' 库的 'LOGICAL.Vote'（User votes on posts）与 'LOGICAL.User'（DisplayName 为"the user's display name"）。 2. L2 领域共识（qid=1`
+
+**raw 日志**：[results/0928_2256_qids_563_565_567_568_571/raw/0928_2257_568_dlr.ndjson](../results/0928_2256_qids_563_565_567_568_571/raw/0928_2257_568_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -739,8 +741,6 @@ Final Answer: George Dontas
 Evidence SQL: SELECT u.DisplayName FROM votes v JOIN users u ON v.UserId = u.Id WHERE v.Id = 6347
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q571">
@@ -751,6 +751,8 @@ Evidence SQL: SELECT u.DisplayName FROM votes v JOIN users u ON v.UserId = u.Id 
 **期望**：`0.375`
 
 **答案**：`## 结论 **用户 No.24（UserId = 24，DisplayName = "A Lion"）共有 3 篇 posts、8 条 votes**，因此 posts 是 votes 的 **0.375 倍**（3 ÷ 8）。 ### 锚定过程（三级） \| 级 \| 工具 \| 命中 \| \|---\|---\|---\| \| L1 数据源级 \| 'dlr_semantic_query`
+
+**raw 日志**：[results/0928_2256_qids_563_565_567_568_571/raw/0928_2257_571_dlr.ndjson](../results/0928_2256_qids_563_565_567_568_571/raw/0928_2257_571_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -792,8 +794,6 @@ Final Answer: 0.375
 Evidence SQL: SELECT CAST((SELECT COUNT(*) FROM posts WHERE OwnerUserId = 24) AS REAL) / (SELECT COUNT(*) FROM votes WHERE UserId = 24) AS posts_over_votes
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q572">
@@ -804,6 +804,8 @@ Evidence SQL: SELECT CAST((SELECT COUNT(*) FROM posts WHERE OwnerUserId = 24) AS
 **期望**：`60`
 
 **答案**：`单行精确命中，结果为 60。 **结论**：标题为 'Integration of Weka and/or RapidMiner into Informatica PowerCenter/Developer' 的帖子获得 **60** 次浏览。 **依据**： - **L1 实体路**（'dlr_semantic_query'）：命中 'LOGICAL.Post'（db='codebase_com`
+
+**raw 日志**：[results/0928_2309_qids_572_573_576_578_581/raw/0928_2309_572_dlr.ndjson](../results/0928_2309_qids_572_573_576_578_581/raw/0928_2309_572_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -834,8 +836,6 @@ Final Answer: 60
 Evidence SQL: SELECT ViewCount FROM posts WHERE Title = 'Integration of Weka and/or RapidMiner into Informatica PowerCenter/Developer'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q573">
@@ -846,6 +846,8 @@ Evidence SQL: SELECT ViewCount FROM posts WHERE Title = 'Integration of Weka and
 **期望**：`Reminds me that in my early days as a referee i spent *far* too long reviewing a statistical paper that was eventually rejected by that particular journal, but the other referees and I suggested a more useful application for the method, and I also sketched an algebraic proof to replace an unsatisfactory simulation study in the manuscript. The authors have since got two published papers out of it. I'm not *annoyed* by that, but an acknowledgement such as "we thank referees of an earlier version of the paper for helpful comments" would have been good manners. | If you're going to use R, I'd recommend embedding your R code in an Sweave document that produces your report.  That way the R code stays with the report. | As a non-expert, I think that the key to the entire debate is that people actually reason like Bayesians. You have to be trained to think like a frequentist, and even then it's easy to slip up and either reason or present your reasoning as if it were Bayesian. "There's a 95% chance that the value is within this confidence interval." Enough said. | In the linear regression model the dependent variable $y$ is considered continuous, whereas in logistic regression it is categorical, i.e., discrete. In application, the former is used in regression settings while the latter is used for binary classification or multi-class classification (where it is called multinomial logistic regression). | Did anyone else notice that the tour guide changes colors between the second and third frames?`
 
 **答案**：`Three-level anchoring complete: - **L3** ('dlr_search_sop'): 'match=similar' — no section restates this question verbatim, so no题级口径; solved from L1+L2. - **L1** ('dlr_semantic_query'): 'LOGICAL.PostI`
+
+**raw 日志**：[results/0928_2309_qids_572_573_576_578_581/raw/0928_2309_573_dlr.ndjson](../results/0928_2309_qids_572_573_576_578_581/raw/0928_2309_573_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -882,8 +884,6 @@ Final Answer: 5 rows (comments.Text where comments.Score = 17):
 
 Evidence SQL: SELECT Text FROM comments WHERE Score = 17 LIMIT 200
 
-建模缺口: 无
-
 </details>
 
 <details id="q576">
@@ -894,6 +894,8 @@ Evidence SQL: SELECT Text FROM comments WHERE Score = 17 LIMIT 200
 **期望**：`Preets`
 
 **答案**：`**结论**：评论 ''thank you user93!'' 的用户是 **Preets**。 **锚定路径（三级并行）** - **L1（实体路）** 'dlr_semantic_query' → 库 'codebase_community'；'LOGICAL.PostInteraction'（评论）→ 'PHYSICAL.Comment'（'comments'），'LOGICAL.User'`
+
+**raw 日志**：[results/0928_2309_qids_572_573_576_578_581/raw/0928_2309_576_dlr.ndjson](../results/0928_2309_qids_572_573_576_578_581/raw/0928_2309_576_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -925,8 +927,6 @@ Final Answer: Preets
 Evidence SQL: SELECT u.DisplayName FROM comments c JOIN users u ON c.UserId = u.Id WHERE c.Text = 'thank you user93!'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q578">
@@ -937,6 +937,8 @@ Evidence SQL: SELECT u.DisplayName FROM comments c JOIN users u ON c.UserId = u.
 **期望**：`Hendy | 146`
 
 **答案**：`## 分析过程 **三级锚定结果** \| 级别 \| 工具 \| 结果 \| \|------\|------\|------\| \| L1 实体路 \| 'dlr_semantic_query' \| 命中 'codebase_community' 库：'LOGICAL.Post'（PHYSICAL.posts）、'LOGICAL.User'（PHYSICAL.users）；Post 有 O`
+
+**raw 日志**：[results/0928_2309_qids_572_573_576_578_581/raw/0928_2309_578_dlr.ndjson](../results/0928_2309_qids_572_573_576_578_581/raw/0928_2309_578_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -981,8 +983,6 @@ JOIN users u ON p.OwnerUserId = u.Id
 WHERE p.Title = 'Understanding what Dassault iSight is doing?'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q581">
@@ -993,6 +993,8 @@ WHERE p.Title = 'Understanding what Dassault iSight is doing?'
 **期望**：`Paul`
 
 **答案**：`## 查询过程 **三级并行锚定结果：** \| 级别 \| 工具 \| 命中/信号 \| 采用 \| \|------\|------\|-----------\|------\| \| L1 实体路 \| 'dlr_semantic_query' (confidence 0.738) \| 'LOGICAL.Post'（posts，含 'OwnerUserId'/'Title'）+ 'LOGI`
+
+**raw 日志**：[results/0928_2309_qids_572_573_576_578_581/raw/0928_2309_581_dlr.ndjson](../results/0928_2309_qids_572_573_576_578_581/raw/0928_2309_581_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1033,8 +1035,6 @@ Final Answer: Paul
 Evidence SQL: SELECT u.DisplayName FROM posts p JOIN users u ON u.Id = p.OwnerUserId WHERE p.Title = 'Open source tools for visualizing multi-dimensional data?'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q584">
@@ -1045,6 +1045,8 @@ Evidence SQL: SELECT u.DisplayName FROM posts p JOIN users u ON u.Id = p.OwnerUs
 **期望**：` |  |  | edited title | TeXified the formulas. | deleted 5 characters in body; edited title | deleted 5 characters in body; edited title | edited title`
 
 **答案**：`## 结论 **L3 命中（exact）**：'dlr_search_sop' 返回标题逐字复述本题的节 —— 'codebase_community#Write all the comments left by users who edited the post titled '...''，其 Expected 为 'edited title \| TeXified the formulas. `
+
+**raw 日志**：[results/0928_2320_qids_584_586_587_592_595/raw/0928_2320_584_dlr.ndjson](../results/0928_2320_qids_584_586_587_592_595/raw/0928_2320_584_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1089,8 +1091,6 @@ Evidence SQL: SELECT u.DisplayName FROM posts p JOIN users u ON u.Id = p.OwnerUs
 Final Answer: edited title | TeXified the formulas. | deleted 5 characters in body; edited title
 Evidence SQL: SELECT GROUP_CONCAT(Comment, ' | ') AS EditNotes FROM (SELECT ph.Comment AS Comment, MIN(ph.CreationDate) AS first_seen FROM postHistory ph JOIN posts p ON p.Id = ph.PostId WHERE p.Title = 'Why square the difference instead of taking the absolute value in standard deviation?' AND ph.Comment IS NOT NULL AND TRIM(ph.Comment) <> '' GROUP BY ph.Comment ORDER BY first_seen)
 
-建模缺口: 无
-
 </details>
 
 <details id="q586">
@@ -1101,6 +1101,8 @@ Evidence SQL: SELECT GROUP_CONCAT(Comment, ' | ') AS EditNotes FROM (SELECT ph.C
 **期望**：`chl | How to combine confidence intervals for a variance component of a mixed-effects model when using multiple imputation | shabbychef | Unbiased estimation of covariance matrix for multiply censored data`
 
 **答案**：`## 查询过程 **L1 语义召回**（'dlr_semantic_query'）：定位到库 'codebase_community'，命中三个逻辑实体 —— 'LOGICAL.Post'（posts）、'LOGICAL.User'（users）、'LOGICAL.Vote'（votes）。 **L2 领域共识**（'dlr_search_consensus'，namespace=codebase`
+
+**raw 日志**：[results/0928_2320_qids_584_586_587_592_595/raw/0928_2320_586_dlr.ndjson](../results/0928_2320_qids_584_586_587_592_595/raw/0928_2320_586_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1146,8 +1148,6 @@ Final Answer: chl
 Evidence SQL: SELECT u.DisplayName FROM votes v JOIN posts p ON v.PostId = p.Id JOIN users u ON v.UserId = u.Id WHERE v.BountyAmount = 50 AND v.VoteTypeId = 8 AND (p.Title LIKE '% variance %' OR p.Title LIKE 'variance %' OR p.Title LIKE '% variance')
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q587">
@@ -1158,6 +1158,8 @@ Evidence SQL: SELECT u.DisplayName FROM votes v JOIN posts p ON v.PostId = p.Id 
 **期望**：`288 | So how many staticians *does* it take to screw in a lightbulb? | @Jason Punyon in particular gets a humorless downvote for removing my "verboten" tag! ;-) | 288 | So how many staticians *does* it take to screw in a lightbulb? | Probably better asked on meta.  People feel like they have to downvote it because it is an off-topic question.  But then the downvotes make it look like staticians have no sense of humor :( | 64481 | What is your favorite "data analysis" cartoon?`
 
 **答案**：`**解题过程** 1. **三级锚定**（并行）：L1 语义召回 → 'codebase_community' 库的 'LOGICAL.Post'（posts）/'LOGICAL.PostInteraction'（comments）；L2 共识命中：*"A tag is named by its tag name, and posts carry tags"*、*"A post's Title i`
+
+**raw 日志**：[results/0928_2320_qids_584_586_587_592_595/raw/0928_2320_587_dlr.ndjson](../results/0928_2320_qids_584_586_587_592_595/raw/0928_2320_587_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1208,8 +1210,6 @@ Final Answer: 平均浏览量 = 33236.25（4 篇 tagged 'humor' 的帖子：288 
 4) "Funny statistics exam answers" — (a) "Should be a community wiki?" ; (b) "I think everyone here who has taught statistics has had a student give an answer where a probability is not restricted to the interval $[0,1]$ but that's really more disconcerting than funny." ; (c) "@Macro   Every...single....exam I had multiple students give probabilities less than 0 or greater than 1. It made me want to scream. This was not restricted to Intro Stats... even in Intro to MCMC I saw it." ; (d) "The early answers to this thread are *so* off-topic I think this should be closed.  SE is not the place for lists of jokes, etc. (even though we all enjoy them.) See guideline #3 at http://blog.stackoverflow.com/2010/01/stack-overflow-where-we-hate-fun/, for example.  I anticipate complaints, though, so I'm holding back. But if the quality doesn't go up quickly, I won't hesitate to put in a close vote!" ; (e) "It's interesting how the off topic answers are getting voted up as well." ; (f) "@John, welcome to the democratic process. These things do happen sometimes :)" ; (g) "I had a post that was off-topic so removed it. As far as true students' mistakes go: I am a grad student and have been teaching into to Econometrics for two semesters. I have seen: complete inability of students to work with fractions, things like: 1/2 + 1/3 = 2/5, answers with negative probability, negative variance. Students constantly mess up their orders of operations. I got blank stare when I asked a student \"What is the probability of getting heads in a coin toss\"."
 Evidence SQL: SELECT p.Title, c.Text AS Comment, (SELECT CAST(AVG(ViewCount) AS REAL) FROM posts WHERE Tags LIKE '%<humor>%') AS AvgViewCount FROM posts p JOIN comments c ON c.PostId = p.Id WHERE p.Tags LIKE '%<humor>%' ORDER BY p.Id, c.Id
 
-建模缺口: 无
-
 </details>
 
 <details id="q592">
@@ -1220,6 +1220,8 @@ Evidence SQL: SELECT p.Title, c.Text AS Comment, (SELECT CAST(AVG(ViewCount) AS 
 **期望**：`2875`
 
 **答案**：`## 结论 **2875 名用户被授予了超过 5 个徽章。** **推理链（三级锚定）** \| 级别 \| 工具 \| 结果 \| \|------\|------\|------\| \| L1 数据源级 \| 'dlr_semantic_query' \| 命中 'LOGICAL.Badge'（"User badges"）→ 'PHYSICAL.Badge'，库 'codebase_comm`
+
+**raw 日志**：[results/0928_2320_qids_584_586_587_592_595/raw/0928_2321_592_dlr.ndjson](../results/0928_2320_qids_584_586_587_592_595/raw/0928_2321_592_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1257,8 +1259,6 @@ Final Answer: 2875
 Evidence SQL: SELECT COUNT(*) AS user_count FROM (SELECT UserId FROM badges GROUP BY UserId HAVING COUNT(*) > 5)
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q595">
@@ -1269,6 +1269,8 @@ Evidence SQL: SELECT COUNT(*) AS user_count FROM (SELECT UserId FROM badges GROU
 **期望**：`57 | 61 | 80 | 124 | 139 | 334 | 486 | 495`
 
 **答案**：`L3 逐字命中本题（'match=exact'），其口径为：取用户对 **ViewCount ≥ 1000** 的帖子所做的编辑记录，**按用户**分组，保留其编辑记录只归结为**单一一种 history 类型**的用户（by kind，非 by record）。按此执行即得 94 个用户，与 Expected 完全一致。 Final Answer: 57 \| 61 \| 80 \| 124 \`
+
+**raw 日志**：[results/0928_2320_qids_584_586_587_592_595/raw/0928_2321_595_dlr.ndjson](../results/0928_2320_qids_584_586_587_592_595/raw/0928_2321_595_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1289,8 +1291,6 @@ Final Answer: 57 | 61 | 80 | 124 | 139 | 334 | 486 | 495 | 779 | 1080 | 2436 | 2
 
 Evidence SQL: SELECT ph.UserId FROM postHistory ph JOIN posts p ON ph.PostId = p.Id WHERE p.ViewCount >= 1000 GROUP BY ph.UserId HAVING COUNT(DISTINCT ph.PostHistoryTypeId) = 1 ORDER BY ph.UserId
 
-建模缺口: 无
-
 </details>
 
 <details id="q598">
@@ -1301,6 +1301,8 @@ Evidence SQL: SELECT ph.UserId FROM postHistory ph JOIN posts p ON ph.PostId = p
 **期望**：`-9.544015626052403`
 
 **答案**：`三级锚定闭环完成，结果与 L3 SOP 给出的既定事实完全吻合（542 / 1,959 / 14,847）。 **执行路径与证据：** \| 级别 \| 工具 \| 命中结论 \| \|------\|------\|----------\| \| L3 口径 \| 'dlr_search_sop' \| 'match=exact'，题面逐字复述本题：Student badges = 'Name=`
+
+**raw 日志**：[results/0928_2347_qids_598/raw/0928_2347_598_dlr.ndjson](../results/0928_2347_qids_598/raw/0928_2347_598_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1332,8 +1334,6 @@ Final Answer: -9.544015626052403
 Evidence SQL: SELECT (SUM(CASE WHEN substr(Date,1,4)='2010' THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) - (SUM(CASE WHEN substr(Date,1,4)='2011' THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) AS pct_diff, SUM(CASE WHEN substr(Date,1,4)='2010' THEN 1 ELSE 0 END) AS n2010, SUM(CASE WHEN substr(Date,1,4)='2011' THEN 1 ELSE 0 END) AS n2011, COUNT(*) AS n_all FROM badges WHERE Name = 'Student';
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q604">
@@ -1344,6 +1344,8 @@ Evidence SQL: SELECT (SUM(CASE WHEN substr(Date,1,4)='2010' THEN 1 ELSE 0 END) *
 **期望**：`182.2832618025751 | 34.083333333333336`
 
 **答案**：`## 查询过程 **三级锚定结果：** - **L3 ('dlr_search_sop')**：'match=similar'，返回的两个候选节（UK 用户 favorite / posts score 百分比）均未逐字复述本题 → 本题无 L3 权威节，按 L1+L2 自解。 - **L1 ('dlr_semantic_query')**：命中 'codebase_community' 库，结构`
+
+**raw 日志**：[results/0928_2344_qids_598_604_629_633_634/raw/0928_2344_604_dlr.ndjson](../results/0928_2344_qids_598_604_629_633_634/raw/0928_2344_604_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1380,8 +1382,6 @@ Final Answer: 平均 up votes = 182.2832618025751；平均用户年龄 = 34.0833
 Evidence SQL: SELECT AVG(UpVotes) AS avg_upvotes, AVG(Age) AS avg_age, COUNT(*) AS n_users FROM users WHERE Id IN (SELECT OwnerUserId FROM posts WHERE OwnerUserId IS NOT NULL GROUP BY OwnerUserId HAVING COUNT(*) > 10)
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q629">
@@ -1392,6 +1392,8 @@ Evidence SQL: SELECT AVG(UpVotes) AS avg_upvotes, AVG(Age) AS avg_age, COUNT(*) 
 **期望**：`1.307099679981036`
 
 **答案**：`## 结论 **问题拆解**：本题是单一子问题——求 2010 年与 2011 年投票数的比值。 **三级锚定结果**： - **L3（'dlr_search_sop'）**：'match=none'（含换问法重试），本题无题级 SOP 节 → 按 L1 + L2 自解。 - **L1（'dlr_semantic_query'）**：命中 'LOGICAL.Vote'（"User votes on`
+
+**raw 日志**：[results/0928_2344_qids_598_604_629_633_634/raw/0928_2345_629_dlr.ndjson](../results/0928_2344_qids_598_604_629_633_634/raw/0928_2345_629_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1427,8 +1429,6 @@ Final Answer: 1.307099679981036
 Evidence SQL: SELECT CAST(SUM(CASE WHEN strftime('%Y', CreationDate)='2010' THEN 1 ELSE 0 END) AS REAL) / SUM(CASE WHEN strftime('%Y', CreationDate)='2011' THEN 1 ELSE 0 END) AS ratio_2010_to_2011 FROM votes
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q633">
@@ -1439,6 +1439,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN strftime('%Y', CreationDate)='2010' THEN
 **期望**：`351`
 
 **答案**：`## 结论 **slashnick**（User Id = 16）在 'posts' 表中共有 **且仅有 1 篇** post，因此"answers count 最多"的那篇即该篇，Post ID = **351**。 关键点（L3 口径，'dlr_search_sop' 精确命中本题）： - "answers count" 指 post 自身记录的 'AnswerCount' 字段，**不是*`
+
+**raw 日志**：[results/0928_2344_qids_598_604_629_633_634/raw/0928_2345_633_dlr.ndjson](../results/0928_2344_qids_598_604_629_633_634/raw/0928_2345_633_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1476,8 +1478,6 @@ Final Answer: 351
 Evidence SQL: SELECT p.Id FROM users u JOIN posts p ON p.OwnerUserId = u.Id WHERE u.DisplayName = 'slashnick'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q634">
@@ -1488,6 +1488,8 @@ Evidence SQL: SELECT p.Id FROM users u JOIN posts p ON p.OwnerUserId = u.Id WHER
 **期望**：`Harvey Motulsky`
 
 **答案**：`## 结论过程 **三级锚定结果：** \| 级 \| 工具 \| 命中 \| \|---\|---\|---\| \| L3 业务逻辑级 \| 'dlr_search_sop' \| **match=exact** — 标题逐字复述本题，为该题权威口径 \| \| L2 领域共识级 \| 'dlr_search_consensus' \| qid=4：*"higher view count me`
+
+**raw 日志**：[results/0928_2344_qids_598_604_629_633_634/raw/0928_2345_634_dlr.ndjson](../results/0928_2344_qids_598_604_629_633_634/raw/0928_2345_634_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1533,8 +1535,6 @@ Final Answer: Harvey Motulsky
 
 Evidence SQL: SELECT u.DisplayName AS author FROM users u JOIN posts p ON p.OwnerUserId = u.Id WHERE u.DisplayName IN ('Harvey Motulsky','Noah Snyder') GROUP BY u.Id, u.DisplayName ORDER BY SUM(COALESCE(p.ViewCount,0)) DESC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q637">
@@ -1545,6 +1545,8 @@ Evidence SQL: SELECT u.DisplayName AS author FROM users u JOIN posts p ON p.Owne
 **期望**：`<books> | <books> | <books> | <books> | null`
 
 **答案**：`## 分析过程 **三级锚定结果** - **L1 实体路**：命中 'codebase_community' 库，涉及 'LOGICAL.Post'（posts：OwnerUserId / Tags / CommentCount）、'LOGICAL.Tag'（tags：TagName）、'LOGICAL.PostInteraction'（comments：PostId）→ 经 'get_pe_m`
+
+**raw 日志**：[results/0928_2355_qids_637_639_640_665_669/raw/0928_2355_637_dlr.ndjson](../results/0928_2355_qids_637_639_640_665_669/raw/0928_2355_637_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1586,8 +1588,6 @@ Final Answer: books
 Evidence SQL: SELECT DISTINCT p.Tags FROM posts p WHERE p.OwnerUserId = (SELECT Id FROM users WHERE DisplayName = 'Mark Meckes') AND NOT EXISTS (SELECT 1 FROM comments c WHERE c.PostId = p.Id) AND p.Tags IS NOT NULL
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q639">
@@ -1598,6 +1598,8 @@ Evidence SQL: SELECT DISTINCT p.Tags FROM posts p WHERE p.OwnerUserId = (SELECT 
 **期望**：`0.19569471624266144`
 
 **答案**：`## 结论 **答案：0** ### 三级锚定过程 \| 级别 \| 工具 \| 命中结果 \| \|------\|------\|----------\| \| **L3 业务逻辑级** \| 'dlr_search_sop' \| **'match=exact'** —— 标题逐字复述本题，该节即本题权威口径，**Expected = 0** \| \| **L1 数据源级** \| 'dl`
+
+**raw 日志**：[results/0928_2355_qids_637_639_640_665_669/raw/0928_2355_639_dlr.ndjson](../results/0928_2355_qids_637_639_640_665_669/raw/0928_2355_639_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1649,8 +1651,6 @@ Final Answer: 0
 Evidence SQL: SELECT (SELECT COUNT(*) FROM posts p JOIN users u ON p.OwnerUserId = u.Id WHERE u.DisplayName = 'Community' AND (p.Tags LIKE '%<r>%' OR p.Tags LIKE '%"r"%')) * 100.0 / (SELECT COUNT(*) FROM posts p JOIN users u ON p.OwnerUserId = u.Id WHERE u.DisplayName = 'Community') AS pct_r_posts
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q640">
@@ -1661,6 +1661,8 @@ Evidence SQL: SELECT (SELECT COUNT(*) FROM posts p JOIN users u ON p.OwnerUserId
 **期望**：`-1491`
 
 **答案**：`## 结论 **L3 命中**：'dlr_search_sop' 返回 'match=exact'，标题逐字复述本题（'codebase_community#Calculate the difference in view count...'），Expected = **-497**。按该节口径执行。 **口径要点（L3 权威）**： 1. "The posts posted by an auth`
+
+**raw 日志**：[results/0928_2355_qids_637_639_640_665_669/raw/0928_2355_640_dlr.ndjson](../results/0928_2355_qids_637_639_640_665_669/raw/0928_2355_640_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1707,8 +1709,6 @@ Final Answer: -497
 Evidence SQL: SELECT (SELECT COALESCE(SUM(p.ViewCount),0) FROM users u LEFT JOIN posts p ON p.OwnerUserId = u.Id WHERE LOWER(u.DisplayName) = 'mornington') - (SELECT COALESCE(SUM(p.ViewCount),0) FROM users u LEFT JOIN posts p ON p.OwnerUserId = u.Id WHERE u.DisplayName = 'Amos') AS view_count_difference
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q665">
@@ -1719,6 +1719,8 @@ Evidence SQL: SELECT (SELECT COALESCE(SUM(p.ViewCount),0) FROM users u LEFT JOIN
 **期望**：`8.666666666666666`
 
 **答案**：`## 结论 **问题解析**：三个语义要素分别锚定到 'codebase_community' 库—— \| 要素 \| 锚定 \| 依据 \| \|------\|------\|------\| \| 「links」 \| 'postLinks' 表（PHYSICAL.PostLink，LE=PostInteraction） \| L1 召回：'LOGICAL.PostInteraction'`
+
+**raw 日志**：[results/0928_2355_qids_637_639_640_665_669/raw/0928_2356_665_dlr.ndjson](../results/0928_2355_qids_637_639_640_665_669/raw/0928_2356_665_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1757,8 +1759,6 @@ Evidence SQL: SELECT (SELECT COALESCE(SUM(p.ViewCount),0) FROM users u LEFT JOIN
 Final Answer: 8.67
 Evidence SQL: SELECT CAST(COUNT(*) AS REAL)/12 AS avg_monthly FROM postLinks WHERE strftime('%Y', CreationDate) = '2010' AND PostId IN (SELECT Id FROM posts WHERE AnswerCount <= 2)
 
-建模缺口: 无
-
 </details>
 
 <details id="q669">
@@ -1769,6 +1769,8 @@ Evidence SQL: SELECT CAST(COUNT(*) AS REAL)/12 AS avg_monthly FROM postLinks WHE
 **期望**：`2010-08-13`
 
 **答案**：`## 分析过程 **三级锚定结果：** - **L3（SOP）**：'match=none' — 本题无题级口径节，按 L1+L2 自解 - **L1（实体路）**：'dlr_semantic_query' 全局召回锚定库 'codebase_community'；命中 'LOGICAL.Vote'（votes）与 'LOGICAL.User'（users） - **L2（共识路）**：'code`
+
+**raw 日志**：[results/0928_2355_qids_637_639_640_665_669/raw/0928_2356_669_dlr.ndjson](../results/0928_2355_qids_637_639_640_665_669/raw/0928_2356_669_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1811,8 +1813,6 @@ Final Answer: 2010-08-13
 Evidence SQL: SELECT MIN(v.CreationDate) AS first_vote_date FROM users u JOIN votes v ON v.UserId = u.Id WHERE u.DisplayName = 'chl'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q671">
@@ -1823,6 +1823,8 @@ Evidence SQL: SELECT MIN(v.CreationDate) AS first_vote_date FROM users u JOIN vo
 **期望**：`Geoff Dalgas`
 
 **答案**：`## 查询过程 **三级锚定** - **L1 语义召回**：命中 'LOGICAL.Badge'（PE 'badges'）与 'LOGICAL.User'（PE 'users'），同属 'codebase_community' 库 - **L2 领域共识**（'dlr_search_consensus', namespace='codebase_community', qid=2）：*"The `
+
+**raw 日志**：[results/0929_0826_qids_671_672_678_682_683/raw/0929_0826_671_dlr.ndjson](../results/0929_0826_qids_671_672_678_682_683/raw/0929_0826_671_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1865,8 +1867,6 @@ Final Answer: Geoff Dalgas
 Evidence SQL: SELECT u.DisplayName FROM users u JOIN badges b ON b.UserId = u.Id WHERE b.Name = 'Autobiographer' ORDER BY b.Date ASC, b.Id ASC LIMIT 1
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q672">
@@ -1877,6 +1877,8 @@ Evidence SQL: SELECT u.DisplayName FROM users u JOIN badges b ON b.UserId = u.Id
 **期望**：`19`
 
 **答案**：`## 分析过程 **三级锚定结果：** - **L3（'dlr_search_sop'）→ 'match=exact'**，标题逐字复述本题，为最权威口径 - **L1（'dlr_semantic_query'）**：命中 'LOGICAL.User'（'codebase_community.users'）与 'LOGICAL.Post'（'codebase_community.posts'），同`
+
+**raw 日志**：[results/0929_0826_qids_671_672_678_682_683/raw/0929_0826_672_dlr.ndjson](../results/0929_0826_qids_671_672_678_682_683/raw/0929_0826_672_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1924,8 +1926,6 @@ Final Answer: 14
 Evidence SQL: SELECT COUNT(DISTINCT u.Id) FROM users u JOIN posts p ON p.OwnerUserId = u.Id WHERE u.Location = 'United Kingdom' AND p.FavoriteCount >= 4
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q678">
@@ -1936,6 +1936,8 @@ Evidence SQL: SELECT COUNT(DISTINCT u.Id) FROM users u JOIN posts p ON p.OwnerUs
 **期望**：`109 | Power of Holm's multiple comparison testing compared to others`
 
 **答案**：`**结论**：Harvey Motulsky（'users.Id = 25'）共有多篇帖子，其中浏览量（ViewCount）最高的是 **id = 109**，标题为 **"Power of Holm's multiple comparison testing compared to others"**（3,980 次浏览）。 **证据链**： - L1 语义召回 → 'LOGICAL.Post'`
+
+**raw 日志**：[results/0929_0826_qids_671_672_678_682_683/raw/0929_0826_678_dlr.ndjson](../results/0929_0826_qids_671_672_678_682_683/raw/0929_0826_678_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -1965,8 +1967,6 @@ Final Answer: id = 109, title = "Power of Holm's multiple comparison testing com
 
 Evidence SQL: SELECT p.Id, p.Title FROM posts p JOIN users u ON p.OwnerUserId = u.Id WHERE u.DisplayName = 'Harvey Motulsky' ORDER BY p.ViewCount DESC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q682">
@@ -1977,6 +1977,8 @@ Evidence SQL: SELECT p.Id, p.Title FROM posts p JOIN users u ON p.OwnerUserId = 
 **期望**：`890 | Fabian Fagerholm`
 
 **答案**：`**结论**：2010 年最有价值的帖子是 Id **1595**，其 owner 的 display name 为 **Fabian Fagerholm**（收藏数 FavoriteCount = 233，创建于 2010-08-12）。 **推理链与证据**： - **L2 领域共识**（'codebase_community' qid=6）：「The most valuable post」=`
+
+**raw 日志**：[results/0929_0826_qids_671_672_678_682_683/raw/0929_0826_682_dlr.ndjson](../results/0929_0826_qids_671_672_678_682_683/raw/0929_0826_682_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2007,8 +2009,6 @@ Final Answer: Post Id = 1595, Owner Display Name = Fabian Fagerholm
 
 Evidence SQL: SELECT p.Id, u.DisplayName FROM posts p JOIN users u ON p.OwnerUserId = u.Id WHERE strftime('%Y', p.CreaionDate) = '2010' ORDER BY p.FavoriteCount DESC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q683">
@@ -2019,6 +2019,8 @@ Evidence SQL: SELECT p.Id, u.DisplayName FROM posts p JOIN users u ON p.OwnerUse
 **期望**：`7.24159250999183`
 
 **答案**：`## 结论 2011 年发布的帖子中，**帖子所有者声望超过 1000 的帖子占比为 51.1662%**。 **口径依据（L3 精确命中，逐字复述本题）** 'dlr_search_sop' 返回 'match=exact'，节标题与本题逐字相同（'codebase_community'）： - "In 2011" 限定**整个问题**的范围 —— 2011 年的帖子作为分母，其中所有者的 re`
+
+**raw 日志**：[results/0929_0826_qids_671_672_678_682_683/raw/0929_0826_683_dlr.ndjson](../results/0929_0826_qids_671_672_678_682_683/raw/0929_0826_683_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2061,8 +2063,6 @@ Final Answer: 51.1662
 Evidence SQL: SELECT CAST(SUM(CASE WHEN u.Reputation > 1000 THEN 1 ELSE 0 END) AS REAL) * 100 / COUNT(*) FROM posts p JOIN users u ON p.OwnerUserId = u.Id WHERE p.CreaionDate LIKE '2011%'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q685">
@@ -2073,6 +2073,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN u.Reputation > 1000 THEN 1 ELSE 0 END) A
 **期望**：`1708 | mbq`
 
 **答案**：`## 结论 **L3 口径命中（exact）**：'dlr_search_sop' 返回的节标题逐字复述本题，按该节执行——题面引号内的字符串是**帖子正文文本（body text）**，不是标题（没有任何帖子的标题逐字等于它），须拿它与**某次编辑记录下的文本**匹配；"the user who posted it last time" 指帖子记录的**最后编辑者（LastEditorUserI`
+
+**raw 日志**：[results/0929_0847_qids_685_687_694_701_704/raw/0929_0847_685_dlr.ndjson](../results/0929_0847_qids_685_687_694_701_704/raw/0929_0847_685_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2112,8 +2114,6 @@ Final Answer: Total views = 1708; last user (last editor) = mbq
 
 Evidence SQL: SELECT p.ViewCount AS TotalViews, u.DisplayName AS LastEditor FROM postHistory ph JOIN posts p ON p.Id = ph.PostId JOIN users u ON u.Id = p.LastEditorUserId WHERE ph.Text = 'Computer Game Datasets' LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q687">
@@ -2124,6 +2124,8 @@ Evidence SQL: SELECT p.ViewCount AS TotalViews, u.DisplayName AS LastEditor FROM
 **期望**：`3`
 
 **答案**：`## 结论 **最高分帖子**：Id = **1595**（"Python as a statistics workbench"，Score = **192**，为全表最高分，无并列）。 它上面的评论数 = **3**。两条口径互相印证： - 帖子自身记录数（'posts.CommentCount'）= **3** - 实际挂在 'comments.PostId = 1595' 下的评论行数 = `
+
+**raw 日志**：[results/0929_0847_qids_685_687_694_701_704/raw/0929_0847_687_dlr.ndjson](../results/0929_0847_qids_685_687_694_701_704/raw/0929_0847_687_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2160,8 +2162,6 @@ JOIN 依据：`PHYSICAL.Comment` 的 `A_anchor` 为 `cardinality N:1, key = Post
 ```
 Final Answer: 3
 Evidence SQL: SELECT CommentCount FROM posts ORDER BY Score DESC LIMIT 1;
-建模缺口: 无
-```
 
 </details>
 
@@ -2173,6 +2173,8 @@ Evidence SQL: SELECT CommentCount FROM posts ORDER BY Score DESC LIMIT 1;
 **期望**：`About the picture, post to some image hosting and put a link -- I'll convert it into a pasted-in picture. | eliavs | +1, interesting question, you might find that soon you will have enough reputation :) | eliavs | yup i have thanks to all that helped me!! | eliavs | judging from the graph, the problem is not the lag. What you have plotted is roughly goodness of fit. So it seems that Weibull distribution is not apropriate for your data. I see that there is a bunch up near zero, do you have zero values in your data? In that case you will need to model zero values separately. So first suggestion would be to try Weibull for non zero values. Also why Weibull, is there particular reason, some reference from similar work perhaps? | eliavs`
 
 **答案**：`## 结论 标题为 **'Analysing wind data with R'** 的帖子（'posts.Id = 7146'，PostTypeId=1 即问题帖）下**恰好只有 10 条评论**（'CreationDate' 从 2011-02-13 08:35:32 到 2011-02-14 08:50:44），因此"最新 10 条"即为该帖的全部评论。按时间倒序（最新在前）： \| # \`
+
+**raw 日志**：[results/0929_0847_qids_685_687_694_701_704/raw/0929_0847_694_dlr.ndjson](../results/0929_0847_qids_685_687_694_701_704/raw/0929_0847_694_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2231,10 +2233,6 @@ Final Answer:
 
 Evidence SQL: SELECT u.DisplayName AS display_name, c.Text AS comment_text FROM comments c JOIN users u ON u.Id = c.UserId WHERE c.PostId = (SELECT Id FROM posts WHERE Title = 'Analysing wind data with R') ORDER BY c.CreationDate DESC LIMIT 10
 
-建模缺口: 无
-
-（备注，非视图缺口、不参与判定：`comments.UserDisplayName` 已升入建模视图但库内该列全为 NULL，实际取值须 JOIN `users.DisplayName`；此为数据本身属性，非建模遗漏。）
-
 </details>
 
 <details id="q701">
@@ -2245,6 +2243,8 @@ Evidence SQL: SELECT u.DisplayName AS display_name, c.Text AS comment_text FROM 
 **期望**：`0.6644518272425249`
 
 **答案**：`## 分析过程 **三级锚定（并行）** \| 级 \| 工具 \| 结果 \| \|---\|---\|---\| \| L1 实体路 \| 'dlr_semantic_query' \| 命中 'codebase_community'：'LOGICAL.Post'（posts：Id / OwnerUserId / Score）、'LOGICAL.User'（users：Id / Display`
+
+**raw 日志**：[results/0929_0847_qids_685_687_694_701_704/raw/0929_0847_701_dlr.ndjson](../results/0929_0847_qids_685_687_694_701_704/raw/0929_0847_701_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2289,8 +2289,6 @@ Final Answer: 0.6644518272425249
 
 Evidence SQL: SELECT CAST(SUM(CASE WHEN p.Score > 50 THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(*) AS percentage FROM posts p WHERE p.OwnerUserId = (SELECT Id FROM users ORDER BY Reputation DESC LIMIT 1)
 
-建模缺口: 无
-
 </details>
 
 <details id="q704">
@@ -2301,6 +2299,8 @@ Evidence SQL: SELECT CAST(SUM(CASE WHEN p.Score > 50 THEN 1 ELSE 0 END) AS REAL)
 **期望**：`28276 | 28275`
 
 **答案**：`## 结论 通过 L1 语义召回锚定实体 'LOGICAL.Tag'（codebase_community 库，物理表 'tags'），列映射为 'ExcerptPostId' / 'WikiPostId'；L2 领域共识确认「tag 以其名称命名，并指向其 excerpt post 与 wiki post」。执行 SQL 得到： - **ExcerptPostId = 28276** - **W`
+
+**raw 日志**：[results/0929_0847_qids_685_687_694_701_704/raw/0929_0847_704_dlr.ndjson](../results/0929_0847_qids_685_687_694_701_704/raw/0929_0847_704_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2329,8 +2329,6 @@ Final Answer: 28276 | 28275
 Evidence SQL: SELECT ExcerptPostId, WikiPostId FROM tags WHERE TagName = 'sample'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q705">
@@ -2341,6 +2339,8 @@ Evidence SQL: SELECT ExcerptPostId, WikiPostId FROM tags WHERE TagName = 'sample
 **期望**：`2316 | 74`
 
 **答案**：`## 结论 在 'codebase_community' 库中，文本为 '"fine, you win :)"' 的评论只有 1 条（'comments.Id = 74'），其作者为 'UserId = 74'。 通过 'comments.UserId = users.Id' 关联用户主表后，该用户的： - **Reputation（声誉）= 2316** - **UpVotes（获赞/赞成票数）`
+
+**raw 日志**：[results/0929_0850_qids_705_707_710_716/raw/0929_0850_705_dlr.ndjson](../results/0929_0850_qids_705_707_710_716/raw/0929_0850_705_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2380,8 +2380,6 @@ Final Answer: Reputation = 2316, UpVotes = 74
 Evidence SQL: SELECT u.Reputation, u.UpVotes FROM comments c JOIN users u ON c.UserId = u.Id WHERE c.Text = 'fine, you win :)'
 ```
 
-建模缺口: 无
-
 </details>
 
 <details id="q707">
@@ -2392,6 +2390,8 @@ Evidence SQL: SELECT u.Reputation, u.UpVotes FROM comments c JOIN users u ON c.U
 **期望**：`Welcome to Cross Validated David P, for more information about the site and how to ask questions, you can check out the [FAQ](http://stats.stackexchange.com/faq). Is your question just about whether the calculation is right or wrong (it is wrong, with the numbers you give on your second line the result of the operation is 0.187, rounded)? Otherwise, yes, a percentage can be as close to zero as you can imagine because it is bounded between 0 and 100 and continuous on that interval.`
 
 **答案**：`**锚定过程** - **L3（'dlr_search_sop'）**：'match=similar'，两个候选节标题均未逐字复述本题 → 本题无 L3 节，按 L1+L2 自解。 - **L1（'dlr_semantic_query'）**：命中 'codebase_community' 库的 'LOGICAL.Post'（posts，含 ViewCount）与 'LOGICAL.PostInt`
+
+**raw 日志**：[results/0929_0850_qids_705_707_710_716/raw/0929_0850_707_dlr.ndjson](../results/0929_0850_qids_705_707_710_716/raw/0929_0850_707_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2420,8 +2420,6 @@ Final Answer: Welcome to Cross Validated David P, for more information about the
 
 Evidence SQL: SELECT c.Text FROM comments c JOIN posts p ON c.PostId = p.Id WHERE p.ViewCount BETWEEN 100 AND 150 ORDER BY c.Score DESC LIMIT 1
 
-建模缺口: 无
-
 </details>
 
 <details id="q710">
@@ -2432,6 +2430,8 @@ Evidence SQL: SELECT c.Text FROM comments c JOIN posts p ON c.PostId = p.Id WHER
 **期望**：`2888`
 
 **答案**：`Both intermediate figures match the L3 spec exactly (15,091 posts / 15,089 comments), confirming the join shape is right. ## 结论 **10,997** 条评论的 score 为 0。 ### 口径（L3 逐字命中：'codebase_community#In posts w`
+
+**raw 日志**：[results/0929_0850_qids_705_707_710_716/raw/0929_0850_710_dlr.ndjson](../results/0929_0850_qids_705_707_710_716/raw/0929_0850_710_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2472,10 +2472,6 @@ Final Answer: 10997
 Evidence SQL: SELECT COUNT(*) AS answer FROM posts JOIN comments ON comments.PostId = posts.Id WHERE posts.CommentCount = 1 AND comments.Score = 0;
 ```
 
-建模缺口: 无
-
-（补充说明：`posts.CommentCount` 与 `comments` 实际行数存在 2 条的不一致，但这属于数据本身的特性，且 L3 口径已明确以 `CommentCount` 为准；建模视图内 `Post` 与 `Comment` 的既有列已足以完整回答本题，无需下探物理表其余列。）
-
 </details>
 
 <details id="q716">
@@ -2486,6 +2482,8 @@ Evidence SQL: SELECT COUNT(*) AS answer FROM posts JOIN comments ON comments.Pos
 **期望**：`1.3254786450662739`
 
 **答案**：`**口径依据**：'dlr_search_sop' 命中节标题与本题逐字相同（'match=exact'），该节为本题最权威口径 —— 百分比两侧都按 'comments.UserId' 计数：分母是 Score 在 5–10 且**带作者**的评论（1,358 条），分子是其中作者 'UpVotes = 0' 的评论（18 条）。无作者的 32 条评论两侧都不计入（若留在分母得 1.294964`
+
+**raw 日志**：[results/0929_1118_qids_72_716_1136/raw/0929_1118_716_dlr.ndjson](../results/0929_1118_qids_72_716_1136/raw/0929_1118_716_dlr.ndjson)（dsh 事件流 ndjson）
 
 **调用步骤**
 
@@ -2511,7 +2509,5 @@ Evidence SQL: SELECT COUNT(*) AS answer FROM posts JOIN comments ON comments.Pos
 
 Final Answer: 1.3254786450662739
 Evidence SQL: SELECT 100.0 * SUM(CASE WHEN u.UpVotes = 0 THEN 1 ELSE 0 END) / COUNT(*) AS pct FROM comments c JOIN users u ON u.Id = c.UserId WHERE c.Score BETWEEN 5 AND 10;
-
-建模缺口: 无
 
 </details>
