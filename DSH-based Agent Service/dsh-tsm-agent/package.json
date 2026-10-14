@@ -1,6 +1,6 @@
 {
   "name": "dsh-tsm-agent",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "description": "dsh bundle for TSM / DLR: MCP semantic gateway to tsm-core-dlr, the scenario-independent paradigm skill, the TSM status overlay, and the agent rules (AGENTS.md). Assembly face = preset-dlr.",
   "license": "MIT",
