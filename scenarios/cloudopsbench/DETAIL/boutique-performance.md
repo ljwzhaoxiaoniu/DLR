@@ -1,6 +1,6 @@
 # 评测明细 · boutique/performance — cloudopsbench
 
-> 本家族已跑 **29/29** 题：JRA ✅25 ❌4 ｜ 证据链全闭 26 ｜ token 中位 231,341 ｜ 生成 2026-10-13T18:58:20.406Z
+> 本家族已跑 **29/29** 题：JRA ✅28 ❌1 ｜ 证据链全闭 28 ｜ token 中位 222,648 ｜ 生成 2026-10-14T01:41:18.020Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -24,17 +24,17 @@
 | [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2174 | 24 | 232,678 | 0 | 0 | 1014_0021_inorder4-v3b72 | 全对·链闭 |
 | [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1852 | 28 | 286,169 | 0.037 | 0 | 1014_0029_inorder4-v3b73 | 全对·链闭 |
 | [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2222 | 28 | 318,825 | 0 | 0 | 1014_0035_inorder4-v3b74 | 全对·链闭 |
-| [18](#case-18) | 0 | 1 | 0 | 0.5 | 0.5 | 0 | 0.2727 | 12 | 77,515 | 0 | 0 | 1014_0041_inorder4-v3b75 | 未命中 |
+| [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 21 | 145,925 | 0 | 0 | 1014_0935_l3fix2-verify2 | 全对·链闭 |
 | [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 21 | 105,777 | 0 | 0 | 1014_0046_inorder4-v3b76 | 全对·链闭 |
 | [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 137,699 | 0 | 0 | 1014_0048_inorder4-v3b77 | 全对·链闭 |
 | [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3182 | 23 | 172,807 | 0 | 0 | 1014_0051_inorder4-v3b78 | 全对·链闭 |
 | [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.087 | 47 | 1,023,978 | 0 | 0 | 1014_0054_inorder4-v3b79 | 全对·链闭 |
 | [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1481 | 28 | 247,891 | 0 | 0 | 1014_0104_inorder4-v3b80 | 全对·链闭 |
-| [24](#case-24) | 0 | 1 | 0 | 0.5 | 0.5 | 0 | 0.0455 | 45 | 860,543 | 0 | 0 | 1014_0108_inorder4-v3b81 | 未命中 |
-| [25](#case-25) | 0 | 0 | 0 | 0.5 | 0.5 | 0 | 0.069 | 30 | 312,686 | 0 | 0 | 1014_0118_inorder4-v3b82 | 未命中 |
+| [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1 | 31 | 382,289 | 0 | 0 | 1014_0928_l3fix2-verify1 | 全对·链闭 |
+| [25](#case-25) | 0 | 0 | 0 | 0.5 | 0.5 | 0 | 0.0732 | 42 | 798,117 | 0 | 0 | 1014_0928_l3fix2-verify1 | 未命中 |
 | [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1304 | 24 | 222,648 | 0 | 0 | 1014_0122_inorder4-v3b83 | 全对·链闭 |
 | [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1034 | 30 | 312,461 | 0 | 0 | 1014_0124_inorder4-v3b84 | 全对·链闭 |
-| [28](#case-28) | 1 | 0 | 0 | 1 | 1 | 1 | 0.1176 | 35 | 529,973 | 0 | 0 | 1014_0130_inorder4-v3b85 | 未命中 |
+| [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 13 | 85,057 | 0 | 0 | 1014_0928_l3fix2-verify1 | 全对·链闭 |
 | [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0882 | 35 | 350,169 | 0 | 0 | 1014_0141_inorder4-v3b86 | 全对·链闭 |
 
 ## 证据正文
@@ -160,10 +160,10 @@
 
 ### case-18
 
-- **结论**：`app/checkoutservice` + `pod_network_delay` ｜ 标签 `app/paymentservice` + `pod_network_delay`（✗ 与标签不符）
-- **流程**：MC 0.5 · EOC 0.5 · ECR 0 · EE 0.2727 · steps 12 · tokens 77,515
-- **raw 日志**：[results/1014_0041_inorder4-v3b75/raw/1014_0044_boutique-performance-18](../results/1014_0041_inorder4-v3b75/raw/1014_0044_boutique-performance-18/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Alerts (window 2025-12-26 00:19:43~00:21:38) show three L2 LATENCY_DEGRADATION rows: checkoutservice moves BOTH percentiles (p50 17.05ms->1367.53ms, +7921.8%; p90 24.44ms->2380.35ms, +9640.8%), while frontend (p90 45.76->1567.24ms) and paymentservice (p90 4.81->2259.93ms) move only p90 = partial-traffic ripples; no saturation (cpu_cfs/memory) row exists, so the resource surface is excluded. Per the L3 SOP the both-percentile row marks the epicenter, and the dependency graph closes it: GetServiceDependencies(checkoutservice) gives upstream frontend and downstream paymentservice, i.e. both rippl
+- **结论**：`app/paymentservice` + `pod_network_delay` ｜ 标签 `app/paymentservice` + `pod_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3 · steps 21 · tokens 145,925
+- **raw 日志**：[results/1014_0935_l3fix2-verify2/raw/1014_0935_boutique-performance-18](../results/1014_0935_l3fix2-verify2/raw/1014_0935_boutique-performance-18/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts at 00:19:43-00:21:38 show three moving latency rows on one call path frontend -> checkoutservice -> paymentservice (GetServiceDependencies: paymentservice is a Leaf Service). paymentservice p90 4.81ms->2259.93ms (+46921.7%, no saturation rows); its caller checkoutservice p90 24.44ms->2380.35ms (+2356ms ~= the same added delay) and p50 17.05ms->1367.53ms, i.e. checkout's rise is its accumulated wait on the callee; frontend moved only p90 (45.76ms->1567.24ms) since only its checkout branch is affected. paymentservice is a leaf whose own server-side latency rose by +2255ms, which cannot be
 
 ### case-19
 
@@ -202,17 +202,17 @@
 
 ### case-24
 
-- **结论**：`node/worker-01` + `node_network_delay` ｜ 标签 `node/worker-02` + `node_network_delay`（✗ 与标签不符）
-- **流程**：MC 0.5 · EOC 0.5 · ECR 0 · EE 0.0455 · steps 45 · tokens 860,543
-- **raw 日志**：[results/1014_0108_inorder4-v3b81/raw/1014_0109_boutique-performance-24](../results/1014_0108_inorder4-v3b81/raw/1014_0109_boutique-performance-24/)（ndjson / mcp.jsonl / meta）
-- **摘要**：All boutique pods Running with 0 restarts and no FailedCreate/FailedScheduling/probe/quota/image events -> object layer is clean (latency fault is metric/wire level). GetAlerts shows one infrastructure anomaly: Node worker-01 NETWORK_QUALITY_DEGRADED [TCP Retransmission] 0.00 -> 0.70 retrans/s (new spike), plus LATENCY_DEGRADATION on checkoutservice (17.35ms -> 3559.79ms) and recommendationservice (3.01ms -> 1186.20ms), frontend success rate 99.9%->37.5% / throughput -81.4% / traffic -75%, adservice success rate 100%->76%. Frontend error logs in-window: 370x 'failed to get ads: Unavailable des
+- **结论**：`node/worker-02` + `node_network_delay` ｜ 标签 `node/worker-02` + `node_network_delay`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1 · steps 31 · tokens 382,289
+- **raw 日志**：[results/1014_0928_l3fix2-verify1/raw/1014_0929_boutique-performance-24](../results/1014_0928_l3fix2-verify1/raw/1014_0929_boutique-performance-24/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert window 2026-01-17 20:18:09~20:20:04: LATENCY_DEGRADATION on checkoutservice (p50 17.35ms->3559.79ms, +20420%) and recommendationservice (3.01ms->1186.20ms, +39362.8%), ERROR_SPIKE frontend 99.9%->37.5% and adservice 100%->76%, TRAFFIC_ANOMALY Network Drop on frontend (-75.4% in / -76.0% out), currencyservice (-71.8%), productcatalogservice (-63.2%), cartservice (-49.8%), redis-cart (-49.6%). Pods listing (wide) placement: worker-02 hosts checkoutservice, recommendationservice, adservice, cartservice, redis-cart, shippingservice (all 6 alerted, including both latency-degraded services); w
 
 ### case-25
 
 - **结论**：`app/productcatalogservice` + `pod_network_delay` ｜ 标签 `node/worker-02` + `node_network_delay`（✗ 与标签不符）
-- **流程**：MC 0.5 · EOC 0.5 · ECR 0 · EE 0.069 · steps 30 · tokens 312,686
-- **raw 日志**：[results/1014_0118_inorder4-v3b82/raw/1014_0119_boutique-performance-25](../results/1014_0118_inorder4-v3b82/raw/1014_0119_boutique-performance-25/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Alerts (11:38:49~11:40:44) show LATENCY_DEGRADATION on exactly one epicenter and its only dependent: productcatalogservice-p90latency Normal=2.50ms -> Current=1158.68ms (+46268.0%), and recommendationservice p50 3.00ms -> 946.61ms / p90 4.81ms -> 2151.41ms; all other services show only closed-loop traffic/throughput drops (-65%~-75%) and frontend a success-rate drop 99.9% -> 25.0%. Object layer is clean: all 11 pods 2/2 Running, RESTARTS 0, no Warning events, productcatalogservice pod Running/Ready on worker-01 with Normal Scheduled/Pulled/Created/Started events only. GetServiceDependencies sh
+- **流程**：MC 0.5 · EOC 0.5 · ECR 0 · EE 0.0732 · steps 42 · tokens 798,117
+- **raw 日志**：[results/1014_0928_l3fix2-verify1/raw/1014_0930_boutique-performance-25](../results/1014_0928_l3fix2-verify1/raw/1014_0930_boutique-performance-25/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts show latency degradation concentrated on productcatalogservice (p90 2.50ms -> 1158.68ms, +46268%) and on its sole dependent recommendationservice (p50 3.00ms -> 946.61ms; p90 4.81ms -> 2151.41ms), while all 11 boutique services show only a uniform ~-65% RPS/pps collapse (adservice -64.8%, cartservice -66.1%, redis-cart -66.8%), with frontend additionally at 25.0% success rate and vanished latency metrics. Object layer is intact for the whole namespace: 11/11 pods 2/2 Running, 0 restarts; worker-01/02/03 and master Ready with no taints/cordon/pressure; kube-proxy active on worker-01 and 
 
 ### case-26
 
@@ -230,10 +230,10 @@
 
 ### case-28
 
-- **结论**：`node/worker-02` + `node_network_delay` ｜ 标签 `node/worker-02` + `node_network_packet_loss`（✗ 与标签不符）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1176 · steps 35 · tokens 529,973
-- **raw 日志**：[results/1014_0130_inorder4-v3b85/raw/1014_0131_boutique-performance-28](../results/1014_0130_inorder4-v3b85/raw/1014_0131_boutique-performance-28/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Telemetry-chain incident with a clean object layer. Alerts (19:57:17~19:59:12): LATENCY_DEGRADATION on frontend (p50 16.78ms -> 421.43ms, +2411.0%) and checkoutservice (18.07ms -> 392.23ms, +2070.7%, both cross-node fan-out aggregators, uniform ~+400ms); TRAFFIC_ANOMALY [Network Drop] ~-50% on currencyservice (In 154.67->64.62pps/-58.2%, Out 149.57->69.30/-53.7%), productcatalogservice (153.18->75.34/-50.8%, 120.35->60.53/-49.7%) and redis-cart (46.09->22.87/-50.4%); NETWORK_QUALITY_DEGRADED [TCP Retransmission] on worker-02 (0.00 -> 9.07retrans, New Spike) and worker-01 (0.03 -> 0.53, +1770.6
+- **结论**：`node/worker-02` + `node_network_packet_loss` ｜ 标签 `node/worker-02` + `node_network_packet_loss`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 13 · tokens 85,057
+- **raw 日志**：[results/1014_0928_l3fix2-verify1/raw/1014_0928_boutique-performance-28](../results/1014_0928_l3fix2-verify1/raw/1014_0928_boutique-performance-28/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom window 2026-01-17 19:57:17~19:59:12: alerts show LATENCY_DEGRADATION on frontend-p50 (16.78ms -> 421.43ms, +2411%) and checkoutservice-p50 (18.07ms -> 392.23ms, +2070.7%), plus TRAFFIC_ANOMALY drops on worker-01-hosted downstreams currencyservice (-58.2% inbound), productcatalogservice (-50.8%) and redis-cart (-50.4%). Per the L3 SOP for this exact wording the node retransmission rows decide the mechanism: worker-02 NETWORK_QUALITY_DEGRADED TCP retransmission 0.00 -> 9.07 retrans (New Spike) versus worker-01 only 0.03 -> 0.53 retrans, i.e. worker-02 is ~17x every other node (an order o
 
 ### case-29
 

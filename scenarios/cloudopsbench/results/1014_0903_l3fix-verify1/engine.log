@@ -1,0 +1,75 @@
+[2026-10-14 09:03:16] l3fix-verify1 · 4 题 · 2 路 → scenarios/cloudopsbench/results/1014_0903_l3fix-verify1
+[09:03:16] boutique/codedefect/51 第 1 遍 (:8000)
+[09:03:16] boutique/codedefect/56 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-codedefect-51）…
+[start] 基准诊断 MCP（boutique-codedefect-56）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8001/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_0903_l3fix-verify1/raw/1014_0903_boutique-codedefect-51
+[09:04:26] boutique/codedefect/57 第 1 遍 (:8000)
+[start] 基准诊断 MCP（boutique-codedefect-57）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8000/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_0903_l3fix-verify1/raw/1014_0903_boutique-codedefect-56
+[09:05:05] boutique/codedefect/58 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-codedefect-58）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8001/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_0903_l3fix-verify1/raw/1014_0904_boutique-codedefect-57
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_0903_l3fix-verify1/raw/1014_0905_boutique-codedefect-58
+[09:06:32] grade + stats
+[grade] runs=4 → out=scenarios/cloudopsbench/results/1014_0903_l3fix-verify1
+[convert] boutique/codedefect/51 → scenarios\cloudopsbench\results\1014_0903_l3fix-verify1\traces\boutique\dsh-tsm\codedefect\51\51.json  steps=13 final=有 preds=3
+[convert] boutique/codedefect/56 → scenarios\cloudopsbench\results\1014_0903_l3fix-verify1\traces\boutique\dsh-tsm\codedefect\56\56.json  steps=17 final=有 preds=3
+[convert] boutique/codedefect/57 → scenarios\cloudopsbench\results\1014_0903_l3fix-verify1\traces\boutique\dsh-tsm\codedefect\57\57.json  steps=19 final=有 preds=3
+[convert] boutique/codedefect/58 → scenarios\cloudopsbench\results\1014_0903_l3fix-verify1\traces\boutique\dsh-tsm\codedefect\58\58.json  steps=15 final=有 preds=3
+[convert] manifest → scenarios\cloudopsbench\results\1014_0903_l3fix-verify1\traces\manifest.json（共 4 条）
+[grade] 评分组: boutique/codedefect
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: boutique
+fault_category: codedefect
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\boutique\codedefect
+agent_root: scenarios\cloudopsbench\results\1014_0903_l3fix-verify1\traces\boutique\dsh-tsm\codedefect
+--------------------------------------------------------------------------------
+total_cases: 98
+selected_cases: 4
+run_cases: 4
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 1.0
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.2358
+steps (Average Diagnostic Steps per Case): 17.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] boutique_codedefect: scenarios\cloudopsbench\results\1014_0903_l3fix-verify1\boutique_codedefect_questions.csv
+
+[grade] 完成
+  summary.md   : scenarios/cloudopsbench/results/1014_0903_l3fix-verify1/summary.md
+  questions.csv: scenarios/cloudopsbench/results/1014_0903_l3fix-verify1/questions.csv
+  traces/      : scenarios/cloudopsbench/results/1014_0903_l3fix-verify1/traces
+[stats] 轮次 153 · 覆盖 469/754 · JRA 462/469
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\results\STATS.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL/*.md（12 个家族）
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\overview.html
+  + session-46a53381-8246-…  boutique/codedefect/51  1014_0903_boutique-codedefect-51
+  + session-533c1828-a4b7-…  boutique/codedefect/56  1014_0903_boutique-codedefect-56
+  + session-32a51988-1598-…  boutique/codedefect/57  1014_0904_boutique-codedefect-57
+  + session-44c576ee-faaa-…  boutique/codedefect/58  1014_0905_boutique-codedefect-58
+[sync] 扫到 run 524（无 session 0）· 新登记 4 · 清出 0（避重叠）· 跳过已归组 84 · 解除归档 0 · 全量组共 447
+[ws] 已写 D:\Code_Proj\DLR Proj\DSH-based Agent Service\.dsh-home\storages\workspace.json（备份 .bak-1014_090641）

@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **96/98** 题：JRA ✅90 ❌6 ｜ 证据链全闭 96 ｜ token 中位 298,509 ｜ 生成 2026-10-13T18:58:20.406Z
+> 本家族已跑 **96/98** 题：JRA ✅96 ❌0 ｜ 证据链全闭 96 ｜ token 中位 300,857 ｜ 生成 2026-10-14T01:41:18.020Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -57,15 +57,15 @@
 | [48](#case-48) | 1 | 1 | 1 | 1 | 0.4 | 1 | 0.1667 | 31 | 727,720 | 0.0333 | 0 | 1014_0012_inorder4-v3b70 | 全对·链闭 |
 | [49](#case-49) | 1 | 1 | 1 | 1 | 1 | 1 | 0.16 | 26 | 484,280 | 0 | 0 | 1014_0016_inorder4-v3b71 | 全对·链闭 |
 | [50](#case-50) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0882 | 69 | 1,685,639 | 0.0147 | 0 | 1014_0021_inorder4-v3b72 | 全对·链闭 |
-| [51](#case-51) | 1 | 0 | 0 | 1 | 1 | 1 | 0.0968 | 32 | 712,951 | 0 | 0 | 1014_0029_inorder4-v3b73 | 未命中 |
+| [51](#case-51) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 189,689 | 0 | 0 | 1014_0903_l3fix-verify1 | 全对·链闭 |
 | [52](#case-52) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0811 | 38 | 773,593 | 0 | 0 | 1014_0035_inorder4-v3b74 | 全对·链闭 |
 | [53](#case-53) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1739 | 24 | 762,544 | 0.0435 | 0 | 1014_0041_inorder4-v3b75 | 全对·链闭 |
 | [54](#case-54) | 1 | 1 | 1 | 1 | 1 | 1 | 0.15 | 21 | 479,980 | 0 | 0 | 1014_0046_inorder4-v3b76 | 全对·链闭 |
 | [55](#case-55) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1538 | 27 | 345,289 | 0 | 0 | 1014_0048_inorder4-v3b77 | 全对·链闭 |
-| [56](#case-56) | 1 | 0 | 0 | 1 | 1 | 1 | 0.25 | 17 | 231,291 | 0 | 0 | 1014_0051_inorder4-v3b78 | 未命中 |
-| [57](#case-57) | 1 | 0 | 0 | 1 | 1 | 1 | 0.2222 | 19 | 289,949 | 0 | 0 | 1014_0054_inorder4-v3b79 | 未命中 |
-| [58](#case-58) | 1 | 0 | 0 | 1 | 1 | 1 | 0.25 | 17 | 225,598 | 0 | 0 | 1014_0104_inorder4-v3b80 | 未命中 |
-| [59](#case-59) | 1 | 0 | 0 | 1 | 1 | 1 | 0.2105 | 20 | 456,652 | 0 | 0 | 1014_0108_inorder4-v3b81 | 未命中 |
+| [56](#case-56) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 227,578 | 0 | 0 | 1014_0903_l3fix-verify1 | 全对·链闭 |
+| [57](#case-57) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2105 | 20 | 327,835 | 0 | 0 | 1014_0903_l3fix-verify1 | 全对·链闭 |
+| [58](#case-58) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 319,134 | 0 | 0 | 1014_0903_l3fix-verify1 | 全对·链闭 |
+| [59](#case-59) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2222 | 19 | 588,989 | 0 | 0 | 1014_0906_l3fix-verify2 | 全对·链闭 |
 | [60](#case-60) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 183,078 | 0 | 0 | 1014_0118_inorder4-v3b82 | 全对·链闭 |
 | [61](#case-61) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 225,798 | 0 | 0 | 1014_0122_inorder4-v3b83 | 全对·链闭 |
 | [62](#case-62) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1579 | 20 | 364,654 | 0 | 0 | 1014_0124_inorder4-v3b84 | 全对·链闭 |
@@ -77,7 +77,7 @@
 | [68](#case-68) | 1 | 1 | 1 | 1 | 1 | 1 | 0.12 | 26 | 536,882 | 0 | 0 | 1014_0153_inorder4-v3b90 | 全对·链闭 |
 | [69](#case-69) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1364 | 23 | 197,392 | 0 | 0 | 1014_0155_inorder4-v3b91 | 全对·链闭 |
 | [70](#case-70) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 250,409 | 0 | 0 | 1014_0158_inorder4-v3b92 | 全对·链闭 |
-| [71](#case-71) | 1 | 0 | 0 | 1 | 1 | 1 | 0.1667 | 25 | 532,300 | 0 | 0 | 1014_0200_inorder4-v3b93 | 未命中 |
+| [71](#case-71) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1905 | 22 | 363,023 | 0 | 0 | 1014_0906_l3fix-verify2 | 全对·链闭 |
 | [72](#case-72) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2222 | 19 | 524,599 | 0.0556 | 0 | 1014_0202_inorder4-v3b94 | 全对·链闭 |
 | [73](#case-73) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1765 | 18 | 163,011 | 0 | 0 | 1014_0205_inorder4-v3b95 | 全对·链闭 |
 | [74](#case-74) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1579 | 20 | 432,179 | 0 | 0 | 1014_0207_inorder4-v3b96 | 全对·链闭 |
@@ -458,10 +458,10 @@
 
 ### case-51
 
-- **结论**：`app/frontend` + `pod_cpu_overload` ｜ 标签 `app/frontend` + `code_excessive_file_reads`（✗ 与标签不符）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.0968 · steps 32 · tokens 712,951
-- **raw 日志**：[results/1014_0029_inorder4-v3b73/raw/1014_0029_boutique-codedefect-51](../results/1014_0029_inorder4-v3b73/raw/1014_0029_boutique-codedefect-51/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Telemetry-chain closure on the boutique snapshot. GetAlerts() flags only frontend: RESOURCE_SATURATION [cpu_cfs] 'Val=0.985s throttled', RESOURCE_SATURATION [cpu] Normal=0.01 -> Current=0.12 cores (+974.4%), LATENCY_DEGRADATION p50 19.21ms->537.50ms (+2698.6%) / p90 59.15ms->4007.26ms (+6675.1%), plus 32 load-generator 503s on frontend entry routes (/product/{id} x16, /cart x7, /cart/checkout x5, /setCurrency x4). Object layer is clean, so the break is not there: all 11 boutique pods are 2/2 Running with RESTARTS=0; DescribeResource(pod/frontend-6794985cd9-mdtpn) shows Ready=True, Restart Coun
+- **结论**：`app/frontend` + `code_excessive_file_reads` ｜ 标签 `app/frontend` + `code_excessive_file_reads`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2308 · steps 14 · tokens 189,689
+- **raw 日志**：[results/1014_0903_l3fix-verify1/raw/1014_0903_boutique-codedefect-51](../results/1014_0903_l3fix-verify1/raw/1014_0903_boutique-codedefect-51/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts name frontend as the sole anomalous entity: RESOURCE_SATURATION [cpu_cfs] Val=0.985s throttled, cpu 0.01->0.12 cores (+974.4%), LATENCY_DEGRADATION p50 19.21ms->537.50ms (+2698.6%) / p90 ->4007.26ms, with 503s spread across /product/{id}, /cart, /cart/checkout and /setCurrency. The object layer is clean (all 11 boutique pods 2/2 Running, RESTARTS=0, no scheduling/probe/volume Warnings in the namespace event stream), so no resource-capacity break exists. Clearing the code surface of the flagged service (frontend) per the L3 discipline found the defect line in handlers.go setCurrencyHandl
 
 ### case-52
 
@@ -493,31 +493,31 @@
 
 ### case-56
 
-- **结论**：`app/frontend` + `code_missing_parameter` ｜ 标签 `app/frontend` + `code_wrong_return`（✗ 与标签不符）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 17 · tokens 231,291
-- **raw 日志**：[results/1014_0051_inorder4-v3b78/raw/1014_0051_boutique-codedefect-56](../results/1014_0051_inorder4-v3b78/raw/1014_0051_boutique-codedefect-56/)（ndjson / mcp.jsonl / meta）
-- **摘要**：All 11 boutique pods read Running 2/2 with 0 restarts, no Pending/CrashLoop; only outlier is frontend-76cdc49cd7-w54zf, rolled out 2m27s ago (new ReplicaSet frontend-76cdc49cd7, event '3m1s ScalingReplicaSet deployment/frontend'), i.e. a fresh frontend build. frontend's own logs carry 557 x HTTP 400 'product id not specified' on GET /product/{id} (took_ms=0, failing before any downstream call) while GET / returns 200; TCP connectivity to frontend:80 succeeds, so reachability is intact and the break is functional. Route registration in frontend/main.go is correct ('/product/{id}' -> productHand
+- **结论**：`app/frontend` + `code_wrong_return` ｜ 标签 `app/frontend` + `code_wrong_return`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2353 · steps 18 · tokens 227,578
+- **raw 日志**：[results/1014_0903_l3fix-verify1/raw/1014_0903_boutique-codedefect-56](../results/1014_0903_l3fix-verify1/raw/1014_0903_boutique-codedefect-56/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All pods 2/2 Running with RESTARTS=0, so scheduling/startup/image/probe mechanisms are excluded. The caller-side signal is decisive: frontend's error log carries 557 identical 400s on GET /product/{id} with error 'product id not specified' for paths that DID carry an id (e.g. /product/0PUK6V6EV0). Downstream is clean and reachable (productcatalogservice:3550 open, recommendationservice error-free), frontend Service selector app=frontend and port 80->8080 are correct, and the frontend ServiceAccount exists (the FailedCreate serviceaccount rows in the event surface are stale setup history, not t
 
 ### case-57
 
-- **结论**：`app/frontend` + `code_missing_parameter` ｜ 标签 `app/frontend` + `code_wrong_return`（✗ 与标签不符）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2222 · steps 19 · tokens 289,949
-- **raw 日志**：[results/1014_0054_inorder4-v3b79/raw/1014_0054_boutique-codedefect-57](../results/1014_0054_inorder4-v3b79/raw/1014_0054_boutique-codedefect-57/)（ndjson / mcp.jsonl / meta）
-- **摘要**：All pods in boutique are 2/2 Running with 0 restarts and every Service port/connectivity is healthy (recommendationservice:8080 probe = Connection Succeeded, its logs show only normal [Recv ListRecommendations] INFO), so the object/scheduling/addressing layers show no break. The break is on the symptom side: frontend's error logs contain a single pattern repeating 541 times (12.38% error ratio): {"error":"product id not specified","http.req.path":"/product/6E92ZMYYFZ","message":"request error"} - the request path clearly carries the product id yet the handler reports it as not specified (HTTP 
+- **结论**：`app/frontend` + `code_wrong_return` ｜ 标签 `app/frontend` + `code_wrong_return`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2105 · steps 20 · tokens 327,835
+- **raw 日志**：[results/1014_0903_l3fix-verify1/raw/1014_0904_boutique-codedefect-57](../results/1014_0903_l3fix-verify1/raw/1014_0904_boutique-codedefect-57/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods read 2/2 Running with 0 restarts and all 11 deployments are 1/1 AVAILABLE (all ServiceAccounts present), so no scheduling/startup/admission/resource mechanism is in play. The symptom enters at the entrypoint: frontend's error logs carry 541 occurrences (12.4% error ratio) of {"error":"product id not specified","http.req.path":"/product/6E92ZMYYFZ","http.req.method":"GET"}, matching the alert HTTPError('400') on url=/product/{id}. The dependency walk from the symptom side (frontend -> productcatalogservice) plus productcatalogservice's clean logs (gRPC :3550, 'successfully 
 
 ### case-58
 
-- **结论**：`app/frontend` + `code_missing_parameter` ｜ 标签 `app/frontend` + `code_wrong_return`（✗ 与标签不符）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 17 · tokens 225,598
-- **raw 日志**：[results/1014_0104_inorder4-v3b80/raw/1014_0104_boutique-codedefect-58](../results/1014_0104_inorder4-v3b80/raw/1014_0104_boutique-codedefect-58/)（ndjson / mcp.jsonl / meta）
-- **摘要**：All 11 boutique pods are 2/2 Running with 0 restarts (object layer clean), and the alert's flagged entity recommendationservice is healthy (no error logs; its log shows continuous normal '[Recv ListRecommendations]' serving) — its 'AVAILABILITY_MISSING / success_rate vanished' is a downstream consequence. The frontend caller-side error log carries the real break: 571x {"error":"product id not specified"} with 13.07% error ratio on GET /product/9SIQT8TOJO, i.e. HTTP 400 on every product-detail request even though the path supplies the id. Code surface proves it: main.go correctly registers r.Ha
+- **结论**：`app/frontend` + `code_wrong_return` ｜ 标签 `app/frontend` + `code_wrong_return`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 319,134
+- **raw 日志**：[results/1014_0903_l3fix-verify1/raw/1014_0905_boutique-codedefect-58](../results/1014_0903_l3fix-verify1/raw/1014_0905_boutique-codedefect-58/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique pods all 2/2 Running with 0 restarts and healthy probes; frontend's own error stream carries a single pattern (571 occurrences, 13.07%): {"error":"product id not specified","http.req.path":"/product/9SIQT8TOJO"} - a request whose path DID specify the product id is rejected by the handler's own return path with HTTP 400. Pod sheet of frontend-76cdc49cd7-rvjhk is clean (Running/Ready/0 restarts, no probe/OOM/scheduling/image mechanism), the route table in main.go correctly registers baseUrl+"/product/{id}", and the defect line in handlers.go productHandler is `id = ""` (right 
 
 ### case-59
 
-- **结论**：`app/frontend` + `code_missing_parameter` ｜ 标签 `app/frontend` + `code_wrong_return`（✗ 与标签不符）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2105 · steps 20 · tokens 456,652
-- **raw 日志**：[results/1014_0108_inorder4-v3b81/raw/1014_0108_boutique-codedefect-59](../results/1014_0108_inorder4-v3b81/raw/1014_0108_boutique-codedefect-59/)（ndjson / mcp.jsonl / meta）
-- **摘要**：All 11 boutique pods are Running 2/2 with 0 restarts, so this is not a scheduling/startup/probe chain. The symptom side is frontend (entrypoint of the call graph): GetErrorLogs(frontend) shows a single dominant pattern, 550 errors / 4326 lines (12.7%): {"error":"product id not specified","http.req.path":"/product/OLJCESPC7Z"} answered with http.resp.status 400, even though the product id is present in the request path. Downstream suspects are clean (productcatalogservice logs only startup; GetErrorLogs(recommendationservice) = no error logs, so the AVAILABILITY_MISSING alert is only a pointer 
+- **结论**：`app/frontend` + `code_wrong_return` ｜ 标签 `app/frontend` + `code_wrong_return`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2222 · steps 19 · tokens 588,989
+- **raw 日志**：[results/1014_0906_l3fix-verify2/raw/1014_0906_boutique-codedefect-59](../results/1014_0906_l3fix-verify2/raw/1014_0906_boutique-codedefect-59/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Object layer is fully healthy (all 11 pods 2/2 Running with 0 restarts, all deployments 1/1 AVAILABLE, all ServiceAccounts incl. frontend present, Service port 80->8080 matches containerPort, no Pending/FailedScheduling/image-pull/mount events), so the recurring 'FailedCreate ... serviceaccount not found' Warning rows are namespace setup history, not the mechanism. The break is in the frontend code path: frontend error logs show 550/4326 (12.7%) identical errors '{"error":"product id not specified","http.req.path":"/product/OLJCESPC7Z"}' completing with http.resp.status 400 and took_ms=0, i.e.
 
 ### case-60
 
@@ -598,10 +598,10 @@
 
 ### case-71
 
-- **结论**：`app/productcatalogservice` + `code_wrong_return` ｜ 标签 `app/productcatalogservice` + `code_missing_parameter`（✗ 与标签不符）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 25 · tokens 532,300
-- **raw 日志**：[results/1014_0200_inorder4-v3b93/raw/1014_0200_boutique-codedefect-71](../results/1014_0200_inorder4-v3b93/raw/1014_0200_boutique-codedefect-71/)（ndjson / mcp.jsonl / meta）
-- **摘要**：boutique 全部 Pod 2/2 Running 且 RESTARTS=0，唯一离群行是 productcatalogservice 的 Pod 年龄(2m25s vs 其余~5m35s，因滚动替换为 wangyl2128/productcatalogservice-v2:latest)。frontend 唯一错误 pattern 588 条: 'could not retrieve product: rpc error: code = NotFound desc = no product with ID '(空 ID)，对应 GET /product/{id} 500，Success Rate 90.5%->65.0%；productcatalogservice 自身错误日志干净。调用图(frontend -> recommendationservice/checkoutservice -> productcatalogservice)确认 productcatalogservice 为叶子被调方。其源码 product_catalog.go 中 GetProduct 在 `productID := req.Id` 之后有 `productID = ""` —— 请求 ID 被抹掉，循环永不命中，对每个合法商品 ID 都返回 status.Errorf(codes.NotF
+- **结论**：`app/productcatalogservice` + `code_missing_parameter` ｜ 标签 `app/productcatalogservice` + `code_missing_parameter`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1905 · steps 22 · tokens 363,023
+- **raw 日志**：[results/1014_0906_l3fix-verify2/raw/1014_0906_boutique-codedefect-71](../results/1014_0906_l3fix-verify2/raw/1014_0906_boutique-codedefect-71/)（ndjson / mcp.jsonl / meta）
+- **摘要**：frontend logs carry a single dominant error pattern (588x, matching the alert count): 'could not retrieve product: rpc error: code = NotFound desc = no product with ID ' with the product ID echoed EMPTY, while the same requests' paths carry valid ids (/product/2ZYFJ3GM2N) and frontend logs 'id':'2ZYFJ3GM2N' at 'serving product page'. The caller side is complete: frontend handlers.go reads mux.Vars(r)["id"] (rejects empty), rpc.go sends &pb.GetProductRequest{Id: id}. Reachability is fine (CheckServiceConnectivity productcatalogservice:3550 = Connection Succeeded; Service selector app=productcat
 
 ### case-72
 

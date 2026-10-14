@@ -29,31 +29,31 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 458 / 469（97.7%） |
-| CA（组件命中） | 465 / 469（99.1%） |
-| FA（故障型命中） | 461 / 469（98.3%） |
-| ECR（证据链全闭） | 439 / 469（93.6%） |
+| JRA（联合命中） | 467 / 469（99.6%） |
+| CA（组件命中） | 467 / 469（99.6%） |
+| FA（故障型命中） | 468 / 469（99.8%） |
+| ECR（证据链全闭） | 441 / 469（94.0%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 0.9835 | 0.9565 | 0.936 | 0.2746 | 19.8763 | 0.0022 | 0.0064 |
+| 0.9856 | 0.9586 | 0.9403 | 0.2751 | 19.7996 | 0.0019 | 0.0064 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 314,260 / 232,678 | 54,365 / 2,181,512 | 73% |
+| 312,240 / 232,678 | 54,365 / 2,181,512 | 73% |
 
 ## 分家族索引
 
 | 家族 | 全量 | 已跑 | JRA | 链全闭 | 明细 |
 |---|---|---|---|---|---|
 | boutique/admission | 58 | 7 | 7 | 6 | [boutique-admission.md](DETAIL/boutique-admission.md) |
-| boutique/codedefect | 98 | 96 | 90 | 96 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
+| boutique/codedefect | 98 | 96 | 96 | 96 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
 | boutique/infrastructure | 40 | 40 | 40 | 40 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
-| boutique/performance | 29 | 29 | 25 | 26 | [boutique-performance.md](DETAIL/boutique-performance.md) |
+| boutique/performance | 29 | 29 | 28 | 28 | [boutique-performance.md](DETAIL/boutique-performance.md) |
 | boutique/runtime | 45 | 17 | 17 | 17 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
 | boutique/scheduling | 164 | 12 | 12 | 12 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
 | boutique/service | 54 | 54 | 54 | 52 | [boutique-service.md](DETAIL/boutique-service.md) |
@@ -229,6 +229,12 @@
 > **2026-10-13 深夜 · ttperf34 定稿轮 1013_2345_ttperf34-verify1（用户令"跑一下看看" · 仍不过 · 记档维持）**：报 `ts-order-service` vs 真值 `ts-user-service`（41 步 · 首跑报 security——**两跑两个不同的错对象**）。**结果定性**：定位口缺位案的重跑落点确实随机（线索不在案面），骰子未中 → **记档维持**，账 268/269 不动。至此 ttperf34 的处置完全闭环：批跑（security）/ 定稿跑（order）双证 + 解剖审计（金标零告警行 · 序列不可读 · 闩锁歧义）。
 >
 > **2026-10-13 深夜 · 轮次 1013_2345_inorder4-v3b68（批六十八 · 止于 1/4 · 会话收官）**：① **用户令"跑完结束·别连续跑了"——引擎停机**：批六十八仅发首题 `cod/46`（`code_missing_parameter`@frontend 20 步 · **六项链全满 · 参数序六连**），余三题（svc/13 · perf/12 · tt-runtime/31）未发、批次止于 1/4。② **停机账：轮次 102 · 覆盖 269/754 · JRA 268/269**（唯一余项 = ttperf34 记档）+ 序滑点观察位七例；满族三（tt-svc · boutique/infrastructure · tt-perf）。③ 后续批次待用户发令（连续跑模式撤销，恢复批间报数）。
+
+
+
+
+
+
 
 
 

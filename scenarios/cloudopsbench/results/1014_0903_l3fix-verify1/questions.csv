@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/51,1.0,1.0,1.0,1.0,1.0,1.0,0.23076923076923078,14.0,0.0,0.0,app/frontend,code_excessive_file_reads,app/frontend,code_excessive_file_reads,
+boutique/codedefect/56,1.0,1.0,1.0,1.0,1.0,1.0,0.23529411764705882,18.0,0.0,0.0,app/frontend,code_wrong_return,app/frontend,code_wrong_return,
+boutique/codedefect/57,1.0,1.0,1.0,1.0,1.0,1.0,0.21052631578947367,20.0,0.0,0.0,app/frontend,code_wrong_return,app/frontend,code_wrong_return,
+boutique/codedefect/58,1.0,1.0,1.0,1.0,1.0,1.0,0.26666666666666666,16.0,0.0,0.0,app/frontend,code_wrong_return,app/frontend,code_wrong_return,

@@ -1,0 +1,60 @@
+INFO:     Started server process [4316]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:60450 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60451 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:60450 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60452 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60455 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60457 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:60462 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60462 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:60462 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60462 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60462 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60462 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60462 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60462 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"productcatalogservice"}
+INFO:     127.0.0.1:60467 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"recommendationservice"}
+INFO:     127.0.0.1:60467 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:60467 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60472 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60472 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60472 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"productcatalogservice","port":3550}
+INFO:     127.0.0.1:60477 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"recommendationservice","port":8080}
+INFO:     127.0.0.1:60477 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"cartservice","port":7070}
+INFO:     127.0.0.1:60477 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60477 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60480 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60480 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kube-proxy"}
+INFO:     127.0.0.1:60480 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"kube-proxy"}
+INFO:     127.0.0.1:60480 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55308 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"recommendationservice"}
+INFO:     127.0.0.1:55308 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"productcatalogservice"}
+INFO:     127.0.0.1:55308 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60011 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"productcatalogservice"}
+INFO:     127.0.0.1:60011 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60011 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60011 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60011 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60011 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60011 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56750 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56750 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56750 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56751 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56751 - "POST /mcp HTTP/1.1" 200 OK

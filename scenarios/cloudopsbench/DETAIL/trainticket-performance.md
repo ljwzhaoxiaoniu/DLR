@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/performance — cloudopsbench
 
-> 本家族已跑 **47/47** 题：JRA ✅46 ❌1 ｜ 证据链全闭 46 ｜ token 中位 304,738 ｜ 生成 2026-10-13T18:58:20.406Z
+> 本家族已跑 **47/47** 题：JRA ✅46 ❌1 ｜ 证据链全闭 46 ｜ token 中位 304,738 ｜ 生成 2026-10-14T01:41:18.020Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -28,11 +28,11 @@
 | [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 13 | 184,004 | 0 | 0 | 1013_2008_inorder4-v3b37 | 全对·链闭 |
 | [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3571 | 15 | 213,402 | 0 | 0 | 1013_2012_inorder4-v3b38 | 全对·链闭 |
 | [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 258,331 | 0 | 0 | 1013_2042_inorder4-v3b39 | 全对·链闭 |
-| [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2222 | 28 | 625,309 | 0 | 0 | 1013_2059_lmdecoy-verify1 | 全对·链闭 |
+| [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 406,423 | 0 | 0 | 1014_0939_l3fix3-verify1 | 全对·链闭 |
 | [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 150,648 | 0 | 0 | 1013_2059_inorder4-v3b41 | 全对·链闭 |
 | [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1538 | 14 | 343,773 | 0 | 0 | 1013_2106_inorder4-v3b42 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 322,359 | 0 | 0 | 1013_2110_inorder4-v3b43 | 全对·链闭 |
-| [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 11 | 185,640 | 0.1 | 0 | 1013_2133_perf26-verify1 | 全对·链闭 |
+| [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1364 | 23 | 259,035 | 0 | 0 | 1014_0935_l3fix2-verify2 | 全对·链闭 |
 | [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 160,103 | 0 | 0 | 1013_2133_inorder4-v3b45 | 全对·链闭 |
 | [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 206,042 | 0 | 0 | 1013_2141_inorder4-v3b46 | 全对·链闭 |
 | [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 16 | 700,398 | 0 | 0 | 1013_2150_inorder4-v3b47 | 全对·链闭 |
@@ -207,9 +207,9 @@
 ### case-22
 
 - **结论**：`app/ts-gateway-service` + `pod_network_delay` ｜ 标签 `app/ts-gateway-service` + `pod_network_delay`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2222 · steps 28 · tokens 625,309
-- **raw 日志**：[results/1013_2059_lmdecoy-verify1/raw/1013_2059_trainticket-performance-22](../results/1013_2059_lmdecoy-verify1/raw/1013_2059_trainticket-performance-22/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Symptom 'Service quality degradation.' lives on the metric surface (L3 exact match): 21 alerts in one window 22:10:28-22:12:18 show a whole-system Network Drop sweep (in/out pps -40%~-66% on every service, THROUGHPUT_DROP [RPS] -60%~-78%) with NO saturation row and no genuine latency row (only a LATENCY_MISSING collection hole on ts-payment-service). The dependency graph is browser -> ts-ui-dashboard -> ts-gateway-service -> all 38 backends, so ts-gateway-service is the point every request flows through and carries the system's total traffic (Inbound 667.58 pps, max of all services) plus the r
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 16 · tokens 406,423
+- **raw 日志**：[results/1014_0939_l3fix3-verify1/raw/1014_0939_trainticket-performance-22](../results/1014_0939_l3fix3-verify1/raw/1014_0939_trainticket-performance-22/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts (GetAlerts): 21 rows, ALL in one window 2026-03-19 22:10:28~22:12:18, all TRAFFIC_ANOMALY [Network Drop] (in/out pps -40%~-66%) plus THROUGHPUT_DROP [RPS] (-60%~-78%), with NO latency row and NO saturation row at all -> whole-system network-drop sweep. Topology (GetServiceDependencies): ts-ui-dashboard (called by browser) calls ts-gateway-service, and ts-gateway-service is the single funnel with all 37 ts-* services downstream, so it is the point every request flows through (system total traffic); its row is the largest and steepest (Inbound 667.58pps->283.68pps (-57.5%), RPS 5.92->1.30
 
 ### case-23
 
@@ -235,9 +235,9 @@
 ### case-26
 
 - **结论**：`app/ts-preserve-service` + `pod_network_delay` ｜ 标签 `app/ts-preserve-service` + `pod_network_delay`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4 · steps 11 · tokens 185,640
-- **raw 日志**：[results/1013_2133_perf26-verify1/raw/1013_2133_trainticket-performance-26](../results/1013_2133_perf26-verify1/raw/1013_2133_trainticket-performance-26/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Alerts in window 11:46:04~11:47:54 show ts-preserve-service as the only LATENCY_DEGRADATION row moving BOTH percentiles (p50 3571.43ms->8453.99ms +136.7%, p90 10500.00ms->23627.85ms +125.0%) = the epicenter; ts-basic-service and ts-food-service moved only p90 (49.15->1145.55ms, 23.50->1750.00ms) i.e. partial-traffic ripples, and every one of them is a direct graph neighbor of ts-preserve-service (GetServiceDependencies: downstream ts-basic/ts-food/ts-order/ts-assurance), so no quiet intermediate hop is needed. The ts-order-service cpu_cfs throttled row and the ts-assurance-service cpu core +68
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1364 · steps 23 · tokens 259,035
+- **raw 日志**：[results/1014_0935_l3fix2-verify2/raw/1014_0935_trainticket-performance-26](../results/1014_0935_l3fix2-verify2/raw/1014_0935_trainticket-performance-26/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts are the only anomaly surface (window 11:46:04-11:47:54): ts-preserve-service is the ONLY row moving both percentiles (p50 3571.43->8453.99 ms, p90 10500.00->23627.85 ms), i.e. the delay rides across all of its traffic and marks the epicenter; ts-basic-service (p90 49.15->1145.55 ms) and ts-food-service (p90 23.50->1750.00 ms) move only their p90 = partial-traffic ripples on the degraded pod's own paths. GetServiceDependencies closes the graph: both rippling services are the direct callees of ts-preserve-service and have no call path between them (independent candidates -> the dual-movin
 
 ### case-27
 

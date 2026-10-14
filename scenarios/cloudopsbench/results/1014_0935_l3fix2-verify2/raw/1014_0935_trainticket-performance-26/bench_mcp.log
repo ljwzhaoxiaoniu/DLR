@@ -1,0 +1,43 @@
+INFO:     Started server process [14340]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:50074 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50076 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:50074 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50078 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50083 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50088 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:50098 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-preserve-service"}
+INFO:     127.0.0.1:50101 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-basic-service"}
+INFO:     127.0.0.1:50101 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-food-service"}
+INFO:     127.0.0.1:50101 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50101 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-basic-service"}
+INFO:     127.0.0.1:50116 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-food-service"}
+INFO:     127.0.0.1:50116 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-preserve-service"}
+INFO:     127.0.0.1:50116 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:50116 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-preserve-service","port":8080}
+INFO:     127.0.0.1:50120 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-basic-service","port":8080}
+INFO:     127.0.0.1:50120 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-food-service","port":8080}
+INFO:     127.0.0.1:50120 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-travel-service","port":8080}
+INFO:     127.0.0.1:50120 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kube-proxy"}
+INFO:     127.0.0.1:50120 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kubelet"}
+INFO:     127.0.0.1:50120 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50128 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50128 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50128 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50128 - "POST /mcp HTTP/1.1" 200 OK
