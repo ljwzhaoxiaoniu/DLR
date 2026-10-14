@@ -9,7 +9,7 @@ kind: "package-bundle"
 
 ## Summary
 
-`dsh-tsm-agent` 把一个 dsh profile 接到运行中的 **TSM Core Service**（`tsm-core-dlr`）上，并附带与场景无关的 `paradigm` 技能、Web 状态浮层和 agent 规则（`AGENTS.md`）。它贡献两条**顶层行**——`mcp-semantic-core`（MCP 客户端，指向 `http://127.0.0.1:28795/mcp`，streamable HTTP）与 `dlr-status`（浮层）——以及一个 agent preset `preset-dlr`（persona、AGENTS.md 指令、技能、compaction）。语义后端是**独立包 `tsm-core-dlr`**（已声明为依赖，装本包会连带装上）；场景内容来自独立的 `tsm-scenario-*` 包或路径。L3 SOP 已走索引检索（`dlr_search_sop`），**不再随包发 L3 技能**。
+`dsh-tsm-agent` 把一个 dsh profile 接到运行中的 **TSM Core Service**（`tsm-core-dlr`）上，并附带与场景无关的 `paradigm` 技能、Web 状态浮层和 agent 规则（`AGENTS.md`）。它贡献两条**顶层行**——`mcp-semantic-core`（MCP 客户端，指向 `http://127.0.0.1:28795/mcp`，streamable HTTP）与 `dlr-status`（浮层）——以及一个 agent preset `preset-dlr`（persona、AGENTS.md 指令、技能、compaction）。语义后端是**独立包 `tsm-core-dlr`**（已声明为依赖，装本包会连带装上）；场景内容来自独立的、可选的 `tsm-scenario-*` 包或路径。L3 SOP 已走索引检索（`dlr_search_sop`），**不再随包发 L3 技能**。
 
 ## 目录
 
@@ -32,12 +32,22 @@ dsh plugin --profile web add "<repo>/DSH-based Agent Service/dsh-tsm-agent"   # 
 # 然后启用 bundle——只装不选，不会生效
 ```
 
+**依赖分级。** 一个硬依赖、两个可选配套：
+
+| 包 | 关系 | 说明 |
+|---|---|---|
+| `tsm-core-dlr` | **硬依赖**——已声明在 `dependencies`，随本包自动安装；服务未运行时 MCP 行拒绝激活 | 含原生依赖约 200 MB；服务本体需单独启动（见下） |
+| `tsm-scenario-birdmini`、`tsm-scenario-cloudopsbench` | 可选 | 服务所提供的内容；装哪个用哪个，设 `TSM_SCENARIO=<包名>`（或指向自带场景）。bundle 本身与场景无关 |
+| `dsh-tsm-eval` | 可选 | 评测工具（跑 / 判 / 报）；日常问答不需要 |
+
 先起语义后端——连不上时 MCP 行会拒绝激活：
 
 ```bash
-bash "DSH-based Agent Service/scripts/start_backend.sh"    # Neo4j + TS MCP server (:28795)
+bash "DSH-based Agent Service/scripts/start_backend.sh"    # 仓库检出内：Neo4j + TS MCP server (:28795)
 bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 ```
+
+仅有 npm 安装（无检出）时，同一服务以 `tsm` CLI 提供——`npm i -g tsm-core-dlr && tsm serve --http 28795`（首次还需 `tsm fetch-model`，并对已安装的场景跑一次 `tsm build`）。
 
 MCP 端点默认 `http://127.0.0.1:28795/mcp`，可用环境变量 `TSM_MCP_URL` 覆盖。MCP 行是**顶层行**，headless 跑题同样生效（`--profile headless` 挂不了 preset）；`preset-dlr` 只塑造选用它的交互会话。
 

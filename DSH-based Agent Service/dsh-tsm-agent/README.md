@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-`dsh-tsm-agent` wires a dsh profile to a running **TSM Core Service** (`tsm-core-dlr`) and adds the scenario-independent `paradigm` skill, a Web status overlay, and the agent rules (`AGENTS.md`). It contributes two top-level rows — `mcp-semantic-core` (MCP client for `http://127.0.0.1:28795/mcp`, streamable HTTP) and `dlr-status` (overlay) — and one agent preset, `preset-dlr` (persona, AGENTS.md instruction loader, skills, compaction). The semantic backend is the **separate package `tsm-core-dlr`** (declared as a dependency, so installing this bundle installs it too); the scenario content comes from a separate `tsm-scenario-*` package or a path. L3 SOP is delivered by index retrieval (`dlr_search_sop`), so no L3 skill ships with the package.
+`dsh-tsm-agent` wires a dsh profile to a running **TSM Core Service** (`tsm-core-dlr`) and adds the scenario-independent `paradigm` skill, a Web status overlay, and the agent rules (`AGENTS.md`). It contributes two top-level rows — `mcp-semantic-core` (MCP client for `http://127.0.0.1:28795/mcp`, streamable HTTP) and `dlr-status` (overlay) — and one agent preset, `preset-dlr` (persona, AGENTS.md instruction loader, skills, compaction). The semantic backend is the **separate package `tsm-core-dlr`** (declared as a dependency, so installing this bundle installs it too); the scenario content comes from a separate, optional `tsm-scenario-*` package or a path. L3 SOP is delivered by index retrieval (`dlr_search_sop`), so no L3 skill ships with the package.
 
 ## Table of Contents
 
@@ -32,12 +32,22 @@ dsh plugin --profile web add "<repo>/DSH-based Agent Service/dsh-tsm-agent"   # 
 # then select/enable the bundle — installing alone does not select it
 ```
 
+**Dependencies.** One hard dependency, two optional companions:
+
+| Package | Relation | Note |
+|---|---|---|
+| `tsm-core-dlr` | **Hard dependency** — declared in `dependencies`, so installing this bundle installs it too; the MCP row refuses activation while its service is not running | Ships native deps (~200 MB); the service itself must be started separately (below) |
+| `tsm-scenario-birdmini`, `tsm-scenario-cloudopsbench` | Optional | Scenario content the service serves; install whichever fits and set `TSM_SCENARIO=<package>` (or point it at your own scenario). The bundle itself is scenario-independent |
+| `dsh-tsm-eval` | Optional | Benchmark eval harness (run / judge / report); not needed for regular Q&A |
+
 Start the semantic backend first — the MCP row refuses activation when it cannot connect:
 
 ```bash
-bash "DSH-based Agent Service/scripts/start_backend.sh"    # Neo4j + TS MCP server (:28795)
+bash "DSH-based Agent Service/scripts/start_backend.sh"    # in a repo checkout: Neo4j + TS MCP server (:28795)
 bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 ```
+
+From an npm-only install (no checkout), the same service ships as the `tsm` CLI — `npm i -g tsm-core-dlr && tsm serve --http 28795` (first run also needs `tsm fetch-model` and a `tsm build` over an installed scenario).
 
 The MCP endpoint defaults to `http://127.0.0.1:28795/mcp` and can be overridden with the `TSM_MCP_URL` environment variable. The MCP row is **top-level**, so it also serves headless runs (presets are not available under `--profile headless`); `preset-dlr` shapes the interactive sessions that select it.
 
