@@ -8,14 +8,15 @@
 
 项目跑在**三级语义建模（TSM）**框架下——**L1 `dlr`**（数据源级）/ **L2 `consensus`**（领域共识级）/ **L3 `sop`**（业务逻辑级）；一条知识进哪一级，**准入判据即治理线**。详见 [docs/02-concept.md](docs/02-concept.md)。
 
-一份检出 = 两个服务部件 + 两个开箱即用的场景包 + 一层可插拔的场景机制：
+一份检出 = **五个 npm 包**（语义服务 · dsh bundle · 考试系统 · 两个开箱即用的场景包）+ 一层可插拔的场景机制：
 
-| 部分 | 是什么 |
+| 部分 · npm 包 | 是什么 |
 |---|---|
-| `TSM Core Service/` | 语义服务（TypeScript）：LanceDB 向量 + Neo4j 图 + ONNX 编码器，经 streamable-http 暴露 **7 个 MCP 工具** |
-| `DSH-based Agent Service/` | dsh（DeepSeek Harness）接入：`dsh-tsm-agent` bundle、`dsh-tsm-eval` 考试系统、启动器、agent 规则 |
-| `scenarios/birdminidev/` | 场景包 —— BIRD mini-dev（11 库 / 500 题）：三层源 + 考卷 + 跑批结果。**500/500 评定正确**（426 与 gold 完全一致 + 74 处按 L3 节口径裁定的数据集缺陷） |
-| `scenarios/cloudopsbench/` | 场景包 —— Cloud-OpsBench（K8s 根因诊断，754 例）：三层源 + 上游评分器适配 + 跑批结果。已跑 549 例 **JRA 547/549（99.6%）** |
+| `TSM Core Service/` · [`tsm-core-dlr`](https://www.npmjs.com/package/tsm-core-dlr) | 语义服务（TypeScript）：LanceDB 向量 + Neo4j 图 + ONNX 编码器，经 streamable-http 暴露 **7 个 MCP 工具** |
+| `DSH-based Agent Service/dsh-tsm-agent/` · [`dsh-tsm-agent`](https://www.npmjs.com/package/dsh-tsm-agent) | **dsh bundle**：MCP 语义网关 + 场景无关的范式技能 + TSM 状态浮层 + agent 规则（启动器在 `DSH-based Agent Service/` 下） |
+| `DSH-based Agent Service/dsh-tsm-eval/` · [`dsh-tsm-eval`](https://www.npmjs.com/package/dsh-tsm-eval) | **考试系统**：把场景的考卷经 dsh headless 跑一遍、`tsm grade` 采分、产出可回放报告（结果 + 过程 + 会话日志取证） |
+| `scenarios/birdminidev/` · [`tsm-scenario-birdmini`](https://www.npmjs.com/package/tsm-scenario-birdmini) | 场景包 —— BIRD mini-dev（11 库 / 500 题）：三层源 + 考卷 + 跑批结果。**500/500 评定正确**（426 与 gold 完全一致 + 74 处按 L3 节口径裁定的数据集缺陷） |
+| `scenarios/cloudopsbench/` · [`tsm-scenario-cloudopsbench`](https://www.npmjs.com/package/tsm-scenario-cloudopsbench) | 场景包 —— Cloud-OpsBench（K8s 根因诊断，754 例）：三层源 + 上游评分器适配 + 跑批结果。已跑 549 例 **JRA 547/549（99.6%）** |
 | *自带场景* | 场景层**可插拔** —— 把 `TSM_SCENARIO` 指向任意自带三层源（可选考卷）的场景包即可。换场景 checklist 见 [docs/04-application.md](docs/04-application.md) |
 
 <a id="benchmarks"></a>
