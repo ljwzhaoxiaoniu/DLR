@@ -54,8 +54,7 @@ MCP 端点默认 `http://127.0.0.1:28795/mcp`，可用环境变量 `TSM_MCP_URL`
 <a id="实现说明"></a>
 ## 实现说明
 
-- `cordis.patch.yml` —— 上面的两条顶层行（MCP 网关 + 状态浮层）。
-- `presets/dlr.patch.yml` —— `preset-dlr`；compaction 组的 `isolate` realm 是 preset 服务的硬要求（缺了报 "Preset services require isolate realms"）。
+- `cordis.patch.yml` —— 上述三行：两条顶层行（MCP 网关 + 状态浮层）+ `preset-dlr`（为满足插件商店对 `dsh.bundle.patch` 的单字符串校验，由原 `presets/dlr.patch.yml` 并入；compaction 组的 `isolate` realm 是 preset 服务的硬要求，缺了报 "Preset services require isolate realms"）。
 - `skills/paradigm/SKILL.md` —— 范式认知（TSM 三级；DLR 结构：LE / PE / 锚键与 JOIN）；与数据集无关，按需加载。
 - `lib/index.js` —— node 半：boot 期把随包的 `skills/` 目录设为 `DLR_SKILLS_DIR`；`lib/client.js` —— 浏览器半（状态浮层）。
 - 层序：bundle patch → profile 的 `cordis.patch.yml` → `$DSH_HOME/cordis.patch.yml` → `--patch`（最高）。使用方本地策略——禁用清单、模型选择、默认 preset、目录选择器修复——留在 `--patch` 层（`dsh_dlr/dsh.patch.yml`、`dsh_dlr/dsh-web.patch.yml`），不在本包内。

@@ -8,7 +8,7 @@
  *     工作区自带 AGENTS.md（仓库内）或启动器显式给了 `DLR_AGENTS_MD` 时不动、并清掉本包旧副本。
  * 启动器若已显式设置（仓库内运行、dsh_cob 按题指令等），一律以启动器为准。
  *
- * 浏览器半（TSM 状态浮层）走 `exports["./client"]`；本包的行见 cordis.patch.yml 与 presets/。
+ * 浏览器半（TSM 状态浮层）走 `exports["./client"]`；本包的行见 cordis.patch.yml。
  */
 import fs from "node:fs";
 import os from "node:os";

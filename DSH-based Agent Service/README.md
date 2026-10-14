@@ -16,8 +16,7 @@ DSH-based Agent Service/
 ├── .gitignore                # .dsh-home/、.env
 ├── scripts/start_backend.sh  # 一键起后端（Neo4j + TS MCP server，幂等 + 预检）
 ├── dsh-tsm-agent/                  # ★ bundle（dsh plugin add 安装）：MCP 网关 + preset-dlr + 状态浮层 + skills
-│   ├── cordis.patch.yml      #   顶层行：mcp-semantic-core · dlr-status
-│   ├── presets/dlr.patch.yml #   preset-dlr：persona / AGENTS.md / skills / compaction
+│   ├── cordis.patch.yml      #   三条行：mcp-semantic-core · dlr-status · preset-dlr（persona/skills/compaction）
 │   ├── skills/               #   paradigm（认知层，场景无关）；L3 已走索引检索（不随包发技能）
 │   └── lib/client.js         #   TSM 状态浮层（浏览器半）
 ├── .dsh-home/                # 运行时生成（$DSH_HOME；会话日志在此，可取证可删）

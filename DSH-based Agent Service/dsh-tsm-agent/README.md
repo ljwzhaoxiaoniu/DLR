@@ -54,8 +54,7 @@ The tool surface behind the gateway (7 tools): `dlr_semantic_query` · `dlr_sear
 <a id="understand-the-implementation"></a>
 ## Understand the implementation
 
-- `cordis.patch.yml` — the two top-level rows above (MCP gateway + status overlay).
-- `presets/dlr.patch.yml` — `preset-dlr`; the `isolate` realm on the compaction group is required by preset services ("Preset services require isolate realms").
+- `cordis.patch.yml` — all three rows above: the two top-level rows (MCP gateway + status overlay) plus `preset-dlr` (merged from the former `presets/dlr.patch.yml` to satisfy the plugin store's single-string `dsh.bundle.patch` check; the `isolate` realm on the compaction group is required by preset services — "Preset services require isolate realms").
 - `skills/paradigm/SKILL.md` — paradigm cognition (TSM three levels; DLR structure: LE / PE / anchors and joins); scenario-independent, loaded on demand.
 - `lib/index.js` — node half: exposes the packaged `skills/` directory as `DLR_SKILLS_DIR` at boot; `lib/client.js` — browser half for the overlay.
 - Layering: bundle patch → profile `cordis.patch.yml` → `$DSH_HOME/cordis.patch.yml` → `--patch` (highest). Consumer-local policy — disabled plugins, model choice, default preset, directory-picker fixes — lives in `--patch` layers (`dsh_dlr/dsh.patch.yml`, `dsh_dlr/dsh-web.patch.yml`), not in this package.

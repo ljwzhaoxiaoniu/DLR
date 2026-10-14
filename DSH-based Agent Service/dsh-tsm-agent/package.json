@@ -30,7 +30,6 @@
   },
   "files": [
     "lib",
-    "presets",
     "skills",
     "cordis.patch.yml",
     "locale",
@@ -42,10 +41,7 @@
   },
   "dsh": {
     "bundle": {
-      "patch": [
-        "./cordis.patch.yml",
-        "./presets/dlr.patch.yml"
-      ]
+      "patch": "./cordis.patch.yml"
     },
     "client": {
       "platform": "web",
