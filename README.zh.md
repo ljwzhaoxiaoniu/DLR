@@ -2,7 +2,7 @@
 
 [English](README.md) | 中文
 
-[![BIRD mini-dev · 500/500](https://img.shields.io/badge/BIRD_mini--dev-500%2F500_correct-brightgreen)](#benchmarks) [![Cloud-OpsBench · JRA 547/549](https://img.shields.io/badge/Cloud--OpsBench-JRA_547%2F549_(99.6%25)-blue)](#benchmarks) [![npm](https://img.shields.io/npm/v/dsh-tsm-agent)](https://www.npmjs.com/package/dsh-tsm-agent)
+[![BIRD mini-dev · 500/500](https://img.shields.io/badge/BIRD_mini--dev-500%2F500_correct-brightgreen)](#benchmarks) [![Cloud-OpsBench · JRA 752/754](https://img.shields.io/badge/Cloud--OpsBench-JRA_752%2F754_(99.7%25)-blue)](#benchmarks) [![npm](https://img.shields.io/npm/v/dsh-tsm-agent)](https://www.npmjs.com/package/dsh-tsm-agent)
 
 **DLR（Decoupled Logic Representation）** 是本项目原创的**数据源级**语义建模范式：**LE / PE** 双层模型 + **ARCS**（投影锚定）与 **PAS**（语义路由）两个机制，把逻辑概念层与物理数据层解耦，让 LLM agent 可靠地把自然语言问题落到关系数据库上。详见 [docs/03-design.md](docs/03-design.md)。
 
@@ -16,7 +16,7 @@
 | `DSH-based Agent Service/dsh-tsm-agent/` · [`dsh-tsm-agent`](https://www.npmjs.com/package/dsh-tsm-agent) | **dsh bundle**：MCP 语义网关 + 场景无关的范式技能 + TSM 状态浮层 + agent 规则（启动器在 `DSH-based Agent Service/` 下） |
 | `DSH-based Agent Service/dsh-tsm-eval/` · [`dsh-tsm-eval`](https://www.npmjs.com/package/dsh-tsm-eval) | **考试系统**：把场景的考卷经 dsh headless 跑一遍、`tsm grade` 采分、产出可回放报告（结果 + 过程 + 会话日志取证） |
 | `scenarios/birdminidev/` · [`tsm-scenario-birdmini`](https://www.npmjs.com/package/tsm-scenario-birdmini) | 场景包 —— BIRD mini-dev（11 库 / 500 题）：三层源 + 考卷 + 跑批结果。**500/500 评定正确**（426 与 gold 完全一致 + 74 处按 L3 节口径裁定的数据集缺陷） |
-| `scenarios/cloudopsbench/` · [`tsm-scenario-cloudopsbench`](https://www.npmjs.com/package/tsm-scenario-cloudopsbench) | 场景包 —— Cloud-OpsBench（K8s 根因诊断，754 例）：三层源 + 上游评分器适配 + 跑批结果。已跑 549 例 **JRA 547/549（99.6%）** |
+| `scenarios/cloudopsbench/` · [`tsm-scenario-cloudopsbench`](https://www.npmjs.com/package/tsm-scenario-cloudopsbench) | 场景包 —— Cloud-OpsBench（K8s 根因诊断，754 例）：三层源 + 上游评分器适配 + 跑批结果。全量 754 例 **JRA 752/754（99.7%）** |
 | *自带场景* | 场景层**可插拔** —— 把 `TSM_SCENARIO` 指向任意自带三层源（可选考卷）的场景包即可。换场景 checklist 见 [docs/04-application.md](docs/04-application.md) |
 
 <a id="benchmarks"></a>
@@ -34,7 +34,7 @@
 
 | 跑批 | 结果 | 备注 |
 |---|---|---|
-| 已跑 549/754 例（72.8%） | **JRA 547/549（99.6%）** · 证据链全闭 520/549（94.7%） | 流程分均值 MC 0.99 / EOC 0.94 · 无效动作 0.6% |
+| 全量 754/754 例（100%） | **JRA 752/754（99.7%）** · 证据链全闭 724/754（96.0%） | 流程分均值 MC 0.99 / EOC 0.94 · 无效动作 0.4% |
 | 对照 —— 基准自家评分器 | 该基准报告的最强模型基线：JRA ≈ 0.76、证据链闭合 ≈ 0.38（探索面广、闭不上链） | 上游评分器原样判分，无人工翻盘 |
 
 台账（逐题 + 证据）：[birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md)

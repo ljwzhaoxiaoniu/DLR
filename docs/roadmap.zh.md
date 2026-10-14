@@ -36,7 +36,7 @@
 | 步 | 做什么 | 状态 |
 |---|---|---|
 | **1. 路径解耦** | 消灭硬编码绝对路径：路径从**包自身位置推导 + env 覆盖**（`TSM_*` 全家）；数据目录在检出内落原位置、安装态落用户目录；Neo4j 位置探测 | ✅ 已落——仓库挪到任意目录照跑；`tsm scenario` 可打印当前生效解析 |
-| **2. 打包** | **三个 npm 包**：`tsm-core-dlr`（服务 + `tsm` CLI）· `tsm-scenario-<benchmark>`（内容；一个 benchmark 一个包，如 `tsm-scenario-birdmini`）· `dsh-tsm-agent`（dsh bundle；依赖服务）。场景可选/可插拔：`TSM_SCENARIO` 支持**路径或包名** | ✅ 已落 |
+| **2. 打包** | **五个 npm 包**：`tsm-core-dlr`（服务 + `tsm` CLI）· `tsm-scenario-<benchmark>`（内容；一个 benchmark 一个包——`tsm-scenario-birdmini`、`tsm-scenario-cloudopsbench`）· `dsh-tsm-agent`（dsh bundle；依赖服务）· `dsh-tsm-eval`（考试系统）。场景可选/可插拔：`TSM_SCENARIO` 支持**路径或包名** | ✅ 已落 |
 | **3. 图后端双轨（"零服务"）** | 默认**进程内**（YAML→内存：零依赖、零锁、零服务；千级节点只读查找）；**保留 Neo4j 兼容**（配 `NEO4J_URI` 即启用：Cypher / Browser / 大图 / 企业已有图库）。一致性由 `tsm verify memory_graph_parity` 逐字段把关（11 库） | ✅ 已落——测试机不装 Neo4j 也跑通验收四连 |
 | **附带：可视化独立成页** | ✅ `tsm viz`（开发态）读 YAML 结构载荷 → 自包含 HTML（数据 + vis-network 内联）；服务侧以 **`GET /viz/dlr`** 端出（状态卡 `图谱 ↗` 直链）；Neo4j Browser 作为并列入口保留 | ✅ 已落 |
 
@@ -44,7 +44,7 @@
 
 ## 五、待探索
 
-- **Cloud-OpsBench**（K8s agentic 根因分析基准）：TSM 跷跷板另一端的候选——**L3 重 / L1 薄**（诊断 runbook ≈ 知识化的 golden trajectory；其"证据链闭合（ECR）"与我们的过程可评同向）。工具面是 K8s 诊断接口（非 SQL），真玩需另起 `scenarios/cloudops/` + 工具适配层。
+- **Cloud-OpsBench**（K8s agentic 根因分析基准）——✅ **已落为第二个场景**（架构「换场景」的首个真实检验；TSM 跷跷板另一端——**L3 重 / L1 薄**）：落地为 `scenarios/cloudopsbench/` + `tsm-scenario-cloudopsbench` 包，含 K8s 诊断工具适配层与上游评分器适配；**覆盖 754/754 · JRA 752/754（99.7%）**。
 - **开发态能力的继续内建**：introspect → 草稿 → 评审（反身建模），与第 1/2 步同一条 CLI 长出来。
 
 ## 相关

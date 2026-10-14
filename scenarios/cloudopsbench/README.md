@@ -58,12 +58,12 @@ dlr-state 形态 = **3 工具**（`state_model_query` 症状→模型切片 / `d
 
 ## 三、应用结果（本场景的模型）
 
-> 数据截至留档**轮次 158**；口径 = 上游 scorer 输出、去重取最新（详见 [DETAIL.md](DETAIL.md) / `results/STATS.md`）。
+> 数据截至留档**轮次 230**；口径 = 上游 scorer 输出、去重取最新（详见 [DETAIL.md](DETAIL.md) / `results/STATS.md`）。
 
-- **覆盖 469/754（62.2%）**；**JRA 467/469（99.6%）** · CA 467/469 · FA 468/469 · **ECR 441/469（94.0%）**；
-- 流程分（均值）：**MC 0.986 · EOC 0.959 · ECR 0.940** · steps 19.8 · invalid 0.6%；
-- **六个满族**（100% 覆盖且全 JRA）：boutique/{infrastructure, performance, service} · train-ticket/{performance, service, startup}；
-- 对标：上游顶模基线 JRA 0.76 / ECR 0.38、工业界 Train-Ticket 全量 82.8% JRA——本场景 467/469 已在场之上；余 2 处（perf25 / ttperf34）按「摸到极限也算」**记档不追**；
+- **覆盖 754/754（100%）**；**JRA 752/754（99.7%）** · CA 752 · FA 753 · **ECR 724/754（96.0%）**；
+- 流程分（均值）：**MC 0.990 · EOC 0.946 · ECR 0.960** · steps 18.3 · invalid 0.4%；
+- **十二家族满覆盖**（12/12 全跑），其中 **10 族全 JRA**：boutique/{admission, codedefect, infrastructure, runtime, scheduling, service, startup} · train-ticket/{runtime, service, startup}；boutique/performance 与 train-ticket/performance 各余 1 例按「摸到极限也算」**记档**；
+- 对标：上游顶模基线 JRA 0.76 / ECR 0.38、工业界 Train-Ticket 全量 82.8% JRA——本场景 **752/754** 已在场之上；余 2 处（perf25 / ttperf34）记档不追；
 - 逐题留档：[DETAIL.md](DETAIL.md)（总账）＋ `DETAIL/<家族>.md`（逐题校验表 + 证据正文）＋ `results/<轮次>/`（questions.csv + traces/）。
 
 ## 四、处理和使用流程（这份基准怎么跑）

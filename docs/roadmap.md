@@ -36,7 +36,7 @@ Goal: "on any machine that has dsh, one command installs everything."
 | Step | What | Status |
 |---|---|---|
 | **1. Path decoupling** | No hardcoded absolute paths: paths derive from the package's own location with env overrides (`TSM_*`); data dirs default inside the checkout and fall back to a user dir when installed; Neo4j location is probed | ✅ Done — checkout runs from any directory; `tsm scenario` prints what is live |
-| **2. Packaging** | **Three npm packages**: `tsm-core-dlr` (service + `tsm` CLI) · `tsm-scenario-<benchmark>` (content; one per benchmark, e.g. `tsm-scenario-birdmini`) · `dsh-tsm-agent` (the dsh bundle; depends on the service). The scenario is optional/pluggable: `TSM_SCENARIO` accepts a path **or a package name** | ✅ Done |
+| **2. Packaging** | **Five npm packages**: `tsm-core-dlr` (service + `tsm` CLI) · `tsm-scenario-<benchmark>` (content; one per benchmark — `tsm-scenario-birdmini`, `tsm-scenario-cloudopsbench`) · `dsh-tsm-agent` (the dsh bundle; depends on the service) · `dsh-tsm-eval` (the exam system). The scenario is optional/pluggable: `TSM_SCENARIO` accepts a path **or a package name** | ✅ Done |
 | **3. Graph backend, two tracks** ("zero-service") | **In-process by default** (YAML → memory: zero dependencies, zero locks, zero services; read-only lookups over the ~1,100-node graph) + **Neo4j kept compatible** (set `NEO4J_URI` to use Cypher / Browser / big graphs / an existing enterprise graph store). Parity is enforced by `tsm verify memory_graph_parity` (field-level, all 11 databases) | ✅ Done — a Neo4j-free machine passes the four-point acceptance |
 | **Bonus: visualization as a standalone page** | ✅ `tsm viz` (dev) reads the YAML structure payload → a self-contained HTML (data + vis-network inlined); the service serves it live at **`GET /viz/dlr`** (the status card's `图谱 ↗` links to it); Neo4j Browser stays as a parallel entry | ✅ Done |
 
@@ -44,7 +44,7 @@ Goal: "on any machine that has dsh, one command installs everything."
 
 ## 5. To explore
 
-- **Cloud-OpsBench** (K8s agentic root-cause analysis benchmark): the candidate for the other end of the TSM seesaw — **L3 heavy / L1 thin** (a diagnostic runbook ≈ a knowledge-ized golden trajectory; its "evidence-chain closure (ECR)" points the same way as our process evaluation). Its tool surface is K8s diagnostics (not SQL); a real attempt needs a separate `scenarios/cloudops/` plus a tool adapter layer.
+- **Cloud-OpsBench** (K8s agentic root-cause analysis benchmark) — ✅ **Done as the second scenario** (the first real test of the architecture's scenario switch; the other end of the TSM seesaw — **L3 heavy / L1 thin**): shipped as `scenarios/cloudopsbench/` + the `tsm-scenario-cloudopsbench` package, with the K8s-diagnostics tool adapter and the upstream-scorer adapter; **754/754 cases covered · JRA 752/754 (99.7%)**.
 - **More dev-mode capabilities**: introspect → draft → review (reflexive modeling), growing along the same CLI as steps 1/2.
 
 ## Related
