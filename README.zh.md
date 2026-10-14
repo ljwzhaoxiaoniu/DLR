@@ -2,6 +2,8 @@
 
 [English](README.md) | 中文
 
+[![BIRD mini-dev · 500/500](https://img.shields.io/badge/BIRD_mini--dev-500%2F500_correct-brightgreen)](#benchmarks) [![Cloud-OpsBench · JRA 547/549](https://img.shields.io/badge/Cloud--OpsBench-JRA_547%2F549_(99.6%25)-blue)](#benchmarks) [![npm](https://img.shields.io/npm/v/dsh-tsm-agent)](https://www.npmjs.com/package/dsh-tsm-agent)
+
 **DLR（Decoupled Logic Representation）** 是本项目原创的**数据源级**语义建模范式：**LE / PE** 双层模型 + **ARCS**（投影锚定）与 **PAS**（语义路由）两个机制，把逻辑概念层与物理数据层解耦，让 LLM agent 可靠地把自然语言问题落到关系数据库上。详见 [docs/03-design.md](docs/03-design.md)。
 
 项目跑在**三级语义建模（TSM）**框架下——**L1 `dlr`**（数据源级）/ **L2 `consensus`**（领域共识级）/ **L3 `sop`**（业务逻辑级）；一条知识进哪一级，**准入判据即治理线**。详见 [docs/02-concept.md](docs/02-concept.md)。
@@ -14,8 +16,29 @@
 | `DSH-based Agent Service/` | dsh（DeepSeek Harness）接入：`dsh-tsm-agent` bundle、`dsh-tsm-eval` 考试系统、启动器、agent 规则 |
 | `scenarios/<名>/` | 完整 TSM 内容包：三层源 + 考卷 + 跑批结果。当前 `birdminidev`（BIRD mini-dev，11 库 / 500 题——**500/500 评定正确**：426 与 gold 一致 + 74 处按 L3 节口径裁定为数据集自身缺陷） |
 
+<a id="benchmarks"></a>
+## 基准成绩
+
+两个外部基准，都是端到端跑完的（每个案例都可在台账中查证）：
+
+**BIRD mini-dev —— NL2SQL · 11 库 · 500 题** · 场景包 [`birdminidev`](scenarios/birdminidev/)
+
+| 跑批 | 结果 | 备注 |
+|---|---|---|
+| 全部 500 题 | **500/500 评定正确** —— ✅ 426 与 gold 完全一致 + 🔁 74 处按 L3 节口径裁定正确（那些题 gold 本身有缺陷） | 零错误 · 每题 token 中位 ≈ 5.6 万 / 约 6 步 |
+
+**Cloud-OpsBench —— Kubernetes 根因诊断 · 754 例**（Online Boutique + Train-Ticket）· 场景包 [`cloudopsbench`](scenarios/cloudopsbench/)
+
+| 跑批 | 结果 | 备注 |
+|---|---|---|
+| 已跑 549/754 例（72.8%） | **JRA 547/549（99.6%）** · 证据链全闭 520/549（94.7%） | 流程分均值 MC 0.99 / EOC 0.94 · 无效动作 0.6% |
+| 对照 —— 基准自家评分器 | 该基准报告的最强模型基线：JRA ≈ 0.76、证据链闭合 ≈ 0.38（探索面广、闭不上链） | 上游评分器原样判分，无人工翻盘 |
+
+台账（逐题 + 证据）：[birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md)
+
 ## 目录
 
+- [基准成绩](#benchmarks)
 - [快速开始](#快速开始)
 - [架构](#架构)
 - [场景包](#场景包)
