@@ -1,0 +1,74 @@
+[2026-10-14 20:05:51] inorder4-v3b181 · 4 题 · 2 路 → scenarios/cloudopsbench/results/1014_2005_inorder4-v3b181
+[20:05:51] boutique/scheduling/128 第 1 遍 (:8000)
+[20:05:51] boutique/scheduling/129 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-scheduling-129）…
+[start] 基准诊断 MCP（boutique-scheduling-128）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8000/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_2005_inorder4-v3b181/raw/1014_2005_boutique-scheduling-128
+[20:06:38] boutique/scheduling/130 第 1 遍 (:8000)
+[start] 基准诊断 MCP（boutique-scheduling-130）…
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_2005_inorder4-v3b181/raw/1014_2005_boutique-scheduling-129
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+�
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+beResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+[precheck] http://127.0.0.1:8001/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_2005_inorder4-v3b181/raw/1014_2006_boutique-scheduling-131
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_2005_inorder4-v3b181/raw/1014_2006_boutique-scheduling-130
+[20:07:47] grade + stats
+[grade] runs=4 → out=scenarios/cloudopsbench/results/1014_2005_inorder4-v3b181
+[convert] boutique/scheduling/128 → scenarios\cloudopsbench\results\1014_2005_inorder4-v3b181\traces\boutique\dsh-tsm\scheduling\128\128.json  steps=18 final=有 preds=3
+[convert] boutique/scheduling/129 → scenarios\cloudopsbench\results\1014_2005_inorder4-v3b181\traces\boutique\dsh-tsm\scheduling\129\129.json  steps=17 final=有 preds=3
+[convert] boutique/scheduling/130 → scenarios\cloudopsbench\results\1014_2005_inorder4-v3b181\traces\boutique\dsh-tsm\scheduling\130\130.json  steps=20 final=有 preds=3
+[convert] boutique/scheduling/131 → scenarios\cloudopsbench\results\1014_2005_inorder4-v3b181\traces\boutique\dsh-tsm\scheduling\131\131.json  steps=15 final=有 preds=3
+[convert] manifest → scenarios\cloudopsbench\results\1014_2005_inorder4-v3b181\traces\manifest.json（共 4 条）
+[grade] 评分组: boutique/scheduling
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: boutique
+fault_category: scheduling
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\boutique\scheduling
+agent_root: scenarios\cloudopsbench\results\1014_2005_inorder4-v3b181\traces\boutique\dsh-tsm\scheduling
+--------------------------------------------------------------------------------
+total_cases: 164
+selected_cases: 4
+run_cases: 4
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 1.0
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.3583
+steps (Average Diagnostic Steps per Case): 18.5
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] boutique_scheduling: scenarios\cloudopsbench\results\1014_2005_inorder4-v3b181\boutique_scheduling_questions.csv
+
+[grade] 完成
+  summary.md   : scenarios/cloudopsbench/results/1014_2005_inorder4-v3b181/summary.md
+  questions.csv: scenarios/cloudopsbench/results/1014_2005_inorder4-v3b181/questions.csv
+  traces/      : scenarios/cloudopsbench/results/1014_2005_inorder4-v3b181/traces
+[stats] 轮次 222 · 覆盖 721/754 · JRA 712/721
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\results\STATS.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL/*.md（12 个家族）
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\overview.html
+  + session-5017df64-f568-…  boutique/scheduling/128  1014_2005_boutique-scheduling-128
+  + session-41873863-6a57-…  boutique/scheduling/129  1014_2005_boutique-scheduling-129
+  + session-8b9b37fc-7cdb-…  boutique/scheduling/130  1014_2006_boutique-scheduling-130
+  + session-43c71d1d-ce7e-…  boutique/scheduling/131  1014_2006_boutique-scheduling-131
+[sync] 扫到 run 796（无 session 0）· 新登记 4 · 清出 0（避重叠）· 跳过已归组 132 · 解除归档 0 · 全量组共 671
+[ws] 已写 D:\Code_Proj\DLR Proj\DSH-based Agent Service\.dsh-home\storages\workspace.json（备份 .bak-1014_200754）

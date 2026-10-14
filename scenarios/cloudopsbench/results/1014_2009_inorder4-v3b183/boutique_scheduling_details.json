@@ -1,0 +1,178 @@
+[
+  {
+    "case_name": "136",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling\\136\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2009_inorder4-v3b183\\traces\\boutique\\dsh-tsm\\scheduling\\136\\136.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Scheduling_Fault",
+      "fault_object": "app/redis-cart",
+      "root_cause": "pvc_storage_class_mismatch"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/redis-cart",
+        "root_cause": "pvc_storage_class_mismatch"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/redis-cart",
+        "root_cause": "pv_binding_occupied"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/redis-cart",
+        "root_cause": "pvc_access_mode_mismatch"
+      }
+    ],
+    "tool_call_count": 17,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.29411764705882354,
+      "steps": 18.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "137",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling\\137\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2009_inorder4-v3b183\\traces\\boutique\\dsh-tsm\\scheduling\\137\\137.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Scheduling_Fault",
+      "fault_object": "app/redis-cart",
+      "root_cause": "pv_binding_occupied"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/redis-cart",
+        "root_cause": "pv_binding_occupied"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/redis-cart",
+        "root_cause": "pvc_storage_class_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/redis-cart",
+        "root_cause": "pvc_capacity_mismatch"
+      }
+    ],
+    "tool_call_count": 16,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.1875,
+      "steps": 17.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "138",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling\\138\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2009_inorder4-v3b183\\traces\\boutique\\dsh-tsm\\scheduling\\138\\138.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Scheduling_Fault",
+      "fault_object": "app/redis-cart",
+      "root_cause": "pv_binding_occupied"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/redis-cart",
+        "root_cause": "pv_binding_occupied"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/redis-cart",
+        "root_cause": "pvc_storage_class_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/redis-cart",
+        "root_cause": "pvc_capacity_mismatch"
+      }
+    ],
+    "tool_call_count": 22,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.18181818181818182,
+      "steps": 23.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "139",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling\\139\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2009_inorder4-v3b183\\traces\\boutique\\dsh-tsm\\scheduling\\139\\139.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Scheduling_Fault",
+      "fault_object": "app/redis-cart",
+      "root_cause": "pv_binding_occupied"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/redis-cart",
+        "root_cause": "pv_binding_occupied"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/redis-cart",
+        "root_cause": "pvc_storage_class_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/redis-cart",
+        "root_cause": "pvc_capacity_mismatch"
+      }
+    ],
+    "tool_call_count": 21,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.19047619047619047,
+      "steps": 22.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

@@ -1,0 +1,18 @@
+[2026-10-14 20:11:36] inorder4-v3b184 · 4 题 · 2 路 → scenarios/cloudopsbench/results/1014_2011_inorder4-v3b184
+[20:11:36] boutique/scheduling/140 第 1 遍 (:8000)
+[20:11:36] boutique/scheduling/141 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-scheduling-140）…
+[start] 基准诊断 MCP（boutique-scheduling-141）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8000/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_2011_inorder4-v3b184/raw/1014_2011_boutique-scheduling-140
+[20:12:25] boutique/scheduling/142 第 1 遍 (:8000)
+[start] 基准诊断 MCP（boutique-scheduling-142）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8000/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_2011_inorder4-v3b184/raw/1014_2011_boutique-scheduling-141
+[20:12:37] boutique/scheduling/143 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-scheduling-143）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query

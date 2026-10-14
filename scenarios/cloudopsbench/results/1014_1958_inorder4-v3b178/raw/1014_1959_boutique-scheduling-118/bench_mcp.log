@@ -1,0 +1,67 @@
+INFO:     Started server process [2480]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:59928 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59929 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:59928 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59930 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59933 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59935 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59939 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:59939 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59939 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59939 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:59939 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59939 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"redis-cart"}
+INFO:     127.0.0.1:59956 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59956 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59956 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59963 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"redis-cart","port":6379}
+INFO:     127.0.0.1:59963 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"cartservice"}
+INFO:     127.0.0.1:59963 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:59963 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"productcatalogservice","port":3550}
+INFO:     127.0.0.1:59974 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59974 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"recommendationservice"}
+INFO:     127.0.0.1:59974 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59974 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"productcatalogservice"}
+INFO:     127.0.0.1:59974 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59980 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59980 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"cartservice","port":7070}
+INFO:     127.0.0.1:59980 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"frontend","port":80}
+INFO:     127.0.0.1:59980 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"currencyservice","port":7000}
+INFO:     127.0.0.1:59980 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"redis-cart","port":6379}
+INFO:     127.0.0.1:59984 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"adservice","port":9555}
+INFO:     127.0.0.1:59984 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"checkoutservice","port":5050}
+INFO:     127.0.0.1:59984 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"frontend"}
+INFO:     127.0.0.1:59984 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59984 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"checkoutservice"}
+INFO:     127.0.0.1:59988 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"adservice"}
+INFO:     127.0.0.1:59988 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"shippingservice"}
+INFO:     127.0.0.1:59988 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"currencyservice"}
+INFO:     127.0.0.1:59988 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59988 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59989 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59989 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"redis-cart"}
+INFO:     127.0.0.1:59989 - "POST /mcp HTTP/1.1" 200 OK

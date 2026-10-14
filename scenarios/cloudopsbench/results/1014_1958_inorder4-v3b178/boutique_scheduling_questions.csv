@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/scheduling/116,1.0,1.0,1.0,1.0,1.0,1.0,0.26666666666666666,16.0,0.0,0.0,app/paymentservice,pod_anti_affinity_conflict,app/paymentservice,pod_anti_affinity_conflict,
+boutique/scheduling/117,1.0,1.0,1.0,1.0,1.0,1.0,0.2222222222222222,19.0,0.0,0.0,app/productcatalogservice,pod_anti_affinity_conflict,app/productcatalogservice,pod_anti_affinity_conflict,
+boutique/scheduling/118,1.0,1.0,1.0,1.0,1.0,1.0,0.10256410256410256,40.0,0.02564102564102564,0.0,app/redis-cart,pod_anti_affinity_conflict,app/redis-cart,pod_anti_affinity_conflict,
+boutique/scheduling/119,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,13.0,0.0,0.0,app/shippingservice,pod_anti_affinity_conflict,app/shippingservice,pod_anti_affinity_conflict,

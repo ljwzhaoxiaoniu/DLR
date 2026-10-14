@@ -1,0 +1,178 @@
+[
+  {
+    "case_name": "120",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling\\120\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2001_inorder4-v3b179\\traces\\boutique\\dsh-tsm\\scheduling\\120\\120.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Scheduling_Fault",
+      "fault_object": "app/adservice",
+      "root_cause": "pod_anti_affinity_conflict"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/adservice",
+        "root_cause": "pod_anti_affinity_conflict"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/adservice",
+        "root_cause": "node_cordon_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/adservice",
+        "root_cause": "taint_toleration_mismatch"
+      }
+    ],
+    "tool_call_count": 13,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.23076923076923078,
+      "steps": 14.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "121",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling\\121\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2001_inorder4-v3b179\\traces\\boutique\\dsh-tsm\\scheduling\\121\\121.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Scheduling_Fault",
+      "fault_object": "app/cartservice",
+      "root_cause": "pod_anti_affinity_conflict"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/cartservice",
+        "root_cause": "pod_anti_affinity_conflict"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/cartservice",
+        "root_cause": "node_cordon_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/productcatalogservice",
+        "root_cause": "service_dns_resolution_failure"
+      }
+    ],
+    "tool_call_count": 14,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.21428571428571427,
+      "steps": 15.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "122",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling\\122\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2001_inorder4-v3b179\\traces\\boutique\\dsh-tsm\\scheduling\\122\\122.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Scheduling_Fault",
+      "fault_object": "app/checkoutservice",
+      "root_cause": "pod_anti_affinity_conflict"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "pod_anti_affinity_conflict"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "node_cordon_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "taint_toleration_mismatch"
+      }
+    ],
+    "tool_call_count": 15,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.2,
+      "steps": 16.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "123",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling\\123\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2001_inorder4-v3b179\\traces\\boutique\\dsh-tsm\\scheduling\\123\\123.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Scheduling_Fault",
+      "fault_object": "app/currencyservice",
+      "root_cause": "pod_anti_affinity_conflict"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/currencyservice",
+        "root_cause": "pod_anti_affinity_conflict"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/currencyservice",
+        "root_cause": "node_cordon_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/currencyservice",
+        "root_cause": "taint_toleration_mismatch"
+      }
+    ],
+    "tool_call_count": 16,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.1875,
+      "steps": 17.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]
