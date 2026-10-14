@@ -1,0 +1,45 @@
+{
+  "config": {
+    "config_path": "D:\\Code_Proj\\Cloud-OpsBench\\agents\\cloudops_agent\\configs\\model_configs.yaml",
+    "system": "boutique",
+    "fault_category": "scheduling",
+    "case_split": "",
+    "case_split_file": "",
+    "label_root": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling",
+    "agent_root": "scenarios\\cloudopsbench\\results\\1014_2014_inorder4-v3b185\\traces\\boutique\\dsh-tsm\\scheduling"
+  },
+  "counts": {
+    "total_cases": 164,
+    "selected_cases": 4,
+    "run_cases": 4,
+    "missing_run_cases": 0,
+    "invalid_action_total": 0
+  },
+  "metrics": {
+    "CA": 1.0,
+    "FA": 1.0,
+    "JRA": 1.0,
+    "MC": 1.0,
+    "EOC": 1.0,
+    "ECR": 1.0,
+    "EE": 0.1933,
+    "steps": 19.75,
+    "RAR": 0.0,
+    "invalid_actions": 0.0
+  },
+  "by_root_cause": {
+    "taint_toleration_mismatch": {
+      "n": 4,
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.1933,
+      "steps": 19.75,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+}

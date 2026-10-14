@@ -1,0 +1,8 @@
+system: boutique
+category: scheduling
+case: 148
+query: Partial Service Unreachability.
+rc: 0
+stamp: 1014_2016
+tsm_mcp: http://127.0.0.1:28796/mcp
+bench_mcp: http://127.0.0.1:8000/mcp

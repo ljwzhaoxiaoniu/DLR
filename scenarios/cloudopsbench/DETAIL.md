@@ -14,14 +14,14 @@
 | boutique/infrastructure | 40 | 40 | 0 | 100.0% |
 | boutique/performance | 29 | 29 | 0 | 100.0% |
 | boutique/runtime | 45 | 45 | 0 | 100.0% |
-| boutique/scheduling | 164 | 139 | 25 | 84.8% |
+| boutique/scheduling | 164 | 151 | 13 | 92.1% |
 | boutique/service | 54 | 54 | 0 | 100.0% |
 | boutique/startup | 62 | 62 | 0 | 100.0% |
 | train-ticket/performance | 47 | 47 | 0 | 100.0% |
 | train-ticket/runtime | 96 | 96 | 0 | 100.0% |
 | train-ticket/service | 37 | 37 | 0 | 100.0% |
 | train-ticket/startup | 24 | 24 | 0 | 100.0% |
-| **合计** | **754** | **729** | **25** | **96.7%** |
+| **合计** | **754** | **741** | **13** | **98.3%** |
 
 ## 汇总（去重 · 取最新）
 
@@ -29,22 +29,22 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 720 / 729（98.8%） |
-| CA（组件命中） | 720 / 729（98.8%） |
-| FA（故障型命中） | 721 / 729（98.9%） |
-| ECR（证据链全闭） | 693 / 729（95.1%） |
+| JRA（联合命中） | 732 / 741（98.8%） |
+| CA（组件命中） | 732 / 741（98.8%） |
+| FA（故障型命中） | 733 / 741（98.9%） |
+| ECR（证据链全闭） | 705 / 741（95.1%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 0.9872 | 0.9441 | 0.9506 | 0.286 | 18.2757 | 0.0014 | 0.0041 |
+| 0.9874 | 0.945 | 0.9514 | 0.2843 | 18.2915 | 0.0013 | 0.004 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 243,130 / 146,428 | 54,365 / 2,181,512 | 74% |
+| 241,462 / 145,313 | 54,365 / 2,181,512 | 74% |
 
 ## 分家族索引
 
@@ -55,7 +55,7 @@
 | boutique/infrastructure | 40 | 40 | 40 | 40 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
 | boutique/performance | 29 | 29 | 28 | 28 | [boutique-performance.md](DETAIL/boutique-performance.md) |
 | boutique/runtime | 45 | 45 | 45 | 45 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
-| boutique/scheduling | 164 | 139 | 139 | 138 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
+| boutique/scheduling | 164 | 151 | 151 | 150 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
 | boutique/service | 54 | 54 | 54 | 52 | [boutique-service.md](DETAIL/boutique-service.md) |
 | boutique/startup | 62 | 62 | 62 | 62 | [boutique-startup.md](DETAIL/boutique-startup.md) |
 | train-ticket/performance | 47 | 47 | 46 | 46 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
@@ -412,6 +412,9 @@
 
 
 > **2026-10-14 · 轮次 1014_1337_imgadm-verify1（优化轮一 · 修复位 3 + 回归锚 2）**：① **image 三胞胎判类线重写生效**——全库 59 案扫描（消息形态×真值交叉）定「按失败阶段判类」（transport `lookup/dial` → dns ｜ manifest 本身 `NotFound` / 镜像站 HEAD 裸 403 → 引用错 ｜ **token 步骤 `failed to authorize`（401/403 均算）→ pull-secret**，+ `Image pull secrets: <none>` 佐证），写入 §1+§2 → **startup/43 · /45 复跑双双全满**（rank1 改判 `missing_image_pull_secret` · 12/13 步）；回归锚 startup/46 全满稳。② **§1 never-created 分支补「受害信号先行」+ quota 收口 + caller 收口「entry caller」**——admission/16 **MC 0.75→1.0 · ECR 0→1.0**（信号面补读命中），EOC 0→0.25 残（信号段仍居链尾）→ 按「不强求」记档。③ **admission/21 = 症状面高方差第二实证**：首跑（b134）endpoints+connectivity 早位命中、全满；复跑同开头后跳 object 面、**M0 整段缺席** → EOC 0 —— 两跑两形态（与 admission/6 三谱同型），句不含此机制、判定家族方差、记档。④ 探针：5 节 rebuild、新句全入面 + 老句零回归。⑤ 现值 轮次 179 · 覆盖 549/754 · JRA 547/549。
+
+
+
 
 
 
