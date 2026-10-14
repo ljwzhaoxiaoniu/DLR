@@ -1,6 +1,6 @@
 {
   "name": "dsh-tsm-eval",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "dsh-tsm-eval: the exam system for TSM/DLR. Run a scenario paper (eval/questions.jsonl) through dsh headless, score it with tsm grade, and emit a replayable report (result + process + session-log forensics).",
   "license": "MIT",
