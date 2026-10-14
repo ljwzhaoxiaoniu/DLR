@@ -1,0 +1,398 @@
+[
+  {
+    "case_name": "16",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\admission\\16\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2200_svcquota-verify1\\traces\\boutique\\dsh-tsm\\admission\\16\\16.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Admission_Fault",
+      "fault_object": "namespace/boutique",
+      "root_cause": "namespace_cpu_quota_exceeded"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "namespace/boutique",
+        "root_cause": "namespace_cpu_quota_exceeded"
+      },
+      {
+        "rank": 2,
+        "fault_object": "namespace/boutique",
+        "root_cause": "namespace_pod_quota_exceeded"
+      },
+      {
+        "rank": 3,
+        "fault_object": "namespace/boutique",
+        "root_cause": "namespace_memory_quota_exceeded"
+      }
+    ],
+    "tool_call_count": 12,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 0.25,
+      "ECR": 1.0,
+      "EE": 0.4166666666666667,
+      "steps": 13.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "35",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\admission\\35\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2200_svcquota-verify1\\traces\\boutique\\dsh-tsm\\admission\\35\\35.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Admission_Fault",
+      "fault_object": "namespace/boutique",
+      "root_cause": "namespace_pod_quota_exceeded"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "namespace/boutique",
+        "root_cause": "namespace_pod_quota_exceeded"
+      },
+      {
+        "rank": 2,
+        "fault_object": "namespace/boutique",
+        "root_cause": "namespace_cpu_quota_exceeded"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "missing_service_account"
+      }
+    ],
+    "tool_call_count": 14,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.5,
+      "steps": 15.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "44",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\admission\\44\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2200_svcquota-verify1\\traces\\boutique\\dsh-tsm\\admission\\44\\44.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Admission_Fault",
+      "fault_object": "namespace/boutique",
+      "root_cause": "namespace_service_quota_exceeded"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "namespace/boutique",
+        "root_cause": "namespace_service_quota_exceeded"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/adservice",
+        "root_cause": "service_dns_resolution_failure"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/adservice",
+        "root_cause": "service_selector_mismatch"
+      }
+    ],
+    "tool_call_count": 14,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 0.3333333333333333,
+      "ECR": 1.0,
+      "EE": 0.35714285714285715,
+      "steps": 15.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "45",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\admission\\45\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2200_svcquota-verify1\\traces\\boutique\\dsh-tsm\\admission\\45\\45.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Admission_Fault",
+      "fault_object": "namespace/boutique",
+      "root_cause": "namespace_service_quota_exceeded"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "namespace/boutique",
+        "root_cause": "namespace_service_quota_exceeded"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/cartservice",
+        "root_cause": "service_dns_resolution_failure"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/cartservice",
+        "root_cause": "service_selector_mismatch"
+      }
+    ],
+    "tool_call_count": 10,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 0.3333333333333333,
+      "ECR": 1.0,
+      "EE": 0.3,
+      "steps": 11.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "46",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\admission\\46\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2200_svcquota-verify1\\traces\\boutique\\dsh-tsm\\admission\\46\\46.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Admission_Fault",
+      "fault_object": "namespace/boutique",
+      "root_cause": "namespace_service_quota_exceeded"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "namespace/boutique",
+        "root_cause": "namespace_service_quota_exceeded"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "service_dns_resolution_failure"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "service_selector_mismatch"
+      }
+    ],
+    "tool_call_count": 24,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 0.3333333333333333,
+      "ECR": 1.0,
+      "EE": 0.25,
+      "steps": 25.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "47",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\admission\\47\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2200_svcquota-verify1\\traces\\boutique\\dsh-tsm\\admission\\47\\47.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Admission_Fault",
+      "fault_object": "namespace/boutique",
+      "root_cause": "namespace_service_quota_exceeded"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "namespace/boutique",
+        "root_cause": "namespace_service_quota_exceeded"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/currencyservice",
+        "root_cause": "service_dns_resolution_failure"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/currencyservice",
+        "root_cause": "service_selector_mismatch"
+      }
+    ],
+    "tool_call_count": 13,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 0.3333333333333333,
+      "ECR": 1.0,
+      "EE": 0.46153846153846156,
+      "steps": 14.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "50",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\admission\\50\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2200_svcquota-verify1\\traces\\boutique\\dsh-tsm\\admission\\50\\50.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Admission_Fault",
+      "fault_object": "namespace/boutique",
+      "root_cause": "namespace_service_quota_exceeded"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "namespace/boutique",
+        "root_cause": "namespace_service_quota_exceeded"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/paymentservice",
+        "root_cause": "service_dns_resolution_failure"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "service_env_var_address_mismatch"
+      }
+    ],
+    "tool_call_count": 18,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.3888888888888889,
+      "steps": 19.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "51",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\admission\\51\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2200_svcquota-verify1\\traces\\boutique\\dsh-tsm\\admission\\51\\51.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Admission_Fault",
+      "fault_object": "namespace/boutique",
+      "root_cause": "namespace_service_quota_exceeded"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "namespace/boutique",
+        "root_cause": "namespace_service_quota_exceeded"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/productcatalogservice",
+        "root_cause": "service_dns_resolution_failure"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/productcatalogservice",
+        "root_cause": "service_selector_mismatch"
+      }
+    ],
+    "tool_call_count": 13,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 0.6666666666666666,
+      "ECR": 1.0,
+      "EE": 0.46153846153846156,
+      "steps": 14.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "53",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\admission\\53\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_2200_svcquota-verify1\\traces\\boutique\\dsh-tsm\\admission\\53\\53.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Admission_Fault",
+      "fault_object": "namespace/boutique",
+      "root_cause": "namespace_service_quota_exceeded"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "namespace/boutique",
+        "root_cause": "namespace_service_quota_exceeded"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/redis-cart",
+        "root_cause": "service_dns_resolution_failure"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/cartservice",
+        "root_cause": "service_env_var_address_mismatch"
+      }
+    ],
+    "tool_call_count": 13,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 0.3333333333333333,
+      "ECR": 1.0,
+      "EE": 0.3076923076923077,
+      "steps": 14.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

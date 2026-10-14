@@ -1,0 +1,123 @@
+[2026-10-14 22:08:33] svcquota-verify2 · 9 题 · 2 路 → scenarios/cloudopsbench/results/1014_2208_svcquota-verify2
+[22:08:33] boutique/admission/44 第 1 遍 (:8000)
+[22:08:33] boutique/admission/46 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-admission-44）…
+[start] 基准诊断 MCP（boutique-admission-46）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8000/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_2208_svcquota-verify2/raw/1014_2208_boutique-admission-44
+[22:09:12] boutique/admission/47 第 1 遍 (:8000)
+[start] 基准诊断 MCP（boutique-admission-47）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+boutique-admission-46
+[22:09:18] boutique/admission/50 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-admission-50）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+beResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+[precheck] http://127.0.0.1:8001/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_2208_svcquota-verify2/raw/1014_2209_boutique-admission-47
+[22:10:00] boutique/admission/51 第 1 遍 (:8000)
+[start] 基准诊断 MCP（boutique-admission-51）…
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_2208_svcquota-verify2/raw/1014_2209_boutique-admission-50
+[22:10:02] boutique/admission/53 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-admission-53）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:8001/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_2208_svcquota-verify2/raw/1014_2210_boutique-admission-51
+[22:10:42] boutique/admission/35 第 1 遍 (:8000)
+[start] 基准诊断 MCP（boutique-admission-35）…
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_2208_svcquota-verify2/raw/1014_2210_boutique-admission-53
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+beResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+[precheck] http://127.0.0.1:8001/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_2208_svcquota-verify2/raw/1014_2210_boutique-admission-35
+[22:11:27] boutique/admission/45 第 1 遍 (:8000)
+[start] 基准诊断 MCP（boutique-admission-45）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query
+boutique-admission-16
+[precheck] http://127.0.0.1:8000/mcp ok (12 tools): CheckNodeServiceStatus, CheckServiceConnectivity, DescribeResource, GetAlerts, GetAppYAML, GetClusterConfiguration, GetErrorLogs, GetRecentLogs, GetResources, GetServiceDependencies, GetSourceCode, ListCodeFiles
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1014_2208_svcquota-verify2/raw/1014_2211_boutique-admission-45
+[22:12:06] grade + stats
+[grade] runs=9 → out=scenarios/cloudopsbench/results/1014_2208_svcquota-verify2
+[convert] boutique/admission/44 → scenarios\cloudopsbench\results\1014_2208_svcquota-verify2\traces\boutique\dsh-tsm\admission\44\44.json  steps=11 final=有 preds=3
+[convert] boutique/admission/46 → scenarios\cloudopsbench\results\1014_2208_svcquota-verify2\traces\boutique\dsh-tsm\admission\46\46.json  steps=14 final=有 preds=3
+[convert] boutique/admission/47 → scenarios\cloudopsbench\results\1014_2208_svcquota-verify2\traces\boutique\dsh-tsm\admission\47\47.json  steps=17 final=有 preds=3
+[convert] boutique/admission/50 → scenarios\cloudopsbench\results\1014_2208_svcquota-verify2\traces\boutique\dsh-tsm\admission\50\50.json  steps=15 final=有 preds=3
+[convert] boutique/admission/16 → scenarios\cloudopsbench\results\1014_2208_svcquota-verify2\traces\boutique\dsh-tsm\admission\16\16.json  steps=14 final=有 preds=3
+[convert] boutique/admission/35 → scenarios\cloudopsbench\results\1014_2208_svcquota-verify2\traces\boutique\dsh-tsm\admission\35\35.json  steps=13 final=有 preds=3
+[convert] boutique/admission/51 → scenarios\cloudopsbench\results\1014_2208_svcquota-verify2\traces\boutique\dsh-tsm\admission\51\51.json  steps=14 final=有 preds=3
+[convert] boutique/admission/53 → scenarios\cloudopsbench\results\1014_2208_svcquota-verify2\traces\boutique\dsh-tsm\admission\53\53.json  steps=15 final=有 preds=3
+[convert] boutique/admission/45 → scenarios\cloudopsbench\results\1014_2208_svcquota-verify2\traces\boutique\dsh-tsm\admission\45\45.json  steps=14 final=有 preds=3
+[convert] manifest → scenarios\cloudopsbench\results\1014_2208_svcquota-verify2\traces\manifest.json（共 9 条）
+[grade] 评分组: boutique/admission
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: boutique
+fault_category: admission
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\boutique\admission
+agent_root: scenarios\cloudopsbench\results\1014_2208_svcquota-verify2\traces\boutique\dsh-tsm\admission
+--------------------------------------------------------------------------------
+total_cases: 58
+selected_cases: 9
+run_cases: 9
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 0.6944
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.3864
+steps (Average Diagnostic Steps per Case): 15.1111
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] boutique_admission: scenarios\cloudopsbench\results\1014_2208_svcquota-verify2\boutique_admission_questions.csv
+
+[grade] 完成
+  summary.md   : scenarios/cloudopsbench/results/1014_2208_svcquota-verify2/summary.md
+  questions.csv: scenarios/cloudopsbench/results/1014_2208_svcquota-verify2/questions.csv
+  traces/      : scenarios/cloudopsbench/results/1014_2208_svcquota-verify2/traces
+[stats] 轮次 230 · 覆盖 754/754 · JRA 752/754
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\results\STATS.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL/*.md（12 个家族）
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\overview.html
+  + session-fab81bd1-1193-…  boutique/admission/44  1014_2208_boutique-admission-44
+  + session-d067df9a-a647-…  boutique/admission/46  1014_2208_boutique-admission-46
+  + session-b27cc4d3-7c0e-…  boutique/admission/47  1014_2209_boutique-admission-47
+  + session-ebcd0838-69ff-…  boutique/admission/50  1014_2209_boutique-admission-50
+  + session-4339df92-f8e8-…  boutique/admission/16  1014_2210_boutique-admission-16
+  + session-f4532f71-f287-…  boutique/admission/35  1014_2210_boutique-admission-35
+  + session-8e57df5a-47bb-…  boutique/admission/51  1014_2210_boutique-admission-51
+  + session-5d5fbc9c-4230-…  boutique/admission/53  1014_2210_boutique-admission-53
+  + session-f4de2b62-8d55-…  boutique/admission/45  1014_2211_boutique-admission-45
+[sync] 扫到 run 847（无 session 0）· 新登记 9 · 清出 0（避重叠）· 跳过已归组 139 · 解除归档 0 · 全量组共 715
+[ws] 已写 D:\Code_Proj\DLR Proj\DSH-based Agent Service\.dsh-home\storages\workspace.json（备份 .bak-1014_221224）
+[retire] 目标 5 条 → 「归档」（D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob-archive）
+  ✓ session-4339df92-f8e8-…  [cloudopsbench-all]  D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob
+  ✓ session-fab81bd1-1193-…  [cloudopsbench-all]  D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob
+  ✓ session-f4de2b62-8d55-…  [cloudopsbench-all]  D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob
+  ✓ session-d067df9a-a647-…  [cloudopsbench-all]  D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob
+  ✓ session-ebcd0838-69ff-…  [cloudopsbench-all]  D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob
+  → session-4339df92-f8e8-…  D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob → D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob-archive
+  → session-fab81bd1-1193-…  D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob → D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob-archive
+  → session-f4de2b62-8d55-…  D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob → D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob-archive
+  → session-d067df9a-a647-…  D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob → D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob-archive
+  → session-ebcd0838-69ff-…  D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob → D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob-archive
+[ws] 已写 D:\Code_Proj\DLR Proj\DSH-based Agent Service\.dsh-home\storages\workspace.json（备份 .bak-1014_221228）
+[retire] 完成 5 条 · 复核 cwd 5/5 · 备份/还原：D:\Code_Proj\DLR Proj\tmp_scripts\cob_session_retire_20261014_221227
+[提示] dsh web 重启后可见（bash "DSH-based Agent Service/dsh_dlr/run_web.sh"）

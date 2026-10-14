@@ -1,0 +1,10 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/16,1.0,1.0,1.0,1.0,0.25,1.0,0.4166666666666667,13.0,0.0,0.0,namespace/boutique,namespace_cpu_quota_exceeded,namespace/boutique,namespace_cpu_quota_exceeded,
+boutique/admission/35,1.0,1.0,1.0,1.0,1.0,1.0,0.5,15.0,0.0,0.0,namespace/boutique,namespace_pod_quota_exceeded,namespace/boutique,namespace_pod_quota_exceeded,
+boutique/admission/44,1.0,1.0,1.0,1.0,0.3333333333333333,1.0,0.35714285714285715,15.0,0.0,0.0,namespace/boutique,namespace_service_quota_exceeded,namespace/boutique,namespace_service_quota_exceeded,
+boutique/admission/45,1.0,1.0,1.0,1.0,0.3333333333333333,1.0,0.3,11.0,0.0,0.0,namespace/boutique,namespace_service_quota_exceeded,namespace/boutique,namespace_service_quota_exceeded,
+boutique/admission/46,1.0,1.0,1.0,1.0,0.3333333333333333,1.0,0.25,25.0,0.0,0.0,namespace/boutique,namespace_service_quota_exceeded,namespace/boutique,namespace_service_quota_exceeded,
+boutique/admission/47,1.0,1.0,1.0,1.0,0.3333333333333333,1.0,0.46153846153846156,14.0,0.0,0.0,namespace/boutique,namespace_service_quota_exceeded,namespace/boutique,namespace_service_quota_exceeded,
+boutique/admission/50,1.0,1.0,1.0,1.0,1.0,1.0,0.3888888888888889,19.0,0.0,0.0,namespace/boutique,namespace_service_quota_exceeded,namespace/boutique,namespace_service_quota_exceeded,
+boutique/admission/51,1.0,1.0,1.0,1.0,0.6666666666666666,1.0,0.46153846153846156,14.0,0.0,0.0,namespace/boutique,namespace_service_quota_exceeded,namespace/boutique,namespace_service_quota_exceeded,
+boutique/admission/53,1.0,1.0,1.0,1.0,0.3333333333333333,1.0,0.3076923076923077,14.0,0.0,0.0,namespace/boutique,namespace_service_quota_exceeded,namespace/boutique,namespace_service_quota_exceeded,

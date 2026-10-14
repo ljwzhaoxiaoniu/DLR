@@ -29,28 +29,28 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 745 / 754（98.8%） |
-| CA（组件命中） | 745 / 754（98.8%） |
-| FA（故障型命中） | 746 / 754（98.9%） |
-| ECR（证据链全闭） | 718 / 754（95.2%） |
+| JRA（联合命中） | 752 / 754（99.7%） |
+| CA（组件命中） | 752 / 754（99.7%） |
+| FA（故障型命中） | 753 / 754（99.9%） |
+| ECR（证据链全闭） | 724 / 754（96.0%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 0.9876 | 0.946 | 0.9523 | 0.2821 | 18.3966 | 0.0013 | 0.004 |
+| 0.9903 | 0.946 | 0.9602 | 0.2826 | 18.3462 | 0.0013 | 0.004 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 241,251 / 146,428 | 54,365 / 2,181,512 | 74% |
+| 241,049 / 145,925 | 54,365 / 2,181,512 | 74% |
 
 ## 分家族索引
 
 | 家族 | 全量 | 已跑 | JRA | 链全闭 | 明细 |
 |---|---|---|---|---|---|
-| boutique/admission | 58 | 58 | 51 | 50 | [boutique-admission.md](DETAIL/boutique-admission.md) |
+| boutique/admission | 58 | 58 | 58 | 56 | [boutique-admission.md](DETAIL/boutique-admission.md) |
 | boutique/codedefect | 98 | 98 | 98 | 98 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
 | boutique/infrastructure | 40 | 40 | 40 | 40 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
 | boutique/performance | 29 | 29 | 28 | 28 | [boutique-performance.md](DETAIL/boutique-performance.md) |
@@ -412,6 +412,8 @@
 
 
 > **2026-10-14 · 轮次 1014_1337_imgadm-verify1（优化轮一 · 修复位 3 + 回归锚 2）**：① **image 三胞胎判类线重写生效**——全库 59 案扫描（消息形态×真值交叉）定「按失败阶段判类」（transport `lookup/dial` → dns ｜ manifest 本身 `NotFound` / 镜像站 HEAD 裸 403 → 引用错 ｜ **token 步骤 `failed to authorize`（401/403 均算）→ pull-secret**，+ `Image pull secrets: <none>` 佐证），写入 §1+§2 → **startup/43 · /45 复跑双双全满**（rank1 改判 `missing_image_pull_secret` · 12/13 步）；回归锚 startup/46 全满稳。② **§1 never-created 分支补「受害信号先行」+ quota 收口 + caller 收口「entry caller」**——admission/16 **MC 0.75→1.0 · ECR 0→1.0**（信号面补读命中），EOC 0→0.25 残（信号段仍居链尾）→ 按「不强求」记档。③ **admission/21 = 症状面高方差第二实证**：首跑（b134）endpoints+connectivity 早位命中、全满；复跑同开头后跳 object 面、**M0 整段缺席** → EOC 0 —— 两跑两形态（与 admission/6 三谱同型），句不含此机制、判定家族方差、记档。④ 探针：5 节 rebuild、新句全入面 + 老句零回归。⑤ 现值 轮次 179 · 覆盖 549/754 · JRA 547/549。
+
+
 
 
 
