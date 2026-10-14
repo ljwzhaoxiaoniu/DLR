@@ -1,6 +1,6 @@
 # 评测明细 · boutique/startup — cloudopsbench
 
-> 本家族已跑 **56/62** 题：JRA ✅56 ❌0 ｜ 证据链全闭 56 ｜ token 中位 83,339 ｜ 生成 2026-10-14T11:00:09.483Z
+> 本家族已跑 **62/62** 题：JRA ✅62 ❌0 ｜ 证据链全闭 62 ｜ token 中位 83,254 ｜ 生成 2026-10-14T11:13:27.392Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -63,6 +63,12 @@
 | [54](#case-54) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 72,921 | 0 | 0 | 1014_1853_inorder4-v3b146 | 全对·链闭 |
 | [55](#case-55) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 11 | 67,892 | 0 | 0 | 1014_1855_inorder4-v3b147 | 全对·链闭 |
 | [56](#case-56) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 82,653 | 0 | 0 | 1014_1858_inorder4-v3b148 | 全对·链闭 |
+| [57](#case-57) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 69,364 | 0 | 0 | 1014_1900_inorder4-v3b149 | 全对·链闭 |
+| [58](#case-58) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 11 | 83,254 | 0 | 0 | 1014_1902_inorder4-v3b150 | 全对·链闭 |
+| [59](#case-59) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 12 | 70,378 | 0 | 0 | 1014_1904_inorder4-v3b151 | 全对·链闭 |
+| [60](#case-60) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 12 | 79,351 | 0 | 0 | 1014_1906_inorder4-v3b152 | 全对·链闭 |
+| [61](#case-61) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 12 | 86,157 | 0 | 0 | 1014_1908_inorder4-v3b153 | 全对·链闭 |
+| [62](#case-62) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 98,602 | 0 | 0 | 1014_1910_inorder4-v3b154 | 全对·链闭 |
 
 ## 证据正文
 
@@ -457,4 +463,46 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 12 · tokens 82,653
 - **raw 日志**：[results/1014_1858_inorder4-v3b148/raw/1014_1859_boutique-startup-56](../results/1014_1858_inorder4-v3b148/raw/1014_1859_boutique-startup-56/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Only paymentservice is unreachable (partial): pods listing shows its sole pod paymentservice-5b54b484cf-crf67 as 0/1 ErrImagePull while all other 10 boutique services are 1/1 Running; deployments show paymentservice 0/1 AVAILABLE 0; CheckServiceConnectivity(paymentservice,50051) = Connection Failed. The kubelet event names the failing stage verbatim: 'Failed to pull image ... failed to authorize: failed to fetch anonymous token: unexpected status from GET request to https://ghcr.io/token?scope=...: 401 Unauthorized', plus 'FailedToRetrieveImagePullSecret ... (non-existent-secret)' -> ErrImageP
+
+### case-57
+
+- **结论**：`app/productcatalogservice` + `missing_image_pull_secret` ｜ 标签 `app/productcatalogservice` + `missing_image_pull_secret`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 12 · tokens 69,364
+- **raw 日志**：[results/1014_1900_inorder4-v3b149/raw/1014_1901_boutique-startup-57](../results/1014_1900_inorder4-v3b149/raw/1014_1901_boutique-startup-57/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods listing in namespace boutique shows a single outlier: productcatalogservice-7675b8db49-rjsvp is 0/1 ImagePullBackOff (all other 10 pods are 1/1 Running), and Endpoints for Service productcatalogservice is empty (its declared port 3550 matches containerPort 3550, ruling out the addressing layer). The pod's own sheet carries the pull message verbatim: 'failed to pull and unpack image "ghcr.io/testuser177/solar-system:latest": ... failed to authorize: failed to fetch anonymous token: unexpected status from GET request to https://ghcr.io/token?...: 401 Unauthorized' - the failure sits at the 
+
+### case-58
+
+- **结论**：`app/recommendationservice` + `missing_image_pull_secret` ｜ 标签 `app/recommendationservice` + `missing_image_pull_secret`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3 · steps 11 · tokens 83,254
+- **raw 日志**：[results/1014_1902_inorder4-v3b150/raw/1014_1903_boutique-startup-58](../results/1014_1902_inorder4-v3b150/raw/1014_1903_boutique-startup-58/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods listing in boutique shows a single outlier: recommendationservice-78d74cd666-2qw2g 0/1 ErrImagePull (all other 10 services 1/1 Running, RESTARTS 0; GetAlerts reports no metric anomalies). The pod's own events carry the mechanism verbatim: 'Failed to pull image "ghcr.io/testuser177/solar-system:latest": failed to authorize: failed to fetch anonymous token: unexpected status from GET request to https://ghcr.io/token?...: 401 Unauthorized' plus 'FailedToRetrieveImagePullSecret - Unable to retrieve some image pull secrets (non-existent-secret)'. The failure is at the registry TOKEN step, not 
+
+### case-59
+
+- **结论**：`app/redis-cart` + `missing_image_pull_secret` ｜ 标签 `app/redis-cart` + `missing_image_pull_secret`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3636 · steps 12 · tokens 70,378
+- **raw 日志**：[results/1014_1904_inorder4-v3b151/raw/1014_1905_boutique-startup-59](../results/1014_1904_inorder4-v3b151/raw/1014_1905_boutique-startup-59/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All pods in boutique are 1/1 Running except the sole replica of redis-cart (redis-cart-69f96b5bd6-6t72v), which is stuck 0/1 in ErrImagePull/ImagePullBackOff on worker-01. The pull message names the failing stage verbatim: 'failed to resolve reference "ghcr.io/testuser177/redis:alpine": failed to authorize: failed to fetch anonymous token: unexpected status from GET request to https://ghcr.io/token?scope=repository%3Atestuser177%2Fredis%3Apull&service=ghcr.io: 403 Forbidden' — a rejection at the registry token step (credentials side), not a manifest rejection (incorrect reference) nor 'lookup 
+
+### case-60
+
+- **结论**：`app/redis-cart` + `volume_mount_permission_denied` ｜ 标签 `app/redis-cart` + `volume_mount_permission_denied`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3636 · steps 12 · tokens 79,351
+- **raw 日志**：[results/1014_1906_inorder4-v3b152/raw/1014_1907_boutique-startup-60](../results/1014_1906_inorder4-v3b152/raw/1014_1907_boutique-startup-60/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods listing shows exactly one outlier: redis-cart-79598c9984-fs47p 0/1 CrashLoopBackOff with 4 restarts, while all other boutique pods are 1/1 Running. Connectivity probing the declared Service port (redis-cart:6379) from debug pods on worker-01/02/03 returns 'Connection Failed' on all three nodes, confirming the partial unreachability. The pod sheet shows the redis container Terminated with Exit Code 1, Ready False, Restart Count 4, mounting /data from volume redis-data, and kubelet events 'Liveness/Readiness probe failed: dial tcp 172.20.1.167:6379: connect: connection refused' plus 'Back-o
+
+### case-61
+
+- **结论**：`app/redis-cart` + `volume_mount_permission_denied` ｜ 标签 `app/redis-cart` + `volume_mount_permission_denied`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3636 · steps 12 · tokens 86,157
+- **raw 日志**：[results/1014_1908_inorder4-v3b153/raw/1014_1908_boutique-startup-61](../results/1014_1908_inorder4-v3b153/raw/1014_1908_boutique-startup-61/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Frontend entry error logs (118/548, 21.5%) show the cart/checkout path failing with 'Can't access cart storage … RedisConnectionException: UnableToConnect on redis-cart:6379'. The pods inventory shows exactly one outlier: redis-cart-79f6dc5894-rcnrc 0/1 CrashLoopBackOff (4 restarts) on worker-01, all other boutique services 1/1 Running. Connectivity probe on the Service's declared port 6379 fails from worker-01/02/03 (Connection Failed). The pod's own record shows Last State Terminated, Exit Code 1, with BackOff events, and its raw logs give the mechanism verbatim: 'Fatal error: can't open the
+
+### case-62
+
+- **结论**：`app/redis-cart` + `volume_mount_permission_denied` ｜ 标签 `app/redis-cart` + `volume_mount_permission_denied`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 98,602
+- **raw 日志**：[results/1014_1910_inorder4-v3b154/raw/1014_1910_boutique-startup-62](../results/1014_1910_inorder4-v3b154/raw/1014_1910_boutique-startup-62/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Inventory of namespace boutique shows a single outlier: pod redis-cart-79598c9984-cncj7, 0/1 CrashLoopBackOff with 4 restarts (all other 10 pods 1/1 Running). Victim signal first: Service redis-cart (ClusterIP 10.68.147.150, 6379/TCP) has an EMPTY endpoints list, active TCP probes on its declared port 6379 fail from worker-01/02/03 ('Connection Failed' x3), and its sole caller cartservice logs 122x 'Can't access cart storage ... UnableToConnect on redis-cart:6379'. Owner chain: deployment/redis-cart 0/1 UP-TO-DATE, 0 AVAILABLE. Mechanism read from the victim's own container log: redis reaches 
 

@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/42,1.0,1.0,1.0,1.0,0.5,1.0,0.42857142857142855,15.0,0.0,0.0,namespace/boutique,namespace_pod_quota_exceeded,namespace/boutique,namespace_pod_quota_exceeded,
+boutique/scheduling/21,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,13.0,0.0,0.0,app/paymentservice,cpu_capacity_mismatch,app/paymentservice,cpu_capacity_mismatch,
+boutique/scheduling/35,1.0,1.0,1.0,1.0,1.0,1.0,0.2857142857142857,15.0,0.0,0.0,app/cartservice,memory_capacity_mismatch,app/cartservice,memory_capacity_mismatch,
+boutique/scheduling/69,1.0,1.0,1.0,1.0,1.0,1.0,0.23529411764705882,18.0,0.0,0.0,app/recommendationservice,node_affinity_mismatch,app/recommendationservice,node_affinity_mismatch,

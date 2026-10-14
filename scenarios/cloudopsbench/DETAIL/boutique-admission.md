@@ -1,6 +1,6 @@
 # 评测明细 · boutique/admission — cloudopsbench
 
-> 本家族已跑 **35/58** 题：JRA ✅34 ❌1 ｜ 证据链全闭 33 ｜ token 中位 87,636 ｜ 生成 2026-10-14T11:00:09.483Z
+> 本家族已跑 **42/58** 题：JRA ✅41 ❌1 ｜ 证据链全闭 40 ｜ token 中位 88,036 ｜ 生成 2026-10-14T11:13:27.392Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -42,6 +42,13 @@
 | [33](#case-33) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.3636 | 12 | 70,164 | 0 | 0 | 1014_1853_inorder4-v3b146 | 全对·链闭 |
 | [34](#case-34) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.5333 | 16 | 111,698 | 0 | 0 | 1014_1855_inorder4-v3b147 | 全对·链闭 |
 | [35](#case-35) | 0 | 0 | 0 | 1 | 1 | 1 | 0.4667 | 15 | 90,630 | 0 | 0 | 1014_1858_inorder4-v3b148 | 错误: unparsed_final_answer |
+| [36](#case-36) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.3846 | 14 | 72,838 | 0 | 0 | 1014_1900_inorder4-v3b149 | 全对·链闭 |
+| [37](#case-37) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.4286 | 15 | 89,960 | 0 | 0 | 1014_1902_inorder4-v3b150 | 全对·链闭 |
+| [38](#case-38) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.5714 | 15 | 88,247 | 0 | 0 | 1014_1904_inorder4-v3b151 | 全对·链闭 |
+| [39](#case-39) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4286 | 15 | 103,651 | 0 | 0 | 1014_1906_inorder4-v3b152 | 全对·链闭 |
+| [40](#case-40) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3846 | 14 | 87,627 | 0 | 0 | 1014_1908_inorder4-v3b153 | 全对·链闭 |
+| [41](#case-41) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.3846 | 14 | 88,036 | 0 | 0 | 1014_1910_inorder4-v3b154 | 全对·链闭 |
+| [42](#case-42) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.4286 | 15 | 92,390 | 0 | 0 | 1014_1911_inorder4-v3b155 | 全对·链闭 |
 
 ## 证据正文
 
@@ -289,4 +296,53 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4667 · steps 15 · tokens 90,630
 - **raw 日志**：[results/1014_1858_inorder4-v3b148/raw/1014_1858_boutique-admission-35](../results/1014_1858_inorder4-v3b148/raw/1014_1858_boutique-admission-35/)（ndjson / mcp.jsonl / meta）
 - **错误**：unparsed_final_answer
+
+### case-36
+
+- **结论**：`namespace/boutique` + `namespace_pod_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_pod_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.25 · ECR 1 · EE 0.3846 · steps 14 · tokens 72,838
+- **raw 日志**：[results/1014_1900_inorder4-v3b149/raw/1014_1900_boutique-admission-36](../results/1014_1900_inorder4-v3b149/raw/1014_1900_boutique-admission-36/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique reaches its Pod-count quota. Pods listing shows 10/11 services running and NO currencyservice pod; service/endpoints surfaces show currencyservice endpoints=<none> while its Service declares port 7000, and frontend caller logs show 'dial tcp 10.68.179.223:7000: connect: connection refused' (190/200 errors) plus checkout 'failed to convert shipping cost to currency' — a refused ClusterIP with zero endpoints. Owner chain confirms deployment/currencyservice is 0/1, UP-TO-DATE 0, AVAILABLE 0. The mechanism event closes it verbatim: 'Warning FailedCreate replicaset/currencyservic
+
+### case-37
+
+- **结论**：`namespace/boutique` + `namespace_pod_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_pod_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.25 · ECR 1 · EE 0.4286 · steps 15 · tokens 89,960
+- **raw 日志**：[results/1014_1902_inorder4-v3b150/raw/1014_1902_boutique-admission-37](../results/1014_1902_inorder4-v3b150/raw/1014_1902_boutique-admission-37/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique's ResourceQuota 'pod-count-quota' is saturated (Describe: pods Used 10 / Hard 10), so admission rejects every new Pod. The pods listing (wide) shows 10 Running pods belonging to the other services and NO emailservice pod; deployments listing shows emailservice 0/3 (replicas: 3 desired, 0 available) while all other services are 1/1. The mechanism event is verbatim on the namespace event surface: 'Warning FailedCreate replicaset/emailservice-c86b9b8f6 - Error creating: pods "emailservice-c86b9b8f6-..." is forbidden: exceeded quota: pod-count-quota, requested: pods=1, used: pod
+
+### case-38
+
+- **结论**：`namespace/boutique` + `namespace_pod_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_pod_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.5714 · steps 15 · tokens 88,247
+- **raw 日志**：[results/1014_1904_inorder4-v3b151/raw/1014_1904_boutique-admission-38](../results/1014_1904_inorder4-v3b151/raw/1014_1904_boutique-admission-38/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique's ResourceQuota 'pod-count-quota' is saturated: listing shows pods 10/10 (used=hard=10). The event surface carries the mechanism verbatim: Warning FailedCreate replicaset/frontend-657dd795f 'Error creating: pods "frontend-657dd795f-b7v7n" is forbidden: exceeded quota: pod-count-quota, requested: pods=1, used: pods=10, limited: pods=10', repeated continuously and still live at 36s. Symptom side matches: deployments listing shows only frontend as the outlier at 0/1 READY with UP-TO-DATE 0 (no pod object was ever created), frontend and frontend-external endpoints are <none> (al
+
+### case-39
+
+- **结论**：`namespace/boutique` + `namespace_pod_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_pod_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4286 · steps 15 · tokens 103,651
+- **raw 日志**：[results/1014_1906_inorder4-v3b152/raw/1014_1906_boutique-admission-39](../results/1014_1906_inorder4-v3b152/raw/1014_1906_boutique-admission-39/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique's ResourceQuota 'pod-quota' (hard pods=10) is fully consumed: resourcequota shows 'pods 10/10'. The pods listing holds exactly 10 pods while paymentservice has no pod at all; deployments listing shows 'paymentservice 0/1 0 0' with condition 'ReplicaFailure True FailedCreate'. The namespace events surface carries the verbatim mechanism: Warning FailedCreate replicaset/paymentservice-78c5996648 'Error creating: pods "paymentservice-78c5996648-svw4h" is forbidden: exceeded quota: pod-quota, requested: pods=1, used: pods=10, limited: pods=10' (retried repeatedly). The victim's o
+
+### case-40
+
+- **结论**：`namespace/boutique` + `namespace_pod_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_pod_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3846 · steps 14 · tokens 87,627
+- **raw 日志**：[results/1014_1908_inorder4-v3b153/raw/1014_1908_boutique-admission-40](../results/1014_1908_inorder4-v3b153/raw/1014_1908_boutique-admission-40/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique's ResourceQuota 'pod-count-quota' is saturated at pods 10/10. The productcatalogservice ReplicaSet repeatedly fails admission: namespace events show 'Warning FailedCreate replicaset/productcatalogservice-ddb46fc86 Error creating: pods "productcatalogservice-ddb46fc86-72s99" is forbidden: exceeded quota: pod-count-quota, requested: pods=1, used: pods=10, limited: pods=10', and the quota listing confirms 'pod-count-quota ... pods: 10/10'. Consequently the deployment reads 0/1 READY, UP-TO-DATE 0 with no pod present under label app=productcatalogservice, and the Service has no 
+
+### case-41
+
+- **结论**：`namespace/boutique` + `namespace_pod_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_pod_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.25 · ECR 1 · EE 0.3846 · steps 14 · tokens 88,036
+- **raw 日志**：[results/1014_1910_inorder4-v3b154/raw/1014_1910_boutique-admission-41](../results/1014_1910_inorder4-v3b154/raw/1014_1910_boutique-admission-41/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Service Availability Disruption.' with no service named in the wording - the namespace inventory was the entry: all 10 running pods are 1/1 with 0 restarts, but recommendationservice has NO pod at all (11 apps defined, 10 pods). GetResources(deployments) shows 'recommendationservice 0/1 0 0' (desired 1, UP-TO-DATE 0 = pods never created). The entry caller's log carries the symptom verbatim: frontend emits 'rpc error: code = Unavailable ... dial tcp 10.68.188.125:8080: connect: connection refused' with message 'failed to get product recommendations' (131/941 lines, 13.9%), and CheckSer
+
+### case-42
+
+- **结论**：`namespace/boutique` + `namespace_pod_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_pod_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.4286 · steps 15 · tokens 92,390
+- **raw 日志**：[results/1014_1911_inorder4-v3b155/raw/1014_1911_boutique-admission-42](../results/1014_1911_inorder4-v3b155/raw/1014_1911_boutique-admission-42/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 10 boutique pods are 1/1 Running with 0 restarts, but redis-cart has no pod at all; its Deployment shows 0/1 updated, 0 available, ReplicaFailure=True/FailedCreate, and Service endpoints are '<none>'. The namespace event surface carries the mechanism verbatim: 'FailedCreate replicaset/redis-cart-6f966d9cc9: pods ... is forbidden: exceeded quota: pod-count-quota, requested: pods=1, used: pods=10, limited: pods=10'. The closing config read confirms it is live: GetResources(resourcequota, boutique) shows 'pod-count-quota pods: 10/10'. Redis-cart's own App YAML (replicas 1, image redis:alpine,
 

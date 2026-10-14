@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/38,1.0,1.0,1.0,1.0,0.5,1.0,0.5714285714285714,15.0,0.0,0.0,namespace/boutique,namespace_pod_quota_exceeded,namespace/boutique,namespace_pod_quota_exceeded,
+boutique/scheduling/17,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,16.0,0.0,0.0,app/cartservice,cpu_capacity_mismatch,app/cartservice,cpu_capacity_mismatch,
+boutique/scheduling/65,1.0,1.0,1.0,1.0,1.0,1.0,0.26666666666666666,16.0,0.0,0.0,app/currencyservice,node_affinity_mismatch,app/currencyservice,node_affinity_mismatch,
+boutique/startup/59,1.0,1.0,1.0,1.0,1.0,1.0,0.36363636363636365,12.0,0.0,0.0,app/redis-cart,missing_image_pull_secret,app/redis-cart,missing_image_pull_secret,

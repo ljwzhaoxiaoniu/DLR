@@ -1,0 +1,90 @@
+[
+  {
+    "case_name": "19",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling\\19\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_1908_inorder4-v3b153\\traces\\boutique\\dsh-tsm\\scheduling\\19\\19.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Scheduling_Fault",
+      "fault_object": "app/emailservice",
+      "root_cause": "cpu_capacity_mismatch"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/emailservice",
+        "root_cause": "cpu_capacity_mismatch"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/emailservice",
+        "root_cause": "node_cordon_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "namespace/boutique",
+        "root_cause": "namespace_cpu_quota_exceeded"
+      }
+    ],
+    "tool_call_count": 11,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.36363636363636365,
+      "steps": 12.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "67",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling\\67\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_1908_inorder4-v3b153\\traces\\boutique\\dsh-tsm\\scheduling\\67\\67.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Scheduling_Fault",
+      "fault_object": "app/frontend",
+      "root_cause": "node_affinity_mismatch"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/frontend",
+        "root_cause": "node_affinity_mismatch"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/frontend",
+        "root_cause": "node_cordon_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/frontend",
+        "root_cause": "taint_toleration_mismatch"
+      }
+    ],
+    "tool_call_count": 15,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.26666666666666666,
+      "steps": 16.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]
