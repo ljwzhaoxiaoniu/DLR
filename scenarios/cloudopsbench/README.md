@@ -1,9 +1,9 @@
 # 场景 2 · K8s 根因诊断（外部基准 `Cloud-OpsBench`）—— TSM + DLR 怎么用
 
 > **定位**：把 TSM（三级语义建模）+ DLR 用到**外部基准 Cloud-OpsBench**（K8s agentic RCA）上的场景——**架构「换场景」的首个真实检验**，也是三级体系"L3 重 / L1 薄"跷跷板的另一端。
-> **规范与原则**（LE / PE / ARCS / PAS、建模规则与自检）在 **[docs/03-design.md](../../docs/03-design.md)**；
+> **规范与原则**（LE / PE / ARCS / PAS、建模规则与自检）在 **[docs/03-design.zh.md](../../docs/03-design.zh.md)**；
 > 本文按用法顺序展开：**数据集介绍（含判分口径）→ 建模应用思路 → 应用结果 → 处理和使用流程 → 实测结果**。
-> 场景包规范（目录约定、换场景 checklist）：[docs/04-application.md](../../docs/04-application.md)。
+> 场景包规范（目录约定、换场景 checklist）：[docs/04-application.zh.md](../../docs/04-application.zh.md)。
 
 ## 一、数据集介绍（外部基准，含判分口径）
 

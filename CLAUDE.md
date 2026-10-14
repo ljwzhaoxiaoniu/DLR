@@ -34,14 +34,14 @@ dsh（headless / web）→ MCP（7 工具）→ TSM Core Service（LanceDB + Neo
 
 | # | 规则 |
 |---|---|
-| 1 | **不执行 `build` / `serve` / `reset`** —— 由项目主手动操作（服务持排他锁、且影响所有并发跑题）。**2.0 后端不在此列**：`start_backend.sh`（幂等）由 agent 负责启停，卡死时杀进程再拉起（见 [docs/run.md](docs/run.md)） |
+| 1 | **不执行 `build` / `serve` / `reset`** —— 由项目主手动操作（服务持排他锁、且影响所有并发跑题）。**2.0 后端不在此列**：`start_backend.sh`（幂等）由 agent 负责启停，卡死时杀进程再拉起（见 [docs/run.zh.md](docs/run.zh.md)） |
 | 2 | **不自行重跑**任何题 —— 默认单轮；任何重跑/多跑/方差验证，先列方案（跑谁、几轮、为什么）等确认 |
 | 3 | **批间停下报数** —— 2.0 一批 **4 题**（2026-10-11 起：跑批易爆内存 → 4 题/批、串行跑），跑完报告结果，等确认再跑下一批 |
 | 4 | **归档须确认** —— Stage 1–4 跑完不自动归档，等结果确认再 `post_process` |
 | 5 | **Python 用绝对路径** `/d/ProgramData/anaconda3/envs/lepe_som/python`，禁止裸 `python`（2.0 默认不用 Python；仅兜底路线） |
 | 6 | **临时文件只进 `tmp_scripts/`**，或随用随删 —— 禁止写盘根 / 仓库散落 |
 | 7 | **判定口径以知识层为准**：术语/公式以 L2 领域共识（`scenarios/<场景>/sources/consensus`）+ L3（`scenarios/<场景>/sources/sop.md`，检索交付 `dlr_search_sop`）为准；冲突时按 `disputes > L3 节口径 > L2 共识 > 源字段字面` |
-| 8 | **SOP 加节有三档准入**：① 数据集错误 ② 无 SOP 跑不对 ③ 无 SOP 时 >15W —— 新库**先裸跑取基线**，只给 ①②③ 写节，**每题最多两遍**；节必须钉**实测事实与陷阱**并附"不必再核、直接作答"（[docs/02-concept.md](docs/02-concept.md) §二 / [docs/04-application.md](docs/04-application.md) §二） |
+| 8 | **SOP 加节有三档准入**：① 数据集错误 ② 无 SOP 跑不对 ③ 无 SOP 时 >15W —— 新库**先裸跑取基线**，只给 ①②③ 写节，**每题最多两遍**；节必须钉**实测事实与陷阱**并附"不必再核、直接作答"（[docs/02-concept.zh.md](docs/02-concept.zh.md) §二 / [docs/04-application.zh.md](docs/04-application.zh.md) §二） |
 
 ---
 
@@ -49,14 +49,14 @@ dsh（headless / web）→ MCP（7 工具）→ TSM Core Service（LanceDB + Neo
 
 | 我要… | 看这篇 |
 |---|---|
-| **全貌与读法** | [docs/README.md](docs/README.md)（索引：叙事四篇 + 操作三篇） |
-| 懂"为什么"（背景与主张） | [docs/01-background.md](docs/01-background.md) |
-| 懂概念（三级 / 准入判据 / 分层确权） | [docs/02-concept.md](docs/02-concept.md) |
-| **建模**（DLR 规范 + 自检清单） | [docs/03-design.md](docs/03-design.md) |
-| **场景包 / 换场景** | [docs/04-application.md](docs/04-application.md) |
-| **跑（起后端 / 跑题 / web / 状态面 / 排障）** | [docs/run.md](docs/run.md) |
-| 评测设计（考卷跟场景、考试系统跟 dsh） | [docs/eval.md](docs/eval.md) |
-| 可移植 / 扩展边界（DSL_SQL · OData 参照） | [docs/roadmap.md](docs/roadmap.md) |
+| **全貌与读法** | [docs/README.zh.md](docs/README.zh.md)（索引：叙事四篇 + 操作三篇） |
+| 懂"为什么"（背景与主张） | [docs/01-background.zh.md](docs/01-background.zh.md) |
+| 懂概念（三级 / 准入判据 / 分层确权） | [docs/02-concept.zh.md](docs/02-concept.zh.md) |
+| **建模**（DLR 规范 + 自检清单） | [docs/03-design.zh.md](docs/03-design.zh.md) |
+| **场景包 / 换场景** | [docs/04-application.zh.md](docs/04-application.zh.md) |
+| **跑（起后端 / 跑题 / web / 状态面 / 排障）** | [docs/run.zh.md](docs/run.zh.md) |
+| 评测设计（考卷跟场景、考试系统跟 dsh） | [docs/eval.zh.md](docs/eval.zh.md) |
+| 可移植 / 扩展边界（DSL_SQL · OData 参照） | [docs/roadmap.zh.md](docs/roadmap.zh.md) |
 | 改 Agent 行为规则 | `DSH-based Agent Service/AGENTS.md`（2.0 入口） |
 | 历史资料 | `archive/`（v2/v3 基线、旧归档、旧分享页）——**与现逻辑无关，勿据此改现状** |
 
@@ -71,7 +71,7 @@ bash "DSH-based Agent Service/scripts/start_backend.sh"               # 起后�
 bash "DSH-based Agent Service/dsh_dlr/run_one.sh" <qid> "<question>"  # 单题（自动预检）
 bash "DSH-based Agent Service/scripts/run_batch.sh" --qids <q1>,<q2> --jobs 3   # 跑一批（产物进 scenarios/<场景>/results/）
 bash "DSH-based Agent Service/dsh_dlr/run_web.sh"                     # Web 对话
-cd "TSM Core Service" && node bin/tsm.mjs grade --run "<批次目录>"    # 判定 → questions.csv + summary.md（口径见 docs/eval.md §五）
+cd "TSM Core Service" && node bin/tsm.mjs grade --run "<批次目录>"    # 判定 → questions.csv + summary.md（口径见 docs/eval.zh.md §五）
 cd "TSM Core Service" && npx tsx src/verify/precheck.ts               # 后端预检（应列出 7 工具）
 node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" doctor   # 考试系统自检（11 项；任一失败非零退出）
 node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" all --qids <q1>,<q2> --out tmp_scripts/<目录>  # 跑+判+报一条龙（默认不进台账；--ledger 才进，且 >5 题需 --yes）
@@ -84,7 +84,7 @@ node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" all --qids <q1>,<q2
 - **token 口径** `total = input + cache_read + reasoning(CoT) + output`（cache_read 可占 80%+），**差异看 steps**
 - **改配置必须 rebuild + 重启**（L1/L2/L3 三层同规：改 yaml / consensus / **sop.md** → 各自 `tsm build` 重建；原「skills/*.md 改文件即生效」的例外已随 L3 检索化取消）；同批次配置必须一致
 - **2.0 判定只看结论句**（`Final Answer:` 区域）：正文里"参考值 / 被否决的备选读法"不算命中（2026-09-29 judge 加固）；写节时 `Expected` 要写**结论句里会给出的那个值**
-- **节写完必须复跑该题**（节晚于跑批生效 → 旧档 ✅ 可能靠假阳性撑着）；节标题须与题面**逐字符**一致（含结尾标点）；判据/口径变动后**全量重判**（口径与流程见 [docs/eval.md](docs/eval.md) §五）
+- **节写完必须复跑该题**（节晚于跑批生效 → 旧档 ✅ 可能靠假阳性撑着）；节标题须与题面**逐字符**一致（含结尾标点）；判据/口径变动后**全量重判**（口径与流程见 [docs/eval.zh.md](docs/eval.zh.md) §五）
 - **`tsm grade` 可能卡死**（重活 = gold 大查询 / 结果集补救；表现为 CPU 不动、无输出）→ 杀该进程重跑该目录即可（金缓存已落盘，不重复付）
 
 ---

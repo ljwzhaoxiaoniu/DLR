@@ -43,7 +43,7 @@ results/
 ## 更新（边跑边更新）
 
 跑题中遇到的**数据集问题 / 建模冲突 / 难题 / 其他** → 在 `../sources/sop.md` 补节并打标
-（口径见 [docs/04-application.md](../../../docs/04-application.md) §二）→ 下一轮跑批读取新 SOP 生效。
+（口径见 [docs/04-application.zh.md](../../../docs/04-application.zh.md) §二）→ 下一轮跑批读取新 SOP 生效。
 
 ## 一轮怎么跑
 

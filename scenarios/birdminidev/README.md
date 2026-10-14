@@ -1,9 +1,9 @@
 # 场景 1 · NL2SQL（数据集 `birdminidev`）—— TSM + DLR 怎么用
 
 > **定位**：把 TSM（三级语义建模）+ DLR 用到真实 NL2SQL 数据集上的**第一个场景**。
-> **规范与原则**（LE / PE / 库表如何抽象成两层 / 建模规则与自检）在 **[docs/03-design.md](../../docs/03-design.md)**；
+> **规范与原则**（LE / PE / 库表如何抽象成两层 / 建模规则与自检）在 **[docs/03-design.zh.md](../../docs/03-design.zh.md)**；
 > 本文按用法顺序展开：**数据集介绍（含数据集缺陷）→ 建模应用思路 → 应用结果 → 处理和使用流程 → 实测结果**。
-> 场景包规范（目录约定、换场景 checklist）：[docs/04-application.md](../../docs/04-application.md)。
+> 场景包规范（目录约定、换场景 checklist）：[docs/04-application.zh.md](../../docs/04-application.zh.md)。
 
 ## 一、数据集介绍（含数据集缺陷）
 
@@ -114,7 +114,7 @@ evidence 的剩余 ────────────────────�
 
 **对账即自证**：`tsm coverage`（开发态）把这三步变成三张对账单——L1 列级/关系级（硬）、L2 残差（启发式）。
 
-**建模原则**：L1 一列一描述、全部取自**数据集原生**（不做语义丰富度补充，保证公平）；数据集的问题与麻烦**不在 L1 修**，交 L3 `sop.md` 承载并打标——口径见 [docs/04-application.md](../../docs/04-application.md) §二。
+**建模原则**：L1 一列一描述、全部取自**数据集原生**（不做语义丰富度补充，保证公平）；数据集的问题与麻烦**不在 L1 修**，交 L3 `sop.md` 承载并打标——口径见 [docs/04-application.zh.md](../../docs/04-application.zh.md) §二。
 
 ## 三、应用结果（本场景的模型）
 
@@ -198,7 +198,7 @@ tsm verify           # 回归套件（对 fixtures 自证；fixtures = 回归快
 tsm viz --open       # 看结构（LE/PE/ARCS/PAS 图谱页）
 tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 ```
-跑题与排障见 [docs/run.md](../../docs/run.md)；换场景见 [docs/04-application.md](../../docs/04-application.md)；评测（考卷 + 考试系统）见 [docs/eval.md](../../docs/eval.md)。
+跑题与排障见 [docs/run.zh.md](../../docs/run.zh.md)；换场景见 [docs/04-application.zh.md](../../docs/04-application.zh.md)；评测（考卷 + 考试系统）见 [docs/eval.zh.md](../../docs/eval.zh.md)。
 
 ## 五、实测结果
 

@@ -4,9 +4,17 @@
 #   git hash-object <file>
 #
 # 规则：每篇文档一对 X.md（英文主）+ X.zh.md（中文对照）。新增一篇 → 在此登记两条哈希。
-# 迁移中（2026-09-30 起，2–3 篇一批）：未落对的文档暂时只有中文单篇。
+# 迁移完成（2026-10-15）：叙事四篇 + 操作三篇全部 AB 对（英主 + .zh.md）。
 README.md: 14d495f07488b316c4c211657d052ef1fdb077f1
-README.zh.md: 7f7fa2418dd21ab878b9632bc611434685dede10
+01-background.md: 1b86813308322a0ec91c57107f8cf8dc96ad33c7
+01-background.zh.md: 58795ee9ef465cfab22bbe48a80b47a29aa0d1e8
+02-concept.md: 1aae69438a8c2549a545b1a75ae89f665234c256
+02-concept.zh.md: 5c367d7e936db9eee43413796a083149bf624b1a
+03-design.md: 2aa063fe10a4da4d919d72157dd82e162c1509b6
+03-design.zh.md: 8a0e82929b12045993b19a1e5ea01805fdb20dde
+04-application.md: a9af067026c48d47c3c943d1ee39ae0c55c38448
+04-application.zh.md: af8084c21b0e8adeab2d936c35c085e5d020347f
+README.zh.md: 221ebcabaf70b8342c2385fae47d551c9226ced3
 run.md: f593934d00630a897a9db4370a0ffca1abdeb041
 run.zh.md: ff2b1e38ac0e46429c162b0d251fb67fbbf8629c
 eval.md: 2b8bbd4c3d1c9e0ca31b47764e92e61ce17ace0a

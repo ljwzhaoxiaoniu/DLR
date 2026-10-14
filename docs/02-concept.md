@@ -1,193 +1,193 @@
-# 概念：三级语义建模（TSM）
+# Concepts: Three-Level Semantic Modeling (TSM)
 
-> **一句话**：TSM 把"回答一个问题需要的东西"按**谁维护、什么时候变**分成三级——数据源级（L1）/ 领域共识级（L2）/ 业务逻辑级（L3）；**准入判据就是治理线**。
-> **出身**：TSM 出自 DLR 体系的研究实践；2.0 起它是产品的**结构性原则**，与评测无关。
+> **In one sentence**: TSM sorts "what it takes to answer a question" into three levels by **who maintains it and when it changes** — data-source level (L1) / domain-consensus level (L2) / business-logic level (L3); **the admission criteria are the governance line**.
+> **Origin**: TSM grew out of research practice in the DLR program; since 2.0 it is a **structural principle** of the product, independent of evaluation.
 
-## 〇、TSM + DLR 是给谁的答案
+## 0. Who TSM + DLR is the answer for
 
-先读总论 [01-background.md](01-background.md)。它把问题摆清楚了：**文本是 schema-on-read 的**——同一句话在不同场景里是断言还是规则，"层级不在文字里，在使用方式里"；语义层要解决的是**赋型问题**（每条知识该站哪一层），而它的两个死法是 W3C 的"铸死"与裸 RAG 的"放任"。
+Read the opening paper [01-background.md](01-background.md) first. It lays the problems out: **text is schema-on-read** — the same sentence is an assertion in one scenario and a rule in another, "its layer is not in the words, it is in the usage"; the semantic layer exists to solve the **typing problem** (which layer each piece of knowledge belongs on) — and its two ways of dying are the W3C's "cast in stone" and bare RAG's "laissez-faire".
 
-**TSM + DLR 的全部设计，就是针对这些问题给出的回答**：
+**The whole design of TSM + DLR is the answer to those problems**:
 
-| 背景篇（01-background）指出的问题 | TSM + DLR 的回答 |
+| Problem raised in 01-background | TSM + DLR's answer |
 |---|---|
-| 层级只有使用侧答案（引用频率 / 覆盖范围 / 变更节奏 / 维护主体） | **准入判据**：按使用侧问四个问题（§二）——判据是"使用方式"的可操作化 |
-| 冻结派把流动铸死 → 人读不懂 + LLM 弱区 | **分层书写**：L3 用业务的话、L1 用数据的话；**双读测试**（业务不皱眉 + 裸 LLM 能执行）落在同一份自然语言上（§四） |
-| 放任派（裸 RAG）层级混乱、口径打架 | **三级分离 + 判序**：`sop > consensus > 字面`，冲突有裁决者（§七） |
-| 换层是常态，需要制度而不是一次性判断 | **换层移民**：挂靠定型 + 探针生成候选 + 人只签字（§二后附） |
-| 实例文本亿级、语义骨架千级，不能互相淹没 | **类级 / 实例级分工**：体系只存"去哪类"的**路由条目**，内容留在业务系统，运行期经 MCP 拉取（§一·体系范围） |
-| 参照系缺失 | **DLR 认领数据架构为纲**：LE-PE 双层解耦（概念 vs 落地），并行使对 schema 的 **correction 权** |
+| The layer has only usage-side answers (citation frequency / coverage / change rhythm / maintainer) | **Admission criteria**: ask four usage-side questions (§2) — the criteria are "usage" made operable |
+| The freeze camp casts the flow in stone → humans cannot read it + it is an LLM weak region | **Layered writing**: L3 in the business's words, L1 in the data's words; the **dual-read test** (no frown from business + executable by a bare LLM) lands on one and the same natural-language text (§4) |
+| The laissez-faire camp (bare RAG): layers muddled, norms colliding | **Three-way separation + precedence**: `sop > consensus > literal`, with an arbiter on conflict (§7) |
+| Layer changes are the norm and need an institution, not one-off judgments | **Layer-migration**: attachment carries the fixation + probes generate candidates + humans only sign (§2 appendix) |
+| Instance text in the hundred-millions, semantic skeleton in the thousands — neither may drown the other | **Class-level / instance-level division**: the system stores only the routing entries ("which *kind* to consult"); the content stays in the business systems and is pulled at runtime over MCP (§1 · system scope) |
+| No frame of reference | **DLR claims the data architecture as the frame**: an LE-PE two-layer decoupling (concept vs implementation), plus a **correction right** over the schema |
 
-**一句话定位**：数字化时代，分层确权的产物是**文档与报表口径**（静态、要人翻译、平台升级即重写）；智能化时代，同一套分层成为**运行态资产**（agent 直接消费、有裁决序、可版本化可回归）——同一件"把秩序固定下来"的事，从"写给人看"变成"机器执行"。
+**One-line positioning**: in the digitization era, layered ownership produced **documents and report norms** — static, needing a human translator, rewritten on every platform upgrade. In the intelligence era the same layering becomes a **runtime asset** — consumed by agents directly, with a precedence order, versionable and regressable. The same act of "fixing the order down" turns from *written for people to read* into *executed by machines*.
 
-## 一、三级是什么
+## 1. What the three levels are
 
-| 级 | 标识 | 载体（2.0） | 回答什么 | 怎么拿到 | 谁维护 | 变更节奏 |
+| Level | Key | Carrier (2.0) | Answers | How it is obtained | Maintained by | Change rhythm |
 |---|---|---|---|---|---|---|
-| **数据源级** L1 | `dlr` | 场景包 `sources/configs/DLR/*.yaml` → 图 + 向量 | 这个领域**有什么**：业务概念、落地在哪、怎么连 | `dlr_semantic_query` → `get_pe_mapping` / `get_le_attrs` | **数据侧** | 随 schema / 数据源演进 |
-| **领域共识级** L2 | `consensus` | 场景包 `sources/consensus/*.jsonl` → 向量 | 题面用词**怎么算 / 怎么过滤**：术语→值、口径、背景 | `dlr_search_consensus` | **领域业务人员** | 随业务口径 |
-| **业务逻辑级** L3 | `sop` | 场景包 `sources/sop.md` → 向量索引（`tsm build` 编译，按题检索） | 这类问题**怎么裁**：打法、例外、陷阱 | `dlr_search_sop(question)` | **业务人员** | 随流程 / 打法 |
+| **Data-source level** L1 | `dlr` | scenario package `sources/configs/DLR/*.yaml` → graph + vectors | What this domain **has**: business concepts, where they land, how they connect | `dlr_semantic_query` → `get_pe_mapping` / `get_le_attrs` | **the data side** | with the schema / data sources |
+| **Domain-consensus level** L2 | `consensus` | scenario package `sources/consensus/*.jsonl` → vectors | How a question's wording **is computed / filtered**: term→value, conventions, background | `dlr_search_consensus` | **domain business staff** | with the business's conventions |
+| **Business-logic level** L3 | `sop` | scenario package `sources/sop.md` → vector index (compiled by `tsm build`, retrieved per question) | How this *kind of question* **is settled**: playbooks, exceptions, traps | `dlr_search_sop(question)` | **business staff** | with the process / playbook |
 
-三级**并行锚定**（不是串行流程）：拿到问题后三级同时取，交叉验证后才进入 SQL 构造。
+The three levels are **anchored in parallel** (not a serial pipeline): once a question arrives, all three are fetched at once and cross-checked before SQL construction begins.
 
-> 命名注：L2 故意不叫 "knowledge"——它不是传统知识库/KG，而是**场景所需、基于 L1 schema 的一类「非 workflow」知识**。
+> Note on naming: L2 is deliberately not called "knowledge" — it is not a traditional knowledge base/KG, but **a class of scenario-required, *non-workflow* knowledge built on the L1 schema**.
 
-**体系范围（同样重要）**：三级的覆盖范围是 **schema 级语义**——结构、值域、粒度、术语、打法。**数据源实例级知识**（"具体某条/某批数据是什么"：客户 38508 是谁、这个月哪个产品卖得最多、这批负值都是退款……）**不在本体系的语义范畴**：
+**System scope (equally important)**: the three levels cover **schema-level semantics** — structure, value domains, granularity, terminology, playbooks. **Data-source instance-level knowledge** ("what some specific row or batch of data is": who customer 38508 is, which product sold most this month, whether these negative values are all refunds…) **is outside this system's semantic scope**:
 
-| 归体系（写进三级） | 不归体系（体系外接入） |
+| In the system (written into the three levels) | Out of the system (attached externally) |
 |---|---|
-| 列的值域、表的粒度 / 样本性质、连接键（L1） | 具体行的值、**逐份快照变化的**具体实体清单、数据的实时分布 |
-| 题面用词 ↔ 术语的口径映射（L2） | 只在某次查询中才知道的事实 |
-| 打法 / 例外 / 陷阱（L3） | — |
+| Column value domains, table granularity / sample nature, join keys (L1) | Concrete row values, concrete entity lists that **change snapshot by snapshot**, the data's live distribution |
+| Question-wording ↔ term convention mapping (L2) | Facts knowable only within one particular query |
+| Playbooks / exceptions / traps (L3) | — |
 
-> **分辨线（2026-10-10 补）**：单元里**每份快照都相同**的结构（服务名册、调用拓扑、节点名册、固定锚键）属**源结构 → L1**；逐份不同的（实例名、IP、状态、报文）才是体系外。判据一句话：**"每份数据里都一样" = 源结构；"每份数据里都不同" = 实例。**
+> **The discriminating line (added 2026-10-10)**: structures that are **the same in every snapshot** (service rosters, call topologies, node rosters, fixed anchor keys) are **source structure → L1**; what differs snapshot by snapshot (instance names, IPs, states, messages) is out of the system. One sentence: **"same in every copy" = source structure; "different in every copy" = instance.**
 
-实例级知识的两条路：**① 即时算**（agent 用 `execute_sql` 从数据里取）；**② 外部接入**（企业自有系统经 **MCP 工具**提供，**SOP 里引用**"这个数去哪里取"）。这样体系保持**水平、可复用**（不随数据变动而腐烂），实例事实的鲜活性交给 MCP。
+Instance-level knowledge takes two routes: **① compute on demand** (the agent pulls it from the data with `execute_sql`); **② external attachment** (the enterprise's own systems provide it via **MCP tools**, and the **SOP references** "where this figure comes from"). This keeps the system **horizontal and reusable** (it does not rot as the data changes), while the freshness of instance facts is delegated to MCP.
 
-## 二、准入判据（= 治理线）
+## 2. Admission criteria (= the governance line)
 
-一条知识该进哪级，**按序问四个问题**：
+To decide which level a piece of knowledge belongs to, **ask four questions, in order**:
 
-0. **它是"具体某条/某批数据"的事实吗？** → **体系外**——不写成知识（即时算，或经外部 MCP 取，见上「体系范围」）。
-1. **它是数据源自身的事实吗？**（列的值域、表的粒度、样本窗口、连接键……与"谁会问什么"无关）
-   → **L1 `dlr`**。哪怕它最初来自别处（比如数据集的 evidence），只要它是场景无关的源事实，就下沉到 L1，**写在对应的实体/属性描述里**。
-2. **它是"题面用词 ↔ 模型术语"的映射，或只为某类说法而存在的约定吗？**（术语→列/值、公式、口径、背景知识）
-   → **L2 `consensus`**。特征是：**非 workflow**，需要场景（业务）语境才成立。
-3. **它是这类问题的打法 / 例外 / 陷阱吗？**（"这种题容易错在哪"、仲裁规则、检查步骤）
-   → **L3 `sop`**。
+0. **Is it a fact about some specific row or batch of data?** → **outside the system** — do not write it as knowledge (compute on demand, or fetch via an external MCP; see "system scope" above).
+1. **Is it a fact about the data source itself?** (column value domains, table granularity, sample windows, join keys… independent of "who will ask what")
+   → **L1 `dlr`**. Even if it originally came from elsewhere (say, a dataset's evidence), as long as it is a scenario-independent source fact it sinks into L1, **written into the corresponding entity/attribute description**.
+2. **Is it a mapping from question wording ↔ model terminology, or a convention that exists only for some class of phrasing?** (term→column/value, formulas, conventions, background knowledge)
+   → **L2 `consensus`**. Its hallmark: **non-workflow** — it only holds with the scenario's (business) context.
+3. **Is it a playbook / exception / trap for this kind of question?** ("where this kind of question typically goes wrong", arbitration rules, check steps)
+   → **L3 `sop`**.
 
-**判断口诀**：
+**The mnemonic**:
 
-| 心里这句话 | 归入 |
+| The sentence in your head | Belongs to |
 |---|---|
-| "这个数据怎么存" | L1 |
-| "这句话查什么列 / 怎么算" | L2 |
-| "这种题容易怎么错" | L3 |
+| "How is this data stored" | L1 |
+| "Which column does this phrasing query / how is it computed" | L2 |
+| "How does this kind of question typically go wrong" | L3 |
 
-边界示例：
+Boundary examples:
 
-| 事实 | 归入 | 理由 |
+| Fact | Belongs to | Why |
 |---|---|---|
-| `Currency` 列取值 CZK / EUR，分别是捷克克朗与欧元 | **L1** | 列的值域——任何使用此数据的人都需要，且与题目无关 |
-| "monthly consumption 是逐客户逐月的聚合额，**不是**单笔金额" | **L1** | 粒度事实；写进 `Consumption` 属性描述（同时消掉"单价 vs 月消费"的混淆） |
-| `transactions_1k` 只是 4 天窗口的 1000 行样本 | **L1** | 数据源自身的性质，决定了任何"某月某产品"类问题的答案 |
-| 题面里的 `2012/8/24` 要按日历日期理解 | **L2** | 题面写法 → 存储格式的换算约定；不是源事实 |
-| `"nationality"` 指的是站点所在国，不是客户字段 | **L2** | 题面用词 → 结构的映射 |
-| "百分比题的分子分母要同口径，分母必须包含无记录的客户" | **L3** | 这类题的打法/陷阱（单题命中时才生效） |
-| "客户 38508 的月消费是多少" 里的 **38508**、"本月销量第一的产品" | **体系外** | 实例级——即时从数据算，或经外部 MCP 取；不沉淀为知识 |
+| The `Currency` column takes CZK / EUR — Czech koruna and euro respectively | **L1** | A column's value domain — every user of this data needs it, and it has nothing to do with any question |
+| "Monthly consumption is a per-customer, per-month aggregate, **not** a single-transaction amount" | **L1** | A granularity fact; written into the `Consumption` attribute description (and it dissolves the "unit price vs monthly spend" confusion) |
+| `transactions_1k` is only a 1,000-row sample over a 4-day window | **L1** | A property of the source itself, which decides the answer to any "some month, some product" question |
+| The `2012/8/24` on the question's face is to be read as a calendar date | **L2** | A conversion convention from question phrasing → storage format; not a source fact |
+| "nationality" refers to the country the station is in, not a customer field | **L2** | A wording → structure mapping |
+| "In percentage questions the numerator and denominator must share the same population, and the denominator must include customers with no records" | **L3** | A playbook/trap for this kind of question (effective only when that question hits it) |
+| The **38508** in "what is customer 38508's monthly consumption", or "the top-selling product this month" | **outside the system** | Instance-level — computed from the data on demand, or fetched via an external MCP; never sedimented as knowledge |
 
-> 与旧版的差别（重要）：**"题面这句话查什么列"未必进 L2**——如果它其实是关于源本身的说明（值域/粒度/样本），按第 1 条**下沉 L1**。实践中 BIRD 的 evidence 大多属于这一类。
+> The difference from earlier versions (important): **"which column does this phrasing query" does not necessarily go to L2** — if it is really a statement about the source itself (value domain / granularity / sample), criterion 1 **sinks it into L1**. In practice most of BIRD's `evidence` falls in this class.
 
-### L3 的加节准入（2026-09-25 定）
+### L3 section admission (decided 2026-09-25)
 
-写一节 L3 不是免费的：**每题都全量载入 `sop.md`**，一节还多一份要维护、要验证的口径。所以加节有**三档准入**：
+Writing an L3 section is not free: **every question loads the whole `sop.md`**, and each section adds one more norm to maintain and verify. So section admission has **three tiers**:
 
-| 档 | 判据 | 依据 |
+| Tier | Criterion | Basis |
 |---|---|---|
-| **① 数据集错误** | 题面 / gold / evidence 自身缺陷 | 它是裁定依据，必须写 |
-| **② 错题** | **没有节就答不对** | 答法/口径缺失，必须写 |
-| **③ 难题** | **无节时成本显著高于带节** | 节的价值是省下探索成本 |
+| **① Dataset defect** | The question / gold / evidence is itself defective | It is the ruling basis; it must be written |
+| **② Failing questions** | **Without the section the question is answered wrong** | The method/convention is missing; it must be written |
+| **③ Expensive questions** | **Without the section the cost is clearly higher than with it** | The section's value is the exploration cost it saves |
 
-三档都要求**先拿到"无节基线"再判**（库里本来无节的题 = 天然基线）；跑对且成本不高的题 = 无据 → 不写节。同一把尺子也用于**回溯复核**既有节——本项目 09-25 用"摘节裸跑"的对照删掉了 debit_card 6 节无据的节。
+All three tiers require **taking the no-section baseline first** (questions that already had no section are the natural baseline); questions answered correctly at a reasonable cost = no evidence → no section. The same ruler applies to **retroactive review** of existing sections — this project used "section ablated, run bare" comparisons on 09-25 to delete six unsupported sections from debit_card.
 
-### 判据之外：换层是制度，不是一次性判断
+### Beyond the criteria: layer migration is an institution, not a one-off judgment
 
-知识会**换层**——一句被反复复用、无人纠正的口径，就该晋升；一条共识被新个体推翻（旧阈值遇上新设备），就该降级为例外条目。所以三级不是"填一次就完"：
+Knowledge **changes layers** — a convention reused again and again, uncorrected, deserves promotion; a consensus overturned by a new individual (an old threshold meeting new equipment) deserves demotion to an exception entry. So the three levels are not "fill once and done":
 
-- **挂靠承担定型**：每条知识登记它属于哪个实体 / 哪个场景类——承诺不在文本里，在**挂靠关系**里（可寻址、可审计）；
-- **探针生成候选**：谁在被反复引用、谁在被反复纠正，由运行观测产出候选（原料 = 会话日志 / 考卷结果，见 [eval.md](eval.md)）——不靠人记得；
-- **人只签字**：晋升 / 降级的决定权在 owner（§三），机器只把候选递到手边。
+- **Attachment carries the fixation**: every piece of knowledge registers which entity / scenario class it belongs to — the commitment is not in the text but in the **attachment relation** (addressable, auditable);
+- **Probes generate candidates**: who is cited repeatedly, who is corrected repeatedly — runtime observation produces the candidates (raw material = session logs / exam results, see [eval.md](eval.md)) — not human memory;
+- **Humans only sign**: the promotion/demotion decision belongs to the owner (§3); the machine only hands the candidate over.
 
-（本项目里 L3 的"事后准入"就是这套制度的雏形：运行暴露问题 → 归类 → 补条目。**横跳从漂移变成移民**。）
+(In this project, L3's "admission after the fact" is the prototype of that institution: runtime exposes a problem → classify → add an entry. **Hopping turns from drift into immigration.**)
 
-## 三、分层确权：企业级的骨架
+## 3. Layered ownership: the enterprise skeleton
 
-TSM 对企业最实际的意义不是技术，是**确权**——"上帝的归上帝，凯撒的归凯撒"：
+TSM's most practical meaning for an enterprise is not technology but **ownership** — "render unto God what is God's, unto Caesar what is Caesar's":
 
-- **业务人员**维护自己的 `sop`（口径、例外、流程，用业务的话写）；
-- **领域业务人员**维护 `consensus`（术语、领域共识）；
-- **数据侧**维护 `dlr`（数据源本身的样子，随库演进）。
+- **Business staff** maintain their `sop` (conventions, exceptions, processes — in the business's words);
+- **Domain business staff** maintain `consensus` (terminology, domain consensus);
+- **The data side** maintains `dlr` (the source itself, as the databases evolve).
 
-三线各有责任方、各有变更节奏、互不污染。由此得到一条**书写纪律**：
+Each line has its own responsible party and its own change rhythm, without cross-contamination. One **writing discipline** follows:
 
-> **文本的分层就是权属的分层**：L3 通篇业务语言、L1 通篇数据语言、L2 居中做对齐。
+> **The text's layering is the ownership's layering**: L3 in business language throughout, L1 in data language throughout, and L2 in the middle doing the alignment.
 
-## 四、分层书写原则：引用下级，不越级描述
+## 4. Layered writing principle: reference your subordinates, never describe above your level
 
-好的分层 = **上层可以引用下级的对象描述；层层对齐、层层收敛；不要越级描述**（2026-09-20 定）。
+Good layering = **an upper level may reference the object descriptions of lower levels; level by level they align and converge; never describe above your level** (decided 2026-09-20).
 
-- **L3 不写库表列原名**（不出现 `yearmonth`、`Consumption`、`transactions_1k` 这类词）。需要指涉某列时，用业务语言说"我要什么数据"，物理映射由 L1/L2 提供。
-- **数据自身的约定可留**（如"期间记录为 YYYYMM 编码"），**库表结构描述不留**。判断标准：这句话是业务在说需求，还是数据库在自我介绍？
-- 反面教材：某条 L3 曾把"每行 = 某客户某月"写成 `yearmonth.Consumption` 级别的数据源描述——**越级**。
-- 同理，**L1 不写题面口径**（那是 L2/L3 的事）；一旦 L1 描述里出现"题目里写 X 时……"，就该上浮或删掉。
+- **L3 does not write database/table/column names** (no `yearmonth`, no `Consumption`, no `transactions_1k`). To refer to a column, say in business language what data is wanted; the physical mapping is L1/L2's job.
+- **Conventions the data itself carries may stay** (e.g. "the period is recorded as a YYYYMM code"); **descriptions of the database structure may not**. The test: is the sentence the business stating a need, or the database introducing itself?
+- Anti-pattern: one L3 section wrote "each row = one customer-month" as a data-source description at the level of `yearmonth.Consumption` — **above its level**.
+- Likewise, **L1 does not write question-level conventions** (that is L2/L3's work); the moment an L1 description says "when a question writes X…", it should float up or be cut.
 
-**验收 = 双读测试**（每条语义条目的唯一标准）：一个不懂技术的业务人员读一遍**不皱眉**，一个裸 LLM 读一遍**能执行**——两条都过才入库。这不是体验问题：**人难懂 = 语料低频 = LLM 弱区**，业务人员的皱眉就是模型的报错，而且是一次零成本的提前返工。
+**Acceptance = the dual-read test** (the single standard for every semantic entry): a non-technical business person reads it once **without frowning**, a bare LLM reads it once **and can execute it** — both pass, it enters the library. This is not an experience concern: **hard for people = low corpus frequency = the LLM's weak region**; a business person's frown is the model's error message — and a free, early rework.
 
-**correction 权**：语义层不擅动 schema，但对 schema 的**描述**享有修正权——"此表名为 X 实为 Y，历史原因，按 Z 理解"。**译者不改编原著，但译者有资格指出原文的笔误。**
+**The correction right**: the semantic layer does not touch the schema on its own, but it holds a correction right over the schema's **description** — "this table is *named* X but *is* Y — a historical accident, read it as Z". **A translator does not rewrite the original, but a translator is entitled to flag typos in it.**
 
-> ⚠ **本项目的边界（2026-09-24）**：使用数据集建模时**不做语义丰富度补充**（公平性）——描述一律取自数据集原生；数据集自身的缺陷**不在 L1 修**，交 L3 承载并**标注类型**；correction 仅限"消除歧义所必需"的最小措辞。见 [04-application.md](04-application.md) §二。
+> ⚠ **This project's boundary (2026-09-24)**: when modeling a dataset we **add no semantic enrichment** (fairness) — descriptions come from the dataset's own material only; the dataset's own defects are **not fixed in L1** but carried by L3 and **tagged by type**; correction is limited to the minimal wording "required to remove ambiguity". See [04-application.md](04-application.md) §2.
 
-## 五、层重随 workload 跷跷板
+## 5. Layer weight is a seesaw with the workload
 
-三级的**投入比例不是固定的**，由负载形态决定：
+The three levels' **investment ratio is not fixed**; the workload's shape decides:
 
-| workload 形态 | L1 | L2 | L3 |
+| Workload shape | L1 | L2 | L3 |
 |---|---|---|---|
-| NL2SQL / BI 问数 | **重**（数据源语义是主要矛盾） | 薄 | 极薄（仅仲裁） |
-| 运维 / agentic（如 RCA 类） | 薄（可建模的结构化面小） | 按需 | **厚**（runbook / 诊断 / 流程） |
+| NL2SQL / BI question-answering | **Heavy** (data-source semantics are the main task) | Thin | Very thin (arbitration only) |
+| Operations / agentic (e.g. RCA) | Thin (little structured surface to model) | As needed | **Thick** (runbooks / diagnosis / process) |
 
-同一套 TSM 吃两种形态，靠的就是分层解耦——**投资哪层由 workload 决定**，不是把三层都填满。
+The same TSM eats both shapes precisely because of the layered decoupling — **which layer gets the investment is the workload's decision**; it is not about filling all three to the brim.
 
-关于 L3 的两个认知（避免低估）：
+Two points about L3 (not to be underestimated):
 
-- 它在本项目（NL2SQL）里薄，是因为 **NL2SQL 太简单**（单查询任务，没有流程可写）；它同时充当**异常承载层**（建模冲突、题面缺陷、陷阱的仲裁）。
-- 但**bench 证明不了 ≠ 不重要**：对企业，L3（业务逻辑）**可能是最重要的一层**——L1 是门槛（工具多、可替代），L2 是词典，L3 才是"我们的数按我们的口径算"的独有资产。
+- It is thin in this project (NL2SQL) because **NL2SQL is too simple** (single-query tasks; there is no process to write); it doubles as the **exception-bearing layer** (arbiter of modeling conflicts, question defects, traps).
+- But **a benchmark cannot prove it unimportant**: for an enterprise, L3 (business logic) is **possibly the most important level** — L1 is a threshold (many tools can do it; replaceable), L2 is a dictionary, and only L3 carries "our numbers computed by our conventions" as a unique asset.
 
-## 六、层职能与上限（难题怎么落地）
+## 6. Layer duties and ceilings (how hard cases land)
 
-三级的职能各有边界；一级配不齐的，**往上开一级，不在本级硬堆**（2026-10-12 定，RCA 场景跑批收敛）。运行态三层**并行召回**（§一）；本节讲的是**开发态**——模型撞上限时怎么扩展。
+Each level has its own duty and its own boundary; when a level cannot be made complete, **open the level above — never pile it up locally** (decided 2026-10-12, converging the RCA scenario's batch runs). At runtime the three levels **recall in parallel** (§1); this section is about the **development time** — how the model extends when it hits a ceiling.
 
-| 级 | 首要职能 | 不是它的活 |
+| Level | Primary duty | Not its job |
 |---|---|---|
-| L1 | **保证寻源正确**——有什么对象、落在哪、怎么取，读法指对源 | 不承担题级判断；描述里吸收额外领域共识只是**加分项** |
-| L2 | **按条补充**——schema 级读法、术语口径，按需一条条生长 | 题级走序装不进条目——"什么时候读"不是读法问题 |
-| L3 | **题间冲突的裁决**——同一读法在不同题下结论相左时的定夺（打法 / 例外 / 收口纪律） | 不进答案、不逐题写：按题面措辞族分节，未暴露成本的措辞不写节 |
+| L1 | **Keep source-finding correct** — what objects exist, where they land, how to fetch them; the reading points at the right source | No question-level judgment; absorbing extra domain consensus in a description is only a **bonus** |
+| L2 | **Increment by entry** — schema-level readings, term conventions, growing one entry at a time as needed | Question-level sequencing does not pack into an entry — "when to read" is not a reading matter |
+| L3 | **Settling inter-question conflicts** — deciding when the same reading yields contradictory conclusions under different questions (playbooks / exceptions / closing discipline) | Never inside an answer, never per question: sections are split by the question-wording family; wordings that have not exposed a cost get no section |
 
-**每层的上限**（撞上限 = 该级结构性配不了，换级才解）：
+**Each level's ceiling** (hitting a ceiling = this level structurally cannot carry it; changing level is the only cure):
 
-- **L1 上限 = 结构**：能表达"有什么、怎么读"，表达不了"怎么走"——链序纪律在 L1 结构上不承载。
-- **L2 上限 = schema 级**：读法全对，agent 仍可能把收口读法当探针提前用——顺序不是读法条目能配的。
-- **L3 上限 = 泛化红线**：绝不由答案倒推；残余失分撞到"再往上没有层可追"（已不属任何级的缺陷）——留观，不调参扑评分器。
+- **L1's ceiling = structure**: it can express "what exists and how to read it", not "how to walk" — chain-order discipline is not carried by L1's structure.
+- **L2's ceiling = schema level**: all readings correct, yet the agent may still use a *closing* reading as a *probe* ahead of turn — order is not something a reading entry can configure.
+- **L3's ceiling = the generalization red line**: never reverse-engineer from answers; a residual loss hitting "there is no level above to chase" (no longer a defect of any level) — keep it on observation; do not tune parameters to chase the scorer.
 
-**难题落地流程**（实操定式）：
+**The landing routine for hard cases** (the operating pattern):
 
-1. **先解剖，再动手**——沿会话 trace 找第一个"观测 ≠ 期望"，判定失败机制住在哪级；不猜、不先改。
-2. **按机制分诊**——缺陷在本级就在本级修（读法指错源 → L1；该有的条目没有 → L2）；"怎么走"缺打法 → L3；读了也不走收口 → **宿主行为规则**（AGENTS 层）。
-3. **最小修**——一次一个实体 / 一条条目；牵动整批读法模板的横切改动单独评估。
-4. **复跑对表**——改完必须复跑暴露问题的题；**跑对不算完**：还要在未经解剖的同类题上验证泛化——防"把答案写进知识层"。
-5. **留档与停止线**——记定性观察 + 提交；未收敛就停下来报方案，不无限重跑；不扑评分器。
+1. **Dissect before touching** — walk the session trace to the first "observation ≠ expectation", and decide which level the failure mechanism lives on; do not guess, do not edit first.
+2. **Triage by mechanism** — a defect on this level is fixed on this level (a reading pointing at the wrong source → L1; a missing entry → L2); a missing "how to walk" playbook → L3; read but still not closing → the **host's behavior rules** (the AGENTS layer).
+3. **Minimum change** — one entity / one entry at a time; cross-cutting edits that move a whole family of reading templates are evaluated on their own.
+4. **Re-run and check against the table** — after editing, re-run the questions that exposed the problem; **passing is not the end**: verify generalization on same-family questions that were not dissected — this prevents "writing the answer into the knowledge layer".
+5. **Record and stop** — write the qualitative observation + commit; if it does not converge, stop and report a plan; no unbounded re-running; do not chase the scorer.
 
-> 反过来：**上层不代偿下层**——L1 读法指错源，L3 再写也补不回；爬梯的前提 = 下级已尽力且干净。本项目实例（RCA 场景）：载体资源误写 = L1 修；收口读法被当探针提前读 = L3 补；机制读到但不走收口 = 行为层兜底——三处各修各级，互不代偿。
+> And the converse: **an upper level does not compensate for a lower one** — if L1's reading points at the wrong source, no amount of L3 writing brings it back; climbing the ladder presupposes that the level below has done its best, cleanly. This project's example (the RCA scenario): a carrier resource miswritten = fix in L1; a closing reading used as an early probe = fix in L3; the mechanism read but not closed = the behavior layer catches it — three fixes, three levels, no mutual compensation.
 
-> **对偶**：运行态按**判序**裁决（§七：`disputes > sop > consensus > 字面`）——建好之后的仲裁；开发态按**上限爬梯**——建设中的扩展。一个对题，一个对失败。
+> **The duality**: at runtime, precedence arbitrates (§7: `disputes > sop > consensus > literal`) — arbitration after construction; at development time, ceilings drive the ladder — extension during construction. One faces questions, the other faces failures.
 
-## 七、答题时怎么用（给 agent）
+## 7. How to use them when answering (for the agent)
 
-1. 先判断"这题缺什么"：**缺结构** → L1；**缺口径/术语** → L2；**缺题级判断** → L3。
-2. 三级**并行发出**，交叉验证后再写 SQL；L1 召回可能排错，L2/L3 用来纠偏。
-3. **判序**（冲突时）：`disputes > SkillPath(SOP) > KnowledgePath(consensus) > 源字段字面`；L3 严格命中本题即最权威。
-4. 结论必须可追溯（工具返回 / SQL 结果），并注明来源。
+1. First decide "what this question lacks": **lacks structure** → L1; **lacks a convention/term** → L2; **lacks question-level judgment** → L3.
+2. Issue the three levels **in parallel**; cross-check before writing SQL; L1 recall can misfire, and L2/L3 correct it.
+3. **Precedence** (on conflict): `disputes > SkillPath(SOP) > KnowledgePath(consensus) > the source field's literal`; an L3 section that strictly matches this question is the highest authority.
+4. Conclusions must be traceable (tool returns / SQL results) and cite their source.
 
-> 具体协议见 `DSH-based Agent Service/AGENTS.md`（执行入口）与认知技能 `skills/paradigm`；本文不重复。
+> The concrete protocol lives in `DSH-based Agent Service/AGENTS.md` (the execution entry) and the `skills/paradigm` cognition skill; this document does not repeat it.
 
-## 八、常见误读
+## 8. Common misreadings
 
-- **把 L2 当"证据库"**——它是口径与术语，不是明细数据；"evidence" 是数据集字段名，不是范式术语。
-- **把 L1 当"随便写的描述"**——L1 只承载源事实；任何题面耦合的表述都不该留在 L1。
-- **把 L3 当评测补丁**——它是业务资产的正式载体；缺陷仲裁只是它在 NL2SQL 形态下的副产品。
-- **认为三层都要填满**——层重随 workload 跷跷板（第五节）。
+- **Treating L2 as an "evidence store"** — it holds conventions and terminology, not detail data; "evidence" is a dataset field name, not a paradigm term.
+- **Treating L1 as "descriptions written loosely"** — L1 carries source facts only; any question-coupled phrasing should not stay in L1.
+- **Treating L3 as an evaluation patch** — it is the formal carrier of business assets; defect arbitration is only its by-product in the NL2SQL shape.
+- **Assuming all three levels must be filled** — layer weight seesaws with the workload (§5).
 
-## 相关
+## Related
 
-- 建模规范：[03-design.md](03-design.md)｜场景包：[04-application.md](04-application.md)
-- 评测设计（考卷跟场景、考试系统跟 dsh）：[eval.md](eval.md)
+- Modeling rules: [03-design.md](03-design.md) | scenario packages: [04-application.md](04-application.md)
+- Evaluation design (the exam paper follows the scenario, the exam system follows dsh): [eval.md](eval.md)

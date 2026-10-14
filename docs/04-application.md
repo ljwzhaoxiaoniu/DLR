@@ -1,114 +1,114 @@
-# 应用：场景包（现有 `birdminidev` 与 `cloudopsbench`）
+# Application: scenario packages (currently `birdminidev` and `cloudopsbench`)
 
-> **定位**：四篇叙事的 **④ 落地（解法）**——把 ①[背景与主张](01-background.md)、②[概念](02-concept.md)、③[设计](03-design.md) 落成**一套可运行的内容包**。
-> **一句话**：**一个场景 = 一套完整的 TSM 内容**，以 git 文本形态存在（Semantic Layer as Code）：可 diff、可评审、可回滚。
+> **Position**: ④ of the four narrative docs — the **application (the solution)**: turning ①[Background and thesis](01-background.md), ②[Concepts](02-concept.md), ③[Design](03-design.md) into **a runnable content package**.
+> **In one sentence**: **one scenario = one complete set of TSM content**, living as git text (Semantic Layer as Code): diffable, reviewable, rollback-able.
 
-> **每个场景自带一份「案例说明」**：`scenarios/<名>/README.md` —— 讲数据集的语义原料原来在哪、怎么被装进三层、每库的抽象决策。它与 [03-design.md](03-design.md) 互为呼应：**规范 ↔ 案例**。
+> **Every scenario carries its own "case notes"**: `scenarios/<name>/README.md` — where the dataset's semantic raw material came from, how it was packed into the three levels, and the abstraction decisions per database. It echoes [03-design.md](03-design.md): **spec ↔ case**.
 
-## 一、一个场景包里有什么（实测结构）
+## 1. What a scenario package contains (the measured structure)
 
 ```
 scenarios/birdminidev/
 ├── sources/
-│   ├── configs/{ER,DLR,RDF}/   # L1 建模源（11 库 × 3 范式；本线消费 DLR）
-│   ├── consensus/*.jsonl       # L2 领域共识源（11 库各一份）
-│   └── sop.md                  # L3 口径源（人写；`tsm build sop` 编译成检索索引）
-├── eval/                       # 考卷：questions.jsonl（500 题：题面+期望+口径来源）
-│   └── build.mjs               # 生成器（node eval/build.mjs 可复现；答案键取 L3 节口径、其余取 gold）
-└── fixtures/                   # 对照真值（verify 套件用，见 §三）
+│   ├── configs/{ER,DLR,RDF}/   # L1 modeling sources (11 databases × 3 paradigms; this line consumes DLR)
+│   ├── consensus/*.jsonl       # L2 domain-consensus sources (one per database × 11)
+│   └── sop.md                  # L3 convention source (human-written; `tsm build sop` compiles it into the retrieval index)
+├── eval/                       # the exam paper: questions.jsonl (500 questions: question + expected + provenience)
+│   └── build.mjs               # the generator (reproducible via node eval/build.mjs; answer keys from L3 clauses, the rest from gold)
+└── fixtures/                   # reference truths (used by the verify suite, see §3)
 ```
 
-现状规模：图 **LE 50 / PE 74 / PA 784 / LA 277 / PAS 37**（共 1185 节点）；向量 **entities 946 · consensus 91 · sop 180**；共识覆盖 11 个 namespace。
+Current scale: graph **LE 50 / PE 74 / PA 784 / LA 277 / PAS 37** (1,185 nodes); vectors **entities 946 · consensus 91 · sop 180**; consensus covers 11 namespaces.
 
-## 二、三层各写什么
+## 2. What each level writes
 
-### L1 `dlr` —— `sources/configs/DLR/*.yaml`
+### L1 `dlr` — `sources/configs/DLR/*.yaml`
 
-- 建模规范、自检清单：**唯一口径在 [03-design.md](03-design.md)**（本文不重复）。
-- 一句话纪律：**只写数据源自身的事实**；L1 **不写题面口径**，也不写实例级事实（见 [02-concept.md](02-concept.md) §一"体系范围"）。
-- **不做语义丰富度补充**（2026-09-24 定，公平性）：描述取自**数据集原生**——CSV 的 `column_name` / `column_description` / `value_description`，加上 evidence 里属于源自身的事实；**不引入外部知识**。发现的数据集缺陷**不在 L1 修**，交 L3 承载并标注（见下）。
+- Modeling spec and self-check list: **the single source of truth is [03-design.md](03-design.md)** (not repeated here).
+- One-line discipline: **write source facts only**; L1 writes **no question-level conventions** and no instance-level facts (see [02-concept.md](02-concept.md) §1 "system scope").
+- **No semantic enrichment** (decided 2026-09-24, fairness): descriptions come from **the dataset's own material** — the CSV's `column_name` / `column_description` / `value_description`, plus the parts of `evidence` that are facts about the source itself; **no external knowledge is introduced**. Dataset defects found are **not fixed in L1** but carried by L3 and tagged (see below).
 
-### L2 `consensus` —— `sources/consensus/*.jsonl`
+### L2 `consensus` — `sources/consensus/*.jsonl`
 
-- **格式**：kid 聚合式 JSON 数组，每条 `{kid, knowledge}`（loader 也兼容 BIRD 式逐条 evidence）。
-- **准入**（[02-concept.md](02-concept.md) §二）：**场景所需 · 基于 L1 schema · 非 workflow**；**不写实例级**。
-- **写什么**：术语 → 列/值的映射、公式与口径、领域背景（如"CZK / EUR 是计费币种"）。
-- **纪律**：**该下沉 L1 的就下沉**——源自身的事实（值域 / 粒度 / 样本性质）留在 L2 就是放错了层；一库一份文件（namespace = 库名）。
-- **语言**：与题面语言一致（英文）。
+- **Format**: a kid-aggregated JSON array, each entry `{kid, knowledge}` (the loader also accepts BIRD-style per-question evidence).
+- **Admission** ([02-concept.md](02-concept.md) §2): **scenario-required · built on the L1 schema · non-workflow**; **no instance-level content**.
+- **What it writes**: term → column/value mappings, formulas and conventions, domain background (e.g. "CZK / EUR are the billing currencies").
+- **Discipline**: **what should sink to L1 sinks** — facts about the source itself (value domains / granularity / sample nature) left in L2 are on the wrong level; one file per database (namespace = database name).
+- **Language**: the same as the questions (English).
 
-### L3 `sop` —— `sources/sop.md`
+### L3 `sop` — `sources/sop.md`
 
-- **形态**：**按题面分节**——每节标题复述一道题（`### When asked: "..."`），正文给这道题的口径 / 打法 / 陷阱；文件头部是一段**阅读协议**（怎么匹配、没命中怎么办、本节只覆盖本题）。
-- **每节必须标注类型**（四类，可多选），写在标题下一行：`> **类型**：数据集问题`
-  | 类型 | 指什么 |
+- **Shape**: **sectioned by question wording** — each section's title restates one question (`### When asked: "..."`), and the body gives that question's conventions / playbook / traps; the file head is a **reading protocol** (how to match, what to do when nothing matches, and that a section covers only its own question).
+- **Every section must be tagged by type** (four types, multi-select), on the line under the title: `> **Type**: dataset issue`
+  | Type | Means |
   |---|---|
-  | **数据集问题** | 题面 / gold / evidence 自身缺陷、样本窗口、错描述——**数据集的问题与麻烦在这里载** |
-  | **建模冲突** | L1/L2 结构与题面的冲突、召回撞库（如"transactions"把召回带去别的库） |
-  | **难题** | 题目本身难：口径陷阱、答案单位、计数单位、比值口径……需要打法 |
-  | **其他** | 兜底（将来的企业口径 / 流程类内容落这里，或再细分） |
-  标注**只供维护与统计，答题时一视同仁**（不改变该节的执行方式）。
-- **硬纪律**：**不写库表列原名**（2026-09-20 定）。判断标准：这句话是业务在说需求，还是数据库在自我介绍？
-- **质量线**（2026-09-26 定）：③ 难题节**不能只复述题面 / 解释术语**——必须钉**实测的事实与陷阱**（计数、集合大小、并列/分布、易错读法），事实**先用 SQL 核过再写**；给出事实后要说明**该事实已确立、照此作答**（否则 agent 会把余量花在自证上）。
-- **补强配方（按需，不是每节都要）**：若某题跑完发现 agent 在**反复自证**（同一节命中、口径也对，却烧掉大量 SQL 求证边界），按这三条补该节（2026-09-28 q37 实证：只改节写法，379k→62k token、SQL 21→2）：① 这题最容易走错的**岔路**是哪条？② 岔路有没有**可实测的具体后果**（数字 / 行数 / 另一个实体——「2,269 行里 218 行考生数为 0」「会选到 1900 Third Street, Alameda」这种粒度，而不是「有些/可能」）？③ 加一句**「已确立，照此作答」**（settled 语气是功能性的：它直接对应 agent 的核查预算）。**只在出问题的节上做**——节的自然写法优先，不要为了凑格式改写健康的节。
-- **节的厚度**：L3 已检索化（`dlr_search_sop` 只取命中那一节）——**节变长不再有全局成本，只在该题命中时付费**。所以补事实时不必心疼字数。
-- **Expected 一致性（不变量）**：`Expected` 里的每个值都必须落在**本节正文口径的答案集合内**。2026-09-28 q27 反例：正文口径"只列有成绩的学校"，Expected 却写了无成绩的学校 → 严守口径的答案反被判 WRONG（`rulingOf` 只按 Expected 判）。
-- **可比口径**：裁定值写成 `> **Expected**：<值>`（多值用 `|` 分隔），判定/裁定都按它算；"真答案 = 空结果"的节**不写 Expected**，正文写清"空"的判据（判据认 `empty list / no data / 为空` 一类说法）。
-- **准入**：**事后、按需**——运行暴露问题 → 归类 → 补节；不预写通用规则（n=1 不成为规则）。三档准入见 [02-concept.md §二](02-concept.md)。
-- **写完必须复跑**（2026-09-29 定）：节补完 → `tsm build sop` → **立刻跑该题对表**。节的生效时点晚于跑批时，归档里那一行还是补节前的结果，而它可能是被假阳性撑着的 ✅（q1136 节晚 11 分钟 / q1472 节晚 4.5 小时，全量重判后才暴露）。
-- **范围限定（防跨题移植）**：节的告诫会被 agent 搬到同型的其他题——q716 把"无 owner 的行留在分母"从 posts 百分比题搬到了 comments 百分比题。凡**可被推广的告诫**都要写明"它属于**本题**的口径"，并指出什么情形不适用（该节已补一句范围限定收口）。
-- **交付**：`tsm build sop` 把源编译成 LanceDB 的 `sop` 索引（题面 → 节），由 `dlr_search_sop` 按题检索——**只取复述本题的那一节**（原 `sync_sop.sh` + `skills/sop` 整文件载入的传输方式已退役，2026-09-28）。真源仍只有这一份 `sop.md`。
+  | **Dataset issue** | The question / gold / evidence is itself defective — sample windows, wrong descriptions: **the dataset's problems and pains are carried here** |
+  | **Modeling conflict** | A clash between L1/L2 structure and the question; recall crossing databases (e.g. "transactions" dragging recall into another database) |
+  | **Hard question** | The question itself is hard: conventions traps, answer units, counting units, ratio conventions… it needs a playbook |
+  | **Other** | Fallback (future enterprise conventions / process content lands here, or gets subdivided later) |
+  The tags **serve maintenance and statistics only; at answering time all sections are equal** (the tag never changes how a section executes).
+- **Hard discipline**: **do not write database/table/column names** (decided 2026-09-20). The test: is the sentence the business stating a need, or the database introducing itself?
+- **Quality line** (decided 2026-09-26): a ③ hard-question section **may not merely restate the question or explain terms** — it must pin **measured facts and traps** (counts, set sizes, ties/distributions, misreadings), and the facts **must be verified with SQL before writing**; after giving the facts, say **the fact is settled — answer by it** (otherwise the agent spends its budget self-verifying).
+- **The reinforcement recipe (on demand, not for every section)**: if a question's run shows the agent **repeatedly self-verifying** (the right section hit, the convention right, yet a lot of SQL burnt probing the boundary), reinforce that section along three lines (measured on 09-28 q37: rewriting the section only, 379k → 62k tokens, SQL 21 → 2): ① which **fork** does this question most easily take wrong? ② does the fork have a **measurably concrete consequence** (a number / a row count / another entity — at the grain of "of the 2,269 rows, 218 have zero test-takers", not "some / possibly")? ③ add one sentence **"settled — answer by it"** (the settled tone is functional: it maps directly onto the agent's verification budget). **Do it only on the sections that showed the problem** — the natural way of writing a section comes first; never rewrite a healthy section to fit a template.
+- **Section thickness**: L3 is retrieval-delivered (`dlr_search_sop` fetches only the matched section) — **a longer section no longer has a global cost; you pay only on the question that hits it.** So do not stint on words when adding facts.
+- **Expected consistency (an invariant)**: every value in `Expected` must fall **inside the answer set of this section's stated convention**. The 09-28 q27 counter-example: the body said "list only schools with scores" while `Expected` carried schools without scores → the convention-faithful answer was judged WRONG (`rulingOf` judges by `Expected` alone).
+- **The comparable convention**: write the ruling value as `> **Expected**: <value>` (multi-value separated by `|`); judging and ruling both use it. A section whose "true answer = empty result" **writes no Expected** and states the emptiness criterion in the body (the criterion recognizes phrasings like `empty list / no data / 为空`).
+- **Admission**: **after the fact, on demand** — runtime exposes a problem → classify → add a section; never pre-write general rules (n=1 is not a rule). The three tiers are in [02-concept.md §2](02-concept.md).
+- **After writing, re-run** (decided 2026-09-29): the section is added → `tsm build sop` → **immediately re-run that question and check against the table**. A section takes effect later than the batch that exposed the problem; the ledger's row still shows the pre-section run — which may be a ✅ propped up by a false positive (q1136's section came 11 minutes late / q1472's 4.5 hours late; both surfaced only after a full re-judging).
+- **Scope limiting (against cross-question transplanting)**: a section's caution gets carried by the agent onto same-shaped questions — q716 transplanted "rows without an owner stay in the denominator" from a posts-percentage question onto a comments-percentage question. Every **generalizable caution** must say it belongs to **this question's** convention, and name the cases where it does not apply (that section has since gained a scope-limiting closing line).
+- **Delivery**: `tsm build sop` compiles the source into LanceDB's `sop` index (question → section), retrieved per question by `dlr_search_sop` — **only the one section restating this question** (the old whole-file transfer of `sync_sop.sh` + `skills/sop` was retired 2026-09-28). The single true source remains this one `sop.md`.
 
-## 三、`fixtures/` —— 对照真值
+## 3. `fixtures/` — reference truths
 
-| 文件 | 对照什么 |
+| File | What it verifies |
 |---|---|
-| `dlr_vector_manifest.json` | YAML → 向量行（id / name / PAS 文本）逐字 |
-| `py_semantic_query.json` | 语义召回的结构、顺序与 confidence |
-| `py_consensus_search.json` | L2 检索的内容与分数 |
-| `py_pe_mapping.json` | 第二跳全量映射（含 `database_url`），JSON 逐字节 |
-| `py_execute_sql.json` | SQL 执行结果与拒绝口径 |
+| `dlr_vector_manifest.json` | YAML → vector rows (id / name / PAS text), character by character |
+| `py_semantic_query.json` | semantic recall's structure, order, and confidence |
+| `py_consensus_search.json` | L2 retrieval's content and scores |
+| `py_pe_mapping.json` | the second hop's full mapping (including `database_url`), byte for byte as JSON |
+| `py_execute_sql.json` | SQL execution results and rejection conventions |
 
-**2.0 定位 = 回归快照**：Python 线已删，这些不再是"跨实现 parity"，而是**改建模后的自证基线**——改了 YAML / consensus，跑 `src/verify/*` 看结果是否**符合预期地**变化；预期变化则一并更新快照。
+**2.0 repositioning = regression snapshots**: the Python line is gone; these are no longer "cross-implementation parity" but **the self-证 baseline after modeling changes** — after editing YAML / consensus, run `src/verify/*` and check the results changed **as expected**; expected changes get the snapshots updated along.
 
-## 四、`eval/` —— 考卷（✅ 已落地：500 题）
+## 4. `eval/` — the exam paper (✅ landed: 500 questions)
 
-- 每个场景自带考卷：`eval/questions.jsonl`，每题 `{question, expected, source}`（`source` = 口径来源，便于判错归因）。
-- **birdminidev 现状**：500 行 = **L3 节口径 74 处**（翻盘题的答案键）+ **gold 426 处**；生成器 `eval/build.mjs`（`node eval/build.mjs` 可复现，答案键与台账互证：74/426 与评定分栏**逐项一致**）。
-- **考卷跟场景走、考试系统跟 dsh 走**（独立 bundle）——见 [eval.md](eval.md)。
+- Every scenario carries its own paper: `eval/questions.jsonl`, each entry `{question, expected, source}` (`source` = the provenience of the answer key, for attribution when a failure is judged).
+- **birdminidev today**: 500 lines = **74 from L3 clause conventions** (answer keys of overturned questions) + **426 from gold**; the generator `eval/build.mjs` (`node eval/build.mjs`, reproducible; the keys cross-check with the ledger: 74/426 match the ruling columns **item by item**).
+- **The exam paper follows the scenario; the exam system follows dsh** (an independent bundle) — see [eval.md](eval.md).
 
-## 五、评审：双读测试
+## 5. Review: the dual-read test
 
-每条语义条目（L1 描述 / L2 条目 / L3 节）入库前过**双读**：一个不懂技术的业务人员读一遍**不皱眉**，一个裸 LLM 读一遍**能执行**。两条都过才入库——人的皱眉就是模型的报错（[02-concept.md](02-concept.md) §四）。
+Every semantic entry (L1 description / L2 entry / L3 section) passes **dual read** before entering the library: a non-technical business person reads it once **without frowning**; a bare LLM reads it once **and can execute it**. Both pass, it enters — a human's frown is the model's error message ([02-concept.md](02-concept.md) §4).
 
-## 六、换场景 checklist
+## 6. Scenario-switch checklist
 
 ```bash
-# 1) 指向新场景（或写进 .env 的 TSM_SCENARIO）
+# 1) point at the new scenario (or put it in .env as TSM_SCENARIO)
 export TSM_SCENARIO="/abs/path/scenarios/<name>"
 
-# 2) 构建三层
+# 2) build the three levels
 cd "TSM Core Service"
-npx tsx src/build/buildLance.ts --all          # L1 向量（LE/PE/属性/PAS）
-npx tsx src/build/buildConsensus.ts            # L2 向量（按 namespace）
-npx tsx src/build/buildSop.ts                  # L3 索引（题面 → 节）
-npx tsx src/graph/loadNeo4j.ts --all --wipe    # 图（⚠ 先停 MCP server：清库重建）
+npx tsx src/build/buildLance.ts --all          # L1 vectors (LE/PE/attribute/PAS)
+npx tsx src/build/buildConsensus.ts            # L2 vectors (per namespace)
+npx tsx src/build/buildSop.ts                  # L3 index (question → section)
+npx tsx src/graph/loadNeo4j.ts --all --wipe    # graph (⚠ stop the MCP server first: drop and rebuild)
 
-# 4) 考卷（可选：从三层源生成）
+# 4) the exam paper (optional: generate from the three-level sources)
 node eval/build.mjs
 
-# 5) 自检
+# 5) self-check
 cd "../../TSM Core Service" && npx tsx src/verify/precheck.ts
 ```
 
-## 七、换场景时不动的三样
+## 7. Three things a scenario switch never touches
 
-| 不动的东西 | 为什么 |
+| Untouched | Why |
 |---|---|
-| 认知层 `skills/paradigm`（TSM + DLR 范式认知） | **与场景无关**——这正是它单独存在的原因 |
-| L3 工具名 `dlr_search_sop` | 固定名：换的是索引内容（`tsm build sop` 从场景源编译），不是模型层的选择 |
-| MCP 工具面（7 个：L1/L2/L3 语义 + `get_full_data_info` 下探 + `execute_sql` 取数） | 契约冻结（见 [roadmap.md](roadmap.md) §一） |
+| The cognition layer `skills/paradigm` (TSM + DLR paradigm awareness) | **Scenario-independent** — which is exactly why it exists standalone |
+| The L3 tool name `dlr_search_sop` | A fixed name: what changes is the index's content (`tsm build sop` compiles it from the scenario's sources), not the model layer's choices |
+| The MCP tool surface (7: L1/L2/L3 semantics + `get_full_data_info` drill-down + `execute_sql` fetch) | A frozen contract (see [roadmap.md](roadmap.md) §1) |
 
-## 相关
+## Related
 
-- 概念与准入判据：[02-concept.md](02-concept.md)｜DLR 建模规范：[03-design.md](03-design.md)
-- 评测（考卷 + 考试系统）：[eval.md](eval.md)｜运行与排障：[run.md](run.md)
+- Concepts and admission criteria: [02-concept.md](02-concept.md) | DLR modeling spec: [03-design.md](03-design.md)
+- Evaluation (paper + exam system): [eval.md](eval.md) | operations and troubleshooting: [run.md](run.md)

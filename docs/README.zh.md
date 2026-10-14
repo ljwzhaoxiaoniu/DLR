@@ -7,10 +7,10 @@
 
 | 文档 | 给谁看 | 状态 |
 |---|---|---|
-| [01-background.md](01-background.md) | ① **背景与主张** —— 当前的问题（数据 / 知识 / API）+ 分析 → 主张：语义建模以结构化数据源为基础 | ✅ |
-| [02-concept.md](02-concept.md) | ② **概念**（TSM）—— 三级 / 准入判据=治理线 / 分层确权 / 换层制度 | ✅ |
-| [03-design.md](03-design.md) | ③ **实现**（DLR：原创 foundation 的详细设计）—— LE/PE/ARC/PAS · 图/向量消费 · 建模规则 + 自检清单 | ✅ |
-| [04-application.md](04-application.md) | ④ **落地（解法）** —— 场景包：三层写作规范 · `fixtures/`（回归快照）· **`eval/` 考卷约定** · 双读评审 · 换场景 checklist | ✅（现有 `birdminidev`、`cloudopsbench`） |
+| [01-background.zh.md](01-background.zh.md) | ① **背景与主张** —— 当前的问题（数据 / 知识 / API）+ 分析 → 主张：语义建模以结构化数据源为基础 | ✅ |
+| [02-concept.zh.md](02-concept.zh.md) | ② **概念**（TSM）—— 三级 / 准入判据=治理线 / 分层确权 / 换层制度 | ✅ |
+| [03-design.zh.md](03-design.zh.md) | ③ **实现**（DLR：原创 foundation 的详细设计）—— LE/PE/ARC/PAS · 图/向量消费 · 建模规则 + 自检清单 | ✅ |
+| [04-application.zh.md](04-application.zh.md) | ④ **落地（解法）** —— 场景包：三层写作规范 · `fixtures/`（回归快照）· **`eval/` 考卷约定** · 双读评审 · 换场景 checklist | ✅（现有 `birdminidev`、`cloudopsbench`） |
 | [run.zh.md](run.zh.md) | 操作 —— 运行手册：起后端 / 跑题 / web / **状态面** / 工具依赖矩阵 / 排障 | ✅ |
 | [eval.zh.md](eval.zh.md) | 操作 —— 评测 = **内容（考卷跟场景）** + **能力（考试系统跟 dsh）**；考卷格式 / 报告 / 探针 | ✅ |
 | [roadmap.zh.md](roadmap.zh.md) | 操作 —— **扩展边界（DSL_SQL/OData）** · 可移植三步（全部落地） · 待探索 | ✅ |

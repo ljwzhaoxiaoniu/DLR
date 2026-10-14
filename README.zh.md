@@ -4,9 +4,9 @@
 
 [![BIRD mini-dev · 500/500](https://img.shields.io/badge/BIRD_mini--dev-500%2F500_correct-brightgreen)](#benchmarks) [![Cloud-OpsBench · JRA 752/754](https://img.shields.io/badge/Cloud--OpsBench-JRA_752%2F754_(99.7%25)-blue)](#benchmarks) [![npm](https://img.shields.io/npm/v/dsh-tsm-agent)](https://www.npmjs.com/package/dsh-tsm-agent)
 
-**DLR（Decoupled Logic Representation）** 是本项目原创的**数据源级**语义建模范式：**LE / PE** 双层模型 + **ARCS**（投影锚定）与 **PAS**（语义路由）两个机制，把逻辑概念层与物理数据层解耦，让 LLM agent 可靠地把自然语言问题落到关系数据库上。详见 [docs/03-design.md](docs/03-design.md)。
+**DLR（Decoupled Logic Representation）** 是本项目原创的**数据源级**语义建模范式：**LE / PE** 双层模型 + **ARCS**（投影锚定）与 **PAS**（语义路由）两个机制，把逻辑概念层与物理数据层解耦，让 LLM agent 可靠地把自然语言问题落到关系数据库上。详见 [docs/03-design.zh.md](docs/03-design.zh.md)。
 
-项目跑在**三级语义建模（TSM）**框架下——**L1 `dlr`**（数据源级）/ **L2 `consensus`**（领域共识级）/ **L3 `sop`**（业务逻辑级）；一条知识进哪一级，**准入判据即治理线**。详见 [docs/02-concept.md](docs/02-concept.md)。
+项目跑在**三级语义建模（TSM）**框架下——**L1 `dlr`**（数据源级）/ **L2 `consensus`**（领域共识级）/ **L3 `sop`**（业务逻辑级）；一条知识进哪一级，**准入判据即治理线**。详见 [docs/02-concept.zh.md](docs/02-concept.zh.md)。
 
 一份检出 = **五个 npm 包**（语义服务 · dsh bundle · 考试系统 · 两个开箱即用的场景包）+ 一层可插拔的场景机制：
 
@@ -17,7 +17,7 @@
 | `DSH-based Agent Service/dsh-tsm-eval/` · [`dsh-tsm-eval`](https://www.npmjs.com/package/dsh-tsm-eval) | **考试系统**：把场景的考卷经 dsh headless 跑一遍、`tsm grade` 采分、产出可回放报告（结果 + 过程 + 会话日志取证） |
 | `scenarios/birdminidev/` · [`tsm-scenario-birdmini`](https://www.npmjs.com/package/tsm-scenario-birdmini) | 场景包 —— BIRD mini-dev（11 库 / 500 题）：三层源 + 考卷 + 跑批结果。**500/500 评定正确**（426 与 gold 完全一致 + 74 处按 L3 节口径裁定的数据集缺陷） |
 | `scenarios/cloudopsbench/` · [`tsm-scenario-cloudopsbench`](https://www.npmjs.com/package/tsm-scenario-cloudopsbench) | 场景包 —— Cloud-OpsBench（K8s 根因诊断，754 例）：三层源 + 上游评分器适配 + 跑批结果。全量 754 例 **JRA 752/754（99.7%）** |
-| *自带场景* | 场景层**可插拔** —— 把 `TSM_SCENARIO` 指向任意自带三层源（可选考卷）的场景包即可。换场景 checklist 见 [docs/04-application.md](docs/04-application.md) |
+| *自带场景* | 场景层**可插拔** —— 把 `TSM_SCENARIO` 指向任意自带三层源（可选考卷）的场景包即可。换场景 checklist 见 [docs/04-application.zh.md](docs/04-application.zh.md) |
 
 <a id="benchmarks"></a>
 ## 基准成绩
@@ -148,7 +148,7 @@ Neo4j（图：LE 50 / PE 74 / LA 277 / PA 784 · PAS 37；Browser :7474）
 
 当前场景 **`birdminidev`**：BIRD mini-dev——11 库 / 500 题全部跑完并判定，**500/500**（✅ 426 + 🔁 74 数据集缺陷裁定；零错误）。每题 token 中位 ≈ 5.6 万（均值 7.3 万），约 6 步 / 10 次工具调用。台账：[scenarios/birdminidev/DETAIL.md](scenarios/birdminidev/DETAIL.md)。
 
-换场景：把服务指向另一个包（`TSM_SCENARIO=<路径>`）、重建，按 [docs/04-application.md](docs/04-application.md) 的 checklist 走。
+换场景：把服务指向另一个包（`TSM_SCENARIO=<路径>`）、重建，按 [docs/04-application.zh.md](docs/04-application.zh.md) 的 checklist 走。
 
 -----
 
@@ -170,13 +170,13 @@ DLR Proj/                          # 分支 2.0
 
 | 我要… | 看这篇 |
 |---|---|
-| 懂"为什么" | [docs/01-background.md](docs/01-background.md) |
-| 懂概念（三级 / 准入判据） | [docs/02-concept.md](docs/02-concept.md) |
-| 建模（DLR 规范 + 自检清单） | [docs/03-design.md](docs/03-design.md) |
-| 建/换场景包 | [docs/04-application.md](docs/04-application.md) |
-| 跑（起后端 / 跑题 / web / 状态面 / 排障） | [docs/run.md](docs/run.md) |
-| 评测（考卷 + 考试系统） | [docs/eval.md](docs/eval.md) |
-| 可移植 / 扩展边界 | [docs/roadmap.md](docs/roadmap.md) |
+| 懂"为什么" | [docs/01-background.zh.md](docs/01-background.zh.md) |
+| 懂概念（三级 / 准入判据） | [docs/02-concept.zh.md](docs/02-concept.zh.md) |
+| 建模（DLR 规范 + 自检清单） | [docs/03-design.zh.md](docs/03-design.zh.md) |
+| 建/换场景包 | [docs/04-application.zh.md](docs/04-application.zh.md) |
+| 跑（起后端 / 跑题 / web / 状态面 / 排障） | [docs/run.zh.md](docs/run.zh.md) |
+| 评测（考卷 + 考试系统） | [docs/eval.zh.md](docs/eval.zh.md) |
+| 可移植 / 扩展边界 | [docs/roadmap.zh.md](docs/roadmap.zh.md) |
 
 <a id="排障"></a>
 ## 排障
@@ -187,7 +187,7 @@ DLR Proj/                          # 分支 2.0
 | Web 报 `EADDRINUSE 3080` | 旧实例没死透：`netstat -ano \| grep :3080` → `taskkill //F //PID <pid>` |
 | dsh 升级后模型报工具名不对 | 先 `--dump-config` 核 patch 行（bundle 已在 `0.2.0-rc.2` 上核过） |
 | `tsm grade` 看着卡死 | 病态 agent SQL 有 20s 子进程硬超时护栏；慢 gold 查询走磁盘缓存（`TSM_GOLD_NO_CACHE=1` 可绕过） |
-| 更多条目 | [docs/run.md](docs/run.md) 排障表 |
+| 更多条目 | [docs/run.zh.md](docs/run.zh.md) 排障表 |
 
 <a id="分支"></a>
 ## 分支
