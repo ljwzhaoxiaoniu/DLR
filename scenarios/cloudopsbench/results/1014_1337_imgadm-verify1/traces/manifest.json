@@ -1,0 +1,37 @@
+[
+  {
+    "case": "boutique/startup/43",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1014_1337_imgadm-verify1\\raw\\1014_1337_boutique-startup-43",
+    "steps": 11,
+    "has_final_answer": true,
+    "predictions": 3
+  },
+  {
+    "case": "boutique/startup/45",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1014_1337_imgadm-verify1\\raw\\1014_1337_boutique-startup-45",
+    "steps": 12,
+    "has_final_answer": true,
+    "predictions": 3
+  },
+  {
+    "case": "boutique/admission/16",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1014_1337_imgadm-verify1\\raw\\1014_1338_boutique-admission-16",
+    "steps": 16,
+    "has_final_answer": true,
+    "predictions": 3
+  },
+  {
+    "case": "boutique/startup/46",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1014_1337_imgadm-verify1\\raw\\1014_1338_boutique-startup-46",
+    "steps": 10,
+    "has_final_answer": true,
+    "predictions": 3
+  },
+  {
+    "case": "boutique/admission/21",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1014_1337_imgadm-verify1\\raw\\1014_1339_boutique-admission-21",
+    "steps": 12,
+    "has_final_answer": true,
+    "predictions": 3
+  }
+]

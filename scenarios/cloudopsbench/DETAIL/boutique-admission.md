@@ -1,6 +1,6 @@
 # 评测明细 · boutique/admission — cloudopsbench
 
-> 本家族已跑 **25/58** 题：JRA ✅25 ❌0 ｜ 证据链全闭 23 ｜ token 中位 86,160 ｜ 生成 2026-10-14T05:24:30.653Z
+> 本家族已跑 **25/58** 题：JRA ✅25 ❌0 ｜ 证据链全闭 23 ｜ token 中位 86,428 ｜ 生成 2026-10-14T05:40:15.366Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -22,12 +22,12 @@
 | [13](#case-13) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.4375 | 17 | 106,336 | 0 | 0 | 1014_1247_inorder4-v3b126 | 全对·链闭 |
 | [14](#case-14) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.3846 | 14 | 83,704 | 0 | 0 | 1014_1250_inorder4-v3b127 | 全对·链闭 |
 | [15](#case-15) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.5 | 15 | 105,270 | 0 | 0 | 1014_1252_inorder4-v3b128 | 全对·链闭 |
-| [16](#case-16) | 1 | 1 | 1 | 0.75 | 0 | 0 | 0.25 | 13 | 86,991 | 0 | 0 | 1014_1255_inorder4-v3b129 | 结果对·链未闭 |
+| [16](#case-16) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.4375 | 17 | 94,841 | 0 | 0 | 1014_1337_imgadm-verify1 | 全对·链闭 |
 | [17](#case-17) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.4615 | 14 | 85,383 | 0 | 0 | 1014_1257_inorder4-v3b130 | 全对·链闭 |
 | [18](#case-18) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.5455 | 12 | 70,481 | 0 | 0 | 1014_1300_inorder4-v3b131 | 全对·链闭 |
 | [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4167 | 13 | 85,684 | 0 | 0 | 1014_1302_inorder4-v3b132 | 全对·链闭 |
 | [20](#case-20) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.4615 | 14 | 69,814 | 0 | 0 | 1014_1305_inorder4-v3b133 | 全对·链闭 |
-| [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4615 | 14 | 86,160 | 0 | 0 | 1014_1308_inorder4-v3b134 | 全对·链闭 |
+| [21](#case-21) | 1 | 1 | 1 | 0.75 | 0 | 0 | 0.3333 | 13 | 86,428 | 0 | 0 | 1014_1337_imgadm-verify1 | 结果对·链未闭 |
 | [22](#case-22) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.4 | 16 | 89,651 | 0 | 0 | 1014_1312_inorder4-v3b135 | 全对·链闭 |
 | [23](#case-23) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.3571 | 15 | 92,339 | 0 | 0 | 1014_1314_inorder4-v3b136 | 全对·链闭 |
 | [24](#case-24) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.3529 | 18 | 110,270 | 0 | 0 | 1014_1318_inorder4-v3b137 | 全对·链闭 |
@@ -143,9 +143,9 @@
 ### case-16
 
 - **结论**：`namespace/boutique` + `namespace_cpu_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_cpu_quota_exceeded`（✓ 逐字命中）
-- **流程**：MC 0.75 · EOC 0 · ECR 0 · EE 0.25 · steps 13 · tokens 86,991
-- **raw 日志**：[results/1014_1255_inorder4-v3b129/raw/1014_1255_boutique-admission-16](../results/1014_1255_inorder4-v3b129/raw/1014_1255_boutique-admission-16/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Symptom 'Partial Service Unreachability' traced along the reachability chain: pods listing shows all 10 running pods healthy but emailservice has NO pod at all; deployment emailservice is 0/1 READY with 0 UP-TO-DATE (no pod ever created -> admission). Caller-side signal: checkoutservice error logs show 12x 'failed to send order confirmation ... rpc error: code = Unavailable ... dial tcp 10.68.216.116:5000: connect: connection refused' (emailservice ClusterIP, no endpoints). Namespace events name the mechanism literally: 'Warning FailedCreate replicaset/emailservice-5dcd9bdff Error creating: po
+- **流程**：MC 1 · EOC 0.25 · ECR 1 · EE 0.4375 · steps 17 · tokens 94,841
+- **raw 日志**：[results/1014_1337_imgadm-verify1/raw/1014_1338_boutique-admission-16](../results/1014_1337_imgadm-verify1/raw/1014_1338_boutique-admission-16/)（ndjson / mcp.jsonl / meta）
+- **摘要**：emailservice Deployment 0/1 AVAILABLE and 0 UP-TO-DATE with no pod object at all; its ReplicaSet emailservice-5dcd9bdff shows DESIRED 1 / CURRENT 0 / READY 0, i.e. the pod was never created. The namespace events surface names the mechanism verbatim on that object: 'Warning FailedCreate replicaset/emailservice-5dcd9bdff — Error creating: pods "emailservice-5dcd9bdff-w8k4f" is forbidden: exceeded quota: cpu-quota, requested: requests.cpu=1, used: requests.cpu=10, limited: requests.cpu=10' (repeated across many pod names). Closing config read: DescribeResource(resourcequota cpu-quota, boutique) s
 
 ### case-17
 
@@ -178,9 +178,9 @@
 ### case-21
 
 - **结论**：`namespace/boutique` + `namespace_cpu_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_cpu_quota_exceeded`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4615 · steps 14 · tokens 86,160
-- **raw 日志**：[results/1014_1308_inorder4-v3b134/raw/1014_1308_boutique-admission-21](../results/1014_1308_inorder4-v3b134/raw/1014_1308_boutique-admission-21/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Namespace boutique shows the shippingservice workload never admitted: deployment shippingservice reads 0/1 (UP-TO-DATE 0, AVAILABLE 0), replicaset shippingservice-77f56d9479 reads DESIRED 1/CURRENT 0, Service endpoints are '<none>' and CheckServiceConnectivity(shippingservice:50051) returns 'Connection Failed', while all other 10 boutique pods are 1/1 Running with 0 restarts and no metric alerts. The events surface carries the live mechanism verbatim and repeatedly: 'Warning FailedCreate replicaset/shippingservice-77f56d9479 Error creating: pods ... is forbidden: exceeded quota: cpu-quota, req
+- **流程**：MC 0.75 · EOC 0 · ECR 0 · EE 0.3333 · steps 13 · tokens 86,428
+- **raw 日志**：[results/1014_1337_imgadm-verify1/raw/1014_1339_boutique-admission-21](../results/1014_1337_imgadm-verify1/raw/1014_1339_boutique-admission-21/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods inventory shows shippingservice has no pod at all while all 10 other boutique pods are 1/1 Running with 0 restarts. The shippingservice Service exists (selector app=shippingservice, port grpc 50051/TCP) but its Endpoints is empty, so the Service has no backend. Deployment shippingservice reads READY 0/1, UP-TO-DATE 0, AVAILABLE 0 with desired replicas 1. The namespace events surface carries the mechanism verbatim, repeated per replica attempt: 'Warning FailedCreate replicaset/shippingservice-77f56d9479  Error creating: pods "shippingservice-77f56d9479-k5x62" is forbidden: exceeded quota: 
 
 ### case-22
 

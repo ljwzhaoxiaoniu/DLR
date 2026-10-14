@@ -1,0 +1,6 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/startup/43,1.0,1.0,1.0,1.0,1.0,1.0,0.2727272727272727,12.0,0.0,0.0,app/checkoutservice,missing_image_pull_secret,app/checkoutservice,missing_image_pull_secret,
+boutique/startup/45,1.0,1.0,1.0,1.0,1.0,1.0,0.25,13.0,0.0,0.0,app/emailservice,missing_image_pull_secret,app/emailservice,missing_image_pull_secret,
+boutique/startup/46,1.0,1.0,1.0,1.0,1.0,1.0,0.3,11.0,0.0,0.0,app/frontend,missing_image_pull_secret,app/frontend,missing_image_pull_secret,
+boutique/admission/16,1.0,1.0,1.0,1.0,0.25,1.0,0.4375,17.0,0.0,0.0,namespace/boutique,namespace_cpu_quota_exceeded,namespace/boutique,namespace_cpu_quota_exceeded,
+boutique/admission/21,1.0,1.0,1.0,0.75,0.0,0.0,0.3333333333333333,13.0,0.0,0.0,namespace/boutique,namespace_cpu_quota_exceeded,namespace/boutique,namespace_cpu_quota_exceeded,

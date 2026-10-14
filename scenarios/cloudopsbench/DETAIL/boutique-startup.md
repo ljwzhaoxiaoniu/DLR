@@ -1,6 +1,6 @@
 # 评测明细 · boutique/startup — cloudopsbench
 
-> 本家族已跑 **46/62** 题：JRA ✅44 ❌2 ｜ 证据链全闭 46 ｜ token 中位 85,131 ｜ 生成 2026-10-14T05:24:30.653Z
+> 本家族已跑 **46/62** 题：JRA ✅46 ❌0 ｜ 证据链全闭 46 ｜ token 中位 85,131 ｜ 生成 2026-10-14T05:40:15.366Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -49,10 +49,10 @@
 | [40](#case-40) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 13 | 85,204 | 0 | 0 | 1014_1302_inorder4-v3b132 | 全对·链闭 |
 | [41](#case-41) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 10 | 66,551 | 0 | 0 | 1014_1305_inorder4-v3b133 | 全对·链闭 |
 | [42](#case-42) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 195,861 | 0 | 0 | 1014_1308_inorder4-v3b134 | 全对·链闭 |
-| [43](#case-43) | 1 | 0 | 0 | 1 | 1 | 1 | 0.2308 | 14 | 71,400 | 0 | 0 | 1014_1312_inorder4-v3b135 | 未命中 |
+| [43](#case-43) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 68,431 | 0 | 0 | 1014_1337_imgadm-verify1 | 全对·链闭 |
 | [44](#case-44) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1111 | 28 | 160,246 | 0 | 0 | 1014_1314_inorder4-v3b136 | 全对·链闭 |
-| [45](#case-45) | 1 | 0 | 0 | 1 | 1 | 1 | 0.2143 | 15 | 88,419 | 0 | 0 | 1014_1318_inorder4-v3b137 | 未命中 |
-| [46](#case-46) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 10 | 69,579 | 0 | 0 | 1014_1321_inorder4-v3b138 | 全对·链闭 |
+| [45](#case-45) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 13 | 68,252 | 0 | 0 | 1014_1337_imgadm-verify1 | 全对·链闭 |
+| [46](#case-46) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 11 | 89,900 | 0 | 0 | 1014_1337_imgadm-verify1 | 全对·链闭 |
 
 ## 证据正文
 
@@ -352,10 +352,10 @@
 
 ### case-43
 
-- **结论**：`app/checkoutservice` + `incorrect_image_reference` ｜ 标签 `app/checkoutservice` + `missing_image_pull_secret`（✗ 与标签不符）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2308 · steps 14 · tokens 71,400
-- **raw 日志**：[results/1014_1312_inorder4-v3b135/raw/1014_1313_boutique-startup-43](../results/1014_1312_inorder4-v3b135/raw/1014_1313_boutique-startup-43/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Only one workload is off in the boutique namespace: pod checkoutservice-5bb6f6875-txw5q is 0/1 ImagePullBackOff (deployment checkoutservice 0/1 READY, AVAILABLE 0; its Service lists NO endpoints while all other 10 services have endpoints and are 1/1 Running; GetAlerts() shows no metric anomaly). kubelet events: 'Failed to pull image "ghcr.io/google-samples/microservices-demo/checkoutservice:v0.10.3": failed to resolve reference ...: failed to authorize: failed to fetch anonymous token: unexpected status from GET request to https://ghcr.io/token?...: 403 Forbidden' (ErrImagePull -> ImagePullBac
+- **结论**：`app/checkoutservice` + `missing_image_pull_secret` ｜ 标签 `app/checkoutservice` + `missing_image_pull_secret`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 12 · tokens 68,431
+- **raw 日志**：[results/1014_1337_imgadm-verify1/raw/1014_1337_boutique-startup-43](../results/1014_1337_imgadm-verify1/raw/1014_1337_boutique-startup-43/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique: checkoutservice pod checkoutservice-5bb6f6875-txw5q is 0/1 ImagePullBackOff while all other 10 boutique pods are 1/1 Running with 0 restarts. Victim-side signal: the checkoutservice Endpoints list is empty (no ready address) and an active TCP connectivity probe to checkoutservice:5050 (port taken from the Service's own spec) returns Connection Failed. Mechanism event (kubelet, verbatim): 'Failed to pull image ghcr.io/google-samples/microservices-demo/checkoutservice:v0.10.3: failed to resolve reference ...: failed to authorize: failed to fetch anonymous token: unexpected st
 
 ### case-44
 
@@ -366,15 +366,15 @@
 
 ### case-45
 
-- **结论**：`app/emailservice` + `incorrect_image_reference` ｜ 标签 `app/emailservice` + `missing_image_pull_secret`（✗ 与标签不符）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 88,419
-- **raw 日志**：[results/1014_1318_inorder4-v3b137/raw/1014_1319_boutique-startup-45](../results/1014_1318_inorder4-v3b137/raw/1014_1319_boutique-startup-45/)（ndjson / mcp.jsonl / meta）
-- **摘要**：In namespace boutique, exactly one workload deviates from the all-healthy baseline: pod emailservice-6b89575c-jttr4 is 0/1 ErrImagePull (all other 10 pods 1/1 Running). DescribeResource shows PodScheduled=True and a Normal 'Scheduled' event (not a scheduling fault), Restart Count 0, container State Waiting/Reason ErrImagePull. The mechanism event reads verbatim: Failed to pull image "ghcr.io/google-samples/microservices-demo/emailservice:v0.10.3": failed to resolve reference ... failed to authorize: failed to fetch anonymous token: unexpected status from GET request to https://ghcr.io/token...
+- **结论**：`app/emailservice` + `missing_image_pull_secret` ｜ 标签 `app/emailservice` + `missing_image_pull_secret`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 13 · tokens 68,252
+- **raw 日志**：[results/1014_1337_imgadm-verify1/raw/1014_1337_boutique-startup-45](../results/1014_1337_imgadm-verify1/raw/1014_1337_boutique-startup-45/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace-wide pods listing (wide) shows a single outlier: emailservice-6b89575c-jttr4 is 0/1 ErrImagePull on worker-03 while all other 10 boutique services are 1/1 Running with 0 restarts; GetAlerts reports no metric anomalies (startup/admission-stage break, not telemetry). The victim's own signal leads: CheckServiceConnectivity(emailservice, 5000) -- the port taken from its own Service spec (port 5000 -> targetPort 8080) -- returns 'Connection Failed', and the entry caller checkoutservice's error logs are empty, so the break is inside emailservice's own startup. The pod is Scheduled (PodSche
 
 ### case-46
 
 - **结论**：`app/frontend` + `missing_image_pull_secret` ｜ 标签 `app/frontend` + `missing_image_pull_secret`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 10 · tokens 69,579
-- **raw 日志**：[results/1014_1321_inorder4-v3b138/raw/1014_1322_boutique-startup-46](../results/1014_1321_inorder4-v3b138/raw/1014_1322_boutique-startup-46/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Symptom entry: with no service named by the wording, the boutique pods listing was the legitimate entry and showed a single outlier: frontend-5cb85b46cc-5fxvx = 0/1 Ready, STATUS ErrImagePull, while all other 10 boutique workloads were 1/1 Running with 0 restarts (hence 'Partial'). The pod's own sheet shows PodScheduled=True (Successfully assigned to worker-03), so scheduling is not the break; the container is Waiting with Reason ErrImagePull, Restart Count 0, and the kubelet event reads: 'Failed to pull image "ghcr.io/google-samples/microservices-demo/frontend:v0.10.3": failed to resolve refe
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3 · steps 11 · tokens 89,900
+- **raw 日志**：[results/1014_1337_imgadm-verify1/raw/1014_1338_boutique-startup-46](../results/1014_1337_imgadm-verify1/raw/1014_1338_boutique-startup-46/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods inventory in ns=boutique shows a single outlier: frontend-5cb85b46cc-5fxvx 0/1 ErrImagePull on worker-03 (deployment frontend 0/1 AVAILABLE 0), while all other 10 boutique services are 1/1 Running — matching 'partial' unreachability (frontend is the storefront entry: ClusterIP 10.68.151.5:80 -> 8080, NodePort 30080). The pod's own events show it scheduled successfully (PodScheduled True, no FailedCreate/FailedScheduling/FailedMount) and the failure occurring at image pull: 'failed to pull and unpack image "ghcr.io/google-samples/microservices-demo/frontend:v0.10.3" ... failed to authorize
 
