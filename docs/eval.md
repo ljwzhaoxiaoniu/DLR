@@ -1,6 +1,6 @@
 # Evaluation: content and capability, separated
 
-> Operations. **2.0's evaluation is nothing like 1.5's four-stage pipeline**: this document describes the 2.0 design only; the old caliber is archived in `eval-line/`.
+> Operations. The 2.0 evaluation design: **content (the exam paper follows the scenario) + capability (the exam system follows dsh)**.
 > 中文版：[eval.zh.md](eval.zh.md)
 
 ## 1. In one sentence
@@ -44,20 +44,9 @@ Much cleaner than 1.5's "adapters + four stages". Three extra benefits:
 - **Process**: steps, tokens, tool-call sequence, whether the evidence chain closes;
 - Both the `--json` event stream and the session-log path are recorded — **replayable forensics**.
 
-## 5. Relationship to 1.5
+## 5. Batch runs and judging (current practice)
 
-| | 1.5 (`dlr-eval-v1.5`) | 2.0 (this document) |
-|---|---|---|
-| Host | opencode + bridge | dsh, native |
-| Flow | four stages (run → judge → parse → archive) | run + score + report (one bundle) |
-| Judging | two-tier + LLM judge + disputes | rules first + LLM judge (1.5's judging policy is reusable) |
-| Archiving | `post_process` directory layout | reports + session logs (native forensics) |
-
-**2.0 does not re-implement the four stages**; historical calibers and baselines live in `eval-line/`.
-
-## 6. Batch runs and judging (current practice)
-
-> The migration-period chain: **question-level validation driven by scenario content** — what is being validated is **L3** (L1/L2 are given inputs; the only differences in a run should come from L3). The formal exam system is §7.
+> The migration-period chain: **question-level validation driven by scenario content** — what is being validated is **L3** (L1/L2 are given inputs; the only differences in a run should come from L3). The formal exam system is §6.
 
 **Batch run** (`DSH-based Agent Service/scripts/run_batch.sh`):
 
@@ -86,11 +75,11 @@ cd "TSM Core Service" && node bin/tsm.mjs grade --run "<that dir>"   # → quest
 - `sources/sop.md` change → `tsm build sop` (rebuild the index) → re-run to compare; **experimental runs never go into `results/`** (the ledger takes the latest round per question).
 - After a judging-policy change, **re-judge everything** (run `tsm grade` per directory; gold is cached): the ledger may only have one ruler.
 
-## 7. Relationship to the layer-migration regime (probes)
+## 6. Relationship to the layer-migration regime (probes)
 
 The exam system's by-product = **probes**: who gets cited repeatedly, who gets corrected repeatedly, which questions keep losing points — these runtime observations generate candidates for **layer migration** (promotion / demotion / new clauses), and humans only sign off (see [02-concept.md](02-concept.md) §2 appendix).
 
-## 8. Roadmap
+## 7. Roadmap
 
 1. Scenario packages land `eval/questions.jsonl` first (content, extendable anytime) — ✅ done for `birdminidev`;
 2. The exam system becomes a dsh bundle (`--json` + session logs → judging → report) — ✅ landed as the standalone `dsh-tsm-eval` package (v0.1, CLI orchestrator; `report.json` carries the `baseline_key` diff anchor); the dsh bundle surface (web overlay / `/eval`) is 0.2;
@@ -100,4 +89,3 @@ The exam system's by-product = **probes**: who gets cited repeatedly, who gets c
 
 - Scenario packages and the exam directory: [04-application.md](04-application.md) §4
 - Running (questions and session logs): [run.md](run.md) ｜ probes and layer migration: [02-concept.md](02-concept.md)
-- The old four-stage caliber: [`eval-line/`](eval-line/)

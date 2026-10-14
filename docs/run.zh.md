@@ -122,7 +122,7 @@ curl -s http://127.0.0.1:28795/status
 - 改配置（patch / 插件）→ 重启对应宿主；**改 L3 源 `sources/sop.md` → `tsm build sop` 重建索引后即生效**（不再需要重启宿主；原 sync_sop.sh 已退役）。
 - 路径与数据目录（全部可 env 覆盖）：`TSM_DATA_DIR`（向量库/缓存/viz；仓库内默认 `<服务>/.store`，安装态 `~/.tsm`）· `TSM_DATASET_DIR`（默认仓库根）· `TSM_SCENARIO`（路径或包名）· `TSM_OUT_DIR`（场景写入落点）· `TSM_MODEL_DIR` · `TSM_STORE_DIR` · `TSM_CACHE_DIR` · `TSM_MCP_URL` · `TSM_GRAPH_BACKEND`。
 - 临时产物一律进 `tmp_scripts/`，或随用随删。
-- **跑一批题 + 判定**：`run_batch.sh --qids ... --jobs 3` → `tsm grade --run <批次目录>`；判据三层、翻盘口径与迁移期纪律（5 题一批 / 每题最多两遍 / 节写完必须复跑 / 全量重判）见 [eval.zh.md](eval.zh.md) §六。
+- **跑一批题 + 判定**：`run_batch.sh --qids ... --jobs 3` → `tsm grade --run <批次目录>`；判据三层、翻盘口径与迁移期纪律（5 题一批 / 每题最多两遍 / 节写完必须复跑 / 全量重判）见 [eval.zh.md](eval.zh.md) §五。
 
 ## 8. 新机器安装
 
@@ -147,7 +147,7 @@ npm i -g tsm-scenario-birdmini        # 场景内容（一个 benchmark 一个�
 
 ```bash
 tsm fetch-model                                    # ONNX 编码器 ~95MB（走 hf-mirror）
-# 数据集 ~1.4G：从原机拷 MINIDEV_sqlite/，或按 docs/eval-line/dataset.md 下载
+# 数据集 ~1.4G：从原机拷 MINIDEV_sqlite/，或从 bird-bench/mini_dev 下载
 # mini_dev 解压到 <数据根>/MINIDEV_sqlite/
 ```
 

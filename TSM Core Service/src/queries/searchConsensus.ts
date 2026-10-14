@@ -6,7 +6,7 @@
  * namespace 留空 = **跨库召回**（与 `dlr_semantic_query` 的 db 留空同口径）——
  *   命中自带 namespace 与它派生的原题 question，用来判断"这条共识是不是本题的库/题的"；
  *   定库后传 namespace 收口（防跨库串扰）。
- * 形状与 1.5 线 `dlr_search_evidence` 一致（那边保留 BIRD 遗留的旧工具名），另加 per-hit namespace。
+ * 形状与历史 Python 实现 `dlr_search_evidence` 一致（该实现保留 BIRD 遗留的旧工具名），另加 per-hit namespace。
  */
 import type { LanceStore } from "../store/lance.js";
 

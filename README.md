@@ -36,7 +36,7 @@ A checkout ships three parts:
 | Node.js + npm | The service is TypeScript, run via `npx tsx` / `node` |
 | Neo4j 5.x | Local instance (zip + portable JDK) or any Bolt endpoint — set `NEO4J_HOME` (or `NEO4J_URI`) |
 | ONNX encoder | `bash "TSM Core Service/scripts/fetch-model.sh"` (~95 MB, from hf-mirror) |
-| Dataset | BIRD mini-dev → unpack into `MINIDEV_sqlite/` (gitignored); source links in [docs/eval-line/dataset.md](docs/eval-line/dataset.md) |
+| Dataset | BIRD mini-dev → unpack into `MINIDEV_sqlite/` (gitignored); upstream: [bird-bench/mini_dev](https://github.com/bird-bench/mini_dev) |
 | dsh | `@deepseek-ai/dsh@0.2.0-rc.2` (alpha preview; the 500-question run was produced on `0.1.7-alpha.1` and was **not re-run**; re-check patch rows with `--dump-config` after any upgrade) |
 | API key | `cp "DSH-based Agent Service/dsh_dlr/.env.example" "DSH-based Agent Service/dsh_dlr/.env"`, fill `DEEPSEEK_API_KEY` |
 | Service env | `cd "TSM Core Service" && npm install && cp .env.example .env` (fill `NEO4J_PASSWORD`) |
@@ -132,11 +132,9 @@ Switching scenarios: point the service at another package (`TSM_SCENARIO=<path>`
 ```
 DLR Proj/                          # branch 2.0
 ├── docs/                          # narrative 01–04 + operations (run / eval / roadmap) + README index
-│                                  #   └── eval-line/   evaluation-line archive (read-only reference)
 ├── scenarios/birdminidev/         # ★ scenario package: sources/{configs,consensus,sop.md} + eval/ + fixtures/ + results/
 ├── TSM Core Service/              # semantic service (TS): LanceDB + Neo4j + MCP server
 ├── DSH-based Agent Service/       # dsh integration: bundle (dsh-tsm-agent) / exam system (dsh-tsm-eval) / launchers / agent rules
-├── Evaluation/ · validated_results/   # evaluation line (used on branch 1.5)
 ├── archive/                       # history (v2/v3, old docs and share pages) — read-only
 └── MINIDEV_sqlite/                # dataset (gitignored, download required)
 ```
@@ -153,7 +151,6 @@ DLR Proj/                          # branch 2.0
 | Run (backend, questions, web, status, troubleshooting) | [docs/run.md](docs/run.md) |
 | Evaluate (exam paper + harness) | [docs/eval.md](docs/eval.md) |
 | Portability and extension boundary | [docs/roadmap.md](docs/roadmap.md) |
-| Evaluation-line archive (three-paradigm comparison, v4 baselines) | [docs/eval-line/](docs/eval-line/) |
 
 <a id="troubleshooting"></a>
 ## Troubleshooting
@@ -170,6 +167,5 @@ DLR Proj/                          # branch 2.0
 ## Branches
 
 - **`2.0`** (this checkout) — the DLR + TSM continuous line: scenario packages, TS semantic service, dsh integration.
-- **`dlr-eval-v1.5`** — the evaluation line (three-paradigm isomorphic comparison ER/DLR/RDF, four-stage pipeline, v4 baselines; `Evaluation/`, `validated_results/`). The two lines evolve independently; `docs/eval-line/` here is read-only reference.
 
 > Repo-level instructions for agents: [CLAUDE.md](CLAUDE.md).

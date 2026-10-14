@@ -4,7 +4,7 @@
  * 两种源格式都支持（"evidence" 是 BIRD 数据集字段名，**不是**范式术语）：
  *   - knowledge 数组：`[{"kid","knowledge","source_qids"}]` → text = knowledge
  *   - JSONL：`{"qid","question","evidence"}`              → text = evidence
- * 口径与 1.5 线 build_evidence.py:load_topic 一致。
+ * 口径与历史实现 build_evidence.py:load_topic 一致。
  */
 import * as fs from "node:fs";
 

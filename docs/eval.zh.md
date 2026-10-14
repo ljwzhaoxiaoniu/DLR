@@ -1,6 +1,6 @@
 # 评测：内容与能力分离
 
-> 操作篇。**2.0 的评测与 1.5 的四阶段流水线完全不同**：这里只讲 2.0 的设计，旧口径见 `eval-line/`。
+> 操作篇。2.0 评测 = **内容（考卷跟场景）+ 能力（考试系统跟 dsh）**。
 > 英文版：[eval.md](eval.md)
 
 ## 一、一句话
@@ -44,20 +44,9 @@
 - **过程**：步数、token、工具调用序列、是否闭合证据链；
 - 输出同时落 `--json` 事件流与会话日志路径，**可回放取证**。
 
-## 五、与 1.5 的关系
+## 五、跑批与判定（当前实操）
 
-| | 1.5（`dlr-eval-v1.5`） | 2.0（本文） |
-|---|---|---|
-| 运行宿主 | opencode + 桥 | dsh 原生 |
-| 流程 | 四阶段（run → judge → parse → 归档） | 跑题 + 采分 + 报告（一体的 bundle） |
-| 判定 | 两段式 + judge + disputes | 规则优先 + LLM judge（可复用 1.5 的判定政策） |
-| 归档 | `post_process` 目录结构 | 报告 + 会话日志（原生取证） |
-
-**2.0 不复刻四阶段**；历史口径与基线数据在 `eval-line/`。
-
-## 六、跑批与判定（当前实操）
-
-> 迁移期正在用的批跑链路：场景包内容驱动的**题级验证**——验的是 **L3**（L1/L2 是既定输入，跑的差异只应来自 L3）。正式考试系统见 §七。
+> 迁移期正在用的批跑链路：场景包内容驱动的**题级验证**——验的是 **L3**（L1/L2 是既定输入，跑的差异只应来自 L3）。正式考试系统见 §六。
 
 **跑批**（`DSH-based Agent Service/scripts/run_batch.sh`）：
 
@@ -86,11 +75,11 @@ cd "TSM Core Service" && node bin/tsm.mjs grade --run "<上一步目录>"   # �
 - 改 `sources/sop.md` → `tsm build sop` 重建索引 → 复跑对表；**实验跑不进 `results/`**（台账取每题最新一轮）。
 - 判据 / 口径变动后**全量重判**（逐目录 `tsm grade` 即可，gold 走缓存）：台账只能有一套尺子。
 
-## 七、与换层制度的关系（探针）
+## 六、与换层制度的关系（探针）
 
 考试系统的副产品 = **探针**：谁被反复引用、谁被反复纠正、哪些题反复失分——这些运行观测为**换层移民**生成候选（晋升 / 降级 / 补节），人只签字（[02-concept.zh.md](02-concept.zh.md) §二后附）。
 
-## 八、路线
+## 七、路线
 
 1. 场景包先落 `eval/questions.jsonl`（内容，随时可加）——✅ `birdminidev` 已落；
 2. 考试系统做成 dsh bundle（`--json` + 会话日志 → 判定 → 报告）——✅ 已落地为独立包 `dsh-tsm-eval`（v0.1，CLI 编排器；`report.json` 带 `baseline_key` diff 锚）；bundle 面（web 浮层 / `/eval`）属 0.2；
@@ -100,4 +89,3 @@ cd "TSM Core Service" && node bin/tsm.mjs grade --run "<上一步目录>"   # �
 
 - 场景包与考卷目录：[04-application.zh.md](04-application.zh.md) §四
 - 运行（跑题与会话日志）：[run.zh.md](run.zh.md)｜探针与换层制度：[02-concept.zh.md](02-concept.zh.md)
-- 旧四阶段口径：[`eval-line/`](eval-line/)（待搬迁）

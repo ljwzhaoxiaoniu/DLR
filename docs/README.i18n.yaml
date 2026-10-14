@@ -5,11 +5,11 @@
 #
 # 规则：每篇文档一对 X.md（英文主）+ X.zh.md（中文对照）。新增一篇 → 在此登记两条哈希。
 # 迁移中（2026-09-30 起，2–3 篇一批）：未落对的文档暂时只有中文单篇。
-README.md: d03b365816004ee105628d8d0e52395563a6b92d
-README.zh.md: e75ea9baa9fe738a675a692a1b7ec3742abfceb1
-run.md: 5890b75c15b0f557a7b2564bd197ffe1712f4a46
-run.zh.md: aef9edcea2090bbad664b5516819ef9fe6a90ee3
-eval.md: e583f9037b7bb38fdb8d53f62c25a55def4e4416
-eval.zh.md: 27dfe8de32da87a59735861626e2211ae5698cfa
+README.md: 9b99fac9a14b09c34ba5d23e43a87a82d91e77af
+README.zh.md: 4cc45783f9ca2cac06903bc14b87c55626822d88
+run.md: f593934d00630a897a9db4370a0ffca1abdeb041
+run.zh.md: ff2b1e38ac0e46429c162b0d251fb67fbbf8629c
+eval.md: 2b8bbd4c3d1c9e0ca31b47764e92e61ce17ace0a
+eval.zh.md: d7c994b5728da1eafedbd7d23ba82cc58ac0d157
 roadmap.md: 1b8ea7122a03882337336b3abaaff14cce4bcaa2
 roadmap.zh.md: f0825c02c21bc5bc33d04016d209acc507d48d74

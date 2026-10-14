@@ -213,7 +213,7 @@ pas_relations:
 | toxicology | `atom.element`、`bond_type` 等全 private，Bond→Atom 无 PAS | 四列升 public；补 PAS；描述英文+字段名 | token **-60%** |
 | debit_card | `Consumption` 的 public 面缺"消费金额"；`Amount` 与 "amount spent" 冲突 | 新增 `Spending` public；`Amount` 改为"加油量(升)" | token **-33%** |
 
-（数字来自评测线口径的历史对照，见 `eval-line/`；此处作为**设计规则有效性的证据**保留。）
+（数字来自历史对照；此处作为**设计规则有效性的证据**保留。）
 
 ## 5. DLR 如何被消费：图 + 向量
 
@@ -303,4 +303,3 @@ npx tsx src/verify/precheck.ts                # 工具面可用
 
 - 概念与准入判据：[02-concept.md](02-concept.md)｜应用（场景包）：[04-application.md](04-application.md)
 - 构建链路与命令：[TSM Core Service/README.md](<../TSM Core Service/README.md>)
-- 评测线旧口径（三范式对准、yaml→Kuzu/FAISS 全映射）：`eval-line/`

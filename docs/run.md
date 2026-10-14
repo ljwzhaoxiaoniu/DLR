@@ -120,7 +120,7 @@ curl -s http://127.0.0.1:28795/status
 - Configuration changes (patches / plugins) → restart the host; **L3 source `sources/sop.md` → `tsm build sop`, effective without a host restart** (the old `sync_sop.sh` is retired).
 - Paths and data dirs (all env-overridable): `TSM_DATA_DIR` (store/cache/viz; default `<service>/.store` in-repo, `~/.tsm` when installed), `TSM_DATASET_DIR` (default = repo root), `TSM_SCENARIO` (path or package name), `TSM_OUT_DIR` (scenario write target), `TSM_MODEL_DIR`, `TSM_STORE_DIR`, `TSM_CACHE_DIR`, `TSM_MCP_URL`, `TSM_GRAPH_BACKEND`.
 - Temporary artifacts go to `tmp_scripts/` or are deleted on the spot.
-- **Batch + grading**: `run_batch.sh --qids ... --jobs 3` → `tsm grade --run <dir>`; the three-tier verdicts, reversal policy and migration-period discipline (5 questions per batch, at most two passes per question, always re-run after writing a clause, full re-judge after policy changes) are in [eval.md](eval.md) §6.
+- **Batch + grading**: `run_batch.sh --qids ... --jobs 3` → `tsm grade --run <dir>`; the three-tier verdicts, reversal policy and migration-period discipline (5 questions per batch, at most two passes per question, always re-run after writing a clause, full re-judge after policy changes) are in [eval.md](eval.md) §5.
 
 ## 8. New-machine install
 
@@ -146,7 +146,7 @@ npm i -g tsm-scenario-birdmini        # scenario content (one package per benchm
 ```bash
 tsm fetch-model                                    # ONNX encoder ~95 MB (hf-mirror)
 # dataset ~1.4 GB: copy MINIDEV_sqlite/ from the original machine, or download
-# mini_dev per docs/eval-line/dataset.md and unpack to <data-root>/MINIDEV_sqlite/
+# mini_dev: fetch from bird-bench/mini_dev and unpack to <data-root>/MINIDEV_sqlite/
 ```
 
 **3) Build the indexes** (matching the backend; `graph` is a no-op self-check in memory mode)

@@ -1,7 +1,6 @@
 # DSH-based Agent Service — DLR 接入 DeepSeek Harness
 
-把 **DLR 这一个范式**接入 dsh（DeepSeek Harness）。与 `OC-based Agent Service/`（评测线，1.5 分支）运行时
-**完全独立**；`Evaluation/` 属评测线，本分支不动。
+把 **DLR 这一个范式**接入 dsh（DeepSeek Harness）。
 
 **后端 = `TSM Core Service/`（TS/Node 栈：LanceDB + Neo4j + MCP，streamable-http 直连）** —— 无 Python、无桥。
 

@@ -36,7 +36,7 @@
 | Node.js + npm | 服务是 TypeScript，经 `npx tsx` / `node` 运行 |
 | Neo4j 5.x | 本机实例（免安装 zip + 便携 JDK）或任意 Bolt 端点——设 `NEO4J_HOME`（或 `NEO4J_URI`） |
 | ONNX 编码器 | `bash "TSM Core Service/scripts/fetch-model.sh"`（~95 MB，走 hf-mirror） |
-| 数据集 | BIRD mini-dev → 解压到 `MINIDEV_sqlite/`（gitignored）；下载源见 [docs/eval-line/dataset.md](docs/eval-line/dataset.md) |
+| 数据集 | BIRD mini-dev → 解压到 `MINIDEV_sqlite/`（gitignored）；下载源：[bird-bench/mini_dev](https://github.com/bird-bench/mini_dev) |
 | dsh | `@deepseek-ai/dsh@0.2.0-rc.2`（alpha 预览；500 题跑批产出于 `0.1.7-alpha.1`、**未重跑**；升级后先 `--dump-config` 核行） |
 | API key | `cp "DSH-based Agent Service/dsh_dlr/.env.example" "DSH-based Agent Service/dsh_dlr/.env"`，填 `DEEPSEEK_API_KEY` |
 | 服务 env | `cd "TSM Core Service" && npm install && cp .env.example .env`（填 `NEO4J_PASSWORD`） |
@@ -132,11 +132,9 @@ Neo4j（图：LE 50 / PE 74 / LA 277 / PA 784 · PAS 37；Browser :7474）
 ```
 DLR Proj/                          # 分支 2.0
 ├── docs/                          # 叙事四篇（01–04）+ 操作三篇（run / eval / roadmap）+ README 索引
-│                                  #   └── eval-line/   评测线归档（只读参考）
 ├── scenarios/birdminidev/         # ★ 场景包：sources/{configs,consensus,sop.md} + eval/ + fixtures/ + results/
 ├── TSM Core Service/              # 语义服务（TS）：LanceDB + Neo4j + MCP server
 ├── DSH-based Agent Service/       # dsh 接入：bundle（dsh-tsm-agent）/ 考试系统（dsh-tsm-eval）/ 启动器 / agent 规则
-├── Evaluation/ · validated_results/   # 评测线（1.5 分支使用）
 ├── archive/                       # 历史（v2/v3 归档、旧文档与分享页）——只读
 └── MINIDEV_sqlite/                # 数据集（gitignored，需下载）
 ```
@@ -153,7 +151,6 @@ DLR Proj/                          # 分支 2.0
 | 跑（起后端 / 跑题 / web / 状态面 / 排障） | [docs/run.md](docs/run.md) |
 | 评测（考卷 + 考试系统） | [docs/eval.md](docs/eval.md) |
 | 可移植 / 扩展边界 | [docs/roadmap.md](docs/roadmap.md) |
-| 评测线归档（三范式对比、v4 基线） | [docs/eval-line/](docs/eval-line/) |
 
 <a id="排障"></a>
 ## 排障
@@ -170,6 +167,5 @@ DLR Proj/                          # 分支 2.0
 ## 分支
 
 - **`2.0`**（本检出）——DLR + TSM 的持续线：场景包、TS 语义服务、dsh 接入。
-- **`dlr-eval-v1.5`**——评测线（ER/DLR/RDF 三范式同构对比、四阶段流水线、v4 基线；`Evaluation/`、`validated_results/`）。两线各自演进；本分支的 `docs/eval-line/` 只读参考。
 
 > 仓库级执行约定（给 agent）：[CLAUDE.md](CLAUDE.md)。
