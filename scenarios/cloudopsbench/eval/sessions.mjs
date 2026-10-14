@@ -1,32 +1,30 @@
 #!/usr/bin/env node
 // Cloud-OpsBench 会话归组（评测包组件 · 与 grade.sh / stats.mjs 同列）
 //
-// 两个组的职责（dsh web 左侧列表）：
-//   cloudopsbench-all   全量/默认组 —— 每个跑题 session 的默认落点（sync 例行补齐登记）
-//   cloudopsbench       正式组 —— 只放「通过」（JRA=1）的 session（promote，认可才「搬」入）
+// 组结构（2026-10-14 整理后，dsh web 左侧列表）：
+//   cloudopsbench   单一主力组（原 cloudopsbench-all 与「正式」组合并，完整一份全在这）——
+//                   每个跑题 session 的默认落点（sync 例行补齐登记）；promote 已随分档退役
+//   （「归档」组 = 退休区，见 retire）
 // ★ 平台硬约束（2026-10-12 实锤）：一个 session 只能属于一个 workspace——dsh-workspace
 //   启动时校验 sessionIds 全局不重叠；违反 = 整个工作区域加载失败（网页左侧列表全空，
-//   session-controller 全 pending）。所以 promote 是「搬移」而非「加挂」，sync 会把
-//   误入的重叠清出；saveWs 前有 assertDisjoint 断言兜底。
+//   session-controller 全 pending）。sync 会把误入的重叠清出；saveWs 前有 assertDisjoint 断言兜底。
 //
 // 用法:
 //   node sessions.mjs sync    [--results <dir>] [--dirs <run_dir>...] [--dry]
-//       把 results/<轮次>/raw/<run>/ 里全部 session 登记进全量组（补登记 + 解除归档）；
-//       已属其他组（正式/归档）的跳过——retire 过的 raw 配对会话不再捞回
-//   node sessions.mjs promote [--round <id前缀>] [--case <sys/cat/case>]... [--session <id前缀>]... [--dry]
-//       默认：每题取最近一轮，「通过」（JRA=1）的 run 移入正式组（从全量组搬出，不留副本）
-//       --case / --session 手动指定（可越过分档，即「认可」通道）
+//       把 results/<轮次>/raw/<run>/ 里全部 session 登记进 cloudopsbench 组（补登记 + 解除归档）；
+//       已属其他组（归档等）的跳过——retire 过的 raw 配对会话不再捞回
 //   node sessions.mjs adopt [--to <组名>] [--dry]
-//       把「未分组」（未归档、不属于任何组、已落盘的持久会话）收进指定组（默认全量组）——
+//       把「未分组」（未归档、不属于任何组、已落盘的持久会话）收进指定组（默认 cloudopsbench）——
 //       界面上「未分组」区里未落盘的空会话不在此列（等它落盘再收）
-//   node sessions.mjs retire --strays [--session <id前缀>…] [--dry]
+//   node sessions.mjs retire --strays | --group <组名> [--session <id前缀>…] [--dry]
+//       --group：把某组全部成员（不论 cwd 是否有效）收进「归档」——整组退役用
 //       显示失效的旧会话改写 cwd 收进「归档」组。规则（dsh-workspace 实锤）：组员显示
 //       资格 = 会话头部 cwd 归一后严格等于组 path；被删 run 目录的旧会话因此掉进界面
 //       「未分组」且无法归组。retire = 帧级改写头部 cwd 到归档目录 + 文件搬进对应
 //       bucket + 从原组摘出移入「归档」组（归档态不动）。全量备份到
 //       tmp_scripts/cob_session_retire_<stamp>/（原文件 + manifest + restore.mjs）。
 //   node sessions.mjs list
-//       两组现状（session → 案例/轮次 反查）
+//       组现状（session → 案例/轮次 反查）
 //
 // 改的是 <repo>/DSH-based Agent Service/.dsh-home/storages/workspace.json（--ws / DSH_HOME 可覆盖）。
 // 写入前自动备份 workspace.json.bak-<stamp>；dsh web 重启后可见（workspace.json 在启动时读取）。
@@ -40,8 +38,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url)); // …/scenarios/clou
 const SCENARIO = path.resolve(HERE, "..");
 const REPO = path.resolve(HERE, "..", "..", "..");
 
-const ALL_TITLE = "cloudopsbench-all";
-const FORMAL_TITLE = "cloudopsbench";
+const ALL_TITLE = "cloudopsbench";
 // 「归档」组 = 退休区：显示失效的旧会话改写 cwd 后收进来（见 retire 命令注释）
 const ARCHIVE_TITLE = "归档";
 const ARCHIVE_DIR = path.join(REPO, "DSH-based Agent Service", "dsh_cob-archive");
@@ -104,6 +101,7 @@ let dry = false;
 let roundFilter = null;
 let toGroup = null;
 let straysFlag = false;
+let groupFilter = null;
 const extraDirs = [];
 const caseFilter = [];
 const sessionFilter = [];
@@ -118,10 +116,11 @@ for (let i = 1; i < argv.length; i++) {
   else if (a === "--session") sessionFilter.push(argv[++i]);
   else if (a === "--to") toGroup = argv[++i];
   else if (a === "--strays") straysFlag = true;
+  else if (a === "--group") groupFilter = argv[++i];
   else { console.error(`未知参数: ${a}`); process.exit(2); }
 }
-if (!["sync", "promote", "adopt", "retire", "list"].includes(cmd)) {
-  console.error("用法: node sessions.mjs <sync|promote|adopt|retire|list> [选项…]（见文件头注释）");
+if (!["sync", "adopt", "retire", "list"].includes(cmd)) {
+  console.error("用法: node sessions.mjs <sync|adopt|retire|list> [选项…]（见文件头注释）");
   process.exit(2);
 }
 
@@ -228,13 +227,12 @@ function latestPerCase() {
 function loadWs() {
   const ws = JSON.parse(fs.readFileSync(wsPath, "utf8"));
   const W = ws.tables.workspaces;
-  const find = (t) => Object.entries(W).find(([, w]) => w.title === t);
-  const all = find(ALL_TITLE), formal = find(FORMAL_TITLE);
-  if (!all || !formal) {
-    console.error(`[ERR] ${wsPath} 里找不到组「${ALL_TITLE}」/「${FORMAL_TITLE}」（先在 web 里建组）`);
+  const all = Object.entries(W).find(([, w]) => w.title === ALL_TITLE);
+  if (!all) {
+    console.error(`[ERR] ${wsPath} 里找不到组「${ALL_TITLE}」（先在 web 里建组）`);
     process.exit(3);
   }
-  return { ws, W, allId: all[0], formalId: formal[0] };
+  return { ws, W, allId: all[0] };
 }
 /** 平台硬约束：sessionIds 全局不重叠（重叠 = 工作区域加载失败，左侧列表全空）——写盘前断言 */
 function assertDisjoint(ws) {
@@ -292,60 +290,7 @@ if (cmd === "sync") {
   else console.log(dry ? "[dry] 未写盘" : "[sync] 无变化");
 }
 
-// ── promote：移入正式组 ─────────────────────────────────────────────
-else if (cmd === "promote") {
-  const { ws, W, allId, formalId } = loadWs();
-  const allList = W[allId].sessionIds;
-  const formalList = W[formalId].sessionIds;
-
-  // 目标集合
-  const targets = []; // {caseKey, sessionId, round, jra, why}
-  if (sessionFilter.length) {
-    for (const pref of sessionFilter) {
-      const hits = [...bySession.keys()].filter((s) => s.includes(pref));
-      if (hits.length !== 1) { console.log(`  ! --session ${pref}: 命中 ${hits.length} 个（需唯一）`); continue; }
-      const r = bySession.get(hits[0]);
-      targets.push({ caseKey: r.caseKey, sessionId: r.sessionId, round: "(手动)", jra: null, why: "手动指定" });
-    }
-  } else if (caseFilter.length) {
-    const latest = latestPerCase();
-    for (const ck of caseFilter) {
-      const e = latest.get(ck);
-      if (!e) { console.log(`  ! --case ${ck}: 未找到（跑过吗？）`); continue; }
-      if (!e.run?.sessionId) { console.log(`  ! --case ${ck}: run 无 session（${e.run?.dirName ?? "无 run"}）`); continue; }
-      targets.push({ caseKey: ck, sessionId: e.run.sessionId, round: e.round, jra: e.jra, why: "手动指定" });
-    }
-  } else {
-    const latest = latestPerCase();
-    const passed = [...latest.entries()].filter(([, e]) => e.jra === 1)
-      .sort((a, b) => a[0].localeCompare(b[0]));
-    for (const [ck, e] of passed) {
-      if (!e.run?.sessionId) { console.log(`  ! ${ck}: 通过但 run 无 session（${e.run?.dirName ?? "无 run"}），跳过`); continue; }
-      targets.push({ caseKey: ck, sessionId: e.run.sessionId, round: e.round, jra: e.jra, why: "JRA=1" });
-    }
-  }
-  if (!targets.length) { console.log("[promote] 无目标（名单空）"); process.exit(0); }
-
-  let moved = 0, already = 0;
-  for (const t of targets) {
-    if (formalList.includes(t.sessionId)) {
-      already++;
-      console.log(`  = ${t.caseKey}  [${t.round} · ${t.jra == null ? "手动" : "JRA=" + t.jra}]  ${short(t.sessionId)}  已在正式组`);
-      continue;
-    }
-    formalList.push(t.sessionId);
-    const i = allList.indexOf(t.sessionId);
-    if (i >= 0) allList.splice(i, 1);
-    unarchive(ws, t.sessionId); // 正式组要可见
-    moved++;
-    console.log(`  → ${t.caseKey}  [${t.round} · ${t.jra == null ? "手动" : "JRA=" + t.jra}]  ${short(t.sessionId)}  全量→正式（搬移：平台约束，不留副本）`);
-  }
-  formalList.sort();
-  console.log(`[promote] 移入 ${moved} · 已在 ${already} · 正式组共 ${formalList.length} · 全量组剩 ${allList.length}`);
-  if (moved && !dry) saveWs(ws);
-  else console.log(dry ? "[dry] 未写盘" : "[promote] 无变化");
-  console.log("[提示] dsh web 重启后可见（bash \"DSH-based Agent Service/dsh_dlr/run_web.sh\"）");
-}
+// ── promote：已退役（2026-10-14 单一组制——完整一份全在 cloudopsbench，无档可分）──
 
 // ── adopt：把「未分组」的持久会话收进指定组 ─────────────────────────
 else if (cmd === "adopt") {
@@ -457,7 +402,14 @@ else if (cmd === "retire") {
   // ── 目标收集：--session 显式 / 默认（--strays）全库扫「cwd 失效或与组 path 不符」的成员 ──
   const targets = []; // { sid, from }
   const seen = new Set();
-  if (sessionFilter.length) {
+  if (groupFilter) {
+    const g = Object.entries(W).find(([, w]) => w.title === groupFilter);
+    if (!g) { console.error(`[ERR] 找不到组「${groupFilter}」`); process.exit(3); }
+    for (const sid of g[1].sessionIds) {
+      if (seen.has(sid)) continue; seen.add(sid);
+      targets.push({ sid, from: groupFilter });
+    }
+  } else if (sessionFilter.length) {
     for (const pref of sessionFilter) {
       const hits = [...idx.keys()].filter((s) => s.includes(pref));
       if (hits.length !== 1) { console.log(`  ! --session ${pref}: 命中 ${hits.length} 个（需唯一）`); continue; }
@@ -561,13 +513,13 @@ else if (cmd === "retire") {
 
 // ── list ────────────────────────────────────────────────────────────
 else if (cmd === "list") {
-  const { ws, W, allId, formalId } = loadWs();
+  const { ws, W, allId } = loadWs();
   const archived = new Set(ws.global.archivedSessionIds || []);
   const label = (sid) => {
     const r = bySession.get(sid);
     return r ? `${r.caseKey}  (${r.dirName})` : "(未在 results/--dirs 扫到)";
   };
-  const rows = [[allId, ALL_TITLE], [formalId, FORMAL_TITLE]];
+  const rows = [[allId, ALL_TITLE]];
   const aEnt = Object.entries(W).find(([, w]) => w.title === ARCHIVE_TITLE);
   if (aEnt) rows.push([aEnt[0], ARCHIVE_TITLE]);
   for (const [id, title] of rows) {
