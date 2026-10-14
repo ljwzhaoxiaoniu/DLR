@@ -8,13 +8,15 @@
 
 项目跑在**三级语义建模（TSM）**框架下——**L1 `dlr`**（数据源级）/ **L2 `consensus`**（领域共识级）/ **L3 `sop`**（业务逻辑级）；一条知识进哪一级，**准入判据即治理线**。详见 [docs/02-concept.md](docs/02-concept.md)。
 
-一份检出包含三部分：
+一份检出 = 两个服务部件 + 两个开箱即用的场景包 + 一层可插拔的场景机制：
 
 | 部分 | 是什么 |
 |---|---|
 | `TSM Core Service/` | 语义服务（TypeScript）：LanceDB 向量 + Neo4j 图 + ONNX 编码器，经 streamable-http 暴露 **7 个 MCP 工具** |
 | `DSH-based Agent Service/` | dsh（DeepSeek Harness）接入：`dsh-tsm-agent` bundle、`dsh-tsm-eval` 考试系统、启动器、agent 规则 |
-| `scenarios/<名>/` | 完整 TSM 内容包：三层源 + 考卷 + 跑批结果。当前 `birdminidev`（BIRD mini-dev，11 库 / 500 题——**500/500 评定正确**：426 与 gold 一致 + 74 处按 L3 节口径裁定为数据集自身缺陷） |
+| `scenarios/birdminidev/` | 场景包 —— BIRD mini-dev（11 库 / 500 题）：三层源 + 考卷 + 跑批结果。**500/500 评定正确**（426 与 gold 完全一致 + 74 处按 L3 节口径裁定的数据集缺陷） |
+| `scenarios/cloudopsbench/` | 场景包 —— Cloud-OpsBench（K8s 根因诊断，754 例）：三层源 + 上游评分器适配 + 跑批结果。已跑 549 例 **JRA 547/549（99.6%）** |
+| *自带场景* | 场景层**可插拔** —— 把 `TSM_SCENARIO` 指向任意自带三层源（可选考卷）的场景包即可。换场景 checklist 见 [docs/04-application.md](docs/04-application.md) |
 
 <a id="benchmarks"></a>
 ## 基准成绩

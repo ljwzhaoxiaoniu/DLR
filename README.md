@@ -8,13 +8,15 @@ English | [中文](README.zh.md)
 
 The project runs DLR inside the **Three-Level Semantic Modeling (TSM)** framework — **L1 `dlr`** (data-source level) / **L2 `consensus`** (domain-consensus level) / **L3 `sop`** (business-logic level). The admission criteria for a piece of knowledge are the governance line. See [docs/02-concept.md](docs/02-concept.md).
 
-A checkout ships three parts:
+A checkout ships two service components, two ready-to-run scenario packages, and a pluggable scenario layer:
 
 | Part | What it is |
 |---|---|
 | `TSM Core Service/` | The semantic service (TypeScript): LanceDB vectors + Neo4j graph + ONNX encoder, exposing **7 MCP tools** over streamable HTTP |
 | `DSH-based Agent Service/` | dsh (DeepSeek Harness) integration: the `dsh-tsm-agent` bundle, the `dsh-tsm-eval` exam system, launchers, agent rules |
-| `scenarios/<name>/` | Complete TSM content packages: three-level sources + exam paper + graded results. Current: `birdminidev` (BIRD mini-dev, 11 databases / 500 questions — **500/500 judged correct**: 426 matching gold exactly, 74 ruled correct under L3 clauses where the dataset's own gold is defective) |
+| `scenarios/birdminidev/` | Scenario package — BIRD mini-dev (11 databases / 500 questions): three-level sources + exam paper + graded results. **500/500 judged correct** (426 matching gold exactly + 74 dataset-defect rulings carried by L3 clauses) |
+| `scenarios/cloudopsbench/` | Scenario package — Cloud-OpsBench (Kubernetes RCA, 754 cases): three-level sources + the upstream-scorer adapter + graded results. **JRA 547/549 (99.6%)** on the 549 cases run so far |
+| *Bring your own* | The scenario layer is **pluggable** — point `TSM_SCENARIO` at any package carrying its own three-level sources (and optionally an exam paper). See [docs/04-application.md](docs/04-application.md) for the scenario-switch checklist |
 
 <a id="benchmarks"></a>
 ## Benchmarks
