@@ -1,6 +1,6 @@
 # 评测明细 · boutique/runtime — cloudopsbench
 
-> 本家族已跑 **17/45** 题：JRA ✅17 ❌0 ｜ 证据链全闭 17 ｜ token 中位 61,752 ｜ 生成 2026-10-14T01:41:18.020Z
+> 本家族已跑 **37/45** 题：JRA ✅37 ❌0 ｜ 证据链全闭 37 ｜ token 中位 81,268 ｜ 生成 2026-10-14T05:24:30.653Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -24,6 +24,26 @@
 | [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 13 | 98,012 | 0 | 0 | 1014_0252_inorder4-v3b116 | 全对·链闭 |
 | [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 11 | 61,113 | 0 | 0 | 1014_0254_inorder4-v3b117 | 全对·链闭 |
 | [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 12 | 81,447 | 0 | 0 | 1014_0256_inorder4-v3b118 | 全对·链闭 |
+| [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4286 | 15 | 107,286 | 0 | 0 | 1014_1226_inorder4-v3b119 | 全对·链闭 |
+| [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 71,479 | 0 | 0 | 1014_1230_inorder4-v3b120 | 全对·链闭 |
+| [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 154,772 | 0 | 0 | 1014_1234_inorder4-v3b121 | 全对·链闭 |
+| [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 13 | 84,911 | 0 | 0 | 1014_1236_inorder4-v3b122 | 全对·链闭 |
+| [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 12 | 147,618 | 0 | 0 | 1014_1239_inorder4-v3b123 | 全对·链闭 |
+| [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 82,921 | 0 | 0 | 1014_1241_inorder4-v3b124 | 全对·链闭 |
+| [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 15 | 88,747 | 0 | 0 | 1014_1245_inorder4-v3b125 | 全对·链闭 |
+| [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 12 | 81,268 | 0 | 0 | 1014_1247_inorder4-v3b126 | 全对·链闭 |
+| [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 94,812 | 0 | 0 | 1014_1250_inorder4-v3b127 | 全对·链闭 |
+| [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 102,987 | 0 | 0 | 1014_1252_inorder4-v3b128 | 全对·链闭 |
+| [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 115,722 | 0 | 0 | 1014_1255_inorder4-v3b129 | 全对·链闭 |
+| [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 68,980 | 0 | 0 | 1014_1257_inorder4-v3b130 | 全对·链闭 |
+| [30](#case-30) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 13 | 68,255 | 0 | 0 | 1014_1300_inorder4-v3b131 | 全对·链闭 |
+| [31](#case-31) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 82,684 | 0 | 0 | 1014_1302_inorder4-v3b132 | 全对·链闭 |
+| [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3529 | 18 | 113,648 | 0.0588 | 0 | 1014_1305_inorder4-v3b133 | 全对·链闭 |
+| [33](#case-33) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3846 | 14 | 80,370 | 0 | 0 | 1014_1308_inorder4-v3b134 | 全对·链闭 |
+| [34](#case-34) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 12 | 78,923 | 0 | 0 | 1014_1312_inorder4-v3b135 | 全对·链闭 |
+| [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3846 | 14 | 81,258 | 0 | 0 | 1014_1314_inorder4-v3b136 | 全对·链闭 |
+| [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 29 | 128,004 | 0 | 0 | 1014_1318_inorder4-v3b137 | 全对·链闭 |
+| [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3571 | 15 | 81,865 | 0 | 0 | 1014_1321_inorder4-v3b138 | 全对·链闭 |
 
 ## 证据正文
 
@@ -145,4 +165,144 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3636 · steps 12 · tokens 81,447
 - **raw 日志**：[results/1014_0256_inorder4-v3b118/raw/1014_0256_boutique-runtime-17](../results/1014_0256_inorder4-v3b118/raw/1014_0256_boutique-runtime-17/)（ndjson / mcp.jsonl / meta）
 - **摘要**：adservice-75d5d88689-7djn4 is the only outlier pod in namespace boutique: STATUS CrashLoopBackOff, READY 0/1, RESTARTS 4 (47s ago), Last State Terminated Reason=Error Exit Code=143 (SIGTERM by kubelet, not 137 OOMKilled). Pod events bind the mechanism verbatim: 'Liveness probe failed: timeout: failed to connect service "172.20.2.186:9555" within 1s: context deadline exceeded' and 'Container server failed liveness probe, will be restarted' -> 'Back-off restarting failed container'. The adservice Deployment configures livenessProbe: initialDelaySeconds=1, periodSeconds=1, timeoutSeconds=1, failu
+
+### case-18
+
+- **结论**：`app/currencyservice` + `liveness_probe_incorrect_timing` ｜ 标签 `app/currencyservice` + `liveness_probe_incorrect_timing`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4286 · steps 15 · tokens 107,286
+- **raw 日志**：[results/1014_1226_inorder4-v3b119/raw/1014_1226_boutique-runtime-18](../results/1014_1226_inorder4-v3b119/raw/1014_1226_boutique-runtime-18/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods listing shows only currencyservice-6c5cd895d9-wszxs as an outlier: RESTARTS=5 (45s ago) vs 0 for all other 10 boutique pods. Its last termination state is Terminated/Reason=Error/Exit Code=137 after only ~8s of life, and kubelet events bind the mechanism literally: 'Liveness probe failed: timeout: failed to connect service "172.20.1.147:7000" within 1s: context deadline exceeded' followed by 'Container server failed liveness probe, will be restarted' (x3) and 'Back-off restarting failed container server', i.e. kubelet SIGKILLed the container — Reason is Error, not OOMKilled. The deploymen
+
+### case-19
+
+- **结论**：`app/emailservice` + `liveness_probe_incorrect_timing` ｜ 标签 `app/emailservice` + `liveness_probe_incorrect_timing`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3077 · steps 14 · tokens 71,479
+- **raw 日志**：[results/1014_1230_inorder4-v3b120/raw/1014_1230_boutique-runtime-19](../results/1014_1230_inorder4-v3b120/raw/1014_1230_boutique-runtime-19/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only emailservice-75d7c8757-7pmzv is an outlier in the namespace-wide pod scan: 0/1 CrashLoopBackOff with 4 restarts, while all 10 other pods are 1/1 Running with 0 restarts (including the other pods on the same node worker-01, ruling out node-level faults). Pod detail shows Last State: Terminated, Reason: Error, Exit Code: 137 (SIGKILL class, not OOMKilled; memory limit 128Mi never implicated) with a ~7s container lifetime, and the kubelet events read verbatim: 'Liveness probe failed: timeout: failed to connect service "172.20.1.163:8080" within 1s: context deadline exceeded' followed by 'Con
+
+### case-20
+
+- **结论**：`app/paymentservice` + `liveness_probe_incorrect_timing` ｜ 标签 `app/paymentservice` + `liveness_probe_incorrect_timing`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2353 · steps 18 · tokens 154,772
+- **raw 日志**：[results/1014_1234_inorder4-v3b121/raw/1014_1234_boutique-runtime-20](../results/1014_1234_inorder4-v3b121/raw/1014_1234_boutique-runtime-20/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Object-layer scan: only paymentservice-55d4c9b59-cc5z2 is an outlier with RESTARTS=3 (all other 10 pods 0); its pod detail shows Last State Terminated Reason=Error ExitCode=137 with events 'Liveness probe failed: timeout: failed to connect service "172.20.2.236:50051" within 1s' (x3) → 'Container server failed liveness probe, will be restarted' (x3) → BackOff, i.e. kubelet probe-kill, not OOMKilled. GetAppYAML(paymentservice) shows a pathologically tight liveness probe: initialDelaySeconds=1, periodSeconds=1, timeoutSeconds=1, failureThreshold=1 against grpc port 50051 (port/protocol match con
+
+### case-21
+
+- **结论**：`app/recommendationservice` + `liveness_probe_incorrect_timing` ｜ 标签 `app/recommendationservice` + `liveness_probe_incorrect_timing`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 13 · tokens 84,911
+- **raw 日志**：[results/1014_1236_inorder4-v3b122/raw/1014_1237_boutique-runtime-21](../results/1014_1236_inorder4-v3b122/raw/1014_1237_boutique-runtime-21/)（ndjson / mcp.jsonl / meta）
+- **摘要**：In namespace boutique only recommendationservice-649b47b8f5-w7zd6 is an outlier in the pods listing (READY 0/1, RESTARTS 5, all other 10 pods 1/1 Running with 0 restarts). Pod detail shows Last State Terminated with Reason Error / Exit Code 137 and Restart Count 5 (not OOMKilled). Pod events bind the mechanism verbatim: 'Liveness probe failed: timeout: failed to connect service "172.20.2.254:8080" within 1s: context deadline exceeded' followed by 'Container server failed liveness probe, will be restarted' and BackOff/CrashLoopBackOff; kubelet log confirms 'failed to StartContainer for server w
+
+### case-22
+
+- **结论**：`app/adservice` + `container_memory_limit_too_low` ｜ 标签 `app/adservice` + `container_memory_limit_too_low`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3636 · steps 12 · tokens 147,618
+- **raw 日志**：[results/1014_1239_inorder4-v3b123/raw/1014_1239_boutique-runtime-22](../results/1014_1239_inorder4-v3b123/raw/1014_1239_boutique-runtime-22/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods listing shows the single outlier adservice-74c7f4c787-8g8cs (0/1 ContainerCreating on worker-01) while all other boutique services are 1/1 Running. Its own signal: endpoints/adservice = <none> (no routable backend). Pod conditions show PodScheduled=True, State Waiting/ContainerCreating, with repeated Warning FailedCreatePodSandBox: 'failed to create containerd task: ... runc create failed: unable to start container process: container init was OOM-killed (memory limit too low?)'. The config face confirms the mechanism: Deployment/Pod spec sets resources.limits.memory=5Mi (requests.memory=5
+
+### case-23
+
+- **结论**：`app/cartservice` + `container_memory_limit_too_low` ｜ 标签 `app/cartservice` + `container_memory_limit_too_low`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 12 · tokens 82,921
+- **raw 日志**：[results/1014_1241_inorder4-v3b124/raw/1014_1241_boutique-runtime-23](../results/1014_1241_inorder4-v3b124/raw/1014_1241_boutique-runtime-23/)（ndjson / mcp.jsonl / meta）
+- **摘要**：In namespace boutique, only cartservice is broken: pod cartservice-8c5b58976-49rrx is 0/1 ContainerCreating while all other 10 services are 1/1 Running, and a connectivity probe on its declared port 7070 returns 'Connection Failed'. DescribeResource on the pod shows PodScheduled=True but PodReadyToStartContainers=False with Warning FailedCreatePodSandBox: 'failed to create containerd task ... runc create failed: unable to start container process: container init was OOM-killed (memory limit too low?)'. GetAppYAML(cartservice) confirms the referenced config: requests/limits memory = 5Mi (limits 
+
+### case-24
+
+- **结论**：`app/checkoutservice` + `container_memory_limit_too_low` ｜ 标签 `app/checkoutservice` + `container_memory_limit_too_low`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 15 · tokens 88,747
+- **raw 日志**：[results/1014_1245_inorder4-v3b125/raw/1014_1245_boutique-runtime-24](../results/1014_1245_inorder4-v3b125/raw/1014_1245_boutique-runtime-24/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side (wording names no service -> inventory entry): pods wide listing shows the single outlier checkoutservice-79cc47d4c5-7q259 0/1 ContainerCreating on worker-03 (all other 10 boutique workloads 1/1 Running); endpoints listing shows 'checkoutservice <none>' while every other service has bound endpoints; active TCP probe on the port the victim's own Service declares (5050) returns 'Connection Failed'. Victim-side signal leads to the pod sheet, whose events carry the mechanism verbatim: 'Warning FailedCreatePodSandBox ... OCI runtime create failed: runc create failed: unable to start co
+
+### case-25
+
+- **结论**：`app/emailservice` + `container_memory_limit_too_low` ｜ 标签 `app/emailservice` + `container_memory_limit_too_low`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3636 · steps 12 · tokens 81,268
+- **raw 日志**：[results/1014_1247_inorder4-v3b126/raw/1014_1247_boutique-runtime-25](../results/1014_1247_inorder4-v3b126/raw/1014_1247_boutique-runtime-25/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only one outlier in the boutique inventory: pod emailservice-6ddd77457-tzhbg is 0/1 in ContainerCreating on worker-03 while all other 10 services are 1/1 Running; the deployments listing confirms emailservice 0/1 (AVAILABLE 0). The pod's own events carry the mechanism verbatim: 'Warning FailedCreatePodSandBox ... runc create failed: unable to start container process: container init was OOM-killed (memory limit too low?)' — the container dies before sandbox init, with PodScheduled=True and no FailedScheduling/FailedMount/image-pull/probe rows. GetAppYAML(emailservice) reads the referenced confi
+
+### case-26
+
+- **结论**：`app/frontend` + `container_memory_limit_too_low` ｜ 标签 `app/frontend` + `container_memory_limit_too_low`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 16 · tokens 94,812
+- **raw 日志**：[results/1014_1250_inorder4-v3b127/raw/1014_1250_boutique-runtime-26](../results/1014_1250_inorder4-v3b127/raw/1014_1250_boutique-runtime-26/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only outlier in the boutique pods inventory: frontend-5b4698b8c7-4462b is 0/1 CrashLoopBackOff (2 restarts) while all other 10 pods are 1/1 Running with 0 restarts. Victim's own signal: the frontend Service has an EMPTY endpoints list (no ready backend) and CheckServiceConnectivity(frontend:80) returns 'Connection Failed'; its owner deployment frontend is the only one at 0/1 AVAILABLE. Pod sheet carries the mechanism verbatim: Last State Terminated Reason=StartError ExitCode=128, message 'failed to create containerd task: ... OCI runtime create failed: runc create failed: unable to start conta
+
+### case-27
+
+- **结论**：`app/paymentservice` + `container_memory_limit_too_low` ｜ 标签 `app/paymentservice` + `container_memory_limit_too_low`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3077 · steps 14 · tokens 102,987
+- **raw 日志**：[results/1014_1252_inorder4-v3b128/raw/1014_1252_boutique-runtime-27](../results/1014_1252_inorder4-v3b128/raw/1014_1252_boutique-runtime-27/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Partial unreachability localized to paymentservice: its Service endpoints are '<none>' while every other boutique service has bound endpoints. Pod paymentservice-8694bc5949-9p4xp is 0/1 in ContainerCreating (not Ready, 0 restarts) and owner deployment/paymentservice is 0/1 AVAILABLE. The pod's own event carries the mechanism: Warning FailedCreatePodSandBox (x3) - 'failed to create containerd task ... OCI runtime create failed: runc create failed: unable to start container process: container init was OOM-killed (memory limit too low?)'. GetAppYAML(paymentservice) confirms resources.limits.memor
+
+### case-28
+
+- **结论**：`app/productcatalogservice` + `container_memory_limit_too_low` ｜ 标签 `app/productcatalogservice` + `container_memory_limit_too_low`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 115,722
+- **raw 日志**：[results/1014_1255_inorder4-v3b129/raw/1014_1255_boutique-runtime-28](../results/1014_1255_inorder4-v3b129/raw/1014_1255_boutique-runtime-28/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Partial reachability localized to productcatalogservice: pods listing shows the sole outlier productcatalogservice-6bdfff7c55-bntnp 0/1 ContainerCreating (all 10 other boutique pods 1/1 Running). Victim-side signals: the Service-declared port 3550 probe returns 'Connection Failed' and the endpoints listing for productcatalogservice shows '<none>' (no backend endpoints), while the Service selector app=productcatalogservice matches the pod label. Owner chain: deployment productcatalogservice 0/1 READY, 1 UP-TO-DATE, 0 AVAILABLE. The pod's own sheet carries the mechanism verbatim: 'Warning Failed
+
+### case-29
+
+- **结论**：`app/redis-cart` + `container_memory_limit_too_low` ｜ 标签 `app/redis-cart` + `container_memory_limit_too_low`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3077 · steps 14 · tokens 68,980
+- **raw 日志**：[results/1014_1257_inorder4-v3b130/raw/1014_1257_boutique-runtime-29](../results/1014_1257_inorder4-v3b130/raw/1014_1257_boutique-runtime-29/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Endpoints listing shows redis-cart with no endpoints (<none>) while all 11 peer services are bound, and an active probe to redis-cart:6379 returned 'Connection Failed' -> partial unreachability isolated to redis-cart. Its pod redis-cart-754cf58cb4-42f8g is 0/1 ContainerCreating on worker-02 (PodScheduled=True, so not a scheduling fault). The pod's own events carry the mechanism: 'FailedCreatePodSandBox ... Failed to create pod sandbox: failed to create containerd task: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: container init w
+
+### case-30
+
+- **结论**：`app/shippingservice` + `container_memory_limit_too_low` ｜ 标签 `app/shippingservice` + `container_memory_limit_too_low`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 13 · tokens 68,255
+- **raw 日志**：[results/1014_1300_inorder4-v3b131/raw/1014_1300_boutique-runtime-30](../results/1014_1300_inorder4-v3b131/raw/1014_1300_boutique-runtime-30/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique pods listing (wide) shows a single outlier: shippingservice-84778d9f49-l8d2p 0/1 ContainerCreating on worker-03, while all other 10 pods are 1/1 Running and the other pods on worker-03 (cartservice, emailservice, paymentservice, redis-cart) are healthy, excluding a node-level fault. The victim's own signal confirms the disruption: Endpoints for shippingservice is '<none>' and CheckServiceConnectivity(shippingservice:50051) returns 'Connection Failed'. Pod detail gives the mechanism event: Status Pending, container Waiting/ContainerCreating, RestartCount 0, with Warning Faile
+
+### case-31
+
+- **结论**：`app/adservice` + `readiness_probe_incorrect_protocol` ｜ 标签 `app/adservice` + `readiness_probe_incorrect_protocol`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3077 · steps 14 · tokens 82,684
+- **raw 日志**：[results/1014_1302_inorder4-v3b132/raw/1014_1302_boutique-runtime-31](../results/1014_1302_inorder4-v3b132/raw/1014_1302_boutique-runtime-31/)（ndjson / mcp.jsonl / meta）
+- **摘要**：adservice is the unique outlier in the namespace: pod adservice-7446b5cf5d-4fv94 shows READY 0/1 (Ready=False, ContainersReady=False) and Deployment adservice is 0/1 AVAILABLE while all other 10 boutique services are 1/1. Kubelet event: 'Warning Unhealthy ... Readiness probe failed: Get "http://172.20.1.249:9555/": net/http: HTTP/1.x transport connection broken: malformed HTTP status code "\x00\x00\x00\x04\b..."' - i.e. an HTTP/1.x probe receiving HTTP/2 (gRPC) frames. GetAppYAML(adservice) confirms the mismatch: readinessProbe uses httpGet path=/ port=9555, while the container serves gRPC on 
+
+### case-32
+
+- **结论**：`app/checkoutservice` + `readiness_probe_incorrect_protocol` ｜ 标签 `app/checkoutservice` + `readiness_probe_incorrect_protocol`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3529 · steps 18 · tokens 113,648
+- **raw 日志**：[results/1014_1305_inorder4-v3b133/raw/1014_1305_boutique-runtime-32](../results/1014_1305_inorder4-v3b133/raw/1014_1305_boutique-runtime-32/)（ndjson / mcp.jsonl / meta）
+- **摘要**：checkoutservice pod checkoutservice-74fc7d4686-9vlrn is 0/1 Running with Ready=False/ContainersReady=False and empty Service endpoints (Deployment AVAILABLE 0/1), while all other boutique pods are 1/1 with 0 restarts. Kubelet events show repeated 'Warning Unhealthy ... Readiness probe failed: Get "http://172.20.2.80:5050/health": net/http: HTTP/1.x transport connection broken: malformed HTTP response "\x00\x00\x06\x04..."' (x11 over 81s). Deployment YAML shows readinessProbe using httpGet /health on port 5050 whereas livenessProbe correctly uses grpc on 5050; main.go confirms port 5050 serves 
+
+### case-33
+
+- **结论**：`app/currencyservice` + `readiness_probe_incorrect_protocol` ｜ 标签 `app/currencyservice` + `readiness_probe_incorrect_protocol`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3846 · steps 14 · tokens 80,370
+- **raw 日志**：[results/1014_1308_inorder4-v3b134/raw/1014_1308_boutique-runtime-33](../results/1014_1308_inorder4-v3b134/raw/1014_1308_boutique-runtime-33/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only currencyservice is the outlier: pod currencyservice-665c44c9f4-5p79r is 0/1 Running with Restarts=0, deployment currencyservice 0/1 AVAILABLE=0, Service currencyservice has EMPTY ENDPOINTS while all other 10 services have endpoints, and CheckServiceConnectivity(currencyservice:7000) returned 'Connection Failed'; GetAlerts shows no metric anomalies. Mechanism event read verbatim from the pod: 'Warning Unhealthy 1s (x11 over 81s) kubelet Readiness probe failed: Get "http://172.20.1.7:7000/": net/http: HTTP/1.x transport connection broken: malformed HTTP response "\x00\x00\x00\x04..."' — the
+
+### case-34
+
+- **结论**：`app/emailservice` + `readiness_probe_incorrect_protocol` ｜ 标签 `app/emailservice` + `readiness_probe_incorrect_protocol`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3636 · steps 12 · tokens 78,923
+- **raw 日志**：[results/1014_1312_inorder4-v3b135/raw/1014_1312_boutique-runtime-34](../results/1014_1312_inorder4-v3b135/raw/1014_1312_boutique-runtime-34/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Health-chain walk on namespace boutique: pod listing shows a single outlier row emailservice-77bbb89876-x85qb 0/1 Running (all other 10 pods 1/1), matching deployment emailservice 0/1 ready / 0 available while every peer deployment is 1/1. Pod describe gives the mechanism verbatim: kubelet 'Warning Unhealthy (x10 over 82s) Readiness probe failed: Get "http://172.20.2.91:8080/": net/http: HTTP/1.x transport connection broken: malformed HTTP response "\x00\x00\x1e\x04..."' — the response bytes are HTTP/2 gRPC frame headers, proving an HTTP/1.x probe hitting a gRPC port. Config confirmation: emai
+
+### case-35
+
+- **结论**：`app/paymentservice` + `readiness_probe_incorrect_protocol` ｜ 标签 `app/paymentservice` + `readiness_probe_incorrect_protocol`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3846 · steps 14 · tokens 81,258
+- **raw 日志**：[results/1014_1314_inorder4-v3b136/raw/1014_1315_boutique-runtime-35](../results/1014_1314_inorder4-v3b136/raw/1014_1315_boutique-runtime-35/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique: only paymentservice is anomalous (pod paymentservice-6fbb5fdcd6-krhgt 0/1 Running, Restart Count 0; deployment paymentservice 0/1 AVAILABLE 0), while all other 10 pods/deployments are 1/1 Running with RESTARTS 0. kubelet event on the pod: 'Warning Unhealthy (x11 over 82s) Readiness probe failed: Get "http://172.20.2.97:50051/": net/http: HTTP/1.x transport connection broken: malformed HTTP response "\x00\x00\x00\x04..."' — the returned bytes are raw gRPC/HTTP2 frames. The Deployment's readinessProbe is httpGet path=/ port=50051 while the container (containerPort 50051, PORT
+
+### case-36
+
+- **结论**：`app/productcatalogservice` + `readiness_probe_incorrect_protocol` ｜ 标签 `app/productcatalogservice` + `readiness_probe_incorrect_protocol`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2143 · steps 29 · tokens 128,004
+- **raw 日志**：[results/1014_1318_inorder4-v3b137/raw/1014_1318_boutique-runtime-36](../results/1014_1318_inorder4-v3b137/raw/1014_1318_boutique-runtime-36/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only outlier in boutique: pod productcatalogservice-695767b548-2x2xc is 0/1 Running with Restart Count 0 (no OOMKilled/137, no crash) while all other pods are 1/1; its pod events show 'Warning Unhealthy ... Readiness probe failed: Get "http://172.20.2.102:3550/": malformed HTTP response "\x00\x00\x06\x04..."' — the response bytes are an HTTP/2 preface, proving port 3550 serves gRPC. GetAppYAML confirms the injected config: productcatalogservice readinessProbe is httpGet path=/ port=3550 while its own livenessProbe and every other gRPC service use grpc: port=<svc port>. Container log 'starting 
+
+### case-37
+
+- **结论**：`app/recommendationservice` + `readiness_probe_incorrect_protocol` ｜ 标签 `app/recommendationservice` + `readiness_probe_incorrect_protocol`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3571 · steps 15 · tokens 81,865
+- **raw 日志**：[results/1014_1321_inorder4-v3b138/raw/1014_1321_boutique-runtime-37](../results/1014_1321_inorder4-v3b138/raw/1014_1321_boutique-runtime-37/)（ndjson / mcp.jsonl / meta）
+- **摘要**：recommendationservice pod recommendationservice-68d8957488-2l4kj is 0/1 Running (Deployment 0/1 AVAILABLE, 0 ready replicas) while all other boutique pods are 1/1 Running. kubelet events repeat: 'Warning Unhealthy ... Readiness probe failed: Get http://172.20.2.107:8080/: net/http: HTTP/1.x transport connection broken: malformed HTTP response' returning HTTP/2/gRPC frame bytes, while container logs show the service healthy and 'listening on port: 8080'. GetAppYAML confirms the injected mutation: readinessProbe uses httpGet path=/ port=8080 against a gRPC (HTTP/2) server, whereas livenessProbe 
 

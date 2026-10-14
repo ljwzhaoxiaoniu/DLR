@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/12,1.0,1.0,1.0,1.0,0.25,1.0,0.38461538461538464,14.0,0.0,0.0,namespace/boutique,namespace_cpu_quota_exceeded,namespace/boutique,namespace_cpu_quota_exceeded,
+boutique/runtime/24,1.0,1.0,1.0,1.0,1.0,1.0,0.21428571428571427,15.0,0.0,0.0,app/checkoutservice,container_memory_limit_too_low,app/checkoutservice,container_memory_limit_too_low,
+boutique/startup/33,1.0,1.0,1.0,1.0,1.0,1.0,0.25,13.0,0.0,0.0,app/recommendationservice,incorrect_image_reference,app/recommendationservice,incorrect_image_reference,
+trainticket/runtime/87,1.0,1.0,1.0,1.0,1.0,1.0,0.23076923076923078,14.0,0.0,0.0,app/ts-payment-service,service_sidecar_port_conflict,app/ts-payment-service,service_sidecar_port_conflict,

@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/11,1.0,1.0,1.0,1.0,0.25,1.0,0.46153846153846156,14.0,0.0,0.0,app/shippingservice,missing_service_account,app/shippingservice,missing_service_account,
+boutique/runtime/23,1.0,1.0,1.0,1.0,1.0,1.0,0.2727272727272727,12.0,0.0,0.0,app/cartservice,container_memory_limit_too_low,app/cartservice,container_memory_limit_too_low,
+boutique/startup/32,1.0,1.0,1.0,1.0,1.0,1.0,0.2727272727272727,12.0,0.0,0.0,app/frontend,incorrect_image_reference,app/frontend,incorrect_image_reference,
+trainticket/runtime/86,1.0,1.0,1.0,1.0,0.6666666666666666,1.0,0.3076923076923077,14.0,0.0,0.0,app/ts-order-service,service_sidecar_port_conflict,app/ts-order-service,service_sidecar_port_conflict,

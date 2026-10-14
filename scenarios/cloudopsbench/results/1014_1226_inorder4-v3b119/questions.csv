@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/97,1.0,1.0,1.0,1.0,1.0,1.0,0.23076923076923078,14.0,0.0,0.0,app/shippingservice,code_excessive_file_writes,app/shippingservice,code_excessive_file_writes,
+boutique/runtime/18,1.0,1.0,1.0,1.0,1.0,1.0,0.42857142857142855,15.0,0.0,0.0,app/currencyservice,liveness_probe_incorrect_timing,app/currencyservice,liveness_probe_incorrect_timing,
+trainticket/runtime/81,1.0,1.0,1.0,1.0,1.0,1.0,0.23076923076923078,14.0,0.0,0.0,app/ts-cancel-service,service_sidecar_port_conflict,app/ts-cancel-service,service_sidecar_port_conflict,
+boutique/startup/27,1.0,1.0,1.0,1.0,1.0,1.0,0.21428571428571427,15.0,0.0,0.0,app/shippingservice,incorrect_image_reference,app/shippingservice,incorrect_image_reference,

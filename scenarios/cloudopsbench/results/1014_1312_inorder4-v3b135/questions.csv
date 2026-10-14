@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/22,1.0,1.0,1.0,1.0,0.5,1.0,0.4,16.0,0.0,0.0,namespace/boutique,namespace_memory_quota_exceeded,namespace/boutique,namespace_memory_quota_exceeded,
+boutique/runtime/34,1.0,1.0,1.0,1.0,1.0,1.0,0.36363636363636365,12.0,0.0,0.0,app/emailservice,readiness_probe_incorrect_protocol,app/emailservice,readiness_probe_incorrect_protocol,
+boutique/scheduling/49,1.0,1.0,1.0,1.0,1.0,1.0,0.25,17.0,0.0,0.0,app/productcatalogservice,memory_capacity_mismatch,app/productcatalogservice,memory_capacity_mismatch,
+boutique/startup/43,1.0,0.0,0.0,1.0,1.0,1.0,0.23076923076923078,14.0,0.0,0.0,app/checkoutservice,incorrect_image_reference,app/checkoutservice,missing_image_pull_secret,

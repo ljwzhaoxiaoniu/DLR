@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/24,1.0,1.0,1.0,1.0,0.5,1.0,0.35294117647058826,18.0,0.0,0.0,namespace/boutique,namespace_memory_quota_exceeded,namespace/boutique,namespace_memory_quota_exceeded,
+boutique/runtime/36,1.0,1.0,1.0,1.0,1.0,1.0,0.21428571428571427,29.0,0.0,0.0,app/productcatalogservice,readiness_probe_incorrect_protocol,app/productcatalogservice,readiness_probe_incorrect_protocol,
+boutique/scheduling/51,1.0,1.0,1.0,1.0,1.0,1.0,0.19047619047619047,22.0,0.0,0.0,app/redis-cart,memory_capacity_mismatch,app/redis-cart,memory_capacity_mismatch,
+boutique/startup/45,1.0,0.0,0.0,1.0,1.0,1.0,0.21428571428571427,15.0,0.0,0.0,app/emailservice,incorrect_image_reference,app/emailservice,missing_image_pull_secret,

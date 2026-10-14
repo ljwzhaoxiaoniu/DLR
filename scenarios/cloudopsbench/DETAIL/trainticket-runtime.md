@@ -1,6 +1,6 @@
 # 评测明细 · train-ticket/runtime — cloudopsbench
 
-> 本家族已跑 **80/96** 题：JRA ✅80 ❌0 ｜ 证据链全闭 58 ｜ token 中位 409,364 ｜ 生成 2026-10-14T01:41:18.020Z
+> 本家族已跑 **96/96** 题：JRA ✅96 ❌0 ｜ 证据链全闭 74 ｜ token 中位 382,918 ｜ 生成 2026-10-14T05:24:30.653Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -87,6 +87,22 @@
 | [78](#case-78) | 1 | 1 | 1 | 0.8 | 0.6 | 0 | 0.4211 | 20 | 300,183 | 0 | 0 | 1014_0252_inorder4-v3b116 | 结果对·链未闭 |
 | [79](#case-79) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1579 | 20 | 633,424 | 0.0526 | 0 | 1014_0254_inorder4-v3b117 | 全对·链闭 |
 | [80](#case-80) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 12 | 271,594 | 0 | 0 | 1014_0256_inorder4-v3b118 | 全对·链闭 |
+| [81](#case-81) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 283,198 | 0 | 0 | 1014_1226_inorder4-v3b119 | 全对·链闭 |
+| [82](#case-82) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 275,600 | 0 | 0 | 1014_1230_inorder4-v3b120 | 全对·链闭 |
+| [83](#case-83) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.2667 | 16 | 490,099 | 0 | 0 | 1014_1234_inorder4-v3b121 | 全对·链闭 |
+| [84](#case-84) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.2727 | 12 | 263,384 | 0 | 0 | 1014_1236_inorder4-v3b122 | 全对·链闭 |
+| [85](#case-85) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.3333 | 13 | 273,331 | 0 | 0 | 1014_1239_inorder4-v3b123 | 全对·链闭 |
+| [86](#case-86) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.3077 | 14 | 267,107 | 0 | 0 | 1014_1241_inorder4-v3b124 | 全对·链闭 |
+| [87](#case-87) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 271,088 | 0 | 0 | 1014_1245_inorder4-v3b125 | 全对·链闭 |
+| [88](#case-88) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.3077 | 14 | 382,918 | 0 | 0 | 1014_1247_inorder4-v3b126 | 全对·链闭 |
+| [89](#case-89) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 513,025 | 0 | 0 | 1014_1250_inorder4-v3b127 | 全对·链闭 |
+| [90](#case-90) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 309,910 | 0 | 0 | 1014_1252_inorder4-v3b128 | 全对·链闭 |
+| [91](#case-91) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 11 | 278,540 | 0 | 0 | 1014_1255_inorder4-v3b129 | 全对·链闭 |
+| [92](#case-92) | 1 | 1 | 1 | 1 | 0.6667 | 1 | 0.25 | 13 | 276,594 | 0 | 0 | 1014_1257_inorder4-v3b130 | 全对·链闭 |
+| [93](#case-93) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 280,031 | 0 | 0 | 1014_1300_inorder4-v3b131 | 全对·链闭 |
+| [94](#case-94) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 13 | 276,404 | 0 | 0 | 1014_1302_inorder4-v3b132 | 全对·链闭 |
+| [95](#case-95) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 482,636 | 0 | 0 | 1014_1305_inorder4-v3b133 | 全对·链闭 |
+| [96](#case-96) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 13 | 275,261 | 0 | 0 | 1014_1308_inorder4-v3b134 | 全对·链闭 |
 
 ## 证据正文
 
@@ -649,4 +665,116 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3636 · steps 12 · tokens 271,594
 - **raw 日志**：[results/1014_0256_inorder4-v3b118/raw/1014_0257_trainticket-runtime-80](../results/1014_0256_inorder4-v3b118/raw/1014_0257_trainticket-runtime-80/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Pods listing in train-ticket shows a single outlier: ts-basic-service-664d46695c-v75jc is 1/2 CrashLoopBackOff with 4 restarts on worker-01 (all other 48 pods Running/Ready). DescribeResource on that pod: app container State=Waiting/CrashLoopBackOff, Last State Terminated Reason=Error Exit Code=1, Ready=False, containerPort 15680/TCP, while the injected istio-proxy sidecar carries annotation proxy.istio.io/config { "statusPort": 15680 } and logs 'Opening status port 15680'. GetRecentLogs/GetErrorLogs of ts-basic-service give the mechanism verbatim: 'Tomcat initialized with port(s): 15680 (http
+
+### case-81
+
+- **结论**：`app/ts-cancel-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-cancel-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2308 · steps 14 · tokens 283,198
+- **raw 日志**：[results/1014_1226_inorder4-v3b119/raw/1014_1228_trainticket-runtime-81](../results/1014_1226_inorder4-v3b119/raw/1014_1228_trainticket-runtime-81/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ns=train-ticket 中唯一离群 workload 为 ts-cancel-service(1/2 Ready, RESTARTS 3)；其 Service endpoints 列为空，三节点连通性实测 18885 全部 Connection Failed，caller 侧 32 次 HTTPError 503 与之闭环。机制事件：容器 Last State=Terminated/Error/Exit Code 1，事件面 Readiness probe failed 与 Back-off restarting failed container ts-cancel-service；应用日志原文 'PortInUseException: Port 18885 is already in use' / 'Web server failed to start. Port 18885 was already in use.'。配置确认：该 Deployment pod template 注解 proxy.istio.io/config: '{ "statusPort": 18885 }' 与 containerPort 18885 相同，pod 内 PROXY_CONFIG={"statusPort":18885}，即 Istio sidecar 状态端口抢占应用端口；对照 ts
+
+### case-82
+
+- **结论**：`app/ts-contacts-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-contacts-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3077 · steps 14 · tokens 275,600
+- **raw 日志**：[results/1014_1230_inorder4-v3b120/raw/1014_1232_trainticket-runtime-82](../results/1014_1230_inorder4-v3b120/raw/1014_1232_trainticket-runtime-82/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-contacts-service-7946b749bf-m8ps8 is the only outlier in the namespace pods listing (READY 1/2, STATUS CrashLoopBackOff, RESTARTS 2); its app container last state is Terminated/Error with exit code 1 and its log reads verbatim 'Failed to start bean webServerStartStop ... PortInUseException: Port 12347 is already in use' / 'Web server failed to start. Port 12347 was already in use.', while the co-located istio-proxy sidecar log reads 'Apply proxy config from annotation { statusPort: 12347 }' and 'Opening status port 12347'. GetAppYAML confirms the defect as configuration: the pod template an
+
+### case-83
+
+- **结论**：`app/ts-food-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-food-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.6667 · ECR 1 · EE 0.2667 · steps 16 · tokens 490,099
+- **raw 日志**：[results/1014_1234_inorder4-v3b121/raw/1014_1235_trainticket-runtime-83](../results/1014_1234_inorder4-v3b121/raw/1014_1235_trainticket-runtime-83/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-food-service pod (ts-food-service-5744cc6666-5gs7t) is the only outlier in the namespace object listing: READY 1/2, 4 restarts in ~5m, Ready=False. Its container Last State is Terminated with Reason=Error, Exit Code=1 and events show 'Back-off restarting failed container'. Application logs state 'Tomcat initialized with port(s): 18856 (http)' followed by 'APPLICATION FAILED TO START ... Web server failed to start. Port 18856 was already in use.' The same pod's istio-proxy log shows the colliding binder: 'Apply proxy config from annotation { "statusPort": 18856 }' and 'Opening status port 18
+
+### case-84
+
+- **结论**：`app/ts-gateway-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-gateway-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.6667 · ECR 1 · EE 0.2727 · steps 12 · tokens 263,384
+- **raw 日志**：[results/1014_1236_inorder4-v3b122/raw/1014_1238_trainticket-runtime-84](../results/1014_1236_inorder4-v3b122/raw/1014_1238_trainticket-runtime-84/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side: GetAlerts shows POST /api/v1/users/login returning '503 Server Error: Service Unavailable' (30 occurrences); CheckServiceConnectivity ts-gateway-service:18888 fails on worker-01/02/03. Object layer: pods listing has exactly one outlier, ts-gateway-service-7d97d56b56-6wwkf 1/2 CrashLoopBackOff (4 restarts), and deployments shows ts-gateway-service 0/1 AVAILABLE. Pod sheet: app container ts-gateway-service Waiting/CrashLoopBackOff, Last State Terminated Reason Error Exit Code 1, Restart Count 4, Ready False, while the istio-proxy sidecar in the same pod is Running/Ready with PROXY_
+
+### case-85
+
+- **结论**：`app/ts-inside-payment-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-inside-payment-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.6667 · ECR 1 · EE 0.3333 · steps 13 · tokens 273,331
+- **raw 日志**：[results/1014_1239_inorder4-v3b123/raw/1014_1240_trainticket-runtime-85](../results/1014_1239_inorder4-v3b123/raw/1014_1240_trainticket-runtime-85/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert points to ts-inside-payment-service's 'Process payment' returning 503. Pod listing shows the sole outlier: ts-inside-payment-service-6db9d96587-s6459 1/2 Running with 4 restarts on worker-01 (all other ts-* pods 2/2). Pod describe shows the business container Terminated Reason=Error ExitCode=1, RestartCount=4, Ready=False, with kubelet Warning BackOff. Previous-container error logs give the mechanism verbatim: 'PortInUseException: Port 18673 is already in use' / 'Web server failed to start. Port 18673 was already in use', while the istio-proxy sidecar logs 'Opening status port 18673'. Co
+
+### case-86
+
+- **结论**：`app/ts-order-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-order-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.6667 · ECR 1 · EE 0.3077 · steps 14 · tokens 267,107
+- **raw 日志**：[results/1014_1241_inorder4-v3b124/raw/1014_1242_trainticket-runtime-86](../results/1014_1241_inorder4-v3b124/raw/1014_1242_trainticket-runtime-86/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts show 503 on ts-order-service order-refresh routes. Pod inventory has exactly one outlier: ts-order-service-64776c8b87-5qf8p is READY 1/2 with 4 restarts while all other train-ticket pods are 2/2. Its error log reads 'org.springframework.boot.web.server.PortInUseException: Port 12031 is already in use'; container ts-order-service last state is Terminated (Reason: Error, Exit Code 1, Ready False) while the istio-proxy sidecar in the same pod is Ready. The deployment template carries the injected annotation proxy.istio.io/config: '{ "statusPort": 12031 }', so the sidecar binds the same por
+
+### case-87
+
+- **结论**：`app/ts-payment-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-payment-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2308 · steps 14 · tokens 271,088
+- **raw 日志**：[results/1014_1245_inorder4-v3b125/raw/1014_1246_trainticket-runtime-87](../results/1014_1245_inorder4-v3b125/raw/1014_1246_trainticket-runtime-87/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only outlier in the namespace-wide pods listing is ts-payment-service-6cbd66f447-ks5sb (1/2 READY, RESTARTS 4, BackOff events); its main container exits with Reason=Error ExitCode=1 and the previous log states 'org.springframework.boot.web.server.PortInUseException: Port 19001 is already in use'. The Deployment maps the app to containerPort 19001 while the same pod template carries the annotation proxy.istio.io/config: { "statusPort": 19001 }, and the injected istio-proxy sidecar (Running/Ready, PROXY_CONFIG statusPort=19001, ISTIO_META_POD_PORTS containerPort 19001) therefore occupies the ide
+
+### case-88
+
+- **结论**：`app/ts-preserve-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-preserve-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.6667 · ECR 1 · EE 0.3077 · steps 14 · tokens 382,918
+- **raw 日志**：[results/1014_1247_inorder4-v3b126/raw/1014_1248_trainticket-runtime-88](../results/1014_1247_inorder4-v3b126/raw/1014_1248_trainticket-runtime-88/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert and symptom side: entry POST /api/v1/preserveservice/preserve to ts-preserve-service returns HTTP 503 Service Unavailable (20 occurrences), and an active TCP probe to ts-preserve-service:14568 fails from all three workers (worker-01/02/03 'Connection Failed'). Object layer: pods listing shows exactly one outlier, ts-preserve-service-d9d44bb7c-vctxl 1/2 CrashLoopBackOff with 4 restarts (Ready False, ContainersReady False), while all other train-ticket pods are 2/2 Running. Pod record: application container Last State Terminated, Reason Error, Exit Code 1. Application logs (current and pre
+
+### case-89
+
+- **结论**：`app/ts-price-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-price-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 513,025
+- **raw 日志**：[results/1014_1250_inorder4-v3b127/raw/1014_1251_trainticket-runtime-89](../results/1014_1250_inorder4-v3b127/raw/1014_1251_trainticket-runtime-89/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom-side: only outlier in the train-ticket pod inventory is ts-price-service-58cd9cbd76-jft7k (1/2 READY, 4 restarts), and Service ts-price-service has EMPTY endpoints; alerts show its upstream callers ts-preserve-service (/preserve, 11x HTTP 500) and ts-inside-payment-service (/inside_payment, 5x HTTP 500). Workload/owner chain: deployment/ts-price-service is 0/1 AVAILABLE (1 up-to-date). Mechanism: the app container's Last State is Terminated/Error, Exit Code 1, logs read 'APPLICATION FAILED TO START ... Web server failed to start. Port 16579 was already in use.' (PortInUseException: Por
+
+### case-90
+
+- **结论**：`app/ts-route-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-route-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2308 · steps 14 · tokens 309,910
+- **raw 日志**：[results/1014_1252_inorder4-v3b128/raw/1014_1253_trainticket-runtime-90](../results/1014_1252_inorder4-v3b128/raw/1014_1253_trainticket-runtime-90/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only outlier in the train-ticket inventory is ts-route-service-66696fb9bd-8fg55 (READY 1/2, STATUS Running, RESTARTS 4 (82s ago)); all other workloads are 2/2 with 0 restarts. Its own signal: CheckServiceConnectivity(ts-route-service, port 11178 - the port its Service declares, 11178->targetPort 11178) fails on worker-01/02/03, and Deployment ts-route-service reports MinimumReplicasUnavailable / unavailableReplicas: 1. Pod describe shows the app container 'ts-route-service' Last State: Terminated, Reason: Error, Exit Code 1, Restart Count 4, Ready False, while the injected sidecar istio-proxy 
+
+### case-91
+
+- **结论**：`app/ts-seat-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-seat-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3 · steps 11 · tokens 278,540
+- **raw 日志**：[results/1014_1255_inorder4-v3b129/raw/1014_1256_trainticket-runtime-91](../results/1014_1255_inorder4-v3b129/raw/1014_1256_trainticket-runtime-91/)（ndjson / mcp.jsonl / meta）
+- **摘要**：pods listing (train-ticket, -o wide) shows a single outlier: ts-seat-service-74c885bd58-48kmm 1/2 CrashLoopBackOff, 4 restarts, on worker-01 (all other 45 pods 2/2 Running). The app container log reads 'org.springframework.boot.web.server.PortInUseException: Port 18898 is already in use' -> 'APPLICATION FAILED TO START / Web server failed to start. Port 18898 was already in use.', and the pod description shows Last State Terminated Reason=Error Exit Code=1, Ready=False, with events 'Warning BackOff: Back-off restarting failed container ts-seat-service' and 'Unhealthy Readiness probe failed ...
+
+### case-92
+
+- **结论**：`app/ts-security-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-security-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.6667 · ECR 1 · EE 0.25 · steps 13 · tokens 276,594
+- **raw 日志**：[results/1014_1257_inorder4-v3b130/raw/1014_1258_trainticket-runtime-92](../results/1014_1257_inorder4-v3b130/raw/1014_1258_trainticket-runtime-92/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only outlier on the pods surface is ts-security-service-6b55fdd59-99nzl (READY 1/2, RESTARTS 4, Age 5m6s) while every other train-ticket workload is 2/2 with 0 restarts; its caller-side symptom is ts-preserve-service's logs (IllegalArgumentException: Service Instance cannot be null -> HTTP 500 on POST /api/v1/preserveservice/preserve, matching the active alert) and the failed call edge ts-preserve-service -> ts-security-service exists in the dependency graph. The victim's own container log is decisive: 'org.springframework.boot.web.server.PortInUseException: Port 11188 is already in use' durin
+
+### case-93
+
+- **结论**：`app/ts-station-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-station-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 12 · tokens 280,031
+- **raw 日志**：[results/1014_1300_inorder4-v3b131/raw/1014_1301_trainticket-runtime-93](../results/1014_1300_inorder4-v3b131/raw/1014_1301_trainticket-runtime-93/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Inventory outlier: only ts-station-service-5ffd899745-qgmd6 is 1/2 Ready with 4 restarts (all other 49 pods 2/2). Pod sheet + events: business container Exit Code 1, Ready=False, 'Back-off restarting failed container ts-station-service'. Container log: 'APPLICATION FAILED TO START ... PortInUseException: Port 12345 is already in use / Web server failed to start. Port 12345 was already in use', while the istio-proxy sidecar logged 'Apply proxy config from annotation { statusPort: 12345 }' and 'Opening status port 12345' seconds before the app started. Config closure: the ts-station-service pod 
+
+### case-94
+
+- **结论**：`app/ts-train-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-train-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 13 · tokens 276,404
+- **raw 日志**：[results/1014_1302_inorder4-v3b132/raw/1014_1304_trainticket-runtime-94](../results/1014_1302_inorder4-v3b132/raw/1014_1304_trainticket-runtime-94/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods listing (wide) shows a single outlier: ts-train-service-54dc44c8b9-wsb6b 1/2 Running with 4 restarts on worker-01, while every other pod is 2/2 with 0 restarts; its container is Terminated (Reason: Error, Exit Code: 1) with events 'Warning BackOff Back-off restarting failed container ts-train-service'. Logs give the break verbatim: 'Web server failed to start. Port 14567 was already in use.' / 'APPLICATION FAILED TO START'. The same pod's sidecar logs show 'Opening status port 14567' and 'Apply proxy config from annotation { "statusPort": 14567 }', and GetAppYAML(ts-train-service) confirm
+
+### case-95
+
+- **结论**：`app/ts-travel-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-travel-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3077 · steps 14 · tokens 482,636
+- **raw 日志**：[results/1014_1305_inorder4-v3b133/raw/1014_1307_trainticket-runtime-95](../results/1014_1305_inorder4-v3b133/raw/1014_1307_trainticket-runtime-95/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only outlier in the train-ticket pod inventory: ts-travel-service-795b58f7cd-rknnk is 1/2 Running with 4 restarts (all 45 other pods are 2/2, 0 restarts, so no node-level fault). Pod detail shows the ts-travel-service container Last State Terminated Reason=Error Exit Code=1, Ready=False, with a kubelet 'BackOff restarting failed container ts-travel-service' event. Its logs give the mechanism verbatim: 'org.springframework.boot.web.server.PortInUseException: Port 12346 is already in use' / 'Web server failed to start. Port 12346 was already in use.' while the co-located istio-proxy logs 'Openin
+
+### case-96
+
+- **结论**：`app/ts-user-service` + `service_sidecar_port_conflict` ｜ 标签 `app/ts-user-service` + `service_sidecar_port_conflict`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 13 · tokens 275,261
+- **raw 日志**：[results/1014_1308_inorder4-v3b134/raw/1014_1309_trainticket-runtime-96](../results/1014_1308_inorder4-v3b134/raw/1014_1309_trainticket-runtime-96/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-user-service is the sole outlier in the pods listing (ts-user-service-57d8854584-gnftk, 1/2 READY, 4 restarts). Connectivity probes on its own declared Service port 12342 fail from worker-01/02/03. Its container exits with code 1 and logs 'APPLICATION FAILED TO START ... PortInUseException: Port 12342 is already in use', while the istio sidecar in the same pod logs 'Opening status port 12342'. The victim's own deployment manifest carries the collision: annotation proxy.istio.io/config '{ "statusPort": 12342 }' equals the app containerPort 12342 (and the Service/readiness-probe port 12342). 
 

@@ -13,7 +13,7 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 .note { border-left:3px solid var(--dlr); padding:12px 18px; background:var(--surface); border-radius:0 10px 10px 0; font-size:14.5px; color:var(--ink-2); margin-top:20px; }</style></head><body>
 <p class="muted"><a href="../overview.html">← 总视图</a> · <a href="../DETAIL.md">DETAIL.md（文字版总账）</a> · <a href="../results/STATS.md">STATS.md</a></p>
 <h1 class="hero">评测明细 · <em>boutique/admission</em></h1>
-<p class="deck">已跑 <b>7/58</b> 题：JRA ✅7 ❌0 ｜ 证据链全闭 6 ｜ token 中位 82,218 ｜ 口径与列义同总账 ｜ 生成 2026-10-14T01:41:18.020Z</p>
+<p class="deck">已跑 <b>25/58</b> 题：JRA ✅25 ❌0 ｜ 证据链全闭 23 ｜ token 中位 86,160 ｜ 口径与列义同总账 ｜ 生成 2026-10-14T05:24:30.653Z</p>
 <h2 class="section-title">逐题统计 · <em>去重取最新</em></h2>
 <table><tr><th>案例</th><th>CA</th><th>FA</th><th>JRA</th><th>MC</th><th>EOC</th><th>ECR</th><th>EE</th><th>steps</th><th>tokens</th><th>RAR</th><th>inv</th><th>轮次</th><th>raw 日志</th></tr>
 <tr><td><a href="#case-1"><code>1</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.6</td><td>16</td><td>81,626</td><td>0</td><td>0</td><td class="muted">1012_1458_l3-verify3</td><td><a href="../results/1012_1458_l3-verify3/raw/1012_1458_boutique-admission-1/" title="raw 日志（ndjson / mcp.jsonl / meta）">1012_1458_boutique-admission-1</a></td></tr>
@@ -23,6 +23,24 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
 <tr><td><a href="#case-5"><code>5</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.5</td><td>15</td><td>82,218</td><td>0</td><td>0</td><td class="muted">1013_1458_chainhead-verify2c</td><td><a href="../results/1013_1458_chainhead-verify2c/raw/1013_1458_boutique-admission-5/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1458_boutique-admission-5</a></td></tr>
 <tr><td><a href="#case-6"><code>6</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>0.75</td><td>0</td><td>0</td><td>0.4545</td><td>12</td><td>67,891</td><td>0</td><td>0</td><td class="muted">1013_1515_workload-verify2</td><td><a href="../results/1013_1515_workload-verify2/raw/1013_1515_boutique-admission-6/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1515_boutique-admission-6</a></td></tr>
 <tr><td><a href="#case-7"><code>7</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.25</td><td>1</td><td>0.5</td><td>13</td><td>85,806</td><td>0</td><td>0</td><td class="muted">1013_1845_triple-verify1</td><td><a href="../results/1013_1845_triple-verify1/raw/1013_1845_boutique-admission-7/" title="raw 日志（ndjson / mcp.jsonl / meta）">1013_1845_boutique-admission-7</a></td></tr>
+<tr><td><a href="#case-8"><code>8</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.6154</td><td>14</td><td>88,263</td><td>0</td><td>0</td><td class="muted">1014_1234_inorder4-v3b121</td><td><a href="../results/1014_1234_inorder4-v3b121/raw/1014_1234_boutique-admission-8/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1234_boutique-admission-8</a></td></tr>
+<tr><td><a href="#case-9"><code>9</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.5</td><td>1</td><td>0.5385</td><td>14</td><td>85,409</td><td>0</td><td>0</td><td class="muted">1014_1236_inorder4-v3b122</td><td><a href="../results/1014_1236_inorder4-v3b122/raw/1014_1237_boutique-admission-9/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1237_boutique-admission-9</a></td></tr>
+<tr><td><a href="#case-10"><code>10</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.5625</td><td>17</td><td>107,090</td><td>0</td><td>0</td><td class="muted">1014_1239_inorder4-v3b123</td><td><a href="../results/1014_1239_inorder4-v3b123/raw/1014_1239_boutique-admission-10/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1239_boutique-admission-10</a></td></tr>
+<tr><td><a href="#case-11"><code>11</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.25</td><td>1</td><td>0.4615</td><td>14</td><td>85,055</td><td>0</td><td>0</td><td class="muted">1014_1241_inorder4-v3b124</td><td><a href="../results/1014_1241_inorder4-v3b124/raw/1014_1241_boutique-admission-11/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1241_boutique-admission-11</a></td></tr>
+<tr><td><a href="#case-12"><code>12</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.25</td><td>1</td><td>0.3846</td><td>14</td><td>87,418</td><td>0</td><td>0</td><td class="muted">1014_1245_inorder4-v3b125</td><td><a href="../results/1014_1245_inorder4-v3b125/raw/1014_1245_boutique-admission-12/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1245_boutique-admission-12</a></td></tr>
+<tr><td><a href="#case-13"><code>13</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.5</td><td>1</td><td>0.4375</td><td>17</td><td>106,336</td><td>0</td><td>0</td><td class="muted">1014_1247_inorder4-v3b126</td><td><a href="../results/1014_1247_inorder4-v3b126/raw/1014_1247_boutique-admission-13/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1247_boutique-admission-13</a></td></tr>
+<tr><td><a href="#case-14"><code>14</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.5</td><td>1</td><td>0.3846</td><td>14</td><td>83,704</td><td>0</td><td>0</td><td class="muted">1014_1250_inorder4-v3b127</td><td><a href="../results/1014_1250_inorder4-v3b127/raw/1014_1250_boutique-admission-14/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1250_boutique-admission-14</a></td></tr>
+<tr><td><a href="#case-15"><code>15</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.25</td><td>1</td><td>0.5</td><td>15</td><td>105,270</td><td>0</td><td>0</td><td class="muted">1014_1252_inorder4-v3b128</td><td><a href="../results/1014_1252_inorder4-v3b128/raw/1014_1252_boutique-admission-15/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1252_boutique-admission-15</a></td></tr>
+<tr><td><a href="#case-16"><code>16</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>0.75</td><td>0</td><td>0</td><td>0.25</td><td>13</td><td>86,991</td><td>0</td><td>0</td><td class="muted">1014_1255_inorder4-v3b129</td><td><a href="../results/1014_1255_inorder4-v3b129/raw/1014_1255_boutique-admission-16/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1255_boutique-admission-16</a></td></tr>
+<tr><td><a href="#case-17"><code>17</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.5</td><td>1</td><td>0.4615</td><td>14</td><td>85,383</td><td>0</td><td>0</td><td class="muted">1014_1257_inorder4-v3b130</td><td><a href="../results/1014_1257_inorder4-v3b130/raw/1014_1257_boutique-admission-17/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1257_boutique-admission-17</a></td></tr>
+<tr><td><a href="#case-18"><code>18</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.5</td><td>1</td><td>0.5455</td><td>12</td><td>70,481</td><td>0</td><td>0</td><td class="muted">1014_1300_inorder4-v3b131</td><td><a href="../results/1014_1300_inorder4-v3b131/raw/1014_1300_boutique-admission-18/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1300_boutique-admission-18</a></td></tr>
+<tr><td><a href="#case-19"><code>19</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4167</td><td>13</td><td>85,684</td><td>0</td><td>0</td><td class="muted">1014_1302_inorder4-v3b132</td><td><a href="../results/1014_1302_inorder4-v3b132/raw/1014_1302_boutique-admission-19/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1302_boutique-admission-19</a></td></tr>
+<tr><td><a href="#case-20"><code>20</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.25</td><td>1</td><td>0.4615</td><td>14</td><td>69,814</td><td>0</td><td>0</td><td class="muted">1014_1305_inorder4-v3b133</td><td><a href="../results/1014_1305_inorder4-v3b133/raw/1014_1305_boutique-admission-20/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1305_boutique-admission-20</a></td></tr>
+<tr><td><a href="#case-21"><code>21</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>1</td><td>1</td><td>0.4615</td><td>14</td><td>86,160</td><td>0</td><td>0</td><td class="muted">1014_1308_inorder4-v3b134</td><td><a href="../results/1014_1308_inorder4-v3b134/raw/1014_1308_boutique-admission-21/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1308_boutique-admission-21</a></td></tr>
+<tr><td><a href="#case-22"><code>22</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.5</td><td>1</td><td>0.4</td><td>16</td><td>89,651</td><td>0</td><td>0</td><td class="muted">1014_1312_inorder4-v3b135</td><td><a href="../results/1014_1312_inorder4-v3b135/raw/1014_1312_boutique-admission-22/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1312_boutique-admission-22</a></td></tr>
+<tr><td><a href="#case-23"><code>23</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.25</td><td>1</td><td>0.3571</td><td>15</td><td>92,339</td><td>0</td><td>0</td><td class="muted">1014_1314_inorder4-v3b136</td><td><a href="../results/1014_1314_inorder4-v3b136/raw/1014_1315_boutique-admission-23/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1315_boutique-admission-23</a></td></tr>
+<tr><td><a href="#case-24"><code>24</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.5</td><td>1</td><td>0.3529</td><td>18</td><td>110,270</td><td>0</td><td>0</td><td class="muted">1014_1318_inorder4-v3b137</td><td><a href="../results/1014_1318_inorder4-v3b137/raw/1014_1318_boutique-admission-24/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1318_boutique-admission-24</a></td></tr>
+<tr><td><a href="#case-25"><code>25</code></a></td><td>1</td><td>1</td><td><span class="ok">✅</span></td><td>1</td><td>0.25</td><td>1</td><td>0.5</td><td>13</td><td>94,597</td><td>0</td><td>0</td><td class="muted">1014_1321_inorder4-v3b138</td><td><a href="../results/1014_1321_inorder4-v3b138/raw/1014_1321_boutique-admission-25/" title="raw 日志（ndjson / mcp.jsonl / meta）">1014_1321_boutique-admission-25</a></td></tr>
 </table>
 <h2 class="section-title">证据正文 · <em>逐题摘要</em></h2>
 <details id="case-1"><summary><b>case-1</b> · <code>app/adservice</code> + <code>missing_service_account</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 16 步</summary><ul>
@@ -306,6 +324,735 @@ pre { white-space:pre-wrap; word-break:break-word; background:var(--page); borde
    &quot;rank&quot;: 3,
    &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
    &quot;root_cause&quot;: &quot;namespace_pod_quota_exceeded&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-8"><summary><b>case-8</b> · <code>app/productcatalogservice</code> + <code>missing_service_account</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 14 步</summary><ul>
+<li><b>摘要</b>：Pod inventory (the legitimate entry, since the wording names no service) shows productcatalogservice entirely absent while all 10 other pods are 1/1 Running; GetResources(endpoints) shows 'productcatalogservice &lt;none&gt;' (zero endpoints) while every other service has bound endpoints; frontend caller logs carry 137 errors of 'connection refused' dialing 10.68.103.92:3550 (productcatalogservice's ClusterIP:port), i.e. the Service has no ready backend. Deployment reads 0/1 with UP-TO-DATE 0 and ReplicaSet productcatalogservice-758d969786 reads 'Replicas: 0 current / 1 desired', 'Pods Status: 0 Runn</li>
+<li><b>raw 日志</b>：<a href="../results/1014_1234_inorder4-v3b121/raw/1014_1234_boutique-admission-8/">results/1014_1234_inorder4-v3b121/raw/1014_1234_boutique-admission-8</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;replicasets&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;productcatalogservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;serviceaccounts&quot;}</code></td></tr>
+<tr><td>13</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;replicaset&quot;,&quot;name&quot;:&quot;productcatalogservice-758d969786&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Pod inventory (the legitimate entry, since the wording names no service) shows productcatalogservice entirely absent while all 10 other pods are 1/1 Running; GetResources(endpoints) shows 'productcatalogservice &lt;none&gt;' (zero endpoints) while every other service has bound endpoints; frontend caller logs carry 137 errors of 'connection refused' dialing 10.68.103.92:3550 (productcatalogservice's ClusterIP:port), i.e. the Service has no ready backend. Deployment reads 0/1 with UP-TO-DATE 0 and ReplicaSet productcatalogservice-758d969786 reads 'Replicas: 0 current / 1 desired', 'Pods Status: 0 Running / 0 Waiting', condition ReplicaFailure=True/FailedCreate — so the pod was never created (admission-stage failure, not scheduling/startup). Namespace events bind the mechanism verbatim: 'Warning FailedCreate replicaset/productcatalogservice-758d969786 Error creating: pods \&quot;productcatalogservice-758d969786-\&quot; is forbidden: error looking up service account boutique/productcatalog-services: serviceaccount \&quot;productcatalog-services\&quot; not found' (x15 over 103s = live mechanism). Config face confirms the mismatch: GetAppYAML(productcatalogservice) sets spec.template.spec.serviceAccountName=productcatalog-services, while the manifest's own ServiceAccount is named 'productcatalogservice'. The referenced-object listing confirms it is STILL missing: serviceaccounts in boutique contain productcatalogservice (and the other per-service SAs) but no 'productcatalog-services' — so the event is the mechanism, not setup history. Chain: missing ServiceAccount reference -&gt; pod never created -&gt; Deployment 0/1 -&gt; Service zero endpoints -&gt; upstream frontend connection refused = Service Availability Disruption.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/productcatalogservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/productcatalogservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/productcatalogservice&quot;,
+   &quot;root_cause&quot;: &quot;deployment_zero_replicas&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-9"><summary><b>case-9</b> · <code>app/recommendationservice</code> + <code>missing_service_account</code>（✓ 逐字命中） · MC 1 · EOC 0.5 · ECR 1 · 14 步</summary><ul>
+<li><b>摘要</b>：Wording named no service, so the inventory listing was the entry: every boutique pod is 1/1 Running with 0 restarts, but the deployments listing shows recommendationservice 0/1 (0 up-to-date, 0 available) and its Service endpoints are '&lt;none&gt;'. Caller-side frontend logs carry the unreachability symptom verbatim: 'failed to get product recommendations' with 'dial tcp 10.68.170.142:8080: connect: connection refused' (recommendationservice ClusterIP, 118 hits). No pod object exists for app=recommendationservice. The namespace events surface names the mechanism: Warning FailedCreate replicaset/rec</li>
+<li><b>raw 日志</b>：<a href="../results/1014_1236_inorder4-v3b122/raw/1014_1237_boutique-admission-9/">results/1014_1236_inorder4-v3b122/raw/1014_1237_boutique-admission-9</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;recommendationservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;pods&quot;,&quot;label_selector&quot;:&quot;app=recommendationservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;serviceaccounts&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Wording named no service, so the inventory listing was the entry: every boutique pod is 1/1 Running with 0 restarts, but the deployments listing shows recommendationservice 0/1 (0 up-to-date, 0 available) and its Service endpoints are '&lt;none&gt;'. Caller-side frontend logs carry the unreachability symptom verbatim: 'failed to get product recommendations' with 'dial tcp 10.68.170.142:8080: connect: connection refused' (recommendationservice ClusterIP, 118 hits). No pod object exists for app=recommendationservice. The namespace events surface names the mechanism: Warning FailedCreate replicaset/recommendationservice-7595cbfcbd - 'pods ... is forbidden: error looking up service account boutique/recommendservices: serviceaccount \&quot;recommendservices\&quot; not found'. Closing the reference check: the workload template sets serviceAccountName: recommendservices, while the serviceaccounts listing contains only 'recommendationservice' (singular) - the referenced account is still missing, so the admission failure is live. Root cause: pod creation blocked by a non-existent ServiceAccount reference, leaving recommendationservice with zero endpoints and callers getting connection refused.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/recommendationservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/recommendationservice&quot;,
+   &quot;root_cause&quot;: &quot;service_selector_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/adservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_network_delay&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-10"><summary><b>case-10</b> · <code>app/redis-cart</code> + <code>missing_service_account</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 17 步</summary><ul>
+<li><b>摘要</b>：redis-cart is the only unreachable unit: it has no pod at all (pods listing shows 10/11 services Running with 0 restarts; label_selector app=redis-cart returns no pods), its Service endpoints are '&lt;none&gt;' and a TCP probe to redis-cart:6379 fails ('Connection Failed'), while caller cartservice logs show 246/664 errors 'UnableToConnect on redis-cart:6379'. The owner chain shows Deployment redis-cart at 1 desired / 0 updated / 0 total / 0 available with condition ReplicaFailure=True FailedCreate, and ReplicaSet redis-cart-7f446868dc at 0/1 with 'Pods Status: 0 Running / 0 Waiting' — i.e. the pod </li>
+<li><b>raw 日志</b>：<a href="../results/1014_1239_inorder4-v3b123/raw/1014_1239_boutique-admission-10/">results/1014_1239_inorder4-v3b123/raw/1014_1239_boutique-admission-10</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;label_selector&quot;:&quot;app=redis-cart&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;redis-cart&quot;,&quot;port&quot;:6379,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;deployment&quot;,&quot;name&quot;:&quot;redis-cart&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;redis-cart&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;serviceaccounts&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;replicaset&quot;,&quot;name&quot;:&quot;redis-cart-7f446868dc&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>16</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pvc&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;redis-cart is the only unreachable unit: it has no pod at all (pods listing shows 10/11 services Running with 0 restarts; label_selector app=redis-cart returns no pods), its Service endpoints are '&lt;none&gt;' and a TCP probe to redis-cart:6379 fails ('Connection Failed'), while caller cartservice logs show 246/664 errors 'UnableToConnect on redis-cart:6379'. The owner chain shows Deployment redis-cart at 1 desired / 0 updated / 0 total / 0 available with condition ReplicaFailure=True FailedCreate, and ReplicaSet redis-cart-7f446868dc at 0/1 with 'Pods Status: 0 Running / 0 Waiting' — i.e. the pod object was never created (admission-stage break, not scheduling). The mechanism event is live and explicit: 'Warning FailedCreate 22s (x15 over 104s) replicaset/redis-cart-7f446868dc: Error creating: pods \&quot;redis-cart-7f446868dc-\&quot; is forbidden: error looking up service account boutique/redis-service: serviceaccount \&quot;redis-service\&quot; not found'. The config face confirms the reference: the redis-cart pod template sets serviceAccountName: redis-service, and the serviceaccounts listing contains only redis-cart/default plus per-service SAs — redis-service is still missing (so the FailedCreate is not setup history). PVC redis-cart-pvc is Bound (rules out the storage chain) and the Service selector app=redis-cart matches the template labels (rules out selector mismatch).&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/redis-cart&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/redis-cart&quot;,
+   &quot;root_cause&quot;: &quot;missing_secret_binding&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/redis-cart&quot;,
+   &quot;root_cause&quot;: &quot;volume_mount_permission_denied&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-11"><summary><b>case-11</b> · <code>app/shippingservice</code> + <code>missing_service_account</code>（✓ 逐字命中） · MC 1 · EOC 0.25 · ECR 1 · 14 步</summary><ul>
+<li><b>摘要</b>：shippingservice is the only outlier: no Pod object at all, Deployment reports 0/1 ready with 0 up-to-date, and its Service endpoints are '&lt;none&gt;' while the connectivity probe to its declared port 50051 returns 'Connection Failed' (all other 10 boutique services are 1/1 Running, 0 restarts, so the failure is partial). Because desired replicas = 1 but 0 pods were ever created, the chain breaks at admission, not scheduling/runtime. The namespace events surface names the culprit object verbatim: 'Warning FailedCreate replicaset/shippingservice-6b8786b6db - Error creating: pods &quot;shippingservice-6b8</li>
+<li><b>raw 日志</b>：<a href="../results/1014_1241_inorder4-v3b124/raw/1014_1241_boutique-admission-11/">results/1014_1241_inorder4-v3b124/raw/1014_1241_boutique-admission-11</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;shippingservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;serviceaccounts&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;shippingservice&quot;,&quot;port&quot;:50051,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;shippingservice is the only outlier: no Pod object at all, Deployment reports 0/1 ready with 0 up-to-date, and its Service endpoints are '&lt;none&gt;' while the connectivity probe to its declared port 50051 returns 'Connection Failed' (all other 10 boutique services are 1/1 Running, 0 restarts, so the failure is partial). Because desired replicas = 1 but 0 pods were ever created, the chain breaks at admission, not scheduling/runtime. The namespace events surface names the culprit object verbatim: 'Warning FailedCreate replicaset/shippingservice-6b8786b6db - Error creating: pods \&quot;shippingservice-6b8786b6db-\&quot; is forbidden: error looking up service account boutique/shippingservices: serviceaccount \&quot;shippingservices\&quot; not found'. Config confirmation closes it: GetAppYAML(shippingservice) sets spec.template.spec.serviceAccountName: shippingservices (extra trailing 's'), while the actual ServiceAccount listing contains only 'shippingservice' - the referenced 'shippingservices' is still absent, so the FailedCreate is live, not setup history. Misnamed ServiceAccount reference -&gt; pod creation forbidden -&gt; ReplicaSet can never produce a pod -&gt; Service has no endpoints -&gt; partial unavailability at callers.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;app/shippingservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/shippingservice&quot;,
+   &quot;root_cause&quot;: &quot;deployment_zero_replicas&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/shippingservice&quot;,
+   &quot;root_cause&quot;: &quot;service_selector_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-12"><summary><b>case-12</b> · <code>namespace/boutique</code> + <code>namespace_cpu_quota_exceeded</code>（✓ 逐字命中） · MC 1 · EOC 0.25 · ECR 1 · 14 步</summary><ul>
+<li><b>摘要</b>：Symptom 'Partial Service Unreachability.' resolves on the reachability chain to adservice: the pods inventory shows every other boutique service Running while adservice has no Pod object at all, and the endpoints listing confirms 'adservice &lt;none&gt;' (no ready backends) while all 11 sibling endpoints are populated. Its Deployment reads 0/1 AVAILABLE and 0 UP-TO-DATE, so no Pod was ever created by ReplicaSet adservice-b7d6498c7 -&gt; admission, not scheduling/probe/image. The namespace event surface names the mechanism verbatim on that ReplicaSet: 'Warning FailedCreate ... Error creating: pods &quot;adse</li>
+<li><b>raw 日志</b>：<a href="../results/1014_1245_inorder4-v3b125/raw/1014_1245_boutique-admission-12/">results/1014_1245_inorder4-v3b125/raw/1014_1245_boutique-admission-12</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;label_selector&quot;:&quot;app=adservice&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequotas&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequota&quot;,&quot;name&quot;:&quot;cpu-quota&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom 'Partial Service Unreachability.' resolves on the reachability chain to adservice: the pods inventory shows every other boutique service Running while adservice has no Pod object at all, and the endpoints listing confirms 'adservice &lt;none&gt;' (no ready backends) while all 11 sibling endpoints are populated. Its Deployment reads 0/1 AVAILABLE and 0 UP-TO-DATE, so no Pod was ever created by ReplicaSet adservice-b7d6498c7 -&gt; admission, not scheduling/probe/image. The namespace event surface names the mechanism verbatim on that ReplicaSet: 'Warning FailedCreate ... Error creating: pods \&quot;adservice-b7d6498c7-hq4wq\&quot; is forbidden: exceeded quota: cpu-quota, requested: requests.cpu=1, used: requests.cpu=10, limited: requests.cpu=1' (repeating across several attempts), and the referenced config object confirms it: ResourceQuota/cpu-quota in namespace boutique with requests.cpu Used=10 / Hard=1. The namespace CPU quota is massively over-subscribed (10 used vs 1 hard), so adservice's pod (requests.cpu=1000m) is rejected at admission, leaving the Service with an empty endpoint set and making adservice partially unreachable.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_cpu_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_pod_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_memory_quota_exceeded&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-13"><summary><b>case-13</b> · <code>namespace/boutique</code> + <code>namespace_cpu_quota_exceeded</code>（✓ 逐字命中） · MC 1 · EOC 0.5 · ECR 1 · 17 步</summary><ul>
+<li><b>摘要</b>：Symptom-side first: all 10 boutique pods are 1/1 Running but cartservice has no pod object at all; its Endpoints are '&lt;none&gt;' and CheckServiceConnectivity(cartservice, 7070) returns 'Connection Failed' (partial unreachability). Workload pruned by anchor: deployment cartservice is 0/1 with UP-TO-DATE 0 and ReplicaFailure=True/FailedCreate, NewReplicaSet cartservice-8cbf5b9d4 (0/1 replicas created). The namespace events surface binds the live mechanism to that ReplicaSet verbatim and repeatedly: 'Error creating: pods &quot;cartservice-8cbf5b9d4-bx7l2&quot; is forbidden: exceeded quota: cpu-request-quota, </li>
+<li><b>raw 日志</b>：<a href="../results/1014_1247_inorder4-v3b126/raw/1014_1247_boutique-admission-13/">results/1014_1247_inorder4-v3b126/raw/1014_1247_boutique-admission-13</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;label_selector&quot;:&quot;app=cartservice&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;cartservice&quot;,&quot;port&quot;:7070,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;serviceaccounts&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequotas&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>15</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;deployment&quot;,&quot;name&quot;:&quot;cartservice&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>16</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequota&quot;,&quot;name&quot;:&quot;cpu-request-quota&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom-side first: all 10 boutique pods are 1/1 Running but cartservice has no pod object at all; its Endpoints are '&lt;none&gt;' and CheckServiceConnectivity(cartservice, 7070) returns 'Connection Failed' (partial unreachability). Workload pruned by anchor: deployment cartservice is 0/1 with UP-TO-DATE 0 and ReplicaFailure=True/FailedCreate, NewReplicaSet cartservice-8cbf5b9d4 (0/1 replicas created). The namespace events surface binds the live mechanism to that ReplicaSet verbatim and repeatedly: 'Error creating: pods \&quot;cartservice-8cbf5b9d4-bx7l2\&quot; is forbidden: exceeded quota: cpu-request-quota, requested: requests.cpu=1, used: requests.cpu=10, limited: requests.cpu=10' (latest 38s ago, combined from similar events). Config confirmation: ResourceQuota cpu-request-quota shows requests.cpu Used 10 / Hard 10, while GetAppYAML(cartservice) requests cpu 1000m per replica — the quota is saturated so the replica's pod admission is denied. The competing one-off event 'serviceaccount \&quot;cartservice\&quot; not found' is setup history only: the cartservice ServiceAccount is present in its own listing (105s), so that FailedCreate is not live and the missing_service_account story is dropped. Service selector (app=cartservice) and port mapping (7070-&gt;7070) are correct, excluding selector/port/addressing faults.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_cpu_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_pod_quota_exceeded&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-14"><summary><b>case-14</b> · <code>namespace/boutique</code> + <code>namespace_cpu_quota_exceeded</code>（✓ 逐字命中） · MC 1 · EOC 0.5 · ECR 1 · 14 步</summary><ul>
+<li><b>摘要</b>：checkoutservice has no running pod while all other 10 boutique pods are 1/1 Running; its Endpoints bind to &lt;none&gt; and a TCP probe on its own declared port 5050 returns 'Connection Failed'. The deployment shows 0/1 available (desired 1, so replicas are not zero), and the namespace event surface carries the mechanism verbatim: 'Warning FailedCreate replicaset/checkoutservice-7545f6f597 Error creating: pods ... is forbidden: exceeded quota: cpu-request-quota, requested: requests.cpu=2, used: requests.cpu=10, limited: requests.cpu=10'. The config face confirms it: ResourceQuota cpu-request-quota s</li>
+<li><b>raw 日志</b>：<a href="../results/1014_1250_inorder4-v3b127/raw/1014_1250_boutique-admission-14/">results/1014_1250_inorder4-v3b127/raw/1014_1250_boutique-admission-14</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;,&quot;port&quot;:5050,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;label_selector&quot;:&quot;app=checkoutservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequotas&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;serviceaccounts&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;checkoutservice has no running pod while all other 10 boutique pods are 1/1 Running; its Endpoints bind to &lt;none&gt; and a TCP probe on its own declared port 5050 returns 'Connection Failed'. The deployment shows 0/1 available (desired 1, so replicas are not zero), and the namespace event surface carries the mechanism verbatim: 'Warning FailedCreate replicaset/checkoutservice-7545f6f597 Error creating: pods ... is forbidden: exceeded quota: cpu-request-quota, requested: requests.cpu=2, used: requests.cpu=10, limited: requests.cpu=10'. The config face confirms it: ResourceQuota cpu-request-quota shows 'requests.cpu: 10/10' (fully consumed), whereas checkoutservice's pod template requests cpu: 2000m, so admission can never fit. The referenced ServiceAccount 'checkoutservice' exists in the serviceaccounts listing and image/probe/PVC references are healthy, ruling out the missing-service-account setup-history trap and image/mount faults. Root cause is therefore namespace-level CPU request quota exhaustion blocking pod creation, leaving the service with no backing endpoint.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_cpu_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_memory_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;cpu_capacity_mismatch&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-15"><summary><b>case-15</b> · <code>namespace/boutique</code> + <code>namespace_cpu_quota_exceeded</code>（✓ 逐字命中） · MC 1 · EOC 0.25 · ECR 1 · 15 步</summary><ul>
+<li><b>摘要</b>：Namespace-scoped CPU request quota exhaustion blocks currencyservice pod creation. Pod inventory shows all boutique apps Running except currencyservice, which has zero pods; Deployment currencyservice is 0/2 ready, 0 UP-TO-DATE, 0 AVAILABLE. Namespace events carry repeated Warning FailedCreate on replicaset/currencyservice-8587d7cfd7: 'pods ... is forbidden: exceeded quota: cpu-request-quota, requested: requests.cpu=1, used: requests.cpu=10, limited: requests.cpu=10' (still active 38s before collection). ResourceQuota DescribeResource confirms cpu-request-quota in namespace boutique at request</li>
+<li><b>raw 日志</b>：<a href="../results/1014_1252_inorder4-v3b128/raw/1014_1252_boutique-admission-15/">results/1014_1252_inorder4-v3b128/raw/1014_1252_boutique-admission-15</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequotas&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>11</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;currencyservice&quot;,&quot;port&quot;:7000,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>14</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequota&quot;,&quot;name&quot;:&quot;cpu-request-quota&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Namespace-scoped CPU request quota exhaustion blocks currencyservice pod creation. Pod inventory shows all boutique apps Running except currencyservice, which has zero pods; Deployment currencyservice is 0/2 ready, 0 UP-TO-DATE, 0 AVAILABLE. Namespace events carry repeated Warning FailedCreate on replicaset/currencyservice-8587d7cfd7: 'pods ... is forbidden: exceeded quota: cpu-request-quota, requested: requests.cpu=1, used: requests.cpu=10, limited: requests.cpu=10' (still active 38s before collection). ResourceQuota DescribeResource confirms cpu-request-quota in namespace boutique at requests.cpu Used 10 / Hard 10. Victim-side signal: currencyservice endpoints list is &lt;none&gt; and CheckServiceConnectivity(currencyservice:7000) returns Connection Failed; caller-side frontend error logs show 191 occurrences of 'could not retrieve currencies: dial tcp 10.68.22.190:7000: connect: connection refused' (currencyservice ClusterIP, port 7000 per its Service). All other services have healthy endpoints, so the unreachability is partial. Admission-stage rejection (FailedCreate), not scheduling, is the first surface contradicting expectation.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_cpu_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_pod_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/currencyservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-16"><summary><b>case-16</b> · <code>namespace/boutique</code> + <code>namespace_cpu_quota_exceeded</code>（✓ 逐字命中） · MC 0.75 · EOC 0 · ECR 0 · 13 步</summary><ul>
+<li><b>摘要</b>：Symptom 'Partial Service Unreachability' traced along the reachability chain: pods listing shows all 10 running pods healthy but emailservice has NO pod at all; deployment emailservice is 0/1 READY with 0 UP-TO-DATE (no pod ever created -&gt; admission). Caller-side signal: checkoutservice error logs show 12x 'failed to send order confirmation ... rpc error: code = Unavailable ... dial tcp 10.68.216.116:5000: connect: connection refused' (emailservice ClusterIP, no endpoints). Namespace events name the mechanism literally: 'Warning FailedCreate replicaset/emailservice-5dcd9bdff Error creating: po</li>
+<li><b>raw 日志</b>：<a href="../results/1014_1255_inorder4-v3b129/raw/1014_1255_boutique-admission-16/">results/1014_1255_inorder4-v3b129/raw/1014_1255_boutique-admission-16</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;label_selector&quot;:&quot;app=emailservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;emailservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequotas&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom 'Partial Service Unreachability' traced along the reachability chain: pods listing shows all 10 running pods healthy but emailservice has NO pod at all; deployment emailservice is 0/1 READY with 0 UP-TO-DATE (no pod ever created -&gt; admission). Caller-side signal: checkoutservice error logs show 12x 'failed to send order confirmation ... rpc error: code = Unavailable ... dial tcp 10.68.216.116:5000: connect: connection refused' (emailservice ClusterIP, no endpoints). Namespace events name the mechanism literally: 'Warning FailedCreate replicaset/emailservice-5dcd9bdff Error creating: pods ... is forbidden: exceeded quota: cpu-quota, requested: requests.cpu=1, used: requests.cpu=10, limited: requests.cpu=10' (still live - the quota is still full). Config confirmation: ResourceQuota cpu-quota shows requests.cpu 10/10 (exhausted), while emailservice's template requests cpu: 1000m; its ServiceAccount, image reference and Service selector/port are all correct, excluding SA/image/selector hypotheses. Root cause thus resides on the namespace-level CPU ResourceQuota admission surface.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_cpu_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_pod_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/emailservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-17"><summary><b>case-17</b> · <code>namespace/boutique</code> + <code>namespace_cpu_quota_exceeded</code>（✓ 逐字命中） · MC 1 · EOC 0.5 · ECR 1 · 14 步</summary><ul>
+<li><b>摘要</b>：frontend Service endpoints are '&lt;none&gt;' and CheckServiceConnectivity(frontend, 80) returns 'Connection Failed' while all other boutique services are up (partial unreachability). Deployment frontend shows 0/1 READY, 0 UP-TO-DATE, 0 AVAILABLE; ReplicaSet frontend-64bcd9854d is DESIRED 1 / CURRENT 0 and no frontend pod object exists. The ReplicaSet's repeated, still-current FailedCreate event reads verbatim: 'pods &quot;frontend-64bcd9854d-fzvkf&quot; is forbidden: exceeded quota: cpu-quota, requested: requests.cpu=1, used: requests.cpu=10, limited: requests.cpu=10'; the closure object confirms ResourceQuo</li>
+<li><b>raw 日志</b>：<a href="../results/1014_1257_inorder4-v3b130/raw/1014_1257_boutique-admission-17/">results/1014_1257_inorder4-v3b130/raw/1014_1257_boutique-admission-17</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;replicasets&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequotas&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;serviceaccounts&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;frontend&quot;,&quot;port&quot;:80,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;frontend Service endpoints are '&lt;none&gt;' and CheckServiceConnectivity(frontend, 80) returns 'Connection Failed' while all other boutique services are up (partial unreachability). Deployment frontend shows 0/1 READY, 0 UP-TO-DATE, 0 AVAILABLE; ReplicaSet frontend-64bcd9854d is DESIRED 1 / CURRENT 0 and no frontend pod object exists. The ReplicaSet's repeated, still-current FailedCreate event reads verbatim: 'pods \&quot;frontend-64bcd9854d-fzvkf\&quot; is forbidden: exceeded quota: cpu-quota, requested: requests.cpu=1, used: requests.cpu=10, limited: requests.cpu=10'; the closure object confirms ResourceQuota cpu-quota in namespace boutique at requests.cpu 10/10 against a hard limit of 10, while the frontend template requests cpu 1000m. An isolated earlier 'serviceaccount \&quot;frontend\&quot; not found' event is setup history only - the frontend ServiceAccount is present in its own listing, so the live mechanism is the exhausted namespace CPU quota denying pod admission for the last replica.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_cpu_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/frontend&quot;,
+   &quot;root_cause&quot;: &quot;deployment_zero_replicas&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-18"><summary><b>case-18</b> · <code>namespace/boutique</code> + <code>namespace_cpu_quota_exceeded</code>（✓ 逐字命中） · MC 1 · EOC 0.5 · ECR 1 · 12 步</summary><ul>
+<li><b>摘要</b>：Entry via inventory: paymentservice is the only outlier (deployment READY 0/1, UP-TO-DATE 0, AVAILABLE 0) and has NO pod object at all, while frontend caller logs show 14 checkout failures 'failed to charge card: rpc error: code = Unavailable ... dial tcp 10.68.128.36:50051: connect: connection refused' - a Service with no backends. The mechanism event is explicit and live: namespace boutique events show repeated Warning FailedCreate on replicaset/paymentservice-5797775987: 'pods paymentservice-5797775987-ftbfz is forbidden: exceeded quota: cpu-request-quota, requested: requests.cpu=1, used: r</li>
+<li><b>raw 日志</b>：<a href="../results/1014_1300_inorder4-v3b131/raw/1014_1300_boutique-admission-18/">results/1014_1300_inorder4-v3b131/raw/1014_1300_boutique-admission-18</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>9</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;paymentservice&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;deployment&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;resourcequotas&quot;}</code></td></tr>
+<tr><td>11</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;cpu-request-quota&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;resourcequota&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Entry via inventory: paymentservice is the only outlier (deployment READY 0/1, UP-TO-DATE 0, AVAILABLE 0) and has NO pod object at all, while frontend caller logs show 14 checkout failures 'failed to charge card: rpc error: code = Unavailable ... dial tcp 10.68.128.36:50051: connect: connection refused' - a Service with no backends. The mechanism event is explicit and live: namespace boutique events show repeated Warning FailedCreate on replicaset/paymentservice-5797775987: 'pods paymentservice-5797775987-ftbfz is forbidden: exceeded quota: cpu-request-quota, requested: requests.cpu=1, used: requests.cpu=10, limited: requests.cpu=10'. Closure at the referenced object confirms it: ResourceQuota cpu-request-quota in namespace boutique is requests.cpu Used 10 / Hard 10 (fully consumed by the other 10 workloads), leaving no CPU request headroom for paymentservice (Requests: cpu: 1). Break = namespace-level CPU request quota exhaustion blocking pod admission, which drains the paymentservice Service endpoints and yields partial unreachability.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_cpu_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_pod_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_memory_quota_exceeded&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-19"><summary><b>case-19</b> · <code>namespace/boutique</code> + <code>namespace_cpu_quota_exceeded</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 13 步</summary><ul>
+<li><b>摘要</b>：Symptom-side: pods inventory shows 10/11 services Running with 0 restarts, but productcatalogservice has NO pod; its endpoints listing reads '&lt;none&gt;' while all other services' endpoints are bound, so the break is on the endpoints/admission side, not scheduling, probes or addressing (its Service declares port 3550 with selector app=productcatalogservice matching the Deployment template). Workload pruned by anchor: GetResources(deployments, label_selector=app=productcatalogservice) = 'READY 0/1, UP-TO-DATE 0, AVAILABLE 0'. Live mechanism event on the namespace events surface: 'Warning FailedCrea</li>
+<li><b>raw 日志</b>：<a href="../results/1014_1302_inorder4-v3b132/raw/1014_1302_boutique-admission-19/">results/1014_1302_inorder4-v3b132/raw/1014_1302_boutique-admission-19</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;label_selector&quot;:&quot;app=productcatalogservice&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;productcatalogservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequotas&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom-side: pods inventory shows 10/11 services Running with 0 restarts, but productcatalogservice has NO pod; its endpoints listing reads '&lt;none&gt;' while all other services' endpoints are bound, so the break is on the endpoints/admission side, not scheduling, probes or addressing (its Service declares port 3550 with selector app=productcatalogservice matching the Deployment template). Workload pruned by anchor: GetResources(deployments, label_selector=app=productcatalogservice) = 'READY 0/1, UP-TO-DATE 0, AVAILABLE 0'. Live mechanism event on the namespace events surface: 'Warning FailedCreate replicaset/productcatalogservice-d78f7f8f7 - Error creating: pods \&quot;productcatalogservice-d78f7f8f7-zdrm2\&quot; is forbidden: exceeded quota: cpu-quota, requested: requests.cpu=1, used: requests.cpu=10, limited: requests.cpu=10' (repeating at 2m/119s/38s, so not setup history). Config face the mechanism points at: ResourceQuota 'cpu-quota' in namespace boutique reads 'requests.cpu: 10/10' - fully exhausted, so the pod requesting cpu 1000m cannot be admitted. Root cause = namespace CPU quota exhausted; blocked pods never created -&gt; endpoints empty -&gt; port 3550 unreachable -&gt; availability disruption.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_cpu_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_memory_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_pod_quota_exceeded&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-20"><summary><b>case-20</b> · <code>namespace/boutique</code> + <code>namespace_cpu_quota_exceeded</code>（✓ 逐字命中） · MC 1 · EOC 0.25 · ECR 1 · 14 步</summary><ul>
+<li><b>摘要</b>：Symptom 'Partial Service Unreachability.' — listing entry: deployment redis-cart shows 0/1 READY, 0 UP-TO-DATE, 0 AVAILABLE with no redis-cart pod in the pods listing, while all 10 other boutique pods are 1/1 Running. Namespace events bind the mechanism: Warning FailedCreate replicaset/redis-cart-869b6f5f6d 'Error creating: pods ... is forbidden: exceeded quota: cpu-quota, requested: requests.cpu=1, used: requests.cpu=10, limited: requests.cpu=1' (api-worker-86b754b694 shows the same CPU-quota rejection). Config face confirms the quota object: ResourceQuota 'cpu-quota' in boutique — requests.c</li>
+<li><b>raw 日志</b>：<a href="../results/1014_1305_inorder4-v3b133/raw/1014_1305_boutique-admission-20/">results/1014_1305_inorder4-v3b133/raw/1014_1305_boutique-admission-20</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;redis-cart&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;serviceaccounts&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;resourcequotas&quot;}</code></td></tr>
+<tr><td>11</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;redis-cart&quot;,&quot;port&quot;:6379,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequota&quot;,&quot;name&quot;:&quot;cpu-quota&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;name&quot;:&quot;redis-cart&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Symptom 'Partial Service Unreachability.' — listing entry: deployment redis-cart shows 0/1 READY, 0 UP-TO-DATE, 0 AVAILABLE with no redis-cart pod in the pods listing, while all 10 other boutique pods are 1/1 Running. Namespace events bind the mechanism: Warning FailedCreate replicaset/redis-cart-869b6f5f6d 'Error creating: pods ... is forbidden: exceeded quota: cpu-quota, requested: requests.cpu=1, used: requests.cpu=10, limited: requests.cpu=1' (api-worker-86b754b694 shows the same CPU-quota rejection). Config face confirms the quota object: ResourceQuota 'cpu-quota' in boutique — requests.cpu Used 10 / Hard 1 (already exhausted before the new replicas). Reachability symptom closes on the same object: Service redis-cart endpoints are &lt;none&gt; and CheckServiceConnectivity(redis-cart:6379, boutique) returns Connection Failed, while its Service YAML (selector app=redis-cart, port/targetPort 6379) is consistent — so the service is unreachable only because its pod could never be admitted. Break is at the namespace CPU-quota admission layer; the affected business unit is redis-cart.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_cpu_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_pod_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/redis-cart&quot;,
+   &quot;root_cause&quot;: &quot;deployment_zero_replicas&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-21"><summary><b>case-21</b> · <code>namespace/boutique</code> + <code>namespace_cpu_quota_exceeded</code>（✓ 逐字命中） · MC 1 · EOC 1 · ECR 1 · 14 步</summary><ul>
+<li><b>摘要</b>：Namespace boutique shows the shippingservice workload never admitted: deployment shippingservice reads 0/1 (UP-TO-DATE 0, AVAILABLE 0), replicaset shippingservice-77f56d9479 reads DESIRED 1/CURRENT 0, Service endpoints are '&lt;none&gt;' and CheckServiceConnectivity(shippingservice:50051) returns 'Connection Failed', while all other 10 boutique pods are 1/1 Running with 0 restarts and no metric alerts. The events surface carries the live mechanism verbatim and repeatedly: 'Warning FailedCreate replicaset/shippingservice-77f56d9479 Error creating: pods ... is forbidden: exceeded quota: cpu-quota, req</li>
+<li><b>raw 日志</b>：<a href="../results/1014_1308_inorder4-v3b134/raw/1014_1308_boutique-admission-21/">results/1014_1308_inorder4-v3b134/raw/1014_1308_boutique-admission-21</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;deployments&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true,&quot;resource_type&quot;:&quot;services&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+<tr><td>9</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;service_name&quot;:&quot;shippingservice&quot;,&quot;port&quot;:50051,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;replicasets&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;resourcequotas&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;shippingservice&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Namespace boutique shows the shippingservice workload never admitted: deployment shippingservice reads 0/1 (UP-TO-DATE 0, AVAILABLE 0), replicaset shippingservice-77f56d9479 reads DESIRED 1/CURRENT 0, Service endpoints are '&lt;none&gt;' and CheckServiceConnectivity(shippingservice:50051) returns 'Connection Failed', while all other 10 boutique pods are 1/1 Running with 0 restarts and no metric alerts. The events surface carries the live mechanism verbatim and repeatedly: 'Warning FailedCreate replicaset/shippingservice-77f56d9479 Error creating: pods ... is forbidden: exceeded quota: cpu-quota, requested: requests.cpu=1, used: requests.cpu=10, limited: requests.cpu=10'. Config confirmation matches exactly: ResourceQuota cpu-quota in boutique reads 'requests.cpu: 10/10' (fully consumed), and shippingservice's pod template requests cpu: 1000m (= the rejected requests.cpu=1) with a valid image, probes and ServiceAccount. The break is at the admission stage of the namespace CPU quota; the app spec itself is well-formed.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_cpu_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_pod_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/shippingservice&quot;,
+   &quot;root_cause&quot;: &quot;deployment_zero_replicas&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-22"><summary><b>case-22</b> · <code>namespace/boutique</code> + <code>namespace_memory_quota_exceeded</code>（✓ 逐字命中） · MC 1 · EOC 0.5 · ECR 1 · 16 步</summary><ul>
+<li><b>摘要</b>：adservice is the victim: the pods inventory shows 10/11 services Running while NO adservice pod exists at all (deployment/adservice = 0/1 AVAILABLE), and its endpoints listing reads 'adservice &lt;none&gt;' while every other service has bound Pod IPs. The caller-side signal (frontend error logs, 105/107 errors) is identical: 'failed to get ads: rpc error: code = Unavailable ... dial tcp 10.68.248.19:9555: connect: connection refused' — that IP:port is adservice's own declared Service ClusterIP:9555. The namespace event surface binds the mechanism to the instance verbatim: 'Warning FailedCreate repli</li>
+<li><b>raw 日志</b>：<a href="../results/1014_1312_inorder4-v3b135/raw/1014_1312_boutique-admission-22/">results/1014_1312_inorder4-v3b135/raw/1014_1312_boutique-admission-22</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>6</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;services&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;endpoints&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;adservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;events&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;serviceaccounts&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequota&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>15</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequota&quot;,&quot;name&quot;:&quot;memory-quota&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;adservice is the victim: the pods inventory shows 10/11 services Running while NO adservice pod exists at all (deployment/adservice = 0/1 AVAILABLE), and its endpoints listing reads 'adservice &lt;none&gt;' while every other service has bound Pod IPs. The caller-side signal (frontend error logs, 105/107 errors) is identical: 'failed to get ads: rpc error: code = Unavailable ... dial tcp 10.68.248.19:9555: connect: connection refused' — that IP:port is adservice's own declared Service ClusterIP:9555. The namespace event surface binds the mechanism to the instance verbatim: 'Warning FailedCreate replicaset/adservice-99b76fc49 Error creating: pods \&quot;adservice-99b76fc49-8rbvm\&quot; is forbidden: exceeded quota: memory-quota, requested: requests.memory=300Mi, used: requests.memory=3000Mi, limited: requests.memory=3Gi' (repeated across 9 pod names). The config face confirms it: resourcequota/memory-quota in boutique shows requests.memory Used 3000Mi / Hard 3Gi, so 3000Mi + adservice's 300Mi request exceeds the cap. The pod template's serviceAccountName 'adservice' DOES exist in the serviceaccounts listing, so a stale FailedCreate about the SA is setup history, not the mechanism. Nodes are all Ready and untainted with ample allocatable resources, excluding scheduling/node-scoped causes.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_memory_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_pod_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_cpu_quota_exceeded&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-23"><summary><b>case-23</b> · <code>namespace/boutique</code> + <code>namespace_memory_quota_exceeded</code>（✓ 逐字命中） · MC 1 · EOC 0.25 · ECR 1 · 15 步</summary><ul>
+<li><b>摘要</b>：Pods inventory shows 10 of 11 boutique services Running 1/1, with cartservice having no pod at all; its Deployment reads 0/1 READY with UP-TO-DATE=0 (pod never created). Frontend caller logs (198 errors, 21.7%) show 'could not retrieve cart: ... dial tcp 10.68.118.132:7070: connect: connection refused' - 10.68.118.132:7070 being cartservice's own ClusterIP and declared Service port, i.e. empty endpoints. The namespace events surface binds the mechanism verbatim to replicaset/cartservice-9b469fbc4: 'Warning FailedCreate ... is forbidden: exceeded quota: boutique-quota, requested: requests.memor</li>
+<li><b>raw 日志</b>：<a href="../results/1014_1314_inorder4-v3b136/raw/1014_1315_boutique-admission-23/">results/1014_1314_inorder4-v3b136/raw/1014_1315_boutique-admission-23</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;services&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;deployments&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;cartservice&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;serviceaccounts&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;label_selector&quot;:&quot;app=cartservice&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;pods&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;resourcequotas&quot;}</code></td></tr>
+<tr><td>14</td><td><code>DescribeResource</code></td><td><code>{&quot;name&quot;:&quot;boutique-quota&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;resourcequota&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Pods inventory shows 10 of 11 boutique services Running 1/1, with cartservice having no pod at all; its Deployment reads 0/1 READY with UP-TO-DATE=0 (pod never created). Frontend caller logs (198 errors, 21.7%) show 'could not retrieve cart: ... dial tcp 10.68.118.132:7070: connect: connection refused' - 10.68.118.132:7070 being cartservice's own ClusterIP and declared Service port, i.e. empty endpoints. The namespace events surface binds the mechanism verbatim to replicaset/cartservice-9b469fbc4: 'Warning FailedCreate ... is forbidden: exceeded quota: boutique-quota, requested: requests.memory=300Mi, used: requests.memory=3000Mi, limited: requests.memory=3Gi' (repeated, still live). Config confirmation: ResourceQuota boutique-quota shows requests.memory 3000Mi/3Gi fully saturated, while cartservice's template requests exactly 300Mi. ServiceAccount cartservice exists and no scheduling/Pending condition exists, ruling out missing service account, probe/volume, and node-side causes - the break is at namespace admission quota.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_memory_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_cpu_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/cartservice&quot;,
+   &quot;root_cause&quot;: &quot;missing_service_account&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-24"><summary><b>case-24</b> · <code>namespace/boutique</code> + <code>namespace_memory_quota_exceeded</code>（✓ 逐字命中） · MC 1 · EOC 0.5 · ECR 1 · 18 步</summary><ul>
+<li><b>摘要</b>：Wording names no service, so the inventory listing was the entry: only 10 pods exist for 11 boutique services, and checkoutservice has no pod at all (label_selector app=checkoutservice returns nothing; Deployment checkoutservice 0/1, RS checkoutservice-6bcfb6486c DESIRED 1 / CURRENT 0 / READY 0). The victim's own signal leads: its caller frontend logs 'failed to complete the order: rpc error: code = Unavailable desc = transport: Error while dialing: dial tcp 10.68.232.185:5050: connect: connection refused' - checkoutservice's own ClusterIP and declared port. The namespace event surface carries</li>
+<li><b>raw 日志</b>：<a href="../results/1014_1318_inorder4-v3b137/raw/1014_1318_boutique-admission-24/">results/1014_1318_inorder4-v3b137/raw/1014_1318_boutique-admission-24</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Service Availability Disruption.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetAlerts</code></td><td><code>{}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;services&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;deployments&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;pods&quot;,&quot;label_selector&quot;:&quot;app=checkoutservice&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetServiceDependencies</code></td><td><code>{&quot;service_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>11</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;checkoutservice&quot;}</code></td></tr>
+<tr><td>13</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;serviceaccounts&quot;}</code></td></tr>
+<tr><td>14</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;replicasets&quot;}</code></td></tr>
+<tr><td>15</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;resourcequotas&quot;}</code></td></tr>
+<tr><td>16</td><td><code>DescribeResource</code></td><td><code>{&quot;resource_type&quot;:&quot;resourcequota&quot;,&quot;name&quot;:&quot;memory-request-quota&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>17</td><td><code>GetClusterConfiguration</code></td><td><code>{}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;Wording names no service, so the inventory listing was the entry: only 10 pods exist for 11 boutique services, and checkoutservice has no pod at all (label_selector app=checkoutservice returns nothing; Deployment checkoutservice 0/1, RS checkoutservice-6bcfb6486c DESIRED 1 / CURRENT 0 / READY 0). The victim's own signal leads: its caller frontend logs 'failed to complete the order: rpc error: code = Unavailable desc = transport: Error while dialing: dial tcp 10.68.232.185:5050: connect: connection refused' - checkoutservice's own ClusterIP and declared port. The namespace event surface carries the live mechanism verbatim: 'Warning FailedCreate replicaset/checkoutservice-6bcfb6486c Error creating: pods ... is forbidden: exceeded quota: memory-request-quota, requested: requests.memory=300Mi, used: requests.memory=3000Mi, limited: requests.memory=3Gi'. The config object the mechanism points at confirms it: ResourceQuota memory-request-quota in boutique reads requests.memory 3000Mi/3Gi (Used 3000Mi, Hard 3Gi), fully exhausted, while checkoutservice's pod template requests 300Mi (GetAppYAML). Admission rejects every replica, so the Service 5050 has no endpoints and callers get connection refused. Node-side exclusion: all 4 nodes Ready, no taints/pressure, ~15Gi allocatable memory each - the block is namespace quota, not node capacity. checkoutservice's ServiceAccount exists, so this FailedCreate is the live mechanism, not setup history.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_memory_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/checkoutservice&quot;,
+   &quot;root_cause&quot;: &quot;memory_capacity_mismatch&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;app/adservice&quot;,
+   &quot;root_cause&quot;: &quot;pod_cpu_overload&quot;
+  }
+ ]
+}</pre>
+</details>
+<details id="case-25"><summary><b>case-25</b> · <code>namespace/boutique</code> + <code>namespace_memory_quota_exceeded</code>（✓ 逐字命中） · MC 1 · EOC 0.25 · ECR 1 · 13 步</summary><ul>
+<li><b>摘要</b>：currencyservice has no Pod object at all while every other boutique service is 1/1 Running; its deployment reads 0/1 UP-TO-DATE, 0 AVAILABLE. Frontend caller logs show 'could not retrieve currencies: rpc error: code = Unavailable ... dial tcp 10.68.182.150:7000: connect: connection refused', endpoints listing shows 'currencyservice &lt;none&gt;', and CheckServiceConnectivity(currencyservice:7000) returns Connection Failed, so the service is genuinely unreachable with no backing endpoint. The namespace event surface names the mechanism verbatim and repeatedly: 'Warning FailedCreate replicaset/currenc</li>
+<li><b>raw 日志</b>：<a href="../results/1014_1321_inorder4-v3b138/raw/1014_1321_boutique-admission-25/">results/1014_1321_inorder4-v3b138/raw/1014_1321_boutique-admission-25</a></li>
+</ul>
+<table><tr><th>#</th><th>动作</th><th>参数（截 200）</th></tr>
+<tr><td>1</td><td><code>dlr_search_sop</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>2</td><td><code>dlr_search_consensus</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>3</td><td><code>state_model_query</code></td><td><code>{&quot;question&quot;:&quot;Partial Service Unreachability.&quot;}</code></td></tr>
+<tr><td>4</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;pods&quot;,&quot;namespace&quot;:&quot;boutique&quot;,&quot;output_wide&quot;:true}</code></td></tr>
+<tr><td>5</td><td><code>GetResources</code></td><td><code>{&quot;resource_type&quot;:&quot;deployments&quot;,&quot;namespace&quot;:&quot;boutique&quot;}</code></td></tr>
+<tr><td>6</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;events&quot;}</code></td></tr>
+<tr><td>7</td><td><code>GetAppYAML</code></td><td><code>{&quot;app_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>8</td><td><code>GetErrorLogs</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;service_name&quot;:&quot;frontend&quot;}</code></td></tr>
+<tr><td>9</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;resourcequotas&quot;}</code></td></tr>
+<tr><td>10</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;endpoints&quot;}</code></td></tr>
+<tr><td>11</td><td><code>CheckServiceConnectivity</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;port&quot;:7000,&quot;service_name&quot;:&quot;currencyservice&quot;}</code></td></tr>
+<tr><td>12</td><td><code>GetResources</code></td><td><code>{&quot;namespace&quot;:&quot;boutique&quot;,&quot;resource_type&quot;:&quot;serviceaccounts&quot;}</code></td></tr>
+</table>
+<p><b>报告原文</b>（契约 JSON）：</p><pre>{
+ &quot;key_evidence_summary&quot;: &quot;currencyservice has no Pod object at all while every other boutique service is 1/1 Running; its deployment reads 0/1 UP-TO-DATE, 0 AVAILABLE. Frontend caller logs show 'could not retrieve currencies: rpc error: code = Unavailable ... dial tcp 10.68.182.150:7000: connect: connection refused', endpoints listing shows 'currencyservice &lt;none&gt;', and CheckServiceConnectivity(currencyservice:7000) returns Connection Failed, so the service is genuinely unreachable with no backing endpoint. The namespace event surface names the mechanism verbatim and repeatedly: 'Warning FailedCreate replicaset/currencyservice-5c9c9fdd9d Error creating: pods \&quot;currencyservice-5c9c9fdd9d-9d96j\&quot; is forbidden: exceeded quota: memory-request-quota, requested: requests.memory=300Mi, used: requests.memory=3000Mi, limited: requests.memory=3Gi'. The config face confirms it: ResourceQuota memory-request-quota in namespace boutique is saturated at requests.memory: 3000Mi/3Gi, leaving zero headroom for the 300Mi the currencyservice pod template requests (GetAppYAML). Admission is therefore the first observation that contradicts expectation: the break is namespace-level memory request quota exhaustion, not scheduling, image pull, service account (SA currencyservice exists) or address/selector wiring. Adservice probe-timeout warnings are transient startup noise since that pod is now 1/1 Ready with a bound endpoint.&quot;,
+ &quot;top_3_predictions&quot;: [
+  {
+   &quot;rank&quot;: 1,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_memory_quota_exceeded&quot;
+  },
+  {
+   &quot;rank&quot;: 2,
+   &quot;fault_object&quot;: &quot;app/adservice&quot;,
+   &quot;root_cause&quot;: &quot;liveness_probe_incorrect_timing&quot;
+  },
+  {
+   &quot;rank&quot;: 3,
+   &quot;fault_object&quot;: &quot;namespace/boutique&quot;,
+   &quot;root_cause&quot;: &quot;namespace_cpu_quota_exceeded&quot;
   }
  ]
 }</pre>

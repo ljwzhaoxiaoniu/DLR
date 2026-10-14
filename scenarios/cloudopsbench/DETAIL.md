@@ -9,19 +9,19 @@
 
 | 家族 | 全量 | 已跑 | 剩余 | 覆盖 |
 |---|---|---|---|---|
-| boutique/admission | 58 | 7 | 51 | 12.1% |
-| boutique/codedefect | 98 | 96 | 2 | 98.0% |
+| boutique/admission | 58 | 25 | 33 | 43.1% |
+| boutique/codedefect | 98 | 98 | 0 | 100.0% |
 | boutique/infrastructure | 40 | 40 | 0 | 100.0% |
 | boutique/performance | 29 | 29 | 0 | 100.0% |
-| boutique/runtime | 45 | 17 | 28 | 37.8% |
-| boutique/scheduling | 164 | 12 | 152 | 7.3% |
+| boutique/runtime | 45 | 37 | 8 | 82.2% |
+| boutique/scheduling | 164 | 16 | 148 | 9.8% |
 | boutique/service | 54 | 54 | 0 | 100.0% |
-| boutique/startup | 62 | 26 | 36 | 41.9% |
+| boutique/startup | 62 | 46 | 16 | 74.2% |
 | train-ticket/performance | 47 | 47 | 0 | 100.0% |
-| train-ticket/runtime | 96 | 80 | 16 | 83.3% |
+| train-ticket/runtime | 96 | 96 | 0 | 100.0% |
 | train-ticket/service | 37 | 37 | 0 | 100.0% |
 | train-ticket/startup | 24 | 24 | 0 | 100.0% |
-| **合计** | **754** | **469** | **285** | **62.2%** |
+| **合计** | **754** | **549** | **205** | **72.8%** |
 
 ## 汇总（去重 · 取最新）
 
@@ -29,37 +29,37 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 467 / 469（99.6%） |
-| CA（组件命中） | 467 / 469（99.6%） |
-| FA（故障型命中） | 468 / 469（99.8%） |
-| ECR（证据链全闭） | 441 / 469（94.0%） |
+| JRA（联合命中） | 545 / 549（99.3%） |
+| CA（组件命中） | 547 / 549（99.6%） |
+| FA（故障型命中） | 546 / 549（99.5%） |
+| ECR（证据链全闭） | 520 / 549（94.7%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 0.9856 | 0.9586 | 0.9403 | 0.2751 | 19.7996 | 0.0019 | 0.0064 |
+| 0.9872 | 0.9446 | 0.9472 | 0.2809 | 19.0492 | 0.0018 | 0.0055 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 312,240 / 232,678 | 54,365 / 2,181,512 | 73% |
+| 288,065 / 205,969 | 54,365 / 2,181,512 | 73% |
 
 ## 分家族索引
 
 | 家族 | 全量 | 已跑 | JRA | 链全闭 | 明细 |
 |---|---|---|---|---|---|
-| boutique/admission | 58 | 7 | 7 | 6 | [boutique-admission.md](DETAIL/boutique-admission.md) |
-| boutique/codedefect | 98 | 96 | 96 | 96 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
+| boutique/admission | 58 | 25 | 25 | 23 | [boutique-admission.md](DETAIL/boutique-admission.md) |
+| boutique/codedefect | 98 | 98 | 98 | 98 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
 | boutique/infrastructure | 40 | 40 | 40 | 40 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
 | boutique/performance | 29 | 29 | 28 | 28 | [boutique-performance.md](DETAIL/boutique-performance.md) |
-| boutique/runtime | 45 | 17 | 17 | 17 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
-| boutique/scheduling | 164 | 12 | 12 | 12 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
+| boutique/runtime | 45 | 37 | 37 | 37 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
+| boutique/scheduling | 164 | 16 | 16 | 16 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
 | boutique/service | 54 | 54 | 54 | 52 | [boutique-service.md](DETAIL/boutique-service.md) |
-| boutique/startup | 62 | 26 | 26 | 26 | [boutique-startup.md](DETAIL/boutique-startup.md) |
+| boutique/startup | 62 | 46 | 44 | 46 | [boutique-startup.md](DETAIL/boutique-startup.md) |
 | train-ticket/performance | 47 | 47 | 46 | 46 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
-| train-ticket/runtime | 96 | 80 | 80 | 58 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
+| train-ticket/runtime | 96 | 96 | 96 | 74 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
 | train-ticket/service | 37 | 37 | 37 | 37 | [trainticket-service.md](DETAIL/trainticket-service.md) |
 | train-ticket/startup | 24 | 24 | 24 | 23 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
 
@@ -229,6 +229,26 @@
 > **2026-10-13 深夜 · ttperf34 定稿轮 1013_2345_ttperf34-verify1（用户令"跑一下看看" · 仍不过 · 记档维持）**：报 `ts-order-service` vs 真值 `ts-user-service`（41 步 · 首跑报 security——**两跑两个不同的错对象**）。**结果定性**：定位口缺位案的重跑落点确实随机（线索不在案面），骰子未中 → **记档维持**，账 268/269 不动。至此 ttperf34 的处置完全闭环：批跑（security）/ 定稿跑（order）双证 + 解剖审计（金标零告警行 · 序列不可读 · 闩锁歧义）。
 >
 > **2026-10-13 深夜 · 轮次 1013_2345_inorder4-v3b68（批六十八 · 止于 1/4 · 会话收官）**：① **用户令"跑完结束·别连续跑了"——引擎停机**：批六十八仅发首题 `cod/46`（`code_missing_parameter`@frontend 20 步 · **六项链全满 · 参数序六连**），余三题（svc/13 · perf/12 · tt-runtime/31）未发、批次止于 1/4。② **停机账：轮次 102 · 覆盖 269/754 · JRA 268/269**（唯一余项 = ttperf34 记档）+ 序滑点观察位七例；满族三（tt-svc · boutique/infrastructure · tt-perf）。③ 后续批次待用户发令（连续跑模式撤销，恢复批间报数）。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

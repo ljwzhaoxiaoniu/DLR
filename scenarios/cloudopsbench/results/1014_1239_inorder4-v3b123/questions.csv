@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/10,1.0,1.0,1.0,1.0,1.0,1.0,0.5625,17.0,0.0,0.0,app/redis-cart,missing_service_account,app/redis-cart,missing_service_account,
+boutique/runtime/22,1.0,1.0,1.0,1.0,1.0,1.0,0.36363636363636365,12.0,0.0,0.0,app/adservice,container_memory_limit_too_low,app/adservice,container_memory_limit_too_low,
+boutique/startup/31,1.0,1.0,1.0,1.0,1.0,1.0,0.3,11.0,0.0,0.0,app/currencyservice,incorrect_image_reference,app/currencyservice,incorrect_image_reference,
+trainticket/runtime/85,1.0,1.0,1.0,1.0,0.6666666666666666,1.0,0.3333333333333333,13.0,0.0,0.0,app/ts-inside-payment-service,service_sidecar_port_conflict,app/ts-inside-payment-service,service_sidecar_port_conflict,

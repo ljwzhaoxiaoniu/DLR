@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "95",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\trainticket\\runtime\\95\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_1305_inorder4-v3b133\\traces\\trainticket\\dsh-tsm\\runtime\\95\\95.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Runtime_Fault",
+      "fault_object": "app/ts-travel-service",
+      "root_cause": "service_sidecar_port_conflict"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/ts-travel-service",
+        "root_cause": "service_sidecar_port_conflict"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/ts-travel-service",
+        "root_cause": "readiness_probe_incorrect_port"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/ts-travel-service",
+        "root_cause": "service_port_mapping_mismatch"
+      }
+    ],
+    "tool_call_count": 13,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.3076923076923077,
+      "steps": 14.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

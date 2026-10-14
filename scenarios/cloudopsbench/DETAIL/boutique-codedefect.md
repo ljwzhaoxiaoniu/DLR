@@ -1,6 +1,6 @@
 # 评测明细 · boutique/codedefect — cloudopsbench
 
-> 本家族已跑 **96/98** 题：JRA ✅96 ❌0 ｜ 证据链全闭 96 ｜ token 中位 300,857 ｜ 生成 2026-10-14T01:41:18.020Z
+> 本家族已跑 **98/98** 题：JRA ✅98 ❌0 ｜ 证据链全闭 98 ｜ token 中位 298,509 ｜ 生成 2026-10-14T05:24:30.653Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -103,6 +103,8 @@
 | [94](#case-94) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 422,940 | 0 | 0 | 1014_0252_inorder4-v3b116 | 全对·链闭 |
 | [95](#case-95) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1579 | 20 | 185,574 | 0 | 0 | 1014_0254_inorder4-v3b117 | 全对·链闭 |
 | [96](#case-96) | 1 | 1 | 1 | 1 | 1 | 1 | 0.15 | 21 | 211,381 | 0 | 0 | 1014_0256_inorder4-v3b118 | 全对·链闭 |
+| [97](#case-97) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 94,632 | 0 | 0 | 1014_1226_inorder4-v3b119 | 全对·链闭 |
+| [98](#case-98) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 135,671 | 0 | 0 | 1014_1230_inorder4-v3b120 | 全对·链闭 |
 
 ## 证据正文
 
@@ -777,4 +779,18 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.15 · steps 21 · tokens 211,381
 - **raw 日志**：[results/1014_0256_inorder4-v3b118/raw/1014_0256_boutique-codedefect-96](../results/1014_0256_inorder4-v3b118/raw/1014_0256_boutique-codedefect-96/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Telemetry chain (L2 qid=12): alerts first, then object-layer exclusion. Alerts flagged shippingservice with FILESYSTEM_WRITE_SURGE [fs_write_bytes] Normal=0.00B/s -> Current=133560.76B/s (New Spike, Peak=281034.62B/s) plus RESOURCE_SATURATION [cpu] 0.00 -> 0.02 cores (+1800%), window 11:26:26~11:29:01. Object layer is clean for all 11 pods (2/2 Running, RESTARTS=0), so no scheduling/restart/probe break; the only outlier is the freshly recreated shippingservice pod (AGE 2m31s vs ~5m41s for all others), matching namespace events 'Scaled up replica set shippingservice-f6f49b76b' / 'Scaled down re
+
+### case-97
+
+- **结论**：`app/shippingservice` + `code_excessive_file_writes` ｜ 标签 `app/shippingservice` + `code_excessive_file_writes`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2308 · steps 14 · tokens 94,632
+- **raw 日志**：[results/1014_1226_inorder4-v3b119/raw/1014_1226_boutique-codedefect-97](../results/1014_1226_inorder4-v3b119/raw/1014_1226_boutique-codedefect-97/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert on shippingservice (13:44:58~13:47:33) shows a resource-shaped signature: RESOURCE_SATURATION [cpu] 0.00->0.02 cores (+1830%) and FILESYSTEM_WRITE_SURGE [fs_write_bytes] 0.00B/s -> 119673.72B/s (New Spike, Peak 231802.87B/s). Object layer is clean (all 11 boutique pods 2/2 Running, RESTARTS=0, no warning events for shippingservice in the fault window) and the gRPC logs show GetQuote request pairs completing normally in ~3ms with 0.09% error ratio, so no scheduling/startup/probe/addressing break exists. Per the L3 discipline for 'Service Performance Degradation.' the code surface of the f
+
+### case-98
+
+- **结论**：`app/shippingservice` + `code_excessive_file_writes` ｜ 标签 `app/shippingservice` + `code_excessive_file_writes`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2308 · steps 14 · tokens 135,671
+- **raw 日志**：[results/1014_1230_inorder4-v3b120/raw/1014_1230_boutique-codedefect-98](../results/1014_1230_inorder4-v3b120/raw/1014_1230_boutique-codedefect-98/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert surface: shippingservice ABNORMAL (16:03:08-16:05:43) with RESOURCE_SATURATION [cpu] 0.00 -> 0.02 cores (+1629%) and FILESYSTEM_WRITE_SURGE [fs_write_bytes] 0.00B/s -> 156251.48B/s (Peak 304828.34B/s). Object layer excluded: all 11 boutique pods 2/2 Running with RESTARTS=0, shippingservice pod 2/2 Running on worker-01, logs carry no errors (only 2 info-level 'temporarily unavailable'), no FailedCreate/FailedScheduling/Unhealthy events for the current ReplicaSet shippingservice-f6f49b76b. Code surface closed per the L3 playbook ('clear the code surface of the flagged service before rankin
 
