@@ -1,0 +1,6 @@
+{
+  "name": "cloudopsbench",
+  "yamlDir": "sources/configs/DLR",
+  "consensusDir": "sources/consensus",
+  "sop": "sources/sop.md"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "tsm-scenario-cloudopsbench",
+  "version": "0.1.0",
+  "description": "TSM scenario package: Cloud-OpsBench (K8s agentic RCA) — L1 DLR state-model YAML (Online Boutique + Train-Ticket), L2 domain consensus, L3 SOP, and the upstream-scorer grading adapter. Consumed by tsm-core-dlr (TSM_SCENARIO=tsm-scenario-cloudopsbench).",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ljwzhaoxiaoniu/DLR.git",
+    "directory": "scenarios/cloudopsbench"
+  },
+  "files": [
+    "tsm-scenario.json",
+    "sources/configs/DLR",
+    "sources/consensus",
+    "sources/sop.md",
+    "eval",
+    "modeling-plan.md",
+    "modeling-plan.zh.md",
+    "README.i18n.yaml",
+    "README.md",
+    "LICENSE"
+  ]
+}

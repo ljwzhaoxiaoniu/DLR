@@ -22,7 +22,7 @@
     "nl2sql"
   ],
   "bin": {
-    "tsm": "./bin/tsm.mjs"
+    "tsm": "bin/tsm.mjs"
   },
   "files": [
     "bin",

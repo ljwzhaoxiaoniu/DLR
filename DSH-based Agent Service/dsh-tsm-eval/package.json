@@ -13,7 +13,7 @@
     "node": ">=22.15.0"
   },
   "bin": {
-    "dsh-eval": "./bin/dsh-eval.mjs"
+    "dsh-eval": "bin/dsh-eval.mjs"
   },
   "main": "./lib/index.mjs",
   "exports": {
