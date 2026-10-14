@@ -1,0 +1,6 @@
+[2026-10-14 19:38:06] inorder4-v3b167 · 4 题 · 2 路 → scenarios/cloudopsbench/results/1014_1938_inorder4-v3b167
+[19:38:06] boutique/admission/54 第 1 遍 (:8000)
+[19:38:06] boutique/scheduling/33 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-scheduling-33）…
+[start] 基准诊断 MCP（boutique-admission-54）…
+[precheck] http://127.0.0.1:28796/mcp ok (3 tools): dlr_search_consensus, dlr_search_sop, state_model_query

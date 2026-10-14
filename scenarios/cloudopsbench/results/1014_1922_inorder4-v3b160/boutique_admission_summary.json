@@ -1,0 +1,45 @@
+{
+  "config": {
+    "config_path": "D:\\Code_Proj\\Cloud-OpsBench\\agents\\cloudops_agent\\configs\\model_configs.yaml",
+    "system": "boutique",
+    "fault_category": "admission",
+    "case_split": "",
+    "case_split_file": "",
+    "label_root": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\admission",
+    "agent_root": "scenarios\\cloudopsbench\\results\\1014_1922_inorder4-v3b160\\traces\\boutique\\dsh-tsm\\admission"
+  },
+  "counts": {
+    "total_cases": 58,
+    "selected_cases": 1,
+    "run_cases": 1,
+    "missing_run_cases": 0,
+    "invalid_action_total": 0
+  },
+  "metrics": {
+    "CA": 0.0,
+    "FA": 0.0,
+    "JRA": 0.0,
+    "MC": 0.6667,
+    "EOC": 0.6667,
+    "ECR": 0.0,
+    "EE": 0.3158,
+    "steps": 20.0,
+    "RAR": 0.0,
+    "invalid_actions": 0.0
+  },
+  "by_root_cause": {
+    "namespace_service_quota_exceeded": {
+      "n": 1,
+      "CA": 0.0,
+      "FA": 0.0,
+      "JRA": 0.0,
+      "MC": 0.6667,
+      "EOC": 0.6667,
+      "ECR": 0.0,
+      "EE": 0.3158,
+      "steps": 20.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+}

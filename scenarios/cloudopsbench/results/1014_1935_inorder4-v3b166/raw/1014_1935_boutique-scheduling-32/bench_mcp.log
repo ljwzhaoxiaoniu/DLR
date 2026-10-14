@@ -1,0 +1,28 @@
+INFO:     Started server process [17568]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:65065 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65066 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:65065 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65069 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65074 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65078 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65086 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:65086 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65086 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:65086 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65086 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"paymentservice"}
+INFO:     127.0.0.1:65098 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65098 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65098 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65109 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65109 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65109 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"paymentservice","port":50051}
+INFO:     127.0.0.1:65117 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"checkoutservice"}
+INFO:     127.0.0.1:65117 - "POST /mcp HTTP/1.1" 200 OK

@@ -94,3 +94,15 @@ invalid_actions (Average Invalid Actions per Case): 0.0
 [stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL.md
 [stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL/*.md（12 个家族）
 [stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\overview.html
+  + session-7d0c27bd-ef74-…  boutique/admission/42  1014_1911_boutique-admission-42
+  + session-f393eaa8-3bd9-…  boutique/scheduling/21  1014_1911_boutique-scheduling-21
+  + session-78845757-7cb0-…  boutique/scheduling/35  1014_1912_boutique-scheduling-35
+  + session-b624e53c-4fbd-…  boutique/scheduling/69  1014_1912_boutique-scheduling-69
+[sync] 扫到 run 692（无 session 0）· 新登记 4 · 清出 0（避重叠）· 跳过已归组 124 · 解除归档 0 · 全量组共 575
+[ws] 已写 D:\Code_Proj\DLR Proj\DSH-based Agent Service\.dsh-home\storages\workspace.json（备份 .bak-1014_191334）
+[retire] 目标 1 条 → 「归档」（D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob-archive）
+  ✓ session-7d0c27bd-ef74-…  [cloudopsbench-all]  D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob
+  → session-7d0c27bd-ef74-…  D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob → D:\Code_Proj\DLR Proj\DSH-based Agent Service\dsh_cob-archive
+[ws] 已写 D:\Code_Proj\DLR Proj\DSH-based Agent Service\.dsh-home\storages\workspace.json（备份 .bak-1014_191335）
+[retire] 完成 1 条 · 复核 cwd 1/1 · 备份/还原：D:\Code_Proj\DLR Proj\tmp_scripts\cob_session_retire_20261014_191335
+[提示] dsh web 重启后可见（bash "DSH-based Agent Service/dsh_dlr/run_web.sh"）

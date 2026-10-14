@@ -1,0 +1,28 @@
+INFO:     Started server process [14312]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:58299 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58302 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:58299 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58304 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58308 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58313 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62013 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:62013 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62013 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"master","service_name":"kube-scheduler"}
+INFO:     127.0.0.1:62013 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:62013 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"shippingservice"}
+INFO:     127.0.0.1:62020 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"shippingservice","port":50051}
+INFO:     127.0.0.1:62020 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62020 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62020 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62020 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62024 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62024 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62024 - "POST /mcp HTTP/1.1" 200 OK

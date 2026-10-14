@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/53,0.0,0.0,0.0,0.6666666666666666,0.6666666666666666,0.0,0.2692307692307692,27.0,0.0,0.0,app/redis-cart,service_dns_resolution_failure,namespace/boutique,namespace_service_quota_exceeded,
+boutique/scheduling/32,1.0,1.0,1.0,1.0,1.0,1.0,0.25,17.0,0.0,0.0,app/paymentservice,cpu_capacity_mismatch,app/paymentservice,cpu_capacity_mismatch,
+boutique/scheduling/46,1.0,1.0,1.0,1.0,1.0,1.0,0.25,17.0,0.0,0.0,app/emailservice,memory_capacity_mismatch,app/emailservice,memory_capacity_mismatch,
+boutique/scheduling/80,1.0,1.0,1.0,1.0,1.0,1.0,0.25,13.0,0.0,0.0,app/adservice,node_selector_mismatch,app/adservice,node_selector_mismatch,

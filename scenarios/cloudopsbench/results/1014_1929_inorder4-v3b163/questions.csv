@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/50,0.0,0.0,0.0,0.6666666666666666,0.6666666666666666,0.0,0.3125,17.0,0.0,0.0,app/paymentservice,service_dns_resolution_failure,namespace/boutique,namespace_service_quota_exceeded,
+boutique/scheduling/29,1.0,1.0,1.0,1.0,1.0,1.0,0.2777777777777778,19.0,0.0,0.0,app/currencyservice,cpu_capacity_mismatch,app/currencyservice,cpu_capacity_mismatch,
+boutique/scheduling/43,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,13.0,0.0,0.0,app/shippingservice,memory_capacity_mismatch,app/shippingservice,memory_capacity_mismatch,
+boutique/scheduling/77,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,13.0,0.0,0.0,app/productcatalogservice,node_affinity_mismatch,app/productcatalogservice,node_affinity_mismatch,

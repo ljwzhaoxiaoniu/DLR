@@ -1,0 +1,26 @@
+INFO:     Started server process [6960]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:52669 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52672 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:52669 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52673 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52679 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52683 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52691 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52691 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:52691 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52691 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:52691 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52691 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"redis-cart"}
+INFO:     127.0.0.1:52691 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52691 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52695 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52695 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52695 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60321 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60321 - "POST /mcp HTTP/1.1" 200 OK

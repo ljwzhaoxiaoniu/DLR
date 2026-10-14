@@ -1,6 +1,6 @@
 # 评测明细 · boutique/scheduling — cloudopsbench
 
-> 本家族已跑 **43/164** 题：JRA ✅43 ❌0 ｜ 证据链全闭 43 ｜ token 中位 106,786 ｜ 生成 2026-10-14T11:13:27.392Z
+> 本家族已跑 **76/164** 题：JRA ✅76 ❌0 ｜ 证据链全闭 76 ｜ token 中位 103,905 ｜ 生成 2026-10-14T11:37:58.203Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -28,7 +28,29 @@
 | [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 12 | 67,524 | 0 | 0 | 1014_1908_inorder4-v3b153 | 全对·链闭 |
 | [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 87,124 | 0 | 0 | 1014_1910_inorder4-v3b154 | 全对·链闭 |
 | [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 13 | 87,278 | 0 | 0 | 1014_1911_inorder4-v3b155 | 全对·链闭 |
+| [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 91,234 | 0 | 0 | 1014_1913_inorder4-v3b156 | 全对·链闭 |
+| [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 112,904 | 0 | 0 | 1014_1917_inorder4-v3b157 | 全对·链闭 |
+| [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 17 | 112,155 | 0 | 0 | 1014_1919_inorder4-v3b158 | 全对·链闭 |
+| [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 93,364 | 0 | 0 | 1014_1920_inorder4-v3b159 | 全对·链闭 |
+| [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 132,310 | 0 | 0 | 1014_1922_inorder4-v3b160 | 全对·链闭 |
+| [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2381 | 22 | 225,604 | 0 | 0 | 1014_1924_inorder4-v3b161 | 全对·链闭 |
+| [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2381 | 22 | 181,779 | 0 | 0 | 1014_1926_inorder4-v3b162 | 全对·链闭 |
+| [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 129,361 | 0 | 0 | 1014_1929_inorder4-v3b163 | 全对·链闭 |
+| [30](#case-30) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 13 | 87,251 | 0 | 0 | 1014_1931_inorder4-v3b164 | 全对·链闭 |
+| [31](#case-31) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 12 | 103,861 | 0 | 0 | 1014_1933_inorder4-v3b165 | 全对·链闭 |
+| [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 17 | 137,758 | 0 | 0 | 1014_1935_inorder4-v3b166 | 全对·链闭 |
 | [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 104,468 | 0 | 0 | 1014_1911_inorder4-v3b155 | 全对·链闭 |
+| [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 102,563 | 0 | 0 | 1014_1913_inorder4-v3b156 | 全对·链闭 |
+| [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 13 | 88,610 | 0 | 0 | 1014_1917_inorder4-v3b157 | 全对·链闭 |
+| [38](#case-38) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 91,529 | 0 | 0 | 1014_1919_inorder4-v3b158 | 全对·链闭 |
+| [39](#case-39) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3846 | 14 | 104,305 | 0 | 0 | 1014_1920_inorder4-v3b159 | 全对·链闭 |
+| [40](#case-40) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 84,438 | 0 | 0 | 1014_1922_inorder4-v3b160 | 全对·链闭 |
+| [41](#case-41) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 87,048 | 0 | 0 | 1014_1924_inorder4-v3b161 | 全对·链闭 |
+| [42](#case-42) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 86,031 | 0 | 0 | 1014_1926_inorder4-v3b162 | 全对·链闭 |
+| [43](#case-43) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 13 | 103,905 | 0 | 0 | 1014_1929_inorder4-v3b163 | 全对·链闭 |
+| [44](#case-44) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 93,136 | 0 | 0 | 1014_1931_inorder4-v3b164 | 全对·链闭 |
+| [45](#case-45) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 17 | 108,227 | 0 | 0 | 1014_1933_inorder4-v3b165 | 全对·链闭 |
+| [46](#case-46) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 17 | 114,716 | 0 | 0 | 1014_1935_inorder4-v3b166 | 全对·链闭 |
 | [49](#case-49) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 17 | 107,955 | 0 | 0 | 1014_1312_inorder4-v3b135 | 全对·链闭 |
 | [50](#case-50) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 140,439 | 0 | 0 | 1014_1314_inorder4-v3b136 | 全对·链闭 |
 | [51](#case-51) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1905 | 22 | 134,958 | 0 | 0 | 1014_1318_inorder4-v3b137 | 全对·链闭 |
@@ -50,6 +72,17 @@
 | [67](#case-67) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 137,527 | 0 | 0 | 1014_1908_inorder4-v3b153 | 全对·链闭 |
 | [68](#case-68) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 13 | 103,001 | 0 | 0 | 1014_1910_inorder4-v3b154 | 全对·链闭 |
 | [69](#case-69) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 133,049 | 0 | 0 | 1014_1911_inorder4-v3b155 | 全对·链闭 |
+| [70](#case-70) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1481 | 28 | 275,399 | 0 | 0 | 1014_1913_inorder4-v3b156 | 全对·链闭 |
+| [71](#case-71) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 90,384 | 0 | 0 | 1014_1917_inorder4-v3b157 | 全对·链闭 |
+| [72](#case-72) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 88,543 | 0 | 0 | 1014_1919_inorder4-v3b158 | 全对·链闭 |
+| [73](#case-73) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 121,766 | 0 | 0 | 1014_1920_inorder4-v3b159 | 全对·链闭 |
+| [74](#case-74) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 13 | 88,560 | 0 | 0 | 1014_1922_inorder4-v3b160 | 全对·链闭 |
+| [75](#case-75) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 85,469 | 0 | 0 | 1014_1924_inorder4-v3b161 | 全对·链闭 |
+| [76](#case-76) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 13 | 103,632 | 0 | 0 | 1014_1926_inorder4-v3b162 | 全对·链闭 |
+| [77](#case-77) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 13 | 87,754 | 0 | 0 | 1014_1929_inorder4-v3b163 | 全对·链闭 |
+| [78](#case-78) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 104,428 | 0 | 0 | 1014_1931_inorder4-v3b164 | 全对·链闭 |
+| [79](#case-79) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 85,335 | 0 | 0 | 1014_1933_inorder4-v3b165 | 全对·链闭 |
+| [80](#case-80) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 13 | 69,417 | 0 | 0 | 1014_1935_inorder4-v3b166 | 全对·链闭 |
 
 ## 证据正文
 
@@ -200,12 +233,166 @@
 - **raw 日志**：[results/1014_1911_inorder4-v3b155/raw/1014_1911_boutique-scheduling-21](../results/1014_1911_inorder4-v3b155/raw/1014_1911_boutique-scheduling-21/)（ndjson / mcp.jsonl / meta）
 - **摘要**：paymentservice pod paymentservice-6cff9d48f4-mwggd is stuck 0/1 Pending with no node assigned (all other boutique services Running). Its own scheduler reason reads verbatim 'FailedScheduling ... 0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient cpu.' Node side: master is Ready,SchedulingDisabled (taint node.kubernetes.io/unschedulable:NoSchedule) while worker-01/02/03 are Ready, untainted and each expose allocatable cpu: 8. GetAppYAML(paymentservice) confirms the pod template requests cpu: "12" (and limits cpu: "12"), i.e. more than any single node's entire allocatable CPU,
 
+### case-22
+
+- **结论**：`app/productcatalogservice` + `cpu_capacity_mismatch` ｜ 标签 `app/productcatalogservice` + `cpu_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 91,234
+- **raw 日志**：[results/1014_1913_inorder4-v3b156/raw/1014_1913_boutique-scheduling-22](../results/1014_1913_inorder4-v3b156/raw/1014_1913_boutique-scheduling-22/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side: productcatalogservice endpoints are <none> and a TCP probe of its declared port 3550 returned 'Connection Failed', while all other 10 boutique services have bound endpoints (hence 'partial'). Object scan: the sole outlier pod productcatalogservice-5d475f9fb-7nrnf is 0/1 Pending with Node <none>; owner deployment productcatalogservice is 0/1 AVAILABLE. Pod sheet carries the mechanism event: 'FailedScheduling ... 0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient cpu' — so it IS a capacity/scheduling story. Node layer: master is Ready,SchedulingDisabled with the 
+
+### case-23
+
+- **结论**：`app/recommendationservice` + `cpu_capacity_mismatch` ｜ 标签 `app/recommendationservice` + `cpu_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 16 · tokens 112,904
+- **raw 日志**：[results/1014_1917_inorder4-v3b157/raw/1014_1917_boutique-scheduling-23](../results/1014_1917_inorder4-v3b157/raw/1014_1917_boutique-scheduling-23/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only one outlier in the boutique inventory: recommendationservice-94fcdb6bd-gshxk is 0/1 Pending with Node <none>, while all 11 sibling services are 1/1 Running. Victim signal leads: the recommendationservice endpoints listing shows <none> (all siblings bound) and a connectivity probe on its declared port 8080 returns 'Connection Failed'. The pod's own sheet carries the scheduling line: 'Warning FailedScheduling ... 0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient cpu.' GetAppYAML(recommendationservice) shows the template requesting cpu: "14" (request and limit), whereas e
+
+### case-24
+
+- **结论**：`app/redis-cart` + `cpu_capacity_mismatch` ｜ 标签 `app/redis-cart` + `cpu_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 17 · tokens 112,155
+- **raw 日志**：[results/1014_1919_inorder4-v3b158/raw/1014_1919_boutique-scheduling-24](../results/1014_1919_inorder4-v3b158/raw/1014_1919_boutique-scheduling-24/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptoms entry via inventory listing: only redis-cart-54754cc77c-qgnv6 is an outlier (0/1 Pending, no NODE assigned), while all other 10 boutique pods are 1/1 Running and deployments show redis-cart 0/1 AVAILABLE; no metric alerts. The pod's own reason reads verbatim '0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient cpu' (FailedScheduling) — a scheduling-stage break. Node side: worker-01/02/03 are Ready, untainted (Taints: <none>, Unschedulable: false) with Allocatable cpu: 8 and only ~1125m (14%) CPU already requested, so capacity is free; the master is SchedulingDisabled
+
+### case-25
+
+- **结论**：`app/shippingservice` + `cpu_capacity_mismatch` ｜ 标签 `app/shippingservice` + `cpu_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 93,364
+- **raw 日志**：[results/1014_1920_inorder4-v3b159/raw/1014_1920_boutique-scheduling-25](../results/1014_1920_inorder4-v3b159/raw/1014_1920_boutique-scheduling-25/)（ndjson / mcp.jsonl / meta）
+- **摘要**：shippingservice is the unreachable unit: its Service 'shippingservice' lists ENDPOINTS <none> and a connectivity probe on its declared port 50051 returned 'Connection Failed', while all ten other boutique pods are 1/1 Running. Its pod shippingservice-6bb75d8c98-zd62f is 0/1 Pending with Node <none>, and the deployment reports 0/1 AVAILABLE (replica exists, so this is not admission). The pod's own sheet carries the live mechanism event: Warning FailedScheduling '0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient cpu. preemption: 0/4 ... 3 No preemption victims found'. Node ca
+
+### case-26
+
+- **结论**：`app/adservice` + `cpu_capacity_mismatch` ｜ 标签 `app/adservice` + `cpu_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 132,310
+- **raw 日志**：[results/1014_1922_inorder4-v3b160/raw/1014_1922_boutique-scheduling-26](../results/1014_1922_inorder4-v3b160/raw/1014_1922_boutique-scheduling-26/)（ndjson / mcp.jsonl / meta）
+- **摘要**：adservice 的 Pod（adservice-55f4bdbfc8-q5r4z）是 boutique 中唯一离群实例：STATUS=Pending、0/1、PodScheduled=False，而其余 13 个 pod 全部 1/1 Running；其 Service 无后端（endpoints: adservice <none>，9555 连通性检查 Connection Failed）。Pod 自身理由与 namespace 事件面逐字给出机制：FailedScheduling '0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient cpu'（在 adservice-58dbccc5d 与 adservice-55f4bdbfc8 上反复出现）。配置面 GetAppYAML(adservice) 显示 requests.cpu=5000m（远超上游默认），节点面显示 3 个 worker allocatable cpu=8，但 DaemonSet cpu-consumer 每节点一个 pod 各 Requests cpu=5，使每个 worker 仅剩 ~3 CPU 空闲，无法容纳 5000m 的请求；master 另因 cordon 不可调度（Ready,SchedulingDisab
+
+### case-27
+
+- **结论**：`app/cartservice` + `cpu_capacity_mismatch` ｜ 标签 `app/cartservice` + `cpu_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2381 · steps 22 · tokens 225,604
+- **raw 日志**：[results/1014_1924_inorder4-v3b161/raw/1014_1924_boutique-scheduling-27](../results/1014_1924_inorder4-v3b161/raw/1014_1924_boutique-scheduling-27/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Partial unreachability is confined to cartservice: the pods inventory shows the single outlier cartservice-5cddc7cc77-cxhfn 0/1 Pending with Node=<none> and PodScheduled=False, while all other boutique pods are 1/1 Running and the frontend entrypoint is reachable (10.68.69.105:80 open). The victim's own signals agree: endpoints for cartservice are <none> and a TCP probe on the Service's declared port 7070 returns Connection Failed. The mechanism event is verbatim: 'Warning FailedScheduling pod/cartservice-5cddc7cc77-cxhfn - 0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient 
+
+### case-28
+
+- **结论**：`app/checkoutservice` + `cpu_capacity_mismatch` ｜ 标签 `app/checkoutservice` + `cpu_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2381 · steps 22 · tokens 181,779
+- **raw 日志**：[results/1014_1926_inorder4-v3b162/raw/1014_1926_boutique-scheduling-28](../results/1014_1926_inorder4-v3b162/raw/1014_1926_boutique-scheduling-28/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique: only outlier is checkoutservice-7587897bf4-m6x7w, 0/1 Pending with Node <none>. Its Service has no endpoints ('checkoutservice <none>') and a TCP probe on the declared port 5050 returns Connection Failed, while all 11 other services are reachable - the reported partial unreachability. Pod sheet: PodScheduled=False with event 'FailedScheduling: 0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient cpu; preemption: 3 No preemption victims found'. The unschedulable node is master (Ready,SchedulingDisabled by design, no nodeSelector on the pod), so the blocker i
+
+### case-29
+
+- **结论**：`app/currencyservice` + `cpu_capacity_mismatch` ｜ 标签 `app/currencyservice` + `cpu_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2778 · steps 19 · tokens 129,361
+- **raw 日志**：[results/1014_1929_inorder4-v3b163/raw/1014_1929_boutique-scheduling-29](../results/1014_1929_inorder4-v3b163/raw/1014_1929_boutique-scheduling-29/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only one workload deviates in the namespace inventory: pod currencyservice-6669d77476-7l6wl is 0/1 Pending with Node <none> (all other services 1/1 Running) -> partial unreachability. Victim-side signal confirms it: CheckServiceConnectivity(currencyservice:7000) = Connection Failed and endpoints currencyservice = <none>, deployment currencyservice 0/1 AVAILABLE. The pod's own sheet carries the mechanism event verbatim: Warning FailedScheduling from default-scheduler '0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient cpu. preemption: ... 3 No preemption victims found for inc
+
+### case-30
+
+- **结论**：`app/emailservice` + `cpu_capacity_mismatch` ｜ 标签 `app/emailservice` + `cpu_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 13 · tokens 87,251
+- **raw 日志**：[results/1014_1931_inorder4-v3b164/raw/1014_1931_boutique-scheduling-30](../results/1014_1931_inorder4-v3b164/raw/1014_1931_boutique-scheduling-30/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods listing in boutique shows a single outlier: emailservice-6cc965cc46-x4xnv 0/1 Pending, no node assigned (all other 14 pods 1/1 Running, no restarts). Its own describe gives the mechanism verbatim: 'Warning FailedScheduling ... 0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient cpu. preemption: ... 3 No preemption victims found'. Node side: 4 Ready nodes with allocatable cpu=8, worker-01/02/03 untainted; the '1 unschedulable' node is master, which carries its baseline node.kubernetes.io/unschedulable:NoSchedule taint. Config face: emailservice Deployment requests cpu="5"
+
+### case-31
+
+- **结论**：`app/frontend` + `cpu_capacity_mismatch` ｜ 标签 `app/frontend` + `cpu_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3636 · steps 12 · tokens 103,861
+- **raw 日志**：[results/1014_1933_inorder4-v3b165/raw/1014_1933_boutique-scheduling-31](../results/1014_1933_inorder4-v3b165/raw/1014_1933_boutique-scheduling-31/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods listing (wide) shows the only outlier: frontend-849b4c58f6-vnz5p is 0/1 Pending with no node assigned, while all other 14 boutique pods are 1/1 Running; deployments listing confirms frontend is the only drained workload (0/1 AVAILABLE, others 1/1). The pod's own FailedScheduling event reads verbatim: '0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient cpu.' Node side (GetClusterConfiguration): worker-01/02/03 are Ready, untainted, each with only cpu:8 allocatable; master is Ready but carries node.kubernetes.io/unschedulable:NoSchedule (the single 'unschedulable' node). 
+
+### case-32
+
+- **结论**：`app/paymentservice` + `cpu_capacity_mismatch` ｜ 标签 `app/paymentservice` + `cpu_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 17 · tokens 137,758
+- **raw 日志**：[results/1014_1935_inorder4-v3b166/raw/1014_1935_boutique-scheduling-32](../results/1014_1935_inorder4-v3b166/raw/1014_1935_boutique-scheduling-32/)（ndjson / mcp.jsonl / meta）
+- **摘要**：boutique 命名空间中 paymentservice-6d68bc998-996g5 停留在 Pending 0/1 且未绑定节点，是 pods 清单中唯一离群行（其余 14 个 pod 均 1/1 Running）。其 DescribeResource 机制事件原文为 'FailedScheduling ... 0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient cpu'。节点侧核对：worker-01/02/03 均 Ready、无 taint、Unschedulable: false、allocatable cpu=8，但 Allocated resources 已达 6095m(76%)/6125m(76%)/5925m(74%)（每节点含一个 mypod-* CPU Requests 5），剩余仅约 1.9-2.1 CPU，远小于该 Pod 的请求；master 为基线 SchedulingDisabled。配置确认：GetAppYAML(paymentservice) 声明 resources.requests.cpu="6" 与 limits.cpu="6"（同类服务仅 100m-200m），与节点可用 CPU 容量不匹配，导致 3 个 worker 全部报 Insuffic
+
 ### case-35
 
 - **结论**：`app/cartservice` + `memory_capacity_mismatch` ｜ 标签 `app/cartservice` + `memory_capacity_mismatch`（✓ 逐字命中）
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 104,468
 - **raw 日志**：[results/1014_1911_inorder4-v3b155/raw/1014_1912_boutique-scheduling-35](../results/1014_1911_inorder4-v3b155/raw/1014_1912_boutique-scheduling-35/)（ndjson / mcp.jsonl / meta）
 - **摘要**：cartservice-7f8574fc8d-gv26b is the only outlier in the pods listing: READY 0/1, STATUS Pending, NODE <none>. Its own record carries the mechanism event: 'FailedScheduling ... 0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient memory'. The config face confirms the mismatch: GetAppYAML(cartservice) sets container resources requests/limits memory=20Gi, while GetClusterConfiguration shows every node's allocatable memory at only 1567134x Ki (~14.9GiB) — the 20Gi request exceeds any node's allocatable memory, so no worker can host the pod (the single 'unschedulable' node is the m
+
+### case-36
+
+- **结论**：`app/checkoutservice` + `memory_capacity_mismatch` ｜ 标签 `app/checkoutservice` + `memory_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3077 · steps 14 · tokens 102,563
+- **raw 日志**：[results/1014_1913_inorder4-v3b156/raw/1014_1914_boutique-scheduling-36](../results/1014_1913_inorder4-v3b156/raw/1014_1914_boutique-scheduling-36/)（ndjson / mcp.jsonl / meta）
+- **摘要**：checkoutservice pod checkoutservice-86b8558dc-wbpvr is stuck Pending (0/1, PodScheduled=False) while all other 10 boutique services are 1/1 Running. The pod's own reason line reads verbatim: 'FailedScheduling ... 0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient memory. preemption: 0/4 ... No preemption victims found'. The config face confirms the mechanism: the Deployment requests memory: 30Gi (== its limit), while every node's allocatable memory is only ~15671348Ki (~14.9Gi) — so the request can never fit on any worker. Worker-01/02/03 are all Ready, untainted and free of
+
+### case-37
+
+- **结论**：`app/currencyservice` + `memory_capacity_mismatch` ｜ 标签 `app/currencyservice` + `memory_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 13 · tokens 88,610
+- **raw 日志**：[results/1014_1917_inorder4-v3b157/raw/1014_1918_boutique-scheduling-37](../results/1014_1917_inorder4-v3b157/raw/1014_1918_boutique-scheduling-37/)（ndjson / mcp.jsonl / meta）
+- **摘要**：namespace boutique: currencyservice-6dddb8ccb5-4hbm5 is 0/1 Pending with Node:<none>, while all other 10 pods are 1/1 Running; endpoints/currencyservice shows ENDPOINTS <none> (no backend -> partial unreachability). The pod sheet carries the scheduling line verbatim: 'Warning FailedScheduling 30s default-scheduler 0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient memory. preemption: ... 3 No preemption victims found for incoming pod.' The deployment template (GetAppYAML currencyservice) requests/limits memory: 20Gi, whereas every schedulable worker's allocatable memory is o
+
+### case-38
+
+- **结论**：`app/frontend` + `memory_capacity_mismatch` ｜ 标签 `app/frontend` + `memory_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 91,529
+- **raw 日志**：[results/1014_1919_inorder4-v3b158/raw/1014_1920_boutique-scheduling-38](../results/1014_1919_inorder4-v3b158/raw/1014_1920_boutique-scheduling-38/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Partial unreachability localizes to the boutique entry service: the endpoints listing shows every Service bound except `frontend`/`frontend-external` (ENDPOINTS <none>), and an active TCP probe on frontend:80 (its declared port) returns Connection Failed. The object layer shows the lone outlier frontend-54565b4ccc-9hn89 as 0/1 Pending with Node <none>, owner Deployment frontend 0/1 READY (desired replicas=1, UP-TO-DATE 1, AVAILABLE 0); all other 10 pods are 1/1 Running. The pod's own sheet carries the mechanism: Warning FailedScheduling '0/4 nodes are available: 1 node(s) were unschedulable, 3
+
+### case-39
+
+- **结论**：`app/paymentservice` + `memory_capacity_mismatch` ｜ 标签 `app/paymentservice` + `memory_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3846 · steps 14 · tokens 104,305
+- **raw 日志**：[results/1014_1920_inorder4-v3b159/raw/1014_1921_boutique-scheduling-39](../results/1014_1920_inorder4-v3b159/raw/1014_1921_boutique-scheduling-39/)（ndjson / mcp.jsonl / meta）
+- **摘要**：pods listing in namespace boutique shows a single outlier: paymentservice-9c44ddcbf-g9t92 is 0/1 Pending with Node:<none> while all other 10 boutique pods are 1/1 Running. The pod's own sheet carries the mechanism verbatim: 'Warning FailedScheduling 0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient memory. preemption: 0/4 nodes are available: 1 Preemption is not helpful for scheduling, 3 No preemption victims found for incoming pod.' with PodScheduled=False. The config face the mechanism points at confirms the mismatch: GetAppYAML(paymentservice) declares resources.requests
+
+### case-40
+
+- **结论**：`app/productcatalogservice` + `memory_capacity_mismatch` ｜ 标签 `app/productcatalogservice` + `memory_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3077 · steps 14 · tokens 84,438
+- **raw 日志**：[results/1014_1922_inorder4-v3b160/raw/1014_1923_boutique-scheduling-40](../results/1014_1922_inorder4-v3b160/raw/1014_1923_boutique-scheduling-40/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Inventory listing showed the single outlier productcatalogservice-c589fc787-gf9w5 as 0/1 Pending while all other 10 boutique pods were 1/1 Running. Its own Pod sheet carries the mechanism: Node <none>, PodScheduled False, 'Warning FailedScheduling 0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient memory'. Node surface confirms the blocker is capacity, not cordon/taint: all three workers are Ready, untainted, but allocatable memory is only 15671348Ki (~14.95Gi), while GetAppYAML(productcatalogservice) declares requests/limits memory = 22Gi in the pod template — 22Gi exceeds 
+
+### case-41
+
+- **结论**：`app/recommendationservice` + `memory_capacity_mismatch` ｜ 标签 `app/recommendationservice` + `memory_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3077 · steps 14 · tokens 87,048
+- **raw 日志**：[results/1014_1924_inorder4-v3b161/raw/1014_1925_boutique-scheduling-41](../results/1014_1924_inorder4-v3b161/raw/1014_1925_boutique-scheduling-41/)（ndjson / mcp.jsonl / meta）
+- **摘要**：recommendationservice-7f9977467f-t66vg is 0/1 Pending while all other 10 boutique pods are 1/1 Running. Its own FailedScheduling event reads verbatim '0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient memory', i.e. the scheduler rejects it on node memory capacity. GetClusterConfiguration shows every node (master, worker-01/02/03) allocatable memory = 15671352Ki (~14.94 GiB), all Ready with MemoryPressure=False; GetAppYAML(recommendationservice) shows the pod template requests memory: 20Gi (requests and limits), which exceeds any single node's allocatable memory, so no node 
+
+### case-42
+
+- **结论**：`app/redis-cart` + `memory_capacity_mismatch` ｜ 标签 `app/redis-cart` + `memory_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 86,031
+- **raw 日志**：[results/1014_1926_inorder4-v3b162/raw/1014_1928_boutique-scheduling-42](../results/1014_1926_inorder4-v3b162/raw/1014_1928_boutique-scheduling-42/)（ndjson / mcp.jsonl / meta）
+- **摘要**：唯一离群对象为 redis-cart-d9c95f94d-tshkh (0/1 Pending, Node:<none>), 其余 10 个服务均 1/1 Running/RESTARTS=0。victim 自身信号先行: CheckServiceConnectivity(redis-cart:6379) 返回 Connection Failed, endpoints 清单中 redis-cart 为 <none>。Pod 自身事件给出机制: 'FailedScheduling 0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient memory' (descheduler 阶段, PodScheduled False, 从未绑定)。配置确认面: GetAppYAML(redis-cart) 中容器 redis 的 requests/limits memory 均为 20Gi; 而 GetClusterConfiguration 显示全部节点 allocatable memory 仅约 15671348Ki(≈14.9GiB), 即 20Gi 请求超过任一节点可分配内存, 三个 worker 全报 Insufficient memory, preemption 亦无受害者可抢占。GetResourc
+
+### case-43
+
+- **结论**：`app/shippingservice` + `memory_capacity_mismatch` ｜ 标签 `app/shippingservice` + `memory_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 13 · tokens 103,905
+- **raw 日志**：[results/1014_1929_inorder4-v3b163/raw/1014_1930_boutique-scheduling-43](../results/1014_1929_inorder4-v3b163/raw/1014_1930_boutique-scheduling-43/)（ndjson / mcp.jsonl / meta）
+- **摘要**：pods listing (wide) shows exactly one outlier: shippingservice-c57f8c997-nmvm2 Pending 0/1 on no node; its own events read 'FailedScheduling ... 0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient memory'. GetClusterConfiguration shows all 3 schedulable workers Ready, untainted, allocatable.memory=15671348Ki (~14.95Gi) while master carries node.kubernetes.io/unschedulable:NoSchedule. The pod template (DescribeResource pod + GetAppYAML shippingservice) requests memory: 20Gi (limits 20Gi), which exceeds every worker's allocatable memory, so the scheduler can never place it. Con
+
+### case-44
+
+- **结论**：`app/cartservice` + `memory_capacity_mismatch` ｜ 标签 `app/cartservice` + `memory_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3077 · steps 14 · tokens 93,136
+- **raw 日志**：[results/1014_1931_inorder4-v3b164/raw/1014_1932_boutique-scheduling-44](../results/1014_1931_inorder4-v3b164/raw/1014_1932_boutique-scheduling-44/)（ndjson / mcp.jsonl / meta）
+- **摘要**：boutique 中唯一离群对象为 cartservice-985bc9ccd-nb525：0/1 Pending、NODE <none>、PodScheduled False，其余 13 个 pod 全 1/1 Running 且 0 重启。受害对象自身信号先行：CheckServiceConnectivity(cartservice:7070，Service 声明端口) 返回 Connection Failed，Deployment cartservice 0/1 AVAILABLE（无 Ready 端点）。Pod 调度单逐字给出机制：Warning FailedScheduling '0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient memory'（preemption 亦无受害者）。节点侧：worker-01/02/03 全 Ready、无 taint、三种 Pressure 均 False，allocatable memory 约 15.67GiB；master 为 Ready,SchedulingDisabled（按角色设计，非阻塞点）。DaemonSet memory-consumer 每节点一个、Requests/Limits memory 10Gi、QoS Guarantee
+
+### case-45
+
+- **结论**：`app/checkoutservice` + `memory_capacity_mismatch` ｜ 标签 `app/checkoutservice` + `memory_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 17 · tokens 108,227
+- **raw 日志**：[results/1014_1933_inorder4-v3b165/raw/1014_1934_boutique-scheduling-45](../results/1014_1933_inorder4-v3b165/raw/1014_1934_boutique-scheduling-45/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom entered from the unnamed-service inventory: checkoutservice-77499d48c9-5ggrs is the only outlier (0/1 Pending, no node assigned), its Deployment reads 0/1 AVAILABLE and endpoints/checkoutservice shows ENDPOINTS <none> (availability disruption). The pod's own reason reads verbatim: '0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient memory. preemption: ... 3 No preemption victims found for incoming pod.' with PodScheduled=False. Node side: all 4 nodes Ready and untainted except master (Ready,SchedulingDisabled + node.kubernetes.io/unschedulable:NoSchedule = the 1 unsc
+
+### case-46
+
+- **结论**：`app/emailservice` + `memory_capacity_mismatch` ｜ 标签 `app/emailservice` + `memory_capacity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 17 · tokens 114,716
+- **raw 日志**：[results/1014_1935_inorder4-v3b166/raw/1014_1937_boutique-scheduling-46](../results/1014_1935_inorder4-v3b166/raw/1014_1937_boutique-scheduling-46/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only emailservice is unavailable while all other workloads are healthy ('partial'): pods listing shows emailservice-7b8b9859b5-8sw52 at 0/1 Pending with Node <none>, its endpoints are empty ('emailservice  <none>') and CheckServiceConnectivity on its declared port 5000 fails; deployment emailservice is 0/1 AVAILABLE. DescribeResource on the pending pod carries the scheduling line verbatim: 'FailedScheduling ... 0/4 nodes are available: 1 node(s) were unschedulable, 3 Insufficient memory'. Node side closes the arithmetic: GetClusterConfiguration shows worker-01/02/03 Ready, untainted, ~14.95Gi 
 
 ### case-49
 
@@ -353,4 +540,81 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2353 · steps 18 · tokens 133,049
 - **raw 日志**：[results/1014_1911_inorder4-v3b155/raw/1014_1912_boutique-scheduling-69](../results/1014_1911_inorder4-v3b155/raw/1014_1912_boutique-scheduling-69/)（ndjson / mcp.jsonl / meta）
 - **摘要**：The unreachability is isolated to recommendationservice: its Endpoints row is <none> and an active probe on its declared port 8080 (ClusterIP 10.68.76.96) returns Connection Failed, while the entry caller frontend logs 69x 'failed to get product recommendations' with 'dial tcp 10.68.76.96:8080: connect: connection refused'. All other 11 boutique pods are 1/1 Running and every other Service has endpoints (productcatalogservice:3550 probes open, so the transient 'lookup productcatalogservice ... no such host' log lines are not the fault). The single outlier is pod recommendationservice-797c4ccc7
+
+### case-70
+
+- **结论**：`app/redis-cart` + `node_affinity_mismatch` ｜ 标签 `app/redis-cart` + `node_affinity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1481 · steps 28 · tokens 275,399
+- **raw 日志**：[results/1014_1913_inorder4-v3b156/raw/1014_1914_boutique-scheduling-70](../results/1014_1913_inorder4-v3b156/raw/1014_1914_boutique-scheduling-70/)（ndjson / mcp.jsonl / meta）
+- **摘要**：boutique 命名空间中仅 redis-cart 出现离群：redis-cart-5884778669-tr7fc 为 Pending(0/1, Node: <none>)，其 DescribeResource 事件逐字给出机制 'Warning FailedScheduling: 0/4 nodes are available: 1 node(s) were unschedulable, 3 node(s) didn't match Pod's node affinity/selector'。节点侧对照：worker-01/02/03 全部带标签 state=maintenance，而 redis-cart 的 Pod 模板带 nodeAffinity requiredDuringSchedulingIgnoredDuringExecution 'state NotIn [maintenance]'，因此三个 worker 全被排除；唯一不带 state 标签（NotIn 语义可匹配）的 master 处于 cordon（Ready,SchedulingDisabled，taint node.kubernetes.io/unschedulable:NoSchedule），构成 '1 node(s) were unschedulable'。逐个核对 GetAppYAML（fro
+
+### case-71
+
+- **结论**：`app/shippingservice` + `node_affinity_mismatch` ｜ 标签 `app/shippingservice` + `node_affinity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 90,384
+- **raw 日志**：[results/1014_1917_inorder4-v3b157/raw/1014_1918_boutique-scheduling-71](../results/1014_1917_inorder4-v3b157/raw/1014_1918_boutique-scheduling-71/)（ndjson / mcp.jsonl / meta）
+- **摘要**：shippingservice pod shippingservice-847dfd5ff4-wnwc9 is stuck Pending with Node:<none> and PodScheduled=False; the scheduler event reads verbatim '0/4 nodes are available: 1 node(s) were unschedulable, 3 node(s) didn't match Pod's node affinity/selector.' GetAppYAML(shippingservice) shows a hard requiredDuringScheduling nodeAffinity requiring key 'state' NotIn ['maintenance'], while GetClusterConfiguration shows worker-01/worker-02/worker-03 all carry the label state=maintenance and the only remaining node (master) is marked unschedulable (node.kubernetes.io/unschedulable:NoSchedule) — so no n
+
+### case-72
+
+- **结论**：`app/adservice` + `node_affinity_mismatch` ｜ 标签 `app/adservice` + `node_affinity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3077 · steps 14 · tokens 88,543
+- **raw 日志**：[results/1014_1919_inorder4-v3b158/raw/1014_1919_boutique-scheduling-72](../results/1014_1919_inorder4-v3b158/raw/1014_1919_boutique-scheduling-72/)（ndjson / mcp.jsonl / meta）
+- **摘要**：boutique 内唯一离群对象是 adservice pod（adservice-7fcbc7446f-ndl8v，0/1 Pending，NODE <none>），其余 10 个 pod 均 1/1 Running。实测可达性：CheckServiceConnectivity(adservice, 9555) = Connection Failed，endpoints 清单中 adservice 为 <none>（其余 11 个 Service 端点正常绑定）——符合『部分服务不可达』。pod 自身事件给出机制：Warning FailedScheduling 0/4 nodes are available: 1 node(s) were unschedulable, 3 node(s) didn't match Pod's node affinity/selector。节点侧：master 为 Ready,SchedulingDisabled（对应 '1 node unschedulable'），worker-01/02/03 全部 Ready、无 taint、CPU/内存可分配（各 8C/~15Gi）——排除容量与 cordon 作为 worker 被拒原因。配置面 GetAppYAML(adservice) 显示模板声明 nodeAffinity requiredDuri
+
+### case-73
+
+- **结论**：`app/cartservice` + `node_affinity_mismatch` ｜ 标签 `app/cartservice` + `node_affinity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 121,766
+- **raw 日志**：[results/1014_1920_inorder4-v3b159/raw/1014_1921_boutique-scheduling-73](../results/1014_1920_inorder4-v3b159/raw/1014_1921_boutique-scheduling-73/)（ndjson / mcp.jsonl / meta）
+- **摘要**：cartservice is the only unreachable boutique service. Its pod cartservice-55cd596fdb-75wdb is 0/1 Pending with Node <none>; its own sheet shows PodScheduled=False and the event 'Warning FailedScheduling ... 0/4 nodes are available: 1 node(s) were unschedulable, 3 node(s) didn't match Pod's node affinity/selector'. The config face explains it: GetAppYAML(cartservice) requires nodeAffinity 'storage-vendor Exists' (requiredDuringSchedulingIgnoredDuringExecution), while GetClusterConfiguration shows no node carries the 'storage-vendor' label (worker-01/02/03 labels are only arch/os/hostname/role; 
+
+### case-74
+
+- **结论**：`app/currencyservice` + `node_affinity_mismatch` ｜ 标签 `app/currencyservice` + `node_affinity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 13 · tokens 88,560
+- **raw 日志**：[results/1014_1922_inorder4-v3b160/raw/1014_1923_boutique-scheduling-74](../results/1014_1922_inorder4-v3b160/raw/1014_1923_boutique-scheduling-74/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique pods listing shows the sole outlier currencyservice-75688b6455-clv5l as 0/1 Pending (all other 10 services 1/1 Running) and deployments listing shows currencyservice 0/1 AVAILABLE. Its connectivity probe (CheckServiceConnectivity currencyservice:7000) returns Connection Failed, confirming the reachability complaint. DescribeResource on the pod shows 'Node: <none>' with PodScheduled=False and the mechanism event: Warning FailedScheduling '0/4 nodes are available: 1 node(s) were unschedulable, 3 node(s) didn't match Pod's node affinity/selector.' The config face (GetAppYAML cu
+
+### case-75
+
+- **结论**：`app/emailservice` + `node_affinity_mismatch` ｜ 标签 `app/emailservice` + `node_affinity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3077 · steps 14 · tokens 85,469
+- **raw 日志**：[results/1014_1924_inorder4-v3b161/raw/1014_1925_boutique-scheduling-75](../results/1014_1924_inorder4-v3b161/raw/1014_1925_boutique-scheduling-75/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All boutique workloads are 1/1 Running except emailservice: pod emailservice-79d96f6bc9-4gxqr is 0/1 Pending with PodScheduled=False, and deployment emailservice shows 0/1 AVAILABLE. The pod's own FailedScheduling event reads '0/4 nodes are available: 1 node(s) were unschedulable, 3 node(s) didn't match Pod's node affinity/selector.' Node side: master is Ready,SchedulingDisabled (normal), worker-01/02/03 are all Ready/taint-free, and none of the four nodes carries the label 'storage-vendor'. The emailservice pod template (GetAppYAML) declares requiredDuringSchedulingIgnoredDuringExecution node
+
+### case-76
+
+- **结论**：`app/paymentservice` + `node_affinity_mismatch` ｜ 标签 `app/paymentservice` + `node_affinity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 13 · tokens 103,632
+- **raw 日志**：[results/1014_1926_inorder4-v3b162/raw/1014_1928_boutique-scheduling-76](../results/1014_1926_inorder4-v3b162/raw/1014_1928_boutique-scheduling-76/)（ndjson / mcp.jsonl / meta）
+- **摘要**：namespace boutique pods listing names a single outlier: paymentservice-6bc9cd4c79-c9lmd is 0/1 Pending with no node assigned, while all other 10 services are 1/1 Running; deployments listing shows paymentservice as the only workload at 0 AVAILABLE and CheckServiceConnectivity(paymentservice:50051) returns Connection Failed, matching the reported availability disruption. The pod's own reason (DescribeResource) is 'FailedScheduling ... 0/4 nodes are available: 1 node(s) were unschedulable, 3 node(s) didn't match Pod's node affinity/selector', and the pod sheet shows Node-Selectors: <none>, point
+
+### case-77
+
+- **结论**：`app/productcatalogservice` + `node_affinity_mismatch` ｜ 标签 `app/productcatalogservice` + `node_affinity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 13 · tokens 87,754
+- **raw 日志**：[results/1014_1929_inorder4-v3b163/raw/1014_1930_boutique-scheduling-77](../results/1014_1929_inorder4-v3b163/raw/1014_1930_boutique-scheduling-77/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only productcatalogservice is unreachable: its Service endpoints list is `<none>` (all 10 peer Services have bound endpoints) and the connectivity probe on its declared port 3550 returns 'Connection Failed'. The workload is drained: deployment productcatalogservice 0/1 READY, 0 AVAILABLE; its pod productcatalogservice-656b5cf4cc-d5gvg is 0/1 Pending with Node=<none>. The pod's own sheet carries the mechanism event: 'FailedScheduling ... 0/4 nodes are available: 1 node(s) were unschedulable, 3 node(s) didn't match Pod's node affinity/selector.' The config the mechanism points at confirms it: th
+
+### case-78
+
+- **结论**：`app/redis-cart` + `node_affinity_mismatch` ｜ 标签 `app/redis-cart` + `node_affinity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 104,428
+- **raw 日志**：[results/1014_1931_inorder4-v3b164/raw/1014_1932_boutique-scheduling-78](../results/1014_1931_inorder4-v3b164/raw/1014_1932_boutique-scheduling-78/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Reachability chain resolves to redis-cart. Caller-side: frontend error logs show 79/108 errors of the family 'could not retrieve cart / failed to add to cart: rpc error: code = FailedPrecondition desc = Can't access cart storage. RedisConnectionException: UnableToConnect on redis-cart:6379 ... clientName: cartservice-79b49f5555-ftbzn'. Victim signal: endpoints/redis-cart shows ENDPOINTS <none> and CheckServiceConnectivity(redis-cart,6379) returns 'Connection Failed'. Workload: deployments shows redis-cart 0/1 UP-TO-DATE, AVAILABLE 0 (all other 10 deployments 1/1), and pod redis-cart-695798d76d
+
+### case-79
+
+- **结论**：`app/shippingservice` + `node_affinity_mismatch` ｜ 标签 `app/shippingservice` + `node_affinity_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3077 · steps 14 · tokens 85,335
+- **raw 日志**：[results/1014_1933_inorder4-v3b165/raw/1014_1934_boutique-scheduling-79](../results/1014_1933_inorder4-v3b165/raw/1014_1934_boutique-scheduling-79/)（ndjson / mcp.jsonl / meta）
+- **摘要**：shippingservice is the sole outlier in the boutique namespace: pod shippingservice-5c476cd7dc-9wbbp is Pending 0/1 with Node=<none> and PodScheduled=False, while all other 10 pods are 1/1 Running. Its FailedScheduling event states verbatim '0/4 nodes are available: 1 node(s) were unschedulable, 3 node(s) didn't match Pod's node affinity/selector. preemption: 0/4 nodes are available: 4 Preemption is not helpful for scheduling.' — no capacity shortfall, a hard placement constraint. Node side: master is Ready,SchedulingDisabled (the 1 unschedulable node), worker-01/02/03 are Ready and untainted; 
+
+### case-80
+
+- **结论**：`app/adservice` + `node_selector_mismatch` ｜ 标签 `app/adservice` + `node_selector_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 13 · tokens 69,417
+- **raw 日志**：[results/1014_1935_inorder4-v3b166/raw/1014_1936_boutique-scheduling-80](../results/1014_1935_inorder4-v3b166/raw/1014_1936_boutique-scheduling-80/)（ndjson / mcp.jsonl / meta）
+- **摘要**：adservice is the only outlier: pod adservice-74f5c86c49-2lhwq is Pending with Node <none> and deployment adservice shows 0/1 AVAILABLE, while all other 10 boutique services are 1/1 Running (matching 'Partial' unreachability). Its own signal confirms the fault: CheckServiceConnectivity(adservice, 9555 - the port its Service declares) returns 'Connection Failed'. The mechanism event is read verbatim on the pod sheet: 'FailedScheduling ... 0/4 nodes are available: 1 node(s) were unschedulable, 3 node(s) didn't match Pod's node affinity/selector.' The config face confirms the cause: GetAppYAML(ads
 

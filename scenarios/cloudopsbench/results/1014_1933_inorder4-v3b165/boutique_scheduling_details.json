@@ -1,0 +1,134 @@
+[
+  {
+    "case_name": "31",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling\\31\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_1933_inorder4-v3b165\\traces\\boutique\\dsh-tsm\\scheduling\\31\\31.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Scheduling_Fault",
+      "fault_object": "app/frontend",
+      "root_cause": "cpu_capacity_mismatch"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/frontend",
+        "root_cause": "cpu_capacity_mismatch"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/frontend",
+        "root_cause": "node_cordon_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/frontend",
+        "root_cause": "taint_toleration_mismatch"
+      }
+    ],
+    "tool_call_count": 11,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.36363636363636365,
+      "steps": 12.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "45",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling\\45\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_1933_inorder4-v3b165\\traces\\boutique\\dsh-tsm\\scheduling\\45\\45.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Scheduling_Fault",
+      "fault_object": "app/checkoutservice",
+      "root_cause": "memory_capacity_mismatch"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "memory_capacity_mismatch"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "node_cordon_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "cpu_capacity_mismatch"
+      }
+    ],
+    "tool_call_count": 16,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.25,
+      "steps": 17.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "79",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling\\79\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_1933_inorder4-v3b165\\traces\\boutique\\dsh-tsm\\scheduling\\79\\79.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Scheduling_Fault",
+      "fault_object": "app/shippingservice",
+      "root_cause": "node_affinity_mismatch"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/shippingservice",
+        "root_cause": "node_affinity_mismatch"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/shippingservice",
+        "root_cause": "node_cordon_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/shippingservice",
+        "root_cause": "node_selector_mismatch"
+      }
+    ],
+    "tool_call_count": 13,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.3076923076923077,
+      "steps": 14.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

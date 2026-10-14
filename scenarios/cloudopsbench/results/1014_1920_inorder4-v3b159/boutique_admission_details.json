@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "46",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\admission\\46\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_1920_inorder4-v3b159\\traces\\boutique\\dsh-tsm\\admission\\46\\46.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Admission_Fault",
+      "fault_object": "namespace/boutique",
+      "root_cause": "namespace_service_quota_exceeded"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "service_dns_resolution_failure"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "service_selector_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "service_port_mapping_mismatch"
+      }
+    ],
+    "tool_call_count": 20,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 0.0,
+      "FA": 0.0,
+      "JRA": 0.0,
+      "MC": 0.6666666666666666,
+      "EOC": 0.6666666666666666,
+      "ECR": 0.0,
+      "EE": 0.3,
+      "steps": 21.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

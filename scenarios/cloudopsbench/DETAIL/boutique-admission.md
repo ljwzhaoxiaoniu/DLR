@@ -1,6 +1,6 @@
 # 评测明细 · boutique/admission — cloudopsbench
 
-> 本家族已跑 **42/58** 题：JRA ✅41 ❌1 ｜ 证据链全闭 40 ｜ token 中位 88,036 ｜ 生成 2026-10-14T11:13:27.392Z
+> 本家族已跑 **53/58** 题：JRA ✅46 ❌7 ｜ 证据链全闭 45 ｜ token 中位 89,960 ｜ 生成 2026-10-14T11:37:58.203Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -49,6 +49,17 @@
 | [40](#case-40) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3846 | 14 | 87,627 | 0 | 0 | 1014_1908_inorder4-v3b153 | 全对·链闭 |
 | [41](#case-41) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.3846 | 14 | 88,036 | 0 | 0 | 1014_1910_inorder4-v3b154 | 全对·链闭 |
 | [42](#case-42) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.4286 | 15 | 92,390 | 0 | 0 | 1014_1911_inorder4-v3b155 | 全对·链闭 |
+| [43](#case-43) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4615 | 14 | 91,331 | 0 | 0 | 1014_1913_inorder4-v3b156 | 全对·链闭 |
+| [44](#case-44) | 0 | 0 | 0 | 0.6667 | 0.6667 | 0 | 0.25 | 21 | 119,723 | 0 | 0 | 1014_1917_inorder4-v3b157 | 未命中 |
+| [45](#case-45) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3889 | 19 | 112,233 | 0 | 0 | 1014_1919_inorder4-v3b158 | 全对·链闭 |
+| [46](#case-46) | 0 | 0 | 0 | 0.6667 | 0.6667 | 0 | 0.3 | 21 | 118,478 | 0 | 0 | 1014_1920_inorder4-v3b159 | 未命中 |
+| [47](#case-47) | 0 | 0 | 0 | 0.6667 | 0.6667 | 0 | 0.3158 | 20 | 133,502 | 0 | 0 | 1014_1922_inorder4-v3b160 | 未命中 |
+| [48](#case-48) | 1 | 1 | 1 | 1 | 1 | 1 | 0.303 | 34 | 183,391 | 0 | 0 | 1014_1924_inorder4-v3b161 | 全对·链闭 |
+| [49](#case-49) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1613 | 63 | 394,111 | 0 | 0 | 1014_1926_inorder4-v3b162 | 全对·链闭 |
+| [50](#case-50) | 0 | 0 | 0 | 0.6667 | 0.6667 | 0 | 0.3125 | 17 | 90,428 | 0 | 0 | 1014_1929_inorder4-v3b163 | 未命中 |
+| [51](#case-51) | 0 | 0 | 0 | 0.6667 | 0.6667 | 0 | 0.3125 | 17 | 95,203 | 0 | 0 | 1014_1931_inorder4-v3b164 | 未命中 |
+| [52](#case-52) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 23 | 158,133 | 0 | 0 | 1014_1933_inorder4-v3b165 | 全对·链闭 |
+| [53](#case-53) | 0 | 0 | 0 | 0.6667 | 0.6667 | 0 | 0.2692 | 27 | 199,989 | 0 | 0 | 1014_1935_inorder4-v3b166 | 未命中 |
 
 ## 证据正文
 
@@ -345,4 +356,81 @@
 - **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.4286 · steps 15 · tokens 92,390
 - **raw 日志**：[results/1014_1911_inorder4-v3b155/raw/1014_1911_boutique-admission-42](../results/1014_1911_inorder4-v3b155/raw/1014_1911_boutique-admission-42/)（ndjson / mcp.jsonl / meta）
 - **摘要**：All 10 boutique pods are 1/1 Running with 0 restarts, but redis-cart has no pod at all; its Deployment shows 0/1 updated, 0 available, ReplicaFailure=True/FailedCreate, and Service endpoints are '<none>'. The namespace event surface carries the mechanism verbatim: 'FailedCreate replicaset/redis-cart-6f966d9cc9: pods ... is forbidden: exceeded quota: pod-count-quota, requested: pods=1, used: pods=10, limited: pods=10'. The closing config read confirms it is live: GetResources(resourcequota, boutique) shows 'pod-count-quota pods: 10/10'. Redis-cart's own App YAML (replicas 1, image redis:alpine,
+
+### case-43
+
+- **结论**：`namespace/boutique` + `namespace_pod_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_pod_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4615 · steps 14 · tokens 91,331
+- **raw 日志**：[results/1014_1913_inorder4-v3b156/raw/1014_1913_boutique-admission-43](../results/1014_1913_inorder4-v3b156/raw/1014_1913_boutique-admission-43/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 10 existing boutique pods are 1/1 Running with 0 restarts, yet the shippingservice Service shows ENDPOINTS <none> and no shippingservice pod exists at all; frontend error logs (50x repeated pattern) show 'failed to get shipping quote ... dial tcp 10.68.141.164:50051: connect: connection refused' — the shippingservice ClusterIP, i.e. no endpoints to forward to. The owner chain shows deployments shippingservice 0/1 READY, 0 UP-TO-DATE, 0 AVAILABLE while every other deployment is 1/1. Namespace events name the mechanism verbatim: 'Warning FailedCreate replicaset/shippingservice-7ff54bf6b6 Err
+
+### case-44
+
+- **结论**：`app/adservice` + `service_dns_resolution_failure` ｜ 标签 `namespace/boutique` + `namespace_service_quota_exceeded`（✗ 与标签不符）
+- **流程**：MC 0.6667 · EOC 0.6667 · ECR 0 · EE 0.25 · steps 21 · tokens 119,723
+- **raw 日志**：[results/1014_1917_inorder4-v3b157/raw/1014_1917_boutique-admission-44](../results/1014_1917_inorder4-v3b157/raw/1014_1917_boutique-admission-44/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique: all 11 pods are 1/1 Running with 0 restarts, all deployments (incl. adservice 1/1 AVAILABLE) report ready, the adservice pod logs 'Ad Service started, listening on 9555', its ServiceAccount exists, and the namespace event surface contains only Normal events (no Warning). The only break is on the reachability/addressing surface: the caller frontend's error logs are dominated by 'failed to get ads: rpc error: code = Unavailable ... dial tcp: lookup adservice on 169.254.20.10:53: no such host' (114/903 = 12.6%), i.e. a name-resolution failure (NXDOMAIN) rather than connection 
+
+### case-45
+
+- **结论**：`namespace/boutique` + `namespace_service_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_service_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3889 · steps 19 · tokens 112,233
+- **raw 日志**：[results/1014_1919_inorder4-v3b158/raw/1014_1919_boutique-admission-45](../results/1014_1919_inorder4-v3b158/raw/1014_1919_boutique-admission-45/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts, and cartservice's own pod log shows it healthy listening on :7070, ruling out scheduling/probe/image/OOM faults. The caller-side signal is selective: frontend error logs (205/943 errors) are dominated by 'lookup cartservice on 169.254.20.10:53: no such host', while every other backend resolves normally — partial, single-service unreachability. The pruning scan localizes the break to the address layer: the Services listing contains only 11 services with cartservice ABSENT (no endpoint either); GetResources(services, label_selector=app=cartse
+
+### case-46
+
+- **结论**：`app/checkoutservice` + `service_dns_resolution_failure` ｜ 标签 `namespace/boutique` + `namespace_service_quota_exceeded`（✗ 与标签不符）
+- **流程**：MC 0.6667 · EOC 0.6667 · ECR 0 · EE 0.3 · steps 21 · tokens 118,478
+- **raw 日志**：[results/1014_1920_inorder4-v3b159/raw/1014_1920_boutique-admission-46](../results/1014_1920_inorder4-v3b159/raw/1014_1920_boutique-admission-46/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Reachability chain break localized at checkoutservice's service-discovery/DNS layer. (1) Symptom side (entry caller frontend error logs, 7x): 'rpc error: code = Unavailable ... dial tcp: lookup checkoutservice on 169.254.20.10:53: no such host' with HTTP 500 on /cart/checkout — the name never resolves, so the call fails before any TCP connect. (2) Workload layer pruned: all pods show 1/1 Running, RESTARTS 0; checkoutservice-8445f8b6cb-k8lss is Running with zero error logs and its namespace events surface contains only Normal events (Pulled/Created/Started) — no image-pull, mount, admission, pr
+
+### case-47
+
+- **结论**：`app/currencyservice` + `service_dns_resolution_failure` ｜ 标签 `namespace/boutique` + `namespace_service_quota_exceeded`（✗ 与标签不符）
+- **流程**：MC 0.6667 · EOC 0.6667 · ECR 0 · EE 0.3158 · steps 20 · tokens 133,502
+- **raw 日志**：[results/1014_1922_inorder4-v3b160/raw/1014_1922_boutique-admission-47](../results/1014_1922_inorder4-v3b160/raw/1014_1922_boutique-admission-47/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts (currencyservice pod Ready=True, Restart Count 0, grpc probes on 7000 passing) and no alerts, excluding workload/probe/scheduling causes; the namespace events surface contains only Normal events (Created/Started/SuccessfulCreate/ScalingReplicaSet), excluding FailedCreate/FailedScheduling/FailedMount. The break is at the service-addressing layer: the Services listing contains 11 services but NO currencyservice Service, DescribeResource(service, currencyservice) returns 'Error from server (NotFound): services "currencyservice" not found', GetR
+
+### case-48
+
+- **结论**：`namespace/boutique` + `namespace_service_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_service_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.303 · steps 34 · tokens 183,391
+- **raw 日志**：[results/1014_1924_inorder4-v3b161/raw/1014_1924_boutique-admission-48](../results/1014_1924_inorder4-v3b161/raw/1014_1924_boutique-admission-48/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Partial service unreachability localized to emailservice. Entry caller checkoutservice logs 28% errors: 'dial tcp: lookup emailservice on 169.254.20.10:53: no such host'; connectivity probe to emailservice fails while all other 10 boutique services (frontend:80, productcatalogservice:3550, currencyservice:7000, cartservice:7070, adservice:9555, recommendationservice:8080, checkoutservice:5050, shippingservice:50051, paymentservice:50051, redis-cart:6379) return 'open'. Workload layer is clean: 11/11 Deployments AVAILABLE (emailservice 1/1) and all 11 pods 1/1 Running with 0 restarts, so no pro
+
+### case-49
+
+- **结论**：`namespace/boutique` + `namespace_service_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_service_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1613 · steps 63 · tokens 394,111
+- **raw 日志**：[results/1014_1926_inorder4-v3b162/raw/1014_1926_boutique-admission-49](../results/1014_1926_inorder4-v3b162/raw/1014_1926_boutique-admission-49/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts and all 11 deployments are 1/1 available; all nodes Ready with kubelet/kube-proxy/containerd active; no Warning events and no error logs. TCP probes on each Service's declared port succeed for the 10 backend services (adservice:9555, cartservice:7070, checkoutservice:5050, currencyservice:7000, emailservice:5000, paymentservice:50051, productcatalogservice:3550, recommendationservice:8080, shippingservice:50051, redis-cart:6379), but the entry service probe frontend:80 returns 'Connection Failed'. GetAppYAML(frontend) declares Services 'fron
+
+### case-50
+
+- **结论**：`app/paymentservice` + `service_dns_resolution_failure` ｜ 标签 `namespace/boutique` + `namespace_service_quota_exceeded`（✗ 与标签不符）
+- **流程**：MC 0.6667 · EOC 0.6667 · ECR 0 · EE 0.3125 · steps 17 · tokens 90,428
+- **raw 日志**：[results/1014_1929_inorder4-v3b163/raw/1014_1929_boutique-admission-50](../results/1014_1929_inorder4-v3b163/raw/1014_1929_boutique-admission-50/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods read 1/1 Running with RESTARTS=0, all deployments 1/1 AVAILABLE, no metric alerts, and the namespace events surface contains only Normal rows (no FailedCreate/FailedScheduling/FailedMount/image-pull/probe warnings) — so scheduling, admission, startup, probe and runtime layers are all clean. The break is at the address layer: GetResources(services) lists every boutique Service except paymentservice, and the explicit read returns 'Error from server (NotFound): services "paymentservice" not found' (the endpoints listing likewise has no paymentservice), so the name 'paymentser
+
+### case-51
+
+- **结论**：`app/productcatalogservice` + `service_dns_resolution_failure` ｜ 标签 `namespace/boutique` + `namespace_service_quota_exceeded`（✗ 与标签不符）
+- **流程**：MC 0.6667 · EOC 0.6667 · ECR 0 · EE 0.3125 · steps 17 · tokens 95,203
+- **raw 日志**：[results/1014_1931_inorder4-v3b164/raw/1014_1931_boutique-admission-51](../results/1014_1931_inorder4-v3b164/raw/1014_1931_boutique-admission-51/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 boutique pods are 1/1 Running with 0 restarts and no alerts, but productcatalogservice is missing from BOTH the services and endpoints listings while its pod (productcatalogservice-ddb46fc86-qh6pr, app=productcatalogservice) is Running/Ready and its own error logs are empty. Callers fail at name resolution with the canonical name echoed verbatim: frontend logs 'dial tcp: lookup productcatalogservice on 169.254.20.10:53: no such host' (111+47 occurrences) and recommendationservice logs 'DNS resolution failed for productcatalogservice:3550: C-ares status is not ARES_SUCCESS qtype=A name=p
+
+### case-52
+
+- **结论**：`namespace/boutique` + `namespace_service_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_service_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3636 · steps 23 · tokens 158,133
+- **raw 日志**：[results/1014_1933_inorder4-v3b165/raw/1014_1933_boutique-admission-52](../results/1014_1933_inorder4-v3b165/raw/1014_1933_boutique-admission-52/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 11 workload pods are 1/1 Running with 0 restarts and no Warning events, yet the frontend's own error logs (139/1003 errors; dominant pattern 122 hits, 12.16%) carry 'rpc error: code = Unavailable ... dial tcp: lookup recommendationservice on 169.254.20.10:53: no such host' for 'failed to get product recommendations'. The call-graph walk from the symptom side (frontend -> recommendationservice -> productcatalogservice) localizes the failure to the frontend->recommendationservice edge: CheckServiceConnectivity(recommendationservice:8080) = Connection Failed while productcatalogservice:3550 =
+
+### case-53
+
+- **结论**：`app/redis-cart` + `service_dns_resolution_failure` ｜ 标签 `namespace/boutique` + `namespace_service_quota_exceeded`（✗ 与标签不符）
+- **流程**：MC 0.6667 · EOC 0.6667 · ECR 0 · EE 0.2692 · steps 27 · tokens 199,989
+- **raw 日志**：[results/1014_1935_inorder4-v3b166/raw/1014_1935_boutique-admission-53](../results/1014_1935_inorder4-v3b166/raw/1014_1935_boutique-admission-53/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Object layer is fully healthy: all 11 boutique pods are 1/1 Running with 0 restarts, all deployments 1/1 AVAILABLE, namespace events contain only Normal rows (no FailedScheduling/FailedCreate/FailedMount/image-pull/probe Warning), and no alerts fire. The break is isolated to the address layer of redis-cart: the Service object 'redis-cart' does not exist in the namespace (GetResources(services) lists only 10 business Services with no redis-cart row, and both GetResources(services, name=redis-cart) and DescribeResource(service, redis-cart) return 'Error from server (NotFound)'), and its endpoint
 

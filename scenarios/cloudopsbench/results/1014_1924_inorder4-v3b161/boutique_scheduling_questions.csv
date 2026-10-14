@@ -1,0 +1,4 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/scheduling/27,1.0,1.0,1.0,1.0,1.0,1.0,0.23809523809523808,22.0,0.0,0.0,app/cartservice,cpu_capacity_mismatch,app/cartservice,cpu_capacity_mismatch,
+boutique/scheduling/41,1.0,1.0,1.0,1.0,1.0,1.0,0.3076923076923077,14.0,0.0,0.0,app/recommendationservice,memory_capacity_mismatch,app/recommendationservice,memory_capacity_mismatch,
+boutique/scheduling/75,1.0,1.0,1.0,1.0,1.0,1.0,0.3076923076923077,14.0,0.0,0.0,app/emailservice,node_affinity_mismatch,app/emailservice,node_affinity_mismatch,
