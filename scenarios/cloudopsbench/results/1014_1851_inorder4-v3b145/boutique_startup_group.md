@@ -1,0 +1,11 @@
+## boutique/startup
+
+- cases: run=1 / selected=1 · invalid_actions=0
+
+| CA | FA | JRA | MC | EOC | ECR | EE | steps | RAR | invalid_actions |
+|---|---|---|---|---|---|---|---|---|---|
+| 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 0.25 | 13.0 | 0.0 | 0.0 |
+
+| case | CA | FA | JRA | MC | EOC | ECR | EE | steps | RAR | inv | pred#1 | gt |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 53 | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 13 | 0 | 0 | app/checkoutservice + missing_image_pull_secret | app/checkoutservice + missing_image_pull_secret |

@@ -1,0 +1,20 @@
+INFO:     Started server process [6016]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:53357 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53360 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:53357 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53361 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53365 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53370 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50698 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:50698 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50698 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50698 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50698 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50698 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50698 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"shippingservice"}
+INFO:     127.0.0.1:50698 - "POST /mcp HTTP/1.1" 200 OK

@@ -1,6 +1,6 @@
 # 评测明细 · boutique/startup — cloudopsbench
 
-> 本家族已跑 **46/62** 题：JRA ✅46 ❌0 ｜ 证据链全闭 46 ｜ token 中位 85,131 ｜ 生成 2026-10-14T05:40:15.366Z
+> 本家族已跑 **56/62** 题：JRA ✅56 ❌0 ｜ 证据链全闭 56 ｜ token 中位 83,339 ｜ 生成 2026-10-14T11:00:09.483Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -53,6 +53,16 @@
 | [44](#case-44) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1111 | 28 | 160,246 | 0 | 0 | 1014_1314_inorder4-v3b136 | 全对·链闭 |
 | [45](#case-45) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 13 | 68,252 | 0 | 0 | 1014_1337_imgadm-verify1 | 全对·链闭 |
 | [46](#case-46) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 11 | 89,900 | 0 | 0 | 1014_1337_imgadm-verify1 | 全对·链闭 |
+| [47](#case-47) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 25 | 130,852 | 0 | 0 | 1014_1841_inorder4-v3b139 | 全对·链闭 |
+| [48](#case-48) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 69,178 | 0 | 0 | 1014_1843_inorder4-v3b140 | 全对·链闭 |
+| [49](#case-49) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 11 | 69,251 | 0 | 0 | 1014_1844_inorder4-v3b141 | 全对·链闭 |
+| [50](#case-50) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 68,663 | 0 | 0 | 1014_1846_inorder4-v3b142 | 全对·链闭 |
+| [51](#case-51) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 12 | 168,680 | 0 | 0 | 1014_1848_inorder4-v3b143 | 全对·链闭 |
+| [52](#case-52) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 11 | 68,586 | 0 | 0 | 1014_1850_inorder4-v3b144 | 全对·链闭 |
+| [53](#case-53) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 13 | 69,782 | 0 | 0 | 1014_1851_inorder4-v3b145 | 全对·链闭 |
+| [54](#case-54) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2308 | 14 | 72,921 | 0 | 0 | 1014_1853_inorder4-v3b146 | 全对·链闭 |
+| [55](#case-55) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 11 | 67,892 | 0 | 0 | 1014_1855_inorder4-v3b147 | 全对·链闭 |
+| [56](#case-56) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 12 | 82,653 | 0 | 0 | 1014_1858_inorder4-v3b148 | 全对·链闭 |
 
 ## 证据正文
 
@@ -377,4 +387,74 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3 · steps 11 · tokens 89,900
 - **raw 日志**：[results/1014_1337_imgadm-verify1/raw/1014_1338_boutique-startup-46](../results/1014_1337_imgadm-verify1/raw/1014_1338_boutique-startup-46/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Pods inventory in ns=boutique shows a single outlier: frontend-5cb85b46cc-5fxvx 0/1 ErrImagePull on worker-03 (deployment frontend 0/1 AVAILABLE 0), while all other 10 boutique services are 1/1 Running — matching 'partial' unreachability (frontend is the storefront entry: ClusterIP 10.68.151.5:80 -> 8080, NodePort 30080). The pod's own events show it scheduled successfully (PodScheduled True, no FailedCreate/FailedScheduling/FailedMount) and the failure occurring at image pull: 'failed to pull and unpack image "ghcr.io/google-samples/microservices-demo/frontend:v0.10.3" ... failed to authorize
+
+### case-47
+
+- **结论**：`app/paymentservice` + `missing_image_pull_secret` ｜ 标签 `app/paymentservice` + `missing_image_pull_secret`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 25 · tokens 130,852
+- **raw 日志**：[results/1014_1841_inorder4-v3b139/raw/1014_1842_boutique-startup-47](../results/1014_1841_inorder4-v3b139/raw/1014_1842_boutique-startup-47/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom-side: CheckServiceConnectivity(paymentservice, 50051) = Connection Failed while the control probe to shippingservice:50051 succeeded, and the endpoints listing shows paymentservice with an EMPTY ENDPOINTS column while every other boutique service has one -> the Service has no backend, i.e. partial unreachability localized to paymentservice (sole caller: checkoutservice). Object layer: the single outlier in the pods listing is paymentservice-67b78cc4cf-25w4q with READY 0/1 and STATUS ImagePullBackOff (all other 10 pods 1/1 Running, RESTARTS 0); deployments shows paymentservice 0/1 AVAIL
+
+### case-48
+
+- **结论**：`app/recommendationservice` + `missing_image_pull_secret` ｜ 标签 `app/recommendationservice` + `missing_image_pull_secret`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 12 · tokens 69,178
+- **raw 日志**：[results/1014_1843_inorder4-v3b140/raw/1014_1843_boutique-startup-48](../results/1014_1843_inorder4-v3b140/raw/1014_1843_boutique-startup-48/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Inventory scan of namespace boutique shows exactly one outlier: pod recommendationservice-655b6d9489-r9w5h is 0/1 in ImagePullBackOff while all other 10 services are Running 1/1 (hence 'partial' unreachability). The victim's own signal confirms it: endpoints/recommendationservice lists no ENDPOINTS, a connectivity probe on its Service-declared port 8080 fails ('Connection Failed'), and deployment app=recommendationservice reports 0/1 READY, 0 AVAILABLE. The kubelet pull failure message is decisive: it fails at the registry's token step - 'failed to authorize: failed to fetch anonymous token: u
+
+### case-49
+
+- **结论**：`app/redis-cart` + `missing_image_pull_secret` ｜ 标签 `app/redis-cart` + `missing_image_pull_secret`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3 · steps 11 · tokens 69,251
+- **raw 日志**：[results/1014_1844_inorder4-v3b141/raw/1014_1845_boutique-startup-49](../results/1014_1844_inorder4-v3b141/raw/1014_1845_boutique-startup-49/)（ndjson / mcp.jsonl / meta）
+- **摘要**：In namespace boutique, redis-cart is the only outlier: pod redis-cart-5b65d684-cxkh8 is 0/1 ImagePullBackOff (State: Waiting, Reason: ErrImagePull) and Deployment redis-cart shows READY 0/1 / AVAILABLE 0, while all other 10 services are 1/1 Running. Its symptom side confirms unreachability: the redis-cart Service endpoints list is empty and CheckServiceConnectivity(redis-cart:6379, its declared port) returns Connection Failed. The pull message decides the class — the request reaches the ghcr.io TOKEN endpoint and is rejected there: 'failed to authorize: failed to fetch anonymous token: unexpec
+
+### case-50
+
+- **结论**：`app/shippingservice` + `missing_image_pull_secret` ｜ 标签 `app/shippingservice` + `missing_image_pull_secret`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 12 · tokens 68,663
+- **raw 日志**：[results/1014_1846_inorder4-v3b142/raw/1014_1847_boutique-startup-50](../results/1014_1846_inorder4-v3b142/raw/1014_1847_boutique-startup-50/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Inventory outlier: only shippingservice pod is unhealthy (shippingservice-75687d9d75-nksb9 0/1 ErrImagePull; all other 10 boutique services 1/1 Running). Victim-side signal confirms unreachability: endpoints/shippingservice shows an empty ENDPOINTS column, and a connectivity probe on the declared Service port 50051 returns 'Connection Failed'. Scheduling succeeded ('Successfully assigned boutique/shippingservice-75687d9d75-nksb9 to worker-03'), so this is not a node/scheduling fault. The kubelet event names the failing stage verbatim: 'Failed to pull image ... failed to resolve reference ... f
+
+### case-51
+
+- **结论**：`app/adservice` + `missing_image_pull_secret` ｜ 标签 `app/adservice` + `missing_image_pull_secret`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3636 · steps 12 · tokens 168,680
+- **raw 日志**：[results/1014_1848_inorder4-v3b143/raw/1014_1849_boutique-startup-51](../results/1014_1848_inorder4-v3b143/raw/1014_1849_boutique-startup-51/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only outlier in the pods inventory is adservice-59c6997996-xvw2b (0/1, ErrImagePull), all other 10 boutique pods are 1/1 Running with 0 restarts. Symptom side confirms the victim: the adservice Service has an empty ENDPOINTS list and a connectivity probe on its own declared port 9555 returns 'Connection Failed'. Mechanism event on the live pod reads verbatim: 'Failed to pull image "ghcr.io/testuser177/solar-system:latest": ... failed to authorize: failed to fetch anonymous token: unexpected status from GET request to https://ghcr.io/token?...: 401 Unauthorized' together with 'FailedToRetrieveI
+
+### case-52
+
+- **结论**：`app/cartservice` + `missing_image_pull_secret` ｜ 标签 `app/cartservice` + `missing_image_pull_secret`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3 · steps 11 · tokens 68,586
+- **raw 日志**：[results/1014_1850_inorder4-v3b144/raw/1014_1851_boutique-startup-52](../results/1014_1850_inorder4-v3b144/raw/1014_1851_boutique-startup-52/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique pods inventory: cartservice-6b49f777f6-t6sv4 is the sole outlier at 0/1 READY with STATUS ErrImagePull/ImagePullBackOff (all other 10 services are 1/1 Running); deployments listing shows cartservice 0/1 AVAILABLE, i.e. the service is drained. DescribeResource on the pod gives the decisive pull message: 'failed to pull and unpack image "ghcr.io/testuser177/solar-system:latest": failed to resolve reference ...: failed to authorize: failed to fetch anonymous token: unexpected status from GET request to https://ghcr.io/token?...&service=ghcr.io: 401 Unauthorized' — the rejection
+
+### case-53
+
+- **结论**：`app/checkoutservice` + `missing_image_pull_secret` ｜ 标签 `app/checkoutservice` + `missing_image_pull_secret`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 13 · tokens 69,782
+- **raw 日志**：[results/1014_1851_inorder4-v3b145/raw/1014_1852_boutique-startup-53](../results/1014_1851_inorder4-v3b145/raw/1014_1852_boutique-startup-53/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace-wide pod listing shows a single outlier: checkoutservice-6c445d9cbc-27r9x is 0/1 ImagePullBackOff while all other 10 pods are 1/1 Running (no alerts fired). The victim's own signal confirms the reachability break: connectivity probe on checkoutservice's own declared Service port 5050 returns 'Connection Failed' and its endpoints listing is empty. The kubelet pull message localizes the failing stage to the credential/token step: 'failed to authorize: failed to fetch anonymous token: unexpected status from GET request to https://ghcr.io/token?...: 401 Unauthorized' (no 'no such host' D
+
+### case-54
+
+- **结论**：`app/currencyservice` + `missing_image_pull_secret` ｜ 标签 `app/currencyservice` + `missing_image_pull_secret`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2308 · steps 14 · tokens 72,921
+- **raw 日志**：[results/1014_1853_inorder4-v3b146/raw/1014_1854_boutique-startup-54](../results/1014_1853_inorder4-v3b146/raw/1014_1854_boutique-startup-54/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace-wide pods listing in boutique shows a single outlier: currencyservice-755b87b768-587jl is 0/1 in ImagePullBackOff (all other 10 pods Running; all 4 nodes Ready with no taints on workers). Victim-side signals confirm the outage: CheckServiceConnectivity(currencyservice:7000) returned 'Connection Failed' and endpoints/currencyservice has an empty ENDPOINTS list, so the Service has no ready backend. The kubelet mechanism events on the pod name the referenced pull secret and the failing stage verbatim: 'FailedToRetrieveImagePullSecret ... Unable to retrieve some image pull secrets (ghcr-
+
+### case-55
+
+- **结论**：`app/frontend` + `missing_image_pull_secret` ｜ 标签 `app/frontend` + `missing_image_pull_secret`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3 · steps 11 · tokens 67,892
+- **raw 日志**：[results/1014_1855_inorder4-v3b147/raw/1014_1856_boutique-startup-55](../results/1014_1855_inorder4-v3b147/raw/1014_1856_boutique-startup-55/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Service Availability Disruption.' (no service named) → object-layer inventory: exactly one outlier, frontend-7869fc75b4-9499w 0/1 in ErrImagePull/ImagePullBackOff; all other 10 boutique pods are 1/1 Running with 0 restarts. The pod's own pull message shows the failure at the registry TOKEN step, not DNS or the manifest: 'failed to authorize: failed to fetch anonymous token: unexpected status from GET request to https://ghcr.io/token?...&service=ghcr.io: 401 Unauthorized', accompanied by kubelet event 'FailedToRetrieveImagePullSecret: Unable to retrieve some image pull secrets (non-exi
+
+### case-56
+
+- **结论**：`app/paymentservice` + `missing_image_pull_secret` ｜ 标签 `app/paymentservice` + `missing_image_pull_secret`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 12 · tokens 82,653
+- **raw 日志**：[results/1014_1858_inorder4-v3b148/raw/1014_1859_boutique-startup-56](../results/1014_1858_inorder4-v3b148/raw/1014_1859_boutique-startup-56/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only paymentservice is unreachable (partial): pods listing shows its sole pod paymentservice-5b54b484cf-crf67 as 0/1 ErrImagePull while all other 10 boutique services are 1/1 Running; deployments show paymentservice 0/1 AVAILABLE 0; CheckServiceConnectivity(paymentservice,50051) = Connection Failed. The kubelet event names the failing stage verbatim: 'Failed to pull image ... failed to authorize: failed to fetch anonymous token: unexpected status from GET request to https://ghcr.io/token?scope=...: 401 Unauthorized', plus 'FailedToRetrieveImagePullSecret ... (non-existent-secret)' -> ErrImageP
 

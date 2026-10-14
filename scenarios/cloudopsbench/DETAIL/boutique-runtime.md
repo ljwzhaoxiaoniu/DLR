@@ -1,6 +1,6 @@
 # 评测明细 · boutique/runtime — cloudopsbench
 
-> 本家族已跑 **37/45** 题：JRA ✅37 ❌0 ｜ 证据链全闭 37 ｜ token 中位 81,268 ｜ 生成 2026-10-14T05:40:15.366Z
+> 本家族已跑 **45/45** 题：JRA ✅45 ❌0 ｜ 证据链全闭 45 ｜ token 中位 81,447 ｜ 生成 2026-10-14T11:00:09.483Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -44,6 +44,14 @@
 | [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3846 | 14 | 81,258 | 0 | 0 | 1014_1314_inorder4-v3b136 | 全对·链闭 |
 | [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2143 | 29 | 128,004 | 0 | 0 | 1014_1318_inorder4-v3b137 | 全对·链闭 |
 | [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3571 | 15 | 81,865 | 0 | 0 | 1014_1321_inorder4-v3b138 | 全对·链闭 |
+| [38](#case-38) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 10 | 60,233 | 0 | 0 | 1014_1841_inorder4-v3b139 | 全对·链闭 |
+| [39](#case-39) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 102,360 | 0 | 0 | 1014_1843_inorder4-v3b140 | 全对·链闭 |
+| [40](#case-40) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 116,960 | 0 | 0 | 1014_1844_inorder4-v3b141 | 全对·链闭 |
+| [41](#case-41) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3846 | 14 | 80,472 | 0 | 0 | 1014_1846_inorder4-v3b142 | 全对·链闭 |
+| [42](#case-42) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 13 | 93,092 | 0 | 0 | 1014_1848_inorder4-v3b143 | 全对·链闭 |
+| [43](#case-43) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4167 | 13 | 66,266 | 0 | 0 | 1014_1850_inorder4-v3b144 | 全对·链闭 |
+| [44](#case-44) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 115,895 | 0 | 0 | 1014_1851_inorder4-v3b145 | 全对·链闭 |
+| [45](#case-45) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3529 | 18 | 103,946 | 0 | 0 | 1014_1853_inorder4-v3b146 | 全对·链闭 |
 
 ## 证据正文
 
@@ -305,4 +313,60 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3571 · steps 15 · tokens 81,865
 - **raw 日志**：[results/1014_1321_inorder4-v3b138/raw/1014_1321_boutique-runtime-37](../results/1014_1321_inorder4-v3b138/raw/1014_1321_boutique-runtime-37/)（ndjson / mcp.jsonl / meta）
 - **摘要**：recommendationservice pod recommendationservice-68d8957488-2l4kj is 0/1 Running (Deployment 0/1 AVAILABLE, 0 ready replicas) while all other boutique pods are 1/1 Running. kubelet events repeat: 'Warning Unhealthy ... Readiness probe failed: Get http://172.20.2.107:8080/: net/http: HTTP/1.x transport connection broken: malformed HTTP response' returning HTTP/2/gRPC frame bytes, while container logs show the service healthy and 'listening on port: 8080'. GetAppYAML confirms the injected mutation: readinessProbe uses httpGet path=/ port=8080 against a gRPC (HTTP/2) server, whereas livenessProbe 
+
+### case-38
+
+- **结论**：`app/shippingservice` + `readiness_probe_incorrect_protocol` ｜ 标签 `app/shippingservice` + `readiness_probe_incorrect_protocol`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 10 · tokens 60,233
+- **raw 日志**：[results/1014_1841_inorder4-v3b139/raw/1014_1841_boutique-runtime-38](../results/1014_1841_inorder4-v3b139/raw/1014_1841_boutique-runtime-38/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique pod scan shows a single outlier: shippingservice-546b9d5bcb-42mk8 is 0/1 (Ready=False, ContainersReady=False) while all other 10 pods are 1/1 Running; Restart Count is 0, so no crash-loop. Pod events show 'Warning Unhealthy ... Readiness probe failed: Get "http://172.20.2.113:50051/": net/http: HTTP/1.x transport connection broken: malformed HTTP response "\x00\x00\x06\x04..."' (x10 over 83s) — the returned bytes are an HTTP/2 frame, indicating the port speaks gRPC rather than HTTP. GetAppYAML(shippingservice) confirms the mismatch: livenessProbe uses grpc on port 50051 (cor
+
+### case-39
+
+- **结论**：`app/adservice` + `readiness_probe_incorrect_port` ｜ 标签 `app/adservice` + `readiness_probe_incorrect_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 102,360
+- **raw 日志**：[results/1014_1843_inorder4-v3b140/raw/1014_1843_boutique-runtime-39](../results/1014_1843_inorder4-v3b140/raw/1014_1843_boutique-runtime-39/)（ndjson / mcp.jsonl / meta）
+- **摘要**：adservice is the sole outlier in namespace boutique: Deployment 'adservice' shows 0/1 READY, 1 UP-TO-DATE, 0 AVAILABLE while all other 10 deployments are 1/1/1; its Service endpoint list is empty (all other services have IP:port endpoints) and CheckServiceConnectivity(adservice:9555) fails. Pod adservice-7b9d8c87cf-gpwlc reports Ready=False with Restart Count 0 and no OOMKilled/termination state, and the only Warning event is 'Readiness probe failed: timeout: failed to connect service "172.20.1.39:9556" within 1s: context deadline exceeded' (x10 over 80s). GetAppYAML shows readinessProbe grpc 
+
+### case-40
+
+- **结论**：`app/checkoutservice` + `readiness_probe_incorrect_port` ｜ 标签 `app/checkoutservice` + `readiness_probe_incorrect_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 116,960
+- **raw 日志**：[results/1014_1844_inorder4-v3b141/raw/1014_1844_boutique-runtime-40](../results/1014_1844_inorder4-v3b141/raw/1014_1844_boutique-runtime-40/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Object-layer scan of namespace boutique: all 11 pods freshly created (~91s) with RESTARTS=0; the only outlier is checkoutservice-757c84f65-48bhl 0/1 Running (deployment checkoutservice 0/1 AVAILABLE), all other workloads 1/1. Pod events (kubelet, verbatim): 'Warning Unhealthy 10s (x9 over 80s) Readiness probe failed: timeout: failed to connect service "172.20.2.125:5051" within 1s: context deadline exceeded'; no liveness failure, no Killing, no 137/143 termination -> OOM/low-memory and liveness restarts excluded. Container logs show the app listens on only one port: 'starting to listen on tcp:
+
+### case-41
+
+- **结论**：`app/currencyservice` + `readiness_probe_incorrect_port` ｜ 标签 `app/currencyservice` + `readiness_probe_incorrect_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3846 · steps 14 · tokens 80,472
+- **raw 日志**：[results/1014_1846_inorder4-v3b142/raw/1014_1846_boutique-runtime-41](../results/1014_1846_inorder4-v3b142/raw/1014_1846_boutique-runtime-41/)（ndjson / mcp.jsonl / meta）
+- **摘要**：currencyservice-7cc975cfff-nk87k (worker-02) is the only outlier: READY 0/1, Ready=False/ContainersReady=False, deployment currencyservice 0/1 and AVAILABLE 0, and the currencyservice Service has an EMPTY endpoint list; CheckServiceConnectivity(currencyservice:7000) returned 'Connection Failed'. The pod events show 'Warning Unhealthy 0s (x10 over 80s) kubelet Readiness probe failed: timeout: failed to connect service "172.20.2.130:7001" within 1s', while the container log proves the process is healthy ('CurrencyService gRPC server started on port 7000') with no error logs and Restart Count 0 (
+
+### case-42
+
+- **结论**：`app/emailservice` + `readiness_probe_incorrect_port` ｜ 标签 `app/emailservice` + `readiness_probe_incorrect_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 13 · tokens 93,092
+- **raw 日志**：[results/1014_1848_inorder4-v3b143/raw/1014_1848_boutique-runtime-42](../results/1014_1848_inorder4-v3b143/raw/1014_1848_boutique-runtime-42/)（ndjson / mcp.jsonl / meta）
+- **摘要**：emailservice pod emailservice-5795bc6dc5-tt6tf is 0/1 Running with Restart Count 0; kubelet events repeat 'Readiness probe failed: timeout: failed to connect service "172.20.1.56:8081" within 1s: context deadline exceeded' (x10). GetAppYAML shows readinessProbe.grpc.port=8081 while the container only exposes containerPort 8080, env PORT=8080, and livenessProbe correctly uses 8080 (so the container is never killed -> RESTARTS 0 everywhere). Source email_server.py binds only '[::]:'+os.environ.get('PORT','8080') and logs 'listening on port: 8080', so nothing listens on 8081. Consequence: the ema
+
+### case-43
+
+- **结论**：`app/productcatalogservice` + `readiness_probe_incorrect_port` ｜ 标签 `app/productcatalogservice` + `readiness_probe_incorrect_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4167 · steps 13 · tokens 66,266
+- **raw 日志**：[results/1014_1850_inorder4-v3b144/raw/1014_1850_boutique-runtime-43](../results/1014_1850_inorder4-v3b144/raw/1014_1850_boutique-runtime-43/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only productcatalogservice is degraded: pod productcatalogservice-66d84469c7-pvlhv is 0/1 Running (Ready False, Restart Count 0) and Deployment productcatalogservice shows 0/1 AVAILABLE while all 10 peer services are 1/1 with 0 restarts. Pod events show 'Warning Unhealthy 2s (x10 over 82s) kubelet Readiness probe failed: timeout: failed to connect service "172.20.2.146:3551" within 1s: context deadline exceeded'. The container only serves on 3550 (containerPort 3550, env PORT=3550, app log 'starting grpc server at :3550'), while GetAppYAML shows readinessProbe.grpc.port: 3551 (livenessProbe co
+
+### case-44
+
+- **结论**：`app/recommendationservice` + `readiness_probe_incorrect_port` ｜ 标签 `app/recommendationservice` + `readiness_probe_incorrect_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 115,895
+- **raw 日志**：[results/1014_1851_inorder4-v3b145/raw/1014_1851_boutique-runtime-44](../results/1014_1851_inorder4-v3b145/raw/1014_1851_boutique-runtime-44/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Object-layer scan of ns boutique shows a single outlier: pod recommendationservice-754c777cbc-brp8t is 0/1 Running (Deployment recommendationservice 0/1 AVAILABLE, all other pods/deployments 1/1). Pod describe: State Running, Restart Count 0, Ready False, with kubelet event 'Warning Unhealthy 1s (x11 over 81s) Readiness probe failed: timeout: failed to connect service "172.20.1.72:8081" within 1s'. Container logs show the process healthy and 'listening on port: 8080' with zero error logs. GetAppYAML(recommendationservice) shows readinessProbe.grpc.port=8081 while containerPort=8080, PORT=8080,
+
+### case-45
+
+- **结论**：`app/shippingservice` + `readiness_probe_incorrect_port` ｜ 标签 `app/shippingservice` + `readiness_probe_incorrect_port`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3529 · steps 18 · tokens 103,946
+- **raw 日志**：[results/1014_1853_inorder4-v3b146/raw/1014_1853_boutique-runtime-45](../results/1014_1853_inorder4-v3b146/raw/1014_1853_boutique-runtime-45/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Object-layer scan of namespace boutique: 10/11 pods 1/1 Running RESTARTS=0, only shippingservice-6fccf4868f-29764 is 0/1 Running (READY 0/1) and Deployment shippingservice shows AVAILABLE 0. Pod events repeatedly report 'Warning Unhealthy ... Readiness probe failed: timeout: failed to connect service "172.20.1.78:50052" within 1s' (x11 over 82s), with container State Running and Restart Count 0 (no OOMKilled/SIGTERM termination). GetAppYAML(shippingservice) shows the container serves gRPC on containerPort/env PORT 50051 (Service targetPort 50051) and the app log states 'Shipping Service listen
 

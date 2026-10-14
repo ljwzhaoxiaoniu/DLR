@@ -1,6 +1,6 @@
 # 评测明细 · boutique/admission — cloudopsbench
 
-> 本家族已跑 **25/58** 题：JRA ✅25 ❌0 ｜ 证据链全闭 23 ｜ token 中位 86,428 ｜ 生成 2026-10-14T05:40:15.366Z
+> 本家族已跑 **35/58** 题：JRA ✅34 ❌1 ｜ 证据链全闭 33 ｜ token 中位 87,636 ｜ 生成 2026-10-14T11:00:09.483Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -32,6 +32,16 @@
 | [23](#case-23) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.3571 | 15 | 92,339 | 0 | 0 | 1014_1314_inorder4-v3b136 | 全对·链闭 |
 | [24](#case-24) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.3529 | 18 | 110,270 | 0 | 0 | 1014_1318_inorder4-v3b137 | 全对·链闭 |
 | [25](#case-25) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.5 | 13 | 94,597 | 0 | 0 | 1014_1321_inorder4-v3b138 | 全对·链闭 |
+| [26](#case-26) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.5 | 11 | 67,561 | 0 | 0 | 1014_1841_inorder4-v3b139 | 全对·链闭 |
+| [27](#case-27) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.3636 | 12 | 87,806 | 0 | 0 | 1014_1843_inorder4-v3b140 | 全对·链闭 |
+| [28](#case-28) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.3125 | 17 | 109,430 | 0 | 0 | 1014_1844_inorder4-v3b141 | 全对·链闭 |
+| [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4286 | 15 | 89,613 | 0 | 0 | 1014_1846_inorder4-v3b142 | 全对·链闭 |
+| [30](#case-30) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.5 | 15 | 103,746 | 0 | 0 | 1014_1848_inorder4-v3b143 | 全对·链闭 |
+| [31](#case-31) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4167 | 13 | 87,636 | 0 | 0 | 1014_1850_inorder4-v3b144 | 全对·链闭 |
+| [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 12 | 68,078 | 0 | 0 | 1014_1851_inorder4-v3b145 | 全对·链闭 |
+| [33](#case-33) | 1 | 1 | 1 | 1 | 0.25 | 1 | 0.3636 | 12 | 70,164 | 0 | 0 | 1014_1853_inorder4-v3b146 | 全对·链闭 |
+| [34](#case-34) | 1 | 1 | 1 | 1 | 0.5 | 1 | 0.5333 | 16 | 111,698 | 0 | 0 | 1014_1855_inorder4-v3b147 | 全对·链闭 |
+| [35](#case-35) | 0 | 0 | 0 | 1 | 1 | 1 | 0.4667 | 15 | 90,630 | 0 | 0 | 1014_1858_inorder4-v3b148 | 错误: unparsed_final_answer |
 
 ## 证据正文
 
@@ -209,4 +219,74 @@
 - **流程**：MC 1 · EOC 0.25 · ECR 1 · EE 0.5 · steps 13 · tokens 94,597
 - **raw 日志**：[results/1014_1321_inorder4-v3b138/raw/1014_1321_boutique-admission-25](../results/1014_1321_inorder4-v3b138/raw/1014_1321_boutique-admission-25/)（ndjson / mcp.jsonl / meta）
 - **摘要**：currencyservice has no Pod object at all while every other boutique service is 1/1 Running; its deployment reads 0/1 UP-TO-DATE, 0 AVAILABLE. Frontend caller logs show 'could not retrieve currencies: rpc error: code = Unavailable ... dial tcp 10.68.182.150:7000: connect: connection refused', endpoints listing shows 'currencyservice <none>', and CheckServiceConnectivity(currencyservice:7000) returns Connection Failed, so the service is genuinely unreachable with no backing endpoint. The namespace event surface names the mechanism verbatim and repeatedly: 'Warning FailedCreate replicaset/currenc
+
+### case-26
+
+- **结论**：`namespace/boutique` + `namespace_memory_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_memory_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.25 · ECR 1 · EE 0.5 · steps 11 · tokens 67,561
+- **raw 日志**：[results/1014_1841_inorder4-v3b139/raw/1014_1841_boutique-admission-26](../results/1014_1841_inorder4-v3b139/raw/1014_1841_boutique-admission-26/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique inventory surfaced one outlier: deployment emailservice 0/1 (UPDATED 0, AVAILABLE 0) with no emailservice pod existing at all -> admission-stage branch. Victim-side signal: endpoints/emailservice = <none> and CheckServiceConnectivity(emailservice:5000) = Connection Failed. Live mechanism event: 'Warning FailedCreate replicaset/emailservice-6d4d7cd4dc: Error creating: pods "emailservice-6d4d7cd4dc-*" is forbidden: exceeded quota: memory-request-quota, requested: requests.memory=500Mi, used: requests.memory=3000Mi, limited: requests.memory=3Gi' (repeated for every replica atte
+
+### case-27
+
+- **结论**：`namespace/boutique` + `namespace_memory_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_memory_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.25 · ECR 1 · EE 0.3636 · steps 12 · tokens 87,806
+- **raw 日志**：[results/1014_1843_inorder4-v3b140/raw/1014_1843_boutique-admission-27](../results/1014_1843_inorder4-v3b140/raw/1014_1843_boutique-admission-27/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Inventory outlier: the 'frontend' Deployment shows 0/1 READY with UP-TO-DATE 0 (no pod ever created) while all other 10 boutique services run 1/1, and CheckServiceConnectivity(frontend:80) returns Connection Failed. The frontend Service selector (app=frontend) and port mapping (80->8080) are correct, excluding the addressing layer. The live mechanism event is explicit: 'Warning FailedCreate replicaset/frontend-78fdd6f7d6 Error creating: pods "frontend-78fdd6f7d6-..." is forbidden: exceeded quota: memory-request-quota, requested: requests.memory=300Mi, used: requests.memory=3000Mi, limited: req
+
+### case-28
+
+- **结论**：`namespace/boutique` + `namespace_memory_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_memory_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.25 · ECR 1 · EE 0.3125 · steps 17 · tokens 109,430
+- **raw 日志**：[results/1014_1844_inorder4-v3b141/raw/1014_1844_boutique-admission-28](../results/1014_1844_inorder4-v3b141/raw/1014_1844_boutique-admission-28/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods listing (wide) shows 10 healthy pods but NO paymentservice pod; deployments show paymentservice 0/1 with UP-TO-DATE 0 (pods never created -> admission stage, not scheduling/startup/probe). Caller side: frontend error log 'failed to complete the order: ... failed to charge card: rpc error ... dial tcp 10.68.64.227:50051: connect: connection refused' (12x) and CheckServiceConnectivity(paymentservice, 50051 declared in its own Service spec) = Connection Failed. Mechanism event, verbatim and repeated: 'Warning FailedCreate replicaset/paymentservice-9f5d9db95 Error creating: pods "paymentservi
+
+### case-29
+
+- **结论**：`namespace/boutique` + `namespace_memory_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_memory_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4286 · steps 15 · tokens 89,613
+- **raw 日志**：[results/1014_1846_inorder4-v3b142/raw/1014_1846_boutique-admission-29](../results/1014_1846_inorder4-v3b142/raw/1014_1846_boutique-admission-29/)（ndjson / mcp.jsonl / meta）
+- **摘要**：namespace boutique has ResourceQuota 'memory-request-quota' with requests.memory limited to 3Gi and already 3000Mi (100%) consumed by the other 10 boutique workloads at 300Mi each. productcatalogservice has desired 1 replica but 0 pods: ReplicaSet productcatalogservice-5f876f76c9 shows Replicas 0 current/1 desired, Pods Status 0 Running/0 Waiting, and ReplicaFailure=True/FailedCreate, with repeated Warning FailedCreate events reading verbatim 'Error creating: pods "productcatalogservice-5f876f76c9-..." is forbidden: exceeded quota: memory-request-quota, requested: requests.memory=300Mi, used: 
+
+### case-30
+
+- **结论**：`namespace/boutique` + `namespace_memory_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_memory_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.5 · steps 15 · tokens 103,746
+- **raw 日志**：[results/1014_1848_inorder4-v3b143/raw/1014_1848_boutique-admission-30](../results/1014_1848_inorder4-v3b143/raw/1014_1848_boutique-admission-30/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All pods except recommendationservice are 1/1 Running; recommendationservice has NO pod at all (deployment 0/1 READY, 0 up-to-date, 0 available, condition ReplicaFailure=True/FailedCreate), its Endpoints are <none>, and a TCP probe on its declared Service port 8080 returns 'Connection Failed'. The frontend caller log carries the unreachability complaint verbatim: 'failed to get product recommendations ... rpc error: code = Unavailable ... dial tcp 10.68.104.223:8080: connect: connection refused' (103/127 errors). The live mechanism event names the break: 'Warning FailedCreate replicaset/recomm
+
+### case-31
+
+- **结论**：`namespace/boutique` + `namespace_memory_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_memory_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4167 · steps 13 · tokens 87,636
+- **raw 日志**：[results/1014_1850_inorder4-v3b144/raw/1014_1850_boutique-admission-31](../results/1014_1850_inorder4-v3b144/raw/1014_1850_boutique-admission-31/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Partial Service Unreachability' entered via the no-service-named inventory path: all boutique pods are 1/1 Running except redis-cart, which has NO pod object at all. Its own signal confirms the break: TCP connectivity to redis-cart:6379 failed, while redis-cart Service (10.68.205.158, selector app=redis-cart, 6379->6379) exists but has no backing endpoint. Workload state: deployment/redis-cart shows 'Replicas: 1 desired | 0 updated | 0 total | 0 available' with Conditions ReplicaFailure=True/Reason=FailedCreate and 'NewReplicaSet: redis-cart-5858bb886 (0/1 replicas created)' - i.e. th
+
+### case-32
+
+- **结论**：`namespace/boutique` + `namespace_memory_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_memory_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3636 · steps 12 · tokens 68,078
+- **raw 日志**：[results/1014_1851_inorder4-v3b145/raw/1014_1851_boutique-admission-32](../results/1014_1851_inorder4-v3b145/raw/1014_1851_boutique-admission-32/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 10 other boutique pods are Running/Ready with 0 restarts, but shippingservice has no pod: its Deployment reads 0/1, its Endpoints are <none>, while its Service object exists and is well-formed (ClusterIP 10.68.123.226, 50051/TCP) — so the pod was never created (admission stage). The namespace events surface carries the verbatim mechanism, repeated on replicaset/shippingservice-696cc9d869: 'Error creating: pods "shippingservice-696cc9d869-..." is forbidden: exceeded quota: memory-request-quota, requested: requests.memory=300Mi, used: requests.memory=3000Mi, limited: requests.memory=3Gi'. Th
+
+### case-33
+
+- **结论**：`namespace/boutique` + `namespace_pod_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_pod_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.25 · ECR 1 · EE 0.3636 · steps 12 · tokens 70,164
+- **raw 日志**：[results/1014_1853_inorder4-v3b146/raw/1014_1853_boutique-admission-33](../results/1014_1853_inorder4-v3b146/raw/1014_1853_boutique-admission-33/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side first: the boutique pod inventory shows 10 pods running but adservice has no pod object at all (only outlier among 11 services). The caller frontend logs 115x 'failed to get ads: ... dial tcp 10.68.203.112:9555: connect: connection refused' against adservice's own declared ClusterIP:port (Service adservice ClusterIP 10.68.203.112 9555/TCP, selector app=adservice matches), so adservice's Service has no endpoints. Workload state: deployment adservice is 0/1 available and UP-TO-DATE 0 (creation-stage failure). Mechanism event (namespace events, Warning, still live at 36s): 'FailedCre
+
+### case-34
+
+- **结论**：`namespace/boutique` + `namespace_pod_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_pod_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 0.5 · ECR 1 · EE 0.5333 · steps 16 · tokens 111,698
+- **raw 日志**：[results/1014_1855_inorder4-v3b147/raw/1014_1855_boutique-admission-34](../results/1014_1855_inorder4-v3b147/raw/1014_1855_boutique-admission-34/)（ndjson / mcp.jsonl / meta）
+- **摘要**：cartservice is the unreachable victim: frontend logs show 'dial tcp 10.68.65.162:7070: connect: connection refused' (cartservice ClusterIP/declared port) for GET /, POST /cart and checkout, and CheckServiceConnectivity(cartservice, 7070) returns Connection Failed, while all other services work. Object layer: no cartservice pod exists at all; deployment/cartservice is 0/1 READY, UP-TO-DATE 0 with condition ReplicaFailure=True/FailedCreate, and replicaset/cartservice-79b49f5555 is DESIRED 1 / CURRENT 0 / READY 0 (pod creation fails, not scheduling or startup). Mechanism event verbatim: 'Warning 
+
+### case-35
+
+- **结论**：`` + `` ｜ 标签 `namespace/boutique` + `namespace_pod_quota_exceeded`（✗ 与标签不符）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4667 · steps 15 · tokens 90,630
+- **raw 日志**：[results/1014_1858_inorder4-v3b148/raw/1014_1858_boutique-admission-35](../results/1014_1858_inorder4-v3b148/raw/1014_1858_boutique-admission-35/)（ndjson / mcp.jsonl / meta）
+- **错误**：unparsed_final_answer
 

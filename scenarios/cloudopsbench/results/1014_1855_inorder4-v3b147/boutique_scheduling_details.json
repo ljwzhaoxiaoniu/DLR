@@ -1,0 +1,90 @@
+[
+  {
+    "case_name": "13",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling\\13\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_1855_inorder4-v3b147\\traces\\boutique\\dsh-tsm\\scheduling\\13\\13.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Scheduling_Fault",
+      "fault_object": "app/frontend",
+      "root_cause": "node_cordon_mismatch"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/frontend",
+        "root_cause": "node_cordon_mismatch"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/frontend",
+        "root_cause": "node_selector_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/frontend",
+        "root_cause": "taint_toleration_mismatch"
+      }
+    ],
+    "tool_call_count": 19,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.21052631578947367,
+      "steps": 20.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "61",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling\\61\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1014_1855_inorder4-v3b147\\traces\\boutique\\dsh-tsm\\scheduling\\61\\61.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Scheduling_Fault",
+      "fault_object": "app/productcatalogservice",
+      "root_cause": "node_affinity_mismatch"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/productcatalogservice",
+        "root_cause": "node_affinity_mismatch"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/productcatalogservice",
+        "root_cause": "node_selector_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/productcatalogservice",
+        "root_cause": "node_cordon_mismatch"
+      }
+    ],
+    "tool_call_count": 13,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.3076923076923077,
+      "steps": 14.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

@@ -1,0 +1,31 @@
+INFO:     Started server process [10792]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:52859 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52861 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:52859 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52862 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52870 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52874 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52881 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:52881 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52881 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52881 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:52881 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"frontend"}
+INFO:     127.0.0.1:52896 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52896 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52896 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"cartservice"}
+INFO:     127.0.0.1:52910 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"recommendationservice"}
+INFO:     127.0.0.1:52910 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52923 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52923 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52923 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52927 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52927 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52927 - "POST /mcp HTTP/1.1" 200 OK
