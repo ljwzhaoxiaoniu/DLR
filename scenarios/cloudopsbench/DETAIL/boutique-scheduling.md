@@ -1,6 +1,6 @@
 # 评测明细 · boutique/scheduling — cloudopsbench
 
-> 本家族已跑 **151/164** 题：JRA ✅151 ❌0 ｜ 证据链全闭 150 ｜ token 中位 103,861 ｜ 生成 2026-10-14T12:19:10.767Z
+> 本家族已跑 **164/164** 题：JRA ✅164 ❌0 ｜ 证据链全闭 163 ｜ token 中位 104,428 ｜ 生成 2026-10-14T13:49:55.249Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -158,6 +158,19 @@
 | [149](#case-149) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1765 | 18 | 118,445 | 0 | 0 | 1014_2016_inorder4-v3b186 | 全对·链闭 |
 | [150](#case-150) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 145,313 | 0 | 0 | 1014_2016_inorder4-v3b186 | 全对·链闭 |
 | [151](#case-151) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2222 | 19 | 119,860 | 0 | 0 | 1014_2016_inorder4-v3b186 | 全对·链闭 |
+| [152](#case-152) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1765 | 18 | 130,889 | 0 | 0 | 1014_2130_inorder4-final13 | 全对·链闭 |
+| [153](#case-153) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1765 | 18 | 133,053 | 0 | 0 | 1014_2130_inorder4-final13 | 全对·链闭 |
+| [154](#case-154) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 91,303 | 0 | 0 | 1014_2130_inorder4-final13 | 全对·链闭 |
+| [155](#case-155) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0857 | 36 | 575,813 | 0 | 0 | 1014_2130_inorder4-final13 | 全对·链闭 |
+| [156](#case-156) | 1 | 1 | 1 | 1 | 1 | 1 | 0.0909 | 34 | 575,267 | 0 | 0 | 1014_2130_inorder4-final13 | 全对·链闭 |
+| [157](#case-157) | 1 | 1 | 1 | 1 | 1 | 1 | 0.15 | 21 | 174,191 | 0 | 0 | 1014_2130_inorder4-final13 | 全对·链闭 |
+| [158](#case-158) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1154 | 27 | 222,046 | 0 | 0 | 1014_2130_inorder4-final13 | 全对·链闭 |
+| [159](#case-159) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 172,745 | 0 | 0 | 1014_2130_inorder4-final13 | 全对·链闭 |
+| [160](#case-160) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1111 | 28 | 190,263 | 0 | 0 | 1014_2130_inorder4-final13 | 全对·链闭 |
+| [161](#case-161) | 1 | 1 | 1 | 1 | 1 | 1 | 0.125 | 25 | 187,222 | 0 | 0 | 1014_2130_inorder4-final13 | 全对·链闭 |
+| [162](#case-162) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1429 | 29 | 219,169 | 0 | 0 | 1014_2130_inorder4-final13 | 全对·链闭 |
+| [163](#case-163) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1154 | 27 | 164,047 | 0 | 0 | 1014_2130_inorder4-final13 | 全对·链闭 |
+| [164](#case-164) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2632 | 20 | 143,676 | 0 | 0 | 1014_2130_inorder4-final13 | 全对·链闭 |
 
 ## 证据正文
 
@@ -1217,4 +1230,95 @@
 - **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2222 · steps 19 · tokens 119,860
 - **raw 日志**：[results/1014_2016_inorder4-v3b186/raw/1014_2017_boutique-scheduling-151](../results/1014_2016_inorder4-v3b186/raw/1014_2017_boutique-scheduling-151/)（ndjson / mcp.jsonl / meta）
 - **摘要**：emailservice is the only outlier: pod emailservice-5dc98cf79d-sjbdt is 0/1 Pending (Node: <none>, PodScheduled False) and deployment emailservice is 0/1 AVAILABLE, so its Service has empty Endpoints and a TCP probe to its declared port 5000 returns 'Connection Failed' -> partial service unreachability (checkoutservice's EMAIL_SERVICE_ADDR=emailservice:5000). The pod's own sheet carries the mechanism event: 'Warning FailedScheduling ... 0/4 nodes are available: 1 node(s) had untolerated taint {node-unhealthy: true}, 1 node(s) were unschedulable, 2 node(s) didn't match Pod's node affinity/select
+
+### case-152
+
+- **结论**：`app/paymentservice` + `taint_toleration_mismatch` ｜ 标签 `app/paymentservice` + `taint_toleration_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1765 · steps 18 · tokens 130,889
+- **raw 日志**：[results/1014_2130_inorder4-final13/raw/1014_2130_boutique-scheduling-152](../results/1014_2130_inorder4-final13/raw/1014_2130_boutique-scheduling-152/)（ndjson / mcp.jsonl / meta）
+- **摘要**：paymentservice is the only outlier: its pod paymentservice-67f996f49d-hfg6c is Pending with Node:<none> while all 10 peer pods are 1/1 Running, and the deployment reads 0/1 AVAILABLE (desired 1). Its Service has no bound endpoint (GetResources(endpoints, name=paymentservice) -> <none>), so payment charging is unreachable to checkoutservice. The pod's own mechanism event reads verbatim: 'Warning FailedScheduling 0/4 nodes are available: 1 node(s) had untolerated taint {node-unhealthy: true}, 1 node(s) were unschedulable, 2 node(s) didn't match Pod's node affinity/selector.' The deployment's pod
+
+### case-153
+
+- **结论**：`app/productcatalogservice` + `taint_toleration_mismatch` ｜ 标签 `app/productcatalogservice` + `taint_toleration_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1765 · steps 18 · tokens 133,053
+- **raw 日志**：[results/1014_2130_inorder4-final13/raw/1014_2130_boutique-scheduling-153](../results/1014_2130_inorder4-final13/raw/1014_2130_boutique-scheduling-153/)（ndjson / mcp.jsonl / meta）
+- **摘要**：frontend logs (173/690 errors) show 'rpc error: code = Unavailable ... dial tcp 10.68.204.67:3550: connect: connection refused' toward productcatalogservice, and CheckServiceConnectivity(productcatalogservice:3550) returns Connection Failed while endpoints/productcatalogservice has empty Subsets. Pod listing's only outlier is productcatalogservice-dfd4c7b9b-5cmn8 (0/1 Pending, no node) and deployment productcatalogservice reads 0/1 AVAILABLE. The pod's own reason: '0/4 nodes are available: 1 node(s) had untolerated taint {node-unhealthy: true}, 1 node(s) were unschedulable, 2 node(s) didn't ma
+
+### case-154
+
+- **结论**：`app/recommendationservice` + `taint_toleration_mismatch` ｜ 标签 `app/recommendationservice` + `taint_toleration_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 91,303
+- **raw 日志**：[results/1014_2130_inorder4-final13/raw/1014_2131_boutique-scheduling-154](../results/1014_2130_inorder4-final13/raw/1014_2131_boutique-scheduling-154/)（ndjson / mcp.jsonl / meta）
+- **摘要**：recommendationservice is the only unreachable workload: its Service has no endpoints ('recommendationservice <none>') and its Deployment shows 0/1 AVAILABLE, caused by pod recommendationservice-68858794d6-pd6vc being stuck 0/1 Pending with Node: <none>. The scheduler's pending line on the pod sheet reads '0/4 nodes are available: 1 node(s) had untolerated taint {node-unhealthy: true}, 1 node(s) were unschedulable, 2 node(s) didn't match Pod's node affinity/selector'. The pod template (GetAppYAML) pins it with nodeSelector app=target-node, and only node worker-01 carries label app=target-node; 
+
+### case-155
+
+- **结论**：`app/redis-cart` + `taint_toleration_mismatch` ｜ 标签 `app/redis-cart` + `taint_toleration_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.0857 · steps 36 · tokens 575,813
+- **raw 日志**：[results/1014_2130_inorder4-final13/raw/1014_2131_boutique-scheduling-155](../results/1014_2130_inorder4-final13/raw/1014_2131_boutique-scheduling-155/)（ndjson / mcp.jsonl / meta）
+- **摘要**：boutique 唯一离群对象为 redis-cart pod（redis-cart-6587955858-h82lp，0/1 Pending，Node=<none>，其余 10 个服务 1/1 Running）。其 FailedScheduling 事件逐字给出阻塞原因：'0/4 nodes are available: 1 node(s) had untolerated taint {node-unhealthy: true}, 1 node(s) were unschedulable, 2 node(s) didn't match Pod's node affinity/selector'；该 pod 的 Node-Selectors 为 kubernetes.io/hostname=worker-01、Tolerations: <none>。节点面确认 worker-01 携带人工 taint node-unhealthy=true:NoExecute，但节点 Ready、无 Memory/Disk/PID 压力，kubelet/containerd/kube-proxy 均 active (running) —— taint 是纯配置态，非节点真病；worker-01 的 labels 另缺 kubernetes.io/hostname（旁证）。影响面闭环：redis-c
+
+### case-156
+
+- **结论**：`app/shippingservice` + `taint_toleration_mismatch` ｜ 标签 `app/shippingservice` + `taint_toleration_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.0909 · steps 34 · tokens 575,267
+- **raw 日志**：[results/1014_2130_inorder4-final13/raw/1014_2132_boutique-scheduling-156](../results/1014_2130_inorder4-final13/raw/1014_2132_boutique-scheduling-156/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Caller-side: frontend error logs (163x) 'failed to get shipping quote: rpc error: code = Unavailable ... dial tcp 10.68.226.143:50051: connect: connection refused'; active probe CheckServiceConnectivity(shippingservice,50051) = 'Connection Failed'; endpoints for shippingservice = <none>. Object layer: pods listing outlier shippingservice-6d544fbbbc-vskx4 is 0/1 Pending with NODE <none> (all 10 peer pods 1/1 Running). Pod sheet carries the mechanism: PodScheduled False, Node-Selectors kubernetes.io/hostname=worker-01, event 'FailedScheduling 0/4 nodes are available: 1 node(s) had untolerated ta
+
+### case-157
+
+- **结论**：`app/adservice` + `taint_toleration_mismatch` ｜ 标签 `app/adservice` + `taint_toleration_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.15 · steps 21 · tokens 174,191
+- **raw 日志**：[results/1014_2130_inorder4-final13/raw/1014_2140_boutique-scheduling-157](../results/1014_2130_inorder4-final13/raw/1014_2140_boutique-scheduling-157/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side: frontend error logs dominated by 151x 'failed to get ads: rpc error: code = Unavailable ... dial tcp 10.68.88.124:9555: connect: connection refused' (20.2% overall error ratio), adservice Endpoints = <none>, and CheckServiceConnectivity(adservice:9555) = Connection Failed, while the Service port mapping (9555 -> targetPort 9555) is correct. Object layer: the only outlier is pod adservice-6cbcf4f588-gdnlr, STATUS Pending, READY 0/1, NODE <none>, PodScheduled=False (deployment adservice 0/1 available; all other 10 boutique services Running 1/1). Mechanism event (verbatim): Warning 
+
+### case-158
+
+- **结论**：`app/cartservice` + `taint_toleration_mismatch` ｜ 标签 `app/cartservice` + `taint_toleration_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1154 · steps 27 · tokens 222,046
+- **raw 日志**：[results/1014_2130_inorder4-final13/raw/1014_2139_boutique-scheduling-158](../results/1014_2130_inorder4-final13/raw/1014_2139_boutique-scheduling-158/)（ndjson / mcp.jsonl / meta）
+- **摘要**：cartservice's only pod cartservice-8b95d4bb-r7jtd is stuck Pending with PodScheduled=False, so the cartservice Service has zero endpoints (GetResources endpoints -> ENDPOINTS <none>) and the entry caller frontend logs 145x/86x 'cart: rpc error: code = Unavailable ... dial tcp 10.68.97.38:7070: connect: connection refused'; a direct connectivity probe to cartservice:7070 fails. The pod's own FailedScheduling event reads: '0/4 nodes are available: 1 node(s) didn't match Pod's node affinity/selector, 1 node(s) were unschedulable, 2 node(s) had untolerated taint {compute: intensive}'. The two node
+
+### case-159
+
+- **结论**：`app/currencyservice` + `taint_toleration_mismatch` ｜ 标签 `app/currencyservice` + `taint_toleration_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 172,745
+- **raw 日志**：[results/1014_2130_inorder4-final13/raw/1014_2144_boutique-scheduling-159](../results/1014_2130_inorder4-final13/raw/1014_2144_boutique-scheduling-159/)（ndjson / mcp.jsonl / meta）
+- **摘要**：namespace boutique 中仅 currencyservice-5d6cb67d5b-hc5jg 离群：0/1 Pending，Node:<none>，其事件为 Warning FailedScheduling '0/4 nodes are available: 1 node(s) had untolerated taint {workload: specialized-processing}, 1 node(s) were unschedulable, 2 node(s) didn't match Pod's node affinity/selector'。节点侧：worker-01 Ready(Unschedulable:false) 带 label workload-type=specialized 与 taint workload=specialized-processing:NoSchedule；worker-02/03 无该 label；master 为控制面 SchedulingDisabled（基线）。Pod 的 nodeSelector=workload-type=specialized 在 worker-01 上匹配成功，但 Pod 无 `workload=specialized-processing` 容忍（GetAppYAML(currencys
+
+### case-160
+
+- **结论**：`app/emailservice` + `taint_toleration_mismatch` ｜ 标签 `app/emailservice` + `taint_toleration_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1111 · steps 28 · tokens 190,263
+- **raw 日志**：[results/1014_2130_inorder4-final13/raw/1014_2143_boutique-scheduling-160](../results/1014_2130_inorder4-final13/raw/1014_2143_boutique-scheduling-160/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only outlier in boutique: pod emailservice-5694b49ccc-xrtj7 is 0/1 Pending with Node <none>; Service emailservice has ENDPOINTS <none> and TCP probe to its declared port 5000 fails, while all 10 sibling boutique pods are 1/1 Running (deployment emailservice 0/1 AVAILABLE 0) and no alerts/metric anomaly exist. Pod's own sheet carries the mechanism verbatim: 'FailedScheduling 0/4 nodes are available: 1 node(s) had untolerated taint {compute: high-performance}, 1 node(s) were unschedulable, 2 node(s) didn't match Pod's node affinity/selector.' Node inventory: worker-01 is Ready/Unschedulable=fals
+
+### case-161
+
+- **结论**：`app/frontend` + `taint_toleration_mismatch` ｜ 标签 `app/frontend` + `taint_toleration_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.125 · steps 25 · tokens 187,222
+- **raw 日志**：[results/1014_2130_inorder4-final13/raw/1014_2145_boutique-scheduling-161](../results/1014_2130_inorder4-final13/raw/1014_2145_boutique-scheduling-161/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Wording named no service, so the inventory listing was the entry: pods surface shows a single outlier 'frontend-8585db7589-dbt2h 0/1 Pending' with NODE <none> (all 10 peers 1/1 Running), deployments shows 'frontend 0/1 AVAILABLE', endpoints shows 'frontend <none>' / 'frontend-external <none>' and CheckServiceConnectivity(frontend:80) = Connection Failed -> victim is the frontend business unit. The pod's own sheet carries the mechanism verbatim: 'Warning FailedScheduling ... 0/4 nodes are available: 1 node(s) didn't match Pod's node affinity/selector, 1 node(s) were unschedulable, 2 node(s) had
+
+### case-162
+
+- **结论**：`app/paymentservice` + `taint_toleration_mismatch` ｜ 标签 `app/paymentservice` + `taint_toleration_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1429 · steps 29 · tokens 219,169
+- **raw 日志**：[results/1014_2130_inorder4-final13/raw/1014_2146_boutique-scheduling-162](../results/1014_2130_inorder4-final13/raw/1014_2146_boutique-scheduling-162/)（ndjson / mcp.jsonl / meta）
+- **摘要**：paymentservice is the only unreachable unit: its Service endpoints list is '<none>' while all 10 sibling Services have endpoints, and a TCP probe to its Service-declared port (paymentservice:50051) returns 'Connection Failed'. Its single pod paymentservice-84c59c8dff-rbvz9 is stuck Pending 0/1 with Node '<none>' (Deployment paymentservice 0/1 AVAILABLE) - the only outlier in the namespace. The pod's own sheet carries the mechanism event: 'Warning FailedScheduling ... 0/4 nodes are available: 1 node(s) had untolerated taint {environment: production}, 1 node(s) were unschedulable, 2 node(s) didn
+
+### case-163
+
+- **结论**：`app/recommendationservice` + `taint_toleration_mismatch` ｜ 标签 `app/recommendationservice` + `taint_toleration_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1154 · steps 27 · tokens 164,047
+- **raw 日志**：[results/1014_2130_inorder4-final13/raw/1014_2147_boutique-scheduling-163](../results/1014_2130_inorder4-final13/raw/1014_2147_boutique-scheduling-163/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only recommendationservice is broken: its pod recommendationservice-698cd8974f-6m4k9 is 0/1 Pending with Node <none>, its Service endpoints are <none>, a TCP probe to recommendationservice:8080 fails, and the frontend caller log shows 83x 'dial tcp 10.68.109.192:8080: connect: connection refused' / 'failed to get product recommendations' (port 8080 is the port recommendationservice's Service declares), while all other 10 boutique pods are 1/1 Running. The pod's own sheet shows Node-Selectors: workload=compute-intensive, no compute tolerations, and the scheduler event 'FailedScheduling ... 0/4 
+
+### case-164
+
+- **结论**：`app/redis-cart` + `taint_toleration_mismatch` ｜ 标签 `app/redis-cart` + `taint_toleration_mismatch`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2632 · steps 20 · tokens 143,676
+- **raw 日志**：[results/1014_2130_inorder4-final13/raw/1014_2148_boutique-scheduling-164](../results/1014_2130_inorder4-final13/raw/1014_2148_boutique-scheduling-164/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Partial Service Unreachability' is bound to the cart path: CheckServiceConnectivity(redis-cart:6379) returned 'Connection Failed' and the entry caller cartservice logged 288/776 errors (37%) with 'UnableToConnect on redis-cart:6379 ... RedisConnectionException / Can't access cart storage', while all other services stay 1/1 Running. The pruned workload scan shows the single outlier: pod redis-cart-64ffd47f7f-h796g is Pending 0/1 with Node <none> (never bound), and deployment redis-cart is 0/1 UP-TO-DATE with AVAILABLE=0. The mechanism event is carried by the pod's own sheet: 'FailedSch
 
