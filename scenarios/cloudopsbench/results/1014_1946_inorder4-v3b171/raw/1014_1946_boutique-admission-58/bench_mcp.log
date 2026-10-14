@@ -1,0 +1,38 @@
+INFO:     Started server process [19220]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:61583 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61585 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:61583 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61587 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61595 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61599 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61605 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:61605 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61605 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:61605 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61610 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61610 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61610 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"redis-cart"}
+INFO:     127.0.0.1:61610 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61616 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61616 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61616 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61616 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"redis-cart","port":6379}
+INFO:     127.0.0.1:61633 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61633 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61633 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61633 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61655 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61655 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61655 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61655 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61663 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61663 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61663 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61663 - "POST /mcp HTTP/1.1" 200 OK

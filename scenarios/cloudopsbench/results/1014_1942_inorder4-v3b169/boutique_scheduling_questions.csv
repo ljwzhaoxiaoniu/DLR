@@ -1,0 +1,4 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/scheduling/83,1.0,1.0,1.0,1.0,1.0,1.0,0.21428571428571427,15.0,0.0,0.0,app/emailservice,node_selector_mismatch,app/emailservice,node_selector_mismatch,
+boutique/scheduling/84,1.0,1.0,1.0,1.0,1.0,1.0,0.25,13.0,0.0,0.0,app/paymentservice,node_selector_mismatch,app/paymentservice,node_selector_mismatch,
+boutique/scheduling/85,1.0,1.0,1.0,1.0,1.0,1.0,0.36363636363636365,12.0,0.0,0.0,app/recommendationservice,node_selector_mismatch,app/recommendationservice,node_selector_mismatch,

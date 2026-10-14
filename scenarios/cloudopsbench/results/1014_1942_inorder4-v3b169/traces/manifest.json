@@ -1,0 +1,30 @@
+[
+  {
+    "case": "boutique/admission/56",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1014_1942_inorder4-v3b169\\raw\\1014_1942_boutique-admission-56",
+    "steps": 19,
+    "has_final_answer": true,
+    "predictions": 3
+  },
+  {
+    "case": "boutique/scheduling/83",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1014_1942_inorder4-v3b169\\raw\\1014_1942_boutique-scheduling-83",
+    "steps": 14,
+    "has_final_answer": true,
+    "predictions": 3
+  },
+  {
+    "case": "boutique/scheduling/85",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1014_1942_inorder4-v3b169\\raw\\1014_1943_boutique-scheduling-85",
+    "steps": 11,
+    "has_final_answer": true,
+    "predictions": 3
+  },
+  {
+    "case": "boutique/scheduling/84",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1014_1942_inorder4-v3b169\\raw\\1014_1944_boutique-scheduling-84",
+    "steps": 12,
+    "has_final_answer": true,
+    "predictions": 3
+  }
+]

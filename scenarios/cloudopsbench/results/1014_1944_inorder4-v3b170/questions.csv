@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/57,1.0,1.0,1.0,1.0,1.0,1.0,0.5,17.0,0.0,0.0,namespace/boutique,namespace_storage_quota_exceeded,namespace/boutique,namespace_storage_quota_exceeded,
+boutique/scheduling/86,1.0,1.0,1.0,1.0,1.0,1.0,0.2,16.0,0.0,0.0,app/redis-cart,node_selector_mismatch,app/redis-cart,node_selector_mismatch,
+boutique/scheduling/87,1.0,1.0,1.0,1.0,1.0,1.0,0.23076923076923078,14.0,0.0,0.0,app/shippingservice,node_selector_mismatch,app/shippingservice,node_selector_mismatch,
+boutique/scheduling/88,1.0,1.0,1.0,1.0,1.0,1.0,0.23529411764705882,18.0,0.0,0.0,app/adservice,node_selector_mismatch,app/adservice,node_selector_mismatch,

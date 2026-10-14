@@ -1,6 +1,6 @@
 # 评测明细 · boutique/admission — cloudopsbench
 
-> 本家族已跑 **53/58** 题：JRA ✅46 ❌7 ｜ 证据链全闭 45 ｜ token 中位 89,960 ｜ 生成 2026-10-14T11:37:58.203Z
+> 本家族已跑 **58/58** 题：JRA ✅51 ❌7 ｜ 证据链全闭 50 ｜ token 中位 91,331 ｜ 生成 2026-10-14T11:58:35.208Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
@@ -60,6 +60,11 @@
 | [51](#case-51) | 0 | 0 | 0 | 0.6667 | 0.6667 | 0 | 0.3125 | 17 | 95,203 | 0 | 0 | 1014_1931_inorder4-v3b164 | 未命中 |
 | [52](#case-52) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3636 | 23 | 158,133 | 0 | 0 | 1014_1933_inorder4-v3b165 | 全对·链闭 |
 | [53](#case-53) | 0 | 0 | 0 | 0.6667 | 0.6667 | 0 | 0.2692 | 27 | 199,989 | 0 | 0 | 1014_1935_inorder4-v3b166 | 未命中 |
+| [54](#case-54) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4706 | 18 | 95,401 | 0 | 0 | 1014_1938_inorder4-v3b167 | 全对·链闭 |
+| [55](#case-55) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4762 | 22 | 186,147 | 0 | 0 | 1014_1940_inorder4-v3b168 | 全对·链闭 |
+| [56](#case-56) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3684 | 20 | 147,903 | 0 | 0 | 1014_1942_inorder4-v3b169 | 全对·链闭 |
+| [57](#case-57) | 1 | 1 | 1 | 1 | 1 | 1 | 0.5 | 17 | 131,520 | 0 | 0 | 1014_1944_inorder4-v3b170 | 全对·链闭 |
+| [58](#case-58) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3704 | 28 | 179,799 | 0 | 0 | 1014_1946_inorder4-v3b171 | 全对·链闭 |
 
 ## 证据正文
 
@@ -433,4 +438,39 @@
 - **流程**：MC 0.6667 · EOC 0.6667 · ECR 0 · EE 0.2692 · steps 27 · tokens 199,989
 - **raw 日志**：[results/1014_1935_inorder4-v3b166/raw/1014_1935_boutique-admission-53](../results/1014_1935_inorder4-v3b166/raw/1014_1935_boutique-admission-53/)（ndjson / mcp.jsonl / meta）
 - **摘要**：Object layer is fully healthy: all 11 boutique pods are 1/1 Running with 0 restarts, all deployments 1/1 AVAILABLE, namespace events contain only Normal rows (no FailedScheduling/FailedCreate/FailedMount/image-pull/probe Warning), and no alerts fire. The break is isolated to the address layer of redis-cart: the Service object 'redis-cart' does not exist in the namespace (GetResources(services) lists only 10 business Services with no redis-cart row, and both GetResources(services, name=redis-cart) and DescribeResource(service, redis-cart) return 'Error from server (NotFound)'), and its endpoint
+
+### case-54
+
+- **结论**：`namespace/boutique` + `namespace_service_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_service_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4706 · steps 18 · tokens 95,401
+- **raw 日志**：[results/1014_1938_inorder4-v3b167/raw/1014_1938_boutique-admission-54](../results/1014_1938_inorder4-v3b167/raw/1014_1938_boutique-admission-54/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique has a ResourceQuota 'service-quota' with services Used 11 / Hard 11 (saturated), and exactly 11 Service objects exist; the 12th Service for shippingservice is absent (GetResources(services, name=shippingservice) -> NotFound, endpoints NotFound, CheckServiceConnectivity(shippingservice:50051) -> Connection Failed), so the DNS name shippingservice has no record. The caller-side symptom is decisive: frontend error logs show 'failed to get shipping quote: rpc error: code = Unavailable ... dial tcp: lookup shippingservice on 169.254.20.10:53: no such host' (68x GET /cart) and 'fa
+
+### case-55
+
+- **结论**：`namespace/boutique` + `namespace_storage_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_storage_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4762 · steps 22 · tokens 186,147
+- **raw 日志**：[results/1014_1940_inorder4-v3b168/raw/1014_1940_boutique-admission-55](../results/1014_1940_inorder4-v3b168/raw/1014_1940_boutique-admission-55/)（ndjson / mcp.jsonl / meta）
+- **摘要**：boutique 命名空间内 redis-cart 唯一 Pod (redis-cart-5858bb886-w6b9q) 卡在 0/1 Pending、无节点；其事件逐字为 'FailedScheduling 0/4 nodes are available: persistentvolumeclaim "redis-cart-pvc" not found'。被引用对象清单核验：命名空间内不存在任何 PVC（persistentvolumeclaims 与 pvc 两种读法均 'No resources found'），而 PV redis-cart-pv (10Gi/RWO/Retain) 状态 Available、Claim 为空、无 storageClassName —— 供给空闲未被占用，故被引用对象仍缺失，属活跃机制而非建置历史。配置面 (GetAppYAML redis-cart) 显示 claimName、accessModes RWO、storageClassName '' 与 PV 完全匹配，唯一偏差是该 PVC 未生成；断点在命名空间准入/配额面：ResourceQuota storage-quota 的 requests.storage 硬上限为 1Gi（Used 0/1Gi），低于 PVC 请求的 10Gi，claim 被配额拒绝导致 PVC 从未创建。可达
+
+### case-56
+
+- **结论**：`namespace/boutique` + `namespace_storage_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_storage_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3684 · steps 20 · tokens 147,903
+- **raw 日志**：[results/1014_1942_inorder4-v3b169/raw/1014_1942_boutique-admission-56](../results/1014_1942_inorder4-v3b169/raw/1014_1942_boutique-admission-56/)（ndjson / mcp.jsonl / meta）
+- **摘要**：redis-cart pod is the sole outlier: Pending/unscheduled (0/1, Node <none>), with mechanism event 'FailedScheduling ... 0/4 nodes are available: persistentvolumeclaim "redis-cart-pvc" not found'. The claim object is genuinely absent (PVC listing empty; DescribeResource(pvc/redis-cart-pvc) -> Error from server (NotFound)), while PV redis-cart-pv exists and is Available (2Gi, RWO) and the redis-cart Deployment/mount references claimName redis-cart-pvc with /data. The namespace carries ResourceQuota 'storage-quota' hard-limiting requests.storage to 1Gi (Used 0/1Gi), so the 2Gi storage request decl
+
+### case-57
+
+- **结论**：`namespace/boutique` + `namespace_storage_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_storage_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.5 · steps 17 · tokens 131,520
+- **raw 日志**：[results/1014_1944_inorder4-v3b170/raw/1014_1944_boutique-admission-57](../results/1014_1944_inorder4-v3b170/raw/1014_1944_boutique-admission-57/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pods listing (wide) shows the single outlier redis-cart-5858bb886-dvpvz 0/1 Pending with no node assigned (all other 10 boutique pods 1/1 Running). DescribeResource(pod) gives the mechanism verbatim: 'Warning FailedScheduling ... 0/4 nodes are available: persistentvolumeclaim "redis-cart-pvc" not found', i.e. the scheduling break is a missing volume claim, not a node-side capacity/taint issue (4 nodes schedulable). The referenced object is genuinely absent: GetResources(persistentvolumeclaims, boutique) = 'No resources found' and a by-name fetch returns NotFound, while PV redis-cart-pv is Avai
+
+### case-58
+
+- **结论**：`namespace/boutique` + `namespace_storage_quota_exceeded` ｜ 标签 `namespace/boutique` + `namespace_storage_quota_exceeded`（✓ 逐字命中）
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3704 · steps 28 · tokens 179,799
+- **raw 日志**：[results/1014_1946_inorder4-v3b171/raw/1014_1946_boutique-admission-58](../results/1014_1946_inorder4-v3b171/raw/1014_1946_boutique-admission-58/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Namespace boutique holds a ResourceQuota 'storage-quota' with requests.storage hard=10Gi, used=9Gi (consumed by the pre-existing 10Gi claim pre-existing-pvc -> pre-existing-pv), leaving only 1Gi headroom. The redis-cart Deployment's volume redis-data references PVC 'redis-cart-pvc' requesting 2Gi, so 9Gi+2Gi > 10Gi and the claim is never admitted: the PVC listing shows only pre-existing-pvc and DescribeResource(pvc/redis-cart-pvc) returns NotFound (the matching PV redis-cart-pv, 2Gi RWO, is Available and unbound, so storageClass/accessMode/capacity/binding are all consistent - only the claim o
 
