@@ -1,4 +1,4 @@
-# 应用：场景包（当前 `birdminidev`）
+# 应用：场景包（现有 `birdminidev` 与 `cloudopsbench`）
 
 > **定位**：四篇叙事的 **④ 落地（解法）**——把 ①[背景与主张](01-background.md)、②[概念](02-concept.md)、③[设计](03-design.md) 落成**一套可运行的内容包**。
 > **一句话**：**一个场景 = 一套完整的 TSM 内容**，以 git 文本形态存在（Semantic Layer as Code）：可 diff、可评审、可回滚。

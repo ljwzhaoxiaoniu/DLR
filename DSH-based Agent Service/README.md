@@ -52,7 +52,7 @@ bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 
 ## 场景（scenario = 一套完整 TSM）
 
-内容在仓库根 `scenarios/<name>/`（当前 `birdminidev`）：
+内容在仓库根 `scenarios/<name>/`（现有 `birdminidev` 与 `cloudopsbench`）：
 
 | 层 | 换场景时 | 载体 |
 |---|---|---|

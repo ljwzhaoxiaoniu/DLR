@@ -5,8 +5,8 @@
 #
 # 规则：每篇文档一对 X.md（英文主）+ X.zh.md（中文对照）。新增一篇 → 在此登记两条哈希。
 # 迁移中（2026-09-30 起，2–3 篇一批）：未落对的文档暂时只有中文单篇。
-README.md: 9b99fac9a14b09c34ba5d23e43a87a82d91e77af
-README.zh.md: 4cc45783f9ca2cac06903bc14b87c55626822d88
+README.md: 14d495f07488b316c4c211657d052ef1fdb077f1
+README.zh.md: 7f7fa2418dd21ab878b9632bc611434685dede10
 run.md: f593934d00630a897a9db4370a0ffca1abdeb041
 run.zh.md: ff2b1e38ac0e46429c162b0d251fb67fbbf8629c
 eval.md: 2b8bbd4c3d1c9e0ca31b47764e92e61ce17ace0a
