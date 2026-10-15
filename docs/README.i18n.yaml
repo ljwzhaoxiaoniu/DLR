@@ -6,14 +6,14 @@
 # 规则：每篇文档一对 X.md（英文主）+ X.zh.md（中文对照）。新增一篇 → 在此登记两条哈希。
 # 迁移完成（2026-10-15）：叙事四篇 + 操作三篇全部 AB 对（英主 + .zh.md）。
 README.md: f18ebba8a512125804b9212e44237603c6f8d45e
-01-background.md: 1b86813308322a0ec91c57107f8cf8dc96ad33c7
-01-background.zh.md: 58795ee9ef465cfab22bbe48a80b47a29aa0d1e8
+01-background.md: fdb94c589f1c7fb49dee24cb8a1dca5020bd7b26
+01-background.zh.md: cd1664e62299322ae8d223dfccc7c9814ad61884
 02-concept.md: 2d27cd6c397a22e64766de7f46cde8c3824994f5
 02-concept.zh.md: ca6bdc5d1cbe0656f0ed5d652f8c90b1344e76d4
 03-design.md: 614481bd4e75a48b935af60bc47b5c0601a090c9
 03-design.zh.md: 9d81bae7e39ad1208035f9aec782da11b0d89f7a
-04-application.md: a9af067026c48d47c3c943d1ee39ae0c55c38448
-04-application.zh.md: af8084c21b0e8adeab2d936c35c085e5d020347f
+04-application.md: 22dd05338367b62ccabc2027feb5e07815e663d2
+04-application.zh.md: fbbcd61a64de03249b747645cf2adca07996ab27
 README.zh.md: ab6a2d7d4b90f09f20c3c289396bc4a2fb8414e8
 run.md: 13e8a0d4f7c4b2faf145fea01f851f2c83cc8ece
 run.zh.md: 54814920f623cad668634712f58491eaa130308c
