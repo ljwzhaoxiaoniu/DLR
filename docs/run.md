@@ -124,7 +124,7 @@ curl -s http://127.0.0.1:28795/status
 
 ## 8. From zero: the npm walkthrough
 
-> Audience: a fresh machine with only **Node + npm**. Goal: stand the whole thing up from npm — dsh first, then the semantic backend, then the bundle — and ask a real question. The pieces are three packages: the **service** `tsm-core-dlr`, the **scenario content** `tsm-scenario-birdmini`, and the **dsh bundle** `dsh-tsm-agent` (which depends on the service).
+> Audience: a fresh machine with only **Node + npm**. Goal: stand the whole thing up from npm — dsh first, then the semantic backend, then the bundle — and ask a real question. The pieces are three packages: the **service** `tsm-core-dlr`, the **scenario content** (`tsm-scenario-*`, one package per benchmark — this walkthrough uses `tsm-scenario-birdmini`; the Cloud-OpsBench variant is at the end), and the **dsh bundle** `dsh-tsm-agent` (which depends on the service).
 
 **0) Prerequisites**
 
@@ -211,6 +211,18 @@ One-shot CLI variant (with the headless bundle enabled):
 ```bash
 dsh --profile headless --json "Question: What is the ratio of customers who pay in EUR against customers who pay in CZK?"
 ```
+
+**Another scenario — Cloud-OpsBench (K8s RCA).** The second shipped scenario, `tsm-scenario-cloudopsbench`, is a `dlr-state` model for Kubernetes root-cause diagnosis (754 cases); its TSM surface is **3 tools** (`state_model_query` · `dlr_search_consensus` · `dlr_search_sop`). The TSM side swaps mechanically — its own store and its own port, so both scenarios can coexist while the birdmini server stays on 28795:
+
+```bash
+npm i -g tsm-scenario-cloudopsbench
+TSM_SCENARIO=tsm-scenario-cloudopsbench TSM_STORE_DIR=$HOME/.tsm/lance/cloudopsbench tsm build lance
+TSM_SCENARIO=tsm-scenario-cloudopsbench TSM_STORE_DIR=$HOME/.tsm/lance/cloudopsbench tsm build consensus
+TSM_SCENARIO=tsm-scenario-cloudopsbench TSM_STORE_DIR=$HOME/.tsm/lance/cloudopsbench tsm build sop
+TSM_SCENARIO=tsm-scenario-cloudopsbench TSM_STORE_DIR=$HOME/.tsm/lance/cloudopsbench tsm serve --http 28796
+```
+
+Two things to know before going further: the `dlr-state` path loads **no graph** (Neo4j unnecessary), and the TSM store only carries the *navigation* layer — the case data and its diagnostic interface come from the **upstream benchmark** (~3.9 GB checkout of [LLM4Ops/Cloud-OpsBench](https://github.com/LLM4Ops/Cloud-OpsBench), snapshot `ea05daf`), while the per-case runner assembly is repo-side (`DSH-based Agent Service/dsh_cob/`), not shipped on npm. So the npm packages give you the semantic side of COB; the full 754-case evaluation runs from a repo checkout — details in the [scenario README](../scenarios/cloudopsbench/README.md).
 
 **Troubleshooting (npm route)**
 
