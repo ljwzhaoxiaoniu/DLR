@@ -3,6 +3,7 @@
 > **Position**: ① of the four narrative docs — today's problems (data / knowledge / API) + the analysis, leading to the thesis: **semantic modeling grounded in structured data sources**.
 > Where the thesis is implemented: **② Concepts → [02-concept.md](02-concept.md)** | **③ Design → [03-design.md](03-design.md)** | **④ Application → [04-application.md](04-application.md)**.
 > This document is where the thinking starts; it is **not meant to be exhaustive** — the other three fill in the rest.
+> 中文版：[01-background.zh.md](01-background.zh.md) ｜ Index: [README.md](README.md)
 
 ## Part 1: Diagnosis — text data has no stable schema
 
@@ -130,7 +131,7 @@ Hopping turns from ungoverned drift into logged, approved, cadenced **institutio
 
 ### 5.1 The dual-read test (the only acceptance standard)
 
-> **Every semantic entry must pass dual read: a non-technical business person reads it once without frowning; a bare LLM reads it once and can execute it. Both pass, it enters the library; either fails, it is rework — because a human's frown is the model's error message.**
+> **Every semantic entry must pass dual read — a non-technical business person reads it once without frowning; a bare LLM reads it once and can execute it; either fails, it is rework** (full definition: [02-concept.md](02-concept.md) §4; a human's frown is the model's error message).
 
 This replaces the old W3C-era standard ("decidable by a reasoner"). The execution channel (schema + SQL) stays untranslated; the explanation channel (natural-language semantic layer) does the translating — the semantic layer is an interface to an interface, and nothing counts until it lands back in the execution channel. Hold this boundary and the structure camp never degenerates into the prose camp.
 
