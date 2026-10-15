@@ -1,5 +1,7 @@
 # DSH-based Agent Service — DLR 接入 DeepSeek Harness
 
+[English](README.md) | 中文
+
 把 **DLR 这一个范式**接入 dsh（DeepSeek Harness）。
 
 **后端 = `TSM Core Service/`（TS/Node 栈：LanceDB + Neo4j + MCP，streamable-http 直连）** —— 无 Python、无桥。
@@ -11,18 +13,22 @@
 ```
 DSH-based Agent Service/
 ├── AGENTS.md                 # dsh 版评测 Agent 规则（独立文件，只与 OC 版内容同源）
-├── README.md
+├── README.md · README.zh.md  # ← 本文（英文主 + 中文对照）
 ├── .gitignore                # .dsh-home/、.env
-├── scripts/start_backend.sh  # 一键起后端（Neo4j + TS MCP server，幂等 + 预检）
-├── dsh-tsm-agent/                  # ★ bundle（dsh plugin add 安装）：MCP 网关 + preset-dlr + 状态浮层 + skills
-│   ├── cordis.patch.yml      #   三条行：mcp-semantic-core · dlr-status · preset-dlr（persona/skills/compaction）
+├── scripts/
+│   ├── start_backend.sh      # 一键起后端（Neo4j + TS MCP server，幂等 + 预检）
+│   ├── run_batch.sh          # 批跑器（并发派发 + 700MB 内存闸；产物进场景 results/）
+│   └── decode_session_log.cjs # 会话日志（多帧 zstd）解码器
+├── dsh-tsm-agent/            # ★ bundle（dsh plugin add 安装）：MCP 网关 + preset-dlr + 状态浮层 + skills
+│   ├── cordis.patch.yml      #   行：mcp-semantic-core · dlr-status · preset-dlr（persona/skills/compaction）
 │   ├── skills/               #   paradigm（认知层，场景无关）；L3 已走索引检索（不随包发技能）
 │   └── lib/client.js         #   TSM 状态浮层（浏览器半）
+├── dsh-tsm-eval/             # 考试系统（bin `dsh-eval`：run / score / report / all / doctor / parity）
+├── dsh_cob/                  # COB 场景跑题装配（run_one.sh + 独立后端 :28796；不随包分发）
 ├── .dsh-home/                # 运行时生成（$DSH_HOME；会话日志在此，可取证可删）
 └── dsh_dlr/
     ├── dsh.patch.yml         # headless 本地策略：禁用清单 / 模型 / persona / 指令候选
     ├── dsh-web.patch.yml     # web 本地策略：进程级收尾 / 目录选择器修复 / registry 默认 preset
-    ├── run_one.sh / run_web.sh / run_batch.sh   # 单题 / Web / 批跑（L3 索引用 tsm build sop 重建）
     ├── run_one.sh            # 单题运行器（预检 + dsh headless）
     ├── run_web.sh            # Web UI 启动器（预检 + dsh web）
     └── .env.example          # DEEPSEEK_API_KEY → 复制为 .env
@@ -46,7 +52,7 @@ bash "DSH-based Agent Service/dsh_dlr/run_one.sh" 1471 "What is the ratio of cus
 
 # Web 对话（默认 preset = dlr；进 UI 先选工作区 DSH-based Agent Service）
 bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
-#   ↑ 右下角浮出 TSM 状态卡：Neo4j / MCP 服务灯 · LE/PE/PA/PAS · 向量行数 · 场景名 · Neo4j Browser 链接
+#   ↑ 右下角浮出 TSM 状态卡：图后端 / MCP 服务灯 · LE/PE/PA/PAS · 向量行数 · 场景名 · 图页链接
 #     （前提：dsh-tsm-agent bundle 已装 —— dsh plugin --profile web add "<abs>/DSH-based Agent Service/dsh-tsm-agent"）
 ```
 
@@ -64,11 +70,11 @@ bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 
 **铁律：L3 以检索交付**——模型层永远只调 `dlr_search_sop`（按题返回命中的节）；"用哪套 sop"发生在场景构建期（`sources/sop.md` → `tsm build sop`），模型层永远不需要选。
 
-## MCP 工具面（7）
+## MCP 工具面（`dlr` 形态 7 个）
 
 `dlr_semantic_query` · `dlr_search_consensus` · `dlr_search_sop` · `get_pe_mapping` · `get_le_attrs` · `get_full_data_info` · `execute_sql`
 
-（另有 harness 侧技能工具 `skill`——按需加载 `paradigm` 认知技能，不是 MCP 工具。）
+（另有 harness 侧技能工具 `skill`——按需加载 `paradigm` 认知技能，不是 MCP 工具。`dlr-state` 形态（COB）= 3 个：`state_model_query` · `dlr_search_consensus` · `dlr_search_sop`；契约表以 [TSM Core Service README](<../TSM Core Service/README.zh.md>) 为准。）
 
 > L2 工具名与 Python 线（1.5）不同：那边仍是 `dlr_search_evidence`（BIRD 遗留命名）。
 
