@@ -2,6 +2,9 @@
 
 > Operations: **start the backend / run a question / Web / status surface / troubleshooting.** Commands run under Git Bash (Windows).
 > Background: the narrative docs ([01](01-background.md) → [04](04-application.md)); per-tree reference docs: [TSM Core Service](<../TSM Core Service/README.md>) · [DSH-based Agent Service](<../DSH-based Agent Service/README.md>).
+> 中文版：[run.zh.md](run.zh.md)
+
+**Contents**: [0](#0-big-picture) · [1](#1-start-the-backend-idempotent) · [2](#2-run-one-question-headless) · [2.5](#25-run-the-exam-dsh-tsm-eval) · [3](#3-web-chat) · [4](#4-status-surface) · [5](#5-graph-backend-what-changes-when-neo4j-is-absent) · [6](#6-troubleshooting) · [7](#7-discipline) · [8](#8-from-zero-the-npm-walkthrough)
 
 ## 0. Big picture
 
@@ -39,7 +42,7 @@ bash "DSH-based Agent Service/dsh_dlr/run_one.sh" <qid> "<question>"
 - Artifacts: `tmp_scripts/dsh_smoke/<stamp>_<qid>_dlr.ndjson` (the `--json` event stream) plus a same-named `.err`.
 - The backend is prechecked automatically; an unreachable backend **exits loudly** (exit 3) instead of burning model calls.
 - Session logs: `DSH-based Agent Service/.dsh-home/sessions/<project-dir>/<session-id>/session.v4.jsonl.zstd` (**multi-frame zstd**; decoder: `DSH-based Agent Service/scripts/decode_session_log.cjs`).
-- **Batch runs** (parallel → grade → stats): see "How a round is run" in `scenarios/birdminidev/results/README.md`.
+- **Batch runs** (4 questions per batch, memory-gated parallel dispatch → `tsm grade` → `tsm stats`): see "How a round is run" in `scenarios/birdminidev/results/README.md`.
 
 ## 2.5 Run the exam (dsh-tsm-eval)
 
@@ -50,7 +53,7 @@ node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" doctor             
 node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" all --qids 1471,27 --out tmp_scripts/smoke
 ```
 
-- Default landing is `<scenario>/eval/runs/` — **never scanned by `tsm stats`**; `--ledger` targets `results/`, and runs over 5 questions need `--yes` (batch discipline).
+- Default landing is `<scenario>/eval/runs/` — **never scanned by `tsm stats`**; `--ledger` targets `results/`, and runs over 4 questions need `--yes` (batch discipline).
 - `report.json` / `report.md` add process metrics, the invalid-round split (TRANSPORT / timeout) and session-log forensics on top of grade's CSV.
 - Full reference: [dsh-tsm-eval README](../DSH-based%20Agent%20Service/dsh-tsm-eval/README.md).
 
@@ -114,13 +117,13 @@ curl -s http://127.0.0.1:28795/status
 
 ## 7. Discipline
 
-- **Runtime = dsh host + MCP surface + status surface; dev = the `tsm` CLI** (`tsm build` / `tsm verify` / `tsm viz` / `tsm coverage` / `tsm scenario`).
+- **Runtime = dsh host + MCP surface + status surface; dev = the `tsm` CLI** (`tsm build` / `tsm verify` / `tsm grade` / `tsm stats` / `tsm viz` / `tsm coverage` / `tsm scenario`).
   `tsm viz [--open] [--db <name>]` renders the self-contained DLR graph page (LE/PE/ARCS/PAS; click a PE for its column mapping) into `<DATA_DIR>/viz/dlr-graph.html`.
 - **The backend is started/stopped by the operator**; every command in this runbook is **repeatable** (idempotence is a design goal).
 - Configuration changes (patches / plugins) → restart the host; **L3 source `sources/sop.md` → `tsm build sop`, effective without a host restart** (the old `sync_sop.sh` is retired).
 - Paths and data dirs (all env-overridable): `TSM_DATA_DIR` (store/cache/viz; default `<service>/.store` in-repo, `~/.tsm` when installed), `TSM_DATASET_DIR` (default = repo root), `TSM_SCENARIO` (path or package name), `TSM_OUT_DIR` (scenario write target), `TSM_MODEL_DIR`, `TSM_STORE_DIR`, `TSM_CACHE_DIR`, `TSM_MCP_URL`, `TSM_GRAPH_BACKEND`.
 - Temporary artifacts go to `tmp_scripts/` or are deleted on the spot.
-- **Batch + grading**: `run_batch.sh --qids ... --jobs 3` → `tsm grade --run <dir>`; the three-tier verdicts, reversal policy and migration-period discipline (5 questions per batch, at most two passes per question, always re-run after writing a clause, full re-judge after policy changes) are in [eval.md](eval.md) §5.
+- **Batch + grading**: `run_batch.sh --qids ... --jobs 4` → `tsm grade --run <dir>`; the three-tier verdicts, reversal policy and migration-period discipline (**4 questions per batch**, at most two passes per question, always re-run after writing a clause, full re-judge after policy changes) are in [eval.md](eval.md) §5.
 
 ## 8. From zero: the npm walkthrough
 
@@ -212,7 +215,9 @@ One-shot CLI variant (with the headless bundle enabled):
 dsh --profile headless --json "Question: What is the ratio of customers who pay in EUR against customers who pay in CZK?"
 ```
 
-**Another scenario — Cloud-OpsBench (K8s RCA).** The second shipped scenario, `tsm-scenario-cloudopsbench`, is a `dlr-state` model for Kubernetes root-cause diagnosis (754 cases); its TSM surface is **3 tools** (`state_model_query` · `dlr_search_consensus` · `dlr_search_sop`). The TSM side swaps mechanically — its own store and its own port, so both scenarios can coexist while the birdmini server stays on 28795:
+### Another scenario — Cloud-OpsBench (K8s RCA)
+
+The second shipped scenario, `tsm-scenario-cloudopsbench`, is a `dlr-state` model for Kubernetes root-cause diagnosis (754 cases); its TSM surface is **3 tools** (`state_model_query` · `dlr_search_consensus` · `dlr_search_sop`). The TSM side swaps mechanically — its own store and its own port, so both scenarios can coexist while the birdmini server stays on 28795:
 
 ```bash
 npm i -g tsm-scenario-cloudopsbench

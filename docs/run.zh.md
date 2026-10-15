@@ -4,6 +4,8 @@
 > 背景见叙事四篇（[01](01-background.zh.md) → [04](04-application.zh.md)）；两棵树的就地说明书：[TSM Core Service](<../TSM Core Service/README.md>)、[DSH-based Agent Service](<../DSH-based Agent Service/README.md>)。
 > 英文版：[run.md](run.md)
 
+**目录**：[0](#0-全局图) · [1](#1-起后端幂等) · [2](#2-跑一道题headless) · [2.5](#25-跑考试dsh-tsm-eval) · [3](#3-web-对话) · [4](#4-状态面) · [5](#5-图后端neo4j-缺席时变什么) · [6](#6-排障表) · [7](#7-纪律) · [8](#8-从零开跑npm-走查)
+
 ## 0. 全局图
 
 ```
@@ -40,7 +42,7 @@ bash "DSH-based Agent Service/dsh_dlr/run_one.sh" <qid> "<question>"
 - 产物：`tmp_scripts/dsh_smoke/<stamp>_<qid>_dlr.ndjson`（`--json` 事件流）+ 同名 `.err`。
 - 自动预检后端；后端不可达**响亮退出**（exit 3），不会烧模型调用。
 - 会话日志：`DSH-based Agent Service/.dsh-home/sessions/<项目目录>/<session-id>/session.v4.jsonl.zstd`（**多帧 zstd**，取证解码器 `DSH-based Agent Service/scripts/decode_session_log.cjs`）。
-- **跑一批**（并行 → 判定 → 统计）：见 `scenarios/birdminidev/results/README.md`「一轮怎么跑」。
+- **跑一批**（一批 4 题、批间停下报数；批内并发派发带内存闸 → 判定 → 统计）：见 `scenarios/birdminidev/results/README.md`「一轮怎么跑」。
 
 ## 2.5 跑考试（dsh-tsm-eval）
 
@@ -51,7 +53,7 @@ node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" doctor             
 node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" all --qids 1471,27 --out tmp_scripts/smoke
 ```
 
-- 默认落 `<场景>/eval/runs/` —— **`tsm stats` 永不会扫到**；`--ledger` 才写 `results/`，且超 5 题须 `--yes`（批量纪律）。
+- 默认落 `<场景>/eval/runs/` —— **`tsm stats` 永不会扫到**；`--ledger` 才写 `results/`，且超 4 题须 `--yes`（批量纪律）。
 - `report.json` / `report.md` 在 grade 的 CSV 之上补：过程指标、无效轮分离（TRANSPORT / 超时）、会话日志取证。
 - 完整参考：[dsh-tsm-eval README](../DSH-based%20Agent%20Service/dsh-tsm-eval/README.zh.md)。
 
@@ -116,13 +118,13 @@ curl -s http://127.0.0.1:28795/status
 
 ## 7. 纪律
 
-- **运行态 = dsh 宿主 + MCP 面 + 状态面；开发态 = `tsm` CLI**（`tsm build` / `tsm verify` / `tsm viz` / `tsm coverage` / `tsm scenario`）。
+- **运行态 = dsh 宿主 + MCP 面 + 状态面；开发态 = `tsm` CLI**（`tsm build` / `tsm verify` / `tsm grade` / `tsm stats` / `tsm viz` / `tsm coverage` / `tsm scenario`）。
   `tsm viz [--open] [--db <库>]` 生成自包含的 DLR 图谱页（开发态看建模：LE/PE/ARCS/PAS，点击 PE 看列映射），产物在 `<DATA_DIR>/viz/dlr-graph.html`。
 - **服务由项目主手动启停**；本手册的命令都可**重复执行**（幂等是设计目标）。
 - 改配置（patch / 插件）→ 重启对应宿主；**改 L3 源 `sources/sop.md` → `tsm build sop` 重建索引后即生效**（不再需要重启宿主；原 sync_sop.sh 已退役）。
 - 路径与数据目录（全部可 env 覆盖）：`TSM_DATA_DIR`（向量库/缓存/viz；仓库内默认 `<服务>/.store`，安装态 `~/.tsm`）· `TSM_DATASET_DIR`（默认仓库根）· `TSM_SCENARIO`（路径或包名）· `TSM_OUT_DIR`（场景写入落点）· `TSM_MODEL_DIR` · `TSM_STORE_DIR` · `TSM_CACHE_DIR` · `TSM_MCP_URL` · `TSM_GRAPH_BACKEND`。
 - 临时产物一律进 `tmp_scripts/`，或随用随删。
-- **跑一批题 + 判定**：`run_batch.sh --qids ... --jobs 3` → `tsm grade --run <批次目录>`；判据三层、翻盘口径与迁移期纪律（5 题一批 / 每题最多两遍 / 节写完必须复跑 / 全量重判）见 [eval.zh.md](eval.zh.md) §五。
+- **跑一批题 + 判定**：`run_batch.sh --qids ... --jobs 4` → `tsm grade --run <批次目录>`；判据三层、翻盘口径与迁移期纪律（**4 题一批** / 每题最多两遍 / 节写完必须复跑 / 全量重判）见 [eval.zh.md](eval.zh.md) §五。
 
 ## 8. 从零开跑（npm 走查）
 
@@ -214,7 +216,9 @@ dsh web                # 右下角状态卡两盏灯应全绿
 dsh --profile headless --json "Question: What is the ratio of customers who pay in EUR against customers who pay in CZK?"
 ```
 
-**另一场景 —— Cloud-OpsBench（K8s 根因诊断）。** 随包的第二场景 `tsm-scenario-cloudopsbench` 是 K8s RCA 的 `dlr-state` 模型（754 例）；TSM 侧是 **3 工具**（`state_model_query` · `dlr_search_consensus` · `dlr_search_sop`）。TSM 侧换法是机械式的——独立 store、独立端口，两个场景可并存（birdmini 服务继续留在 28795）：
+### 另一场景 —— Cloud-OpsBench（K8s 根因诊断）
+
+随包的第二场景 `tsm-scenario-cloudopsbench` 是 K8s RCA 的 `dlr-state` 模型（754 例）；TSM 侧是 **3 工具**（`state_model_query` · `dlr_search_consensus` · `dlr_search_sop`）。TSM 侧换法是机械式的——独立 store、独立端口，两个场景可并存（birdmini 服务继续留在 28795）：
 
 ```bash
 npm i -g tsm-scenario-cloudopsbench
