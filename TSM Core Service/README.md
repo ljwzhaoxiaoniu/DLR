@@ -1,75 +1,78 @@
-# TSM Core Service（TS/Node）
+# TSM Core Service (TS/Node)
 
-2.0 线的 TSM 服务：**Neo4j（图）+ LanceDB（向量/共识）+ ONNX（编码器）** 的 TypeScript 实现，
-契约 = MCP **7 工具**（L2/L3 工具名与 Python 线不同，见下）。用于插件化（无 Python、无 sidecar）。
+English | [中文](README.zh.md)
 
-> 三级语义建模（TSM）：**L1 = `dlr`**（语义图谱）｜**L2 = `consensus`**（Domain Consensus = 场景所需的、
-> 基于 L1 schema 的一类**非 workflow** 知识：术语/口径/背景，非明细）｜**L3 = `sop`**（题级流程/打法）。
-> 准入判据：非 workflow → consensus；题级流程/打法 → sop。注意："evidence" 是 BIRD 数据集字段名，**不是**范式术语。
+The 2.0 line's TSM service: a TypeScript implementation of **Neo4j (graph) + LanceDB (vectors/consensus) + ONNX (encoder)**,
+contract = the MCP tool surface (**7 tools for `dlr` / 3 for `dlr-state`**, see below; L2/L3 tool names differ from the Python line). Built for pluginization (no Python, no sidecar).
 
-## 目录
+> Three-level semantic modeling (TSM): **L1 = `dlr`** (semantic graph) ｜ **L2 = `consensus`** (Domain Consensus = the kind of **non-workflow** knowledge a scenario needs on top of the L1 schema: terms / conventions / background — no detail rows) ｜ **L3 = `sop`** (question-level playbooks).
+> Admission: non-workflow → consensus; question-level playbooks → sop. Note: "evidence" is a BIRD dataset field name — **not** a paradigm term.
+
+## Layout
 
 ```
 src/
-├── config.ts                    # 路径唯一来源（场景可选择：TSM_SCENARIO）
-├── model/{types,loadDlr}.ts     # L1：DLR YAML → 向量行（逐字对齐 Python 线构建器）
-├── embed/encoder.ts             # TextEncoder：ONNX 本地推理，复刻 sentence-transformers 行为
-├── store/lance.ts               # LanceDB 访问层（entities=L1 语义 / consensus=L2 领域共识）
-├── graph/{physicalSchema,queries,types,loadNeo4j}.ts  # SQLite 类型扫描 / Neo4j 查询 / YAML→Neo4j
+├── config.ts                    # paths' single source (scenario selectable: TSM_SCENARIO)
+├── model/{types,loadDlr}.ts     # L1: DLR YAML → vector rows (verbatim-aligned with the Python line's builder)
+├── embed/encoder.ts             # TextEncoder: local ONNX inference, replicating sentence-transformers behavior
+├── store/lance.ts               # LanceDB access layer (entities=L1 semantics / consensus=L2)
+├── graph/{physicalSchema,queries,types,loadNeo4j}.ts  # SQLite type scan / Neo4j queries / YAML→Neo4j
 ├── queries/{semanticQuery,searchConsensus,searchSop,peMapping,fullDataInfo,executeSql}.ts
-│     + {unwind,sqlWorker}.ts     # 7 个工具的实现；unwind=行级 PE 展开（ARCS.R），sqlWorker=execute_sql 子进程执行器
-├── build/{buildLance,buildConsensus}.ts         # 构建向量表 / 领域共识表
-├── mcp/server.ts                # MCP server（stdio + streamable-http，stateful）
-└── verify/                      # 回归套件（对 fixtures 自证 + MCP 预检）
-scripts/fetch-model.sh           # 从 hf-mirror 拉 ONNX 模型（新机器可复现）
+│     + {unwind,sqlWorker}.ts     # the 7 tools' implementations; unwind=row-level PE expansion (ARCS.R), sqlWorker=execute_sql subprocess runner
+├── build/{buildLance,buildConsensus}.ts         # build the vector table / the consensus table
+├── mcp/server.ts                # MCP server (stdio + streamable-http, stateful)
+└── verify/                      # regression suite (self-proof vs fixtures + MCP precheck)
+scripts/fetch-model.sh           # pull the ONNX model from hf-mirror (reproducible on a fresh machine)
 ```
 
-**场景（scenario）** = 一套完整 TSM 的内容，在仓库 `scenarios/<name>/`（现有 `birdminidev` 与 `cloudopsbench`）：
-`sources/configs/{ER,DLR,RDF}/*.yaml`（L1 建模源）+ `sources/consensus/*.jsonl`（L2 源）+ `sources/sop.md`（L3 源）
-+ `fixtures/*.json`（对照真值）。切换场景：`TSM_SCENARIO=<路径> npx tsx …`。
+**A scenario** = one complete TSM's content, at `scenarios/<name>/` in the repo (currently `birdminidev` and `cloudopsbench`):
+`sources/configs/{ER,DLR,RDF}/*.yaml` (L1 sources; **this line consumes DLR only — ER/RDF are legacy references**) + `sources/consensus/*.jsonl` (L2 sources) + `sources/sop.md` (L3 source)
++ `fixtures/*.json` (reference truths). Switch: `TSM_SCENARIO=<path> npx tsx …`.
+(The COB scenario uses the single-file `dlr-state` shape: `boutique.yaml` / `trainticket.yaml`, no databases/attributes.)
 
-## 一次性准备
+## One-time setup
 
 ```bash
 npm install
-bash scripts/fetch-model.sh        # ONNX 模型 → tmp_scripts/bge-onnx（~95MB，走 hf-mirror）
-cp .env.example .env               # 填 NEO4J_PASSWORD
-# Neo4j 本机实例（本仓库用免安装 zip + 便携 JDK 起在 D:\neo4j，非 Windows 服务）：
+bash scripts/fetch-model.sh        # ONNX model → tmp_scripts/bge-onnx (~95MB, via hf-mirror)
+cp .env.example .env               # fill NEO4J_PASSWORD
+# Neo4j local instance (this repo uses the no-install zip + a portable JDK at D:\neo4j, not a Windows service):
 #   JAVA_HOME=D:\neo4j\jdk-21.0.12.1+1  neo4j-community-5.26.30\bin\neo4j.bat console
-# 或一键：bash "../DSH-based Agent Service/scripts/start_backend.sh"
+# or one-shot: bash "../DSH-based Agent Service/scripts/start_backend.sh"
 ```
 
-## 构建与运行
+## Build and run
 
 ```bash
-npx tsx src/build/buildLance.ts --all        # L1 向量表（11 库 946 行）
-npx tsx src/build/buildConsensus.ts          # L2 领域共识表（11 namespace 91 条，已加工）
-npx tsx src/graph/loadNeo4j.ts --all --wipe  # 图（LE 50 / PE 74 / LA 277 / PA 784 · PAS 37；共 1185 节点）
-npx tsx src/mcp/server.ts --http 28795       # MCP server（dsh 直连；stdio 模式去掉 --http）
+npx tsx src/build/buildLance.ts --all        # L1 vector table (11 databases, 946 rows)
+npx tsx src/build/buildConsensus.ts          # L2 consensus table (11 namespaces, 91 entries)
+npx tsx src/graph/loadNeo4j.ts --all --wipe  # graph (LE 50 / PE 74 / LA 277 / PA 784 · PAS 37; 1,185 nodes)
+npx tsx src/mcp/server.ts --http 28795       # MCP server (dsh connects directly; drop --http for stdio)
 ```
 
-## MCP 工具（7）
+## MCP tools (`dlr` shape, 7)
 
-`dlr_semantic_query`（L1 召回）· `dlr_search_consensus`（L2 领域共识）· **`dlr_search_sop`**（L3，按题检索交付）·
-`get_pe_mapping`（第二跳）· `get_le_attrs` · `get_full_data_info`（下探视图外物理列）· `execute_sql`（**子进程 + 20s 硬超时**，`TSM_SQL_TIMEOUT_MS` 可调）
+`dlr_semantic_query` (L1 recall) · `dlr_search_consensus` (L2 consensus) · **`dlr_search_sop`** (L3, retrieval-delivered) ·
+`get_pe_mapping` (second hop) · `get_le_attrs` · `get_full_data_info` (drill down to unmodeled physical columns) · `execute_sql` (**subprocess + 20s hard timeout**, `TSM_SQL_TIMEOUT_MS` tunable)
 
-> ⚠ L2 工具名沿革：本服务为 `dlr_search_consensus`（历史 Python 实现用 `dlr_search_evidence`——"evidence" 是 BIRD 数据集字段名，非范式术语）。
-> 其余 4 个工具同名同构；L2 的**返回形状与分数口径与历史实现一致**，仅 qid 编号口径不同。
+> The `dlr-state` shape (Cloud-OpsBench) = **3**: `state_model_query` (symptom → model slice) · `dlr_search_consensus` · `dlr_search_sop`.
 
-## 验证（`src/verify/`，全部对 `scenarios/*/fixtures/` 自证，零 Python）
+> ⚠ L2 tool-name lineage: this service uses `dlr_search_consensus` (the historical Python implementation used `dlr_search_evidence` — "evidence" is a BIRD dataset field name, not a paradigm term).
+> The other 4 tools share name and shape; L2's **return shape and score calibers match the historical implementation**, differing only in qid numbering.
 
-| 脚本 | 对照 | 结果 |
+## Verification (`src/verify/`, all self-proof against `scenarios/*/fixtures/`, zero Python)
+
+| Script | Against | Result |
 |---|---|---|
-| `parity_dlr.ts` | YAML→向量行 vs Python 线产物（fixtures manifest） | id/name/PAS 文本逐字一致 |
-| `embed_parity.ts` | Node(ONNX) 编码（与 Python 线比对见 fixtures 历史） | cosine 1.000000（已验） |
-| `tool_parity.ts` | 全链路（LanceDB+Neo4j）vs `dlr_semantic_query` 真值 | **按 id 配对**逐字段对账（位置比对会被新增 LE 误报）；现存 1 处描述漂移 = `LOGICAL.Loan`（真值 fixture 系 09-29 定盘前快照） |
-| `consensus_parity.ts` | L2 检索 vs Python 线真值 | 内容与分数逐位一致 |
-| `pe_mapping_parity.ts` | 第二跳 vs `get_pe_mapping` 真值 | JSON 逐字节一致（含 database_url） |
-| `execute_sql_check.ts` | SQL 执行 vs 真值 | 结果一致 + 拒绝口径一致 |
-| `precheck.ts` | — | 连 MCP server 列工具（供 launcher 预检） |
+| `parity_dlr.ts` | YAML→vector rows vs the Python line's output (fixtures manifest) | id/name/PAS text verbatim identical |
+| `embed_parity.ts` | Node(ONNX) encoding (vs the Python line, via fixtures history) | cosine 1.000000 (verified) |
+| `tool_parity.ts` | the full chain (LanceDB+Neo4j) vs `dlr_semantic_query` truths | **paired by id**, field by field (positional comparison false-alarms on new LEs); 1 known description drift = `LOGICAL.Loan` (its fixture predates the 09-29 caliber) |
+| `consensus_parity.ts` | L2 retrieval vs the Python line's truths | content and scores bit-identical |
+| `pe_mapping_parity.ts` | the second hop vs `get_pe_mapping` truths | JSON byte-identical (incl. database_url) |
+| `execute_sql_check.ts` | SQL execution vs truths | same results + same rejection conventions |
+| `precheck.ts` | — | connects to the MCP server and lists tools (used by launcher prechecks) |
 
-**⚠ 编码坑（已固化在 `TextEncoder`）**：sentence-transformers 用 `do_lower_case=true` 老式分词，
-而 fast tokenizer **不**自动小写 → 大写英文变 `[UNK]`，向量静默偏掉。编码前必须 `toLowerCase()`。
+**⚠ Encoding pitfall (fixed inside `TextEncoder`)**: sentence-transformers uses the old `do_lower_case=true` tokenizer,
+while a fast tokenizer does **not** lowercase automatically → uppercase English becomes `[UNK]` and vectors silently drift. `toLowerCase()` is mandatory before encoding.
 
-**⚠ MCP HTTP 模式**：必须 **stateful**（每会话新建 transport + McpServer 实例）；stateless 与
-dsh/fastmcp 客户端握手不兼容。
+**⚠ MCP HTTP mode**: must be **stateful** (a fresh transport + McpServer per session); stateless is incompatible with dsh/fastmcp clients' handshake.
