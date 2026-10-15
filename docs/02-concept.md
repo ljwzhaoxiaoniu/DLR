@@ -2,6 +2,7 @@
 
 > **In one sentence**: TSM sorts "what it takes to answer a question" into three levels by **who maintains it and when it changes** — data-source level (L1) / domain-consensus level (L2) / business-logic level (L3); **the admission criteria are the governance line**.
 > **Origin**: TSM grew out of research practice in the DLR program; since 2.0 it is a **structural principle** of the product, independent of evaluation.
+> 中文版：[02-concept.zh.md](02-concept.zh.md) ｜ Index: [README.md](README.md)
 
 ## 0. Who TSM + DLR is the answer for
 
@@ -80,13 +81,13 @@ Boundary examples:
 
 ### L3 section admission (decided 2026-09-25)
 
-Writing an L3 section is not free: **every question loads the whole `sop.md`**, and each section adds one more norm to maintain and verify. So section admission has **three tiers**:
+Writing an L3 section is not free: sections are **vector-indexed and retrieved per question** (`dlr_search_sop` returns only the matched section), so a single section no longer has a global cost — but it still adds one more norm to maintain and to verify. So section admission has **three tiers**:
 
 | Tier | Criterion | Basis |
 |---|---|---|
 | **① Dataset defect** | The question / gold / evidence is itself defective | It is the ruling basis; it must be written |
 | **② Failing questions** | **Without the section the question is answered wrong** | The method/convention is missing; it must be written |
-| **③ Expensive questions** | **Without the section the cost is clearly higher than with it** | The section's value is the exploration cost it saves |
+| **③ Expensive questions** | **Without the section the cost is clearly higher than with it (the practice line: above 150k tokens — 15W)** | The section's value is the exploration cost it saves |
 
 All three tiers require **taking the no-section baseline first** (questions that already had no section are the natural baseline); questions answered correctly at a reasonable cost = no evidence → no section. The same ruler applies to **retroactive review** of existing sections — this project used "section ablated, run bare" comparisons on 09-25 to delete six unsupported sections from debit_card.
 
