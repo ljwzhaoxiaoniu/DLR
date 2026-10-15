@@ -139,10 +139,10 @@ async function executeRun(args) {
     limit: args.limit,
   });
   if (rejected.length) console.log(`[run] rejected: ${rejected.join(", ")}`);
-  if (selected.length > 5 && !args.yes && !dryRun) {
-    throw new EvalError(`${selected.length} questions selected - runs over 5 need --yes (5-per-batch discipline)`);
+  if (selected.length > 4 && !args.yes && !dryRun) {
+    throw new EvalError(`${selected.length} questions selected - runs over 4 need --yes (4-per-batch discipline)`);
   }
-  if (selected.length > 5 && !args.yes && dryRun) {
+  if (selected.length > 4 && !args.yes && dryRun) {
     console.log(`[run] WARN ${selected.length} questions selected - a real run would need --yes`);
   }
 

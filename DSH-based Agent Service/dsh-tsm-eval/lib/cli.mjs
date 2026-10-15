@@ -21,7 +21,7 @@ Usage:
 Value flags:
   --qids 1313,1471   question ids from the paper's dataset order (comma-separated)
   --db <name>        all paper questions of one database
-  --all              the whole paper (over 5 questions requires --yes)
+  --all              the whole paper (over 4 questions requires --yes)
   --limit <n>        cap the selected questions
   --jobs <n>         parallel dsh runs (default 4)
   --timeout <sec>    per-question timeout (default 600)
@@ -35,7 +35,7 @@ Value flags:
 Boolean flags:
   --skip-precheck  skip the /status + MCP probe before running
   --dry-run        print argv/cwd/env/landing, start nothing
-  --yes            confirm >5-question runs
+  --yes            confirm >4-question runs
   --force          overwrite an existing run directory
   --no-cache       score: TSM_GOLD_NO_CACHE=1 (recompute gold values)
   --no-session     report: skip session-log facts (path still recorded)

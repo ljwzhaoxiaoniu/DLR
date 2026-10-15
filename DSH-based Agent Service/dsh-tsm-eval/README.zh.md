@@ -38,7 +38,7 @@ node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" doctor
 dsh-eval run --qids 1471 --dry-run
 
 # 2. 跑 + 判 + 报一条龙
-dsh-eval all --qids 1471,27,726,186,234 --out tmp_scripts/smoke5
+dsh-eval all --qids 1471,27,726,186 --out tmp_scripts/smoke4
 ```
 
 （在仓库根执行；装包后 `dsh-eval` = bin 命令）
@@ -71,7 +71,7 @@ run 参数：`--jobs 4` · `--timeout 600`（单题秒数）· `--min-free-mb 70
 └─ report.json / report.md
 ```
 
-**官方台账是显式选项。** 默认落 `eval/runs/`（gitignored，`tsm stats` 永不会扫到）；只有 `--ledger` 才写 `results/`，且**超过 5 题必须 `--yes`**（一批 5 题纪律）。已存在的 run 目录拒绝复用，除非 `--force`。
+**官方台账是显式选项。** 默认落 `eval/runs/`（gitignored，`tsm stats` 永不会扫到）；只有 `--ledger` 才写 `results/`，且**超过 4 题必须 `--yes`**（一批 4 题纪律）。已存在的 run 目录拒绝复用，除非 `--force`。
 
 ## report.json（schema `dsh-tsm-eval/report@1`）
 
@@ -94,7 +94,7 @@ $DSH_HOME/sessions/<cwd-slug>/<session-id>/session.v4.jsonl.zstd
 
 ## 纪律
 
-- **一批 5 题**；超 5 需 `--yes`。TRANSPORT / 被杀轮 = 无效轮，重跑即可，不要当错误读；
+- **一批 4 题**；超 4 需 `--yes`。TRANSPORT / 被杀轮 = 无效轮，重跑即可，不要当错误读；
 - **判据 = `tsm grade`**，单一尺子。`report.json` 原样嵌入其行、从不复判；SOP 评定（✅ / 🔁 / ❌ / ⚠）与台账同口径；
 - ndjson 在 grade 之后被改动会产生**陈旧 CSV**——`parity` 逐字段可查，report 会标 `csv_stale`；
 - 实验轮永不进 `results/`（台账每题取最新一轮）。

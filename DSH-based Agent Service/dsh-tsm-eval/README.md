@@ -41,7 +41,7 @@ node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" doctor
 dsh-eval run --qids 1471 --dry-run
 
 # 2. run + score + report in one go
-dsh-eval all --qids 1471,27,726,186,234 --out tmp_scripts/smoke5
+dsh-eval all --qids 1471,27,726,186 --out tmp_scripts/smoke4
 ```
 
 (from the repo root; `dsh-eval` = the bin once the package is installed)
@@ -74,7 +74,7 @@ Global: `--scenario <path\|pkg>` (default `$TSM_SCENARIO` or the repo's scenario
 └─ report.json / report.md
 ```
 
-**The official ledger is opt-in.** By default runs land in `eval/runs/` (git-ignored, never scanned by `tsm stats`); only `--ledger` targets `results/`, and anything over 5 questions requires `--yes` (the 5-per-batch discipline). An existing run directory is refused unless `--force`.
+**The official ledger is opt-in.** By default runs land in `eval/runs/` (git-ignored, never scanned by `tsm stats`); only `--ledger` targets `results/`, and anything over 4 questions requires `--yes` (the 4-per-batch discipline). An existing run directory is refused unless `--force`.
 
 ## report.json (schema `dsh-tsm-eval/report@1`)
 
@@ -97,7 +97,7 @@ They are **multi-frame zstd** (one frame per append batch; plain zstd decoders r
 
 ## Discipline
 
-- **One batch = 5 questions**; over 5 needs `--yes`. TRANSPORT / killed rounds are invalid — rerun them, do not read them as errors;
+- **One batch = 4 questions**; over 4 needs `--yes`. TRANSPORT / killed rounds are invalid — rerun them, do not read them as errors;
 - **The judge is `tsm grade`** — one ruler. `report.json` embeds its rows and never re-judges; SOP rulings (✅ / 🔁 / ❌ / ⚠) come from the same calibers as the ledger;
 - A round's CSV can go **stale** if the ndjson changed after grading — `parity` detects it (field-by-field), and the report marks `csv_stale`;
 - Experimental runs never go into `results/` (the ledger takes the newest round per question).
