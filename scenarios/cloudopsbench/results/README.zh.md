@@ -1,7 +1,9 @@
 # 跑批结果（结果文档）
 
+[English](README.md) | 中文
+
 > 本目录记录 `cloudopsbench` 的**跑题结果**——结构仿 `birdminidev/results/`：**raw 可追溯 + 单轮汇总 + 逐题明细 + 跨轮统计**，随跑随更新。
-> 产生方式：跑题（`dsh_cob/run_one.sh`；批跑器后续单元）→ `eval/grade.sh`（上游 evaluation.py 评分）→ `eval/stats.mjs`（重建 [STATS.md](STATS.md) + [../DETAIL.md](../DETAIL.md) + `../DETAIL/<家族>.md`）。
+> 产生方式：跑题（`dsh_cob/run_one.sh`；批量为串行一次一题——全量 754 例马拉松已跑、留档 230 轮）→ `eval/grade.sh`（上游 evaluation.py 评分）→ `eval/stats.mjs`（重建 [STATS.md](STATS.md) + [../DETAIL.md](../DETAIL.md) + `../DETAIL/<家族>.md`）。
 
 ## 结构
 
@@ -12,7 +14,7 @@ results/
 └── <run_id>/            # 一轮 = 一个目录（命名 <MMDD>_<HHMM>_<批次名>）
     ├── raw/             # ★ 可追溯：每题一个 run 目录（dsh --json 事件流 + .err + 基准 mcp.jsonl
     │   └── <stamp>_<case>/   #   审计 + instructions.md + meta.yml + case_metadata.json）
-    ├── traces/          # convert.mjs 产物：上游 reference 轨迹（<system>/dsh-tsm/<category>/<case>/）
+    ├── traces/          # convert.mjs 产物：上游 reference 轨迹（<system>/dsh-tsm/<category>/<case>/；`dsh-tsm` = 评分侧模型标签，COB_MODEL 默认值，非 bundle 名）
     ├── <sys>_<cat>_questions.csv · _summary.json · _details.json · _group.md   # 每家族的评分产物
     ├── questions.csv    # 各组拼合的逐题明细（机器可读）
     └── summary.md       # 单轮汇总（家族指标表 + 逐题行）
@@ -31,7 +33,7 @@ results/
 ## 怎么更新
 
 ```bash
-# 1) 跑题（单题示例；批跑器后续单元直接落 raw/）
+# 1) 跑题（单题示例；批量跑法 = 串行一次一题、逐轮落 raw/）
 bash "DSH-based Agent Service/dsh_cob/run_one.sh" boutique runtime 1
 # 2) 归轮到 results/<run_id>/raw/ 后评分（--runs-root 扫 raw/）
 bash scenarios/cloudopsbench/eval/grade.sh --runs-root scenarios/cloudopsbench/results/<run_id>/raw \
