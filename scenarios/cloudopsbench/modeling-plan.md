@@ -1,6 +1,6 @@
 # Cloud-OpsBench — TSM Modeling Plan (L1 · dlr-state)
 
-> **Status**: 2026-10-10 — the L1 model is in place (**two per-system files**); the serving path, the scorer adapter and the results ledger have landed; the L3 gate is untriggered.
+> **Status**: as-built, 2026-10-15 — the L1 model is in place (**two per-system files**); the serving path, the scorer adapter and the results ledger have landed; the **L3 gate has since fired** (`sources/sop.md`, 5 sections) and the **full sweep is complete — 754/754 coverage, JRA 752/754 (99.7%)**. Everything below is kept as the modeling record.
 > **Provenance**: benchmark README (layout / tool surface / metrics) + one sampled case per Boutique family (all 8) + cache scans over all 754 cases + the scorer internals (`agents/*/evaluation_utils`) + the service rosters and call graphs read edge-by-edge from the snapshots' own inputs — visible side only; gold / answer-side material never feeds the model.
 > **中文版**: [modeling-plan.zh.md](modeling-plan.zh.md)
 
@@ -70,7 +70,7 @@ No new tool is needed on either side: the semantic layer can only **point** — 
 
 ## 3. Runtime usage (guide, not query)
 
-- **Dual-path parallel recall** — the first ReAct step issues `dlr_search_consensus` (L2: symptom → entry chain + reading rules) and `state_model_query` (L1: objects / surfaces / call edges) **together**, cross-validates, then walks. TSM's levels anchor in **parallel, not sequentially**; when an L3 surface exists it joins the same step — this scenario's tool surface carries L1 + L2 only (L3 gate untriggered). L1 recall may be off on bare symptom wording (templates overload across chains); the L2 chain entry corrects it.
+- **Dual-path parallel recall** — the first ReAct step issues `dlr_search_consensus` (L2: symptom → entry chain + reading rules) and `state_model_query` (L1: objects / surfaces / call edges) **together**, cross-validates, then walks. TSM's levels anchor in **parallel, not sequentially**; when an L3 surface exists it joins the same step — this scenario's tool surface carries L1 + L2 + L3 (`dlr_search_sop`, 5 sections, written once the walk SOPs were admitted). L1 recall may be off on bare symptom wording (templates overload across chains); the L2 chain entry corrects it.
 - **Anchor-first, then pruned reads** — the first scan (usually the pods listing's RESTARTS/READY outlier row) locates the anomaly carrier; from there every read is anchored.
 - **First break wins** — the first surface whose observation contradicts expectation is the break point; the conclusion is component + mechanism, submitted in the benchmark's contract JSON (top-3 predictions; Rank 1 is scored).
 
@@ -103,12 +103,12 @@ No new tool is needed on either side: the semantic layer can only **point** — 
 ## 7. Level split & authoring discipline
 
 - **L1** (this model): read out of the data source; two files; grows by correction, stabilizes over time.
-- **L2** (`sources/consensus/kubernetes.jsonl`, 13 entries): schema-level reading rules **plus the symptom→chain mappings** (admission criterion #2: question wording ↔ model terms), incl. the placement reading (pods listing / detail → node faces, kid7). Never beyond the dataset's own information.
+- **L2** (`sources/consensus/kubernetes.jsonl`, 15 entries): schema-level reading rules **plus the symptom→chain mappings** (admission criterion #2: question wording ↔ model terms), incl. the placement reading (pods listing / detail → node faces, kid7). Never beyond the dataset's own information.
 - **L3** (`sources/sop.md`): case-by-case walk playbooks, one section per symptom wording; gated (bare-run baseline + evidence of need), never derived from answers. Positioned as the business team's layer — maintained on top of a stable L1/L2 to raise generalization, accuracy and robustness as cases accumulate.
 
 ## 8. Open items
 
-1. A 5-case cross-family batch through the tracked flow; batch runner (one benchmark-MCP boot per case — a port pool for parallelism).
-2. L2 grows on run evidence.
+1. ~~A 5-case cross-family batch through the tracked flow; batch runner~~ — **done** (2026-10-14): the tracked flow ran the **full 754-case sweep**, serially one case at a time (memory-safety mode; no port pool was needed), 230 rounds archived in `results/`.
+2. L2 grows on run evidence — **now 15 entries**; further growth follows new case classes.
 3. If the snapshot ever moves (new pin): re-check the two capability facts that live in code — the code-tool hard gate and the pre-render sets.
-4. **PE → technical LE (direction, tentative)** — aggregate an object's observation surfaces (PEs) into a *technical LE* and connect it with its *business LE*, to enrich the semantics the graph carries (the v3 carrier / observer split already does this for part of each service). Noted 2026-10-12; revisit — and adjust as needed — after real evaluation runs.
+4. **PE → technical LE (direction, tentative)** — aggregate an object's observation surfaces (PEs) into a *technical LE* and connect it with its *business LE*, to enrich the semantics the graph carries (the v3 carrier / observer split already does this for part of each service). Noted 2026-10-12; the real evaluation has since landed (754/754) — this can now be revisited.
