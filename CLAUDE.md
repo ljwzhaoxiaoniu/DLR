@@ -25,7 +25,7 @@ bash "DSH-based Agent Service/dsh_dlr/run_web.sh"                    # Web 对�
 
 ```
 # 2.0（本分支）
-dsh（headless / web）→ MCP（7 工具）→ TSM Core Service（LanceDB + Neo4j）→ 物理层（数据集 SQLite）
+dsh（headless / web）→ MCP（dlr：7 工具 · dlr-state：3 工具）→ TSM Core Service（LanceDB + 图后端：内存默认 / Neo4j 兼容）→ 数据层（数据集 SQLite · 基准快照）
 ```
 
 ---
@@ -69,10 +69,10 @@ dsh（headless / web）→ MCP（7 工具）→ TSM Core Service（LanceDB + Neo
 ```bash
 bash "DSH-based Agent Service/scripts/start_backend.sh"               # 起后端（Neo4j + TS MCP，幂等）
 bash "DSH-based Agent Service/dsh_dlr/run_one.sh" <qid> "<question>"  # 单题（自动预检）
-bash "DSH-based Agent Service/scripts/run_batch.sh" --qids <q1>,<q2> --jobs 3   # 跑一批（产物进 scenarios/<场景>/results/）
+bash "DSH-based Agent Service/scripts/run_batch.sh" --qids <q1>,<q2> --jobs 4   # 跑一批（4 题/批；默认 4 并发；产物进 scenarios/<场景>/results/）
 bash "DSH-based Agent Service/dsh_dlr/run_web.sh"                     # Web 对话
 cd "TSM Core Service" && node bin/tsm.mjs grade --run "<批次目录>"    # 判定 → questions.csv + summary.md（口径见 docs/eval.zh.md §五）
-cd "TSM Core Service" && npx tsx src/verify/precheck.ts               # 后端预检（应列出 7 工具）
+cd "TSM Core Service" && npx tsx src/verify/precheck.ts               # 后端预检（dlr 应列出 7 工具；dlr-state 3 工具）
 node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" doctor   # 考试系统自检（11 项；任一失败非零退出）
 node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" all --qids <q1>,<q2> --out tmp_scripts/<目录>  # 跑+判+报一条龙（默认不进台账；--ledger 才进，且 >5 题需 --yes）
 ```
