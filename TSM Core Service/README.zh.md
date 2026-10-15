@@ -37,8 +37,9 @@ scripts/fetch-model.sh           # 从 hf-mirror 拉 ONNX 模型（新机器可�
 npm install
 bash scripts/fetch-model.sh        # ONNX 模型 → tmp_scripts/bge-onnx（~95MB，走 hf-mirror）
 cp .env.example .env               # 填 NEO4J_PASSWORD
-# Neo4j 本机实例（本仓库用免安装 zip + 便携 JDK 起在 D:\neo4j，非 Windows 服务）：
-#   JAVA_HOME=D:\neo4j\jdk-21.0.12.1+1  neo4j-community-5.26.30\bin\neo4j.bat console
+# Neo4j —— 任意本地 Bolt 端点均可；开发机参考做法：免安装 zip + 便携 JDK
+# （非 Windows 服务），路径自定，例如：
+#   JAVA_HOME=<neo4j目录>\jdk-21.0.12.1+1  <neo4j目录>\neo4j-community-5.26.30\bin\neo4j.bat console
 # 或一键：bash "../DSH-based Agent Service/scripts/start_backend.sh"
 ```
 

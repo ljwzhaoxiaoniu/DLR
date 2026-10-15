@@ -72,7 +72,7 @@ dlr-state 形态 = **3 工具**（`state_model_query` 症状→模型切片 / `d
 
 ### 先决（本包外的两件）
 
-1. **基准检出**：外挂克隆上游（快照 `ea05daf`）到仓库外（默认 `D:\Code_Proj\Cloud-OpsBench`；`COB_DIR` 可覆盖）——不随包分发；
+1. **基准检出**：外挂克隆上游（快照 `ea05daf`）到仓库外（开发机示例 `D:\Code_Proj\Cloud-OpsBench`；`COB_DIR` 可覆盖）——不随包分发；
 2. **语义后端**：本包经 TSM Core Service 构建（本包可 `npm i tsm-scenario-cloudopsbench` 后按**包名**解析）：
 
 ```bash

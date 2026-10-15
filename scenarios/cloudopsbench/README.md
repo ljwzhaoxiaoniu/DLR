@@ -72,7 +72,7 @@ The dlr-state shape = **3 tools** (`state_model_query` symptom→model slice / `
 
 ### Prerequisites (two things outside this package)
 
-1. **The benchmark checkout**: clone upstream (pin `ea05daf`) outside the repo (default `D:\Code_Proj\Cloud-OpsBench`; `COB_DIR` overrides) — not shipped;
+1. **The benchmark checkout**: clone upstream (pin `ea05daf`) outside the repo (dev-machine example `D:\Code_Proj\Cloud-OpsBench`; `COB_DIR` overrides) — not shipped;
 2. **The semantic backend**: build via TSM Core Service (either from this package — `npm i tsm-scenario-cloudopsbench`, resolved by package name):
 
 ```bash

@@ -36,8 +36,9 @@ scripts/fetch-model.sh           # pull the ONNX model from hf-mirror (reproduci
 npm install
 bash scripts/fetch-model.sh        # ONNX model → tmp_scripts/bge-onnx (~95MB, via hf-mirror)
 cp .env.example .env               # fill NEO4J_PASSWORD
-# Neo4j local instance (this repo uses the no-install zip + a portable JDK at D:\neo4j, not a Windows service):
-#   JAVA_HOME=D:\neo4j\jdk-21.0.12.1+1  neo4j-community-5.26.30\bin\neo4j.bat console
+# Neo4j — any local Bolt endpoint works; dev-machine reference: no-install zip + a portable JDK
+# (not a Windows service), path of your choosing, e.g.:
+#   JAVA_HOME=<neo4j-dir>\jdk-21.0.12.1+1  <neo4j-dir>\neo4j-community-5.26.30\bin\neo4j.bat console
 # or one-shot: bash "../DSH-based Agent Service/scripts/start_backend.sh"
 ```
 

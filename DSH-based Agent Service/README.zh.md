@@ -40,7 +40,7 @@ DSH-based Agent Service/
 |---|---|
 | dsh | `@deepseek-ai/dsh@0.2.0-rc.2`（当前适配版；500 题跑批产出于 `0.1.7-alpha.1`、**未重跑**；升级前重跑 `--dump-config` 核行 id） |
 | 语义后端 | `TSM Core Service/`（`src/mcp/server.ts --http 28795`，需 Neo4j 在跑） |
-| Neo4j | 本机 `D:\neo4j`（免安装 zip + 便携 JDK）或任意 bolt 端点 |
+| Neo4j | 任意本地 bolt 端点（开发机参考：免安装 zip + 便携 JDK，路径自定，非 Windows 服务） |
 
 ## 运行
 

@@ -40,7 +40,7 @@ DSH-based Agent Service/
 |---|---|
 | dsh | `@deepseek-ai/dsh@0.2.0-rc.2` (current target; the 500-question run was produced on `0.1.7-alpha.1` and was **not re-run**; re-check `--dump-config` rows before upgrading) |
 | Semantic backend | `TSM Core Service/` (`src/mcp/server.ts --http 28795`; Neo4j running) |
-| Neo4j | local `D:\neo4j` (no-install zip + portable JDK) or any Bolt endpoint |
+| Neo4j | any local Bolt endpoint (dev-machine reference: no-install zip + portable JDK under a path of your choosing, not a Windows service) |
 
 ## Run
 
