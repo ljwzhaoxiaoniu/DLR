@@ -1,6 +1,6 @@
 {
   "name": "tsm-core-dlr",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "type": "module",
   "description": "TSM Core Service (DLR): the semantic-layer backend for the Three-Level Semantic Modeling framework — LanceDB vectors + in-process memory graph (Neo4j optional) + MCP server with 7 tools. CLI: tsm serve|status|build|verify|scenario|fetch-model|grade|stats|coverage|viz.",
   "license": "MIT",
