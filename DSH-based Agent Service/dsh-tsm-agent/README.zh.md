@@ -98,4 +98,4 @@ patch 行按 `id` 合并，覆写时 `config` 是**整块替换**——要保留
 
 `preset-dlr` 的技能目录取自 `DLR_SKILLS_DIR`，由本 bundle 的 node 半在 boot 期设置（按包位置推导，**不含机器相关路径**）；启动器可覆盖。如果你依赖 `preset-dlr` 的技能加载，请保持 `dlr-status` 行启用，或自行设置该变量。
 
-仓库带 `dsh-plugin` GitHub topic，供 DSH 插件目录（deepseek1024.com / 1024 Store）收录：目录按静态校验（`dsh.bundle.patch` + 补丁文件已提交）自动识别；包**发布到 npm 后**才显示安装命令，之前以浏览模式收录。
+仓库带 `dsh-plugin` GitHub topic，供 DSH 插件目录（deepseek1024.com / 1024 Store）收录：目录按静态校验（`dsh.bundle.patch` + 补丁文件已提交）识别，包已发布上 npm（`dsh-tsm-agent@0.2.1`）。直接从 npm 安装：`dsh plugin --profile <p> add dsh-tsm-agent`（目录页自动填的安装命令依赖上游巡检任务，目前停摆）。

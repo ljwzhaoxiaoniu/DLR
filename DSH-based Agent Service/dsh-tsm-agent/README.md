@@ -98,4 +98,4 @@ Patch rows merge by `id`, and a `config` block replaces wholesale on override â€
 
 `preset-dlr` reads its skills directory from `DLR_SKILLS_DIR`, which this bundle's node half sets at boot (derived from the package location, never a machine-specific path); launchers may override it. Keep the `dlr-status` row enabled if you rely on `preset-dlr`'s skill loading, or set the variable yourself.
 
-The repository carries the `dsh-plugin` GitHub topic for the DSH plugin directory (deepseek1024.com / 1024 Store); the directory picks the package up through its static validation (`dsh.bundle.patch` + committed patch files) and shows an install command once the package is published to npm â€” browse-only until then.
+The repository carries the `dsh-plugin` GitHub topic for the DSH plugin directory (deepseek1024.com / 1024 Store); the directory lists the package via its static validation (`dsh.bundle.patch` + committed patch files), and the package is published on npm (`dsh-tsm-agent@0.2.1`). Install straight from npm: `dsh plugin --profile <p> add dsh-tsm-agent` (the directory page's auto-populated install command depends on an upstream crawler that is currently stalled).
