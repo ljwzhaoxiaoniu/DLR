@@ -1,0 +1,9 @@
+{
+  "name": "dsh-tsm-agent",
+  "private": true,
+  "dsh": {
+    "bundle": {
+      "patch": "./DSH-based Agent Service/dsh-tsm-agent/cordis.patch.yml"
+    }
+  }
+}
