@@ -1,5 +1,7 @@
 # 场景 1 · NL2SQL（数据集 `birdminidev`）—— TSM + DLR 怎么用
 
+[English](README.md) | 中文
+
 > **定位**：把 TSM（三级语义建模）+ DLR 用到真实 NL2SQL 数据集上的**第一个场景**。
 > **规范与原则**（LE / PE / 库表如何抽象成两层 / 建模规则与自检）在 **[docs/03-design.zh.md](../../docs/03-design.zh.md)**；
 > 本文按用法顺序展开：**数据集介绍（含数据集缺陷）→ 建模应用思路 → 应用结果 → 处理和使用流程 → 实测结果**。
@@ -22,7 +24,6 @@
 > 数据集自身的问题（gold 缺陷 / 样本窗口 / 描述失真）由跑题暴露出来，每题一节 L3 `sop.md` 裁定承载——
 > **数据集的错**在这里，**我们为什么这么答**也在这里（逐题来龙去脉见并列的 [DETAIL.md](DETAIL.md)）。
 
-<!-- mistakes:begin -->
 | 题号 | 库 | 评定 | 类型 | 问题（截） | 裁定（全文见 [DETAIL.md](DETAIL.md)） |
 |---|---|---|---|---|---|
 | q27 | california_schools | 🔁 翻盘 | 难题 | What is the average score in writing for the schools tha | "Communication number" is the school's phone number -- there is no separate contact table. Date reading: "opened after 1991" means |
@@ -99,7 +100,7 @@
 | q218 | toxicology | 🔁 翻盘 | 数据集问题 | What percentage of carcinogenic-type molecules does not | Of the **152** carcinogenic molecules only **one** contains fluorine, so **151/152 = 99.34210526315789%** do not. The dataset's ow |
 | q234 | toxicology | 🔁 翻盘 | 数据集问题 | How many bonds which involved atom 12 does molecule TR00 | Molecule TR009 has **3** bonds involving its atom `TR009_12` (via `connected`). The dataset's own query tests `'_1'` and `'_2'` (a |
 | q263 | toxicology | 🔁 翻盘 | 数据集问题 | What is the composition of element chlorine in percentag | Among the single-bond molecules, count each molecule **once** and take chlorine atoms over all their atoms: **3.4823684499615513** |
-<!-- mistakes:end -->
+> 本表随跑批由 `tsm stats` 同步**英文侧**（README.md 的 `mistakes` 标记块）；此处为中文阅读镜像，**以英文侧为准**（逐题来龙去脉见 [DETAIL.md](DETAIL.md)）。
 
 ## 二、建模应用思路（原料 → 三层）
 
@@ -131,7 +132,7 @@ evidence 的剩余 ────────────────────�
 | superhero | 3 | Superhero ← superhero+colour+race+gender+publisher+alignment ｜ Power ← hero_power+superpower ｜ Attribute ← hero_attribute+attribute | 2 | 10/31 | 5 张碎片维度表收敛进主 LE（"碎表集中"样板）；Power/Attribute 独立 LE + PAS |
 | thrombosis_prediction | 1 | Patient ← Patient+Laboratory+Examination | 0 | 3/64 | 3 表共享 `PatientID` 锚键 → **1 LE + 3 PE + 0 PAS**（ARCS 隐式编码 JOIN） |
 | toxicology | 3 | Molecule ← molecule ｜ Atom ← atom ｜ Bond ← bond+connected | 3 | 4/11 | bond+connected 合成一个 LE；Atom/Molecule 各自 |
-| **合计** | **50** | **74 PE** | **37** | 1185 节点 | |
+| **合计** | **50** | **74 PE** | **37** | 1,185 节点（LE 50 + PE 74 + LA 277 + PA 784）+ PAS 37 关系 | |
 
 ### 行级 PE（`ARCS.R = unwind`）：多槽位 FK 的表达 — 首个用例（football 首发槽位）
 
@@ -189,6 +190,17 @@ evidence 的剩余 ────────────────────�
 - **判定**：执行 gold SQL 得期望值 ↔ agent 答案（规则判定；数值容差 + 字符串归一；存疑进人工/仲裁清单）。
 - **规模**：500 题 × 单题约 1.5 分钟；并发 N 路时 ≈ 500×1.5/N 分钟（N=6 ≈ 2 小时）。
 
+### L3 写作实勘（案例）
+
+上述纪律（按需加固 / 写完复跑 / Expected 一致性 / 范围限定）都出自具体跑题——实勘案例在此：
+
+| 案例 | 发生了什么 | 钉下的教训 |
+|---|---|---|
+| q37（加固·实测） | 节命中、口径也对，agent 仍烧 SQL 反复自核边界——只重写该节（岔路 + 可测后果 + "已定，按此作答"） | **379k → 62k tokens、SQL 21 → 2 次**——预算在改节上 |
+| q27（Expected 不一致） | 正文写"只列有成绩的学校"，`Expected` 却带无成绩学校 → 按节口径作答反被判 **WRONG** | `Expected` 的每个值必须落在本节口径的答案集内 |
+| q1136 · q1472（节迟到） | 节分别在跑批后 11 分钟 / 4.5 小时才落——台账那行是靠假阳性撑着的 ✅ | **节写完必须复跑该题**；全量重判后才暴露 |
+| q716（跨题移植） | "无主的行留在分母"从 posts 百分比题被搬去 comments 百分比题 | 可泛化的告诫必须带**范围限定句**——属于哪题、在哪不适用 |
+
 **开发态命令**：
 
 ```bash
@@ -204,7 +216,6 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 
 > 跑批结果按轮次留档在 [`results/`](results/)：raw 可追溯日志 + 判定明细 + 单轮汇总；综合统计由 `tsm stats` 汇总生成，并同步一份到本节。
 
-<!-- stats:begin -->
 ![实测结果综合统计](results/stats.svg)
 
 **评定**（按 SOP 裁定 · 500 题口径）：✅ 正确 426 ｜ 🔁 翻盘 74 ｜ ❌ 错误 0 ｜ ⚠️ 待仲裁 0 ｜ ⬜ 未跑 0　—　**已跑 500 题全部正确**
@@ -213,8 +224,7 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 
 均值 **6.0 步 / 10.0 工具调用 / 每题 73,307 tokens** ｜ 跑题覆盖度 **500/500 题**（11/11 库有产物）
 
-> 本块由 `tsm stats` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 74 道数据集缺陷题的比对记录）也在这两处可查。
-<!-- stats:end -->
+> 本块随跑批由 `tsm stats` 同步**英文侧**（README.md 的 `stats` 标记块）；此处为中文阅读镜像，**数值以英文侧为准**。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 74 道数据集缺陷题的比对记录）也在这两处可查。
 
 **怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。
 
