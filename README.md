@@ -12,7 +12,7 @@ A checkout ships **five npm packages** — the semantic service, the dsh bundle,
 
 | Part · npm | What it is |
 |---|---|
-| `TSM Core Service/` · [`tsm-core-dlr`](https://www.npmjs.com/package/tsm-core-dlr) | The semantic service (TypeScript): LanceDB vectors + Neo4j graph + ONNX encoder, exposing **7 MCP tools** over streamable HTTP |
+| `TSM Core Service/` · [`tsm-core-dlr`](https://www.npmjs.com/package/tsm-core-dlr) | The semantic service (TypeScript): LanceDB vectors + graph backend (in-memory or Neo4j) + ONNX encoder, exposing **7 MCP tools** (`dlr`; 3 for `dlr-state` scenarios) over streamable HTTP |
 | `DSH-based Agent Service/dsh-tsm-agent/` · [`dsh-tsm-agent`](https://www.npmjs.com/package/dsh-tsm-agent) | The **dsh bundle**: MCP semantic gateway + the scenario-independent paradigm skill + the TSM status overlay + the agent rules (launchers live in `DSH-based Agent Service/`) |
 | `DSH-based Agent Service/dsh-tsm-eval/` · [`dsh-tsm-eval`](https://www.npmjs.com/package/dsh-tsm-eval) | The **exam system**: runs a scenario's exam paper through dsh headless, scores it with `tsm grade`, and emits a replayable report (result + process + session-log forensics) |
 | `scenarios/birdminidev/` · [`tsm-scenario-birdmini`](https://www.npmjs.com/package/tsm-scenario-birdmini) | Scenario package — BIRD mini-dev (11 databases / 500 questions): three-level sources + exam paper + graded results. **500/500 judged correct** (426 matching gold exactly + 74 dataset-defect rulings carried by L3 clauses) |
@@ -101,12 +101,12 @@ bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 
 The Harness **Plugin Manager** (Settings → Plugins) installs and selects the bundle in one step; the CLI command above installs the package only. The MCP endpoint is overridable with the `TSM_MCP_URL` environment variable.
 
-The TSM status overlay (bottom-right) shows Neo4j / MCP health, LE/PE/PA counts, vector rows, and the active scenario.
+The TSM status overlay (bottom-right) shows graph-backend / MCP health, LE/PE/PA counts, vector rows, and the active scenario.
 
 ### 4. Batch runs and grading
 
 ```bash
-bash "DSH-based Agent Service/scripts/run_batch.sh" --qids 1471,1472 --jobs 3   # or --db <name> | --all
+bash "DSH-based Agent Service/scripts/run_batch.sh" --qids 1471,1472 --jobs 4   # or --db <name> | --all
 cd "TSM Core Service"
 node bin/tsm.mjs grade --run "<run dir>"    # verdicts → questions.csv + summary.md
 node bin/tsm.mjs stats                      # → results/STATS.md + the DETAIL.md ledger
@@ -131,15 +131,14 @@ dsh (DeepSeek Harness: headless / web)
    │  MCP (streamable-http :28795, 7 tools)
    ▼
 TSM Core Service (TypeScript): LanceDB (vectors) + ONNX encoder (in-process)
-   │  bolt :7687
+   │  graph backend (LE 50 / PE 74 / LA 277 / PA 784 · PAS 37 — birdmini), two tracks:
+   │    · memory  — YAML → in-process graph (default; zero deps)
+   │    · neo4j   — bolt :7687 (optional; enabled by NEO4J_URI; Browser :7474)
    ▼
-Neo4j (graph: LE 50 / PE 74 / LA 277 / PA 784 · PAS 37; Browser :7474)
-   │  sqlite:///
-   ▼
-Dataset (MINIDEV_sqlite, gitignored)
+Dataset (MINIDEV_sqlite, gitignored; benchmark snapshots for dlr-state scenarios)
 ```
 
-Two processes only: Neo4j + the TS MCP server (LanceDB and the encoder are embedded, not services).
+Processes: the TS MCP server always; Neo4j only when the `neo4j` graph backend is in use (the default in this repo's `.env`). LanceDB and the encoder are embedded, not services.
 
 <a id="scenario-packages"></a>
 ## Scenario packages

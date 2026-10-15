@@ -12,7 +12,7 @@
 
 | 部分 · npm 包 | 是什么 |
 |---|---|
-| `TSM Core Service/` · [`tsm-core-dlr`](https://www.npmjs.com/package/tsm-core-dlr) | 语义服务（TypeScript）：LanceDB 向量 + Neo4j 图 + ONNX 编码器，经 streamable-http 暴露 **7 个 MCP 工具** |
+| `TSM Core Service/` · [`tsm-core-dlr`](https://www.npmjs.com/package/tsm-core-dlr) | 语义服务（TypeScript）：LanceDB 向量 + 图后端（内存图或 Neo4j）+ ONNX 编码器，经 streamable-http 暴露 **7 个 MCP 工具**（`dlr`；`dlr-state` 场景为 3 个） |
 | `DSH-based Agent Service/dsh-tsm-agent/` · [`dsh-tsm-agent`](https://www.npmjs.com/package/dsh-tsm-agent) | **dsh bundle**：MCP 语义网关 + 场景无关的范式技能 + TSM 状态浮层 + agent 规则（启动器在 `DSH-based Agent Service/` 下） |
 | `DSH-based Agent Service/dsh-tsm-eval/` · [`dsh-tsm-eval`](https://www.npmjs.com/package/dsh-tsm-eval) | **考试系统**：把场景的考卷经 dsh headless 跑一遍、`tsm grade` 采分、产出可回放报告（结果 + 过程 + 会话日志取证） |
 | `scenarios/birdminidev/` · [`tsm-scenario-birdmini`](https://www.npmjs.com/package/tsm-scenario-birdmini) | 场景包 —— BIRD mini-dev（11 库 / 500 题）：三层源 + 考卷 + 跑批结果。**500/500 评定正确**（426 与 gold 完全一致 + 74 处按 L3 节口径裁定的数据集缺陷） |
@@ -101,12 +101,12 @@ bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 
 Harness 的**插件管理器**（设置 → 插件）一步完成装包 + 启用；上面的 CLI 只装包。MCP 端点可用环境变量 `TSM_MCP_URL` 覆盖。
 
-右下角浮出 TSM 状态卡：Neo4j / MCP 服务灯、LE/PE/PA 计数、向量行数、当前场景。
+右下角浮出 TSM 状态卡：图后端 / MCP 服务灯、LE/PE/PA 计数、向量行数、当前场景。
 
 ### 4. 批跑与判定
 
 ```bash
-bash "DSH-based Agent Service/scripts/run_batch.sh" --qids 1471,1472 --jobs 3   # 或 --db <库名> | --all
+bash "DSH-based Agent Service/scripts/run_batch.sh" --qids 1471,1472 --jobs 4   # 或 --db <库名> | --all
 cd "TSM Core Service"
 node bin/tsm.mjs grade --run "<批次目录>"    # 判定 → questions.csv + summary.md
 node bin/tsm.mjs stats                      # → results/STATS.md + 台账 DETAIL.md
@@ -131,15 +131,14 @@ dsh（DeepSeek Harness：headless / web）
    │  MCP（streamable-http :28795，7 工具）
    ▼
 TSM Core Service（TypeScript）：LanceDB（向量）+ ONNX 编码器（进程内）
-   │  bolt :7687
+   │  图后端（LE 50 / PE 74 / LA 277 / PA 784 · PAS 37 —— birdmini），双轨：
+   │    · memory —— YAML → 进程内内存图（默认；零依赖）
+   │    · neo4j  —— bolt :7687（可选；配了 NEO4J_URI 即启用；Browser :7474）
    ▼
-Neo4j（图：LE 50 / PE 74 / LA 277 / PA 784 · PAS 37；Browser :7474）
-   │  sqlite:///
-   ▼
-数据集（MINIDEV_sqlite，gitignored）
+数据集（MINIDEV_sqlite，gitignored；dlr-state 场景为基准快照）
 ```
 
-只有两个进程：Neo4j + TS MCP server（LanceDB 与编码器内嵌，不是服务）。
+**进程**：TS MCP server 常驻；Neo4j 只在用 Neo4j 图后端时启动（本仓库 `.env` 默认如此）。LanceDB 与编码器内嵌，不是服务。
 
 <a id="场景包"></a>
 ## 场景包
