@@ -8,6 +8,7 @@
  *   场景 overview.html  总视图（自动生成，与 DETAIL.md 同级：关键数卡片 + 逐库覆盖度进度条 + 逐库明细；逐轮等过程数据只在 STATS.md/DETAIL.md）
  *   场景 DETAIL.md      评测明细文档（与 README 并列；见 dev/detail.ts）
  *   场景 README         两个标记块同步：实测结果（stats:）+ 错题记录（mistakes:）
+ *                       ——README 为英文主文，同步内容亦为英文；STATS.md / DETAIL.md / overview.html 维持中文
  *
  * 用法: tsm stats [--no-sync] [--open]
  *
@@ -307,17 +308,31 @@ const md = [
 ].join("\n");
 fs.writeFileSync(OUT_MD, md);
 
-// ── 同步一份进场景 README（标记块之间） ──────────────────────────────
+// ── 同步一份进场景 README（标记块之间；README 为英文主文） ──────────
+/** README 同步块专用英文标签（STATS.md / DETAIL.md / overview.html 保持中文口径） */
+const README_RULING: Record<string, string> = {
+  CORRECT: "✅ correct",
+  OVERTURNED: "🔁 overturned",
+  WRONG: "❌ wrong",
+  PENDING: "⚠️ pending",
+};
+const README_TYPE: Record<string, string> = {
+  "数据集问题": "dataset issue",
+  "难题": "hard question",
+  "建模冲突": "modeling conflict",
+  "其他": "other",
+};
+
 const block = [
-  `![实测结果综合统计](results/stats.svg)`,
+  `![Measured results — aggregate statistics](results/stats.svg)`,
   "",
-  `**评定**（按 SOP 裁定 · ${dataset.length} 题口径）：✅ 正确 ${rTallyFinal("CORRECT")} ｜ 🔁 翻盘 ${rTallyFinal("OVERTURNED")} ｜ ❌ 错误 ${rTallyFinal("WRONG")} ｜ ⚠️ 待仲裁 ${rTallyFinal("PENDING")} ｜ ⬜ 未跑 ${dataset.length - finals.length}　—　**${finals.length && !rTallyFinal("WRONG") && !rTallyFinal("PENDING") ? `已跑 ${finals.length} 题全部正确` : `已跑 ${finals.length} 题：正确 ${rTallyFinal("CORRECT") + rTallyFinal("OVERTURNED")} 题`}**`,
+  `**Ruling** (by SOP clause · all ${dataset.length} questions): ✅ correct ${rTallyFinal("CORRECT")} ｜ 🔁 overturned ${rTallyFinal("OVERTURNED")} ｜ ❌ wrong ${rTallyFinal("WRONG")} ｜ ⚠️ pending ${rTallyFinal("PENDING")} ｜ ⬜ unrun ${dataset.length - finals.length}　—　**${finals.length && !rTallyFinal("WRONG") && !rTallyFinal("PENDING") ? `all ${finals.length} run questions judged correct` : `${finals.length} run: ${rTallyFinal("CORRECT") + rTallyFinal("OVERTURNED")} correct`}**`,
   "",
-  `（🔁 翻盘 = 数据集自身缺陷（gold 未实现题面）按 SOP 逐题裁定为正确——单独计数、不并入 ✅ 正确；每题取最新一轮）`,
+  `(🔁 overturned = the dataset's own defect (gold fails to implement the question), ruled correct under its SOP clause — counted separately, never merged into ✅ correct; latest round per question)`,
   "",
-  `均值 **${avgFinal((r) => r.steps).toFixed(1)} 步 / ${avgFinal((r) => r.tools).toFixed(1)} 工具调用 / 每题 ${fmt(Math.round(avgFinal((r) => r.tokens)))} tokens** ｜ 跑题覆盖度 **${doneTotal}/${dataset.length} 题**（${dbDone.size}/${dbTotal.size} 库有产物）`,
+  `Mean **${avgFinal((r) => r.steps).toFixed(1)} steps / ${avgFinal((r) => r.tools).toFixed(1)} tool calls / ${fmt(Math.round(avgFinal((r) => r.tokens)))} tokens per question** ｜ coverage **${doneTotal}/${dataset.length} questions** (${dbDone.size}/${dbTotal.size} databases have artifacts)`,
   "",
-  `> 本块由 \`tsm stats\` 自动同步。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 ${rTallyFinal("OVERTURNED")} 道数据集缺陷题的比对记录）也在这两处可查。`,
+  `> This block is synced automatically by \`tsm stats\`. **Per-question detail** (ruling / steps / basis & conclusion) in the sibling [DETAIL.md](DETAIL.md); per-round stats [results/STATS.md](results/STATS.md). The **verbatim gold comparisons** (including the ${rTallyFinal("OVERTURNED")} dataset-defect questions) are recorded in both places.`,
 ].join("\n");
 
 // ── 明细文档（DETAIL.md，与 README 并列）+ 错题块 ─────────────────────
@@ -327,14 +342,14 @@ console.log(`[stats] 明细文档 → ${DETAIL_MD}（数据集缺陷 ${mistakes.
 const cell = (s: string) => s.replace(/\|/g, "\\|").replace(/\r?\n+/g, " ").trim();
 const mistakesBlock = mistakes.length
   ? [
-      "| 题号 | 库 | 评定 | 类型 | 问题（截） | 裁定（全文见 [DETAIL.md](DETAIL.md)） |",
+      "| QID | DB | Ruling | Type | Question (excerpt) | Ruling rationale (full text in [DETAIL.md](DETAIL.md)) |",
       "|---|---|---|---|---|---|",
       ...mistakes.map(
         (m) =>
-          `| q${m.qid} | ${m.db} | ${RULING_LABEL[m.ruling] ?? m.ruling} | ${m.types.join(" · ") || "—"} | ${cell(m.question.slice(0, 56))} | ${cell(m.rationale.slice(0, 130))} |`,
+          `| q${m.qid} | ${m.db} | ${README_RULING[m.ruling] ?? m.ruling} | ${m.types.map((t) => README_TYPE[t] ?? t).join(" · ") || "—"} | ${cell(m.question.slice(0, 56))} | ${cell(m.rationale.slice(0, 130))} |`,
       ),
     ].join("\n")
-  : "（暂无：已跑题判定均为 PASS）";
+  : "(none yet: every graded question PASSes)";
 
 if (!NO_SYNC) {
   const readmePath = SCENARIO_README;
