@@ -6,7 +6,7 @@
 
 `dsh-tsm-eval` runs a scenario's exam paper (`scenarios/<name>/eval/questions.jsonl`) through **dsh headless**, scores every answer with **`tsm grade`** (the single judge), and emits a **replayable report**: result + process + session-log forensics. One system serves all scenarios.
 
-This is the 2.0 evaluation pipeline's host half (working name from `docs/eval.md` §8, route 2). It replaces the manual `run_batch.sh` → `tsm grade` → read-the-CSV chain with one command, adds process metrics and forensics the old chain never captured, and lands nothing in the official ledger unless asked to.
+This is the 2.0 evaluation pipeline's host half (working name from `docs/eval.md` §7 item 2 — roadmap route 2). It replaces the manual `run_batch.sh` → `tsm grade` → read-the-CSV chain with one command, adds process metrics and forensics the old chain never captured, and lands nothing in the official ledger unless asked to.
 
 ## Pipeline
 
@@ -104,7 +104,7 @@ They are **multi-frame zstd** (one frame per append batch; plain zstd decoders r
 
 ## Relation to the previous chain
 
-`run_batch.sh` + `run_one.sh` remain in-tree for the historical workflow; `dsh-eval` reproduces their dsh invocation contract field-for-field (argv order, cwd = `dsh_dlr/`, `DSH_HOME` / `DLR_SKILLS_DIR` / `dsh_dlr/.env`) but is cross-platform (no bash/GNU-timeout dependency), knows about TSM_SCENARIO/TSM_OUT_DIR, and adds the report layer. `dsh-eval parity --all-results` proves the reader matches the ledger's CSVs (932/933 rows exact; the one diff is the known stale-CSV round `0929_1359_financial_secC` q186).
+`run_batch.sh` + `run_one.sh` remain in-tree for the historical workflow; `dsh-eval` reproduces their dsh invocation contract field-for-field (argv order, cwd = `dsh_dlr/`, `DSH_HOME` / `DLR_SKILLS_DIR` / `dsh_dlr/.env`) but is cross-platform (no bash/GNU-timeout dependency), knows about TSM_SCENARIO/TSM_OUT_DIR, and adds the report layer. `dsh-eval parity --all-results` proves the reader matches the ledger's CSVs (199 rounds · 933/933 rows compared; the only diffs — 10 fields — sit in the known stale-CSV round `0929_1359_financial_secC`, q186).
 
 ## Troubleshooting
 

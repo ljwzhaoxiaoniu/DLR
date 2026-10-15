@@ -6,7 +6,7 @@
 
 `dsh-tsm-eval` 把一套场景的考卷（`scenarios/<名>/eval/questions.jsonl`）跑过 **dsh headless**，用 **`tsm grade`**（唯一判据）逐题判定，产出**可回放报告**：结果 + 过程 + 会话日志取证。一套系统通吃所有场景。
 
-这是 2.0 评测流水线的宿主侧（`docs/eval.md` §8 路线 2 的落地，工作名沿用）。它把手工链（`run_batch.sh` → `tsm grade` → 人看 CSV）合并成一条命令，补上旧链从未采集的过程指标与取证，并且**默认不往官方台账写任何东西**。
+这是 2.0 评测流水线的宿主侧（`docs/eval.md` §七第 2 条路线 2 的落地，工作名沿用）。它把手工链（`run_batch.sh` → `tsm grade` → 人看 CSV）合并成一条命令，补上旧链从未采集的过程指标与取证，并且**默认不往官方台账写任何东西**。
 
 ## 流水线
 
@@ -101,7 +101,7 @@ $DSH_HOME/sessions/<cwd-slug>/<session-id>/session.v4.jsonl.zstd
 
 ## 与旧链的关系
 
-`run_batch.sh` + `run_one.sh` 保留在树内（历史工作流）；`dsh-eval` 逐字段复刻其 dsh 调用契约（argv 顺序、cwd = `dsh_dlr/`、`DSH_HOME` / `DLR_SKILLS_DIR` / `dsh_dlr/.env`），但跨平台（不依赖 bash / GNU timeout）、认 TSM_SCENARIO/TSM_OUT_DIR，并补报告层。`dsh-eval parity --all-results` 可证读取器与台账 CSV 一致（933 行中 932 行逐值相同；唯一差异是已知陈旧 CSV 轮 `0929_1359_financial_secC` 的 q186）。
+`run_batch.sh` + `run_one.sh` 保留在树内（历史工作流）；`dsh-eval` 逐字段复刻其 dsh 调用契约（argv 顺序、cwd = `dsh_dlr/`、`DSH_HOME` / `DLR_SKILLS_DIR` / `dsh_dlr/.env`），但跨平台（不依赖 bash / GNU timeout）、认 TSM_SCENARIO/TSM_OUT_DIR，并补报告层。`dsh-eval parity --all-results` 可证读取器与台账 CSV 一致（199 轮 · 933/933 行全数比对；差异仅 10 个字段，全部在已知陈旧 CSV 轮 `0929_1359_financial_secC`（q186））。
 
 ## 排障
 
