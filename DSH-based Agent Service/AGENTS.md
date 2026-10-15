@@ -15,12 +15,13 @@
 
 ## 工具面（本组合固定，无其他工具）
 
-MCP server 名为 `semantic-core`，DLR 范式下共注册 6 个工具：
+MCP server 名为 `semantic-core`，DLR 范式下共注册 7 个工具：
 
 | 工具 | 用途 |
 |------|------|
 | `mcp__semantic-core__dlr_semantic_query` | L1 语义召回：候选逻辑实体/物理实体/属性（不含物理表名） |
 | `mcp__semantic-core__dlr_search_consensus` | L2 领域共识检索：问题用词 → 列/值映射 |
+| `mcp__semantic-core__dlr_search_sop` | L3 题级口径检索：按题返回命中节（口径/陷阱/Expected）；无命中=本题无节 |
 | `mcp__semantic-core__get_pe_mapping` | 第二跳：按 `pe_id` 取映射（`database_url`、**建模视图内的列**、arcs） |
 | `mcp__semantic-core__get_full_data_info` | **下探**：物理表全量列（数据集原始描述 + 每列 `in_modeled_view` 标注）——**仅当视图不足以回答时**用，用后必须按下方 **Modeling gap** 小节固定反馈 |
 | `mcp__semantic-core__get_le_attrs` | 逻辑实体属性 |
