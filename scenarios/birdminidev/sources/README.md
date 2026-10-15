@@ -1,74 +1,75 @@
-# sources/ —— 三层的来源、组织规则与落点对账
+# sources/ — where the three levels come from, how they are organized, reconciliation of landing points
 
-> 本目录是场景的知识源：`configs/`（L1 dlr 建模）、`consensus/`（L2 领域共识）、`sop.md`（L3 题级）。
-> 本文说明**它们的语义从哪来、怎么组织、怎么核对没丢**。规则口径（2026-09-29 项目主定盘）：
+English | [中文](README.zh.md)
 
-**LE = PE 的有效聚合 ｜ PE = 物理表的视图投影 ｜ 所有描述都来自数据集描述 + evidence 的吸收**
+> This directory holds the scenario's knowledge sources: `configs/` (L1 dlr modeling), `consensus/` (L2 domain consensus), `sop.md` (L3, question-level).
+> This document explains **where their semantics come from, how they are organized, and how we check that nothing was lost**. Settled caliber (2026-09-29, project owner):
 
-## 一、语义来源（数据集侧，三处）
+**LE = PE's effective aggregation ｜ PE = the physical table's view projection ｜ every description comes from the dataset's descriptions + absorbed evidence**
 
-| 来源 | 内容 | 去处 |
+## 1. Semantic sources (dataset side — three places)
+
+| Source | Content | Destination |
 |---|---|---|
-| SQLite schema（= table.json：表/列清单） | 表、列、类型 | PE 视图列清单（**全列投影，不按频次裁剪**） |
-| `database_description/<Table>.csv` | `column_description` / `data_format` / `value_description` | L1 列描述（**原文**；public 列可用同源文本做业务化措辞） |
-| `mini_dev_sqlite.json` 的 `evidence`（逐题） | 题面词 → 数据语义的映射、值域、格式、算式、题级口径 | 逐条分流：数据源级事实 → **L1**；非数据源级的领域口径 → **L2**；题级口径/陷阱 → **L3**；零信息重复（如实体名 ↔ 同名列）→ 不入层（登记为"零信息"） |
+| SQLite schema (= table.json: the table/column inventory) | tables, columns, types | the PE view's column list (**full-column projection, never trimmed by frequency**) |
+| `database_description/<Table>.csv` | `column_description` / `data_format` / `value_description` | L1 column descriptions (**verbatim**; a public column may get business-toned wording built from the same text) |
+| `evidence` in `mini_dev_sqlite.json` (per question) | question wording → data-semantics mappings, value domains, formats, formulas, question-level conventions | triaged item by item: data-source-level facts → **L1**; domain conventions above the source level → **L2**; question-level conventions/traps → **L3**; zero-information repeats (an entity name ↔ its same-named column) → **not layered** (recorded as "zero information") |
 
-## 二、组织规则（不增语义，只换组织方式）
+## 2. Organization rules (no semantics added — only the organization changes)
 
-1. **PE 视图 = 该物理表的列投影**（骨架完整；`get_pe_mapping` 按此返回）。裁剪只发生在"确定不建模的列"（无描述、无题目使用、纯生成噪声）——作此判断须留依据。
-2. **public 是组织位，不是内容**：只升**核心度量 / 高频过滤（WHERE·GROUP BY·JOIN）/ 关系键**（桥梁键必须在可见面，否则 PAS/JOIN 断头）。
-   其余列保持 private：仍在视图内可下钻，只是不进 LE 公开面。**不按使用频次机械裁剪视图**。
-3. **LE = PE 的有效聚合**：LE 描述写业务语义（关键字段名 + 业务含义），聚合其下 PE 的 public 面；LE 不做 PE 之外的语义发明。
-4. **描述纪律**：L1 描述一律取自 CSV 原文或 evidence 原文；
-   - 不写"我理解后的单位/范围/解释"（例：CSV 只写 "the player's weight"，就不写 "in pounds (117-243)"）；
-   - 需要消歧的最小时措辞（如同名异义列）除外，且必须可由数据/数据集文本直接支撑。
-5. **L2 = evidence 的残差**：只留"非数据源级"的领域口径（跨表换算、编码约定、值域在业务上的读法）；条目文本同样取自 evidence/CSV 原文，不新造。
-6. **L3 = 题级口径**，按三档准入（①数据集错误 ②无节跑不对 ③无节 >15W）写节；检索交付。
+1. **A PE view = that physical table's column projection** (the skeleton stays complete; `get_pe_mapping` returns it as such). Trimming happens only for "columns definitively not modeled" (no description, used by no question, pure generated noise) — and that call needs a recorded reason.
+2. **public is an organizational slot, not content**: promote only **core measures / high-frequency filters (WHERE·GROUP BY·JOIN) / relation keys** (a bridge key must be on the visible face, or PAS/JOIN breaks). Everything else stays private — still in the view and drillable, just not on the LE's public face. **Never trim the view mechanically by usage frequency.**
+3. **LE = PE's effective aggregation**: the LE description states business semantics (key field names + business meaning) and aggregates its PEs' public faces; the LE invents no semantics beyond its PEs.
+4. **Description discipline**: L1 descriptions are taken verbatim from the CSV or from evidence;
+   - do not write "my interpretation" of units/ranges (if the CSV says only "the player's weight", do not write "in pounds (117-243)");
+   - the minimal disambiguating wording (e.g. same-named columns with different meanings) is the exception, and must be directly supported by the data or the dataset's text.
+5. **L2 = evidence's residual**: only conventions above the source level (cross-table conversions, encoding conventions, business readings of value domains); entry text likewise taken from evidence/CSV verbatim, never invented.
+6. **L3 = question-level conventions**, admitted in three tiers (① dataset defect ② wrong without the section ③ >15W without the section); delivered by retrieval.
 
-## 三、落点对账（football pilot，51 条 evidence → 7 条 L2）
+## 3. Landing-point reconciliation (football pilot: 51 evidence items → 7 L2 entries)
 
-| evidence 语义 | 落点 |
+| evidence semantics | Landing point |
 |---|---|
-| 评分列语义 + 逐日期记录粒度 | L1 各评分列描述（0-100 by FIFA）+ L2#1 |
-| 战术评分 + Class 词表与区间 | L1 各列描述（CSV value_description 原文）+ L2#2 |
-| 惯用脚 right/left | L1 `preferred_foot` 描述（CSV 原文）+ L2#3 |
-| work rate 三档语义（FIFA 评语） | L1 两列描述（CSV value_description 原文）+ L2#4 |
-| birthday 读法 / age at present | L1 `birthday` 描述（CSV 原文）+ L2#5 |
-| 比分/胜负/平局 | L1 两个 goal 列描述（CSV 原文）+ L2#6 |
-| 赛季标签 / 日期格式 | L1 `season`/`date` 描述（CSV + evidence）+ L2#7 |
-| 联赛/球队命名 | L1 `LeagueName`/`team_long_name`/`team_short_name` 描述（CSV 原文） |
-| 题级口径（阈值、并列、特指实体…） | L3 节（命中三档的题）；其余为题面本身，不入层 |
-| 零信息重复（`X 指 player_name = 'X'` 这类） | 不入层（登记） |
+| rating-column semantics + per-date record grain | each rating column's L1 description (0-100 by FIFA) + L2#1 |
+| tactical ratings + the Class vocabulary and bins | each column's L1 description (CSV value_description verbatim) + L2#2 |
+| preferred foot right/left | L1 `preferred_foot` description (CSV verbatim) + L2#3 |
+| the three work-rate levels (FIFA wording) | the two columns' L1 descriptions (CSV value_description verbatim) + L2#4 |
+| birthday reading / age at present | L1 `birthday` description (CSV verbatim) + L2#5 |
+| score / win-loss / draw | the two goal columns' L1 descriptions (CSV verbatim) + L2#6 |
+| season labels / date format | L1 `season`/`date` descriptions (CSV + evidence) + L2#7 |
+| league / team naming | L1 `LeagueName`/`team_long_name`/`team_short_name` descriptions (CSV verbatim) |
+| question-level conventions (thresholds, ties, named entities, …) | L3 sections (questions meeting a tier); the rest is the question itself, not layered |
+| zero-information repeats (`X means player_name = 'X'` and the like) | not layered (recorded) |
 
-**不变量**：上表逐条覆盖 51 条 evidence 的语义；任何一条要么在 L1、要么在 L2、要么在 L3、要么被登记为"零信息"。新增/修改三层后按此表复核。
+**Invariant**: the table above covers, item by item, all 51 evidence items' semantics; every item is either in L1, in L2, in L3, or recorded as "zero information". After changing the three levels, re-check against this table.
 
-## 四、核对方法（可复跑）
+## 4. Checking methods (re-runnable)
 
 ```bash
 cd "TSM Core Service"
-node bin/tsm.mjs coverage      # 覆盖度对账：缺 L1 列 / 描述不一致 / FK 未表达 / evidence↔L2
-npx tsx src/verify/parity_dlr.ts <库名>   # 与历史 Python 线的向量清单对照（历史闸门，模型演进后按设计允许差异）
+node bin/tsm.mjs coverage      # coverage reconciliation: missing L1 columns / description mismatches / unexpressed FKs / evidence↔L2
+npx tsx src/verify/parity_dlr.ts <db>   # against the historical Python line's vector manifest (historical gate; differences are by design after model evolution)
 ```
 
-> 脚本：`tmp_scripts/audit_le_pe.mjs`（结构清单）、`tmp_scripts/audit_col_roles.mjs`（列角色：JOIN/过滤/分组/度量）、`tmp_scripts/dump_le.mjs`（LE 视角展开）、`tmp_scripts/set_public.mjs`（按列升 public，幂等）。
+> Scripts: `tmp_scripts/audit_le_pe.mjs` (structure inventory), `tmp_scripts/audit_col_roles.mjs` (column roles: JOIN/filter/group/measure), `tmp_scripts/dump_le.mjs` (LE-view expansion), `tmp_scripts/set_public.mjs` (promote columns to public, idempotent).
 
-## 五、各库 L1/L2 状态（2026-09-29，全部完成）
+## 5. Per-database L1/L2 status (reviewed 2026-10-15; all complete)
 
-**通则**：视图 = 表列投影（全列，仅"登记/派生/重复/数据集标注无用"列不入，且逐列留因）；描述 = CSV（column_description+value_description）或 evidence 原文；public = 核心度量 / 高频过滤 / 关系键；L2 = evidence 的吸收（领域级），题级口径归 L3。
+**General rules**: view = the table's column projection (all columns; only "registered / derived / duplicate / dataset-noted-useless" columns stay out, each with a recorded reason); descriptions = CSV (`column_description`+`value_description`) or evidence verbatim; public = core measures / high-frequency filters / relation keys; L2 = absorbed evidence (domain level) — question-level conventions belong to L3.
 
-| 库 | L1（视图 / 描述 / 关系） | L2 |
+| Database | L1 (view / descriptions / relations) | L2 |
 |---|---|---|
-| european_football_2 | 199 列全投影 ✓ ｜ 描述 ✓（6 处为 CSV 自身编码坏字）｜ 关系：22 个首发槽位列为多槽位列 → **已由行级 PE 表达**（`R = unwind` → Appearance LE + PAS Appearance→Player；见场景 README §三） | 7 条（51→7） |
-| codebase_community | ✓（补 6 条 FK 为可见连接键） | 7 条（49→7） |
-| card_games | ✓ | 21 条（原有聚合式） |
-| debit_card_specializing | ✓ | 13 条 |
-| california_schools | 视图 76/89（13 列登记/派生/重复不入，逐列留因：NCES 号、缩写、三个派生 Percent、CALPADS 状态、IRC(标 Not useful)、County/School Code 等）✓ ｜ 关系 ✓ | 22 条（30→6） |
-| financial | ✓（另修正 loan.status 的 A/B/C/D 语义为 CSV 原文、补 frequency 编码） | 6 条（32→5） |
-| formula_1 | ✓（补 4 条 FK） | 26 条（66→6） |
-| student_club | ✓（补 2 条 FK；9 处 CSV 空白列的中文描述改为英文短描述） | 25 条（48→6） |
-| superhero | ✓（补 9 条 FK；LE 描述改英文） | 25 条（52→4） |
-| thrombosis_prediction | ✓ | 5 条（50→5） |
-| toxicology | ✓ | 28 条（40→5） |
+| european_football_2 | 199 columns, full projection ✓ ｜ descriptions ✓ (6 are the CSV's own broken encodings) ｜ relations: the 22 line-up slot columns are multi-slot → **expressed by the row-level PE** (`R = unwind` → Appearance LE + PAS Appearance→Player; see the scenario README §3) | **7** (51→7) |
+| codebase_community | ✓ (6 FKs added as visible join keys) | **7** (49→7) |
+| card_games | ✓ | **21** (aggregated form from the start) |
+| debit_card_specializing | ✓ | **19** |
+| california_schools | view 76/89 (13 columns registered/derived/duplicate, each with a reason: NCES ids, abbreviations, three derived Percent columns, CALPADS status, IRC (marked Not useful), County/School Code, …) ✓ ｜ relations ✓ | **6** (30→6) |
+| financial | ✓ (also: loan.status's A/B/C/D semantics corrected to the CSV; frequency encodings added) | **5** (32→5) |
+| formula_1 | ✓ (4 FKs added) | **6** (66→6) |
+| student_club | ✓ (2 FKs added; 9 Chinese descriptions on CSV-blank columns → short English) | **6** (48→6) |
+| superhero | ✓ (9 FKs added; LE descriptions → English) | **4** (52→4) |
+| thrombosis_prediction | ✓ | **5** (50→5) |
+| toxicology | ✓ | **5** (40→5) |
 
-> 全局：consensus 向量 **458 → 91 行**；L1 向量 entities 938；Neo4j LE 49 / PE 73 / PA 781 / LA 273。
-> 另有全局清理：所有库的中文描述 → 数据集原文或英文短描述（47 处 + 10 处）。
+> Global: consensus vectors **458 → 91 rows** (91 across all databases); L1 vectors entities **946**; graph LE 50 / PE 74 / LA 277 / PA 784 (**1,185 nodes**) + **37 PAS relations**.
+> Also a global cleanup: Chinese descriptions across all databases → dataset verbatim or short English (47 + 10 cases).
