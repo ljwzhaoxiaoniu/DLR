@@ -38,7 +38,7 @@ dsh（headless / web）→ MCP（dlr：7 工具 · dlr-state：3 工具）→ TS
 | 2 | **不自行重跑**任何题 —— 默认单轮；任何重跑/多跑/方差验证，先列方案（跑谁、几轮、为什么）等确认 |
 | 3 | **批间停下报数** —— 2.0 一批 **4 题**（2026-10-11 起：跑批易爆内存 → 4 题/批、串行跑），跑完报告结果，等确认再跑下一批 |
 | 4 | **归档须确认** —— Stage 1–4 跑完不自动归档，等结果确认再 `post_process` |
-| 5 | **Python 用绝对路径** `/d/ProgramData/anaconda3/envs/lepe_som/python`，禁止裸 `python`（2.0 默认不用 Python；仅兜底路线） |
+| 5 | **Python 仅兜底路线**（2.0 默认不用 Python）：确需调用时，用所用虚拟环境解释器的**绝对路径**，禁止裸 `python`（开发机常用环境 `lepe_som`，示例：`/d/ProgramData/anaconda3/envs/lepe_som/python`） |
 | 6 | **临时文件只进 `tmp_scripts/`**，或随用随删 —— 禁止写盘根 / 仓库散落 |
 | 7 | **判定口径以知识层为准**：术语/公式以 L2 领域共识（`scenarios/<场景>/sources/consensus`）+ L3（`scenarios/<场景>/sources/sop.md`，检索交付 `dlr_search_sop`）为准；冲突时按 `disputes > L3 节口径 > L2 共识 > 源字段字面` |
 | 8 | **SOP 加节有三档准入**：① 数据集错误 ② 无 SOP 跑不对 ③ 无 SOP 时 >15W —— 新库**先裸跑取基线**，只给 ①②③ 写节，**每题最多两遍**；节必须钉**实测事实与陷阱**并附"不必再核、直接作答"（[docs/02-concept.zh.md](docs/02-concept.zh.md) §二 / [docs/04-application.zh.md](docs/04-application.zh.md) §二） |
@@ -110,4 +110,4 @@ DLR Proj/                          # 分支 2.0
 └── MINIDEV_sqlite/              # 数据集（gitignored，需下载）
 ```
 
-> 项目记忆（跨会话）在 `~/.claude/projects/D--Code-Proj-DLR-Proj/memory/`，索引见其中的 `MEMORY.md`。
+> 跨会话项目记忆由 Claude Code 维护在**开发机的记忆区**（机器本地、不入库；索引见其中的 `MEMORY.md`）。
