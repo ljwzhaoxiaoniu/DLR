@@ -1,48 +1,50 @@
-# 场景 2 · K8s 根因诊断（外部基准 `Cloud-OpsBench`）—— TSM + DLR 怎么用
+# Scenario 2 · K8s root-cause diagnosis (external benchmark `Cloud-OpsBench`) — using TSM + DLR
 
-> **定位**：把 TSM（三级语义建模）+ DLR 用到**外部基准 Cloud-OpsBench**（K8s agentic RCA）上的场景——**架构「换场景」的首个真实检验**，也是三级体系"L3 重 / L1 薄"跷跷板的另一端。
-> **规范与原则**（LE / PE / ARCS / PAS、建模规则与自检）在 **[docs/03-design.zh.md](../../docs/03-design.zh.md)**；
-> 本文按用法顺序展开：**数据集介绍（含判分口径）→ 建模应用思路 → 应用结果 → 处理和使用流程 → 实测结果**。
-> 场景包规范（目录约定、换场景 checklist）：[docs/04-application.zh.md](../../docs/04-application.zh.md)。
+English | [中文](README.zh.md)
 
-## 一、数据集介绍（外部基准，含判分口径）
+> **Position**: the scenario that applies TSM (three-level semantic modeling) + DLR to an **external benchmark, Cloud-OpsBench** (agentic RCA on Kubernetes) — the **first real test of the architecture's "scenario swap"**, and the other end of the three-level seesaw from "heavy L3 / thin L1".
+> **Spec and principles** (LE / PE / ARCS / PAS, modeling rules and self-check) live in **[docs/03-design.md](../../docs/03-design.md)**;
+> this document runs in usage order: **dataset introduction (incl. scoring calibers) → modeling approach → application results → workflow → measured results**.
+> Scenario-package conventions (directory layout, scenario-switch checklist): [docs/04-application.md](../../docs/04-application.md).
 
-### 原生语义：原来在哪
+## 1. Dataset introduction (an external benchmark, incl. its scoring calibers)
 
-| 原料 | 位置 | 内容 |
+### Native semantics: where the raw material lives
+
+| Raw material | Location | Content |
 |---|---|---|
-| **基准本体** | 上游 [LLM4Ops/Cloud-OpsBench](https://github.com/LLM4Ops/Cloud-OpsBench)（中山大学 / 港中文） | **快照锚 `ea05daf`**（main，commit 2026-10-06；2026-10-10 拉取）——开发与复跑以该快照为准，上游变动只在需要时增量拉取 |
-| **case 快照** | 基准检出 `benchmark/{boutique 550, trainticket 204}` | 真集群注入故障 + Verifier 验证后，把工具可观测上下文固化为 JSON：`tool_cache.json`（预渲染工具输出）/ `logs.json` / `metrics.csv`（性能类）/ `alert.json` / `code/`（boutique 源码）——**确定性回放，无需真集群、可复现** |
-| **判分** | `process-label/`（里程碑）· `evaluation_utils/`（scorer） | 结果分 **CA/FA/JRA**（Rank 1 对标签逐字）＋流程分 **MC/EOC/ECR/EE**（证据链：admissible 工具调用 + 证据模式匹配）；**金标准打分，无人工翻盘口径** |
-| **规模** | 12 家族 = 754 case | Easy/Medium/Hard 分层；Online Boutique 550 + Train-Ticket 204；57 种故障类型 |
-| ⚠ **不随包分发** | 基准检出（约 3.9GB）外挂在仓库外 | 本包（`scenarios/cloudopsbench/`）只放**适配层**：L1/L2/L3 源 + 评测适配；case 数据由 agent 经基准工具实查 |
+| **The benchmark** | upstream [LLM4Ops/Cloud-OpsBench](https://github.com/LLM4Ops/Cloud-OpsBench) (Sun Yat-sen University / CUHK) | **snapshot pin `ea05daf`** (main, commit 2026-10-06; pulled 2026-10-10) — development and re-runs ride this snapshot; upstream moves are pulled incrementally only when needed |
+| **Case snapshots** | the checkout's `benchmark/{boutique 550, trainticket 204}` | after faults are injected into a real cluster and verified by the Verifier, the tools' observable context is frozen to JSON: `tool_cache.json` (pre-rendered tool outputs) / `logs.json` / `metrics.csv` (performance cases) / `alert.json` / `code/` (boutique sources) — **deterministic replay, no live cluster, reproducible** |
+| **Scoring** | `process-label/` (milestones) · `evaluation_utils/` (scorer) | outcome **CA/FA/JRA** (Rank-1 answer vs labels, verbatim) + process **MC/EOC/ECR/EE** (evidence chains: admissible tool calls + evidence-pattern matching); **gold-standard scoring — no manual-overturn caliber** |
+| **Scale** | 12 families = 754 cases | Easy/Medium/Hard tiers; Online Boutique 550 + Train-Ticket 204; 57 fault types |
+| ⚠ **not shipped with the package** | the benchmark checkout (~3.9 GB) lives outside the repo | this package (`scenarios/cloudopsbench/`) holds only the **adapter layer**: L1/L2/L3 sources + the evaluation adapter; case data is read live by the agent through the benchmark's tools |
 
-### 判分机理要点（写节 / 复跑前先读）
+### Scoring mechanics to know before writing sections or re-running
 
-- **证据必须经工具取得**：MC/EOC/ECR 匹配的是工具输出的观察文本（admissible = 工具名 + 参数子集）——模型代查会打坏证据链分；
-- **EOC = 严格单遍级联**：里程碑仅当前置先收才进 `ordered`，链头倒位即整条塌到 1/4——**链序条款**是 L3 的主体之一；
-- `performance` 类有 `disable_getalerts_credit`：Rank 1 对象错会**连带** MC/EOC/ECR 塌，流程分塌是对象错的后果；
-- 上游关键发现（与本项目主张对味）：**结果对 ≠ 诊断可靠**——顶级模型 JRA 0.76 但 ECR（证据链闭合）仅 0.38，"够到正确证据区却闭不上证据链"。
+- **Evidence must be obtained through tools**: MC/EOC/ECR match the observation text of tool outputs (admissible = tool name + argument subset) — a model-side lookup breaks the chain scores;
+- **EOC is a strict single-pass cascade**: a milestone only enters `ordered` when its predecessor came first; a head-of-chain inversion collapses the whole chain to 1/4 — **chain-order clauses** are a core part of L3;
+- `performance` cases carry `disable_getalerts_credit`: a wrong Rank-1 object **drags** MC/EOC/ECR down — the process-score collapse is the consequence of the object error;
+- the upstream's own key finding (consonant with this project's thesis): **correct outcome ≠ reliable diagnosis** — top models reach JRA 0.76 but ECR (chain closure) only 0.38, "reaching the right evidence zone without closing the chain".
 
-## 二、建模应用思路（原料 → 三层）
+## 2. Modeling approach (raw material → three levels)
 
-### L1 = 系统状态空间（`mapping_type: dlr-state`）
+### L1 = the system's state space (`mapping_type: dlr-state`)
 
-与经典 DLR 共享词汇（LE/PE、ARCS/PAS、id 约定、描述纪律）；差异 = 无 databases/attributes、关系带**观测槽**；三表行级 1:1。两份按系统落：`sources/configs/DLR/boutique.yaml` · `trainticket.yaml`。
+Shares its vocabulary with classic DLR (LE/PE, ARCS/PAS, id conventions, description discipline); the differences: no databases/attributes, relations carry **observation slots**, and the three tables are row-level 1:1. Two files, one per system: `sources/configs/DLR/boutique.yaml` · `trainticket.yaml`.
 
-- **LE = 具体对象**：服务三件套（`<svc>` 业务 / `<svc>-deploy` 载体 / `<svc>-obs` 观测面）+ 节点 + 命名空间——展开到具体对象，不留抽象 kind；
-- **PE = 观测面**：deployment / pods / service+endpoints / telemetry / logs / code——每面读法带**谓词模板**；
-- **ARCS 锚 = 剪枝**：锚 A = 取数 `WHERE` 键（应用标签）——**唯一合法的全量检索 = 首轮找锚**，其后按锚收窄（DLR 省 token 机制本体）；
-- **PAS = 系统调用图**：自快照 `GetServiceDependencies` 逐条读得（boutique 15 边 / TT 112 边）；
-- **实例边界**：图只存 **schema 级**——实例明细（名字/状态/报文/数值）一律不入；L1 是帮 agent「找到数据」的导航索引，不是「直接查询数据」（同 BIRD：建模 ≠ 装数据）。
+- **LE = concrete objects**: the service triad (`<svc>` business / `<svc>-deploy` carrier / `<svc>-obs` observation face) + nodes + namespace — expanded to concrete objects, never left as abstract kinds;
+- **PE = observation surfaces**: deployment / pods / service+endpoints / telemetry / logs / code — every surface's reading carries a **predicate template**;
+- **The ARCS anchor = pruning**: anchor A = the read's `WHERE` key (the application label) — **the only legitimate full pull is the first-round anchor scan**; everything after is pruned by the anchor (this is DLR's token-saving mechanism itself);
+- **PAS = the system's call graph**: read edge by edge from the snapshots' own `GetServiceDependencies` (boutique 15 edges / TT 112);
+- **Instance boundary**: the graph stores **schema level only** — per-case detail (names / statuses / payloads / numbers) never enters; L1 is a navigation index helping the agent *find* data, not *query* it (same as BIRD: modeling ≠ loading data).
 
-### L2 = 领域共识（`sources/consensus/kubernetes.jsonl`，15 条）
+### L2 = domain consensus (`sources/consensus/kubernetes.jsonl`, 15 entries)
 
-schema 级读法：对象清单 / 日志槽 / 遥测槽 / 排除 / 终止原因 / 代码槽 / 落位（Placement）/ 事件面……每条带 L1 锚 + 可见侧依据。**层界 = 不超数据集自身信息**（数据源明细不入 L2，由 agent 沿槽实查）；读法按**槽类**聚类、不按系统。
+Schema-level reading rules: object listings / log slots / telemetry slots / exclusions / termination reasons / code slots / placement / event faces…; each carries its L1 anchor + visible-side basis. **The layer boundary = never beyond the dataset's own information** (source-level detail never enters L2; the agent reads it along the slots). Readings cluster by **slot class**, not by system.
 
-### L3 = 走链 SOP（`sources/sop.md`，5 节）
+### L3 = the walk SOP (`sources/sop.md`, 5 sections)
 
-节标题 = 题面措辞**逐字**（向量检索交付：`dlr_search_sop`）；节内 = **实测打法**（判型双胞胎判别线 / 链序条款 / 提交落笔条款），不钉答案：
+Section titles = the question wording **verbatim** (delivered by vector retrieval: `dlr_search_sop`); a section carries the **measured playbook** (twin-class discrimination lines / chain-order clauses / submission clauses) and pins no answers:
 
 1. `Partial Service Unreachability.`
 2. `Service Availability Disruption.`
@@ -50,28 +52,28 @@ schema 级读法：对象清单 / 日志槽 / 遥测槽 / 排除 / 终止原因 
 4. `Service latency increased significantly`
 5. `Service Performance Degradation.`
 
-准入走三档（①数据集错误 ②无 SOP 跑不对 ③无 SOP >15W）；**破连才加句、改句必搭回归锚复跑**（既有验证位对表）。
+Admission goes through the three tiers (① dataset defect ② wrong without the section ③ >15W without the section); **break the chain before adding a line, and re-run against regression anchors after editing one**.
 
-### 工具面
+### Tool surface
 
-dlr-state 形态 = **3 工具**（`state_model_query` 症状→模型切片 / `dlr_search_consensus` / `dlr_search_sop`）；数据面 = 上游基准 MCP（按题起停 `:8000`）。召回形态 = 同一轮**双路并行**（TSM 并行锚定）；agent 侧装配在仓库 `DSH-based Agent Service/dsh_cob/`（不随本包分发）。
+The dlr-state shape = **3 tools** (`state_model_query` symptom→model slice / `dlr_search_consensus` / `dlr_search_sop`); the data plane = the upstream benchmark's MCP (booted per case on `:8000`). Recall shape = **dual-path parallel** in the same step (TSM's parallel anchoring); the agent-side assembly lives in this repo at `DSH-based Agent Service/dsh_cob/` (not shipped with this package).
 
-## 三、应用结果（本场景的模型）
+## 3. Application results (this scenario's model)
 
-> 数据截至留档**轮次 230**；口径 = 上游 scorer 输出、去重取最新（详见 [DETAIL.md](DETAIL.md) / `results/STATS.md`）。
+> Data as of archived **round 230**; calibers = upstream scorer output, dedupe-take-latest (see [DETAIL.md](DETAIL.md) / `results/STATS.md`).
 
-- **覆盖 754/754（100%）**；**JRA 752/754（99.7%）** · CA 752 · FA 753 · **ECR 724/754（96.0%）**；
-- 流程分（均值）：**MC 0.990 · EOC 0.946 · ECR 0.960** · steps 18.3 · invalid 0.4%；
-- **十二家族满覆盖**（12/12 全跑），其中 **10 族全 JRA**：boutique/{admission, codedefect, infrastructure, runtime, scheduling, service, startup} · train-ticket/{runtime, service, startup}；boutique/performance 与 train-ticket/performance 各余 1 例按「摸到极限也算」**记档**；
-- 对标：上游顶模基线 JRA 0.76 / ECR 0.38、工业界 Train-Ticket 全量 82.8% JRA——本场景 **752/754** 已在场之上；余 2 处（perf25 / ttperf34）记档不追；
-- 逐题留档：[DETAIL.md](DETAIL.md)（总账）＋ `DETAIL/<家族>.md`（逐题校验表 + 证据正文）＋ `results/<轮次>/`（questions.csv + traces/）。
+- **Coverage 754/754 (100%)**; **JRA 752/754 (99.7%)** · CA 752 · FA 753 · **ECR 724/754 (96.0%)**;
+- Process scores (means): **MC 0.990 · EOC 0.946 · ECR 0.960** · steps 18.3 · invalid 0.4%;
+- **All twelve families covered** (12/12 run), **10 of them fully JRA**: boutique/{admission, codedefect, infrastructure, runtime, scheduling, service, startup} · train-ticket/{runtime, service, startup}; boutique/performance and train-ticket/performance each keep 1 case **recorded** under "touching the limit counts";
+- Compared against: the upstream's top-model baselines JRA 0.76 / ECR 0.38, industry Train-Ticket full-set 82.8% JRA — this scenario's **752/754** sits above the field; the remaining 2 (perf25 / ttperf34) are recorded, not chased;
+- Per-case archives: [DETAIL.md](DETAIL.md) (the ledger) + `DETAIL/<family>.md` (per-case check lists + evidence text) + `results/<round>/` (questions.csv + traces/).
 
-## 四、处理和使用流程（这份基准怎么跑）
+## 4. Workflow (how this benchmark is run)
 
-### 先决（本包外的两件）
+### Prerequisites (two things outside this package)
 
-1. **基准检出**：外挂克隆上游（快照 `ea05daf`）到仓库外（默认 `D:\Code_Proj\Cloud-OpsBench`；`COB_DIR` 可覆盖）——不随包分发；
-2. **语义后端**：本包经 TSM Core Service 构建（本包可 `npm i tsm-scenario-cloudopsbench` 后按**包名**解析）：
+1. **The benchmark checkout**: clone upstream (pin `ea05daf`) outside the repo (default `D:\Code_Proj\Cloud-OpsBench`; `COB_DIR` overrides) — not shipped;
+2. **The semantic backend**: build via TSM Core Service (either from this package — `npm i tsm-scenario-cloudopsbench`, resolved by package name):
 
 ```bash
 cd "TSM Core Service"
@@ -79,40 +81,45 @@ TSM_SCENARIO=tsm-scenario-cloudopsbench npx tsx src/build/buildLance.ts --all --
 TSM_SCENARIO=tsm-scenario-cloudopsbench npx tsx src/build/buildConsensus.ts --store .store/lance/cloudopsbench
 ```
 
-（仓库内开发态用路径形式：`TSM_SCENARIO="$PWD/../scenarios/cloudopsbench"`）
+(dev mode in-repo uses the path form: `TSM_SCENARIO="$PWD/../scenarios/cloudopsbench"`)
 
-### 跑题与判分（仓库侧装配 `DSH-based Agent Service/dsh_cob/`）
+### Running and scoring (repo-side assembly, `DSH-based Agent Service/dsh_cob/`)
 
 ```bash
-bash "DSH-based Agent Service/dsh_cob/scripts/start_backend.sh"                   # 语义后端 :28796（幂等）
-bash "DSH-based Agent Service/dsh_cob/run_one.sh" <system> <category> <case_id>   # 单题 → results/<轮次>/
-bash scenarios/cloudopsbench/eval/grade.sh --runs-root scenarios/cloudopsbench/results --match "<glob>"  # 判分 → questions.csv + summary.md
-node scenarios/cloudopsbench/eval/stats.mjs         # 重建 STATS.md / DETAIL.md / DETAIL/<家族>.md
+bash "DSH-based Agent Service/dsh_cob/scripts/start_backend.sh"                   # semantic backend :28796 (idempotent)
+bash "DSH-based Agent Service/dsh_cob/run_one.sh" <system> <category> <case_id>   # one case → results/<round>/
+bash scenarios/cloudopsbench/eval/grade.sh --runs-root scenarios/cloudopsbench/results --match "<glob>"  # score → questions.csv + summary.md
+node scenarios/cloudopsbench/eval/stats.mjs         # rebuild STATS.md / DETAIL.md / DETAIL/<family>.md
 ```
 
-二路并发（内存约束）：`COB_MCP_PORT=8001 CLOUDOPSBENCH_MCP_PORT=8001` **成对**设置（前者 = runner 探针口，后者 = 上游服务实际绑定口——只给前者 = 服务仍绑 8000 → 撞端口）。
+Two-way concurrency (memory-bound): set `COB_MCP_PORT=8001 CLOUDOPSBENCH_MCP_PORT=8001` **as a pair** (the former = the runner's probe port, the latter = the port the upstream service actually binds — setting only the former leaves the service on 8000 → port clash).
 
-## 五、实测结果
+(`dsh_cob/instructions.md` is a per-case assembly artifact generated by `run_one.sh` (AGENTS.md source + the upstream contract) — do not hand-edit.)
 
-| 指标 | 值 |
+## 5. Measured results
+
+> Same source as §3 (dedupe-take-latest · round 230); details in `results/STATS.md`.
+
+| Metric | Value |
 |---|---|
-| token 均值 / 中位 | 312,240 / 232,678（口径 = input+cache_read+cache_write+output；cache 读占比 ~73%） |
-| steps 均值 | 19.8 |
-| RAR（重复调用率）/ invalid | 0.19% / 0.64% |
-| EE（证据效率） | 0.275（走链即满足流程分的论证在首题即兑现；EE 只作观察） |
+| tokens mean / median | 241,049 / 145,925 (caliber = input+cache_read+cache_write+output; cache reads 74%) |
+| steps mean | 18.3 |
+| RAR (repeated-call rate) / invalid | 0.13% / 0.4% |
+| EE (evidence efficiency) | 0.283 (the "walk the chain, satisfy the process scores" argument paid off from the first case; EE is observational only) |
 
-## 六、目录速查
+## 6. Directory map
 
 ```
 scenarios/cloudopsbench/
-├── tsm-scenario.json          # 场景清单（TSM_SCENARIO 解析用）
+├── tsm-scenario.json          # the scenario manifest (for TSM_SCENARIO resolution)
+├── README.md · README.zh.md   # ← this scenario's docs (EN primary + 中文对照)
 ├── sources/
-│   ├── configs/DLR/           # L1 建模源（boutique.yaml · trainticket.yaml）
-│   ├── consensus/             # L2 领域共识（kubernetes.jsonl）
-│   └── sop.md                 # L3 走链 SOP
-├── eval/                      # 评测适配：convert.mjs / run_eval.py / grade.sh / stats.mjs / sessions.mjs
-├── results/<轮次>/            # 跑批留档（questions.csv + traces/ + raw/）
-├── DETAIL.md · DETAIL/        # 评测总账 + 逐家族逐题明细（stats.mjs 重建）
-├── modeling-plan.md (.zh.md)  # 建模方案（双语成对，哈希记录 README.i18n.yaml）
-└── overview.html              # 总视图（stats.mjs 生成）
+│   ├── configs/DLR/           # L1 modeling sources (boutique.yaml · trainticket.yaml)
+│   ├── consensus/             # L2 domain consensus (kubernetes.jsonl)
+│   └── sop.md                 # L3 walk SOP
+├── eval/                      # evaluation adapter: convert.mjs / run_eval.py / grade.sh / stats.mjs / sessions.mjs
+├── results/<round>/           # run archives (questions.csv + traces/ + raw/)
+├── DETAIL.md · DETAIL/        # the ledger + per-family per-case detail (rebuilt by stats.mjs)
+├── modeling-plan.md (.zh.md)  # the modeling plan (bilingual pair, hashes in README.i18n.yaml)
+└── overview.html              # the aggregate view (generated by stats.mjs)
 ```
