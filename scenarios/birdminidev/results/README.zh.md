@@ -1,7 +1,10 @@
 # 跑批结果（结果文档）
 
+[English](README.md) | 中文
+
 > 本目录记录 `birdminidev` 的**跑题结果**——结构仿照旧结果：**raw 可追溯 + 汇总 + 逐题明细**，随跑随更新。
-> 产生方式：`run_batch.sh`（并行跑）→ `tsm grade`（判定与汇总）→ `tsm stats`（综合统计 + 明细文档 [DETAIL.md](../DETAIL.md) + 同步场景 README）。
+> 产生方式：`run_batch.sh`（并行跑）→ `tsm grade`（判定与汇总）→ `tsm stats`（综合统计 + 明细文档 [DETAIL.md](../DETAIL.md) + 同步场景 README 机块）。
+> **历史注**：这条手工链是 500 题台账的历史工作流；现行考试系统 = `dsh-tsm-eval`（`dsh-eval all` 跑 + 判 + 报一条龙，见其 README）——逐字段复刻本链并补报告层。
 
 ## 结构
 
@@ -43,7 +46,7 @@ results/
 ## 更新（边跑边更新）
 
 跑题中遇到的**数据集问题 / 建模冲突 / 难题 / 其他** → 在 `../sources/sop.md` 补节并打标
-（口径见 [docs/04-application.zh.md](../../../docs/04-application.zh.md) §二）→ 下一轮跑批读取新 SOP 生效。
+（口径见 [docs/04-application.zh.md](../../../docs/04-application.zh.md) §二）→ `tsm build sop` 重建检索索引 → 下一轮跑批生效。
 
 ## 一轮怎么跑
 
