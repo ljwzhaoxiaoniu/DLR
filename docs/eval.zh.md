@@ -10,7 +10,7 @@
 | | 跟着谁 | 形态 | 性质 |
 |---|---|---|---|
 | **考卷**（题面 + 期望 + 口径来源） | **场景** | `scenarios/<名>/eval/questions.jsonl` | **内容资产**：一场景一份，随场景包 git 化 ｜ ✅ `birdminidev` 已有（500 题；生成器 `eval/build.mjs`：**答案键取 L3 节口径 74 处、其余取 gold 426 处**） |
-| **考试系统**（跑题 + 采分 + 出报告） | **dsh** | ✅ 独立包 `dsh-tsm-eval`（0.1：CLI `run → score → report`；bundle 面 —— web 浮层、`/eval` —— 计划 0.2） | **宿主能力**：一套通吃多场景，**独立可分** |
+| **考试系统**（跑题 + 采分 + 出报告） | **dsh** | ✅ 独立包 `dsh-tsm-eval`（0.1：CLI `run / score / report / all / doctor / parity`；bundle 面 —— web 浮层、`/eval` —— 计划 0.2） | **宿主能力**：一套通吃多场景，**独立可分** |
 
 ## 二、为什么这样切
 
@@ -46,12 +46,12 @@
 
 ## 五、跑批与判定（当前实操）
 
-> 迁移期正在用的批跑链路：场景包内容驱动的**题级验证**——验的是 **L3**（L1/L2 是既定输入，跑的差异只应来自 L3）。正式考试系统见 §六。
+> 迁移期正在用的批跑链路：场景包内容驱动的**题级验证**——验的是 **L3**（L1/L2 是既定输入，跑的差异只应来自 L3）。正式考试系统见 §七第 2 条（并见本节注）。**本节是批跑/判分纪律的唯一之家**——其他文档只引一行、指回本节。
 
 **跑批**（`DSH-based Agent Service/scripts/run_batch.sh`）：
 
 ```bash
-bash "DSH-based Agent Service/scripts/run_batch.sh" --qids 685,687,694 --jobs 3
+bash "DSH-based Agent Service/scripts/run_batch.sh" --qids 685,687,694 --jobs 4
 #   产物 → scenarios/<场景>/results/<stamp>_qids_.../（raw/ 逐题 ndjson）
 cd "TSM Core Service" && node bin/tsm.mjs grade --run "<上一步目录>"   # → questions.csv + summary.md
 ```
@@ -70,7 +70,7 @@ cd "TSM Core Service" && node bin/tsm.mjs grade --run "<上一步目录>"   # �
 
 **纪律**（迁移期）：
 
-- 一批 **5 题**，批间停下报数；**每题最多两遍**（第二遍用于补节后对表）。
+- 一批 **4 题**（2026-10-11 定，防爆内存），批间停下报数；**每题最多两遍**（第二遍用于补节后对表）。实操中 `run_batch.sh` 按 `--jobs` 并发派发（默认 4，带 700MB 空闲内存闸）；Cloud-OpsBench 马拉松为严格串行、一次一题。
 - **节写完必须复跑该题**——节的生效时点若晚于跑批，旧档那一行可能靠假阳性撑着（q1136 节晚 11 分钟 / q1472 节晚 4.5 小时，重判后才暴露）。
 - 改 `sources/sop.md` → `tsm build sop` 重建索引 → 复跑对表；**实验跑不进 `results/`**（台账取每题最新一轮）。
 - 判据 / 口径变动后**全量重判**（逐目录 `tsm grade` 即可，gold 走缓存）：台账只能有一套尺子。

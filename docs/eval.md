@@ -10,7 +10,7 @@
 | | Follows | Form | Nature |
 |---|---|---|---|
 | **Exam paper** (question + expected + caliber source) | **scenario** | `scenarios/<name>/eval/questions.jsonl` | **Content asset**: one per scenario, versioned with the scenario package ｜ ✅ `birdminidev` has one (500 questions; generator `eval/build.mjs` — **answer keys take the L3 clause for 74 questions and gold for the other 426**) |
-| **Exam system** (run + score + report) | **dsh** | ✅ the standalone `dsh-tsm-eval` package (0.1: CLI `run → score → report`; the dsh bundle surface — web overlay, `/eval` — is planned for 0.2) | **Host capability**: one system serves all scenarios, **independently separable** |
+| **Exam system** (run + score + report) | **dsh** | ✅ the standalone `dsh-tsm-eval` package (0.1: CLI `run / score / report / all / doctor / parity`; the dsh bundle surface — web overlay, `/eval` — is planned for 0.2) | **Host capability**: one system serves all scenarios, **independently separable** |
 
 ## 2. Why split this way
 
@@ -46,12 +46,12 @@ Much cleaner than 1.5's "adapters + four stages". Three extra benefits:
 
 ## 5. Batch runs and judging (current practice)
 
-> The migration-period chain: **question-level validation driven by scenario content** — what is being validated is **L3** (L1/L2 are given inputs; the only differences in a run should come from L3). The formal exam system is §6.
+> The migration-period chain: **question-level validation driven by scenario content** — what is being validated is **L3** (L1/L2 are given inputs; the only differences in a run should come from L3). The formal exam system is §7 item 2 (see the note below). **This section is the single home of the batch/judging discipline** — other docs quote one line and point here.
 
 **Batch run** (`DSH-based Agent Service/scripts/run_batch.sh`):
 
 ```bash
-bash "DSH-based Agent Service/scripts/run_batch.sh" --qids 685,687,694 --jobs 3
+bash "DSH-based Agent Service/scripts/run_batch.sh" --qids 685,687,694 --jobs 4
 #   artifacts → scenarios/<scenario>/results/<stamp>_qids_.../ (per-question ndjson under raw/)
 cd "TSM Core Service" && node bin/tsm.mjs grade --run "<that dir>"   # → questions.csv + summary.md
 ```
@@ -70,7 +70,7 @@ cd "TSM Core Service" && node bin/tsm.mjs grade --run "<that dir>"   # → quest
 
 **Discipline (migration period)**:
 
-- One batch = **5 questions**; stop and report between batches; **at most two passes per question** (the second pass is for post-clause re-runs).
+- One batch = **4 questions** (settled 2026-10-11, memory-safety); stop and report between batches; **at most two passes per question** (the second pass is for post-clause re-runs). In practice `run_batch.sh` dispatches with parallel `--jobs` (default 4, gated on 700 MB free memory); the Cloud-OpsBench marathon ran strictly serially, one case at a time.
 - **Always re-run a question after writing its clause** — if the clause postdates the run, that old row may be propped up by a false positive (q1136's clause was 11 minutes late, q1472's 4.5 hours; only a re-judge exposed it).
 - `sources/sop.md` change → `tsm build sop` (rebuild the index) → re-run to compare; **experimental runs never go into `results/`** (the ledger takes the latest round per question).
 - After a judging-policy change, **re-judge everything** (run `tsm grade` per directory; gold is cached): the ledger may only have one ruler.
