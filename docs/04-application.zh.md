@@ -2,6 +2,7 @@
 
 > **定位**：四篇叙事的 **④ 落地（解法）**——把 ①[背景与主张](01-background.zh.md)、②[概念](02-concept.zh.md)、③[设计](03-design.zh.md) 落成**一套可运行的内容包**。
 > **一句话**：**一个场景 = 一套完整的 TSM 内容**，以 git 文本形态存在（Semantic Layer as Code）：可 diff、可评审、可回滚。
+> 英文版：[04-application.md](04-application.md) ｜ 索引：[README.zh.md](README.zh.md)
 
 > **每个场景自带一份「案例说明」**：`scenarios/<名>/README.md` —— 讲数据集的语义原料原来在哪、怎么被装进三层、每库的抽象决策。它与 [03-design.zh.md](03-design.zh.md) 互为呼应：**规范 ↔ 案例**。
 
@@ -18,7 +19,7 @@ scenarios/birdminidev/
 └── fixtures/                   # 对照真值（verify 套件用，见 §三）
 ```
 
-现状规模：图 **LE 50 / PE 74 / PA 784 / LA 277 / PAS 37**（共 1185 节点）；向量 **entities 946 · consensus 91 · sop 180**；共识覆盖 11 个 namespace。
+现状规模 —— `birdminidev`：图 **LE 50 / PE 74 / PA 784 / LA 277（1,185 节点）+ PAS 37 条关系**；向量 **entities 946 · consensus 91 · sop 180**；共识覆盖 11 个 namespace。`cloudopsbench`：**L2 15 · L3 5**，不装图（dlr-state）。
 
 ## 二、三层各写什么
 
@@ -49,13 +50,13 @@ scenarios/birdminidev/
   标注**只供维护与统计，答题时一视同仁**（不改变该节的执行方式）。
 - **硬纪律**：**不写库表列原名**（2026-09-20 定）。判断标准：这句话是业务在说需求，还是数据库在自我介绍？
 - **质量线**（2026-09-26 定）：③ 难题节**不能只复述题面 / 解释术语**——必须钉**实测的事实与陷阱**（计数、集合大小、并列/分布、易错读法），事实**先用 SQL 核过再写**；给出事实后要说明**该事实已确立、照此作答**（否则 agent 会把余量花在自证上）。
-- **补强配方（按需，不是每节都要）**：若某题跑完发现 agent 在**反复自证**（同一节命中、口径也对，却烧掉大量 SQL 求证边界），按这三条补该节（2026-09-28 q37 实证：只改节写法，379k→62k token、SQL 21→2）：① 这题最容易走错的**岔路**是哪条？② 岔路有没有**可实测的具体后果**（数字 / 行数 / 另一个实体——「2,269 行里 218 行考生数为 0」「会选到 1900 Third Street, Alameda」这种粒度，而不是「有些/可能」）？③ 加一句**「已确立，照此作答」**（settled 语气是功能性的：它直接对应 agent 的核查预算）。**只在出问题的节上做**——节的自然写法优先，不要为了凑格式改写健康的节。
+- **补强配方（按需，不是每节都要）**：若某题跑完发现 agent 在**反复自证**（同一节命中、口径也对，却烧掉大量 SQL 求证边界），按这三条补该节（实测实勘——q37，见 [birdmini README §四](../scenarios/birdminidev/README.zh.md)）：① 这题最容易走错的**岔路**是哪条？② 岔路有没有**可实测的具体后果**（数字 / 行数 / 另一个实体——「2,269 行里 218 行考生数为 0」「会选到 1900 Third Street, Alameda」这种粒度，而不是「有些/可能」）？③ 加一句**「已确立，照此作答」**（settled 语气是功能性的：它直接对应 agent 的核查预算）。**只在出问题的节上做**——节的自然写法优先，不要为了凑格式改写健康的节。
 - **节的厚度**：L3 已检索化（`dlr_search_sop` 只取命中那一节）——**节变长不再有全局成本，只在该题命中时付费**。所以补事实时不必心疼字数。
-- **Expected 一致性（不变量）**：`Expected` 里的每个值都必须落在**本节正文口径的答案集合内**。2026-09-28 q27 反例：正文口径"只列有成绩的学校"，Expected 却写了无成绩的学校 → 严守口径的答案反被判 WRONG（`rulingOf` 只按 Expected 判）。
+- **Expected 一致性（不变量）**：`Expected` 里的每个值都必须落在**本节正文口径的答案集合内**（q27 反例为实勘案例，见 [birdmini README §四](../scenarios/birdminidev/README.zh.md)）。
 - **可比口径**：裁定值写成 `> **Expected**：<值>`（多值用 `|` 分隔），判定/裁定都按它算；"真答案 = 空结果"的节**不写 Expected**，正文写清"空"的判据（判据认 `empty list / no data / 为空` 一类说法）。
 - **准入**：**事后、按需**——运行暴露问题 → 归类 → 补节；不预写通用规则（n=1 不成为规则）。三档准入见 [02-concept.md §二](02-concept.zh.md)。
-- **写完必须复跑**（2026-09-29 定）：节补完 → `tsm build sop` → **立刻跑该题对表**。节的生效时点晚于跑批时，归档里那一行还是补节前的结果，而它可能是被假阳性撑着的 ✅（q1136 节晚 11 分钟 / q1472 节晚 4.5 小时，全量重判后才暴露）。
-- **范围限定（防跨题移植）**：节的告诫会被 agent 搬到同型的其他题——q716 把"无 owner 的行留在分母"从 posts 百分比题搬到了 comments 百分比题。凡**可被推广的告诫**都要写明"它属于**本题**的口径"，并指出什么情形不适用（该节已补一句范围限定收口）。
+- **写完必须复跑**（2026-09-29 定）：节补完 → `tsm build sop` → **立刻跑该题对表**。节的生效时点晚于跑批时，归档里那一行还是补节前的结果，而它可能是被假阳性撑着的 ✅（两个迟到节案例 q1136/q1472 见 [birdmini README §四](../scenarios/birdminidev/README.zh.md)）。
+- **范围限定（防跨题移植）**：节的告诫会被 agent 搬到同型的其他题（移植案例 q716 见 [birdmini README §四](../scenarios/birdminidev/README.zh.md)）。凡**可被推广的告诫**都要写明"它属于**本题**的口径"，并指出什么情形不适用（该节已补一句范围限定收口）。
 - **交付**：`tsm build sop` 把源编译成 LanceDB 的 `sop` 索引（题面 → 节），由 `dlr_search_sop` 按题检索——**只取复述本题的那一节**（原 `sync_sop.sh` + `skills/sop` 整文件载入的传输方式已退役，2026-09-28）。真源仍只有这一份 `sop.md`。
 
 ## 三、`fixtures/` —— 对照真值
@@ -78,7 +79,7 @@ scenarios/birdminidev/
 
 ## 五、评审：双读测试
 
-每条语义条目（L1 描述 / L2 条目 / L3 节）入库前过**双读**：一个不懂技术的业务人员读一遍**不皱眉**，一个裸 LLM 读一遍**能执行**。两条都过才入库——人的皱眉就是模型的报错（[02-concept.zh.md](02-concept.zh.md) §四）。
+每条语义条目入库前过**双读测试**（完整定义见 [02-concept.zh.md](02-concept.zh.md) §四）。
 
 ## 六、换场景 checklist
 
@@ -86,18 +87,19 @@ scenarios/birdminidev/
 # 1) 指向新场景（或写进 .env 的 TSM_SCENARIO）
 export TSM_SCENARIO="/abs/path/scenarios/<name>"
 
-# 2) 构建三层
+# 2) 构建三层（在仓库根起）
 cd "TSM Core Service"
 npx tsx src/build/buildLance.ts --all          # L1 向量（LE/PE/属性/PAS）
 npx tsx src/build/buildConsensus.ts            # L2 向量（按 namespace）
 npx tsx src/build/buildSop.ts                  # L3 索引（题面 → 节）
-npx tsx src/graph/loadNeo4j.ts --all --wipe    # 图（⚠ 先停 MCP server：清库重建）
+npx tsx src/graph/loadNeo4j.ts --all --wipe    # 图（⚠ 先停 MCP server：清库重建；dlr-state 场景不装图）
+cd ..
 
-# 4) 考卷（可选：从三层源生成）
-node eval/build.mjs
+# 3) 考卷（可选：从三层源生成）
+node scenarios/<name>/eval/build.mjs
 
-# 5) 自检
-cd "../../TSM Core Service" && npx tsx src/verify/precheck.ts
+# 4) 自检
+cd "TSM Core Service" && npx tsx src/verify/precheck.ts
 ```
 
 ## 七、换场景时不动的三样
@@ -106,7 +108,7 @@ cd "../../TSM Core Service" && npx tsx src/verify/precheck.ts
 |---|---|
 | 认知层 `skills/paradigm`（TSM + DLR 范式认知） | **与场景无关**——这正是它单独存在的原因 |
 | L3 工具名 `dlr_search_sop` | 固定名：换的是索引内容（`tsm build sop` 从场景源编译），不是模型层的选择 |
-| MCP 工具面（7 个：L1/L2/L3 语义 + `get_full_data_info` 下探 + `execute_sql` 取数） | 契约冻结（见 [roadmap.zh.md](roadmap.zh.md) §一） |
+| MCP 工具面（冻结：`dlr` 形态 7 个——L1/L2/L3 语义 + `get_full_data_info` 下探 + `execute_sql` 取数；`dlr-state` 形态 3 个） | 契约冻结（见 [roadmap.zh.md](roadmap.zh.md) §一） |
 
 ## 相关
 
