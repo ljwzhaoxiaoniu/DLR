@@ -17,6 +17,7 @@
 
 > **Reading order (the four narrative docs)**: [01-background.md](01-background.md) states the **background and thesis** (problems: data / knowledge / API) → [02-concept.md](02-concept.md) gives the **concepts** (TSM) → [03-design.md](03-design.md) gives the **design** (DLR, the original foundation) → [04-application.md](04-application.md) gives the **application (solution)** (scenario packages). **The whole TSM + DLR design is the answer to the problems listed in 01.**
 > The in-tree reference docs ([TSM Core Service](<../TSM Core Service/README.md>), [DSH-based Agent Service](<../DSH-based Agent Service/README.md>)) stay where they are and are not merged into this directory.
+> Bilingual pairs are hash-registered in [README.i18n.yaml](README.i18n.yaml) — after editing either side of a pair, bring the other side along and re-record.
 
 ## History
 
