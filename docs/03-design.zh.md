@@ -53,7 +53,7 @@ R: { kind: unwind, pattern: '{side}_player_{slot}', side: [home, away], slot: ['
 ```
 
 - **服务侧**：`get_pe_mapping` 对 unwind PE 返回**现生成的行展开 SQL**（校验物理列后展开为 UNION ALL，`missing` 非空即规格写错），agent 可直接 `execute_sql`；
-- **首个用例与探针题**：football `Match` 的 22 个首发槽位 → `Appearance` LE（含 agent 实测轨迹与成本）见 [scenarios/birdminidev/README.md](../scenarios/birdminidev/README.md) §三「行级 PE」；
+- **首个用例与探针题**：football `Match` 的 22 个首发槽位 → `Appearance` LE（含 agent 实测轨迹与成本）见 [scenarios/birdminidev/README.zh.md](../scenarios/birdminidev/README.zh.md) §三「行级 PE」；
 - **边界**：数据集未说明语义的列（该表的 `X`/`Y` 槽位变体）**不建模**——行级建模是"把已有列讲成关系"，不是发明语义。
 
 - `ARCS.A.cardinality` 一律**从 LE 视角**写：`1:1`（每个锚定值 ↔ 本表 1 行 = 身份/属性面）或 `1:N`（↔ 本表 N 行 = 明细/事件面）。**不存在 `N:1` 写法。**
