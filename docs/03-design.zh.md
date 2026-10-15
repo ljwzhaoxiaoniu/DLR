@@ -2,6 +2,7 @@
 
 > **定位**：四篇叙事的 **③ 实现**。① [背景与主张](01-background.zh.md) 引出"语义建模以结构化数据源为基础"；② [概念](02-concept.zh.md) 给出 TSM 三级框架；**本文是 DLR——数据源级（L1）这一级的原创 foundation 详细设计**：LE / PE 双层 + ARCS / PAS 两个机制。
 > **读者**：接手 DLR 建模的人或 agent。读完应当能独立为一个新库写出合规的 DLR yaml，并知道哪里最容易错。
+> 英文版：[03-design.md](03-design.md) ｜ 索引：[README.zh.md](README.zh.md)
 
 ## 0. 一句话与两条设计要点
 
@@ -183,7 +184,8 @@ pas_relations:
 ### 3.2 其余规则速查
 
 - **规则 3：`PAS.A` 落在两侧之一的 public 面名字上**（不是实体名、不是物理列名，也不要求必须在源侧）。
-- **规则 4/10：业务核心度量与 WHERE / GROUP BY / JOIN 高频列 → public**。不升也能对，但要多花 2-3 步——**public/private 影响效率（步数 × token），不影响正确性**。
+- **规则 4：业务核心度量（金额/状态/日期/数量）→ public**。不升也能对，但要多花 2-3 步——**public/private 影响效率（步数 × token），不影响正确性**。
+- **规则 10：WHERE / GROUP BY / JOIN 高频列 → public**（效率理由同规则 4）。
 - **规则 5：纯关联表下沉为 PE 时，其连接键必须升为所属 LE 的 public**（否则 PAS 锚定键在源端断头）。
 - **规则 6：A_anchor 必须锚到有逻辑意义的 FK**（纯 junction FK 不配做主锚）。
 - **规则 7：独立业务概念 = 独立 LE**——即使物理上 FK 挂在别的表下，也不为物理结构所限。
@@ -242,7 +244,7 @@ pas_relations:
 
 **召回只在 LE 面收口**（"先收口后截断"）——这决定了两条设计纪律：LE description 必须丰富（规则 8）、例名必须写进 LE 可见面（规则 11）。
 
-### 5.3 工具面（7 个）
+### 5.3 工具面（`dlr` 形态 7 个；`dlr-state` 形态 3 个）
 
 `dlr_semantic_query`（LE 召回）→ `get_pe_mapping`（第二跳：表名/**视图列**/ARCS/`database_url`）/ `get_le_attrs`；`dlr_search_consensus`（L2）；`dlr_search_sop`（**L3**：按题检索的 SOP 索引，只取复述本题的那一节）；`execute_sql`（取数：**子进程执行 + 20s 硬超时**，超时中止并让 agent 改写——防病态 SQL 钉死单线程服务）；`get_full_data_info`（**下探**：视图外的物理列，用后须在答案反馈建模缺口）。
 
@@ -266,7 +268,7 @@ npx tsx src/verify/precheck.ts                # 工具面可用
 
 7. **跑题验证**：走 dsh 单题（`run_one.sh`），看召回是否落在正确的 LE 上。
 
-## 7. 自检清单（提交前逐条过）
+## 7. 自检清单（自 §3.2 规则派生，按走序逐条过）
 
 ```
 [ ] LE 有业务对象生命周期吗？（纯 junction 下沉为 PE）
@@ -286,7 +288,7 @@ npx tsx src/verify/precheck.ts                # 工具面可用
 [ ] id 全局唯一吗？（2.0 载入器无冲突拦截，重名会静默合并）
 ```
 
-## 8. 常见错误与后果
+## 8. 常见错误与后果（严重度视图；规则定义见 §3.2）
 
 | 错误 | 后果 | 严重度 |
 |---|---|---|

@@ -2,6 +2,7 @@
 
 > **Position**: ③ of the four narrative docs. ① [Background and thesis](01-background.md) argues for "semantic modeling grounded in structured data sources"; ② [Concepts](02-concept.md) gives the TSM three-level frame; **this document is DLR — the detailed design of the original foundation at the data-source level (L1)**: the LE / PE two layers plus the two mechanisms, ARCS and PAS.
 > **Audience**: whoever (or whatever agent) takes over DLR modeling. After reading it you should be able to write a compliant DLR yaml for a new database on your own — and know where mistakes cluster.
+> 中文版：[03-design.zh.md](03-design.zh.md) ｜ Index: [README.md](README.md)
 
 ## 0. One sentence, two design points
 
@@ -183,7 +184,8 @@ pas_relations:
 ### 3.2 The rest of the rules, quick-reference
 
 - **Rule 3: `PAS.A` lands on a public-face name of one of the two sides** (not an entity name, not a physical column name, and it does not have to be on the source side).
-- **Rules 4/10: business core measures and high-frequency WHERE / GROUP BY / JOIN columns → public**. Leaving them private still answers correctly, but costs 2-3 extra steps — **public/private affects efficiency (steps × tokens), not correctness**.
+- **Rule 4: business core measures (amounts / status / dates / quantities) → public**. Leaving them private still answers correctly, but costs 2-3 extra steps — **public/private affects efficiency (steps × tokens), not correctness**.
+- **Rule 10: high-frequency WHERE / GROUP BY / JOIN columns → public** (same efficiency rationale as rule 4).
 - **Rule 5: when a pure association table sinks into a PE, its join keys must be promoted to the owning LE's public** (otherwise the PAS anchor key is decapitated at the source end).
 - **Rule 6: the A_anchor must anchor to a logically meaningful FK** (a bare junction FK does not qualify as the main anchor).
 - **Rule 7: an independent business concept = an independent LE** — even when the physical FK hangs under another table; never be limited by physical structure.
@@ -242,7 +244,7 @@ pas_relations:
 
 **Recall converges only at the LE face** ("converge first, then truncate") — which fixes two design disciplines: LE descriptions must be rich (rule 8), and example names must be written onto the LE's visible face (rule 11).
 
-### 5.3 The tool surface (7)
+### 5.3 The tool surface (7 in the `dlr` shape; 3 in `dlr-state`)
 
 `dlr_semantic_query` (LE recall) → `get_pe_mapping` (the second hop: table name / **view columns** / ARCS / `database_url`) / `get_le_attrs`; `dlr_search_consensus` (L2); `dlr_search_sop` (**L3**: the SOP index retrieved per question — only the one section that restates this question); `execute_sql` (data fetch: **executed in a subprocess with a 20 s hard timeout** — on timeout it aborts and the agent rewrites, so a pathological SQL cannot pin the single-threaded service); `get_full_data_info` (**drill-down**: physical columns outside the view; after using it the answer must record the modeling gap).
 
@@ -266,7 +268,7 @@ npx tsx src/verify/precheck.ts                # tool surface is up
 
 7. **Question-level validation**: run a single question through dsh (`run_one.sh`) and watch whether recall lands on the right LE.
 
-## 7. Self-check list (walk every line before submitting)
+## 7. Self-check list — derived from §3.2's rules, in walk order (every line before submitting)
 
 ```
 [ ] Does each LE have a business-object lifecycle? (pure junctions sank into PEs)
@@ -286,7 +288,7 @@ npx tsx src/verify/precheck.ts                # tool surface is up
 [ ] Are ids globally unique? (the 2.0 loader has no collision interception; same names merge silently)
 ```
 
-## 8. Common errors and their consequences
+## 8. Common errors and their consequences (a severity view; rule definitions in §3.2)
 
 | Error | Consequence | Severity |
 |---|---|---|
