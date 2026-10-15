@@ -38,7 +38,7 @@
 
 ![Cloud-OpsBench —— 模型基线的 JRA 与证据链全闭对比](assets/charts/cloudopsbench.svg)
 
-*柱：JRA；线：证据链全闭（ECR）—— 基线取自基准报告，按 Online Boutique（550）+ Train-Ticket（204）加权；我方由同一上游评分器判分。*
+*Cloud-OpsBench（754 例）：JRA —— 故障组件 + 故障类型都对（柱）；ECR —— 证据链全闭（线）。基线：基准报告（arXiv:2603.00468），各模型分数按 Online Boutique（550）+ Train-Ticket（204）加权。我方：DeepSeek-V4.1-Flash + TSM+DLR —— JRA 752/754（99.7%）、证据链全闭 724/754（96.0%），由同一上游评分器判分。*
 
 | 跑批 | 结果 | 备注 |
 |---|---|---|

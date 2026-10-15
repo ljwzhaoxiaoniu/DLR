@@ -38,7 +38,7 @@ Two external benchmarks, both run end-to-end under this architecture (every case
 
 ![Cloud-OpsBench — JRA and evidence-chain closure vs model baselines](assets/charts/cloudopsbench.svg)
 
-*Bars: JRA; line: evidence-chain closure (ECR) — baselines from the benchmark report, weighted over Online Boutique (550) + Train-Ticket (204); ours scored by the same upstream scorer.*
+*Cloud-OpsBench (754 cases): JRA — faulty component + fault type both correct (bars); ECR — evidence chains fully closed (line). Baselines: the benchmark report (arXiv:2603.00468), per-model scores weighted over Online Boutique (550) + Train-Ticket (204). Ours: DeepSeek-V4.1-Flash + TSM+DLR — JRA 752/754 (99.7%), chains fully closed 724/754 (96.0%), scored by the same upstream scorer.*
 
 | Run | Result | Notes |
 |---|---|---|
