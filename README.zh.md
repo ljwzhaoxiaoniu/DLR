@@ -2,7 +2,7 @@
 
 [English](README.md) | 中文
 
-[![BIRD mini-dev · 500/500](https://img.shields.io/badge/BIRD_mini--dev-500%2F500_correct-brightgreen)](#benchmarks) [![Cloud-OpsBench · JRA 752/754](https://img.shields.io/badge/Cloud--OpsBench-JRA_752%2F754_(99.7%25)-blue)](#benchmarks) [![npm](https://img.shields.io/npm/v/dsh-tsm-agent)](https://www.npmjs.com/package/dsh-tsm-agent)
+[![BIRD mini-dev · 500/500](https://img.shields.io/badge/BIRD_mini--dev-500%2F500_correct-brightgreen)](#benchmarks) [![Cloud-OpsBench · JRA 752/754](https://img.shields.io/badge/Cloud--OpsBench-JRA_752%2F754_(99.7%25)-brightgreen)](#benchmarks) [![npm](https://img.shields.io/npm/v/dsh-tsm-agent)](https://www.npmjs.com/package/dsh-tsm-agent)
 
 **DLR（Decoupled Logic Representation）** 是本项目原创的**数据源级**语义建模范式：**LE / PE** 双层模型 + **ARCS**（投影锚定）与 **PAS**（语义路由）两个机制，把逻辑概念层与物理数据层解耦，让 LLM agent 可靠地把自然语言问题落到关系数据库上。详见 [docs/03-design.zh.md](docs/03-design.zh.md)。
 
@@ -26,16 +26,24 @@
 
 **BIRD mini-dev —— NL2SQL · 11 库 · 500 题** · 场景包 [`birdminidev`](scenarios/birdminidev/)
 
+![BIRD mini-dev —— 代表性系统 vs 我方的执行准确率](assets/charts/bird-minidev.svg)
+
+*BIRD mini-dev（500 题）执行准确率（EX）：GPT-4o 上代表性的免训练方法，取自 PV-SQL 论文（arXiv:2604.17653）。我方：DeepSeek-V4.1-Flash + TSM+DLR —— 426/500 与 gold 完全一致 + 74/500 按 L3 缺陷裁定。*
+
 | 跑批 | 结果 | 备注 |
 |---|---|---|
 | 全部 500 题 | **500/500 评定正确** —— ✅ 426 与 gold 完全一致 + 🔁 74 处按 L3 节口径裁定正确（那些题 gold 本身有缺陷） | 零错误 · 每题 token 中位 ≈ 5.6 万 / 约 6 步 |
 
 **Cloud-OpsBench —— Kubernetes 根因诊断 · 754 例**（Online Boutique + Train-Ticket）· 场景包 [`cloudopsbench`](scenarios/cloudopsbench/)
 
+![Cloud-OpsBench —— 模型基线的 JRA 与证据链全闭对比](assets/charts/cloudopsbench.svg)
+
+*柱：JRA；线：证据链全闭（ECR）—— 基线取自基准报告，按 Online Boutique（550）+ Train-Ticket（204）加权；我方由同一上游评分器判分。*
+
 | 跑批 | 结果 | 备注 |
 |---|---|---|
-| 全量 754/754 例（100%） | **JRA 752/754（99.7%）** · 证据链全闭 724/754（96.0%） | 流程分均值 MC 0.99 / EOC 0.94 · 无效动作 0.4% |
-| 对照 —— 基准自家评分器 | 该基准报告的最强模型基线：JRA ≈ 0.76、证据链闭合 ≈ 0.38（探索面广、闭不上链） | 上游评分器原样判分，无人工翻盘 |
+| 全量 754/754 例（100%） | **JRA 752/754（99.7%）** ✅ · 证据链全闭 724/754（96.0%） | 流程分均值 MC 0.99 / EOC 0.94 · 无效动作 0.4% |
+| 对照 —— 模型基线（基准自家评分器） | 基准报告最强基线：JRA 0.76（Online Boutique）/ 0.68（Train-Ticket），全 754 加权 ≈ 0.73；证据链闭合 0.38 / 0.15（探索面广、闭不上链） | 上游评分器原样判分，无人工翻盘 |
 
 台账（逐题 + 证据）：[birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md)
 
@@ -146,7 +154,7 @@ Neo4j（图：LE 50 / PE 74 / LA 277 / PA 784 · PAS 37；Browser :7474）
 
 包内还有：`eval/questions.jsonl`（考卷——一行一题 `{question, expected, source}`；74 处缺陷裁定题的答案键取 L3 节口径，其余取 gold）、`results/<轮次>/`（跑批留档）、`fixtures/`（verify 套件对照真值）、`DETAIL.md` + `DETAIL/<库>.md`（台账）。
 
-当前场景 **`birdminidev`**：BIRD mini-dev——11 库 / 500 题全部跑完并判定，**500/500**（✅ 426 + 🔁 74 数据集缺陷裁定；零错误）。每题 token 中位 ≈ 5.6 万（均值 7.3 万），约 6 步 / 10 次工具调用。台账：[scenarios/birdminidev/DETAIL.md](scenarios/birdminidev/DETAIL.md)。
+现有场景两个 —— **`birdminidev`**：BIRD mini-dev，11 库 / 500 题全部跑完并判定，**500/500**（✅ 426 + 🔁 74 数据集缺陷裁定；零错误）；每题 token 中位 ≈ 5.6 万（均值 7.3 万），约 6 步 / 10 次工具调用。**`cloudopsbench`**：Cloud-OpsBench —— 754 例 K8s 根因诊断，**JRA 752/754（99.7%）**。台账：[birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md)。
 
 换场景：把服务指向另一个包（`TSM_SCENARIO=<路径>`）、重建，按 [docs/04-application.zh.md](docs/04-application.zh.md) 的 checklist 走。
 

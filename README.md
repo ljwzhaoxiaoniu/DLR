@@ -2,7 +2,7 @@
 
 English | [中文](README.zh.md)
 
-[![BIRD mini-dev · 500/500](https://img.shields.io/badge/BIRD_mini--dev-500%2F500_correct-brightgreen)](#benchmarks) [![Cloud-OpsBench · JRA 752/754](https://img.shields.io/badge/Cloud--OpsBench-JRA_752%2F754_(99.7%25)-blue)](#benchmarks) [![npm](https://img.shields.io/npm/v/dsh-tsm-agent)](https://www.npmjs.com/package/dsh-tsm-agent)
+[![BIRD mini-dev · 500/500](https://img.shields.io/badge/BIRD_mini--dev-500%2F500_correct-brightgreen)](#benchmarks) [![Cloud-OpsBench · JRA 752/754](https://img.shields.io/badge/Cloud--OpsBench-JRA_752%2F754_(99.7%25)-brightgreen)](#benchmarks) [![npm](https://img.shields.io/npm/v/dsh-tsm-agent)](https://www.npmjs.com/package/dsh-tsm-agent)
 
 **DLR (Decoupled Logic Representation)** is an original **data-source-level** semantic modeling paradigm: a two-layer model (**LE** logical entities / **PE** physical views) plus two mechanisms (**ARCS** projection anchoring, **PAS** semantic routing). It decouples the logical concept layer from the physical data layer so an LLM agent can land natural-language questions on relational databases reliably. See [docs/03-design.md](docs/03-design.md).
 
@@ -26,16 +26,24 @@ Two external benchmarks, both run end-to-end under this architecture (every case
 
 **BIRD mini-dev — NL2SQL · 11 databases · 500 questions** · scenario [`birdminidev`](scenarios/birdminidev/)
 
+![BIRD mini-dev — execution accuracy: representative published systems vs ours](assets/charts/bird-minidev.svg)
+
+*EX on BIRD mini-dev (500 q): representative training-free methods on GPT-4o, as reported in the PV-SQL paper (arXiv:2604.17653). Ours: DeepSeek-V4.1-Flash + TSM+DLR — 426/500 exactly matching gold + 74/500 carried by L3 defect rulings.*
+
 | Run | Result | Notes |
 |---|---|---|
 | All 500 questions | **500/500 judged correct** — ✅ 426 matching gold exactly + 🔁 74 ruled correct under L3 clauses (the dataset's own gold is defective on those) | zero errors · median ≈ 56k tokens / ~6 steps per question |
 
 **Cloud-OpsBench — Kubernetes root-cause analysis · 754 cases** (Online Boutique + Train-Ticket) · scenario [`cloudopsbench`](scenarios/cloudopsbench/)
 
+![Cloud-OpsBench — JRA and evidence-chain closure vs model baselines](assets/charts/cloudopsbench.svg)
+
+*Bars: JRA; line: evidence-chain closure (ECR) — baselines from the benchmark report, weighted over Online Boutique (550) + Train-Ticket (204); ours scored by the same upstream scorer.*
+
 | Run | Result | Notes |
 |---|---|---|
-| All 754 cases (100%) | **JRA 752/754 (99.7%)** · evidence chains fully closed: 724/754 (96.0%) | process means MC 0.99 / EOC 0.94 · invalid actions 0.4% |
-| Reference — the benchmark's own scorer | strongest model baselines in the benchmark report JRA ≈ 0.76 with evidence-chain closure ≈ 0.38 (exploring wide, closing no chain) | scored by the upstream scorer as-is; no manual rulings |
+| All 754 cases (100%) | **JRA 752/754 (99.7%)** ✅ · evidence chains fully closed: 724/754 (96.0%) | process means MC 0.99 / EOC 0.94 · invalid actions 0.4% |
+| Reference — model baselines (the benchmark's own scorer) | strongest baselines in the benchmark report: JRA 0.76 (Online Boutique) / 0.68 (Train-Ticket), ≈ 0.73 weighted over all 754; evidence-chain closure 0.38 / 0.15 (exploring wide, closing no chain) | scored by the upstream scorer as-is; no manual rulings |
 
 Ledgers, question by question with evidence: [birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md)
 
@@ -146,7 +154,7 @@ A **scenario** is one complete TSM: content lives in `scenarios/<name>/` and is 
 
 Also in the package: `eval/questions.jsonl` (the exam paper — one line per question: `{question, expected, source}`; answer keys come from the L3 clause for the 74 defect-ruled questions, gold otherwise), `results/<run>/` (graded runs), `fixtures/` (truth sets for the verify suite), `DETAIL.md` + `DETAIL/<db>.md` (ledger).
 
-Current scenario **`birdminidev`**: BIRD mini-dev — 11 databases / 500 questions, all run and judged — **500/500** (✅ 426 + 🔁 74 dataset-defect rulings; zero errors). Token median ≈ 55.9k per question (mean 73.3k), ~6 steps / 10 tool calls. Ledger: [scenarios/birdminidev/DETAIL.md](scenarios/birdminidev/DETAIL.md).
+Scenarios in the box — **`birdminidev`**: BIRD mini-dev, 11 databases / 500 questions, all run and judged — **500/500** (✅ 426 + 🔁 74 dataset-defect rulings; zero errors); token median ≈ 55.9k per question (mean 73.3k), ~6 steps / 10 tool calls. **`cloudopsbench`**: Cloud-OpsBench — 754 Kubernetes RCA cases — **JRA 752/754 (99.7%)**. Ledgers: [birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md).
 
 Switching scenarios: point the service at another package (`TSM_SCENARIO=<path>`), rebuild, and follow the checklist in [docs/04-application.md](docs/04-application.md).
 
