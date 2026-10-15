@@ -228,7 +228,7 @@ TSM_SCENARIO=tsm-scenario-cloudopsbench TSM_STORE_DIR=$HOME/.tsm/lance/cloudopsb
 TSM_SCENARIO=tsm-scenario-cloudopsbench TSM_STORE_DIR=$HOME/.tsm/lance/cloudopsbench tsm serve --http 28796
 ```
 
-往下走之前要知道两件事：`dlr-state` 路径**不装载图**（不需要 Neo4j）；TSM store 只承载**导航层**——case 数据与诊断接口来自**上游基准**（约 3.9GB 的 [LLM4Ops/Cloud-OpsBench](https://github.com/LLM4Ops/Cloud-OpsBench) 检出，快照 `ea05daf`），逐题跑题的装配在仓库侧（`DSH-based Agent Service/dsh_cob/`），不随 npm 包分发。也就是说：npm 包给到 COB 的语义侧；754 例的完整评测从仓库检出跑——细节见[场景 README](../scenarios/cloudopsbench/README.md)。
+往下走之前要知道两件事：`dlr-state` 路径**不装载图**（不需要 Neo4j）；TSM store 只承载**导航层**——case 数据与诊断接口来自**上游基准**（约 3.9GB 的 [LLM4Ops/Cloud-OpsBench](https://github.com/LLM4Ops/Cloud-OpsBench) 检出，快照 `ea05daf`），逐题跑题的装配在仓库侧（`DSH-based Agent Service/dsh_cob/`），不随 npm 包分发。也就是说：npm 包给到 COB 的语义侧；754 例的完整评测从仓库检出跑——细节见[场景 README](../scenarios/cloudopsbench/README.zh.md)。
 
 **排障速查（npm 路线）**
 
