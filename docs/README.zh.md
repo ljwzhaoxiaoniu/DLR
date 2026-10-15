@@ -16,7 +16,7 @@
 | [roadmap.zh.md](roadmap.zh.md) | 操作 —— **扩展边界（DSL_SQL/OData）** · 可移植三步（全部落地） · 待探索 | ✅ |
 
 > **读法（叙事四篇）**：`01-background.zh.md` 提出**背景与主张**（当前的问题：数据 / 知识 / API）→ `02-concept.zh.md` 给**概念**（TSM）→ `03-design.zh.md` 给**实现**（DLR，原创 foundation 的详细设计）→ `04-application.zh.md` 给**落地（解法）**（场景包）。**TSM + DLR 的设计就是为解决背景篇所列的问题。**
-> 两棵树内的就地说明书（`TSM Core Service/README.md`、`DSH-based Agent Service/README.md`）保持现状，不并入本目录。
+> 两棵树内的就地说明书（`TSM Core Service/README.zh.md`、`DSH-based Agent Service/README.zh.md`）保持现状，不并入本目录。
 
 ## 历史
 

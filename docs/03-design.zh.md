@@ -302,4 +302,4 @@ npx tsx src/verify/precheck.ts                # 工具面可用
 ## 相关
 
 - 概念与准入判据：[02-concept.zh.md](02-concept.zh.md)｜应用（场景包）：[04-application.zh.md](04-application.zh.md)
-- 构建链路与命令：[TSM Core Service/README.md](<../TSM Core Service/README.md>)
+- 构建链路与命令：[TSM Core Service/README.zh.md](<../TSM Core Service/README.zh.md>)

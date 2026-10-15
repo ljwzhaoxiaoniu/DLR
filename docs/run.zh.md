@@ -1,7 +1,7 @@
 # 运行手册（2.0）
 
 > 操作篇：**起后端 / 跑题 / Web / 状态面 / 排障**。命令都在 Git Bash 下执行（Windows）。
-> 背景见叙事四篇（[01](01-background.zh.md) → [04](04-application.zh.md)）；两棵树的就地说明书：[TSM Core Service](<../TSM Core Service/README.md>)、[DSH-based Agent Service](<../DSH-based Agent Service/README.md>)。
+> 背景见叙事四篇（[01](01-background.zh.md) → [04](04-application.zh.md)）；两棵树的就地说明书：[TSM Core Service](<../TSM Core Service/README.zh.md>)、[DSH-based Agent Service](<../DSH-based Agent Service/README.zh.md>)。
 > 英文版：[run.md](run.md)
 
 **目录**：[0](#0-全局图) · [1](#1-起后端幂等) · [2](#2-跑一道题headless) · [2.5](#25-跑考试dsh-tsm-eval) · [3](#3-web-对话) · [4](#4-状态面) · [5](#5-图后端neo4j-缺席时变什么) · [6](#6-排障表) · [7](#7-纪律) · [8](#8-从零开跑npm-走查)
