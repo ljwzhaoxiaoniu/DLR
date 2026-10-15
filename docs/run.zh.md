@@ -42,7 +42,7 @@ bash "DSH-based Agent Service/dsh_dlr/run_one.sh" <qid> "<question>"
 - 产物：`tmp_scripts/dsh_smoke/<stamp>_<qid>_dlr.ndjson`（`--json` 事件流）+ 同名 `.err`。
 - 自动预检后端；后端不可达**响亮退出**（exit 3），不会烧模型调用。
 - 会话日志：`DSH-based Agent Service/.dsh-home/sessions/<项目目录>/<session-id>/session.v4.jsonl.zstd`（**多帧 zstd**，取证解码器 `DSH-based Agent Service/scripts/decode_session_log.cjs`）。
-- **跑一批**（一批 4 题、批间停下报数；批内并发派发带内存闸 → 判定 → 统计）：见 `scenarios/birdminidev/results/README.md`「一轮怎么跑」。
+- **跑一批**（一批 4 题、批间停下报数；批内并发派发带内存闸 → 判定 → 统计）：见 `scenarios/birdminidev/results/README.zh.md`「一轮怎么跑」。
 
 ## 2.5 跑考试（dsh-tsm-eval）
 

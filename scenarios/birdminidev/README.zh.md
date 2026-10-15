@@ -226,7 +226,7 @@ tsm coverage         # 覆盖度对账（本场景离"最优解"的差距）
 
 > 本块随跑批由 `tsm stats` 同步**英文侧**（README.md 的 `stats` 标记块）；此处为中文阅读镜像，**数值以英文侧为准**。**逐题明细**（评定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)；逐轮统计 [results/STATS.md](results/STATS.md)。与 gold 的**原始逐字比对**（含 74 道数据集缺陷题的比对记录）也在这两处可查。
 
-**怎么看**：判定口径见 [results/README.md](results/README.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。
+**怎么看**：判定口径见 [results/README.zh.md](results/README.zh.md)；**逐题明细**（判定 / 调用步骤 / 依据与结论）见并列的 [DETAIL.md](DETAIL.md)，机器可读 `results/<轮次>/questions.csv`（含 `session` 列，可解码回放）；逐轮统计 `results/STATS.md`。
 
 **怎么更新**：跑完一批 → `tsm grade --run <轮次目录>` → `tsm stats`（重算图与本节块）；跑题中遇到的问题按类型补进 `sources/sop.md`。
 

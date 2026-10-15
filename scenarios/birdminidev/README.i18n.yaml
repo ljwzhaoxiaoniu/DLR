@@ -6,4 +6,4 @@
 # 规则：每篇文档一对 X.md（英文主）+ X.zh.md（中文对照）。新增一篇 → 在此登记两条哈希。
 # 注：README.md 内的 stats:/mistakes: 机块由 `tsm stats` 同步（英文侧为准）；改 .zh 侧镜像后须重登记。
 README.md: 19d62754f62e6333c7809279769b52bb6e46d954
-README.zh.md: 997a4b3fc1334880ceaa0ccf1fabd2c827fe4361
+README.zh.md: 81179f68787a6fce094ca7eca4c1109c914a23b0
