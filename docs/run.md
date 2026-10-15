@@ -122,68 +122,108 @@ curl -s http://127.0.0.1:28795/status
 - Temporary artifacts go to `tmp_scripts/` or are deleted on the spot.
 - **Batch + grading**: `run_batch.sh --qids ... --jobs 3` → `tsm grade --run <dir>`; the three-tier verdicts, reversal policy and migration-period discipline (5 questions per batch, at most two passes per question, always re-run after writing a clause, full re-judge after policy changes) are in [eval.md](eval.md) §5.
 
-## 8. New-machine install
+## 8. From zero: the npm walkthrough
 
-> Goal: on a machine that has **only dsh**, stand the whole thing up. Split into three packages: the **service** `tsm-core-dlr`, the **scenario content** `tsm-scenario-birdmini`, and the **dsh bundle** `dsh-tsm-agent` (which depends on the service).
+> Audience: a fresh machine with only **Node + npm**. Goal: stand the whole thing up from npm — dsh first, then the semantic backend, then the bundle — and ask a real question. The pieces are three packages: the **service** `tsm-core-dlr`, the **scenario content** `tsm-scenario-birdmini`, and the **dsh bundle** `dsh-tsm-agent` (which depends on the service).
 
-**0) Packages** (from npm; in this checkout, install from paths instead)
+**0) Prerequisites**
+
+| Item | Check | Notes |
+|---|---|---|
+| Node ≥ 23.4 (24 recommended) | `node -v` | Runs the service and dsh (`node:sqlite` without a flag) |
+| npm | `npm -v` | |
+| Neo4j 5.x — **optional** | — | Skip on the first pass: without it the service uses the in-memory graph (§5) |
+
+**1) Install dsh (the host, first)**
 
 ```bash
-npm i -g tsm-core-dlr                 # the service + `tsm` CLI
-npm i -g tsm-scenario-birdmini        # scenario content (one package per benchmark)
+npm i -g @deepseek-ai/dsh@0.2.0-rc.2 pnpm
+dsh --help            # should print the CLI usage
 ```
 
-**1) System dependencies**
+Configure model credentials for dsh itself (settings UI, or a `DEEPSEEK_API_KEY` environment variable); `DSH-based Agent Service/dsh_dlr/.env.example` in this repo is a working reference. `pnpm` is what `dsh plugin` forwards to — bundle installs need it.
 
-| Item | Notes |
-|---|---|
-| Node ≥ 23.4 (24 recommended) + npm | Runs the service and dsh (`node:sqlite` without a flag) |
-| Git Bash (Windows) / bash | Host for all scripts |
-| Neo4j 5.x — **optional** | Only for the Neo4j graph backend: `docker run -d --name tsm-neo4j -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/<password> neo4j:5`; without it the service uses the in-memory graph |
-
-**2) Model and dataset** (both large; fetched separately)
+**2) Install the service and the scenario content**
 
 ```bash
-tsm fetch-model                                    # ONNX encoder ~95 MB (hf-mirror)
-# dataset ~1.4 GB: copy MINIDEV_sqlite/ from the original machine, or download
-# mini_dev: fetch from bird-bench/mini_dev and unpack to <data-root>/MINIDEV_sqlite/
+npm i -g tsm-core-dlr tsm-scenario-birdmini
+tsm --help            # should list: serve / status / build / verify / fetch-model / scenario / ...
 ```
 
-**3) Build the indexes** (matching the backend; `graph` is a no-op self-check in memory mode)
+**3) One-time config: `~/.tsm/.env`**
 
 ```bash
-TSM_SCENARIO=tsm-scenario-birdmini TSM_DATASET_DIR=<data-root> tsm build all
+mkdir -p ~/.tsm
+cat > ~/.tsm/.env <<'EOF'
+TSM_SCENARIO=tsm-scenario-birdmini
+TSM_DATASET_DIR=$HOME/tsm-data
+EOF
 ```
 
-**4) Serve**
+Why here: the service loads `<service>/.env`, then `<data-dir>/.env` (default `~/.tsm` when installed from npm); system environment variables win over both. With this file in place every `tsm` command runs bare — no inline prefixes to forget.
+
+**4) Fetch the model and the dataset**
 
 ```bash
-TSM_SCENARIO=tsm-scenario-birdmini TSM_DATASET_DIR=<data-root> tsm serve --http 28795
-# in-repo equivalent: bash "DSH-based Agent Service/scripts/start_backend.sh"
+tsm fetch-model        # ONNX encoder ~95 MB (hf-mirror) → ~/.tsm/models/bge-onnx
+mkdir -p ~/tsm-data
+# dataset ~1.4 GB: download mini_dev from https://github.com/bird-bench/mini_dev
+# and unpack to ~/tsm-data/MINIDEV_sqlite/ (mini_dev_sqlite.json + 11 .sqlite files)
+ls ~/tsm-data/MINIDEV_sqlite/mini_dev_sqlite.json   # must exist
 ```
 
-**5) dsh side**
+**5) Build the indexes**
 
 ```bash
-npm install -g @deepseek-ai/dsh@0.2.0-rc.2        # current adapted version
-npm install -g pnpm                               # `dsh plugin` forwards to pnpm (needed to install bundles)
+tsm scenario           # sanity: scenario=tsm-scenario-birdmini, source=env-package, dataset path
+tsm build all          # L1 vectors (946 rows) + L2 consensus (91) + L3 SOP; `graph` is a memory self-check
+```
 
-dsh plugin --profile web add dsh-tsm-agent        # installs tsm-core-dlr with it
-dsh plugin --profile headless add dsh-tsm-agent
+**6) Serve** (keep this terminal open)
+
+```bash
+tsm serve --http 28795
+# new terminal:
+tsm status             # ok:true; graph LE 50 / PE 74 / PA 784 · PAS 37
+tsm verify precheck    # connects to the server and lists the 7 tools
+```
+
+**7) Wire the bundle into dsh**
+
+```bash
+dsh plugin --profile web add dsh-tsm-agent           # pulls tsm-core-dlr with it
+dsh plugin --profile headless add dsh-tsm-agent      # optional: for one-shot CLI runs
 # ⚠ installing ≠ selecting: add dsh-tsm-agent to each profile's dsh.profile.bundles
-#   (or tick it in the Plugin Manager, which does both)
+#   (ticking it in the Plugin Manager does both)
 ```
 
-**6) Acceptance**
+**8) Ask a question**
 
-| Check | Expected |
+```bash
+dsh web                # the status card (bottom right) should show both lamps green
+```
+
+Ask: `What is the ratio of customers who pay in EUR against customers who pay in CZK?`
+Expected: tool calls under `mcp__semantic-core__*` (semantic query → PE mapping → `execute_sql`), and the answer **0.0657**.
+
+One-shot CLI variant (with the headless bundle enabled):
+
+```bash
+dsh --profile headless --json "Question: What is the ratio of customers who pay in EUR against customers who pay in CZK?"
+```
+
+**Troubleshooting (npm route)**
+
+| Symptom | Fix |
 |---|---|
-| `tsm verify precheck` | 7 tools |
-| `curl -s localhost:28795/status` | `ok:true`; graph `LE 50 / PE 74 / PA 784 · PAS 37` (in memory **or** Neo4j backend) |
-| `bash dsh_dlr/run_one.sh 1471 "What is the ratio of customers who pay in EUR against customers who pay in CZK?"` | answer **0.0657** |
-| `bash dsh_dlr/run_web.sh` | both status lamps green |
+| `EBADENGINE` on `npm i -g` | Node < 23.4 — upgrade Node |
+| Error that `TSM_SCENARIO=...` is neither a path nor an installed scenario package | scenario package not installed into the same global root (`npm i -g tsm-scenario-birdmini`), or `~/.tsm/.env` missing |
+| `tsm scenario` reports `source=default` | the scenario package was not picked up — recheck `~/.tsm/.env` |
+| Port 28795 already in use | `netstat -ano \| grep :28795` → `taskkill //F //PID <pid>` |
+| Web shows no status card / no `preset-dlr` | bundle installed but not selected (see step 7) |
+| Questions get no tool calls | model credentials not configured (see step 1), or the service terminal is not running |
 
-> Any deviation = a portability problem; report it back to this repo (that is exactly what path decoupling is meant to guarantee).
+> Any step that does not match its "expected" line = a portability regression: report it back to this repo.
 
 ## Related
 

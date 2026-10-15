@@ -124,68 +124,108 @@ curl -s http://127.0.0.1:28795/status
 - 临时产物一律进 `tmp_scripts/`，或随用随删。
 - **跑一批题 + 判定**：`run_batch.sh --qids ... --jobs 3` → `tsm grade --run <批次目录>`；判据三层、翻盘口径与迁移期纪律（5 题一批 / 每题最多两遍 / 节写完必须复跑 / 全量重判）见 [eval.zh.md](eval.zh.md) §五。
 
-## 8. 新机器安装
+## 8. 从零开跑（npm 走查）
 
-> 目标：在"只有 dsh 的环境"把整套装起来。拆成三个包：**服务** `tsm-core-dlr`、**场景内容** `tsm-scenario-birdmini`、**dsh bundle** `dsh-tsm-agent`（依赖服务）。
+> 读者：只有 **Node + npm** 的新机器。目标：全程从 npm 把整套立起来——先 dsh，再语义后端，再 bundle——最后真问一道题。三个包：**服务** `tsm-core-dlr`、**场景内容** `tsm-scenario-birdmini`、**dsh bundle** `dsh-tsm-agent`（依赖服务）。
 
-**0) 装包**（从 npm；在检出里则改用路径安装）
+**0) 前置**
+
+| 项 | 检查 | 说明 |
+|---|---|---|
+| Node ≥ 23.4（建议 24） | `node -v` | 跑服务与 dsh（`node:sqlite` 免旗标） |
+| npm | `npm -v` | |
+| Neo4j 5.x —— **可选** | — | 第一遍先跳过：没有它就自动用内存图（§5） |
+
+**1) 装 dsh（宿主，第一步）**
 
 ```bash
-npm i -g tsm-core-dlr                 # 服务 + `tsm` CLI
-npm i -g tsm-scenario-birdmini        # 场景内容（一个 benchmark 一个包）
+npm i -g @deepseek-ai/dsh@0.2.0-rc.2 pnpm
+dsh --help            # 应打印 CLI 用法
 ```
 
-**1) 系统依赖**
+给 dsh 配好模型凭据（设置界面，或 `DEEPSEEK_API_KEY` 环境变量）——本仓库 `DSH-based Agent Service/dsh_dlr/.env.example` 是一份可用参考。`pnpm` 是 `dsh plugin` 的转发目标，装 bundle 必需。
 
-| 项 | 说明 |
-|---|---|
-| Node ≥ 23.4（建议 24）+ npm | 跑服务与 dsh（`node:sqlite` 免旗标） |
-| Git Bash（Windows）/ bash | 所有脚本的宿主 |
-| Neo4j 5.x —— **可选** | 仅 Neo4j 图后端需要：`docker run -d --name tsm-neo4j -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/<密码> neo4j:5`；没有它则用内存图 |
-
-**2) 模型与数据集**（都较大，单独获取）
+**2) 装服务与场景内容**
 
 ```bash
-tsm fetch-model                                    # ONNX 编码器 ~95MB（走 hf-mirror）
-# 数据集 ~1.4G：从原机拷 MINIDEV_sqlite/，或从 bird-bench/mini_dev 下载
-# mini_dev 解压到 <数据根>/MINIDEV_sqlite/
+npm i -g tsm-core-dlr tsm-scenario-birdmini
+tsm --help            # 应列出：serve / status / build / verify / fetch-model / scenario / …
 ```
 
-**3) 构建索引**（按后端；内存图下 graph 是自检、无副作用）
+**3) 一次性配置：`~/.tsm/.env`**
 
 ```bash
-TSM_SCENARIO=tsm-scenario-birdmini TSM_DATASET_DIR=<数据根> tsm build all
+mkdir -p ~/.tsm
+cat > ~/.tsm/.env <<'EOF'
+TSM_SCENARIO=tsm-scenario-birdmini
+TSM_DATASET_DIR=$HOME/tsm-data
+EOF
 ```
 
-**4) 起服务**
+为什么放这：服务读取顺序 = `<服务>/.env` → `<数据目录>/.env`（npm 安装态默认 `~/.tsm`）→ 系统环境变量优先。写好这份文件后，之后所有 `tsm` 命令都不必再带前缀。
+
+**4) 拉模型 + 数据集**
 
 ```bash
-TSM_SCENARIO=tsm-scenario-birdmini TSM_DATASET_DIR=<数据根> tsm serve --http 28795
-# 检出内等价：bash "DSH-based Agent Service/scripts/start_backend.sh"
+tsm fetch-model        # ONNX 编码器 ~95MB（走 hf-mirror）→ ~/.tsm/models/bge-onnx
+mkdir -p ~/tsm-data
+# 数据集 ~1.4G：从 https://github.com/bird-bench/mini_dev 下载 mini_dev
+# 解压到 ~/tsm-data/MINIDEV_sqlite/（含 mini_dev_sqlite.json + 11 个 .sqlite）
+ls ~/tsm-data/MINIDEV_sqlite/mini_dev_sqlite.json   # 必须存在
 ```
 
-**5) dsh 侧**
+**5) 构建索引**
 
 ```bash
-npm install -g @deepseek-ai/dsh@0.2.0-rc.2        # 当前适配版
-npm install -g pnpm                               # dsh plugin 转发给它（装 bundle 必需）
+tsm scenario           # 自检：scenario=tsm-scenario-birdmini、source=env-package、数据集路径
+tsm build all          # L1 向量（946 行）+ L2 共识（91 条）+ L3 SOP；graph 为内存自检
+```
 
-dsh plugin --profile web add dsh-tsm-agent        # 连带装 tsm-core-dlr
-dsh plugin --profile headless add dsh-tsm-agent
+**6) 起服务**（这个终端保持开着）
+
+```bash
+tsm serve --http 28795
+# 另开终端：
+tsm status             # ok:true；图 LE 50 / PE 74 / PA 784 · PAS 37
+tsm verify precheck    # 连上服务并列出 7 个工具
+```
+
+**7) 把 bundle 装进 dsh**
+
+```bash
+dsh plugin --profile web add dsh-tsm-agent           # 连带装 tsm-core-dlr
+dsh plugin --profile headless add dsh-tsm-agent      # 可选：供命令行单题
 # ⚠ 装包 ≠ 启用：把 dsh-tsm-agent 加进各 profile 的 dsh.profile.bundles
 #   （在插件管理器里勾选等价——那一步会同时完成装与选）
 ```
 
-**6) 验收**
+**8) 提问**
 
-| 检查 | 期望 |
+```bash
+dsh web                # 右下角状态卡两盏灯应全绿
+```
+
+问：`What is the ratio of customers who pay in EUR against customers who pay in CZK?`
+期望：出现 `mcp__semantic-core__*` 工具调用（语义查询 → PE 映射 → `execute_sql`），答案 **0.0657**。
+
+命令行单题（headless profile 已装 bundle 时）：
+
+```bash
+dsh --profile headless --json "Question: What is the ratio of customers who pay in EUR against customers who pay in CZK?"
+```
+
+**排障速查（npm 路线）**
+
+| 症状 | 处置 |
 |---|---|
-| `tsm verify precheck` | 7 工具 |
-| `curl -s localhost:28795/status` | `ok:true`；图 **LE 50 / PE 74 / PA 784 · PAS 37**（内存图或 Neo4j 皆同） |
-| `bash dsh_dlr/run_one.sh 1471 "What is the ratio of customers who pay in EUR against customers who pay in CZK?"` | 答案 **0.0657** |
-| `bash dsh_dlr/run_web.sh` | 右下角状态卡两盏灯全绿 |
+| `npm i -g` 报 `EBADENGINE` | Node < 23.4——升级 Node |
+| 报 `TSM_SCENARIO=...` 既不是路径也不是已安装的场景包 | 场景包没装进同一全局根（`npm i -g tsm-scenario-birdmini`），或 `~/.tsm/.env` 缺失 |
+| `tsm scenario` 显示 `source=default` | 场景包未被拾取——重查 `~/.tsm/.env` |
+| 端口 28795 被占 | `netstat -ano \| grep :28795` → `taskkill //F //PID <pid>` |
+| Web 无状态卡 / 无 `preset-dlr` | bundle 装了但没选（见第 7 步） |
+| 提问无工具调用 | 模型凭据没配（见第 1 步），或服务终端没在跑 |
 
-> 任何一步不符合期望 = 可移植性问题，回报给本仓库（这正是"路径解耦"要保证的）。
+> 任何一步与"期望"不符 = 可移植性回归：回报给本仓库。
 
 ## 相关
 
