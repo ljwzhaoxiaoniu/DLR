@@ -62,7 +62,7 @@ bash "DSH-based Agent Service/dsh_dlr/run_web.sh"
 
 | 层 | 换场景时 | 载体 |
 |---|---|---|
-| L1 DLR | 重新建模/构建 | `scenarios/<s>/sources/configs/{ER,DLR,RDF}/*.yaml` → `TSM Core Service` 构建 |
+| L1 DLR | 重新建模/构建 | `scenarios/<s>/sources/configs/DLR/*.yaml` → `TSM Core Service` 构建 |
 | L2 Domain Consensus | 换一组共识源 | `scenarios/<s>/sources/consensus/*.jsonl` → `buildConsensus.ts`（namespace 隔离） |
 | L3 SOP | 换一个源文件 | `scenarios/<s>/sources/sop.md` → `buildSop.ts` 编译成检索索引（`dlr_search_sop`） |
 | 认知层 | **不动** | `skills/paradigm/SKILL.md`（与场景无关） |

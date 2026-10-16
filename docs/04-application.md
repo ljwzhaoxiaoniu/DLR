@@ -11,7 +11,7 @@
 ```
 scenarios/birdminidev/
 ├── sources/
-│   ├── configs/{ER,DLR,RDF}/   # L1 modeling sources (11 databases × 3 paradigms; this line consumes DLR)
+│   ├── configs/DLR/            # L1 modeling sources (one DLR yaml per database)
 │   ├── consensus/*.jsonl       # L2 domain-consensus sources (one per database × 11)
 │   └── sop.md                  # L3 convention source (human-written; `tsm build sop` compiles it into the retrieval index)
 ├── eval/                       # the exam paper: questions.jsonl (500 questions: question + expected + provenience)

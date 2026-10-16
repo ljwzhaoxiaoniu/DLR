@@ -239,7 +239,7 @@ scenarios/birdminidev/
 ├── DETAIL/<库>.md       # 分库明细（逐题校验表：题号锚点跳证据块；证据正文；本库缺陷）
 ├── results/             # 跑批留档（按轮次：raw 日志 + 判定 CSV + 单轮汇总；stats.svg 综合统计图）
 ├── sources/
-│   ├── configs/{ER,DLR,RDF}/   # L1 建模源（本线消费 DLR；ER/RDF 为历史遗留）
+│   ├── configs/DLR/            # L1 建模源（一库一份 yaml）
 │   ├── consensus/*.jsonl       # L2 源（11 库；两种格式：聚合式 / 逐题式）
 │   └── sop.md                  # L3 源（题级打法；`tsm build sop` 编译成按题检索索引）
 ├── eval/                       # 考卷：questions.jsonl（500 题 = 题面 + 期望 + 口径来源）

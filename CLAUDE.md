@@ -95,7 +95,7 @@ node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" all --qids <q1>,<q2
 DLR Proj/                          # 分支 2.0
 ├── CLAUDE.md                    # ← 本文件
 ├── scenarios/birdminidev/       # ★ 一套完整 TSM：
-│                                #   sources/configs/{ER,DLR,RDF}/ = L1 建模源
+│                                #   sources/configs/DLR/ = L1 建模源
 │                                #   sources/consensus/           = L2 Domain Consensus 源
 │                                #   sources/sop.md               = L3 口径源
 │                                #   eval/questions.jsonl         = 考卷（500 题=题面+期望+口径来源；eval/build.mjs 生成）

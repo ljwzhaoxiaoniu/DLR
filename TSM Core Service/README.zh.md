@@ -27,7 +27,7 @@ scripts/fetch-model.sh           # 从 hf-mirror 拉 ONNX 模型（新机器可�
 ```
 
 **场景（scenario）** = 一套完整 TSM 的内容，在仓库 `scenarios/<name>/`（现有 `birdminidev` 与 `cloudopsbench`）：
-`sources/configs/{ER,DLR,RDF}/*.yaml`（L1 建模源；**本线消费 DLR 一件，ER/RDF 为历史遗留对照**）+ `sources/consensus/*.jsonl`（L2 源）+ `sources/sop.md`（L3 源）
+`sources/configs/DLR/*.yaml`（L1 建模源）+ `sources/consensus/*.jsonl`（L2 源）+ `sources/sop.md`（L3 源）
 + `fixtures/*.json`（对照真值）。切换场景：`TSM_SCENARIO=<路径> npx tsx …`。
 （COB 场景为 `mapping_type: dlr-state` 的单文件形态：`boutique.yaml` / `trainticket.yaml`，无 databases/attributes。）
 

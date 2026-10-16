@@ -26,7 +26,7 @@ scripts/fetch-model.sh           # pull the ONNX model from hf-mirror (reproduci
 ```
 
 **A scenario** = one complete TSM's content, at `scenarios/<name>/` in the repo (currently `birdminidev` and `cloudopsbench`):
-`sources/configs/{ER,DLR,RDF}/*.yaml` (L1 sources; **this line consumes DLR only — ER/RDF are legacy references**) + `sources/consensus/*.jsonl` (L2 sources) + `sources/sop.md` (L3 source)
+`sources/configs/DLR/*.yaml` (L1 sources) + `sources/consensus/*.jsonl` (L2 sources) + `sources/sop.md` (L3 source)
 + `fixtures/*.json` (reference truths). Switch: `TSM_SCENARIO=<path> npx tsx …`.
 (The COB scenario uses the single-file `dlr-state` shape: `boutique.yaml` / `trainticket.yaml`, no databases/attributes.)
 

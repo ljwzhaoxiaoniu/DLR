@@ -242,7 +242,7 @@ scenarios/birdminidev/
 ├── DETAIL/<db>.md       # per-database detail (per-question check list: qid anchors → evidence blocks; evidence text; this db's defects)
 ├── results/             # round-by-round archives (raw logs + verdict CSV + round summary; stats.svg aggregate chart)
 ├── sources/
-│   ├── configs/{ER,DLR,RDF}/   # L1 modeling sources (this line consumes DLR; ER/RDF are legacy)
+│   ├── configs/DLR/            # L1 modeling sources (one yaml per database)
 │   ├── consensus/*.jsonl       # L2 sources (11 databases; two formats: aggregated / per-question)
 │   └── sop.md                  # L3 source (question-level playbooks; `tsm build sop` compiles the per-question retrieval index)
 ├── eval/                       # the exam paper: questions.jsonl (500 = question + expected + provenience)

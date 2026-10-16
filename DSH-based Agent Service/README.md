@@ -62,7 +62,7 @@ Content lives at the repo root `scenarios/<name>/` (currently `birdminidev` and 
 
 | Level | On a scenario switch | Carrier |
 |---|---|---|
-| L1 DLR | remodel / rebuild | `scenarios/<s>/sources/configs/{ER,DLR,RDF}/*.yaml` → built by `TSM Core Service` |
+| L1 DLR | remodel / rebuild | `scenarios/<s>/sources/configs/DLR/*.yaml` → built by `TSM Core Service` |
 | L2 Domain Consensus | swap the consensus sources | `scenarios/<s>/sources/consensus/*.jsonl` → `buildConsensus.ts` (per-namespace isolation) |
 | L3 SOP | swap one source file | `scenarios/<s>/sources/sop.md` → compiled by `buildSop.ts` into the retrieval index (`dlr_search_sop`) |
 | Cognition layer | **never touched** | `skills/paradigm/SKILL.md` (scenario-independent) |

@@ -11,7 +11,7 @@
 ```
 scenarios/birdminidev/
 ├── sources/
-│   ├── configs/{ER,DLR,RDF}/   # L1 建模源（11 库 × 3 范式；本线消费 DLR）
+│   ├── configs/DLR/            # L1 建模源（一库一份 DLR yaml）
 │   ├── consensus/*.jsonl       # L2 领域共识源（11 库各一份）
 │   └── sop.md                  # L3 口径源（人写；`tsm build sop` 编译成检索索引）
 ├── eval/                       # 考卷：questions.jsonl（500 题：题面+期望+口径来源）
