@@ -128,7 +128,7 @@ curl -s http://127.0.0.1:28795/status
 
 ## 8. 从零开跑（npm 走查）
 
-> 读者：只有 **Node + npm** 的新机器。目标：全程从 npm 把整套立起来——先 dsh，再语义后端，再 bundle——最后真问一道题。三个包：**服务** `tsm-core-dlr`、**场景内容**（`tsm-scenario-*`，一个 benchmark 一个包——本走查用 `tsm-scenario-birdmini`，Cloud-OpsBench 变体在文末）、**dsh bundle** `dsh-tsm-agent`（依赖服务）。
+> 读者：只有 **Node + npm** 的新机器。目标：全程从 npm 把整套立起来——先 dsh，再语义后端，再 bundle——最后真问一道题。三个包：**服务** `tsm-core-dlr`、**场景内容**（`tsm-scenario-*`，一个 benchmark 一个包——本走查用 `tsm-scenario-birdmini`；Cloud-OpsBench 的对照走查——npm 侧 + 仓库侧真跑一题——在文末）、**dsh bundle** `dsh-tsm-agent`（依赖服务）。
 
 **0) 前置**
 
@@ -218,7 +218,9 @@ dsh --profile headless --json "Question: What is the ratio of customers who pay 
 
 ### 另一场景 —— Cloud-OpsBench（K8s 根因诊断）
 
-随包的第二场景 `tsm-scenario-cloudopsbench` 是 K8s RCA 的 `dlr-state` 模型（754 例）；TSM 侧是 **3 工具**（`state_model_query` · `dlr_search_consensus` · `dlr_search_sop`）。TSM 侧换法是机械式的——独立 store、独立端口，两个场景可并存（birdmini 服务继续留在 28795）：
+随包的第二场景 `tsm-scenario-cloudopsbench` 是 K8s RCA 的 `dlr-state` 模型（754 例）；TSM 侧是 **3 工具**（`state_model_query` · `dlr_search_consensus` · `dlr_search_sop`）。与 birdmini 的两点不同：`dlr-state` 路径**不装载图**（不需要 Neo4j）；两个场景的服务**可并存**——各自独立 store 与端口（birdmini 继续留在 28795）。
+
+**npm 侧（语义层）—— 步 2/5/6 的 COB 版：**
 
 ```bash
 npm i -g tsm-scenario-cloudopsbench
@@ -228,7 +230,16 @@ TSM_SCENARIO=tsm-scenario-cloudopsbench TSM_STORE_DIR=$HOME/.tsm/lance/cloudopsb
 TSM_SCENARIO=tsm-scenario-cloudopsbench TSM_STORE_DIR=$HOME/.tsm/lance/cloudopsbench tsm serve --http 28796
 ```
 
-往下走之前要知道两件事：`dlr-state` 路径**不装载图**（不需要 Neo4j）；TSM store 只承载**导航层**——case 数据与诊断接口来自**上游基准**（约 3.9GB 的 [LLM4Ops/Cloud-OpsBench](https://github.com/LLM4Ops/Cloud-OpsBench) 检出，快照 `ea05daf`），逐题跑题的装配在仓库侧（`DSH-based Agent Service/dsh_cob/`），不随 npm 包分发。也就是说：npm 包给到 COB 的语义侧；754 例的完整评测从仓库检出跑——细节见[场景 README](../scenarios/cloudopsbench/README.zh.md)。
+**要真跑一条 case —— 仓库检出侧。** case 数据与诊断接口来自**上游基准**（约 3.9GB 的 [LLM4Ops/Cloud-OpsBench](https://github.com/LLM4Ops/Cloud-OpsBench) 检出到仓库外，快照 `ea05daf`，路径可经 `COB_DIR` 覆盖）；逐题装配在仓库 `DSH-based Agent Service/dsh_cob/`，不随 npm 包分发。语义后端由 dsh_cob 的幂等脚本自拉起（:28796——与上面 npm 的 `tsm serve` **二选一**，勿同开）：
+
+```bash
+bash "DSH-based Agent Service/dsh_cob/scripts/start_backend.sh"                   # COB 语义后端 :28796（幂等）
+bash "DSH-based Agent Service/dsh_cob/run_one.sh" <system> <category> <case_id>   # 一条 case（例：boutique runtime 1）；产物落 [out_dir]（可选第 4 参，默认 tmp_scripts/cob_runs/）
+bash scenarios/cloudopsbench/eval/grade.sh --runs-root scenarios/cloudopsbench/results --match "<glob>"   # 判分 → questions.csv + summary.md
+node scenarios/cloudopsbench/eval/stats.mjs                                       # 重建 STATS.md / DETAIL.md / DETAIL/<家族>.md
+```
+
+一句话：npm 包给到 COB 的**语义侧**；case 数据与 754 例完整评测从**仓库检出**跑——逐题装配、二路并发端口对（`COB_MCP_PORT` / `CLOUDOPSBENCH_MCP_PORT`）与判分口径细节见[场景 README](../scenarios/cloudopsbench/README.zh.md) §四。
 
 **排障速查（npm 路线）**
 

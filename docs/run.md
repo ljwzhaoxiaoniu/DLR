@@ -127,7 +127,7 @@ curl -s http://127.0.0.1:28795/status
 
 ## 8. From zero: the npm walkthrough
 
-> Audience: a fresh machine with only **Node + npm**. Goal: stand the whole thing up from npm — dsh first, then the semantic backend, then the bundle — and ask a real question. The pieces are three packages: the **service** `tsm-core-dlr`, the **scenario content** (`tsm-scenario-*`, one package per benchmark — this walkthrough uses `tsm-scenario-birdmini`; the Cloud-OpsBench variant is at the end), and the **dsh bundle** `dsh-tsm-agent` (which depends on the service).
+> Audience: a fresh machine with only **Node + npm**. Goal: stand the whole thing up from npm — dsh first, then the semantic backend, then the bundle — and ask a real question. The pieces are three packages: the **service** `tsm-core-dlr`, the **scenario content** (`tsm-scenario-*`, one package per benchmark — this walkthrough uses `tsm-scenario-birdmini`; the Cloud-OpsBench pass — npm side plus running a real case from a repo checkout — is at the end), and the **dsh bundle** `dsh-tsm-agent` (which depends on the service).
 
 **0) Prerequisites**
 
@@ -217,7 +217,9 @@ dsh --profile headless --json "Question: What is the ratio of customers who pay 
 
 ### Another scenario — Cloud-OpsBench (K8s RCA)
 
-The second shipped scenario, `tsm-scenario-cloudopsbench`, is a `dlr-state` model for Kubernetes root-cause diagnosis (754 cases); its TSM surface is **3 tools** (`state_model_query` · `dlr_search_consensus` · `dlr_search_sop`). The TSM side swaps mechanically — its own store and its own port, so both scenarios can coexist while the birdmini server stays on 28795:
+The second shipped scenario, `tsm-scenario-cloudopsbench`, is a `dlr-state` model for Kubernetes root-cause diagnosis (754 cases); its TSM surface is **3 tools** (`state_model_query` · `dlr_search_consensus` · `dlr_search_sop`). Two differences from birdmini: the `dlr-state` path loads **no graph** (Neo4j unnecessary), and the two services **coexist** — own store, own port (birdmini stays on 28795).
+
+**npm side (the semantic layer) — steps 2/5/6, the COB edition:**
 
 ```bash
 npm i -g tsm-scenario-cloudopsbench
@@ -227,7 +229,16 @@ TSM_SCENARIO=tsm-scenario-cloudopsbench TSM_STORE_DIR=$HOME/.tsm/lance/cloudopsb
 TSM_SCENARIO=tsm-scenario-cloudopsbench TSM_STORE_DIR=$HOME/.tsm/lance/cloudopsbench tsm serve --http 28796
 ```
 
-Two things to know before going further: the `dlr-state` path loads **no graph** (Neo4j unnecessary), and the TSM store only carries the *navigation* layer — the case data and its diagnostic interface come from the **upstream benchmark** (~3.9 GB checkout of [LLM4Ops/Cloud-OpsBench](https://github.com/LLM4Ops/Cloud-OpsBench), snapshot `ea05daf`), while the per-case runner assembly is repo-side (`DSH-based Agent Service/dsh_cob/`), not shipped on npm. So the npm packages give you the semantic side of COB; the full 754-case evaluation runs from a repo checkout — details in the [scenario README](../scenarios/cloudopsbench/README.md).
+**To actually run a case — the repo-checkout side.** The case data and the diagnostic interface come from the **upstream benchmark** (~3.9 GB checkout of [LLM4Ops/Cloud-OpsBench](https://github.com/LLM4Ops/Cloud-OpsBench) outside the repo, snapshot `ea05daf`, path overridable via `COB_DIR`); the per-case assembly lives repo-side in `DSH-based Agent Service/dsh_cob/` and is not shipped on npm. dsh_cob's idempotent script brings up the semantic backend itself (:28796 — pick it **or** the npm `tsm serve` above, not both):
+
+```bash
+bash "DSH-based Agent Service/dsh_cob/scripts/start_backend.sh"                   # COB semantic backend :28796 (idempotent)
+bash "DSH-based Agent Service/dsh_cob/run_one.sh" <system> <category> <case_id>   # one case (e.g. boutique runtime 1); artifacts land in [out_dir] (optional 4th arg, default tmp_scripts/cob_runs/)
+bash scenarios/cloudopsbench/eval/grade.sh --runs-root scenarios/cloudopsbench/results --match "<glob>"   # score → questions.csv + summary.md
+node scenarios/cloudopsbench/eval/stats.mjs                                       # rebuild STATS.md / DETAIL.md / DETAIL/<family>.md
+```
+
+In short: the npm packages give you COB's **semantic side**; the case data and the full 754-case evaluation run from a **repo checkout** — per-case assembly, the two-lane port pair (`COB_MCP_PORT` / `CLOUDOPSBENCH_MCP_PORT`) and the grading caliber are detailed in the [scenario README](../scenarios/cloudopsbench/README.md) §4.
 
 **Troubleshooting (npm route)**
 
