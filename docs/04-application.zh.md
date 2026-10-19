@@ -9,17 +9,28 @@
 ## 一、一个场景包里有什么（实测结构）
 
 ```
-scenarios/birdminidev/
+scenarios/<场景>/
 ├── sources/
-│   ├── configs/DLR/            # L1 建模源（一库一份 DLR yaml）
-│   ├── consensus/*.jsonl       # L2 领域共识源（11 库各一份）
-│   └── sop.md                  # L3 口径源（人写；`tsm build sop` 编译成检索索引）
-├── eval/                       # 考卷：questions.jsonl（500 题：题面+期望+口径来源）
-│   └── build.mjs               # 生成器（node eval/build.mjs 可复现；答案键取 L3 节口径、其余取 gold）
-└── fixtures/                   # 对照真值（verify 套件用，见 §三）
+│   ├── configs/DLR/            # L1 建模源（dlr：一库一份 yaml；dlr-state：一系统一份 yaml）
+│   ├── consensus/*.jsonl       # L2 领域共识源（按命名空间 / 槽类组织）
+│   └── sop.md                  # L3 口径源（人写；`tsm build sop` 编译成按题检索索引）
+├── eval/                       # 考卷 / 评测适配：自建题库（questions.jsonl）或外部基准适配（convert / grade / stats）
+├── fixtures/                   # 对照真值（可选；birdminidev 用作回归快照）
+├── results/<轮次>/             # 跑批留档（questions.csv + raw/ 或 traces/）
+└── DETAIL.md · DETAIL/         # 评测总账 + 逐题明细（stats 重建）
 ```
 
-现状规模 —— `birdminidev`：图 **LE 50 / PE 74 / PA 784 / LA 277（1,185 节点）+ PAS 37 条关系**；向量 **entities 946 · consensus 91 · sop 180**；共识覆盖 11 个 namespace。`cloudopsbench`：**L2 15 · L3 5**，不装图（dlr-state）。
+**两个已落地场景（并重）**：
+
+| | `birdminidev` | `cloudopsbench` |
+|---|---|---|
+| 场景形态 | `dlr`（SQLite NL2SQL） | `dlr-state`（K8s 状态空间 RCA） |
+| L1 规模 | 11 库 · **50 LE / 74 PE / 37 PAS**（图 1,185 节点） | 2 系统 · **169 LE / 355 PE / 233 PAS**（53 服务 + 节点 + 命名空间） |
+| L2 | 11 文件 · 91 条 | 1 文件 · 15 条（按槽类聚类） |
+| L3 | 180 节（**按题**分节） | 5 节（**按症状措辞**分节，覆盖 754 例；节内是决策树） |
+| 工具面 | 7 个 | 3 个（不装 Neo4j 图） |
+| 评测内容 | 自建考卷：`eval/questions.jsonl` 500 题 | 外部基准：754 例 + 上游 scorer 适配 |
+| 结果 | **500/500**（✅ 426 + 🔁 74） | **覆盖 754/754 · JRA 752/754（99.7%）** |
 
 ## 二、三层各写什么
 
@@ -28,18 +39,23 @@ scenarios/birdminidev/
 - 建模规范、自检清单：**唯一口径在 [03-design.zh.md](03-design.zh.md)**（本文不重复）。
 - 一句话纪律：**只写数据源自身的事实**；L1 **不写题面口径**，也不写实例级事实（见 [02-concept.zh.md](02-concept.zh.md) §一"体系范围"）。
 - **不做语义丰富度补充**（2026-09-24 定，公平性）：描述取自**数据集原生**——CSV 的 `column_name` / `column_description` / `value_description`，加上 evidence 里属于源自身的事实；**不引入外部知识**。发现的数据集缺陷**不在 L1 修**，交 L3 承载并标注（见下）。
+- **`dlr-state`（COB）写什么**：一个系统一份 yaml；LE = 可指认对象（服务 / 节点 / 命名空间），PE = 对象的观测面（deployment / pods / endpoints / telemetry / logs / code……），每个面带**锚定读法模板**；锚 = 取数 WHERE 键（应用标签 / 节点名 / 命名空间），PAS = 调用图与载体/信号边。**放置与作用域不建边**（逐 case 的实例事实）。完整规范见 [03-design.zh.md](03-design.zh.md) §1.7.1。
 
 ### L2 `consensus` —— `sources/consensus/*.jsonl`
 
 - **格式**：kid 聚合式 JSON 数组，每条 `{kid, knowledge}`（loader 也兼容 BIRD 式逐条 evidence）。
 - **准入**（[02-concept.zh.md](02-concept.zh.md) §二）：**场景所需 · 基于 L1 schema · 非 workflow**；**不写实例级**。
 - **写什么**：术语 → 列/值的映射、公式与口径、领域背景（如"CZK / EUR 是计费币种"）。
-- **纪律**：**该下沉 L1 的就下沉**——源自身的事实（值域 / 粒度 / 样本性质）留在 L2 就是放错了层；一库一份文件（namespace = 库名）。
+- **纪律**：**该下沉 L1 的就下沉**——源自身的事实（值域 / 粒度 / 样本性质）留在 L2 就是放错了层；按命名空间 / 槽类组织（bird：一库一份，namespace = 库名；COB：一类槽位一份，`kubernetes.jsonl` 15 条，按槽类聚类）。
+- **COB 的 L2**：schema 级读法 + **症状 → 链的映射**（题面用词 ↔ 模型术语），含落位读法（pods 的 NODE 字段 → 节点面）；不写实例明细。
 - **语言**：与题面语言一致（英文）。
 
 ### L3 `sop` —— `sources/sop.md`
 
-- **形态**：**按题面分节**——每节标题复述一道题（`### When asked: "..."`），正文给这道题的口径 / 打法 / 陷阱；文件头部是一段**阅读协议**（怎么匹配、没命中怎么办、本节只覆盖本题）。
+- **两种分节形态，同一条逐层消歧原则**：
+  - **`birdminidev`（NL2SQL）：按题分节**——180 节，每节标题复述一道题（`### When asked: "..."`），正文给这道题的口径 / 打法 / 陷阱。
+  - **`cloudopsbench`（RCA）：按症状措辞分节**——5 节覆盖 754 例；标题 = 题面症状措辞逐字，节内是**决策树**：链上实际观测 → 机制分支（Pending / 镜像 / 准入 / 路由……）→ 收口三件套（机制事件 + 事件面 + 配置）。**节少不等于薄：这是 SOP 的分层**（措辞层 → 分支层 → 收口层），见 [02-concept.zh.md](02-concept.zh.md) §六「逐层消歧」。
+  - 共同的阅读协议：怎么匹配、没命中怎么办、本节只覆盖本题。
 - **每节必须标注类型**（四类，可多选），写在标题下一行：`> **类型**：数据集问题`
   | 类型 | 指什么 |
   |---|---|
@@ -48,6 +64,7 @@ scenarios/birdminidev/
   | **难题** | 题目本身难：口径陷阱、答案单位、计数单位、比值口径……需要打法 |
   | **其他** | 兜底（将来的企业口径 / 流程类内容落这里，或再细分） |
   标注**只供维护与统计，答题时一视同仁**（不改变该节的执行方式）。
+  > 类型标注与 `Expected` 是 **bird 自建题库**的维护约定；COB 的 5 节按症状族维护、不写 `Expected`（判分在上游 scorer，见 §四）。
 - **硬纪律**：**不写库表列原名**（2026-09-20 定）。判断标准：这句话是业务在说需求，还是数据库在自我介绍？
 - **质量线**（2026-09-26 定）：③ 难题节**不能只复述题面 / 解释术语**——必须钉**实测的事实与陷阱**（计数、集合大小、并列/分布、易错读法），事实**先用 SQL 核过再写**；给出事实后要说明**该事实已确立、照此作答**（否则 agent 会把余量花在自证上）。
 - **补强配方（按需，不是每节都要）**：若某题跑完发现 agent 在**反复自证**（同一节命中、口径也对，却烧掉大量 SQL 求证边界），按这三条补该节（实测实勘——q37，见 [birdmini README §四](../scenarios/birdminidev/README.zh.md)）：① 这题最容易走错的**岔路**是哪条？② 岔路有没有**可实测的具体后果**（数字 / 行数 / 另一个实体——「2,269 行里 218 行考生数为 0」「会选到 1900 Third Street, Alameda」这种粒度，而不是「有些/可能」）？③ 加一句**「已确立，照此作答」**（settled 语气是功能性的：它直接对应 agent 的核查预算）。**只在出问题的节上做**——节的自然写法优先，不要为了凑格式改写健康的节。
@@ -61,6 +78,8 @@ scenarios/birdminidev/
 
 ## 三、`fixtures/` —— 对照真值
 
+`fixtures/` 目前是 `birdminidev` 的回归快照；COB 的对照真值是上游 scorer 账本（`results/` + `DETAIL`，见 §四）。
+
 | 文件 | 对照什么 |
 |---|---|
 | `dlr_vector_manifest.json` | YAML → 向量行（id / name / PAS 文本）逐字 |
@@ -71,10 +90,11 @@ scenarios/birdminidev/
 
 **2.0 定位 = 回归快照**：Python 线已删，这些不再是"跨实现 parity"，而是**改建模后的自证基线**——改了 YAML / consensus，跑 `src/verify/*` 看结果是否**符合预期地**变化；预期变化则一并更新快照。
 
-## 四、`eval/` —— 考卷（✅ 已落地：500 题）
+## 四、`eval/` —— 考卷的两种形态（两场景并重）
 
-- 每个场景自带考卷：`eval/questions.jsonl`，每题 `{question, expected, source}`（`source` = 口径来源，便于判错归因）。
-- **birdminidev 现状**：500 行 = **L3 节口径 74 处**（翻盘题的答案键）+ **gold 426 处**；生成器 `eval/build.mjs`（`node eval/build.mjs` 可复现，答案键与台账互证：74/426 与评定分栏**逐项一致**）。
+- **形态 A：自建题库（birdminidev）**——`eval/questions.jsonl`，每题 `{question, expected, source}`（`source` = 口径来源，便于判错归因）；500 行 = **L3 节口径 74 处**（翻盘题的答案键）+ **gold 426 处**；生成器 `eval/build.mjs`（`node eval/build.mjs` 可复现，74/426 与评定分栏**逐项一致**）。
+- **形态 B：外部基准适配（cloudopsbench）**——`eval/` 放的是适配器而非题库：`convert.mjs`（会话日志 → reference trace）· `run_eval.py`（复用上游 scorer）· `grade.sh`（一条命令判分）· `stats.mjs`（重建 STATS / DETAIL）。考卷本体是上游 754 例（`process-label` 全量），判分口径 = 上游 CA/FA/JRA + MC/EOC/ECR/EE，**没有人工翻盘口径**。
+- **结果**：bird **500/500**（✅ 426 + 🔁 74）；COB **覆盖 754/754 · JRA 752/754（99.7%）**（轮次 230）。
 - **考卷跟场景走、考试系统跟 dsh 走**（独立 bundle）——见 [eval.zh.md](eval.zh.md)。
 
 ## 五、评审：双读测试
@@ -101,6 +121,8 @@ node scenarios/<name>/eval/build.mjs
 # 4) 自检
 cd "TSM Core Service" && npx tsx src/verify/precheck.ts
 ```
+
+> **`dlr-state` 场景**：一系统一份 yaml；构建 `buildLance` / `buildConsensus` / `buildSop` 即可，**跳过 `loadNeo4j`**（不装图）；单例验证走 `dsh_cob/run_one.sh <system> <category> <case_id>`，判分走 `scenarios/cloudopsbench/eval/grade.sh` + `stats.mjs`（见 [run.zh.md](run.zh.md) §2.1）。
 
 ## 七、换场景时不动的三样
 

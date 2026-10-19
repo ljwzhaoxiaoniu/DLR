@@ -4,7 +4,7 @@
 > 背景见叙事四篇（[01](01-background.zh.md) → [04](04-application.zh.md)）；两棵树的就地说明书：[TSM Core Service](<../TSM Core Service/README.zh.md>)、[DSH-based Agent Service](<../DSH-based Agent Service/README.zh.md>)。
 > 英文版：[run.md](run.md)
 
-**目录**：[0](#0-全局图) · [1](#1-起后端幂等) · [2](#2-跑一道题headless) · [2.5](#25-跑考试dsh-tsm-eval) · [3](#3-web-对话) · [4](#4-状态面) · [5](#5-图后端neo4j-缺席时变什么) · [6](#6-排障表) · [7](#7-纪律) · [8](#8-从零开跑npm-走查)
+**目录**：[0](#0-全局图) · [1](#1-起后端幂等) · [2](#2-跑一道题headless) · [2.1](#21-跑一个-cob-用例dlr-state) · [2.5](#25-跑考试dsh-tsm-eval) · [3](#3-web-对话) · [4](#4-状态面) · [5](#5-图后端neo4j-缺席时变什么) · [6](#6-排障表) · [7](#7-纪律) · [8](#8-从零开跑npm-走查)
 
 ## 0. 全局图
 
@@ -19,6 +19,8 @@ tsm-core-dlr（node 进程）：LanceDB（向量）+ ONNX 编码器（进程内�
    ▼
 数据集（MINIDEV_sqlite，gitignored；手动下载）
 ```
+
+**dlr-state（COB）另起一套**：MCP `:28796`，3 工具（`state_model_query` · `dlr_search_consensus` · `dlr_search_sop`），不装 Neo4j 图；数据面是上游基准 MCP（按题起停 `:8000`），两套服务可并存。
 
 **进程**：TS MCP server 常驻；Neo4j 只在用 Neo4j 图后端时启动（本仓库默认如此——见 §5）。LanceDB 与编码器是嵌在 MCP 进程里的库，**不是**服务。
 
@@ -43,6 +45,17 @@ bash "DSH-based Agent Service/dsh_dlr/run_one.sh" <qid> "<question>"
 - 自动预检后端；后端不可达**响亮退出**（exit 3），不会烧模型调用。
 - 会话日志：`DSH-based Agent Service/.dsh-home/sessions/<项目目录>/<session-id>/session.v4.jsonl.zstd`（**多帧 zstd**，取证解码器 `DSH-based Agent Service/scripts/decode_session_log.cjs`）。
 - **跑一批**（一批 4 题、批间停下报数；批内并发派发带内存闸 → 判定 → 统计）：见 `scenarios/birdminidev/results/README.zh.md`「一轮怎么跑」。
+
+### 2.1 跑一个 COB 用例（dlr-state）
+
+```bash
+bash "DSH-based Agent Service/dsh_cob/scripts/start_backend.sh"                   # COB 语义后端 :28796（幂等）
+bash "DSH-based Agent Service/dsh_cob/run_one.sh" <system> <category> <case_id>   # 例：boutique runtime 1
+```
+
+- 产物默认落 `tmp_scripts/cob_runs/`（可选第 4 参指定 out_dir）；case 数据来自仓库外的上游基准检出（约 3.9GB，快照 `ea05daf`，`COB_DIR` 可覆盖）。
+- 判分：`scenarios/cloudopsbench/eval/grade.sh --runs-root scenarios/cloudopsbench/results --match "<glob>"` → `questions.csv` + `summary.md`；`node scenarios/cloudopsbench/eval/stats.mjs` 重建 `STATS.md` / `DETAIL.md`。
+- 与 npm 的 `tsm serve :28796` **二选一**（同一个语义后端）；详见 [cloudopsbench README](../scenarios/cloudopsbench/README.zh.md) §四。
 
 ## 2.5 跑考试（dsh-tsm-eval）
 
@@ -80,6 +93,7 @@ curl -s http://127.0.0.1:28795/status
 - **图谱页**：**http://127.0.0.1:28795/viz/dlr**（MCP server 实时渲染；状态卡上的 `图谱 ↗` 指向它）。
   离线/分享用单文件版：`tsm viz`（产物 `<DATA_DIR>/viz/dlr-graph.html`）。
 - Neo4j Browser：http://localhost:7474 —— 账号 `neo4j`，密码在 `TSM Core Service/.env`（状态卡 `Neo4j ↗` 指向它；内存图后端时隐藏）。
+- COB 后端在 **:28796**：`curl -s http://127.0.0.1:28796/status`；两场景可并存，各自独立 store。
 
 ## 5. 图后端（Neo4j 缺席时变什么）
 
@@ -94,6 +108,9 @@ curl -s http://127.0.0.1:28795/status
 | `dlr_semantic_query` · `get_pe_mapping` · `get_le_attrs` | 图（内存图**或**Neo4j） |
 | `dlr_search_consensus` · `dlr_search_sop` | LanceDB |
 | `execute_sql` · `get_full_data_info` | SQLite（+ YAML） |
+| `state_model_query`（dlr-state） | LanceDB 状态模型（**不装图**） |
+
+`dlr-state` 场景只挂 3 个工具（`state_model_query` + 两个检索）；数据库工具与图工具不挂。
 
 **"失败不缓存"**（MCP server 口径）：`neo4j` 后端下连接失败会复位句柄——Neo4j 恢复后工具**自愈**（无需重启）；而 `auto` 回落到内存图属于**成功**，要回到 Cypher 需重启服务。
 
@@ -115,6 +132,8 @@ curl -s http://127.0.0.1:28795/status
 | 单题无结论句、ndjson 停在中间 | 撞上 `timeout 600`（agent 跑飞）：收紧该题 L3 节的**答案形态**后单题重跑（q186/q1241 先例） |
 | 跑批中后端"卡死"（`/status` 超时、后续题全废） | agent 写的**病态 SQL**（大表相关子查询）钉死单线程服务——已加 `execute_sql` 子进程 + **20s 硬超时**护栏（`TSM_SQL_TIMEOUT_MS` 可调）；杀端口 → `start_backend.sh` |
 | 换场景没生效 / 写错地方 | `tsm scenario` 打印解析结果（目录 + `source`：`env-path` / `env-package` / `default`） |
+| COB 单例报端口冲突 / 服务绑错口 | `COB_MCP_PORT` 与 `CLOUDOPSBENCH_MCP_PORT` **成对**设置（只给前者 → 上游服务仍绑 8000 → 撞端口） |
+| COB 起不来、提示找不到 case | 上游基准检出（约 3.9GB，快照 `ea05daf`）不在预期路径；设 `COB_DIR` 或按 [COB README](../scenarios/cloudopsbench/README.zh.md) §四 放置 |
 
 ## 7. 纪律
 
@@ -125,6 +144,7 @@ curl -s http://127.0.0.1:28795/status
 - 路径与数据目录（全部可 env 覆盖）：`TSM_DATA_DIR`（向量库/缓存/viz；仓库内默认 `<服务>/.store`，安装态 `~/.tsm`）· `TSM_DATASET_DIR`（默认仓库根）· `TSM_SCENARIO`（路径或包名）· `TSM_OUT_DIR`（场景写入落点）· `TSM_MODEL_DIR` · `TSM_STORE_DIR` · `TSM_CACHE_DIR` · `TSM_MCP_URL` · `TSM_GRAPH_BACKEND`。
 - 临时产物一律进 `tmp_scripts/`，或随用随删。
 - **跑一批题 + 判定**：`run_batch.sh --qids ... --jobs 4` → `tsm grade --run <批次目录>`；判据三层、翻盘口径与迁移期纪律（**4 题一批** / 每题最多两遍 / 节写完必须复跑 / 全量重判）见 [eval.zh.md](eval.zh.md) §五。
+- **COB 判分不走 `tsm grade`**：走 `scenarios/cloudopsbench/eval/grade.sh` + `stats.mjs`（上游 scorer 口径），见 [eval.zh.md](eval.zh.md) §五「COB 批跑」。
 
 ## 8. 从零开跑（npm 走查）
 

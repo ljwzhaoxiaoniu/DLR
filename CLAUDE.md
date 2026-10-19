@@ -103,6 +103,9 @@ DLR Proj/                          # 分支 2.0
 │                                #   results/<轮次>/              = 跑批留档（questions.csv + raw/）
 │                                #   DETAIL.md                    = 评测总账（覆盖度/汇总/分库索引/缺陷裁定）
 │                                #   DETAIL/<库>.md               = 逐题校验表 + 证据正文（按库拆）
+├── scenarios/cloudopsbench/     # ★ 同一套 TSM 的 K8s RCA 场景（dlr-state）：
+│                                #   sources/（L1 两系统两份 yaml / L2 15 条 / L3 5 节）
+│                                #   eval/（上游 scorer 适配）· results/ · DETAIL.md
 ├── TSM Core Service/            # 2.0 语义服务（TS）：LanceDB + Neo4j + MCP server；build=开发态，verify=质量门
 ├── DSH-based Agent Service/     # 2.0 宿主接入：组合 patch / 技能 / 启动器 / plugins/（状态浮层）
 ├── docs/                        # 叙事四篇（01–04）+ 操作三篇 + README 索引

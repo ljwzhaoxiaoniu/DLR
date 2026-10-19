@@ -9,7 +9,8 @@
 
 | | Follows | Form | Nature |
 |---|---|---|---|
-| **Exam paper** (question + expected + caliber source) | **scenario** | `scenarios/<name>/eval/questions.jsonl` | **Content asset**: one per scenario, versioned with the scenario package ｜ ✅ `birdminidev` has one (500 questions; generator `eval/build.mjs` — **answer keys take the L3 clause for 74 questions and gold for the other 426**) |
+| **Paper A: authored** | **scenario** | `scenarios/<name>/eval/questions.jsonl` | **Content asset**: one per scenario, versioned with the scenario package ｜ ✅ `birdminidev`: 500 questions (generator `eval/build.mjs` — **answer keys take the L3 clause for 74 questions and gold for the other 426**) |
+| **Paper B: external-benchmark adapter** | **scenario** | `scenarios/<name>/eval/` (adapters: `convert` / `run_eval` / `grade` / `stats`) | **Content asset**: the paper itself is the upstream benchmark's 754 cases; the scenario package ships only the adapter ｜ ✅ `cloudopsbench`: **coverage 754/754 · JRA 752/754 (99.7%)**; judging = the upstream scorer (CA/FA/JRA + MC/EOC/ECR/EE) |
 | **Exam system** (run + score + report) | **dsh** | ✅ the standalone `dsh-tsm-eval` package (0.1: CLI `run / score / report / all / doctor / parity`; the dsh bundle surface — web overlay, `/eval` — is planned for 0.2) | **Host capability**: one system serves all scenarios, **independently separable** |
 
 ## 2. Why split this way
@@ -21,7 +22,7 @@ What evaluation really targets is the joint object "**host composition × scenar
 
 Much cleaner than 1.5's "adapters + four stages". Three extra benefits:
 
-1. **Multi-scenario**: one system × N papers (scenarios are peer-level by design, exactly for this);
+1. **Multi-scenario**: one system × N papers (scenarios are peer-level by design, exactly for this); the two landed scenarios occupy one content form each — bird's authored paper and COB's external-benchmark adapter;
 2. **Process is evaluable**: 1.5 can only judge the final answer; dsh natively exposes the **tool-call chain and evidence chain** (the same direction as Cloud-OpsBench's ECR "evidence-chain closure", see [roadmap.md](roadmap.md) §5);
 3. **Enterprise demo**: change one L3 clause → rerun the same paper → the behavior change is **reproducible** — a CI for semantic assets.
 
@@ -37,6 +38,8 @@ Much cleaner than 1.5's "adapters + four stages". Three extra benefits:
 
 - `expected`: prefer an exact value (program-checkable); give a judging note when tolerance is needed;
 - `source`: where the caliber comes from (L1 description / L2 kid / L3 clause) — so a mistake can be **attributed to a layer**.
+
+> The above is the **authored-paper** format (bird). COB writes no `questions.jsonl`: its "paper" is the upstream 754 cases and `eval/` holds only the conversion / scoring adapters (see §5).
 
 ## 4. Report (convention)
 
@@ -68,6 +71,18 @@ cd "TSM Core Service" && node bin/tsm.mjs grade --run "<that dir>"   # → quest
 | ② Result-set comparison (**rescues false negatives only**) | when gold judged non-PASS, compare the agent's candidate SQL row set with gold's (as-is / LIMIT-stripped / common-column projection) | A safety net for list questions; credits the **generating logic**, not the wording |
 | ③ SOP ruling (the verdict) | rule by the L3 clause's `Expected` / dataset-defect tag | Answer matches the clause but differs from gold → 🔁 **reversal**; clause caliber equals gold and it matches → ✅ correct (**not** a reversal); neither → ❌ |
 
+**COB batch runs (external benchmark, not `tsm grade`)**:
+
+```bash
+bash "DSH-based Agent Service/dsh_cob/scripts/start_backend.sh"                   # semantic backend :28796 (idempotent)
+bash "DSH-based Agent Service/dsh_cob/run_one.sh" <system> <category> <case_id>   # one case (e.g. boutique runtime 1)
+bash scenarios/cloudopsbench/eval/grade.sh --runs-root scenarios/cloudopsbench/results --match "<glob>"
+node scenarios/cloudopsbench/eval/stats.mjs
+```
+
+- Serial, one case at a time (memory constraint); **230 rounds** archived; result **coverage 754/754 · JRA 752/754 (99.7%)**; process scores MC 0.990 / EOC 0.946 / ECR 0.960.
+- The judging caliber = the **upstream scorer** (CA/FA/JRA + MC/EOC/ECR/EE), not the three tiers of `tsm grade` above; `stats.mjs` deduplicates across rounds and takes the latest.
+
 **Discipline (migration period)**:
 
 - One batch = **4 questions** (settled 2026-10-11, memory-safety); stop and report between batches; **at most two passes per question** (the second pass is for post-clause re-runs). In practice `run_batch.sh` dispatches with parallel `--jobs` (default 4, gated on 700 MB free memory); the Cloud-OpsBench marathon ran strictly serially, one case at a time.
@@ -81,7 +96,7 @@ The exam system's by-product = **probes**: who gets cited repeatedly, who gets c
 
 ## 7. Roadmap
 
-1. Scenario packages land `eval/questions.jsonl` first (content, extendable anytime) — ✅ done for `birdminidev`;
+1. Scenario packages land `eval/questions.jsonl` first (content, extendable anytime) — ✅ done for `birdminidev`; ✅ `cloudopsbench` uses the **external-benchmark adapter** instead (not `questions.jsonl`, see §5);
 2. The exam system becomes a dsh bundle (`--json` + session logs → judging → report) — ✅ landed as the standalone `dsh-tsm-eval` package (v0.1, CLI orchestrator; `report.json` carries the `baseline_key` diff anchor); the dsh bundle surface (web overlay / `/eval`) is 0.2;
 3. Reports get baselined: every round of semantic-asset change reruns the same paper, and behavior is diffed.
 

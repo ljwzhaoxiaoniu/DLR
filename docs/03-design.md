@@ -19,6 +19,8 @@ Direct answers to two points from ① Background:
 - **Concept decoupled from implementation (LE ↔ PE) → data-maturity independence**: the same LE can be implemented by an Excel sheet, a 3NF system table, a dimensional-modeling platform table, or a real-time wide table. An enterprise **does not need to upgrade its platform first**; an upgrade **touches only the PEs** — LE / L2 / L3 change zero characters.
 - **Correction right (boundary narrowed, 2026-09-24)**: the description layer may flag a schema's historical distortions ("this table is *named* X but *is* Y — read it as Z") — it **never touches the schema**, but it **adds no semantic enrichment** (fairness, see [04-application.md](04-application.md) §2): descriptions revert to **the dataset's own material**; the dataset's own defects are **not fixed in L1** but carried by L3 and tagged by type. Correction is limited to the minimum wording **required to remove ambiguity** (e.g., two tables each have a `Date` with different encodings — that must be stated apart).
 
+**DLR itself is a two-stage disambiguation chain**: physical tables are ambiguous (fragmented / wide / same-named columns / multi-slot FKs) → PE disambiguates with a **view** (R row space, C column selection, A anchor, S semantics); when the PE is still ambiguous (which business object it belongs to, which public face is addressable) → LE disambiguates with **pointable objects + public faces + PAS**. The continuation above the data-source level (L2 consensus, L3 question-level ruling, SOP's internal layering) is in [02-concept.md](02-concept.md) §6 "layered disambiguation"; this document expands only the first segment (L1).
+
 ## 1. The design model: three layers, two mechanisms, one flag
 
 > Finalized 2026-09-12 in agreement with the author. **This is DLR's semantic ontology; every rule derives from here.**
@@ -102,8 +104,21 @@ The same principles land on two kinds of data sources, forming two **shapes** (d
 | PE attributes | physical columns (C-selected + public) | the surfaces' **readable fields** — written into the surface's description and reading template, **not promoted to attribute nodes** (the state shape brings in no LA/PA — those are "column" vocabulary) |
 | The anchor `A` | a logical key (JOIN / filter key) | an **object name** (`app=<service>` / `node_name` / `namespace`) |
 | Example LEs | Account / Loan / Player | concrete services / nodes / namespaces — **pointable objects** |
+| Internal LE shape | a business entity (usually one main table + attached PEs) | a service may split into **business / carrier / observation** (`<svc>` / `<svc>-deploy` / `<svc>-obs`); nodes and namespaces are first-class objects |
 
 The two shapes share every term and discipline: LE/PE both sides, ARCS/PAS, the A anchor (= the WHERE key at fetch time, §1.2), the schema-level boundary, the naming and description disciplines. Reference applications: `scenarios/birdminidev/` (dlr, 11 databases), `scenarios/cloudopsbench/` (dlr-state, one file per system, two systems).
+
+#### 1.7.1 The as-built dlr-state shape (Cloud-OpsBench, v3)
+
+`scenarios/cloudopsbench/` lands the table above as two files for two systems (boutique / trainticket), **169 LE / 355 PE / 233 PAS** in total (boutique 38/90/37; trainticket 131/265/196):
+
+- **LE = concrete objects**: 53 services + nodes + namespaces. A service splits into three under "pointable ∧ surfaces share an anchor ∧ parent LE non-empty" — business `<svc>`, deployment carrier `<svc>-deploy`, observation set `<svc>-obs`; no abstract kinds.
+- **PE = observation surface + reading template**: deployment / pods / service_endpoints / telemetry / logs / code, plus node and namespace surfaces; each surface carries its anchored reading in `S` (e.g. `GetResources(pods, label_selector=app=<service>)`). **The state shape introduces no attribute nodes** — fields live in the surface's reading.
+- **A anchor = pruning predicate**: services use the app label `app=<service>`, nodes `node_name`, namespaces `namespace`; a first-round full scan only finds the anchor, and everything after narrows by anchor.
+- **PAS = call graph + carrier/signal edges**: call edges are read one by one from the snapshot's `GetServiceDependencies`; **placement (pod → node) and scope (namespace) deliberately get no edge** — they are per-case instance facts. Nodes / namespaces remain first-class objects: reachable by four routes (by name / by slot word / by placement wording / by symptom signposting), with no special tool and no per-deployment descriptions (X×N repetition).
+- **Boundary**: instances (pod names / IPs / state values / log bodies) never enter the model; the observable resource-kind closure = 21 kinds (verified across all 754 snapshots, no additions).
+
+Modeling record and the four reachability probes: [scenarios/cloudopsbench/modeling-plan.md](../scenarios/cloudopsbench/modeling-plan.md) §2.5.
 
 ## 2. The yaml, field by field
 
@@ -173,6 +188,8 @@ pas_relations:
 | Business lifecycle? Independent identity? | Loan (approved → settled), Transaction (happens per event), Account (opened → closed) | **→ LE** |
 | A pure junction table? No business meaning? | disp (account_id + client_id, no independent life) | **→ PE** |
 | A dimension / lookup table? 1:1 attribute lookups? | colour, gender, district | **→ PE** |
+| A pointable object in K8s? | the `frontend` service, the `worker-01` node, the `boutique` namespace | **→ LE** (dlr-state) |
+| An abstract category word? | "a Service", "some Pod" | **→ not an LE** |
 
 **Counter-example**: `LOGICAL.AccountRelation` (the disp table) is only a junction and should sink into an Account PE. **Correct example**: Loan / Transaction carry physical FKs to Account (N:1) but each has an independent lifecycle, so they stay LEs.
 
@@ -214,6 +231,8 @@ pas_relations:
 | student_club | `Expense`'s anchor was `link_to_budget` (no business meaning); Member description was 3 words | Expense promoted to its own LE with a new anchor; PAS added; descriptions enriched | 389K/25 steps → **34K/4 steps** |
 | toxicology | `atom.element`, `bond_type` etc. all private; no PAS from Bond→Atom | Four columns promoted to public; PAS added; descriptions in English + field names | tokens **-60%** |
 | debit_card | `Consumption`'s public face lacked "the spend amount"; `Amount` collided with "amount spent" | New `Spending` public; `Amount` renamed to "fuel amount (litres)" | tokens **-33%** |
+| cloudopsbench (v1 → v3) | Abstract kinds; objects and surfaces could not be told apart | **Concrete-object LEs** (business / carrier / observation) + observation-surface PEs + anchored readings + call-graph PAS | Dual-path parallel recall; coverage 754/754, JRA 752/754 (99.7%) |
+| cloudopsbench (edgeless objects) | Placement / scope change per case; a schema edge would write instance facts into the model | **Deliberately no edge**; nodes / namespaces reachable through four routes with existing tools, no dedicated tool, no per-deployment descriptions | All four reachability probes passed; X×N repetition avoided |
 
 (The figures come from historical comparisons; kept here as **evidence that the design rules work**.)
 
@@ -267,6 +286,8 @@ npx tsx src/verify/precheck.ts                # tool surface is up
 ```
 
 7. **Question-level validation**: run a single question through dsh (`run_one.sh`) and watch whether recall lands on the right LE.
+
+> **The `dlr-state` differences**: one yaml per system (e.g. boutique / trainticket); **no Neo4j graph**; L1 is read by `state_model_query`; build only the three vector indexes (`buildLance` / `buildConsensus` / `buildSop`) and skip `loadNeo4j`. See [cloudopsbench README](../scenarios/cloudopsbench/README.md) §4.
 
 ## 7. Self-check list — derived from §3.2's rules, in walk order (every line before submitting)
 

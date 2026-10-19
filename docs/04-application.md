@@ -9,17 +9,28 @@
 ## 1. What a scenario package contains (the measured structure)
 
 ```
-scenarios/birdminidev/
+scenarios/<scenario>/
 ├── sources/
-│   ├── configs/DLR/            # L1 modeling sources (one DLR yaml per database)
-│   ├── consensus/*.jsonl       # L2 domain-consensus sources (one per database × 11)
-│   └── sop.md                  # L3 convention source (human-written; `tsm build sop` compiles it into the retrieval index)
-├── eval/                       # the exam paper: questions.jsonl (500 questions: question + expected + provenience)
-│   └── build.mjs               # the generator (reproducible via node eval/build.mjs; answer keys from L3 clauses, the rest from gold)
-└── fixtures/                   # reference truths (used by the verify suite, see §3)
+│   ├── configs/DLR/            # L1 modeling sources (dlr: one yaml per database; dlr-state: one yaml per system)
+│   ├── consensus/*.jsonl       # L2 domain-consensus sources (organized by namespace / slot class)
+│   └── sop.md                  # L3 convention source (human-written; `tsm build sop` compiles the per-question retrieval index)
+├── eval/                       # exam paper / evaluation adapter: authored questions.jsonl or external-benchmark adapters (convert / grade / stats)
+├── fixtures/                   # reference truths (optional; birdminidev uses them as regression snapshots)
+├── results/<round>/            # batch archives (questions.csv + raw/ or traces/)
+└── DETAIL.md · DETAIL/         # evaluation ledger + per-case detail (rebuilt by stats)
 ```
 
-Current scale — `birdminidev`: graph **LE 50 / PE 74 / PA 784 / LA 277 (1,185 nodes) + 37 PAS relations**; vectors **entities 946 · consensus 91 · sop 180**; consensus covers 11 namespaces. `cloudopsbench`: **L2 15 · L3 5**, no graph (`dlr-state`).
+**Two landed scenarios (peer-level)**:
+
+| | `birdminidev` | `cloudopsbench` |
+|---|---|---|
+| Scenario shape | `dlr` (SQLite NL2SQL) | `dlr-state` (K8s state-space RCA) |
+| L1 scale | 11 databases · **50 LE / 74 PE / 37 PAS** (1,185 graph nodes) | 2 systems · **169 LE / 355 PE / 233 PAS** (53 services + nodes + namespaces) |
+| L2 | 11 files · 91 entries | 1 file · 15 entries (clustered by slot class) |
+| L3 | 180 sections (**per question**) | 5 sections (**per symptom wording**, covering 754 cases; each section is a decision tree) |
+| Tool surface | 7 | 3 (no Neo4j graph) |
+| Evaluation content | Authored paper: `eval/questions.jsonl`, 500 questions | External benchmark: 754 cases + upstream scorer adapter |
+| Result | **500/500** (✅ 426 + 🔁 74) | **coverage 754/754 · JRA 752/754 (99.7%)** |
 
 ## 2. What each level writes
 
@@ -28,18 +39,23 @@ Current scale — `birdminidev`: graph **LE 50 / PE 74 / PA 784 / LA 277 (1,185 
 - Modeling spec and self-check list: **the single source of truth is [03-design.md](03-design.md)** (not repeated here).
 - One-line discipline: **write source facts only**; L1 writes **no question-level conventions** and no instance-level facts (see [02-concept.md](02-concept.md) §1 "system scope").
 - **No semantic enrichment** (decided 2026-09-24, fairness): descriptions come from **the dataset's own material** — the CSV's `column_name` / `column_description` / `value_description`, plus the parts of `evidence` that are facts about the source itself; **no external knowledge is introduced**. Dataset defects found are **not fixed in L1** but carried by L3 and tagged (see below).
+- **What `dlr-state` (COB) writes**: one yaml per system; LE = pointable objects (services / nodes / namespaces), PE = the object's observation surfaces (deployment / pods / endpoints / telemetry / logs / code…), each surface carrying an **anchored reading template**; the anchor = the WHERE key at fetch time (app label / node name / namespace), PAS = the call graph plus carrier/signal edges. **Placement and scope get no edge** (per-case instance facts). Full spec: [03-design.md](03-design.md) §1.7.1.
 
 ### L2 `consensus` — `sources/consensus/*.jsonl`
 
 - **Format**: a kid-aggregated JSON array, each entry `{kid, knowledge}` (the loader also accepts BIRD-style per-question evidence).
 - **Admission** ([02-concept.md](02-concept.md) §2): **scenario-required · built on the L1 schema · non-workflow**; **no instance-level content**.
 - **What it writes**: term → column/value mappings, formulas and conventions, domain background (e.g. "CZK / EUR are the billing currencies").
-- **Discipline**: **what should sink to L1 sinks** — facts about the source itself (value domains / granularity / sample nature) left in L2 are on the wrong level; one file per database (namespace = database name).
+- **Discipline**: **what should sink to L1 sinks** — facts about the source itself (value domains / granularity / sample nature) left in L2 are on the wrong level; organize by namespace / slot class (bird: one file per database, namespace = database name; COB: one file per slot class, `kubernetes.jsonl` with 15 entries).
+- **COB's L2**: schema-level readings + **symptom → chain mapping** (question wording ↔ model terminology), including the placement reading (the pods surface's NODE field → the node object); no instance detail.
 - **Language**: the same as the questions (English).
 
 ### L3 `sop` — `sources/sop.md`
 
-- **Shape**: **sectioned by question wording** — each section's title restates one question (`### When asked: "..."`), and the body gives that question's conventions / playbook / traps; the file head is a **reading protocol** (how to match, what to do when nothing matches, and that a section covers only its own question).
+- **Two sectioning shapes, one principle of layered disambiguation**:
+  - **`birdminidev` (NL2SQL): per question** — 180 sections; each title restates one question (`### When asked: "..."`), and the body gives that question's conventions / playbook / traps.
+  - **`cloudopsbench` (RCA): per symptom wording** — 5 sections cover 754 cases; the title is the question's symptom wording verbatim, and the section body is a **decision tree**: actual on-chain observation → mechanism branch (Pending / image pull / admission / routing…) → closing triad (mechanism event + events surface + config). **Few sections does not mean thin: this is SOP layering** (wording layer → branch layer → closing layer), see [02-concept.md](02-concept.md) §6 "layered disambiguation".
+  - Shared reading protocol: how to match, what to do when nothing matches, and that a section covers only its own question.
 - **Every section must be tagged by type** (four types, multi-select), on the line under the title: `> **Type**: dataset issue`
   | Type | Means |
   |---|---|
@@ -48,6 +64,7 @@ Current scale — `birdminidev`: graph **LE 50 / PE 74 / PA 784 / LA 277 (1,185 
   | **Hard question** | The question itself is hard: conventions traps, answer units, counting units, ratio conventions… it needs a playbook |
   | **Other** | Fallback (future enterprise conventions / process content lands here, or gets subdivided later) |
   The tags **serve maintenance and statistics only; at answering time all sections are equal** (the tag never changes how a section executes).
+  > Type tags and `Expected` are maintenance conventions of the **bird authored paper**; COB's 5 sections are maintained per symptom family and write no `Expected` (judging is the upstream scorer, see §4).
 - **Hard discipline**: **do not write database/table/column names** (decided 2026-09-20). The test: is the sentence the business stating a need, or the database introducing itself?
 - **Quality line** (decided 2026-09-26): a ③ hard-question section **may not merely restate the question or explain terms** — it must pin **measured facts and traps** (counts, set sizes, ties/distributions, misreadings), and the facts **must be verified with SQL before writing**; after giving the facts, say **the fact is settled — answer by it** (otherwise the agent spends its budget self-verifying).
 - **The reinforcement recipe (on demand, not for every section)**: if a question's run shows the agent **repeatedly self-verifying** (the right section hit, the convention right, yet a lot of SQL burnt probing the boundary), reinforce that section along three lines (a measured worked case — q37, in the [birdmini README](../scenarios/birdminidev/README.md) §4): ① which **fork** does this question most easily take wrong? ② does the fork have a **measurably concrete consequence** (a number / a row count / another entity — at the grain of "of the 2,269 rows, 218 have zero test-takers", not "some / possibly")? ③ add one sentence **"settled — answer by it"** (the settled tone is functional: it maps directly onto the agent's verification budget). **Do it only on the sections that showed the problem** — the natural way of writing a section comes first; never rewrite a healthy section to fit a template.
@@ -61,6 +78,8 @@ Current scale — `birdminidev`: graph **LE 50 / PE 74 / PA 784 / LA 277 (1,185 
 
 ## 3. `fixtures/` — reference truths
 
+`fixtures/` currently holds `birdminidev`'s regression snapshots; COB's reference truth is the upstream scorer's ledger (`results/` + `DETAIL`, see §4).
+
 | File | What it verifies |
 |---|---|
 | `dlr_vector_manifest.json` | YAML → vector rows (id / name / PAS text), character by character |
@@ -71,10 +90,11 @@ Current scale — `birdminidev`: graph **LE 50 / PE 74 / PA 784 / LA 277 (1,185 
 
 **2.0 repositioning = regression snapshots**: the Python line is gone; these are no longer "cross-implementation parity" but **the self-证 baseline after modeling changes** — after editing YAML / consensus, run `src/verify/*` and check the results changed **as expected**; expected changes get the snapshots updated along.
 
-## 4. `eval/` — the exam paper (✅ landed: 500 questions)
+## 4. `eval/` — two forms of exam paper (peer-level scenarios)
 
-- Every scenario carries its own paper: `eval/questions.jsonl`, each entry `{question, expected, source}` (`source` = the provenience of the answer key, for attribution when a failure is judged).
-- **birdminidev today**: 500 lines = **74 from L3 clause conventions** (answer keys of overturned questions) + **426 from gold**; the generator `eval/build.mjs` (`node eval/build.mjs`, reproducible; the keys cross-check with the ledger: 74/426 match the ruling columns **item by item**).
+- **Form A: authored paper (birdminidev)** — `eval/questions.jsonl`, each entry `{question, expected, source}` (`source` = provenience of the answer key, for attribution when a failure is judged); 500 lines = **74 from L3 clause conventions** (answer keys of overturned questions) + **426 from gold**; the generator `eval/build.mjs` (`node eval/build.mjs`, reproducible; 74/426 match the ruling columns **item by item**).
+- **Form B: external-benchmark adapter (cloudopsbench)** — `eval/` holds adapters rather than a paper: `convert.mjs` (session logs → reference trace) · `run_eval.py` (reuses the upstream scorer) · `grade.sh` (one-command scoring) · `stats.mjs` (rebuilds STATS / DETAIL). The paper itself is the upstream 754 cases (`process-label` full set); the judging caliber = upstream CA/FA/JRA + MC/EOC/ECR/EE, **with no human reversal convention**.
+- **Results**: bird **500/500** (✅ 426 + 🔁 74); COB **coverage 754/754 · JRA 752/754 (99.7%)** (round 230).
 - **The exam paper follows the scenario; the exam system follows dsh** (an independent bundle) — see [eval.md](eval.md).
 
 ## 5. Review: the dual-read test
@@ -101,6 +121,8 @@ node scenarios/<name>/eval/build.mjs
 # 4) self-check
 cd "TSM Core Service" && npx tsx src/verify/precheck.ts
 ```
+
+> **`dlr-state` scenarios**: one yaml per system; build `buildLance` / `buildConsensus` / `buildSop` only and **skip `loadNeo4j`** (no graph); validate one case with `dsh_cob/run_one.sh <system> <category> <case_id>` and score with `scenarios/cloudopsbench/eval/grade.sh` + `stats.mjs` (see [run.md](run.md) §2.1).
 
 ## 7. Three things a scenario switch never touches
 

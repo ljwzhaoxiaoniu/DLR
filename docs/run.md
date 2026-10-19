@@ -4,7 +4,7 @@
 > Background: the narrative docs ([01](01-background.md) → [04](04-application.md)); per-tree reference docs: [TSM Core Service](<../TSM Core Service/README.md>) · [DSH-based Agent Service](<../DSH-based Agent Service/README.md>).
 > 中文版：[run.zh.md](run.zh.md)
 
-**Contents**: [0](#0-big-picture) · [1](#1-start-the-backend-idempotent) · [2](#2-run-one-question-headless) · [2.5](#25-run-the-exam-dsh-tsm-eval) · [3](#3-web-chat) · [4](#4-status-surface) · [5](#5-graph-backend-what-changes-when-neo4j-is-absent) · [6](#6-troubleshooting) · [7](#7-discipline) · [8](#8-from-zero-the-npm-walkthrough)
+**Contents**: [0](#0-big-picture) · [1](#1-start-the-backend-idempotent) · [2](#2-run-one-question-headless) · [2.1](#21-run-one-cob-case-dlr-state) · [2.5](#25-run-the-exam-dsh-tsm-eval) · [3](#3-web-chat) · [4](#4-status-surface) · [5](#5-graph-backend-what-changes-when-neo4j-is-absent) · [6](#6-troubleshooting) · [7](#7-discipline) · [8](#8-from-zero-the-npm-walkthrough)
 
 ## 0. Big picture
 
@@ -19,6 +19,8 @@ tsm-core-dlr (node process): LanceDB (vectors) + ONNX encoder (in-process)
    ▼
 dataset (MINIDEV_sqlite, gitignored; manual download)
 ```
+
+**`dlr-state` (COB) runs a second stack**: MCP on `:28796` with 3 tools (`state_model_query` · `dlr_search_consensus` · `dlr_search_sop`), no Neo4j graph; its data surface is the upstream benchmark's MCP (started/stopped per case on `:8000`). The two services coexist.
 
 **Processes**: the TS MCP server always; Neo4j only when the Neo4j graph backend is in use (the default in this repo — see §5). LanceDB and the encoder are libraries embedded in the MCP process, not services.
 
@@ -43,6 +45,17 @@ bash "DSH-based Agent Service/dsh_dlr/run_one.sh" <qid> "<question>"
 - The backend is prechecked automatically; an unreachable backend **exits loudly** (exit 3) instead of burning model calls.
 - Session logs: `DSH-based Agent Service/.dsh-home/sessions/<project-dir>/<session-id>/session.v4.jsonl.zstd` (**multi-frame zstd**; decoder: `DSH-based Agent Service/scripts/decode_session_log.cjs`).
 - **Batch runs** (4 questions per batch, memory-gated parallel dispatch → `tsm grade` → `tsm stats`): see "How a round is run" in `scenarios/birdminidev/results/README.md`.
+
+### 2.1 Run one COB case (`dlr-state`)
+
+```bash
+bash "DSH-based Agent Service/dsh_cob/scripts/start_backend.sh"                   # COB semantic backend :28796 (idempotent)
+bash "DSH-based Agent Service/dsh_cob/run_one.sh" <system> <category> <case_id>   # e.g. boutique runtime 1
+```
+
+- Artifacts land in `tmp_scripts/cob_runs/` by default (an optional 4th argument sets out_dir); case data comes from the upstream benchmark checkout outside the repo (~3.9 GB, snapshot `ea05daf`, overridable via `COB_DIR`).
+- Score: `scenarios/cloudopsbench/eval/grade.sh --runs-root scenarios/cloudopsbench/results --match "<glob>"` → `questions.csv` + `summary.md`; `node scenarios/cloudopsbench/eval/stats.mjs` rebuilds `STATS.md` / `DETAIL.md`.
+- Either this or the npm `tsm serve :28796` — **not both** (same semantic backend); see [cloudopsbench README](../scenarios/cloudopsbench/README.md) §4.
 
 ## 2.5 Run the exam (dsh-tsm-eval)
 
@@ -79,6 +92,7 @@ curl -s http://127.0.0.1:28795/status
   Key fields: `graph.backend` (`memory` | `neo4j`), `graph.fallback_reason` (when `auto` fell back), `scenario.{name,dir,source}`, `service_info.{http_base,viz_url}`, `neo4j.enabled` (compat key).
 - **Graph page**: **http://127.0.0.1:28795/viz/dlr** (rendered live by the MCP server; the overlay's `图谱 ↗` points there). Offline/shareable single file: `tsm viz` (writes `<DATA_DIR>/viz/dlr-graph.html`).
 - Neo4j Browser: http://localhost:7474 — user `neo4j`, password in `TSM Core Service/.env` (the overlay's `Neo4j ↗` points there; hidden when the backend is `memory`).
+- COB backend on **:28796**: `curl -s http://127.0.0.1:28796/status`; the two scenarios coexist with independent stores.
 
 ## 5. Graph backend (what changes when Neo4j is absent)
 
@@ -93,6 +107,9 @@ curl -s http://127.0.0.1:28795/status
 | `dlr_semantic_query` · `get_pe_mapping` · `get_le_attrs` | graph (memory **or** Neo4j) |
 | `dlr_search_consensus` · `dlr_search_sop` | LanceDB |
 | `execute_sql` · `get_full_data_info` | SQLite (+ YAML) |
+| `state_model_query` (dlr-state) | LanceDB state model (**no graph**) |
+
+A `dlr-state` scenario exposes only 3 tools (`state_model_query` + the two searches); database and graph tools are not mounted.
 
 **Failures are not cached** in the MCP-server sense: with the `neo4j` backend, connection failures reset the handle so tools **self-heal** after Neo4j returns (no restart). A `memory` fallback under `auto`, by contrast, is a *success*: restart the server to go back to Cypher.
 
@@ -114,6 +131,8 @@ curl -s http://127.0.0.1:28795/status
 | A question ends with no conclusion sentence | Hit `timeout 600` (runaway agent): tighten that question's L3 clause **answer shape**, then rerun it |
 | The backend "wedges" mid-batch (`/status` times out, everything fails) | A pathological agent SQL pinning the single-threaded service — guarded by `execute_sql`'s subprocess + 20 s hard timeout (`TSM_SQL_TIMEOUT_MS`); kill the port → `start_backend.sh` |
 | Wrong scenario is live | `tsm scenario` prints the resolved dir + `source` (`env-path` / `env-package` / `default`) |
+| COB case reports a port conflict / the service binds the wrong port | Set `COB_MCP_PORT` and `CLOUDOPSBENCH_MCP_PORT` **as a pair** (the first alone leaves the upstream service on 8000 → port collision) |
+| COB won't start and reports a missing case | The upstream benchmark checkout (~3.9 GB, snapshot `ea05daf`) is not at the expected path; set `COB_DIR` or follow the [COB README](../scenarios/cloudopsbench/README.md) §4 |
 
 ## 7. Discipline
 
@@ -124,6 +143,7 @@ curl -s http://127.0.0.1:28795/status
 - Paths and data dirs (all env-overridable): `TSM_DATA_DIR` (store/cache/viz; default `<service>/.store` in-repo, `~/.tsm` when installed), `TSM_DATASET_DIR` (default = repo root), `TSM_SCENARIO` (path or package name), `TSM_OUT_DIR` (scenario write target), `TSM_MODEL_DIR`, `TSM_STORE_DIR`, `TSM_CACHE_DIR`, `TSM_MCP_URL`, `TSM_GRAPH_BACKEND`.
 - Temporary artifacts go to `tmp_scripts/` or are deleted on the spot.
 - **Batch + grading**: `run_batch.sh --qids ... --jobs 4` → `tsm grade --run <dir>`; the three-tier verdicts, reversal policy and migration-period discipline (**4 questions per batch**, at most two passes per question, always re-run after writing a clause, full re-judge after policy changes) are in [eval.md](eval.md) §5.
+- **COB does not grade through `tsm grade`**: use `scenarios/cloudopsbench/eval/grade.sh` + `stats.mjs` (the upstream scorer's caliber), see [eval.md](eval.md) §5 "COB batch runs".
 
 ## 8. From zero: the npm walkthrough
 

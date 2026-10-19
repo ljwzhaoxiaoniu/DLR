@@ -25,7 +25,7 @@ Read the opening paper [01-background.md](01-background.md) first. It lays the p
 
 | Level | Key | Carrier (2.0) | Answers | How it is obtained | Maintained by | Change rhythm |
 |---|---|---|---|---|---|---|
-| **Data-source level** L1 | `dlr` | scenario package `sources/configs/DLR/*.yaml` → graph + vectors | What this domain **has**: business concepts, where they land, how they connect | `dlr_semantic_query` → `get_pe_mapping` / `get_le_attrs` | **the data side** | with the schema / data sources |
+| **Data-source level** L1 | `dlr` | scenario package `sources/configs/DLR/*.yaml` → graph + vectors | What this domain **has**: business concepts, where they land, how they connect | `dlr_semantic_query` → `get_pe_mapping` / `get_le_attrs` (dlr-state: `state_model_query`) | **the data side** | with the schema / data sources |
 | **Domain-consensus level** L2 | `consensus` | scenario package `sources/consensus/*.jsonl` → vectors | How a question's wording **is computed / filtered**: term→value, conventions, background | `dlr_search_consensus` | **domain business staff** | with the business's conventions |
 | **Business-logic level** L3 | `sop` | scenario package `sources/sop.md` → vector index (compiled by `tsm build`, retrieved per question) | How this *kind of question* **is settled**: playbooks, exceptions, traps | `dlr_search_sop(question)` | **business staff** | with the process / playbook |
 
@@ -76,6 +76,8 @@ Boundary examples:
 | "nationality" refers to the country the station is in, not a customer field | **L2** | A wording → structure mapping |
 | "In percentage questions the numerator and denominator must share the same population, and the denominator must include customers with no records" | **L3** | A playbook/trap for this kind of question (effective only when that question hits it) |
 | The **38508** in "what is customer 38508's monthly consumption", or "the top-selling product this month" | **outside the system** | Instance-level — computed from the data on demand, or fetched via an external MCP; never sedimented as knowledge |
+| K8s `worker-01`, the `boutique` namespace; the frontend service with its deployment / pods / endpoints surfaces | **L1** | Pointable object + observation surfaces present in every snapshot (dlr-state shape) |
+| "Pod X currently sits on worker-01" | **outside the system** | An instance fact changing snapshot by snapshot; L2 only writes the reading "take placement from the pods surface's NODE field" |
 
 > The difference from earlier versions (important): **"which column does this phrasing query" does not necessarily go to L2** — if it is really a statement about the source itself (value domain / granularity / sample), criterion 1 **sinks it into L1**. In practice most of BIRD's `evidence` falls in this class.
 
@@ -135,9 +137,11 @@ The three levels' **investment ratio is not fixed**; the workload's shape decide
 | Workload shape | L1 | L2 | L3 |
 |---|---|---|---|
 | NL2SQL / BI question-answering | **Heavy** (data-source semantics are the main task) | Thin | Very thin (arbitration only) |
-| Operations / agentic (e.g. RCA) | Thin (little structured surface to model) | As needed | **Thick** (runbooks / diagnosis / process) |
+| Operations / agentic (e.g. RCA) | Thin in attribute depth (no column-level attributes; objects / surfaces / edges are still modeled) | As needed | **Thick** (decision trees organized by symptom family; few sections ≠ thin) |
 
 The same TSM eats both shapes precisely because of the layered decoupling — **which layer gets the investment is the workload's decision**; it is not about filling all three to the brim.
+
+> **COB is the evidence for this end**: L1 has no column-level attributes, yet objects / surfaces / edges are not few — **169 LE / 355 PE / 233 PAS** (two systems); L2 has 15 entries; L3 has only 5 sections yet covers 754 cases — because each section is not an answer but a **decision tree** (see §6 "layered disambiguation"). **"L1 thin / L3 thick" describes the shape, not the node count or section count.**
 
 Two points about L3 (not to be underestimated):
 
@@ -147,6 +151,20 @@ Two points about L3 (not to be underestimated):
 ## 6. Layer duties and ceilings (how hard cases land)
 
 Each level has its own duty and its own boundary; when a level cannot be made complete, **open the level above — never pile it up locally** (decided 2026-10-12, converging the RCA scenario's batch runs). At runtime the three levels **recall in parallel** (§1); this section is about the **development time** — how the model extends when it hits a ceiling.
+
+### Layered disambiguation: each level solves only what it can judge objectively (added 2026-10-19)
+
+The three levels are not three side-by-side descriptions but a **chain of layered disambiguation**: each level does only what it can judge objectively; what one level cannot solve is **not fought over at that level** — it opens the level above. Forcing it down at one level squeezes the problem out at another (press the gourd down, the ladle floats up).
+
+- **Inside DLR: physical table → PE → LE.** Physical tables are inherently ambiguous (fragmented tables, wide tables, same-named/different-meaning columns, multi-slot FKs); PE disambiguates with a **view** (scope rows, select columns, fix the anchor, annotate semantics); when the PE is still ambiguous (which business object does this surface belong to, which public face is the addressing point) → LE disambiguates with **pointable objects + public faces + PAS**. This is DLR's two-stage disambiguation (see [03-design.md](03-design.md) §0).
+- **Across the levels: data source → L2 → L3.** L1 can objectively answer only "how the data is stored"; the mapping from question wording ↔ model terminology, and domain conventions, are outside L1's objective scope → L2. L1 + L2 still have natural conflicts: some are **real business conflicts** (both conventions hold; the question decides), some are **system-level** (the business is fine, but data and consensus disagree) → L3 makes the question-level ruling.
+- **Layering inside L3 (COB evidence).** If SOP has only "one layer" — one section directly giving one answer — it is ambiguous too: the same symptom wording can hide several mechanisms. COB's SOP therefore writes each section as a **decision tree**: ① section title = symptom wording (lock the family first) → ② in-section branches = which mechanism the actual on-chain observation lands on (Pending / image pull / admission / routing…) → ③ chain order and closing = mechanism event + events surface + config (preventing "right mechanism, unclosed evidence chain"). **Five sections cover 754 cases — not because there are few sections, but because each section is layered inside.**
+
+> Distinguish this from §5's "layer-weight seesaw": §5 is about the **investment ratio** changing with the workload; this is about **inter-level ceilings** — forcing a problem down at one level pushes it out at another. They are two sides of the same layered design.
+
+> **Forward-looking: L2 will also layer along LEs (direction, unverified).** Neither of the two current benchmarks is suitable for demonstrating this; but a convention that holds **globally** can naturally descend from SOP to L2 (organized per LE / domain), while one that holds only inside an LE stays isolated by LE. **Layered disambiguation and per-LE isolation are two uses of the same governance tool** — see [roadmap.md](roadmap.md) §5.
+
+**Each level's duty and ceiling**:
 
 | Level | Primary duty | Not its job |
 |---|---|---|

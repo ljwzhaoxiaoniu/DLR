@@ -19,6 +19,8 @@
 - **概念与落地解耦（LE ↔ PE）→ 数据成熟度无关**：同一个 LE 的落地可以是一张 Excel、一个 3NF 系统表、一张维度建模平台表、一张实时大表。企业**不必先升级平台**；升级换代**只动 PE**，LE / L2 / L3 一字不改。
 - **correction 权（边界收窄，2026-09-24）**：描述层可指出 schema 的历史失真（"此表名为 X 实为 Y，按 Z 理解"）——**不擅动 schema**，但**不做语义丰富度补充**（公平性，见 [04-application.zh.md](04-application.zh.md) §二）：描述一律回归**数据集原生**，数据集自身的缺陷**不在 L1 修**，交 L3 承载并标注类型。correction 仅限**消除歧义所必需**的最小措辞（如两张表的同名 `Date` 编码不同，必须分开说明）。
 
+**DLR 本身是一条两级消歧链**：物理表有歧义（碎表 / 宽表 / 同名异义列 / 多槽位 FK）→ PE 用**视图**消歧（R 行空间、C 列选择、A 锚、S 语义）；PE 仍有歧义（属于哪个业务对象、哪个 public 面可寻址）→ LE 用**可指认的对象 + public 面 + PAS** 消歧。数据源级之上的接续（L2 共识、L3 题级裁决、SOP 内部分层）见 [02-concept.zh.md](02-concept.zh.md) §六「逐层消歧」；本文只展开第一段（L1）。
+
 ## 1. 设计模型：三层实体、两个机制、一个标记位
 
 > 2026-09-12 与作者对齐后定稿。**这是 DLR 的语义本体，一切规则从这里推导。**
@@ -102,8 +104,21 @@ R: { kind: unwind, pattern: '{side}_player_{slot}', side: [home, away], slot: ['
 | PE 的属性 | 物理列（C 选择 + public） | 面内的**可读字段**——写在面的说明与读法模板里，**不升为属性节点**（state 形态不引入 LA/PA：那是"列"词汇） |
 | 锚 `A` | 逻辑键（JOIN / 过滤键） | **对象名**（`app=<服务>` / `node_name` / `namespace`） |
 | LE 例 | Account / Loan / Player | 具体服务 / 节点 / 命名空间——**可指认的对象** |
+| LE 的内部形态 | 业务实体（通常一张主表 + 附属 PE） | 服务可分**业务 / 载体 / 观测**三件（`<svc>` / `<svc>-deploy` / `<svc>-obs`）；节点、命名空间为一等对象 |
 
 两形态共享全部词汇与纪律：LE/PE 双侧、ARCS/PAS、A 锚（= 取数 WHERE 键，§1.2）、schema 级边界、例名与描述纪律。参考应用：`scenarios/birdminidev/`（dlr，11 库）、`scenarios/cloudopsbench/`（dlr-state，两系统两份）。
+
+#### 1.7.1 dlr-state 的实证形态（Cloud-OpsBench，v3）
+
+`scenarios/cloudopsbench/` 把上表落成两系统两份文件（boutique / trainticket），共 **169 LE / 355 PE / 233 PAS**（boutique 38/90/37；trainticket 131/265/196）：
+
+- **LE = 具体对象**：53 个服务 + 节点 + 命名空间。服务按「可指认 ∧ 面群同锚 ∧ 母 LE 不空」拆三件——业务对象 `<svc>`、部署载体 `<svc>-deploy`、观测集合 `<svc>-obs`；不设抽象 kind。
+- **PE = 观测面 + 读法模板**：deployment / pods / service_endpoints / telemetry / logs / code，以及节点面、命名空间面；每个面在 `S` 里带锚定读法（如 `GetResources(pods, label_selector=app=<服务>)`）。**state 形态不引入属性节点**——字段写在面的读法里。
+- **A 锚 = 剪枝谓词**：服务用应用标签 `app=<服务>`，节点用 `node_name`，命名空间用 `namespace`；首轮全量只用于找锚，其后一切按锚收窄。
+- **PAS = 调用图 + 载体/信号边**：调用边逐条取自快照的 `GetServiceDependencies`；**放置（pod → node）与作用域（namespace）刻意不建边**——它们是逐 case 变化的实例事实。节点 / 命名空间仍是一等对象：靠「按名 / 按槽词 / 按落位措辞 / 按症状指路」四条路可达，不需要专用工具，也不逐 deployment 补描述（X×N 重复）。
+- **边界**：实例（pod 名 / IP / 状态值 / 日志正文）一律不入模型；可观测资源种类闭包 = 21 类（全 754 快照验过无新增）。
+
+建模记录与四条可达性实测：[scenarios/cloudopsbench/modeling-plan.zh.md](../scenarios/cloudopsbench/modeling-plan.zh.md) §2.5。
 
 ## 2. yaml 逐字段规范
 
@@ -173,6 +188,8 @@ pas_relations:
 | 有业务生命周期？有独立身份？ | Loan（批准→结清）、Transaction（逐笔发生）、Account（开户→销户） | **→ LE** |
 | 纯连接表？无业务意义？ | disp（account_id + client_id，无独立生命） | **→ PE** |
 | 维表 / 查找表？1:1 查属性？ | colour、gender、district | **→ PE** |
+| K8s 里可指认的对象？ | `frontend` 服务、`worker-01` 节点、`boutique` 命名空间 | **→ LE**（dlr-state） |
+| 抽象类别词？ | "一个 Service"、"某种 Pod" | **→ 不是 LE** |
 
 **反例**：`LOGICAL.AccountRelation`（disp 表）只是连接表，应下沉为 Account 的 PE。**正例**：Loan / Transaction 虽然物理 FK 指向 Account（N:1），但各有独立生命周期，保留为 LE。
 
@@ -214,6 +231,8 @@ pas_relations:
 | student_club | `Expense` 的锚是 `link_to_budget`（无业务意义）；Member 描述仅 3 词 | Expense 升独立 LE、换锚；补 PAS；描述丰富化 | 389K/25 步 → **34K/4 步** |
 | toxicology | `atom.element`、`bond_type` 等全 private，Bond→Atom 无 PAS | 四列升 public；补 PAS；描述英文+字段名 | token **-60%** |
 | debit_card | `Consumption` 的 public 面缺"消费金额"；`Amount` 与 "amount spent" 冲突 | 新增 `Spending` public；`Amount` 改为"加油量(升)" | token **-33%** |
+| cloudopsbench（v1 → v3） | 抽象 kind 建模，对象 / 面分不开 | 改为**具体对象 LE**（业务 / 载体 / 观测三件）+ 观测面 PE + 锚定读法 + 调用图 PAS | 双路并行召回；全量覆盖 754/754、JRA 752/754（99.7%） |
+| cloudopsbench（无边对象） | 放置 / 作用域逐 case 变化，建 schema 边会把实例事实写进模型 | **刻意不建边**；节点 / 命名空间靠既有工具四路可达，不新增专用工具、不逐 deployment 补描述 | 四条可达性实测全通；避免 X×N 重复 |
 
 （数字来自历史对照；此处作为**设计规则有效性的证据**保留。）
 
@@ -267,6 +286,8 @@ npx tsx src/verify/precheck.ts                # 工具面可用
 ```
 
 7. **跑题验证**：走 dsh 单题（`run_one.sh`），看召回是否落在正确的 LE 上。
+
+> **`dlr-state` 的接入差异**：一系统一份 yaml（如 boutique / trainticket）；**不装 Neo4j 图**；L1 由 `state_model_query` 读取；构建只做向量三层（`buildLance` / `buildConsensus` / `buildSop`），跳过 `loadNeo4j`。参考 [cloudopsbench README](../scenarios/cloudopsbench/README.zh.md) §四。
 
 ## 7. 自检清单（自 §3.2 规则派生，按走序逐条过）
 
