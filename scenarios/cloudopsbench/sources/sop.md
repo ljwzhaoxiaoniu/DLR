@@ -83,10 +83,12 @@ Readings from L2 tell you how to read a surface, not what to read first; this or
 
 > **Systems**: boutique
 
-This wording lives on the metric surface — alerts first. A wave of latency and traffic drops across several services at once is usually a node-scope network story: localize by placement, not by the loudest row.
+**Our order (a team convention): open wide, place, then let the node retransmission rows decide.** This wording lives on the metric surface — alerts first. A wave of latency and traffic drops across several services at once is usually a node-scope network story: localize by placement, not by the loudest row.
 
-1. **Open wide, then place.** Read the pods listing in its **wide form** — the NODE column is your map — together with the alerts (and the error-log trail, for service names, if it is cheap). The degrading services' pods landing on one node names the case: that node's network. One service degrading alone is its own pod story; several services that share a node is the node's story.
-2. **The node retransmission rows decide, in this order.** ① Compare the node retransmission values: when one node's value is far above every other (an order of magnitude or more), that node is the case — and retransmissions there are **packet loss**: the class is `node_network_packet_loss`. ② When no node carries a prominent retransmission value — only noise-sized spikes, wherever they sit — the case is a network **delay**: the node is the placement pick from step 1, and a small spike on another node does not move it.
+1. **Open wide, then place.** Read the pods listing in its wide form — the NODE column is the map — together with the alerts (and the error-log trail for service names, if cheap). The degrading services' pods landing on one node names the case: that node's network. One service degrading alone is its own pod story; several services sharing a node is the node's story.
+2. **Read the nodes listing in wide form, then let the retransmission rows decide.** Read every node's retransmission value first; do not anchor on one node before the comparison.
+   - One node's retransmission value far above every other (an order of magnitude or more) → that node is the case; the class is `node_network_packet_loss`.
+   - No prominent retransmission value — only noise-sized spikes, wherever they sit → the case is a network delay; the node is the placement pick from step 1, and a small spike on another node does not move it.
 3. **Close on the node surface** — the node's own objects / `GetClusterConfiguration` — with the placement map (which service pods sit on that node) as the localization evidence.
 
 ### When asked: "Service Performance Degradation."
