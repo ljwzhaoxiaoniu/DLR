@@ -173,15 +173,25 @@ function pick(hits: LanceHit[], topK: number, threshold: number): LanceHit[] {
 
 const round4 = (n: number) => Math.round(n * 10000) / 10000;
 
+/** L1 作用域归一：题面 namespace（boutique / train-ticket）→ entities.db（boutique / trainticket）。 */
+function normalizeSystem(s?: string): string | undefined {
+  const v = (s ?? "").trim().toLowerCase();
+  if (!v) return undefined;
+  if (v === "train-ticket" || v === "trainticket") return "trainticket";
+  if (v === "online-boutique" || v === "onlineboutique" || v === "boutique") return "boutique";
+  return v;
+}
+
 export async function stateModelQuery(
   store: LanceStore,
   question: string,
-  opts: { topK?: number; threshold?: number } = {},
+  opts: { topK?: number; threshold?: number; system?: string } = {},
 ): Promise<StateModelSliceResult> {
   const topK = opts.topK ?? 5;
   const threshold = opts.threshold ?? 0.5;
+  const system = normalizeSystem(opts.system);
 
-  const hits = (await store.search("entities", question)).sort((a, b) => b.score - a.score);
+  const hits = (await store.search("entities", question, { db: system })).sort((a, b) => b.score - a.score);
   const idx = loadIndex();
 
   const objHits = pick(hits.filter((h) => h.type === "logical_entity"), topK, threshold);

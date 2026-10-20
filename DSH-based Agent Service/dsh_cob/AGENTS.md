@@ -43,10 +43,10 @@
 1. **召回（同一轮并行）**：第一步**同时**调三个语义工具（question 都传题面里**引号内的症状短语原文**，逐字，如 `Service abnormal restart.`）——
    - `mcp__semantic-core__dlr_search_sop`（L3）：**match=exact（标题逐字复述本题）→ 该节的链序 / 分支 / 收口是最高口径；L2 的入口链和 L1 的面只提供“读什么、按什么锚读”，不得改变 L3 的“先读什么”**；未命中 = 本题无 L3 打法；
    - `mcp__semantic-core__dlr_search_consensus`（L2）：拿「症状 → 入口链」与各面读法；
-   - `mcp__semantic-core__state_model_query`（L1）：拿与问题相关的对象 / 观测面（read 模板）。
+   - `mcp__semantic-core__state_model_query`（L1）：**必须传 `system=<题面 namespace>`**（boutique / train-ticket；题面已给），拿与问题相关的对象 / 观测面（read 模板）。
    三路**交叉验证**后再走链：L1 召回可能排错（症状措辞跨链重载），用 L3/L2 的链与走法纠偏；**但纠偏后的落点必须是 L1 的对象/面/锚，L2 只裁决 L1 的冲突，不得替代 L1 的导航职责。**
 2. **按链头顺序走（症状先行）**：**先读症状侧**（caller 日志 / 连通性 / 端点绑定 / 告警——视入口链而定），**再做对象层的首轮全量扫描**（通常是 pods 清单的 RESTARTS / READY / STATUS 离群行）——这是**唯一合法的"全量"**；症状与离群对象对上后，其后一切取数**按锚收窄**。**症状侧未读之前，不碰配置面 / 代码面 / 事件面（它们是关题工具，不是开路工具）。**
-3. **锚后必须回查 L1（硬性）**：首轮扫描一旦锁定对象名/锚（如 `app=adservice`），**在任何后续数据面调用之前，必须再调用 `state_model_query(<对象名>)`**，取得该对象的 L1 `objects` / `surfaces` 与 `read` 模板。之后每个数据面调用都必须对应一个 L1 面（pods / deployment / logs / telemetry / endpoints），并使用该面的 read 模板（带锚剪枝）。
+3. **锚后必须回查 L1（硬性）**：首轮扫描一旦锁定对象名/锚（如 `app=adservice`），**在任何后续数据面调用之前，必须再调用 `state_model_query(<对象名>, system=<题面 namespace>)`**，取得该对象的 L1 `objects` / `surfaces` 与 `read` 模板。之后每个数据面调用都必须对应一个 L1 面（pods / deployment / logs / telemetry / endpoints），并使用该面的 read 模板（带锚剪枝）。
    - **L1 首次召回漂移不是跳过 L1 的理由**：如果 `state_model_query(症状)` 的 top-k 没有目标对象，用**对象名**重查；L2 的链只负责裁决 L1 的冲突，不负责替代 L1 的对象/面解析。
    - **只有对象名重查仍无结果**时，才回退到 L2 + 数据面自解，并在最终回答记录“L1 未覆盖该对象”；不得静默绕过。
    - **禁止反复做无锚的全量拉取**（全 namespace 清单 / 未按服务收窄的日志、源码）。
@@ -66,6 +66,7 @@
 
 - **数据只从数据侧工具来**：模型只告诉你"去哪查、读哪段、按什么锚取"；实例数据（名字、状态、消息、数值）一律实查，不猜测、不编造。
 - **L2 是路线裁决，不是数据脚本**：L2 只裁决 L1 的冲突（哪个对象 / 哪个面 / 哪种读法），不得直接指挥数据面工具；数据面调用必须使用 L1 返回的 read 模板。
+- **L1 作用域 = 题面 namespace**：COB 的 L1 是两个系统的合表；`state_model_query` 必须带 `system`，否则会跨系统漂移。不带 system 的 L1 查询视为无效导航。
 - **L3 exact > L2 链序**：L3 `match=exact` 时，节内的链序 / 分支 / 收口是最高口径；L2 的入口链不能覆盖它。L2 搞不定的（链序、分支、兜底）交 L3。
 - **锚 = 取数的 WHERE 键（剪枝）**：每个观测面的 read 模板都带锚（`label_selector=app=…` / `service_name=…` / `node_name=…`）——按锚取数得到该对象的薄切片而不是集群全量；上下文越小，判断越准。
 - 证据引用工具输出原文（关键行可摘引）。

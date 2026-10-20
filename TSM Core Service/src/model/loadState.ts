@@ -29,7 +29,7 @@ function lastSeg(id: string): string {
  *  PE/PAS 行进检索面供点名/合并（同 dlr 线"召回在 LE 面收口"的降级形态：本形态的题面是症状，
  *  领路在 L2；L1 按对象/面名供给）。 */
 function toStateVectorRowsV2(s: StateScenarioYaml): VectorRow[] {
-  const ns = s.scenario_name ?? "state";
+  const ns = String((s.source as Record<string, unknown> | undefined)?.system ?? s.scenario_name ?? "state");
   const rows: VectorRow[] = [];
   const leName = new Map<string, string>();
 
@@ -98,7 +98,7 @@ function toStateVectorRowsV2(s: StateScenarioYaml): VectorRow[] {
 export function toStateVectorRows(s: StateScenarioYaml): VectorRow[] {
   if ((s.logical_entities ?? []).length > 0) return toStateVectorRowsV2(s);
 
-  const ns = s.scenario_name ?? "state";
+  const ns = String((s.source as Record<string, unknown> | undefined)?.system ?? s.scenario_name ?? "state");
   const rows: VectorRow[] = [];
 
   // ── v1 过渡：实体 → 关系 → 症状切片 ──
