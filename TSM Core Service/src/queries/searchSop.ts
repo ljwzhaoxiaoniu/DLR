@@ -24,13 +24,14 @@ export interface SopHit {
   score: number; // 1 = 精确命中
 }
 
-/** 题面归一化（精确命中的判据）：小写、去首尾空白与包裹引号、折叠空白、去尾问号 */
+/** 题面归一化（精确命中的判据）：小写、去首尾空白与包裹引号、折叠空白、去尾问号/句号/感叹号。
+ *  数据集同一措辞存在带/不带尾句点两种写法，尾标点不承载语义。 */
 function norm(s: string): string {
   return s
     .trim()
     .replace(/^["'“”‘’]+|["'“”‘’]+$/g, "")
     .replace(/\s+/g, " ")
-    .replace(/\?+$/, "")
+    .replace(/[.?!。！？]+$/, "")
     .toLowerCase();
 }
 
