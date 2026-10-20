@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# 一键起语义后端（Neo4j + TS MCP server）+ 预检
-# 幂等：已在跑的不重复起。
+# 一键起语义后端（可选 Neo4j + TS MCP server）+ 预检
+# 幂等：已在跑的不重复起。Neo4j 是可选依赖：图后端 auto 会回落内存图。
 # 用法: bash "DSH-based Agent Service/scripts/start_backend.sh"
 set -uo pipefail
 
@@ -20,23 +20,22 @@ if [ -z "${JAVA_HOME_WIN:-}" ] && [ -n "${NEO4J_HOME:-}" ]; then
 fi
 mkdir -p "$ROOT/tmp_scripts"
 
-# 1) Neo4j（免安装 zip + 便携 JDK，前台 console 常驻）
+# 1) Neo4j（可选，best-effort）——TS MCP 图后端默认 auto：配了 NEO4J_URI 且可达才走
+#    Neo4j，否则回落内存图（见 TSM Core Service/src/graph/backend.ts）。这里不阻塞启动。
 if curl -s -o /dev/null -m 3 "http://127.0.0.1:7474/" 2>/dev/null; then
   echo "[ok]    Neo4j 已在跑 (:7474)"
-else
-  if [ -z "${NEO4J_HOME:-}" ]; then
-    echo "[ERR]  未找到 Neo4j：设 NEO4J_HOME 指向安装目录（或先让 :7474 跑起来）" >&2
-    exit 1
-  fi
-  echo "[start] Neo4j console…（$NEO4J_HOME）"
+elif [ -n "${NEO4J_HOME:-}" ]; then
+  echo "[start] Neo4j console…（$NEO4J_HOME；可选依赖）"
   ( cd "$NEO4J_HOME" && JAVA_HOME="${JAVA_HOME_WIN:-${JAVA_HOME:-}}" nohup cmd //c "bin\\neo4j.bat console" > "$ROOT/tmp_scripts/neo4j_console.log" 2>&1 & )
-  for i in $(seq 1 30); do
+  for i in $(seq 1 15); do
     sleep 2
     curl -s -o /dev/null -m 2 "http://127.0.0.1:7474/" 2>/dev/null && break
   done
   curl -s -o /dev/null -m 2 "http://127.0.0.1:7474/" 2>/dev/null \
     && echo "[ok]    Neo4j 起来了" \
-    || { echo "[ERR]   Neo4j 未起来，看 tmp_scripts/neo4j_console.log"; exit 1; }
+    || echo "[warn]  Neo4j 未在 30s 内起来；TS MCP 将回落内存图（看 tmp_scripts/neo4j_console.log）" >&2
+else
+  echo "[skip]  Neo4j 未运行/未配置（可选；TS MCP 图后端将走内存，设 NEO4J_HOME 可拉起）"
 fi
 
 # 2) TS MCP server（streamable-http :28795）
