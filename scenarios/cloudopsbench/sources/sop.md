@@ -95,7 +95,7 @@ Readings from L2 tell you how to read a surface, not what to read first; this or
 
 > **Systems**: boutique
 
-This wording can hide a code defect under a resource-shaped alert. When one service shows saturation (cpu climbing, `cpu_cfs` throttling) with its own latency climbing and a burst of 503s across its business actions, the metric surface has named the symptom, not the mechanism.
+**Our order (a team convention): clear the code surface first.** This wording can hide a code defect under a resource-shaped alert; the metric surface has named the symptom, not the mechanism.
 
-1. **Clear the code surface of the flagged service before ranking any resource class.** `ListCodeFiles` → `GetSourceCode` on that service. Run-away work can live in its own request handler — a hot loop doing work the request does not need burns cpu and throttles the pod exactly the way an overload would.
+1. **Read the code surface of the flagged service.** `ListCodeFiles` → `GetSourceCode` on that service. Run-away work can live in its own request handler — a hot loop doing work the request does not need burns cpu and throttles the pod exactly the way an overload would.
 2. **Then close:** a defect line on the code surface is your mechanism (a code class, not a resource class); only when the code reads clean is the resource face (pods: usage vs limits) yours to report.
