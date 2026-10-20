@@ -13,6 +13,8 @@ export interface ConsensusSourceItem {
   qid: number;
   question: string;
   text: string;
+  /** 作用域：shared（两系统通用）| boutique | trainticket；缺省 shared */
+  system: string;
 }
 
 export function consensusSourceFormat(file: string): "aggregated" | "per-question" {
@@ -23,16 +25,27 @@ export function consensusSourceFormat(file: string): "aggregated" | "per-questio
 export function readConsensusSource(file: string): ConsensusSourceItem[] {
   const raw = fs.readFileSync(file, "utf8").trim();
   if (!raw) return [];
+  const sys = (v: unknown): string => (typeof v === "string" && v.trim() ? v.trim() : "shared");
   if (raw.startsWith("[")) {
-    const items = JSON.parse(raw) as { kid?: number; knowledge?: string }[];
+    const items = JSON.parse(raw) as { kid?: number; knowledge?: string; system?: string }[];
     return items
-      .map((o) => ({ qid: Number(o.kid ?? 0), question: "", text: (o.knowledge ?? "").trim() }))
+      .map((o) => ({
+        qid: Number(o.kid ?? 0),
+        question: "",
+        text: (o.knowledge ?? "").trim(),
+        system: sys(o.system),
+      }))
       .filter((r) => r.text);
   }
   return raw
     .split("\n")
     .filter((l) => l.trim())
-    .map((l) => JSON.parse(l) as { qid?: number; question?: string; evidence?: string })
-    .map((o) => ({ qid: Number(o.qid ?? 0), question: o.question ?? "", text: (o.evidence ?? "").trim() }))
+    .map((l) => JSON.parse(l) as { qid?: number; question?: string; evidence?: string; system?: string })
+    .map((o) => ({
+      qid: Number(o.qid ?? 0),
+      question: o.question ?? "",
+      text: (o.evidence ?? "").trim(),
+      system: sys(o.system),
+    }))
     .filter((r) => r.text);
 }

@@ -30,23 +30,78 @@ const TABLE = "sop";
 export interface SopRow {
   id: string;
   db: string;
+  /** 作用域：shared（两系统共用一节）| boutique | trainticket */
+  system: string;
   title: string;
   type: string;
   expected: string;
   text: string;
 }
 
-/** sop.md → 节列表（标题 = 题面原文；text = 标题 + 正文，供 embedding 与展示） */
+/** 系统名归一（与 L1 entities.db 同口径） */
+function normSystem(s: string): string {
+  const v = s.trim().toLowerCase();
+  if (v === "train-ticket" || v === "trainticket") return "trainticket";
+  if (v === "online-boutique" || v === "onlineboutique" || v === "boutique") return "boutique";
+  return v || "shared";
+}
+
+interface Segment {
+  system: string;
+  lines: string[];
+}
+
+interface CurSection {
+  title: string;
+  /** 节级声明：本节应产出哪些系统的行（`> **Systems**: boutique, trainticket`） */
+  systems: string[];
+  type: string;
+  expected: string;
+  segments: Segment[];
+}
+
+/**
+ * sop.md → 节列表（标题 = 题面原文；text = 标题 + 正文，供 embedding 与展示）
+ *
+ * 可选系统标记（同一份源，按系统生成不同的索引行；不复制正文）：
+ *   `> **Systems**: boutique, trainticket`  节级：本节对哪些系统生效（shared = 两系统共用一节）
+ *   `> **System**: boutique`                段级：后续正文只属于该系统；下一段再切回 shared/另一系统
+ * 无标记 → 单条 shared 行（向后兼容）。同一标题在不同系统各生成一行，id 带 system 去重。
+ */
 export function parseSop(md: string): SopRow[] {
   const rows: SopRow[] = [];
   let db = "";
-  let cur: SopRow | null = null;
+  let cur: CurSection | null = null;
+
   const flush = () => {
-    if (cur) {
-      rows.push(cur);
-      cur = null;
+    if (!cur) return;
+    const specific = [...new Set(cur.segments.map((s) => s.system))].filter((s) => s !== "shared");
+    const targets = cur.systems.length ? cur.systems : specific.length ? specific : ["shared"];
+    for (const system of targets) {
+      const body = cur.segments
+        .filter((s) => s.system === "shared" || s.system === system)
+        .map((s) => s.lines.join("\n"))
+        .filter((t) => t.trim())
+        .join("\n")
+        .trim();
+      const meta = [
+        `System：${system}`,
+        cur.type ? `类型：${cur.type}` : "",
+        cur.expected ? `Expected：${cur.expected}` : "",
+      ].filter(Boolean).join("；");
+      rows.push({
+        id: `${db}#${system}#${cur.title}`,
+        db,
+        system,
+        title: cur.title,
+        type: cur.type,
+        expected: cur.expected,
+        text: `${cur.title}\n${meta}\n${body}`,
+      });
     }
+    cur = null;
   };
+
   for (const line of md.split(/\r?\n/)) {
     const h2 = line.match(/^## (.+?)\s*$/);
     if (h2) {
@@ -58,10 +113,24 @@ export function parseSop(md: string): SopRow[] {
     if (h3) {
       flush();
       if (!db) continue; // 前言区里的节不索引（没有库归属）
-      cur = { id: "", db, title: h3[1], type: "", expected: "", text: "" };
+      cur = { title: h3[1], systems: [], type: "", expected: "", segments: [{ system: "shared", lines: [] }] };
       continue;
     }
     if (!cur) continue;
+
+    const systemsLine = line.match(/^>\s*\*\*Systems\*\*[:：]\s*(.+?)\s*$/i);
+    if (systemsLine) {
+      cur.systems = systemsLine[1].split(/[,，]/).map(normSystem).filter(Boolean);
+      continue;
+    }
+    const systemLine = line.match(/^>\s*\*\*System\*\*[:：]\s*(.+?)\s*$/i);
+    if (systemLine) {
+      const system = normSystem(systemLine[1]);
+      const last = cur.segments[cur.segments.length - 1];
+      if (last && last.lines.every((l) => !l.trim())) last.system = system;
+      else cur.segments.push({ system, lines: [] });
+      continue;
+    }
     const t = line.match(/^>\s*\*\*类型\*\*：(.+?)\s*$/);
     if (t) {
       cur.type = t[1].trim();
@@ -72,15 +141,9 @@ export function parseSop(md: string): SopRow[] {
       cur.expected = e[1].trim();
       continue;
     }
-    cur.text += line + "\n";
+    cur.segments[cur.segments.length - 1].lines.push(line);
   }
   flush();
-  // id 与 text 定稿：text 带上类型/Expected（检索与展示都用完整节）
-  for (const r of rows) {
-    r.id = `${r.db}#${r.title}`;
-    const meta = [r.type ? `类型：${r.type}` : "", r.expected ? `Expected：${r.expected}` : ""].filter(Boolean).join("；");
-    r.text = `${r.title}\n${meta ? meta + "\n" : ""}${r.text.trim()}`;
-  }
   return rows;
 }
 
@@ -90,8 +153,15 @@ if (isMain) {
   const md = fs.readFileSync(SOP_SOURCE, "utf8");
   const rows = parseSop(md);
   const byDb = new Map<string, number>();
-  for (const r of rows) byDb.set(r.db, (byDb.get(r.db) ?? 0) + 1);
-  console.log(`[sop] ${path.basename(SOP_SOURCE)} → ${rows.length} 节：${[...byDb].map(([d, n]) => `${d}(${n})`).join(" ")}`);
+  const bySys = new Map<string, number>();
+  for (const r of rows) {
+    byDb.set(r.db, (byDb.get(r.db) ?? 0) + 1);
+    bySys.set(r.system, (bySys.get(r.system) ?? 0) + 1);
+  }
+  console.log(
+    `[sop] ${path.basename(SOP_SOURCE)} → ${rows.length} 节：${[...byDb].map(([d, n]) => `${d}(${n})`).join(" ")}` +
+      ` · systems ${[...bySys].map(([s, n]) => `${s}(${n})`).join(" ")}`,
+  );
 
   const encoder = await TextEncoder.load(MODEL_DIR);
   const BATCH = 64;
@@ -105,6 +175,7 @@ if (isMain) {
   const data = rows.map((r, i) => ({
     id: r.id,
     db: r.db,
+    system: r.system,
     title: r.title,
     type: r.type,
     expected: r.expected,

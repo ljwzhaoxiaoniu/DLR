@@ -13,6 +13,7 @@ import type { LanceStore } from "../store/lance.js";
 export interface ConsensusHit {
   qid: number;
   namespace: string;
+  system: string;
   text: string;
   question: string;
   score: number;
@@ -23,18 +24,24 @@ export async function searchConsensus(
   namespace: string,
   question: string,
   topK = 5,
-): Promise<{ success: boolean; namespace: string; count: number; results: ConsensusHit[] }> {
+  system?: string,
+): Promise<{ success: boolean; namespace: string; system: string; count: number; results: ConsensusHit[] }> {
   const ns = namespace.trim();
+  const sys = (system ?? "").trim();
+  const clauses: string[] = [];
+  if (ns) clauses.push(`namespace = '${ns.replace(/'/g, "''")}'`);
+  if (sys) clauses.push(`(system = '${sys.replace(/'/g, "''")}' OR system = 'shared' OR system = '')`);
   const hits = await store.search("consensus", question, {
-    ...(ns ? { where: `namespace = '${ns.replace(/'/g, "''")}'` } : {}),
+    ...(clauses.length ? { where: clauses.join(" AND ") } : {}),
     limit: topK,
   });
   const results: ConsensusHit[] = hits.map((h) => ({
     qid: Number(h.qid ?? 0),
     namespace: String(h.namespace ?? ""),
+    system: String(h.system ?? ""),
     text: String(h.text ?? ""),
     question: String(h.question ?? ""),
     score: Math.round(h.score * 10000) / 10000,
   }));
-  return { success: true, namespace: ns, count: results.length, results };
+  return { success: true, namespace: ns, system: sys, count: results.length, results };
 }

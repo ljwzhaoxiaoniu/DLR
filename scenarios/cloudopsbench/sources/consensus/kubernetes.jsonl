@@ -1,6 +1,7 @@
 [
   {
     "kid": 1,
+    "system": "shared",
     "knowledge": "Reading workload pod listings: the READY column (a/b containers ready) and the RESTARTS column (count, with the most recent restart time) are what single out the unhealthy instance — typically one pod at 'READY 1/2' with a rising restart count; the phase word (Running) alone does not distinguish it.",
     "anchors": [
       "surface:pods"
@@ -13,6 +14,7 @@
   },
   {
     "kid": 2,
+    "system": "shared",
     "knowledge": "Reading the error-log output: it arrives as deduplicated patterns (count / ratio per group) whose sample lines hold the raw text — read the sample text verbatim as the mechanism lead (a panic / exception line states the failure itself); the counts only tell how dominant each pattern is.",
     "anchors": [
       "surface:logs"
@@ -25,6 +27,7 @@
   },
   {
     "kid": 3,
+    "system": "shared",
     "knowledge": "Reading the alert output: it is self-describing — each alert names the entity, an anomaly class (e.g. RESOURCE_SATURATION / LATENCY_DEGRADATION / THROUGHPUT_DROP) and an evidence line comparing baseline vs current (e.g. 'Normal=4.74ms -> Current=37.82ms (+697.2%)'); the comparison inside the text is the reading — the alert identifies where and what kind of anomaly.",
     "anchors": [
       "surface:telemetry"
@@ -37,6 +40,7 @@
   },
   {
     "kid": 4,
+    "system": "shared",
     "knowledge": "Telemetry-led reading: pair the alerted entity with the object-layer listings — if that entity reads normal (all running, no restarts, endpoints bound), the break is not an unhealthy object; the signal lives at the metric level, and the object listing is the exclusion side of the pair.",
     "anchors": [
       "surface:telemetry",
@@ -50,6 +54,7 @@
   },
   {
     "kid": 5,
+    "system": "shared",
     "knowledge": "Reading a restarted container: its pod detail carries the last termination state — a reason and an exit code (e.g. OOMKilled 137 vs SIGTERM-by-kubelet 143) — read that field to classify why the container restarted before moving further down the chain.",
     "anchors": [
       "surface:pods"
@@ -62,6 +67,7 @@
   },
   {
     "kid": 6,
+    "system": "boutique",
     "knowledge": "Reading the code slot (Boutique only): service-first — list the recorded source files of the service named by the log sample, then fetch the specific file; the failing call / parameter is read off that source. The slot is closed by the source itself, not by a wider search.",
     "anchors": [
       "surface:code"
@@ -74,6 +80,7 @@
   },
   {
     "kid": 7,
+    "system": "shared",
     "knowledge": "Placement reading — which node a pod sits on: the pods listing in its wide form carries a NODE column, and the pod detail names its node (Node: <none> while unscheduled); scheduling failures surface as pod events (e.g. 'N nodes are available: … unschedulable / Insufficient cpu'). That pointer leads to the node object — node state reads on its own surfaces (node listing / GetClusterConfiguration: conditions, taints, capacity, cordon; CheckNodeServiceStatus for kubelet / containerd / kube-proxy). Which pod sits on which node varies per snapshot: read the association from the pods surface, not from a static edge.",
     "anchors": [
       "surface:pods",
@@ -87,6 +94,7 @@
   },
   {
     "kid": 8,
+    "system": "shared",
     "knowledge": "Reading the events surface — GetResources(events, namespace=…) returns the cluster's own narrative rows (LAST SEEN / TYPE / REASON / OBJECT / MESSAGE): Warning rows bind a mechanism to a concrete object verbatim (e.g. 'Unhealthy pod/<name> … Too many connections'). When a mechanism is known only at service level (log streams, alerts) — or a workload has several instances — the events surface, and the instances' own details (their events sections), are where it gets pinned to the object that carries it: read them at the close.",
     "anchors": [
       "surface:events"
@@ -98,6 +106,7 @@
   },
   {
     "kid": 9,
+    "system": "trainticket",
     "knowledge": "Reading the gateway route table (the edge of Train-Ticket): the gateway app YAML (its configmap) carries the full route table — each route maps a Path prefix to a target (uri: lb://<service> or host:port). Audit it by pairing every route’s Path with its uri target: a route whose target names a different service than its Path denotes is a misroute — the evidence is found by reading the table line by line, not by probing from outside. Direct-connect probes that diverge while every object is healthy point at this address layer. The component to report is the table’s owner (the gateway) — a mis-wired target service is the victim, not the break.",
     "anchors": [
       "surface:deployment",
@@ -110,7 +119,8 @@
   },
   {
     "kid": 13,
-    "knowledge": "L1 conflict resolution — 'Service abnormal restart.' makes L1 offer several candidate objects/surfaces (business vs deploy vs obs; plus cross-system recall drift). Resolve which L1 object and surface apply: the restart symptom belongs to the service's deploy carrier; the OOM-vs-kill ambiguity is read from `pods.last_termination` (137 OOMKilled vs 143 SIGTERM); probe evidence is on `pods.events` plus `deployment.probes`; the mechanism narrative is on `obs.logs`. This entry resolves the L1 conflict only — it does not prescribe a walk order; follow the matched L3 section for order, otherwise let the first observation != expectation decide. Use the L1 read templates; do not bypass L1 with a namespace-wide data scan.",
+    "system": "shared",
+    "knowledge": "L1 conflict resolution — 'Service abnormal restart.' makes L1 offer several candidate objects/surfaces (business vs deploy vs obs). Resolve which L1 object and surface apply: the restart symptom belongs to the service's deploy carrier; the OOM-vs-kill ambiguity is read from `pods.last_termination` (137 OOMKilled vs 143 SIGTERM); probe evidence is on `pods.events` plus `deployment.probes`; the mechanism narrative is on `obs.logs`. This entry resolves the L1 conflict only — it does not prescribe a walk order; follow the matched L3 section for order, otherwise let the first observation != expectation decide. Use the L1 read templates; do not bypass L1 with a namespace-wide data scan.",
     "anchors": [
       "surface:pods",
       "surface:deployment",

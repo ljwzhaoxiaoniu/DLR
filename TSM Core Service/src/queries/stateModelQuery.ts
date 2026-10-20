@@ -7,8 +7,9 @@
  *   - relations：命中的 PAS 调用边
  *
  * 口径同 dlr_semantic_query（semanticQuery.ts）：全量召回 → 各组阈值优先 + 补满（每组至多 topK）。
- * 领路说明：本形态题面是症状、且措辞跨链重载——**症状 → 入口链的映射在 L2**（dlr_search_consensus），
- * 本工具供"走动中出现的对象/面名"与结构确认（L1 按对象名供给；症状裸问可能低分，属预期）。
+ * 领路说明：本形态题面是症状、且措辞跨链重载——**症状 → 走链顺序的映射在 L3**（dlr_search_sop）；
+ * L2 只提供读法与 L1 冲突裁决；本工具供"走动中出现的对象/面名"与结构确认
+ * （L1 按对象名供给；症状裸问可能低分，属预期）。
  * 召回走 LanceDB `entities` 表（loadState v2 写入）；明细每次从场景 YAML 回填——源即真相，改源 rebuild 生效。
  */
 import * as fs from "node:fs";
@@ -174,7 +175,7 @@ function pick(hits: LanceHit[], topK: number, threshold: number): LanceHit[] {
 const round4 = (n: number) => Math.round(n * 10000) / 10000;
 
 /** L1 作用域归一：题面 namespace（boutique / train-ticket）→ entities.db（boutique / trainticket）。 */
-function normalizeSystem(s?: string): string | undefined {
+export function normalizeSystem(s?: string): string | undefined {
   const v = (s ?? "").trim().toLowerCase();
   if (!v) return undefined;
   if (v === "train-ticket" || v === "trainticket") return "trainticket";

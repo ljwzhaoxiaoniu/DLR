@@ -143,7 +143,7 @@ The three levels' **investment ratio is not fixed**; the workload's shape decide
 
 The same TSM eats both shapes precisely because of the layered decoupling — **which layer gets the investment is the workload's decision**; it is not about filling all three to the brim.
 
-> **COB is the evidence for this end**: L1 has no column-level attributes, yet objects / surfaces / edges are not few — **169 LE / 355 PE / 233 PAS** (two systems); L2 has 15 entries; L3 has only 5 sections yet covers 754 cases — because each section is not an answer but a **decision tree** (see §6 "layered disambiguation"). **"L1 thin / L3 thick" describes the shape, not the node count or section count.**
+> **COB is the evidence for this end**: L1 has no column-level attributes, yet objects / surfaces / edges are not few — **169 LE / 355 PE / 233 PAS** (two systems); L2 has 10 entries; L3 has only 5 sections yet covers 754 cases — because each section is not an answer but a **decision tree** (see §6 "layered disambiguation"). **"L1 thin / L3 thick" describes the shape, not the node count or section count.**
 
 Two points about L3 (not to be underestimated):
 

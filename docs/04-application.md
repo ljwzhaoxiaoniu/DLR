@@ -26,7 +26,7 @@ scenarios/<scenario>/
 |---|---|---|
 | Scenario shape | `dlr` (SQLite NL2SQL) | `dlr-state` (K8s state-space RCA) |
 | L1 scale | 11 databases · **50 LE / 74 PE / 37 PAS** (1,185 graph nodes) | 2 systems · **169 LE / 355 PE / 233 PAS** (53 services + nodes + namespaces) |
-| L2 | 11 files · 91 entries | 1 file · 15 entries (clustered by slot class) |
+| L2 | 11 files · 91 entries | 1 file · 10 entries (clustered by slot class) |
 | L3 | 180 sections (**per question**) | 5 sections (**per symptom wording**, covering 754 cases; each section is a decision tree) |
 | Tool surface | 7 | 3 (no Neo4j graph) |
 | Evaluation content | Authored paper: `eval/questions.jsonl`, 500 questions | External benchmark: 754 cases + upstream scorer adapter |
@@ -46,15 +46,15 @@ scenarios/<scenario>/
 - **Format**: a kid-aggregated JSON array, each entry `{kid, knowledge}` (the loader also accepts BIRD-style per-question evidence).
 - **Admission** ([02-concept.md](02-concept.md) §2): **scenario-required · built on the L1 schema · non-workflow**; **no instance-level content**.
 - **What it writes**: term → column/value mappings, formulas and conventions, domain background (e.g. "CZK / EUR are the billing currencies").
-- **Discipline**: **what should sink to L1 sinks** — facts about the source itself (value domains / granularity / sample nature) left in L2 are on the wrong level; organize by namespace / slot class (bird: one file per database, namespace = database name; COB: one file per slot class, `kubernetes.jsonl` with 15 entries).
-- **COB's L2**: schema-level readings + **symptom → chain mapping** (question wording ↔ model terminology), including the placement reading (the pods surface's NODE field → the node object); no instance detail.
+- **Discipline**: **what should sink to L1 sinks** — facts about the source itself (value domains / granularity / sample nature) left in L2 are on the wrong level; organize by namespace / slot class (bird: one file per database, namespace = database name; COB: one file per slot class, `kubernetes.jsonl` with 10 entries; generic readings are tagged `shared`, system-specific entries are scoped to `boutique` / `trainticket`).
+- **COB's L2**: schema-level readings + **L1 conflict resolution** (question wording ↔ model terminology), including the placement reading (the pods surface's NODE field → the node object); **no walk order** (order belongs to L3), no instance detail; generic entries are `shared`, system-specific entries are isolated per system.
 - **Language**: the same as the questions (English).
 
 ### L3 `sop` — `sources/sop.md`
 
 - **Two sectioning shapes, one principle of layered disambiguation**:
   - **`birdminidev` (NL2SQL): per question** — 180 sections; each title restates one question (`### When asked: "..."`), and the body gives that question's conventions / playbook / traps.
-  - **`cloudopsbench` (RCA): per symptom wording** — 5 sections cover 754 cases; the title is the question's symptom wording verbatim, and the section body is a **decision tree**: actual on-chain observation → mechanism branch (Pending / image pull / admission / routing…) → closing triad (mechanism event + events surface + config). **Few sections does not mean thin: this is SOP layering** (wording layer → branch layer → closing layer), see [02-concept.md](02-concept.md) §6 "layered disambiguation".
+  - **`cloudopsbench` (RCA): per symptom wording** — 5 sections cover 754 cases; the title is the question's symptom wording verbatim, and the section body is a **decision tree**: actual on-chain observation → mechanism branch (Pending / image pull / admission / routing…) → closing triad (mechanism event + events surface + config). **Few sections does not mean thin: this is SOP layering** (wording layer → branch layer → closing layer), see [02-concept.md](02-concept.md) §6 "layered disambiguation". System-specific branches are split per system at build time (shared sections stay `shared`); the runtime endpoint (`/mcp/boutique` / `/mcp/trainticket`) binds the scope.
   - Shared reading protocol: how to match, what to do when nothing matches, and that a section covers only its own question.
 - **Every section must be tagged by type** (four types, multi-select), on the line under the title: `> **Type**: dataset issue`
   | Type | Means |

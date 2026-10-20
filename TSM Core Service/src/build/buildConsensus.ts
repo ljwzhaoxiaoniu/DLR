@@ -34,6 +34,7 @@ const TOPICS = arg("--topics", "")
 
 interface Rec {
   namespace: string;
+  system: string;
   qid: number;
   question: string;
   text: string;

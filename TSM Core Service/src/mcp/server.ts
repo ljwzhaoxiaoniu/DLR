@@ -22,7 +22,7 @@ import { openGraph } from "../graph/backend.js";
 import type { GraphHandle } from "../graph/types.js";
 import { dlrSemanticQuery } from "../queries/semanticQuery.js";
 import { searchConsensus } from "../queries/searchConsensus.js";
-import { stateModelQuery } from "../queries/stateModelQuery.js";
+import { stateModelQuery, normalizeSystem } from "../queries/stateModelQuery.js";
 import { scenarioKind } from "../model/scenarioKind.js";
 import { getPeMapping } from "../queries/peMapping.js";
 import { getFullDataInfo } from "../queries/fullDataInfo.js";
@@ -62,8 +62,8 @@ const getStore = () =>
 const getGraph = () =>
   (graphPromise ??= withReset(() => (graphPromise = null), openGraph()));
 
-/** L2 共识检索（两种场景形态共用） */
-function registerConsensus(server: McpServer): void {
+/** L2 共识检索（两种场景形态共用；dlr-state 端点可按系统作用域过滤） */
+function registerConsensus(server: McpServer, systemScope?: string, state = false): void {
   server.registerTool(
     "dlr_search_consensus",
     {
@@ -71,25 +71,37 @@ function registerConsensus(server: McpServer): void {
         "[DLR] L2 领域共识检索（Domain Consensus）：召回领域共识条目——" +
         "基于 L1 schema 的背景知识与术语（术语→列/值、公式、口径），非明细数据。" +
         "namespace 留空做跨库召回（与 dlr_semantic_query 的 db 留空同口径），命中自带 namespace 与原题 question，" +
-        "用它判断这条共识是否对得上本题；确定目标库后必须传 namespace 避免跨库串扰。",
+        "用它判断这条共识是否对得上本题；确定目标库后必须传 namespace 避免跨库串扰。" +
+        "**dlr-state 场景**：namespace 是 topic 文件名（如 kubernetes），通常留空；" +
+        "端点可绑定 `system`（boutique / train-ticket），绑定后只召回该系统 + shared 条目，`system` 可显式覆盖。",
       inputSchema: {
         namespace: z
           .string()
           .default("")
-          .describe("库名，如 debit_card_specializing；留空 = 跨库召回（命中里带 namespace 分辨来源）"),
+          .describe(
+            state
+              ? "dlr-state 场景留空（L2 topic 文件名固定为 kubernetes；系统隔离由端点绑定的 system 控制）"
+              : "库名，如 debit_card_specializing；留空 = 跨库召回（命中里带 namespace 分辨来源）",
+          ),
         question: z.string(),
         top_k: z.number().int().positive().default(5),
+        system: z
+          .string()
+          .optional()
+          .describe("场景单元 / 题面 namespace（boutique / train-ticket）；不传则用端点绑定值"),
       },
     },
-    async ({ namespace, question, top_k }) => {
-      const r = await searchConsensus(await getStore(), namespace, question, top_k);
+    async ({ namespace, question, top_k, system }) => {
+      // dlr-state：namespace 是 topic 文件名（kubernetes），不是系统；系统隔离走 system/端点。
+      const ns = state ? "" : namespace;
+      const r = await searchConsensus(await getStore(), ns, question, top_k, system ?? systemScope);
       return { content: [{ type: "text", text: JSON.stringify(r) }] };
     },
   );
 }
 
 /** dlr-state 场景的工具面：模型切片检索 + L2 共识（DB 型工具为数据库形态专属，不挂） */
-function registerStateTools(server: McpServer): void {
+function registerStateTools(server: McpServer, systemScope?: string): void {
   server.registerTool(
     "state_model_query",
     {
@@ -107,37 +119,46 @@ function registerStateTools(server: McpServer): void {
       },
     },
     async ({ question, top_k, threshold, system }) => {
-      const r = await stateModelQuery(await getStore(), question, { topK: top_k, threshold, system });
+      const r = await stateModelQuery(await getStore(), question, {
+        topK: top_k,
+        threshold,
+        system: system ?? systemScope,
+      });
       return { content: [{ type: "text", text: JSON.stringify(r) }] };
     },
   );
-  registerConsensus(server);
+  registerConsensus(server, systemScope, true);
   server.registerTool(
     "dlr_search_sop",
     {
       description:
         "[dlr-state] L3 业务逻辑级 SOP（走链打法）：按题面**症状措辞**取「复述本题」的那一节——节的标题就是措辞原文。" +
         "match=exact（标题与本题逐字相同）→ 该节的**走链纪律**（先立症状 → 对象层 → 机制事件 → 配置确认收口）为本题最高口径，先按它走；" +
-        "match=similar → 只有标题逐字复述本题时才采用；match=none → 本题无 L3 节，按 L1 对象/面 + L2 读法自解。",
+        "match=similar → 只有标题逐字复述本题时才采用；match=none → 本题无 L3 节，按 L1 对象/面 + L2 读法自解。" +
+        "**端点可绑定 system**（boutique / train-ticket）：绑定后只返回该系统 + shared 的节；`system` 可显式覆盖。",
       inputSchema: {
         question: z.string().describe("题目原文（引号内症状短语，逐字传入，用于精确命中）"),
         top_k: z.number().int().positive().default(2),
+        system: z
+          .string()
+          .optional()
+          .describe("场景单元 / 题面 namespace（boutique / train-ticket）；不传则用端点绑定值"),
       },
     },
-    async ({ question, top_k }) => {
-      const r = await searchSop(await getStore(), question, top_k);
+    async ({ question, top_k, system }) => {
+      const r = await searchSop(await getStore(), question, top_k, 0.7, system ?? systemScope);
       return { content: [{ type: "text", text: JSON.stringify(r) }] };
     },
   );
 }
 
-/** 每会话一个 McpServer 实例（工具注册相同，底层共享上面的连接） */
-export function createServer(): McpServer {
+/** 每会话一个 McpServer 实例（工具注册相同，底层共享上面的连接；systemScope 由 HTTP 端点绑定） */
+export function createServer(systemScope?: string): McpServer {
   const server = new McpServer({ name: "tsm-core-dlr", version: SERVICE_VERSION });
 
   // dlr-state 场景：只挂模型面（模型切片 + L2）。
   if (scenarioKind() === "dlr-state") {
-    registerStateTools(server);
+    registerStateTools(server, systemScope);
     return server;
   }
 
@@ -267,6 +288,17 @@ if (RUN_AS_MAIN && httpIdx >= 0) {
       JSON.stringify({ jsonrpc: "2.0", error: { code, message }, id: null }),
     );
 
+  /** 端点作用域：/mcp/boutique、/mcp/trainticket（也接受 train-ticket）；/mcp = 不绑定 */
+  const scopeFromUrl = (raw?: string): string | undefined => {
+    try {
+      const pathname = new URL(raw ?? "/", "http://localhost").pathname;
+      const m = pathname.match(/^\/mcp(?:\/([^/]+))?\/?$/);
+      return m?.[1] ? normalizeSystem(decodeURIComponent(m[1])) : undefined;
+    } catch {
+      return undefined;
+    }
+  };
+
   http
     .createServer(async (req, res) => {
       try {
@@ -310,7 +342,7 @@ if (RUN_AS_MAIN && httpIdx >= 0) {
             t.onclose = () => {
               if (t.sessionId) transports.delete(t.sessionId);
             };
-            await createServer().connect(t); // 每会话独立实例
+            await createServer(scopeFromUrl(req.url)).connect(t); // 每会话独立实例（端点绑定系统）
             transport = t;
           } else {
             rpcError(res, -32000, "Bad Request: no valid session id", 400);

@@ -106,7 +106,8 @@ if [ -n "$BENCH_WIN_PID" ] && ! tasklist //FI "PID eq $BENCH_WIN_PID" 2>/dev/nul
 fi
 
 # ── 双 MCP 预检（SKIP_PRECHECK=1 跳过——批跑时预检一次就够）──
-MCP_URL="${TSM_MCP_URL:-http://127.0.0.1:28796/mcp}"
+# 语义端点按系统绑定：/mcp/boutique | /mcp/trainticket（L1/L2/L3 同一作用域）
+MCP_URL="${TSM_MCP_URL:-http://127.0.0.1:28796/mcp/$SYS_DIR}"
 if [ "${SKIP_PRECHECK:-0}" != "1" ]; then
   (cd "$TSM_DIR" && npx tsx src/verify/precheck.ts "$MCP_URL") \
     || { echo "[ERR] COB 语义后端不可达: $MCP_URL —— 先跑 dsh_cob/scripts/start_backend.sh" >&2; exit 4; }
