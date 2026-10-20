@@ -57,6 +57,10 @@
    ③ **配置确认面**：机制指向的引用 / 配置（如 `GetAppYAML`、被引对象清单）读到；
    ④ 按契约提交。**机制只到服务级（日志流 / 清单）不算收口。**
 6. **提交前自检（硬性）**：回看工具轨迹——锚定后的每个数据面调用，是否都能对应到一个 L1 面？如果没有任何一次 `state_model_query(<对象名>)`，或数据调用找不到对应的 L1 面，先回查 L1 再提交。**如果 L3 `match=exact`：数据面调用顺序是否与节内顺序一致？如果先读了节内排在后头的面（例如 code-defect 分支先 logs 后 pod sheet），按节内顺序重走关键面再提交。**
+   - **分支证据**：L3 exact 时，写明选中的分支和依据。**address 分支必须已读 gateway 自己的 manifest（`GetAppYAML` on the gateway service）；quota 分支必须证明缺失的 Service 就是投诉点名的 / 失败调用目标的那一个。两条都不满足 = 还没进这个分支，回链上继续。**
+   - **signal first**：节内说 signal first 时，锚后第一个数据调用必须是 signal 侧（调用方日志 / 连通性 / endpoints）；先读 workload 状态就是链序反了。
+   - **分支排查也在 signal 之后**：为确认“缺失的 Service 是不是受害者”而读 deployments/services 列表，仍然算 workload 列表；必须在 signal 读之后，不能把 signal 挤到后面。
+   - **node 分支**：先 `DescribeResource(pod)` 拿 pending 原因，再读一般节点面（nodes listing / `GetClusterConfiguration`）后读具体组件；跳过一般面直接读节点详情/服务状态，EOC 会掉。
 
 ## 纪律
 
