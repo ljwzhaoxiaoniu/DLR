@@ -38,7 +38,8 @@ const HERE = path.dirname(fileURLToPath(import.meta.url)); // …/scenarios/clou
 const SCENARIO = path.resolve(HERE, "..");
 const REPO = path.resolve(HERE, "..", "..", "..");
 
-const ALL_TITLE = "cloudopsbench";
+// 主组名：默认 cloudopsbench（老 754 基线）；正式轮用 COB_SESSION_GROUP=正式轮。
+const ALL_TITLE = process.env.COB_SESSION_GROUP || "cloudopsbench";
 // 「归档」组 = 退休区：显示失效的旧会话改写 cwd 后收进来（见 retire 命令注释）
 const ARCHIVE_TITLE = "归档";
 const ARCHIVE_DIR = path.join(REPO, "DSH-based Agent Service", "dsh_cob-archive");

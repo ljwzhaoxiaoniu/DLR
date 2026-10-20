@@ -135,8 +135,13 @@ if [ -f "$SVC_DIR/dsh_dlr/.env" ]; then set -a; . "$SVC_DIR/dsh_dlr/.env"; set +
 INSTRUCT_NAME="${COB_INSTRUCTIONS_NAME:-instructions.md}"
 OUT_FILE="$RUN_DIR/${KEY}_dlr.ndjson"
 ERR_FILE="$RUN_DIR/${KEY}_dlr.err"
+# 会话落点（dsh 工作组成员 = cwd 严格等于组 path）：
+# 默认 dsh_cob（cloudopsbench 组）；正式轮用 COB_SESSION_DIR=dsh_cob-formal → 落「正式轮」组。
+SESSION_DIR="${COB_SESSION_DIR:-$HERE}"
+mkdir -p "$SESSION_DIR"
 cp "$INSTRUCT" "$HERE/$INSTRUCT_NAME"
-cd "$HERE"
+if [ "$SESSION_DIR" != "$HERE" ]; then cp "$INSTRUCT" "$SESSION_DIR/$INSTRUCT_NAME"; fi
+cd "$SESSION_DIR"
 TSM_MCP_URL="$MCP_URL" COB_MCP_URL="$BENCH_URL" DLR_AGENTS_MD="$INSTRUCT_NAME" \
 timeout "$TIMEOUT" dsh --profile headless --patch "$HERE/dsh.patch.yml" --json "Question: ${QUESTION}" \
   < /dev/null > "$OUT_FILE" 2> "$ERR_FILE"
@@ -151,6 +156,7 @@ cp "$CASE_DIR/metadata.json" "$RUN_DIR/case_metadata.json"
   echo "query: $QUERY"
   echo "rc: $RC"
   echo "stamp: $STAMP"
+  echo "session_dir: $SESSION_DIR"
   echo "tsm_mcp: $MCP_URL"
   echo "bench_mcp: $BENCH_URL"
 } > "$RUN_DIR/meta.yml"
