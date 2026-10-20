@@ -127,14 +127,16 @@ if [ -f "$SVC_DIR/dsh_dlr/.env" ]; then set -a; . "$SVC_DIR/dsh_dlr/.env"; set +
 # 会被过滤掉（绝对路径无效！）；加载方式是「从 cwd 逐级向上找候选名」。
 # ⚠ 会话 cwd 语义（dsh-workspace 源码核实，2026-10-12）：工作组成员 = cwd 与其 path
 # **严格相等**的会话——不等者启动时被静默过滤（→ 掉进网页「未分组」）。
-# 所以：在 dsh_cob（= 全量组 path）里启动 dsh——指令写进 dsh_cob/instructions.md
+# 所以：在 dsh_cob（= 全量组 path）里启动 dsh——指令写进 dsh_cob/<INSTRUCT_NAME>
 # （裸名从 cwd 命中），会话 cwd=dsh_cob，天生就是全量组正式成员。
-# （旧版在 RUN_DIR 里启动，导致会话永远进不了组，14 个已归档；串行跑，instructions.md 不并发写。）
+# （旧版在 RUN_DIR 里启动，导致会话永远进不了组，14 个已归档；默认文件名仍为 instructions.md，
+#   并发多路时用 COB_INSTRUCTIONS_NAME 给每路独立文件名，避免互相覆盖。）
+INSTRUCT_NAME="${COB_INSTRUCTIONS_NAME:-instructions.md}"
 OUT_FILE="$RUN_DIR/${KEY}_dlr.ndjson"
 ERR_FILE="$RUN_DIR/${KEY}_dlr.err"
-cp "$INSTRUCT" "$HERE/instructions.md"
+cp "$INSTRUCT" "$HERE/$INSTRUCT_NAME"
 cd "$HERE"
-TSM_MCP_URL="$MCP_URL" COB_MCP_URL="$BENCH_URL" DLR_AGENTS_MD="instructions.md" \
+TSM_MCP_URL="$MCP_URL" COB_MCP_URL="$BENCH_URL" DLR_AGENTS_MD="$INSTRUCT_NAME" \
 timeout "$TIMEOUT" dsh --profile headless --patch "$HERE/dsh.patch.yml" --json "Question: ${QUESTION}" \
   < /dev/null > "$OUT_FILE" 2> "$ERR_FILE"
 RC=$?
