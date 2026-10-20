@@ -68,7 +68,7 @@
   {
     "kid": 6,
     "system": "boutique",
-    "knowledge": "Reading the code slot (Boutique only): service-first — list the recorded source files of the service named by the log sample, then fetch the specific file; the failing call / parameter is read off that source. The slot is closed by the source itself, not by a wider search.",
+    "knowledge": "Reading the code slot (Boutique only): service-first — list the recorded source files of the service named by the log sample, then fetch the specific file; the failing call / parameter is read off that source. The slot is closed by the source itself, not by a wider search. Two look-alike classes part by the defect line, not the error wording: a request field blanked before it goes to work (the lookup/outgoing call sees an empty value, and the error echoes that empty field) is code_missing_parameter; a handler whose own return path rejects or fails a request that arrived complete (its error complains about a field the caller did send) is code_wrong_return.",
     "anchors": [
       "surface:code"
     ],

@@ -30,8 +30,9 @@ Readings from L2 tell you how to read a surface, not what to read first; this or
 > **System**: trainticket
    - **Address layer (Train-Ticket)**: when the objects read healthy but probes diverge, read the gateway's own app manifest (`GetAppYAML` on `ts-gateway-service`); audit every route's Path ↔ target line by line. A route pointing elsewhere is the evidence; report the gateway (the table's owner), not the mis-wired target. Do not stop at a downstream DNS symptom.
 > **System**: shared
-4. **Close with all three:** the mechanism event; the events surface; the config the mechanism points at.
-5. **Stop and submit:** once the mechanism is bound to an object and the three closure reads are done, submit. Rank 1 names the mechanism's owner, not the victim.
+4. **When the chain crosses services**, call `GetServiceDependencies` from the symptom side before any mechanism/config/code material; an anchor elsewhere is a guess.
+5. **Close with all three:** the mechanism event; the events surface; the config the mechanism points at.
+6. **Stop and submit:** once the mechanism is bound to an object and the three closure reads are done, submit. Rank 1 names the mechanism's owner, not the victim.
 
 This wording also shows up on scheduling / startup failures — decide by what you find on the chain, not by the wording.
 
@@ -49,9 +50,10 @@ Readings from L2 tell you how to read a surface, not what to read first; this or
    - **Pending**: the pod's own sheet first (it carries the scheduling line), then the node side, general before specific; no scheduling line at all → the control-plane scheduler.
    - **Never created / missing reference**: the victim's signal first; then the workload state; then the event names the missing object; read the template and the object's own listing. Close a quota case on the namespace quota's used/hard rows (see the L2 quota reading); a missing Service is never a DNS failure. The quota rows close the case, they do not open it: first read the victim's endpoints or a connectivity probe on the victim's own Service. Scope the quota branch to the Service named by the complaint or the target of the failing call. A `FailedCreate` whose object is present is setup history.
    - **Image pull**: read the failing stage in the message (registry lookup / manifest / token) and classify by that stage (see the L2 image-pull reading); mount/probe errors go to the matching config face.
-   - **Cross-service localization**: take the topology walk from the symptom side before any mechanism/config/code material; an anchor elsewhere is a guess.
+   - **Cross-service localization**: call `GetServiceDependencies` from the symptom side before any mechanism/config/code material; an anchor elsewhere is a guess.
 > **System**: boutique
-   - **Pod up, service misbehaves (Boutique)**: the suspect pod's sheet first, then its error logs, then the code surface (`ListCodeFiles` → `GetSourceCode`); classify by the defect line, not the error wording (see the L2 code reading).
+   - **Pod up, service misbehaves (Boutique)**: read the metric alert first (`GetAlerts`; if you batch, the alert leads the batch), then the entry caller's error log, then the suspect pod's sheet, then the code surface (`ListCodeFiles` → `GetSourceCode`); call `GetServiceDependencies` from the symptom side before the code material.
+   - **Code-class decision (Boutique)**: if the entry caller's log is clean, the malformed-request trail sits in a downstream callee's log — read it before the code material. Then read the defect line, not the error wording: a field blanked/empty where a value should be (the lookup or outgoing call sees an empty value, and the error echoes that field) → `code_missing_parameter`; a handler whose own return path rejects a request that arrived complete (the error complains about a field the caller did send) → `code_wrong_return`.
 > **System**: trainticket
    - **Everything healthy but probes diverge / foreign payloads (Train-Ticket)**: when the objects read healthy but probes diverge, read the gateway's own app manifest (`GetAppYAML` on `ts-gateway-service`) and audit the route table Path ↔ target; the gateway is the table's owner, the mis-wired target is the victim. Do not stop at a downstream DNS symptom.
 > **System**: shared
