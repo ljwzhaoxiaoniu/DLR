@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DLR + TSM — 语义层内部汇报</title>
+<style>
+  :root {
+    --surface: #fcfcfb;
+    --page: #f9f9f7;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --grid: #e1e0d9;
+    --border: rgba(11,11,11,0.08);
+    --dlr: #2a78d6;
+    --cob: #e8782a;
+    --tsm: #5c3d99;
+    --good: #0ca30c;
+    --warn: #fab219;
+    --critical: #d03b3b;
+    --on-accent: #ffffff;
+    font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans SC", sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--page);
+    scroll-behavior: smooth;
+    scroll-snap-type: y proximity;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      --surface: #1a1a19; --page: #0d0d0d; --ink: #ffffff;
+      --ink-2: #c3c2b7; --muted: #898781; --grid: #2c2c2a;
+      --border: rgba(255,255,255,0.08); --dlr: #3987e5;
+      --cob: #d96a1f; --tsm: #7c5fc0; --good: #22b522;
+      --warn: #e5a800; --critical: #e05252;
+    }
+  }
+  :root[data-theme="dark"] {
+    --surface: #1a1a19; --page: #0d0d0d; --ink: #ffffff;
+    --ink-2: #c3c2b7; --muted: #898781; --grid: #2c2c2a;
+    --border: rgba(255,255,255,0.08); --dlr: #3987e5;
+    --cob: #d96a1f; --tsm: #7c5fc0; --good: #22b522;
+    --warn: #e5a800; --critical: #e05252;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--page); color: var(--ink); }
+
+  /* ── Chrome ── */
+  .progress {
+    position: fixed; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--grid); z-index: 1000;
+  }
+  .progress__fill { height: 100%; width: 0; background: var(--dlr); transition: width .18s ease; }
+  .theme-toggle, .fullscreen-btn {
+    position: fixed; top: 18px; z-index: 1001;
+    width: 38px; height: 38px; border-radius: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--ink); font-size: 17px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .theme-toggle { right: 18px; }
+  .fullscreen-btn { right: 64px; font-size: 14px; }
+  .page-dots {
+    position: fixed; right: 22px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 9px; z-index: 998;
+  }
+  .page-dots a {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--grid); border: 1px solid var(--border);
+    display: block; transition: background .2s, transform .2s;
+  }
+  .page-dots a.active { background: var(--dlr); border-color: var(--dlr); transform: scale(1.25); }
+  .slide-counter, .nav-hint {
+    position: fixed; bottom: 18px; z-index: 1000;
+    font-size: 12px; color: var(--muted); letter-spacing: .04em;
+  }
+  .slide-counter { right: 22px; font-variant-numeric: tabular-nums; }
+  .nav-hint { left: 22px; }
+  .nav-hint kbd {
+    font-family: inherit; font-size: 11px; border: 1px solid var(--border);
+    border-radius: 4px; padding: 1px 5px; background: var(--surface);
+  }
+
+  /* ── Slide ── */
+  .slide {
+    min-height: 100vh; display: flex; align-items: center;
+    padding: 70px 7vw 56px; scroll-snap-align: start; position: relative;
+  }
+  .slide__inner { width: 100%; max-width: 1180px; margin: 0 auto; }
+  .slide--cover { text-align: center; }
+  .slide--cover .slide__inner { max-width: 980px; }
+  .slide--end { text-align: center; }
+  .slide--end .slide__inner { max-width: 900px; }
+
+  /* ── Typography ── */
+  .eyebrow {
+    font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .12em; color: var(--dlr); margin-bottom: 14px;
+  }
+  .hero {
+    font-size: clamp(38px, 5.2vw, 68px); font-weight: 800;
+    letter-spacing: -0.02em; line-height: 1.12;
+  }
+  .hero em { font-style: normal; color: var(--dlr); }
+  .section-title {
+    font-size: clamp(28px, 3.5vw, 44px); font-weight: 760;
+    letter-spacing: -0.015em; line-height: 1.22; margin-bottom: 26px;
+  }
+  .section-title em { font-style: normal; color: var(--dlr); }
+  .lead { font-size: clamp(17px, 1.7vw, 21px); color: var(--ink-2); max-width: 820px; }
+  .muted { color: var(--muted); font-size: 14px; }
+  .note { color: var(--muted); font-size: 13px; margin-top: 12px; }
+  .takeaway {
+    margin-top: 26px; text-align: center; font-size: 15px;
+    color: var(--ink-2); border-top: 1px solid var(--border); padding-top: 18px;
+  }
+  .takeaway strong { color: var(--ink); }
+
+  /* ── Grids & cards ── */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px;
+  }
+  .card h3 { font-size: 17px; font-weight: 720; margin-bottom: 8px; }
+  .card p { font-size: 14.5px; color: var(--ink-2); line-height: 1.55; }
+  .card ul { margin: 8px 0 0 18px; font-size: 14px; color: var(--ink-2); }
+  .card li { margin-bottom: 4px; }
+  .card--dlr { border-left: 4px solid var(--dlr); }
+  .card--cob { border-left: 4px solid var(--cob); }
+  .card--tsm { border-left: 4px solid var(--tsm); }
+  .card--good { border-left: 4px solid var(--good); }
+  .card--critical { border-left: 4px solid var(--critical); }
+  .card__kicker { font-size: 12px; font-weight: 700; letter-spacing: .06em; color: var(--muted); margin-bottom: 6px; }
+
+  /* ── Callout ── */
+  .callout {
+    background: var(--surface);
+    background: color-mix(in srgb, var(--dlr) 7%, var(--surface));
+    border-left: 4px solid var(--dlr);
+    border-radius: 10px; padding: 18px 22px; margin-top: 20px;
+    font-size: 14.5px; color: var(--ink-2); line-height: 1.55;
+  }
+  .callout strong { color: var(--ink); }
+  .callout--cob {
+    background: var(--surface);
+    background: color-mix(in srgb, var(--cob) 8%, var(--surface));
+    border-left-color: var(--cob);
+  }
+  .callout--tsm {
+    background: var(--surface);
+    background: color-mix(in srgb, var(--tsm) 8%, var(--surface));
+    border-left-color: var(--tsm);
+  }
+
+  /* ── Cover stats ── */
+  .cover-stats { display: flex; justify-content: center; flex-wrap: wrap; gap: 18px; margin: 34px 0 22px; }
+  .cover-stat {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 28px; min-width: 190px;
+  }
+  .cover-stat strong {
+    display: block; font-size: clamp(30px, 3.6vw, 44px); font-weight: 800;
+    letter-spacing: -0.02em; color: var(--dlr); line-height: 1.1;
+  }
+  .cover-stat span { display: block; font-size: 13px; color: var(--ink-2); margin-top: 6px; }
+
+  /* ── Stat tiles ── */
+  .stat-row { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+  .stat {
+    flex: 1 1 180px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 22px;
+  }
+  .stat__value {
+    font-size: clamp(28px, 3.6vw, 44px); font-weight: 800;
+    letter-spacing: -0.02em; line-height: 1.05; color: var(--dlr);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat__label { font-size: 13px; color: var(--ink-2); margin-top: 6px; }
+  .stat__note { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .stat--cob .stat__value { color: var(--cob); }
+  .stat--ink .stat__value { color: var(--ink); }
+  .stat--good .stat__value { color: var(--good); }
+
+  /* ── Three levels ── */
+  .level-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
+  .level-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-top: 4px solid var(--dlr); border-radius: 12px; padding: 22px;
+  }
+  .level-card--l2 { border-top-color: var(--tsm); }
+  .level-card--l3 { border-top-color: var(--cob); }
+  .level-card__key { font-size: 12px; font-weight: 700; letter-spacing: .08em; color: var(--muted); }
+  .level-card h3 { font-size: 19px; margin: 4px 0 8px; }
+  .level-card p { font-size: 14px; color: var(--ink-2); min-height: 44px; }
+  .level-card small { display: block; margin-top: 12px; font-size: 12px; color: var(--muted); }
+  .mnemonic {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    margin-top: 18px; font-size: 14px; color: var(--ink-2);
+  }
+  .mnemonic span {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 999px; padding: 6px 14px;
+  }
+
+  /* ── Flow ── */
+  .flow { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .flow__node {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 16px; font-size: 14px; font-weight: 650;
+  }
+  .flow__node--accent { border-color: var(--dlr); color: var(--dlr); border-width: 2px; }
+  .flow__arrow { color: var(--muted); font-size: 18px; }
+
+  /* ── Architecture ── */
+  .arch { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 20px; }
+  .arch__row { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .arch__box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 22px; text-align: center; min-width: 180px;
+  }
+  .arch__box--accent { border: 2px solid var(--dlr); }
+  .arch__box--cob { border: 2px solid var(--cob); }
+  .arch__box strong { display: block; font-size: 15px; }
+  .arch__box small { font-size: 11.5px; color: var(--ink-2); }
+  .arch__arrow { font-size: 12px; color: var(--muted); }
+
+  /* ── Chart ── */
+  .legend { display: flex; gap: 18px; font-size: 12.5px; color: var(--ink-2); margin-bottom: 12px; }
+  .legend i {
+    display: inline-block; width: 10px; height: 10px; border-radius: 3px;
+    margin-right: 6px; vertical-align: -1px;
+  }
+  .dot--project { background: var(--dlr); }
+  .dot--baseline { background: var(--cob); }
+  .chart-group { margin-top: 14px; }
+  .chart-group__title { font-size: 13px; font-weight: 700; color: var(--ink-2); margin-bottom: 8px; }
+  .bar-row { display: grid; grid-template-columns: 82px 1fr 86px; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .bar-row__label { font-size: 12.5px; color: var(--ink-2); text-align: right; }
+  .bar-row__value { font-size: 12.5px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+  .bar-track { height: 26px; background: var(--grid); border-radius: 6px; overflow: hidden; }
+  .bar-fill {
+    height: 100%; border-radius: 6px; display: flex; align-items: center;
+    padding-left: 9px; font-size: 11.5px; font-weight: 700; color: var(--on-accent);
+    white-space: nowrap; cursor: default;
+  }
+  .bar-fill--project { background: var(--dlr); }
+  .bar-fill--baseline { background: var(--cob); }
+
+  /* ── Split bar ── */
+  .split-bar { display: flex; gap: 2px; height: 38px; margin: 16px 0 6px; }
+  .split-bar__seg {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--on-accent); font-size: 13px; font-weight: 700;
+    white-space: nowrap; overflow: hidden;
+  }
+  .split-bar__seg--project { background: var(--dlr); border-radius: 6px 0 0 6px; }
+  .split-bar__seg--baseline { background: var(--cob); border-radius: 0 6px 6px 0; }
+
+  /* ── Decision tree ── */
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 20px; }
+  .pill {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 999px; padding: 5px 12px; font-size: 12.5px; color: var(--ink-2);
+  }
+  .tree {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 22px; margin-top: 6px;
+  }
+  .tree__row { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; }
+  .tree__node {
+    background: var(--page); border: 1px solid var(--border);
+    border-radius: 9px; padding: 10px 16px; font-size: 13.5px; font-weight: 650;
+  }
+  .tree__node--start { border-color: var(--dlr); color: var(--dlr); }
+  .tree__node--branch { border-color: var(--cob); color: var(--cob); }
+  .tree__node--close { border-color: var(--good); color: var(--good); }
+  .tree__arrow { color: var(--muted); }
+  .tree__branches {
+    margin-top: 14px; text-align: center; font-size: 13px; color: var(--ink-2);
+    border-top: 1px dashed var(--border); padding-top: 14px;
+  }
+
+  /* ── Table view ── */
+  details.table-view { margin-top: 12px; font-size: 12.5px; color: var(--ink-2); }
+  details.table-view summary { cursor: pointer; color: var(--muted); }
+  details.table-view table { border-collapse: collapse; margin-top: 8px; width: 100%; max-width: 560px; }
+  details.table-view th, details.table-view td {
+    border: 1px solid var(--border); padding: 5px 10px; text-align: left;
+  }
+  details.table-view th { background: var(--surface); }
+
+  /* ── Closing ── */
+  .closing-ask {
+    margin-top: 30px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 26px; font-size: 15px; color: var(--ink-2);
+    max-width: 760px; margin-left: auto; margin-right: auto;
+  }
+  .closing-ask strong { color: var(--ink); }
+
+  /* ── Tooltip ── */
+  #tooltip {
+    position: fixed; z-index: 2000; pointer-events: none;
+    background: var(--ink); color: var(--page);
+    padding: 7px 10px; border-radius: 7px; font-size: 12px;
+    max-width: 280px; opacity: 0; transition: opacity .12s;
+  }
+  #tooltip.show { opacity: 1; }
+
+  @media (max-width: 900px) {
+    .level-grid { grid-template-columns: 1fr; }
+    .bar-row { grid-template-columns: 70px 1fr 70px; }
+    .page-dots { display: none; }
+  }
+  @media (max-width: 700px) {
+    .slide { padding: 56px 5vw 48px; }
+    .nav-hint, .fullscreen-btn { display: none; }
+    .split-bar { height: 32px; }
+  }
+  @media print {
+    @page { size: 16in 9in; margin: 0; }
+    html { scroll-snap-type: none; }
+    .theme-toggle, .fullscreen-btn, .page-dots, .slide-counter, .nav-hint,
+    .progress, #tooltip, details.table-view { display: none !important; }
+    .slide {
+      height: 9in; min-height: 9in; max-height: 9in; overflow: hidden;
+      page-break-after: always; padding: 40px 48px;
+    }
+    .slide:last-of-type { page-break-after: auto; }
+    body { background: #fff; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="progress__fill" id="progress"></div></div>
+<button class="fullscreen-btn" onclick="toggleFullscreen()" title="全屏（F）" aria-label="全屏">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M8 3H3v5"></path><path d="M16 3h5v5"></path><path d="M8 21H3v-5"></path><path d="M16 21h5v-5"></path>
+  </svg>
+</button>
+<button class="theme-toggle" onclick="toggleTheme()" title="切换深色/浅色（T）">☀</button>
+
+<nav class="page-dots" aria-label="幻灯片导航">
+  <a href="#s1" title="封面"></a>
+  <a href="#s2" title="结论先行"></a>
+  <a href="#s3" title="问题"></a>
+  <a href="#s4" title="处方"></a>
+  <a href="#s5" title="TSM 三级"></a>
+  <a href="#s6" title="DLR 设计"></a>
+  <a href="#s7" title="逐层消歧"></a>
+  <a href="#s8" title="BIRD"></a>
+  <a href="#s9" title="Cloud-OpsBench"></a>
+  <a href="#s10" title="SOP 分层"></a>
+  <a href="#s11" title="工程架构"></a>
+  <a href="#s12" title="评测体系"></a>
+  <a href="#s13" title="边界与路线"></a>
+  <a href="#s14" title="结语"></a>
+</nav>
+
+<div class="slide-counter" id="counter">01 / 14</div>
+<div class="nav-hint"><kbd>↑</kbd> <kbd>↓</kbd> / <kbd>空格</kbd> 翻页 · <kbd>F</kbd> 全屏 · <kbd>T</kbd> 主题</div>
+<div id="tooltip" role="tooltip"></div>
+
+<!-- ════════════════ 01 · 封面 ════════════════ -->
+<section class="slide slide--cover" id="s1">
+  <div class="slide__inner">
+    <div class="eyebrow">语义层内部汇报 · 2026-10-19</div>
+    <h1 class="hero">让企业数据<br><em>变成 Agent 能读懂的语义层</em></h1>
+    <p class="lead" style="margin:18px auto 0">DLR + TSM：一套逐层建模、逐层消歧的方法；两个全量验证场景。</p>
+    <div class="cover-stats">
+      <div class="cover-stat"><strong>500 / 500</strong><span>BIRD mini_dev · NL2SQL</span></div>
+      <div class="cover-stat"><strong>754 / 754</strong><span>Cloud-OpsBench · K8s 根因诊断</span></div>
+      <div class="cover-stat"><strong>99.7%</strong><span>JRA · 根因联合准确率</span></div>
+    </div>
+    <p class="muted">从 ready to machine，到 ready to human</p>
+  </div>
+</section>
+
+<!-- ════════════════ 02 · 结论先行 ════════════════ -->
+<section class="slide" id="s2">
+  <div class="slide__inner">
+    <div class="eyebrow">结论先行</div>
+    <h2 class="section-title">两个场景，<em>全量闭环</em></h2>
+    <div class="stat-row">
+      <div class="stat"><div class="stat__value">500/500</div><div class="stat__label">NL2SQL 评定正确</div><div class="stat__note">426 正确 + 74 按 SOP 裁定</div></div>
+      <div class="stat stat--cob"><div class="stat__value">754/754</div><div class="stat__label">K8s RCA 覆盖</div><div class="stat__note">12 个故障家族全跑</div></div>
+      <div class="stat stat--good"><div class="stat__value">99.7%</div><div class="stat__label">JRA 联合准确率</div><div class="stat__note">752 / 754</div></div>
+      <div class="stat stat--ink"><div class="stat__value">1 + 2</div><div class="stat__label">一套架构 / 两个场景</div><div class="stat__note">7 工具 + 3 工具</div></div>
+    </div>
+    <div class="grid-3">
+      <div class="card card--dlr">
+        <div class="card__kicker">L1 · 数据源级</div>
+        <h3>DLR：把物理表投影成业务实体</h3>
+        <p>LE / PE 解耦，ARCS 纵向锚定、PAS 横向路由；birdmini 500 题全部判定正确。</p>
+      </div>
+      <div class="card card--cob">
+        <div class="card__kicker">L3 · 业务逻辑级</div>
+        <h3>SOP：把题级打法做成决策树</h3>
+        <p>COB 用 5 节症状措辞覆盖 754 例；JRA 752/754，ECR 96.0%。</p>
+      </div>
+      <div class="card card--tsm">
+        <div class="card__kicker">工程化</div>
+        <h3>单机可跑，数据不出域</h3>
+        <p>MCP 工具面、LanceDB + ONNX、内存图 / Neo4j 双轨；唯一外呼是 LLM API。</p>
+      </div>
+    </div>
+    <p class="takeaway"><strong>不是两个 demo：</strong>从建模、检索、执行到判分的全量闭环，且判分口径可复现。</p>
+  </div>
+</section>
+
+<!-- ════════════════ 03 · 问题 ════════════════ -->
+<section class="slide" id="s3">
+  <div class="slide__inner">
+    <div class="eyebrow">背景 · 问题</div>
+    <h2 class="section-title">文本没有稳定 schema，<em>层级只在使用中成立</em></h2>
+    <p class="lead">同一句话，在不同场景里可能是断言，也可能是规则。层级不在文字里，在读它的人把它当什么用。</p>
+    <div class="grid-2" style="margin-top:22px">
+      <div class="card card--critical">
+        <div class="card__kicker">冻结派 · W3C 本体工程</div>
+        <h3>把每条知识铸死成公理或个体</h3>
+        <ul>
+          <li>业务人员读不懂，维护无人接手</li>
+          <li>处于 LLM 语料分布边缘，机器性能最差</li>
+          <li>四十年，一场没跑通</li>
+        </ul>
+      </div>
+      <div class="card card--cob">
+        <div class="card__kicker">放任派 · 裸 RAG</div>
+        <h3>所有文本块平等检索，不分层</h3>
+        <ul>
+          <li>每次召回都在临时赋型，检索器不自知</li>
+          <li>手册全文和一句口径共识同等待遇</li>
+          <li>层级混乱、口径打架、token 爆炸</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout">
+      <strong>三类资产，三种欠账：</strong>数据欠“这数据是什么意思”；知识欠“该站哪一层、谁签字”；API 欠“调用契约的人话”。语义化不是重新建模，是补一笔四十年的欠账。
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ 04 · 处方 ════════════════ -->
+<section class="slide" id="s4">
+  <div class="slide__inner">
+    <div class="eyebrow">处方</div>
+    <h2 class="section-title">以数据架构为纲：<em>认领，不发明</em></h2>
+    <div class="grid-3">
+      <div class="card card--dlr">
+        <h3>纲是出发点，不是圣经</h3>
+        <p>语义层不擅动 schema，但对 schema 的描述享有 <strong>correction 权</strong>：表还是那张表，可以写“此表名为 X 实为 Y，按 Z 理解”。</p>
+      </div>
+      <div class="card card--dlr">
+        <h3>纲不殖民血肉</h3>
+        <p>实例文本亿级、持续膨胀；语义骨架千级、稳定。体系只存“去哪类”的路由条目，内容留在业务系统，运行期再拉取。</p>
+      </div>
+      <div class="card card--dlr">
+        <h3>不发明、不补全、不重建</h3>
+        <p>不凭空构建本体，不以知识完备为目标，不为还没产生的数据建模。资产不换，只补说明。</p>
+      </div>
+    </div>
+    <div class="flow" style="margin-top:26px">
+      <div class="flow__node flow__node--accent">问题</div><div class="flow__arrow">→</div>
+      <div class="flow__node">定位实体</div><div class="flow__arrow">→</div>
+      <div class="flow__node">取得路由</div><div class="flow__arrow">→</div>
+      <div class="flow__node">Agent 拉明细</div><div class="flow__arrow">→</div>
+      <div class="flow__node flow__node--accent">执行</div>
+    </div>
+    <p class="takeaway"><strong>语义层的使命：</strong>把现有 ICT 资产——数据、知识、API——语义化，从 ready to machine 到 ready to human。</p>
+  </div>
+</section>
+
+<!-- ════════════════ 05 · TSM 三级 ════════════════ -->
+<section class="slide" id="s5">
+  <div class="slide__inner">
+    <div class="eyebrow">概念 · TSM</div>
+    <h2 class="section-title">三级语义建模：<em>按“谁维护、什么时候变”分层</em></h2>
+    <div class="level-grid">
+      <div class="level-card">
+        <div class="level-card__key">L1 · dlr</div>
+        <h3>数据源级</h3>
+        <p>这个领域<strong>有什么</strong>：业务概念、落在哪、怎么连。</p>
+        <small>维护：数据侧 · 随 schema / 数据源演进</small>
+      </div>
+      <div class="level-card level-card--l2">
+        <div class="level-card__key">L2 · consensus</div>
+        <h3>领域共识级</h3>
+        <p>题面用词<strong>怎么算、怎么过滤</strong>：术语→值、公式、口径、背景。</p>
+        <small>维护：领域业务人员 · 随业务口径</small>
+      </div>
+      <div class="level-card level-card--l3">
+        <div class="level-card__key">L3 · sop</div>
+        <h3>业务逻辑级（SOP）</h3>
+        <p>这类问题<strong>怎么裁</strong>：打法、例外、陷阱、链序纪律。</p>
+        <small>维护：业务人员 · 随流程 / 打法</small>
+      </div>
+    </div>
+    <div class="callout callout--tsm">
+      <strong>别混：</strong>TSM 是三级框架；<strong>DLR 是 L1 的一种实现（本项目原创）</strong>，不是三级的统称。L2 = 领域共识（consensus），L3 = SOP（sop）。
+    </div>
+    <div class="mnemonic">
+      <span>“这个数据怎么存” → L1</span>
+      <span>“这句话查什么列 / 怎么算” → L2</span>
+      <span>“这种题容易怎么错” → L3</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ 06 · DLR 设计 ════════════════ -->
+<section class="slide" id="s6">
+  <div class="slide__inner">
+    <div class="eyebrow">实现 · DLR</div>
+    <h2 class="section-title">DLR：<em>物理表 → 视图 → 业务实体</em></h2>
+    <div class="arch">
+      <div class="arch__row">
+        <div class="arch__box"><strong>物理表</strong><small>列 / 行 / 外键</small></div>
+        <div class="arch__arrow">── ARCS ──▶</div>
+        <div class="arch__box arch__box--accent"><strong>PE · 视图</strong><small>锚 / 行空间 / 列选择 / 语义</small></div>
+        <div class="arch__arrow">── 1:N ──▶</div>
+        <div class="arch__box arch__box--accent"><strong>LE · 业务实体</strong><small>可指认对象 + public 面</small></div>
+        <div class="arch__arrow">── PAS ──▶</div>
+        <div class="arch__box"><strong>另一个 LE</strong><small>沿谓词导航</small></div>
+      </div>
+    </div>
+    <div class="grid-3" style="margin-top:22px">
+      <div class="card card--dlr">
+        <h3>ARCS：纵向锚定</h3>
+        <p>把物理表投影成视图：A 锚定键、R 行空间、C 列选择、S 语义补注。碎表、宽表、关联表对 Agent 透明。</p>
+      </div>
+      <div class="card card--dlr">
+        <h3>PAS：横向路由</h3>
+        <p>LE 之间只声明“关联存在 + 起点坐标”，路径由 Agent 找。模型给导航语义，不给执行计划。</p>
+      </div>
+      <div class="card card--dlr">
+        <h3>public / private</h3>
+        <p>核心度量、高频过滤列升 public，进 LE 面与向量；其余留在 PE，下探可见。影响效率，不影响正确性。</p>
+      </div>
+    </div>
+    <div class="callout">
+      <strong>消歧链：</strong>物理表的歧义由 PE 消解；PE 的歧义由 LE 消解。LE 必须是<strong>可指认</strong>的业务对象——说出名字就知道在说谁。
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ 07 · 逐层消歧 ════════════════ -->
+<section class="slide" id="s7">
+  <div class="slide__inner">
+    <div class="eyebrow">方法 · 核心原则</div>
+    <h2 class="section-title">一层解决不了的，<em>不在这一层死磕</em></h2>
+    <p class="lead">每层只解决本层能客观判定的歧义；解决不了，向上开一层。硬压会把问题挤到另一层弹回来——按下葫芦浮起瓢。</p>
+    <div class="grid-2" style="margin-top:22px">
+      <div class="card card--dlr">
+        <div class="card__kicker">层内 · DLR 的两级消歧</div>
+        <h3>物理表 → PE → LE</h3>
+        <p>物理表天然有歧义：碎表、宽表、同名异义列、多槽位 FK。PE 用视图消歧；PE 仍有歧义，LE 用“可指认对象 + public 面 + PAS”消歧。</p>
+      </div>
+      <div class="card card--tsm">
+        <div class="card__kicker">层间 · 三级向上开</div>
+        <h3>L1 → L2 → L3</h3>
+        <p>L1 只回答“数据怎么存”；题面用词 ↔ 模型的映射归 L2；L1 + L2 的真实业务冲突或系统级冲突，归 L3 做题级裁决。</p>
+      </div>
+    </div>
+    <div class="callout callout--cob">
+      <strong>L3 内部再分层（COB 实证）：</strong>SOP 若只有“一层”——一节直接给一个答案——同样会歧义。<strong>SOP 分层 = 措辞层 → 分支层 → 收口层</strong>；5 节因此能覆盖 754 例。
+    </div>
+    <div class="callout callout--tsm">
+      <strong>前瞻：</strong>L2 也会随 LE 分层。全局成立的 SOP 口径可自然下放到 L2；只在某个 LE 内成立的口径按 LE 隔离。“分层消歧”与“按 LE 隔离”是同一治理工具的两种用法。
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ 08 · BIRD ════════════════ -->
+<section class="slide" id="s8">
+  <div class="slide__inner">
+    <div class="eyebrow">场景一 · BIRD mini_dev</div>
+    <h2 class="section-title">NL2SQL：<em>500 题全部判定正确</em></h2>
+    <div class="stat-row">
+      <div class="stat"><div class="stat__value">500/500</div><div class="stat__label">最终评定</div><div class="stat__note">199 轮 · 933 次判定</div></div>
+      <div class="stat stat--ink"><div class="stat__value">6.0</div><div class="stat__label">平均步数</div><div class="stat__note">10.0 次工具调用</div></div>
+      <div class="stat stat--ink"><div class="stat__value">73k</div><div class="stat__label">每题 token</div><div class="stat__note">cache 读占比 82%</div></div>
+      <div class="stat stat--ink"><div class="stat__value">50/74/37</div><div class="stat__label">LE / PE / PAS</div><div class="stat__note">11 个数据库</div></div>
+    </div>
+    <div class="legend"><span><i class="dot--project"></i>✅ 正确 426</span><span><i class="dot--baseline"></i>🔁 按 SOP 裁定翻盘 74</span></div>
+    <div class="split-bar" role="img" aria-label="500 题中 426 题正确，74 题按 SOP 裁定翻盘">
+      <div class="split-bar__seg split-bar__seg--project" style="width:85.2%">426 · 正确</div>
+      <div class="split-bar__seg split-bar__seg--baseline" style="width:14.8%">74 · 翻盘</div>
+    </div>
+    <div class="grid-3" style="margin-top:18px">
+      <div class="card card--dlr"><h3>L1</h3><p>11 库 · 50 LE / 74 PE / 37 PAS；图 1,185 节点；LE description 是路由质量的唯一信号。</p></div>
+      <div class="card card--tsm"><h3>L2</h3><p>11 个 namespace · 91 条共识；术语映射、公式口径、领域背景。</p></div>
+      <div class="card card--cob"><h3>L3</h3><p>180 节，按题分节；只取命中本题的那一节，节变长不再有全局成本。</p></div>
+    </div>
+    <p class="note">74 题是数据集缺陷 / 口径冲突的裁定结果，按 SOP 单独计，不并入正确；判定口径与台账逐项互证。</p>
+  </div>
+</section>
+
+<!-- ════════════════ 09 · COB ════════════════ -->
+<section class="slide" id="s9">
+  <div class="slide__inner">
+    <div class="eyebrow">场景二 · Cloud-OpsBench</div>
+    <h2 class="section-title">K8s 根因诊断：<em>754 例全量覆盖</em></h2>
+    <div class="stat-row">
+      <div class="stat stat--cob"><div class="stat__value">754/754</div><div class="stat__label">覆盖度</div><div class="stat__note">12 家族 · 2 系统 · 230 轮</div></div>
+      <div class="stat stat--good"><div class="stat__value">752/754</div><div class="stat__label">JRA 联合准确率</div><div class="stat__note">99.7%</div></div>
+      <div class="stat stat--ink"><div class="stat__value">96.0%</div><div class="stat__label">ECR 证据链闭合</div><div class="stat__note">724 / 754</div></div>
+      <div class="stat stat--ink"><div class="stat__value">18.3</div><div class="stat__label">平均步数</div><div class="stat__note">invalid 0.4%</div></div>
+    </div>
+    <div class="grid-2" style="align-items:start">
+      <div>
+        <div class="legend"><span><i class="dot--project"></i>本方案</span><span><i class="dot--baseline"></i>上游公开基线</span></div>
+        <div class="chart-group">
+          <div class="chart-group__title">JRA · 根因联合准确率</div>
+          <div class="bar-row">
+            <div class="bar-row__label">本方案</div>
+            <div class="bar-track"><div class="bar-fill bar-fill--project" style="width:99.7%" data-tip="本方案 JRA 752/754 = 99.7%">99.7%</div></div>
+            <div class="bar-row__value">752/754</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-row__label">上游基线</div>
+            <div class="bar-track"><div class="bar-fill bar-fill--baseline" style="width:76%" data-tip="上游顶模公开基线 JRA 0.76（不同模型，仅作参照）">76.0%</div></div>
+            <div class="bar-row__value">公开基线</div>
+          </div>
+        </div>
+        <div class="chart-group">
+          <div class="chart-group__title">ECR · 证据链闭合率</div>
+          <div class="bar-row">
+            <div class="bar-row__label">本方案</div>
+            <div class="bar-track"><div class="bar-fill bar-fill--project" style="width:96%" data-tip="本方案 ECR 724/754 = 96.0%">96.0%</div></div>
+            <div class="bar-row__value">724/754</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-row__label">上游基线</div>
+            <div class="bar-track"><div class="bar-fill bar-fill--baseline" style="width:38%" data-tip="上游顶模公开基线 ECR 0.38（不同模型，仅作参照）">38.0%</div></div>
+            <div class="bar-row__value">公开基线</div>
+          </div>
+        </div>
+        <details class="table-view">
+          <summary>数据表</summary>
+          <table>
+            <tr><th>指标</th><th>本方案</th><th>上游公开基线</th></tr>
+            <tr><td>JRA</td><td>99.7%（752/754）</td><td>76.0%</td></tr>
+            <tr><td>ECR</td><td>96.0%（724/754）</td><td>38.0%</td></tr>
+          </table>
+        </details>
+        <p class="note">上游基线来自基准 README 的顶模公开数字，模型与运行条件不同，仅作量级参照。</p>
+      </div>
+      <div class="grid-2" style="grid-template-columns:1fr; gap:12px">
+        <div class="card card--cob"><h3>L1 · dlr-state</h3><p>2 系统两份文件 · <strong>169 LE / 355 PE / 233 PAS</strong>；53 个服务 + 节点 + 命名空间；观测面带锚定读法。</p></div>
+        <div class="card card--tsm"><h3>L2 · 领域共识</h3><p>15 条；schema 级读法 + 症状→链映射；按槽类聚类，不按系统。</p></div>
+        <div class="card card--cob"><h3>L3 · SOP</h3><p>5 节；按症状措辞逐字命中；节内是决策树，不是一条答案。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ 10 · SOP 分层 ════════════════ -->
+<section class="slide" id="s10">
+  <div class="slide__inner">
+    <div class="eyebrow">L3 · SOP 分层</div>
+    <h2 class="section-title">5 节 SOP，<em>为什么能覆盖 754 例</em></h2>
+    <p class="lead">节标题 = 题面症状措辞，逐字命中；节内不是一条答案，而是一棵按证据走的分支树。</p>
+    <div class="pills">
+      <span class="pill">Partial Service Unreachability.</span>
+      <span class="pill">Service Availability Disruption.</span>
+      <span class="pill">Service quality degradation.</span>
+      <span class="pill">Service latency increased significantly</span>
+      <span class="pill">Service Performance Degradation.</span>
+    </div>
+    <div class="tree">
+      <div class="tree__row">
+        <div class="tree__node tree__node--start">信号先行</div>
+        <div class="tree__arrow">→</div>
+        <div class="tree__node">剪枝工作负载</div>
+        <div class="tree__arrow">→</div>
+        <div class="tree__node tree__node--branch">机制分支</div>
+        <div class="tree__arrow">→</div>
+        <div class="tree__node tree__node--close">收口三件套</div>
+      </div>
+      <div class="tree__branches">
+        分支：Pending / 镜像拉取 / 准入 / 路由 / 代码缺陷 ……　｜　收口：机制事件 + 事件面 + 配置
+      </div>
+    </div>
+    <div class="grid-2" style="margin-top:18px">
+      <div class="card card--cob"><h3>为什么不是“只写答案”</h3><p>同一症状措辞下可能是多个机制。节只锁定“哪一族”，具体分支由链上实际观测决定——这就是 SOP 分层。</p></div>
+      <div class="card card--critical"><h3>链序是硬约束</h3><p>EOC 是严格单遍级联：链头倒位，整条证据链会塌到 1/4。L3 的主体不是结论，是走链纪律。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ 11 · 工程架构 ════════════════ -->
+<section class="slide" id="s11">
+  <div class="slide__inner">
+    <div class="eyebrow">工程 · 架构</div>
+    <h2 class="section-title">一个宿主，<em>两套工具面</em></h2>
+    <div class="arch">
+      <div class="arch__row">
+        <div class="arch__box arch__box--accent"><strong>dsh</strong><small>headless / web</small></div>
+      </div>
+      <div class="arch__arrow">↓ MCP（streamable-http）</div>
+      <div class="arch__row">
+        <div class="arch__box arch__box--accent"><strong>语义后端 :28795</strong><small>dlr · 7 tools</small></div>
+        <div class="arch__box arch__box--cob"><strong>状态后端 :28796</strong><small>dlr-state · 3 tools</small></div>
+      </div>
+      <div class="arch__arrow">↓</div>
+      <div class="arch__row">
+        <div class="arch__box"><strong>TSM Core Service</strong><small>LanceDB · ONNX 编码器 · 内存图 / Neo4j</small></div>
+      </div>
+      <div class="arch__arrow">↓</div>
+      <div class="arch__row">
+        <div class="arch__box"><strong>数据层</strong><small>SQLite 数据集 · K8s 确定性快照</small></div>
+      </div>
+    </div>
+    <div class="grid-3" style="margin-top:20px">
+      <div class="card card--dlr"><h3>工具面冻结</h3><p>dlr 7 个：召回 / 映射 / L2 / L3 / 执行 / 下探。dlr-state 3 个：状态模型切片 + 两个检索。</p></div>
+      <div class="card card--tsm"><h3>可移植</h3><p>5 个 npm 包；路径从包自身推导 + env 覆盖；测试机不装 Neo4j 也能跑通验收。</p></div>
+      <div class="card card--good"><h3>数据主权</h3><p>图、向量、编码器、建模产物全在本地；唯一外呼是 LLM API，可指向私有部署。</p></div>
+    </div>
+    <p class="note">工程护栏：execute_sql 子进程 + 20s 硬超时，防病态 SQL 钉死单线程服务；判分与跑题解耦，可回放取证。</p>
+  </div>
+</section>
+
+<!-- ════════════════ 12 · 评测体系 ════════════════ -->
+<section class="slide" id="s12">
+  <div class="slide__inner">
+    <div class="eyebrow">评测 · 内容与能力分离</div>
+    <h2 class="section-title">考卷跟场景，<em>考试系统跟 dsh</em></h2>
+    <div class="grid-2">
+      <div class="card card--dlr">
+        <div class="card__kicker">考卷 A · 自建题库</div>
+        <h3>birdminidev · 500 题</h3>
+        <p>题面 + 期望 + 口径来源；答案键 74 处取 L3 节口径、426 处取 gold；生成器可复现，与台账逐项互证。</p>
+      </div>
+      <div class="card card--cob">
+        <div class="card__kicker">考卷 B · 外部基准适配</div>
+        <h3>cloudopsbench · 754 例</h3>
+        <p>考卷本体是上游基准；场景包只放转换 / 判分适配器。判分 = 上游 scorer（CA/FA/JRA + MC/EOC/ECR/EE）。</p>
+      </div>
+    </div>
+    <div class="flow" style="margin-top:22px">
+      <div class="flow__node">跑题</div><div class="flow__arrow">→</div>
+      <div class="flow__node">采分</div><div class="flow__arrow">→</div>
+      <div class="flow__node">报告</div><div class="flow__arrow">→</div>
+      <div class="flow__node flow__node--accent">回放取证</div>
+    </div>
+    <div class="callout">
+      <strong>企业价值：</strong>改一条 L3 口径 → 跑同一份考卷 → 行为差异可复现。语义资产从此有了 CI，而不是靠人记得。
+    </div>
+    <p class="note">2.0 判定的三层：① 与 gold 比对（只认 Final Answer 结论句）② 结果集比对（只救假阴性）③ SOP 裁定（数据集缺陷 / 口径冲突）。</p>
+  </div>
+</section>
+
+<!-- ════════════════ 13 · 边界与路线 ════════════════ -->
+<section class="slide" id="s13">
+  <div class="slide__inner">
+    <div class="eyebrow">边界 · 下一步</div>
+    <h2 class="section-title">契约在内，<em>实现在外</em></h2>
+    <div class="grid-2">
+      <div class="card card--critical">
+        <div class="card__kicker">明确不做</div>
+        <h3>不做什么</h3>
+        <ul>
+          <li>不做本体 / KG 平台——只有 LE / PE / ARCS / PAS 四个概念</li>
+          <li>不替代指标计算平台——只做“LLM 能不能正确落到你的数据上”的接地层</li>
+          <li>不锁模型、不锁宿主——MCP 是标准，dsh 是首选宿主</li>
+        </ul>
+      </div>
+      <div class="card card--dlr">
+        <div class="card__kicker">企业扩展层</div>
+        <h3>企业在哪接</h3>
+        <ul>
+          <li>execute_sql → DSL_SQL 服务：受控 DSL → 各方言 SQL + 权限下推（OData 参照）</li>
+          <li>图后端 → 企业自建连接器，按同一读取接口实现</li>
+          <li>建模 → introspect → 草稿 → 评审，接企业元数据平台</li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid-3" style="margin-top:18px">
+      <div class="card card--tsm"><h3>下一步 · L2 分层</h3><p>L2 随 LE 分层 / 按 LE 隔离；全局成立的 SOP 口径下放到 L2。</p></div>
+      <div class="card card--cob"><h3>下一步 · 新场景</h3><p>用第三个真实企业数据域验证“换场景”与层重跷跷板。</p></div>
+      <div class="card card--dlr"><h3>下一步 · 开发态</h3><p>introspect → 草稿 → 评审，让建模从手写 YAML 走向半自动。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ 14 · 结语 ════════════════ -->
+<section class="slide slide--end" id="s14">
+  <div class="slide__inner">
+    <div class="eyebrow">结语</div>
+    <h1 class="hero">语义层不是一座楼，<br><em>是一条制度。</em></h1>
+    <p class="lead" style="margin:18px auto 0">以数据架构为纲 · 逐层建模、逐层消歧 · 用两个全量场景证明方法可落地。</p>
+    <div class="closing-ask">
+      <strong>建议下一步：</strong>选一个企业数据域，从 10 张核心表的 L1 建模 + 一个业务域的 L3 试点开始；用同一套考卷跑基线，再逐轮补共识与 SOP。
+    </div>
+    <p class="muted" style="margin-top:28px">数据来源：scenarios/*/results/STATS.md · DETAIL.md；docs/01–04、run、eval、roadmap</p>
+  </div>
+</section>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide[id]'));
+  const dots = Array.from(document.querySelectorAll('.page-dots a'));
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  let current = 0;
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function setCurrent(i) {
+    current = Math.max(0, Math.min(slides.length - 1, i));
+    dots.forEach((d, k) => d.classList.toggle('active', k === current));
+    counter.textContent = pad(current + 1) + ' / ' + pad(slides.length);
+    progress.style.width = ((current + 1) / slides.length * 100) + '%';
+  }
+
+  function go(i) {
+    setCurrent(i);
+    slides[current].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function fromScroll() {
+    const mid = window.scrollY + window.innerHeight * 0.45;
+    let idx = 0;
+    slides.forEach((s, i) => { if (s.offsetTop <= mid) idx = i; });
+    setCurrent(idx);
+  }
+
+  window.addEventListener('scroll', fromScroll, { passive: true });
+  window.addEventListener('resize', fromScroll);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    const key = e.key;
+    if (['ArrowDown', 'ArrowRight', 'PageDown', ' '].includes(key)) { e.preventDefault(); go(current + 1); }
+    else if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(key)) { e.preventDefault(); go(current - 1); }
+    else if (key === 'Home') { e.preventDefault(); go(0); }
+    else if (key === 'End') { e.preventDefault(); go(slides.length - 1); }
+    else if (key === 'f' || key === 'F') { toggleFullscreen(); }
+    else if (key === 't' || key === 'T') { toggleTheme(); }
+  });
+
+  dots.forEach((d, i) => d.addEventListener('click', (e) => { e.preventDefault(); go(i); }));
+
+  function toggleTheme() {
+    const root = document.documentElement;
+    const btn = document.querySelector('.theme-toggle');
+    if (root.getAttribute('data-theme') === 'dark') {
+      root.removeAttribute('data-theme');
+      btn.textContent = '☀';
+      try { localStorage.setItem('deck-theme', 'light'); } catch (_) {}
+    } else {
+      root.setAttribute('data-theme', 'dark');
+      btn.textContent = '☾';
+      try { localStorage.setItem('deck-theme', 'dark'); } catch (_) {}
+    }
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      (document.documentElement.requestFullscreen || function(){}).call(document.documentElement);
+    } else {
+      (document.exitFullscreen || function(){}).call(document);
+    }
+  }
+
+  try {
+    if (localStorage.getItem('deck-theme') === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.querySelector('.theme-toggle').textContent = '☾';
+    }
+  } catch (_) {}
+
+  // Hover tooltip for chart marks
+  const tip = document.getElementById('tooltip');
+  document.querySelectorAll('[data-tip]').forEach(el => {
+    el.addEventListener('mouseenter', (e) => {
+      tip.textContent = el.getAttribute('data-tip');
+      tip.classList.add('show');
+    });
+    el.addEventListener('mousemove', (e) => {
+      const pad = 14;
+      let x = e.clientX + pad, y = e.clientY + pad;
+      if (x + tip.offsetWidth > window.innerWidth - 8) x = e.clientX - tip.offsetWidth - pad;
+      if (y + tip.offsetHeight > window.innerHeight - 8) y = e.clientY - tip.offsetHeight - pad;
+      tip.style.left = x + 'px';
+      tip.style.top = y + 'px';
+    });
+    el.addEventListener('mouseleave', () => tip.classList.remove('show'));
+  });
+
+  setCurrent(0);
+
+  // Static preview helper: ?slide=N jumps straight to slide N (used for screenshots).
+  const qsSlide = new URLSearchParams(location.search).get('slide');
+  if (qsSlide) {
+    const n = Math.max(0, Math.min(slides.length - 1, Number(qsSlide) - 1));
+    window.scrollTo({ top: slides[n].offsetTop, behavior: 'instant' });
+    setCurrent(n);
+  }
+</script>
+</body>
+</html>
