@@ -9,6 +9,7 @@
  * 形状与历史 Python 实现 `dlr_search_evidence` 一致（该实现保留 BIRD 遗留的旧工具名），另加 per-hit namespace。
  */
 import type { LanceStore } from "../store/lance.js";
+import { normalizeSystem } from "./stateModelQuery.js";
 
 export interface ConsensusHit {
   qid: number;
@@ -27,7 +28,7 @@ export async function searchConsensus(
   system?: string,
 ): Promise<{ success: boolean; namespace: string; system: string; count: number; results: ConsensusHit[] }> {
   const ns = namespace.trim();
-  const sys = (system ?? "").trim();
+  const sys = normalizeSystem(system) ?? "";
   const clauses: string[] = [];
   if (ns) clauses.push(`namespace = '${ns.replace(/'/g, "''")}'`);
   if (sys) clauses.push(`(system = '${sys.replace(/'/g, "''")}' OR system = 'shared' OR system = '')`);

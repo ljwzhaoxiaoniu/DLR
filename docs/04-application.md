@@ -26,7 +26,7 @@ scenarios/<scenario>/
 |---|---|---|
 | Scenario shape | `dlr` (SQLite NL2SQL) | `dlr-state` (K8s state-space RCA) |
 | L1 scale | 11 databases · **50 LE / 74 PE / 37 PAS** (1,185 graph nodes) | 2 systems · **169 LE / 355 PE / 233 PAS** (53 services + nodes + namespaces) |
-| L2 | 11 files · 91 entries | 1 file · 10 entries (clustered by slot class) |
+| L2 | 11 files · 91 entries | 1 file · 15 entries (clustered by slot class) |
 | L3 | 180 sections (**per question**) | 5 sections (**per symptom wording**, covering 754 cases; each section is a decision tree) |
 | Tool surface | 7 | 3 (no Neo4j graph) |
 | Evaluation content | Authored paper: `eval/questions.jsonl`, 500 questions | External benchmark: 754 cases + upstream scorer adapter |
@@ -47,7 +47,7 @@ scenarios/<scenario>/
 - **Admission** ([02-concept.md](02-concept.md) §2): **scenario-required · built on the L1 schema · non-workflow**; **no instance-level content**.
 - **What it writes**: term → column/value mappings, formulas and conventions, domain background (e.g. "CZK / EUR are the billing currencies").
 - **Discipline**: **what should sink to L1 sinks** — facts about the source itself (value domains / granularity / sample nature) left in L2 are on the wrong level; organize by namespace / slot class (bird: one file per database, namespace = database name; COB: one file per slot class, `kubernetes.jsonl` with 10 entries; generic readings are tagged `shared`, system-specific entries are scoped to `boutique` / `trainticket`).
-- **COB's L2**: schema-level readings + **L1 conflict resolution** (question wording ↔ model terminology), including the placement reading (the pods surface's NODE field → the node object); **no walk order** (order belongs to L3), no instance detail; generic entries are `shared`, system-specific entries are isolated per system.
+- **COB's L2**: schema-level readings, **tool/environment facts**, and **L1 conflict resolution** (question wording ↔ model terminology), including the placement reading (the pods surface's NODE field → the node object); **no walk order** (order belongs to L3), no instance detail; generic entries are `shared`, system-specific entries are isolated per system.
 - **Language**: the same as the questions (English).
 
 ### L3 `sop` — `sources/sop.md`

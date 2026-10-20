@@ -11,6 +11,7 @@
  * 口径与判定侧同源：Expected/类型随节返回（`tsm grade` 读的也是 sop.md 真源）。
  */
 import type { LanceStore } from "../store/lance.js";
+import { normalizeSystem } from "./stateModelQuery.js";
 
 export interface SopHit {
   id: string;
@@ -65,7 +66,7 @@ export async function searchSop(
   results: SopHit[];
   note?: string;
 }> {
-  const sys = (system ?? "").trim();
+  const sys = normalizeSystem(system) ?? "";
   const toHit = (r: Record<string, unknown>, score: number): SopHit => ({
     id: String(r.id ?? ""),
     db: String(r.db ?? ""),

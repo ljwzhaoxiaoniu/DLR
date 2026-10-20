@@ -131,5 +131,72 @@
       "boutique/runtime/1",
       "boutique/runtime/2"
     ]
+  },
+  {
+    "kid": 14,
+    "system": "shared",
+    "knowledge": "Error-log evidence: the error-log call is the evidence; the recent-log call is context only. When the evidence chain expects first-level log evidence, read the error-log view (GetErrorLogs), not the recent-log view (GetRecentLogs).",
+    "anchors": [
+      "surface:logs"
+    ],
+    "basis": "Process-label evidence tool; GetErrorLogs vs GetRecentLogs output roles",
+    "source_cases": [
+      "trainticket/runtime/2",
+      "boutique/runtime/2"
+    ]
+  },
+  {
+    "kid": 15,
+    "system": "shared",
+    "knowledge": "Image-pull reading by the failing stage in the message: the request never reaches the registry (lookup / dial / no such host) -> image_registry_dns_failure (a made-up hostname is still this class); the manifest request itself rejects (NotFound / manifest unknown; a mirror's bare 403 on the HEAD manifest of a bogus tag) -> incorrect_image_reference; the registry's token step rejects (failed to authorize: failed to fetch anonymous token, 401/403) -> missing_image_pull_secret. Read the stage, not the hostname or the bare status.",
+    "anchors": [
+      "surface:pods"
+    ],
+    "basis": "Image-pull message stages in pod events; 59-case class scan",
+    "source_cases": [
+      "boutique/startup/43",
+      "boutique/startup/45"
+    ]
+  },
+  {
+    "kid": 16,
+    "system": "shared",
+    "knowledge": "Quota reading: close on the namespace resourcequota used/hard rows; an all-Normal event surface does not rule out a full quota, and used == hard alone is the mechanism. A Service that was never created kills its own name lookup - a missing Service object is never service_dns_resolution_failure; the quota is the cause.",
+    "anchors": [
+      "surface:resourcequotas",
+      "surface:events"
+    ],
+    "basis": "resourcequota used/hard rows + service-quota cases with no Warning events",
+    "source_cases": [
+      "boutique/admission/20",
+      "boutique/admission/44"
+    ]
+  },
+  {
+    "kid": 17,
+    "system": "shared",
+    "knowledge": "Stale-event check: a FailedCreate about a referenced object that is present in its own listing - or a pod that already exists - is setup history, not the live mechanism; read why the existing pod cannot proceed.",
+    "anchors": [
+      "surface:events",
+      "surface:pods"
+    ],
+    "basis": "events rows + workload/pod existence in the same snapshot",
+    "source_cases": [
+      "trainticket/service/8",
+      "boutique/codedefect/16"
+    ]
+  },
+  {
+    "kid": 18,
+    "system": "shared",
+    "knowledge": "Connectivity evidence uses the port the Service own spec declares - read the Service object port; a remembered or guessed port proves nothing.",
+    "anchors": [
+      "surface:service_endpoints"
+    ],
+    "basis": "Service spec ports vs connectivity probes",
+    "source_cases": [
+      "trainticket/service/25",
+      "boutique/admission/1"
+    ]
   }
 ]
