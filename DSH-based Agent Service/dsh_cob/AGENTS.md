@@ -61,6 +61,8 @@
    - **signal first**：节内说 signal first 时，锚后第一个数据调用必须是 signal 侧（调用方日志 / 连通性 / endpoints）；先读 workload 状态就是链序反了。
    - **分支排查也在 signal 之后**：为确认“缺失的 Service 是不是受害者”而读 deployments/services 列表，仍然算 workload 列表；必须在 signal 读之后，不能把 signal 挤到后面。
    - **node 分支**：先 `DescribeResource(pod)` 拿 pending 原因，再读一般节点面（nodes listing / `GetClusterConfiguration`）后读具体组件；跳过一般面直接读节点详情/服务状态，EOC 会掉。
+   - **收口三件套（提交前）**：① 机制事件；② events 面；③ 机制指向的配置（`GetAppYAML` / 被引对象清单 / `DescribeResource` 的 pod 详情）。缺任何一件先补读。机制已识别后，不要为了“多查一点”翻无关分支（quota / DNS）；额外读面会打乱 EOC。
+   - **first-level log evidence**：`GetErrorLogs` 是错误日志证据；`GetRecentLogs` 只是上下文，不替代 `GetErrorLogs`。signal 侧优先对症状服务调 `GetErrorLogs`。
 
 ## 纪律
 
