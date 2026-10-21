@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/scheduling/54,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,16.0,0.0,0.0,app/redis-cart,pvc_capacity_mismatch,app/redis-cart,pvc_capacity_mismatch,
+boutique/scheduling/55,1.0,1.0,1.0,1.0,1.0,1.0,0.35714285714285715,15.0,0.0,0.0,app/redis-cart,pvc_capacity_mismatch,app/redis-cart,pvc_capacity_mismatch,
+boutique/scheduling/56,1.0,1.0,1.0,1.0,1.0,1.0,0.36363636363636365,12.0,0.0,0.0,app/adservice,node_affinity_mismatch,app/adservice,node_affinity_mismatch,
+boutique/scheduling/57,1.0,1.0,1.0,1.0,1.0,1.0,0.36363636363636365,12.0,0.0,0.0,app/cartservice,node_affinity_mismatch,app/cartservice,node_affinity_mismatch,

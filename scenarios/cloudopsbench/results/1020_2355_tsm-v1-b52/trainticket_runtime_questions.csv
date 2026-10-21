@@ -1,0 +1,2 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+trainticket/runtime/25,1.0,1.0,1.0,1.0,0.5,1.0,0.11538461538461539,27.0,0.0,0.0,app/ts-price-service,deployment_zero_replicas,app/ts-price-service,deployment_zero_replicas,

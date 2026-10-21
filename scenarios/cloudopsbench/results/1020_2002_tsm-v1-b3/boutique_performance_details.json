@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "1",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\performance\\1\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1020_2002_tsm-v1-b3\\traces\\boutique\\dsh-tsm\\performance\\1\\1.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Performance_Fault",
+      "fault_object": "app/adservice",
+      "root_cause": "pod_cpu_overload"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/adservice",
+        "root_cause": "pod_cpu_overload"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/adservice",
+        "root_cause": "code_busy_loop"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/adservice",
+        "root_cause": "cpu_capacity_mismatch"
+      }
+    ],
+    "tool_call_count": 13,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.23076923076923078,
+      "steps": 14.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

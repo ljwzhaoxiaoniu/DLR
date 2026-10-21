@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/56,1.0,1.0,1.0,1.0,1.0,1.0,0.26666666666666666,16.0,0.0,0.0,app/frontend,code_wrong_return,app/frontend,code_wrong_return,
+boutique/scheduling/145,1.0,1.0,1.0,1.0,1.0,1.0,0.23076923076923078,14.0,0.0,0.0,app/paymentservice,taint_toleration_mismatch,app/paymentservice,taint_toleration_mismatch,
+boutique/startup/56,1.0,1.0,1.0,1.0,1.0,1.0,0.2,16.0,0.0,0.0,app/paymentservice,missing_image_pull_secret,app/paymentservice,missing_image_pull_secret,
+trainticket/runtime/56,1.0,1.0,1.0,1.0,1.0,1.0,0.35294117647058826,18.0,0.0,0.0,app/ts-voucher-service,mysql_invalid_credentials,app/ts-voucher-service,mysql_invalid_credentials,

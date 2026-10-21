@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "23",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\infrastructure\\23\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1020_2346_tsm-v1-b48\\traces\\boutique\\dsh-tsm\\infrastructure\\23\\23.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Infrastructure_Fault",
+      "fault_object": "node/master",
+      "root_cause": "kube_scheduler_unavailable"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "node/master",
+        "root_cause": "kube_scheduler_unavailable"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/emailservice",
+        "root_cause": "missing_service_account"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/emailservice",
+        "root_cause": "cpu_capacity_mismatch"
+      }
+    ],
+    "tool_call_count": 16,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.1875,
+      "steps": 17.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

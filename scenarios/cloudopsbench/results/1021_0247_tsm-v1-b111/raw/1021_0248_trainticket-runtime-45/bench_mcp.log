@@ -1,0 +1,21 @@
+INFO:     Started server process [3288]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:60568 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60570 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60577 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-price-service"}
+INFO:     127.0.0.1:60577 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-basic-service"}
+INFO:     127.0.0.1:60577 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60577 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-price-service","port":16579}
+INFO:     127.0.0.1:60577 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60577 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-price-service"}
+INFO:     127.0.0.1:60577 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60577 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-price-service"}
+INFO:     127.0.0.1:60577 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60577 - "POST /mcp HTTP/1.1" 200 OK

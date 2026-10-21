@@ -1,0 +1,19 @@
+INFO:     Started server process [23132]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:58088 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58093 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:58102 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58102 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58106 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:58108 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58108 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58108 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"paymentservice"}
+INFO:     127.0.0.1:58108 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58110 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"paymentservice","port":50051}
+INFO:     127.0.0.1:58110 - "POST /mcp HTTP/1.1" 200 OK

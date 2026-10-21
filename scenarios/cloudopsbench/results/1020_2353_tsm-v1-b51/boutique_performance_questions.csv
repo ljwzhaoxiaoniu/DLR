@@ -1,0 +1,2 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/performance/24,0.0,0.0,0.0,0.5,0.5,0.0,0.2,16.0,0.0,0.0,node/worker-01,node_network_packet_loss,node/worker-02,node_network_delay,

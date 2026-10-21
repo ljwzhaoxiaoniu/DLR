@@ -1,0 +1,45 @@
+{
+  "config": {
+    "config_path": "D:\\Code_Proj\\Cloud-OpsBench\\agents\\cloudops_agent\\configs\\model_configs.yaml",
+    "system": "boutique",
+    "fault_category": "performance",
+    "case_split": "",
+    "case_split_file": "",
+    "label_root": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\performance",
+    "agent_root": "scenarios\\cloudopsbench\\results\\1020_2359_tsm-v1-b54\\traces\\boutique\\dsh-tsm\\performance"
+  },
+  "counts": {
+    "total_cases": 29,
+    "selected_cases": 1,
+    "run_cases": 1,
+    "missing_run_cases": 0,
+    "invalid_action_total": 0
+  },
+  "metrics": {
+    "CA": 0.0,
+    "FA": 0.0,
+    "JRA": 0.0,
+    "MC": 0.5,
+    "EOC": 0.5,
+    "ECR": 0.0,
+    "EE": 0.0435,
+    "steps": 24.0,
+    "RAR": 0.0,
+    "invalid_actions": 0.0
+  },
+  "by_root_cause": {
+    "node_network_delay": {
+      "n": 1,
+      "CA": 0.0,
+      "FA": 0.0,
+      "JRA": 0.0,
+      "MC": 0.5,
+      "EOC": 0.5,
+      "ECR": 0.0,
+      "EE": 0.0435,
+      "steps": 24.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+}

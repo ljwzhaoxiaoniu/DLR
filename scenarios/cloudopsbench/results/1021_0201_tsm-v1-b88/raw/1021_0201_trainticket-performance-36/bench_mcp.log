@@ -1,0 +1,21 @@
+INFO:     Started server process [22260]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:58871 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58875 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:58885 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58887 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-contacts-service"}
+INFO:     127.0.0.1:58892 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-contacts-service"}
+INFO:     127.0.0.1:58892 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58892 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52944 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52944 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52944 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:52948 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-contacts-service","port":12347}
+INFO:     127.0.0.1:52948 - "POST /mcp HTTP/1.1" 200 OK

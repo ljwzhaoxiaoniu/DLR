@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/infrastructure/37,1.0,1.0,1.0,1.0,0.3333333333333333,1.0,0.2857142857142857,15.0,0.0,0.0,node/worker-01,kubelet_unavailable,node/worker-01,kubelet_unavailable,
+boutique/runtime/37,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,13.0,0.0,0.0,app/recommendationservice,readiness_probe_incorrect_protocol,app/recommendationservice,readiness_probe_incorrect_protocol,
+boutique/scheduling/127,1.0,1.0,1.0,1.0,1.0,1.0,0.17647058823529413,18.0,0.0,0.0,app/redis-cart,pod_anti_affinity_conflict,app/redis-cart,pod_anti_affinity_conflict,
+trainticket/service/37,1.0,1.0,1.0,1.0,1.0,1.0,0.2631578947368421,20.0,0.0,0.0,app/ts-user-service,service_dns_resolution_failure,app/ts-user-service,service_dns_resolution_failure,

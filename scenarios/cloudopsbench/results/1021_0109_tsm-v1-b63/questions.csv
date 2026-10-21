@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/infrastructure/28,1.0,1.0,1.0,1.0,1.0,1.0,0.25,13.0,0.0,0.0,node/master,kube_scheduler_unavailable,node/master,kube_scheduler_unavailable,
+boutique/performance/28,1.0,1.0,1.0,1.0,1.0,1.0,0.2,16.0,0.0,0.0,node/worker-02,node_network_packet_loss,node/worker-02,node_network_packet_loss,
+trainticket/service/28,1.0,1.0,1.0,0.75,0.25,0.0,0.23529411764705882,18.0,0.0,0.0,app/ts-payment-service,service_dns_resolution_failure,app/ts-payment-service,service_dns_resolution_failure,
+trainticket/startup/6,1.0,1.0,1.0,1.0,1.0,1.0,0.38461538461538464,14.0,0.0,0.0,app/ts-delivery-service,missing_secret_binding,app/ts-delivery-service,missing_secret_binding,

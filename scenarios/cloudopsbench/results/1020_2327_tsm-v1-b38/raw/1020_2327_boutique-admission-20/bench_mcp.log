@@ -1,0 +1,20 @@
+INFO:     Started server process [5356]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:51104 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51107 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:51347 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51347 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"cartservice"}
+INFO:     127.0.0.1:51351 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51351 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51351 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51351 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51351 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51351 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51351 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"redis-cart"}
+INFO:     127.0.0.1:55683 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55683 - "POST /mcp HTTP/1.1" 200 OK

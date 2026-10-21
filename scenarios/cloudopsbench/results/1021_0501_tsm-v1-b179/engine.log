@@ -1,0 +1,74 @@
+[2026-10-21 05:01:55] tsm-v1-b179 · 4 题 · 2 路 → scenarios/cloudopsbench/results/1021_0501_tsm-v1-b179
+[05:01:55] boutique/scheduling/61 第 1 遍 (:8000)
+[05:01:55] boutique/scheduling/62 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-scheduling-62）…
+[start] 基准诊断 MCP（boutique-scheduling-61）…
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1021_0501_tsm-v1-b179/raw/1021_0501_boutique-scheduling-61
+[05:02:34] boutique/scheduling/63 第 1 遍 (:8000)
+[start] 基准诊断 MCP（boutique-scheduling-63）…
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1021_0501_tsm-v1-b179/raw/1021_0501_boutique-scheduling-62
+[05:02:44] boutique/scheduling/64 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-scheduling-64）…
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1021_0501_tsm-v1-b179/raw/1021_0502_boutique-scheduling-63
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1021_0501_tsm-v1-b179/raw/1021_0502_boutique-scheduling-64
+[05:03:20] grade + stats
+[grade] runs=4 → out=scenarios/cloudopsbench/results/1021_0501_tsm-v1-b179
+[convert] boutique/scheduling/61 → scenarios\cloudopsbench\results\1021_0501_tsm-v1-b179\traces\boutique\dsh-tsm\scheduling\61\61.json  steps=11 final=有 preds=3
+[convert] boutique/scheduling/62 → scenarios\cloudopsbench\results\1021_0501_tsm-v1-b179\traces\boutique\dsh-tsm\scheduling\62\62.json  steps=11 final=有 preds=3
+[convert] boutique/scheduling/63 → scenarios\cloudopsbench\results\1021_0501_tsm-v1-b179\traces\boutique\dsh-tsm\scheduling\63\63.json  steps=11 final=有 preds=3
+[convert] boutique/scheduling/64 → scenarios\cloudopsbench\results\1021_0501_tsm-v1-b179\traces\boutique\dsh-tsm\scheduling\64\64.json  steps=13 final=有 preds=3
+[convert] manifest → scenarios\cloudopsbench\results\1021_0501_tsm-v1-b179\traces\manifest.json（共 4 条）
+[grade] 评分组: boutique/scheduling
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: boutique
+fault_category: scheduling
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\boutique\scheduling
+agent_root: scenarios\cloudopsbench\results\1021_0501_tsm-v1-b179\traces\boutique\dsh-tsm\scheduling
+--------------------------------------------------------------------------------
+total_cases: 164
+selected_cases: 4
+run_cases: 4
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 1.0
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.3497
+steps (Average Diagnostic Steps per Case): 12.5
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] boutique_scheduling: scenarios\cloudopsbench\results\1021_0501_tsm-v1-b179\boutique_scheduling_questions.csv
+
+[grade] 完成
+  summary.md   : scenarios/cloudopsbench/results/1021_0501_tsm-v1-b179/summary.md
+  questions.csv: scenarios/cloudopsbench/results/1021_0501_tsm-v1-b179/questions.csv
+  traces/      : scenarios/cloudopsbench/results/1021_0501_tsm-v1-b179/traces
+[stats] 轮次 409 · 覆盖 754/754 · JRA 728/754
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\results\STATS.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL/*.md（12 个家族）
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\overview.html
+  + session-1166980a-15ed-…  boutique/scheduling/61  1021_0501_boutique-scheduling-61
+  + session-0ccf9d3a-8f52-…  boutique/scheduling/62  1021_0501_boutique-scheduling-62
+  + session-08189b29-1132-…  boutique/scheduling/63  1021_0502_boutique-scheduling-63
+  + session-5a73b9c5-6e20-…  boutique/scheduling/64  1021_0502_boutique-scheduling-64
+[sync] 扫到 run 1563（无 session 0）· 新登记 4 · 清出 0（避重叠）· 跳过已归组 1474 · 解除归档 0 · 全量组共 90
+[ws] 已写 D:\Code_Proj\DLR Proj\DSH-based Agent Service\.dsh-home\storages\workspace.json（备份 .bak-1021_050335）
+  ↑ boutique/scheduling/61 session-1166980a-1… → COB-bench
+  ↑ boutique/scheduling/62 session-0ccf9d3a-8… → COB-bench
+  ↑ boutique/scheduling/63 session-08189b29-1… → COB-bench
+  ↑ boutique/scheduling/64 session-5a73b9c5-6… → COB-bench
+[batch-group] ↑4 ↓0 kept 0 skipped 0

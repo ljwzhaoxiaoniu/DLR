@@ -1,0 +1,15 @@
+INFO:     Started server process [14584]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:62747 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62749 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62754 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62757 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62757 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"frontend"}
+INFO:     127.0.0.1:62757 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:62757 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62757 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62757 - "POST /mcp HTTP/1.1" 200 OK

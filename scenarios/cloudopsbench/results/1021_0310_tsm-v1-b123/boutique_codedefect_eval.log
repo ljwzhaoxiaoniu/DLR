@@ -1,0 +1,28 @@
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: boutique
+fault_category: codedefect
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\boutique\codedefect
+agent_root: scenarios\cloudopsbench\results\1021_0310_tsm-v1-b123\traces\boutique\dsh-tsm\codedefect
+--------------------------------------------------------------------------------
+total_cases: 98
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 0.8
+EOC (Evidence-Order Consistency): 0.4
+ECR (Evidence Closure Rate): 0.0
+EE (Evidence Efficiency): 0.1379
+steps (Average Diagnostic Steps per Case): 30.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] boutique_codedefect: scenarios\cloudopsbench\results\1021_0310_tsm-v1-b123\boutique_codedefect_questions.csv

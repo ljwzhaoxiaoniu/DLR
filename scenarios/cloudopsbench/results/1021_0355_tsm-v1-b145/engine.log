@@ -1,0 +1,160 @@
+[2026-10-21 03:55:10] tsm-v1-b145 · 4 题 · 2 路 → scenarios/cloudopsbench/results/1021_0355_tsm-v1-b145
+[03:55:10] train-ticket/runtime/64 第 1 遍 (:8000)
+[03:55:11] boutique/startup/8 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-startup-8）…
+[start] 基准诊断 MCP（trainticket-runtime-64）…
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1021_0355_tsm-v1-b145/raw/1021_0355_boutique-startup-8
+[03:55:46] boutique/codedefect/65 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-codedefect-65）…
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1021_0355_tsm-v1-b145/raw/1021_0355_trainticket-runtime-64
+[03:55:58] boutique/scheduling/154 第 1 遍 (:8000)
+[start] 基准诊断 MCP（boutique-scheduling-154）…
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1021_0355_tsm-v1-b145/raw/1021_0355_boutique-codedefect-65
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1021_0355_tsm-v1-b145/raw/1021_0355_boutique-scheduling-154
+[03:56:47] grade + stats
+[grade] runs=4 → out=scenarios/cloudopsbench/results/1021_0355_tsm-v1-b145
+[convert] boutique/codedefect/65 → scenarios\cloudopsbench\results\1021_0355_tsm-v1-b145\traces\boutique\dsh-tsm\codedefect\65\65.json  steps=13 final=有 preds=3
+[convert] boutique/scheduling/154 → scenarios\cloudopsbench\results\1021_0355_tsm-v1-b145\traces\boutique\dsh-tsm\scheduling\154\154.json  steps=13 final=有 preds=3
+[convert] boutique/startup/8 → scenarios\cloudopsbench\results\1021_0355_tsm-v1-b145\traces\boutique\dsh-tsm\startup\8\8.json  steps=10 final=有 preds=3
+[convert] trainticket/runtime/64 → scenarios\cloudopsbench\results\1021_0355_tsm-v1-b145\traces\trainticket\dsh-tsm\runtime\64\64.json  steps=17 final=有 preds=3
+[convert] manifest → scenarios\cloudopsbench\results\1021_0355_tsm-v1-b145\traces\manifest.json（共 4 条）
+[grade] 评分组: boutique/codedefect
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: boutique
+fault_category: codedefect
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\boutique\codedefect
+agent_root: scenarios\cloudopsbench\results\1021_0355_tsm-v1-b145\traces\boutique\dsh-tsm\codedefect
+--------------------------------------------------------------------------------
+total_cases: 98
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 1.0
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.2308
+steps (Average Diagnostic Steps per Case): 14.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] boutique_codedefect: scenarios\cloudopsbench\results\1021_0355_tsm-v1-b145\boutique_codedefect_questions.csv
+[grade] 评分组: boutique/scheduling
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: boutique
+fault_category: scheduling
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\boutique\scheduling
+agent_root: scenarios\cloudopsbench\results\1021_0355_tsm-v1-b145\traces\boutique\dsh-tsm\scheduling
+--------------------------------------------------------------------------------
+total_cases: 164
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 1.0
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.3077
+steps (Average Diagnostic Steps per Case): 14.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] boutique_scheduling: scenarios\cloudopsbench\results\1021_0355_tsm-v1-b145\boutique_scheduling_questions.csv
+[grade] 评分组: boutique/startup
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: boutique
+fault_category: startup
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\boutique\startup
+agent_root: scenarios\cloudopsbench\results\1021_0355_tsm-v1-b145\traces\boutique\dsh-tsm\startup
+--------------------------------------------------------------------------------
+total_cases: 62
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 1.0
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.3
+steps (Average Diagnostic Steps per Case): 11.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] boutique_startup: scenarios\cloudopsbench\results\1021_0355_tsm-v1-b145\boutique_startup_questions.csv
+[grade] 评分组: train-ticket/runtime
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: train-ticket
+fault_category: runtime
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\trainticket\runtime
+agent_root: scenarios\cloudopsbench\results\1021_0355_tsm-v1-b145\traces\trainticket\dsh-tsm\runtime
+--------------------------------------------------------------------------------
+total_cases: 96
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 0.8
+EOC (Evidence-Order Consistency): 0.6
+ECR (Evidence Closure Rate): 0.0
+EE (Evidence Efficiency): 0.5294
+steps (Average Diagnostic Steps per Case): 18.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] trainticket_runtime: scenarios\cloudopsbench\results\1021_0355_tsm-v1-b145\trainticket_runtime_questions.csv
+
+[grade] 完成
+  summary.md   : scenarios/cloudopsbench/results/1021_0355_tsm-v1-b145/summary.md
+  questions.csv: scenarios/cloudopsbench/results/1021_0355_tsm-v1-b145/questions.csv
+  traces/      : scenarios/cloudopsbench/results/1021_0355_tsm-v1-b145/traces
+[stats] 轮次 375 · 覆盖 754/754 · JRA 733/754
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\results\STATS.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL/*.md（12 个家族）
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\overview.html
+  + session-e898d2dc-7382-…  boutique/codedefect/65  1021_0355_boutique-codedefect-65
+  + session-b55a625e-91cc-…  boutique/scheduling/154  1021_0355_boutique-scheduling-154
+  + session-ce1c3f26-0240-…  boutique/startup/8  1021_0355_boutique-startup-8
+  + session-b2f63535-0b5f-…  trainticket/runtime/64  1021_0355_trainticket-runtime-64
+[sync] 扫到 run 1427（无 session 0）· 新登记 4 · 清出 0（避重叠）· 跳过已归组 1361 · 解除归档 0 · 全量组共 67
+[ws] 已写 D:\Code_Proj\DLR Proj\DSH-based Agent Service\.dsh-home\storages\workspace.json（备份 .bak-1021_035706）
+  ↑ boutique/codedefect/65 session-e898d2dc-7… → COB-bench
+  ↑ boutique/scheduling/154 session-b55a625e-9… → COB-bench
+  ↑ boutique/startup/8 session-ce1c3f26-0… → COB-bench
+[batch-group] ↑3 ↓0 kept 1 skipped 0

@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/infrastructure/2,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,16.0,0.0,0.0,node/worker-02,containerd_unavailable,node/worker-02,containerd_unavailable,
+trainticket/service/2,1.0,1.0,1.0,1.0,1.0,1.0,0.2777777777777778,19.0,0.0,0.0,app/ts-gateway-service,gateway_misrouted,app/ts-gateway-service,gateway_misrouted,
+boutique/performance/2,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,13.0,0.0,0.0,app/cartservice,pod_cpu_overload,app/cartservice,pod_cpu_overload,
+trainticket/startup/2,1.0,1.0,1.0,1.0,1.0,1.0,0.35714285714285715,15.0,0.0,0.0,app/ts-auth-service,missing_secret_binding,app/ts-auth-service,missing_secret_binding,

@@ -1,0 +1,4 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/1,1.0,1.0,1.0,1.0,1.0,1.0,0.5,15.0,0.0,0.0,app/adservice,missing_service_account,app/adservice,missing_service_account,
+boutique/admission/12,1.0,1.0,1.0,1.0,1.0,1.0,0.4,16.0,0.0,0.0,namespace/boutique,namespace_cpu_quota_exceeded,namespace/boutique,namespace_cpu_quota_exceeded,
+boutique/admission/55,1.0,1.0,1.0,1.0,1.0,1.0,0.4117647058823529,18.0,0.0,0.0,namespace/boutique,namespace_storage_quota_exceeded,namespace/boutique,namespace_storage_quota_exceeded,

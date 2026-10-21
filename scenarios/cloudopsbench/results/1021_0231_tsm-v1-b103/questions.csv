@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/service/41,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,16.0,0.0,0.0,app/checkoutservice,service_selector_mismatch,app/checkoutservice,service_selector_mismatch,
+trainticket/performance/41,1.0,1.0,1.0,1.0,1.0,1.0,0.29411764705882354,18.0,0.0,0.0,app/ts-preserve-service,pod_network_delay,app/ts-preserve-service,pod_network_delay,
+boutique/infrastructure/5,1.0,1.0,1.0,1.0,1.0,1.0,0.38461538461538464,14.0,0.0,0.0,node/worker-01,containerd_unavailable,node/worker-01,containerd_unavailable,
+boutique/runtime/41,1.0,1.0,1.0,1.0,1.0,1.0,0.4166666666666667,13.0,0.0,0.0,app/currencyservice,readiness_probe_incorrect_port,app/currencyservice,readiness_probe_incorrect_port,

@@ -1,0 +1,23 @@
+INFO:     Started server process [14708]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:54892 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54893 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:54892 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54894 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54897 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54899 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-gateway-service"}
+INFO:     127.0.0.1:54904 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54904 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54907 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-train-service"}
+INFO:     127.0.0.1:54907 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-travel-service"}
+INFO:     127.0.0.1:54907 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-train-service"}
+INFO:     127.0.0.1:54907 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54907 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54907 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53831 - "POST /mcp HTTP/1.1" 200 OK

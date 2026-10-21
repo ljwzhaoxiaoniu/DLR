@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/52,1.0,1.0,1.0,1.0,1.0,1.0,0.23076923076923078,14.0,0.0,0.0,app/frontend,code_excessive_file_reads,app/frontend,code_excessive_file_reads,
+boutique/scheduling/141,1.0,1.0,1.0,1.0,1.0,1.0,0.1875,17.0,0.0,0.0,app/adservice,taint_toleration_mismatch,app/adservice,taint_toleration_mismatch,
+boutique/startup/52,1.0,1.0,1.0,1.0,1.0,1.0,0.23076923076923078,14.0,0.0,0.0,app/cartservice,missing_image_pull_secret,app/cartservice,missing_image_pull_secret,
+trainticket/runtime/52,1.0,1.0,1.0,0.75,0.75,0.0,0.23529411764705882,18.0,0.0,0.0,app/ts-train-service,mysql_invalid_credentials,app/ts-train-service,mysql_invalid_credentials,

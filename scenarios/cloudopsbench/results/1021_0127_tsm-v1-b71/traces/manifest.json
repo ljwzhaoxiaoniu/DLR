@@ -1,0 +1,30 @@
+[
+  {
+    "case": "boutique/admission/30",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1021_0127_tsm-v1-b71\\raw\\1021_0127_boutique-admission-30",
+    "steps": 13,
+    "has_final_answer": true,
+    "predictions": 3
+  },
+  {
+    "case": "boutique/service/30",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1021_0127_tsm-v1-b71\\raw\\1021_0127_boutique-service-30",
+    "steps": 17,
+    "has_final_answer": true,
+    "predictions": 3
+  },
+  {
+    "case": "boutique/runtime/30",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1021_0127_tsm-v1-b71\\raw\\1021_0128_boutique-runtime-30",
+    "steps": 14,
+    "has_final_answer": true,
+    "predictions": 3
+  },
+  {
+    "case": "trainticket/performance/30",
+    "run_dir": "D:\\Code_Proj\\DLR Proj\\scenarios\\cloudopsbench\\results\\1021_0127_tsm-v1-b71\\raw\\1021_0128_trainticket-performance-30",
+    "steps": 14,
+    "has_final_answer": true,
+    "predictions": 3
+  }
+]

@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/65,1.0,1.0,1.0,1.0,1.0,1.0,0.23076923076923078,14.0,0.0,0.0,app/productcatalogservice,code_busy_loop,app/productcatalogservice,code_busy_loop,
+boutique/scheduling/154,1.0,1.0,1.0,1.0,1.0,1.0,0.3076923076923077,14.0,0.0,0.0,app/recommendationservice,taint_toleration_mismatch,app/recommendationservice,taint_toleration_mismatch,
+boutique/startup/8,1.0,1.0,1.0,1.0,1.0,1.0,0.3,11.0,0.0,0.0,app/currencyservice,image_registry_dns_failure,app/currencyservice,image_registry_dns_failure,
+trainticket/runtime/64,1.0,1.0,1.0,0.8,0.6,0.0,0.5294117647058824,18.0,0.0,0.0,app/ts-inside-payment-service,mysql_invalid_port,app/ts-inside-payment-service,mysql_invalid_port,

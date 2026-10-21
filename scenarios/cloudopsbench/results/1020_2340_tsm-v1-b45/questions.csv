@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/infrastructure/22,1.0,1.0,1.0,1.0,1.0,1.0,0.2,16.0,0.0,0.0,node/master,kube_scheduler_unavailable,node/master,kube_scheduler_unavailable,
+trainticket/service/22,1.0,1.0,1.0,1.0,1.0,1.0,0.35,21.0,0.0,0.0,app/ts-cancel-service,service_dns_resolution_failure,app/ts-cancel-service,service_dns_resolution_failure,
+boutique/performance/22,1.0,1.0,1.0,1.0,1.0,1.0,0.21052631578947367,20.0,0.0,0.0,node/worker-02,node_network_delay,node/worker-02,node_network_delay,
+trainticket/startup/22,1.0,1.0,1.0,1.0,1.0,1.0,0.35714285714285715,15.0,0.0,0.0,app/ts-user-service,missing_secret_binding,app/ts-user-service,missing_secret_binding,

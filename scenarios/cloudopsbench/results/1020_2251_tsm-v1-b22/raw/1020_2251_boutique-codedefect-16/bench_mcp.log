@@ -1,0 +1,40 @@
+INFO:     Started server process [9312]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:54448 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54453 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54460 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:54460 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:54460 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54584 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54584 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"checkoutservice","port":5050}
+INFO:     127.0.0.1:54584 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"frontend"}
+INFO:     127.0.0.1:54587 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"frontend"}
+INFO:     127.0.0.1:54587 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62251 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"checkoutservice"}
+INFO:     127.0.0.1:62251 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52405 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52405 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61219 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61219 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"checkoutservice"}
+INFO:     127.0.0.1:56066 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50636 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:50636 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57370 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kubelet"}
+INFO:     127.0.0.1:57421 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"containerd"}
+INFO:     127.0.0.1:57421 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"kubelet"}
+INFO:     127.0.0.1:57421 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-02","service_name":"kube-proxy"}
+INFO:     127.0.0.1:57421 - "POST /mcp HTTP/1.1" 200 OK

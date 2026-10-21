@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "12",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\trainticket\\performance\\12\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1020_2017_tsm-v1-b11\\traces\\trainticket\\dsh-tsm\\performance\\12\\12.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Performance_Fault",
+      "fault_object": "app/ts-security-service",
+      "root_cause": "pod_network_delay"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/ts-security-service",
+        "root_cause": "pod_network_delay"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/ts-order-service",
+        "root_cause": "pod_cpu_overload"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/ts-security-service",
+        "root_cause": "code_artificial_delay"
+      }
+    ],
+    "tool_call_count": 16,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.375,
+      "steps": 17.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

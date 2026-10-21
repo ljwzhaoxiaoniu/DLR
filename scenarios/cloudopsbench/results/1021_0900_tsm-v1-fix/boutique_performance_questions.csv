@@ -1,0 +1,6 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/performance/10,1.0,1.0,1.0,1.0,1.0,1.0,0.16666666666666666,13.0,0.0,0.0,app/redis-cart,pod_cpu_overload,app/redis-cart,pod_cpu_overload,
+boutique/performance/11,1.0,1.0,1.0,1.0,1.0,1.0,0.25,17.0,0.0,0.0,app/shippingservice,pod_cpu_overload,app/shippingservice,pod_cpu_overload,
+boutique/performance/24,1.0,1.0,1.0,1.0,1.0,1.0,0.25,13.0,0.0,0.0,node/worker-02,node_network_delay,node/worker-02,node_network_delay,
+boutique/performance/25,1.0,1.0,1.0,1.0,1.0,1.0,0.26666666666666666,16.0,0.0,0.0,node/worker-02,node_network_delay,node/worker-02,node_network_delay,
+boutique/performance/29,1.0,1.0,1.0,1.0,1.0,1.0,0.25,13.0,0.0,0.0,node/worker-02,node_network_packet_loss,node/worker-02,node_network_packet_loss,

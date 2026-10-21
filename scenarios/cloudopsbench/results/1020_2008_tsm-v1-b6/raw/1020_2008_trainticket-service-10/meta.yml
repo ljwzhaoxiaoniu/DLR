@@ -1,0 +1,8 @@
+system: train-ticket
+category: service
+case: 10
+query: Partial Service Unreachability.
+rc: 0
+stamp: 1020_2008
+tsm_mcp: http://127.0.0.1:28796/mcp/trainticket
+bench_mcp: http://127.0.0.1:8001/mcp

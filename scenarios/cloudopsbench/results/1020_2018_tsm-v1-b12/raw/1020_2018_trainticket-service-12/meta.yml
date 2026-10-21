@@ -1,0 +1,8 @@
+system: train-ticket
+category: service
+case: 12
+query: Service Availability Disruption.
+rc: 0
+stamp: 1020_2018
+tsm_mcp: http://127.0.0.1:28796/mcp/trainticket
+bench_mcp: http://127.0.0.1:8001/mcp

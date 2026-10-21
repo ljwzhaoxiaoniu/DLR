@@ -1,0 +1,9 @@
+system: train-ticket
+category: startup
+case: 23
+query: Partial Service Unreachability.
+rc: 0
+stamp: 1020_2348
+session_dir: /d/Code_Proj/DLR Proj/DSH-based Agent Service/dsh_cob-formal
+tsm_mcp: http://127.0.0.1:28796/mcp/trainticket
+bench_mcp: http://127.0.0.1:8001/mcp

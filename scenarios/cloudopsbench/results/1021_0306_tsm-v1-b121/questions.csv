@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/5,1.0,1.0,1.0,1.0,1.0,1.0,0.23076923076923078,14.0,0.0,0.0,app/checkoutservice,code_busy_loop,app/checkoutservice,code_busy_loop,
+boutique/runtime/8,1.0,1.0,1.0,1.0,1.0,1.0,0.3,11.0,0.0,0.0,app/shippingservice,liveness_probe_incorrect_protocol,app/shippingservice,liveness_probe_incorrect_protocol,
+trainticket/performance/6,1.0,1.0,1.0,1.0,1.0,1.0,0.21052631578947367,20.0,0.0,0.0,app/ts-order-service,pod_network_delay,app/ts-order-service,pod_network_delay,
+boutique/scheduling/139,1.0,1.0,1.0,1.0,1.0,1.0,0.2,16.0,0.0,0.0,app/redis-cart,pv_binding_occupied,app/redis-cart,pv_binding_occupied,

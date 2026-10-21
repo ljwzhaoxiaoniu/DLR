@@ -1,0 +1,25 @@
+INFO:     Started server process [1924]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:58669 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58671 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:53146 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53155 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"adservice"}
+INFO:     127.0.0.1:53155 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:55268 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"adservice"}
+INFO:     127.0.0.1:55268 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55271 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55271 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55271 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55271 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55271 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55271 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:55271 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"boutique","service_name":"adservice","port":9555}
+INFO:     127.0.0.1:55271 - "POST /mcp HTTP/1.1" 200 OK

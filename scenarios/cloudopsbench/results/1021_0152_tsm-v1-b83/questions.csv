@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/infrastructure/34,1.0,1.0,1.0,0.6666666666666666,0.3333333333333333,0.0,0.15,21.0,0.0,0.0,node/worker-01,kubelet_unavailable,node/worker-01,kubelet_unavailable,
+boutique/runtime/34,1.0,1.0,1.0,1.0,1.0,1.0,0.38461538461538464,14.0,0.0,0.0,app/emailservice,readiness_probe_incorrect_protocol,app/emailservice,readiness_probe_incorrect_protocol,
+boutique/performance/8,1.0,1.0,1.0,1.0,1.0,1.0,0.25,13.0,0.0,0.0,app/productcatalogservice,pod_cpu_overload,app/productcatalogservice,pod_cpu_overload,
+trainticket/service/34,1.0,1.0,1.0,1.0,1.0,1.0,0.25,17.0,0.0,0.0,app/ts-station-service,service_dns_resolution_failure,app/ts-station-service,service_dns_resolution_failure,

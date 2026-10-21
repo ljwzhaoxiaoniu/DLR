@@ -1,0 +1,20 @@
+INFO:     Started server process [18892]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     127.0.0.1:49675 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49682 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:49690 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"boutique","service_name":"frontend"}
+INFO:     127.0.0.1:49690 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49690 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61461 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:61461 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61461 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"containerd"}
+INFO:     127.0.0.1:61461 - "POST /mcp HTTP/1.1" 200 OK
+CheckNodeServiceStatus:{"node_name":"worker-01","service_name":"kubelet"}
+INFO:     127.0.0.1:61461 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61461 - "POST /mcp HTTP/1.1" 200 OK

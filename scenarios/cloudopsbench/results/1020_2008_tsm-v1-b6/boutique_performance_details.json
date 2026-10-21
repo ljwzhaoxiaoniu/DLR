@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "10",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\performance\\10\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1020_2008_tsm-v1-b6\\traces\\boutique\\dsh-tsm\\performance\\10\\10.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Performance_Fault",
+      "fault_object": "app/redis-cart",
+      "root_cause": "pod_cpu_overload"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "node/worker-01",
+        "root_cause": "node_network_delay"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/redis-cart",
+        "root_cause": "pod_cpu_overload"
+      },
+      {
+        "rank": 3,
+        "fault_object": "node/worker-01",
+        "root_cause": "node_network_packet_loss"
+      }
+    ],
+    "tool_call_count": 16,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 0.0,
+      "FA": 0.0,
+      "JRA": 0.0,
+      "MC": 0.5,
+      "EOC": 0.5,
+      "ECR": 0.0,
+      "EE": 0.125,
+      "steps": 17.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

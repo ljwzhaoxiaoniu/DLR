@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/scheduling/16,1.0,1.0,1.0,1.0,1.0,1.0,0.26666666666666666,16.0,0.0,0.0,app/redis-cart,node_cordon_mismatch,app/redis-cart,node_cordon_mismatch,
+trainticket/runtime/7,1.0,1.0,1.0,1.0,1.0,1.0,0.2857142857142857,29.0,0.0,0.0,app/tsdb-mysql,db_readonly_mode,app/tsdb-mysql,db_readonly_mode,
+trainticket/runtime/70,1.0,1.0,1.0,1.0,1.0,1.0,0.42105263157894735,20.0,0.0,0.0,app/ts-route-service,mysql_invalid_port,app/ts-route-service,mysql_invalid_port,
+boutique/codedefect/70,1.0,0.0,0.0,0.5,0.5,0.0,0.15384615384615385,14.0,0.0,0.0,app/productcatalogservice,container_memory_limit_too_low,app/productcatalogservice,code_memory_leak,

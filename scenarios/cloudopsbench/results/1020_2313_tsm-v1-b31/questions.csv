@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/19,1.0,1.0,1.0,1.0,1.0,1.0,0.2777777777777778,19.0,0.0,0.0,app/checkoutservice,code_missing_parameter,app/checkoutservice,code_missing_parameter,
+boutique/scheduling/108,1.0,1.0,1.0,1.0,1.0,1.0,0.3,11.0,0.0,0.0,app/productcatalogservice,node_selector_mismatch,app/productcatalogservice,node_selector_mismatch,
+boutique/startup/19,1.0,1.0,1.0,1.0,1.0,1.0,0.23076923076923078,14.0,0.0,0.0,app/recommendationservice,incorrect_image_reference,app/recommendationservice,incorrect_image_reference,
+trainticket/runtime/19,1.0,1.0,1.0,1.0,1.0,1.0,0.17647058823529413,18.0,0.0,0.0,app/ts-food-service,deployment_zero_replicas,app/ts-food-service,deployment_zero_replicas,

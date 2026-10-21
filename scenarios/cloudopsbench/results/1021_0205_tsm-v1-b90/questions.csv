@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/37,1.0,1.0,1.0,1.0,1.0,1.0,0.23809523809523808,22.0,0.0,0.0,namespace/boutique,namespace_pod_quota_exceeded,namespace/boutique,namespace_pod_quota_exceeded,
+boutique/startup/37,1.0,1.0,1.0,1.0,1.0,1.0,0.25,13.0,0.0,0.0,app/checkoutservice,incorrect_image_reference,app/checkoutservice,incorrect_image_reference,
+boutique/service/37,1.0,1.0,1.0,1.0,1.0,1.0,0.21052631578947367,20.0,0.0,0.0,app/redis-cart,service_selector_mismatch,app/redis-cart,service_selector_mismatch,
+trainticket/performance/37,1.0,1.0,1.0,1.0,1.0,1.0,0.2857142857142857,15.0,0.0,0.0,app/ts-food-service,pod_network_delay,app/ts-food-service,pod_network_delay,

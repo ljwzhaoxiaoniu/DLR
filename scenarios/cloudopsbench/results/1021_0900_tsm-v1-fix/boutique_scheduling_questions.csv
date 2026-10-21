@@ -1,0 +1,7 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/scheduling/12,1.0,1.0,1.0,1.0,1.0,1.0,0.1875,17.0,0.0,0.0,app/emailservice,node_cordon_mismatch,app/emailservice,node_cordon_mismatch,
+boutique/scheduling/112,1.0,1.0,1.0,1.0,1.0,1.0,0.2222222222222222,19.0,0.0,0.0,app/adservice,pod_anti_affinity_conflict,app/adservice,pod_anti_affinity_conflict,
+boutique/scheduling/152,1.0,1.0,1.0,1.0,1.0,1.0,0.21428571428571427,15.0,0.0,0.0,app/paymentservice,taint_toleration_mismatch,app/paymentservice,taint_toleration_mismatch,
+boutique/scheduling/156,1.0,1.0,1.0,1.0,1.0,1.0,0.2,16.0,0.0,0.0,app/shippingservice,taint_toleration_mismatch,app/shippingservice,taint_toleration_mismatch,
+boutique/scheduling/157,1.0,1.0,1.0,1.0,1.0,1.0,0.2727272727272727,12.0,0.0,0.0,app/adservice,taint_toleration_mismatch,app/adservice,taint_toleration_mismatch,
+boutique/scheduling/162,1.0,1.0,1.0,1.0,1.0,1.0,0.2727272727272727,12.0,0.0,0.0,app/paymentservice,taint_toleration_mismatch,app/paymentservice,taint_toleration_mismatch,

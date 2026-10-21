@@ -1,0 +1,58 @@
+[
+  {
+    "case_name": "37",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\trainticket\\runtime\\37\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1021_0203_tsm-v1-b89\\traces\\trainticket\\dsh-tsm\\runtime\\37\\37.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Runtime_Fault",
+      "fault_object": "app/ts-delivery-service",
+      "root_cause": "mysql_invalid_credentials"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/ts-delivery-service",
+        "root_cause": "mysql_invalid_credentials"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/tsdb-mysql",
+        "root_cause": "mysql_invalid_credentials"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/ts-delivery-service",
+        "root_cause": "db_readonly_mode"
+      }
+    ],
+    "tool_call_count": 13,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [
+      {
+        "step_id": 6,
+        "action_name": "GetResources",
+        "action_input": {
+          "resourceType": "pods",
+          "namespace": "train-ticket",
+          "output_wide": true
+        },
+        "reason": "tool_error",
+        "error": "Error: Invalid tool arguments: unexpected argument(s): resourceType"
+      }
+    ],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 0.75,
+      "EOC": 0.75,
+      "ECR": 0.0,
+      "EE": 0.3076923076923077,
+      "steps": 14.0,
+      "RAR": 0.0,
+      "invalid_actions": 1.0
+    }
+  }
+]

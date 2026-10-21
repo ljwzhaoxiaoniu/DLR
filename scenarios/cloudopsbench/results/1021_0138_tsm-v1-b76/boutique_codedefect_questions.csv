@@ -1,0 +1,2 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/32,1.0,1.0,1.0,1.0,1.0,1.0,0.17857142857142858,29.0,0.0,0.0,app/frontend,code_wrong_argument_order,app/frontend,code_wrong_argument_order,

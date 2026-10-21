@@ -1,0 +1,354 @@
+[
+  {
+    "case_name": "1",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\codedefect\\1\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1021_0900_tsm-v1-fix\\traces\\boutique\\dsh-tsm\\codedefect\\1\\1.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Application_Code_Defect",
+      "fault_object": "app/checkoutservice",
+      "root_cause": "code_wrong_argument_order"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "code_wrong_argument_order"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "code_wrong_return"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "code_missing_parameter"
+      }
+    ],
+    "tool_call_count": 14,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.2857142857142857,
+      "steps": 15.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "2",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\codedefect\\2\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1021_0900_tsm-v1-fix\\traces\\boutique\\dsh-tsm\\codedefect\\2\\2.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Application_Code_Defect",
+      "fault_object": "app/checkoutservice",
+      "root_cause": "code_wrong_argument_order"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "code_wrong_argument_order"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "code_missing_parameter"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "code_wrong_return"
+      }
+    ],
+    "tool_call_count": 15,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.26666666666666666,
+      "steps": 16.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "16",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\codedefect\\16\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1021_0900_tsm-v1-fix\\traces\\boutique\\dsh-tsm\\codedefect\\16\\16.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Application_Code_Defect",
+      "fault_object": "app/checkoutservice",
+      "root_cause": "code_missing_parameter"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "code_missing_parameter"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "code_wrong_return"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/cartservice",
+        "root_cause": "code_wrong_return"
+      }
+    ],
+    "tool_call_count": 24,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.20833333333333334,
+      "steps": 25.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "18",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\codedefect\\18\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1021_0900_tsm-v1-fix\\traces\\boutique\\dsh-tsm\\codedefect\\18\\18.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Application_Code_Defect",
+      "fault_object": "app/checkoutservice",
+      "root_cause": "code_missing_parameter"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "code_missing_parameter"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "code_wrong_return"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/cartservice",
+        "root_cause": "code_wrong_return"
+      }
+    ],
+    "tool_call_count": 21,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.23809523809523808,
+      "steps": 22.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "25",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\codedefect\\25\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1021_0900_tsm-v1-fix\\traces\\boutique\\dsh-tsm\\codedefect\\25\\25.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Application_Code_Defect",
+      "fault_object": "app/checkoutservice",
+      "root_cause": "code_wrong_return"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "code_wrong_return"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/paymentservice",
+        "root_cause": "code_wrong_return"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "code_missing_parameter"
+      }
+    ],
+    "tool_call_count": 17,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.29411764705882354,
+      "steps": 18.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "47",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\codedefect\\47\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1021_0900_tsm-v1-fix\\traces\\boutique\\dsh-tsm\\codedefect\\47\\47.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Application_Code_Defect",
+      "fault_object": "app/frontend",
+      "root_cause": "code_missing_parameter"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/frontend",
+        "root_cause": "code_missing_parameter"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/frontend",
+        "root_cause": "code_wrong_return"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/productcatalogservice",
+        "root_cause": "code_missing_parameter"
+      }
+    ],
+    "tool_call_count": 17,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.23529411764705882,
+      "steps": 18.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "70",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\codedefect\\70\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1021_0900_tsm-v1-fix\\traces\\boutique\\dsh-tsm\\codedefect\\70\\70.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Application_Code_Defect",
+      "fault_object": "app/productcatalogservice",
+      "root_cause": "code_memory_leak"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/productcatalogservice",
+        "root_cause": "code_memory_leak"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/productcatalogservice",
+        "root_cause": "container_memory_limit_too_low"
+      },
+      {
+        "rank": 3,
+        "fault_object": "node/worker-01",
+        "root_cause": "memory_capacity_mismatch"
+      }
+    ],
+    "tool_call_count": 15,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.26666666666666666,
+      "steps": 16.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "71",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\codedefect\\71\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1021_0900_tsm-v1-fix\\traces\\boutique\\dsh-tsm\\codedefect\\71\\71.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Application_Code_Defect",
+      "fault_object": "app/productcatalogservice",
+      "root_cause": "code_missing_parameter"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/productcatalogservice",
+        "root_cause": "code_missing_parameter"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/frontend",
+        "root_cause": "code_missing_parameter"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/productcatalogservice",
+        "root_cause": "code_wrong_return"
+      }
+    ],
+    "tool_call_count": 15,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.26666666666666666,
+      "steps": 16.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

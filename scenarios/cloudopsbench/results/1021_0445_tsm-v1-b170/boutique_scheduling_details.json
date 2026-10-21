@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "36",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\scheduling\\36\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1021_0445_tsm-v1-b170\\traces\\boutique\\dsh-tsm\\scheduling\\36\\36.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Scheduling_Fault",
+      "fault_object": "app/checkoutservice",
+      "root_cause": "memory_capacity_mismatch"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "memory_capacity_mismatch"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "node_cordon_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/checkoutservice",
+        "root_cause": "taint_toleration_mismatch"
+      }
+    ],
+    "tool_call_count": 12,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.3333333333333333,
+      "steps": 13.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

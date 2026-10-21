@@ -1,0 +1,9 @@
+system: train-ticket
+category: runtime
+case: 25
+query: Service Availability Disruption.
+rc: 0
+stamp: 1021_0012
+session_dir: D:/Code_Proj/DLR Proj/DSH-based Agent Service/dsh_cob
+tsm_mcp: http://127.0.0.1:28796/mcp/trainticket
+bench_mcp: http://127.0.0.1:8001/mcp

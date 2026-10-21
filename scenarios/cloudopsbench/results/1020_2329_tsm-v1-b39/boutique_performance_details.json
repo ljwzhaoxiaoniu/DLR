@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "20",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\performance\\20\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1020_2329_tsm-v1-b39\\traces\\boutique\\dsh-tsm\\performance\\20\\20.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Performance_Fault",
+      "fault_object": "app/recommendationservice",
+      "root_cause": "pod_network_delay"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/recommendationservice",
+        "root_cause": "pod_network_delay"
+      },
+      {
+        "rank": 2,
+        "fault_object": "node/worker-02",
+        "root_cause": "node_network_delay"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/recommendationservice",
+        "root_cause": "code_artificial_delay"
+      }
+    ],
+    "tool_call_count": 18,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.4444444444444444,
+      "steps": 19.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

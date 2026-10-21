@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/service/4,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,19.0,0.0,0.0,app/recommendationservice,service_env_var_address_mismatch,app/recommendationservice,service_env_var_address_mismatch,
+trainticket/performance/4,1.0,1.0,1.0,1.0,1.0,1.0,0.21428571428571427,15.0,0.0,0.0,app/ts-gateway-service,pod_network_delay,app/ts-gateway-service,pod_network_delay,
+boutique/infrastructure/4,1.0,1.0,1.0,1.0,1.0,1.0,0.35714285714285715,15.0,0.0,0.0,node/worker-02,containerd_unavailable,node/worker-02,containerd_unavailable,
+boutique/runtime/4,1.0,1.0,1.0,1.0,1.0,1.0,0.3,11.0,0.0,0.0,app/emailservice,liveness_probe_incorrect_protocol,app/emailservice,liveness_probe_incorrect_protocol,

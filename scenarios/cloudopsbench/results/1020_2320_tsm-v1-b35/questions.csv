@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/2,1.0,1.0,1.0,1.0,1.0,1.0,0.5,15.0,0.0,0.0,app/cartservice,missing_service_account,app/cartservice,missing_service_account,
+boutique/service/2,1.0,1.0,1.0,1.0,0.75,1.0,0.16666666666666666,25.0,0.0,0.0,app/checkoutservice,service_env_var_address_mismatch,app/checkoutservice,service_env_var_address_mismatch,
+trainticket/performance/2,1.0,1.0,1.0,1.0,1.0,1.0,0.25,17.0,0.0,0.0,app/ts-contacts-service,pod_network_delay,app/ts-contacts-service,pod_network_delay,
+boutique/runtime/2,1.0,1.0,1.0,1.0,1.0,1.0,0.3,11.0,0.0,0.0,app/checkoutservice,liveness_probe_incorrect_protocol,app/checkoutservice,liveness_probe_incorrect_protocol,

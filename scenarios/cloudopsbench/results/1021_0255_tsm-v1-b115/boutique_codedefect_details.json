@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "47",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\codedefect\\47\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1021_0255_tsm-v1-b115\\traces\\boutique\\dsh-tsm\\codedefect\\47\\47.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Application_Code_Defect",
+      "fault_object": "app/frontend",
+      "root_cause": "code_missing_parameter"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/frontend",
+        "root_cause": "code_wrong_return"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/frontend",
+        "root_cause": "code_missing_parameter"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/productcatalogservice",
+        "root_cause": "code_wrong_return"
+      }
+    ],
+    "tool_call_count": 17,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 0.0,
+      "JRA": 0.0,
+      "MC": 1.0,
+      "EOC": 0.25,
+      "ECR": 1.0,
+      "EE": 0.23529411764705882,
+      "steps": 18.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

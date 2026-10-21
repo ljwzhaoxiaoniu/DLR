@@ -1,0 +1,90 @@
+[
+  {
+    "case_name": "87",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\codedefect\\87\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1021_0433_tsm-v1-b164\\traces\\boutique\\dsh-tsm\\codedefect\\87\\87.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Application_Code_Defect",
+      "fault_object": "app/shippingservice",
+      "root_cause": "code_busy_loop"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/shippingservice",
+        "root_cause": "code_busy_loop"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/shippingservice",
+        "root_cause": "code_artificial_delay"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/shippingservice",
+        "root_cause": "pod_cpu_overload"
+      }
+    ],
+    "tool_call_count": 12,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.25,
+      "steps": 13.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  },
+  {
+    "case_name": "88",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\codedefect\\88\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1021_0433_tsm-v1-b164\\traces\\boutique\\dsh-tsm\\codedefect\\88\\88.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Application_Code_Defect",
+      "fault_object": "app/shippingservice",
+      "root_cause": "code_busy_loop"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/shippingservice",
+        "root_cause": "code_busy_loop"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/shippingservice",
+        "root_cause": "code_artificial_delay"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/shippingservice",
+        "root_cause": "pod_cpu_overload"
+      }
+    ],
+    "tool_call_count": 13,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.23076923076923078,
+      "steps": 14.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

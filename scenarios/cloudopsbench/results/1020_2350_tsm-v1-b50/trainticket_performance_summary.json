@@ -1,0 +1,45 @@
+{
+  "config": {
+    "config_path": "D:\\Code_Proj\\Cloud-OpsBench\\agents\\cloudops_agent\\configs\\model_configs.yaml",
+    "system": "train-ticket",
+    "fault_category": "performance",
+    "case_split": "",
+    "case_split_file": "",
+    "label_root": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\trainticket\\performance",
+    "agent_root": "scenarios\\cloudopsbench\\results\\1020_2350_tsm-v1-b50\\traces\\trainticket\\dsh-tsm\\performance"
+  },
+  "counts": {
+    "total_cases": 47,
+    "selected_cases": 1,
+    "run_cases": 1,
+    "missing_run_cases": 0,
+    "invalid_action_total": 0
+  },
+  "metrics": {
+    "CA": 1.0,
+    "FA": 1.0,
+    "JRA": 1.0,
+    "MC": 1.0,
+    "EOC": 1.0,
+    "ECR": 1.0,
+    "EE": 0.2,
+    "steps": 16.0,
+    "RAR": 0.0,
+    "invalid_actions": 0.0
+  },
+  "by_root_cause": {
+    "pod_network_delay": {
+      "n": 1,
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.2,
+      "steps": 16.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+}

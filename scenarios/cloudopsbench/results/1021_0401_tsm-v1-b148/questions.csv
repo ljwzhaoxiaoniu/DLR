@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/68,1.0,1.0,1.0,1.0,1.0,1.0,0.21428571428571427,15.0,0.0,0.0,app/productcatalogservice,code_artificial_delay,app/productcatalogservice,code_artificial_delay,
+boutique/scheduling/157,0.0,0.0,0.0,1.0,1.0,1.0,0.21428571428571427,14.0,0.0,0.0,,,app/adservice,taint_toleration_mismatch,unparsed_final_answer
+boutique/scheduling/158,1.0,1.0,1.0,1.0,1.0,1.0,0.25,17.0,0.0,0.0,app/cartservice,taint_toleration_mismatch,app/cartservice,taint_toleration_mismatch,
+trainticket/runtime/68,1.0,1.0,1.0,1.0,1.0,1.0,0.4375,17.0,0.0,0.0,app/ts-payment-service,mysql_invalid_port,app/ts-payment-service,mysql_invalid_port,

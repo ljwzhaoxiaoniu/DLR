@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "54",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\admission\\54\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1021_0326_tsm-v1-b131\\traces\\boutique\\dsh-tsm\\admission\\54\\54.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Admission_Fault",
+      "fault_object": "namespace/boutique",
+      "root_cause": "namespace_service_quota_exceeded"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "namespace/boutique",
+        "root_cause": "namespace_service_quota_exceeded"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/shippingservice",
+        "root_cause": "service_dns_resolution_failure"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/shippingservice",
+        "root_cause": "service_selector_mismatch"
+      }
+    ],
+    "tool_call_count": 12,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.4166666666666667,
+      "steps": 13.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

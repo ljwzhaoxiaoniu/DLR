@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/12,1.0,1.0,1.0,1.0,1.0,1.0,0.3,21.0,0.0,0.0,app/checkoutservice,code_missing_parameter,app/checkoutservice,code_missing_parameter,
+boutique/scheduling/101,1.0,1.0,1.0,1.0,1.0,1.0,0.21428571428571427,15.0,0.0,0.0,app/productcatalogservice,node_selector_mismatch,app/productcatalogservice,node_selector_mismatch,
+boutique/startup/12,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,13.0,0.0,0.0,app/productcatalogservice,image_registry_dns_failure,app/productcatalogservice,image_registry_dns_failure,
+trainticket/runtime/12,1.0,1.0,1.0,1.0,1.0,1.0,0.2916666666666667,25.0,0.0,0.0,app/tsdb-mysql,db_readonly_mode,app/tsdb-mysql,db_readonly_mode,

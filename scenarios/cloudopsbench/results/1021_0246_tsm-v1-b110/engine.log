@@ -1,0 +1,161 @@
+[2026-10-21 02:46:03] tsm-v1-b110 · 4 题 · 2 路 → scenarios/cloudopsbench/results/1021_0246_tsm-v1-b110
+[02:46:03] boutique/admission/44 第 1 遍 (:8000)
+[02:46:03] boutique/service/44 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-service-44）…
+[start] 基准诊断 MCP（boutique-admission-44）…
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1021_0246_tsm-v1-b110/raw/1021_0246_boutique-service-44
+[02:46:44] boutique/runtime/44 第 1 遍 (:8001)
+[start] 基准诊断 MCP（boutique-runtime-44）…
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1021_0246_tsm-v1-b110/raw/1021_0246_boutique-admission-44
+[02:46:47] train-ticket/performance/44 第 1 遍 (:8000)
+[start] 基准诊断 MCP（trainticket-performance-44）…
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1021_0246_tsm-v1-b110/raw/1021_0246_boutique-runtime-44
+rc=0
+run_dir=D:/Code_Proj/DLR Proj/scenarios/cloudopsbench/results/1021_0246_tsm-v1-b110/raw/1021_0246_trainticket-performance-44
+[02:47:37] grade + stats
+[grade] runs=4 → out=scenarios/cloudopsbench/results/1021_0246_tsm-v1-b110
+[convert] boutique/admission/44 → scenarios\cloudopsbench\results\1021_0246_tsm-v1-b110\traces\boutique\dsh-tsm\admission\44\44.json  steps=15 final=有 preds=3
+[convert] boutique/runtime/44 → scenarios\cloudopsbench\results\1021_0246_tsm-v1-b110\traces\boutique\dsh-tsm\runtime\44\44.json  steps=11 final=有 preds=3
+[convert] boutique/service/44 → scenarios\cloudopsbench\results\1021_0246_tsm-v1-b110\traces\boutique\dsh-tsm\service\44\44.json  steps=14 final=有 preds=3
+[convert] trainticket/performance/44 → scenarios\cloudopsbench\results\1021_0246_tsm-v1-b110\traces\trainticket\dsh-tsm\performance\44\44.json  steps=16 final=有 preds=3
+[convert] manifest → scenarios\cloudopsbench\results\1021_0246_tsm-v1-b110\traces\manifest.json（共 4 条）
+[grade] 评分组: boutique/admission
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: boutique
+fault_category: admission
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\boutique\admission
+agent_root: scenarios\cloudopsbench\results\1021_0246_tsm-v1-b110\traces\boutique\dsh-tsm\admission
+--------------------------------------------------------------------------------
+total_cases: 58
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 1.0
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.4
+steps (Average Diagnostic Steps per Case): 16.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] boutique_admission: scenarios\cloudopsbench\results\1021_0246_tsm-v1-b110\boutique_admission_questions.csv
+[grade] 评分组: boutique/runtime
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: boutique
+fault_category: runtime
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\boutique\runtime
+agent_root: scenarios\cloudopsbench\results\1021_0246_tsm-v1-b110\traces\boutique\dsh-tsm\runtime
+--------------------------------------------------------------------------------
+total_cases: 45
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 1.0
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.3636
+steps (Average Diagnostic Steps per Case): 12.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] boutique_runtime: scenarios\cloudopsbench\results\1021_0246_tsm-v1-b110\boutique_runtime_questions.csv
+[grade] 评分组: boutique/service
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: boutique
+fault_category: service
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\boutique\service
+agent_root: scenarios\cloudopsbench\results\1021_0246_tsm-v1-b110\traces\boutique\dsh-tsm\service
+--------------------------------------------------------------------------------
+total_cases: 54
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 1.0
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.4286
+steps (Average Diagnostic Steps per Case): 15.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] boutique_service: scenarios\cloudopsbench\results\1021_0246_tsm-v1-b110\boutique_service_questions.csv
+[grade] 评分组: train-ticket/performance
+Outcome Evaluation v2
+================================================================================
+config_path: D:\Code_Proj\Cloud-OpsBench\agents\cloudops_agent\configs\model_configs.yaml
+system: train-ticket
+fault_category: performance
+case_split: 
+case_split_file: 
+label_root: D:\Code_Proj\Cloud-OpsBench\process-label\trainticket\performance
+agent_root: scenarios\cloudopsbench\results\1021_0246_tsm-v1-b110\traces\trainticket\dsh-tsm\performance
+--------------------------------------------------------------------------------
+total_cases: 47
+selected_cases: 1
+run_cases: 1
+missing_run_cases: 0
+invalid_action_total: 0
+--------------------------------------------------------------------------------
+CA (Component Accuracy): 1.0
+FA (Fault-Type Accuracy): 1.0
+JRA (Joint RCA Accuracy): 1.0
+MC (Milestone Coverage): 1.0
+EOC (Evidence-Order Consistency): 1.0
+ECR (Evidence Closure Rate): 1.0
+EE (Evidence Efficiency): 0.3125
+steps (Average Diagnostic Steps per Case): 17.0
+RAR (Redundant Action Rate): 0.0
+invalid_actions (Average Invalid Actions per Case): 0.0
+--------------------------------------------------------------------------------
+[group] trainticket_performance: scenarios\cloudopsbench\results\1021_0246_tsm-v1-b110\trainticket_performance_questions.csv
+
+[grade] 完成
+  summary.md   : scenarios/cloudopsbench/results/1021_0246_tsm-v1-b110/summary.md
+  questions.csv: scenarios/cloudopsbench/results/1021_0246_tsm-v1-b110/questions.csv
+  traces/      : scenarios/cloudopsbench/results/1021_0246_tsm-v1-b110/traces
+[stats] 轮次 340 · 覆盖 754/754 · JRA 737/754
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\results\STATS.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL.md
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\DETAIL/*.md（12 个家族）
+[stats] → D:\Code_Proj\DLR Proj\scenarios\cloudopsbench\overview.html
+  + session-9b55b261-8277-…  boutique/admission/44  1021_0246_boutique-admission-44
+  + session-faa5336c-7c63-…  boutique/runtime/44  1021_0246_boutique-runtime-44
+  + session-4a20dbd1-c7bc-…  boutique/service/44  1021_0246_boutique-service-44
+  + session-f2819017-ab09-…  trainticket/performance/44  1021_0246_trainticket-performance-44
+[sync] 扫到 run 1287（无 session 0）· 新登记 4 · 清出 0（避重叠）· 跳过已归组 1240 · 解除归档 0 · 全量组共 48
+[ws] 已写 D:\Code_Proj\DLR Proj\DSH-based Agent Service\.dsh-home\storages\workspace.json（备份 .bak-1021_024751）
+  ↑ boutique/admission/44 session-9b55b261-8… → COB-bench
+  ↑ boutique/runtime/44 session-faa5336c-7… → COB-bench
+  ↑ boutique/service/44 session-4a20dbd1-c… → COB-bench
+  ↑ trainticket/performance/44 session-f2819017-a… → COB-bench
+[batch-group] ↑4 ↓0 kept 0 skipped 0

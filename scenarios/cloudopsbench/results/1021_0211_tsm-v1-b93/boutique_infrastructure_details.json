@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "38",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\boutique\\infrastructure\\38\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1021_0211_tsm-v1-b93\\traces\\boutique\\dsh-tsm\\infrastructure\\38\\38.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Infrastructure_Fault",
+      "fault_object": "node/worker-01",
+      "root_cause": "kubelet_unavailable"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "node/worker-01",
+        "root_cause": "kubelet_unavailable"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/recommendationservice",
+        "root_cause": "node_selector_mismatch"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/recommendationservice",
+        "root_cause": "taint_toleration_mismatch"
+      }
+    ],
+    "tool_call_count": 17,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.29411764705882354,
+      "steps": 18.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

@@ -1,0 +1,2 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+trainticket/runtime/64,1.0,1.0,1.0,0.8,0.6,0.0,0.5294117647058824,18.0,0.0,0.0,app/ts-inside-payment-service,mysql_invalid_port,app/ts-inside-payment-service,mysql_invalid_port,

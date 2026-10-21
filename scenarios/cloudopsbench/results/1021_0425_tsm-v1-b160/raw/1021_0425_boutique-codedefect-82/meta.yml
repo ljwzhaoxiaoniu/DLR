@@ -1,0 +1,9 @@
+system: boutique
+category: codedefect
+case: 82
+query: Service Performance Degradation.
+rc: 0
+stamp: 1021_0425
+session_dir: /d/Code_Proj/DLR Proj/DSH-based Agent Service
+tsm_mcp: http://127.0.0.1:28796/mcp/boutique
+bench_mcp: http://127.0.0.1:8001/mcp

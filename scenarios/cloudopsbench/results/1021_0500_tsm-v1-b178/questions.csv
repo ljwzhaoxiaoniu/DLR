@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/scheduling/6,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,13.0,0.0,0.0,app/productcatalogservice,node_cordon_mismatch,app/productcatalogservice,node_cordon_mismatch,
+boutique/scheduling/58,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,13.0,0.0,0.0,app/currencyservice,node_affinity_mismatch,app/currencyservice,node_affinity_mismatch,
+boutique/scheduling/59,1.0,1.0,1.0,1.0,1.0,1.0,0.21052631578947367,20.0,0.0,0.0,app/emailservice,node_affinity_mismatch,app/emailservice,node_affinity_mismatch,
+boutique/scheduling/60,1.0,1.0,1.0,1.0,1.0,1.0,0.36363636363636365,12.0,0.0,0.0,app/frontend,node_affinity_mismatch,app/frontend,node_affinity_mismatch,

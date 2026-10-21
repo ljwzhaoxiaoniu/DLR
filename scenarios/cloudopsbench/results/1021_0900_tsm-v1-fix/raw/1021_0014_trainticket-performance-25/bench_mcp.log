@@ -1,0 +1,28 @@
+INFO:     Started server process [4304]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:56828 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56829 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:56828 - "GET /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56830 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60071 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60073 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:60076 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-payment-service"}
+INFO:     127.0.0.1:60081 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-payment-service"}
+INFO:     127.0.0.1:60081 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60081 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-payment-service"}
+INFO:     127.0.0.1:60086 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-inside-payment-service"}
+INFO:     127.0.0.1:60086 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60099 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60099 - "POST /mcp HTTP/1.1" 200 OK
+GetClusterConfiguration:{}
+INFO:     127.0.0.1:60099 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60099 - "POST /mcp HTTP/1.1" 200 OK
+CheckServiceConnectivity:{"namespace":"train-ticket","service_name":"ts-payment-service","port":19001}
+INFO:     127.0.0.1:60102 - "POST /mcp HTTP/1.1" 200 OK

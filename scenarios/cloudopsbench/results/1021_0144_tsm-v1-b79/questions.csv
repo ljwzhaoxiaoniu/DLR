@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/startup/33,1.0,1.0,1.0,1.0,1.0,1.0,0.25,13.0,0.0,0.0,app/recommendationservice,incorrect_image_reference,app/recommendationservice,incorrect_image_reference,
+trainticket/runtime/33,1.0,1.0,1.0,0.75,0.75,0.0,0.3076923076923077,14.0,0.0,0.0,app/ts-assurance-service,mysql_invalid_credentials,app/ts-assurance-service,mysql_invalid_credentials,
+boutique/admission/33,1.0,1.0,1.0,1.0,1.0,1.0,0.4666666666666667,16.0,0.0,0.0,namespace/boutique,namespace_pod_quota_exceeded,namespace/boutique,namespace_pod_quota_exceeded,
+boutique/service/33,1.0,1.0,1.0,1.0,1.0,1.0,0.3125,17.0,0.0,0.0,app/checkoutservice,service_selector_mismatch,app/checkoutservice,service_selector_mismatch,

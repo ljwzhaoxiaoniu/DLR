@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/infrastructure/21,1.0,1.0,1.0,1.0,1.0,1.0,0.1875,17.0,0.0,0.0,node/master,kube_scheduler_unavailable,node/master,kube_scheduler_unavailable,
+trainticket/service/21,1.0,1.0,1.0,1.0,1.0,1.0,0.35294117647058826,18.0,0.0,0.0,app/ts-basic-service,service_dns_resolution_failure,app/ts-basic-service,service_dns_resolution_failure,
+boutique/performance/21,1.0,1.0,1.0,1.0,1.0,1.0,0.4375,17.0,0.0,0.0,app/shippingservice,pod_network_delay,app/shippingservice,pod_network_delay,
+trainticket/startup/21,1.0,1.0,1.0,1.0,1.0,1.0,0.38461538461538464,14.0,0.0,0.0,app/ts-travel-service,missing_secret_binding,app/ts-travel-service,missing_secret_binding,

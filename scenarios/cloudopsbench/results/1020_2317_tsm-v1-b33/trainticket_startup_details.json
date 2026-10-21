@@ -1,0 +1,46 @@
+[
+  {
+    "case_name": "19",
+    "label_path": "D:\\Code_Proj\\Cloud-OpsBench\\process-label\\trainticket\\startup\\19\\milestone.json",
+    "agent_path": "scenarios\\cloudopsbench\\results\\1020_2317_tsm-v1-b33\\traces\\trainticket\\dsh-tsm\\startup\\19\\19.json",
+    "agent_case_exists": true,
+    "ground_truth": {
+      "fault_taxonomy": "Startup_Fault",
+      "fault_object": "app/ts-train-service",
+      "root_cause": "missing_secret_binding"
+    },
+    "final_answer_source": "top_level_final_answer",
+    "top_3_predictions": [
+      {
+        "rank": 1,
+        "fault_object": "app/ts-train-service",
+        "root_cause": "missing_secret_binding"
+      },
+      {
+        "rank": 2,
+        "fault_object": "app/ts-train-service",
+        "root_cause": "mysql_invalid_credentials"
+      },
+      {
+        "rank": 3,
+        "fault_object": "app/ts-train-service",
+        "root_cause": "readiness_probe_incorrect_timing"
+      }
+    ],
+    "tool_call_count": 13,
+    "final_answer_step_count": 1,
+    "invalid_action_details": [],
+    "metrics": {
+      "CA": 1.0,
+      "FA": 1.0,
+      "JRA": 1.0,
+      "MC": 1.0,
+      "EOC": 1.0,
+      "ECR": 1.0,
+      "EE": 0.38461538461538464,
+      "steps": 14.0,
+      "RAR": 0.0,
+      "invalid_actions": 0.0
+    }
+  }
+]

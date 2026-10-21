@@ -1,0 +1,8 @@
+system: train-ticket
+category: performance
+case: 13
+query: Service quality degradation.
+rc: 0
+stamp: 1020_2023
+tsm_mcp: http://127.0.0.1:28796/mcp/trainticket
+bench_mcp: http://127.0.0.1:8000/mcp

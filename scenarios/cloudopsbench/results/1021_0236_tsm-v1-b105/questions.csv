@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/42,1.0,1.0,1.0,1.0,1.0,1.0,0.38461538461538464,14.0,0.0,0.0,namespace/boutique,namespace_pod_quota_exceeded,namespace/boutique,namespace_pod_quota_exceeded,
+boutique/service/42,1.0,1.0,1.0,1.0,1.0,1.0,0.4666666666666667,16.0,0.0,0.0,app/currencyservice,service_selector_mismatch,app/currencyservice,service_selector_mismatch,
+boutique/startup/42,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,13.0,0.0,0.0,app/adservice,missing_image_pull_secret,app/adservice,missing_image_pull_secret,
+trainticket/performance/42,1.0,1.0,1.0,1.0,1.0,1.0,0.2777777777777778,19.0,0.0,0.0,app/ts-route-service,pod_network_delay,app/ts-route-service,pod_network_delay,

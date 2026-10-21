@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/8,1.0,1.0,1.0,1.0,1.0,1.0,0.5,15.0,0.0,0.0,app/productcatalogservice,missing_service_account,app/productcatalogservice,missing_service_account,
+boutique/codedefect/61,1.0,1.0,1.0,1.0,1.0,1.0,0.2727272727272727,12.0,0.0,0.0,app/frontend,code_excessive_file_writes,app/frontend,code_excessive_file_writes,
+boutique/scheduling/150,1.0,1.0,1.0,1.0,1.0,1.0,0.25,13.0,0.0,0.0,app/checkoutservice,taint_toleration_mismatch,app/checkoutservice,taint_toleration_mismatch,
+trainticket/runtime/61,1.0,1.0,1.0,1.0,1.0,1.0,0.5,17.0,0.0,0.0,app/ts-delivery-service,mysql_invalid_port,app/ts-delivery-service,mysql_invalid_port,

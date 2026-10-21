@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/25,1.0,1.0,1.0,1.0,1.0,1.0,0.42857142857142855,15.0,0.0,0.0,namespace/boutique,namespace_memory_quota_exceeded,namespace/boutique,namespace_memory_quota_exceeded,
+boutique/service/25,1.0,1.0,1.0,1.0,1.0,1.0,0.3125,17.0,0.0,0.0,app/checkoutservice,service_protocol_mismatch,app/checkoutservice,service_protocol_mismatch,
+boutique/runtime/25,1.0,1.0,1.0,1.0,1.0,1.0,0.21428571428571427,15.0,0.0,0.0,app/emailservice,container_memory_limit_too_low,app/emailservice,container_memory_limit_too_low,
+trainticket/performance/25,1.0,0.0,0.0,1.0,1.0,1.0,0.21428571428571427,15.0,0.0,0.0,app/ts-payment-service,code_missing_parameter,app/ts-payment-service,pod_network_delay,

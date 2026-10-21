@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/admission/12,0.0,0.0,0.0,1.0,1.0,1.0,0.42857142857142855,14.0,0.0,0.0,,,namespace/boutique,namespace_cpu_quota_exceeded,unparsed_final_answer
+boutique/service/12,1.0,1.0,1.0,1.0,1.0,1.0,0.3125,17.0,0.0,0.0,app/paymentservice,service_port_mapping_mismatch,app/paymentservice,service_port_mapping_mismatch,
+trainticket/performance/12,1.0,1.0,1.0,1.0,1.0,1.0,0.375,17.0,0.0,0.0,app/ts-security-service,pod_network_delay,app/ts-security-service,pod_network_delay,
+boutique/runtime/12,1.0,1.0,1.0,1.0,1.0,1.0,0.2727272727272727,12.0,0.0,0.0,app/emailservice,liveness_probe_incorrect_port,app/emailservice,liveness_probe_incorrect_port,

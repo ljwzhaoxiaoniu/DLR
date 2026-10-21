@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/infrastructure/24,1.0,1.0,1.0,1.0,1.0,1.0,0.23076923076923078,14.0,0.0,0.0,node/master,kube_scheduler_unavailable,node/master,kube_scheduler_unavailable,
+boutique/performance/24,0.0,0.0,0.0,0.5,0.5,0.0,0.2,16.0,0.0,0.0,node/worker-01,node_network_packet_loss,node/worker-02,node_network_delay,
+trainticket/service/24,1.0,1.0,1.0,1.0,1.0,1.0,0.29411764705882354,18.0,0.0,0.0,app/ts-food-service,service_dns_resolution_failure,app/ts-food-service,service_dns_resolution_failure,
+trainticket/startup/24,1.0,1.0,1.0,1.0,1.0,1.0,0.3125,17.0,0.0,0.0,app/ts-wait-order-service,missing_secret_binding,app/ts-wait-order-service,missing_secret_binding,

@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/infrastructure/14,1.0,1.0,1.0,1.0,0.6666666666666666,1.0,0.3125,17.0,0.0,0.0,node/worker-02,kube_proxy_unavailable,node/worker-02,kube_proxy_unavailable,
+trainticket/service/14,1.0,1.0,1.0,1.0,1.0,1.0,0.35714285714285715,15.0,0.0,0.0,app/ts-gateway-service,gateway_misrouted,app/ts-gateway-service,gateway_misrouted,
+boutique/performance/14,1.0,1.0,1.0,1.0,1.0,1.0,0.19230769230769232,27.0,0.0,0.0,app/checkoutservice,pod_network_delay,app/checkoutservice,pod_network_delay,
+trainticket/startup/14,1.0,1.0,1.0,1.0,1.0,1.0,0.4166666666666667,13.0,0.0,0.0,app/ts-security-service,missing_secret_binding,app/ts-security-service,missing_secret_binding,

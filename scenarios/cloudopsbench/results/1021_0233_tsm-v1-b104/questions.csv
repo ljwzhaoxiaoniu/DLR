@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/scheduling/131,1.0,1.0,1.0,1.0,1.0,1.0,0.375,17.0,0.0,0.0,app/redis-cart,pvc_selector_mismatch,app/redis-cart,pvc_selector_mismatch,
+trainticket/service/8,1.0,1.0,1.0,1.0,1.0,1.0,0.3333333333333333,19.0,0.0,0.0,app/ts-gateway-service,gateway_misrouted,app/ts-gateway-service,gateway_misrouted,
+boutique/codedefect/42,1.0,1.0,1.0,1.0,1.0,1.0,0.21739130434782608,24.0,0.0,0.0,app/frontend,code_missing_parameter,app/frontend,code_missing_parameter,
+trainticket/runtime/42,1.0,1.0,1.0,0.75,0.75,0.0,0.375,17.0,0.0,0.0,app/ts-order-other-service,mysql_invalid_credentials,app/ts-order-other-service,mysql_invalid_credentials,

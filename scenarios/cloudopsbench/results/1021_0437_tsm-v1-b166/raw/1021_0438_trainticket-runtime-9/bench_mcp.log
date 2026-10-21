@@ -1,0 +1,37 @@
+INFO:     Started server process [21332]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:53490 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53492 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-gateway-service"}
+INFO:     127.0.0.1:53497 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53497 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53497 - "POST /mcp HTTP/1.1" 200 OK
+GetAlerts:{}
+INFO:     127.0.0.1:53497 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-inside-payment-service"}
+INFO:     127.0.0.1:53499 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-preserve-service"}
+INFO:     127.0.0.1:53499 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53499 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-preserve-service"}
+INFO:     127.0.0.1:53505 - "POST /mcp HTTP/1.1" 200 OK
+GetServiceDependencies:{"service_name":"ts-inside-payment-service"}
+INFO:     127.0.0.1:53505 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-basic-service"}
+INFO:     127.0.0.1:53507 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-payment-service"}
+INFO:     127.0.0.1:53507 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"tsdb-mysql"}
+INFO:     127.0.0.1:53509 - "POST /mcp HTTP/1.1" 200 OK
+GetErrorLogs:{"namespace":"train-ticket","service_name":"ts-order-service"}
+INFO:     127.0.0.1:53509 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53509 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53509 - "POST /mcp HTTP/1.1" 200 OK
+GetAppYAML:{"app_name":"ts-payment-service"}
+INFO:     127.0.0.1:53511 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53511 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53511 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53511 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53512 - "POST /mcp HTTP/1.1" 200 OK

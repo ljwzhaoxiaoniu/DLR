@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/codedefect/28,1.0,1.0,1.0,0.8,0.2,0.0,0.2,21.0,0.0,0.0,app/checkoutservice,code_wrong_return,app/checkoutservice,code_wrong_return,
+boutique/scheduling/117,1.0,1.0,1.0,1.0,1.0,1.0,0.26666666666666666,16.0,0.0,0.0,app/productcatalogservice,pod_anti_affinity_conflict,app/productcatalogservice,pod_anti_affinity_conflict,
+trainticket/runtime/28,1.0,1.0,1.0,1.0,0.5,1.0,0.1111111111111111,19.0,0.0,0.0,app/ts-security-service,deployment_zero_replicas,app/ts-security-service,deployment_zero_replicas,
+boutique/startup/28,1.0,1.0,1.0,1.0,1.0,1.0,0.25,13.0,0.0,0.0,app/adservice,incorrect_image_reference,app/adservice,incorrect_image_reference,

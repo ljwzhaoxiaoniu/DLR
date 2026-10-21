@@ -1,0 +1,2 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/scheduling/155,1.0,1.0,1.0,1.0,1.0,1.0,0.2,16.0,0.0,0.0,app/redis-cart,taint_toleration_mismatch,app/redis-cart,taint_toleration_mismatch,

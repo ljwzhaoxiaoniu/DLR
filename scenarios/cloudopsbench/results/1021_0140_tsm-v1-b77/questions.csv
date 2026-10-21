@@ -1,0 +1,5 @@
+case,CA,FA,JRA,MC,EOC,ECR,EE,steps,RAR,invalid_actions,pred_fault_object,pred_root_cause,gt_fault_object,gt_root_cause,error
+boutique/service/32,1.0,1.0,1.0,1.0,1.0,0.0,0.3125,17.0,0.0,0.0,app/cartservice,service_selector_mismatch,app/cartservice,service_selector_mismatch,
+trainticket/performance/32,1.0,1.0,1.0,1.0,1.0,1.0,0.35294117647058826,18.0,0.0,0.0,app/ts-train-service,pod_network_delay,app/ts-train-service,pod_network_delay,
+boutique/infrastructure/32,1.0,1.0,1.0,1.0,1.0,1.0,0.3125,17.0,0.0,0.0,node/worker-01,kubelet_unavailable,node/worker-01,kubelet_unavailable,
+boutique/runtime/32,1.0,1.0,1.0,1.0,1.0,1.0,0.3,11.0,0.0,0.0,app/checkoutservice,readiness_probe_incorrect_protocol,app/checkoutservice,readiness_probe_incorrect_protocol,
