@@ -65,7 +65,7 @@ dlr-state 形态 = **3 工具**（`state_model_query` 症状→模型切片 / `d
 - **覆盖 754/754（100%）**；**JRA 753/754（99.87%）** · CA 753 · FA 754 · **ECR 740/754（98.1%）**；
 - 流程分（均值）：**MC 0.996 · EOC 0.980 · ECR 0.981** · steps 16.1 · invalid 0.8%；
 - **十二家族满覆盖**（12/12 全跑），其中 **11 族全 JRA**：boutique/{admission, codedefect, infrastructure, performance, runtime, scheduling, service, startup} · train-ticket/{runtime, service, startup}；train-ticket/performance 余 1 例按「摸到极限也算」**记档**；
-- 对标：上游顶模基线 JRA 0.76 / ECR 0.38、工业界 Train-Ticket 全量 82.8% JRA——本场景 **753/754** 已在场之上；余 1 处（ttperf34）记档不追；
+- 对标：基准 10 个公开裸模型的各项最强（按 550/204 加权）——CA 0.829 · FA 0.754 · JRA 0.725 · MC 0.708 · EOC 0.659 · ECR 0.382；工业界 Train-Ticket 全量 82.8% JRA——本场景 **753/754** 已在场之上；余 1 处（ttperf34）记档不追；
 - 逐题留档：[DETAIL.md](DETAIL.md)（总账）＋ `DETAIL/<家族>.md`（逐题校验表 + 证据正文）＋ `results/<轮次>/`（questions.csv + traces/）。
 
 ## 四、处理和使用流程（这份基准怎么跑）

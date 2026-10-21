@@ -355,6 +355,7 @@
   <a href="#s7" title="逐层消歧"></a>
   <a href="#s8" title="BIRD"></a>
   <a href="#s9" title="Cloud-OpsBench"></a>
+  <a href="#s9a" title="六项指标对照"></a>
   <a href="#s9b" title="六项指标"></a>
   <a href="#s10" title="SOP 分层"></a>
   <a href="#s11" title="工程架构"></a>
@@ -613,7 +614,7 @@
     </div>
     <div class="grid-2" style="align-items:start">
       <div>
-        <div class="legend"><span><i class="dot--project"></i>本方案</span><span><i class="dot--baseline"></i>上游公开基线</span></div>
+        <div class="legend"><span><i class="dot--project"></i>本方案</span><span><i class="dot--baseline"></i>最强公开裸模型</span></div>
         <div class="chart-group">
           <div class="chart-group__title">JRA · 根因联合准确率</div>
           <div class="bar-row">
@@ -622,9 +623,9 @@
             <div class="bar-row__value">753/754</div>
           </div>
           <div class="bar-row">
-            <div class="bar-row__label">上游基线</div>
-            <div class="bar-track"><div class="bar-fill bar-fill--baseline" style="width:76%" data-tip="上游顶模公开基线 JRA 0.76（不同模型，仅作参照）">76.0%</div></div>
-            <div class="bar-row__value">公开基线</div>
+            <div class="bar-row__label">最强裸模型</div>
+            <div class="bar-track"><div class="bar-fill bar-fill--baseline" style="width:72.5%" data-tip="10 个公开裸模型按 550/204 加权后的最高 JRA = 72.5%（DeepSeek-V4-Flash）">72.5%</div></div>
+            <div class="bar-row__value">DS-V4-Flash</div>
           </div>
         </div>
         <div class="chart-group">
@@ -635,20 +636,20 @@
             <div class="bar-row__value">740/754</div>
           </div>
           <div class="bar-row">
-            <div class="bar-row__label">上游基线</div>
-            <div class="bar-track"><div class="bar-fill bar-fill--baseline" style="width:38%" data-tip="上游顶模公开基线 ECR 0.38（不同模型，仅作参照）">38.0%</div></div>
-            <div class="bar-row__value">公开基线</div>
+            <div class="bar-row__label">最强裸模型</div>
+            <div class="bar-track"><div class="bar-fill bar-fill--baseline" style="width:38.2%" data-tip="10 个公开裸模型按 550/204 加权后的最高 ECR = 38.2%（Qwen3-14B）">38.2%</div></div>
+            <div class="bar-row__value">Qwen3-14B</div>
           </div>
         </div>
         <details class="table-view">
           <summary>数据表</summary>
           <table>
-            <tr><th>指标</th><th>本方案</th><th>上游公开基线</th></tr>
-            <tr><td>JRA</td><td>99.87%（753/754）</td><td>76.0%</td></tr>
-            <tr><td>ECR</td><td>98.1%（740/754）</td><td>38.0%</td></tr>
+            <tr><th>指标</th><th>本方案</th><th>最强公开裸模型</th></tr>
+            <tr><td>JRA</td><td>99.87%（753/754）</td><td>72.5%（DeepSeek-V4-Flash）</td></tr>
+            <tr><td>ECR</td><td>98.1%（740/754）</td><td>38.2%（Qwen3-14B）</td></tr>
           </table>
         </details>
-        <p class="note">上游基线来自基准 README 的顶模公开数字，模型与运行条件不同，仅作量级参照。</p>
+        <p class="note">上游基线取基准 README 的 10 个公开裸模型，按 550 / 204 加权；模型与运行条件不同，仅作量级参照。</p>
       </div>
       <div class="grid-2" style="grid-template-columns:1fr; gap:12px">
         <div class="card card--cob"><h3>L1 · dlr-state</h3><p>2 系统两份文件 · <strong>169 LE / 355 PE / 233 PAS</strong>；53 个服务 + 节点 + 命名空间；观测面带锚定读法。</p></div>
@@ -656,6 +657,17 @@
         <div class="card card--cob"><h3>L3 · SOP</h3><p>5 节；按症状措辞逐字命中；节内是决策树，不是一条答案。</p></div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ════════════════ 09a · 六项指标 vs 裸模型 ════════════════ -->
+<section class="slide" id="s9a">
+  <div class="slide__inner">
+    <div class="eyebrow">场景二 · Cloud-OpsBench · 六项指标对照</div>
+    <h2 class="section-title">六项指标，<em>逐项对表裸模型</em></h2>
+    <p class="lead" style="font-size:15px;margin-bottom:14px">10 个公开裸模型按 550/204 加权，我方取 754 全量。每项都高于最强裸模型；ECR 的差距最大（+59.9 个百分点）。</p>
+    <img src="../../assets/charts/cloudopsbench-six-vs-best.svg" alt="Cloud-OpsBench six metrics vs the best bare model" style="display:block;width:auto;max-width:100%;max-height:60vh;margin:0 auto"/>
+    <p class="note">基线为无 TSM/DLR 的裸模型，且基座不同（V4-Flash vs V4.1-Flash），仅作量级参照；完整 10×6 矩阵见 README。</p>
   </div>
 </section>
 

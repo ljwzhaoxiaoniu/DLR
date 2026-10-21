@@ -65,7 +65,7 @@ The dlr-state shape = **3 tools** (`state_model_query` symptom→model slice / `
 - **Coverage 754/754 (100%)**; **JRA 753/754 (99.87%)** · CA 753 · FA 754 · **ECR 740/754 (98.1%)**;
 - Process scores (means): **MC 0.996 · EOC 0.980 · ECR 0.981** · steps 16.1 · invalid 0.8%;
 - **All twelve families covered** (12/12 run), **11 of them fully JRA**: boutique/{admission, codedefect, infrastructure, performance, runtime, scheduling, service, startup} · train-ticket/{runtime, service, startup}; train-ticket/performance keeps 1 case **recorded** under "touching the limit counts";
-- Compared against: the upstream's top-model baselines JRA 0.76 / ECR 0.38, industry Train-Ticket full-set 82.8% JRA — this scenario's **753/754** sits above the field; the remaining 1 (ttperf34) are recorded, not chased;
+- Compared against: the best of the benchmark's 10 published bare models (weighted 550/204) — CA 0.829 · FA 0.754 · JRA 0.725 · MC 0.708 · EOC 0.659 · ECR 0.382; industry Train-Ticket full-set 82.8% JRA — this scenario's **753/754** sits above the field; the remaining 1 (ttperf34) are recorded, not chased;
 - Per-case archives: [DETAIL.md](DETAIL.md) (the ledger) + `DETAIL/<family>.md` (per-case check lists + evidence text) + `results/<round>/` (questions.csv + traces/).
 
 ## 4. Workflow (how this benchmark is run)

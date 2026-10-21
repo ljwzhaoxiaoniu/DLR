@@ -38,16 +38,22 @@ Two external benchmarks, both run end-to-end under this architecture (every case
 
 ![Cloud-OpsBench — JRA and evidence-chain closure vs model baselines](assets/charts/cloudopsbench-2026-10-21.svg)
 
+*Cloud-OpsBench (754 cases): JRA — faulty component + fault type both correct (bars); ECR — evidence chains fully closed (line). Baselines: the benchmark report (arXiv:2603.00468), per-model scores weighted over Online Boutique (550) + Train-Ticket (204). Ours: DeepSeek-V4.1-Flash + TSM+DLR — JRA 753/754 (99.87%), chains fully closed 740/754 (98.1%), scored by the same upstream scorer.*
+
+![Cloud-OpsBench — six metrics, ours vs the best bare model](assets/charts/cloudopsbench-six-vs-best.svg)
+
+![Cloud-OpsBench — the full bare-model field across all six metrics](assets/charts/cloudopsbench-six-field.svg)
+
+*Six-metric comparison: on every metric, ours sits above the best of the benchmark's 10 published bare models — CA +17.0, FA +24.6, JRA +27.4, MC +28.8, EOC +32.1, ECR +59.9 percentage points (the strongest baseline for each metric is named on its bar). The matrix below is the full field, model by model. Baselines: the benchmark report's per-system tables, weighted over Online Boutique (550) + Train-Ticket (204); ours: the full 754-case run. Baselines are bare models without TSM/DLR and the base model differs (V4-Flash vs V4.1-Flash), so this is a magnitude reference, not a same-model ablation.*
+
 ![Cloud-OpsBench — six-metric result](assets/charts/cloudopsbench-six-metrics.svg)
 
 ![Cloud-OpsBench — all-six coverage by family](assets/charts/cloudopsbench-families.svg)
 
-*Cloud-OpsBench (754 cases): JRA — faulty component + fault type both correct (bars); ECR — evidence chains fully closed (line). Baselines: the benchmark report (arXiv:2603.00468), per-model scores weighted over Online Boutique (550) + Train-Ticket (204). Ours: DeepSeek-V4.1-Flash + TSM+DLR — JRA 753/754 (99.87%), chains fully closed 740/754 (98.1%), scored by the same upstream scorer.*
-
 | Run | Result | Notes |
 |---|---|---|
 | All 754 cases (100%) | **JRA 753/754 (99.87%)** ✅ · evidence chains fully closed: 740/754 (98.1%) · all six metrics full: 722/754 (95.8%) | process means MC 0.996 / EOC 0.980 · invalid actions 0.8% |
-| Reference — model baselines (the benchmark's own scorer) | strongest baselines in the benchmark report: JRA 0.76 (Online Boutique) / 0.68 (Train-Ticket), ≈ 0.73 weighted over all 754; evidence-chain closure 0.38 / 0.15 (exploring wide, closing no chain) | scored by the upstream scorer as-is; no manual rulings |
+| Reference — model baselines (the benchmark's own scorer) | best published bare model per metric: CA 0.829 · FA 0.754 · JRA 0.725 · MC 0.708 · EOC 0.659 · ECR 0.382, weighted over all 754 (best JRA: DeepSeek-V4-Flash; best ECR: Qwen3-14B) | scored by the upstream scorer as-is; no manual rulings |
 
 Ledgers, question by question with evidence: [birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md)
 

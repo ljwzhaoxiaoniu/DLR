@@ -38,16 +38,22 @@
 
 ![Cloud-OpsBench —— 模型基线的 JRA 与证据链全闭对比](assets/charts/cloudopsbench-2026-10-21.svg)
 
+*Cloud-OpsBench（754 例）：JRA —— 故障组件 + 故障类型都对（柱）；ECR —— 证据链全闭（线）。基线：基准报告（arXiv:2603.00468），各模型分数按 Online Boutique（550）+ Train-Ticket（204）加权。我方：DeepSeek-V4.1-Flash + TSM+DLR —— JRA 753/754（99.87%）、证据链全闭 740/754（98.1%），由同一上游评分器判分。*
+
+![Cloud-OpsBench —— 六项指标：本方案 vs 最强裸模型](assets/charts/cloudopsbench-six-vs-best.svg)
+
+![Cloud-OpsBench —— 全部裸模型的六项指标矩阵](assets/charts/cloudopsbench-six-field.svg)
+
+*六项指标逐项对照：六项全部高于基准 10 个公开裸模型中的最好成绩——CA +17.0、FA +24.6、JRA +27.4、MC +28.8、EOC +32.1、ECR +59.9 个百分点（各指标最强基线标在对应柱旁）。下方矩阵是完整对照，逐模型列出。基线：基准报告分系统表按 Online Boutique（550）+ Train-Ticket（204）加权；我方：754 全量。基线均为无 TSM/DLR 的裸模型，且基座不同（V4-Flash vs V4.1-Flash），仅作量级参照，不是同模型消融。*
+
 ![Cloud-OpsBench —— 六项指标](assets/charts/cloudopsbench-six-metrics.svg)
 
 ![Cloud-OpsBench —— 按家族的六项链覆盖](assets/charts/cloudopsbench-families.svg)
 
-*Cloud-OpsBench（754 例）：JRA —— 故障组件 + 故障类型都对（柱）；ECR —— 证据链全闭（线）。基线：基准报告（arXiv:2603.00468），各模型分数按 Online Boutique（550）+ Train-Ticket（204）加权。我方：DeepSeek-V4.1-Flash + TSM+DLR —— JRA 753/754（99.87%）、证据链全闭 740/754（98.1%），由同一上游评分器判分。*
-
 | 跑批 | 结果 | 备注 |
 |---|---|---|
 | 全量 754/754 例（100%） | **JRA 753/754（99.87%）** ✅ · 证据链全闭 740/754（98.1%） · 六项链全满 722/754（95.8%） | 流程分均值 MC 0.996 / EOC 0.980 · 无效动作 0.8% |
-| 对照 —— 模型基线（基准自家评分器） | 基准报告最强基线：JRA 0.76（Online Boutique）/ 0.68（Train-Ticket），全 754 加权 ≈ 0.73；证据链闭合 0.38 / 0.15（探索面广、闭不上链） | 上游评分器原样判分，无人工翻盘 |
+| 对照 —— 模型基线（基准自家评分器） | 各项最强公开裸模型：CA 0.829 · FA 0.754 · JRA 0.725 · MC 0.708 · EOC 0.659 · ECR 0.382，全 754 加权（JRA 最强：DeepSeek-V4-Flash；ECR 最强：Qwen3-14B） | 上游评分器原样判分，无人工翻盘 |
 
 台账（逐题 + 证据）：[birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md)
 
