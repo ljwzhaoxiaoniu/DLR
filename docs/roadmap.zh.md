@@ -44,7 +44,7 @@
 
 ## 五、待探索
 
-- **Cloud-OpsBench**（K8s agentic 根因分析基准）——✅ **已落为第二个场景**（架构「换场景」的首个真实检验；TSM 跷跷板另一端——**L3 重 / L1 薄**）：落地为 `scenarios/cloudopsbench/` + `tsm-scenario-cloudopsbench` 包；两系统两份 `dlr-state` L1（**169 LE / 355 PE / 233 PAS**）、L2 15 条、L3 **5 节按症状措辞覆盖 754 例**（节内为决策树——SOP 分层）；含 K8s 诊断工具适配层与上游 scorer 适配；**覆盖 754/754 · JRA 752/754（99.7%）**。
+- **Cloud-OpsBench**（K8s agentic 根因分析基准）——✅ **已落为第二个场景**（架构「换场景」的首个真实检验；TSM 跷跷板另一端——**L3 重 / L1 薄**）：落地为 `scenarios/cloudopsbench/` + `tsm-scenario-cloudopsbench` 包；两系统两份 `dlr-state` L1（**169 LE / 355 PE / 233 PAS**）、L2 15 条、L3 **5 节按症状措辞覆盖 754 例**（节内为决策树——SOP 分层）；含 K8s 诊断工具适配层与上游 scorer 适配；**覆盖 754/754 · JRA 753/754（99.87%）**。
 - **L2 随 LE 分层 / 按 LE 隔离**（方向，未验证）：领域共识未来会随 LE / 域分层；**全局成立的 SOP 口径可自然下放到 L2**，只在某个 LE 内成立的口径按 LE 隔离——「分层消歧」与「按 LE 隔离」是同一治理工具的两种用法。现有两个 benchmark（bird / COB）都不适合验证这一点，待新场景。见 [02-concept.zh.md](02-concept.zh.md) §六。
 - **开发态能力的继续内建**：introspect → 草稿 → 评审（反身建模），与第 1/2 步同一条 CLI 长出来。
 

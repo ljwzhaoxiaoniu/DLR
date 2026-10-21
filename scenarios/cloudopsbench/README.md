@@ -60,12 +60,12 @@ The dlr-state shape = **3 tools** (`state_model_query` symptom→model slice / `
 
 ## 3. Application results (this scenario's model)
 
-> Data as of archived **round 230**; calibers = upstream scorer output, dedupe-take-latest (see [DETAIL.md](DETAIL.md) / `results/STATS.md`).
+> Data as of archived **round 420**; calibers = upstream scorer output, dedupe-take-latest (see [DETAIL.md](DETAIL.md) / `results/STATS.md`).
 
-- **Coverage 754/754 (100%)**; **JRA 752/754 (99.7%)** · CA 752 · FA 753 · **ECR 724/754 (96.0%)**;
-- Process scores (means): **MC 0.990 · EOC 0.946 · ECR 0.960** · steps 18.3 · invalid 0.4%;
+- **Coverage 754/754 (100%)**; **JRA 753/754 (99.87%)** · CA 753 · FA 754 · **ECR 740/754 (98.1%)**;
+- Process scores (means): **MC 0.996 · EOC 0.980 · ECR 0.981** · steps 16.1 · invalid 0.8%;
 - **All twelve families covered** (12/12 run), **10 of them fully JRA**: boutique/{admission, codedefect, infrastructure, runtime, scheduling, service, startup} · train-ticket/{runtime, service, startup}; boutique/performance and train-ticket/performance each keep 1 case **recorded** under "touching the limit counts";
-- Compared against: the upstream's top-model baselines JRA 0.76 / ECR 0.38, industry Train-Ticket full-set 82.8% JRA — this scenario's **752/754** sits above the field; the remaining 2 (perf25 / ttperf34) are recorded, not chased;
+- Compared against: the upstream's top-model baselines JRA 0.76 / ECR 0.38, industry Train-Ticket full-set 82.8% JRA — this scenario's **753/754** sits above the field; the remaining 1 (ttperf34) are recorded, not chased;
 - Per-case archives: [DETAIL.md](DETAIL.md) (the ledger) + `DETAIL/<family>.md` (per-case check lists + evidence text) + `results/<round>/` (questions.csv + traces/).
 
 ## 4. Workflow (how this benchmark is run)
@@ -98,13 +98,13 @@ Two-way concurrency (memory-bound): set `COB_MCP_PORT=8001 CLOUDOPSBENCH_MCP_POR
 
 ## 5. Measured results
 
-> Same source as §3 (dedupe-take-latest · round 230); details in `results/STATS.md`.
+> Same source as §3 (dedupe-take-latest · round 420); details in `results/STATS.md`.
 
 | Metric | Value |
 |---|---|
 | tokens mean / median | 241,049 / 145,925 (caliber = input+cache_read+cache_write+output; cache reads 74%) |
-| steps mean | 18.3 |
-| RAR (repeated-call rate) / invalid | 0.13% / 0.4% |
+| steps mean | 16.1 |
+| RAR (repeated-call rate) / invalid | 0.13% / 0.8% |
 | EE (evidence efficiency) | 0.283 (the "walk the chain, satisfy the process scores" argument paid off from the first case; EE is observational only) |
 
 ## 6. Directory map

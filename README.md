@@ -2,7 +2,7 @@
 
 English | [中文](README.zh.md)
 
-[![BIRD mini-dev · 500/500](https://img.shields.io/badge/BIRD_mini--dev-500%2F500_correct-brightgreen)](#benchmarks) [![Cloud-OpsBench · JRA 752/754](https://img.shields.io/badge/Cloud--OpsBench-JRA_752%2F754_(99.7%25)-brightgreen)](#benchmarks) [![npm](https://img.shields.io/npm/v/dsh-tsm-agent)](https://www.npmjs.com/package/dsh-tsm-agent)
+[![BIRD mini-dev · 500/500](https://img.shields.io/badge/BIRD_mini--dev-500%2F500_correct-brightgreen)](#benchmarks) [![Cloud-OpsBench · JRA 753/754](https://img.shields.io/badge/Cloud--OpsBench-JRA_753%2F754_(99.87%25)-brightgreen)](#benchmarks) [![npm](https://img.shields.io/npm/v/dsh-tsm-agent)](https://www.npmjs.com/package/dsh-tsm-agent)
 
 **DLR (Decoupled Logic Representation)** is an original **data-source-level** semantic modeling paradigm: a two-layer model (**LE** logical entities / **PE** physical views) plus two mechanisms (**ARCS** projection anchoring, **PAS** semantic routing). It decouples the logical concept layer from the physical data layer so an LLM agent can land natural-language questions on relational databases reliably. See [docs/03-design.md](docs/03-design.md).
 
@@ -16,7 +16,7 @@ A checkout ships **five npm packages** — the semantic service, the dsh bundle,
 | `DSH-based Agent Service/dsh-tsm-agent/` · [`dsh-tsm-agent`](https://www.npmjs.com/package/dsh-tsm-agent) | The **dsh bundle**: MCP semantic gateway + the scenario-independent paradigm skill + the TSM status overlay + the agent rules (launchers live in `DSH-based Agent Service/`) |
 | `DSH-based Agent Service/dsh-tsm-eval/` · [`dsh-tsm-eval`](https://www.npmjs.com/package/dsh-tsm-eval) | The **exam system**: runs a scenario's exam paper through dsh headless, scores it with `tsm grade`, and emits a replayable report (result + process + session-log forensics) |
 | `scenarios/birdminidev/` · [`tsm-scenario-birdmini`](https://www.npmjs.com/package/tsm-scenario-birdmini) | Scenario package — BIRD mini-dev (11 databases / 500 questions): three-level sources + exam paper + graded results. **500/500 judged correct** (426 matching gold exactly + 74 dataset-defect rulings carried by L3 clauses) |
-| `scenarios/cloudopsbench/` · [`tsm-scenario-cloudopsbench`](https://www.npmjs.com/package/tsm-scenario-cloudopsbench) | Scenario package — Cloud-OpsBench (Kubernetes RCA, 754 cases): three-level sources + the upstream-scorer adapter + graded results. **JRA 752/754 (99.7%)** across all 754 cases |
+| `scenarios/cloudopsbench/` · [`tsm-scenario-cloudopsbench`](https://www.npmjs.com/package/tsm-scenario-cloudopsbench) | Scenario package — Cloud-OpsBench (Kubernetes RCA, 754 cases): three-level sources + the upstream-scorer adapter + graded results. **JRA 753/754 (99.87%)** across all 754 cases |
 | *Bring your own* | The scenario layer is **pluggable** — point `TSM_SCENARIO` at any package carrying its own three-level sources (and optionally an exam paper). See [docs/04-application.md](docs/04-application.md) for the scenario-switch checklist |
 
 <a id="benchmarks"></a>
@@ -38,11 +38,11 @@ Two external benchmarks, both run end-to-end under this architecture (every case
 
 ![Cloud-OpsBench — JRA and evidence-chain closure vs model baselines](assets/charts/cloudopsbench.svg)
 
-*Cloud-OpsBench (754 cases): JRA — faulty component + fault type both correct (bars); ECR — evidence chains fully closed (line). Baselines: the benchmark report (arXiv:2603.00468), per-model scores weighted over Online Boutique (550) + Train-Ticket (204). Ours: DeepSeek-V4.1-Flash + TSM+DLR — JRA 752/754 (99.7%), chains fully closed 724/754 (96.0%), scored by the same upstream scorer.*
+*Cloud-OpsBench (754 cases): JRA — faulty component + fault type both correct (bars); ECR — evidence chains fully closed (line). Baselines: the benchmark report (arXiv:2603.00468), per-model scores weighted over Online Boutique (550) + Train-Ticket (204). Ours: DeepSeek-V4.1-Flash + TSM+DLR — JRA 753/754 (99.87%), chains fully closed 740/754 (98.1%), scored by the same upstream scorer.*
 
 | Run | Result | Notes |
 |---|---|---|
-| All 754 cases (100%) | **JRA 752/754 (99.7%)** ✅ · evidence chains fully closed: 724/754 (96.0%) | process means MC 0.99 / EOC 0.94 · invalid actions 0.4% |
+| All 754 cases (100%) | **JRA 753/754 (99.87%)** ✅ · evidence chains fully closed: 740/754 (98.1%) · all six metrics full: 722/754 (95.8%) | process means MC 0.996 / EOC 0.980 · invalid actions 0.8% |
 | Reference — model baselines (the benchmark's own scorer) | strongest baselines in the benchmark report: JRA 0.76 (Online Boutique) / 0.68 (Train-Ticket), ≈ 0.73 weighted over all 754; evidence-chain closure 0.38 / 0.15 (exploring wide, closing no chain) | scored by the upstream scorer as-is; no manual rulings |
 
 Ledgers, question by question with evidence: [birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md)
@@ -153,7 +153,7 @@ A **scenario** is one complete TSM: content lives in `scenarios/<name>/` and is 
 
 Also in the package: `eval/questions.jsonl` (the exam paper — one line per question: `{question, expected, source}`; answer keys come from the L3 clause for the 74 defect-ruled questions, gold otherwise), `results/<run>/` (graded runs), `fixtures/` (truth sets for the verify suite), `DETAIL.md` + `DETAIL/<db>.md` (ledger).
 
-Scenarios in the box — **`birdminidev`**: BIRD mini-dev, 11 databases / 500 questions, all run and judged — **500/500** (✅ 426 + 🔁 74 dataset-defect rulings; zero errors); token median ≈ 55.9k per question (mean 73.3k), ~6 steps / 10 tool calls. **`cloudopsbench`**: Cloud-OpsBench — 754 Kubernetes RCA cases — **JRA 752/754 (99.7%)**. Ledgers: [birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md).
+Scenarios in the box — **`birdminidev`**: BIRD mini-dev, 11 databases / 500 questions, all run and judged — **500/500** (✅ 426 + 🔁 74 dataset-defect rulings; zero errors); token median ≈ 55.9k per question (mean 73.3k), ~6 steps / 10 tool calls. **`cloudopsbench`**: Cloud-OpsBench — 754 Kubernetes RCA cases — **JRA 753/754 (99.87%)**. Ledgers: [birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md).
 
 Switching scenarios: point the service at another package (`TSM_SCENARIO=<path>`), rebuild, and follow the checklist in [docs/04-application.md](docs/04-application.md).
 

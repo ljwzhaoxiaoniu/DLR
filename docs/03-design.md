@@ -231,7 +231,7 @@ pas_relations:
 | student_club | `Expense`'s anchor was `link_to_budget` (no business meaning); Member description was 3 words | Expense promoted to its own LE with a new anchor; PAS added; descriptions enriched | 389K/25 steps → **34K/4 steps** |
 | toxicology | `atom.element`, `bond_type` etc. all private; no PAS from Bond→Atom | Four columns promoted to public; PAS added; descriptions in English + field names | tokens **-60%** |
 | debit_card | `Consumption`'s public face lacked "the spend amount"; `Amount` collided with "amount spent" | New `Spending` public; `Amount` renamed to "fuel amount (litres)" | tokens **-33%** |
-| cloudopsbench (v1 → v3) | Abstract kinds; objects and surfaces could not be told apart | **Concrete-object LEs** (business / carrier / observation) + observation-surface PEs + anchored readings + call-graph PAS | Dual-path parallel recall; coverage 754/754, JRA 752/754 (99.7%) |
+| cloudopsbench (v1 → v3) | Abstract kinds; objects and surfaces could not be told apart | **Concrete-object LEs** (business / carrier / observation) + observation-surface PEs + anchored readings + call-graph PAS | Dual-path parallel recall; coverage 754/754, JRA 753/754 (99.87%) |
 | cloudopsbench (edgeless objects) | Placement / scope change per case; a schema edge would write instance facts into the model | **Deliberately no edge**; nodes / namespaces reachable through four routes with existing tools, no dedicated tool, no per-deployment descriptions | All four reachability probes passed; X×N repetition avoided |
 
 (The figures come from historical comparisons; kept here as **evidence that the design rules work**.)

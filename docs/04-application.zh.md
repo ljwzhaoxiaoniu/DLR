@@ -30,7 +30,7 @@ scenarios/<场景>/
 | L3 | 180 节（**按题**分节） | 5 节（**按症状措辞**分节，覆盖 754 例；节内是决策树） |
 | 工具面 | 7 个 | 3 个（不装 Neo4j 图） |
 | 评测内容 | 自建考卷：`eval/questions.jsonl` 500 题 | 外部基准：754 例 + 上游 scorer 适配 |
-| 结果 | **500/500**（✅ 426 + 🔁 74） | **覆盖 754/754 · JRA 752/754（99.7%）** |
+| 结果 | **500/500**（✅ 426 + 🔁 74） | **覆盖 754/754 · JRA 753/754（99.87%）** |
 
 ## 二、三层各写什么
 
@@ -94,7 +94,7 @@ scenarios/<场景>/
 
 - **形态 A：自建题库（birdminidev）**——`eval/questions.jsonl`，每题 `{question, expected, source}`（`source` = 口径来源，便于判错归因）；500 行 = **L3 节口径 74 处**（翻盘题的答案键）+ **gold 426 处**；生成器 `eval/build.mjs`（`node eval/build.mjs` 可复现，74/426 与评定分栏**逐项一致**）。
 - **形态 B：外部基准适配（cloudopsbench）**——`eval/` 放的是适配器而非题库：`convert.mjs`（会话日志 → reference trace）· `run_eval.py`（复用上游 scorer）· `grade.sh`（一条命令判分）· `stats.mjs`（重建 STATS / DETAIL）。考卷本体是上游 754 例（`process-label` 全量），判分口径 = 上游 CA/FA/JRA + MC/EOC/ECR/EE，**没有人工翻盘口径**。
-- **结果**：bird **500/500**（✅ 426 + 🔁 74）；COB **覆盖 754/754 · JRA 752/754（99.7%）**（轮次 230）。
+- **结果**：bird **500/500**（✅ 426 + 🔁 74）；COB **覆盖 754/754 · JRA 753/754（99.87%）**（轮次 420）。
 - **考卷跟场景走、考试系统跟 dsh 走**（独立 bundle）——见 [eval.zh.md](eval.zh.md)。
 
 ## 五、评审：双读测试

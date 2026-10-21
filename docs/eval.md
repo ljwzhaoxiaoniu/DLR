@@ -10,7 +10,7 @@
 | | Follows | Form | Nature |
 |---|---|---|---|
 | **Paper A: authored** | **scenario** | `scenarios/<name>/eval/questions.jsonl` | **Content asset**: one per scenario, versioned with the scenario package ｜ ✅ `birdminidev`: 500 questions (generator `eval/build.mjs` — **answer keys take the L3 clause for 74 questions and gold for the other 426**) |
-| **Paper B: external-benchmark adapter** | **scenario** | `scenarios/<name>/eval/` (adapters: `convert` / `run_eval` / `grade` / `stats`) | **Content asset**: the paper itself is the upstream benchmark's 754 cases; the scenario package ships only the adapter ｜ ✅ `cloudopsbench`: **coverage 754/754 · JRA 752/754 (99.7%)**; judging = the upstream scorer (CA/FA/JRA + MC/EOC/ECR/EE) |
+| **Paper B: external-benchmark adapter** | **scenario** | `scenarios/<name>/eval/` (adapters: `convert` / `run_eval` / `grade` / `stats`) | **Content asset**: the paper itself is the upstream benchmark's 754 cases; the scenario package ships only the adapter ｜ ✅ `cloudopsbench`: **coverage 754/754 · JRA 753/754 (99.87%)**; judging = the upstream scorer (CA/FA/JRA + MC/EOC/ECR/EE) |
 | **Exam system** (run + score + report) | **dsh** | ✅ the standalone `dsh-tsm-eval` package (0.1: CLI `run / score / report / all / doctor / parity`; the dsh bundle surface — web overlay, `/eval` — is planned for 0.2) | **Host capability**: one system serves all scenarios, **independently separable** |
 
 ## 2. Why split this way
@@ -80,7 +80,7 @@ bash scenarios/cloudopsbench/eval/grade.sh --runs-root scenarios/cloudopsbench/r
 node scenarios/cloudopsbench/eval/stats.mjs
 ```
 
-- Serial, one case at a time (memory constraint); **230 rounds** archived; result **coverage 754/754 · JRA 752/754 (99.7%)**; process scores MC 0.990 / EOC 0.946 / ECR 0.960.
+- 2 lanes × 4 cases per batch (memory constraint); **420 rounds** archived; result **coverage 754/754 · JRA 753/754 (99.87%)**; process scores MC 0.996 / EOC 0.980 / ECR 0.981.
 - The judging caliber = the **upstream scorer** (CA/FA/JRA + MC/EOC/ECR/EE), not the three tiers of `tsm grade` above; `stats.mjs` deduplicates across rounds and takes the latest.
 
 **Discipline (migration period)**:

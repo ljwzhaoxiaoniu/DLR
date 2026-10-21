@@ -30,7 +30,7 @@ scenarios/<scenario>/
 | L3 | 180 sections (**per question**) | 5 sections (**per symptom wording**, covering 754 cases; each section is a decision tree) |
 | Tool surface | 7 | 3 (no Neo4j graph) |
 | Evaluation content | Authored paper: `eval/questions.jsonl`, 500 questions | External benchmark: 754 cases + upstream scorer adapter |
-| Result | **500/500** (✅ 426 + 🔁 74) | **coverage 754/754 · JRA 752/754 (99.7%)** |
+| Result | **500/500** (✅ 426 + 🔁 74) | **coverage 754/754 · JRA 753/754 (99.87%)** |
 
 ## 2. What each level writes
 
@@ -94,7 +94,7 @@ scenarios/<scenario>/
 
 - **Form A: authored paper (birdminidev)** — `eval/questions.jsonl`, each entry `{question, expected, source}` (`source` = provenience of the answer key, for attribution when a failure is judged); 500 lines = **74 from L3 clause conventions** (answer keys of overturned questions) + **426 from gold**; the generator `eval/build.mjs` (`node eval/build.mjs`, reproducible; 74/426 match the ruling columns **item by item**).
 - **Form B: external-benchmark adapter (cloudopsbench)** — `eval/` holds adapters rather than a paper: `convert.mjs` (session logs → reference trace) · `run_eval.py` (reuses the upstream scorer) · `grade.sh` (one-command scoring) · `stats.mjs` (rebuilds STATS / DETAIL). The paper itself is the upstream 754 cases (`process-label` full set); the judging caliber = upstream CA/FA/JRA + MC/EOC/ECR/EE, **with no human reversal convention**.
-- **Results**: bird **500/500** (✅ 426 + 🔁 74); COB **coverage 754/754 · JRA 752/754 (99.7%)** (round 230).
+- **Results**: bird **500/500** (✅ 426 + 🔁 74); COB **coverage 754/754 · JRA 753/754 (99.87%)** (round 420).
 - **The exam paper follows the scenario; the exam system follows dsh** (an independent bundle) — see [eval.md](eval.md).
 
 ## 5. Review: the dual-read test

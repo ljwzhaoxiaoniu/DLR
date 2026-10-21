@@ -1,6 +1,6 @@
 # Cloud-OpsBench — TSM Modeling Plan (L1 · dlr-state)
 
-> **Status**: as-built, 2026-10-15 — the L1 model is in place (**two per-system files**); the serving path, the scorer adapter and the results ledger have landed; the **L3 gate has since fired** (`sources/sop.md`, 5 sections) and the **full sweep is complete — 754/754 coverage, JRA 752/754 (99.7%)**. Everything below is kept as the modeling record.
+> **Status**: as-built, 2026-10-15 — the L1 model is in place (**two per-system files**); the serving path, the scorer adapter and the results ledger have landed; the **L3 gate has since fired** (`sources/sop.md`, 5 sections) and the **full sweep is complete — 754/754 coverage, JRA 753/754 (99.87%)**. Everything below is kept as the modeling record.
 > **Provenance**: benchmark README (layout / tool surface / metrics) + one sampled case per Boutique family (all 8) + cache scans over all 754 cases + the scorer internals (`agents/*/evaluation_utils`) + the service rosters and call graphs read edge-by-edge from the snapshots' own inputs — visible side only; gold / answer-side material never feeds the model.
 > **中文版**: [modeling-plan.zh.md](modeling-plan.zh.md)
 

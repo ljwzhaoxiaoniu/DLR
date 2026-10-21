@@ -2,7 +2,7 @@
 
 [English](README.md) | 中文
 
-[![BIRD mini-dev · 500/500](https://img.shields.io/badge/BIRD_mini--dev-500%2F500_correct-brightgreen)](#benchmarks) [![Cloud-OpsBench · JRA 752/754](https://img.shields.io/badge/Cloud--OpsBench-JRA_752%2F754_(99.7%25)-brightgreen)](#benchmarks) [![npm](https://img.shields.io/npm/v/dsh-tsm-agent)](https://www.npmjs.com/package/dsh-tsm-agent)
+[![BIRD mini-dev · 500/500](https://img.shields.io/badge/BIRD_mini--dev-500%2F500_correct-brightgreen)](#benchmarks) [![Cloud-OpsBench · JRA 753/754](https://img.shields.io/badge/Cloud--OpsBench-JRA_753%2F754_(99.87%25)-brightgreen)](#benchmarks) [![npm](https://img.shields.io/npm/v/dsh-tsm-agent)](https://www.npmjs.com/package/dsh-tsm-agent)
 
 **DLR（Decoupled Logic Representation）** 是本项目原创的**数据源级**语义建模范式：**LE / PE** 双层模型 + **ARCS**（投影锚定）与 **PAS**（语义路由）两个机制，把逻辑概念层与物理数据层解耦，让 LLM agent 可靠地把自然语言问题落到关系数据库上。详见 [docs/03-design.zh.md](docs/03-design.zh.md)。
 
@@ -16,7 +16,7 @@
 | `DSH-based Agent Service/dsh-tsm-agent/` · [`dsh-tsm-agent`](https://www.npmjs.com/package/dsh-tsm-agent) | **dsh bundle**：MCP 语义网关 + 场景无关的范式技能 + TSM 状态浮层 + agent 规则（启动器在 `DSH-based Agent Service/` 下） |
 | `DSH-based Agent Service/dsh-tsm-eval/` · [`dsh-tsm-eval`](https://www.npmjs.com/package/dsh-tsm-eval) | **考试系统**：把场景的考卷经 dsh headless 跑一遍、`tsm grade` 采分、产出可回放报告（结果 + 过程 + 会话日志取证） |
 | `scenarios/birdminidev/` · [`tsm-scenario-birdmini`](https://www.npmjs.com/package/tsm-scenario-birdmini) | 场景包 —— BIRD mini-dev（11 库 / 500 题）：三层源 + 考卷 + 跑批结果。**500/500 评定正确**（426 与 gold 完全一致 + 74 处按 L3 节口径裁定的数据集缺陷） |
-| `scenarios/cloudopsbench/` · [`tsm-scenario-cloudopsbench`](https://www.npmjs.com/package/tsm-scenario-cloudopsbench) | 场景包 —— Cloud-OpsBench（K8s 根因诊断，754 例）：三层源 + 上游评分器适配 + 跑批结果。全量 754 例 **JRA 752/754（99.7%）** |
+| `scenarios/cloudopsbench/` · [`tsm-scenario-cloudopsbench`](https://www.npmjs.com/package/tsm-scenario-cloudopsbench) | 场景包 —— Cloud-OpsBench（K8s 根因诊断，754 例）：三层源 + 上游评分器适配 + 跑批结果。全量 754 例 **JRA 753/754（99.87%）** |
 | *自带场景* | 场景层**可插拔** —— 把 `TSM_SCENARIO` 指向任意自带三层源（可选考卷）的场景包即可。换场景 checklist 见 [docs/04-application.zh.md](docs/04-application.zh.md) |
 
 <a id="benchmarks"></a>
@@ -38,11 +38,11 @@
 
 ![Cloud-OpsBench —— 模型基线的 JRA 与证据链全闭对比](assets/charts/cloudopsbench.svg)
 
-*Cloud-OpsBench（754 例）：JRA —— 故障组件 + 故障类型都对（柱）；ECR —— 证据链全闭（线）。基线：基准报告（arXiv:2603.00468），各模型分数按 Online Boutique（550）+ Train-Ticket（204）加权。我方：DeepSeek-V4.1-Flash + TSM+DLR —— JRA 752/754（99.7%）、证据链全闭 724/754（96.0%），由同一上游评分器判分。*
+*Cloud-OpsBench（754 例）：JRA —— 故障组件 + 故障类型都对（柱）；ECR —— 证据链全闭（线）。基线：基准报告（arXiv:2603.00468），各模型分数按 Online Boutique（550）+ Train-Ticket（204）加权。我方：DeepSeek-V4.1-Flash + TSM+DLR —— JRA 753/754（99.87%）、证据链全闭 740/754（98.1%），由同一上游评分器判分。*
 
 | 跑批 | 结果 | 备注 |
 |---|---|---|
-| 全量 754/754 例（100%） | **JRA 752/754（99.7%）** ✅ · 证据链全闭 724/754（96.0%） | 流程分均值 MC 0.99 / EOC 0.94 · 无效动作 0.4% |
+| 全量 754/754 例（100%） | **JRA 753/754（99.87%）** ✅ · 证据链全闭 740/754（98.1%） · 六项链全满 722/754（95.8%） | 流程分均值 MC 0.996 / EOC 0.980 · 无效动作 0.8% |
 | 对照 —— 模型基线（基准自家评分器） | 基准报告最强基线：JRA 0.76（Online Boutique）/ 0.68（Train-Ticket），全 754 加权 ≈ 0.73；证据链闭合 0.38 / 0.15（探索面广、闭不上链） | 上游评分器原样判分，无人工翻盘 |
 
 台账（逐题 + 证据）：[birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md)
@@ -153,7 +153,7 @@ TSM Core Service（TypeScript）：LanceDB（向量）+ ONNX 编码器（进程�
 
 包内还有：`eval/questions.jsonl`（考卷——一行一题 `{question, expected, source}`；74 处缺陷裁定题的答案键取 L3 节口径，其余取 gold）、`results/<轮次>/`（跑批留档）、`fixtures/`（verify 套件对照真值）、`DETAIL.md` + `DETAIL/<库>.md`（台账）。
 
-现有场景两个 —— **`birdminidev`**：BIRD mini-dev，11 库 / 500 题全部跑完并判定，**500/500**（✅ 426 + 🔁 74 数据集缺陷裁定；零错误）；每题 token 中位 ≈ 5.6 万（均值 7.3 万），约 6 步 / 10 次工具调用。**`cloudopsbench`**：Cloud-OpsBench —— 754 例 K8s 根因诊断，**JRA 752/754（99.7%）**。台账：[birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md)。
+现有场景两个 —— **`birdminidev`**：BIRD mini-dev，11 库 / 500 题全部跑完并判定，**500/500**（✅ 426 + 🔁 74 数据集缺陷裁定；零错误）；每题 token 中位 ≈ 5.6 万（均值 7.3 万），约 6 步 / 10 次工具调用。**`cloudopsbench`**：Cloud-OpsBench —— 754 例 K8s 根因诊断，**JRA 753/754（99.87%）**。台账：[birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md)。
 
 换场景：把服务指向另一个包（`TSM_SCENARIO=<路径>`）、重建，按 [docs/04-application.zh.md](docs/04-application.zh.md) 的 checklist 走。
 

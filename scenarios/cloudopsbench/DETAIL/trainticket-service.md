@@ -1,308 +1,308 @@
 # 评测明细 · train-ticket/service — cloudopsbench
 
-> 本家族已跑 **37/37** 题：JRA ✅37 ❌0 ｜ 证据链全闭 37 ｜ token 中位 500,404 ｜ 生成 2026-10-14T14:12:10.577Z
+> 本家族已跑 **37/37** 题：JRA ✅37 ❌0 ｜ 证据链全闭 36 ｜ token 中位 508,361 ｜ 生成 2026-10-21T01:11:28.996Z
 > 总账（覆盖度 / 汇总 / 索引）见 [../DETAIL.md](../DETAIL.md)；口径与列义同总账。
 
 ## 逐题校验表
 
 | 案例 | CA | FA | JRA | MC | EOC | ECR | EE | steps | tokens | RAR | inv | 轮次 | 备注 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| [1](#case-1) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4667 | 16 | 374,767 | 0 | 0 | 1013_2229_inorder4-v3b53 | 全对·链闭 |
-| [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 681,352 | 0 | 0 | 1012_2010_attr-verify1 | 全对·链闭 |
-| [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 1,133,738 | 0 | 0 | 1013_1040_rank1-verify1 | 全对·链闭 |
-| [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 373,034 | 0 | 0 | 1013_1122_inorder4-v3b9 | 全对·链闭 |
-| [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 460,035 | 0 | 0 | 1013_1225_inorder4-v3b11 | 全对·链闭 |
-| [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3478 | 24 | 437,347 | 0 | 0 | 1013_1248_inorder4-v3b13 | 全对·链闭 |
-| [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 465,479 | 0 | 0 | 1013_1413_inorder4-v3b15 | 全对·链闭 |
-| [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 364,342 | 0 | 0 | 1013_1520_inorder4-v3b17 | 全对·链闭 |
-| [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.35 | 21 | 295,786 | 0 | 0 | 1013_1536_inorder4-v3b19 | 全对·链闭 |
-| [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2609 | 24 | 666,312 | 0 | 0 | 1013_1623_inorder4-v3b21 | 全对·链闭 |
-| [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2963 | 28 | 707,393 | 0 | 0 | 1013_1640_gatewayyaml-verify1 | 全对·链闭 |
-| [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2927 | 42 | 2,104,083 | 0 | 0 | 1013_1645_inorder4-v3b24 | 全对·链闭 |
-| [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2121 | 34 | 2,181,512 | 0 | 0 | 1013_1810_gateway2-verify1 | 全对·链闭 |
-| [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2414 | 30 | 1,341,232 | 0 | 0 | 1013_1825_dual2-verify1 | 全对·链闭 |
-| [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 930,757 | 0 | 0 | 1013_1831_inorder4-v3b29 | 全对·链闭 |
-| [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2273 | 23 | 1,188,029 | 0 | 0 | 1013_1839_inorder4-v3b31 | 全对·链闭 |
-| [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 21 | 382,197 | 0 | 0 | 1013_1848_inorder4-v3b33 | 全对·链闭 |
-| [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.24 | 26 | 1,087,938 | 0 | 0 | 1013_1955_inorder4-v3b34 | 全对·链闭 |
-| [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 414,398 | 0 | 0 | 1013_2000_inorder4-v3b35 | 全对·链闭 |
-| [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 296,753 | 0 | 0 | 1013_2004_inorder4-v3b36 | 全对·链闭 |
-| [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3684 | 20 | 734,488 | 0 | 0 | 1013_2025_chainpivot-verify1 | 全对·链闭 |
-| [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 528,847 | 0 | 0 | 1013_2012_inorder4-v3b38 | 全对·链闭 |
-| [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 555,827 | 0 | 0 | 1013_2042_inorder4-v3b39 | 全对·链闭 |
-| [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.375 | 17 | 456,606 | 0 | 0 | 1013_2049_inorder4-v3b40 | 全对·链闭 |
-| [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2727 | 23 | 204,578 | 0 | 0 | 1012_1521_l3-tweak1 | 全对·链闭 |
-| [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 541,741 | 0 | 0 | 1013_2059_inorder4-v3b41 | 全对·链闭 |
-| [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 501,550 | 0 | 0 | 1013_2106_inorder4-v3b42 | 全对·链闭 |
-| [28](#case-28) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 486,562 | 0 | 0 | 1013_2110_inorder4-v3b43 | 全对·链闭 |
-| [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4211 | 20 | 325,996 | 0 | 0 | 1013_2114_inorder4-v3b44 | 全对·链闭 |
-| [30](#case-30) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 21 | 522,118 | 0 | 0 | 1013_2133_inorder4-v3b45 | 全对·链闭 |
-| [31](#case-31) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3158 | 20 | 500,404 | 0 | 0 | 1013_2141_inorder4-v3b46 | 全对·链闭 |
-| [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2 | 26 | 984,705 | 0 | 0 | 1013_2150_inorder4-v3b47 | 全对·链闭 |
-| [33](#case-33) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 21 | 366,893 | 0 | 0 | 1013_2156_inorder4-v3b48 | 全对·链闭 |
-| [34](#case-34) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 380,698 | 0 | 0 | 1013_2203_inorder4-v3b49 | 全对·链闭 |
-| [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2857 | 15 | 526,268 | 0 | 0 | 1013_2210_inorder4-v3b50 | 全对·链闭 |
-| [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 315,331 | 0 | 0 | 1013_2214_inorder4-v3b51 | 全对·链闭 |
-| [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 21 | 490,553 | 0 | 0 | 1013_2217_inorder4-v3b52 | 全对·链闭 |
+| [1](#case-1) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4 | 16 | 341,610 | 0 | 0 | 1020_2002_tsm-v1-b3 | 全对·链闭 |
+| [2](#case-2) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2778 | 19 | 341,259 | 0 | 0 | 1020_2323_tsm-v1-b36 | 全对·链闭 |
+| [3](#case-3) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 540,615 | 0 | 0 | 1021_0123_tsm-v1-b69 | 全对·链闭 |
+| [4](#case-4) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1875 | 17 | 332,608 | 0 | 0 | 1021_0213_tsm-v1-b94 | 全对·链闭 |
+| [5](#case-5) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3571 | 15 | 337,105 | 0 | 0 | 1021_0218_tsm-v1-b96 | 全对·链闭 |
+| [6](#case-6) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 485,837 | 0 | 0 | 1021_0223_tsm-v1-b99 | 全对·链闭 |
+| [7](#case-7) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 456,072 | 0 | 0 | 1021_0227_tsm-v1-b101 | 全对·链闭 |
+| [8](#case-8) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 19 | 361,386 | 0 | 0 | 1021_0233_tsm-v1-b104 | 全对·链闭 |
+| [9](#case-9) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 272,693 | 0 | 0 | 1021_0237_tsm-v1-b106 | 全对·链闭 |
+| [10](#case-10) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 21 | 954,922 | 0 | 0 | 1020_2008_tsm-v1-b6 | 全对·链闭 |
+| [11](#case-11) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 631,401 | 0 | 0 | 1021_0900_tsm-v1-fix | 全对·链闭 |
+| [12](#case-12) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3077 | 14 | 297,176 | 0 | 0 | 1021_0900_tsm-v1-fix | 全对·链闭 |
+| [13](#case-13) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3 | 31 | 1,722,412 | 0 | 0 | 1021_0900_tsm-v1-fix | 全对·链闭 |
+| [14](#case-14) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3571 | 15 | 332,905 | 0 | 0 | 1020_2243_tsm-v1-b18 | 全对·链闭 |
+| [15](#case-15) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1667 | 19 | 320,259 | 0 | 0 | 1020_2249_tsm-v1-b21 | 全对·链闭 |
+| [16](#case-16) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 541,423 | 0 | 0 | 1021_0900_tsm-v1-fix | 全对·链闭 |
+| [17](#case-17) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 442,692 | 0 | 0 | 1020_2304_tsm-v1-b27 | 全对·链闭 |
+| [18](#case-18) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 13 | 339,844 | 0 | 0 | 1020_2311_tsm-v1-b30 | 全对·链闭 |
+| [19](#case-19) | 1 | 1 | 1 | 1 | 1 | 1 | 0.4167 | 13 | 324,697 | 0 | 0 | 1020_2317_tsm-v1-b33 | 全对·链闭 |
+| [20](#case-20) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 756,118 | 0 | 0 | 1020_2329_tsm-v1-b39 | 全对·链闭 |
+| [21](#case-21) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3529 | 18 | 612,023 | 0 | 0 | 1020_2334_tsm-v1-b42 | 全对·链闭 |
+| [22](#case-22) | 1 | 1 | 1 | 1 | 1 | 1 | 0.35 | 21 | 477,194 | 0 | 0 | 1020_2340_tsm-v1-b45 | 全对·链闭 |
+| [23](#case-23) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2917 | 25 | 653,936 | 0 | 0 | 1020_2346_tsm-v1-b48 | 全对·链闭 |
+| [24](#case-24) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2941 | 18 | 548,778 | 0 | 0 | 1020_2353_tsm-v1-b51 | 全对·链闭 |
+| [25](#case-25) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 608,519 | 0 | 0 | 1020_2359_tsm-v1-b54 | 全对·链闭 |
+| [26](#case-26) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 746,860 | 0 | 0 | 1021_0056_tsm-v1-b57 | 全对·链闭 |
+| [27](#case-27) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2381 | 22 | 490,230 | 0 | 0 | 1021_0103_tsm-v1-b60 | 全对·链闭 |
+| [28](#case-28) | 1 | 1 | 1 | 0.75 | 0.25 | 0 | 0.2353 | 18 | 425,928 | 0 | 0 | 1021_0109_tsm-v1-b63 | 结果对·链未闭 |
+| [29](#case-29) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3333 | 16 | 610,376 | 0 | 0 | 1021_0117_tsm-v1-b66 | 全对·链闭 |
+| [30](#case-30) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2667 | 16 | 551,879 | 0 | 0 | 1021_0129_tsm-v1-b72 | 全对·链闭 |
+| [31](#case-31) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 655,349 | 0 | 0 | 1021_0136_tsm-v1-b75 | 全对·链闭 |
+| [32](#case-32) | 1 | 1 | 1 | 1 | 1 | 1 | 0.1818 | 23 | 592,231 | 0 | 0 | 1021_0142_tsm-v1-b78 | 全对·链闭 |
+| [33](#case-33) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2609 | 24 | 508,361 | 0 | 0 | 1021_0146_tsm-v1-b80 | 全对·链闭 |
+| [34](#case-34) | 1 | 1 | 1 | 1 | 1 | 1 | 0.25 | 17 | 759,258 | 0 | 0 | 1021_0152_tsm-v1-b83 | 全对·链闭 |
+| [35](#case-35) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2353 | 18 | 505,808 | 0 | 0 | 1021_0158_tsm-v1-b86 | 全对·链闭 |
+| [36](#case-36) | 1 | 1 | 1 | 1 | 1 | 1 | 0.3125 | 17 | 520,435 | 0 | 0 | 1021_0203_tsm-v1-b89 | 全对·链闭 |
+| [37](#case-37) | 1 | 1 | 1 | 1 | 1 | 1 | 0.2632 | 20 | 517,463 | 0 | 0 | 1021_0207_tsm-v1-b91 | 全对·链闭 |
 
 ## 证据正文
 
 ### case-1
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4667 · steps 16 · tokens 374,767
-- **raw 日志**：[results/1013_2229_inorder4-v3b53/raw/1013_2233_trainticket-service-1](../results/1013_2229_inorder4-v3b53/raw/1013_2233_trainticket-service-1/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Chain: symptom side first -> the only active alert is a 404 from the order API (POST /api/v1/orderservice/order/refresh, 20 occurrences, HTTPError('404 Client Error: Not Found')), i.e. an HTTP 404, not a connection refusal. Object layer is clean for both candidate services: pods ts-order-service and ts-food-service are 2/2 Running with 0 restarts, deployments 1/1/1 AVAILABLE, Service ts-order-service maps 12031->12031 with selector app=ts-order-service, and CheckServiceConnectivity to ts-order-service:12031 succeeds from worker-01/02/03 (Connection Succeeded); ts-order-service logs show normal
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4 · steps 16 · tokens 341,610
+- **raw 日志**：[results/1020_2002_tsm-v1-b3/raw/1020_2002_trainticket-service-1](../results/1020_2002_tsm-v1-b3/raw/1020_2002_trainticket-service-1/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side: alert on POST /api/v1/orderservice/order/refresh returns HTTPError('404 Client Error: Not Found') (20 occurrences, 'Refresh order list'/'Refresh orders for cancel'), i.e. the order business path is partially unreachable at HTTP level. Object layer for the named victim: ts-order-service pod is 2/2 Running with 0 restarts, its Service declares port 12031 -> targetPort 12031 with selector app=ts-order-service, endpoints 172.20.3.129:12031 exist, and an active TCP probe on the Service-declared port 12031 from worker-01/02/03 all report 'open / Connection Succeeded'; GetErrorLogs(ts-o
 
 ### case-2
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3158 · steps 20 · tokens 681,352
-- **raw 日志**：[results/1012_2010_attr-verify1/raw/1012_2010_trainticket-service-2](../results/1012_2010_attr-verify1/raw/1012_2010_trainticket-service-2/)（ndjson / mcp.jsonl / meta）
-- **摘要**：All 47 pods in train-ticket are 2/2 Running with no alert and no scheduling/admission/startup warning events, and the supposed victim is healthy: ts-order-service:12031 answers TCP from worker-01/02/03 (Connection Succeeded), its Service ports/targetPort=12031 and selector app=ts-order-service match its pod. The break is therefore at the address layer: line-by-line audit of the gateway route table (ConfigMap ts-gateway-service-config inside GetAppYAML(ts-gateway-service)) shows route id 'order' with Path=/api/v1/orderservice/** wired to uri 'lb://${ROUTE_SERVICE_HOST:ts-route-service}' - point
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2778 · steps 19 · tokens 341,259
+- **raw 日志**：[results/1020_2323_tsm-v1-b36/raw/1020_2323_trainticket-service-2](../results/1020_2323_tsm-v1-b36/raw/1020_2323_trainticket-service-2/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom 'Partial Service Unreachability.' matched L3 exact. Complaint side clean: GetErrorLogs on ts-ui-dashboard and ts-gateway-service returned no error logs, and CheckServiceConnectivity to ts-gateway-service:18888 succeeded from worker-01/02/03. Pod inventory all Running/Ready (only ts-ui-dashboard shows RESTARTS 3, consistent with rolling recreation). Services inventory divergence: ts-food-delivery-service and ts-wait-order-service return NotFound from DescribeResource, but GetResources(resourcequotas, namespace=train-ticket) returns 'No resources found', so the quota branch is excluded a
 
 ### case-3
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 1,133,738
-- **raw 日志**：[results/1013_1040_rank1-verify1/raw/1013_1040_trainticket-service-3](../results/1013_1040_rank1-verify1/raw/1013_1040_trainticket-service-3/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Reachability is partial: ts-ui-dashboard serving other paths 200 (contactservice, travelservice, assuranceservice) while preserveservice returns 499; pods are all 2/2 Running with services/selectors/ports correct, so no workload/node break. The break is in the address layer: the gateway ConfigMap ts-gateway-service-config (application.yml) owns 41 routes and exactly one violates 'each route's Path must point at the service its Path names' - route id 'order' has Path=/api/v1/orderservice/** but uri lb://${TRAVEL_SERVICE_HOST:ts-travel-service}. The nacos ConfigMap contains only NACOS_ADDRS and 
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 540,615
+- **raw 日志**：[results/1021_0123_tsm-v1-b69/raw/1021_0123_trainticket-service-3](../results/1021_0123_tsm-v1-b69/raw/1021_0123_trainticket-service-3/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All train-ticket pods read healthy (2/2 Running; only outlier ts-ui-dashboard RESTARTS 3), GetAlerts returns clean, and no ResourceQuota exists in the namespace (quota branch excluded; the absent Services ts-food-delivery-service and ts-wait-order-service are background). ts-order-service itself is healthy and reachable on its Service-declared port 12031 (GetResources services shows 10.68.138.137:12031; CheckServiceConnectivity returns 'Connection Succeeded' from worker-01/02/03). Yet requests to the order path never reach it: auditing the ts-gateway-service-config route table in GetAppYAML(ts
 
 ### case-4
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2778 · steps 19 · tokens 373,034
-- **raw 日志**：[results/1013_1122_inorder4-v3b9/raw/1013_1127_trainticket-service-4](../results/1013_1122_inorder4-v3b9/raw/1013_1127_trainticket-service-4/)（ndjson / mcp.jsonl / meta）
-- **摘要**：All train-ticket pods are 2/2 Running with no Pending/CrashLoop/ImagePull failures, and namespace events contain only rollout churn (Killing / 503 readiness / Backoff), so scheduling, admission, image, mount, probe, node and quota surfaces are excluded. Alerts report HTTPError('404 Client Error: Not Found') on POST /api/v1/orderservice/order/refresh (entry_service ts-order-service, 20 occurrences each), and TCP checks succeed to both ts-order-service:12031 and ts-price-service:16579 from worker-01/02/03 - a live backend answering 404 proves an addressing/routing break, not a connectivity break
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1875 · steps 17 · tokens 332,608
+- **raw 日志**：[results/1021_0213_tsm-v1-b94/raw/1021_0213_trainticket-service-4](../results/1021_0213_tsm-v1-b94/raw/1021_0213_trainticket-service-4/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 47 workloads are 2/2 Running with no Pending/ImagePullBackOff/CrashLoop, and the namespace events surface shows only rolling-update churn (Killing / Scheduled / SuccessfulCreate) plus probe-503 rows - no FailedCreate, FailedScheduling or FailedMount. Error logs for ts-order-service, ts-gateway-service and ts-price-service are empty, which excludes crash/startup/log-level defects. The signal side is the alert pointer: POST /api/v1/orderservice/order/refresh returns HTTPError('404 Client Error: Not Found') x20 for both 'Refresh order list' and 'Refresh orders for cancel' (entry_service ts-or
 
 ### case-5
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 23 · tokens 460,035
-- **raw 日志**：[results/1013_1225_inorder4-v3b11/raw/1013_1226_trainticket-service-5](../results/1013_1225_inorder4-v3b11/raw/1013_1226_trainticket-service-5/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Symptom: 'Service Availability Disruption.' Caller-side evidence: ts-ui-dashboard nginx log shows repeated 'POST /api/v1/preserveservice/preserve HTTP/1.1" 404 131' (alert: 20 occurrences, entry_service ts-preserve-service) while all other /api/v1/* calls return 200. Object layer is clean: all pods 2/2 Running except ts-ui-dashboard (3 restarts, caused by a transient nginx 'host not found in upstream ts-gateway-service' during rollout, now Ready), namespace events contain no FailedScheduling/FailedCreate/FailedMount/image-pull; ts-preserve-service has no error logs and CheckServiceConnectivity
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3571 · steps 15 · tokens 337,105
+- **raw 日志**：[results/1021_0218_tsm-v1-b96/raw/1021_0218_trainticket-service-5](../results/1021_0218_tsm-v1-b96/raw/1021_0218_trainticket-service-5/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All pods healthy (2/2 Running; only ts-ui-dashboard shows 3 restarts). GetAlerts: entry ts-preserve-service, POST /api/v1/preserveservice/preserve -> HTTPError('404 Client Error: Not Found') x20. GetErrorLogs on ts-preserve-service and ts-gateway-service: no error logs. CheckServiceConnectivity ts-preserve-service:14568 from worker-01/02/03: 'open / Connection Succeeded' (backend healthy). No ResourceQuota object in train-ticket, so the quota branch is excluded; the Services absent from the listing (ts-food-delivery-service, ts-wait-order-service) are background. Namespace events contain only 
 
 ### case-6
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3478 · steps 24 · tokens 437,347
-- **raw 日志**：[results/1013_1248_inorder4-v3b13/raw/1013_1249_trainticket-service-6](../results/1013_1248_inorder4-v3b13/raw/1013_1249_trainticket-service-6/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Alert points at entry_service=ts-preserve-service: POST /api/v1/preserveservice/preserve returns 404 Not Found (20 occurrences). Yet ts-preserve-service is fully healthy: pod 2/2 Running with 0 restarts, endpoints bound at 172.20.3.154:14568, TCP connectivity succeeds from worker-01/02/03, and its error log is empty - so the request never reaches it. The namespace-wide pod scan shows no pending/crash/image-pull/mount anomaly and the events surface carries no Warning naming the preserve chain. The break is in the address layer: in ts-gateway-service-config (ConfigMap of app ts-gateway-service) 
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 485,837
+- **raw 日志**：[results/1021_0223_tsm-v1-b99/raw/1021_0223_trainticket-service-6](../results/1021_0223_tsm-v1-b99/raw/1021_0223_trainticket-service-6/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All train-ticket workloads are healthy (Running, 2/2 or 4/4 READY, no Pending/ImagePull/FailedMount) and no ResourceQuota object exists (quota branch excluded). The alert is POST /api/v1/preserveservice/preserve -> HTTPError('404 Client Error: Not Found') x20, and 404 rather than 5xx points at the address layer. CheckServiceConnectivity(ts-preserve-service,14568) succeeded from worker-01/02/03 (port taken from the Service spec), and GetErrorLogs(ts-preserve-service) is empty, so no request ever reached it. The break is in the gateway route table (ConfigMap ts-gateway-service-config): route id=
 
 ### case-7
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2778 · steps 19 · tokens 465,479
-- **raw 日志**：[results/1013_1413_inorder4-v3b15/raw/1013_1415_trainticket-service-7](../results/1013_1413_inorder4-v3b15/raw/1013_1415_trainticket-service-7/)（ndjson / mcp.jsonl / meta）
-- **摘要**：All 44 train-ticket pods read 2/2 Running/Ready with no Pending/CrashLoop and ts-preserve-service:14568 is reachable from every node (CheckServiceConnectivity: Connection Succeeded; no error logs), yet the UI-dashboard nginx access log shows 20x "POST /api/v1/preserveservice/preserve HTTP/1.1" 404 while every sibling path (orderservice/order/refresh, inside_pay_service/inside_payment, cancelservice, users/login) returns 200. Line-by-line audit of the gateway route table (configmap ts-gateway-service-config, AGE 5m55s vs 9d for all other configmaps) shows exactly one mis-paired entry: id=preser
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2941 · steps 18 · tokens 456,072
+- **raw 日志**：[results/1021_0227_tsm-v1-b101/raw/1021_0228_trainticket-service-7](../results/1021_0227_tsm-v1-b101/raw/1021_0228_trainticket-service-7/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert: POST /api/v1/preserveservice/preserve -> HTTPError('404 Client Error: Not Found') x20. All 45 workloads report Running 2/2 with 0 restarts (ts-preserve-service healthy, its log shows 'Tomcat started on port(s): 14568' and 'nacos registry ... ts-preserve-service 172.20.2.204:14568 register finished'); GetErrorLogs on ts-preserve-service and ts-gateway-service returned no error entries. Direct probes from all three nodes succeeded (ts-preserve-service 10.68.28.164:14568 open, ts-route-service 10.68.77.199:11178 open), so every object is healthy yet the entry call diverges - an address-lay
 
 ### case-8
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 19 · tokens 364,342
-- **raw 日志**：[results/1013_1520_inorder4-v3b17/raw/1013_1523_trainticket-service-8](../results/1013_1520_inorder4-v3b17/raw/1013_1523_trainticket-service-8/)（ndjson / mcp.jsonl / meta）
-- **摘要**：ts-ui-dashboard (nginx, fronting ts-gateway-service) logs POST /api/v1/preserveservice/preserve -> 404 (13 occurrences, alert entry_service=ts-preserve-service) while every sibling path at the same timestamps returns 200 (cancel/login/travelservice/assuranceservice), i.e. only the preserve path is unreachable. The target itself is healthy: ts-preserve-service pod 2/2 Running, Nacos 'register finished', CheckServiceConnectivity(ts-preserve-service:14568) succeeded from worker-01/02/03, and its container log shows startup only — it never receives any preserve request. The break is the address la
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 19 · tokens 361,386
+- **raw 日志**：[results/1021_0233_tsm-v1-b104/raw/1021_0233_trainticket-service-8](../results/1021_0233_tsm-v1-b104/raw/1021_0233_trainticket-service-8/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Signal side: GetAlerts shows 13x POST /api/v1/preserveservice/preserve -> HTTPError('404 Client Error: Not Found') with entry ts-preserve-service; GetErrorLogs(ts-preserve-service) is empty and CheckServiceConnectivity(ts-preserve-service:14568) reports 'open / Connection Succeeded' from worker-01/02/03, so the target service itself is healthy and reachable. Object layer: all pods are 2/2 Running with no READY/RESTARTS outlier; GetResources(resourcequotas) returns 'No resources found in train-ticket namespace', excluding the quota branch, and the only missing objects are the Service entries ts
 
 ### case-9
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.35 · steps 21 · tokens 295,786
-- **raw 日志**：[results/1013_1536_inorder4-v3b19/raw/1013_1537_trainticket-service-9](../results/1013_1536_inorder4-v3b19/raw/1013_1537_trainticket-service-9/)（ndjson / mcp.jsonl / meta）
-- **摘要**：L3 SOP reachability chain. Symptom side: GetAlerts shows POST /api/v1/preserveservice/preserve -> HTTPError('404 Client Error: Not Found') x13 against ts-preserve-service, while GetErrorLogs(ts-preserve-service) returns 'No error logs found' (traffic never reaches it). Object layer healthy: all pods 2/2 Running with no Pending/FailedCreate/FailedScheduling/image-pull errors, deployments ts-preserve-service and ts-gateway-service both 1/1 AVAILABLE (up-to-date 1, available 1), and endpoints ts-preserve-service bound at 172.20.2.242:14568 - so this is NOT a scheduling/startup/probe/selector-bind
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 272,693
+- **raw 日志**：[results/1021_0237_tsm-v1-b106/raw/1021_0238_trainticket-service-9](../results/1021_0237_tsm-v1-b106/raw/1021_0238_trainticket-service-9/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side: GetAlerts shows entry_service ts-preserve-service POST /api/v1/preserveservice/preserve failing with HTTPError('404 Client Error: Not Found') x13. ts-preserve-service is healthy and reachable: CheckServiceConnectivity(ts-preserve-service,14568, declared Service port) returned 'Connection Succeeded' from worker-01/02/03, GetErrorLogs(ts-preserve-service) has no errors, and its pod is 2/2 Running - so the request never reached it. Quota branch excluded: GetResources(resourcequotas) returned 'No resources found' (no ResourceQuota object at all); the only absent Service, ts-food-deli
 
 ### case-10
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2609 · steps 24 · tokens 666,312
-- **raw 日志**：[results/1013_1623_inorder4-v3b21/raw/1013_1624_trainticket-service-10](../results/1013_1623_inorder4-v3b21/raw/1013_1624_trainticket-service-10/)（ndjson / mcp.jsonl / meta）
-- **摘要**：All train-ticket workloads are 2/2 Running/Ready and every Service endpoint is bound, so the break is not at the workload or network layer. Reading the address layer: ConfigMap ts-gateway-service-config (owner ts-gateway-service) contains exactly one route whose uri does not match the service its Path names -- route id 'route' with Path=/api/v1/routeservice/** has uri lb://${PRICE_SERVICE_HOST:ts-price-service} (sibling 'price' route is Path=/api/v1/priceservice/** -> lb://ts-price-service), so it should be ${ROUTE_SERVICE_HOST:ts-route-service}. No route in the table targets ts-route-service 
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3 · steps 21 · tokens 954,922
+- **raw 日志**：[results/1020_2008_tsm-v1-b6/raw/1020_2008_trainticket-service-10](../results/1020_2008_tsm-v1-b6/raw/1020_2008_trainticket-service-10/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All workloads read healthy (every ts-* pod 2/2 Running, no Pending/CrashLoopBackOff/ImagePullBackOff; Service objects all present) and no ResourceQuota exists in the namespace ('No resources found'), so pod-level and quota causes are excluded. The break is on the address layer inside the gateway's own config: in ConfigMap ts-gateway-service-config, the route entry 'id: route' with predicate Path=/api/v1/routeservice/** is wired to uri lb://${PRICE_SERVICE_HOST:ts-price-service} instead of ROUTE_SERVICE_HOST:ts-route-service, so every /api/v1/routeservice/** request is sent to the price service
 
 ### case-11
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2963 · steps 28 · tokens 707,393
-- **raw 日志**：[results/1013_1640_gatewayyaml-verify1/raw/1013_1640_trainticket-service-11](../results/1013_1640_gatewayyaml-verify1/raw/1013_1640_trainticket-service-11/)（ndjson / mcp.jsonl / meta）
-- **摘要**：All workloads are healthy: 43/43 pods Running 2/2 (only ts-ui-dashboard shows 3 restarts, from a transient startup nginx 'host not found in upstream "ts-gateway-service"'), all deployments 1/1 AVAILABLE, every Service has bound endpoints, TCP connectivity to ts-payment-service:19001 succeeds from worker-01/02/03, and the event surface shows no FailedScheduling/FailedCreate/FailedMount/image-pull mechanism events. The address layer is therefore the first failing surface: in the gateway's own manifest (ConfigMap ts-gateway-service-config, read via GetAppYAML(ts-gateway-service)) the route entry 
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 631,401
+- **raw 日志**：[results/1021_0900_tsm-v1-fix/raw/1020_2049_trainticket-service-11](../results/1021_0900_tsm-v1-fix/raw/1020_2049_trainticket-service-11/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All workloads healthy: pods listing shows every ts-* pod Running with READY 2/2, no Pending/CrashLoop/image-pull/PVC events; namespace events are all Normal scheduling/probe transitions and GetResources(resourcequotas) returned 'No resources found', which excludes the quota branch (the two Service objects absent from the listing - ts-food-delivery-service and ts-wait-order-service - are background, not the victim named by the complaint). Symptom side: alert on entry_service ts-inside-payment-service plus its error log 'HttpServerErrorException$InternalServerError: 500 Internal Server Error ...
 
 ### case-12
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2927 · steps 42 · tokens 2,104,083
-- **raw 日志**：[results/1013_1645_inorder4-v3b24/raw/1013_1646_trainticket-service-12](../results/1013_1645_inorder4-v3b24/raw/1013_1646_trainticket-service-12/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Object layer fully healthy: 42/42 Deployments 1/1, every Pod 2/2 Running, no Pending/FailedScheduling/FailedCreate/FailedMount/image-pull errors, no namespace ResourceQuota, every Service has endpoints (ts-route-service 10.68.191.150:11178 open on worker-01/02/03) — scheduling/startup/admission/quota stages are excluded. The single alert (HTTP 500 on ts-inside-payment-service POST /api/v1/inside_pay_service/inside_payment, 5 occurrences) traces to 5 concurrent-request NonUniqueResultException rows in ts-payment-service, a load-induced data flake that matches no injectable root cause. Auditing 
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3077 · steps 14 · tokens 297,176
+- **raw 日志**：[results/1021_0900_tsm-v1-fix/raw/1020_2050_trainticket-service-12](../results/1021_0900_tsm-v1-fix/raw/1020_2050_trainticket-service-12/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 47 pods in train-ticket are Running and Ready (2/2) - no Pending, no ImagePullBackOff, no CrashLoopBackOff; namespace events contain no FailedScheduling/FailedCreate/FailedMount, so the workload layer is healthy. No ResourceQuota object exists (GetResources resourcequotas -> 'No resources found in train-ticket namespace'), so the quota branch is excluded; ts-food-delivery-service and ts-wait-order-service are absent from the Services listing while their pods run, but the target of the failing call (ts-payment-service) exists, so those missing Services are background. Reading the gateway's 
 
 ### case-13
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2121 · steps 34 · tokens 2,181,512
-- **raw 日志**：[results/1013_1810_gateway2-verify1/raw/1013_1810_trainticket-service-13](../results/1013_1810_gateway2-verify1/raw/1013_1810_trainticket-service-13/)（ndjson / mcp.jsonl / meta）
-- **摘要**：All train-ticket workloads read clean on the object layer (deployments 1/1 AVAILABLE, pods 2/2 Running; connectivity probes to ts-gateway-service:18888, ts-ui-dashboard:8080, ts-payment-service:19001, ts-preserve-service:14568 all 'Connection Succeeded'), so the break is in the address layer. The gateway's own manifest (ConfigMap ts-gateway-service-config, application.yml) holds the route table, and one route's Path and target disagree: '- id: route / uri: lb://${USER_SERVICE_HOST:ts-user-service} / Path=/api/v1/routeservice/**' — a routeservice Path wired to ts-user-service, while every other
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3 · steps 31 · tokens 1,722,412
+- **raw 日志**：[results/1021_0900_tsm-v1-fix/raw/1020_2049_trainticket-service-13](../results/1021_0900_tsm-v1-fix/raw/1020_2049_trainticket-service-13/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All pods are 2/2 Running (only ts-ui-dashboard restarted, 3x, on a transient nginx startup error) so no workload is broken; direct-connect probes succeed to both ts-route-service:11178 and ts-user-service:12342 on worker-01/02/03, so objects and endpoints are healthy while addresses diverge. The address layer is the break: in ts-gateway-service-config the route with id 'route' declares Path=/api/v1/routeservice/** but its uri is lb://${USER_SERVICE_HOST:ts-user-service}, a target naming a different service than the Path denotes, so /api/v1/routeservice/** is delivered to ts-user-service and ts
 
 ### case-14
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2414 · steps 30 · tokens 1,341,232
-- **raw 日志**：[results/1013_1825_dual2-verify1/raw/1013_1826_trainticket-service-14](../results/1013_1825_dual2-verify1/raw/1013_1826_trainticket-service-14/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Object layer is fully healthy: all 41 ts-* deployments 1/1 AVAILABLE, every pod 2/2 Running, every Service has endpoints, and TCP probes to ts-gateway-service:18888 and ts-user-service:12342 succeed from all three workers — so the break is not in pods/deployments/endpoints/connectivity. Auditing the gateway route table line by line (GetAppYAML(ts-gateway-service) == live ConfigMap ts-gateway-service-config) shows exactly one Path-to-target mismatch among 41 routes: id 'route' with Path=/api/v1/routeservice/** has uri lb://${USER_SERVICE_HOST:ts-user-service}, i.e. the prefix denoting the route
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3571 · steps 15 · tokens 332,905
+- **raw 日志**：[results/1020_2243_tsm-v1-b18/raw/1020_2243_trainticket-service-14](../results/1020_2243_tsm-v1-b18/raw/1020_2243_trainticket-service-14/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom-side entry: alert names ts-inside-payment-service POST /api/v1/inside_pay_service/inside_payment -> 500. Its error log shows HttpServerErrorException 500 on path /api/v1/paymentservice/payment, so the failure originates downstream. One hop down, ts-payment-service is a leaf (GetServiceDependencies: 'Leaf Node - No downstream calls') yet raises IncorrectResultSizeDataAccessException: query did not return a unique result: 5 - an exception trail, not a mechanism. Object layer is fully healthy: pods listing shows all train-ticket workloads Running (ts-route-service, ts-user-service, ts-gat
 
 ### case-15
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1875 · steps 17 · tokens 930,757
-- **raw 日志**：[results/1013_1831_inorder4-v3b29/raw/1013_1832_trainticket-service-15](../results/1013_1831_inorder4-v3b29/raw/1013_1832_trainticket-service-15/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Object layer is clean: all train-ticket pods read 2/2 Running with no Pending/CrashLoop/FailedScheduling/FailedCreate/FailedMount/image-pull events, so scheduling/startup/runtime are excluded. The address layer is the breakpoint: in the gateway ConfigMap ts-gateway-service-config (spring.cloud.gateway.routes) the route id 'travel' declares Path=/api/v1/travelservice/** but its uri is lb://${USER_SERVICE_HOST:ts-user-service}, i.e. travel search traffic is sent to ts-user-service instead of ts-travel-service (all sibling routes travel2/travel-plan/user are self-consistent). This matches the mis
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1667 · steps 19 · tokens 320,259
+- **raw 日志**：[results/1020_2249_tsm-v1-b21/raw/1020_2249_trainticket-service-15](../results/1020_2249_tsm-v1-b21/raw/1020_2249_trainticket-service-15/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alerts recorded 20x 'HTTPError(404 Client Error: Not Found)' for POST /api/v1/travelservice/trips/left. All pods were 2/2 Running with no Pending/CrashLoop outliers, so the object layer was healthy. Auditing the gateway's own manifest (GetAppYAML ts-gateway-service, ConfigMap ts-gateway-service-config) line by line showed exactly one route whose Path does not match its uri target: '- id: travel / uri: lb://${USER_SERVICE_HOST:ts-user-service} / Path=/api/v1/travelservice/**' (it duplicates the 'user' route's target instead of TRAVEL_SERVICE_HOST:ts-travel-service). Traffic for the travel path 
 
 ### case-16
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2273 · steps 23 · tokens 1,188,029
-- **raw 日志**：[results/1013_1839_inorder4-v3b31/raw/1013_1840_trainticket-service-16](../results/1013_1839_inorder4-v3b31/raw/1013_1840_trainticket-service-16/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Symptom wording named no service, so the inventory listing was the entry: all 47 pods Running/Ready with the only restart outlier being ts-ui-dashboard (3, transient nginx 'host not found in upstream ts-gateway-service' at pod start). Caller-side signal: ts-ui-dashboard nginx access log shows repeated 'POST /api/v1/travelservice/trips/left HTTP/1.1" 404 131' while sibling paths return 200, matching the alert (business_action 'Search ticket', entry_service ts-travel-service, /api/v1/travelservice/trips/left, 19 occurrences, HTTP 404 Not Found). The break is in the address layer, not in either c
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 16 · tokens 541,423
+- **raw 日志**：[results/1021_0900_tsm-v1-fix/raw/1021_0013_trainticket-service-16](../results/1021_0900_tsm-v1-fix/raw/1021_0013_trainticket-service-16/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 51 pods in namespace train-ticket are Running/Ready (2/2, 3/3, 4/4) with no Pending/CrashLoop/image-pull and no Warning event tying any workload to a scheduling, mount or quota failure, so workload/config-quota/DNS branches are excluded. Signal side: GetAlerts reports 'Search ticket' POST /api/v1/travelservice/trips/left returning HTTPError('404 Client Error: Not Found') 19 times. Auditing the gateway's own manifest (GetAppYAML(ts-gateway-service), ConfigMap ts-gateway-service-config) route table line by line exposes the break: route id 'travel' has predicate Path=/api/v1/travelservice/** 
 
 ### case-17
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 21 · tokens 382,197
-- **raw 日志**：[results/1013_1848_inorder4-v3b33/raw/1013_1851_trainticket-service-17](../results/1013_1848_inorder4-v3b33/raw/1013_1851_trainticket-service-17/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Alert surface: POST /api/v1/travelservice/trips/left (business action 'Search ticket', entry ts-travel-service) repeatedly returns HTTPError 404 Not Found (20x) - a valid path answered by an HTTP server that does not own it. Object/node layer is clean: GetResources(pods) shows all 40+ ts-* pods 2/2 Running with no Pending/CrashLoop/image-pull outliers, GetClusterConfiguration shows 4/4 nodes Ready with no taints or pressure, and CheckNodeServiceStatus shows kube-proxy active on worker-01/02/03 - so the break is at the address layer, not in workload or nodes. GetAppYAML(ts-gateway-service) expo
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 16 · tokens 442,692
+- **raw 日志**：[results/1020_2304_tsm-v1-b27/raw/1020_2304_trainticket-service-17](../results/1020_2304_tsm-v1-b27/raw/1020_2304_trainticket-service-17/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert: Search ticket POST /api/v1/travelservice/trips/left -> 404 Not Found (20x) on entry service ts-travel-service. Object layer is healthy: pod ts-travel-service-5b9b99c879-kbm48 is 2/2 Running with 0 restarts, Service ts-travel-service (ClusterIP 10.68.18.40:12346) exists, and CheckServiceConnectivity on the Service's own declared port 12346 succeeded from worker-01/02/03; GetErrorLogs(ts-travel-service) shows only business-level 'Trip already exists' errors, no connection failures. GetServiceDependencies(ts-travel-service) lists ts-gateway-service as an upstream. Decisive evidence is the 
 
 ### case-18
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.24 · steps 26 · tokens 1,087,938
-- **raw 日志**：[results/1013_1955_inorder4-v3b34/raw/1013_1957_trainticket-service-18](../results/1013_1955_inorder4-v3b34/raw/1013_1957_trainticket-service-18/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Caller side proves the break: ts-ui-dashboard nginx access log records repeated 'POST /api/v1/travelservice/trips/left HTTP/1.1" 404 131' from python-requests (matching alert 'Search ticket' 404 x19), while all other paths in the same log return 200. The gateway route table itself is the break: in ConfigMap ts-gateway-service-config (application.yml of ts-gateway-service) the route 'travel' with predicate Path=/api/v1/travelservice/** is wired to uri lb://${PRESERVE_SERVICE_HOST:ts-preserve-service} instead of the travel upstream (${TRAVEL_SERVICE_HOST:ts-travel-service}); the sibling 'preserv
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 13 · tokens 339,844
+- **raw 日志**：[results/1020_2311_tsm-v1-b30/raw/1020_2311_trainticket-service-18](../results/1020_2311_tsm-v1-b30/raw/1020_2311_trainticket-service-18/)（ndjson / mcp.jsonl / meta）
+- **摘要**：All 48 train-ticket workload pods are 2/2 Running; pod listing shows no CrashLoopBackOff/Pending/ImagePullBackOff, and the namespace events surface contains only Normal 'Killing' rows from a rolling restart plus transient istio probe failures - no FailedCreate / FailedScheduling / FailedMount / image-pull warnings, so no creation or capacity breakpoint exists. GetResources(resourcequotas) returns 'No resources found in train-ticket namespace', which excludes the quota branch entirely, and the two Services absent from the services listing (ts-food-delivery-service, ts-wait-order-service) have r
 
 ### case-19
 
 - **结论**：`app/ts-gateway-service` + `gateway_misrouted` ｜ 标签 `app/ts-gateway-service` + `gateway_misrouted`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 19 · tokens 414,398
-- **raw 日志**：[results/1013_2000_inorder4-v3b35/raw/1013_2002_trainticket-service-19](../results/1013_2000_inorder4-v3b35/raw/1013_2002_trainticket-service-19/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Alert: 503 Service Unavailable on POST /api/v1/travelservice/trips/left (entry_service ts-travel-service, 10 occurrences). ts-ui-dashboard nginx access log reproduces it verbatim ('POST /api/v1/travelservice/trips/left HTTP/1.1" 503 153', 16:00:30-32), and ts-gateway-service logs at the same second: 'WARN RoundRobinLoadBalancer : No servers available for service: ts-nonexistent-travel-backend'. The gateway's own route table (ConfigMap ts-gateway-service-config, mounted into ts-gateway-service) carries the mis-wired entry: route id 'travel', Path=/api/v1/travelservice/**, uri=lb://ts-nonexisten
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4167 · steps 13 · tokens 324,697
+- **raw 日志**：[results/1020_2317_tsm-v1-b33/raw/1020_2317_trainticket-service-19](../results/1020_2317_tsm-v1-b33/raw/1020_2317_trainticket-service-19/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert: POST /api/v1/travelservice/trips/left returned 503 Service Unavailable (entry_service ts-travel-service, 10 occurrences). Object layer was healthy: all train-ticket pods Running 2/2 (only ts-ui-dashboard showed restart noise), and CheckServiceConnectivity to ts-travel-service 10.68.156.18:12346 succeeded from worker-01/02/03; ts-travel-service error log only shows business-level 'Trip already exists'. The break is at the address layer: in ts-gateway-service's own ConfigMap route table, the route id 'travel' declares Path=/api/v1/travelservice/** but targets uri: lb://ts-nonexistent-trav
 
 ### case-20
 
 - **结论**：`app/ts-assurance-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-assurance-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 296,753
-- **raw 日志**：[results/1013_2004_inorder4-v3b36/raw/1013_2006_trainticket-service-20](../results/1013_2004_inorder4-v3b36/raw/1013_2006_trainticket-service-20/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Symptom: ts-assurance-service returns 503 (alert: GET /api/v1/assuranceservice/assurances/types, 17 occurrences). Pod inventory outlier: ts-assurance-service-7d97f6cf77-xw4dz 0/2 CrashLoopBackOff, 4 restarts; all other workloads 2/2 Running. Service ts-assurance-service (port 18888 -> targetPort 18888, selector app=ts-assurance-service) has an EMPTY endpoints list, explaining the 503. Container logs: 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' -> HikariPool init failure -> Exit Code 1. The sidecar in the same pod pins the break to the resolver: 'dia
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2941 · steps 18 · tokens 756,118
+- **raw 日志**：[results/1020_2329_tsm-v1-b39/raw/1020_2329_trainticket-service-20](../results/1020_2329_tsm-v1-b39/raw/1020_2329_trainticket-service-20/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only ts-assurance-service is unhealthy: pod ts-assurance-service-7d97f6cf77-xw4dz is 0/2 CrashLoopBackOff (4 restarts, last termination Reason=Error ExitCode=1); all other train-ticket services (including ts-order-service, which uses the same tsdb-mysql-leader host) are 2/2 Running. Alert pointer: GET /api/v1/assuranceservice/assurances/types -> HTTPError('503 Server Error: Service Unavailable'). Connectivity probe on the port the Service declares (18888) fails from worker-01/02/03 (Connection Failed). First-level error log: 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure 
 
 ### case-21
 
 - **结论**：`app/ts-basic-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-basic-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3684 · steps 20 · tokens 734,488
-- **raw 日志**：[results/1013_2025_chainpivot-verify1/raw/1013_2028_trainticket-service-21](../results/1013_2025_chainpivot-verify1/raw/1013_2028_trainticket-service-21/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Only ts-basic-service-76b4574cb-ttvb6 is anomalous in the namespace-wide pod listing (0/2 READY, 4 restarts, Last State Terminated exit code 1 on worker-01) while all 47 other pods are 2/2 Running. Symptom side confirms it: connectivity probe to ts-basic-service:15680 fails from worker-01/02/03 (control: nacos:8848 open from all three), and `get endpoints ts-basic-service` returns an EMPTY endpoints list (Service has no ready backend), so callers ts-preserve-service and ts-inside-payment-service surface HTTP 500 alerts. The break is DNS resolution inside that pod: its app log shows 'nacos regi
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3529 · steps 18 · tokens 612,023
+- **raw 日志**：[results/1020_2334_tsm-v1-b42/raw/1020_2334_trainticket-service-21](../results/1020_2334_tsm-v1-b42/raw/1020_2334_trainticket-service-21/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-basic-service is the only outlier pod (0/2 Running, 4 restarts) while all 45 other pods are 2/2 Ready. Service ts-basic-service declares port 15680; a probe of that exact port fails from worker-01/02/03 and endpoints/ts-basic-service is empty. GetErrorLogs shows the app container dying at startup with 'NacosException: Client not connected, current status:STARTING' (register failed, exit code 1), while istio-proxy logs repeat 'dial tcp: lookup istiod.istio-system.svc on 10.255.10.254:53: read udp 172.20.1.7:...->10.255.10.254:53: i/o timeout' and the kubelet reports 'Startup probe failed: Ge
 
 ### case-22
 
 - **结论**：`app/ts-cancel-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-cancel-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3158 · steps 20 · tokens 528,847
-- **raw 日志**：[results/1013_2012_inorder4-v3b38/raw/1013_2030_trainticket-service-22](../results/1013_2012_inorder4-v3b38/raw/1013_2030_trainticket-service-22/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Alerts point at ts-cancel-service (503 x34). Its Service has NO endpoints and a TCP probe on its declared port 18885 fails from all three nodes (Connection Failed). Pod ts-cancel-service-758b476b4d-r56v4 is 0/2 Running with 3 restarts, last state Terminated Exit Code 1; deployment reports Available=False / MinimumReplicasUnavailable; events show 'Startup probe failed: ... 172.20.1.7:15021: connect: connection refused'. Inside that pod every name lookup times out: istio-proxy logs 'lookup istiod.istio-system.svc on 10.255.9.254:53: read udp 172.20.1.7->10.255.9.254:53: i/o timeout' and 'failed 
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.35 · steps 21 · tokens 477,194
+- **raw 日志**：[results/1020_2340_tsm-v1-b45/raw/1020_2340_trainticket-service-22](../results/1020_2340_tsm-v1-b45/raw/1020_2340_trainticket-service-22/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pod ts-cancel-service-758b476b4d-r56v4 is the only outlier (READY 0/2, RESTARTS 3); Service ts-cancel-service:18885 connectivity fails from worker-01/02/03 and its Endpoints object is empty, while Alerts name entry_service=ts-cancel-service with HTTPError('503 Server Error: Service Unavailable') x34. Pod describe shows the app container Last State 'Terminated, Reason: Error, Exit Code: 1' with Ready=False while the pod itself is Running and PodScheduled=True, and namespace events contain no FailedScheduling/FailedCreate/FailedMount/ImagePull warnings, so scheduling, mount and image are exclude
 
 ### case-23
 
 - **结论**：`app/ts-contacts-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-contacts-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3158 · steps 20 · tokens 555,827
-- **raw 日志**：[results/1013_2042_inorder4-v3b39/raw/1013_2045_trainticket-service-23](../results/1013_2042_inorder4-v3b39/raw/1013_2045_trainticket-service-23/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Only ts-contacts-service is broken: pod ts-contacts-service-5cfbc8875-8fwnq is 0/2 CrashLoopBackOff with 4 restarts (app container Last State Terminated/Error exit 1, istio-proxy never Ready), while all other train-ticket pods are 2/2 Running. Its logs show 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' -> 'Communications link failure' -> HikariPool init failure -> app exit 1, and its istio-proxy shows 'lookup ... on 10.255.3.254:53 ... i/o timeout', i.e. the pod cannot resolve any name. GetAppYAML(ts-contacts-service) shows the deployment uniquely pin
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2917 · steps 25 · tokens 653,936
+- **raw 日志**：[results/1020_2346_tsm-v1-b48/raw/1020_2346_trainticket-service-23](../results/1020_2346_tsm-v1-b48/raw/1020_2346_trainticket-service-23/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Victim ts-contacts-service is 0/2 Error with 4 restarts (CrashLoopBackOff, last termination exit 1); connectivity probe to its Service-declared port 12347 fails from worker-01/02/03 and its endpoints list is empty, matching alerts of HTTP 503 on /api/v1/contactservice/contacts (20 occurrences). First-level error log shows 'Caused by: java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' -> HikariPool-1 Exception during pool initialization -> Unable to build Hibernate SessionFactory -> container exit; the co-located istio-proxy fails the same way ('lookup istio
 
 ### case-24
 
 - **结论**：`app/ts-food-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-food-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.375 · steps 17 · tokens 456,606
-- **raw 日志**：[results/1013_2049_inorder4-v3b40/raw/1013_2051_trainticket-service-24](../results/1013_2049_inorder4-v3b40/raw/1013_2051_trainticket-service-24/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Pod listing outlier: ts-food-service-74f4df4f7-djvnb 0/2 CrashLoopBackOff (4 restarts, exit code 1, not OOM). Service ts-food-service has NO endpoints and CheckServiceConnectivity on its declared port 18856 fails from worker-01/02/03. App log: 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' -> HikariPool init failure -> JPA EntityManagerFactory failure -> 'Application run failed'. Same-pod istio-proxy log: 'lookup istiod.istio-system.svc on 10.255.18.254:53 ... i/o timeout', showing the configured resolver does not answer. GetAppYAML(ts-food-service) sh
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2941 · steps 18 · tokens 548,778
+- **raw 日志**：[results/1020_2353_tsm-v1-b51/raw/1020_2353_trainticket-service-24](../results/1020_2353_tsm-v1-b51/raw/1020_2353_trainticket-service-24/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Full pod listing shows one outlier: ts-food-service-74f4df4f7-djvnb 0/2 CrashLoopBackOff (Restarts 4), owner chain Deployment/ts-food-service; all other pods (incl. same-node worker-01 ts-order-service, which has zero error logs) are 2/2 Running, so the fault is service-scoped. Complaint side: alert POST /api/v1/preserveservice/preserve 500 from ts-preserve-service, whose dependency graph lists ts-food-service downstream; active TCP probe of ts-food-service:18856 (the port its own Service spec declares, clusterIP 10.68.222.241) fails from worker-01/02/03 -> confirmed partial service unreachabi
 
 ### case-25
 
 - **结论**：`app/ts-gateway-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-gateway-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2727 · steps 23 · tokens 204,578
-- **raw 日志**：[results/1012_1521_l3-tweak1/raw/1012_1521_trainticket-service-25](../results/1012_1521_l3-tweak1/raw/1012_1521_trainticket-service-25/)（ndjson / mcp.jsonl / meta）
-- **摘要**：ts-gateway-service is the only workload in train-ticket that is unavailable: pod ts-gateway-service-5d577b65bb-4p686 shows READY 0/2 with 4 restarts, app container Terminated/Reason=Error/ExitCode=1, and the Service has no ready endpoints (GetResources endpoints -> empty ENDPOINTS), so callers get 503 (alert: POST /api/v1/users/login via ts-auth-service -> 503 Service Unavailable) and connectivity probes to ts-gateway-service:18888 fail from all three nodes. Its previous-container log shows the crash mechanism: 'nacos registry, ts-gateway-service register failed ... NacosException: Client not 
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 608,519
+- **raw 日志**：[results/1020_2359_tsm-v1-b54/raw/1020_2359_trainticket-service-25](../results/1020_2359_tsm-v1-b54/raw/1020_2359_trainticket-service-25/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert: POST /api/v1/users/login (entry ts-auth-service) returns HTTPError('503 Server Error: Service Unavailable') x30. Connectivity probe on the gateway's declared Service port ts-gateway-service:18888 fails from worker-01/02/03 (Connection Failed). Pods listing has a single outlier: ts-gateway-service-5d577b65bb-4p686 = 0/2 READY, RESTARTS 4, while all other business pods are 2/2 Running. Pod detail: container ts-gateway-service State=Terminated, Reason=Error, Exit Code=1 (not OOMKilled 137, not SIGTERM 143), Last State Error 1, Restart Count 4; Event: Warning Unhealthy 'Startup probe failed
 
 ### case-26
 
 - **结论**：`app/ts-inside-payment-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-inside-payment-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2941 · steps 18 · tokens 541,741
-- **raw 日志**：[results/1013_2059_inorder4-v3b41/raw/1013_2104_trainticket-service-26](../results/1013_2059_inorder4-v3b41/raw/1013_2104_trainticket-service-26/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Only outlier in the pods listing: ts-inside-payment-service-5ddd559466-pfrhl 0/2 CrashLoopBackOff, 4 restarts, Last State Terminated Exit Code 1; alert points to the same service (503 from entry ts-inside-payment-service). Its app container logs show java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution -> HikariPool pool init failure -> JPA/Hibernate init failure -> 'Application run failed'; its istio-proxy likewise fails all DNS lookups (lookup istiod.istio-system.svc on 10.255.8.254:53: i/o timeout). The DB target itself is fine: Service tsdb-mysql-leader ex
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 746,860
+- **raw 日志**：[results/1021_0056_tsm-v1-b57/raw/1021_0056_trainticket-service-26](../results/1021_0056_tsm-v1-b57/raw/1021_0056_trainticket-service-26/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert: entry_service ts-inside-payment-service POST /api/v1/inside_pay_service/inside_payment -> HTTPError('503 Server Error: Service Unavailable'). Pod listing outlier: ts-inside-payment-service-5ddd559466-pfrhl 0/2 CrashLoopBackOff, RESTARTS 4, last state Terminated Reason=Error ExitCode=1. First-level app log evidence (GetErrorLogs): 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' -> HikariPool-1 Exception during pool initialization -> Failed to initialize JPA EntityManagerFactory -> Application run failed; sidecar logs also show 'lookup istiod.istio
 
 ### case-27
 
 - **结论**：`app/ts-order-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-order-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 501,550
-- **raw 日志**：[results/1013_2106_inorder4-v3b42/raw/1013_2108_trainticket-service-27](../results/1013_2106_inorder4-v3b42/raw/1013_2108_trainticket-service-27/)（ndjson / mcp.jsonl / meta）
-- **摘要**：ts-order-service is the sole outlier: pod ts-order-service-6cd5889659-v76vn is 0/2 CrashLoopBackOff (4 restarts, last state Terminated/Error exit code 1) while all 48 other pods are 2/2 Running; alerts show 503 Service Unavailable on POST /api/v1/orderservice/order/refresh (entry ts-order-service, 2x20 occurrences). Its container logs die during HikariPool-1 initialization: java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution, and its istio-proxy sidecar also fails lookup of istiod.istio-system.svc on 10.255.7.254:53 (i/o timeout) - a pod-internal DNS failure,
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2381 · steps 22 · tokens 490,230
+- **raw 日志**：[results/1021_0103_tsm-v1-b60/raw/1021_0103_trainticket-service-27](../results/1021_0103_tsm-v1-b60/raw/1021_0103_trainticket-service-27/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Pod listing outlier: ts-order-service-6cd5889659-v76vn is 0/2 CrashLoopBackOff with 4 restarts, the only unhealthy workload in train-ticket; alerts point to ts-order-service returning 503. Complaint side: CheckServiceConnectivity on ts-order-service's declared Service port 12031 failed from worker-01/02/03. Pod sheet: app container Last State Terminated, Reason: Error, Exit Code: 1 (not OOMKilled), and previous-container logs show 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' -> 'HikariPool-1 - Exception during pool initialization' -> 'Unable to build
 
 ### case-28
 
 - **结论**：`app/ts-payment-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-payment-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2941 · steps 18 · tokens 486,562
-- **raw 日志**：[results/1013_2110_inorder4-v3b43/raw/1013_2112_trainticket-service-28](../results/1013_2110_inorder4-v3b43/raw/1013_2112_trainticket-service-28/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Pods inventory shows the single outlier ts-payment-service-dd4c6c46b-qwzxg (0/2 CrashLoopBackOff, 4 restarts, last termination Reason=Error ExitCode=1, node worker-02); connectivity probe to its own declared port ts-payment-service:19001 fails from worker-01/02/03 (no ready endpoints), while the alert pointer ts-inside-payment-service 'Process payment' returns 500. Its app log gives the break verbatim: 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' -> HikariPool-1 Exception during pool initialization -> 'Failed to initialize JPA EntityManagerFactory ..
+- **流程**：MC 0.75 · EOC 0.25 · ECR 0 · EE 0.2353 · steps 18 · tokens 425,928
+- **raw 日志**：[results/1021_0109_tsm-v1-b63/raw/1021_0109_trainticket-service-28](../results/1021_0109_tsm-v1-b63/raw/1021_0109_trainticket-service-28/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Signal side: ts-inside-payment-service error log repeats 'java.lang.IllegalArgumentException: Service Instance cannot be null' on its call edge to ts-payment-service (dependency graph: ts-payment-service is a leaf called by ts-gateway-service and ts-inside-payment-service). Workload: ts-payment-service-dd4c6c46b-qwzxg is the only outlier in the pods listing - 0/2 CrashLoopBackOff, RESTARTS 4, while all 46 other business pods are 2/2 Running; pod detail shows Last State Terminated, Reason Error, Exit Code 1 (not 137 OOMKilled, not 143 SIGTERM), so the app fails at startup. Mechanism (app logs):
 
 ### case-29
 
 - **结论**：`app/ts-preserve-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-preserve-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.4211 · steps 20 · tokens 325,996
-- **raw 日志**：[results/1013_2114_inorder4-v3b44/raw/1013_2118_trainticket-service-29](../results/1013_2114_inorder4-v3b44/raw/1013_2118_trainticket-service-29/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Symptom side: alert names ts-preserve-service with 503, and the Service's endpoints listing is EMPTY, with connectivity probes on its declared port 14568 failing from all three workers. Workload side: pod ts-preserve-service-6bd658cfc9-gpc6b on worker-02 is 0/2 Running with 4 restarts (app container Last State Terminated, exit code 1), deployment shows MinimumReplicasUnavailable, and its Startup probe fails with 'dial tcp 172.20.2.121:15021: connect: connection refused'. Mechanism: the pod cannot resolve any cluster name — istio-proxy logs repeatedly show 'lookup istiod.istio-system.svc on 10.
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 16 · tokens 610,376
+- **raw 日志**：[results/1021_0117_tsm-v1-b66/raw/1021_0117_trainticket-service-29](../results/1021_0117_tsm-v1-b66/raw/1021_0117_trainticket-service-29/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert pointer: POST /api/v1/preserveservice/preserve returning 503, entry_service=ts-preserve-service. Pod listing outlier: ts-preserve-service-6bd658cfc9-gpc6b 0/2 Running with 4 restarts; all 45 other pods 2/2 Running. Pod sheet: app container Last State Terminated, Reason Error, Exit Code 1, Ready False; istio-proxy Ready False with event 'Warning Unhealthy Startup probe failed: Get "http://172.20.2.121:15021/healthz/ready": dial tcp 172.20.2.121:15021: connect: connection refused'. Connectivity probe on the Service-declared port 14568 failed from all three nodes (no ready endpoints). Both 
 
 ### case-30
 
 - **结论**：`app/ts-price-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-price-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 21 · tokens 522,118
-- **raw 日志**：[results/1013_2133_inorder4-v3b45/raw/1013_2137_trainticket-service-30](../results/1013_2133_inorder4-v3b45/raw/1013_2137_trainticket-service-30/)（ndjson / mcp.jsonl / meta）
-- **摘要**：ts-price-service is the only outlier workload (pod ts-price-service-69f6579f8-xv9gc, 0/2 READY, STATUS Error, 4 restarts, CrashLoopBackOff with Last State Terminated exit code 1 on node worker-01). Its container log shows 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' during HikariPool/Hibernate initialization, so the failure is at name resolution, not at the database: the Service tsdb-mysql-leader (10.68.188.173:3306) exists and a TCP probe from debug pods on worker-01/02/03 returns 'Connection Succeeded' on all three nodes, and a probe on the victim'
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2667 · steps 16 · tokens 551,879
+- **raw 日志**：[results/1021_0129_tsm-v1-b72/raw/1021_0129_trainticket-service-30](../results/1021_0129_tsm-v1-b72/raw/1021_0129_trainticket-service-30/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Signal side: ts-preserve-service error logs show repeated 500s, and GetAlerts points at ts-preserve-service / ts-inside-payment-service. Object layer: the only outlier row in the pods listing is ts-price-service-69f6579f8-xv9gc (READY 0/2, STATUS Error, RESTARTS 4) on worker-01; all other pods are 2/2 Running. Pod detail: container ts-price-service is Waiting/CrashLoopBackOff with Last State Terminated, Reason Error, Exit Code 1 (not 137 OOMKilled, not 143 SIGTERM); namespace events for this pod show repeated 'Startup probe failed: Get http://172.20.1.243:15021/healthz/ready: dial tcp: connect
 
 ### case-31
 
 - **结论**：`app/ts-route-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-route-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3158 · steps 20 · tokens 500,404
-- **raw 日志**：[results/1013_2141_inorder4-v3b46/raw/1013_2147_trainticket-service-31](../results/1013_2141_inorder4-v3b46/raw/1013_2147_trainticket-service-31/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Inventory: pod/ts-route-service-6d9b8cb654-wjpjn is the sole outlier (0/2, Error, CrashLoopBackOff, restart 4), and endpoints/ts-route-service is empty; a probe on its Service port 11178 fails from worker-01/02/03 while the identically-shaped ts-travel-service:12346 succeeds -> partial unreachability isolated to one service. Its previous log dies on java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution (CJCommunicationsException -> HikariPool-1 init failure -> Hibernate SessionFactory -> exit code 1), and its istio-proxy shows the same address-layer break (look
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 655,349
+- **raw 日志**：[results/1021_0136_tsm-v1-b75/raw/1021_0136_trainticket-service-31](../results/1021_0136_tsm-v1-b75/raw/1021_0136_trainticket-service-31/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-route-service was the only outlier (pod ts-route-service-6d9b8cb654-wjpjn: 0/2, Error, 4 restarts, CrashLoopBackOff exit code 1) while all other train-ticket pods were 2/2 Running; its Service ts-route-service (port 11178) failed the connectivity probe from worker-01/02/03. Previous container log: 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' causing HikariPool-1 initialization failure, and the istio-proxy sidecar independently logged 'lookup istiod.istio-system.svc on 10.255.11.254:53 ... i/o timeout'. The referenced Service exists (tsdb-mysql-lea
 
 ### case-32
 
 - **结论**：`app/ts-seat-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-seat-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2 · steps 26 · tokens 984,705
-- **raw 日志**：[results/1013_2150_inorder4-v3b47/raw/1013_2153_trainticket-service-32](../results/1013_2150_inorder4-v3b47/raw/1013_2153_trainticket-service-32/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Only one object-layer outlier exists in train-ticket: pod ts-seat-service-594847b77f-rsbbh is 0/2 Running with 4 restarts and its Service ts-seat-service (18898) has an EMPTY endpoints list (availability disruption). Its own logs show startup death at registration: 'NacosServiceRegistry: nacos registry, ts-seat-service register failed ... NacosException: Client not connected, current status:STARTING' -> 'Application run failed', container Last State Terminated Reason Error Exit Code 1, Restart Count 4; the co-located istio-proxy shows the same root form of failure - name resolution timeouts: '
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.1818 · steps 23 · tokens 592,231
+- **raw 日志**：[results/1021_0142_tsm-v1-b78/raw/1021_0142_trainticket-service-32](../results/1021_0142_tsm-v1-b78/raw/1021_0142_trainticket-service-32/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Signal side: alerts point to entry services ts-preserve-service (/api/v1/preserveservice/preserve) and ts-inside-payment-service (/api/v1/inside_pay_service/inside_payment) returning 500; their error logs show the real downstream failure: 500 from '/api/v1/travelservice/trip_detail' (ts-travel-service). ts-travel-service error logs repeat 'java.lang.IllegalArgumentException: Service Instance cannot be null', meaning its downstream instance set is empty. Workload scan shows exactly one outlier pod: ts-seat-service-594847b77f-rsbbh 0/2 Running, 4 restarts, node worker-01 (ts-seat-service is a di
 
 ### case-33
 
 - **结论**：`app/ts-security-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-security-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3 · steps 21 · tokens 366,893
-- **raw 日志**：[results/1013_2156_inorder4-v3b48/raw/1013_2158_trainticket-service-33](../results/1013_2156_inorder4-v3b48/raw/1013_2158_trainticket-service-33/)（ndjson / mcp.jsonl / meta）
-- **摘要**：All 47 pods in train-ticket are 2/2 Running except ts-security-service-865558cd4f-g2hs7 (0/2, Error, RESTARTS 4, worker-01); synthetic alert reports HTTP 500 on 'Create ticket order' via ts-preserve-service, which calls ts-security-service. The victim's own signals: CheckServiceConnectivity on ts-security-service:11188 (its declared spec port) fails from all three workers, and endpoints ts-security-service has an empty ENDPOINTS list. Pod record shows the app container Terminated Reason=Error Exit Code 1, and previous logs give the mechanism verbatim: java.net.UnknownHostException: tsdb-mysql-
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2609 · steps 24 · tokens 508,361
+- **raw 日志**：[results/1021_0146_tsm-v1-b80/raw/1021_0147_trainticket-service-33](../results/1021_0146_tsm-v1-b80/raw/1021_0147_trainticket-service-33/)（ndjson / mcp.jsonl / meta）
+- **摘要**：ts-security-service pod ts-security-service-865558cd4f-g2hs7 is 0/2 Error with 4 restarts (deployment 0/1 AVAILABLE) while all 43 other workloads are Running; Service ts-security-service (port 11188, selector app=ts-security-service) has an EMPTY endpoints object and a declared-port probe fails from worker-01/02/03. Pod was Scheduled normally on worker-01, image already present, no FailedMount/FailedCreate, so scheduling/image/PVC branches are excluded; the app container shows State Terminated, Reason Error, Exit Code 1 (not 137 OOMKilled, not 143 SIGTERM). GetErrorLogs on the app container gi
 
 ### case-34
 
 - **结论**：`app/ts-station-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-station-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 16 · tokens 380,698
-- **raw 日志**：[results/1013_2203_inorder4-v3b49/raw/1013_2206_trainticket-service-34](../results/1013_2203_inorder4-v3b49/raw/1013_2206_trainticket-service-34/)（ndjson / mcp.jsonl / meta）
-- **摘要**：ts-station-service-6c9db8cccd-b622n on worker-01 is the only outlier in the pods listing (0/2 CrashLoopBackOff, 4 restarts); its app container last terminated with exit code 1 and its Service port 12345 is unreachable from all three workers (CheckServiceConnectivity: Connection Failed on worker-01/02/03). Error logs show 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' causing HikariPool/JPA EntityManagerFactory init failure, and the pod template is the only workload with a DNS override (dnsPolicy: None, dnsConfig.nameservers: [10.255.13.254]); istio-pro
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.25 · steps 17 · tokens 759,258
+- **raw 日志**：[results/1021_0152_tsm-v1-b83/raw/1021_0153_trainticket-service-34](../results/1021_0152_tsm-v1-b83/raw/1021_0153_trainticket-service-34/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Symptom side: ts-basic-service (caller) throws 'Service Instance cannot be null', i.e. no ready instance of ts-station-service; alerts point to 500s on ts-preserve-service and ts-inside-payment-service. Pod inventory has exactly one outlier: ts-station-service-6c9db8cccd-b622n 0/2 CrashLoopBackOff, 4 restarts, node worker-01. Its app log shows 'Caused by: java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' -> HikariPool-1 Exception during pool initialization -> Failed to initialize JPA EntityManagerFactory -> Application run failed; pod detail gives Last Sta
 
 ### case-35
 
 - **结论**：`app/ts-train-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-train-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2857 · steps 15 · tokens 526,268
-- **raw 日志**：[results/1013_2210_inorder4-v3b50/raw/1013_2212_trainticket-service-35](../results/1013_2210_inorder4-v3b50/raw/1013_2212_trainticket-service-35/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Pod listing shows a single outlier: ts-train-service-84dbf9c989-nn5mp is 0/2 Error with 4 restarts (CrashLoopBackOff, last exit code 1), while all other 51 pods in train-ticket are Running. Its app logs show HikariPool initialization failure / 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' and 'PersistenceException: Unable to build Hibernate SessionFactory', and its istio-proxy logs show all DNS lookups timing out against the same resolver: 'lookup istiod.istio-system.svc on 10.255.12.254:53: read udp 172.20.1.37:...->10.255.12.254:53: i/o timeout' - i
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2353 · steps 18 · tokens 505,808
+- **raw 日志**：[results/1021_0158_tsm-v1-b86/raw/1021_0158_trainticket-service-35](../results/1021_0158_tsm-v1-b86/raw/1021_0158_trainticket-service-35/)（ndjson / mcp.jsonl / meta）
+- **摘要**：victim ts-train-service: pod ts-train-service-84dbf9c989-nn5mp is the only outlier (0/2 Error, 4 restarts, CrashLoopBackOff, Last State Terminated Exit Code 1 - not 137/OOMKilled, not 143). Its app container logs 'HikariPool-1 - Exception during pool initialization' caused by 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution', and its istio-proxy reports 'lookup istiod.istio-system.svc on 10.255.12.254:53: read udp ... i/o timeout' - i.e. both containers in the pod fail name resolution. The DNS target is healthy and present: Service tsdb-mysql-leader exist
 
 ### case-36
 
 - **结论**：`app/ts-travel-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-travel-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3333 · steps 16 · tokens 315,331
-- **raw 日志**：[results/1013_2214_inorder4-v3b51/raw/1013_2215_trainticket-service-36](../results/1013_2214_inorder4-v3b51/raw/1013_2215_trainticket-service-36/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Pod inventory names exactly one outlier: ts-travel-service-5b5d9f9746-pxbqv (0/2, Error, 4 restarts, node worker-02), matching the alert 'ts-travel-service -> /api/v1/travelservice/trips/left -> HTTPError 503' (17 occurrences). The victim's own signal is a total in-pod DNS failure: app container last run 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' and istio-proxy 'dial tcp: lookup istiod.istio-system.svc on 10.255.4.254:53: read udp 172.20.2.14:38306->10.255.4.254:53: i/o timeout'. Connectivity probe to the port its Service declares (12346) fails fr
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3125 · steps 17 · tokens 520,435
+- **raw 日志**：[results/1021_0203_tsm-v1-b89/raw/1021_0203_trainticket-service-36](../results/1021_0203_tsm-v1-b89/raw/1021_0203_trainticket-service-36/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Alert: POST /api/v1/travelservice/trips/left returns 503 (x17). Pod inventory outlier: ts-travel-service-5b5d9f9746-pxbqv 0/2 Error, 4 restarts on worker-02, while all other 45 service pods are 2/2 Running. Connectivity probe to ts-travel-service on its own declared Service port 12346 failed from all three debug pods (no endpoints). Container previous log: 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' -> 'CJCommunicationsException: Communications link failure' -> 'Hibernate SessionFactory' build failure, exit code 1; the pod's istio-proxy simultaneous
 
 ### case-37
 
 - **结论**：`app/ts-user-service` + `service_dns_resolution_failure` ｜ 标签 `app/ts-user-service` + `service_dns_resolution_failure`（✓ 逐字命中）
-- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.3 · steps 21 · tokens 490,553
-- **raw 日志**：[results/1013_2217_inorder4-v3b52/raw/1013_2220_trainticket-service-37](../results/1013_2217_inorder4-v3b52/raw/1013_2220_trainticket-service-37/)（ndjson / mcp.jsonl / meta）
-- **摘要**：Only outlier in the namespace inventory: pod ts-user-service-55f7958bd-gvl47 = 0/2 Error, CrashLoopBackOff, Restart Count 4, Last State Terminated Error Exit Code 1. Its container log reads 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' inside 'HikariPool-1 - Exception during pool initialization' / 'Unable to build Hibernate SessionFactory', and its in-pod istio-proxy shows 'lookup istiod.istio-system.svc on 10.255.2.254:53 ... i/o timeout' - i.e. the whole pod's resolver is dead. The config face confirms it: the ts-user-service Deployment is the only 
+- **流程**：MC 1 · EOC 1 · ECR 1 · EE 0.2632 · steps 20 · tokens 517,463
+- **raw 日志**：[results/1021_0207_tsm-v1-b91/raw/1021_0208_trainticket-service-37](../results/1021_0207_tsm-v1-b91/raw/1021_0208_trainticket-service-37/)（ndjson / mcp.jsonl / meta）
+- **摘要**：Only outlier among 47 pods: ts-user-service-55f7958bd-gvl47 is 0/2 Error with 4 restarts (CrashLoopBackOff, last state Terminated/Reason Error/Exit Code 1). Entry-side signal: ts-preserve-service logs 'java.lang.IllegalArgumentException: Service Instance cannot be null' (no downstream instance) and alerts show 14x HTTP 500 on /api/v1/preserveservice/preserve; ts-user-service is its downstream. First-level log evidence: 'java.net.UnknownHostException: tsdb-mysql-leader: Temporary failure in name resolution' (HikariPool init failed -> container exit 1), and the same pod's istio-proxy shows 'look
 

@@ -29,39 +29,39 @@
 
 | 指标 | 值 |
 |---|---|
-| JRA（联合命中） | 752 / 754（99.7%） |
-| CA（组件命中） | 752 / 754（99.7%） |
-| FA（故障型命中） | 753 / 754（99.9%） |
-| ECR（证据链全闭） | 724 / 754（96.0%） |
+| JRA（联合命中） | 753 / 754（99.9%） |
+| CA（组件命中） | 753 / 754（99.9%） |
+| FA（故障型命中） | 754 / 754（100.0%） |
+| ECR（证据链全闭） | 740 / 754（98.1%） |
 
 **流程分（均值）**
 
 | MC | EOC | ECR | EE | steps | RAR | invalid |
 |---|---|---|---|---|---|---|
-| 0.9903 | 0.946 | 0.9602 | 0.2826 | 18.3462 | 0.0013 | 0.004 |
+| 0.9956 | 0.9801 | 0.9814 | 0.2977 | 16.061 | 0.0001 | 0.008 |
 
 **效率（去重取最新）**
 
 | token 平均 / 中位 | token 最低 / 最高 | cache 读占比 |
 |---|---|---|
-| 241,049 / 145,925 | 54,365 / 2,181,512 | 74% |
+| 232,491 / 186,735 | 83,475 / 1,722,412 | 74% |
 
 ## 分家族索引
 
 | 家族 | 全量 | 已跑 | JRA | 链全闭 | 明细 |
 |---|---|---|---|---|---|
-| boutique/admission | 58 | 58 | 58 | 56 | [boutique-admission.md](DETAIL/boutique-admission.md) |
-| boutique/codedefect | 98 | 98 | 98 | 98 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
-| boutique/infrastructure | 40 | 40 | 40 | 40 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
-| boutique/performance | 29 | 29 | 28 | 28 | [boutique-performance.md](DETAIL/boutique-performance.md) |
+| boutique/admission | 58 | 58 | 58 | 58 | [boutique-admission.md](DETAIL/boutique-admission.md) |
+| boutique/codedefect | 98 | 98 | 98 | 94 | [boutique-codedefect.md](DETAIL/boutique-codedefect.md) |
+| boutique/infrastructure | 40 | 40 | 40 | 39 | [boutique-infrastructure.md](DETAIL/boutique-infrastructure.md) |
+| boutique/performance | 29 | 29 | 29 | 29 | [boutique-performance.md](DETAIL/boutique-performance.md) |
 | boutique/runtime | 45 | 45 | 45 | 45 | [boutique-runtime.md](DETAIL/boutique-runtime.md) |
-| boutique/scheduling | 164 | 164 | 164 | 163 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
-| boutique/service | 54 | 54 | 54 | 52 | [boutique-service.md](DETAIL/boutique-service.md) |
+| boutique/scheduling | 164 | 164 | 164 | 161 | [boutique-scheduling.md](DETAIL/boutique-scheduling.md) |
+| boutique/service | 54 | 54 | 54 | 50 | [boutique-service.md](DETAIL/boutique-service.md) |
 | boutique/startup | 62 | 62 | 62 | 62 | [boutique-startup.md](DETAIL/boutique-startup.md) |
 | train-ticket/performance | 47 | 47 | 46 | 46 | [trainticket-performance.md](DETAIL/trainticket-performance.md) |
-| train-ticket/runtime | 96 | 96 | 96 | 74 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
-| train-ticket/service | 37 | 37 | 37 | 37 | [trainticket-service.md](DETAIL/trainticket-service.md) |
-| train-ticket/startup | 24 | 24 | 24 | 23 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
+| train-ticket/runtime | 96 | 96 | 96 | 96 | [trainticket-runtime.md](DETAIL/trainticket-runtime.md) |
+| train-ticket/service | 37 | 37 | 37 | 36 | [trainticket-service.md](DETAIL/trainticket-service.md) |
+| train-ticket/startup | 24 | 24 | 24 | 24 | [trainticket-startup.md](DETAIL/trainticket-startup.md) |
 
 ## 定性观察
 
@@ -414,6 +414,197 @@
 > **2026-10-14 · 轮次 1014_1337_imgadm-verify1（优化轮一 · 修复位 3 + 回归锚 2）**：① **image 三胞胎判类线重写生效**——全库 59 案扫描（消息形态×真值交叉）定「按失败阶段判类」（transport `lookup/dial` → dns ｜ manifest 本身 `NotFound` / 镜像站 HEAD 裸 403 → 引用错 ｜ **token 步骤 `failed to authorize`（401/403 均算）→ pull-secret**，+ `Image pull secrets: <none>` 佐证），写入 §1+§2 → **startup/43 · /45 复跑双双全满**（rank1 改判 `missing_image_pull_secret` · 12/13 步）；回归锚 startup/46 全满稳。② **§1 never-created 分支补「受害信号先行」+ quota 收口 + caller 收口「entry caller」**——admission/16 **MC 0.75→1.0 · ECR 0→1.0**（信号面补读命中），EOC 0→0.25 残（信号段仍居链尾）→ 按「不强求」记档。③ **admission/21 = 症状面高方差第二实证**：首跑（b134）endpoints+connectivity 早位命中、全满；复跑同开头后跳 object 面、**M0 整段缺席** → EOC 0 —— 两跑两形态（与 admission/6 三谱同型），句不含此机制、判定家族方差、记档。④ 探针：5 节 rebuild、新句全入面 + 老句零回归。⑤ 当轮现值 轮次 179 · 覆盖 549/754 · JRA 547/549。
 
 > **2026-10-14 深夜 · 全量收官（final13 + 服务配额判别线战役 · 第 16 次闭环）**：① **final13**（boutique/scheduling/152-164 十三题）六项链全满 → **全量 754/754（100%）覆盖收官**。② **服务配额判别线战役**：晚间 7 新错 = 六道同型（pred 全 `service_dns_resolution_failure` vs 真值 `namespace/boutique + namespace_service_quota_exceeded`；根因 = 配额句原挂在事件上，而该类全程无 Warning 事件 → 判别线失效）+ admission/35 输出故障（契约完整、上游提取器未吃到 → 补跑即闭）；§1/§2 补 service-quota 显式分支（配额收口不依赖事件 · 缺 Service 对象永不判 DNS）+ 序句（信号→清单→配额；v1 后 45 锚 EOC 自伤 1.0→0.333，EOC 探针实锤 M1@6 抢 M0@7）→ 复跑两轮 **9/9 JRA 全闭**。③ **终态：覆盖 754/754（100%）· JRA 752/754（99.7%）· 证据链全闭 724/754（96.0%）· 轮次 230**；余 2 处（perf25 / ttperf34）记档；EOC 序滑点 44/45/46/50 记档（执行波动类，JRA 安全）。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

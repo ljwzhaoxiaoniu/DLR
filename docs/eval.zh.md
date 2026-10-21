@@ -10,7 +10,7 @@
 | | 跟着谁 | 形态 | 性质 |
 |---|---|---|---|
 | **考卷 A：自建题库** | **场景** | `scenarios/<名>/eval/questions.jsonl` | **内容资产**：一场景一份，随场景包 git 化 ｜ ✅ `birdminidev`：500 题（生成器 `eval/build.mjs`：**答案键取 L3 节口径 74 处、其余取 gold 426 处**） |
-| **考卷 B：外部基准适配** | **场景** | `scenarios/<名>/eval/`（适配器：`convert` / `run_eval` / `grade` / `stats`） | **内容资产**：考卷本体是上游基准的 754 例，场景包只放适配层 ｜ ✅ `cloudopsbench`：**覆盖 754/754 · JRA 752/754（99.7%）**；判分 = 上游 scorer（CA/FA/JRA + MC/EOC/ECR/EE） |
+| **考卷 B：外部基准适配** | **场景** | `scenarios/<名>/eval/`（适配器：`convert` / `run_eval` / `grade` / `stats`） | **内容资产**：考卷本体是上游基准的 754 例，场景包只放适配层 ｜ ✅ `cloudopsbench`：**覆盖 754/754 · JRA 753/754（99.87%）**；判分 = 上游 scorer（CA/FA/JRA + MC/EOC/ECR/EE） |
 | **考试系统**（跑题 + 采分 + 出报告） | **dsh** | ✅ 独立包 `dsh-tsm-eval`（0.1：CLI `run / score / report / all / doctor / parity`；bundle 面 —— web 浮层、`/eval` —— 计划 0.2） | **宿主能力**：一套通吃多场景，**独立可分** |
 
 ## 二、为什么这样切
@@ -80,7 +80,7 @@ bash scenarios/cloudopsbench/eval/grade.sh --runs-root scenarios/cloudopsbench/r
 node scenarios/cloudopsbench/eval/stats.mjs
 ```
 
-- 串行、一次一例（内存约束）；全量留档 **230 轮**；结果 **覆盖 754/754 · JRA 752/754（99.7%）**；流程分 MC 0.990 / EOC 0.946 / ECR 0.960。
+- 2 路 × 4 题/批（内存约束）；全量留档 **420 轮**；结果 **覆盖 754/754 · JRA 753/754（99.87%）**；流程分 MC 0.996 / EOC 0.980 / ECR 0.981。
 - 判分口径 = **上游 scorer**（CA/FA/JRA + MC/EOC/ECR/EE），不是上面 `tsm grade` 的三层；`stats.mjs` 跨轮去重取最新。
 
 **纪律**（迁移期）：

@@ -231,7 +231,7 @@ pas_relations:
 | student_club | `Expense` 的锚是 `link_to_budget`（无业务意义）；Member 描述仅 3 词 | Expense 升独立 LE、换锚；补 PAS；描述丰富化 | 389K/25 步 → **34K/4 步** |
 | toxicology | `atom.element`、`bond_type` 等全 private，Bond→Atom 无 PAS | 四列升 public；补 PAS；描述英文+字段名 | token **-60%** |
 | debit_card | `Consumption` 的 public 面缺"消费金额"；`Amount` 与 "amount spent" 冲突 | 新增 `Spending` public；`Amount` 改为"加油量(升)" | token **-33%** |
-| cloudopsbench（v1 → v3） | 抽象 kind 建模，对象 / 面分不开 | 改为**具体对象 LE**（业务 / 载体 / 观测三件）+ 观测面 PE + 锚定读法 + 调用图 PAS | 双路并行召回；全量覆盖 754/754、JRA 752/754（99.7%） |
+| cloudopsbench（v1 → v3） | 抽象 kind 建模，对象 / 面分不开 | 改为**具体对象 LE**（业务 / 载体 / 观测三件）+ 观测面 PE + 锚定读法 + 调用图 PAS | 双路并行召回；全量覆盖 754/754、JRA 753/754（99.87%） |
 | cloudopsbench（无边对象） | 放置 / 作用域逐 case 变化，建 schema 边会把实例事实写进模型 | **刻意不建边**；节点 / 命名空间靠既有工具四路可达，不新增专用工具、不逐 deployment 补描述 | 四条可达性实测全通；避免 X×N 重复 |
 
 （数字来自历史对照；此处作为**设计规则有效性的证据**保留。）

@@ -21,7 +21,7 @@ bash "DSH-based Agent Service/dsh_dlr/run_web.sh"                    # Web 对�
 
 ## 项目一句话
 
-**DLR（Decoupled Logic Representation）** 是本项目原创的**数据源级**语义建模范式（LE-PE 双层 + PAS 语义路由），运行在**三级语义建模**（TSM：数据源级 / 领域共识级 / 业务逻辑级）框架下。两个已落地场景验证效能：**birdminidev**（BIRD mini_dev 500 题 NL2SQL，500/500 评定正确）与 **cloudopsbench**（K8s 根因诊断 754 例，覆盖 754 · JRA 752/754）。
+**DLR（Decoupled Logic Representation）** 是本项目原创的**数据源级**语义建模范式（LE-PE 双层 + PAS 语义路由），运行在**三级语义建模**（TSM：数据源级 / 领域共识级 / 业务逻辑级）框架下。两个已落地场景验证效能：**birdminidev**（BIRD mini_dev 500 题 NL2SQL，500/500 评定正确）与 **cloudopsbench**（K8s 根因诊断 754 例，覆盖 754 · JRA 753/754）。
 
 ```
 # 2.0（本分支）
