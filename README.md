@@ -36,7 +36,11 @@ Two external benchmarks, both run end-to-end under this architecture (every case
 
 **Cloud-OpsBench — Kubernetes root-cause analysis · 754 cases** (Online Boutique + Train-Ticket) · scenario [`cloudopsbench`](scenarios/cloudopsbench/)
 
-![Cloud-OpsBench — JRA and evidence-chain closure vs model baselines](assets/charts/cloudopsbench.svg)
+![Cloud-OpsBench — JRA and evidence-chain closure vs model baselines](assets/charts/cloudopsbench-2026-10-21.svg)
+
+![Cloud-OpsBench — six-metric result](assets/charts/cloudopsbench-six-metrics.svg)
+
+![Cloud-OpsBench — all-six coverage by family](assets/charts/cloudopsbench-families.svg)
 
 *Cloud-OpsBench (754 cases): JRA — faulty component + fault type both correct (bars); ECR — evidence chains fully closed (line). Baselines: the benchmark report (arXiv:2603.00468), per-model scores weighted over Online Boutique (550) + Train-Ticket (204). Ours: DeepSeek-V4.1-Flash + TSM+DLR — JRA 753/754 (99.87%), chains fully closed 740/754 (98.1%), scored by the same upstream scorer.*
 

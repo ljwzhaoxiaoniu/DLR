@@ -36,7 +36,11 @@
 
 **Cloud-OpsBench —— Kubernetes 根因诊断 · 754 例**（Online Boutique + Train-Ticket）· 场景包 [`cloudopsbench`](scenarios/cloudopsbench/)
 
-![Cloud-OpsBench —— 模型基线的 JRA 与证据链全闭对比](assets/charts/cloudopsbench.svg)
+![Cloud-OpsBench —— 模型基线的 JRA 与证据链全闭对比](assets/charts/cloudopsbench-2026-10-21.svg)
+
+![Cloud-OpsBench —— 六项指标](assets/charts/cloudopsbench-six-metrics.svg)
+
+![Cloud-OpsBench —— 按家族的六项链覆盖](assets/charts/cloudopsbench-families.svg)
 
 *Cloud-OpsBench（754 例）：JRA —— 故障组件 + 故障类型都对（柱）；ECR —— 证据链全闭（线）。基线：基准报告（arXiv:2603.00468），各模型分数按 Online Boutique（550）+ Train-Ticket（204）加权。我方：DeepSeek-V4.1-Flash + TSM+DLR —— JRA 753/754（99.87%）、证据链全闭 740/754（98.1%），由同一上游评分器判分。*
 
