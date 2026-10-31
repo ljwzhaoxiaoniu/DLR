@@ -12,7 +12,13 @@ import { fileURLToPath } from "node:url";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SCN = path.resolve(HERE, "..");
-// 数据集根：env 优先（TSM_DATASET_DIR），否则按仓库布局回退两级（脚本装在场景包内也成立）
+// 数据集根：env 优先（TSM_DATASET_DIR）——先读服务侧 .env（与本检出同一配置源），
+// 再回退仓库布局（场景包独立使用时也成立）
+try {
+  process.loadEnvFile(path.resolve(SCN, "..", "..", "TSM Core Service", ".env"));
+} catch {
+  /* 无服务 .env 时用系统环境变量 / 仓库布局 */
+}
 const DATASET_ROOT = process.env.TSM_DATASET_DIR ?? path.resolve(SCN, "..", "..");
 const qs = JSON.parse(
   fs.readFileSync(path.join(DATASET_ROOT, "MINIDEV_sqlite/mini_dev_sqlite.json"), "utf8"),

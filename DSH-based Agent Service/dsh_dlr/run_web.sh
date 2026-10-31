@@ -3,7 +3,7 @@
 #
 # 用法: bash run_web.sh [--port <n>] [--no-open]
 #   - 默认 3080，自动开浏览器；URL 带 token，用终端打印的那条进
-#   - 进 UI 后先选工作区 D:\Code_Proj\DLR Proj\DSH-based Agent Service（AGENTS.md 靠它加载）
+#   - 进 UI 后先选工作区 <本检出>/DSH-based Agent Service（AGENTS.md 靠它加载）
 #   - 会话默认 preset = dlr（语义业务助手）；可在会话设置里切换
 # 后端默认 = TSM Core Service（TS 栈，streamable-http，28795）：
 #   npx tsx "TSM Core Service/src/mcp/server.ts" --http 28795
@@ -13,7 +13,10 @@ HERE="$(cd "$(dirname "$0")" && pwd -W)"
 SVC_DIR="$(cd "$HERE/.." && pwd -W)"
 ROOT="$(cd "$SVC_DIR/.." && pwd -W)"
 TSM_DIR="$ROOT/TSM Core Service"
-MCP_URL="${TSM_MCP_URL:-http://127.0.0.1:28795/mcp}"
+# 机器配置单一来源（TSM_PORT / TSM_MCP_URL 等）；系统环境变量优先
+if [ -f "$TSM_DIR/.env" ]; then set -a; . "$TSM_DIR/.env"; set +a; fi
+MCP_PORT="${TSM_PORT:-28795}"
+MCP_URL="${TSM_MCP_URL:-http://127.0.0.1:$MCP_PORT/mcp}"
 
 export DSH_HOME="$SVC_DIR/.dsh-home"
 # 技能目录绝对路径（web 的 cwd 是 UI 工作区，不能用相对路径）——bundle 内的 skills
@@ -32,7 +35,7 @@ fi
 
 # 预检（不可达只告警：UI 能起，但工具会起不来）
 if ! (cd "$TSM_DIR" && npx tsx src/verify/precheck.ts "$MCP_URL" >/dev/null 2>&1); then
-  echo "[WARN] 语义后端不可达（$MCP_URL）——先起：npx tsx \"TSM Core Service/src/mcp/server.ts\" --http 28795" >&2
+  echo "[WARN] 语义后端不可达（$MCP_URL）——先起：npx tsx \"TSM Core Service/src/mcp/server.ts\" --http $MCP_PORT" >&2
 fi
 
 cd "$HERE"

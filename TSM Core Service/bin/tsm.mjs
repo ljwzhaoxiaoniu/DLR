@@ -17,6 +17,8 @@ import { createRequire } from "node:module";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)); // …/TSM Core Service/bin
 const ROOT = path.resolve(HERE, ".."); // …/TSM Core Service
+/** 默认 HTTP 端口：TSM_PORT 可覆盖（与 start_backend.sh / 启动器同源） */
+const DEFAULT_PORT = process.env.TSM_PORT ?? "28795";
 
 /** tsx CLI 解析：TSM_TSX 显式指定 → 模块解析（tsx/cli；不能用 "tsx"，那是 loader.mjs）→ 包内旧位置兜底 */
 const require_ = createRequire(import.meta.url);
@@ -42,7 +44,7 @@ const runTs = (entry, args = []) =>
 const usage = () => {
   console.log(`tsm —— TSM Core Service CLI
 
-  tsm serve  [--http <port> | --stdio]              起 MCP server（默认 --http 28795）
+  tsm serve  [--http <port> | --stdio]              起 MCP server（默认 --http ${DEFAULT_PORT}）
   tsm status [--port <port>]                        打印 /status 快照
   tsm build  [lance|consensus|sop|graph|all] [--wipe]   构建（graph 需 Neo4j 在跑）
   tsm verify [precheck|parity_dlr|tool_parity|...]  跑 verify 脚本（默认 precheck）
@@ -59,13 +61,13 @@ let code = 0;
 
 switch (cmd) {
   case "serve": {
-    code = await runTs("mcp/server.ts", rest.length ? rest : ["--http", "28795"]);
+    code = await runTs("mcp/server.ts", rest.length ? rest : ["--http", DEFAULT_PORT]);
     break;
   }
 
   case "status": {
     const i = rest.indexOf("--port");
-    const port = i >= 0 ? rest[i + 1] : "28795";
+    const port = i >= 0 ? rest[i + 1] : DEFAULT_PORT;
     try {
       const res = await fetch(`http://127.0.0.1:${port}/status`);
       console.log(JSON.stringify(await res.json(), null, 2));

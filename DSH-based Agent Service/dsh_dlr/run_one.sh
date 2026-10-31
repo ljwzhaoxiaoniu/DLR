@@ -12,8 +12,10 @@ HERE="$(cd "$(dirname "$0")" && pwd -W)"
 SVC_DIR="$(cd "$HERE/.." && pwd -W)"
 ROOT="$(cd "$SVC_DIR/.." && pwd -W)"
 TSM_DIR="$ROOT/TSM Core Service"
+# 机器配置单一来源（TSM_PORT / TSM_MCP_URL 等）；系统环境变量优先
+if [ -f "$TSM_DIR/.env" ]; then set -a; . "$TSM_DIR/.env"; set +a; fi
 PATCHES=(--patch "$HERE/dsh.patch.yml")
-MCP_URL="${TSM_MCP_URL:-http://127.0.0.1:28795/mcp}"
+MCP_URL="${TSM_MCP_URL:-http://127.0.0.1:${TSM_PORT:-28795}/mcp}"
 TIMEOUT="${TIMEOUT:-600}"
 
 QID="${1:?用法: run_one.sh <qid> \"<question>\" [out_dir]}"

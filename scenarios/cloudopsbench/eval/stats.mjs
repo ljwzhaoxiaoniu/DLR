@@ -15,6 +15,12 @@ import { fileURLToPath } from "node:url";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)); // …/scenarios/cloudopsbench/eval
 const SCENARIO = path.resolve(HERE, ".."); // …/scenarios/cloudopsbench
+// 先读服务侧 .env（COB_DIR 等，与本检出同一配置源），系统环境变量优先
+try {
+  process.loadEnvFile(path.resolve(SCENARIO, "..", "..", "TSM Core Service", ".env"));
+} catch {
+  /* 无服务 .env 时用系统环境变量 / 默认布局 */
+}
 
 const args = process.argv.slice(2);
 let resultsDir = path.join(SCENARIO, "results");

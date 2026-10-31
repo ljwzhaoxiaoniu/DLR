@@ -273,7 +273,7 @@ export function createServer(systemScope?: string): McpServer {
 const RUN_AS_MAIN = /server\.(ts|js|mjs)$/.test(process.argv[1] ?? "");
 const httpIdx = process.argv.indexOf("--http");
 if (RUN_AS_MAIN && httpIdx >= 0) {
-  const port = Number(process.argv[httpIdx + 1] ?? 28795);
+  const port = Number(process.argv[httpIdx + 1] ?? process.env.TSM_PORT ?? 28795);
   const http = await import("node:http");
   const transports = new Map<string, StreamableHTTPServerTransport>();
 

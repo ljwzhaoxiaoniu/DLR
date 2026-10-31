@@ -11,11 +11,15 @@ window.__ModuleLoader__.load({
 
     /** 数据源：TSM Core Service 各实例的 /status（同机 HTTP；该路由带 CORS 头）。
      *  每轮**并发探全部候选**——每个活着的前端渲染一块（各带自己的「图谱 ↗」入口）；
-     *  场景 → 实例 → 端口的对应由启动器决定（birdminidev :28795 / cloudopsbench :28796）。 */
-    const STATUS_CANDIDATES = [
-      "http://127.0.0.1:28795/status",
-      "http://127.0.0.1:28796/status",
-    ];
+     *  场景 → 实例 → 端口的对应由启动器决定（birdminidev :28795 / cloudopsbench :28796）。
+     *  宿主可注入 `globalThis.__TSM_STATUS_URLS__ = ["http://host:port/status", ...]` 覆盖默认值。 */
+    const STATUS_CANDIDATES =
+      globalThis.__TSM_STATUS_URLS__ && globalThis.__TSM_STATUS_URLS__.length
+        ? globalThis.__TSM_STATUS_URLS__
+        : [
+            "http://127.0.0.1:28795/status",
+            "http://127.0.0.1:28796/status",
+          ];
     /** 轮询间隔（毫秒）。 */
     const REFRESH_MS = 10000;
 

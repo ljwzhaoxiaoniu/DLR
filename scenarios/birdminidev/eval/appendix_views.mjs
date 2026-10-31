@@ -11,6 +11,12 @@ import { fileURLToPath } from "node:url";
 // 路径可从任何 cwd 运行：场景自身位置推导 + env 覆盖（TSM_RESULTS_DIR / TSM_DATASET_DIR）
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SCN = path.resolve(HERE, "..");
+// 先读服务侧 .env（与本检出同一配置源），系统环境变量优先
+try {
+  process.loadEnvFile(path.resolve(SCN, "..", "..", "TSM Core Service", ".env"));
+} catch {
+  /* 无服务 .env 时用系统环境变量 / 仓库布局 */
+}
 const RESULTS = process.env.TSM_RESULTS_DIR ?? path.join(SCN, "results");
 const DATASET =
   process.env.TSM_DATASET_DIR != null

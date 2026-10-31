@@ -7,6 +7,9 @@ set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd -W)"
 ROOT="$(cd "$HERE/../.." && pwd -W)"
 TSM="$ROOT/TSM Core Service"
+# 机器配置单一来源：先读服务 .env（系统环境变量优先），再定端口
+if [ -f "$TSM/.env" ]; then set -a; . "$TSM/.env"; set +a; fi
+TSM_PORT="${TSM_PORT:-28795}"
 # Neo4j 位置：env 优先（NEO4J_HOME / JAVA_HOME_WIN）；否则在常见位置探测——跨机器请显式设置
 if [ -z "${NEO4J_HOME:-}" ]; then
   for c in "D:/neo4j/neo4j-community-5.26.30" "$HOME/neo4j" "/opt/neo4j" "/usr/local/neo4j"; do
@@ -38,17 +41,18 @@ else
   echo "[skip]  Neo4j 未运行/未配置（可选；TS MCP 图后端将走内存，设 NEO4J_HOME 可拉起）"
 fi
 
-# 2) TS MCP server（streamable-http :28795）
-if (cd "$TSM" && npx tsx src/verify/precheck.ts >/dev/null 2>&1); then
-  echo "[ok]    TS MCP server 已在跑 (:28795)"
+# 2) TS MCP server（streamable-http :$TSM_PORT）
+MCP_URL="http://127.0.0.1:$TSM_PORT/mcp"
+if (cd "$TSM" && npx tsx src/verify/precheck.ts "$MCP_URL" >/dev/null 2>&1); then
+  echo "[ok]    TS MCP server 已在跑 (:$TSM_PORT)"
 else
   echo "[start] TS MCP server…"
-  ( cd "$TSM" && nohup npx tsx src/mcp/server.ts --http 28795 > "$ROOT/tmp_scripts/tsm_mcp.log" 2>&1 & )
+  ( cd "$TSM" && nohup npx tsx src/mcp/server.ts --http "$TSM_PORT" > "$ROOT/tmp_scripts/tsm_mcp.log" 2>&1 & )
   for i in $(seq 1 15); do
     sleep 2
-    (cd "$TSM" && npx tsx src/verify/precheck.ts >/dev/null 2>&1) && break
+    (cd "$TSM" && npx tsx src/verify/precheck.ts "$MCP_URL" >/dev/null 2>&1) && break
   done
 fi
 
 # 3) 预检（也是给上面两步的验收）
-cd "$TSM" && npx tsx src/verify/precheck.ts
+cd "$TSM" && npx tsx src/verify/precheck.ts "$MCP_URL"
