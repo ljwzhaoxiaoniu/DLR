@@ -52,12 +52,12 @@ TSM_MODEL_DIR="D:/Code_Proj/DLR Proj/tmp_scripts/bge-onnx" \
 npx tsx src/build/buildLance.ts --all
 # 同 env 再跑 buildConsensus.ts / buildSop.ts
 
-# 2) 起 DLR 查询服务（28797）
-TSM_SCENARIO=... TSM_STORE_DIR=... TSM_MODEL_DIR=... npx tsx tmp_scripts/biz_dlr_server.mjs
+# 2) 起 DLR 查询桥（28797）
+TSM_SCENARIO=... TSM_STORE_DIR=... TSM_MODEL_DIR=... npx tsx scenarios/bizagentbench/eval/dlr_server.mjs
 
 # 3) 跑题
-bash tmp_scripts/run_biz_dlr_pilot.sh runs/dlr-001 1
-bash tmp_scripts/run_biz_dlr_pilot.sh runs/dlr-002 2
+bash scenarios/bizagentbench/eval/run_dlr_pilot.sh runs/dlr-001 1
+bash scenarios/bizagentbench/eval/run_dlr_pilot.sh runs/dlr-002 2
 ```
 
 ## 六、本地补丁披露

@@ -1,0 +1,28 @@
+{
+  "name": "tsm-scenario-bizagentbench",
+  "version": "0.1.0",
+  "description": "TSM scenario package: BizAgentBench (payment long-horizon agent benchmark) — L1 DLR object model (Operations Desk, 23 LEs with mounted capabilities), L2 domain consensus, L3 problem-class SOP, plus the DLR retrieval bridge and the upstream-harness eval adapter. Consumed by tsm-core-dlr (TSM_SCENARIO=tsm-scenario-bizagentbench).",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ljwzhaoxiaoniu/DLR.git",
+    "directory": "scenarios/bizagentbench"
+  },
+  "engines": {
+    "node": ">=23.4.0"
+  },
+  "files": [
+    "tsm-scenario.json",
+    "sources/configs/DLR",
+    "sources/consensus",
+    "sources/sop.md",
+    "eval",
+    "results",
+    "DETAIL.md",
+    "README.i18n.yaml",
+    "README.md",
+    "README.zh.md",
+    "LICENSE"
+  ]
+}
