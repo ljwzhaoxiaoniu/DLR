@@ -198,7 +198,9 @@ logical_entities:
   description: 'Published reserve drawing option — reserve account, permitted destination, debit and net
     amount, release conditions, booking window and settlement delay. Drawings are contractual alternatives
     and each can be used once; the fee is debit minus net. A condition on a bank record must already hold
-    at booking; a customer statement or pending request does not satisfy it.'
+    at booking; a customer statement or pending request does not satisfy it. Some routes are subject to a
+    bank terms assessment: a pending assessment can change the net amount or settlement delay at its event,
+    and a prepared request binds the terms version observed at preparation.'
   lifecycle:
     states: [AVAILABLE, USED, EXPIRED]
     transitions:
@@ -226,6 +228,8 @@ logical_entities:
     - {name: expires_minute, description: 'latest booking minute', public: true}
     - {name: settlement_delay, description: 'minutes from booking to destination credit', public: true}
     - {name: terms_version, description: 'terms version bound by a prepared request', public: true}
+    - {name: pending_assessment, description: 'whether a bank terms assessment is still pending', public: true}
+    - {name: assessment_delay, description: 'minutes from the assessment trigger to its event', public: true}
     - {name: status, description: 'AVAILABLE / USED / EXPIRED', public: true}
 
 - logical_entity_id: LOGICAL.operations_desk.ReserveDisbursement
@@ -901,6 +905,204 @@ logical_entities:
     - {name: owned_id, description: 'owned company profile', public: true}
     - {name: ownership_bp, description: 'ownership percentage in basis points', public: true}
 
+- logical_entity_id: LOGICAL.operations_desk.RestrictedLot
+  biz_name: RestrictedLot
+  description: 'Distinguishable line of received proceeds — amount, remaining balance and bank-permitted
+    purposes. Availability is determined per lot, not by netting the headline restriction amounts: a lot
+    is unavailable while any active restriction or unreleased receivable right covers it.'
+  lifecycle:
+    states: [AVAILABLE, RESTRICTED, DEPLETED]
+    transitions:
+    - {from: RESTRICTED, to: AVAILABLE, by: restriction_release}
+    - {from: AVAILABLE, to: DEPLETED, by: propose_purpose_payment}
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.RestrictedLot.record
+    resource: restricted_lots
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("restricted_lots", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: amount_minor, description: 'original lot amount', public: true}
+    - {name: remaining_minor, description: 'unspent balance', public: true}
+    - {name: purposes, description: 'bank-permitted purposes for this lot', public: true}
+    - {name: proceeds_assignment, description: 'commercial expenditure uses stated separately', public: true}
+    - {name: status, description: 'AVAILABLE / RESTRICTED / DEPLETED', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.FundRestriction
+  biz_name: FundRestriction
+  description: 'Active bank restriction covering identified lots. A review releases only this restriction
+    and only the lots its approved evidence explicitly names; other restrictions remain independent. A
+    headline PARTIAL status does not make the whole amount available.'
+  lifecycle:
+    states: [ACTIVE, PARTIAL, RELEASED]
+    transitions:
+    - {from: ACTIVE, to: PARTIAL, by: propose_restriction_review}
+    - {from: PARTIAL, to: RELEASED, by: propose_restriction_review}
+  capabilities:
+  - name: propose_restriction_review
+    kind: write
+    anchor: {param: restriction_id, role: primary}
+    guard: assessed evidence for this restriction only; releases only explicitly named lot ids; other
+      restrictions remain independent
+    source: DESK-restrictions
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.FundRestriction.record
+    resource: fund_restrictions
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("fund_restrictions", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: lot_ids, description: 'lots covered by this restriction', public: true}
+    - {name: review_delay, description: 'minutes from review request to decision', public: true}
+    - {name: status, description: 'ACTIVE / PARTIAL / RELEASED', public: true}
+    - {name: released_lot_ids, description: 'lots released so far', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.ReceivableRight
+  biz_name: ReceivableRight
+  description: 'Assignee right over identified lots. Release applies only to this right and its named lots;
+    evidence for an older contract version cannot release a current right. A right may require a specified
+    instruction to have received a minimum in actual settled payments before its release application is
+    accepted.'
+  lifecycle:
+    states: [ACTIVE, PARTIAL, RELEASED]
+    transitions:
+    - {from: ACTIVE, to: PARTIAL, by: propose_receivable_release}
+    - {from: PARTIAL, to: RELEASED, by: propose_receivable_release}
+  capabilities:
+  - name: propose_receivable_release
+    kind: write
+    anchor: {param: right_id, role: primary}
+    guard: assignee evidence for this right and its named lots; current contract version; release_requires
+      payments must already be settled
+    source: DESK-restrictions
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.ReceivableRight.record
+    resource: receivable_rights
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("receivable_rights", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: lot_ids, description: 'lots covered by this right', public: true}
+    - {name: review_delay, description: 'minutes from release request to decision', public: true}
+    - {name: release_requires, description: 'instruction and settled amount required before release', public: true}
+    - {name: status, description: 'ACTIVE / PARTIAL / RELEASED', public: true}
+    - {name: released_lot_ids, description: 'lots released so far', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.PurposeInstruction
+  biz_name: PurposeInstruction
+  description: 'Instruction to pay a stated purpose from restricted lots. Each source lot must be available
+    and permit the purpose; amounts are explicit positive integers and cannot exceed the lot remaining. The
+    bank does not validate the separate commercial proceeds assignment.'
+  lifecycle:
+    states: [OPEN, PAID]
+    transitions:
+    - {from: OPEN, to: PAID, by: propose_purpose_payment}
+  capabilities:
+  - name: propose_purpose_payment
+    kind: write
+    anchor: {param: instruction_id, role: primary}
+    guard: explicit positive amount per lot; lots available and permit the purpose; not above remaining;
+      commercial assignment is the initiator's responsibility
+    source: DESK-restrictions
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.PurposeInstruction.record
+    resource: purpose_instructions
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("purpose_instructions", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: amount_minor, description: 'instruction amount', public: true}
+    - {name: purpose, description: 'purpose the payment must serve', public: true}
+    - {name: due_minute, description: 'latest payment minute', public: true}
+    - {name: status, description: 'OPEN or PAID', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.PaymentBatchItem
+  biz_name: PaymentBatchItem
+  description: 'One payment in a batch — principal, obligation reference, recipient version and intended
+    bank reference, distinct from a submission attempt. A bank acknowledgement may be pending; ACK_PENDING
+    establishes neither failure nor success.'
+  lifecycle:
+    states: [DUE, PAID, VOID]
+    transitions:
+    - {from: DUE, to: PAID, by: propose_batch_item_payment}
+    - {from: DUE, to: VOID, by: batch_file_update}
+  capabilities:
+  - name: propose_batch_item_payment
+    kind: write
+    anchor: {param: item_id, role: primary}
+    guard: submits exactly the item principal and the explicitly selected bank version; submission_key scoped
+      to the item; same key and parameters returns the original attempt
+    source: DESK-batches
+  - name: propose_batch_recipient_update
+    kind: write
+    anchor: {param: item_id, role: primary}
+    guard: requires approved bank evidence for that item; does not cancel a prior attempt
+    source: DESK-batches
+  - name: propose_batch_residual_payment
+    kind: write
+    anchor: {param: item_id, role: primary}
+    guard: pays an explicit residual amount for the item; same submission_key semantics as a batch payment
+    source: DESK-batches
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.PaymentBatchItem.record
+    resource: payment_batch_items
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("payment_batch_items", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: amount_minor, description: 'item principal', public: true}
+    - {name: currency, description: 'payment currency', public: true}
+    - {name: status, description: 'DUE / PAID / VOID', public: true}
+    - {name: bank_reference, description: 'intended bank reference; OLD marks an outdated value', public: true}
+    - {name: bank_version, description: 'recipient version to submit', public: true}
+    - {name: account_id, description: 'account that funds the item', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.SubmissionAttempt
+  biz_name: SubmissionAttempt
+  description: 'A submitted attempt for one batch item. The instruction amount is nominal principal. A
+    trace produces a bank receipt after trace_delay; only an actual rejection or a bank-confirmed NOT_RECEIVED
+    proves the attempt did not pay. Repeating the same submission_key with the same parameters returns the
+    original attempt; a new key creates a new submission.'
+  lifecycle:
+    states: [SUBMITTED, ACK_PENDING, SETTLED, NOT_RECEIVED, REJECTED]
+    transitions:
+    - {from: SUBMITTED, to: ACK_PENDING, by: bank_ack_pending}
+    - {from: ACK_PENDING, to: SETTLED, by: propose_attempt_trace}
+    - {from: ACK_PENDING, to: NOT_RECEIVED, by: propose_attempt_trace}
+  capabilities:
+  - name: propose_attempt_trace
+    kind: write
+    anchor: {param: attempt_id, role: primary}
+    guard: produces a bank receipt after trace_delay; a settled receipt is authoritative
+    source: DESK-batches
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.SubmissionAttempt.record
+    resource: submission_attempts
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("submission_attempts", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: item_id, description: 'batch item this attempt pays', public: true}
+    - {name: amount_minor, description: 'nominal principal of the attempt', public: true}
+    - {name: bank_reference, description: 'bank reference submitted', public: true}
+    - {name: bank_version, description: 'recipient version submitted', public: true}
+    - {name: trace_delay, description: 'minutes from trace request to receipt', public: true}
+    - {name: status, description: 'SUBMITTED / ACK_PENDING / SETTLED / NOT_RECEIVED / REJECTED', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.BankReceipt
+  biz_name: BankReceipt
+  description: 'Bank receipt for a submission attempt. A settled receipt is authoritative and binds the
+    attempt, item, amount and bank reference; a portal summary is not.'
+  lifecycle:
+    states: [SETTLED, NOT_RECEIVED, REJECTED]
+    transitions:
+    - {from: null, to: SETTLED, by: desk_attempt_receipt}
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.BankReceipt.record
+    resource: bank_receipts
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("bank_receipts", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: attempt_id, description: 'attempt this receipt answers', public: true}
+    - {name: item_id, description: 'batch item paid', public: true}
+    - {name: amount_minor, description: 'amount received', public: true}
+    - {name: status, description: 'SETTLED / NOT_RECEIVED / REJECTED', public: true}
+    - {name: bank_reference, description: 'bank reference of the receipt', public: true}
+
 pas_relations:
 - relation_id: LOGICAL.operations_desk.CurrencyObligation_TO_LOGICAL.operations_desk.DeskAccount
   relation_name: Paid from
@@ -1109,3 +1311,46 @@ pas_relations:
   A: submission_ids
   S: 'the bundle names specific approved submissions; only approved submissions whose claims match
     the current profile versions count'
+
+- relation_id: LOGICAL.operations_desk.FundRestriction_TO_LOGICAL.operations_desk.RestrictedLot
+  relation_name: Covers
+  P:
+    forward: {verb: covers, cardinality: '1:N'}
+    reverse: {verb: is covered by, cardinality: '1:N'}
+  A: lot_ids
+  S: 'a restriction covers the named lots; availability is determined per lot and restrictions may overlap'
+
+- relation_id: LOGICAL.operations_desk.ReceivableRight_TO_LOGICAL.operations_desk.RestrictedLot
+  relation_name: Covers
+  P:
+    forward: {verb: covers, cardinality: '1:N'}
+    reverse: {verb: is covered by, cardinality: '1:N'}
+  A: lot_ids
+  S: 'a receivable right covers the named lots; release applies only to this right and its named lots'
+
+- relation_id: LOGICAL.operations_desk.PurposeInstruction_TO_LOGICAL.operations_desk.RestrictedLot
+  relation_name: Pays from
+  P:
+    forward: {verb: pays from, cardinality: '1:N'}
+    reverse: {verb: funds, cardinality: '1:N'}
+  A: allocations
+  S: 'the instruction names explicit amounts per source lot; each lot must be available and permit the
+    instruction purpose'
+
+- relation_id: LOGICAL.operations_desk.PaymentBatchItem_TO_LOGICAL.operations_desk.SubmissionAttempt
+  relation_name: Submitted as
+  P:
+    forward: {verb: is submitted as, cardinality: '1:N'}
+    reverse: {verb: submits, cardinality: '1:N'}
+  A: item_id
+  S: 'an item is distinct from its attempts; repeating a submission key returns the original attempt, and
+    the same key with different parameters is rejected'
+
+- relation_id: LOGICAL.operations_desk.SubmissionAttempt_TO_LOGICAL.operations_desk.BankReceipt
+  relation_name: Receipted by
+  P:
+    forward: {verb: is receipted by, cardinality: '1:N'}
+    reverse: {verb: receipts, cardinality: '1:1'}
+  A: attempt_id
+  S: 'a trace produces the receipt after trace_delay; a settled receipt is authoritative, while a pending
+    acknowledgement proves neither success nor failure'

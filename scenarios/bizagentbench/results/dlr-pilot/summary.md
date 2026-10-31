@@ -8,7 +8,9 @@
 | case_001 | ✅ | ✅ | ✅ | ✅ | 188 | 6,302,559 | `case_001_result.json` |
 | case_002 | ✅ | ✅ | ✅ | ✅ | 313 | 23,734,153 | `case_002_result.json` |
 | case_003 | ✅ | ✅ | ✅ | ✅ | 253 | 9,445,421 | `case_003_result.json` |
+| case_004 | ✅ | ✅ | ✅ | ✅ | 505 | 16,279,513 | `case_004_result.json` |
 
 - `case_001_result.json`：`runs/dlr-001/case_001__trial0/result.json`
 - `case_002_result.json`：`runs/dlr-002-final3/case_002__trial0/result.json`
 - `case_003_result.json`：`runs/dlr-003c/case_003__trial0/result.json`
+- `case_004_result.json`：`runs/dlr-004b/case_004__trial0/result.json`

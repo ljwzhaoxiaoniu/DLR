@@ -74,5 +74,41 @@
   {
     "kid": 29,
     "knowledge": "The onboarding review-fee budget includes reserve drawing fees paid to the billing account. A documented deadline-versus-fee choice raises the cap only after the customer approved that exact fee-bearing reserve route; the agent's own choice or a final balance does not raise it."
+  },
+  {
+    "kid": 30,
+    "knowledge": "Restricted-fund availability is determined per lot, not by netting the headline restriction amounts. A lot is unavailable while any active restriction or unreleased receivable right covers it; restrictions and rights may overlap."
+  },
+  {
+    "kid": 31,
+    "knowledge": "A restriction review releases only that restriction and only the lot IDs its approved evidence explicitly names; other restrictions remain independent. Partial releases are stored as released lot IDs, and a headline PARTIAL status does not make the whole amount available."
+  },
+  {
+    "kid": 32,
+    "knowledge": "A receivable right release applies only to that right and its named lots, and evidence for an older contract version cannot release a current right. If the right publishes release_requires, the specified instruction must already have received at least the stated amount in actual settled payments before the release application is accepted."
+  },
+  {
+    "kid": 33,
+    "knowledge": "A purpose payment takes an explicit positive amount per source lot; each selected lot must be available and permit the instruction purpose, amounts cannot exceed the lot remaining, and the bank does not validate the separate commercial proceeds assignment."
+  },
+  {
+    "kid": 34,
+    "knowledge": "A payment batch item is distinct from its submission attempts. ACK_PENDING establishes neither failure nor success; a trace produces a bank receipt after its delay, and a settled receipt is authoritative while a portal summary is not."
+  },
+  {
+    "kid": 35,
+    "knowledge": "Repeating the same submission_key with the same parameters returns the original attempt without another debit; the same key with different parameters is rejected; a new key creates a new submission even when another key already paid. Avoid duplicate business payment yourself."
+  },
+  {
+    "kid": 36,
+    "knowledge": "A batch item's intended bank reference may be outdated; the current reference is the item reference with the old marker replaced by the current marker. A recipient change requires approved bank evidence for that item and does not cancel an earlier attempt, and an item in an outdated batch file can be VOID even when a draft attempt exists."
+  },
+  {
+    "kid": 37,
+    "knowledge": "Only an actual bank rejection or a bank-confirmed NOT_RECEIVED establishes that an attempt did not pay. An attempt left ACK_PENDING or SUBMITTED without a terminal receipt keeps the item unresolved, and an item whose amount is due must be matched by bank-received attempt amounts."
+  },
+  {
+    "kid": 38,
+    "knowledge": "Some reserve routes are subject to a scheduled bank terms assessment. A pending assessment can change the net amount or settlement delay at its event, and the precise result is not established before it. A prepared drawing binds the terms version observed at preparation; when a small difference matters for a remaining payment, wait for the assessment before booking."
   }
 ]

@@ -17,19 +17,19 @@
   "tsm_additions": {
     "l1": {
       "file": "sources/configs/DLR/operations_desk.yaml",
-      "logical_entities": 33,
-      "pas_relations": 24,
-      "vector_rows": 90,
+      "logical_entities": 40,
+      "pas_relations": 29,
+      "vector_rows": 109,
       "nature": "本仓库新增的 schema 级对象模型；零实例值；能力挂 LE（anchor + guard）；生命周期入 L1；建模源为数据集内 DB-index / DB-* / DESK-* / tool_catalog"
     },
     "l2": {
       "files": ["sources/consensus/shared.jsonl", "sources/consensus/operations_desk.jsonl"],
-      "entries": 29,
+      "entries": 38,
       "nature": "本仓库新增的领域共识"
     },
     "l3": {
       "file": "sources/sop.md",
-      "sections": 3,
+      "sections": 4,
       "nature": "本仓库新增的问题类打法；与数据集自带的 62 份 SOP-* 文档无关"
     }
   },
@@ -53,6 +53,13 @@
       "trigger": "Our September receipts still don't line up with the outstanding amounts on our report. Our company account application also hasn't been sorted out, and we need to use it soon. Can you help with both?",
       "class": "receivables reconciliation + evidence-based onboarding review",
       "basis": ["DESK-reconciliation", "DESK-onboarding", "DESK-commercial-evidence", "DESK-collateral", "DESK-protocol"],
+      "nature": "本仓库新增，非数据集内容"
+    },
+    {
+      "case": "case_004",
+      "trigger": "Some money in our account isn't available, and payroll and other bills are coming due. I also submitted a batch of supplier payments earlier, but I can't tell which went through. Could you check and get the outstanding payments handled?",
+      "class": "restricted-fund release + batch payment reconciliation",
+      "basis": ["DESK-restrictions", "DESK-batches", "DESK-commercial-evidence", "DESK-collateral", "DESK-protocol"],
       "nature": "本仓库新增，非数据集内容"
     }
   ],
@@ -88,6 +95,15 @@
       "tool_calls": 253,
       "tokens": 9445421,
       "artifact": "results/dlr-pilot/case_003_result.json"
+    },
+    "case_004": {
+      "strict": true,
+      "goal": true,
+      "process": true,
+      "protection": true,
+      "tool_calls": 505,
+      "tokens": 16279513,
+      "artifact": "results/dlr-pilot/case_004_result.json"
     }
   },
   "local_patches": [

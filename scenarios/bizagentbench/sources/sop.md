@@ -121,6 +121,39 @@ completing a company account application that requires ownership analysis and ev
    after the allocation map is consistent, and record the case only after the application is approved and
    the portfolio is closed.
 
+### When asked: "Some money in our account isn't available, and payroll and other bills are coming due. I also submitted a batch of supplier payments earlier, but I can't tell which went through. Could you check and get the outstanding payments handled?"
+
+> **Type**: problem class
+> **Class**: restricted-fund release + batch payment reconciliation
+> **Source**: DESK-restrictions / DESK-batches / DESK-commercial-evidence / DESK-collateral / DESK-protocol
+> **Note**: L3 addition authored in this repository; not dataset content
+
+This class covers any request that combines releasing restricted or assigned funds for due purpose
+payments with determining which earlier batch submissions actually paid.
+
+1. Establish the object set: restricted lots, fund restrictions, receivable rights, purpose instructions,
+   batch items, submission attempts, bank receipts, accounts, scheduled events and supporting documents.
+2. Determine availability per lot: a lot is unavailable while any active restriction or unreleased
+   receivable right covers it; do not net the headline restriction amounts. Map each purpose instruction
+   to its source lots and check that each lot permits the instruction purpose.
+3. Release only what is needed: apply approved evidence for the specific restriction or right and only its
+   named lots; other restrictions remain independent. Respect a release precondition that the named
+   instruction must already have received a minimum in actual settled payments, and treat a partial release
+   as partial rather than full availability.
+4. Pay the instructions: use explicit positive allocations per lot, within the remaining balance and before
+   the due minute. The bank does not validate the separate commercial proceeds assignment, so check that
+   the payment actually serves the instructed purpose.
+5. Reconcile the batch: keep items distinct from attempts. Trace pending attempts after their trace delay;
+   only a settled bank receipt is authoritative, while a pending acknowledgement proves neither success
+   nor failure. Verify the current bank reference and recipient version, and respect submission-key
+   semantics so a retry does not create a duplicate payment.
+6. Fund any shortfall: when the account cannot cover the due batch payments, use the available facility, but
+   inspect pending terms assessments first. A pending assessment can change the net amount at its event, and
+   a prepared request binds the observed terms version; when the difference matters for a remaining payment,
+   wait for the assessment before booking.
+7. Close only when every purpose instruction is paid, every batch item is settled or properly void, and no
+   attempt remains pending without a terminal receipt.
+
 ## psp
 
 (The PSP namespace is not modeled yet; it will be added in a later pass.)

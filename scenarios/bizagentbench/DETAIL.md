@@ -19,9 +19,9 @@
 
 | 层 | 文件 | 规模 | 性质 |
 |---|---|---|---|
-| L1 | `sources/configs/DLR/operations_desk.yaml` | 33 LE · 24 PAS · 90 向量行 | schema 级对象模型：零实例值；能力挂 LE（anchor + guard）；生命周期入 L1 |
-| L2 | `sources/consensus/{shared,operations_desk}.jsonl` | 29 条 | 领域共识；数据集产品条款的归纳 |
-| L3 | `sources/sop.md` | 3 节 | **问题类打法**，本仓库新增；与数据集自带 62 份 `SOP-*` 无关 |
+| L1 | `sources/configs/DLR/operations_desk.yaml` | 40 LE · 29 PAS · 109 向量行 | schema 级对象模型：零实例值；能力挂 LE（anchor + guard）；生命周期入 L1 |
+| L2 | `sources/consensus/{shared,operations_desk}.jsonl` | 38 条 | 领域共识；数据集产品条款的归纳 |
+| L3 | `sources/sop.md` | 4 节 | **问题类打法**，本仓库新增；与数据集自带 62 份 `SOP-*` 无关 |
 
 **报告口径**：bare = 只用数据集知识工具；assisted = 用 `dlr_l1/l2/l3` 替代之；两档分开报数。L3 为新增口径，不得混入“数据集 621 份可搜文档”。
 
@@ -32,6 +32,7 @@
 | I need to pay a supplier in euros and another in pounds. … I don't want to pay the tax twice. | 外币交付 + 已发出税款修复 + 更正费融资 | DESK-fx / DESK-tax / DESK-collateral / DESK-protocol |
 | Several storefronts still can't receive payments. … Can you help with both? | 多站点收款上线 + 带留存服务的账户退出 | DESK-rails / DESK-exit / DESK-collateral / DESK-protocol |
 | Our September receipts still don't line up … Can you help with both? | 应收对账 + 证据制开户审查 | DESK-reconciliation / DESK-onboarding / DESK-commercial-evidence / DESK-collateral / DESK-protocol |
+| Some money in our account isn't available … get the outstanding payments handled? | 受限资金释放 + 批次付款对账 | DESK-restrictions / DESK-batches / DESK-commercial-evidence / DESK-collateral / DESK-protocol |
 
 写法：标题 = 开场白（检索触发）；正文 = 类级打法（对象集 → 资金计划 → 校验 → 收口），**不写实例金额、记录 ID 或固定序列**。
 
@@ -42,6 +43,7 @@
 | case_001 | ✅ | ✅ | ✅ | ✅ | 188 | 6,302,559 | `results/dlr-pilot/case_001_result.json` |
 | case_002 | ✅ | ✅ | ✅ | ✅ | 313 | 23,734,153 | `results/dlr-pilot/case_002_result.json` |
 | case_003 | ✅ | ✅ | ✅ | ✅ | 253 | 9,445,421 | `results/dlr-pilot/case_003_result.json` |
+| case_004 | ✅ | ✅ | ✅ | ✅ | 505 | 16,279,513 | `results/dlr-pilot/case_004_result.json` |
 
 ## 五、复现
 
