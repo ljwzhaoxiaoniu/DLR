@@ -13,8 +13,11 @@ set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd -W)"
 SVC_DIR="$(cd "$HERE/.." && pwd -W)"
 ROOT="$(cd "$SVC_DIR/.." && pwd -W)"
+TSM_DIR="$ROOT/TSM Core Service"
 DSH_DIR="$SVC_DIR/dsh_dlr"
-QJSON="$ROOT/MINIDEV_sqlite/mini_dev_sqlite.json"
+# 数据集根：与服务同源（先读 TSM Core Service/.env，系统环境变量优先）
+if [ -f "$TSM_DIR/.env" ]; then set -a; . "$TSM_DIR/.env"; set +a; fi
+QJSON="${TSM_DATASET_DIR:-$ROOT}/MINIDEV_sqlite/mini_dev_sqlite.json"
 
 JOBS="${JOBS:-4}"
 SCOPE=""

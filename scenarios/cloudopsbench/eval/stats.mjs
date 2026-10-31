@@ -7,7 +7,7 @@
 //   ③ DETAIL/<家族>.md        逐题校验表 + 证据正文（按 system-category 拆）
 //
 // 用法: node stats.mjs [--results <dir>] [--checkout <dir>]
-//   results 默认 <repo>/scenarios/cloudopsbench/results；checkout 默认 $COB_DIR || /d/Code_Proj/Cloud-OpsBench
+//   results 默认 <repo>/scenarios/cloudopsbench/results；checkout 默认 $COB_DIR || <repo>/../Dataset/Cloud-OpsBench
 // 口径：去重取最新（同题多轮取最新一轮）；结果/流程分全部来自上游 scorer，无人工翻盘口径。
 import fs from "node:fs";
 import path from "node:path";
@@ -18,7 +18,7 @@ const SCENARIO = path.resolve(HERE, ".."); // …/scenarios/cloudopsbench
 
 const args = process.argv.slice(2);
 let resultsDir = path.join(SCENARIO, "results");
-let checkout = process.env.COB_DIR || "D:/Code_Proj/Cloud-OpsBench";
+let checkout = process.env.COB_DIR || path.resolve(SCENARIO, "..", "..", "..", "Dataset", "Cloud-OpsBench");
 for (let i = 0; i < args.length; i++) {
   if (args[i] === "--results") resultsDir = args[++i];
   else if (args[i] === "--checkout") checkout = args[++i];

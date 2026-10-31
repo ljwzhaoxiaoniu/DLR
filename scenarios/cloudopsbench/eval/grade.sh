@@ -13,7 +13,8 @@
 set -uo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd -W)"
-COB_DIR="${COB_DIR:-/d/Code_Proj/Cloud-OpsBench}"        # 基准检出（快照 ea05daf）
+ROOT="$(cd "$HERE/../../.." && pwd -W)"
+COB_DIR="${COB_DIR:-$ROOT/../Dataset/Cloud-OpsBench}"    # 基准检出（快照 ea05daf；默认与本检出同级的 Dataset/）
 PY="${PY:-/d/ProgramData/anaconda3/envs/lepe_som/python}" # 绝对路径规则
 MODEL="${COB_MODEL:-dsh-tsm}"
 
