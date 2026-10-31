@@ -1,0 +1,85 @@
+{
+  "scenario": "bizagentbench",
+  "updated": "2026-10-31",
+  "dataset": {
+    "name": "BizAgentBench",
+    "local_copy": "D:/Code_Proj/Dataset/BizAgentBench-main",
+    "release": "bizagentbench-payment-v1",
+    "cases": 50,
+    "knowledge_documents": 789,
+    "searchable_documents": 621,
+    "capabilities": 601,
+    "world_collections": 404,
+    "world_records": 3121,
+    "verifier": "upstream deterministic G/P/F (no LLM judge)",
+    "note": "Case files, knowledge, tools and verifier are dataset-owned and are not edited by this repository."
+  },
+  "tsm_additions": {
+    "l1": {
+      "file": "sources/configs/DLR/operations_desk.yaml",
+      "logical_entities": 23,
+      "pas_relations": 16,
+      "vector_rows": 62,
+      "nature": "本仓库新增的 schema 级对象模型；零实例值；能力挂 LE（anchor + guard）；生命周期入 L1；建模源为数据集内 DB-index / DB-* / DESK-* / tool_catalog"
+    },
+    "l2": {
+      "files": ["sources/consensus/shared.jsonl", "sources/consensus/operations_desk.jsonl"],
+      "entries": 20,
+      "nature": "本仓库新增的领域共识"
+    },
+    "l3": {
+      "file": "sources/sop.md",
+      "sections": 2,
+      "nature": "本仓库新增的问题类打法；与数据集自带的 62 份 SOP-* 文档无关"
+    }
+  },
+  "l3_classes": [
+    {
+      "case": "case_001",
+      "trigger": "I need to pay a supplier in euros and another in pounds. Our earlier tax payments also haven't been matched to the right periods. Can you help sort these out? I don't want to pay the tax twice.",
+      "class": "foreign-currency delivery + unmatched tax transfer repair + fee funding",
+      "basis": ["DESK-fx", "DESK-tax", "DESK-collateral", "DESK-protocol"],
+      "nature": "本仓库新增，非数据集内容"
+    },
+    {
+      "case": "case_002",
+      "trigger": "Several storefronts still can't receive payments. I also want to retire our old operating account, but some subscriptions need to keep running. Can you help with both?",
+      "class": "multi-site collection rollout + account exit with retained services",
+      "basis": ["DESK-rails", "DESK-exit", "DESK-collateral", "DESK-protocol"],
+      "nature": "本仓库新增，非数据集内容"
+    }
+  ],
+  "reporting_rule": {
+    "bare": "只用数据集自带知识工具（search_knowledge / read_document）；不加载本仓库 L1/L2/L3",
+    "assisted": "用本仓库 dlr_l1 / dlr_l2 / dlr_l3 替代数据集知识工具；其余环境与判分不变",
+    "rule": "两档分开报数；L3 节为新增口径，不得混入数据集知识规模的描述（数据集 621 份可搜文档不含本仓库 L1/L2/L3）"
+  },
+  "final_results": {
+    "case_001": {
+      "strict": true,
+      "goal": true,
+      "process": true,
+      "protection": true,
+      "tool_calls": 188,
+      "tokens": 6302559,
+      "artifact": "results/dlr-pilot/case_001_result.json"
+    },
+    "case_002": {
+      "strict": true,
+      "goal": true,
+      "process": true,
+      "protection": true,
+      "tool_calls": 313,
+      "tokens": 23734153,
+      "artifact": "results/dlr-pilot/case_002_result.json"
+    }
+  },
+  "local_patches": [
+    {
+      "file": "D:/Code_Proj/Dataset/BizAgentBench-main/tools/transport_support.py",
+      "change": "write() 原子替换增加 Windows 文件锁重试（40 次退避）",
+      "reason": "实时扫描/索引器短暂占用目标文件导致 WinError 5，与模型行为无关",
+      "scope": "infrastructure only; no scoring or data change"
+    }
+  ]
+}

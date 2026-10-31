@@ -1,0 +1,814 @@
+# BizAgentBench · Operations Desk 场景 · L1（DLR 词汇的 world 形态）
+#
+# 结构（DLR 词汇）：
+#   LE = 业务对象（名字 + 业务描述 + 生命周期 + 挂载 API）——不设 kind / 基类。
+#   PE = 该对象在当前场景下的记录面：resource（集合）+ A（锚键，不含值）+ S（读法模板）。
+#   PAS = 对象间业务关系（付款、分配、改单、开票、绑定……）。
+# 边界（2026-10-31）：
+#   · 只写 schema 级事实——零实例值（无 scope 值 / 记录 id / 余额 / 状态取值 / 分钟数）。
+#   · 建模源：DB-index / DB-*（集合与字段语义）、DESK-*（生命周期与守卫）、tool_catalog（能力与参数）。
+#   · 不读 private/case_*.json；case 仅用于覆盖校验。
+#   · 本份覆盖 operations_desk 命名空间；PSP（xp_*）另起一份。
+
+mapping_type: dlr-state
+version: '3.0'
+scenario_name: dlr_bizagentbench_desk
+description: Operations Desk of BizAgentBench — business objects (LE) with their lifecycles and mounted
+  capabilities, the record surfaces through which each object is read (PE, anchored by case scope),
+  and the business relations between them (PAS). Schema level only; instance values are read at runtime.
+source:
+  kind: synthetic-payment-world
+  system: operations_desk
+  docs: DB-index / DB-* / DESK-* / tool_catalog
+
+logical_entities:
+- logical_entity_id: LOGICAL.operations_desk.Case
+  biz_name: Case
+  description: 'Current customer service case — the record scope of every Desk object. Work is closed
+    exactly once with a recorded terminal outcome after the agreed result; later business writes are
+    blocked. A case can span more than one product contract.'
+  lifecycle:
+    states: [OPEN, COMPLETED]
+    transitions:
+    - {from: OPEN, to: COMPLETED, by: record_case_outcome}
+  capabilities:
+  - name: record_case_outcome
+    kind: write
+    anchor: {param: outcome, role: primary}
+    guard: exactly once; after the agreed terminal state; freezes later business writes
+    source: DESK-protocol
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.Case.scope
+    resource: '(session scope — not a public collection)'
+    A: {cardinality: '1:1', key: scope}
+    S: 'the record scope of the signed-in customer case — every Desk record carries it; read access comes
+      from the current session and query results. Do NOT call search_records with a case/session resource;
+      read any public collection and take the scope from the returned records.'
+    attributes:
+    - {name: scope, description: 'case scope carried by every record', public: true}
+    - {name: business_area, description: 'which Desk product contract governs a record; one case may
+        include more than one', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.DeskAccount
+  biz_name: DeskAccount
+  description: 'Operating account and wallet — each currency balance is separate; payments debit the wallet
+    directly; a wallet can be pledged reserve cash (cash control RESERVE) that cannot be swept. Sweeps move
+    principal between same-entity, same-currency accounts only. A collection account can receive storefront
+    payments only through an active binding on its product profile.'
+  lifecycle:
+    states: [OPEN, CLOSED]
+    transitions:
+    - {from: OPEN, to: CLOSED, by: propose_desk_account_close}
+  capabilities:
+  - name: propose_account_sweep
+    kind: write
+    anchor: {param: source_account_id, role: primary}
+    guard: same entity, same currency, open accounts; pledged reserve cash cannot be swept
+    source: DESK-exit
+  - name: propose_desk_account_close
+    kind: write
+    anchor: {param: account_id, role: primary}
+    guard: open and zero balance; closing does not check subscriptions, accepted bills or expected returns
+    source: DESK-exit
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.DeskAccount.record
+    resource: desk_accounts
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("desk_accounts", filters={scope}) — unfiltered calls return the records visible
+      to this session; get_record(id) reads the full record'
+    attributes:
+    - {name: wallet, description: 'per-currency balance map (integer minor units)', public: true}
+    - {name: status, description: 'OPEN or CLOSED', public: true}
+    - {name: cash_control, description: 'RESERVE marks pledged cash', public: true}
+    - {name: entity_id, description: 'legal holder of the account', public: true}
+    - {name: profile_id, description: 'rail product contract attached to a collection account', public: true}
+    - {name: business_area, description: 'rail / exit / fx / tax product area', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.CurrencyObligation
+  biz_name: CurrencyObligation
+  description: 'Supplier delivery obligation — principal plus a per-payment delivery fee in the obligation
+    currency, due by a published minute. The wallet must fund principal and fee together; partial and
+    successive deliveries are allowed, and each payment carries its own fee.'
+  lifecycle:
+    states: [UNPAID, PAID]
+    transitions:
+    - {from: UNPAID, to: PAID, by: propose_currency_payment}
+  capabilities:
+  - name: propose_currency_payment
+    kind: write
+    anchor: {param: obligation_id, role: primary}
+    guard: positive net; delivery fee charged per payment; account and obligation share the case scope
+    source: DESK-fx
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.CurrencyObligation.record
+    resource: currency_obligations
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("currency_obligations", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: amount_minor, description: 'principal due', public: true}
+    - {name: currency, description: 'currency of the obligation', public: true}
+    - {name: delivery_fee_minor, description: 'fee charged per delivery payment', public: true}
+    - {name: due_minute, description: 'latest logical minute for delivery', public: true}
+    - {name: beneficiary_reference, description: 'recipient bank reference', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.FxRoute
+  biz_name: FxRoute
+  description: 'Published currency conversion path — ordered rational segments each rounded down before
+    the next, a flat fee in the route fee currency, a minimum source amount, a quote lifetime and a settlement
+    delay. A route under pending review may revise its terms at the review event; a quote binds the route
+    version observed when it was created.'
+  lifecycle:
+    states: [FINAL, PENDING, REVISED]
+    transitions:
+    - {from: PENDING, to: REVISED, by: scheduled_review_event}
+  capabilities:
+  - name: inspect_multicurrency_quote
+    kind: read
+    anchor: {param: route_id, role: primary}
+    guard: source at or above the route minimum; account open; same case scope; quoting does not reserve
+    source: DESK-fx
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.FxRoute.record
+    resource: fx_routes
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("fx_routes", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: source_currency, description: 'currency sold', public: true}
+    - {name: target_currency, description: 'currency bought', public: true}
+    - {name: segments, description: 'ordered numerator/denominator legs; floor after each leg', public: true}
+    - {name: fee_minor, description: 'flat route fee', public: true}
+    - {name: fee_currency, description: 'currency of the route fee', public: true}
+    - {name: minimum_minor, description: 'minimum source amount', public: true}
+    - {name: quote_lifetime, description: 'minutes a quote stays executable', public: true}
+    - {name: settlement_delay, description: 'minutes from execution to target credit', public: true}
+    - {name: review_status, description: 'FINAL or PENDING; a pending review may change terms', public: true}
+    - {name: review_minute, description: 'logical minute of the scheduled revision', public: true}
+    - {name: version, description: 'route version bound by a quote', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.FxQuote
+  biz_name: FxQuote
+  description: 'Immutable conversion quote — binds the route version, source amount, each rounded leg
+    output and the route fee. Execution debits principal and fee immediately; the target amount is credited
+    only at the settlement event.'
+  lifecycle:
+    states: [QUOTED, EXECUTED, EXPIRED]
+    transitions:
+    - {from: QUOTED, to: EXECUTED, by: propose_fx_execution}
+    - {from: QUOTED, to: EXPIRED, by: expiry_event}
+  capabilities:
+  - name: propose_fx_execution
+    kind: write
+    anchor: {param: quote_id, role: primary}
+    guard: QUOTED and unexpired; bound route version still current; debits principal plus fee immediately
+    source: DESK-fx
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.FxQuote.record
+    resource: fx_quotes
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("fx_quotes", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: source_minor, description: 'amount sold', public: true}
+    - {name: target_minor, description: 'amount bought after all legs', public: true}
+    - {name: leg_outputs, description: 'output of each rounded leg', public: true}
+    - {name: fee_minor, description: 'route fee charged on execution', public: true}
+    - {name: expires_minute, description: 'last executable minute', public: true}
+    - {name: status, description: 'QUOTED / EXECUTED / EXPIRED', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.FxTrade
+  biz_name: FxTrade
+  description: 'Executed conversion awaiting settlement — PROCESSING until the scheduled settlement event
+    credits the target wallet; the target is not spendable before that credit.'
+  lifecycle:
+    states: [PROCESSING, SETTLED]
+    transitions:
+    - {from: PROCESSING, to: SETTLED, by: desk_fx_settle}
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.FxTrade.record
+    resource: fx_trades
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("fx_trades", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: quote_id, description: 'quote this trade executes', public: true}
+    - {name: status, description: 'PROCESSING or SETTLED', public: true}
+    - {name: submitted_minute, description: 'execution minute', public: true}
+    - {name: settled_minute, description: 'target credit minute', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.ReserveRoute
+  biz_name: ReserveRoute
+  description: 'Published reserve drawing option — reserve account, permitted destination, debit and net
+    amount, release conditions, booking window and settlement delay. Drawings are contractual alternatives
+    and each can be used once; the fee is debit minus net. A condition on a bank record must already hold
+    at booking; a customer statement or pending request does not satisfy it.'
+  lifecycle:
+    states: [AVAILABLE, USED, EXPIRED]
+    transitions:
+    - {from: AVAILABLE, to: USED, by: propose_reserve_disbursement}
+  capabilities:
+  - name: propose_reserve_disbursement
+    kind: write
+    anchor: {param: route_id, role: primary}
+    guard: inside booking window; release conditions hold on actual records; one drawing per route; full
+      debit must be available
+    source: DESK-collateral
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.ReserveRoute.record
+    resource: reserve_routes
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("reserve_routes", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: reserve_account_id, description: 'pledged reserve account debited', public: true}
+    - {name: destination_account_id, description: 'account credited with the net amount', public: true}
+    - {name: debit_minor, description: 'full reserve charge', public: true}
+    - {name: net_minor, description: 'amount delivered to the destination', public: true}
+    - {name: fee_minor, description: 'debit minus net; non-refundable', public: true}
+    - {name: conditions, description: 'record predicates evaluated at booking', public: true}
+    - {name: available_from, description: 'earliest booking minute', public: true}
+    - {name: expires_minute, description: 'latest booking minute', public: true}
+    - {name: settlement_delay, description: 'minutes from booking to destination credit', public: true}
+    - {name: terms_version, description: 'terms version bound by a prepared request', public: true}
+    - {name: status, description: 'AVAILABLE / USED / EXPIRED', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.ReserveDisbursement
+  biz_name: ReserveDisbursement
+  description: 'Booked reserve drawing — cash is debited from the reserve immediately; a zero-delay drawing
+    credits the destination at booking, otherwise it is IN_TRANSIT until its settlement event and cannot
+    be used as available cash.'
+  lifecycle:
+    states: [IN_TRANSIT, SETTLED]
+    transitions:
+    - {from: IN_TRANSIT, to: SETTLED, by: desk_reserve_settlement}
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.ReserveDisbursement.record
+    resource: reserve_disbursements
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("reserve_disbursements", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: route_id, description: 'drawing option used', public: true}
+    - {name: debit_minor, description: 'reserve charge', public: true}
+    - {name: net_minor, description: 'amount credited to the destination', public: true}
+    - {name: fee_minor, description: 'withheld facility fee', public: true}
+    - {name: minute, description: 'booking minute', public: true}
+    - {name: settles_minute, description: 'destination credit minute when delayed', public: true}
+    - {name: status, description: 'IN_TRANSIT or SETTLED', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.TaxTransfer
+  biz_name: TaxTransfer
+  description: 'Tax payment already sent to the authority — principal and recipient are immutable. The
+    declared bank period and tax reference can be amended only while the transfer amendment window is open.
+    The authority allocation assigns explicit period amounts; a successful new allocation replaces the
+    transfer earlier posting rather than adding to it. A pending amendment or allocation blocks another
+    allocation.'
+  lifecycle:
+    states: [SENT, AMENDMENT_PENDING, ALLOCATION_PENDING, ALLOCATED]
+    transitions:
+    - {from: SENT, to: AMENDMENT_PENDING, by: propose_bank_message_amendment}
+    - {from: SENT, to: ALLOCATION_PENDING, by: propose_tax_allocation}
+    - {from: AMENDMENT_PENDING, to: ALLOCATED, by: bank_ack_then_authority_posting}
+    - {from: ALLOCATION_PENDING, to: ALLOCATED, by: desk_tax_post}
+  capabilities:
+  - name: propose_bank_message_amendment
+    kind: write
+    anchor: {param: transfer_id, role: primary}
+    guard: transfer SENT; current minute within amend_until_minute; fee wallet funded; same taxpayer and
+      authority
+    source: DESK-tax
+  - name: propose_tax_allocation
+    kind: write
+    anchor: {param: transfer_id, role: primary}
+    guard: current certificate version; no amendment or allocation in progress; total not above the sent
+      principal; same taxpayer and authority
+    source: DESK-tax
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.TaxTransfer.record
+    resource: tax_transfers
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("tax_transfers", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: amount_minor, description: 'principal already sent; immutable', public: true}
+    - {name: taxpayer_id, description: 'taxpayer this transfer belongs to', public: true}
+    - {name: authority_id, description: 'tax authority holding the payment', public: true}
+    - {name: amend_until_minute, description: 'last minute the bank amendment is accepted; negative means
+        closed', public: true}
+    - {name: amendment_delay, description: 'minutes to the bank acknowledgement', public: true}
+    - {name: amendment_fee_minor, description: 'fee charged for a bank amendment', public: true}
+    - {name: amendment_fee_account_id, description: 'wallet that pays the amendment fee', public: true}
+    - {name: allocation_delay, description: 'minutes to the authority posting', public: true}
+    - {name: certificate_version, description: 'current evidence version required by an allocation', public: true}
+    - {name: declared_period, description: 'period declared to the bank', public: true}
+    - {name: tax_reference, description: 'bank reference declared for the transfer', public: true}
+    - {name: status, description: 'SENT / AMENDMENT_PENDING / ALLOCATION_PENDING / ALLOCATED', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.TaxPeriod
+  biz_name: TaxPeriod
+  description: 'Filing period liability — amount due, filing cutoff minute, late fee and fee account. At
+    the cutoff the authority examines the actual posted allocations; a shortfall records OVERDUE and immediately
+    debits the late fee, while sufficient postings record DISCHARGED.'
+  lifecycle:
+    states: [OPEN, OVERDUE, DISCHARGED]
+    transitions:
+    - {from: OPEN, to: DISCHARGED, by: desk_tax_cutoff}
+    - {from: OPEN, to: OVERDUE, by: desk_tax_cutoff}
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.TaxPeriod.record
+    resource: tax_periods
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("tax_periods", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: amount_minor, description: 'liability for the period', public: true}
+    - {name: tax_reference, description: 'authority reference for the period', public: true}
+    - {name: filing_cutoff_minute, description: 'minute the authority examines postings', public: true}
+    - {name: late_fee_minor, description: 'fee debited on a shortfall at the cutoff', public: true}
+    - {name: fee_account_id, description: 'wallet that pays a late fee', public: true}
+    - {name: filing_status, description: 'OPEN / OVERDUE / DISCHARGED', public: true}
+    - {name: cutoff_paid_minor, description: 'amount counted at the cutoff', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.TaxAllocation
+  biz_name: TaxAllocation
+  description: 'Authority posting that assigns a tax transfer to explicit period amounts — PROCESSING
+    until it posts; each posted allocation replaces the transfer earlier posting. A certificate declaration
+    can name one bank period while its allocation map splits the principal across several periods.'
+  lifecycle:
+    states: [PROCESSING, POSTED]
+    transitions:
+    - {from: PROCESSING, to: POSTED, by: desk_tax_post}
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.TaxAllocation.record
+    resource: tax_allocations
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("tax_allocations", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: transfer_id, description: 'transfer whose principal is assigned', public: true}
+    - {name: allocations, description: 'period id to amount map', public: true}
+    - {name: certificate_version, description: 'evidence version used', public: true}
+    - {name: status, description: 'PROCESSING or POSTED', public: true}
+    - {name: posted_minute, description: 'minute the posting becomes effective', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.MessageAmendment
+  biz_name: MessageAmendment
+  description: 'Bank message amendment request — changes the declared tax period and reference of a transfer.
+    It is acknowledged after the amendment delay; the acknowledgement starts a separate whole-principal
+    authority posting that a later allocation replaces. An amendment never creates a second payment.'
+  lifecycle:
+    states: [REQUESTED, ACKNOWLEDGED]
+    transitions:
+    - {from: REQUESTED, to: ACKNOWLEDGED, by: desk_message_ack}
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.MessageAmendment.record
+    resource: message_amendments
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("message_amendments", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: transfer_id, description: 'transfer being amended', public: true}
+    - {name: tax_period, description: 'newly declared period', public: true}
+    - {name: tax_reference, description: 'newly declared bank reference', public: true}
+    - {name: status, description: 'REQUESTED or ACKNOWLEDGED', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.Request
+  biz_name: Request
+  description: 'Immutable customer approval request — prepared by a propose capability; the customer approves
+    or declines exact terms from their portal. Execution requires an approved request whose arguments are
+    still current; a pending request is not an executed operation. Executing the same request again is
+    idempotent.'
+  lifecycle:
+    states: [PENDING, APPROVED, DECLINED, EXECUTED]
+    transitions:
+    - {from: PENDING, to: APPROVED, by: decide_request}
+    - {from: PENDING, to: DECLINED, by: decide_request}
+    - {from: APPROVED, to: EXECUTED, by: execute_request}
+  capabilities:
+  - name: execute_request
+    kind: write
+    anchor: {param: request_id, role: primary}
+    guard: approved request with current terms; repeating an executed request returns its receipt
+    source: DESK-protocol
+  - name: decide_request
+    kind: write
+    anchor: {param: request_id, role: primary}
+    guard: customer portal only; binds the exact immutable arguments
+    source: DESK-protocol
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.Request.record
+    resource: requests
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("requests", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: operation, description: 'capability that prepared the request', public: true}
+    - {name: arguments, description: 'immutable terms the approval binds', public: true}
+    - {name: status, description: 'PENDING / APPROVED / DECLINED / EXECUTED', public: true}
+    - {name: prepared_minute, description: 'minute the request was prepared', public: true}
+    - {name: approved_by, description: 'customer operator who approved', public: true}
+    - {name: approval_seq, description: 'audit sequence of the approval', public: true}
+    - {name: executed_minute, description: 'minute the operation executed', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.Submission
+  biz_name: Submission
+  description: 'Evidence submission created by a customer upload — assessed against the real target, purpose,
+    signature and expiry and recorded APPROVED or REJECTED. Approval is not completion of the underlying
+    business action.'
+  lifecycle:
+    states: [SUBMITTED, APPROVED, REJECTED]
+    transitions:
+    - {from: SUBMITTED, to: APPROVED, by: assess_evidence}
+    - {from: SUBMITTED, to: REJECTED, by: assess_evidence}
+  capabilities:
+  - name: assess_evidence
+    kind: read
+    anchor: {param: submission_id, role: primary}
+    guard: checks target, purpose, signature and expiry; approval is not completion
+    source: DESK-protocol
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.Submission.record
+    resource: submissions
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("submissions", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: file_id, description: 'private file that was uploaded', public: true}
+    - {name: target_id, description: 'business target named at upload', public: true}
+    - {name: purpose, description: 'declared purpose', public: true}
+    - {name: status, description: 'SUBMITTED / APPROVED / REJECTED', public: true}
+    - {name: assessed_minute, description: 'minute of the assessment', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.PrivateFile
+  biz_name: PrivateFile
+  description: 'Customer private file — visible to the customer only; a scheduled document appears at its
+    available minute. Its contents reach the bank only through a real upload, and a label or draft is not
+    an upload.'
+  lifecycle:
+    states: [UNAVAILABLE, AVAILABLE, UPLOADED]
+    transitions:
+    - {from: UNAVAILABLE, to: AVAILABLE, by: desk_document_available}
+    - {from: AVAILABLE, to: UPLOADED, by: upload_file}
+  capabilities:
+  - name: list_my_files
+    kind: read
+    anchor: {param: null, role: primary}
+    guard: customer inventory only; reflects actual availability
+    source: DESK-protocol
+  - name: upload_file
+    kind: write
+    anchor: {param: file_id, role: primary}
+    guard: file must exist and be available; upload does not approve evidence
+    source: DESK-protocol
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.PrivateFile.record
+    resource: '(customer inventory — not a public collection)'
+    A: {cardinality: '1:N', key: scope}
+    S: 'customer-side list_my_files; upload_file(file_id, target_id, purpose). Do NOT call search_records
+      with a file/document resource; the inventory is exposed only through the customer tools.'
+    attributes:
+    - {name: label, description: 'customer-facing label', public: true}
+    - {name: purpose, description: 'declared purpose of the file', public: true}
+    - {name: target_id, description: 'business record the file supports', public: true}
+    - {name: available_from, description: 'logical minute the file enters the inventory', public: true}
+    - {name: contents, description: 'file contents, readable only after a real upload', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.ScheduledEvent
+  biz_name: ScheduledEvent
+  description: 'Logical business time event — kind, target and due minute. Waiting advances to the next
+    event and processes every earlier one; read-only calls do not advance time. A pending event is not
+    evidence that its intended result has occurred; the receipt only shows what completed.'
+  lifecycle:
+    states: [SCHEDULED, COMPLETED]
+    transitions:
+    - {from: SCHEDULED, to: COMPLETED, by: wait_for_update}
+  capabilities:
+  - name: get_clock
+    kind: read
+    anchor: {param: null, role: primary}
+    guard: read-only; does not advance time
+    source: DESK-protocol
+  - name: wait_for_update
+    kind: write
+    anchor: {param: null, role: primary}
+    guard: customer action only; advances to the next actual event and processes earlier ones
+    source: DESK-protocol
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.ScheduledEvent.record
+    resource: events
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("events", filters={scope}) — event payloads are not completed outcomes; get_record(id)
+      reads kind, target and due minute'
+    attributes:
+    - {name: kind, description: 'event kind (tax cutoff, document availability, fx revision, …)', public: true}
+    - {name: target_id, description: 'record the event acts on', public: true}
+    - {name: due_minute, description: 'logical minute the event is due', public: true}
+    - {name: status, description: 'SCHEDULED or COMPLETED', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.LinkContract
+  biz_name: LinkContract
+  description: 'Public agreement that connects two service matters — names the operator, the relation,
+    the condition and the milestone scope, and constrains how the two matters must be completed together.
+    A link contract is read-only and never creates a payment by itself.'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.LinkContract.record
+    resource: link_contracts
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("link_contracts", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: operator_id, description: 'relation operator that defines the link', public: true}
+    - {name: relation, description: 'published relation between the two matters', public: true}
+    - {name: condition, description: 'condition the linked matters must satisfy', public: true}
+    - {name: milestone_scope, description: 'qualifying milestones per linked matter', public: true}
+    - {name: primary_case_id, description: 'first service matter', public: true}
+    - {name: secondary_case_id, description: 'second service matter', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.BusinessDocument
+  biz_name: BusinessDocument
+  description: 'Received third-party document — facility covenants, certificates, statements. Search by
+    business reference or kind; it contains source statements, not an eligibility decision or an approval
+    of a proposed allocation.'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.BusinessDocument.record
+    resource: business_documents
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("business_documents", filters={scope}) — filter by kind or reference; get_record(id)
+      reads the body'
+    attributes:
+    - {name: kind, description: 'document kind (facility_covenant, certificate, …)', public: true}
+    - {name: reference, description: 'business reference of the document', public: true}
+    - {name: issuer, description: 'source of the document', public: true}
+    - {name: issued_minute, description: 'logical minute of issue', public: true}
+    - {name: status, description: 'RECEIVED, …', public: true}
+    - {name: body, description: 'document contents (covenant milestones, certificate declarations)', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.RailProfile
+  biz_name: RailProfile
+  description: 'Collection product terms — supported markets, entity regions, merchant categories, payment
+    rails, new-account eligibility, issuance fee and billing account. A successful opening consumes its
+    published fee and issuance credit permanently; a legacy-only profile cannot open new accounts.'
+  capabilities:
+  - name: propose_desk_account_opening
+    kind: write
+    anchor: {param: profile_id, role: primary}
+    guard: new-account credit available; actual registration region immutable; opening consumes the published
+      fee and one issuance credit; opening does not prove platform acceptance
+    source: DESK-rails
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.RailProfile.record
+    resource: rail_profiles
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("rail_profiles", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: markets, description: 'supported settlement markets', public: true}
+    - {name: entity_regions, description: 'supported entity registration regions', public: true}
+    - {name: categories, description: 'supported business categories', public: true}
+    - {name: rails, description: 'supported sender rails', public: true}
+    - {name: new_accounts, description: 'whether new accounts can be opened', public: true}
+    - {name: issuance_fee_minor, description: 'fee charged on a successful opening', public: true}
+    - {name: billing_account_id, description: 'account that pays the issuance fee', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.RailSite
+  biz_name: RailSite
+  description: 'Storefront collection site that must be able to receive payments — market, category, actual
+    entity, sender rail and configuration, readiness deadline, validation and test delays. A binding is
+    validated after the delay and an accepted binding still requires a separate successful test before the
+    storefront can collect.'
+  lifecycle:
+    states: [NOT_CONNECTED, BOUND, READY]
+    transitions:
+    - {from: NOT_CONNECTED, to: BOUND, by: propose_rail_binding}
+    - {from: BOUND, to: READY, by: propose_payout_validation}
+  capabilities:
+  - name: propose_rail_binding
+    kind: write
+    anchor: {param: site_id, role: primary}
+    guard: proposed account and rail must match the site attributes; validated after the delay; acceptance
+      is not a successful test
+    source: DESK-rails
+  - name: propose_payout_validation
+    kind: write
+    anchor: {param: site_id, role: primary}
+    guard: requires a live binding; schedules the test settlement; a later test does not establish earlier
+      readiness
+    source: DESK-rails
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.RailSite.record
+    resource: rail_sites
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("rail_sites", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: market, description: 'settlement market of the site', public: true}
+    - {name: category, description: 'operating category', public: true}
+    - {name: sender_rail, description: 'required sender rail', public: true}
+    - {name: sender_configuration, description: 'published sender configuration', public: true}
+    - {name: status, description: 'NOT_CONNECTED / BOUND / READY', public: true}
+    - {name: ready_due_minute, description: 'customer-agreed launch minute', public: true}
+    - {name: test_delay, description: 'minutes from binding to validation', public: true}
+    - {name: validation_delay, description: 'minutes from test request to test result', public: true}
+    - {name: active_binding, description: 'currently active binding, if any', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.RailBinding
+  biz_name: RailBinding
+  description: 'Binding between a collection site and a rail account — proposed explicitly and validated
+    against the site attributes; an accepted binding becomes the site active binding only after a successful
+    test settlement.'
+  lifecycle:
+    states: [PROPOSED, ACCEPTED, REJECTED, READY]
+    transitions:
+    - {from: PROPOSED, to: ACCEPTED, by: platform_validation}
+    - {from: ACCEPTED, to: READY, by: payout_test}
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.RailBinding.record
+    resource: rail_bindings
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("rail_bindings", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: site_id, description: 'site being bound', public: true}
+    - {name: profile_id, description: 'product contract of the account', public: true}
+    - {name: account_id, description: 'account receiving collections', public: true}
+    - {name: status, description: 'PROPOSED / ACCEPTED / REJECTED / READY', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.DeskService
+  biz_name: DeskService
+  description: 'Recurring desk service — separate service identity, billing account, notice and migration
+    delays. Termination takes effect after the notice delay and stops new bills, but already accepted bills
+    stay payable; billing migration changes the account for future bills after its delay.'
+  lifecycle:
+    states: [ACTIVE, TERMINATING, TERMINATED]
+    transitions:
+    - {from: ACTIVE, to: TERMINATING, by: propose_service_termination}
+    - {from: ACTIVE, to: ACTIVE, by: propose_billing_migration}
+  capabilities:
+  - name: propose_service_termination
+    kind: write
+    anchor: {param: service_id, role: primary}
+    guard: takes effect after notice_delay; does not move accepted bills
+    source: DESK-exit
+  - name: propose_billing_migration
+    kind: write
+    anchor: {param: service_id, role: primary}
+    guard: replacement account open, same entity, same currency; takes effect after migration_delay; does
+      not move old accepted bills
+    source: DESK-exit
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.DeskService.record
+    resource: desk_services
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("desk_services", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: billing_account, description: 'account future bills are accepted on', public: true}
+    - {name: status, description: 'ACTIVE / TERMINATING / TERMINATED', public: true}
+    - {name: notice_delay, description: 'minutes for termination to take effect', public: true}
+    - {name: migration_delay, description: 'minutes for billing migration to take effect', public: true}
+    - {name: entity_id, description: 'legal holder of the service', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.BillingInstance
+  biz_name: BillingInstance
+  description: 'A service bill — amount, account and status. An ACCEPTED bill remains payable on the account
+    and contract version captured when accepted; at debit time insufficient funds or a closed account gives
+    FAILED with no automatic retry in this cycle. A return is credited only to its recorded account.'
+  lifecycle:
+    states: [ACCEPTED, PAID, FAILED, REFUNDED]
+    transitions:
+    - {from: ACCEPTED, to: PAID, by: debit_event}
+    - {from: ACCEPTED, to: FAILED, by: debit_event}
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.BillingInstance.record
+    resource: billing_instances
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("billing_instances", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: service_id, description: 'service being billed', public: true}
+    - {name: account_id, description: 'account that pays the bill', public: true}
+    - {name: amount_minor, description: 'bill amount', public: true}
+    - {name: currency, description: 'billing currency', public: true}
+    - {name: status, description: 'ACCEPTED / PAID / FAILED / REFUNDED', public: true}
+    - {name: accepted_minute, description: 'minute the bill was accepted', public: true}
+
+pas_relations:
+- relation_id: LOGICAL.operations_desk.CurrencyObligation_TO_LOGICAL.operations_desk.DeskAccount
+  relation_name: Paid from
+  P:
+    forward: {verb: is paid from, cardinality: '1:N'}
+    reverse: {verb: pays, cardinality: '1:N'}
+  A: scope
+  S: 'the obligation is settled from an operating wallet in the same case scope; the wallet funds principal
+    and the per-payment delivery fee'
+
+- relation_id: LOGICAL.operations_desk.FxRoute_TO_LOGICAL.operations_desk.FxQuote
+  relation_name: Quoted as
+  P:
+    forward: {verb: is quoted as, cardinality: '1:N'}
+    reverse: {verb: quotes, cardinality: '1:1'}
+  A: route_id
+  S: 'a quote binds the route version and each rounded segment; execution uses the quote, not the route'
+
+- relation_id: LOGICAL.operations_desk.FxQuote_TO_LOGICAL.operations_desk.FxTrade
+  relation_name: Executed as
+  P:
+    forward: {verb: is executed as, cardinality: '1:1'}
+    reverse: {verb: executes, cardinality: '1:1'}
+  A: quote_id
+  S: 'execution debits principal and fee immediately; the trade credits the target at its settlement event'
+
+- relation_id: LOGICAL.operations_desk.ReserveRoute_TO_LOGICAL.operations_desk.DeskAccount
+  relation_name: Credits
+  P:
+    forward: {verb: credits, cardinality: '1:N'}
+    reverse: {verb: is funded by, cardinality: '1:N'}
+  A: destination_account_id
+  S: 'a drawing debits the pledged reserve account and credits the destination account with the net amount;
+    a delayed drawing credits only at its settlement event'
+
+- relation_id: LOGICAL.operations_desk.ReserveRoute_TO_LOGICAL.operations_desk.ReserveDisbursement
+  relation_name: Booked as
+  P:
+    forward: {verb: is booked as, cardinality: '1:1'}
+    reverse: {verb: books, cardinality: '1:1'}
+  A: route_id
+  S: 'each drawing option can be used once; the booking captures the terms version observed at booking'
+
+- relation_id: LOGICAL.operations_desk.TaxTransfer_TO_LOGICAL.operations_desk.TaxPeriod
+  relation_name: Allocated to
+  P:
+    forward: {verb: is allocated to, cardinality: '1:N'}
+    reverse: {verb: receives, cardinality: '1:N'}
+  A: transfer_id
+  S: 'a transfer principal is assigned to one or more filing periods by an authority allocation; the allocation
+    replaces the earlier posting of that transfer'
+
+- relation_id: LOGICAL.operations_desk.TaxTransfer_TO_LOGICAL.operations_desk.MessageAmendment
+  relation_name: Amended by
+  P:
+    forward: {verb: is amended by, cardinality: '1:1'}
+    reverse: {verb: amends, cardinality: '1:1'}
+  A: transfer_id
+  S: 'an amendment changes the declared bank period and reference only while the window is open; it never
+    creates a second payment'
+
+- relation_id: LOGICAL.operations_desk.TaxTransfer_TO_LOGICAL.operations_desk.TaxAllocation
+  relation_name: Posts
+  P:
+    forward: {verb: posts, cardinality: '1:N'}
+    reverse: {verb: is posted by, cardinality: '1:1'}
+  A: transfer_id
+  S: 'a transfer can have one current posted allocation; a pending amendment or allocation blocks another
+    application'
+
+- relation_id: LOGICAL.operations_desk.TaxAllocation_TO_LOGICAL.operations_desk.TaxPeriod
+  relation_name: Assigns
+  P:
+    forward: {verb: assigns, cardinality: '1:N'}
+    reverse: {verb: is assigned by, cardinality: '1:N'}
+  A: allocations
+  S: 'the allocation map names each period and amount; the authority counts posted amounts at the filing
+    cutoff'
+
+- relation_id: LOGICAL.operations_desk.PrivateFile_TO_LOGICAL.operations_desk.TaxTransfer
+  relation_name: Certifies
+  P:
+    forward: {verb: certifies, cardinality: '1:1'}
+    reverse: {verb: is certified by, cardinality: '1:1'}
+  A: target_id
+  S: 'a tax certificate names its transfer, the current certificate version and the period amounts actually
+    designated; a superseded version is rejected'
+
+- relation_id: LOGICAL.operations_desk.Submission_TO_LOGICAL.operations_desk.PrivateFile
+  relation_name: Uploaded as
+  P:
+    forward: {verb: is uploaded as, cardinality: '1:1'}
+    reverse: {verb: uploads, cardinality: '1:1'}
+  A: file_id
+  S: 'an upload creates a submission; the file content reaches the bank only through this submission'
+
+- relation_id: LOGICAL.operations_desk.Request_TO_LOGICAL.operations_desk.Case
+  relation_name: Belongs to
+  P:
+    forward: {verb: belongs to, cardinality: '1:N'}
+    reverse: {verb: has, cardinality: '1:N'}
+  A: scope
+  S: 'every prepared request belongs to the current customer case; approval binds the exact immutable arguments'
+
+- relation_id: LOGICAL.operations_desk.RailSite_TO_LOGICAL.operations_desk.RailProfile
+  relation_name: Configured by
+  P:
+    forward: {verb: is configured by, cardinality: '1:N'}
+    reverse: {verb: configures, cardinality: '1:N'}
+  A: profile_id
+  S: 'a site can receive only through an account whose profile matches the site market, category, entity
+    region and rail'
+
+- relation_id: LOGICAL.operations_desk.DeskService_TO_LOGICAL.operations_desk.BillingInstance
+  relation_name: Billed as
+  P:
+    forward: {verb: is billed as, cardinality: '1:N'}
+    reverse: {verb: bills, cardinality: '1:N'}
+  A: service_id
+  S: 'bills are accepted on the service billing account; termination and migration change future bills only'
+
+- relation_id: LOGICAL.operations_desk.BillingInstance_TO_LOGICAL.operations_desk.DeskAccount
+  relation_name: Paid from
+  P:
+    forward: {verb: is paid from, cardinality: '1:N'}
+    reverse: {verb: pays, cardinality: '1:N'}
+  A: account_id
+  S: 'an accepted bill attempts its exact amount from its recorded account at debit time; a closed or underfunded
+    account fails'
+
+- relation_id: LOGICAL.operations_desk.BusinessDocument_TO_LOGICAL.operations_desk.ReserveRoute
+  relation_name: Governs
+  P:
+    forward: {verb: governs, cardinality: '1:N'}
+    reverse: {verb: is governed by, cardinality: '1:N'}
+  A: reference
+  S: 'the facility covenant names the release milestones and permitted destination of a reserve drawing'

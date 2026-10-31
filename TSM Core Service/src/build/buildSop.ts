@@ -85,10 +85,10 @@ export function parseSop(md: string): SopRow[] {
         .join("\n")
         .trim();
       const meta = [
-        `System：${system}`,
-        cur.type ? `类型：${cur.type}` : "",
-        cur.expected ? `Expected：${cur.expected}` : "",
-      ].filter(Boolean).join("；");
+        `System: ${system}`,
+        cur.type ? `Type: ${cur.type}` : "",
+        cur.expected ? `Expected: ${cur.expected}` : "",
+      ].filter(Boolean).join("; ");
       rows.push({
         id: `${db}#${system}#${cur.title}`,
         db,
@@ -131,12 +131,12 @@ export function parseSop(md: string): SopRow[] {
       else cur.segments.push({ system, lines: [] });
       continue;
     }
-    const t = line.match(/^>\s*\*\*类型\*\*：(.+?)\s*$/);
+    const t = line.match(/^>\s*\*\*(?:类型|Type)\*\*[:：](.+?)\s*$/i);
     if (t) {
       cur.type = t[1].trim();
       continue;
     }
-    const e = line.match(/^>\s*\*\*Expected\*\*：(.+?)\s*$/);
+    const e = line.match(/^>\s*\*\*Expected\*\*[:：](.+?)\s*$/i);
     if (e) {
       cur.expected = e[1].trim();
       continue;

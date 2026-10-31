@@ -1,0 +1,6 @@
+{
+  "name": "bizagentbench",
+  "yamlDir": "sources/configs/DLR",
+  "consensusDir": "sources/consensus",
+  "sop": "sources/sop.md"
+}

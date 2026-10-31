@@ -1,0 +1,42 @@
+[
+  {
+    "kid": 1,
+    "knowledge": "Monetary fields ending in _minor are integer minor units; divide by 100 to display a major-unit amount. A wallet maps each currency to its own minor-unit balance, and currencies are never pooled."
+  },
+  {
+    "kid": 2,
+    "knowledge": "A currency quote does not reserve funds. Executing a quote debits its principal and route fee immediately, but the target currency is credited only at the settlement event; target proceeds are not spendable before that credit."
+  },
+  {
+    "kid": 3,
+    "knowledge": "A delivery fee is charged per payment, not per obligation. Splitting one delivery into several payments multiplies the delivery fee; a single payment of the full net amount charges it once."
+  },
+  {
+    "kid": 4,
+    "knowledge": "Reserve drawings are contractual alternatives and each can be used once. Release conditions are evaluated at booking against actual bank records, not against customer statements or pending requests. The facility fee equals debit minus net and is non-refundable. A drawing with a settlement delay is IN_TRANSIT until its event and cannot be used as available cash."
+  },
+  {
+    "kid": 5,
+    "knowledge": "A bank message amendment and an authority tax allocation are different processes. The amendment changes the declared bank period and reference; its acknowledgement starts a whole-principal posting. A later authority allocation replaces that posting with the certificate split rather than adding to it."
+  },
+  {
+    "kid": 6,
+    "knowledge": "A tax certificate must match the transfer current certificate_version. A superseded certificate version is rejected even when its period amounts look plausible."
+  },
+  {
+    "kid": 7,
+    "knowledge": "At a filing cutoff the authority examines the actual posted allocations. A shortfall records OVERDUE and immediately debits the published late fee; sufficient postings record DISCHARGED. Later repair does not undo a late fee already debited."
+  },
+  {
+    "kid": 8,
+    "knowledge": "A prepared request is PENDING, not executed. The customer approval binds its exact immutable arguments, and execution still requires current prerequisites. Repeating an already executed request returns its receipt without duplicating effects."
+  },
+  {
+    "kid": 9,
+    "knowledge": "Read-only calls do not advance logical time. Only the customer waiting for the next update advances the clock, and waiting processes every earlier scheduled event first."
+  },
+  {
+    "kid": 10,
+    "knowledge": "A successful tool call does not guarantee the overall customer goal. Check balances, deadlines, downstream obligations and protected objects separately from local legality."
+  }
+]

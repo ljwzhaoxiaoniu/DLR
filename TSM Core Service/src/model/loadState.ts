@@ -43,13 +43,14 @@ function toStateVectorRowsV2(s: StateScenarioYaml): VectorRow[] {
     }
     const pubText = [...pub.entries()].map(([n, d]) => `${n} ${d}`).join(" ");
     const desc = le.description ?? "";
+    const lifecycle = (le.lifecycle?.states ?? []).join(" ");
     rows.push({
       id: le.logical_entity_id,
       name: le.biz_name,
       type: "logical_entity",
       description: desc,
       db: ns,
-      text: `${le.biz_name} ${desc} ${pubText}`.replace(/\s+/g, " ").trim(),
+      text: `${le.biz_name} ${desc} ${lifecycle} ${pubText}`.replace(/\s+/g, " ").trim(),
     });
   }
 

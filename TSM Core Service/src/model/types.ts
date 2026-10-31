@@ -133,10 +133,29 @@ export interface StatePhysicalEntityV2 {
   attributes?: { name: string; description?: string; public?: boolean }[];
 }
 
+export interface StateCapabilityV2 {
+  name: string;
+  kind?: "read" | "write" | string;
+  /** 本能力的主锚：参数名 + 本 LE 在该参数上的角色（primary / secondary） */
+  anchor?: { param?: string | null; role?: string };
+  /** 业务侧守卫（来自接口契约，不是题面口径） */
+  guard?: string;
+  source?: string;
+}
+
+export interface StateLifecycleV2 {
+  states?: string[];
+  transitions?: { from?: string; to?: string; by?: string }[];
+}
+
 export interface StateLogicalEntityV2 {
   logical_entity_id: string;
   biz_name: string;
   description?: string;
+  /** 业务对象生命周期（状态 + 迁移）；schema 级，不含实例状态 */
+  lifecycle?: StateLifecycleV2;
+  /** 挂载在该对象上的 API（业务能力） */
+  capabilities?: StateCapabilityV2[];
   physical_entities?: StatePhysicalEntityV2[];
 }
 

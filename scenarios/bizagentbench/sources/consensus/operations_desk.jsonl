@@ -1,0 +1,42 @@
+[
+  {
+    "kid": 11,
+    "knowledge": "A tax transfer can be amended only while its own amend window is open; the window is per transfer and a non-positive window means closed. A transfer past its window can still be corrected only by an authority allocation with current evidence."
+  },
+  {
+    "kid": 12,
+    "knowledge": "A transfer has one current posted authority allocation. A successful new allocation replaces the earlier posting for that transfer; it does not accumulate with it."
+  },
+  {
+    "kid": 13,
+    "knowledge": "A pending authority posting, including one started by a bank amendment acknowledgement, occupies the transfer and blocks another allocation until it completes. Applying twice concurrently is rejected."
+  },
+  {
+    "kid": 14,
+    "knowledge": "A reserve release condition such as a settled obligation payment must already be true in bank records at booking. A customer statement, a pending request or a scheduled event does not satisfy the condition."
+  },
+  {
+    "kid": 15,
+    "knowledge": "A rail profile opening charges its issuance_fee_minor and consumes one issuance credit from the entity on success; neither is restored by later closing. A rejected opening charges nothing. A successful opening does not prove platform acceptance or site readiness."
+  },
+  {
+    "kid": 16,
+    "knowledge": "A rail binding must match the site market, category, entity registration region and sender rail. Platform validation records ACCEPTED or REJECTED after its delay, and an accepted binding still requires a separate successful test settlement before the site is READY. A later successful test does not establish readiness at an earlier agreed launch minute."
+  },
+  {
+    "kid": 17,
+    "knowledge": "Service termination takes effect after its notice delay and stops future bills; billing migration changes the account for future bills after its delay. Neither moves an already accepted billing instance: it remains payable on the account captured when accepted."
+  },
+  {
+    "kid": 18,
+    "knowledge": "An account sweep moves principal only between open, same-entity, same-currency accounts. Pledged reserve cash cannot be swept, and a sweep does not migrate accepted bills or expected returns."
+  },
+  {
+    "kid": 19,
+    "knowledge": "Quoting creates a quote record but moves no money. Executing a quote after its lifetime or after its bound route version was revised is rejected; a revised route requires a new quote."
+  },
+  {
+    "kid": 20,
+    "knowledge": "The case outcome is recorded exactly once, only after the agreed terminal result. A premature or repeated closure fails the process requirement, and later business writes are blocked."
+  }
+]

@@ -90,7 +90,7 @@ export async function searchSop(
       system: sys,
       count: 1,
       results: [toHit(exact.row, 1)],
-      note: "标题与本题逐字相同：该节即本题的 L3 口径（L3 最权威），按它执行。",
+      note: "Exact title match: this section is the L3 playbook for this case (L3 is authoritative here); follow it.",
     };
   }
 
@@ -105,7 +105,7 @@ export async function searchSop(
       system: sys,
       count: 0,
       results: [],
-      note: "无精确命中，且近邻候选相似度低于阈值：本题没有 L3 节，按 L1 描述 + L2 共识自解。",
+      note: "No exact match and no near neighbour above the threshold: this case has no L3 section; solve it from L1 and L2.",
     };
   }
   return {
@@ -114,6 +114,6 @@ export async function searchSop(
     system: sys,
     count: results.length,
     results,
-    note: "近似候选，**并非本题的节**：只有标题逐字复述本题时才采用；否则当作背景，按 L1+L2 自解。",
+    note: "Near neighbours: the customer may paraphrase the opening, so a candidate can still restate this case. Adopt one only when its section restates the same customer request; otherwise treat it as background and solve from L1 and L2.",
   };
 }

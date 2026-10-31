@@ -16,7 +16,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { parse } from "yaml";
 import type { LanceHit, LanceStore } from "../store/lance.js";
-import type { StateScenarioYaml } from "../model/types.js";
+import type { StateCapabilityV2, StateLifecycleV2, StateScenarioYaml } from "../model/types.js";
 import { YAML_DIR } from "../config.js";
 
 export interface StateModelSliceResult {
@@ -27,6 +27,10 @@ export interface StateModelSliceResult {
       id: string;
       name: string;
       description: string;
+      /** 业务对象生命周期（schema 级：状态名 + 迁移，不含实例状态） */
+      lifecycle: StateLifecycleV2;
+      /** 挂载在该对象上的 API：name / read|write / anchor / guard / source */
+      capabilities: StateCapabilityV2[];
       score: number;
       surfaces: { id: string; kind: string; s: string; read: string }[];
     }[];
@@ -108,7 +112,16 @@ function readHint(kind: string, ownerName: string, nsValue: string): string {
 }
 
 interface Index {
-  les: Map<string, { name: string; description: string; ns: string }>;
+  les: Map<
+    string,
+    {
+      name: string;
+      description: string;
+      ns: string;
+      lifecycle: StateLifecycleV2;
+      capabilities: StateCapabilityV2[];
+    }
+  >;
   pes: Map<
     string,
     { id: string; leId: string; kind: string; resource: string; s: string; cardinality: string; attributes: { name: string; description: string }[] }
@@ -130,6 +143,8 @@ function loadIndex(): Index {
         name: le.biz_name,
         description: le.description ?? "",
         ns: nsValue,
+        lifecycle: le.lifecycle ?? {},
+        capabilities: le.capabilities ?? [],
       });
       for (const pe of le.physical_entities ?? []) {
         const kind = lastSeg(pe.physical_entity_id);
@@ -208,6 +223,8 @@ export async function stateModelQuery(
         id: h.id ?? "",
         name: ownerName,
         description: r?.description ?? h.description ?? "",
+        lifecycle: r?.lifecycle ?? {},
+        capabilities: r?.capabilities ?? [],
         score: round4(h.score),
         surfaces: (idx.surfacesByLe.get(h.id ?? "") ?? []).map((s) => ({
           ...s,
