@@ -80,7 +80,7 @@
 | Node.js + npm | 服务是 TypeScript，经 `npx tsx` / `node` 运行 |
 | Neo4j 5.x | 本机实例（免安装 zip + 便携 JDK）或任意 Bolt 端点——设 `NEO4J_HOME`（或 `NEO4J_URI`） |
 | ONNX 编码器 | `bash "TSM Core Service/scripts/fetch-model.sh"`（~95 MB，走 hf-mirror） |
-| 数据集 | BIRD mini-dev → 解压到 `MINIDEV_sqlite/`（gitignored）；下载源：[bird-bench/mini_dev](https://github.com/bird-bench/mini_dev) |
+| 数据集 | BIRD mini-dev → 解压到 `MINIDEV_sqlite/`（gitignored）；可外置——`TSM_DATASET_DIR` 指向其父目录；下载源：[bird-bench/mini_dev](https://github.com/bird-bench/mini_dev) |
 | dsh | `@deepseek-ai/dsh@0.2.0-rc.2`（alpha 预览；500 题跑批产出于 `0.1.7-alpha.1`、**未重跑**；升级后先 `--dump-config` 核行） |
 | API key | `cp "DSH-based Agent Service/dsh_dlr/.env.example" "DSH-based Agent Service/dsh_dlr/.env"`，填 `DEEPSEEK_API_KEY` |
 | 服务 env | `cd "TSM Core Service" && npm install && cp .env.example .env`（填 `NEO4J_PASSWORD`） |

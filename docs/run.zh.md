@@ -141,7 +141,7 @@ curl -s http://127.0.0.1:28795/status
   `tsm viz [--open] [--db <库>]` 生成自包含的 DLR 图谱页（开发态看建模：LE/PE/ARCS/PAS，点击 PE 看列映射），产物在 `<DATA_DIR>/viz/dlr-graph.html`。
 - **服务由项目主手动启停**；本手册的命令都可**重复执行**（幂等是设计目标）。
 - 改配置（patch / 插件）→ 重启对应宿主；**改 L3 源 `sources/sop.md` → `tsm build sop` 重建索引后即生效**（不再需要重启宿主；原 sync_sop.sh 已退役）。
-- 路径与数据目录（全部可 env 覆盖）：`TSM_DATA_DIR`（向量库/缓存/viz；仓库内默认 `<服务>/.store`，安装态 `~/.tsm`）· `TSM_DATASET_DIR`（默认仓库根）· `TSM_SCENARIO`（路径或包名）· `TSM_OUT_DIR`（场景写入落点）· `TSM_MODEL_DIR` · `TSM_STORE_DIR` · `TSM_CACHE_DIR` · `TSM_MCP_URL` · `TSM_GRAPH_BACKEND`。
+- 路径与数据目录（全部可 env 覆盖；启动器先读 `<服务>/.env`，系统环境变量优先）：`TSM_DATA_DIR`（向量库/缓存/viz；仓库内默认 `<服务>/.store`，安装态 `~/.tsm`）· `TSM_DATASET_DIR`（默认仓库根；数据集外置时指向其父目录，如与本检出同级的 `Dataset/`）· `TSM_SCENARIO`（路径或包名）· `TSM_OUT_DIR`（场景写入落点）· `TSM_MODEL_DIR` · `TSM_STORE_DIR` · `TSM_CACHE_DIR` · `TSM_MCP_URL` · `TSM_PORT`（MCP server 端口，默认 28795）· `TSM_GRAPH_BACKEND`。
 - 临时产物一律进 `tmp_scripts/`，或随用随删。
 - **跑一批题 + 判定**：`run_batch.sh --qids ... --jobs 4` → `tsm grade --run <批次目录>`；判据三层、翻盘口径与迁移期纪律（**4 题一批** / 每题最多两遍 / 节写完必须复跑 / 全量重判）见 [eval.zh.md](eval.zh.md) §五。
 - **COB 判分不走 `tsm grade`**：走 `scenarios/cloudopsbench/eval/grade.sh` + `stats.mjs`（上游 scorer 口径），见 [eval.zh.md](eval.zh.md) §五「COB 批跑」。

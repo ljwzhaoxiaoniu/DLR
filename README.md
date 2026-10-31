@@ -80,7 +80,7 @@ Ledgers, question by question with evidence: [birdminidev](scenarios/birdminidev
 | Node.js + npm | The service is TypeScript, run via `npx tsx` / `node` |
 | Neo4j 5.x | Local instance (zip + portable JDK) or any Bolt endpoint — set `NEO4J_HOME` (or `NEO4J_URI`) |
 | ONNX encoder | `bash "TSM Core Service/scripts/fetch-model.sh"` (~95 MB, from hf-mirror) |
-| Dataset | BIRD mini-dev → unpack into `MINIDEV_sqlite/` (gitignored); upstream: [bird-bench/mini_dev](https://github.com/bird-bench/mini_dev) |
+| Dataset | BIRD mini-dev → unpack into `MINIDEV_sqlite/` (gitignored); may live outside the repo — point `TSM_DATASET_DIR` at its parent; upstream: [bird-bench/mini_dev](https://github.com/bird-bench/mini_dev) |
 | dsh | `@deepseek-ai/dsh@0.2.0-rc.2` (alpha preview; the 500-question run was produced on `0.1.7-alpha.1` and was **not re-run**; re-check patch rows with `--dump-config` after any upgrade) |
 | API key | `cp "DSH-based Agent Service/dsh_dlr/.env.example" "DSH-based Agent Service/dsh_dlr/.env"`, fill `DEEPSEEK_API_KEY` |
 | Service env | `cd "TSM Core Service" && npm install && cp .env.example .env` (fill `NEO4J_PASSWORD`) |

@@ -86,6 +86,7 @@ node "DSH-based Agent Service/dsh-tsm-eval/bin/dsh-eval.mjs" all --qids <q1>,<q2
 - **2.0 判定只看结论句**（`Final Answer:` 区域）：正文里"参考值 / 被否决的备选读法"不算命中（2026-09-29 judge 加固）；写节时 `Expected` 要写**结论句里会给出的那个值**
 - **节写完必须复跑该题**（节晚于跑批生效 → 旧档 ✅ 可能靠假阳性撑着）；节标题须与题面**逐字符**一致（含结尾标点）；判据/口径变动后**全量重判**（口径与流程见 [docs/eval.zh.md](docs/eval.zh.md) §五）
 - **`tsm grade` 可能卡死**（重活 = gold 大查询 / 结果集补救；表现为 CPU 不动、无输出）→ 杀该进程重跑该目录即可（金缓存已落盘，不重复付）
+- **机器路径走 env**：`TSM Core Service/.env` 是单一配置源（`TSM_DATASET_DIR` / `TSM_PORT` / `COB_DIR`）——启动器与评测脚本先读它、系统环境变量优先；数据集与 COB 基准可外置（默认与本检出同级的 `Dataset/`）
 
 ---
 
@@ -110,7 +111,7 @@ DLR Proj/                          # 分支 2.0
 ├── DSH-based Agent Service/     # 2.0 宿主接入：组合 patch / 技能 / 启动器 / plugins/（状态浮层）
 ├── docs/                        # 叙事四篇（01–04）+ 操作三篇 + README 索引
 ├── archive/                     # 历史（v2/v3 归档、旧文档与分享页）——只读参考
-└── MINIDEV_sqlite/              # 数据集（gitignored，需下载）
+└── MINIDEV_sqlite/              # 数据集（gitignored，需下载；可外置——TSM_DATASET_DIR 指其父目录）
 ```
 
 > 跨会话项目记忆由 Claude Code 维护在**开发机的记忆区**（机器本地、不入库；索引见其中的 `MEMORY.md`）。
