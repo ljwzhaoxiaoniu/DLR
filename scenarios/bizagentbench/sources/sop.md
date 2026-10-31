@@ -154,6 +154,42 @@ payments with determining which earlier batch submissions actually paid.
 7. Close only when every purpose instruction is paid, every batch item is settled or properly void, and no
    attempt remains pending without a terminal receipt.
 
+### When asked: "Our group companies have supplier bills coming due. We also have a purchase where some goods never arrived and the money hasn't been sorted out. Can you help handle both?"
+
+> **Type**: problem class
+> **Class**: group treasury payments under institutional mandates + card dispute loss recovery
+> **Source**: DESK-treasury / DESK-disputes / DESK-commercial-evidence / DESK-collateral / DESK-protocol
+> **Note**: L3 addition authored in this repository; not dataset content
+
+This class covers any request that combines paying group-company supplier obligations under institutional
+treasury authority with recovering the uncompensated loss on a purchase where goods did not arrive.
+
+1. Establish the object set: treasury obligations, treasury mandates with their versions and scheduled
+   revisions/effectiveness events, paying accounts, the card loss case, loss components, compensation
+   entries, the dispute, supporting evidence and scheduled events.
+2. Reconcile authority: for each obligation, take the mandate version effective at the payment minute
+   (applying revision and effectiveness events up to that minute). The paying account entity, the
+   obligation commercial debtor and the mandate payer must be the same; the executor, beneficiary and
+   purpose must be allowed; the minute must fall inside the validity interval; and the payment must capture
+   the current effective version. Capacity counts actual payments under that version in its active interval.
+3. Lodge mandate evidence when a version is pending: reviewed signed evidence becomes effective after its
+   delay, old versions stay historical, and a scheduled replacement invalidates only the replaced version.
+   Authorization and the customer economic funding preference are separate checks; group balances are not
+   pooled automatically.
+4. Compute the loss per component from the warehouse receipts; register claims only for case components and
+   never above the component cleared value, before the case filing deadline. Adjust the full unresolved
+   claim map as actual compensation settles: only settled compensation discharges a loss, and a refund for
+   another component does not offset this one.
+5. Fund and file: the filing fee is charged when the dispute is filed, so fund the fee account first. A
+   customer cap on dispute filing fees covers the filing fee itself, not a reserve facility fee used to fund
+   the fee account — state the two separately and confirm that the filing fee is within the cap. File before
+   the case filing deadline.
+6. Finalize at the case review minute; finalization schedules payment after the settlement delay and cannot
+   be changed afterwards. Watch for a published refund correction that can turn a settled receipt into a
+   failed one, and leave no scheduled refund receipt unresolved.
+7. Close when every obligation is paid under a valid effective mandate and every component loss is covered
+   by settled compensation.
+
 ## psp
 
 (The PSP namespace is not modeled yet; it will be added in a later pass.)

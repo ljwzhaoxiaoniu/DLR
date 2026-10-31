@@ -110,5 +110,33 @@
   {
     "kid": 38,
     "knowledge": "Some reserve routes are subject to a scheduled bank terms assessment. A pending assessment can change the net amount or settlement delay at its event, and the precise result is not established before it. A prepared drawing binds the terms version observed at preparation; when a small difference matters for a remaining payment, wait for the assessment before booking."
+  },
+  {
+    "kid": 39,
+    "knowledge": "A treasury payment needs the paying account entity, the obligation commercial debtor and the mandate payer entity to be the same; the executor, beneficiary and purpose must all be allowed by that mandate, and the payment minute must fall inside the mandate validity interval."
+  },
+  {
+    "kid": 40,
+    "knowledge": "A treasury mandate becomes effective only after its approved signed evidence is reviewed; old versions stay historical. A prepared payment captures the mandate current version, which must still be current and effective at execution, and a scheduled replacement invalidates only the replaced institutional version."
+  },
+  {
+    "kid": 41,
+    "knowledge": "Mandate capacity counts the actual payments made under that mandate version inside its active interval; a different version does not consume the same capacity."
+  },
+  {
+    "kid": 42,
+    "knowledge": "Group balances are not automatically pooled, and a legally authorized treasury payment can still violate the customer economic funding preference. Authorization and customer intent are separate checks."
+  },
+  {
+    "kid": 43,
+    "knowledge": "Only a SETTLED compensation entry discharges a loss component; PROMISED or PROVISIONAL entries do not. A refund for another component cannot reduce this component loss, even within the same purchase."
+  },
+  {
+    "kid": 44,
+    "knowledge": "A card dispute registers component amounts against assessed delivery evidence: component ids must belong to the case, and a claim cannot exceed that component cleared value. An adjustment replaces the full unresolved claim map, and provisional registration does not certify uncompensated loss."
+  },
+  {
+    "kid": 45,
+    "knowledge": "Dispute finalization becomes available at the case review minute and schedules payment after the settlement delay; finalized claims cannot be changed. A published refund correction can change an earlier receipt from SETTLED to FAILED and withdraw that component compensation."
   }
 ]

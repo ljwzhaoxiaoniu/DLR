@@ -1103,6 +1103,180 @@ logical_entities:
     - {name: status, description: 'SETTLED / NOT_RECEIVED / REJECTED', public: true}
     - {name: bank_reference, description: 'bank reference of the receipt', public: true}
 
+- logical_entity_id: LOGICAL.operations_desk.TreasuryObligation
+  biz_name: TreasuryObligation
+  description: 'Supplier obligation payable through institutional treasury authority — amount,
+    purpose, commercial debtor, beneficiary and due minute. A permitted institutional payer may differ
+    from the commercial bill-to party, but the customer funding preference still decides which company
+    should economically fund it.'
+  lifecycle:
+    states: [OPEN, PAID]
+    transitions:
+    - {from: OPEN, to: PAID, by: propose_treasury_payment}
+  capabilities:
+  - name: propose_treasury_payment
+    kind: write
+    anchor: {param: obligation_id, role: primary}
+    guard: account entity equals the obligation debtor and the mandate payer; effective executor; beneficiary
+      and purpose allowed; sufficient principal and mandate capacity; payment captures the current mandate
+      version
+    source: DESK-treasury
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.TreasuryObligation.record
+    resource: treasury_obligations
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("treasury_obligations", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: amount_minor, description: 'obligation principal', public: true}
+    - {name: currency, description: 'currency', public: true}
+    - {name: purpose, description: 'institutional purpose that must be allowed by the mandate', public: true}
+    - {name: commercial_debtor, description: 'entity that owes the obligation', public: true}
+    - {name: beneficiary_id, description: 'supplier beneficiary', public: true}
+    - {name: due_minute, description: 'latest payment minute', public: true}
+    - {name: status, description: 'OPEN or PAID', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.TreasuryMandate
+  biz_name: TreasuryMandate
+  description: 'Institutional payment authority — payer entity, executor, beneficiaries, purposes, amount
+    limit, version and validity interval. A mandate authorizes only its stated scope, and subdelegation
+    requires a separately effective mandate naming that executor and payer. Reviewed signed evidence becomes
+    effective after its review delay; old versions stay historical.'
+  lifecycle:
+    states: [DRAFT, PENDING, EFFECTIVE, REPLACED, EXPIRED]
+    transitions:
+    - {from: DRAFT, to: PENDING, by: propose_treasury_mandate}
+    - {from: PENDING, to: EFFECTIVE, by: desk_mandate_effective}
+    - {from: EFFECTIVE, to: REPLACED, by: desk_mandate_revision}
+  capabilities:
+  - name: propose_treasury_mandate
+    kind: write
+    anchor: {param: mandate_id, role: primary}
+    guard: lodges approved signed mandate evidence; reviewed fields become effective after review_delay;
+      a prepared payment captures the current version, which must still be current and effective at execution
+    source: DESK-treasury
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.TreasuryMandate.record
+    resource: treasury_mandates
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("treasury_mandates", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: payer_entity, description: 'entity that pays under this mandate', public: true}
+    - {name: executor_id, description: 'institutional executor allowed to pay', public: true}
+    - {name: beneficiaries, description: 'beneficiaries the mandate covers', public: true}
+    - {name: purposes, description: 'purposes the mandate allows', public: true}
+    - {name: limit_minor, description: 'capacity limit for the active version', public: true}
+    - {name: version, description: 'mandate version captured by a prepared payment', public: true}
+    - {name: valid_from, description: 'first valid minute', public: true}
+    - {name: valid_until, description: 'last valid minute', public: true}
+    - {name: review_delay, description: 'minutes from lodging to effectiveness', public: true}
+    - {name: status, description: 'DRAFT / PENDING / EFFECTIVE / REPLACED / EXPIRED', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.CardLossCase
+  biz_name: CardLossCase
+  description: 'Card loss case built on actual cleared purchases — filing deadline, filing fee and billing
+    account. Authorizations are not extra cleared purchases; loss components identify shipment references
+    and cleared principal, and warehouse receipts supply the unit prices and quantities used to compute
+    each loss.'
+  lifecycle:
+    states: [OPEN, FILED, CLOSED]
+    transitions:
+    - {from: OPEN, to: FILED, by: propose_card_dispute}
+    - {from: FILED, to: CLOSED, by: close_event}
+  capabilities:
+  - name: propose_card_dispute
+    kind: write
+    anchor: {param: case_id, role: primary}
+    guard: within the case filing deadline; component ids belong to the case; claims assessed against
+      delivery evidence; provisional registration does not certify uncompensated loss
+    source: DESK-disputes
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.CardLossCase.record
+    resource: card_loss_cases
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("card_loss_cases", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: filing_deadline_minute, description: 'latest registration minute', public: true}
+    - {name: filing_fee_minor, description: 'fee charged when a dispute is filed', public: true}
+    - {name: billing_account_id, description: 'account charged the filing fee', public: true}
+    - {name: review_minute, description: 'minute finalization becomes available', public: true}
+    - {name: settlement_delay, description: 'minutes from finalization to payment', public: true}
+    - {name: status, description: 'OPEN / FILED / CLOSED', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.LossComponent
+  biz_name: LossComponent
+  description: 'Shipment-level loss component — shipment reference and cleared principal. The loss is
+    computed from warehouse receipts (unit price and quantities), and a claim cannot exceed the component
+    cleared value.'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.LossComponent.record
+    resource: loss_components
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("loss_components", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: case_id, description: 'card loss case this component belongs to', public: true}
+    - {name: shipment_reference, description: 'shipment the component refers to', public: true}
+    - {name: cleared_minor, description: 'cleared principal of the purchase', public: true}
+    - {name: loss_minor, description: 'uncompensated loss computed from receipts', public: true}
+    - {name: status, description: 'OPEN / CLAIMED / COVERED', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.CompensationEntry
+  biz_name: CompensationEntry
+  description: 'Compensation against a loss component — PROMISED, PROVISIONAL or SETTLED. Only a SETTLED
+    compensation discharges the loss; a refund for another component cannot reduce this one, even within
+    the same purchase.'
+  lifecycle:
+    states: [PROMISED, PROVISIONAL, SETTLED, FAILED]
+    transitions:
+    - {from: PROMISED, to: SETTLED, by: settlement_event}
+    - {from: PROVISIONAL, to: SETTLED, by: settlement_event}
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.CompensationEntry.record
+    resource: compensation_entries
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("compensation_entries", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: component_id, description: 'loss component compensated', public: true}
+    - {name: shipment_reference, description: 'shipment reference', public: true}
+    - {name: amount_minor, description: 'compensation amount', public: true}
+    - {name: status, description: 'PROMISED / PROVISIONAL / SETTLED / FAILED', public: true}
+    - {name: settled_minute, description: 'minute settlement became actual', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.CardDispute
+  biz_name: CardDispute
+  description: 'Registered card dispute — claims registered against component amounts with assessed delivery
+    evidence. An adjustment replaces the full unresolved map. Finalization is available at the case review
+    minute and schedules payment after the settlement delay; finalized claims cannot be changed.'
+  lifecycle:
+    states: [OPEN, ADJUSTED, FINALIZED, SETTLED]
+    transitions:
+    - {from: OPEN, to: ADJUSTED, by: propose_dispute_adjustment}
+    - {from: ADJUSTED, to: FINALIZED, by: propose_dispute_finalization}
+    - {from: FINALIZED, to: SETTLED, by: desk_refund_receipt}
+  capabilities:
+  - name: propose_dispute_adjustment
+    kind: write
+    anchor: {param: dispute_id, role: primary}
+    guard: replaces the full unresolved claim map; component ids belong to the case; claim not above cleared
+      value
+    source: DESK-disputes
+  - name: propose_dispute_finalization
+    kind: write
+    anchor: {param: dispute_id, role: primary}
+    guard: available at the case review minute; schedules payment after settlement_delay; finalized claims
+      cannot change
+    source: DESK-disputes
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.CardDispute.record
+    resource: card_disputes
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("card_disputes", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: case_id, description: 'card loss case disputed', public: true}
+    - {name: claims, description: 'current unresolved component amount map', public: true}
+    - {name: registered_components, description: 'components registered at filing', public: true}
+    - {name: status, description: 'OPEN / ADJUSTED / FINALIZED / SETTLED', public: true}
+    - {name: opened_minute, description: 'minute the dispute was registered', public: true}
+
 pas_relations:
 - relation_id: LOGICAL.operations_desk.CurrencyObligation_TO_LOGICAL.operations_desk.DeskAccount
   relation_name: Paid from
@@ -1354,3 +1528,36 @@ pas_relations:
   A: attempt_id
   S: 'a trace produces the receipt after trace_delay; a settled receipt is authoritative, while a pending
     acknowledgement proves neither success nor failure'
+
+- relation_id: LOGICAL.operations_desk.CardLossCase_TO_LOGICAL.operations_desk.LossComponent
+  relation_name: Contains
+  P:
+    forward: {verb: contains, cardinality: '1:N'}
+    reverse: {verb: belongs to, cardinality: '1:1'}
+  A: case_id
+  S: 'a case contains its shipment-level loss components; each component carries the cleared principal
+    and the loss computed from warehouse receipts'
+
+- relation_id: LOGICAL.operations_desk.LossComponent_TO_LOGICAL.operations_desk.CompensationEntry
+  relation_name: Compensated by
+  P:
+    forward: {verb: is compensated by, cardinality: '1:N'}
+    reverse: {verb: compensates, cardinality: '1:1'}
+  A: component_id
+  S: 'only settled compensation entries discharge the component loss; promised or provisional entries do not'
+
+- relation_id: LOGICAL.operations_desk.CardLossCase_TO_LOGICAL.operations_desk.CardDispute
+  relation_name: Disputed as
+  P:
+    forward: {verb: is disputed as, cardinality: '1:N'}
+    reverse: {verb: disputes, cardinality: '1:1'}
+  A: case_id
+  S: 'a dispute registers claims against the case components; an adjustment replaces the full unresolved map'
+
+- relation_id: LOGICAL.operations_desk.CardDispute_TO_LOGICAL.operations_desk.LossComponent
+  relation_name: Claims
+  P:
+    forward: {verb: claims, cardinality: '1:N'}
+    reverse: {verb: is claimed by, cardinality: '1:N'}
+  A: claims
+  S: 'the claim map names each component and amount; a claim cannot exceed the component cleared value'
