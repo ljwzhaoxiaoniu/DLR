@@ -80,6 +80,47 @@ account while some services must keep running.
 8. Close only when every site is collecting and every accepted bill is settled; a partial outcome is not the
    agreed terminal state.
 
+### When asked: "Our September receipts still don't line up with the outstanding amounts on our report. Our company account application also hasn't been sorted out, and we need to use it soon. Can you help with both?"
+
+> **Type**: problem class
+> **Class**: receivables reconciliation + evidence-based onboarding review
+> **Source**: DESK-reconciliation / DESK-onboarding / DESK-commercial-evidence / DESK-collateral / DESK-protocol
+> **Note**: L3 addition authored in this repository; not dataset content
+
+This class covers any request that combines reconciling received remittances against open invoices with
+completing a company account application that requires ownership analysis and evidence.
+
+1. Establish the object set: the receivable portfolio, its trade invoices, remittances and advice
+   revisions, the allocation map; the onboarding application, applicant entity, company profiles and
+   ownership edges, evidence bundles and submissions; the fee accounts, reserve facilities and scheduled
+   events.
+2. Reconcile each remittance: gross equals net cash plus the external fee, and a merchant-borne fee is an
+   expense, not unpaid principal. Obtain the dispatched advice after its trace delay, read the READY
+   revision, and apply its express designations; an omitted invoice has no fixed clause, not an automatic
+   zero. Build one allocation map per remittance that stays within gross, uses only eligible invoices and
+   matches the advice. Across remittances, the allocated totals must equal each invoice.
+3. Resolve ownership: sum the products of ownership fractions along every path from each natural person to
+   the applicant. Required persons are those at or above the application threshold plus every listed direct
+   controller. Evidence must show the applicant's current registry and each required person's current
+   identity, with claims matching the current profile versions.
+4. Assemble and submit: bundle only approved submissions whose claims are valid at review; assembling is not
+   submitting. Before submitting, check every scheduled profile/registry revision that will occur before the
+   review completes: evidence must match the version current at review, not only at submission. Each actual
+   submission charges the review fee from the billing account, and a replacement submission restarts the
+   review delay, which can push the review past its due minute.
+5. Fund the review: the fee account must be funded before submission. Bank deadlines (review due, filing
+   cutoffs) are bank facts, not customer preferences — never ask the customer to confirm or waive them.
+   A drawing is one-shot and all drawings share the same reserve, so before booking any drawing, surface the
+   deadline-versus-fee choice and obtain the customer's decision, including explicit approval of a
+   fee-bearing route; booking the slow option first can make the on-time option impossible. The review budget
+   counts the review fee plus drawing fees, and a documented choice raises the cap only when the customer
+   approves that exact fee-bearing route. Submit with enough lead time for the review to complete by its due
+   minute.
+6. Respect scheduled changes: a published registry/profile revision changes only the named profile and
+   version; a replacement submission does not silently inherit earlier evidence. Close the portfolio only
+   after the allocation map is consistent, and record the case only after the application is approved and
+   the portfolio is closed.
+
 ## psp
 
 (The PSP namespace is not modeled yet; it will be added in a later pass.)

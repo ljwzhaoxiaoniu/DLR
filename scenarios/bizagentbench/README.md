@@ -63,6 +63,7 @@ The Python harness needs the benchmark's own requirements; the bridge itself is 
 |---|---|---|---|---|---|---|
 | case_001 | ✅ | ✅ | ✅ | ✅ | 188 | 6,302,559 |
 | case_002 | ✅ | ✅ | ✅ | ✅ | 313 | 23,734,153 |
+| case_003 | ✅ | ✅ | ✅ | ✅ | 253 | 9,445,421 |
 
 Artifacts: `results/dlr-pilot/case_00*_result.json`.
 

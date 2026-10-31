@@ -38,5 +38,41 @@
   {
     "kid": 20,
     "knowledge": "The case outcome is recorded exactly once, only after the agreed terminal result. A premature or repeated closure fails the process requirement, and later business writes are blocked."
+  },
+  {
+    "kid": 21,
+    "knowledge": "In receivables reconciliation, a remittance gross equals net cash plus the external fee. When the merchant bears the fee, it is an expense and not unpaid invoice principal. Invoice totals, remittance gross, and merchant-paid fees must reconcile separately."
+  },
+  {
+    "kid": 22,
+    "knowledge": "A READY remittance advice is authoritative for the revision it describes. Each express designation fixes an amount for the invoice identified by buyer, purchase order and period; an omitted invoice has no fixed clause, not an automatic zero allocation."
+  },
+  {
+    "kid": 23,
+    "knowledge": "propose_remittance_advice obtains the advice dispatched by the payer after the remittance trace delay; it does not change cash. If no revision is pending, the trace confirms the current advice. Read the returned advice record rather than assuming its lines."
+  },
+  {
+    "kid": 24,
+    "knowledge": "An invoice allocation replaces the entire reversible map for one remittance. Amounts must be positive, within the gross principal, and refer to invoices in the same portfolio. A provisional allocation does not prove the advice was current or the customer intent was met."
+  },
+  {
+    "kid": 25,
+    "knowledge": "Closing a receivable portfolio freezes the portfolio and its allocations; no further invoice-allocation writes are possible, and closing does not itself confirm reconciliation."
+  },
+  {
+    "kid": 26,
+    "knowledge": "For onboarding ownership, sum the products of ownership fractions along every path from a natural person to the applicant company. A person at or above the application threshold must be evidenced, and every listed direct controller must be evidenced regardless of percentage. Graphs are acyclic."
+  },
+  {
+    "kid": 27,
+    "knowledge": "Onboarding evidence must prove the applicant company current registry and the current identity of every required natural person. Assessing a document establishes its actual claims; approved subjects must match their current company profile versions at review, and a certified exemption covers only its listed subjects and claim types."
+  },
+  {
+    "kid": 28,
+    "knowledge": "A bundle assembly is not a submission. Each actual onboarding submission charges the review fee from the billing account immediately, including replacement reviews; a replacement restarts the review delay, and the review recomputes ownership and evidence validity at that time."
+  },
+  {
+    "kid": 29,
+    "knowledge": "The onboarding review-fee budget includes reserve drawing fees paid to the billing account. A documented deadline-versus-fee choice raises the cap only after the customer approved that exact fee-bearing reserve route; the agent's own choice or a final balance does not raise it."
   }
 ]

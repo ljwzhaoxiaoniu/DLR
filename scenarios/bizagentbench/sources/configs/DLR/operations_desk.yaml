@@ -425,6 +425,7 @@ logical_entities:
     - {name: file_id, description: 'private file that was uploaded', public: true}
     - {name: target_id, description: 'business target named at upload', public: true}
     - {name: purpose, description: 'declared purpose', public: true}
+    - {name: contents, description: 'claimed subjects, claim types, versions and validity', public: true}
     - {name: status, description: 'SUBMITTED / APPROVED / REJECTED', public: true}
     - {name: assessed_minute, description: 'minute of the assessment', public: true}
 
@@ -675,6 +676,231 @@ logical_entities:
     - {name: status, description: 'ACCEPTED / PAID / FAILED / REFUNDED', public: true}
     - {name: accepted_minute, description: 'minute the bill was accepted', public: true}
 
+- logical_entity_id: LOGICAL.operations_desk.DeskPortfolio
+  biz_name: DeskPortfolio
+  description: 'Receivable portfolio that contains trade invoices and remittances. Closing freezes
+    the portfolio and its allocation map; no further invoice-allocation writes are possible, and closing
+    does not itself confirm reconciliation.'
+  lifecycle:
+    states: [OPEN, CLOSED]
+    transitions:
+    - {from: OPEN, to: CLOSED, by: propose_receivable_close}
+  capabilities:
+  - name: propose_receivable_close
+    kind: write
+    anchor: {param: portfolio_id, role: primary}
+    guard: freezes the portfolio and its allocations; closing does not prove reconciliation
+    source: DESK-reconciliation
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.DeskPortfolio.record
+    resource: desk_portfolios
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("desk_portfolios", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: status, description: 'OPEN or CLOSED', public: true}
+    - {name: currency, description: 'portfolio currency', public: true}
+    - {name: name, description: 'portfolio name', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.TradeInvoice
+  biz_name: TradeInvoice
+  description: 'Trade invoice in a receivable portfolio. Each invoice carries an amount and its
+    buyer, purchase order and invoice period identity; allocated amounts across remittances must
+    equal the invoice total.'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.TradeInvoice.record
+    resource: trade_invoices
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("trade_invoices", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: amount_minor, description: 'invoice principal', public: true}
+    - {name: currency, description: 'invoice currency', public: true}
+    - {name: portfolio_id, description: 'portfolio that contains this invoice', public: true}
+    - {name: buyer, description: 'commercial buyer', public: true}
+    - {name: purchase_order, description: 'purchase order reference', public: true}
+    - {name: period, description: 'invoice period', public: true}
+    - {name: status, description: 'OUTSTANDING or SETTLED', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.Remittance
+  biz_name: Remittance
+  description: 'Remittance received from a buyer — gross principal, external fee and net cash. The
+    eligible invoices are fixed by the buyer payment terms; a pending advice revision may change the
+    allocation lines. A trace obtains the dispatched advice without changing cash.'
+  lifecycle:
+    states: [CREDITED, ALLOCATED]
+    transitions:
+    - {from: CREDITED, to: ALLOCATED, by: propose_invoice_allocation}
+  capabilities:
+  - name: propose_remittance_advice
+    kind: write
+    anchor: {param: remittance_id, role: primary}
+    guard: requests the dispatched advice after trace_delay; does not change cash
+    source: DESK-reconciliation
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.Remittance.record
+    resource: remittances
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("remittances", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: gross_minor, description: 'gross principal received', public: true}
+    - {name: fee_minor, description: 'external fee', public: true}
+    - {name: net_minor, description: 'net cash credited', public: true}
+    - {name: currency, description: 'remittance currency', public: true}
+    - {name: fee_bearer, description: 'MERCHANT or BUYER', public: true}
+    - {name: eligible_invoice_ids, description: 'invoices this remittance can fund', public: true}
+    - {name: current_advice_id, description: 'current advice record', public: true}
+    - {name: revision, description: 'current advice revision', public: true}
+    - {name: trace_delay, description: 'minutes for a requested advice to arrive', public: true}
+    - {name: status, description: 'CREDITED or ALLOCATED', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.RemittanceAdvice
+  biz_name: RemittanceAdvice
+  description: 'Payer letter revision for a remittance. A READY advice is authoritative for the revision
+    it describes; each express designation fixes an amount by buyer, purchase order and period. An
+    omitted invoice has no fixed clause, not an automatic zero allocation.'
+  lifecycle:
+    states: [PENDING, READY]
+    transitions:
+    - {from: PENDING, to: READY, by: desk_advice}
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.RemittanceAdvice.record
+    resource: remittance_advice
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("remittance_advice", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: remittance_id, description: 'remittance this advice describes', public: true}
+    - {name: revision, description: 'advice revision', public: true}
+    - {name: allocation_lines, description: 'express designations per invoice', public: true}
+    - {name: status, description: 'PENDING or READY', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.InvoiceAllocation
+  biz_name: InvoiceAllocation
+  description: 'Reversible allocation map for one remittance. A new allocation replaces the whole map;
+    amounts must be positive, within the remittance gross and refer to invoices in its portfolio. A
+    provisional allocation does not prove the advice was current or the customer intent was met.'
+  lifecycle:
+    states: [CURRENT, REPLACED]
+    transitions:
+    - {from: CURRENT, to: REPLACED, by: propose_invoice_allocation}
+  capabilities:
+  - name: propose_invoice_allocation
+    kind: write
+    anchor: {param: remittance_id, role: primary}
+    guard: replaces the whole map; positive integers; within gross; invoices in the portfolio
+    source: DESK-reconciliation
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.InvoiceAllocation.record
+    resource: invoice_allocations
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("invoice_allocations", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: remittance_id, description: 'remittance being allocated', public: true}
+    - {name: advice_id, description: 'advice revision used', public: true}
+    - {name: allocations, description: 'invoice id to amount map', public: true}
+    - {name: status, description: 'CURRENT or REPLACED', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.OnboardingApplication
+  biz_name: OnboardingApplication
+  description: 'Company account application — direct controllers plus an ownership threshold. The
+    review recomputes ownership and evidence validity after review_delay and may return NEEDS_EVIDENCE.
+    Each actual submission charges its fee from the billing account immediately, including replacement
+    reviews; assembling or uploading alone charges nothing.'
+  lifecycle:
+    states: [DRAFT, SUBMITTED, NEEDS_EVIDENCE, APPROVED]
+    transitions:
+    - {from: DRAFT, to: SUBMITTED, by: propose_onboarding_submission}
+    - {from: SUBMITTED, to: NEEDS_EVIDENCE, by: review_event}
+    - {from: SUBMITTED, to: APPROVED, by: review_event}
+  capabilities:
+  - name: propose_onboarding_bundle
+    kind: write
+    anchor: {param: application_id, role: primary}
+    guard: assembles specific approved submissions; assembling is not submitting
+    source: DESK-onboarding
+  - name: propose_onboarding_submission
+    kind: write
+    anchor: {param: bundle_id, role: secondary}
+    guard: starts an independent review after review_delay; each submission charges the fee; replacement
+      reviews restart the delay
+    source: DESK-onboarding
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.OnboardingApplication.record
+    resource: onboarding_applications
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("onboarding_applications", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: entity_id, description: 'applicant legal entity', public: true}
+    - {name: billing_account_id, description: 'account charged for each submission', public: true}
+    - {name: direct_controllers, description: 'persons that must be evidenced regardless of percentage', public: true}
+    - {name: ownership_threshold_bp, description: 'ownership percentage that requires evidence', public: true}
+    - {name: submission_fee_minor, description: 'fee charged on each actual submission', public: true}
+    - {name: review_delay, description: 'minutes from submission to review', public: true}
+    - {name: review_due_minute, description: 'latest acceptable review minute', public: true}
+    - {name: status, description: 'DRAFT / SUBMITTED / NEEDS_EVIDENCE / APPROVED', public: true}
+    - {name: reviewed_minute, description: 'minute the last review completed', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.EvidenceBundle
+  biz_name: EvidenceBundle
+  description: 'Assembled set of approved submissions for an application. Assembling is not submitting;
+    a replacement bundle does not silently acquire newly uploaded evidence.'
+  lifecycle:
+    states: [ASSEMBLED, SUBMITTED]
+    transitions:
+    - {from: ASSEMBLED, to: SUBMITTED, by: propose_onboarding_submission}
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.EvidenceBundle.record
+    resource: evidence_bundles
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("evidence_bundles", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: application_id, description: 'application this bundle supports', public: true}
+    - {name: submission_ids, description: 'approved submissions in the bundle', public: true}
+    - {name: status, description: 'ASSEMBLED or SUBMITTED', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.Entity
+  biz_name: Entity
+  description: 'Registered legal entity — legal name, registration number and immutable registration
+    region. The registry claim is about the applicant company, not its controllers.'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.Entity.record
+    resource: entities
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("entities", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: legal_name, description: 'registered legal name', public: true}
+    - {name: region, description: 'immutable registration region', public: true}
+    - {name: registration_number, description: 'registration number', public: true}
+    - {name: version, description: 'registry version', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.CompanyProfile
+  biz_name: CompanyProfile
+  description: 'Company or natural person profile — kind, legal name and version. Identity claims must
+    match the current version at review; a published registry event changes only the named profile/version.'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.CompanyProfile.record
+    resource: company_profiles
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("company_profiles", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: kind, description: 'PERSON or COMPANY', public: true}
+    - {name: legal_name, description: 'legal name', public: true}
+    - {name: version, description: 'current profile version', public: true}
+    - {name: region, description: 'registration region', public: true}
+
+- logical_entity_id: LOGICAL.operations_desk.OwnershipEdge
+  biz_name: OwnershipEdge
+  description: 'Ownership edge from an owner to an owned company in basis points. Graphs are acyclic;
+    a natural person is required when the summed products of ownership fractions along every path
+    reaches the application threshold.'
+  physical_entities:
+  - physical_entity_id: PHYSICAL.operations_desk.OwnershipEdge.record
+    resource: ownership_edges
+    A: {cardinality: '1:N', key: scope}
+    S: 'search_records("ownership_edges", filters={scope}) / get_record(id)'
+    attributes:
+    - {name: owner_id, description: 'owner profile', public: true}
+    - {name: owned_id, description: 'owned company profile', public: true}
+    - {name: ownership_bp, description: 'ownership percentage in basis points', public: true}
+
 pas_relations:
 - relation_id: LOGICAL.operations_desk.CurrencyObligation_TO_LOGICAL.operations_desk.DeskAccount
   relation_name: Paid from
@@ -812,3 +1038,74 @@ pas_relations:
     reverse: {verb: is governed by, cardinality: '1:N'}
   A: reference
   S: 'the facility covenant names the release milestones and permitted destination of a reserve drawing'
+
+- relation_id: LOGICAL.operations_desk.DeskPortfolio_TO_LOGICAL.operations_desk.TradeInvoice
+  relation_name: Contains
+  P:
+    forward: {verb: contains, cardinality: '1:N'}
+    reverse: {verb: belongs to, cardinality: '1:1'}
+  A: portfolio_id
+  S: 'a portfolio contains its trade invoices; invoice totals must equal the allocated totals before
+    the portfolio is closed'
+
+- relation_id: LOGICAL.operations_desk.DeskPortfolio_TO_LOGICAL.operations_desk.Remittance
+  relation_name: Contains
+  P:
+    forward: {verb: contains, cardinality: '1:N'}
+    reverse: {verb: belongs to, cardinality: '1:1'}
+  A: portfolio_id
+  S: 'a portfolio contains its remittances; a remittance can fund several invoices and several
+    remittances can serve one invoice'
+
+- relation_id: LOGICAL.operations_desk.Remittance_TO_LOGICAL.operations_desk.RemittanceAdvice
+  relation_name: Advised by
+  P:
+    forward: {verb: is advised by, cardinality: '1:N'}
+    reverse: {verb: advises, cardinality: '1:1'}
+  A: remittance_id
+  S: 'a READY advice is authoritative for the revision it describes; a trace obtains the dispatched
+    advice after the trace delay without changing cash'
+
+- relation_id: LOGICAL.operations_desk.Remittance_TO_LOGICAL.operations_desk.InvoiceAllocation
+  relation_name: Allocated as
+  P:
+    forward: {verb: is allocated as, cardinality: '1:N'}
+    reverse: {verb: allocates, cardinality: '1:1'}
+  A: remittance_id
+  S: 'one current allocation map per remittance; a new allocation replaces the whole map'
+
+- relation_id: LOGICAL.operations_desk.InvoiceAllocation_TO_LOGICAL.operations_desk.TradeInvoice
+  relation_name: Funds
+  P:
+    forward: {verb: funds, cardinality: '1:N'}
+    reverse: {verb: is funded by, cardinality: '1:N'}
+  A: allocations
+  S: 'the allocation map names each invoice and amount; totals across remittances must equal the
+    invoice principal'
+
+- relation_id: LOGICAL.operations_desk.OnboardingApplication_TO_LOGICAL.operations_desk.Entity
+  relation_name: Applies for
+  P:
+    forward: {verb: applies for, cardinality: '1:1'}
+    reverse: {verb: is applied for by, cardinality: '1:N'}
+  A: entity_id
+  S: 'the application is for the applicant company; the registry claim covers that company, while
+    each required natural person needs an identity claim'
+
+- relation_id: LOGICAL.operations_desk.OnboardingApplication_TO_LOGICAL.operations_desk.EvidenceBundle
+  relation_name: Evidenced by
+  P:
+    forward: {verb: is evidenced by, cardinality: '1:N'}
+    reverse: {verb: evidences, cardinality: '1:1'}
+  A: application_id
+  S: 'a bundle assembles approved submissions for the application; assembling is not submitting, and
+    a replacement bundle does not acquire newly uploaded evidence'
+
+- relation_id: LOGICAL.operations_desk.EvidenceBundle_TO_LOGICAL.operations_desk.Submission
+  relation_name: Contains
+  P:
+    forward: {verb: contains, cardinality: '1:N'}
+    reverse: {verb: is part of, cardinality: '1:N'}
+  A: submission_ids
+  S: 'the bundle names specific approved submissions; only approved submissions whose claims match
+    the current profile versions count'
