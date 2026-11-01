@@ -22,6 +22,8 @@
 > - case_006：第 1 遍 6 个 G 失败；第 2 遍仅 `activity1:allocation.minimum_principal_and_fee`（P/F 已过）；第 3 遍仍只差同一项——agent 实际还款 A 50k + E 25k + B 15k（3 笔，费用 1,500），未按最小集（2 笔/85k/费用 1,000）。网络有 4 段空档，但结果与第 2 遍一致，属真实规划/计算差距。**006 到此为止，不再重跑**。
 > - case_007：第 1 遍仅 `activity1:cargo.agreed_delivery.A`（交付晚）；第 2 遍退化为多 G 失败；第 3 遍断网 98s 后 minute 0 `ESCALATED`，**按网络无效作废**；第 4 遍（休眠中断）28/39，11 个 G 失败、P/F 通过，仍未过。**007 到此为止**，最好成绩为第 1 遍 38/39（只差 cargo A）。
 > - case_008：首跑 33/44，G 失败 + **F 失败**（`activity1:ledger.independent_reconstruction`、`activity1:frame.original_records`），P 通过，`mixed_failure`；跑中被机器休眠中断 20 分钟，结果标注“睡眠/墙钟噪声”，是否重跑待定。
+>
+> **负优化回滚（2026-11-01）**：007 在加入 cargo/agreed-depot/instrument/route 类级规则后，从第 1 遍 38/39 退化到 11 个 G 失败；006 的最小本金算法也未带来提升（仍 38/39）。已回滚 007 的 L3 改动与 L2 #185/#190、006 的 #189，恢复最佳已知状态；**类级规则是假设，必须 A/B 对比，变差就回滚，不叠规则**。
 
 ## 二、三层现状（2026-11-01 全量）
 
@@ -29,7 +31,7 @@
 |---|---|---|
 | L1 · operations_desk | **84 LE · 127 PAS · 513 向量行**（302 PE） | `operations_desk.yaml`（46 LE，cases 1–5 的 desk 核心）+ `typed_services.yaml`（38 LE，cases 6–30：33 个 DIVERSE/PAYMENT 服务对象 + JointAgreement/JointSource/JointRoute/JointFunding/LinkContract） |
 | L1 · psp | **22 LE · 20 PAS · 174 向量行**（132 PE） | `psp.yaml`：XpCase / XpAccount + 20 个案件族（cases 31–50），PE 覆盖各族的 `xp_*` 记录面 |
-| L2 | **190 条** | shared 10 + operations_desk 46 + typed_services 84 + psp 49；全部按“一条一句口径”写（含 case_006/007 提炼的通用口径：精确资本、terms 重读、交付顺序、inquiry 预热、最小本金算法、覆盖恢复、账单时点、连续下限、收口） |
+| L2 | **187 条** | shared 10 + operations_desk 44 + typed_services 84 + psp 49；全部按“一条一句口径”写。**负优化回滚（2026-11-01）**：移除 #185/#189/#190（007 的 cargo/交付前置/路由规则与 006 的最小本金算法），保留证据支持的 #186–188（覆盖恢复/最小本金/账单时点） |
 | L3 | **50 节** | operations_desk 30（5 预跑 + 25 新）+ psp 20；每节标题 = 客户开场白逐字，正文 = 类级打法 |
 
 L1 的 typed/PSP 部分按 schema 级生成 + 人工收口：能力取自 `tool_catalog`，字段语义取自 `DB-service-*` / `PX-DATABASE`，动作与规则取自 `DIVERSE-* / PAYMENT-* / LINK-* / PX-* / IFACE-*` 产品文章；零实例值。
@@ -79,8 +81,9 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 
 - **全量模型已装进隔离存储**（`.store/lance/bizagentbench`：entities 687 / consensus 190 / sop 50）。
 - **case_006 已挂起**（3 遍一致口径，38/39，只差 `minimum_principal_and_fee`；如实记录，不再重跑）。
-- **case_007 已停**（4 遍一致口径未过；最好 38/39，只差 cargo A；第 3 遍断网作废，第 4 遍受休眠影响）。
-- **case_008 首跑 33/44 mixed_failure**（G + F 失败；跑中被休眠中断 20 分钟）。下一步：决定 008 是否重跑（第 2 遍）或先诊断 F 失败；之后再 009/010。
+- **case_007 已停**（4 遍一致口径未过；最好 38/39，只差 cargo A；第 3 遍断网作废，第 4 遍受休眠影响）；相关类级改动已回滚。
+- **case_008 首跑 33/44 mixed_failure**（G + F 失败；跑中被休眠中断 20 分钟）。下一步：先离线诊断 F 失败（原始记录/账本重建），再决定是否 008 第 2 遍；之后 009/010。
+- **纪律**：类级规则改动必须 A/B；变差即回滚，不叠规则；样本不足不宣称优化有效。
 - **跑题（后续）**：按 4 题/批、串行跑；桥已支持双系统：cases 1–30 → `operations_desk`，31–50 → `psp`（`run_dlr.py` 按 `--numbers` 自动切换）。
 - 跑题前起桥（28797）：`TSM_SCENARIO=... TSM_STORE_DIR=... TSM_MODEL_DIR=... npx tsx eval/dlr_server.mjs`；`run_dlr_pilot.sh <out> <num>`。
 - **最终阶段**：冻结全量模型（记录版本）→ 统一重跑所有已跑题（含 001–005）→ 出正式成绩；之前结果只作预跑。
