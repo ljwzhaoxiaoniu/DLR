@@ -1,6 +1,6 @@
 # BizAgentBench · 穿刺进度（工作记录）
 
-> 2026-10-31 夜 → 2026-11-01 ｜ 分支 2.0 ｜ 5/50 题已跑（全 strict）；**全量三层已建成（覆盖 50 题）**
+> 2026-10-31 夜 → 2026-11-01 ｜ 分支 2.0 ｜ 6/50 题已跑（全 strict）；**全量三层已建成（覆盖 50 题）**
 > 对外成果见 [DETAIL.md](DETAIL.md) / [eval/ledger.json](eval/ledger.json)；本文是续做用的工作记录。
 
 ## 一、已完成
@@ -12,9 +12,11 @@
 | case_003 | reconciliation + onboarding | ✅ | 253 | 9.45M | 证据按**审查时**版本；提款一次性共用储备，先摆选择再 booking；银行截止是银行事实 |
 | case_004 | restrictions + batches | ✅ | 505 | 16.28M | 每 lot 可用性；批次只认银行回执；**待评估条款可能改净额**（1 分钱陷阱） |
 | case_005 | treasury + disputes | ✅ | 339 | 14.01M | 授权三同 + 版本时效；仅 SETTLED 补偿；立案费上限不含设施费 |
+| case_006 | allocation/delivery + split capture | ✅ | 226 | 12.40M | **L3 exact 打法注入 agent policy**；资本 161,000 精确 + 标准路线 100/100 + terms 2；X minute 2、五笔按期交付；SOURCE receipt 预热；minute-5 扣款；COMPLETED 收口 |
 
 > **前五题为预跑**；**2026-11-01 已按全量模型一次性建全三层**（Operations Desk 1–30 + PSP 31–50）。
 > 正式成绩以全量模型上的统一重跑为准（001–005 一并重跑）；此前结果只作预跑。
+> **case_006 为全量模型 + L3 exact 打法注入下的首次通过**（2026-11-01，8 次迭代；结果留在 `results/dlr-full/case_006_r8`，归档待确认）。
 
 ## 二、三层现状（2026-11-01 全量）
 
@@ -28,7 +30,7 @@
 L1 的 typed/PSP 部分按 schema 级生成 + 人工收口：能力取自 `tool_catalog`，字段语义取自 `DB-service-*` / `PX-DATABASE`，动作与规则取自 `DIVERSE-* / PAYMENT-* / LINK-* / PX-* / IFACE-*` 产品文章；零实例值。
 LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整字段随 PE 返回。
 
-检索说明：L3 按题面**精确命中**是每题的入口（50/50 标题逐字对齐）。
+检索说明：L3 按题面**精确命中**是每题的入口（50/50 标题逐字对齐）。**agent 不按逐字开场白调用 `dlr_l3`（会改写问句），因此 `eval/run_dlr.py` 在启动时读取该题 opening、向桥取 L3 exact 节，并把整节注入 agent policy**；这是 case_006 通过的决定性改动，后续题沿用该机制。
 
 **Embedding 模型（2026-11-01 变更）**：biz 场景改用 **BAAI/bge-base-en-v1.5**（768 维，英文专用；HF 缓存快照，`onnx/model.onnx` 436MB），同一套 CLS + L2 + `toLowerCase` 管线，代码零改；正式存储已按新模型重建。实测目标对象直接排第 1（DatedPayroll / DatedCollateral / GatewayOrder / TaxAgentHandover / PricedPaymentRoute），L2 分数同步提升。旧 zh 全量存储备份在 `.store/lance/bizagentbench.zh-bak`。**模型与存储必须同源**——起桥用下方 `eval/start_bridge.sh`，它会自动解析 HF 缓存里的英文模型。
 
