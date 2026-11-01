@@ -1,0 +1,27 @@
+{
+  "freeze_id": "ff3663ec",
+  "git_commit": "ff3663ec304aa1a3921652eb431c962b0dcc7138",
+  "frozen_at": "2026-11-01T21:13:49+0800",
+  "files": {
+    "sources/configs/DLR/operations_desk.yaml": "49b9476f6763f6af56125bf529dffdfbbc3d4066736583c1e240a703cbf2a43c",
+    "sources/configs/DLR/typed_services.yaml": "7fce990836ce0efb6165f7c75a5262f89a00da2d740f490e787cc54cfcbe88ab",
+    "sources/configs/DLR/psp.yaml": "d8cdb8e15fa74abf6a2953cf1f51647d37f77d1b18bb8fb4f7958520ddf5c43b",
+    "sources/consensus/shared.jsonl": "f57fabc4ba1c5625ba883c2c5533bf3e64e550a5e89867aad7a21b84f4e69f87",
+    "sources/consensus/operations_desk.jsonl": "540b9ba65ef0d7d4e4a084f34b7581f875e4327a4953ff714df3cbe5aed421db",
+    "sources/consensus/typed_services.jsonl": "7776f291a534e7da66c135abfb5590dbe2b6aa7fe3e78dc57f397efba80d07c2",
+    "sources/consensus/psp.jsonl": "42462883e33de3d1223c3db21957e365950bb84ea09b39205b087dc4637c8c54",
+    "sources/sop.md": "392a065140a59365a08939716359ae1ffaad8784173ff17053c745ebb9be501b"
+  },
+  "model": {
+    "name": "BAAI/bge-base-en-v1.5",
+    "path": "C:/Users/user/.cache/huggingface/hub/models--BAAI--bge-base-en-v1.5/snapshots/a5beb1e3e68b9ab74eb54cfd186867f64f240e1a",
+    "onnx_sha256": "9bc579acdba21c253c62a9bf866891355a63ffa3442b52c8a37d75b2ccb91848"
+  },
+  "store": {
+    "path": "TSM Core Service/.store/lance/bizagentbench",
+    "entities": 687,
+    "consensus": 187,
+    "sop": 50
+  },
+  "note": "Archived results must reference this freeze_id. Rerun under this exact source; do not edit sources for an archived run."
+}
