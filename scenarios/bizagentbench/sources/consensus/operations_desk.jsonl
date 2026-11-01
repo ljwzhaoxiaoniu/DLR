@@ -193,5 +193,10 @@
     "kid": 189,
     "knowledge": "A minimum-principal requirement is met by repaying exactly the coverage shortfall left after the required releases, on the fewest loans. Repaying a loan whose coverage is already sufficient, over-repaying a shortfall, or repaying more loans than necessary fails the minimum-principal check; each loan's first repayment charges a servicing fee, so compare the total fee of alternative loan sets and stay within the customer's fee cap.",
     "system": "operations_desk"
+  },
+  {
+    "kid": 190,
+    "knowledge": "Cargo delivery requires its delivery instrument first: lodge an available original title or issue an active order-specific guarantee, then deliver to the recorded agreed depot by the order's delivery_due_minute; a deliver without the instrument fails with CARGO_TITLE_UNAVAILABLE. A cross-calendar route is bound to its invoice currency and booking window; a closed or inapplicable reservation or an unavailable quote needs a fresh route and quote, not a retry of the old one.",
+    "system": "operations_desk"
   }
 ]
