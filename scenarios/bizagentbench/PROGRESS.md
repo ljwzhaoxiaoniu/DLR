@@ -77,7 +77,8 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 ## 六、接下来
 
 - **全量模型已装进隔离存储**（`.store/lance/bizagentbench`：entities 687 / consensus 190 / sop 50）。
-- **待决定**：case_006 第 3 遍（已补最小本金算法，需批准）；case_007 两遍已用尽（第 2 遍退化），是否重试待定。
+- **case_006 已挂起**（3 遍一致口径，38/39，只差 `minimum_principal_and_fee`；如实记录，不再重跑）。
+- **case_007 第 3 遍网络无效作废**；现按 7、8 并行推进（007 用当前类级规则重跑，008 首跑）。
 - **跑题（后续）**：按 4 题/批、串行跑；桥已支持双系统：cases 1–30 → `operations_desk`，31–50 → `psp`（`run_dlr.py` 按 `--numbers` 自动切换）。
 - 跑题前起桥（28797）：`TSM_SCENARIO=... TSM_STORE_DIR=... TSM_MODEL_DIR=... npx tsx eval/dlr_server.mjs`；`run_dlr_pilot.sh <out> <num>`。
 - **最终阶段**：冻结全量模型（记录版本）→ 统一重跑所有已跑题（含 001–005）→ 出正式成绩；之前结果只作预跑。
