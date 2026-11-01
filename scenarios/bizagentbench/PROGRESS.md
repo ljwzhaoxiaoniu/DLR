@@ -29,6 +29,11 @@
 > - 006 的 38/39 ← `263d6a3d`（覆盖分支，尚未加 #189）与 `6dfdd4e3`（加 #189 后仍 38/39，无提升）。
 > - **冻结源 = `ff3663ec`**：保留 006 覆盖分支，移除 007 负优化与 #189；`eval/freeze.json` 记录 commit + L1/L2/L3/模型 SHA-256。
 > - 归档规则：归档结果必须引用 `freeze_id`；历史 38/39 来自不同源，只作探索记录，**不与冻结源成绩混写**。
+>
+> **冻结源实测（2026-11-01，无注入）**：
+> - case_006 frozen：**33/39**，G 失败（joint exact capital、minimum_principal_and_fee、delivery dates、terminal），P/F 通过；27.1M tokens。
+> - case_007 frozen：**25/39**，14 个 G 失败（joint capital、payments A/B/C、cargo A/B/C、calendar EUR/GBP、terminal），P/F 通过；提前 `ESCALATED`，3.4M tokens。
+> - 结论：历史 38/39 **不可复现**，是源状态差异 + 跑次方差的离群结果；冻结源上的正式成绩为 33/39 与 25/39。单次跑不足以代表能力（论文也是 3 runs/task）。
 
 ## 二、三层现状（2026-11-01 全量）
 
