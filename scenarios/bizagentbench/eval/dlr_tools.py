@@ -62,14 +62,12 @@ def dlr_l2(question: str, namespace: str = "") -> dict:
 def dlr_l3(question: str) -> dict:
     """L3 SOP: the problem-class playbook for this customer request, if one exists.
 
-    Call this first, before planning, with the customer's opening message copied verbatim (character
-    for character; do not summarize or paraphrase). match=exact means the section title restates this
-    problem verbatim; that section is the authoritative playbook for the case. match=similar means the
-    customer paraphrased the opening or the candidates are near neighbours: read them and adopt one
-    only if its section restates the same customer request; otherwise solve from L1 and L2.
-    match=none means no L3 section for this case.
+    match=exact means the section title restates this problem verbatim; that section is the
+    authoritative playbook for the case. match=similar means the customer paraphrased the opening or
+    the candidates are near neighbours: read them and adopt one only if its section restates the same
+    customer request; otherwise solve from L1 and L2. match=none means no L3 section for this case.
 
     Args:
-        question: the customer's opening request, copied verbatim — do not summarize.
+        question: the customer's opening request, verbatim when possible.
     """
     return _post("/l3", {"question": question, "system": SYSTEM})

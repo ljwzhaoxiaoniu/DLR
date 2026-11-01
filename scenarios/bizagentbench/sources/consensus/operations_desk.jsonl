@@ -138,5 +138,35 @@
   {
     "kid": 45,
     "knowledge": "Dispute finalization becomes available at the case review minute and schedules payment after the settlement delay; finalized claims cannot be changed. A published refund correction can change an earlier receipt from SETTLED to FAILED and withdraw that component compensation."
+  },
+  {
+    "kid": 179,
+    "knowledge": "Joint capital: capital_by_case is the contractual total for a service and initial_operating_by_case is already in that service wallet. At reconciliation, deliver the remaining registered capital exactly (capital_by_case minus initial_operating_by_case), not merely the amount the current payments need, from sources permitted for that service and through their release conditions, while respecting the delivery-fee ceiling and the minimum uncommitted cash.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 180,
+    "knowledge": "A joint-capital agreement may carry a pending assessment. Re-read the current terms_version and assessed fees immediately before preparing each request; after a terms change, prepare a fresh request instead of reusing a stale one.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 181,
+    "knowledge": "Deliver securities that already carry delivery instructions before other work: their due minutes are early, every wait advances the clock, and a release after the due minute is late even when the coverage check passes. Keep retained collateral such as a guarantee certificate pledged; rebalance coverage with other eligible assets rather than releasing retained security.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 182,
+    "knowledge": "A principal repayment may require a service-correspondence receipt that becomes READY after the record's delay. Open the service inquiry early; do not wait for a rejection to open it, and do not treat a rejection as final when a corrected request remains available. Do not escalate while a corrected request remains available.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 183,
+    "knowledge": "Repay the minimum loan principal necessary and prefer fewer loans: the first repayment of each loan charges its servicing fee, while later repayments of the same loan do not repeat it. Respect the customer's fee ceiling.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 184,
+    "knowledge": "Scheduled debits and continuous cash floors apply after every booking. Do not close the case before a scheduled debit has posted and the floor still holds.",
+    "system": "operations_desk"
   }
 ]

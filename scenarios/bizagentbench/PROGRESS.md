@@ -1,6 +1,6 @@
 # BizAgentBench · 穿刺进度（工作记录）
 
-> 2026-10-31 夜 → 2026-11-01 ｜ 分支 2.0 ｜ 6/50 题已跑（全 strict）；**全量三层已建成（覆盖 50 题）**
+> 2026-10-31 夜 → 2026-11-01 ｜ 分支 2.0 ｜ 5/50 预跑 strict（001–005）+ case_031 PSP strict；**全量三层已建成（覆盖 50 题）**
 > 对外成果见 [DETAIL.md](DETAIL.md) / [eval/ledger.json](eval/ledger.json)；本文是续做用的工作记录。
 
 ## 一、已完成
@@ -12,11 +12,11 @@
 | case_003 | reconciliation + onboarding | ✅ | 253 | 9.45M | 证据按**审查时**版本；提款一次性共用储备，先摆选择再 booking；银行截止是银行事实 |
 | case_004 | restrictions + batches | ✅ | 505 | 16.28M | 每 lot 可用性；批次只认银行回执；**待评估条款可能改净额**（1 分钱陷阱） |
 | case_005 | treasury + disputes | ✅ | 339 | 14.01M | 授权三同 + 版本时效；仅 SETTLED 补偿；立案费上限不含设施费 |
-| case_006 | allocation/delivery + split capture | ✅ | 226 | 12.40M | **L3 exact 打法注入 agent policy**；资本 161,000 精确 + 标准路线 100/100 + terms 2；X minute 2、五笔按期交付；SOURCE receipt 预热；minute-5 扣款；COMPLETED 收口 |
+| case_006 | allocation/delivery + split capture | —（不计数） | 226 | 12.40M | r8 通过依赖**案例级答案注入**（实例金额/ID/分钟 + verifier 口径），与前 5 题口径不一致；已撤回，一致口径待重跑 |
 
 > **前五题为预跑**；**2026-11-01 已按全量模型一次性建全三层**（Operations Desk 1–30 + PSP 31–50）。
 > 正式成绩以全量模型上的统一重跑为准（001–005 一并重跑）；此前结果只作预跑。
-> **case_006 为全量模型 + L3 exact 打法注入下的首次通过**（2026-11-01，8 次迭代；结果留在 `results/dlr-full/case_006_r8`，归档待确认）。
+> **case_006 的 r8 不计入成绩**：它靠 L3 exact 答案注入（实例值 + verifier 口径）通过，属于答案透传；已撤回注入、恢复类级 L3 + 通用 L2，待一致口径重跑。
 
 ## 二、三层现状（2026-11-01 全量）
 
@@ -24,13 +24,13 @@
 |---|---|---|
 | L1 · operations_desk | **84 LE · 127 PAS · 513 向量行**（302 PE） | `operations_desk.yaml`（46 LE，cases 1–5 的 desk 核心）+ `typed_services.yaml`（38 LE，cases 6–30：33 个 DIVERSE/PAYMENT 服务对象 + JointAgreement/JointSource/JointRoute/JointFunding/LinkContract） |
 | L1 · psp | **22 LE · 20 PAS · 174 向量行**（132 PE） | `psp.yaml`：XpCase / XpAccount + 20 个案件族（cases 31–50），PE 覆盖各族的 `xp_*` 记录面 |
-| L2 | **176 条** | shared 10 + operations_desk 35 + typed_services 84 + psp 47；全部按“一条一句口径”写 |
+| L2 | **184 条** | shared 10 + operations_desk 41 + typed_services 84 + psp 49；全部按“一条一句口径”写（含 case_006 提炼的 6 条通用口径：精确资本、terms 重读、交付顺序、inquiry 预热、最小本金、连续下限） |
 | L3 | **50 节** | operations_desk 30（5 预跑 + 25 新）+ psp 20；每节标题 = 客户开场白逐字，正文 = 类级打法 |
 
 L1 的 typed/PSP 部分按 schema 级生成 + 人工收口：能力取自 `tool_catalog`，字段语义取自 `DB-service-*` / `PX-DATABASE`，动作与规则取自 `DIVERSE-* / PAYMENT-* / LINK-* / PX-* / IFACE-*` 产品文章；零实例值。
 LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整字段随 PE 返回。
 
-检索说明：L3 按题面**精确命中**是每题的入口（50/50 标题逐字对齐）。**agent 不按逐字开场白调用 `dlr_l3`（会改写问句），因此 `eval/run_dlr.py` 在启动时读取该题 opening、向桥取 L3 exact 节，并把整节注入 agent policy**；这是 case_006 通过的决定性改动，后续题沿用该机制。
+检索说明：L3 按题面**精确命中**是每题的入口（50/50 标题逐字对齐）。**不做答案注入**——`run_dlr.py` 保持原策略，agent 自行按需调用 `dlr_l3`；L3 节必须是类级打法，不得含实例金额、记录 ID、固定分钟或 verifier 口径。case_006 的 r8 曾用“启动时注入精确答案”通过，已认定为口径不一致并撤回。
 
 **Embedding 模型（2026-11-01 变更）**：biz 场景改用 **BAAI/bge-base-en-v1.5**（768 维，英文专用；HF 缓存快照，`onnx/model.onnx` 436MB），同一套 CLS + L2 + `toLowerCase` 管线，代码零改；正式存储已按新模型重建。实测目标对象直接排第 1（DatedPayroll / DatedCollateral / GatewayOrder / TaxAgentHandover / PricedPaymentRoute），L2 分数同步提升。旧 zh 全量存储备份在 `.store/lance/bizagentbench.zh-bak`。**模型与存储必须同源**——起桥用下方 `eval/start_bridge.sh`，它会自动解析 HF 缓存里的英文模型。
 
@@ -61,7 +61,7 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 
 1. **前几题搜索空间偏小（已解决）**：全量模型已建成（84 + 22 LE），001–005 统一重跑即可对齐。
 2. **PSP 命名空间（31–50）已建模**：`psp.yaml` + `psp.jsonl` + 20 节 L3。
-3. **L1 多意图问句召回仍偏弱（已缓解）**：换 bge-base-en-v1.5 后单对象问句/对象名召回已准确；整段多意图开场白仍难一次覆盖全部对象（如 case_006），以 L3 精确命中为主入口，再按 L3 点名对象查 L1。
+3. **L1 多意图问句召回仍偏弱（已缓解）**：换 bge-base-en-v1.5 后单对象问句/对象名召回已准确；整段多意图开场白仍难一次覆盖全部对象（如 case_006）。优化只在框架内做：L3 类级打法 + 新增的 6 条通用 L2 口径 + L1 对象名查询，不做答案注入。
 4. **README 三层表仍是打包时数字**（23 LE / 16 PAS / 20 条 / 2 节）→ 待按全量数字更新（双语 + i18n 登记）。
 5. **模拟器口径漂移**：001/005 都出现“把设施费算进客户上限”的过度限制；靠 L3 表述可修正，但仍是评估噪声；必要时用冻结客户脚本做对照。
 6. **case_002 token 偏大**（23.7M）：多站点 × 9 + 退出 + 多次等待；属结构成本，暂不动评测口径。
@@ -70,8 +70,9 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 
 ## 六、接下来
 
-- **全量模型已装进隔离存储**（`.store/lance/bizagentbench`：entities 687 / consensus 176 / sop 50）。
-- **跑题（下一阶段）**：按 4 题/批、串行跑；首批建议 `case_006–009`（desk 侧），跑完停下报数，再决定下一批。桥已支持双系统：cases 1–30 → `operations_desk`，31–50 → `psp`（`run_dlr.py` 按 `--numbers` 自动切换）。
+- **全量模型已装进隔离存储**（`.store/lance/bizagentbench`：entities 687 / consensus 184 / sop 50）。
+- **下一步：case_006 一致口径重跑**（不用答案注入，只用类级 L3 + 通用 L2 + L1 动作字段）；跑完停下报数，再决定 007。
+- **跑题（后续）**：按 4 题/批、串行跑；桥已支持双系统：cases 1–30 → `operations_desk`，31–50 → `psp`（`run_dlr.py` 按 `--numbers` 自动切换）。
 - 跑题前起桥（28797）：`TSM_SCENARIO=... TSM_STORE_DIR=... TSM_MODEL_DIR=... npx tsx eval/dlr_server.mjs`；`run_dlr_pilot.sh <out> <num>`。
 - **最终阶段**：冻结全量模型（记录版本）→ 统一重跑所有已跑题（含 001–005）→ 出正式成绩；之前结果只作预跑。
 - 环境：`bash eval/start_bridge.sh` 起桥（28797，自动解析场景/store/HF 缓存里的 bge-base-en-v1.5，`/health` 回 model 路径）；跑题 `eval/run_dlr_pilot.sh <out> <num>`。手动起桥时务必 `TSM_MODEL_DIR` 指向英文模型快照。
