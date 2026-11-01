@@ -39,7 +39,8 @@
 > - 首跑 33/44，F 失败 `activity1:ledger.independent_reconstruction` / `activity1:frame.original_records`。离线按 project 后的世界复算：根因不是“改动了原始记录”，而是 **D34 钱包没有按联合协议注入注册资本**。D34 的 `capital_by_case` = 500,000、初始运营 10,000；其 490,000 来自受 release condition 约束的 TRADE 源（需 PAY48 先有 settled installment），PAY48 的 90,000 中 18,000 来自需 D34 先发生实际 cash debit 的 PROCUREMENT 源。agent 只给 PAY48 general 投了 55,000，D34 仍是 10,000，minute 2/4 的 Q4/Q5 收款实际为 `UNPAID`；验证器按协议资本独立重建时认为它们应 SETTLED 并生成 `SETTLED_Q4/SETTLED_Q5` 新借记，于是 queue 状态与新借记集合都对不上 → ledger + frame 同时失败。
 > - 另两个独立问题：agent 在已可 return 的重复借记之外又手动 `pay_invoice` I4/I5（30k/40k），造成不必要支付；`pay_bill` 只提案/批准、没有 execute（`NEW.actual_exact_timely` actual=0），并换用 `propose_service_payment` 重复提案。
 > - L3 case 8 已补类级机制（无实例值）：① 联合计划先按每服务精确注册资本注资，处理 release-condition 前置、按事件时点排序，过期注资不能补救 UNPAID collection；② 重复借记在 return 时不要再手动补付发票；③ 批准 ≠ 支付，必须 execute 并核对回执，不要用多个支付能力重复提案同一账单。
-> - **freeze v2 = `3cbdfe16`**（仅 case 8 L3 改动；`eval/freeze.json` 指向 v2 store `.store/lance/bizagentbench-v2`）；v1 freeze 保留为 `eval/freeze.ff3663ec.json`，v1 store 原样保留给 006/007。008 v2 复跑进行中；006/007 各补 2 次有效跑（v1 store）待 008 结束后续跑。
+> - **freeze v2 = `3cbdfe16`**（仅 case 8 L3 改动；`eval/freeze.json` 指向 v2 store `.store/lance/bizagentbench-v2`）；v1 freeze 保留为 `eval/freeze.ff3663ec.json`，v1 store 原样保留给 006/007。
+> - **008 v2 复跑：34/44**（首跑 33/44），P 过、F 仍失败。PAY48 的 90k 联合资本已按 72k GENERAL + 18k PROCUREMENT 在 minute 2 投齐；Q4/Q4_OLD 均 RECALLED（与独立重建一致）；I4 不再误付。仍失败：D34 的 490k TRADE 资本在 minute 4 **只到批准、没有执行**，Q5 仍 UNPAID，独立重建预期 Q5 SETTLED 并生成 `SETTLED_Q5` → ledger/frame 继续失败；I5 仍误付 40k；installment 结算 actual 9k vs expected 49k；`joint.exact_capital` 仍失败。根因从“完全没注资”收敛为“D34 注资执行太晚/未执行”，属时序与执行问题，不是 L1/L2/L3 缺知识。**008 已跑两遍，第三遍需另行确认**。
 
 ## 二、三层现状（2026-11-01 全量）
 
@@ -98,7 +99,7 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 - **全量模型已装进隔离存储**（`.store/lance/bizagentbench`：entities 687 / consensus 190 / sop 50）。
 - **case_006 已挂起**（3 遍一致口径，38/39，只差 `minimum_principal_and_fee`；如实记录，不再重跑）。
 - **case_007 已停**（4 遍一致口径未过；最好 38/39，只差 cargo A；第 3 遍断网作废，第 4 遍受休眠影响）；相关类级改动已回滚。
-- **case_008 首跑 33/44 mixed_failure**（G + F 失败；跑中被休眠中断 20 分钟）→ 已定位为 D34 未注资 + 重复支付；L3 类级补丁已落（freeze v2 `3cbdfe16`），v2 复跑进行中。之后 009/010。
+- **case_008 v2 34/44**（首跑 33/44；G+F 失败）→ 根因收敛为 D34 的 490k 资本批准后未执行，Q5 仍 UNPAID；L3 类级补丁已落（freeze v2 `3cbdfe16`）。第三遍需确认；之后 009/010。
 - **纪律**：类级规则改动必须 A/B；变差即回滚，不叠规则；样本不足不宣称优化有效。
 - **跑题（后续）**：按 4 题/批、串行跑；桥已支持双系统：cases 1–30 → `operations_desk`，31–50 → `psp`（`run_dlr.py` 按 `--numbers` 自动切换）。
 - 跑题前起桥（28797）：`TSM_SCENARIO=... TSM_STORE_DIR=... TSM_MODEL_DIR=... npx tsx eval/dlr_server.mjs`；`run_dlr_pilot.sh <out> <num>`。
