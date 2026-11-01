@@ -1,0 +1,422 @@
+[
+  {
+    "kid": 46,
+    "knowledge": "A security is eligible as collateral only when the registered owner and currency match the loan, its class is accepted, custody is SETTLED, and the service minute is within its inclusive eligibility dates; lending value is face value after the quoted haircut.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 47,
+    "knowledge": "A security is pledged whole to at most one loan. Loans must retain at least their outstanding principal in eligible collateral after any release, and issuer concentration caps apply per loan to the haircut-adjusted values of that issuer's eligible pledged securities.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 48,
+    "knowledge": "A pending custody record's indicative face value is not lending cover; its scheduled custody event publishes the actual face value. Principal repayment is irreversible within the service, and the first repayment of a loan also charges its fixed servicing fee once.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 49,
+    "knowledge": "Each import order is a separate obligation; signed commercial credits reduce only the matching order and invoice period, and void or draft credits have no effect.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 50,
+    "knowledge": "An accepted documentary drawing is not an actual supplier payment: at its confirmation event it debits its actual amount (which may be partially honored), posts one supplier receipt and becomes final. A confirmed-but-unpaid drawing can be retried by settle_confirmed without creating a second receipt.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 51,
+    "knowledge": "An original title may cover several orders and the bank keeps it while any associated drawing is accepted, recall-requested or confirmed-unpaid. A delivery guarantee is order-specific, its fee is not refundable, and its collateral returns when the original set is lodged with the carrier.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 52,
+    "knowledge": "A bank return is unconditional within the referenced debit's still-returnable settled amount, net of posted credits and prior returns. A merchant credit is a separate transaction, and a return amount is irrevocable after acceptance and completes one service minute later.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 53,
+    "knowledge": "Revocation stops new collections on the mandate, but an already accepted collection keeps its acceptance. A window event locks queued collections on mandates active at that event, and a recalled accepted collection will not settle.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 54,
+    "knowledge": "An invoice may be settled in portions. Net paid is actual debits less posted credits and completed bank returns plus direct top-ups, and historical credits are already reflected in opening cash rather than new money.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 55,
+    "knowledge": "A final inspection states the accepted commercial price per unit, where zero rejects. The highest issued FINAL revision supersedes earlier reports for that lot, while PROVISIONAL reports and DRAFT worksheets do not establish final settlement.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 56,
+    "knowledge": "Warranty retention is the lot's recorded percentage of its total final accepted prices, rounded down once per lot. Assignments are paid in priority order from the distributable remainder, and the seller receives the residual.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 57,
+    "knowledge": "Buyer refunds equal original funding less the final accepted commercial price and follow the original deposit remitters in proportion to their posted deposits, rounding each share down and allocating remaining minor units in ascending refund_order. Escrow refunds are final outward remittances and cannot be recalled.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 58,
+    "knowledge": "Forward margin is held separately from free cash and released proportionally to original notional. Cumulative releases use the difference between the cumulative proportional entitlement and amounts already released, and closing the final remainder releases any rounding residue.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 59,
+    "knowledge": "A confirmed-but-unpaid foreign delivery reports its actual amount and can be retried without creating a second delivery. Closing an uncommitted or suspended remainder releases its margin and charges the recorded closeout fee, while already nominated or exercised currency cannot be closed or refunded.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 60,
+    "knowledge": "A treasury instruction that exhausts funds can prevent a later obligation even when the instruction itself is bank-valid. A spot BUY rounds the source debit upward and a SELL rounds the target credit downward.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 61,
+    "knowledge": "A cargo lot may leave only under an ACTIVE title document whose covers list contains that exact lot and whose endorsement names the actual destination; a draft or pending-split document conveys no current release right.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 62,
+    "knowledge": "Endorsing a joint title controls every covered lot by one destination and is irreversible. Activating its split retires the joint title and activates the exact child titles, with the split fee charged once and an endorsement fee once per newly endorsed document.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 63,
+    "knowledge": "Dispatch consumes the lot's full handling units and is irreversible. For dispatch minute m, storage costs handling_units times the first window rate for each positive interval after free_through, then the later window rate, plus the window's loading fees once.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 64,
+    "knowledge": "A renewal submission pays the selected offer fee immediately, but neither submission nor admission is actual cover. Replacement cover activates only at its activation minute when the full required cash margin is already lodged, and a missed activation is reconsidered later without backdating.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 65,
+    "knowledge": "The existing guarantee covers its inclusive old_through minute. A temporary-cover offer applies to its named guarantee, uses that guarantee's existing margin and runs through its stated inclusive coverage minute.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 66,
+    "knowledge": "Coverage matches the insured legal entity and asset class. An OCCURRENCE policy covers incidents within its inclusive policy period when notification was made by its report-through day, while a CLAIMS_MADE policy requires notification within its policy period and by that day and an incident on or after its retroactive day.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 67,
+    "knowledge": "For each loss, net loss equals gross loss less the deductible, realized salvage and actual supplier compensation, floored at zero. The primary layer pays at most the smaller of net loss and its per-loss limit, and requests reserve the stated policy aggregate immediately.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 68,
+    "knowledge": "Each company in an intercompany clearing group keeps its own bank account and cash; the case cash figure is an aggregate for reporting, not a pool from which any company can spend.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 69,
+    "knowledge": "A prepared clearing cycle retains its captured invoice balances until refreshed. Signatures must come from registered staff signing services, and execution happens once for the captured internal or external instruction.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 70,
+    "knowledge": "A final merchant concession memo states the buyer's recoverable amount but not the remaining payment. Settled scheme credits, posted merchant refunds and new actual refunds all satisfy the same purchase concession, while submissions, expected credits and pending refunds do not.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 71,
+    "knowledge": "Distinct purchases remain distinct even when buyer names or original amounts match, and a merchant may defend the original amount less the final concession.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 72,
+    "knowledge": "An active term deposit pays principal plus its applicable interest at its maturity processing. Full early redemption pays principal minus the break charge immediately and forfeits all interest, and partial redemption, reinstatement and borrowing are unavailable.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 73,
+    "knowledge": "Scheduled processing at a minute applies the actual reimbursement decision first, finalizes a due tier test, pays deposits maturing at that minute, and then attempts the automatic debit. Preparation and approval neither hold a maturity rate nor reserve funds.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 74,
+    "knowledge": "A buyer acceptance notice is not a cash receipt. At the acceptance event the bank records the buyer's actual total accepted amount, which includes historical receipts rather than adding another amount.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 75,
+    "knowledge": "A bill may be discounted once after actual acceptance. The bank checks cash and duplicate physical document movements but does not select the customer's financing optimum or reconcile invoice overpayment.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 76,
+    "knowledge": "A posted bank item keeps its principal, booking day and original value day. An economic-date amendment changes the recorded economic day without reposting principal, changing a historical daily balance or editing the signed interest entry.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 77,
+    "knowledge": "The signed statement's daily balance basis is ORIGINAL_VALUE_DATES, and debit interest is zero when the corrected balance is nonnegative.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 78,
+    "knowledge": "A certificate covers a stated fact interval for the same legal entity, bank account and required attributes; its issue day is separate from that interval, and an ISSUED certificate can be reused across compatible files.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 79,
+    "knowledge": "An issuer's prospective withdrawal prevents new acceptance on or after its effective day. Continuing authorities bind to listed source versions, and a certificate issued today can cover historical facts only when its certified interval expressly includes them.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 80,
+    "knowledge": "A declined authorization notice does not prove that a later presentment was unauthorized. Each presentment is a physical card posting identified by card, entity, cardholder, merchant case, settlement trace, amount and service day.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 81,
+    "knowledge": "For each merchant case, the remaining unauthorized loss is total unsupported presentments less posted merchant credits, floored at zero. Filing a dispute charges one fixed fee on the physical presentment.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 82,
+    "knowledge": "Only final receipt items for registered business activity qualify for travel reimbursement; a void receipt or an authorization without a settled debit is not a reimbursable expense, and a merchant's broad category does not decide classification.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 83,
+    "knowledge": "Net funding per receipt is each settled leg less its posted refunds. Meal funding is capped per beneficiary, expense day and category and allocated proportionally across the group's net funding legs, rounding shares down and distributing remaining cents by fractional remainder then payment reference.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 84,
+    "knowledge": "A usable corporate instrument must be a genuine available copy for that invoice and currency, match the payment's bank-detail version and cover the entire gross instruction amount including the instruction fee.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 85,
+    "knowledge": "The company mandate requires the stated number of independent natural people and capacities. Staff logins and role accounts identify interfaces rather than independent people, and a bank execution receipt does not certify that the company mandate was satisfied.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 86,
+    "knowledge": "Each corporate payment requires two signed authorities from two distinct natural persons plus the owner's instruction approval. The whole gross payment consumes each signer's cumulative gross limit immediately, and another copy cannot restore used capacity.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 87,
+    "knowledge": "A scheduled quote revision replaces the current fee and beneficiary version and increments the quote version without creating a payment. A prepared request binds its quote version, and a changed quote requires a fresh request and approval.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 88,
+    "knowledge": "On a protected remittance route the stated amount is the desired beneficiary net; on a standard route it is the gross amount sent. The return equals gross sent minus actual beneficiary credit minus the return charge, and only the net return becomes new customer cash.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 89,
+    "knowledge": "An earlier accepted transfer honors its bound bank details. After a standard result is final, an exact-net top-up is available at the recorded fixed fee per instruction.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 90,
+    "knowledge": "Each billing period has its own plan election. The fixed subscription fee is charged once for the billing group and variable fees use that period's plan rates, with metered usage posted at each billing event.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 91,
+    "knowledge": "A partner campaign voucher reserves a credit for one open period and requires an active same-group account with the stated partner tenure at redemption. Closing an account updates unused offer eligibility.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 92,
+    "knowledge": "Order and return streams have separate permissions and cursors for each store. Event identity is store plus stream plus native event plus revision, and a failed synchronization may leave both committed postings and an older cursor.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 93,
+    "knowledge": "An import selects events strictly after after_cursor through through_cursor. Each receivable's current face is the sum of its committed source deltas, and financing advances the stated percentage of the positive face rounded down to a cent.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 94,
+    "knowledge": "Disposable earnings equal gross wages less payroll tax. Total attachment cannot exceed disposable earnings minus the obligation's protected disposable amount, and separately listed business-expense repayments never enter the attachment base.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 95,
+    "knowledge": "Support attachments have priority over ordinary judgments. Remaining principal subtracts confirmed historical remittances and actual payments already made to that order, and a pending application has no suspensive effect.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 96,
+    "knowledge": "A cancelled purchase is owed its original charge amount in its original charge currency regardless of display currency or current balance. An in-flight refund receives its actual credited amount at the recorded decision minute.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 97,
+    "knowledge": "A physical refund's actual credited amount satisfies the linked purchase; statements and remittance advices repeat a physical transfer reference and are not additional payments.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 98,
+    "knowledge": "An authorization reserves card capacity but is not a paid shipment. The original authorization remains capturable until expiry, while new approvals are capped across all new authorizations and may be approved for less than requested.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 99,
+    "knowledge": "Captures allocate only to order lines covered by the authorization, and only confirmed dispatched goods may be charged. A capture submitted in the same minute has not yet cleared, and released or cleared amounts cannot be captured twice.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 100,
+    "knowledge": "Cross-calendar settlement counts settlement business days strictly after the origin processing date, excluding recipient weekends and recipient holidays, and routes must be reserved by booking_through_minute.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 101,
+    "knowledge": "The calendar_terms record gives the booking UTC instant and the later executable quote instant, and the beneficiary must be credited on the required calendar day.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 102,
+    "knowledge": "Accepted returned-item principal reduces the financed purchase principal dollar for dollar, and historical installment payments and actual bank collections jointly discharge the obligation.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 103,
+    "knowledge": "A future installment can be cancelled before it is collected. The plan closes only when every installment and return is settled, and earned-period fees follow the plan terms.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 104,
+    "knowledge": "A combined marketplace order has a separate gross amount and commission rate for each seller, and a buyer refund is allocated between buyer and seller according to the recorded seller allocation.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 105,
+    "knowledge": "A pending marketplace refund counts only when the bank reports SETTLED. Reversing a seller credit reallocates the refund without paying the buyer twice.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 106,
+    "knowledge": "Group qualification is assessed when the merchant commitment is accepted. Committing debits the deposit immediately and that deposit counts toward the group's merchant price.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 107,
+    "knowledge": "A withdrawing group participant receives its entire actual contribution back. A failed group refunds participants, while a successful one pays the merchant.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 108,
+    "knowledge": "Each checkout verification binds a merchant, an order and a maximum cumulative captured amount. The issuer accepts captures against live verified matching records up to that maximum and the aggregate card limit.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 109,
+    "knowledge": "An authentication record does not itself move money; payment requires the bound verification.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 110,
+    "knowledge": "Cash top-ups and promotional stored value remain separate lots, and an order can combine available lots within its recorded promotional allowance across all partial payments together.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 111,
+    "knowledge": "Restoring tender returns value to the wallet lot; returning a top-up and paying an order are separate operations with their own approval.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 112,
+    "knowledge": "An endorsed cheque pays its current lawful holder, which may differ from the original invoice seller, and a stop request is not a successful stop.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 113,
+    "knowledge": "Opening cheque holds are separate from opening free cash, and a replacement payment is separate from the underlying bill payment.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 114,
+    "knowledge": "A mid-period subscription change is priced using actual old-plan days and remaining new-plan days at the respective monthly rates plus actual final usage units times the usage unit price.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 115,
+    "knowledge": "Historical and actually settled pending collections both count as payment. The next-period renewal is a separate service obligation.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 116,
+    "knowledge": "The bank net for an acquirer batch equals gross minus refund minus fee plus signed carry plus signed reserve delta, and the bank reference links a credit to its actual batch.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 117,
+    "knowledge": "The batch total and the merchant net are different amounts; merchant invoices reconcile against the acquirer receipt.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 118,
+    "knowledge": "An active link_contracts record names the upstream and downstream service cases and its milestone_scope holds the covered currency and qualifying event IDs. The condition covers the current service episode only, and event ordering is receipt order even within one minute.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 119,
+    "knowledge": "Rolling Obligation Replan: the first downstream instruction executes before a qualifying upstream event posts, and the final downstream instruction executes after that event.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 120,
+    "knowledge": "Refund Recalculation Gate: the final downstream instruction is executed after an upstream cash credit has posted.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 121,
+    "knowledge": "Quote Version Refresh: every downstream request that is actually executed must have been prepared after the first upstream execution.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 122,
+    "knowledge": "Currency Finality Gate: the final downstream instruction is executed after at least one qualifying upstream bank event has posted.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 123,
+    "knowledge": "Shared Capacity Window: the first upstream instruction must execute before the first downstream instruction.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 124,
+    "knowledge": "Independent Approval Binding: at least one upstream approval bound to an actually executed request must precede the first downstream execution.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 125,
+    "knowledge": "Membership Capacity Release: the first downstream instruction must execute strictly between the first and last upstream instructions of the current service episode.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 126,
+    "knowledge": "Posted Settlement Gate: the first downstream instruction is executed after at least one qualifying upstream bank event has posted.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 127,
+    "knowledge": "Compensation Offset: the final downstream cash debit follows an upstream cash credit.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 128,
+    "knowledge": "Deadline Priority Slot: the first upstream cash debit has processing priority over the first downstream cash debit.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 129,
+    "knowledge": "Posted Credit Reuse: the first downstream cash debit follows a posted upstream cash credit in the designated currency.",
+    "system": "operations_desk"
+  }
+]

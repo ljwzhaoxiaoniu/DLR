@@ -51,7 +51,21 @@ def get_environment(*args, **kwargs):
 
 domain.get_environment = get_environment
 
+def _system_for_numbers(argv: list[str]) -> str:
+    """Cases 1-30 are Operations Desk; 31-50 are Payment Expansion (psp)."""
+    nums: list[str] = []
+    for i, a in enumerate(argv):
+        if a == "--numbers" and i + 1 < len(argv):
+            nums = [x.strip() for x in argv[i + 1].split(",") if x.strip()]
+        elif a.startswith("--numbers="):
+            nums = [x.strip() for x in a.split("=", 1)[1].split(",") if x.strip()]
+    if nums and all(n.isdigit() and int(n) >= 31 for n in nums):
+        return "psp"
+    return "operations_desk"
+
+
 if __name__ == "__main__":
+    dlr_tools.set_system(_system_for_numbers(sys.argv[1:]))
     from tools.evaluate import main
 
     main()

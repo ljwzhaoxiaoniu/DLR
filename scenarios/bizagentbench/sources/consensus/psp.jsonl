@@ -1,0 +1,237 @@
+[
+  {
+    "kid": 130,
+    "knowledge": "Payment Expansion: start record navigation at xp_cases, which carries the customer, account, business area and related resources. It is not a universal record ID, and an empty collection does not prove another collection is empty.",
+    "system": "psp"
+  },
+  {
+    "kid": 131,
+    "knowledge": "Payment Expansion: a write capability creates a proposal, not an executed operation. execute_request requires the customer's portal approval of the exact current terms, and reusing an executed request is idempotent.",
+    "system": "psp"
+  },
+  {
+    "kid": 132,
+    "knowledge": "Payment Expansion: record_case_outcome must be called exactly once after the applicable work; a premature or repeated closure fails the process requirement.",
+    "system": "psp"
+  },
+  {
+    "kid": 133,
+    "knowledge": "Payment Expansion: logical time advances only when the customer waits; reads and request preparation do not advance it, and all scheduled events at a minute occur before the waiting update returns.",
+    "system": "psp"
+  },
+  {
+    "kid": 134,
+    "knowledge": "Unknown incoming funds: principal remains in its segregated quarantine account, and only an original-route return, a signed trustee deposit or a separately authorized owner claim may dispose it. A return initiated along the original route cannot be cancelled.",
+    "system": "psp"
+  },
+  {
+    "kid": 135,
+    "knowledge": "A trustee review is separate from authenticating the original incoming owner and from the two-party security amount. A fee quote or bank acceptance says nothing about the ability to fund another payment by its customer deadline.",
+    "system": "psp"
+  },
+  {
+    "kid": 136,
+    "knowledge": "A bank recall controls ownership of the original remittance but does not cancel the sale invoice; returned goods create a separate credit entitlement only after the recorded inspection publishes the authorized credit.",
+    "system": "psp"
+  },
+  {
+    "kid": 137,
+    "knowledge": "The collectible sale amount is invoice face less issued commercial credit, original principal retained, and replacement principal already received or requested. Receipt of a returned-goods document starts neither bank settlement nor commercial credit.",
+    "system": "psp"
+  },
+  {
+    "kid": 138,
+    "knowledge": "Bank receipt causality: bank_sequence is causal order and delivery_minute is transport order. A later RETURNED genuinely corrects an earlier SETTLED and refunds principal, while older PROCESSING messages cannot undo a later settlement.",
+    "system": "psp"
+  },
+  {
+    "kid": 139,
+    "knowledge": "A bank return reopens supplier payable debt. A confirmed supplier credit note can either reduce the reopened debt or be redeemed for cash, never both.",
+    "system": "psp"
+  },
+  {
+    "kid": 140,
+    "knowledge": "A gateway replay of the real payment receipt is idempotent and repairs the delivery mapping; charging the store order again creates a new economic charge and is not a replay.",
+    "system": "psp"
+  },
+  {
+    "kid": 141,
+    "knowledge": "A fully paid store order can still have incomplete physical delivery. Dispatch lines carry their own quantities, required socket, minimum rating and actual receipt deadline, and stock units may differ in rating.",
+    "system": "psp"
+  },
+  {
+    "kid": 142,
+    "knowledge": "A platform payout-rule request carries change_version; acknowledgements apply in event order, and an older acknowledgement cannot clear a newer pending request. Stop is confirmed only when the effective rule is disabled with no outstanding change.",
+    "system": "psp"
+  },
+  {
+    "kid": 143,
+    "knowledge": "Stopping automatic payouts does not cancel accepted revenue, manual receiving, customer refunds or the treasury receipt calendar; the delivery schedule links the reconciliation to those continuing obligations.",
+    "system": "psp"
+  },
+  {
+    "kid": 144,
+    "knowledge": "The supplier obligation, order face, acquired amount and supplier credit are in the requirement currency, while the funding account, purchase and refund fees and cash journal are in the source currency. A target amount costs floor(target*rate_num/rate_den) source minor units plus the purchase fee.",
+    "system": "psp"
+  },
+  {
+    "kid": 145,
+    "knowledge": "Final held foreign-currency stock equals actual fills plus spot purchases less installment payments and actual sales. After a confirmed cancellation it must match the remaining payable exactly, and zero exposure is required to close the supplier settlement.",
+    "system": "psp"
+  },
+  {
+    "kid": 146,
+    "knowledge": "A supplier credit beyond the remaining unpaid invoice must be returned in cash rather than counted against paid principal; the offset plus the elected refund equals the full credit advice.",
+    "system": "psp"
+  },
+  {
+    "kid": 147,
+    "knowledge": "Shared proceeds allocations receive floor(total*weight/sum), and the remaining units go by descending fractional remainder, then ascending residual_rank. Once paid, an overallocated unit cannot be recovered.",
+    "system": "psp"
+  },
+  {
+    "kid": 148,
+    "knowledge": "Delivery fees use source cash left after conversion and never reduce a beneficiary entitlement or a withholding liability. Each channel has a cutoff, fee, delivery timing and shared capacity group, and a reserved slot consumes one instruction.",
+    "system": "psp"
+  },
+  {
+    "kid": 149,
+    "knowledge": "The residency review publishes the actual withholding rate and route eligibility together. Until publication a pending outcome is not a known rate, and provisional route metadata is not a final authority to receive.",
+    "system": "psp"
+  },
+  {
+    "kid": 150,
+    "knowledge": "A tax-agent appointment must be uploaded and approved before its route is enabled; neither step rewrites old recipients. Tax is discharged only when the recipient covers the obligation jurisdiction and an agent route is configured.",
+    "system": "psp"
+  },
+  {
+    "kid": 151,
+    "knowledge": "The retiring-agent census publishes accepted versus queued instructions; queued instructions can be cancelled and accepted ones settle. Agency processing reservations close before the census and share total capacity.",
+    "system": "psp"
+  },
+  {
+    "kid": 152,
+    "knowledge": "An instruction above a direct authority recipient's per-instruction maximum is declined before cash posting. pay_tax_obligation pays the entire remaining obligation after actual predecessor receipts are allocated.",
+    "system": "psp"
+  },
+  {
+    "kid": 153,
+    "knowledge": "The importer of record must own the customs entries and register a same-name ACH destination before a refund claim; the claim uploads the customs schedule, pays a filing fee and receives an entry-level authority review.",
+    "system": "psp"
+  },
+  {
+    "kid": 154,
+    "knowledge": "A customs classification correction is a separate review with its own evidence and additional award. The original award binds the approved outstanding amount, and the selected receiving channel sets initial or supplemental timing.",
+    "system": "psp"
+  },
+  {
+    "kid": 155,
+    "knowledge": "A receipt proves one payment, a statement covers every transaction in its all_transaction_ids, and a certificate proves account ownership only. Only PDF is sealed, and the recipient's required fields and kind are public while customer authorization is separate.",
+    "system": "psp"
+  },
+  {
+    "kid": 156,
+    "knowledge": "A preliminary receipt can truthfully establish the original debit before final receiving advice. Final advice publishes the current version, net received and transfer fee, and a fixed seal license seals only its current version.",
+    "system": "psp"
+  },
+  {
+    "kid": 157,
+    "knowledge": "A recovery changes only its named channel after actual identity evidence. An old logged-in session or a new contact number alone does not restore a locked payment credential, and payment requires an active credential version and challenge.",
+    "system": "psp"
+  },
+  {
+    "kid": 158,
+    "knowledge": "An accepted supplier advance is an alternative instruction signed before credential loss. Releasing one reserves its nominal cash and charges its fee, and the actual receipt reduces the original invoice balance rather than automatically editing a held full-invoice instruction.",
+    "system": "psp"
+  },
+  {
+    "kid": 159,
+    "knowledge": "Revoking one credential disables it and revoking a family disables all siblings, but neither cancels previously accepted instructions. Queued transfers need an active credential at settlement, while accepted instructions survive revocation.",
+    "system": "psp"
+  },
+  {
+    "kid": 160,
+    "knowledge": "A replacement uses an active uncompromised credential and reserves the full original supplier principal. Received principal, not a submission or a cancellation, closes the obligation.",
+    "system": "psp"
+  },
+  {
+    "kid": 161,
+    "knowledge": "Card replacement changes PAN generation and records updater success but does not cancel merchant agreements. Refreshing a stale token repairs the credential without reinstating a cancelled agreement, and revoking a token leaves the agreement active but unusable.",
+    "system": "psp"
+  },
+  {
+    "kid": 162,
+    "knowledge": "An old-generation network capture for the same due invoice is already authorized and is settled or voided on presentation. Settled cash is allocated to the invoice without paying it twice.",
+    "system": "psp"
+  },
+  {
+    "kid": 163,
+    "knowledge": "Carrier COD distinguishes delivery, buyer collection, actual counted custody cash and order-specific commission. Returned orders have no collection or commission, and settlement remits total counted cash minus commissions on delivered orders.",
+    "system": "psp"
+  },
+  {
+    "kid": 164,
+    "knowledge": "Buyer cash collected but absent from carrier custody is a carrier debt unless the merchant accepts otherwise. A later accepted return is offset against the same remittance when above the public minimum, otherwise paid directly.",
+    "system": "psp"
+  },
+  {
+    "kid": 165,
+    "knowledge": "Each marketplace sales-tax order carries PLATFORM or MERCHANT responsibility. Synchronised delivery-location and return events can change the collector and refundable tax, and the merchant remits only MERCHANT liabilities.",
+    "system": "psp"
+  },
+  {
+    "kid": 166,
+    "knowledge": "Sales tax due per order is tax_minor minus refunded_tax_minor. A prior-period buyer overcollection is refunded separately, and its notice certifies a jurisdiction credit usable against the current period or carried forward.",
+    "system": "psp"
+  },
+  {
+    "kid": 167,
+    "knowledge": "Statement endpoints agreeing does not prove completeness; missing debit/credit pairs can leave endpoints unchanged. Completeness requires the expected first and last sequence and the imported detail.",
+    "system": "psp"
+  },
+  {
+    "kid": 168,
+    "knowledge": "A consolidated statement close excludes transfers between the customer's own accounts. Treasury distributions and supplier payments consume the same available cash, while public hold_by_account amounts stay unavailable even though they remain in book balance.",
+    "system": "psp"
+  },
+  {
+    "kid": 169,
+    "knowledge": "A complete payment posting has payable_debit and cash_credit each equal to the settled amount and linked to the same receipt; replay is idempotent and cannot move bank cash.",
+    "system": "psp"
+  },
+  {
+    "kid": 170,
+    "knowledge": "A supplier advance is an existing noncash asset claim. Its standing application can discharge a restored payable up to the debt and available advance, and can be reversed before call-off release.",
+    "system": "psp"
+  },
+  {
+    "kid": 171,
+    "knowledge": "A negotiated plan states the exact principal and deadline change and its fee; adopting it charges the fee and binds the revised obligation, and a legal supplier concession need not match the customer's preferred dates.",
+    "system": "psp"
+  },
+  {
+    "kid": 172,
+    "knowledge": "The debtor confirmation states the undisputed face while collections arrive in tranches. The disputed portion stays separate, and a residual assignment transfers only the uncollected undisputed remainder without recourse.",
+    "system": "psp"
+  },
+  {
+    "kid": 173,
+    "knowledge": "A formal route inquiry returns a fixed bank result and each purchase is charged. An economical route requires a formal ELIGIBLE receipt, while conservative and premium are guaranteed routes without inquiry.",
+    "system": "psp"
+  },
+  {
+    "kid": 174,
+    "knowledge": "One certificate can cover both enrolled beneficiaries under the shared route certificate and daily quota. Certificate purchases are charged including duplicates, and fees count against the customer's all-in allowance.",
+    "system": "psp"
+  },
+  {
+    "kid": 175,
+    "knowledge": "Topup credits its amount less the disclosed fee when the balance is below its threshold; sweep moves cash above its trigger down to its target, and a sweep target below the topup threshold can recreate the trigger.",
+    "system": "psp"
+  },
+  {
+    "kid": 176,
+    "knowledge": "The sweep target alone does not prove a loop; observation must show the repeated cycle. The payroll batch uses the same wallet after the merchant capture runs and may be funded by the automation or a manual transfer.",
+    "system": "psp"
+  }
+]

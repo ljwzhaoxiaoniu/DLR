@@ -10,6 +10,15 @@ import httpx
 
 BASE = "http://127.0.0.1:28797"
 
+# Active model system for this runner: "operations_desk" (cases 1-30) or "psp" (cases 31-50).
+# run_dlr.py sets it from --numbers before the evaluation starts.
+SYSTEM = "operations_desk"
+
+
+def set_system(system: str) -> None:
+    global SYSTEM
+    SYSTEM = system
+
 
 def _post(path: str, payload: dict) -> dict:
     with httpx.Client(timeout=30) as client:
@@ -32,7 +41,7 @@ def dlr_l1(question: str) -> dict:
     Args:
         question: natural-language business question, customer request or object name.
     """
-    return _post("/l1", {"question": question, "system": "operations_desk"})
+    return _post("/l1", {"question": question, "system": SYSTEM})
 
 
 def dlr_l2(question: str, namespace: str = "") -> dict:
@@ -40,13 +49,14 @@ def dlr_l2(question: str, namespace: str = "") -> dict:
 
     Returns short knowledge entries: units, quotes vs settlement, per-payment fees, reserve
     conditions, amendment vs allocation, evidence versions, service and rail rules. Leave
-    namespace empty for a cross-object recall; pass "operations_desk" once the object is known.
+    namespace empty for a cross-object recall; otherwise pass the namespace shown by dlr_l1
+    ("operations_desk" or "psp").
 
     Args:
         question: the convention or rule you need, in business terms.
-        namespace: optional namespace, normally operations_desk.
+        namespace: optional namespace, normally operations_desk or psp.
     """
-    return _post("/l2", {"question": question, "namespace": namespace})
+    return _post("/l2", {"question": question, "namespace": namespace, "system": SYSTEM})
 
 
 def dlr_l3(question: str) -> dict:
@@ -60,4 +70,4 @@ def dlr_l3(question: str) -> dict:
     Args:
         question: the customer's opening request, verbatim when possible.
     """
-    return _post("/l3", {"question": question, "system": "operations_desk"})
+    return _post("/l3", {"question": question, "system": SYSTEM})

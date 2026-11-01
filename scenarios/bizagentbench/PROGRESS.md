@@ -1,6 +1,6 @@
 # BizAgentBench · 穿刺进度（工作记录）
 
-> 2026-10-31 夜 → 2026-11-01 ｜ 分支 2.0 ｜ 5/50 题，全部 strict
+> 2026-10-31 夜 → 2026-11-01 ｜ 分支 2.0 ｜ 5/50 题已跑（全 strict）；**全量三层已建成（覆盖 50 题）**
 > 对外成果见 [DETAIL.md](DETAIL.md) / [eval/ledger.json](eval/ledger.json)；本文是续做用的工作记录。
 
 ## 一、已完成
@@ -13,24 +13,27 @@
 | case_004 | restrictions + batches | ✅ | 505 | 16.28M | 每 lot 可用性；批次只认银行回执；**待评估条款可能改净额**（1 分钱陷阱） |
 | case_005 | treasury + disputes | ✅ | 339 | 14.01M | 授权三同 + 版本时效；仅 SETTLED 补偿；立案费上限不含设施费 |
 
-> **前五题为预跑**：L1 是按对象族逐题长出来的（001 用 23 LE、005 用 46 LE），搜索空间不一致。
-> **下一步改为全量模型先行**：一次性建全 L1/L2/L3（50 题 · desk + PSP 两个命名空间）后再跑题；
-> 正式成绩以全量模型上的统一重跑为准（001–005 一并重跑）。
+> **前五题为预跑**；**2026-11-01 已按全量模型一次性建全三层**（Operations Desk 1–30 + PSP 31–50）。
+> 正式成绩以全量模型上的统一重跑为准（001–005 一并重跑）；此前结果只作预跑。
 
-## 二、三层现状
+## 二、三层现状（2026-11-01 全量）
 
-| 层 | 规模 | 覆盖族 |
+| 层 | 规模 | 覆盖 |
 |---|---|---|
-| L1 | **46 LE · 33 PAS · 125 向量行** | desk 基础 / fx·tax·collateral / rails·exit / reconciliation·onboarding / restrictions·batches / treasury·disputes |
-| L2 | **45 条**（shared 10 + operations_desk 35） | 单位、报价与结算、按笔费、储备条件/评估、改单≠分配、证书版本、截止顺序、每 lot 可用性、批次回执、授权三同、仅 SETTLED 补偿 |
-| L3 | **5 个问题类** | 每类标题 = 客户开场白；正文 = 类级打法（无实例金额/ID/固定序列） |
+| L1 · operations_desk | **84 LE · 127 PAS · 513 向量行**（302 PE） | `operations_desk.yaml`（46 LE，cases 1–5 的 desk 核心）+ `typed_services.yaml`（38 LE，cases 6–30：33 个 DIVERSE/PAYMENT 服务对象 + JointAgreement/JointSource/JointRoute/JointFunding/LinkContract） |
+| L1 · psp | **22 LE · 20 PAS · 174 向量行**（132 PE） | `psp.yaml`：XpCase / XpAccount + 20 个案件族（cases 31–50），PE 覆盖各族的 `xp_*` 记录面 |
+| L2 | **176 条** | shared 10 + operations_desk 35 + typed_services 84 + psp 47；全部按“一条一句口径”写 |
+| L3 | **50 节** | operations_desk 30（5 预跑 + 25 新）+ psp 20；每节标题 = 客户开场白逐字，正文 = 类级打法 |
 
-L1/L2 按“对象族 / 领域口径”生长，L3 按“问题类”生长；五次收口只改过 L3 与（一次）L1 能力挂载，未做单题特判。
+L1 的 typed/PSP 部分按 schema 级生成 + 人工收口：能力取自 `tool_catalog`，字段语义取自 `DB-service-*` / `PX-DATABASE`，动作与规则取自 `DIVERSE-* / PAYMENT-* / LINK-* / PX-* / IFACE-*` 产品文章；零实例值。
+LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整字段随 PE 返回。
+
+检索说明：L3 按题面**精确命中**是每题的入口（50/50 标题逐字对齐）；L1 按对象名命中良好，自然语言多意图问句仍受固定嵌入模型（bge-small-zh-v1.5）限制，跑题时按“缺口/规划/模拟器”归因再补。
 
 ## 三、建模流程（全量模型建成后，此循环只用于补缺口）
 
-> **变更（2026-11-01）**：下次改为**全量模型先行**——先按全量模型一次性建全三层，再跑题；
-> 下列逐题循环只在跑题暴露缺口时触发（补 L1 族 / L2 条 / L3 类），不再作为首次建模路径。
+> **2026-11-01 全量模型已建成**；下列逐题循环只在跑题暴露缺口时触发（补 L1 族 / L2 条 / L3 类），
+> 不再作为首次建模路径。
 
 1. 拆 `payment/data/private/case_NNN.json`：components、acceptance、funding、required docs；
 2. 统计该 scope 的世界记录，对照 L1 找缺的对象族（缺则按 schema 级补 LE + PAS + 能力挂载）；
@@ -52,17 +55,20 @@ L1/L2 按“对象族 / 领域口径”生长，L3 按“问题类”生长；�
 
 ## 五、已知问题 / 待办
 
-1. **L1 按族增长 → 前几题搜索空间偏小**：001 用 23 LE、005 用 46 LE。已定改为**全量模型先行**（见 §六）：先一次性建全 L1/L2/L3，再统一跑题；001–005 只作预跑。
-2. **PSP 命名空间（31–50）未建模**：`xp_*` 是另一套 L1，全量建模时一并纳入。
-3. **模拟器口径漂移**：001/005 都出现“把设施费算进客户上限”的过度限制；靠 L3 表述可修正，但仍是评估噪声；必要时用冻结客户脚本做对照。
-4. **case_002 token 偏大**（23.7M）：多站点 × 9 + 退出 + 多次等待；属结构成本，暂不动评测口径。
-5. **npm 包脚手架已就绪**（`tsm-scenario-bizagentbench@0.1.0`），发布等条件齐。
-6. 英文 README / i18n 已登记；`tsm coverage` 对 50 题的覆盖校验留到规范化阶段。
+1. **前几题搜索空间偏小（已解决）**：全量模型已建成（84 + 22 LE），001–005 统一重跑即可对齐。
+2. **PSP 命名空间（31–50）已建模**：`psp.yaml` + `psp.jsonl` + 20 节 L3。
+3. **L1 自然语言召回偏弱**：固定嵌入模型（bge-small-zh-v1.5）对英文多意图问句区分度有限；L3 精确命中是主入口，L1 按对象名命中良好。跑题后按缺口补描述关键词，不换模型。
+4. **README 三层表仍是打包时数字**（23 LE / 16 PAS / 20 条 / 2 节）→ 待按全量数字更新（双语 + i18n 登记）。
+5. **模拟器口径漂移**：001/005 都出现“把设施费算进客户上限”的过度限制；靠 L3 表述可修正，但仍是评估噪声；必要时用冻结客户脚本做对照。
+6. **case_002 token 偏大**（23.7M）：多站点 × 9 + 退出 + 多次等待；属结构成本，暂不动评测口径。
+7. **npm 包脚手架已就绪**（`tsm-scenario-bizagentbench@0.1.0`），发布等条件齐。
+8. `tsm coverage` 对 50 题的覆盖校验留到规范化阶段（dlr-state 形态的 coverage 口径待定）。
 
-## 六、明天从哪继续
+## 六、接下来
 
-- **全量模型先行（下次尝试）**：先一次性建立覆盖全量模型的 L1/L2/L3——Operations Desk（1–30）+ PSP（31–50，`xp_*` 另一套 L1）两个命名空间；L2 按各领域口径补全，L3 按全题问题类建全。重建隔离存储并用 `tsm coverage` 预检后，再开始跑 case（首题 `case_006` 权利分配 × 时间资格 × 重规划）。
-- 建全量模型仍守纪律：范围 ≤ 测试集提供的信息、不可由答案倒推；建完先自检（缺列 / 描述 / FK 三项归零）。
+- **全量模型已装进隔离存储**（`.store/lance/bizagentbench`：entities 687 / consensus 176 / sop 50）。
+- **跑题（下一阶段）**：按 4 题/批、串行跑；首批建议 `case_006–009`（desk 侧），跑完停下报数，再决定下一批。桥已支持双系统：cases 1–30 → `operations_desk`，31–50 → `psp`（`run_dlr.py` 按 `--numbers` 自动切换）。
+- 跑题前起桥（28797）：`TSM_SCENARIO=... TSM_STORE_DIR=... TSM_MODEL_DIR=... npx tsx eval/dlr_server.mjs`；`run_dlr_pilot.sh <out> <num>`。
 - **最终阶段**：冻结全量模型（记录版本）→ 统一重跑所有已跑题（含 001–005）→ 出正式成绩；之前结果只作预跑。
 - 环境：`TSM_SCENARIO=scenarios/bizagentbench`、`TSM_STORE_DIR=.store/lance/bizagentbench`、`TSM_MODEL_DIR=tmp_scripts/bge-onnx`；桥 `eval/dlr_server.mjs`（28797）；跑题 `eval/run_dlr_pilot.sh <out> <num>`。
 - 提交节奏：小步 commit；日常推 atomgit；GitHub 等通知走 `tmp_scripts/ghpush/sync.sh`。
