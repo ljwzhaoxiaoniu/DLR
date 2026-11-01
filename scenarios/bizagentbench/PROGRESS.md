@@ -35,6 +35,11 @@
 > - case_007 frozen：**25/39**，14 个 G 失败（joint capital、payments A/B/C、cargo A/B/C、calendar EUR/GBP、terminal），P/F 通过；提前 `ESCALATED`，3.4M tokens。
 > - 结论：历史 38/39 **不可复现**，是源状态差异 + 跑次方差的离群结果；冻结源上的正式成绩为 33/39 与 25/39。单次跑不足以代表能力（论文也是 3 runs/task）。
 >
+> **006/007 三次有效跑补齐（2026-11-01，freeze `ff3663ec` / v1 store）**：
+> - case_006：第 1 次 **33/39**（27.1M）；第 2 次 **39/39 strict ✅**（39.7M，两次 `ReadError` 重试均未执行银行动作、已恢复，结果完整）；第 3 次进行中。
+> - case_007：第 1 次 **25/39**（3.4M）；第 2 次 **30/39**（14.7M，无重试）；第 3 次进行中。
+> - 三次跑全部使用 v1 store（`.store/lance/bizagentbench`）；源工作区已有 case 8 的 v2 L3 改动，但 006/007 的 L3 节与 L2 未变，v1 store 未重建。
+>
 > **008 首跑诊断与类级优化（2026-11-01）**：
 > - 首跑 33/44，F 失败 `activity1:ledger.independent_reconstruction` / `activity1:frame.original_records`。离线按 project 后的世界复算：根因不是“改动了原始记录”，而是 **D34 钱包没有按联合协议注入注册资本**。D34 的 `capital_by_case` = 500,000、初始运营 10,000；其 490,000 来自受 release condition 约束的 TRADE 源（需 PAY48 先有 settled installment），PAY48 的 90,000 中 18,000 来自需 D34 先发生实际 cash debit 的 PROCUREMENT 源。agent 只给 PAY48 general 投了 55,000，D34 仍是 10,000，minute 2/4 的 Q4/Q5 收款实际为 `UNPAID`；验证器按协议资本独立重建时认为它们应 SETTLED 并生成 `SETTLED_Q4/SETTLED_Q5` 新借记，于是 queue 状态与新借记集合都对不上 → ledger + frame 同时失败。
 > - 另两个独立问题：agent 在已可 return 的重复借记之外又手动 `pay_invoice` I4/I5（30k/40k），造成不必要支付；`pay_bill` 只提案/批准、没有 execute（`NEW.actual_exact_timely` actual=0），并换用 `propose_service_payment` 重复提案。
