@@ -32,6 +32,8 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 
 检索说明：L3 按题面**精确命中**是每题的入口（50/50 标题逐字对齐）。**不做答案注入**——`run_dlr.py` 保持原策略，agent 自行按需调用 `dlr_l3`；L3 节必须是类级打法，不得含实例金额、记录 ID、固定分钟或 verifier 口径。case_006 的 r8 曾用“启动时注入精确答案”通过，已认定为口径不一致并撤回。
 
+**L3 结构定盘（2026-11-01）**：BizAgentBench 是固定 50 题 → **按题分节（BIRD 式）**，不采用 COB 的 5 节决策树（那是 754 例症状措辞重复、需要收敛的形态）。节内只写类级方法；不写实例值、记录 ID、固定分钟或 verifier 口径。COB 的决策树思路仅作为将来题目数量/重复度上来时的备选，非必要不改。
+
 **Embedding 模型（2026-11-01 变更）**：biz 场景改用 **BAAI/bge-base-en-v1.5**（768 维，英文专用；HF 缓存快照，`onnx/model.onnx` 436MB），同一套 CLS + L2 + `toLowerCase` 管线，代码零改；正式存储已按新模型重建。实测目标对象直接排第 1（DatedPayroll / DatedCollateral / GatewayOrder / TaxAgentHandover / PricedPaymentRoute），L2 分数同步提升。旧 zh 全量存储备份在 `.store/lance/bizagentbench.zh-bak`。**模型与存储必须同源**——起桥用下方 `eval/start_bridge.sh`，它会自动解析 HF 缓存里的英文模型。
 
 ## 三、建模流程（全量模型建成后，此循环只用于补缺口）
