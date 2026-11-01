@@ -20,7 +20,8 @@
 >
 > **一致口径重跑记录（2026-11-01，无答案注入）**：
 > - case_006：第 1 遍 6 个 G 失败；第 2 遍仅 `activity1:allocation.minimum_principal_and_fee`（P/F 已过）；第 3 遍仍只差同一项——agent 实际还款 A 50k + E 25k + B 15k（3 笔，费用 1,500），未按最小集（2 笔/85k/费用 1,000）。网络有 4 段空档，但结果与第 2 遍一致，属真实规划/计算差距。**006 到此为止，不再重跑**。
-> - case_007：第 1 遍仅 `activity1:cargo.agreed_delivery.A`（交付晚）；第 2 遍退化为多 G 失败；第 3 遍断网 98s 后 minute 0 `ESCALATED`，**按网络无效作废**。007 待网络稳定后再定。
+> - case_007：第 1 遍仅 `activity1:cargo.agreed_delivery.A`（交付晚）；第 2 遍退化为多 G 失败；第 3 遍断网 98s 后 minute 0 `ESCALATED`，**按网络无效作废**；第 4 遍（休眠中断）28/39，11 个 G 失败、P/F 通过，仍未过。**007 到此为止**，最好成绩为第 1 遍 38/39（只差 cargo A）。
+> - case_008：首跑 33/44，G 失败 + **F 失败**（`activity1:ledger.independent_reconstruction`、`activity1:frame.original_records`），P 通过，`mixed_failure`；跑中被机器休眠中断 20 分钟，结果标注“睡眠/墙钟噪声”，是否重跑待定。
 
 ## 二、三层现状（2026-11-01 全量）
 
@@ -78,7 +79,8 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 
 - **全量模型已装进隔离存储**（`.store/lance/bizagentbench`：entities 687 / consensus 190 / sop 50）。
 - **case_006 已挂起**（3 遍一致口径，38/39，只差 `minimum_principal_and_fee`；如实记录，不再重跑）。
-- **case_007 第 3 遍网络无效作废**；现按 7、8 并行推进（007 用当前类级规则重跑，008 首跑）。
+- **case_007 已停**（4 遍一致口径未过；最好 38/39，只差 cargo A；第 3 遍断网作废，第 4 遍受休眠影响）。
+- **case_008 首跑 33/44 mixed_failure**（G + F 失败；跑中被休眠中断 20 分钟）。下一步：决定 008 是否重跑（第 2 遍）或先诊断 F 失败；之后再 009/010。
 - **跑题（后续）**：按 4 题/批、串行跑；桥已支持双系统：cases 1–30 → `operations_desk`，31–50 → `psp`（`run_dlr.py` 按 `--numbers` 自动切换）。
 - 跑题前起桥（28797）：`TSM_SCENARIO=... TSM_STORE_DIR=... TSM_MODEL_DIR=... npx tsx eval/dlr_server.mjs`；`run_dlr_pilot.sh <out> <num>`。
 - **最终阶段**：冻结全量模型（记录版本）→ 统一重跑所有已跑题（含 001–005）→ 出正式成绩；之前结果只作预跑。
