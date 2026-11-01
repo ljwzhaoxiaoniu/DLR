@@ -188,5 +188,10 @@
     "kid": 188,
     "knowledge": "A bill's recorded due minute is a hard deadline: pay it before that minute and sequence earlier bills before later fulfillment work. A case left open at the end fails the terminal goal; record the case outcome exactly once with the achieved terminal state.",
     "system": "operations_desk"
+  },
+  {
+    "kid": 189,
+    "knowledge": "A minimum-principal requirement is met by repaying exactly the coverage shortfall left after the required releases, on the fewest loans. Repaying a loan whose coverage is already sufficient, over-repaying a shortfall, or repaying more loans than necessary fails the minimum-principal check; each loan's first repayment charges a servicing fee, so compare the total fee of alternative loan sets and stay within the customer's fee cap.",
+    "system": "operations_desk"
   }
 ]
