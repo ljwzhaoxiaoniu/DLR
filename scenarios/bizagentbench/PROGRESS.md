@@ -19,8 +19,8 @@
 > **case_006 的 r8 不计入成绩**：它靠 L3 exact 答案注入（实例值 + verifier 口径）通过，属于答案透传；已撤回注入、恢复类级 L3 + 通用 L2，待一致口径重跑。
 >
 > **一致口径重跑记录（2026-11-01，无答案注入）**：
-> - case_006：第 1 遍 6 个 G 失败；第 2 遍仅 `activity1:allocation.minimum_principal_and_fee`（P/F 已过）。已补通用 L2 #179–189 与类级 L3 分支（覆盖恢复/最小本金/账单时点/收口）；第 3 遍待批准。
-> - case_007：第 1 遍仅 `activity1:cargo.agreed_delivery.A`（交付晚）；第 2 遍退化为多 G 失败（joint capital / payments / calendar）。两遍已用尽，待决定是否重试。
+> - case_006：第 1 遍 6 个 G 失败；第 2 遍仅 `activity1:allocation.minimum_principal_and_fee`（P/F 已过）；第 3 遍仍只差同一项——agent 实际还款 A 50k + E 25k + B 15k（3 笔，费用 1,500），未按最小集（2 笔/85k/费用 1,000）。网络有 4 段空档，但结果与第 2 遍一致，属真实规划/计算差距。**006 到此为止，不再重跑**。
+> - case_007：第 1 遍仅 `activity1:cargo.agreed_delivery.A`（交付晚）；第 2 遍退化为多 G 失败；第 3 遍断网 98s 后 minute 0 `ESCALATED`，**按网络无效作废**。007 待网络稳定后再定。
 
 ## 二、三层现状（2026-11-01 全量）
 
@@ -28,7 +28,7 @@
 |---|---|---|
 | L1 · operations_desk | **84 LE · 127 PAS · 513 向量行**（302 PE） | `operations_desk.yaml`（46 LE，cases 1–5 的 desk 核心）+ `typed_services.yaml`（38 LE，cases 6–30：33 个 DIVERSE/PAYMENT 服务对象 + JointAgreement/JointSource/JointRoute/JointFunding/LinkContract） |
 | L1 · psp | **22 LE · 20 PAS · 174 向量行**（132 PE） | `psp.yaml`：XpCase / XpAccount + 20 个案件族（cases 31–50），PE 覆盖各族的 `xp_*` 记录面 |
-| L2 | **189 条** | shared 10 + operations_desk 46 + typed_services 84 + psp 49；全部按“一条一句口径”写（含 case_006/007 提炼的通用口径：精确资本、terms 重读、交付顺序、inquiry 预热、最小本金算法、覆盖恢复、账单时点、连续下限、收口） |
+| L2 | **190 条** | shared 10 + operations_desk 46 + typed_services 84 + psp 49；全部按“一条一句口径”写（含 case_006/007 提炼的通用口径：精确资本、terms 重读、交付顺序、inquiry 预热、最小本金算法、覆盖恢复、账单时点、连续下限、收口） |
 | L3 | **50 节** | operations_desk 30（5 预跑 + 25 新）+ psp 20；每节标题 = 客户开场白逐字，正文 = 类级打法 |
 
 L1 的 typed/PSP 部分按 schema 级生成 + 人工收口：能力取自 `tool_catalog`，字段语义取自 `DB-service-*` / `PX-DATABASE`，动作与规则取自 `DIVERSE-* / PAYMENT-* / LINK-* / PX-* / IFACE-*` 产品文章；零实例值。
@@ -76,7 +76,7 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 
 ## 六、接下来
 
-- **全量模型已装进隔离存储**（`.store/lance/bizagentbench`：entities 687 / consensus 189 / sop 50）。
+- **全量模型已装进隔离存储**（`.store/lance/bizagentbench`：entities 687 / consensus 190 / sop 50）。
 - **待决定**：case_006 第 3 遍（已补最小本金算法，需批准）；case_007 两遍已用尽（第 2 遍退化），是否重试待定。
 - **跑题（后续）**：按 4 题/批、串行跑；桥已支持双系统：cases 1–30 → `operations_desk`，31–50 → `psp`（`run_dlr.py` 按 `--numbers` 自动切换）。
 - 跑题前起桥（28797）：`TSM_SCENARIO=... TSM_STORE_DIR=... TSM_MODEL_DIR=... npx tsx eval/dlr_server.mjs`；`run_dlr_pilot.sh <out> <num>`。
