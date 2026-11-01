@@ -168,5 +168,25 @@
     "kid": 184,
     "knowledge": "Scheduled debits and continuous cash floors apply after every booking. Do not close the case before a scheduled debit has posted and the floor still holds.",
     "system": "operations_desk"
+  },
+  {
+    "kid": 185,
+    "knowledge": "Cargo delivery is bound to the order's recorded agreed depot and delivery_due_minute: deliver to that depot and by that minute, regardless of which depot looks convenient. A delivery after the due minute fails even when the depot and quantity are right, and cargo movements cannot be recalled.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 186,
+    "knowledge": "A collateral release that would leave a loan short of its required coverage is rejected. Restore coverage with free eligible assets first (matching currency, accepted class, custody status and eligibility dates) and retry the release; do not pledge retained security, a currency/class mismatch or a pending-custody asset.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 187,
+    "knowledge": "Repay principal only when coverage cannot be restored with eligible free assets; then choose the smallest set of loans that restores coverage. The first repayment of each loan charges its servicing fee while later repayments of the same loan do not, so prefer fewer loans and respect the customer's fee ceiling.",
+    "system": "operations_desk"
+  },
+  {
+    "kid": 188,
+    "knowledge": "A bill's recorded due minute is a hard deadline: pay it before that minute and sequence earlier bills before later fulfillment work. A case left open at the end fails the terminal goal; record the case outcome exactly once with the achieved terminal state.",
+    "system": "operations_desk"
   }
 ]
