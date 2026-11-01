@@ -36,9 +36,14 @@
 > - 结论：历史 38/39 **不可复现**，是源状态差异 + 跑次方差的离群结果；冻结源上的正式成绩为 33/39 与 25/39。单次跑不足以代表能力（论文也是 3 runs/task）。
 >
 > **006/007 三次有效跑补齐（2026-11-01，freeze `ff3663ec` / v1 store）**：
-> - case_006：第 1 次 **33/39**（27.1M）；第 2 次 **39/39 strict ✅**（39.7M，两次 `ReadError` 重试均未执行银行动作、已恢复，结果完整）；第 3 次进行中。
-> - case_007：第 1 次 **25/39**（3.4M）；第 2 次 **30/39**（14.7M，无重试）；第 3 次 **37/39**（27.9M，一次 `ReadError` 重试已恢复；只差 cargo A、calendar EUR）。**三次有效记录已齐，均值 30.67/39；strict 0/3。**
-> - 三次跑全部使用 v1 store（`.store/lance/bizagentbench`）；源工作区已有 case 8 的 v2 L3 改动，但 006/007 的 L3 节与 L2 未变，v1 store 未重建。
+> - case_006：第 1 次 **33/39**（27.1M，0 重试）；第 2 次 **39/39 strict ✅**（39.7M，两次 `ReadError` 重试均未执行银行动作、已恢复，结果完整）；第 3 次 **36/39**（33.9M，0 重试；G 失败 minimum principal、delivery dates、COURIER timely）。**均值 36.0/39；strict 1/3；P/F 3/3。**
+> - case_007：第 1 次 **25/39**（3.4M，0 重试）；第 2 次 **30/39**（14.7M，0 重试）；第 3 次 **37/39**（27.9M，一次 `ReadError` 重试已恢复；只差 cargo A、calendar EUR）。**均值 30.67/39；strict 0/3；P/F 3/3。**
+> - 三次跑全部使用 v1 store（`.store/lance/bizagentbench`）；源工作区已有 case 8 的 v2 L3 改动，但 006/007 的 L3 节与 L2 未变，v1 store 未重建。逐次 provenance 在 `results/dlr-full/frozen_provenance/`。
+>
+> | 题 | run 1 | run 2 | run 3 | 均值 | strict |
+> |---|---|---|---|---|---|
+> | case_006 | 33/39 | **39/39 ✅** | 36/39 | 36.0 | 1/3 |
+> | case_007 | 25/39 | 30/39 | 37/39 | 30.67 | 0/3 |
 >
 > **008 首跑诊断与类级优化（2026-11-01）**：
 > - 首跑 33/44，F 失败 `activity1:ledger.independent_reconstruction` / `activity1:frame.original_records`。离线按 project 后的世界复算：根因不是“改动了原始记录”，而是 **D34 钱包没有按联合协议注入注册资本**。D34 的 `capital_by_case` = 500,000、初始运营 10,000；其 490,000 来自受 release condition 约束的 TRADE 源（需 PAY48 先有 settled installment），PAY48 的 90,000 中 18,000 来自需 D34 先发生实际 cash debit 的 PROCUREMENT 源。agent 只给 PAY48 general 投了 55,000，D34 仍是 10,000，minute 2/4 的 Q4/Q5 收款实际为 `UNPAID`；验证器按协议资本独立重建时认为它们应 SETTLED 并生成 `SETTLED_Q4/SETTLED_Q5` 新借记，于是 queue 状态与新借记集合都对不上 → ledger + frame 同时失败。
@@ -102,8 +107,8 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 ## 六、接下来
 
 - **全量模型已装进隔离存储**（`.store/lance/bizagentbench`：entities 687 / consensus 190 / sop 50）。
-- **case_006 已挂起**（3 遍一致口径，38/39，只差 `minimum_principal_and_fee`；如实记录，不再重跑）。
-- **case_007 已停**（4 遍一致口径未过；最好 38/39，只差 cargo A；第 3 遍断网作废，第 4 遍受休眠影响）；相关类级改动已回滚。
+- **case_006 三次有效记录已齐**（v1 freeze `ff3663ec`）：33/39、**39/39 strict**、36/39；均值 36.0，strict 1/3，P/F 3/3。等用户确认归档后再进 ledger/DETAIL。
+- **case_007 三次有效记录已齐**（v1 freeze `ff3663ec`）：25/39、30/39、37/39；均值 30.67，strict 0/3，P/F 3/3。等用户确认归档后再进 ledger/DETAIL。
 - **case_008 v2 34/44**（首跑 33/44；G+F 失败）→ 根因收敛为 D34 的 490k 资本批准后未执行，Q5 仍 UNPAID；L3 类级补丁已落（freeze v2 `3cbdfe16`）。第三遍需确认；之后 009/010。
 - **纪律**：类级规则改动必须 A/B；变差即回滚，不叠规则；样本不足不宣称优化有效。
 - **跑题（后续）**：按 4 题/批、串行跑；桥已支持双系统：cases 1–30 → `operations_desk`，31–50 → `psp`（`run_dlr.py` 按 `--numbers` 自动切换）。
