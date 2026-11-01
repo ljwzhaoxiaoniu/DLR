@@ -17,7 +17,8 @@ logical_entities:
   description: 'Corporate-lending contract where dated securities back a loan: eligibility by owner, security class, custody status
     and inclusive dates; haircut lending value; issuer concentration caps; continuing principal cover; custody events publish actual
     values; principal repayment is irreversible and the first repayment charges the loan servicing fee. Contract: Dated security substitution
-    and custody settlement. Actions: repay / pledge / release / pay_bill.'
+    and custody settlement. Actions: repay / pledge / release / pay_bill. Instruction data: repay {record_id, amount_minor}; pledge
+    {record_id, loan_id}; release {record_id}; pay_bill {record_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -428,7 +429,8 @@ logical_entities:
     delivery to registered depots. Each order is separate; signed credits and payment directions follow their scope; an accepted drawing
     is not an actual payment until its confirmation event; guarantee collateral returns when the original set is lodged. Contract: Documentary
     import settlements and delivery titles. Actions: direct_pay / recall_drawing / settle_confirmed / issue_guarantee / lodge_originals
-    / deliver.'
+    / deliver. Instruction data: direct_pay {order_id, beneficiary_id, amount_minor}; recall_drawing {drawing_id}; settle_confirmed
+    {drawing_id}; issue_guarantee {order_id}; lodge_originals {title_id}; deliver {order_id, depot_id, quantity_units}.'
   lifecycle:
     states:
     - OPEN
@@ -1145,7 +1147,8 @@ logical_entities:
   description: 'Direct-debit settlement and reconciliation: physical bank debits link to debtor invoices and periods; posted credits
     reduce them; pending credits have no posted value; mandates gate new collections; customer-requested returns are unconditional within
     the still-returnable settled amount; a returned debit may be re-presented. Contract: Direct-debit settlement, returns and mandate
-    retirement. Actions: return_debit / revoke_mandate / recall_collection / pay_invoice.'
+    retirement. Actions: return_debit / revoke_mandate / recall_collection / pay_invoice. Instruction data: return_debit {record_id,
+    amount_minor}; revoke_mandate {record_id}; recall_collection {record_id}; pay_invoice {record_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -1725,7 +1728,8 @@ logical_entities:
   description: 'Per-lot equipment escrow: each lot is independently funded; final inspection sets accepted prices; warranty retention
     stays in the lot; assigned proceeds are paid in priority order (ELIGIBLE_GROSS_CAPPED, then REMAINDER_PERCENTAGE); buyer refunds
     follow posted deposits and ascending refund_order. Contract: Equipment escrow acceptance and assigned proceeds. Actions: distribute
-    / refund_buyer / return_distribution.'
+    / refund_buyer / return_distribution. Instruction data: distribute {lot_id, recipient_id, amount_minor}; refund_buyer {lot_id, recipient_id,
+    amount_minor}; return_distribution {lot_id, recipient_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -2190,7 +2194,9 @@ logical_entities:
   description: 'Treasury forward-currency contracts with separately held margin, lot-sized exercises and nominations, cumulative proportional
     margin release, spot exchange and supplier remittances. Confirmed-but-unpaid deliveries can be retried; closing an uncommitted remainder
     releases its margin and charges the recorded closeout fee. Contract: Forward currency delivery and margin settlement. Actions: exercise
-    / nominate / settle_confirmed / close_remainder / spot / pay_invoice.'
+    / nominate / settle_confirmed / close_remainder / spot / pay_invoice. Instruction data: exercise {record_id, amount_minor}; nominate
+    {record_id, amount_minor}; settle_confirmed {record_id}; close_remainder {record_id}; spot {currency, side, amount_minor}; pay_invoice
+    {record_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -2673,7 +2679,8 @@ logical_entities:
   description: 'Cargo release under ACTIVE title documents: endorsement names the destination; a joint title can be endorsed whole or
     split into its exact child titles; pickup windows open by scheduled events; dispatch consumes the lot''s full handling units and
     is irreversible; storage charges depend on the dispatch minute relative to free_through and the window rates. Contract: Current
-    title documents, pickup windows and storage charges. Actions: activate_split / endorse_title / dispatch.'
+    title documents, pickup windows and storage charges. Actions: activate_split / endorse_title / dispatch. Instruction data: activate_split
+    {title_id}; endorse_title {title_id, destination_id}; dispatch {lot_id, window_id, destination_id}.'
   lifecycle:
     states:
     - OPEN
@@ -3135,7 +3142,9 @@ logical_entities:
   description: 'Guarantee renewal and temporary cover: a renewal submission pays the offer fee immediately but is not cover; replacement
     cover activates at the offer''s activation minute only when the full required cash margin is already lodged; a missed activation
     is reconsidered later without backdating; bridge cover and supplier bills are separate obligations. Contract: Guarantee renewal,
-    temporary cover and cash margin. Actions: submit_renewal / add_margin / withdraw_margin / buy_bridge / pay_supplier.'
+    temporary cover and cash margin. Actions: submit_renewal / add_margin / withdraw_margin / buy_bridge / pay_supplier. Instruction
+    data: submit_renewal {offer_id}; add_margin/withdraw_margin {guarantee_id, amount_minor}; buy_bridge {offer_id}; pay_supplier {bill_id,
+    amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -3586,7 +3595,9 @@ logical_entities:
   description: 'Insurance positions under OCCURRENCE and CLAIMS_MADE policies: match insured entity and asset class; policy period,
     notification deadline, retroactive day and deductibles decide coverage; layers, salvage, external recovery and replacement invoices
     are separate facts; aggregate reinstatement limits apply. Contract: Loss adjustments, insurance layers and aggregate reinstatement.
-    Actions: sell_salvage / claim / return_indemnity / pay_replacement / record_recovery.'
+    Actions: sell_salvage / claim / return_indemnity / pay_replacement / record_recovery. Instruction data: sell_salvage {record_id};
+    claim {record_id, amount_minor}; return_indemnity {record_id, amount_minor}; pay_replacement {record_id, amount_minor}; record_recovery
+    {record_id, external_recovery_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -4033,7 +4044,9 @@ logical_entities:
   description: 'Intercompany clearing: prepare an immutable-amount clearing draft from current invoice balances, refresh while still
     prepared, collect responses from registered staff signing services, and execute the internal or external instruction once. Each
     company keeps its own bank account and cash; the case cash figure is only an aggregate. Contract: Intercompany clearing cycles,
-    credit adjustments and treasury signatures. Actions: prepare_cycle / prepare_external / refresh_cycle / collect_signature / execute.'
+    credit adjustments and treasury signatures. Actions: prepare_cycle / prepare_external / refresh_cycle / collect_signature / execute.
+    Instruction data: prepare_cycle {invoice_ids}; prepare_external {obligation_id, payer_account_id, recipient_id, amount_minor}; refresh_cycle
+    {cycle_id}; collect_signature {cycle_id, login_id}; execute {cycle_id}.'
   lifecycle:
     states:
     - OPEN
@@ -4836,7 +4849,8 @@ logical_entities:
   description: 'Merchant-concession and scheme-remedy dispute: a final concession memo states the buyer''s recoverable amount but not
     the remaining payment; settled scheme credits, posted merchant refunds and new actual refunds all satisfy the same purchase concession;
     submissions, expected credits and pending refunds are not settled recovery; distinct purchases stay distinct. Contract: Merchant
-    concessions, scheme remedies and accepted dispute responses. Actions: refund / respond.'
+    concessions, scheme remedies and accepted dispute responses. Actions: refund / respond. Instruction data: refund {purchase_id, amount_minor};
+    respond {purchase_id, evidence_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -5301,7 +5315,7 @@ logical_entities:
   description: 'Term-deposit relationship tiers and dated operating payments: an active deposit pays principal plus applicable interest
     at its maturity processing; full early redemption pays principal minus the break charge immediately and forfeits all interest; partial
     redemption, reinstatement and borrowing are unavailable. Contract: Term-deposit relationship tiers and dated operating payments.
-    Actions: redeem_early / pay_obligation.'
+    Actions: redeem_early / pay_obligation. Instruction data: redeem_early {deposit_id}; pay_obligation {obligation_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -5704,7 +5718,8 @@ logical_entities:
   description: 'Export-bill collection: a buyer acceptance notice is not cash; each physical bill has its own face, prior receipts,
     acceptance result and title; the acceptance event records the actual accepted amount; a bill may be discounted once after actual
     acceptance; original documents deliver to the buyer or return to the exporter. Contract: Collection acceptance, bill finance and
-    original delivery. Actions: discount / pay / deliver / return_documents.'
+    original delivery. Actions: discount / pay / deliver / return_documents. Instruction data: discount {bill_id, amount_minor}; pay
+    {payable_id, amount_minor}; deliver {bill_id, quantity_units}; return_documents {bill_id, quantity_units}.'
   lifecycle:
     states:
     - OPEN
@@ -6128,7 +6143,9 @@ logical_entities:
   description: 'Value-date evidence and closed-statement interest: a posted bank item keeps its principal, booking day and original
     value day; an economic-date amendment is a separate record; signed historical statements are not current available cash; interest
     adjustments post to the statement account and accountant obligations are paid to verified external recipients. Contract: Value-date
-    evidence and closed-statement interest adjustments. Actions: record_value_date / post_adjustment / pay_accountant.'
+    evidence and closed-statement interest adjustments. Actions: record_value_date / post_adjustment / pay_accountant. Instruction data:
+    record_value_date {item_id, bank_message_id, value_day}; post_adjustment {statement_id, period_id, amount_minor}; pay_accountant
+    {obligation_id, payer_account_id, recipient_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -6959,7 +6976,8 @@ logical_entities:
     and required attributes; a partner file has its own business period and acceptance day; issued certificates are ordered for a fee,
     reliance can be reopened with a version advance, evidence is submitted, and continuing authority is rebound to listed current versions.
     Contract: Certificate withdrawal, signature validity and dependent approvals. Actions: order_certificate / reopen_reliance / submit_evidence
-    / rebind_authority.'
+    / rebind_authority. Instruction data: order_certificate {record_id}; reopen_reliance {record_id}; submit_evidence {record_id, certificate_id};
+    rebind_authority {record_id, versions}.'
   lifecycle:
     states:
     - OPEN
@@ -7426,7 +7444,8 @@ logical_entities:
   description: 'Corporate-card presentments and merchant credits: each presentment is a physical card posting identified by card, entity,
     cardholder, merchant case, settlement trace, amount and service day; a declined authorization does not prove a later presentment
     was unauthorized; each dispute charges one fixed fee on the physical presentment; company cash accounts pay the card. Contract:
-    Corporate-card presentments, merchant credits and disputes. Actions: file_dispute / pay_card.'
+    Corporate-card presentments, merchant credits and disputes. Actions: file_dispute / pay_card. Instruction data: file_dispute {presentment_id,
+    amount_minor}; pay_card {card_account_id, cash_account_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -8062,7 +8081,8 @@ logical_entities:
   description: 'Travel-expense funding and advance reconciliation: only final receipt items for registered business activity qualify;
     lodging, meals and taxis qualify and private activity is excluded; a void receipt or unsettled authorization is not a reimbursable
     expense; expense caps group by beneficiary natural person, expense day and category; staff settlement nets eligible personal-funded
-    shares against outstanding advances. Contract: Travel expense funding and advance reconciliation. Actions: reimburse / recover_advance.'
+    shares against outstanding advances. Contract: Travel expense funding and advance reconciliation. Actions: reimburse / recover_advance.
+    Instruction data: reimburse {employee_id, amount_minor, bank_version}; recover_advance {employee_id, amount_minor, bank_version}.'
   lifecycle:
     states:
     - OPEN
@@ -8583,7 +8603,8 @@ logical_entities:
   description: 'Corporate payment controls and signed instruments: an invoice instruction carries the authority and attached genuine
     signature copies; a bank execution receipt certifies the actual debit and receiving details but does not certify that the company''s
     additional control mandate was satisfied; the attached set can be replaced before payment. Contract: Corporate payment controls
-    and signed instruments. Actions: attach_signatures / pay_invoice.'
+    and signed instruments. Actions: attach_signatures / pay_invoice. Instruction data: attach_signatures {record_id, signature_ids};
+    pay_invoice {record_id, amount_minor, bank_version}.'
   lifecycle:
     states:
     - OPEN
@@ -9019,7 +9040,7 @@ logical_entities:
   description: 'Corporate payment quotes with scheduled revisions: a revision replaces the current fee and beneficiary version and increments
     the quote version without creating a payment; payment requires two signed authorities from two distinct natural persons plus the
     owner''s approval; the whole gross amount consumes each signer''s cumulative limit. Contract: Corporate payment quote revisions
-    and cumulative signing tolerances. Actions: pay.'
+    and cumulative signing tolerances. Actions: pay. Instruction data: pay {invoice_id, quote_version, authority_ids (exactly two)}.'
   lifecycle:
     states:
     - OPEN
@@ -9349,7 +9370,8 @@ logical_entities:
   description: 'Protected net delivery: a protected route states the desired beneficiary net, a standard route states the gross sent;
     the actual result reports the beneficiary credit and any partial return, where the return is gross minus actual credit minus the
     return charge; only the net return becomes new customer cash; an invoice keeps historical receipts and can be completed by a top-up.
-    Contract: Protected net delivery, intermediary deductions and traced returns. Actions: send / topup.'
+    Contract: Protected net delivery, intermediary deductions and traced returns. Actions: send / topup. Instruction data: send {invoice_id,
+    beneficiary_id, route, amount_minor}; topup {invoice_id, beneficiary_id, net_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -9817,7 +9839,8 @@ logical_entities:
   description: 'Consolidated subscription billing: each billing period elects its own plan; the fixed subscription fee is charged once
     for the billing group and variable fees use that period''s plan rates; usage aggregates over the arrangement''s operating accounts;
     a partner campaign voucher is reserved to one open period; closing an account updates unused offer eligibility. Contract: Consolidated
-    subscription billing and partner credits. Actions: select_plan / reserve_voucher / close_account.'
+    subscription billing and partner credits. Actions: select_plan / reserve_voucher / close_account. Instruction data: select_plan
+    {record_id, plan_id}; reserve_voucher {record_id, code}; close_account {record_id}.'
   lifecycle:
     states:
     - OPEN
@@ -10326,7 +10349,8 @@ logical_entities:
     and cursors; event identity is store plus stream plus native event plus revision; imported events post idempotently against canonical
     keys; a failed sync may leave committed postings and an older cursor; receivables can be financed and unwound, and USD withdrawn
     to a verified CNY recipient. Contract: Merchant sales synchronization and receivable finance. Actions: grant_stream / import_window
-    / finance / unwind / withdraw / pay_supplier.'
+    / finance / unwind / withdraw / pay_supplier. Instruction data: grant_stream {record_id}; import_window {record_id, after_cursor,
+    through_cursor}; finance {record_id}; unwind {record_id}; withdraw {record_id, amount_minor}; pay_supplier {record_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -10950,7 +10974,8 @@ logical_entities:
   description: 'Payroll with attachment priorities: disposable earnings equal gross wages less payroll tax; the employee retains the
     protected disposable amount, so total attachment cannot exceed the positive difference; business-expense repayments are additional
     and never enter the attachment base; court notices and attachment orders are dated obligations with creditor priorities. Contract:
-    Payroll attachment priorities and prospective court decisions. Actions: pay_employee / pay_tax / pay_attachment.'
+    Payroll attachment priorities and prospective court decisions. Actions: pay_employee / pay_tax / pay_attachment. Instruction data:
+    pay_employee {record_id, amount_minor, bank_version}; pay_tax {record_id, amount_minor}; pay_attachment {record_id, order_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -11425,7 +11450,8 @@ logical_entities:
   description: 'Refunds in the original charge currency: a cancelled purchase is owed its original charge amount in its original charge
     currency regardless of display or settlement currency; a physical refund''s actual credited amount satisfies the linked purchase;
     statements and advices are not additional payments; an in-flight payment is not final; exchange quotes fund refunds. Contract: Original-currency
-    refunds and returned payment funding. Actions: refund / exchange.'
+    refunds and returned payment funding. Actions: refund / exchange. Instruction data: refund {purchase_id, account_id, currency, amount_minor};
+    exchange {quote_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -11927,7 +11953,9 @@ logical_entities:
   description: 'Card partial shipment: an authorization reserves card capacity but is not a paid shipment; the original authorization
     is a grandfathered issuer commitment capturable until expiry; new approvals are capped; captures allocate to order lines and only
     confirmed dispatched goods may be charged; released or cleared amounts cannot be captured twice; captures clear at the next card
-    clearing event. Contract: Partial shipment card authorizations. Actions: capture / release / pay_bill.'
+    clearing event. Contract: Partial shipment card authorizations. Actions: capture / release / pay_bill. Instruction data: capture
+    {authorization_id, line_id, amount_minor}; release {authorization_id, amount_minor}; new_authorization {amount_minor}; cash_payment
+    {line_id, amount_minor}; pay_bill {bill_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -12306,7 +12334,8 @@ logical_entities:
   biz_name: CrossCalendarDelivery
   description: 'Cross-calendar currency delivery: reserve route capacity and send currency so the beneficiary receives value on the
     required calendar day; route terms, cutoffs and settlement calendars determine when the credit is actually available. Contract:
-    Cross-calendar currency delivery. Actions: reserve_route / send_currency.'
+    Cross-calendar currency delivery. Actions: reserve_route / send_currency. Instruction data: reserve_route {invoice_id, route_id};
+    send_currency {invoice_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -12637,7 +12666,9 @@ logical_entities:
   biz_name: InstallmentReturn
   description: 'Installment plan servicing: pay plan bills, apply returns and refunds, cancel future installments, and close the plan
     only when every installment and return is settled; the plan terms fix the principal, schedule and earned periods. Contract: Installment
-    purchase returns and earned period fees. Actions: apply_return / cancel_future / close_plan / pay_bill / refund.'
+    purchase returns and earned period fees. Actions: apply_return / cancel_future / close_plan / pay_bill / refund. Instruction data:
+    apply_return {remaining_principal_minor, earned_fee_minor}; refund {amount_minor}; pay_balance {amount_minor}; cancel_future {};
+    close_plan {}; pay_bill {bill_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -13015,7 +13046,8 @@ logical_entities:
   biz_name: MarketplaceSplitRefund
   description: 'Marketplace split refunds: allocate a buyer refund between the buyer and the seller according to the recorded seller
     allocation, pay sellers their settled share and reverse a seller credit when the refund reallocates it; the marketplace terms decide
-    what the buyer receives. Contract: Marketplace transfer reversals and buyer returns. Actions: pay_seller / refund_buyer / reverse_seller.'
+    what the buyer receives. Contract: Marketplace transfer reversals and buyer returns. Actions: pay_seller / refund_buyer / reverse_seller.
+    Instruction data: reverse_seller {seller_id, amount_minor}; pay_seller {seller_id, amount_minor}; refund_buyer {amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -13295,7 +13327,9 @@ logical_entities:
   biz_name: GroupPurchaseCommitment
   description: 'Group-purchase commitment: participant contributions form the group; the merchant is paid when the commitment is met;
     if the group fails, participants are refunded according to the group terms. A contribution and a merchant payment are separate money
-    movements. Contract: Group-purchase commitment and contributor restitution. Actions: commit_group / pay_merchant / refund_participant.'
+    movements. Contract: Group-purchase commitment and contributor restitution. Actions: commit_group / pay_merchant / refund_participant.
+    Instruction data: commit_group {group_id, offer (GROUP or RETAIL)}; pay_merchant {group_id, amount_minor}; refund_participant {participant_id,
+    amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -13627,7 +13661,8 @@ logical_entities:
   biz_name: AuthenticationBinding
   description: 'Checkout authentication binding: prepare the verification, bind the authentication result to the checkout order under
     the authentication terms, and pay only after the required verification is bound. An authentication record does not itself move money.
-    Contract: Issuer verification and amended checkouts. Actions: prepare_verification / pay_checkout.'
+    Contract: Issuer verification and amended checkouts. Actions: prepare_verification / pay_checkout. Instruction data: prepare_verification
+    {order_id, maximum_minor}; cancel_verification {authentication_id}; pay_checkout {order_id, authentication_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -13984,7 +14019,8 @@ logical_entities:
   biz_name: StoredValueRestitution
   description: 'Stored-value restitution: restore tender value into wallet lots, pay orders from the wallet and return top-ups under
     the wallet terms. Wallet lots distinguish original tender, restored value and amounts already spent. Contract: Mixed tender cancellations
-    and stored-value restitution. Actions: pay_order / restore_tender / return_topup.'
+    and stored-value restitution. Actions: pay_order / restore_tender / return_topup. Instruction data: restore_tender {lot_id, amount_minor};
+    cash_refund_cancelled {amount_minor}; return_topup {amount_minor}; pay_order {allocations: {lot_id: positive amount_minor}}.'
   lifecycle:
     states:
     - OPEN
@@ -14317,7 +14353,8 @@ logical_entities:
   biz_name: ChequeStopAndReplacement
   description: 'Electronic cheque servicing: request a stop on a cheque, pay the underlying bill, and issue a replacement payment under
     the cheque terms. A stop request and a replacement are separate instructions; an already cleared cheque cannot be stopped. Contract:
-    Electronic cheques, endorsement and replacement payments. Actions: request_stop / pay_bill / replacement_payment.'
+    Electronic cheques, endorsement and replacement payments. Actions: request_stop / pay_bill / replacement_payment. Instruction data:
+    request_stop {cheque_id}; replacement_payment {invoice_id, payee, amount_minor}; pay_bill {bill_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -14696,7 +14733,8 @@ logical_entities:
   biz_name: SubscriptionProration
   description: 'Subscription proration: amend an invoice for the actual service period, refund an overpayment and handle renewals and
     collections under the subscription terms. A renewal is a new period, not a correction of the old invoice. Contract: Mid-period service
-    changes and delayed collections. Actions: amend_invoice / refund.'
+    changes and delayed collections. Actions: amend_invoice / refund. Instruction data: amend_invoice {amount_minor}; refund {amount_minor};
+    pay_balance {amount_minor}; recall_collection {}; set_renewal {active: boolean}.'
   lifecycle:
     states:
     - OPEN
@@ -15055,7 +15093,8 @@ logical_entities:
   biz_name: AcquirerBatchClose
   description: 'Acquirer batch close: post the batch of card receipts, pay the merchant the net settlement after acquirer fees, and
     reconcile merchant invoices against the acquirer receipt. The batch total and the merchant net are different amounts. Contract:
-    Acquirer batch cash and merchant proceeds. Actions: post_batch / pay_merchant.'
+    Acquirer batch cash and merchant proceeds. Actions: post_batch / pay_merchant. Instruction data: post_batch {batch_id, bank_id,
+    gross_minor, refund_minor, fee_minor, carry_minor, reserve_delta_minor}; pay_merchant {invoice_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -15386,7 +15425,10 @@ logical_entities:
   biz_name: JointAgreement
   description: Customer-owned capital arrangement that allocates registered settlement capital to service wallets. The agreement records
     capital by case and account, continuous cash floors, delivery mode, fee cadence, fee ceiling, terms version and any assessment event.
-    Capital delivery is not a supplier payment or refund; delivered money cannot be recalled or swept to another service.
+    capital_by_case is the contractual total for each service and initial_operating_by_case is already in that service wallet; at reconciliation,
+    deliver each service's remaining registered capital exactly (not merely the current payment shortfall), while respecting permitted_case_ids,
+    source release conditions, the route fee ceiling and the uncommitted cash floor. Capital delivery is not a supplier payment or refund;
+    delivered money cannot be recalled or swept to another service.
   capabilities:
   - name: propose_joint_capital_delivery
     kind: write

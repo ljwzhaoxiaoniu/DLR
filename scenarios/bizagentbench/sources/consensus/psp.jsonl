@@ -233,5 +233,15 @@
     "kid": 176,
     "knowledge": "The sweep target alone does not prove a loop; observation must show the repeated cycle. The payroll batch uses the same wallet after the merchant capture runs and may be funded by the automation or a manual transfer.",
     "system": "psp"
+  },
+  {
+    "kid": 177,
+    "knowledge": "Unknown-funds custody: the original-remittance owner investigation and the two-party escrow direction are independent preparatory actions; neither allocates quarantined principal. The direction must be the genuine document matching the incoming and dispute; a relabeled unrelated file or a mismatched direction is rejected with MATCHING_ESCROW_DIRECTION_REQUIRED.",
+    "system": "psp"
+  },
+  {
+    "kid": 178,
+    "knowledge": "Partitioning quarantined principal requires the completed owner decision, the completed direction review and active trustee custody; the return, escrow and claim amounts are nonnegative and must sum to principal, and once a partition or whole disposition executes no second disposition is possible. Review and activation fees come from operating cash, never quarantined principal.",
+    "system": "psp"
   }
 ]
