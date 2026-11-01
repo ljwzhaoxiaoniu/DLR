@@ -130,7 +130,7 @@ const send = (res, code, value) => {
 const server = http.createServer(async (req, res) => {
   try {
     if (req.method === "GET" && req.url === "/health") {
-      return send(res, 200, { ok: true, scenario: SCENARIO, store: STORE_DIR });
+      return send(res, 200, { ok: true, scenario: SCENARIO, store: STORE_DIR, model: MODEL_DIR });
     }
     if (req.method !== "POST") return send(res, 404, { ok: false, error: "not found" });
     const payload = await body(req);

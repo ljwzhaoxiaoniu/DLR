@@ -28,7 +28,9 @@
 L1 的 typed/PSP 部分按 schema 级生成 + 人工收口：能力取自 `tool_catalog`，字段语义取自 `DB-service-*` / `PX-DATABASE`，动作与规则取自 `DIVERSE-* / PAYMENT-* / LINK-* / PX-* / IFACE-*` 产品文章；零实例值。
 LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整字段随 PE 返回。
 
-检索说明：L3 按题面**精确命中**是每题的入口（50/50 标题逐字对齐）；L1 按对象名命中良好，自然语言多意图问句仍受固定嵌入模型（bge-small-zh-v1.5）限制，跑题时按“缺口/规划/模拟器”归因再补。
+检索说明：L3 按题面**精确命中**是每题的入口（50/50 标题逐字对齐）。
+
+**Embedding 模型（2026-11-01 变更）**：biz 场景改用 **BAAI/bge-base-en-v1.5**（768 维，英文专用；HF 缓存快照，`onnx/model.onnx` 436MB），同一套 CLS + L2 + `toLowerCase` 管线，代码零改；正式存储已按新模型重建。实测目标对象直接排第 1（DatedPayroll / DatedCollateral / GatewayOrder / TaxAgentHandover / PricedPaymentRoute），L2 分数同步提升。旧 zh 全量存储备份在 `.store/lance/bizagentbench.zh-bak`。**模型与存储必须同源**——起桥用下方 `eval/start_bridge.sh`，它会自动解析 HF 缓存里的英文模型。
 
 ## 三、建模流程（全量模型建成后，此循环只用于补缺口）
 
@@ -57,7 +59,7 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 
 1. **前几题搜索空间偏小（已解决）**：全量模型已建成（84 + 22 LE），001–005 统一重跑即可对齐。
 2. **PSP 命名空间（31–50）已建模**：`psp.yaml` + `psp.jsonl` + 20 节 L3。
-3. **L1 自然语言召回偏弱**：固定嵌入模型（bge-small-zh-v1.5）对英文多意图问句区分度有限；L3 精确命中是主入口，L1 按对象名命中良好。跑题后按缺口补描述关键词，不换模型。
+3. **L1 多意图问句召回仍偏弱（已缓解）**：换 bge-base-en-v1.5 后单对象问句/对象名召回已准确；整段多意图开场白仍难一次覆盖全部对象（如 case_006），以 L3 精确命中为主入口，再按 L3 点名对象查 L1。
 4. **README 三层表仍是打包时数字**（23 LE / 16 PAS / 20 条 / 2 节）→ 待按全量数字更新（双语 + i18n 登记）。
 5. **模拟器口径漂移**：001/005 都出现“把设施费算进客户上限”的过度限制；靠 L3 表述可修正，但仍是评估噪声；必要时用冻结客户脚本做对照。
 6. **case_002 token 偏大**（23.7M）：多站点 × 9 + 退出 + 多次等待；属结构成本，暂不动评测口径。
@@ -70,7 +72,7 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 - **跑题（下一阶段）**：按 4 题/批、串行跑；首批建议 `case_006–009`（desk 侧），跑完停下报数，再决定下一批。桥已支持双系统：cases 1–30 → `operations_desk`，31–50 → `psp`（`run_dlr.py` 按 `--numbers` 自动切换）。
 - 跑题前起桥（28797）：`TSM_SCENARIO=... TSM_STORE_DIR=... TSM_MODEL_DIR=... npx tsx eval/dlr_server.mjs`；`run_dlr_pilot.sh <out> <num>`。
 - **最终阶段**：冻结全量模型（记录版本）→ 统一重跑所有已跑题（含 001–005）→ 出正式成绩；之前结果只作预跑。
-- 环境：`TSM_SCENARIO=scenarios/bizagentbench`、`TSM_STORE_DIR=.store/lance/bizagentbench`、`TSM_MODEL_DIR=tmp_scripts/bge-onnx`；桥 `eval/dlr_server.mjs`（28797）；跑题 `eval/run_dlr_pilot.sh <out> <num>`。
+- 环境：`bash eval/start_bridge.sh` 起桥（28797，自动解析场景/store/HF 缓存里的 bge-base-en-v1.5，`/health` 回 model 路径）；跑题 `eval/run_dlr_pilot.sh <out> <num>`。手动起桥时务必 `TSM_MODEL_DIR` 指向英文模型快照。
 - 提交节奏：小步 commit；日常推 atomgit；GitHub 等通知走 `tmp_scripts/ghpush/sync.sh`。
 
 ## 七、本阶段提交
