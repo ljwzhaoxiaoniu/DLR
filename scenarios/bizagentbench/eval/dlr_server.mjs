@@ -2,6 +2,8 @@
 //   POST /l1 {question, system, top_k}   → stateModelQuery
 //   POST /l2 {namespace, question, top_k} → searchConsensus
 //   POST /l3 {question, top_k, system}   → searchSop
+//   GET  /status                          → same snapshot as TSM Core Service (dsh status overlay)
+//   GET  /viz/dlr                         → self-contained graph page (overlay's "图谱 ↗" link)
 //
 // Run (repo layout):  TSM_SCENARIO=<scenario> TSM_STORE_DIR=<store> TSM_MODEL_DIR=<model> \
 //                     npx tsx scenarios/bizagentbench/eval/dlr_server.mjs
@@ -34,6 +36,9 @@ const { stateModelQuery } = await load("queries/stateModelQuery.ts");
 const { searchConsensus } = await load("queries/searchConsensus.ts");
 const { searchSop } = await load("queries/searchSop.ts");
 const { STORE_DIR, MODEL_DIR, SCENARIO } = await load("config.ts");
+const { buildStatus } = await load("mcp/status.ts");
+const { InMemoryGraph } = await load("graph/memory.ts");
+const { renderVizHtml } = await load("viz/buildViz.ts");
 
 /** Public record collections of the Operations Desk portal (from DB-index). Only these names are
  *  accepted by search_records; the agent must not guess resource names. */
@@ -107,6 +112,20 @@ const store = await LanceStore.open(STORE_DIR, MODEL_DIR);
 console.log(`[biz-dlr] scenario=${SCENARIO}`);
 console.log(`[biz-dlr] store=${STORE_DIR} port=${PORT}`);
 
+/** CORS for the dsh web status overlay (same policy as TSM Core Service). */
+const STATUS_ORIGINS = new Set(
+  (process.env.TSM_STATUS_ORIGINS ?? "http://127.0.0.1:3080,http://localhost:3080").split(","),
+);
+
+/** Lazy, shared in-memory graph — builds from the scenario YAML on the first /status call.
+ *  Reset on failure so a later poll can retry (mirrors the TSM server's lazy handles). */
+let graphPromise;
+const getGraph = () =>
+  (graphPromise ??= InMemoryGraph.load().catch((e) => {
+    graphPromise = undefined;
+    throw e;
+  }));
+
 function body(req) {
   return new Promise((resolve, reject) => {
     let raw = "";
@@ -129,6 +148,30 @@ const send = (res, code, value) => {
 
 const server = http.createServer(async (req, res) => {
   try {
+    // ── /status：dsh 状态浮层的健康 + 资产快照（与 TSM Core Service 同形状）──
+    if (req.method === "GET" && (req.url === "/status" || req.url?.startsWith("/status?"))) {
+      const status = await buildStatus({
+        getStore: async () => store,
+        getGraph,
+        httpBase: `http://127.0.0.1:${PORT}`,
+      });
+      const origin = req.headers.origin;
+      const headers = {
+        "content-type": "application/json; charset=utf-8",
+        "cache-control": "no-store",
+      };
+      if (origin && STATUS_ORIGINS.has(origin)) headers["access-control-allow-origin"] = origin;
+      res.writeHead(200, headers).end(JSON.stringify(status));
+      return;
+    }
+    // ── /viz/dlr：自包含图谱页（浮层的「图谱 ↗」入口；与 TSM Core Service 同模板）──
+    if (req.method === "GET" && req.url?.startsWith("/viz/dlr")) {
+      const db = new URL(req.url, "http://localhost").searchParams.get("db") ?? undefined;
+      res
+        .writeHead(200, { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" })
+        .end(renderVizHtml(db));
+      return;
+    }
     if (req.method === "GET" && req.url === "/health") {
       return send(res, 200, { ok: true, scenario: SCENARIO, store: STORE_DIR, model: MODEL_DIR });
     }

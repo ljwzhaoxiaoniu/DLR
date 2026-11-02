@@ -9,9 +9,11 @@ window.__ModuleLoader__.load({
 
     const React = require("react");
 
-    /** 数据源：TSM Core Service 各实例的 /status（同机 HTTP；该路由带 CORS 头）。
+    /** 数据源：各场景语义后端的 /status（同机 HTTP；该路由带 CORS 头）。
      *  每轮**并发探全部候选**——每个活着的前端渲染一块（各带自己的「图谱 ↗」入口）；
-     *  场景 → 实例 → 端口的对应由启动器决定（birdminidev :28795 / cloudopsbench :28796）。
+     *  场景 → 实例 → 端口的对应由启动器决定：
+     *    birdminidev :28795 / cloudopsbench :28796 /
+     *    bizagentbench :28797（v1 store，006/007）· :28798（v2 store，008 起）
      *  宿主可注入 `globalThis.__TSM_STATUS_URLS__ = ["http://host:port/status", ...]` 覆盖默认值。 */
     const STATUS_CANDIDATES =
       globalThis.__TSM_STATUS_URLS__ && globalThis.__TSM_STATUS_URLS__.length
@@ -19,6 +21,8 @@ window.__ModuleLoader__.load({
         : [
             "http://127.0.0.1:28795/status",
             "http://127.0.0.1:28796/status",
+            "http://127.0.0.1:28797/status",
+            "http://127.0.0.1:28798/status",
           ];
     /** 轮询间隔（毫秒）。 */
     const REFRESH_MS = 10000;
