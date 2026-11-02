@@ -1206,6 +1206,45 @@
       ],
       "invalid_attempts": [],
       "note": "026 best 30/31 on v19/v20, only seller.B (payout due 0 paid after a wait); marketplace due-0 L3 added in v20 but the agent still prioritised other bank events. All other checks pass; stopped as the remaining gap is a repeated timing habit, not a missing rule."
+    },
+    "case_027": {
+      "strict": false,
+      "goal": false,
+      "process": true,
+      "protection": true,
+      "best_checks": "27/34",
+      "best_artifact": "results/dlr-full/case_027_v20b/case_027__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v20b",
+          "checks": "27/34",
+          "strict": false,
+          "artifact": "results/dlr-full/case_027_v20b/case_027__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:COURIER.actual_exact_timely",
+              "activity1:capture.unused_hold_released",
+              "activity2:payroll.exact_distribution.L1",
+              "activity2:payroll.exact_distribution.N1",
+              "activity2:payroll.exact_distribution.L2",
+              "activity2:payroll.exact_distribution.N2"
+            ],
+            "P": [
+              "link.deadline_priority_slot"
+            ],
+            "F": []
+          }
+        }
+      ],
+      "invalid_attempts": [
+        {
+          "label": "v20",
+          "checks": "20/34",
+          "reason": "too_many_errors (14 failures incl. capture/payroll/link); excluded first pre-run",
+          "artifact": "results/dlr-full/case_027_v20/case_027__trial0/result.json"
+        }
+      ],
+      "note": "027 first valid baseline 27/34 (v20b). Remaining: courier exact/timely, unused authorization release, four payroll exact distributions (L1/N1/L2/N2), and the P deadline-priority link. No optimization applied yet; needs a targeted L3 cycle next session."
     }
   },
   "local_patches": [
