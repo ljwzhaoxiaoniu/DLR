@@ -66,6 +66,7 @@
 - **case_006**：run 1 G 失败 joint exact capital、minimum principal、delivery dates、terminal；run 2 **strict 全过**（两次 `ReadError` 重试均未执行银行动作、已恢复）；run 3 只差 minimum principal、delivery dates、COURIER timely。三次 100,707,917 tokens / 1,150 tool calls。
 - **case_007**：run 1 25/39（joint capital、payments A/B/C、cargo A/B/C、calendar EUR/GBP、terminal）；run 2 30/39；run 3 **37/39**（只差 cargo A、calendar EUR；一次 `ReadError` 重试已恢复）。三次 46,012,281 tokens / 679 tool calls。
 - 三次均使用 v1 store；源工作区已有 case 8 的 v2 L3，但 006/007 的 L3 节与 L2 未变，v1 store 未重建。逐次 provenance 在 `results/dlr-full/frozen_provenance/`。
+- **007 方差说明**：三次同一 freeze / 同一 store / 同一模型；差异来自决策路径而非信息差异。run 1 在 minute 0 因客户 USD 25 费用上限与最低路线费用 USD 40 冲突，直接 `ESCALATED`（后续 G 全部失败）；run 2 等到 minute 3，EUR/GBP 报价窗口已关闭，执行报 `EXECUTABLE_QUOTE_UNAVAILABLE`，以 `PENDING_EXTERNAL_ACTION` 收口；run 3 选择 EUR ordinary（晚 1 天到账）守住 USD 25 费用上限，minute 2 `COMPLETED`，只差 cargo A 与 calendar EUR。这是长程 agent 在硬约束权衡下的规划方差；**25/30/37、均值 30.67** 是三次汇总口径，不能只取某一次。
 
 ## 五、case_008 总结（未完成，不入正式成绩）
 

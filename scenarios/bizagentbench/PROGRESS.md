@@ -38,6 +38,7 @@
 > **006/007 三次有效跑补齐（2026-11-01，freeze `ff3663ec` / v1 store）**：
 > - case_006：第 1 次 **33/39**（27.1M，0 重试）；第 2 次 **39/39 strict ✅**（39.7M，两次 `ReadError` 重试均未执行银行动作、已恢复，结果完整）；第 3 次 **36/39**（33.9M，0 重试；G 失败 minimum principal、delivery dates、COURIER timely）。**均值 36.0/39；strict 1/3；P/F 3/3。**
 > - case_007：第 1 次 **25/39**（3.4M，0 重试）；第 2 次 **30/39**（14.7M，0 重试）；第 3 次 **37/39**（27.9M，一次 `ReadError` 重试已恢复；只差 cargo A、calendar EUR）。**均值 30.67/39；strict 0/3；P/F 3/3。**
+> - **007 方差原因**：同一 freeze/store/model；run1 minute 0 因 USD 25 费用上限与最低路线费用 USD 40 冲突直接 `ESCALATED`；run2 等到 minute 3，报价窗口关闭（`EXECUTABLE_QUOTE_UNAVAILABLE`），以 `PENDING_EXTERNAL_ACTION` 收口；run3 选 EUR ordinary（晚 1 天）守住费用上限，minute 2 `COMPLETED`。是规划/权衡方差，不是信息差异。
 > - 三次跑全部使用 v1 store（`.store/lance/bizagentbench`）；源工作区已有 case 8 的 v2 L3 改动，但 006/007 的 L3 节与 L2 未变，v1 store 未重建。逐次 provenance 在 `results/dlr-full/frozen_provenance/`。
 >
 > | 题 | run 1 | run 2 | run 3 | 均值 | strict |
