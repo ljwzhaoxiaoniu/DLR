@@ -71,6 +71,40 @@
 - 006/007 的跑次均使用 v1 store；源工作区已有 case 8 的 v2 L3，但 006/007 的 L3 节与 L2 未变，v1 store 未重建。逐次 provenance 在 `results/dlr-full/frozen_provenance/`。
 - **007 方差说明**：三次同一 freeze / 同一 store / 同一模型；差异来自决策路径而非信息差异。run 1 在 minute 0 因客户 USD 25 费用上限与最低路线费用 USD 40 冲突，直接 `ESCALATED`（后续 G 全部失败）；run 2 等到 minute 3，EUR/GBP 报价窗口已关闭，执行报 `EXECUTABLE_QUOTE_UNAVAILABLE`，以 `PENDING_EXTERNAL_ACTION` 收口；run 3 选择 EUR ordinary（晚 1 天到账）守住 USD 25 费用上限，minute 2 `COMPLETED`，只差 cargo A 与 calendar EUR。这是长程 agent 在硬约束权衡下的规划方差；**首跑 25/39 已按用户口径 excluded（原始判分保留）**。best-3 = 37/36/30，均值 34.33；补跑 frozen5 25/39 未抬高，不进 best-3。
 
+### 4.3 夜班批量（2026-11-02/03，v1–v20 store）
+
+> 口径：每题按 pre-run → 修 L3 → 复跑推进；strict 一次即 pass；buggy/无效轮排除；引用实际 store/freeze，取最佳有效结果。逐次 provenance 在 `eval/ledger.json`。
+
+| 题 | 最佳有效 | strict | 备注 |
+|---|---|---|---|
+| 006 | **39/39** | ✅ | v1 freeze `ff3663ec`；早先三次归档 |
+| 007 | **37/39**（best-3 均值 34.33） | ❌ | v1 freeze；方差已记档 |
+| 008 | **43/44** | ❌ | v3b/v9；仅 NEW 类缺口；v10 42/44 |
+| 009 | **41/42** | ❌ | v3；仅 seller.B；v9 无效排除 |
+| 010 | **35/39** | ❌ | v3/v11；exact/timely 与 joint 摆动 |
+| 011 | **33/42** | ❌ | v11；group/joint 缺口 |
+| 012 | **38/38** | ✅ | v3；首跑 strict |
+| 013 | **41/47** | ❌ | v10/v11；indemnity/recoveries |
+| 014 | **38/41** | ❌ | v3；v10/v11 35/41 |
+| 015 | **41/42** | ❌ | v10；仅 seller.B due-0 |
+| 016 | **40/40** | ✅ | v9；v5 39/40，v3 29/40 无效 |
+| 017 | **31/32** | ❌ | v11/v13/v14；documents 与 seller.B 两模式互换（v14 已归档） |
+| 018 | **29/30** | ❌ | v12/v14；5 有效轮，剩 minute 0 顺序 + SALES 负调整 |
+| 019 | **34/35** | ❌ | v14/v15；仅 seller.B；v17 无效排除 |
+| 020 | **29/29** | ✅ | v17；净损失 + 客户完成新验证 |
+| 021 | **26/30** | ❌ | v15；courier/额度释放未随 |
+| 022 | **30/30** | ✅ | v15；首跑 strict（section 后未改） |
+| 023 | **32/32** | ✅ | v17；courier due-0 修复 |
+| 024 | **33/33** | ✅ | v18；protected 给高费账单，总费 7500 |
+| 025 | **28/29** | ❌ | v18/v19；仅 billing.minimum_total_cost（套餐配对） |
+| 026 | **30/31** | ❌ | v19；仅 seller.B due-0；v20 复跑中 |
+| 001–005 | — | ✅ | 预跑 strict；冻结态复跑待做 |
+| 031（PSP） | **18/18** | ✅ | 非冻结态预跑，冻结核对待做 |
+
+- **本轮 L3 修复主线**：documents 按账单拆分（017）→ 利息调整带符号/扣除历史退款（018）→ 精确 required 版本重绑 + OPEN reliance 先做（019）→ 净损失/dispute 与验证先完成（020）→ 员工结算时序、courier 独立账单、release 额度（021/023）→ protected 路线按费差指派（024）→ voucher 封顶与套餐配对（025）→ marketplace due-0/净额（026）。
+- **共性陷阱**：due-0 义务（seller.B、courier、retainer/服务账单）必须在任何 wait 之前完成；pending 只有 SETTLED 才算；净额/费用公式按 verifier 口径，不按字面。
+- **无效轮**：016 v3 29/40、019 v17 24/35（`too_many_errors`）、009 v9 24/42；均排除、不混入最佳。
+
 ## 五、case_008 总结（v3 探索中，未归档）
 
 | 轮次 | checks | G | P | F | strict | 备注 |
@@ -113,7 +147,7 @@ bash scenarios/bizagentbench/eval/run_dlr_pilot.sh \
 
 ## 八、待办
 
-1. **007 已归档**（best-3 37/36/30，均值 34.33）。**008**：用 v3 store（28798）补第 3 个有效轮次（现有 v3b 43/44、v3c 38/44）；v4 已回滚，不混；之后 009/010。
-2. 009/010 继续；全量 50 题按同一 freeze 口径推进。
-3. README 三层表按全量数字更新（双语 + i18n 登记）。
-4. `tsm coverage` 对 50 题做覆盖校验。
+1. **最终 best-practice store**：v20（freeze `8992a5aa`）已含 006–026 的已验证修复；待 026 v20 收口后冻结为最终 store，并把 006–026 在它上面做一轮统一复跑（合理方差带内达到/接近 per-case best；大幅退化才修）。
+2. **未覆盖题**：027–030（operations_desk）与 032–050（PSP）尚未首跑；031 PSP 预跑 strict 需在冻结 store 上复核。
+3. 001–005 与 031 的冻结态复跑；全量 50 题判分口径统一。
+4. README 三层表按全量数字更新（双语 + i18n 登记）；`tsm coverage` 复验。
