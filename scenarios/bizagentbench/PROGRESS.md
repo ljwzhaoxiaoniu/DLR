@@ -109,7 +109,7 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 
 - **全量模型已装进隔离存储**（`.store/lance/bizagentbench`：entities 687 / consensus 187 / sop 50）。
 - **case_006 三次有效记录已归档**（v1 freeze `ff3663ec`）：33/39、**39/39 strict**、36/39；均值 36.0，strict 1/3，P/F 3/3。已进 ledger/DETAIL（2026-11-02）。
-- **case_007 三个有效已收官**（v1 freeze `ff3663ec`）：30/39、37/39、36/39；均值 **34.33**，strict 0/3，P/F 3/3；首跑 25/39 因 minute 0 `ESCALATED` 按用户 2026-11-02 不计入。
+- **case_007 best-3 已定**（v1 freeze `ff3663ec`）：37/39、36/39、30/39；**best-3 均值 34.33**，strict 0/3，P/F 3/3。另有两轮 25/39：首跑 minute 0 `ESCALATED` excluded；2026-11-02 补跑 frozen5 为有效但低分，不进 best-3。
 - **case_008 调优进展**：v2 34/44；v3b **43/44**（仅 `NEW.actual_exact_timely`，P/F 全过）；v3c 38/44（方差）；v4 32/44（宽规则回归，已回滚）。**当前最佳 = v3b 43/44**，v3 两轮 43/38。v2b 35/44 与 v3 首跑 29/44 因 `dlr_tools` 端口硬编码无效。**下一步：对 NEW 做窄修复（写进 L1 typed service 的 `pay_bill` 参数/截止语义，不再叠宽 L3）→ 重建 store → 跑 3 轮取平均；之后 009/010。**
 - **纪律**：类级规则改动必须 A/B；变差即回滚，不叠规则；样本不足不宣称优化有效。
 - **跑题（后续）**：按 4 题/批、串行跑；桥已支持双系统：cases 1–30 → `operations_desk`，31–50 → `psp`（`run_dlr.py` 按 `--numbers` 自动切换）。
@@ -132,7 +132,7 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 
 ### 007（operations_desk，v1 freeze `ff3663ec`）
 
-- 三个有效：**30/39、37/39、36/39**，均值 **34.33**，strict 0/3，P/F 3/3；首跑 25/39 因 minute 0 `ESCALATED` 标 excluded。
+- **best-3（同一 freeze `ff3663ec`）：37/39、36/39、30/39，均值 34.33，strict 0/3，P/F 3/3。** 另有 2026-11-02 补跑 frozen5 = 25/39（有效但低分，不进 best-3）；首跑 25/39 因 minute 0 `ESCALATED` excluded。
 - 30 那轮：等 FX 报价窗口到 minute 3，窗口关闭（`EXECUTABLE_QUOTE_UNAVAILABLE`），EUR/GBP 两笔汇款未出，收口 `PENDING_EXTERNAL_ACTION`；设备三单已完成。
 - 37 在窗口内选 EUR ordinary（慢一天但守费用上限）；36 付款执行了但挂 `payment.exact_and_timely.A/B/C`。
 - 结论：007 的差距是 **窗口内 booking vs 等更好报价/路线** 的权衡方差，不是知识缺口。历史上 cargo/route 宽规则曾把 38/39 打到 11 个 G，已回滚；后续如再调 007，只做窄规则并 A/B。
