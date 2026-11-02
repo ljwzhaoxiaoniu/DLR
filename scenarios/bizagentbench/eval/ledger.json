@@ -282,53 +282,21 @@
    "goal": false,
    "process": true,
    "protection": true,
-   "runs": 3,
+   "runs": 2,
    "strict_runs": 0,
    "strict_rate": 0.0,
    "goal_runs": 0,
-   "process_runs": 3,
-   "protection_runs": 3,
+   "process_runs": 2,
+   "protection_runs": 2,
    "checks": [
-    "25/39",
     "30/39",
     "37/39"
    ],
-   "mean_checks": 30.67,
+   "mean_checks": 33.5,
    "best_checks": "37/39",
-   "tokens": 46012281,
-   "tool_calls": 679,
+   "tokens": 42576270,
+   "tool_calls": 551,
    "per_run": [
-    {
-     "run": "case_007_frozen",
-     "checks": "25/39",
-     "strict": false,
-     "goal": false,
-     "process": true,
-     "protection": true,
-     "tokens": 3436011,
-     "tool_calls": 128,
-     "artifact": "results/dlr-full/case_007_frozen/case_007__trial0/result.json",
-     "failed": {
-      "G": [
-       "joint.exact_capital",
-       "activity1:payment.exact_and_timely.A",
-       "activity1:cargo.agreed_delivery.A",
-       "activity1:payment.exact_and_timely.B",
-       "activity1:cargo.agreed_delivery.B",
-       "activity1:payment.exact_and_timely.C",
-       "activity1:cargo.agreed_delivery.C",
-       "activity1:drawings.final_results",
-       "activity1:process.single_completion.terminal_goal",
-       "activity2:calendar.actual_bank_result",
-       "activity2:calendar.delivery_EUR",
-       "activity2:calendar.delivery_GBP",
-       "activity2:shared.single_completed_outcome.terminal_goal",
-       "joint.single_completed_outcome.terminal_goal"
-      ],
-      "P": [],
-      "F": []
-     }
-    },
     {
      "run": "case_007_frozen2",
      "checks": "30/39",
@@ -375,7 +343,16 @@
      }
     }
    ],
-   "note": "三次有效跑；P/F 三次全过；具体失败项见 per_run.failed。"
+   "note": "首跑 25/39 因 minute 0 ESCALATED，按用户 2026-11-02 不计入有效记录（原始判分保留）；当前为 2 次有效（30/37），待补跑第 3 个有效记录后重算。",
+   "valid_runs": 2,
+   "excluded_runs": [
+    {
+     "run": "case_007_frozen",
+     "checks": "25/39",
+     "reason": "minute 0 ESCALATED; excluded per user 2026-11-02; raw benchmark score retained"
+    }
+   ],
+   "pending_replacement": true
   }
  },
  "local_patches": [
@@ -394,13 +371,18 @@
    "case_006_frozen",
    "case_006_frozen2",
    "case_006_frozen3",
-   "case_007_frozen",
    "case_007_frozen2",
    "case_007_frozen3"
   ],
   "case_008_summary_freeze": "3cbdfe16",
   "case_008_summary_freeze_file": "eval/freeze.json",
-  "note": "006/007 归档于 ff3663ec / v1 store；008 未归档，仅作总结（v2 freeze 3cbdfe16）。逐次 provenance 在 results/dlr-full/frozen_provenance/。"
+  "note": "006/007 归档于 ff3663ec / v1 store；008 未归档，仅作总结（v2 freeze 3cbdfe16）。逐次 provenance 在 results/dlr-full/frozen_provenance/。",
+  "excluded_runs": [
+   "case_007_frozen"
+  ],
+  "pending": [
+   "case_007 replacement run (3rd valid) then case_008 third run"
+  ]
  },
  "exploratory_results": {
   "case_008": {
