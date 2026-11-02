@@ -1130,6 +1130,44 @@
       ],
       "invalid_attempts": [],
       "note": "024 strict PASS on v18 after assigning the single-use protected route to the invoice with the larger standard fee (B), keeping total fees at the 7500 cap. v17 32/33 valid (fees 8000)."
+    },
+    "case_025": {
+      "strict": false,
+      "goal": false,
+      "process": true,
+      "protection": true,
+      "best_checks": "28/29",
+      "best_artifact": "results/dlr-full/case_025_v18/case_025__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v18",
+          "checks": "28/29",
+          "strict": false,
+          "artifact": "results/dlr-full/case_025_v18/case_025__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:billing.minimum_total_cost"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v19",
+          "checks": "28/29",
+          "strict": false,
+          "artifact": "results/dlr-full/case_025_v19/case_025__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:billing.minimum_total_cost"
+            ],
+            "P": [],
+            "F": []
+          }
+        }
+      ],
+      "invalid_attempts": [],
+      "note": "025 both valid runs 28/29, only billing.minimum_total_cost; v18 chose BULK+EXPORT (31000) and v19 PAYG+EXPORT (35000) vs static optimum BULK+PRO 30000 with the voucher capped by fixed fee. L3 method stated but the agent does not execute the two-period enumeration; archived best 28/29."
     }
   },
   "local_patches": [
