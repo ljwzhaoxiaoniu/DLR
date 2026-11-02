@@ -1,0 +1,28 @@
+{
+  "freeze_id": "bcca13d2",
+  "git_commit": "bcca13d2b50957bb3068fe362d360b090913ed89",
+  "frozen_at": "2026-11-03T04:50:00+0800",
+  "files": {
+    "sources/configs/DLR/operations_desk.yaml": "49b9476f6763f6af56125bf529dffdfbbc3d4066736583c1e240a703cbf2a43c",
+    "sources/configs/DLR/typed_services.yaml": "fd37115f96b9560c26bb69815dc17fb085d8c6d904ccfbea3021b0cf01d5cebd",
+    "sources/configs/DLR/psp.yaml": "d8cdb8e15fa74abf6a2953cf1f51647d37f77d1b18bb8fb4f7958520ddf5c43b",
+    "sources/consensus/shared.jsonl": "f57fabc4ba1c5625ba883c2c5533bf3e64e550a5e89867aad7a21b84f4e69f87",
+    "sources/consensus/operations_desk.jsonl": "540b9ba65ef0d7d4e4a084f34b7581f875e4327a4953ff714df3cbe5aed421db",
+    "sources/consensus/typed_services.jsonl": "7776f291a534e7da66c135abfb5590dbe2b6aa7fe3e78dc57f397efba80d07c2",
+    "sources/consensus/psp.jsonl": "42462883e33de3d1223c3db21957e365950bb84ea09b39205b087dc4637c8c54",
+    "sources/sop.md": "02008236ee223a25bf6a9a0601600fc725ee1de3b54ab12cb574ba4f17d33ef5"
+  },
+  "model": {
+    "name": "BAAI/bge-base-en-v1.5",
+    "path": "C:/Users/user/.cache/huggingface/hub/models--BAAI--bge-base-en-v1.5/snapshots/a5beb1e3e68b9ab74eb54cfd186867f64f240e1a",
+    "onnx_sha256": "9bc579acdba21c253c62a9bf866891355a63ffa3442b52c8a37d75b2ccb91848"
+  },
+  "store": {
+    "path": "TSM Core Service/.store/lance/bizagentbench-v18",
+    "entities": 687,
+    "consensus": 187,
+    "sop": 50
+  },
+  "derivation": "v18 = copy of v17 + rebuild sop with the 024 guaranteed-net fee fix: the single-use protected route goes to the invoice with the larger standard-route fee, and combined guarantee/standard/top-up/return fees must stay within the total fee cap. Entities/consensus unchanged.",
+  "note": "Prepared for 024 v18 re-check, 025 v18 first pre-run, and one 021 v18 attempt. v17: 023 32/32 strict PASS; 021 25/30 (courier unpaid, auth hold 25000 not released, escalated); 024 32/33 (only fees.actual_total: protected A left B standard 3500+topup 500, total 8000 > 7500; optimal protect B gives exactly 7500)."
+}
