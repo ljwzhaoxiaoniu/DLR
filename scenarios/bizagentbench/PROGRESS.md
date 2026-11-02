@@ -115,7 +115,7 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 - **跑题（后续）**：按 4 题/批、串行跑；桥已支持双系统：cases 1–30 → `operations_desk`，31–50 → `psp`（`run_dlr.py` 按 `--numbers` 自动切换）。
 - 跑题前起桥（28797）：`TSM_SCENARIO=... TSM_STORE_DIR=... TSM_MODEL_DIR=... npx tsx eval/dlr_server.mjs`；`run_dlr_pilot.sh <out> <num>`。
 - **最终阶段**：冻结全量模型（记录版本）→ 统一重跑所有已跑题（含 001–005）→ 出正式成绩；之前结果只作预跑。
-- 环境：`bash eval/start_bridge.sh` 起桥（28797，自动解析场景/store/HF 缓存里的 bge-base-en-v1.5，`/health` 回 model 路径）；跑题 `eval/run_dlr_pilot.sh <out> <num>`。手动起桥时务必 `TSM_MODEL_DIR` 指向英文模型快照。
+- 环境：`bash eval/start_bridge.sh` 起桥（28797，自动解析场景/store/HF 缓存里的 bge-base-en-v1.5，`/health` 回 model 路径）；跑题 `eval/run_dlr_pilot.sh <out> <num>`。手动起桥时务必 `TSM_MODEL_DIR` 指向英文模型快照。桥另提供 `/status`（dsh 状态浮层同口径）与 `/viz/dlr` 图谱页；007 用 v1 store 起 28797、008 用 v2 store 起 28798（`TSM_STORE_DIR` + `BIZ_DLR_PORT`）。
 - 提交节奏：小步 commit；日常推 atomgit；GitHub 等通知走 `tmp_scripts/ghpush/sync.sh`。
 
 ## 七、本阶段提交
