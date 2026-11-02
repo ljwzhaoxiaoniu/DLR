@@ -899,6 +899,92 @@
         }
       ],
       "note": "019 archived best 34/35 (v14/v15), only seller.B stalled at minute 1 vs payout due 0; step-0 L3 wording did not change it and v17 became invalid (too_many_errors), so stopped per invalid-exclusion rule. All other checks including CURRENT and authority rebinds pass on v13-v15."
+    },
+    "case_018": {
+      "strict": false,
+      "goal": false,
+      "process": true,
+      "protection": true,
+      "best_checks": "29/30",
+      "best_artifact": "results/dlr-full/case_018_v14/case_018__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v12",
+          "checks": "29/30",
+          "strict": false,
+          "artifact": "results/dlr-full/case_018_v12/case_018__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:interest.exact_facility_adjustment"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v13",
+          "checks": "28/30",
+          "strict": false,
+          "artifact": "results/dlr-full/case_018_v13/case_018__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:interest.exact_facility_adjustment"
+            ],
+            "P": [
+              "activity1:cash.accounts_and_continuous_reserves"
+            ],
+            "F": []
+          }
+        },
+        {
+          "label": "v14",
+          "checks": "29/30",
+          "strict": false,
+          "artifact": "results/dlr-full/case_018_v14/case_018__trial0/result.json",
+          "failed": {
+            "G": [],
+            "P": [
+              "shared.unapproved_execution_attempt"
+            ],
+            "F": []
+          }
+        },
+        {
+          "label": "v15",
+          "checks": "24/30",
+          "strict": false,
+          "artifact": "results/dlr-full/case_018_v15/case_018__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:dates.correct_item_and_evidence",
+              "activity1:interest.exact_facility_adjustment",
+              "activity1:process.single_completion.terminal_goal",
+              "activity2:SERVICE.actual_exact_timely",
+              "activity2:shared.single_completed_outcome.terminal_goal",
+              "closure.single_completed.terminal_goal"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v17",
+          "checks": "28/30",
+          "strict": false,
+          "artifact": "results/dlr-full/case_018_v17/case_018__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:interest.exact_facility_adjustment"
+            ],
+            "P": [
+              "activity1:cash.accounts_and_continuous_reserves"
+            ],
+            "F": []
+          }
+        }
+      ],
+      "invalid_attempts": [],
+      "note": "018 archived best 29/30 after five valid attempts (v12/v14). Remaining gap is execution ordering within minute 0 (retainer paid before the operating adjustment) and the missing negative SALES recovery; both are stated in L3 but the agent only partly follows. v14 was all-G with only the one premature execute_request P failure. No strict."
     }
   },
   "local_patches": [
