@@ -107,10 +107,10 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 
 ## 六、接下来
 
-- **全量模型已装进隔离存储**（`.store/lance/bizagentbench`：entities 687 / consensus 190 / sop 50）。
+- **全量模型已装进隔离存储**（`.store/lance/bizagentbench`：entities 687 / consensus 187 / sop 50）。
 - **case_006 三次有效记录已归档**（v1 freeze `ff3663ec`）：33/39、**39/39 strict**、36/39；均值 36.0，strict 1/3，P/F 3/3。已进 ledger/DETAIL（2026-11-02）。
-- **case_007 两次有效已归档，首跑 excluded**（v1 freeze `ff3663ec`）：30/39、37/39；均值 33.5，strict 0/2，P/F 2/2；首跑 25/39 因 minute 0 `ESCALATED` 按用户 2026-11-02 不计入。**待补跑第 3 个有效记录**（下次会话先做）。
-- **case_008 v2 34/44**（首跑 33/44；G+F 失败）→ 根因收敛为 D34 的 490k 资本批准后未执行，Q5 仍 UNPAID；L3 类级补丁已落（freeze v2 `3cbdfe16`）。**下一轮 2026-11-02 12:05 起跑（v2）**；跑完不停下报告：方差则补到 3 轮算平均，新系统性失败则优化 L3/L2（A/B）重建后再跑，直到 14:00。之后 009/010。
+- **case_007 三个有效已收官**（v1 freeze `ff3663ec`）：30/39、37/39、36/39；均值 **34.33**，strict 0/3，P/F 3/3；首跑 25/39 因 minute 0 `ESCALATED` 按用户 2026-11-02 不计入。
+- **case_008 调优进展**：v2 34/44；v3b **43/44**（仅 `NEW.actual_exact_timely`，P/F 全过）；v3c 38/44（方差）；v4 32/44（宽规则回归，已回滚）。**当前最佳 = v3b 43/44**，v3 两轮 43/38。v2b 35/44 与 v3 首跑 29/44 因 `dlr_tools` 端口硬编码无效。**下一步：对 NEW 做窄修复（写进 L1 typed service 的 `pay_bill` 参数/截止语义，不再叠宽 L3）→ 重建 store → 跑 3 轮取平均；之后 009/010。**
 - **纪律**：类级规则改动必须 A/B；变差即回滚，不叠规则；样本不足不宣称优化有效。
 - **跑题（后续）**：按 4 题/批、串行跑；桥已支持双系统：cases 1–30 → `operations_desk`，31–50 → `psp`（`run_dlr.py` 按 `--numbers` 自动切换）。
 - 跑题前起桥（28797）：`TSM_SCENARIO=... TSM_STORE_DIR=... TSM_MODEL_DIR=... npx tsx eval/dlr_server.mjs`；`run_dlr_pilot.sh <out> <num>`。
@@ -125,3 +125,32 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 - `6e559cf9` case_003 收口
 - `e692cbc0` case_004 收口
 - `f6451a29` case_005 收口
+
+## 八、建模与调优经验（2026-11-02 007/008 实测）
+
+> 目的：后续调优照这本账走，不再重复试错。原则：**L1 放工具/字段语义，L3 放类级打法与顺序；每条规则单变量 A/B，变差即回滚，不叠规则。**
+
+### 007（operations_desk，v1 freeze `ff3663ec`）
+
+- 三个有效：**30/39、37/39、36/39**，均值 **34.33**，strict 0/3，P/F 3/3；首跑 25/39 因 minute 0 `ESCALATED` 标 excluded。
+- 30 那轮：等 FX 报价窗口到 minute 3，窗口关闭（`EXECUTABLE_QUOTE_UNAVAILABLE`），EUR/GBP 两笔汇款未出，收口 `PENDING_EXTERNAL_ACTION`；设备三单已完成。
+- 37 在窗口内选 EUR ordinary（慢一天但守费用上限）；36 付款执行了但挂 `payment.exact_and_timely.A/B/C`。
+- 结论：007 的差距是 **窗口内 booking vs 等更好报价/路线** 的权衡方差，不是知识缺口。历史上 cargo/route 宽规则曾把 38/39 打到 11 个 G，已回滚；后续如再调 007，只做窄规则并 A/B。
+
+### 008（operations_desk，v2/v3/v4 store）
+
+- 有效轮次：v2 **34/44** → v3b **43/44**（仅 `NEW.actual_exact_timely`）→ v3c **38/44**（方差）；v4 **32/44**（回归，已回滚）。v3 两轮 43/38。
+- **v3 保留的两条 L3（类级，已证明有效）**：
+  1. **重复借记净额重算**：不要用「毛发票额 − 剩余借记」补差；重复借记的 return 本身就是 correction，手动补付会造出第二笔义务。
+  2. **更正截止事件**：installment 的 return/refund/新单付款/close 必须在 reconciliation deadline 事件之前全部落账；截止后补做，独立重建不认。
+- **v4 的教训**：把 `pay_bill` 的 `record_id` / 最早分钟写成宽 L3 规则 → 32/44 退化。**工具字段名、参数 schema、due-minute 语义属于 L1 能力描述（typed service），不属于 L3 宽规则。**
+- **剩余唯一缺口**：`activity2:NEW.actual_exact_timely`。根因：`pay_bill` 先用 `bill_id` 被 `INVALID_LOCAL_ACTION_FIELDS` 拒，改 `record_id` 后已 minute 1 > `due_minute 0`。窄修复方向：在 L1 `propose_payment_installment_return` 的能力描述里写明参数名 `record_id`、`pay_bill` 的金额/截止语义；不要再塞进 L3。
+- **基础设施教训**：`eval/dlr_tools.py` 曾硬编码 28797，导致 008 v2b/v3 首跑打错/打空（v2b 35/44 实为 v1，v3 首跑 29/44 为连接拒绝）。已改为读 `BIZ_DLR_PORT`；多 store 并行前先 `curl /health` 核对 store 路径。
+
+### 调优清单（后续照做）
+
+1. 先看失败谱系，区分「知识缺口 / 时序与执行 / 工具 schema / 环境」。
+2. 知识缺口 → L3 类级规则（顺序、取舍、陷阱），不写实例值。
+3. 工具字段/参数 → L1 能力描述或工具 schema，不写 L3。
+4. 每条改动单变量 A/B；变差立即回滚；不叠规则。
+5. 每题至少 3 个有效轮次再报均值；excluded/无效轮次单独记档，不混入。
