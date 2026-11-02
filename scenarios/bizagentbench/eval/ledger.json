@@ -822,6 +822,83 @@
       ],
       "invalid_attempts": [],
       "note": "020 strict PASS on v17 after two L3 fixes (claim net loss after posted credits; new checkout verification must actually be completed by the customer). v15 first pre-run 24/29 valid."
+    },
+    "case_019": {
+      "strict": false,
+      "goal": false,
+      "process": true,
+      "protection": true,
+      "best_checks": "34/35",
+      "best_artifact": "results/dlr-full/case_019_v14/case_019__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v12",
+          "checks": "29/35",
+          "strict": false,
+          "artifact": "results/dlr-full/case_019_v12/case_019__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:authority.current_versions.GUARANTEE",
+              "activity1:authority.current_versions.PLATFORM",
+              "activity1:process.single_completion.terminal_goal",
+              "activity2:seller.B",
+              "activity2:shared.single_completed_outcome.terminal_goal",
+              "closure.single_completed.terminal_goal"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v13",
+          "checks": "33/35",
+          "strict": false,
+          "artifact": "results/dlr-full/case_019_v13/case_019__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:reliance.validity_and_scope.CURRENT",
+              "activity2:seller.B"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v14",
+          "checks": "34/35",
+          "strict": false,
+          "artifact": "results/dlr-full/case_019_v14/case_019__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity2:seller.B"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v15",
+          "checks": "34/35",
+          "strict": false,
+          "artifact": "results/dlr-full/case_019_v15/case_019__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity2:seller.B"
+            ],
+            "P": [],
+            "F": []
+          }
+        }
+      ],
+      "invalid_attempts": [
+        {
+          "label": "v17",
+          "checks": "24/35",
+          "reason": "too_many_errors (11 failures incl. new reliance/authority and link.quote_version_refresh); excluded",
+          "artifact": "results/dlr-full/case_019_v17/case_019__trial0/result.json"
+        }
+      ],
+      "note": "019 archived best 34/35 (v14/v15), only seller.B stalled at minute 1 vs payout due 0; step-0 L3 wording did not change it and v17 became invalid (too_many_errors), so stopped per invalid-exclusion rule. All other checks including CURRENT and authority rebinds pass on v13-v15."
     }
   },
   "local_patches": [
