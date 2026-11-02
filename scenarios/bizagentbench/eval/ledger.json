@@ -558,6 +558,39 @@
         }
       ],
       "note": "008 best 43/44 (v3b and v9); v10 42/44 is within variance (NEW and joint.fee_and_reserve now pass). No strict. Optimization stopped."
+    },
+    "case_015": {
+      "strict": false,
+      "goal": false,
+      "process": true,
+      "protection": true,
+      "best_checks": "41/42",
+      "best_artifact": "results/dlr-full/case_015_v10/case_015__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v3",
+          "checks": "40/42",
+          "artifact": "results/dlr-full/case_015_v3/case_015__trial0/result.json"
+        },
+        {
+          "label": "v5",
+          "checks": "39/42",
+          "artifact": "results/dlr-full/case_015_v5/case_015__trial0/result.json"
+        },
+        {
+          "label": "v10",
+          "checks": "41/42",
+          "artifact": "results/dlr-full/case_015_v10/case_015__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity2:seller.B"
+            ],
+            "P": [],
+            "F": []
+          }
+        }
+      ],
+      "note": "015 best 41/42 (v10); only seller.B remains (payout_due_minute 0 paid at minute 1). No strict; optimization stopped."
     }
   },
   "local_patches": [
