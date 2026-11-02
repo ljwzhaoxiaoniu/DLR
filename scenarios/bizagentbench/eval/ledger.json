@@ -591,6 +591,32 @@
         }
       ],
       "note": "015 best 41/42 (v10); only seller.B remains (payout_due_minute 0 paid at minute 1). No strict; optimization stopped."
+    },
+    "case_011": {
+      "strict": false,
+      "goal": false,
+      "process": false,
+      "protection": true,
+      "best_checks": "33/42",
+      "best_artifact": "results/dlr-full/case_011_v11/case_011__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v3",
+          "checks": "32/42",
+          "artifact": "results/dlr-full/case_011_v3/case_011__trial0/result.json"
+        },
+        {
+          "label": "v10",
+          "checks": "30/42",
+          "artifact": "results/dlr-full/case_011_v10/case_011__trial0/result.json"
+        },
+        {
+          "label": "v11",
+          "checks": "33/42",
+          "artifact": "results/dlr-full/case_011_v11/case_011__trial0/result.json"
+        }
+      ],
+      "note": "011 best 33/42 (v11); group participant A/B, merchant G1, joint capital/fee and continuous floors remain. Three attempts; optimization stopped."
     }
   },
   "local_patches": [
