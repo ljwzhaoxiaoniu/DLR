@@ -985,6 +985,42 @@
       ],
       "invalid_attempts": [],
       "note": "018 archived best 29/30 after five valid attempts (v12/v14). Remaining gap is execution ordering within minute 0 (retainer paid before the operating adjustment) and the missing negative SALES recovery; both are stated in L3 but the agent only partly follows. v14 was all-G with only the one premature execute_request P failure. No strict."
+    },
+    "case_023": {
+      "strict": true,
+      "goal": true,
+      "process": true,
+      "protection": true,
+      "best_checks": "32/32",
+      "best_artifact": "results/dlr-full/case_023_v17/case_023__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v15",
+          "checks": "31/32",
+          "strict": false,
+          "artifact": "results/dlr-full/case_023_v15/case_023__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity2:COURIER.actual_exact_timely"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v17",
+          "checks": "32/32",
+          "strict": true,
+          "artifact": "results/dlr-full/case_023_v17/case_023__trial0/result.json",
+          "failed": {
+            "G": [],
+            "P": [],
+            "F": []
+          }
+        }
+      ],
+      "invalid_attempts": [],
+      "note": "023 strict PASS on v17 after the courier due-0 L3 fix; v15 31/32 valid (only courier late). No rerun needed."
     }
   },
   "local_patches": [
