@@ -133,6 +133,9 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 - **v13 = v12 + 三处窄 L3**（freeze `b48b70f0`）：017 documents 按每张账单拆分（交 accepted÷unit_price 份、退 (face−accepted)÷unit_price 份，DP 须收妥）；018 利息调整 = entitlement − 已 POSTED 历史退款 − 已 SETTLED 的 pending，一笔入账不冲销；019 重绑只列该 authority 的 required 源与当前版本、待 required reliance COMPLETE 后重试，marketplace 补 due-0 与精确净额。store `bizagentbench-v13`（sop 用 bge-base-en 768 维重建）；017/018/019 v13 三路在 28799 复跑。
 - **v13 结果**：017 **31/32**（documents 已过；仅 `seller.B`——B 的 due-0 拖到 minute 3）；018 **28/30**（`interest.exact_facility_adjustment` 仍挂：SALES 需 −800 回收但 L3 写“positive”导致漏记；`cash.accounts_and_continuous_reserves` 新挂：minute 0 先付 retainer 6000，OPERATING 0 < 2000 准备金，需先记 +6866 调整再付）；019 **33/35**（authority 重绑全过、terminal 全过；`reliance.validity_and_scope.CURRENT` 因 completed_minute 5 > due 2——OPEN reliance 应先做；`seller.B` due-0 仍拖后）。
 - **v14 = v13 + 三处时序窄修**（freeze `4516b4d7`）：017/019 due-0 卖家在**最开局、任何等待之前**先付；018 带符号调整（负值回收也要记）+ minute 0 先记调整再付 retainer + pending 结算后补一笔对冲；019 开局即完成仍 OPEN 的 reliance（其截止最早）。017/018/019 v14 三路在 28799 复跑。
+- **v14 结果**：017 **31/32**（seller.B 已过；documents 又漏退 A1/B2——两模式各自都通过过，属摆动）；018 **29/30**（G 全过；仅 P `shared.unapproved_execution_attempt`——REQUESTS-0002 未先获批就 execute，被拒后重试成功仍记不可逆违规）；019 **34/35**（CURRENT 已过；仅 `seller.B` 仍 minute 3 才付）。
+- **017 归档**：best **31/32**（v11/v13/v14；v12 30/32 有效），strict 0/4；documents 与 seller.B 两失败模式互换、均已分别通过，判为 agent 方差，停止优化；已进 ledger。
+- **v15 = v14 + 两处流程窄修**（freeze `082bfe9f`）：018 每个 request 必须**自己的**客户批准后才能 execute（批一个不等于批全部，未批执行尝试不可逆）；019 把 due-0 卖家置于**所有证书工作之前**（段首加粗）。018/019 v15 + 020 首跑 三路在 28799。
 - **v5（L1 pay_bill 修复，待验证）**：freeze `cff9b6c9` / `eval/freeze.v5.json`；`InstallmentReturn` 描述由 `pay_bill {bill_id}` 改为 `{record_id, amount_minor}`，并补“due minute 是操作截止”；v5 store = 复制 v3 + 重建 entities（687/187/50），已在 28799 验证描述生效。未跑，等 008/016 A/B。
 - **冻结态复跑（后续）**：001–005 与 case_031 的预跑 strict 在冻结 v1 store 上复跑确认；按当前建模设计预期只是方差摆动，不应大幅劣化；PSP 32–50 同批推进。
 - **纪律**：类级规则改动必须 A/B；变差即回滚，不叠规则；样本不足不宣称优化有效。
