@@ -6,9 +6,13 @@ They call the local DLR bridge (eval/dlr_server.mjs).
 
 from __future__ import annotations
 
+import os
+
 import httpx
 
-BASE = "http://127.0.0.1:28797"
+# Bridge port: the runner exports BIZ_DLR_PORT (default 28797). Never hardcode —
+# 008 runs on the v2/v3 store need 28798 while 007 keeps 28797.
+BASE = f"http://127.0.0.1:{os.environ.get('BIZ_DLR_PORT', '28797')}"
 
 # Active model system for this runner: "operations_desk" (cases 1-30) or "psp" (cases 31-50).
 # run_dlr.py sets it from --numbers before the evaluation starts.

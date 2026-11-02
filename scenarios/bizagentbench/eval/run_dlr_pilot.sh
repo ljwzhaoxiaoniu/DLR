@@ -9,6 +9,7 @@ LOCAL_TOOLS="${BIZ_LOCAL_TOOLS:-$(cd "$HERE/../../../tmp_scripts" 2>/dev/null &&
 ENV_FILE="${DEEPSEEK_ENV_FILE:-$HERE/../../../DSH-based Agent Service/dsh_dlr/.env}"
 PYTHON="${BIZ_PYTHON:-/d/ProgramData/anaconda3/envs/lepe_som/python}"
 PORT="${BIZ_DLR_PORT:-28797}"
+export BIZ_DLR_PORT="$PORT"
 OUT="${1:?output dir}"
 NUM="${2:?case number}"
 
