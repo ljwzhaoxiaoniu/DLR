@@ -1,0 +1,28 @@
+{
+  "freeze_id": "c05a38ed",
+  "git_commit": "c05a38ed1bcbeffafc6f616ef10a5f7f25147a37",
+  "frozen_at": "2026-11-02T23:07:50+0800",
+  "files": {
+    "sources/configs/DLR/operations_desk.yaml": "49b9476f6763f6af56125bf529dffdfbbc3d4066736583c1e240a703cbf2a43c",
+    "sources/configs/DLR/typed_services.yaml": "fd37115f96b9560c26bb69815dc17fb085d8c6d904ccfbea3021b0cf01d5cebd",
+    "sources/configs/DLR/psp.yaml": "d8cdb8e15fa74abf6a2953cf1f51647d37f77d1b18bb8fb4f7958520ddf5c43b",
+    "sources/consensus/shared.jsonl": "f57fabc4ba1c5625ba883c2c5533bf3e64e550a5e89867aad7a21b84f4e69f87",
+    "sources/consensus/operations_desk.jsonl": "540b9ba65ef0d7d4e4a084f34b7581f875e4327a4953ff714df3cbe5aed421db",
+    "sources/consensus/typed_services.jsonl": "7776f291a534e7da66c135abfb5590dbe2b6aa7fe3e78dc57f397efba80d07c2",
+    "sources/consensus/psp.jsonl": "42462883e33de3d1223c3db21957e365950bb84ea09b39205b087dc4637c8c54",
+    "sources/sop.md": "1be9f1397e29ca9839f725c0a755bd45b058669e034292f4b34166e776dde09b"
+  },
+  "model": {
+    "name": "BAAI/bge-base-en-v1.5",
+    "path": "C:/Users/user/.cache/huggingface/hub/models--BAAI--bge-base-en-v1.5/snapshots/a5beb1e3e68b9ab74eb54cfd186867f64f240e1a",
+    "onnx_sha256": "9bc579acdba21c253c62a9bf866891355a63ffa3442b52c8a37d75b2ccb91848"
+  },
+  "store": {
+    "path": "TSM Core Service/.store/lance/bizagentbench-v7",
+    "entities": 687,
+    "consensus": 187,
+    "sop": 50
+  },
+  "derivation": "v7 = copy of v6 (L1 pay_bill fix + marketplace seller L3) + rebuild sop with the case-8 rule: the new retained-purchase bill is separate from the plan balance; pay_bill uses record_id at its due minute. Entities/consensus unchanged.",
+  "note": "Prepared for 008 v7 pre-run; no runs yet. Modeling fix freeze, not a result freeze."
+}

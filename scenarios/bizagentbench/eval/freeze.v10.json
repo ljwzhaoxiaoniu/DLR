@@ -1,0 +1,28 @@
+{
+  "freeze_id": "d0777d2a",
+  "git_commit": "d0777d2ac96ad6189b6b4e73af9e90796871962b",
+  "frozen_at": "2026-11-03T00:03:31+0800",
+  "files": {
+    "sources/configs/DLR/operations_desk.yaml": "49b9476f6763f6af56125bf529dffdfbbc3d4066736583c1e240a703cbf2a43c",
+    "sources/configs/DLR/typed_services.yaml": "fd37115f96b9560c26bb69815dc17fb085d8c6d904ccfbea3021b0cf01d5cebd",
+    "sources/configs/DLR/psp.yaml": "d8cdb8e15fa74abf6a2953cf1f51647d37f77d1b18bb8fb4f7958520ddf5c43b",
+    "sources/consensus/shared.jsonl": "f57fabc4ba1c5625ba883c2c5533bf3e64e550a5e89867aad7a21b84f4e69f87",
+    "sources/consensus/operations_desk.jsonl": "540b9ba65ef0d7d4e4a084f34b7581f875e4327a4953ff714df3cbe5aed421db",
+    "sources/consensus/typed_services.jsonl": "7776f291a534e7da66c135abfb5590dbe2b6aa7fe3e78dc57f397efba80d07c2",
+    "sources/consensus/psp.jsonl": "42462883e33de3d1223c3db21957e365950bb84ea09b39205b087dc4637c8c54",
+    "sources/sop.md": "99183fb6b538d55f58e888fe6083bcac95c2879407d3734677e887e1770d64a0"
+  },
+  "model": {
+    "name": "BAAI/bge-base-en-v1.5",
+    "path": "C:/Users/user/.cache/huggingface/hub/models--BAAI--bge-base-en-v1.5/snapshots/a5beb1e3e68b9ab74eb54cfd186867f64f240e1a",
+    "onnx_sha256": "9bc579acdba21c253c62a9bf866891355a63ffa3442b52c8a37d75b2ccb91848"
+  },
+  "store": {
+    "path": "TSM Core Service/.store/lance/bizagentbench-v10",
+    "entities": 687,
+    "consensus": 187,
+    "sop": 50
+  },
+  "derivation": "v10 = copy of v9 + rebuild sop with the case-8 rule: before each joint capital delivery compute the fee source post-delivery balance and never let it fall below minimum_uncommitted_cash_minor; deliver at most balance − minimum_uncommitted_cash − route fees, using another permitted source for any shortfall. Entities/consensus unchanged.",
+  "note": "Prepared for 008 v10 final pre-run; no runs yet. Modeling fix freeze."
+}
