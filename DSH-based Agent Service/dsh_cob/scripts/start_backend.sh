@@ -33,7 +33,10 @@ if (cd "$TSM" && npx tsx src/verify/precheck.ts "$URL" >/dev/null 2>&1); then
   echo "[ok]    COB 语义后端已在跑 ($URL)"
 else
   echo "[start] COB TSM MCP server…（scenario=cloudopsbench, store=.store/lance/cloudopsbench）"
-  ( cd "$TSM" && TSM_SCENARIO="$SCENARIO" TSM_STORE_DIR="$STORE" nohup npx tsx src/mcp/server.ts --http "$PORT" > "$ROOT/tmp_scripts/cob_tsm.log" 2>&1 & )
+  # 图必须走内存：Neo4j 是同机共享库（birdmini 的图在里面），dlr-state 若 auto 连上
+  # Neo4j 会读到 birdmini 的 LE/PE/PAS（/status 显示错场景的计数）；强制 memory 后
+  # 从本场景 YAML 建自己的图。
+  ( cd "$TSM" && TSM_SCENARIO="$SCENARIO" TSM_STORE_DIR="$STORE" TSM_GRAPH_BACKEND=memory nohup npx tsx src/mcp/server.ts --http "$PORT" > "$ROOT/tmp_scripts/cob_tsm.log" 2>&1 & )
   for i in $(seq 1 15); do
     sleep 2
     (cd "$TSM" && npx tsx src/verify/precheck.ts "$URL" >/dev/null 2>&1) && break
