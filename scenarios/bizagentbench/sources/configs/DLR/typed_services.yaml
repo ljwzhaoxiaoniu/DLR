@@ -12668,7 +12668,7 @@ logical_entities:
     only when every installment and return is settled; the plan terms fix the principal, schedule and earned periods. Contract: Installment
     purchase returns and earned period fees. Actions: apply_return / cancel_future / close_plan / pay_bill / refund. Instruction data:
     apply_return {remaining_principal_minor, earned_fee_minor}; refund {amount_minor}; pay_balance {amount_minor}; cancel_future {};
-    close_plan {}; pay_bill {bill_id, amount_minor}.'
+    close_plan {}; pay_bill {record_id, amount_minor}. The recorded due minute of the bill is its operative deadline: prepare and execute the bill payment in the earliest minute.'
   lifecycle:
     states:
     - OPEN
