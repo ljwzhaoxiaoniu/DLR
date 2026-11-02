@@ -759,6 +759,29 @@
         }
       ],
       "note": "017 archived best 31/32 after 4 valid attempts (v11-v14). Two failure modes alternate: documents split (v11/v12/v14) and seller.B due-0 (v13); each has passed in another run (documents passed v13; seller.B passed v14), so remaining gap is agent variance, no further optimization. P/F all pass."
+    },
+    "case_022": {
+      "strict": true,
+      "goal": true,
+      "process": true,
+      "protection": true,
+      "best_checks": "30/30",
+      "best_artifact": "results/dlr-full/case_022_v15/case_022__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v15",
+          "checks": "30/30",
+          "strict": true,
+          "artifact": "results/dlr-full/case_022_v15/case_022__trial0/result.json",
+          "failed": {
+            "G": [],
+            "P": [],
+            "F": []
+          }
+        }
+      ],
+      "invalid_attempts": [],
+      "note": "022 strict PASS on first pre-run (v15). Its L3 section was not modified in v15-v17, so the result carries to the final store; no rerun needed."
     }
   },
   "local_patches": [
