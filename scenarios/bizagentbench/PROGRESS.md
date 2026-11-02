@@ -136,6 +136,8 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 - **v14 结果**：017 **31/32**（seller.B 已过；documents 又漏退 A1/B2——两模式各自都通过过，属摆动）；018 **29/30**（G 全过；仅 P `shared.unapproved_execution_attempt`——REQUESTS-0002 未先获批就 execute，被拒后重试成功仍记不可逆违规）；019 **34/35**（CURRENT 已过；仅 `seller.B` 仍 minute 3 才付）。
 - **017 归档**：best **31/32**（v11/v13/v14；v12 30/32 有效），strict 0/4；documents 与 seller.B 两失败模式互换、均已分别通过，判为 agent 方差，停止优化；已进 ledger。
 - **v15 = v14 + 两处流程窄修**（freeze `082bfe9f`）：018 每个 request 必须**自己的**客户批准后才能 execute（批一个不等于批全部，未批执行尝试不可逆）；019 把 due-0 卖家置于**所有证书工作之前**（段首加粗）。018/019 v15 + 020 首跑 三路在 28799。
+- **v15 结果**：018 **24/30 退化**（漏记全部价值日修订 → 利息 entitlement 算成 10032；SERVICE 200 因“无收款人字段”被 escalate；terminal 挂）；019 **34/35**（仍 `seller.B`，minute 1）；020 首跑 **24/29**（`claims.exact_unauthorized_physical_presentments`：RAIL_DUP 报 25000 而非净损失 20000；`checkout.A`：新验证只 prepare 未获客户实际完成，A 未付）。
+- **v16 = v15 + 三处补修**（freeze `06d6533a`）：018 每个 final 确认不一致的 dated item 都要记价值日修订 + 无收款人字段的 due-0 服务账单仍用 `pay_bill` 直付 + 批准语句改为事实陈述；020 报**净损失**、新验证须客户实际完成后再付；019 把 due-0 卖家列为 **step 0**（先于任何证书动作）。018/019/020 v16 待跑（021/022/023 v15 占着 28799）。
 - **v5（L1 pay_bill 修复，待验证）**：freeze `cff9b6c9` / `eval/freeze.v5.json`；`InstallmentReturn` 描述由 `pay_bill {bill_id}` 改为 `{record_id, amount_minor}`，并补“due minute 是操作截止”；v5 store = 复制 v3 + 重建 entities（687/187/50），已在 28799 验证描述生效。未跑，等 008/016 A/B。
 - **冻结态复跑（后续）**：001–005 与 case_031 的预跑 strict 在冻结 v1 store 上复跑确认；按当前建模设计预期只是方差摆动，不应大幅劣化；PSP 32–50 同批推进。
 - **纪律**：类级规则改动必须 A/B；变差即回滚，不叠规则；样本不足不宣称优化有效。
