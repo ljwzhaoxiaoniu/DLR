@@ -1,435 +1,536 @@
 {
- "scenario": "bizagentbench",
- "updated": "2026-11-02",
- "dataset": {
-  "name": "BizAgentBench",
-  "local_copy": "D:/Code_Proj/Dataset/BizAgentBench-main",
-  "release": "bizagentbench-payment-v1",
-  "cases": 50,
-  "knowledge_documents": 789,
-  "searchable_documents": 621,
-  "capabilities": 601,
-  "world_collections": 404,
-  "world_records": 3121,
-  "verifier": "upstream deterministic G/P/F (no LLM judge)",
-  "note": "Case files, knowledge, tools and verifier are dataset-owned and are not edited by this repository."
- },
- "tsm_additions": {
-  "l1": {
-   "files": [
-    "sources/configs/DLR/operations_desk.yaml",
-    "sources/configs/DLR/typed_services.yaml",
-    "sources/configs/DLR/psp.yaml"
-   ],
-   "logical_entities": 106,
-   "pas_relations": 147,
-   "vector_rows": 687,
-   "nature": "本仓库新增的 schema 级对象模型；零实例值；能力挂 LE（anchor + guard）；生命周期入 L1；desk 84 LE/127 PAS/513 行 + psp 22 LE/20 PAS/174 行"
+  "scenario": "bizagentbench",
+  "updated": "2026-11-02",
+  "dataset": {
+    "name": "BizAgentBench",
+    "local_copy": "D:/Code_Proj/Dataset/BizAgentBench-main",
+    "release": "bizagentbench-payment-v1",
+    "cases": 50,
+    "knowledge_documents": 789,
+    "searchable_documents": 621,
+    "capabilities": 601,
+    "world_collections": 404,
+    "world_records": 3121,
+    "verifier": "upstream deterministic G/P/F (no LLM judge)",
+    "note": "Case files, knowledge, tools and verifier are dataset-owned and are not edited by this repository."
   },
-  "l2": {
-   "files": [
-    "sources/consensus/shared.jsonl",
-    "sources/consensus/operations_desk.jsonl",
-    "sources/consensus/typed_services.jsonl",
-    "sources/consensus/psp.jsonl"
-   ],
-   "entries": 187,
-   "nature": "本仓库新增的领域共识（shared 10 + desk 44 + typed 84 + psp 49）"
-  },
-  "l3": {
-   "file": "sources/sop.md",
-   "sections": 50,
-   "nature": "本仓库新增的问题类打法（desk 30 + psp 20）；标题=客户开场白逐字；正文=类级方法"
-  }
- },
- "l3_classes": [
-  {
-   "case": "case_001",
-   "trigger": "I need to pay a supplier in euros and another in pounds. Our earlier tax payments also haven't been matched to the right periods. Can you help sort these out? I don't want to pay the tax twice.",
-   "class": "foreign-currency delivery + unmatched tax transfer repair + fee funding",
-   "basis": [
-    "DESK-fx",
-    "DESK-tax",
-    "DESK-collateral",
-    "DESK-protocol"
-   ],
-   "nature": "本仓库新增，非数据集内容"
-  },
-  {
-   "case": "case_002",
-   "trigger": "Several storefronts still can't receive payments. I also want to retire our old operating account, but some subscriptions need to keep running. Can you help with both?",
-   "class": "multi-site collection rollout + account exit with retained services",
-   "basis": [
-    "DESK-rails",
-    "DESK-exit",
-    "DESK-collateral",
-    "DESK-protocol"
-   ],
-   "nature": "本仓库新增，非数据集内容"
-  },
-  {
-   "case": "case_003",
-   "trigger": "Our September receipts still don't line up with the outstanding amounts on our report. Our company account application also hasn't been sorted out, and we need to use it soon. Can you help with both?",
-   "class": "receivables reconciliation + evidence-based onboarding review",
-   "basis": [
-    "DESK-reconciliation",
-    "DESK-onboarding",
-    "DESK-commercial-evidence",
-    "DESK-collateral",
-    "DESK-protocol"
-   ],
-   "nature": "本仓库新增，非数据集内容"
-  },
-  {
-   "case": "case_004",
-   "trigger": "Some money in our account isn't available, and payroll and other bills are coming due. I also submitted a batch of supplier payments earlier, but I can't tell which went through. Could you check and get the outstanding payments handled?",
-   "class": "restricted-fund release + batch payment reconciliation",
-   "basis": [
-    "DESK-restrictions",
-    "DESK-batches",
-    "DESK-commercial-evidence",
-    "DESK-collateral",
-    "DESK-protocol"
-   ],
-   "nature": "本仓库新增，非数据集内容"
-  },
-  {
-   "case": "case_005",
-   "trigger": "Our group companies have supplier bills coming due. We also have a purchase where some goods never arrived and the money hasn't been sorted out. Can you help handle both?",
-   "class": "group treasury payments under institutional mandates + card dispute loss recovery",
-   "basis": [
-    "DESK-treasury",
-    "DESK-disputes",
-    "DESK-commercial-evidence",
-    "DESK-collateral",
-    "DESK-protocol"
-   ],
-   "nature": "本仓库新增，非数据集内容"
-  },
-  {
-   "case": "case_006",
-   "trigger": "Can you release the securities we have promised to our counterparties and take care of the equipment bill? We also have a receivable arriving into custody. Also, my equipment order is shipping in two parts. One card payment is still pending, and I need to finish paying for the items that are actually shipping. These are part of the same business spending plan.",
-   "class": "security release + equipment bill + partial card shipment",
-   "basis": [
-    "DESK-protocol",
-    "DIVERSE-dated_collateral",
-    "PAYMENT-payment_split_capture",
-    "JOINT-CASH-delivery"
-   ],
-   "nature": "本仓库新增，非数据集内容"
-  },
-  {
-   "case": "case_007",
-   "trigger": "Please finish paying for our equipment orders and get the goods to the agreed depots. Some of the documentary-credit paperwork is still being processed. Also, two overseas suppliers need cleared funds before their local deadlines. The cheaper route may arrive too late; can you work out how to pay both? These are part of the same business spending plan.",
-   "class": "documentary import settlement + cross-calendar delivery",
-   "basis": [
-    "DESK-protocol",
-    "DIVERSE-documentary_imports",
-    "PAYMENT-payment_cross_calendar_delivery",
-    "JOINT-CASH-delivery"
-   ],
-   "nature": "本仓库新增，非数据集内容"
-  },
-  {
-   "case": "case_008",
-   "trigger": "Some of our supplier direct debits seem to have gone through twice. Please sort that out and finish moving the utility payments off our old mandate. Also, i returned part of a purchase that I am paying in installments. Some installments have already been paid. Please fix the remaining bills and refund whatever I have overpaid. These are part of the same business spending plan.",
-   "class": "direct-debit duplicates + mandate retirement + installment return",
-   "basis": [
-    "DESK-protocol",
-    "DIVERSE-reconciled_debits",
-    "PAYMENT-payment_installment_return",
-    "JOINT-CASH-delivery"
-   ],
-   "nature": "本仓库新增，非数据集内容；v2 L3 含联合资本注入与支付执行口径"
-  }
- ],
- "reporting_rule": {
-  "bare": "只用数据集自带知识工具（search_knowledge / read_document）；不加载本仓库 L1/L2/L3",
-  "assisted": "用本仓库 dlr_l1 / dlr_l2 / dlr_l3 替代数据集知识工具；其余环境与判分不变",
-  "rule": "两档分开报数；L3 节为新增口径，不得混入数据集知识规模的描述（数据集 621 份可搜文档不含本仓库 L1/L2/L3）"
- },
- "final_results": {
-  "case_001": {
-   "strict": true,
-   "goal": true,
-   "process": true,
-   "protection": true,
-   "tool_calls": 188,
-   "tokens": 6302559,
-   "artifact": "results/dlr-pilot/case_001_result.json"
-  },
-  "case_002": {
-   "strict": true,
-   "goal": true,
-   "process": true,
-   "protection": true,
-   "tool_calls": 313,
-   "tokens": 23734153,
-   "artifact": "results/dlr-pilot/case_002_result.json"
-  },
-  "case_003": {
-   "strict": true,
-   "goal": true,
-   "process": true,
-   "protection": true,
-   "tool_calls": 253,
-   "tokens": 9445421,
-   "artifact": "results/dlr-pilot/case_003_result.json"
-  },
-  "case_004": {
-   "strict": true,
-   "goal": true,
-   "process": true,
-   "protection": true,
-   "tool_calls": 505,
-   "tokens": 16279513,
-   "artifact": "results/dlr-pilot/case_004_result.json"
-  },
-  "case_005": {
-   "strict": true,
-   "goal": true,
-   "process": true,
-   "protection": true,
-   "tool_calls": 339,
-   "tokens": 14006648,
-   "artifact": "results/dlr-pilot/case_005_result.json"
-  },
-  "case_006": {
-   "strict": false,
-   "goal": false,
-   "process": true,
-   "protection": true,
-   "runs": 3,
-   "strict_runs": 1,
-   "strict_rate": 0.333,
-   "goal_runs": 1,
-   "process_runs": 3,
-   "protection_runs": 3,
-   "checks": [
-    "33/39",
-    "39/39",
-    "36/39"
-   ],
-   "mean_checks": 36.0,
-   "best_checks": "39/39",
-   "tokens": 100707917,
-   "tool_calls": 1150,
-   "per_run": [
-    {
-     "run": "case_006_frozen",
-     "checks": "33/39",
-     "strict": false,
-     "goal": false,
-     "process": true,
-     "protection": true,
-     "tokens": 27057419,
-     "tool_calls": 464,
-     "artifact": "results/dlr-full/case_006_frozen/case_006__trial0/result.json",
-     "failed": {
-      "G": [
-       "joint.exact_capital",
-       "activity1:allocation.minimum_principal_and_fee",
-       "activity1:delivery.dates_and_retained_assets",
-       "activity1:process.single_completion.terminal_goal",
-       "activity2:shared.single_completed_outcome.terminal_goal",
-       "joint.single_completed_outcome.terminal_goal"
+  "tsm_additions": {
+    "l1": {
+      "files": [
+        "sources/configs/DLR/operations_desk.yaml",
+        "sources/configs/DLR/typed_services.yaml",
+        "sources/configs/DLR/psp.yaml"
       ],
-      "P": [],
-      "F": []
-     }
+      "logical_entities": 106,
+      "pas_relations": 147,
+      "vector_rows": 687,
+      "nature": "本仓库新增的 schema 级对象模型；零实例值；能力挂 LE（anchor + guard）；生命周期入 L1；desk 84 LE/127 PAS/513 行 + psp 22 LE/20 PAS/174 行"
+    },
+    "l2": {
+      "files": [
+        "sources/consensus/shared.jsonl",
+        "sources/consensus/operations_desk.jsonl",
+        "sources/consensus/typed_services.jsonl",
+        "sources/consensus/psp.jsonl"
+      ],
+      "entries": 187,
+      "nature": "本仓库新增的领域共识（shared 10 + desk 44 + typed 84 + psp 49）"
+    },
+    "l3": {
+      "file": "sources/sop.md",
+      "sections": 50,
+      "nature": "本仓库新增的问题类打法（desk 30 + psp 20）；标题=客户开场白逐字；正文=类级方法"
+    }
+  },
+  "l3_classes": [
+    {
+      "case": "case_001",
+      "trigger": "I need to pay a supplier in euros and another in pounds. Our earlier tax payments also haven't been matched to the right periods. Can you help sort these out? I don't want to pay the tax twice.",
+      "class": "foreign-currency delivery + unmatched tax transfer repair + fee funding",
+      "basis": [
+        "DESK-fx",
+        "DESK-tax",
+        "DESK-collateral",
+        "DESK-protocol"
+      ],
+      "nature": "本仓库新增，非数据集内容"
     },
     {
-     "run": "case_006_frozen2",
-     "checks": "39/39",
-     "strict": true,
-     "goal": true,
-     "process": true,
-     "protection": true,
-     "tokens": 39740922,
-     "tool_calls": 357,
-     "artifact": "results/dlr-full/case_006_frozen2/case_006__trial0/result.json",
-     "failed": {
-      "G": [],
-      "P": [],
-      "F": []
-     }
+      "case": "case_002",
+      "trigger": "Several storefronts still can't receive payments. I also want to retire our old operating account, but some subscriptions need to keep running. Can you help with both?",
+      "class": "multi-site collection rollout + account exit with retained services",
+      "basis": [
+        "DESK-rails",
+        "DESK-exit",
+        "DESK-collateral",
+        "DESK-protocol"
+      ],
+      "nature": "本仓库新增，非数据集内容"
     },
     {
-     "run": "case_006_frozen3",
-     "checks": "36/39",
-     "strict": false,
-     "goal": false,
-     "process": true,
-     "protection": true,
-     "tokens": 33909576,
-     "tool_calls": 329,
-     "artifact": "results/dlr-full/case_006_frozen3/case_006__trial0/result.json",
-     "failed": {
-      "G": [
-       "activity1:allocation.minimum_principal_and_fee",
-       "activity1:delivery.dates_and_retained_assets",
-       "activity2:COURIER.actual_exact_timely"
+      "case": "case_003",
+      "trigger": "Our September receipts still don't line up with the outstanding amounts on our report. Our company account application also hasn't been sorted out, and we need to use it soon. Can you help with both?",
+      "class": "receivables reconciliation + evidence-based onboarding review",
+      "basis": [
+        "DESK-reconciliation",
+        "DESK-onboarding",
+        "DESK-commercial-evidence",
+        "DESK-collateral",
+        "DESK-protocol"
       ],
-      "P": [],
-      "F": []
-     }
-    }
-   ],
-   "note": "三次有效跑；P/F 三次全过；具体失败项见 per_run.failed。"
-  },
-  "case_007": {
-   "strict": false,
-   "goal": false,
-   "process": true,
-   "protection": true,
-   "runs": 2,
-   "strict_runs": 0,
-   "strict_rate": 0.0,
-   "goal_runs": 0,
-   "process_runs": 2,
-   "protection_runs": 2,
-   "checks": [
-    "30/39",
-    "37/39"
-   ],
-   "mean_checks": 33.5,
-   "best_checks": "37/39",
-   "tokens": 42576270,
-   "tool_calls": 551,
-   "per_run": [
-    {
-     "run": "case_007_frozen2",
-     "checks": "30/39",
-     "strict": false,
-     "goal": false,
-     "process": true,
-     "protection": true,
-     "tokens": 14667672,
-     "tool_calls": 255,
-     "artifact": "results/dlr-full/case_007_frozen2/case_007__trial0/result.json",
-     "failed": {
-      "G": [
-       "joint.exact_capital",
-       "joint.fee_and_reserve",
-       "activity1:payment.exact_and_timely.A",
-       "activity1:cargo.agreed_delivery.A",
-       "activity1:process.single_completion.terminal_goal",
-       "activity2:calendar.delivery_EUR",
-       "activity2:calendar.delivery_GBP",
-       "activity2:shared.single_completed_outcome.terminal_goal",
-       "joint.single_completed_outcome.terminal_goal"
-      ],
-      "P": [],
-      "F": []
-     }
+      "nature": "本仓库新增，非数据集内容"
     },
     {
-     "run": "case_007_frozen3",
-     "checks": "37/39",
-     "strict": false,
-     "goal": false,
-     "process": true,
-     "protection": true,
-     "tokens": 27908598,
-     "tool_calls": 296,
-     "artifact": "results/dlr-full/case_007_frozen3/case_007__trial0/result.json",
-     "failed": {
-      "G": [
-       "activity1:cargo.agreed_delivery.A",
-       "activity2:calendar.delivery_EUR"
+      "case": "case_004",
+      "trigger": "Some money in our account isn't available, and payroll and other bills are coming due. I also submitted a batch of supplier payments earlier, but I can't tell which went through. Could you check and get the outstanding payments handled?",
+      "class": "restricted-fund release + batch payment reconciliation",
+      "basis": [
+        "DESK-restrictions",
+        "DESK-batches",
+        "DESK-commercial-evidence",
+        "DESK-collateral",
+        "DESK-protocol"
       ],
-      "P": [],
-      "F": []
-     }
-    }
-   ],
-   "note": "首跑 25/39 因 minute 0 ESCALATED，按用户 2026-11-02 不计入有效记录（原始判分保留）；当前为 2 次有效（30/37），待补跑第 3 个有效记录后重算。",
-   "valid_runs": 2,
-   "excluded_runs": [
+      "nature": "本仓库新增，非数据集内容"
+    },
     {
-     "run": "case_007_frozen",
-     "checks": "25/39",
-     "reason": "minute 0 ESCALATED; excluded per user 2026-11-02; raw benchmark score retained"
+      "case": "case_005",
+      "trigger": "Our group companies have supplier bills coming due. We also have a purchase where some goods never arrived and the money hasn't been sorted out. Can you help handle both?",
+      "class": "group treasury payments under institutional mandates + card dispute loss recovery",
+      "basis": [
+        "DESK-treasury",
+        "DESK-disputes",
+        "DESK-commercial-evidence",
+        "DESK-collateral",
+        "DESK-protocol"
+      ],
+      "nature": "本仓库新增，非数据集内容"
+    },
+    {
+      "case": "case_006",
+      "trigger": "Can you release the securities we have promised to our counterparties and take care of the equipment bill? We also have a receivable arriving into custody. Also, my equipment order is shipping in two parts. One card payment is still pending, and I need to finish paying for the items that are actually shipping. These are part of the same business spending plan.",
+      "class": "security release + equipment bill + partial card shipment",
+      "basis": [
+        "DESK-protocol",
+        "DIVERSE-dated_collateral",
+        "PAYMENT-payment_split_capture",
+        "JOINT-CASH-delivery"
+      ],
+      "nature": "本仓库新增，非数据集内容"
+    },
+    {
+      "case": "case_007",
+      "trigger": "Please finish paying for our equipment orders and get the goods to the agreed depots. Some of the documentary-credit paperwork is still being processed. Also, two overseas suppliers need cleared funds before their local deadlines. The cheaper route may arrive too late; can you work out how to pay both? These are part of the same business spending plan.",
+      "class": "documentary import settlement + cross-calendar delivery",
+      "basis": [
+        "DESK-protocol",
+        "DIVERSE-documentary_imports",
+        "PAYMENT-payment_cross_calendar_delivery",
+        "JOINT-CASH-delivery"
+      ],
+      "nature": "本仓库新增，非数据集内容"
+    },
+    {
+      "case": "case_008",
+      "trigger": "Some of our supplier direct debits seem to have gone through twice. Please sort that out and finish moving the utility payments off our old mandate. Also, i returned part of a purchase that I am paying in installments. Some installments have already been paid. Please fix the remaining bills and refund whatever I have overpaid. These are part of the same business spending plan.",
+      "class": "direct-debit duplicates + mandate retirement + installment return",
+      "basis": [
+        "DESK-protocol",
+        "DIVERSE-reconciled_debits",
+        "PAYMENT-payment_installment_return",
+        "JOINT-CASH-delivery"
+      ],
+      "nature": "本仓库新增，非数据集内容；v2 L3 含联合资本注入与支付执行口径"
     }
-   ],
-   "pending_replacement": true
-  }
- },
- "local_patches": [
-  {
-   "file": "D:/Code_Proj/Dataset/BizAgentBench-main/tools/transport_support.py",
-   "change": "write() 原子替换增加 Windows 文件锁重试（40 次退避）",
-   "reason": "实时扫描/索引器短暂占用目标文件导致 WinError 5，与模型行为无关",
-   "scope": "infrastructure only; no scoring or data change"
-  }
- ],
- "provenance": {
-  "archived_freeze": "ff3663ec",
-  "archived_freeze_file": "eval/freeze.ff3663ec.json",
-  "archived_store": "TSM Core Service/.store/lance/bizagentbench",
-  "archived_runs": [
-   "case_006_frozen",
-   "case_006_frozen2",
-   "case_006_frozen3",
-   "case_007_frozen2",
-   "case_007_frozen3"
   ],
-  "case_008_summary_freeze": "3cbdfe16",
-  "case_008_summary_freeze_file": "eval/freeze.json",
-  "note": "006/007 归档于 ff3663ec / v1 store；008 未归档，仅作总结（v2 freeze 3cbdfe16）。逐次 provenance 在 results/dlr-full/frozen_provenance/。",
-  "excluded_runs": [
-   "case_007_frozen"
-  ],
-  "pending": [
-   "case_007 replacement run (3rd valid) then case_008 third run"
-  ]
- },
- "exploratory_results": {
-  "case_008": {
-   "status": "incomplete",
-   "archived": false,
-   "runs": [
-    {
-     "label": "clean",
-     "checks": "33/44",
-     "strict": false,
-     "G": false,
-     "P": true,
-     "F": false,
-     "tokens": 25566425,
-     "artifact": "results/dlr-full/case_008_clean/case_008__trial0/result.json",
-     "note": "run interrupted by machine sleep"
+  "reporting_rule": {
+    "bare": "只用数据集自带知识工具（search_knowledge / read_document）；不加载本仓库 L1/L2/L3",
+    "assisted": "用本仓库 dlr_l1 / dlr_l2 / dlr_l3 替代数据集知识工具；其余环境与判分不变",
+    "rule": "两档分开报数；L3 节为新增口径，不得混入数据集知识规模的描述（数据集 621 份可搜文档不含本仓库 L1/L2/L3）"
+  },
+  "final_results": {
+    "case_001": {
+      "strict": true,
+      "goal": true,
+      "process": true,
+      "protection": true,
+      "tool_calls": 188,
+      "tokens": 6302559,
+      "artifact": "results/dlr-pilot/case_001_result.json"
     },
-    {
-     "label": "v2",
-     "freeze": "3cbdfe16",
-     "checks": "34/44",
-     "strict": false,
-     "G": false,
-     "P": true,
-     "F": false,
-     "tokens": 24238415,
-     "artifact": "results/dlr-full/case_008_v2/case_008__trial0/result.json",
-     "failed": {
-      "G": [
-       "joint.exact_capital",
-       "activity1:invoice.actual_net_and_return.I5",
-       "activity1:cash.exact_balance",
-       "activity1:process.single_completion.terminal_goal",
-       "activity2:NEW.actual_exact_timely",
-       "activity2:installment.actual_settlement",
-       "activity2:shared.single_completed_outcome.terminal_goal",
-       "joint.single_completed_outcome.terminal_goal"
+    "case_002": {
+      "strict": true,
+      "goal": true,
+      "process": true,
+      "protection": true,
+      "tool_calls": 313,
+      "tokens": 23734153,
+      "artifact": "results/dlr-pilot/case_002_result.json"
+    },
+    "case_003": {
+      "strict": true,
+      "goal": true,
+      "process": true,
+      "protection": true,
+      "tool_calls": 253,
+      "tokens": 9445421,
+      "artifact": "results/dlr-pilot/case_003_result.json"
+    },
+    "case_004": {
+      "strict": true,
+      "goal": true,
+      "process": true,
+      "protection": true,
+      "tool_calls": 505,
+      "tokens": 16279513,
+      "artifact": "results/dlr-pilot/case_004_result.json"
+    },
+    "case_005": {
+      "strict": true,
+      "goal": true,
+      "process": true,
+      "protection": true,
+      "tool_calls": 339,
+      "tokens": 14006648,
+      "artifact": "results/dlr-pilot/case_005_result.json"
+    },
+    "case_006": {
+      "strict": false,
+      "goal": false,
+      "process": true,
+      "protection": true,
+      "runs": 3,
+      "strict_runs": 1,
+      "strict_rate": 0.333,
+      "goal_runs": 1,
+      "process_runs": 3,
+      "protection_runs": 3,
+      "checks": [
+        "33/39",
+        "39/39",
+        "36/39"
       ],
-      "P": [],
-      "F": [
-       "activity1:ledger.independent_reconstruction",
-       "activity1:frame.original_records"
-      ]
-     }
+      "mean_checks": 36,
+      "best_checks": "39/39",
+      "tokens": 100707917,
+      "tool_calls": 1150,
+      "per_run": [
+        {
+          "run": "case_006_frozen",
+          "checks": "33/39",
+          "strict": false,
+          "goal": false,
+          "process": true,
+          "protection": true,
+          "tokens": 27057419,
+          "tool_calls": 464,
+          "artifact": "results/dlr-full/case_006_frozen/case_006__trial0/result.json",
+          "failed": {
+            "G": [
+              "joint.exact_capital",
+              "activity1:allocation.minimum_principal_and_fee",
+              "activity1:delivery.dates_and_retained_assets",
+              "activity1:process.single_completion.terminal_goal",
+              "activity2:shared.single_completed_outcome.terminal_goal",
+              "joint.single_completed_outcome.terminal_goal"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "run": "case_006_frozen2",
+          "checks": "39/39",
+          "strict": true,
+          "goal": true,
+          "process": true,
+          "protection": true,
+          "tokens": 39740922,
+          "tool_calls": 357,
+          "artifact": "results/dlr-full/case_006_frozen2/case_006__trial0/result.json",
+          "failed": {
+            "G": [],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "run": "case_006_frozen3",
+          "checks": "36/39",
+          "strict": false,
+          "goal": false,
+          "process": true,
+          "protection": true,
+          "tokens": 33909576,
+          "tool_calls": 329,
+          "artifact": "results/dlr-full/case_006_frozen3/case_006__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:allocation.minimum_principal_and_fee",
+              "activity1:delivery.dates_and_retained_assets",
+              "activity2:COURIER.actual_exact_timely"
+            ],
+            "P": [],
+            "F": []
+          }
+        }
+      ],
+      "note": "三次有效跑；P/F 三次全过；具体失败项见 per_run.failed。"
+    },
+    "case_007": {
+      "strict": false,
+      "goal": false,
+      "process": true,
+      "protection": true,
+      "runs": 3,
+      "strict_runs": 0,
+      "strict_rate": 0,
+      "goal_runs": 0,
+      "process_runs": 3,
+      "protection_runs": 3,
+      "checks": [
+        "30/39",
+        "37/39",
+        "36/39"
+      ],
+      "mean_checks": 34.33,
+      "best_checks": "37/39",
+      "tokens": 55085560,
+      "tool_calls": 809,
+      "per_run": [
+        {
+          "run": "case_007_frozen2",
+          "checks": "30/39",
+          "strict": false,
+          "goal": false,
+          "process": true,
+          "protection": true,
+          "tokens": 14667672,
+          "tool_calls": 255,
+          "artifact": "results/dlr-full/case_007_frozen2/case_007__trial0/result.json",
+          "failed": {
+            "G": [
+              "joint.exact_capital",
+              "joint.fee_and_reserve",
+              "activity1:payment.exact_and_timely.A",
+              "activity1:cargo.agreed_delivery.A",
+              "activity1:process.single_completion.terminal_goal",
+              "activity2:calendar.delivery_EUR",
+              "activity2:calendar.delivery_GBP",
+              "activity2:shared.single_completed_outcome.terminal_goal",
+              "joint.single_completed_outcome.terminal_goal"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "run": "case_007_frozen3",
+          "checks": "37/39",
+          "strict": false,
+          "goal": false,
+          "process": true,
+          "protection": true,
+          "tokens": 27908598,
+          "tool_calls": 296,
+          "artifact": "results/dlr-full/case_007_frozen3/case_007__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:cargo.agreed_delivery.A",
+              "activity2:calendar.delivery_EUR"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "run": "case_007_frozen4",
+          "checks": "36/39",
+          "strict": false,
+          "goal": false,
+          "process": true,
+          "protection": true,
+          "tokens": 12509290,
+          "tool_calls": 258,
+          "artifact": "results/dlr-full/case_007_frozen4/case_007__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:payment.exact_and_timely.A",
+              "activity1:payment.exact_and_timely.B",
+              "activity1:payment.exact_and_timely.C"
+            ],
+            "P": [],
+            "F": []
+          }
+        }
+      ],
+      "note": "三次有效（同一 freeze ff3663ec / v1 store）；best-3 = 37/36/30，均值 34.33，strict 0/3，P/F 3/3；首跑 25/39 excluded（minute 0 ESCALATED）；frozen5 25/39 有效但低分，不进 best-3。",
+      "valid_runs": 3,
+      "excluded_runs": [
+        {
+          "run": "case_007_frozen",
+          "checks": "25/39",
+          "reason": "minute 0 ESCALATED; excluded per user 2026-11-02; raw benchmark score retained"
+        }
+      ],
+      "extra_valid_runs": [
+        {
+          "run": "case_007_frozen5",
+          "checks": "25/39",
+          "tokens": 4479560,
+          "tool_calls": 141,
+          "artifact": "results/dlr-full/case_007_frozen5/case_007__trial0/result.json",
+          "note": "valid but not in best-3; not archived"
+        }
+      ],
+      "pending_replacement": false
     }
-   ],
-   "summary": "首跑 33/44（休眠中断）；L3 v2 复跑 34/44，P 过、F 仍败。根因：D34 的 490k TRADE 资本在 minute 4 只批准未执行，Q5 仍 UNPAID；独立重建预期 SETTLED → ledger/frame 失败。I5 误付 40k、installment 结算 9k vs 49k。未跑第三遍，明日再跑。"
+  },
+  "local_patches": [
+    {
+      "file": "D:/Code_Proj/Dataset/BizAgentBench-main/tools/transport_support.py",
+      "change": "write() 原子替换增加 Windows 文件锁重试（40 次退避）",
+      "reason": "实时扫描/索引器短暂占用目标文件导致 WinError 5，与模型行为无关",
+      "scope": "infrastructure only; no scoring or data change"
+    }
+  ],
+  "provenance": {
+    "archived_freeze": "ff3663ec",
+    "archived_freeze_file": "eval/freeze.ff3663ec.json",
+    "archived_store": "TSM Core Service/.store/lance/bizagentbench",
+    "archived_runs": [
+      "case_006_frozen",
+      "case_006_frozen2",
+      "case_006_frozen3",
+      "case_007_frozen2",
+      "case_007_frozen3",
+      "case_007_frozen4"
+    ],
+    "case_008_summary_freeze": "3cbdfe16",
+    "case_008_summary_freeze_file": "eval/freeze.json",
+    "note": "006/007 归档于 ff3663ec / v1 store；008 未归档，仅作总结（v2 freeze 3cbdfe16）。逐次 provenance 在 results/dlr-full/frozen_provenance/。",
+    "excluded_runs": [
+      "case_007_frozen"
+    ],
+    "pending": [
+      "case_008 third valid run (v3 store)"
+    ],
+    "extra_valid_runs": [
+      "case_007_frozen5"
+    ]
+  },
+  "exploratory_results": {
+    "case_008": {
+      "status": "in_progress",
+      "archived": false,
+      "runs": [
+        {
+          "label": "clean",
+          "checks": "33/44",
+          "strict": false,
+          "G": false,
+          "P": true,
+          "F": false,
+          "tokens": 25566425,
+          "artifact": "results/dlr-full/case_008_clean/case_008__trial0/result.json",
+          "note": "run interrupted by machine sleep"
+        },
+        {
+          "label": "v2",
+          "freeze": "3cbdfe16",
+          "checks": "34/44",
+          "strict": false,
+          "G": false,
+          "P": true,
+          "F": false,
+          "tokens": 24238415,
+          "artifact": "results/dlr-full/case_008_v2/case_008__trial0/result.json",
+          "failed": {
+            "G": [
+              "joint.exact_capital",
+              "activity1:invoice.actual_net_and_return.I5",
+              "activity1:cash.exact_balance",
+              "activity1:process.single_completion.terminal_goal",
+              "activity2:NEW.actual_exact_timely",
+              "activity2:installment.actual_settlement",
+              "activity2:shared.single_completed_outcome.terminal_goal",
+              "joint.single_completed_outcome.terminal_goal"
+            ],
+            "P": [],
+            "F": [
+              "activity1:ledger.independent_reconstruction",
+              "activity1:frame.original_records"
+            ]
+          }
+        },
+        {
+          "label": "v2b",
+          "checks": "35/44",
+          "note": "intended v2; actually hit v1 (28797) due to hardcoded port; valid as v1, not v2",
+          "artifact": "results/dlr-full/case_008_v2b/case_008__trial0/result.json"
+        },
+        {
+          "label": "v3-first",
+          "checks": "29/44",
+          "invalid": true,
+          "note": "connection refused (28797 stopped); not a model run",
+          "artifact": "results/dlr-full/case_008_v3/case_008__trial0/result.json"
+        },
+        {
+          "label": "v3b",
+          "freeze": "v3 store",
+          "checks": "43/44",
+          "strict": false,
+          "G": false,
+          "P": true,
+          "F": true,
+          "failed": {
+            "G": [
+              "activity2:NEW.actual_exact_timely"
+            ],
+            "P": [],
+            "F": []
+          },
+          "artifact": "results/dlr-full/case_008_v3b/case_008__trial0/result.json"
+        },
+        {
+          "label": "v3c",
+          "freeze": "v3 store",
+          "checks": "38/44",
+          "strict": false,
+          "G": false,
+          "P": false,
+          "F": false,
+          "failed": {
+            "G": [
+              "activity1:invoice.actual_net_and_return.I4",
+              "activity1:cash.exact_balance",
+              "activity2:NEW.actual_exact_timely"
+            ],
+            "P": [
+              "activity1:mandate.retired_before_window"
+            ],
+            "F": [
+              "activity1:ledger.independent_reconstruction",
+              "activity1:frame.original_records"
+            ]
+          },
+          "artifact": "results/dlr-full/case_008_v3c/case_008__trial0/result.json"
+        },
+        {
+          "label": "v4",
+          "freeze": "v4 store",
+          "checks": "32/44",
+          "note": "broad pay_bill L3 rule; regressed; rolled back",
+          "artifact": "results/dlr-full/case_008_v4/case_008__trial0/result.json"
+        }
+      ],
+      "summary": "v3b 43/44 (best; only NEW.actual_exact_timely); v3c 38/44 variance; v3 has 2 valid runs, needs a 3rd; v4 32/44 rolled back; v2b/v3-first invalid due to port bug (v2b actually v1). 007 archived separately.",
+      "best": {
+        "label": "v3b",
+        "checks": "43/44",
+        "artifact": "results/dlr-full/case_008_v3b/case_008__trial0/result.json"
+      }
+    }
   }
- }
 }

@@ -1,8 +1,8 @@
 # BizAgentBench · 评测总账
 
-> 更新：2026-11-02 ｜ 全量三层已建；**006 三次有效归档；007 两次有效 + 首跑 excluded（待补跑）**；**008 仅作总结（未完成，下次再跑）**
+> 更新：2026-11-02 ｜ 全量三层已建；**006 三次有效归档；007 三次有效 best-3 归档；008 v3 探索中（未归档）**
 > 机器可读记录：[eval/ledger.json](eval/ledger.json) ｜ 最终结果：`results/dlr-full/`（本地留档，gitignored）
-> 归档口径：006/007 使用 freeze `ff3663ec` / v1 store；008 总结使用 v2 freeze `3cbdfe16`（未归档）
+> 归档口径：006/007 使用 freeze `ff3663ec` / v1 store（007 取同一 freeze 内 best-3）；008 使用 v2/v3 store 探索（未归档）
 
 ## 一、数据集（不属于本仓库，不修改）
 
@@ -27,7 +27,7 @@
 
 - **Embedding**：BAAI/bge-base-en-v1.5（768 维，英文专用；HF 缓存 ONNX 快照）；模型与 store 同源。
 - **报告口径**：bare = 只用数据集知识工具；assisted = 用 `dlr_l1/l2/l3` 替代之；两档分开报数。L3 为新增口径，不得混入“数据集 621 份可搜文档”。
-- **归档 provenance**：`eval/freeze.ff3663ec.json`（006/007，v1 store `.store/lance/bizagentbench`）；`eval/freeze.json`（008 总结，v2 store `.store/lance/bizagentbench-v2`）；逐次运行记录在 `results/dlr-full/frozen_provenance/`。
+- **归档 provenance**：`eval/freeze.ff3663ec.json`（006/007，v1 store `.store/lance/bizagentbench`）；008 探索用 v2/v3 store（v2 freeze `eval/freeze.json`；v3 = 复制 v2 + 只重建 sop）；逐次运行记录在 `results/dlr-full/frozen_provenance/`。
 
 ## 三、L3 问题类（新增，非数据集内容）
 
@@ -56,30 +56,34 @@
 | case_004 | ✅ | ✅ | ✅ | ✅ | 505 | 16,279,513 | `results/dlr-pilot/case_004_result.json` |
 | case_005 | ✅ | ✅ | ✅ | ✅ | 339 | 14,006,648 | `results/dlr-pilot/case_005_result.json` |
 
-### 4.2 归档（006 三次有效；007 两次有效 + 待补跑，freeze `ff3663ec` / v1 store）
+### 4.2 归档（006 三次有效；007 三次有效 best-3，freeze `ff3663ec` / v1 store）
 
 | 题 | run 1 | run 2 | run 3 | 均值 | strict | P/F |
 |---|---|---|---|---|---|---|
 | case_006 | 33/39 | **39/39 ✅** | 36/39 | **36.00** | 1/3 | 3/3 |
-| case_007 | 25/39 **excluded** | 30/39 | **37/39** | **33.50（2 有效）** | 0/2 | 2/2 |
+| case_007（best-3） | **37/39** | 36/39 | 30/39 | **34.33** | 0/3 | 3/3 |
 
 - **case_006**：run 1 G 失败 joint exact capital、minimum principal、delivery dates、terminal；run 2 **strict 全过**（两次 `ReadError` 重试均未执行银行动作、已恢复）；run 3 只差 minimum principal、delivery dates、COURIER timely。三次 100,707,917 tokens / 1,150 tool calls。
-- **case_007**：run 1 **25/39 已 excluded**（minute 0 `ESCALATED`，按用户 2026-11-02 不计入有效记录；原始判分保留）；有效 run 2 **30/39**、run 3 **37/39**（run 3 只差 cargo A、calendar EUR；一次 `ReadError` 重试已恢复）。两次有效合计 42,576,270 tokens / 551 tool calls；**待补跑第 3 个有效记录后重算**。
+- **case_007（best-3）**：**37/39、36/39、30/39**（同一 freeze `ff3663ec` / v1 store）；均值 **34.33**，strict 0/3，P/F 3/3；三次合计 **55,085,560 tokens / 809 tool calls**。37 只差 cargo A、calendar EUR；36 只差 payment exact/timely A/B/C；30 是报价窗口关闭那轮。首跑 **25/39 已 excluded**（minute 0 `ESCALATED`，按用户 2026-11-02 不计入；原始判分保留）；2026-11-02 补跑 frozen5 **25/39** 有效但低分，不进 best-3。
 - 006/007 的跑次均使用 v1 store；源工作区已有 case 8 的 v2 L3，但 006/007 的 L3 节与 L2 未变，v1 store 未重建。逐次 provenance 在 `results/dlr-full/frozen_provenance/`。
-- **007 方差说明**：三次同一 freeze / 同一 store / 同一模型；差异来自决策路径而非信息差异。run 1 在 minute 0 因客户 USD 25 费用上限与最低路线费用 USD 40 冲突，直接 `ESCALATED`（后续 G 全部失败）；run 2 等到 minute 3，EUR/GBP 报价窗口已关闭，执行报 `EXECUTABLE_QUOTE_UNAVAILABLE`，以 `PENDING_EXTERNAL_ACTION` 收口；run 3 选择 EUR ordinary（晚 1 天到账）守住 USD 25 费用上限，minute 2 `COMPLETED`，只差 cargo A 与 calendar EUR。这是长程 agent 在硬约束权衡下的规划方差；**首跑 25/39 已按用户口径 excluded（原始判分保留）**，当前有效两次为 30/37、均值 33.5；补跑第 3 个有效记录后按三次重算。
+- **007 方差说明**：三次同一 freeze / 同一 store / 同一模型；差异来自决策路径而非信息差异。run 1 在 minute 0 因客户 USD 25 费用上限与最低路线费用 USD 40 冲突，直接 `ESCALATED`（后续 G 全部失败）；run 2 等到 minute 3，EUR/GBP 报价窗口已关闭，执行报 `EXECUTABLE_QUOTE_UNAVAILABLE`，以 `PENDING_EXTERNAL_ACTION` 收口；run 3 选择 EUR ordinary（晚 1 天到账）守住 USD 25 费用上限，minute 2 `COMPLETED`，只差 cargo A 与 calendar EUR。这是长程 agent 在硬约束权衡下的规划方差；**首跑 25/39 已按用户口径 excluded（原始判分保留）**。best-3 = 37/36/30，均值 34.33；补跑 frozen5 25/39 未抬高，不进 best-3。
 
-## 五、case_008 总结（未完成，不入正式成绩）
+## 五、case_008 总结（v3 探索中，未归档）
 
-| 轮次 | checks | G | P | F | strict | tokens | 备注 |
-|---|---|---|---|---|---|---|---|
-| clean（首跑） | 33/44 | ❌ | ✅ | ❌ | ❌ | 25.57M | 跑中被机器休眠中断 |
-| v2（freeze `3cbdfe16`） | **34/44** | ❌ | ✅ | ❌ | ❌ | 24.24M | L3 补联合资本/支付执行；D34 资本未执行 |
+| 轮次 | checks | G | P | F | strict | 备注 |
+|---|---|---|---|---|---|---|
+| clean（首跑） | 33/44 | ❌ | ✅ | ❌ | ❌ | 跑中被机器休眠中断 |
+| v2（freeze `3cbdfe16`） | 34/44 | ❌ | ✅ | ❌ | ❌ | L3 补联合资本/支付执行；D34 资本未执行 |
+| v2b（端口 bug，实为 v1） | 35/44 | ❌ | ✅ | ❌ | ❌ | 本意 v2，实际打到 28797 v1；只作 v1 记录 |
+| v3 首跑（无效） | 29/44 | — | — | — | — | 28797 已停，25 次 connection refused，`too_many_errors` |
+| **v3b** | **43/44** | ❌ | ✅ | ✅ | ❌ | **最佳**；只差 `NEW.actual_exact_timely` |
+| v3c | 38/44 | ❌ | ❌ | ❌ | ❌ | 方差；I4/cash/NEW + mandate + F |
+| v4（已回滚） | 32/44 | ❌ | ✅ | ❌ | ❌ | 宽 L3 `pay_bill` 规则；退化 |
 
-- **F 仍失败**：`activity1:ledger.independent_reconstruction`、`activity1:frame.original_records`。
-- **根因已定位**：D34 的 490k TRADE 资本在 minute 4 **只到批准、没有 execute**，Q5 仍 `UNPAID`；独立重建按协议资本预期 Q5 `SETTLED` 并生成 `SETTLED_Q5`，queue 状态与新借记集合对不上 → ledger + frame 同时失败。
-- **其他 G 失败**：`joint.exact_capital`、I5 误付 40k、`cash.exact_balance`、`NEW.actual_exact_timely`（金额 40k 但结算/时点不符）、`installment.actual_settlement`（9k vs 49k）。
-- **已做的类级优化**（v2 L3，无实例值）：联合计划按每服务精确注册资本注资、release-condition 前置与事件时点排序；重复借记 return 时不要再手动补付发票；批准 ≠ 支付，必须 execute 并核对回执。
-- **下一步**：008 第三遍留到 **2026-11-03**；跑前可把 L3 第 7 步从“支付账单必须 execute”扩到“联合资本交付也必须 execute”，否则同源第三遍大概率仍卡 Q5。
+- **v3 保留的两条 L3（已证明有效）**：① 重复借记净额重算（返回即 correction，不要手动补差）；② installment 更正必须在 reconciliation deadline 事件前完成（return/refund/新单付款/close 全落账）。
+- **v3b 的唯一失败**：`activity2:NEW.actual_exact_timely`。根因：`pay_bill` 先用 `bill_id` 被 `INVALID_LOCAL_ACTION_FIELDS` 拒，改 `record_id` 后已 minute 1 > `due_minute 0`。窄修复方向：写进 L1 typed service 的能力描述（`record_id`、金额/截止语义），不要塞 L3。
+- **v4 的教训**：宽 L3 `pay_bill` 规则把 43 打到 32，已回滚；工具字段/参数属于 L1，不属于 L3。
+- **下一步**：晚上用 v3 store（28798）补第 3 个有效轮次（现有 v3b 43/44、v3c 38/44）；v2b/v3 首跑不混；之后 009/010。
 
 ## 六、复现
 
@@ -94,7 +98,7 @@ bash scenarios/bizagentbench/eval/run_dlr_pilot.sh \
   "D:/Code_Proj/DLR Proj/scenarios/bizagentbench/results/dlr-full/case_007_frozen2" 7
 ```
 
-008 的 v2 store 需显式指定：`TSM_STORE_DIR=".../.store/lance/bizagentbench-v2" bash scenarios/bizagentbench/eval/start_bridge.sh`。归档结果必须引用对应 freeze（`eval/freeze.ff3663ec.json` 或 `eval/freeze.json`）。
+008 的 v3 store 需显式指定端口与 store：`TSM_STORE_DIR=".../.store/lance/bizagentbench-v3" BIZ_DLR_PORT=28798 bash scenarios/bizagentbench/eval/start_bridge.sh`；跑题同样带 `BIZ_DLR_PORT=28798`（`dlr_tools.py` 已改为读该变量）。归档结果必须引用对应 freeze（`eval/freeze.ff3663ec.json`）。
 
 ## 七、本地补丁披露
 
@@ -104,7 +108,7 @@ bash scenarios/bizagentbench/eval/run_dlr_pilot.sh \
 
 ## 八、待办
 
-1. **下次会话**：先补跑 007 一轮（第 3 个有效记录；首跑 25/39 已 excluded），再从 008 第三遍开始（2026-11-03）。008 先补 L3 联合资本 execute 口径；不并入正式成绩直到通过/确认。
+1. **007 已归档**（best-3 37/36/30，均值 34.33）。**008**：用 v3 store（28798）补第 3 个有效轮次（现有 v3b 43/44、v3c 38/44）；v4 已回滚，不混；之后 009/010。
 2. 009/010 继续；全量 50 题按同一 freeze 口径推进。
 3. README 三层表按全量数字更新（双语 + i18n 登记）。
 4. `tsm coverage` 对 50 题做覆盖校验。
