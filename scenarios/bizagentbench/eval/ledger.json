@@ -782,6 +782,46 @@
       ],
       "invalid_attempts": [],
       "note": "022 strict PASS on first pre-run (v15). Its L3 section was not modified in v15-v17, so the result carries to the final store; no rerun needed."
+    },
+    "case_020": {
+      "strict": true,
+      "goal": true,
+      "process": true,
+      "protection": true,
+      "best_checks": "29/29",
+      "best_artifact": "results/dlr-full/case_020_v17/case_020__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v15",
+          "checks": "24/29",
+          "strict": false,
+          "artifact": "results/dlr-full/case_020_v15/case_020__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:claims.exact_unauthorized_physical_presentments",
+              "activity1:process.single_completion.terminal_goal",
+              "activity2:checkout.A",
+              "activity2:shared.single_completed_outcome.terminal_goal",
+              "closure.single_completed.terminal_goal"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v17",
+          "checks": "29/29",
+          "strict": true,
+          "artifact": "results/dlr-full/case_020_v17/case_020__trial0/result.json",
+          "failed": {
+            "G": [],
+            "P": [],
+            "F": []
+          }
+        }
+      ],
+      "invalid_attempts": [],
+      "note": "020 strict PASS on v17 after two L3 fixes (claim net loss after posted credits; new checkout verification must actually be completed by the customer). v15 first pre-run 24/29 valid."
     }
   },
   "local_patches": [
