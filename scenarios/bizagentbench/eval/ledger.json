@@ -757,7 +757,10 @@
     "batch_v12_store": "TSM Core Service/.store/lance/bizagentbench-v12",
     "batch_v13_freeze": "b48b70f0",
     "batch_v13_freeze_file": "eval/freeze.v13.json",
-    "batch_v13_store": "TSM Core Service/.store/lance/bizagentbench-v13"
+    "batch_v13_store": "TSM Core Service/.store/lance/bizagentbench-v13",
+    "batch_v14_freeze": "4516b4d7",
+    "batch_v14_freeze_file": "eval/freeze.v14.json",
+    "batch_v14_store": "TSM Core Service/.store/lance/bizagentbench-v14"
   },
   "exploratory_results": {
     "case_008": {
