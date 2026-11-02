@@ -140,7 +140,7 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 - **v16 = v15 + 三处补修**（freeze `06d6533a`）：018 每个 final 确认不一致的 dated item 都要记价值日修订 + 无收款人字段的 due-0 服务账单仍用 `pay_bill` 直付 + 批准语句改为事实陈述；020 报**净损失**、新验证须客户实际完成后再付；019 把 due-0 卖家列为 **step 0**（先于任何证书动作）。018/019/020 v16 待跑（021/022/023 v15 占着 28799）。
 - **v15 批次结果**：021 **26/30**（employee M 结算 due 2 拖到 3；COURIER 10000 未按账单付，反而对 FIRST 行做了 10000 cash_payment → FIRST 超额；未 release 15000 剩余额度）；022 **30/30 strict PASS**（首跑即过，section 后续未改，不必复跑）；023 **31/32**（仅 `COURIER.actual_exact_timely`：due 0 拖到 minute 2）。
 - **v17 = v16 + 021/023 补修**（freeze `b91c7bcc`）：021 员工按各自 due 最早先结 + COURIER 按独立账单直付（due 0 先付）+ 行 capture 不超过 final + release 未用额度；023 COURIER due 0 先付。018/019/020 v17 三路在 28799；之后 021/023 v17。
-- **v17 首批结果**：**020 = 29/29 strict PASS**（两处 L3 修复均生效；已归档）；**019 v17 无效**（`too_many_errors`，11 挂含新 reliance/authority + link.quote_version_refresh，按无效轮排除）；019 归档 best **34/35**（v14/v15，仅 seller.B，停止优化）。018 v17 仍在跑；021/023 v17 已发车。
+- **v17 首批结果**：**020 = 29/29 strict PASS**（两处 L3 修复均生效；已归档）；**019 v17 无效**（`too_many_errors`，11 挂含新 reliance/authority + link.quote_version_refresh，按无效轮排除）；019 归档 best **34/35**（v14/v15，仅 seller.B，停止优化）；**018 v17 = 28/30**（价值日已补记，但 minute 0 先付 retainer 再加 OPERATING +5000 → 准备金瞬时跌破，SALES −800 仍未记）；018 归档 best **29/30**（v12/v14，5 有效轮）。021/023/024 v17 在跑。
 - **v5（L1 pay_bill 修复，待验证）**：freeze `cff9b6c9` / `eval/freeze.v5.json`；`InstallmentReturn` 描述由 `pay_bill {bill_id}` 改为 `{record_id, amount_minor}`，并补“due minute 是操作截止”；v5 store = 复制 v3 + 重建 entities（687/187/50），已在 28799 验证描述生效。未跑，等 008/016 A/B。
 - **冻结态复跑（后续）**：001–005 与 case_031 的预跑 strict 在冻结 v1 store 上复跑确认；按当前建模设计预期只是方差摆动，不应大幅劣化；PSP 32–50 同批推进。
 - **纪律**：类级规则改动必须 A/B；变差即回滚，不叠规则；样本不足不宣称优化有效。
