@@ -505,39 +505,185 @@
       "valid_attempts": [
         {
           "label": "clean (v1)",
-          "checks": "33/44"
+          "checks": "33/44",
+          "strict": false,
+          "artifact": "results/dlr-full/case_008_clean/case_008__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench",
+          "freeze": "ff3663ec",
+          "failed": {
+            "G": [
+              "joint.exact_capital",
+              "activity1:invoice.actual_net_and_return.I4",
+              "activity1:invoice.actual_net_and_return.I5",
+              "activity1:cash.exact_balance",
+              "activity1:process.single_completion.terminal_goal",
+              "activity2:NEW.actual_exact_timely",
+              "activity2:installment.actual_settlement",
+              "activity2:shared.single_completed_outcome.terminal_goal",
+              "joint.single_completed_outcome.terminal_goal"
+            ],
+            "P": [],
+            "F": [
+              "activity1:ledger.independent_reconstruction",
+              "activity1:frame.original_records"
+            ]
+          }
         },
         {
           "label": "v2",
-          "checks": "34/44"
+          "checks": "34/44",
+          "strict": false,
+          "artifact": "results/dlr-full/case_008_v2/case_008__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v2",
+          "freeze": "3cbdfe16",
+          "failed": {
+            "G": [
+              "joint.exact_capital",
+              "activity1:invoice.actual_net_and_return.I5",
+              "activity1:cash.exact_balance",
+              "activity1:process.single_completion.terminal_goal",
+              "activity2:NEW.actual_exact_timely",
+              "activity2:installment.actual_settlement",
+              "activity2:shared.single_completed_outcome.terminal_goal",
+              "joint.single_completed_outcome.terminal_goal"
+            ],
+            "P": [],
+            "F": [
+              "activity1:ledger.independent_reconstruction",
+              "activity1:frame.original_records"
+            ]
+          }
         },
         {
           "label": "v3b",
-          "checks": "43/44"
+          "checks": "43/44",
+          "strict": false,
+          "artifact": "results/dlr-full/case_008_v3b/case_008__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v3",
+          "freeze": "6f3a3102",
+          "failed": {
+            "G": [
+              "activity2:NEW.actual_exact_timely"
+            ],
+            "P": [],
+            "F": []
+          }
         },
         {
           "label": "v3c",
-          "checks": "38/44"
+          "checks": "38/44",
+          "strict": false,
+          "artifact": "results/dlr-full/case_008_v3c/case_008__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v3",
+          "freeze": "6f3a3102",
+          "failed": {
+            "G": [
+              "activity1:invoice.actual_net_and_return.I4",
+              "activity1:cash.exact_balance",
+              "activity2:NEW.actual_exact_timely"
+            ],
+            "P": [
+              "activity1:mandate.retired_before_window"
+            ],
+            "F": [
+              "activity1:ledger.independent_reconstruction",
+              "activity1:frame.original_records"
+            ]
+          }
         },
         {
           "label": "v3d",
-          "checks": "37/44"
+          "checks": "37/44",
+          "strict": false,
+          "artifact": "results/dlr-full/case_008_v3d/case_008__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v3",
+          "freeze": "6f3a3102",
+          "failed": {
+            "G": [
+              "activity1:invoice.actual_net_and_return.I2",
+              "activity1:invoice.actual_net_and_return.I4",
+              "activity1:invoice.actual_net_and_return.I6",
+              "activity1:cash.exact_balance",
+              "activity2:NEW.actual_exact_timely"
+            ],
+            "P": [],
+            "F": [
+              "activity1:ledger.independent_reconstruction",
+              "activity1:frame.original_records"
+            ]
+          }
         },
         {
           "label": "v5",
-          "checks": "36/44"
+          "checks": "36/44",
+          "strict": false,
+          "artifact": "results/dlr-full/case_008_v5/case_008__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v5",
+          "freeze": "cff9b6c9",
+          "failed": {
+            "G": [
+              "activity1:invoice.actual_net_and_return.I4",
+              "activity1:events.final_actual_results",
+              "activity1:cash.exact_balance",
+              "activity2:NEW.actual_exact_timely",
+              "activity2:installment.correction_deadline"
+            ],
+            "P": [
+              "activity1:mandate.retired_before_window"
+            ],
+            "F": [
+              "activity1:ledger.independent_reconstruction",
+              "activity1:frame.original_records"
+            ]
+          }
         },
         {
           "label": "v7",
-          "checks": "41/44"
+          "checks": "41/44",
+          "strict": false,
+          "artifact": "results/dlr-full/case_008_v7/case_008__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v7",
+          "freeze": "c05a38ed",
+          "failed": {
+            "G": [
+              "activity1:invoice.actual_net_and_return.I2",
+              "activity1:invoice.actual_net_and_return.I6",
+              "activity2:NEW.actual_exact_timely"
+            ],
+            "P": [],
+            "F": []
+          }
         },
         {
           "label": "v9",
-          "checks": "43/44"
+          "checks": "43/44",
+          "strict": false,
+          "artifact": "results/dlr-full/case_008_v9/case_008__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v9",
+          "freeze": "faaa7cc1",
+          "failed": {
+            "G": [
+              "joint.fee_and_reserve"
+            ],
+            "P": [],
+            "F": []
+          }
         },
         {
           "label": "v10",
-          "checks": "42/44"
+          "checks": "42/44",
+          "strict": false,
+          "artifact": "results/dlr-full/case_008_v10/case_008__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v10",
+          "freeze": "d0777d2a",
+          "failed": {
+            "G": [
+              "activity1:invoice.actual_net_and_return.I2",
+              "activity1:invoice.actual_net_and_return.I6"
+            ],
+            "P": [],
+            "F": []
+          }
         }
       ],
       "invalid_attempts": [
@@ -557,7 +703,10 @@
           "reason": "broad pay_bill L3 rule; regressed; rolled back"
         }
       ],
-      "note": "008 best 43/44 (v3b and v9); v10 42/44 is within variance (NEW and joint.fee_and_reserve now pass). No strict. Optimization stopped."
+      "note": "008 best 43/44 (v3b and v9); v10 42/44 is within variance (NEW and joint.fee_and_reserve now pass). No strict. Optimization stopped. [6:00 收口：attempts enriched with store/freeze and failed items from result.json]",
+      "best_artifact": "results/dlr-full/case_008_v3b/case_008__trial0/result.json",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v3",
+      "best_freeze": "6f3a3102"
     },
     "case_015": {
       "strict": false,
@@ -570,17 +719,43 @@
         {
           "label": "v3",
           "checks": "40/42",
-          "artifact": "results/dlr-full/case_015_v3/case_015__trial0/result.json"
+          "strict": false,
+          "artifact": "results/dlr-full/case_015_v3/case_015__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v3",
+          "freeze": "6f3a3102",
+          "failed": {
+            "G": [
+              "activity1:response.exact_timely_right.ALDER",
+              "activity2:seller.B"
+            ],
+            "P": [],
+            "F": []
+          }
         },
         {
           "label": "v5",
           "checks": "39/42",
-          "artifact": "results/dlr-full/case_015_v5/case_015__trial0/result.json"
+          "strict": false,
+          "artifact": "results/dlr-full/case_015_v5/case_015__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v5",
+          "freeze": "cff9b6c9",
+          "failed": {
+            "G": [
+              "activity1:response.exact_timely_right.ALDER",
+              "activity1:response.exact_timely_right.CEDAR",
+              "activity2:seller.B"
+            ],
+            "P": [],
+            "F": []
+          }
         },
         {
           "label": "v10",
           "checks": "41/42",
+          "strict": false,
           "artifact": "results/dlr-full/case_015_v10/case_015__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v10",
+          "freeze": "d0777d2a",
           "failed": {
             "G": [
               "activity2:seller.B"
@@ -590,7 +765,9 @@
           }
         }
       ],
-      "note": "015 best 41/42 (v10); only seller.B remains (payout_due_minute 0 paid at minute 1). No strict; optimization stopped."
+      "note": "015 best 41/42 (v10); only seller.B remains (payout_due_minute 0 paid at minute 1). No strict; optimization stopped. [6:00 收口：attempts enriched with store/freeze and failed items from result.json]",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v10",
+      "best_freeze": "d0777d2a"
     },
     "case_011": {
       "strict": false,
@@ -603,20 +780,82 @@
         {
           "label": "v3",
           "checks": "32/42",
-          "artifact": "results/dlr-full/case_011_v3/case_011__trial0/result.json"
+          "strict": false,
+          "artifact": "results/dlr-full/case_011_v3/case_011__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v3",
+          "freeze": "6f3a3102",
+          "failed": {
+            "G": [
+              "joint.exact_capital",
+              "activity1:cargo.correct_title_destination_and_deadline",
+              "activity1:charges.minimum_complete_plan",
+              "activity1:process.single_completion.terminal_goal",
+              "activity2:participant.A",
+              "activity2:participant.B",
+              "activity2:group.merchant_G1",
+              "activity2:shared.single_completed_outcome.terminal_goal",
+              "joint.single_completed_outcome.terminal_goal"
+            ],
+            "P": [
+              "joint.continuous_operating_floors"
+            ],
+            "F": []
+          }
         },
         {
           "label": "v10",
           "checks": "30/42",
-          "artifact": "results/dlr-full/case_011_v10/case_011__trial0/result.json"
+          "strict": false,
+          "artifact": "results/dlr-full/case_011_v10/case_011__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v10",
+          "freeze": "d0777d2a",
+          "failed": {
+            "G": [
+              "joint.exact_capital",
+              "joint.fee_and_reserve",
+              "activity1:process.single_completion.terminal_goal",
+              "activity2:participant.A",
+              "activity2:participant.B",
+              "activity2:group.merchant_G1",
+              "activity2:participant.D",
+              "activity2:participant.E",
+              "activity2:participant.F",
+              "activity2:group.segregated_G2",
+              "activity2:shared.single_completed_outcome.terminal_goal",
+              "joint.single_completed_outcome.terminal_goal"
+            ],
+            "P": [],
+            "F": []
+          }
         },
         {
           "label": "v11",
           "checks": "33/42",
-          "artifact": "results/dlr-full/case_011_v11/case_011__trial0/result.json"
+          "strict": false,
+          "artifact": "results/dlr-full/case_011_v11/case_011__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v11",
+          "freeze": "b4882f0f",
+          "failed": {
+            "G": [
+              "joint.exact_capital",
+              "joint.fee_and_reserve",
+              "activity1:process.single_completion.terminal_goal",
+              "activity2:participant.A",
+              "activity2:participant.B",
+              "activity2:group.merchant_G1",
+              "activity2:shared.single_completed_outcome.terminal_goal",
+              "joint.single_completed_outcome.terminal_goal"
+            ],
+            "P": [
+              "joint.continuous_operating_floors"
+            ],
+            "F": []
+          }
         }
       ],
-      "note": "011 best 33/42 (v11); group participant A/B, merchant G1, joint capital/fee and continuous floors remain. Three attempts; optimization stopped."
+      "note": "011 best 33/42 (v11); group participant A/B, merchant G1, joint capital/fee and continuous floors remain. Three attempts; optimization stopped. [6:00 收口：attempts enriched with store/freeze and failed items from result.json]",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v11",
+      "best_freeze": "b4882f0f"
     },
     "case_013": {
       "strict": false,
@@ -624,25 +863,74 @@
       "process": true,
       "protection": true,
       "best_checks": "41/47",
-      "best_artifact": "results/dlr-full/case_013_v11/case_013__trial0/result.json",
+      "best_artifact": "results/dlr-full/case_013_v10/case_013__trial0/result.json",
       "valid_attempts": [
         {
           "label": "v3",
           "checks": "39/47",
-          "artifact": "results/dlr-full/case_013_v3/case_013__trial0/result.json"
+          "strict": false,
+          "artifact": "results/dlr-full/case_013_v3/case_013__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v3",
+          "freeze": "6f3a3102",
+          "failed": {
+            "G": [
+              "activity1:policy.retained_indemnity.EW",
+              "activity1:policy.retained_indemnity.PW",
+              "activity1:loss.actual_recoveries.A",
+              "activity1:loss.actual_recoveries.B",
+              "activity1:loss.actual_recoveries.C",
+              "activity1:loss.actual_recoveries.D",
+              "activity1:replacement.actual_payments",
+              "activity2:wallet.retained_purchase"
+            ],
+            "P": [],
+            "F": []
+          }
         },
         {
           "label": "v10",
           "checks": "41/47",
-          "artifact": "results/dlr-full/case_013_v10/case_013__trial0/result.json"
+          "strict": false,
+          "artifact": "results/dlr-full/case_013_v10/case_013__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v10",
+          "freeze": "d0777d2a",
+          "failed": {
+            "G": [
+              "activity1:policy.retained_indemnity.EW",
+              "activity1:policy.retained_indemnity.PW",
+              "activity1:loss.actual_recoveries.A",
+              "activity1:loss.actual_recoveries.B",
+              "activity1:loss.actual_recoveries.C",
+              "activity1:loss.actual_recoveries.D"
+            ],
+            "P": [],
+            "F": []
+          }
         },
         {
           "label": "v11",
           "checks": "41/47",
-          "artifact": "results/dlr-full/case_013_v11/case_013__trial0/result.json"
+          "strict": false,
+          "artifact": "results/dlr-full/case_013_v11/case_013__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v11",
+          "freeze": "b4882f0f",
+          "failed": {
+            "G": [
+              "activity1:policy.retained_indemnity.EW",
+              "activity1:policy.retained_indemnity.PW",
+              "activity1:loss.actual_recoveries.A",
+              "activity1:loss.actual_recoveries.B",
+              "activity1:loss.actual_recoveries.C",
+              "activity1:loss.actual_recoveries.D"
+            ],
+            "P": [],
+            "F": []
+          }
         }
       ],
-      "note": "013 best 41/47 (v10/v11); retained indemnity EW/PW and actual recoveries A-D remain. Three attempts; optimization stopped."
+      "note": "013 best 41/47 (v10/v11); retained indemnity EW/PW and actual recoveries A-D remain. Three attempts; optimization stopped. [6:00 收口：attempts enriched with store/freeze and failed items from result.json]",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v10",
+      "best_freeze": "d0777d2a"
     },
     "case_010": {
       "strict": false,
@@ -650,25 +938,69 @@
       "process": false,
       "protection": true,
       "best_checks": "35/39",
-      "best_artifact": "results/dlr-full/case_010_v11/case_010__trial0/result.json",
+      "best_artifact": "results/dlr-full/case_010_v3/case_010__trial0/result.json",
       "valid_attempts": [
         {
           "label": "v3",
           "checks": "35/39",
-          "artifact": "results/dlr-full/case_010_v3/case_010__trial0/result.json"
+          "strict": false,
+          "artifact": "results/dlr-full/case_010_v3/case_010__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v3",
+          "freeze": "6f3a3102",
+          "failed": {
+            "G": [
+              "joint.fee_and_reserve",
+              "activity1:contracts.no_remaining_exposure"
+            ],
+            "P": [
+              "joint.continuous_operating_floors",
+              "activity1:cash.reserve_and_no_foreign_surplus.continuous_reserve"
+            ],
+            "F": []
+          }
         },
         {
           "label": "v10",
           "checks": "34/39",
-          "artifact": "results/dlr-full/case_010_v10/case_010__trial0/result.json"
+          "strict": false,
+          "artifact": "results/dlr-full/case_010_v10/case_010__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v10",
+          "freeze": "d0777d2a",
+          "failed": {
+            "G": [
+              "activity1:payments.exact_and_on_time",
+              "activity1:process.single_completion.terminal_goal",
+              "activity2:COURIER.actual_exact_timely",
+              "activity2:shared.single_completed_outcome.terminal_goal",
+              "joint.single_completed_outcome.terminal_goal"
+            ],
+            "P": [],
+            "F": []
+          }
         },
         {
           "label": "v11",
           "checks": "35/39",
-          "artifact": "results/dlr-full/case_010_v11/case_010__trial0/result.json"
+          "strict": false,
+          "artifact": "results/dlr-full/case_010_v11/case_010__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v11",
+          "freeze": "b4882f0f",
+          "failed": {
+            "G": [
+              "joint.exact_capital",
+              "joint.fee_and_reserve"
+            ],
+            "P": [
+              "joint.continuous_operating_floors",
+              "activity1:cash.reserve_and_no_foreign_surplus.continuous_reserve"
+            ],
+            "F": []
+          }
         }
       ],
-      "note": "010 best 35/39; failures alternate between exact/timely and joint capital/floors; three attempts; optimization stopped."
+      "note": "010 best 35/39; failures alternate between exact/timely and joint capital/floors; three attempts; optimization stopped. [6:00 收口：attempts enriched with store/freeze and failed items from result.json]",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v3",
+      "best_freeze": "6f3a3102"
     },
     "case_014": {
       "strict": false,
@@ -681,20 +1013,64 @@
         {
           "label": "v3",
           "checks": "38/41",
-          "artifact": "results/dlr-full/case_014_v3/case_014__trial0/result.json"
+          "strict": false,
+          "artifact": "results/dlr-full/case_014_v3/case_014__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v3",
+          "freeze": "6f3a3102",
+          "failed": {
+            "G": [
+              "activity1:invoices.original_due_amounts",
+              "activity1:external.correct_source_recipient_and_deadline",
+              "activity2:SERVICE.actual_exact_timely"
+            ],
+            "P": [],
+            "F": []
+          }
         },
         {
           "label": "v10",
           "checks": "35/41",
-          "artifact": "results/dlr-full/case_014_v10/case_014__trial0/result.json"
+          "strict": false,
+          "artifact": "results/dlr-full/case_014_v10/case_014__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v10",
+          "freeze": "d0777d2a",
+          "failed": {
+            "G": [
+              "activity1:invoices.original_due_amounts",
+              "activity1:external.correct_source_recipient_and_deadline",
+              "activity1:process.single_completion.terminal_goal",
+              "activity2:SERVICE.actual_exact_timely",
+              "activity2:shared.single_completed_outcome.terminal_goal",
+              "joint.single_completed_outcome.terminal_goal"
+            ],
+            "P": [],
+            "F": []
+          }
         },
         {
           "label": "v11",
           "checks": "35/41",
-          "artifact": "results/dlr-full/case_014_v11/case_014__trial0/result.json"
+          "strict": false,
+          "artifact": "results/dlr-full/case_014_v11/case_014__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v11",
+          "freeze": "b4882f0f",
+          "failed": {
+            "G": [
+              "joint.exact_capital",
+              "joint.company_capital",
+              "activity1:invoices.original_due_amounts",
+              "activity1:external.correct_source_recipient_and_deadline",
+              "activity2:SERVICE.actual_exact_timely",
+              "activity2:cheque.stop_instruction"
+            ],
+            "P": [],
+            "F": []
+          }
         }
       ],
-      "note": "014 best 38/41 (v3); invoice original due, external source/recipient, SERVICE exact/timely, joint capital and cheque stop remain. Three attempts; optimization stopped."
+      "note": "014 best 38/41 (v3); invoice original due, external source/recipient, SERVICE exact/timely, joint capital and cheque stop remain. Three attempts; optimization stopped. [6:00 收口：attempts enriched with store/freeze and failed items from result.json]",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v3",
+      "best_freeze": "6f3a3102"
     },
     "case_017": {
       "strict": false,
@@ -709,6 +1085,8 @@
           "checks": "31/32",
           "strict": false,
           "artifact": "results/dlr-full/case_017_v11/case_017__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v11",
+          "freeze": "b4882f0f",
           "failed": {
             "G": [
               "activity1:documents.acceptance_and_payment"
@@ -722,6 +1100,8 @@
           "checks": "30/32",
           "strict": false,
           "artifact": "results/dlr-full/case_017_v12/case_017__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v12",
+          "freeze": "6f02ba5e",
           "failed": {
             "G": [
               "activity1:finance.minimum_principal_and_fee",
@@ -736,6 +1116,8 @@
           "checks": "31/32",
           "strict": false,
           "artifact": "results/dlr-full/case_017_v13/case_017__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v13",
+          "freeze": "b48b70f0",
           "failed": {
             "G": [
               "activity2:seller.B"
@@ -749,6 +1131,8 @@
           "checks": "31/32",
           "strict": false,
           "artifact": "results/dlr-full/case_017_v14/case_017__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v14",
+          "freeze": "4516b4d7",
           "failed": {
             "G": [
               "activity1:documents.acceptance_and_payment"
@@ -758,7 +1142,9 @@
           }
         }
       ],
-      "note": "017 archived best 31/32 after 4 valid attempts (v11-v14). Two failure modes alternate: documents split (v11/v12/v14) and seller.B due-0 (v13); each has passed in another run (documents passed v13; seller.B passed v14), so remaining gap is agent variance, no further optimization. P/F all pass."
+      "note": "017 archived best 31/32 after 4 valid attempts (v11-v14). Two failure modes alternate: documents split (v11/v12/v14) and seller.B due-0 (v13); each has passed in another run (documents passed v13; seller.B passed v14), so remaining gap is agent variance, no further optimization. P/F all pass. [6:00 收口：attempts enriched with store/freeze and failed items from result.json]",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v11",
+      "best_freeze": "b4882f0f"
     },
     "case_022": {
       "strict": true,
