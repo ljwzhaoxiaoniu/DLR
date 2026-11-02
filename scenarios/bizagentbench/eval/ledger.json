@@ -695,6 +695,70 @@
         }
       ],
       "note": "014 best 38/41 (v3); invoice original due, external source/recipient, SERVICE exact/timely, joint capital and cheque stop remain. Three attempts; optimization stopped."
+    },
+    "case_017": {
+      "strict": false,
+      "goal": false,
+      "process": true,
+      "protection": true,
+      "best_checks": "31/32",
+      "best_artifact": "results/dlr-full/case_017_v11/case_017__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v11",
+          "checks": "31/32",
+          "strict": false,
+          "artifact": "results/dlr-full/case_017_v11/case_017__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:documents.acceptance_and_payment"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v12",
+          "checks": "30/32",
+          "strict": false,
+          "artifact": "results/dlr-full/case_017_v12/case_017__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:finance.minimum_principal_and_fee",
+              "activity1:documents.acceptance_and_payment"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v13",
+          "checks": "31/32",
+          "strict": false,
+          "artifact": "results/dlr-full/case_017_v13/case_017__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity2:seller.B"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v14",
+          "checks": "31/32",
+          "strict": false,
+          "artifact": "results/dlr-full/case_017_v14/case_017__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:documents.acceptance_and_payment"
+            ],
+            "P": [],
+            "F": []
+          }
+        }
+      ],
+      "note": "017 archived best 31/32 after 4 valid attempts (v11-v14). Two failure modes alternate: documents split (v11/v12/v14) and seller.B due-0 (v13); each has passed in another run (documents passed v13; seller.B passed v14), so remaining gap is agent variance, no further optimization. P/F all pass."
     }
   },
   "local_patches": [
