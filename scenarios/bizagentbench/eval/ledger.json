@@ -1021,6 +1021,108 @@
       ],
       "invalid_attempts": [],
       "note": "023 strict PASS on v17 after the courier due-0 L3 fix; v15 31/32 valid (only courier late). No rerun needed."
+    },
+    "case_021": {
+      "strict": false,
+      "goal": false,
+      "process": true,
+      "protection": true,
+      "best_checks": "26/30",
+      "best_artifact": "results/dlr-full/case_021_v15/case_021__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v15",
+          "checks": "26/30",
+          "strict": false,
+          "artifact": "results/dlr-full/case_021_v15/case_021__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:employee.actual_settlement.M",
+              "activity2:COURIER.actual_exact_timely",
+              "activity2:capture.FIRST",
+              "activity2:capture.unused_hold_released"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v17",
+          "checks": "25/30",
+          "strict": false,
+          "artifact": "results/dlr-full/case_021_v17/case_021__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:process.single_completion.terminal_goal",
+              "activity2:COURIER.actual_exact_timely",
+              "activity2:capture.unused_hold_released",
+              "activity2:shared.single_completed_outcome.terminal_goal",
+              "closure.single_completed.terminal_goal"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v18",
+          "checks": "22/30",
+          "strict": false,
+          "artifact": "results/dlr-full/case_021_v18/case_021__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:process.single_completion.terminal_goal",
+              "activity2:COURIER.actual_exact_timely",
+              "activity2:capture.FIRST",
+              "activity2:capture.SECOND",
+              "activity2:capture.unused_hold_released",
+              "activity2:shared.single_completed_outcome.terminal_goal",
+              "closure.single_completed.terminal_goal"
+            ],
+            "P": [
+              "link.shared_capacity_window"
+            ],
+            "F": []
+          }
+        }
+      ],
+      "invalid_attempts": [],
+      "note": "021 archived best 26/30 (v15). Employee timing and capture.FIRST were each fixed in some runs, but the courier bill and the unused authorization release stayed unfixed across v15/v17/v18 (agent keeps misreading the courier amount as a line gap), and later runs regressed via escalation. Stopped after the v19 wording attempt."
+    },
+    "case_024": {
+      "strict": true,
+      "goal": true,
+      "process": true,
+      "protection": true,
+      "best_checks": "33/33",
+      "best_artifact": "results/dlr-full/case_024_v18/case_024__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v17",
+          "checks": "32/33",
+          "strict": false,
+          "artifact": "results/dlr-full/case_024_v17/case_024__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity1:fees.actual_total"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v18",
+          "checks": "33/33",
+          "strict": true,
+          "artifact": "results/dlr-full/case_024_v18/case_024__trial0/result.json",
+          "failed": {
+            "G": [],
+            "P": [],
+            "F": []
+          }
+        }
+      ],
+      "invalid_attempts": [],
+      "note": "024 strict PASS on v18 after assigning the single-use protected route to the invoice with the larger standard fee (B), keeping total fees at the 7500 cap. v17 32/33 valid (fees 8000)."
     }
   },
   "local_patches": [
