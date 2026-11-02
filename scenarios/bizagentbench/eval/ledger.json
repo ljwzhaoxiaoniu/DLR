@@ -617,6 +617,32 @@
         }
       ],
       "note": "011 best 33/42 (v11); group participant A/B, merchant G1, joint capital/fee and continuous floors remain. Three attempts; optimization stopped."
+    },
+    "case_013": {
+      "strict": false,
+      "goal": false,
+      "process": true,
+      "protection": true,
+      "best_checks": "41/47",
+      "best_artifact": "results/dlr-full/case_013_v11/case_013__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v3",
+          "checks": "39/47",
+          "artifact": "results/dlr-full/case_013_v3/case_013__trial0/result.json"
+        },
+        {
+          "label": "v10",
+          "checks": "41/47",
+          "artifact": "results/dlr-full/case_013_v10/case_013__trial0/result.json"
+        },
+        {
+          "label": "v11",
+          "checks": "41/47",
+          "artifact": "results/dlr-full/case_013_v11/case_013__trial0/result.json"
+        }
+      ],
+      "note": "013 best 41/47 (v10/v11); retained indemnity EW/PW and actual recoveries A-D remain. Three attempts; optimization stopped."
     }
   },
   "local_patches": [
