@@ -643,6 +643,58 @@
         }
       ],
       "note": "013 best 41/47 (v10/v11); retained indemnity EW/PW and actual recoveries A-D remain. Three attempts; optimization stopped."
+    },
+    "case_010": {
+      "strict": false,
+      "goal": false,
+      "process": false,
+      "protection": true,
+      "best_checks": "35/39",
+      "best_artifact": "results/dlr-full/case_010_v11/case_010__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v3",
+          "checks": "35/39",
+          "artifact": "results/dlr-full/case_010_v3/case_010__trial0/result.json"
+        },
+        {
+          "label": "v10",
+          "checks": "34/39",
+          "artifact": "results/dlr-full/case_010_v10/case_010__trial0/result.json"
+        },
+        {
+          "label": "v11",
+          "checks": "35/39",
+          "artifact": "results/dlr-full/case_010_v11/case_010__trial0/result.json"
+        }
+      ],
+      "note": "010 best 35/39; failures alternate between exact/timely and joint capital/floors; three attempts; optimization stopped."
+    },
+    "case_014": {
+      "strict": false,
+      "goal": false,
+      "process": true,
+      "protection": true,
+      "best_checks": "38/41",
+      "best_artifact": "results/dlr-full/case_014_v3/case_014__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v3",
+          "checks": "38/41",
+          "artifact": "results/dlr-full/case_014_v3/case_014__trial0/result.json"
+        },
+        {
+          "label": "v10",
+          "checks": "35/41",
+          "artifact": "results/dlr-full/case_014_v10/case_014__trial0/result.json"
+        },
+        {
+          "label": "v11",
+          "checks": "35/41",
+          "artifact": "results/dlr-full/case_014_v11/case_014__trial0/result.json"
+        }
+      ],
+      "note": "014 best 38/41 (v3); invoice original due, external source/recipient, SERVICE exact/timely, joint capital and cheque stop remain. Three attempts; optimization stopped."
     }
   },
   "local_patches": [

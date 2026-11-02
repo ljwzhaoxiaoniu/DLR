@@ -121,6 +121,8 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 - **v11 = v10 + 010/011/013/014/017 窄 L3**（freeze `b4882f0f`）；010/011/013 v11 pre-run 在跑（28798）；014/017 v11 待接。
 - **011 收口**：v11 = **33/42**（group participant A/B、merchant G1、joint capital/fee、continuous floors 仍挂）；best 33/42 归档；3 次尝试，停止优化。
 - **013 收口**：v11 = **41/47**（retained indemnity EW/PW、recoveries A-D 仍挂，与 v10 同）；best 41/47 归档；3 次尝试，停止优化。
+- **010 收口**：v11 = **35/39**（失败在 exact/timely 与 joint capital/floors 之间摆动）；best 35/39 归档；3 次尝试，停止优化。
+- **014 收口**：v11 = **35/41**（joint capital、invoice original due、external、SERVICE exact/timely、cheque stop）；best **38/41（v3）**归档；3 次尝试，停止优化。
 - **015 收口**：v10 = **41/42**（仅 `seller.B`；`payout_due_minute 0` 仍拖到 minute 1）；best 41/42 归档；停止优化。
 - **010 v10 = 34/39**（P/F 过；G 挂 payments exact/on-time、COURIER exact/timely、terminal）：floors/joint fee 已修，剩 exact/timely 类；可补窄 L3 后再 pre-run。
 - **22:12 起三路 pre-run**：008 v5 = **36/44**（未 strict）；trace 显示 agent 根本没调用 `pay_bill`，而是用 `pay_balance` 170 + `close_plan`，误以为 NEW 的 400 已被 plan balance 覆盖——**NEW 是独立账单**。v7 补 case-8 L3 后，**008 v7 = 41/44**（G 挂 I2/I6/NEW；P/F 过）；**008 v9 = 43/44**（仅 `joint.fee_and_reserve`；P/F 过，NEW 已过）——GENERAL 终值 300 < 最低 400；v10 补 fee/reserve 下限，008 v10 pre-run 在跑（28798）。
