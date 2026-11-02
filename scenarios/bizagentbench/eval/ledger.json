@@ -1168,6 +1168,44 @@
       ],
       "invalid_attempts": [],
       "note": "025 both valid runs 28/29, only billing.minimum_total_cost; v18 chose BULK+EXPORT (31000) and v19 PAYG+EXPORT (35000) vs static optimum BULK+PRO 30000 with the voucher capped by fixed fee. L3 method stated but the agent does not execute the two-period enumeration; archived best 28/29."
+    },
+    "case_026": {
+      "strict": false,
+      "goal": false,
+      "process": true,
+      "protection": true,
+      "best_checks": "30/31",
+      "best_artifact": "results/dlr-full/case_026_v19/case_026__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v19",
+          "checks": "30/31",
+          "strict": false,
+          "artifact": "results/dlr-full/case_026_v19/case_026__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity2:seller.B"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v20",
+          "checks": "30/31",
+          "strict": false,
+          "artifact": "results/dlr-full/case_026_v20/case_026__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity2:seller.B"
+            ],
+            "P": [],
+            "F": []
+          }
+        }
+      ],
+      "invalid_attempts": [],
+      "note": "026 best 30/31 on v19/v20, only seller.B (payout due 0 paid after a wait); marketplace due-0 L3 added in v20 but the agent still prioritised other bank events. All other checks pass; stopped as the remaining gap is a repeated timing habit, not a missing rule."
     }
   },
   "local_patches": [
