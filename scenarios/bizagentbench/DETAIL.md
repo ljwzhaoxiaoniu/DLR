@@ -83,6 +83,7 @@
 | v3c | 38/44 | ❌ | ❌ | ❌ | ❌ | 方差；I4/cash/NEW + mandate + F |
 | v4（已回滚） | 32/44 | ❌ | ✅ | ❌ | ❌ | 宽 L3 `pay_bill` 规则；退化 |
 
+- **v3 freeze**：`6f3a3102`（`eval/freeze.v3.json`；L1/L2 同 v2 `3cbdfe16`，仅重新 build sop；v3b/v3c/v3d 共用同一 store，provenance 在 `results/dlr-full/frozen_provenance/case_008_v3*.json`）。
 - **v3 保留的两条 L3（已证明有效）**：① 重复借记净额重算（返回即 correction，不要手动补差）；② installment 更正必须在 reconciliation deadline 事件前完成（return/refund/新单付款/close 全落账）。
 - **v3b 的唯一失败**：`activity2:NEW.actual_exact_timely`。根因：`pay_bill` 先用 `bill_id` 被 `INVALID_LOCAL_ACTION_FIELDS` 拒，改 `record_id` 后已 minute 1 > `due_minute 0`。窄修复方向：写进 L1 typed service 的能力描述（`record_id`、金额/截止语义），不要塞 L3。
 - **v4 的教训**：宽 L3 `pay_bill` 规则把 43 打到 32，已回滚；工具字段/参数属于 L1，不属于 L3。

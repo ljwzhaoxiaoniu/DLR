@@ -437,7 +437,10 @@
     ],
     "extra_valid_runs": [
       "case_007_frozen5"
-    ]
+    ],
+    "case_008_v3_freeze": "6f3a3102",
+    "case_008_v3_freeze_file": "eval/freeze.v3.json",
+    "case_008_v3_store": "TSM Core Service/.store/lance/bizagentbench-v3"
   },
   "exploratory_results": {
     "case_008": {
@@ -498,7 +501,7 @@
         },
         {
           "label": "v3b",
-          "freeze": "v3 store",
+          "freeze": "6f3a3102",
           "checks": "43/44",
           "strict": false,
           "G": false,
@@ -515,7 +518,7 @@
         },
         {
           "label": "v3c",
-          "freeze": "v3 store",
+          "freeze": "6f3a3102",
           "checks": "38/44",
           "strict": false,
           "G": false,
@@ -546,7 +549,7 @@
         },
         {
           "label": "v3d",
-          "freeze": "v3 store",
+          "freeze": "6f3a3102",
           "checks": "37/44",
           "strict": false,
           "G": false,
@@ -586,7 +589,9 @@
         "P_runs": "2/3",
         "F_runs": "1/3",
         "note": "同一 v3 store；NEW.actual_exact_timely 为唯一稳定缺口。"
-      }
+      },
+      "freeze": "6f3a3102",
+      "freeze_file": "eval/freeze.v3.json"
     },
     "evening_2026_11_02": {
       "store": "v3 store (28797/28798)",
