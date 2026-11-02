@@ -559,7 +559,7 @@ This class covers a sales connection that failed mid-window, withdrawing sales m
 2. Recover the import deterministically: select events strictly after after_cursor through through_cursor; event identity is store + stream + native event + revision. Canonical deduplication prevents double posting; a failed sync may leave committed postings and an older cursor, so advance the cursor only to what was actually committed.
 3. Reconcile the receivable: its current face is the sum of committed source deltas; finance advances the stated percentage of the positive face, rounded down to a cent, and unwinding repays the advance and releases the assignment. Settlement must be supported by genuine current sales.
 4. Withdraw USD to the verified CNY recipient and pay the packaging supplier from actual available cash; a CNY settlement is not USD cash.
-5. Marketplace refund: allocate by seller allocation, count pending only when SETTLED, and avoid double payment on seller-credit reversal.
+5. Marketplace refund: allocate by seller allocation, count pending only when SETTLED, and avoid double payment on seller-credit reversal. For each seller, entitlement is (gross − that seller's accepted return) × (1 − commission_rate), not the original transfer minus the return price; the reversal is the original transfer minus the recalculated entitlement. Only the seller of a returned item bears the return; an unrelated seller is not reversed. Pay or reverse the exact amount by that seller's payout due minute; a payout due at minute 0 must be executed at minute 0, before waiting for any other bank event.
 6. Compensation-offset link: the final downstream cash debit follows an upstream cash credit.
 7. Verify actual sales posts, withdrawals and payments, then close.
 
