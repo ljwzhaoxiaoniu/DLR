@@ -1,6 +1,6 @@
 {
   "scenario": "bizagentbench",
-  "updated": "2026-11-02",
+  "updated": "2026-11-03",
   "dataset": {
     "name": "BizAgentBench",
     "local_copy": "D:/Code_Proj/Dataset/BizAgentBench-main",
@@ -491,6 +491,73 @@
         }
       ],
       "note": "016 PASS at v9 40/40 strict; v5 39/40 valid; v3 29/40 buggy excluded. L1 pay_bill record_id + case-16 due-minute precedence validated. No further optimization."
+    },
+    "case_008": {
+      "strict": false,
+      "goal": false,
+      "process": true,
+      "protection": true,
+      "best_checks": "43/44",
+      "best_artifacts": [
+        "results/dlr-full/case_008_v3b/case_008__trial0/result.json",
+        "results/dlr-full/case_008_v9/case_008__trial0/result.json"
+      ],
+      "valid_attempts": [
+        {
+          "label": "clean (v1)",
+          "checks": "33/44"
+        },
+        {
+          "label": "v2",
+          "checks": "34/44"
+        },
+        {
+          "label": "v3b",
+          "checks": "43/44"
+        },
+        {
+          "label": "v3c",
+          "checks": "38/44"
+        },
+        {
+          "label": "v3d",
+          "checks": "37/44"
+        },
+        {
+          "label": "v5",
+          "checks": "36/44"
+        },
+        {
+          "label": "v7",
+          "checks": "41/44"
+        },
+        {
+          "label": "v9",
+          "checks": "43/44"
+        },
+        {
+          "label": "v10",
+          "checks": "42/44"
+        }
+      ],
+      "invalid_attempts": [
+        {
+          "label": "v2b",
+          "checks": "35/44",
+          "reason": "port bug; actually hit v1 (28797), not v2"
+        },
+        {
+          "label": "v3-first",
+          "checks": "29/44",
+          "reason": "connection refused (28797 stopped); not a model run"
+        },
+        {
+          "label": "v4",
+          "checks": "32/44",
+          "reason": "broad pay_bill L3 rule; regressed; rolled back"
+        }
+      ],
+      "note": "008 best 43/44 (v3b and v9); v10 42/44 is within variance (NEW and joint.fee_and_reserve now pass). No strict. Optimization stopped."
     }
   },
   "local_patches": [
@@ -541,7 +608,10 @@
     "case_008_v7_store": "TSM Core Service/.store/lance/bizagentbench-v7",
     "case_008_v9_freeze": "faaa7cc1",
     "case_008_v9_freeze_file": "eval/freeze.v9.json",
-    "case_008_v9_store": "TSM Core Service/.store/lance/bizagentbench-v9"
+    "case_008_v9_store": "TSM Core Service/.store/lance/bizagentbench-v9",
+    "case_008_v10_freeze": "d0777d2a",
+    "case_008_v10_freeze_file": "eval/freeze.v10.json",
+    "case_008_v10_store": "TSM Core Service/.store/lance/bizagentbench-v10"
   },
   "exploratory_results": {
     "case_008": {
@@ -696,7 +766,8 @@
       "v5_fix": "InstallmentReturn pay_bill {record_id} / due-minute semantics fixed in L1; v5 store prepared for 008/016 A/B.",
       "v6_fix": "Marketplace split-refund seller net entitlement / payout deadline / reversal ownership L3 rule; v6 store prepared for 009/015/017 A/B.",
       "v7_fix": "Case-8 L3: new retained-purchase bill is separate from plan balance; pay_bill record_id at due minute. v7 store prepared for 008 pre-run.",
-      "v9_fix": "Corrected marketplace seller formula and NEW bill due-minute precedence; v9 store prepared for 008/016/009/015/017 pre-runs."
+      "v9_fix": "Corrected marketplace seller formula and NEW bill due-minute precedence; v9 store prepared for 008/016/009/015/017 pre-runs.",
+      "v10_fix": "Case-8 joint fee/reserve floor: never deliver below minimum_uncommitted_cash_minor; v10 prepared for 008 pre-run."
     },
     "evening_2026_11_02": {
       "store": "v3 store (28797/28798)",
