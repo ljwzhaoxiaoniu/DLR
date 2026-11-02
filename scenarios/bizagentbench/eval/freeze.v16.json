@@ -1,0 +1,28 @@
+{
+  "freeze_id": "06d6533a",
+  "git_commit": "06d6533a0369873c97ba77e92806113774cf597d",
+  "frozen_at": "2026-11-03T03:55:00+0800",
+  "files": {
+    "sources/configs/DLR/operations_desk.yaml": "49b9476f6763f6af56125bf529dffdfbbc3d4066736583c1e240a703cbf2a43c",
+    "sources/configs/DLR/typed_services.yaml": "fd37115f96b9560c26bb69815dc17fb085d8c6d904ccfbea3021b0cf01d5cebd",
+    "sources/configs/DLR/psp.yaml": "d8cdb8e15fa74abf6a2953cf1f51647d37f77d1b18bb8fb4f7958520ddf5c43b",
+    "sources/consensus/shared.jsonl": "f57fabc4ba1c5625ba883c2c5533bf3e64e550a5e89867aad7a21b84f4e69f87",
+    "sources/consensus/operations_desk.jsonl": "540b9ba65ef0d7d4e4a084f34b7581f875e4327a4953ff714df3cbe5aed421db",
+    "sources/consensus/typed_services.jsonl": "7776f291a534e7da66c135abfb5590dbe2b6aa7fe3e78dc57f397efba80d07c2",
+    "sources/consensus/psp.jsonl": "42462883e33de3d1223c3db21957e365950bb84ea09b39205b087dc4637c8c54",
+    "sources/sop.md": "646dd3fd5d9a7a19e46b1f596c5af792298275856fce498ee5f1c1d96f6e5389"
+  },
+  "model": {
+    "name": "BAAI/bge-base-en-v1.5",
+    "path": "C:/Users/user/.cache/huggingface/hub/models--BAAI--bge-base-en-v1.5/snapshots/a5beb1e3e68b9ab74eb54cfd186867f64f240e1a",
+    "onnx_sha256": "9bc579acdba21c253c62a9bf866891355a63ffa3442b52c8a37d75b2ccb91848"
+  },
+  "store": {
+    "path": "TSM Core Service/.store/lance/bizagentbench-v16",
+    "entities": 687,
+    "consensus": 187,
+    "sop": 50
+  },
+  "derivation": "v16 = copy of v15 + rebuild sop with 018 (record a value-date amendment for every final-confirmed item; pay a due-0 no-recipient service bill on its record; each request needs its own approval), 020 (claim the case net loss after posted credits; a new checkout verification must be actually completed by the customer before paying), 019 (due-0 marketplace payout as step 0 before any certificate work). Entities/consensus unchanged.",
+  "note": "Prepared for 018/019/020 v16 re-checks after v15: 018 24/30 regression (skipped value-date amendments and the SERVICE bill), 020 first pre-run 24/29 (claim RAIL 25000 vs net 20000; checkout A new verification prepared but never verified), 019 34/35 (seller.B still minute 1)."
+}
