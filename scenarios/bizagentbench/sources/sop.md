@@ -417,7 +417,7 @@ This class covers correcting historical interest on signed statements, paying th
 3. Post a nonzero signed interest adjustment only where the statement and period support it; pay the accountant's bill to a verified external recipient from actual cash.
 4. Cheque: an endorsed cheque pays its current lawful holder, which may differ from the invoice seller; a stop request is not a successful stop. A replacement is separate from the underlying bill.
 5. Rolling obligation link: the first downstream instruction executes before the qualifying upstream event posts, and the final downstream instruction executes after that event; the condition covers the current episode only.
-6. Verify actual postings, cheque outcomes and receipts, and close.
+6. Verify actual postings, cheque outcomes and receipts, and close. Pay each invoice's original due amount by its original due minute; an external payment must use the correct source account and the correct recipient and meet its deadline. A proposal or approval is not a payment; a payment that is late or from the wrong source is not a correction.
 
 ### When asked: "One bank letter has been withdrawn and there is a signing-key notice. Please keep our partner files usable and make sure our guarantee and collection access are still covered. I also need help with a related matter: a customer returned part of a combined order after we paid the sellers. Please refund the returned items and finish the sellers’ remaining payouts."
 
