@@ -402,6 +402,52 @@
         "tokens": 7138636,
         "tool_calls": 131
       }
+    },
+    "case_009": {
+      "strict": false,
+      "goal": false,
+      "process": true,
+      "protection": true,
+      "best_checks": "41/42",
+      "best_artifact": "results/dlr-full/case_009_v3/case_009__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v3",
+          "checks": "41/42",
+          "strict": false,
+          "artifact": "results/dlr-full/case_009_v3/case_009__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity2:seller.B"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v6",
+          "checks": "40/42",
+          "strict": false,
+          "artifact": "results/dlr-full/case_009_v6/case_009__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity2:seller.A",
+              "activity2:seller.B"
+            ],
+            "P": [],
+            "F": []
+          }
+        }
+      ],
+      "invalid_attempts": [
+        {
+          "label": "v9",
+          "checks": "24/42",
+          "reason": "too_many_errors (16 tool errors); excluded from valid results",
+          "artifact": "results/dlr-full/case_009_v9/case_009__trial0/result.json"
+        }
+      ],
+      "note": "009 accepted at best 41/42 (v3); v6 40/42; v9 invalid (too_many_errors). No stable-freeze requirement; seller.B remains. Optimization stopped."
     }
   },
   "local_patches": [
@@ -443,7 +489,16 @@
     "case_008_v3_store": "TSM Core Service/.store/lance/bizagentbench-v3",
     "case_008_v5_freeze": "cff9b6c9",
     "case_008_v5_freeze_file": "eval/freeze.v5.json",
-    "case_008_v5_store": "TSM Core Service/.store/lance/bizagentbench-v5"
+    "case_008_v5_store": "TSM Core Service/.store/lance/bizagentbench-v5",
+    "case_008_v6_freeze": "25c5bd65",
+    "case_008_v6_freeze_file": "eval/freeze.v6.json",
+    "case_008_v6_store": "TSM Core Service/.store/lance/bizagentbench-v6",
+    "case_008_v7_freeze": "c05a38ed",
+    "case_008_v7_freeze_file": "eval/freeze.v7.json",
+    "case_008_v7_store": "TSM Core Service/.store/lance/bizagentbench-v7",
+    "case_008_v9_freeze": "faaa7cc1",
+    "case_008_v9_freeze_file": "eval/freeze.v9.json",
+    "case_008_v9_store": "TSM Core Service/.store/lance/bizagentbench-v9"
   },
   "exploratory_results": {
     "case_008": {
@@ -595,7 +650,10 @@
       },
       "freeze": "6f3a3102",
       "freeze_file": "eval/freeze.v3.json",
-      "v5_fix": "InstallmentReturn pay_bill {record_id} / due-minute semantics fixed in L1; v5 store prepared for 008/016 A/B."
+      "v5_fix": "InstallmentReturn pay_bill {record_id} / due-minute semantics fixed in L1; v5 store prepared for 008/016 A/B.",
+      "v6_fix": "Marketplace split-refund seller net entitlement / payout deadline / reversal ownership L3 rule; v6 store prepared for 009/015/017 A/B.",
+      "v7_fix": "Case-8 L3: new retained-purchase bill is separate from plan balance; pay_bill record_id at due minute. v7 store prepared for 008 pre-run.",
+      "v9_fix": "Corrected marketplace seller formula and NEW bill due-minute precedence; v9 store prepared for 008/016/009/015/017 pre-runs."
     },
     "evening_2026_11_02": {
       "store": "v3 store (28797/28798)",

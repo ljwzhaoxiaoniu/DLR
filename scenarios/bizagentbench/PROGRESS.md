@@ -117,7 +117,7 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 - **并行纪律（2026-11-02 用户定）**：最多同时 3 题；目标是优化后稳定建模上的合理成绩，不追求测试推进数量。
 - **22:12 起三路 pre-run**：008 v5 = **36/44**（未 strict）；trace 显示 agent 根本没调用 `pay_bill`，而是用 `pay_balance` 170 + `close_plan`，误以为 NEW 的 400 已被 plan balance 覆盖——**NEW 是独立账单**。v7 补 case-8 L3 后，008 v7 在跑（28799）。
 - **016 v5 = 39/40**（只差 `NEW.actual_exact_timely`）：`record_id` 已生效、金额 40k 正确，但 **minute 1 > due 0**；v9 在 case-16 L3 补 due-minute 前置。
-- **009 v6 = 40/42**（seller.A/B）：根因是**卖家净额公式错**——应为 `(gross − accepted_return) × (1 − commission_rate)`，不是“原分配 − 退货价”；且 seller.B 的 `payout_due_minute 0` 被拖到 minute 1。v6 的 marketplace 规则写错了，v9 已改为正确公式 + due-0 立即付。
+- **009 v6 = 40/42**（seller.A/B）：根因是**卖家净额公式错**——应为 `(gross − accepted_return) × (1 − commission_rate)`，不是“原分配 − 退货价”；且 seller.B 的 `payout_due_minute 0` 被拖到 minute 1。v6 的 marketplace 规则写错了，v9 已改为正确公式 + due-0 立即付。**009 v9 = 24/42，`too_many_errors`（16 tool errors），无效、不计入；009 已按 best 41/42（v3）归档并停止优化。**
 - **v9 = v7 + 修正 marketplace 公式 + NEW due-minute 前置**（freeze `faaa7cc1`）；016 v9、009 v9 pre-run 已起（28797）。015 v5 = **39/42**（ALDER/CEDAR、seller.B）。规则：**strict 即 pass，不跑 3 轮**；未 strict 再按缺口优化。
 - **v5（L1 pay_bill 修复，待验证）**：freeze `cff9b6c9` / `eval/freeze.v5.json`；`InstallmentReturn` 描述由 `pay_bill {bill_id}` 改为 `{record_id, amount_minor}`，并补“due minute 是操作截止”；v5 store = 复制 v3 + 重建 entities（687/187/50），已在 28799 验证描述生效。未跑，等 008/016 A/B。
 - **冻结态复跑（后续）**：001–005 与 case_031 的预跑 strict 在冻结 v1 store 上复跑确认；按当前建模设计预期只是方差摆动，不应大幅劣化；PSP 32–50 同批推进。
