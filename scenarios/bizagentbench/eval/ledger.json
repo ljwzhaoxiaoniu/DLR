@@ -440,7 +440,10 @@
     ],
     "case_008_v3_freeze": "6f3a3102",
     "case_008_v3_freeze_file": "eval/freeze.v3.json",
-    "case_008_v3_store": "TSM Core Service/.store/lance/bizagentbench-v3"
+    "case_008_v3_store": "TSM Core Service/.store/lance/bizagentbench-v3",
+    "case_008_v5_freeze": "cff9b6c9",
+    "case_008_v5_freeze_file": "eval/freeze.v5.json",
+    "case_008_v5_store": "TSM Core Service/.store/lance/bizagentbench-v5"
   },
   "exploratory_results": {
     "case_008": {
@@ -591,7 +594,8 @@
         "note": "同一 v3 store；NEW.actual_exact_timely 为唯一稳定缺口。"
       },
       "freeze": "6f3a3102",
-      "freeze_file": "eval/freeze.v3.json"
+      "freeze_file": "eval/freeze.v3.json",
+      "v5_fix": "InstallmentReturn pay_bill {record_id} / due-minute semantics fixed in L1; v5 store prepared for 008/016 A/B."
     },
     "evening_2026_11_02": {
       "store": "v3 store (28797/28798)",
