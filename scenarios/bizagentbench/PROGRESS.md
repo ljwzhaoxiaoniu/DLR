@@ -147,7 +147,7 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 - **v19 = v18 + 025 voucher 配对**（freeze `5bc3a79a`）：voucher 抵扣按当期 fixed 封顶，两期套餐要整体比较（高 fixed 套餐可吸满）；021 补“courier 金额不可当行缺口”。025/021/026 v19 三路在 28799。
 - **v19 结果**：025 仍 **28/29**（本次选 PAYG+EXPORT 35000，比 v18 更差；仅 `billing.minimum_total_cost`），按 best 28/29 归档；021 v19 **无效**（`too_many_errors`，10 挂含 employee L/N、refunds、captures、terminal；排除），best 仍 26/30（v15）；**026 首跑 = 30/31**（仅 `seller.B` due-0）。
 - **v20 = v19 + 026 marketplace 补修**（freeze `8992a5aa`）：026 的 marketplace 规则补精确净额公式与 due-0 先付（与 017/019 同口径）。026 v20 复跑 + 027 首跑在 28798。
-- **v20 结果**：**026 = 30/31**（仍仅 seller.B due-0；两轮一致，按 best 30/31 归档）；**027 首跑无效**（`too_many_errors`，14 挂含 capture/payroll/link，排除）；027 v20b 重跑取有效基线中。**最终 best-practice store = v20**（freeze `8992a5aa`；entities 687 / consensus 187 / sop 50，并入 017–026 全部已验证 L3 修复）。028–030、032–050 未跑。
+- **v20 结果**：**026 = 30/31**（仍仅 seller.B due-0；两轮一致，按 best 30/31 归档）；**027 首跑无效**（`too_many_errors`，14 挂含 capture/payroll/link，排除），v20b 有效基线 **27/34**（COURIER、未释放额度、payroll L1/N1/L2/N2、P link.deadline_priority_slot），留待下次优化。**最终 best-practice store = v20**（freeze `8992a5aa`；entities 687 / consensus 187 / sop 50，并入 017–026 全部已验证 L3 修复）。028–030、032–050 未跑。
 - **v5（L1 pay_bill 修复，待验证）**：freeze `cff9b6c9` / `eval/freeze.v5.json`；`InstallmentReturn` 描述由 `pay_bill {bill_id}` 改为 `{record_id, amount_minor}`，并补“due minute 是操作截止”；v5 store = 复制 v3 + 重建 entities（687/187/50），已在 28799 验证描述生效。未跑，等 008/016 A/B。
 - **冻结态复跑（后续）**：001–005 与 case_031 的预跑 strict 在冻结 v1 store 上复跑确认；按当前建模设计预期只是方差摆动，不应大幅劣化；PSP 32–50 同批推进。
 - **纪律**：类级规则改动必须 A/B；变差即回滚，不叠规则；样本不足不宣称优化有效。
