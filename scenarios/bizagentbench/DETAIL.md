@@ -1,6 +1,6 @@
 # BizAgentBench · 评测总账
 
-> 更新：2026-11-02 ｜ 全量三层已建；**006 三次有效归档；007 三次有效 best-3 归档；008 v3 探索中（未归档）**
+> 更新：2026-11-02 ｜ 全量三层已建；**006 三次有效归档；007 三次有效 best-3 归档；case_031 PSP 预跑 strict（非冻结）；008 v3 探索中（未归档）**
 > 机器可读记录：[eval/ledger.json](eval/ledger.json) ｜ 最终结果：`results/dlr-full/`（本地留档，gitignored）
 > 归档口径：006/007 使用 freeze `ff3663ec` / v1 store（007 取同一 freeze 内 best-3）；008 使用 v2/v3 store 探索（未归档）
 
@@ -46,7 +46,7 @@
 
 ## 四、最终结果
 
-### 4.1 预跑（001–005，assisted）
+### 4.1 预跑（001–005 + case_031 PSP，assisted）
 
 | 题 | strict | G | P | F | 工具调用 | tokens | 产物 |
 |---|---|---|---|---|---|---|---|
@@ -55,6 +55,9 @@
 | case_003 | ✅ | ✅ | ✅ | ✅ | 253 | 9,445,421 | `results/dlr-pilot/case_003_result.json` |
 | case_004 | ✅ | ✅ | ✅ | ✅ | 505 | 16,279,513 | `results/dlr-pilot/case_004_result.json` |
 | case_005 | ✅ | ✅ | ✅ | ✅ | 339 | 14,006,648 | `results/dlr-pilot/case_005_result.json` |
+| case_031（PSP） | ✅ | ✅ | ✅ | ✅ | 94 | 2,586,821 | `results/dlr-full/case_031_r2/case_031__trial0/result.json` |
+
+- **case_031**：首跑 12/18；机制修复后第 2 遍 **18/18 strict**（227s / 0 错误）。该次跑在 `0b8e2cd7` 全量模型上（2026-11-01 11:08），**早于 freeze `ff3663ec`；psp.yaml / psp.jsonl / sop.md 的哈希与 freeze 不同**，故计入预跑、不计入冻结归档；**PSP 31–50 在冻结状态上的重跑仍待做**。
 
 ### 4.2 归档（006 三次有效；007 三次有效 best-3，freeze `ff3663ec` / v1 store）
 

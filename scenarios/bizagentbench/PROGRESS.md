@@ -13,6 +13,7 @@
 | case_003 | reconciliation + onboarding | ✅ | 253 | 9.45M | 证据按**审查时**版本；提款一次性共用储备，先摆选择再 booking；银行截止是银行事实 |
 | case_004 | restrictions + batches | ✅ | 505 | 16.28M | 每 lot 可用性；批次只认银行回执；**待评估条款可能改净额**（1 分钱陷阱） |
 | case_005 | treasury + disputes | ✅ | 339 | 14.01M | 授权三同 + 版本时效；仅 SETTLED 补偿；立案费上限不含设施费 |
+| case_031 | PSP（payment expansion） | ✅（预跑，非冻结） | 94 | 2.59M | 机制修复后第 2 遍 **18/18 strict**；跑在 `0b8e2cd7` 全量模型（早于 freeze `ff3663ec`），PSP 31–50 冻结态重跑仍待做 |
 | case_006 | allocation/delivery + split capture | —（不计数） | 226 | 12.40M | r8 通过依赖**案例级答案注入**（实例金额/ID/分钟 + verifier 口径），与前 5 题口径不一致；已撤回，一致口径待重跑 |
 
 > **前五题为预跑**；**2026-11-01 已按全量模型一次性建全三层**（Operations Desk 1–30 + PSP 31–50）。

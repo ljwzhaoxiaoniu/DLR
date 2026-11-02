@@ -384,6 +384,24 @@
         }
       ],
       "pending_replacement": false
+    },
+    "case_031": {
+      "strict": true,
+      "goal": true,
+      "process": true,
+      "protection": true,
+      "tool_calls": 94,
+      "tokens": 2586821,
+      "artifact": "results/dlr-full/case_031_r2/case_031__trial0/result.json",
+      "pre_run": true,
+      "note": "PSP pre-run on the 0b8e2cd7 full model (2026-11-01 11:08); 18/18 strict on the second attempt after the mechanism fix. Not on frozen ff3663ec: psp.yaml / psp.jsonl / sop.md hashes differ from the freeze, so it is recorded as a pre-run, not in the frozen archive. Final-freeze PSP 31-50 re-runs pending.",
+      "prior_attempt": {
+        "checks": "12/18",
+        "strict": false,
+        "artifact": "results/dlr-full/case_031/case_031__trial0/result.json",
+        "tokens": 7138636,
+        "tool_calls": 131
+      }
     }
   },
   "local_patches": [
