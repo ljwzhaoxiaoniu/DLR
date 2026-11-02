@@ -1085,7 +1085,14 @@
           }
         }
       ],
-      "invalid_attempts": [],
+      "invalid_attempts": [
+        {
+          "label": "v19",
+          "checks": "20/30",
+          "reason": "too_many_errors (10 failures incl. employee L/N, refunds, captures, terminal); excluded",
+          "artifact": "results/dlr-full/case_021_v19/case_021__trial0/result.json"
+        }
+      ],
       "note": "021 archived best 26/30 (v15). Employee timing and capture.FIRST were each fixed in some runs, but the courier bill and the unused authorization release stayed unfixed across v15/v17/v18 (agent keeps misreading the courier amount as a line gap), and later runs regressed via escalation. Stopped after the v19 wording attempt."
     },
     "case_024": {
