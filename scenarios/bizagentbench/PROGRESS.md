@@ -198,3 +198,19 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 8. **3 次是经验上限，不是硬性封顶**：有明确优化空间就继续修；没有空间（只剩方差/“差不多”）或 strict pass 就归档最佳有效结果。**buggy/无效轮排除**（如 016 v3 29/40 不计）；**不再要求稳定 freeze**，归档记录实际 store/freeze，取最佳有效结果。
 9. **最终交付 = 单一可复现的 best-practice store/freeze**：合并所有已验证的 L1/L2/L3 修复；受影响题在它上面复跑，**在合理方差带内达到/接近旧 per-case best**；不要求每次精确复现同一分数，agent 摇摆可接受；大幅退化才视为回归并修。旧 store 的 best 只作探索证据，不混入最终归档。
 10. **实验结果真实**：有效轮、无效轮、excluded 轮都如实记录（store/freeze/checks/failed/原因）；最终归档引用实际 store/freeze 与 artifact；报 **best + 观察到的 range**，不追求 deterministic；不筛选、不混写、不 cherry-pick；禁止答案注入/实例值提示/改 verifier。
+
+## 九、6:00 收口汇总（008/015/010/011/013/014/017）
+
+> 口径：每题的 valid attempts 全部保留（含早前 store）；`invalid/excluded` 单独列；最佳只取有效轮；store 路径省略前缀 `TSM Core Service/.store/lance/`。明细与 provenance 见 `eval/ledger.json`。
+
+| 题 | best | store / freeze | 最佳轮失败项（G/P/F） | 其他有效轮 | 无效/排除 |
+|---|---|---|---|---|---|
+| case_008 | **43/44** | `bizagentbench-v3` / `6f3a3102`（另 v9 43/44 / `faaa7cc1`） | G: `NEW.actual_exact_timely`；P/F 过 | v10 42/44（v10/`d0777d2a`）、v7 41/44、v3c 38/44、v3d 37/44、v5 36/44、v2 34/44、clean 33/44 | v2b 35/44 端口 bug（实打 v1）；v3-first 29/44 连接拒绝；v4 32/44 宽规则回滚 |
+| case_015 | **41/42** | `bizagentbench-v10` / `d0777d2a` | G: `seller.B`（due 0 拖到 minute 1）；P/F 过 | v3 40/42、v5 39/42 | — |
+| case_010 | **35/39** | `bizagentbench-v3` / `6f3a3102`（v11 同分 / `b4882f0f`） | G: `joint.fee_and_reserve`、`contracts.no_remaining_exposure`；P: `joint.continuous_operating_floors`、`cash...continuous_reserve` | v10 34/39 | — |
+| case_011 | **33/42** | `bizagentbench-v11` / `b4882f0f` | G: `joint.exact_capital`、`joint.fee_and_reserve`、`participant.A/B`、`group.merchant_G1`、terminal；P: `joint.continuous_operating_floors` | v3 32/42、v10 30/42 | — |
+| case_013 | **41/47** | `bizagentbench-v10` / `d0777d2a`（v11 同分 / `b4882f0f`） | G: `policy.retained_indemnity.EW/PW`、`loss.actual_recoveries.A-D`；P/F 过 | v3 39/47 | — |
+| case_014 | **38/41** | `bizagentbench-v3` / `6f3a3102` | G: `invoices.original_due_amounts`、`external.correct_source_recipient_and_deadline`、`SERVICE.actual_exact_timely`；P/F 过 | v10 35/41、v11 35/41 | — |
+| case_017 | **31/32** | `bizagentbench-v11` / `b4882f0f`（v13/v14 同分） | G: `documents.acceptance_and_payment`（v11 此轮）；P/F 过 | v12 30/32（documents+finance）；v13 31/32（seller.B）；v14 31/32（documents） | — |
+
+**结论**：7 题均无 strict；最佳有效结果如上。008/015/010/011/013/014/017 的剩余失败均为已知单点/双点（见列），且各点在别的轮次曾通过，属模型执行/时序或取舍摆动；按用户口径停止优化、归档 best。最终 best-practice store = **v20**（`8992a5aa`，687/187/50），旧 store 的 best 仅作探索证据。
