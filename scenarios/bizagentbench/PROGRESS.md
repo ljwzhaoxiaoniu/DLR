@@ -143,6 +143,8 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 - **v17 首批结果**：**020 = 29/29 strict PASS**（两处 L3 修复均生效；已归档）；**019 v17 无效**（`too_many_errors`，11 挂含新 reliance/authority + link.quote_version_refresh，按无效轮排除）；019 归档 best **34/35**（v14/v15，仅 seller.B，停止优化）；**018 v17 = 28/30**（价值日已补记，但 minute 0 先付 retainer 再加 OPERATING +5000 → 准备金瞬时跌破，SALES −800 仍未记）；018 归档 best **29/30**（v12/v14，5 有效轮）。
 - **v17 第二批**：**023 = 32/32 strict PASS**（courier due-0 修复生效；已归档）；**021 = 25/30**（employee.M 已修好；COURIER 仍未付、OLD 额度剩 25000 未 release、收口 ESCALATED）；**024 首跑 = 32/33**（仅 `fees.actual_total`：guarantee 给了 A，B 走 standard 3500+topup 500，含 return fee 总 8000 > 7500；最优是 guarantee 给 B，总 7500）。
 - **v18 = v17 + 024 路线指派**（freeze `bcca13d2`）：一次性 protected 路线给 standard 费更大的账单（B），其余 standard+topup，总费用须 ≤ 上限。024 v18 + 025 首跑 + 021 v18 三路在 28799。
+- **v18 结果**：**024 = 33/33 strict PASS**（protected 给 B 后总费用正好 7500；已归档）；**025 首跑 = 28/29**（仅 `billing.minimum_total_cost`：BULK+EXPORT 31000，最优 BULK+PRO 30000——voucher 抵扣被 fixed 封顶，PRO 20000 能吸满 15000）；**021 = 22/30**（courier/额度释放仍未做，另挂 capture.FIRST/SECOND 与 link）；021 归档 best **26/30**（v15）。
+- **v19 = v18 + 025 voucher 配对**（freeze `5bc3a79a`）：voucher 抵扣按当期 fixed 封顶，两期套餐要整体比较（高 fixed 套餐可吸满）；021 补“courier 金额不可当行缺口”。025/021/026 v19 三路在 28799。
 - **v5（L1 pay_bill 修复，待验证）**：freeze `cff9b6c9` / `eval/freeze.v5.json`；`InstallmentReturn` 描述由 `pay_bill {bill_id}` 改为 `{record_id, amount_minor}`，并补“due minute 是操作截止”；v5 store = 复制 v3 + 重建 entities（687/187/50），已在 28799 验证描述生效。未跑，等 008/016 A/B。
 - **冻结态复跑（后续）**：001–005 与 case_031 的预跑 strict 在冻结 v1 store 上复跑确认；按当前建模设计预期只是方差摆动，不应大幅劣化；PSP 32–50 同批推进。
 - **纪律**：类级规则改动必须 A/B；变差即回滚，不叠规则；样本不足不宣称优化有效。
