@@ -1245,6 +1245,29 @@
         }
       ],
       "note": "027 first valid baseline 27/34 (v20b). Remaining: courier exact/timely, unused authorization release, four payroll exact distributions (L1/N1/L2/N2), and the P deadline-priority link. No optimization applied yet; needs a targeted L3 cycle next session."
+    },
+    "case_012": {
+      "strict": true,
+      "goal": true,
+      "process": true,
+      "protection": true,
+      "best_checks": "38/38",
+      "best_artifact": "results/dlr-full/case_012_v3/case_012__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v3",
+          "checks": "38/38",
+          "strict": true,
+          "artifact": "results/dlr-full/case_012_v3/case_012__trial0/result.json",
+          "failed": {
+            "G": [],
+            "P": [],
+            "F": []
+          }
+        }
+      ],
+      "invalid_attempts": [],
+      "note": "012 strict PASS on first pre-run (v3). Its L3 section was not modified in later stores, so the result carries to the final store; no rerun needed."
     }
   },
   "local_patches": [
