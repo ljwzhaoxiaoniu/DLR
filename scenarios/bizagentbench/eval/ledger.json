@@ -448,6 +448,49 @@
         }
       ],
       "note": "009 accepted at best 41/42 (v3); v6 40/42; v9 invalid (too_many_errors). No stable-freeze requirement; seller.B remains. Optimization stopped."
+    },
+    "case_016": {
+      "strict": true,
+      "goal": true,
+      "process": true,
+      "protection": true,
+      "best_checks": "40/40",
+      "best_artifact": "results/dlr-full/case_016_v9/case_016__trial0/result.json",
+      "valid_attempts": [
+        {
+          "label": "v5",
+          "checks": "39/40",
+          "strict": false,
+          "artifact": "results/dlr-full/case_016_v5/case_016__trial0/result.json",
+          "failed": {
+            "G": [
+              "activity2:NEW.actual_exact_timely"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v9",
+          "checks": "40/40",
+          "strict": true,
+          "artifact": "results/dlr-full/case_016_v9/case_016__trial0/result.json",
+          "failed": {
+            "G": [],
+            "P": [],
+            "F": []
+          }
+        }
+      ],
+      "invalid_attempts": [
+        {
+          "label": "v3",
+          "checks": "29/40",
+          "reason": "buggy run (6 tool errors, many G failures); excluded per user 2026-11-02",
+          "artifact": "results/dlr-full/case_016_v3/case_016__trial0/result.json"
+        }
+      ],
+      "note": "016 PASS at v9 40/40 strict; v5 39/40 valid; v3 29/40 buggy excluded. L1 pay_bill record_id + case-16 due-minute precedence validated. No further optimization."
     }
   },
   "local_patches": [
