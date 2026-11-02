@@ -1,7 +1,7 @@
 # BizAgentBench · 穿刺进度（工作记录）
 
 > 2026-10-31 夜 → 2026-11-01 ｜ 分支 2.0 ｜ 5/50 预跑 strict（001–005）+ case_031 PSP strict；**全量三层已建成（覆盖 50 题）**
-> **目标（2026-11-02 用户定）**：摸清 TSM+DLR 在当前 BizAgentBench 建模状态下的最终成绩；**过程只记本文件 + 本地 commit，不对外推送（GitHub / 公开文档 / npm 等）**。
+> **目标（2026-11-02 用户定）**：摸清 TSM+DLR 在当前 BizAgentBench 建模状态下的最终成绩；**过程只记本文件 + 本地 commit，不对外推送（GitHub / 公开文档 / npm 等）；等建模/成绩稳定后再开始推送**。
 > 对外成果见 [DETAIL.md](DETAIL.md) / [eval/ledger.json](eval/ledger.json)；本文是续做用的工作记录。
 
 ## 一、已完成
