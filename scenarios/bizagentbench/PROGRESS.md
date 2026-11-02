@@ -117,7 +117,7 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 - **并行纪律（2026-11-02 用户定）**：最多同时 3 题；目标是优化后稳定建模上的合理成绩，不追求测试推进数量。
 - **2026-11-03 夜班（用户令）**：继续做到 **6:00 收尾**（cron 6:02 停）；按 pre-run → optimize → pre-run 推进 015/010/011/013/014/017；上限 3 路；strict 即 pass；无效轮排除；过程不推送。
 - **008 收口**：best **43/44**（v3b / v9）；v10 **42/44**（仅 I2/I6；NEW 与 joint.fee_and_reserve 已过，属方差）；v2b/v3-first/v4 记 invalid/回滚；停止优化。
-- **第二批 v10 pre-run**：015（已收口 41/42）、010、011、013（v10 store / 28798；3 路上限）；010/011/013 在跑。
+- **第二批 v10 pre-run**：015（已收口 41/42）、010（34/39）、011、013、014（v10 store / 28798；3 路上限）；011/013/014 在跑，017 待接。
 - **015 收口**：v10 = **41/42**（仅 `seller.B`；`payout_due_minute 0` 仍拖到 minute 1）；best 41/42 归档；停止优化。
 - **010 v10 = 34/39**（P/F 过；G 挂 payments exact/on-time、COURIER exact/timely、terminal）：floors/joint fee 已修，剩 exact/timely 类；可补窄 L3 后再 pre-run。
 - **22:12 起三路 pre-run**：008 v5 = **36/44**（未 strict）；trace 显示 agent 根本没调用 `pay_bill`，而是用 `pay_balance` 170 + `close_plan`，误以为 NEW 的 400 已被 plan balance 覆盖——**NEW 是独立账单**。v7 补 case-8 L3 后，**008 v7 = 41/44**（G 挂 I2/I6/NEW；P/F 过）；**008 v9 = 43/44**（仅 `joint.fee_and_reserve`；P/F 过，NEW 已过）——GENERAL 终值 300 < 最低 400；v10 补 fee/reserve 下限，008 v10 pre-run 在跑（28798）。
