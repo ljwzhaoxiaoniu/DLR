@@ -72,7 +72,28 @@ BIZ_DLR_PORT=28799 bash eval/run_dlr_pilot.sh results/dlr-full/<out-dir> <题号
 |---|---|---|---|
 | `Dataset/BizAgentBench-main/tools/transport_support.py` | `write()` 原子替换加 Windows 文件锁重试 | 实时扫描短暂占用导致 `WinError 5`，与模型行为无关 | 仅基础设施；不改判分与数据 |
 
-## 五、剩余工作
+## 五、论文外部基线（仅参照，保留用于最终确认）
+
+> 来源：BizAgentBench / BizBench（arXiv:2610.20424）主表；50 题、多数模型 3 轮平均。**本仓库不以论文 3 轮均值为交付口径**，只保留这组数字作外部参照；我们的推进以“每题最佳有效过程”为准（strict 一次即 pass）。
+
+| 模型 | G | P | F | IF | Strict |
+|---|---|---|---|---|---|
+| Claude Opus 5 | 64.0 | 96.0 | 98.0 | 4.0 | **64.0** |
+| GPT-6 Sol | 64.7 | 94.7 | 100.0 | 5.3 | **61.3** |
+| GLM-5.3-Flash | 48.0 | 79.3 | 87.3 | 29.3 | 43.3 |
+| DeepSeek-V4.1-Flash | 46.7 | 92.0 | 96.7 | 9.3 | 43.3 |
+| DeepSeek-V4-Pro | 41.3 | 85.3 | 88.7 | 24.7 | 39.3 |
+| Muse Spark 1.3 | 38.0 | 94.0 | 98.0 | 6.0 | 38.0 |
+| Qwen3.8-27B | 42.0 | 74.0 | 93.3 | 28.0 | 32.7 |
+| DeepSeek-V4-Flash | 7.3 | 53.3 | 95.3 | 47.3 | 5.3 |
+| Qwen3.5-397B-A17B | 1.3 | 46.7 | 93.3 | 56.7 | 0.7 |
+| Qwen3.5-9B | 0.0 | 18.7 | 89.3 | 83.3 | 0.0 |
+
+- 我们的跑批 agent = **DeepSeek-V4.1-Flash**（dsh 别名 `deepseek-flash`），对应表中 46.7 / 92.0 / 96.7 / 9.3 / 43.3 一行。
+- 该表只作“最终确认”时的外部锚点；当前 DETAIL 表一的最佳成绩是我们自己的过程口径，不强行与论文的 3 轮均值对齐。
+- 论文消融参考：strict 43.3 → 50.0（Gold-doc）→ 70.0（full customer disclosure）；工具调用上限收紧到 1.2× 参考值会跌到 0.7。
+
+## 六、剩余工作
 
 1. 027 定向优化（COURIER、释放额度、payroll、link 优先级）。
 2. 028–030（desk）与 032–050（PSP）首跑。
