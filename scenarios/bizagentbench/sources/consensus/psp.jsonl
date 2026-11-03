@@ -258,5 +258,10 @@
     "kid": 191,
     "knowledge": "Causal projection and statements: every invoice projected status and source receipt come from its highest bank_sequence, even when its status did not change; the final delivered supplier statement must carry that receipt and sequence for each payable.",
     "system": "psp"
+  },
+  {
+    "kid": 192,
+    "knowledge": "A submitted, in-transit or queued instruction is not a receipt: the obligation is discharged only when the actual payment or delivery event reports received or delivered. Before closing, wait for each outstanding instruction to reach its final actual status, or cancel the unused capacity.",
+    "system": "psp"
   }
 ]
