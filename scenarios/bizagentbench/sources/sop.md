@@ -229,6 +229,8 @@ This class covers finishing import payments and physical delivery while an accep
 6. Fund both suppliers from actual available cash and keep the service's cash floor; fees and guarantee collateral are separate from principal. Wait for scheduled events when a date depends on a bank event.
 7. Close only after the actual supplier receipts and cargo deliveries are recorded and the deadlines are met.
 
+> **Wrong turn (observed)**: booking each delivery on the fastest or priority route without pricing the whole plan against the agreement's total delivery-fee cap and the fee source's minimum uncommitted cash — the combined route fees exceeded the cap and the fee-source wallet was left below its floor. Price every delivery against both limits before booking.
+
 ### When asked: "Some of our supplier direct debits seem to have gone through twice. Please sort that out and finish moving the utility payments off our old mandate. Also, i returned part of a purchase that I am paying in installments. Some installments have already been paid. Please fix the remaining bills and refund whatever I have overpaid. These are part of the same business spending plan."
 
 > **System**: operations_desk
@@ -248,6 +250,8 @@ This class covers duplicated direct debits, retiring an old mandate, and correct
 7. Pay the remaining bills by executing an approved request, then verify the actual receipt. A proposal or an approval is not a payment; use the bill's own payment action and do not re-propose the same bill through several payment capabilities. A generic service payment does not settle an installment bill. An installment return creates a separate new retained-purchase bill in addition to the plan balance; paying the plan balance or closing the plan does not settle that bill. Pay the bill itself with `pay_bill` using its `record_id` at its due minute, and verify its `paid_minor`; if the due minute is 0, pay it at minute 0 before any other action that advances the clock. Close only after all returns, collections and installment bills are actually settled and the receipts are recorded.
 8. Check the scheduled events for the installment reconciliation deadline and finish the correction before it: the return, refund, new retained-bill payment and plan close must all be recorded before that event. A correction executed after the deadline is late; the independent reconstruction does not accept it, even if the records look complete afterwards.
 
+> **Wrong turn (observed)**: treating the new retained-purchase bill as already covered by the plan balance and paying it after another action that advances the clock — it is an independent bill due at its own minute; pay it with its record id before any waiting.
+
 ### When asked: "Could you finish settling the equipment shipments in escrow? The inspection paperwork has changed, and some money was already released. Also, a customer returned part of a combined order after we paid the sellers. Please refund the returned items and finish the sellers’ remaining payouts. These are part of the same business spending plan."
 
 > **System**: operations_desk
@@ -264,6 +268,8 @@ This class covers final escrow settlement after changed inspection evidence and 
 4. Refund buyers from the correct lot: original funding less final accepted price, allocated across the original deposit remitters in proportion to posted deposits, rounding down and assigning remaining minor units in ascending refund_order. Escrow refunds cannot be recalled.
 5. Handle the marketplace refund by seller allocation: a pending refund counts only when the bank reports SETTLED; if a seller credit is reversed, reallocate the refund without paying the buyer twice. Finish the sellers' remaining payouts only after the refund allocation is final. For each seller, entitlement is (gross − that seller's accepted return) × (1 − commission_rate), not the original transfer minus the return price; the reversal is the original transfer minus the recalculated entitlement. Only the seller of a returned item bears the return, unrelated sellers are not reversed, and the exact net entitlement must be paid by that seller's payout due minute; a payout due at minute 0 must be executed at minute 0, before advancing the clock.
 6. Verify actual distributions and refunds and close when every lot and seller allocation is settled.
+
+> **Wrong turn (observed)**: stopping once the main funding source is drained while a permitted source still holds capital and one service is short of its registered capital — the agreement requires the exact registered capital for every service; route the remaining permitted balance to the short service instead of leaving it idle.
 
 ### When asked: "Please finish our supplier payments and sort out the currency deliveries already arranged for them. One of the euro deliveries is still being processed. Also, my equipment order is shipping in two parts. One card payment is still pending, and I need to finish paying for the items that are actually shipping. These are part of the same business spending plan."
 
@@ -587,6 +593,10 @@ This class covers completing a partially shipped card order and paying this run 
 4. Pay employee, tax and attachment components from the correct accounts and at the current bank version; keep business-expense repayments outside the attachment base.
 5. Deadline-priority link: the first upstream cash debit has processing priority over the first downstream cash debit; sequence the runs so both deadlines are met.
 6. Verify actual captures and payroll receipts, then close.
+
+> **Wrong turn (observed)**: letting the payroll run consume the early minute while a card line due at minute 1 remains uncaptured — a capture booked in the due minute clears too late; book it early enough for the clearing event to post by the due minute.
+>
+> **Wrong turn (observed)**: subtracting the business-expense repayment from the employee's net pay when distributing a payroll obligation — the repayment is paid to the employee on top of net pay, outside the attachment base; attachments reduce net pay, the expense repayment is added back.
 
 ### When asked: "Our card sales do not add up to the deposits in the bank. Please close the two settlement periods and release the merchant payouts that are actually due. I also need help with a related matter: please get this run and the next payroll paid, including the court deductions. There is a review of Nina's order and I am not sure whether it changes what we owe now."
 
