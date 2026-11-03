@@ -291,6 +291,8 @@ This class covers concluding forward currency deliveries and a partially shipped
 6. Fund every supplier payment from actual available cash plus released margin; a treasury instruction that exhausts funds can block a later obligation even when it is bank-valid.
 7. Verify actual receipts, FX credits and deadlines, and close after both business tracks are settled. Pay every supplier and courier obligation with its exact amount by its original due minute; a proposal or approval is not a payment, and a late payment is late even when the amount is right.
 
+> **Wrong turn (observed)**: spending a wallet down to its available balance at a payment or delivery minute while the continuous operating floor still applies — the floor must hold at every minute, not only at close; reserve it before the outflow.
+
 ### When asked: "Our machinery is ready, but the two depots still cannot collect it. Please release every lot to the right depot before its pickup deadline and keep the total release charges as low as possible. Also, i am organizing two group orders. One person has pulled out and another payment still says pending. Please help the groups complete their purchases and return the money that should go back. These are part of the same business spending plan."
 
 > **System**: operations_desk
@@ -307,6 +309,10 @@ This class covers releasing cargo lots to depots at the lowest total charge and 
 4. Group purchases: qualification is assessed when the merchant commitment is accepted; committing debits the deposit immediately and it counts toward the merchant price. A withdrawing participant gets its entire actual contribution back; a successful group pays the merchant, a failed one refunds participants.
 5. Treat a pending participant payment as not received until the bank records it. Do not commit a group on an unconfirmed contribution.
 6. Fund the charges and releases from actual cash and close after every lot is dispatched to its depot and every group is completed or refunded. Each group is separate: its own participants, contributions, merchant commitment and qualification test. A withdrawing participant gets that participant's actual contribution back from that group only; a failed group refunds its participants; a successful group pays its merchant. Count a participant's payment only when confirmed; do not mix contributions across groups or reuse a payment for another group.
+
+> **Wrong turn (observed)**: waiting for a participant-withdrawal event before committing an otherwise qualified group — once the withdrawal posts, the group loses that participant and can no longer qualify; commit while the recorded participants still meet the minimum, then process the withdrawal, refund the withdrawn participant in full, and refund the remaining contributors only their rebate share.
+>
+> **Wrong turn (observed)**: paying a premium first-delivery route fee that exceeds the agreement's total delivery-fee cap, and stopping before each service has received its exact registered capital — price the delivery plan against the fee cap and deliver the exact capital per service from permitted sources.
 
 ### When asked: "Please renew our port, customs and warehouse guarantees and pay the equipment supplier. We need those services to keep running. Also, the checkout asked me to verify a payment, then the shop changed the order total. I also have another purchase to finish before I leave. These are part of the same business spending plan."
 
@@ -342,6 +348,8 @@ This class covers insurance recoveries with possible later supplier compensation
 5. Wallet and card: cash top-ups and promotional value are separate lots; an order can combine lots only within its recorded promotional allowance across all partial payments. Restoring tender returns value to its lot; a return of a top-up is a separate operation. Fix the wrong top-up without treating a cancelled order's value as spendable.
 6. Verify actual insurance settlements, replacement receipts and wallet balances, and close after the retained order is settled and no claim remains unresolved. Retained indemnity: apply each policy's retained amount (EW/PW) to the corresponding loss component; actual recoveries are only SETTLED compensation entries allocated to the matching component; a replacement payment is not a recovery and cannot offset a different component.
 
+> **Wrong turn (observed)**: paying indemnity per loss without reconciling each loss's actual external recovery — each loss needs its realized supplier compensation plus realized salvage declared as the external recovery; only settled compensation counts, and the policy's net payout must reach the maximum allowed by the per-loss limits and the shared aggregate.
+
 ### When asked: "Could you finish our intercompany settlement and the brokerage payment? There is a group clearing draft in the portal, and some staff approvals are already on it. Also, our contractor says one of our electronic cheques went to the wrong place. There is another cheque due soon as well. Please make sure the right people are paid without paying either bill twice. These are part of the same business spending plan."
 
 > **System**: operations_desk
@@ -358,6 +366,12 @@ This class covers completing an intercompany clearing draft with existing staff 
 4. Cheque: an endorsed cheque pays its current lawful holder, which may differ from the invoice seller. A stop request is not a successful stop; opening cheque holds are separate from free cash. A replacement payment is separate from the underlying bill payment.
 5. Avoid paying either bill twice: identify the actual clearing/cheque outcome first, then pay only the remaining obligation to the correct holder.
 6. Verify actual receipts and holder identities, and close after the clearing cycle and both cheques are resolved.
+
+> **Wrong turn (observed)**: using a later credit or the revised netting amount to satisfy an invoice that matured at minute 0 — the original due amount must be paid in full by its cutoff; later credits cannot retroactively cure a missed payment.
+>
+> **Wrong turn (observed)**: requesting a stop on the cheque that is due soon instead of the misdirected one — the stop must target the cheque the customer reported; the other cheque proceeds normally, and a stop request is not a completed stop.
+>
+> **Wrong turn (observed)**: delivering the group total without the exact capital for each company — each company's designated capital must be recorded separately; a group-level total does not replace a company's original capital.
 
 ### When asked: "Several customers are still chasing refunds while the card disputes are going on. Please finish the refunds we owe and protect the parts of the sales we are entitled to keep. Also, a customer returned part of a combined order after we paid the sellers. Please refund the returned items and finish the sellers’ remaining payouts. These are part of the same business spending plan."
 
@@ -673,6 +687,8 @@ This class covers an unfamiliar incoming payment claimed by someone else while a
 6. An original-route return cannot be cancelled after initiation. The whole-return interface (a_dispose_incoming_balance {incoming_id, disposition RETURN_ORIGIN or CLAIM, decision_version}) requires the exact current bank decision version; do not use it to send funds to a substitute claimant.
 7. Pay the ordinary supplier invoice from its own operating funds only after the refund/escrow flows are set; fees compete with it and the deadline is a bank/customer fact, not something a fee quote or acceptance proves. Verify the actual refund, trustee deposit and supplier receipt, then close once.
 
+> **Wrong turn (observed)**: ordering the trustee review and then trying to activate custody or partition immediately, before the review event publishes the activation offers — activation before the review completes is rejected as not enabled; wait for the review event, then activate, partition, and pay the ordinary supplier invoice.
+
 ### When asked: "A buyer has recalled a payment after returning only part of an order. Please resolve the payment and the value of the goods they kept."
 
 > **System**: psp
@@ -690,6 +706,8 @@ This class covers a buyer recalling a remittance after returning only part of an
 5. Use the buyer collection calendar for the remaining value: book capacity before its milestone, and collect only the remaining amount in the correct tranche.
 6. Verify actual receipts and credits, then close.
 
+> **Wrong turn (observed)**: booking the faster reserved collection service for the full capacity when its per-unit fee exceeds the case's maximum fee budget — unused capacity is still charged, and the standard service still meets the due minute; compute the fee over the entire reserved capacity against the fee cap before booking.
+
 ### When asked: "Our bank receipts arrived out of order and one transfer may have been returned. Please reconcile what is still owed and recover the related supplier allowances."
 
 > **System**: psp
@@ -705,6 +723,8 @@ This class covers bank receipts that arrived out of causal order and a transfer 
 3. Reopen the payable from the returned receipt, then reconcile the invoice. A confirmed supplier credit note can reduce the reopened debt or be redeemed for cash, never both. Redemption charges its fee immediately and pays principal after the published delay; a pending refund has not realized value.
 4. Pay any still-owed invoice from actual operating cash, and keep refund and invoice funding separate.
 5. Do not post a projected status as money; only actual receipts and postings move cash. Verify the actual payables and credit-note outcomes, then close.
+
+> **Wrong turn (observed)**: reasoning about causal order from the receipt list without executing the causal projection for every invoice — an unchanged invoice still needs its projected status and highest-sequence receipt, and the final supplier statement must carry that receipt for each payable; run `a_project_bank_receipts` with CAUSAL (never ARRIVAL) before reconciling and delivering the statement.
 
 ### When asked: "A customer paid for the live-shop order, but the shop still says it is unpaid. Please correct the order and complete its deliveries without charging the customer again."
 
