@@ -236,3 +236,27 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 **a2（v21，12:38–13:50）**：017 **32/32 strict**、026 **31/31 strict**、015 **42/42 strict**；019 34/35、025 28/29、013 41/47 持平；027 31/34、021 29/30、011 36/42、010 37/39 提升；014 37/41（−1，单轮）。007/008/009 到点被杀，未 evaluate。018 在 v20 已 strict，未复跑。
 
 **结论**：15 题未 strict 集合中 4 题翻 strict（018 / 017 / 026 / 015）；单轮 checks pooled 97.5%。剩余失败均为单点/双点，留待下一窗口。
+
+## 十一、2026-11-03 晚 · v22/v23 负向 few-shot 收口（019/021/025）
+
+> 方法：负向 few-shot（只写错法、不写答案/金额/ID）；每题只加实测失败过的那一条；L3 编号步骤与负向冲突时，先改步骤本身，再保留负向作 observed 证据。开放性问题不显式给正解，只封岔路。
+
+**v22**：`bizagentbench-v22`，687/187/50，freeze `c8ba813a`。在 v21 基础上给 019/025/021 各加一条方法级 Wrong turn，并修掉三处步骤自相矛盾：
+
+- **019**：step 0 改为「minute 0 先执行上游证书指令，再同分钟准备并执行 due-0 付款」；原文「先于任何证书动作付款」与 link 的 primary-before-secondary 冲突（link 记录已核实：primary=D34-CERT-CASE，secondary=PAY43-CASE）。step 5 同步改为「上游执行后立刻准备付款」。
+- **021**：step 4 改为「跨两个活动按各自到期分钟排序；capture 要早到让清算事件赶上截止」；原文「先结最早到期员工，再处理卡单」与 FIRST due 1 / 员工 M due 2 冲突。
+- **025**：step 3 改为「枚举每一个合规的两期套餐对与券分配」。
+
+**a3（v22）结果**：
+
+| 题 | 结果 | 失败项 | 说明 |
+|---|---|---|---|
+| 025 | **29/29 strict ✅** | — | BULK + PRO，券 15000 落在 PRO 期，总费用 30000（最优） |
+| 021 | **30/30 strict ✅** | — | 4 个工具错误但 G/P/F 全过 |
+| 019 | 33/35 | G `authority.current_versions.ARCHIVED_ACCESS` / `BRANCH_ACCESS` | P `link.quote_version_refresh` **已过**；新失败 = agent 把四个 authority 全 rebind，verifier 要求未受影响的保持原样（`n == r`） |
+
+**v23**：`bizagentbench-v23`，687/187/50，freeze `985c683d`。只对 019 加第二条负向（不要“保险起见”重绑未升版 authority）+ 收窄 step 4（只重绑 required source 实际升版的 authority，其余保持原样）。
+
+**019 v23 = 35/35 strict ✅**（231 steps / 6.61M tokens / 2 tool errors）。
+
+**结论**：019 / 021 / 025 三题全部 strict。负向 few-shot 对「规则已知但用错」的题有效；对「知识缺口」无效，仍走正向口径。v23 为当前最佳 store（019 两条负向 + 021/025 负向均已入）。007/008/009 在 v23 上复跑中，结果另记。
