@@ -36,6 +36,55 @@ scenarios/<scenario>/
 | Evaluation content | Authored paper: `eval/questions.jsonl`, 500 questions | External benchmark: 754 cases + upstream scorer adapter |
 | Result | **500/500** (✅ 426 + 🔁 74) | **coverage 754/754 · JRA 753/754 (99.87%)** |
 
+### 1.1 The agent operating layer template (three-scenario synthesis)
+
+The three landed scenarios (`birdminidev` SQL, `cloudopsbench` RCA, `bizagentbench` business operations) share one skeleton. **Do not redesign the skeleton per scenario; adapt the slots marked "adaptive".**
+
+**Invariant core — keep stable across scenarios:**
+
+| # | Invariant | Why |
+|---|---|---|
+| 1 | **Role and non-coding identity** — say what the agent is; forbid claiming to be a coding/CLI agent | The harness may expose other personas; drifting into "general assistant" loses the domain frame |
+| 2 | **Tool-surface honesty** — use only mounted tools; never fabricate a tool name or parameter; never claim an unmounted capability | Fabricated tools are silent failures and break the evidence chain |
+| 3 | **Knowledge precedence** — `L3 exact > L2 > L1 > model priors`; retrieve L3 at the start of every case and re-read before closing; define `match=exact` (title restates this case) | Without a binding, L3 is just another piece of context |
+| 4 | **Evidence discipline** — every claim comes from an actual tool result; a proposal, approval or plan is not a result; never guess IDs, amounts or statuses | The verifier scores states and receipts, not narration |
+| 5 | **Scope and one-case contract** — stay inside the case's database / namespace / customer; enumerate and close **every** sub-problem | Cross-case leakage and dropped sub-problems are common long-horizon failures |
+| 6 | **Deterministic submission** — one fixed final form (Final Answer + Evidence SQL / JSON diagnosis / record_case_outcome) and a single verified closure | Scorer extraction and closure checks depend on a stable shape |
+| 7 | **Truthful failure** — bounded retries; do not escalate or claim completion without the actual result; record the real outcome | Protects both the score and the diagnosis of failures |
+
+**Adaptive slots — change per scenario:**
+
+| Slot | `birdminidev` (read-only SQL) | `cloudopsbench` (read-only diagnosis) | `bizagentbench` (mutating business) |
+|---|---|---|---|
+| Persona / domain | semantic business assistant (NL2SQL) | K8s fault-diagnosis assistant | business operations agent (payments/desk) |
+| Tool surface | 7 MCP tools + `skill(paradigm)`; no shell/fs | 3 semantic tools + `cloudops-tools`; no shell/fs | tau2 record/action tools + `dlr_l1/l2/l3` |
+| Workflow | parallel 3-level recall → cross-check/anchor → map → SQL → Final Answer | parallel recall → **symptom-first** chain → re-query L1 after anchor → breakpoint → closing triad → JSON | open case fully → **clock before wait** → one-request-one-approval → execute+verify → bills vs lines → signed adjustments → single verified closure |
+| Ordering / safety | two-hop mapping; SQL read-only; no schema probing | chain order (EOC); anchor pruning; namespace scope; events face before closing | due-0 first; approval before execute; no double payment; release unused holds |
+| Submission | Final Answer + Evidence SQL + Modeling gap | JSON contract (`top_3_predictions`, rank-1 rule) | `record_case_outcome` with per-sub-problem receipts |
+| Runtime config | bundle `AGENTS.md` | `dsh.patch.yml` (persona, model, pruner, disabled tools) | `AGENTS.md` + `BIZ_AGENTS_MD` injection (opt-in) |
+
+**Template skeleton (fill in per scenario):**
+
+```markdown
+# Role                      # invariant 1 — who the agent is, not a coding agent
+## Authority and priority   # invariant 3 — L3 exact > L2 > L1 > priors; retrieve at start, re-read before close
+## Tool surface            # invariant 2 — only mounted tools; exact names; no fabrication
+## Workflow (numbered)     # adaptive — read-only pipeline / diagnostic chain / mutating transaction loop
+## Discipline              # invariant 4/5 + adaptive ordering & safety rules
+## Submission              # invariant 6 — fixed final form and closure rule
+## Scenario appendix       # adaptive — domain vocabulary, tool-specific traps
+```
+
+**New-scenario checklist:**
+
+1. Write the role and the non-coding identity first; delete any default "coding agent" persona.
+2. List the mounted tools and explicitly forbid everything else (shell, fs, web, subagents).
+3. Write the precedence rule and the exact-match definition; require L3 retrieval at start and re-read before closing.
+4. Adapt the workflow to the task shape: read-only query, read-only diagnosis, or mutating transaction.
+5. Add the scenario's ordering and safety rules (anchor/JOIN, chain order, clock/approval/duplicate-payment).
+6. Define one deterministic submission and one verified closure.
+7. A/B on near-miss cases: with vs without the layer; measure strict/score, retries and tokens; revert if it regresses.
+
 ## 2. What each level writes
 
 ### L1 `dlr` — `sources/configs/DLR/*.yaml`

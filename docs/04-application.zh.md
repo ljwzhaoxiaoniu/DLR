@@ -36,6 +36,55 @@ scenarios/<场景>/
 | 评测内容 | 自建考卷：`eval/questions.jsonl` 500 题 | 外部基准：754 例 + 上游 scorer 适配 |
 | 结果 | **500/500**（✅ 426 + 🔁 74） | **覆盖 754/754 · JRA 753/754（99.87%）** |
 
+### 1.1 Agent 运行态设定模板（三场景综合）
+
+三个已落地场景（`birdminidev` SQL、`cloudopsbench` RCA、`bizagentbench` 业务操作）共用一套骨架：**骨架不要每个场景重设计；只适配标「可适配」的槽位。**
+
+**不变内核（跨场景保持稳定）：**
+
+| # | 不变项 | 为什么 |
+|---|---|---|
+| 1 | **角色与非 coding 身份**——说清 agent 是谁；禁止自称 coding/CLI 代理 | 宿主可能带别的默认人格；漂成“通用助手”就丢了领域框架 |
+| 2 | **工具面诚实**——只用已挂载工具；不编造工具名/参数；不声称未挂载能力 | 编造工具是静默失败，且会打断证据链 |
+| 3 | **知识判序**——`L3 exact > L2 > L1 > 模型先验`；每题开局检索 L3，收口前回读；定义 `match=exact`（标题复述本题） | 没有绑定，L3 就只是“又一段上下文” |
+| 4 | **证据纪律**——每个结论来自实际工具结果；proposal/approval/plan 都不算结果；不猜 ID、金额、状态 | 判分看状态与回执，不看叙述 |
+| 5 | **作用域与单案契约**——不越出本题的库 / namespace / 客户；逐个列全并收口**每个**子问题 | 跨案泄漏与漏子问题是长程常见失败 |
+| 6 | **确定性提交**——一种固定最终形态（Final Answer + Evidence SQL / JSON 诊断 / record_case_outcome）+ 单次核验收口 | 判分抽取与收口检查依赖稳定形状 |
+| 7 | **如实失败**——有界重试；没有实际结果就不升级、不声称完成；记录真实结果 | 既保分数，也保失败归因 |
+
+**可适配槽位（按场景改）：**
+
+| 槽位 | `birdminidev`（只读 SQL） | `cloudopsbench`（只读诊断） | `bizagentbench`（改世界业务） |
+|---|---|---|---|
+| 人格 / 领域 | 语义业务助手（NL2SQL） | K8s 故障诊断助手 | 业务操作 agent（payments/desk） |
+| 工具面 | 7 个 MCP + `skill(paradigm)`；无 shell/fs | 3 个语义工具 + `cloudops-tools`；无 shell/fs | tau2 记录/动作工具 + `dlr_l1/l2/l3` |
+| 工作流 | 三级并行召回 → 交叉验证/锚定 → 映射 → SQL → Final Answer | 并行召回 → **症状先行**走链 → 锚后回查 L1 → 断点 → 收口三件套 → JSON | 开局完整读案 → **时钟先行** → 逐请求批准 → 执行后复核 → 账单 vs 行 → 带符号调整 → 核验后单次收口 |
+| 顺序 / 安全 | 两跳映射；SQL 只读；不摸 schema | 链序（EOC）；锚剪枝；namespace 作用域；收口前读 events 面 | due-0 先做；先批后执行；不重复付款；释放未用额度 |
+| 提交 | Final Answer + Evidence SQL + Modeling gap | JSON 契约（`top_3_predictions`、rank-1 条款） | `record_case_outcome` + 逐子问题回执 |
+| 运行配置 | bundle 内 `AGENTS.md` | `dsh.patch.yml`（人格、模型、pruner、禁用项） | `AGENTS.md` + `BIZ_AGENTS_MD` 注入（opt-in） |
+
+**模板骨架（按场景填写）：**
+
+```markdown
+# Role                      # 不变 1——agent 是谁，不是 coding agent
+## Authority and priority   # 不变 3——L3 exact > L2 > L1 > 先验；开局检索、收口前回读
+## Tool surface            # 不变 2——只列已挂载工具；名字精确；禁止编造
+## Workflow (numbered)     # 可适配——只读查询 / 诊断链 / 改世界事务环
+## Discipline              # 不变 4/5 + 可适配的顺序与安全规则
+## Submission              # 不变 6——固定最终形态与收口规则
+## Scenario appendix       # 可适配——领域词汇、工具专属陷阱
+```
+
+**新场景检查单：**
+
+1. 先写角色与非 coding 身份；删掉默认 “coding agent” 人格。
+2. 列出已挂载工具，并显式禁止其他一切（shell、fs、web、子 agent）。
+3. 写判序与 exact 定义；要求开局检索 L3、收口前回读。
+4. 按任务形态适配工作流：只读查询 / 只读诊断 / 改世界事务。
+5. 加本场景的顺序与安全规则（锚/JOIN、链序、时钟/批准/防重复付款）。
+6. 定义唯一确定性提交与唯一核验收口。
+7. 在“差一点”的题上 A/B：带层 vs 不带层；看 strict/得分率、重试与 token；变差即回滚。
+
 ## 二、三层各写什么
 
 ### L1 `dlr` —— `sources/configs/DLR/*.yaml`
