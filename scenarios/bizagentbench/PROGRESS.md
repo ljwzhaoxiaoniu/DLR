@@ -214,3 +214,25 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 | case_017 | **31/32** | `bizagentbench-v11` / `b4882f0f`（v13/v14 同分） | G: `documents.acceptance_and_payment`（v11 此轮）；P/F 过 | v12 30/32（documents+finance）；v13 31/32（seller.B）；v14 31/32（documents） | — |
 
 **结论**：7 题均无 strict；最佳有效结果如上。008/015/010/011/013/014/017 的剩余失败均为已知单点/双点（见列），且各点在别的轮次曾通过，属模型执行/时序或取舍摆动；按用户口径停止优化、归档 best。最终 best-practice store = **v20**（`8992a5aa`，687/187/50），旧 store 的 best 仅作探索证据。
+
+## 十、2026-11-03 · Agent Operating Layer A/B + v21 联合修复
+
+> 背景：v20 的 best 与论文裸模型过于接近；诊断指向两件事——缺 agent 全局设定（只有 `_POLICY_NOTE`）与 L3 检索在改写题面下取不到正确节。
+
+**a1（v20 + AGENTS，12:05 批）**：017 29/32、018 **30/30 strict（P 类 unapproved execution 转干净）**、019 28/35。
+
+**行为偏转诊断（仅失败题）**：
+- 017：用户模拟器改写题面 → L3 `similar`；SOP 索引用「标题+正文」编码，正确节被正文稀释到 rank 41 / 0.567（低于 0.7），top-2 无此节。Agent 从 L1/L2 自解时把 accepted return 20,000 当净份额反推 gross，`reverse_seller` 20,000（应 16,000）、`refund_buyer` 20,000（应 15,000）。
+- 019：a1 的 L3 `exact` 命中（v14 因直/弯撇号只拿到 similar）；SOP 4 的“source names”被照字面执行成 `{"EXPORT": 2}`，被 `SOURCE_ACCEPTANCE_OR_VERSION_UNAVAILABLE` 拒；重复同形后转疑窗口，最终 ESCALATED。v14 改用 record id `{"D34-CERT-EXPORT": 2}` 即成功。
+
+**联合修复**：
+1. `TSM Core Service/src/build/buildSop.ts`：SOP 向量只用标题（正文只进 `text` 展示）。017 正确节从 rank 41 / 0.567 → **rank 1 / 0.969**。
+2. `TSM Core Service/src/queries/searchSop.ts`：`norm()` 归一弯/直撇号与引号（修 019 v14 类 exact 漏配）。
+3. `sources/sop.md`：017 类补 buyer 余额口径；019 类补 `versions` 用 record id 作键、短名会被拒。
+4. `AGENTS.md` 收敛为高位（L1 及以上）TSM 用法：先检索三层再走业务工具；similar 复述本题可作为 playbook hypothesis；题级算术/键形陷阱全部留在 L3。
+
+**v21**：`bizagentbench-v21`，687/187/50，bge-base-en 768 维，freeze `73e7889c`。
+
+**a2（v21，12:38–13:50）**：017 **32/32 strict**、026 **31/31 strict**、015 **42/42 strict**；019 34/35、025 28/29、013 41/47 持平；027 31/34、021 29/30、011 36/42、010 37/39 提升；014 37/41（−1，单轮）。007/008/009 到点被杀，未 evaluate。018 在 v20 已 strict，未复跑。
+
+**结论**：15 题未 strict 集合中 4 题翻 strict（018 / 017 / 026 / 015）；单轮 checks pooled 97.5%。剩余失败均为单点/双点，留待下一窗口。

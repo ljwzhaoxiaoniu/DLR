@@ -709,12 +709,12 @@
       "best_freeze": "6f3a3102"
     },
     "case_015": {
-      "strict": false,
-      "goal": false,
+      "strict": true,
+      "goal": true,
       "process": true,
       "protection": true,
-      "best_checks": "41/42",
-      "best_artifact": "results/dlr-full/case_015_v10/case_015__trial0/result.json",
+      "best_checks": "42/42",
+      "best_artifact": "results/dlr-full/case_015_a2/case_015__trial0/result.json",
       "valid_attempts": [
         {
           "label": "v3",
@@ -763,19 +763,35 @@
             "P": [],
             "F": []
           }
+        },
+        {
+          "label": "v21a2",
+          "checks": "42/42",
+          "strict": true,
+          "goal": true,
+          "process": true,
+          "protection": true,
+          "artifact": "results/dlr-full/case_015_a2/case_015__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v21",
+          "freeze": "73e7889c",
+          "failed": {
+            "G": [],
+            "P": [],
+            "F": []
+          }
         }
       ],
-      "note": "015 best 41/42 (v10); only seller.B remains (payout_due_minute 0 paid at minute 1). No strict; optimization stopped. [6:00 收口：attempts enriched with store/freeze and failed items from result.json]",
-      "best_store": "TSM Core Service/.store/lance/bizagentbench-v10",
-      "best_freeze": "d0777d2a"
+      "note": "015 best 41/42 (v10); only seller.B remains (payout_due_minute 0 paid at minute 1). No strict; optimization stopped. [6:00 收口：attempts enriched with store/freeze and failed items from result.json] [2026-11-03 A/B] best -> v21a2 42/42 strict (v21 joint fix).",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v21",
+      "best_freeze": "73e7889c"
     },
     "case_011": {
       "strict": false,
       "goal": false,
       "process": false,
       "protection": true,
-      "best_checks": "33/42",
-      "best_artifact": "results/dlr-full/case_011_v11/case_011__trial0/result.json",
+      "best_checks": "36/42",
+      "best_artifact": "results/dlr-full/case_011_a2/case_011__trial0/result.json",
       "valid_attempts": [
         {
           "label": "v3",
@@ -851,11 +867,35 @@
             ],
             "F": []
           }
+        },
+        {
+          "label": "v21a2",
+          "checks": "36/42",
+          "strict": false,
+          "goal": false,
+          "process": false,
+          "protection": true,
+          "artifact": "results/dlr-full/case_011_a2/case_011__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v21",
+          "freeze": "73e7889c",
+          "failed": {
+            "G": [
+              "joint.exact_capital",
+              "joint.fee_and_reserve",
+              "activity2:participant.A",
+              "activity2:participant.B",
+              "activity2:group.merchant_G1"
+            ],
+            "P": [
+              "joint.continuous_operating_floors"
+            ],
+            "F": []
+          }
         }
       ],
-      "note": "011 best 33/42 (v11); group participant A/B, merchant G1, joint capital/fee and continuous floors remain. Three attempts; optimization stopped. [6:00 收口：attempts enriched with store/freeze and failed items from result.json]",
-      "best_store": "TSM Core Service/.store/lance/bizagentbench-v11",
-      "best_freeze": "b4882f0f"
+      "note": "011 best 33/42 (v11); group participant A/B, merchant G1, joint capital/fee and continuous floors remain. Three attempts; optimization stopped. [6:00 收口：attempts enriched with store/freeze and failed items from result.json] [2026-11-03 A/B] best -> v21a2 36/42 (v21 joint fix).",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v21",
+      "best_freeze": "73e7889c"
     },
     "case_013": {
       "strict": false,
@@ -863,7 +903,7 @@
       "process": true,
       "protection": true,
       "best_checks": "41/47",
-      "best_artifact": "results/dlr-full/case_013_v10/case_013__trial0/result.json",
+      "best_artifact": "results/dlr-full/case_013_a2/case_013__trial0/result.json",
       "valid_attempts": [
         {
           "label": "v3",
@@ -926,19 +966,42 @@
             "P": [],
             "F": []
           }
+        },
+        {
+          "label": "v21a2",
+          "checks": "41/47",
+          "strict": false,
+          "goal": false,
+          "process": true,
+          "protection": true,
+          "artifact": "results/dlr-full/case_013_a2/case_013__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v21",
+          "freeze": "73e7889c",
+          "failed": {
+            "G": [
+              "activity1:policy.retained_indemnity.EW",
+              "activity1:policy.retained_indemnity.PW",
+              "activity1:loss.actual_recoveries.A",
+              "activity1:loss.actual_recoveries.B",
+              "activity1:loss.actual_recoveries.C",
+              "activity1:loss.actual_recoveries.D"
+            ],
+            "P": [],
+            "F": []
+          }
         }
       ],
-      "note": "013 best 41/47 (v10/v11); retained indemnity EW/PW and actual recoveries A-D remain. Three attempts; optimization stopped. [6:00 收口：attempts enriched with store/freeze and failed items from result.json]",
-      "best_store": "TSM Core Service/.store/lance/bizagentbench-v10",
-      "best_freeze": "d0777d2a"
+      "note": "013 best 41/47 (v10/v11); retained indemnity EW/PW and actual recoveries A-D remain. Three attempts; optimization stopped. [6:00 收口：attempts enriched with store/freeze and failed items from result.json] [2026-11-03 A/B] best -> v21a2 41/47 (v21 joint fix).",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v21",
+      "best_freeze": "73e7889c"
     },
     "case_010": {
       "strict": false,
-      "goal": false,
+      "goal": true,
       "process": false,
       "protection": true,
-      "best_checks": "35/39",
-      "best_artifact": "results/dlr-full/case_010_v3/case_010__trial0/result.json",
+      "best_checks": "37/39",
+      "best_artifact": "results/dlr-full/case_010_a2/case_010__trial0/result.json",
       "valid_attempts": [
         {
           "label": "v3",
@@ -996,11 +1059,30 @@
             ],
             "F": []
           }
+        },
+        {
+          "label": "v21a2",
+          "checks": "37/39",
+          "strict": false,
+          "goal": true,
+          "process": false,
+          "protection": true,
+          "artifact": "results/dlr-full/case_010_a2/case_010__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v21",
+          "freeze": "73e7889c",
+          "failed": {
+            "G": [],
+            "P": [
+              "joint.continuous_operating_floors",
+              "activity1:cash.reserve_and_no_foreign_surplus.continuous_reserve"
+            ],
+            "F": []
+          }
         }
       ],
-      "note": "010 best 35/39; failures alternate between exact/timely and joint capital/floors; three attempts; optimization stopped. [6:00 收口：attempts enriched with store/freeze and failed items from result.json]",
-      "best_store": "TSM Core Service/.store/lance/bizagentbench-v3",
-      "best_freeze": "6f3a3102"
+      "note": "010 best 35/39; failures alternate between exact/timely and joint capital/floors; three attempts; optimization stopped. [6:00 收口：attempts enriched with store/freeze and failed items from result.json] [2026-11-03 A/B] best -> v21a2 37/39 (v21 joint fix).",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v21",
+      "best_freeze": "73e7889c"
     },
     "case_014": {
       "strict": false,
@@ -1066,6 +1148,27 @@
             "P": [],
             "F": []
           }
+        },
+        {
+          "label": "v21a2",
+          "checks": "37/41",
+          "strict": false,
+          "goal": false,
+          "process": true,
+          "protection": true,
+          "artifact": "results/dlr-full/case_014_a2/case_014__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v21",
+          "freeze": "73e7889c",
+          "failed": {
+            "G": [
+              "joint.exact_capital",
+              "joint.company_capital",
+              "activity1:invoices.original_due_amounts",
+              "activity2:cheque.stop_instruction"
+            ],
+            "P": [],
+            "F": []
+          }
         }
       ],
       "note": "014 best 38/41 (v3); invoice original due, external source/recipient, SERVICE exact/timely, joint capital and cheque stop remain. Three attempts; optimization stopped. [6:00 收口：attempts enriched with store/freeze and failed items from result.json]",
@@ -1073,12 +1176,12 @@
       "best_freeze": "6f3a3102"
     },
     "case_017": {
-      "strict": false,
-      "goal": false,
+      "strict": true,
+      "goal": true,
       "process": true,
       "protection": true,
-      "best_checks": "31/32",
-      "best_artifact": "results/dlr-full/case_017_v11/case_017__trial0/result.json",
+      "best_checks": "32/32",
+      "best_artifact": "results/dlr-full/case_017_a2/case_017__trial0/result.json",
       "valid_attempts": [
         {
           "label": "v11",
@@ -1140,11 +1243,47 @@
             "P": [],
             "F": []
           }
+        },
+        {
+          "label": "v20a1",
+          "checks": "29/32",
+          "strict": false,
+          "goal": false,
+          "process": true,
+          "protection": true,
+          "artifact": "results/dlr-full/case_017_a1/case_017__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v20",
+          "freeze": "8992a5aa",
+          "failed": {
+            "G": [
+              "activity1:documents.acceptance_and_payment",
+              "activity2:seller.A",
+              "activity2:buyer.exact_net_refund"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v21a2",
+          "checks": "32/32",
+          "strict": true,
+          "goal": true,
+          "process": true,
+          "protection": true,
+          "artifact": "results/dlr-full/case_017_a2/case_017__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v21",
+          "freeze": "73e7889c",
+          "failed": {
+            "G": [],
+            "P": [],
+            "F": []
+          }
         }
       ],
-      "note": "017 archived best 31/32 after 4 valid attempts (v11-v14). Two failure modes alternate: documents split (v11/v12/v14) and seller.B due-0 (v13); each has passed in another run (documents passed v13; seller.B passed v14), so remaining gap is agent variance, no further optimization. P/F all pass. [6:00 收口：attempts enriched with store/freeze and failed items from result.json]",
-      "best_store": "TSM Core Service/.store/lance/bizagentbench-v11",
-      "best_freeze": "b4882f0f"
+      "note": "017 archived best 31/32 after 4 valid attempts (v11-v14). Two failure modes alternate: documents split (v11/v12/v14) and seller.B due-0 (v13); each has passed in another run (documents passed v13; seller.B passed v14), so remaining gap is agent variance, no further optimization. P/F all pass. [6:00 收口：attempts enriched with store/freeze and failed items from result.json] [2026-11-03 A/B] best -> v21a2 32/32 strict (v21 joint fix).",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v21",
+      "best_freeze": "73e7889c"
     },
     "case_022": {
       "strict": true,
@@ -1211,11 +1350,11 @@
     },
     "case_019": {
       "strict": false,
-      "goal": false,
-      "process": true,
+      "goal": true,
+      "process": false,
       "protection": true,
       "best_checks": "34/35",
-      "best_artifact": "results/dlr-full/case_019_v14/case_019__trial0/result.json",
+      "best_artifact": "results/dlr-full/case_019_a2/case_019__trial0/result.json",
       "valid_attempts": [
         {
           "label": "v12",
@@ -1274,6 +1413,48 @@
             "P": [],
             "F": []
           }
+        },
+        {
+          "label": "v20a1",
+          "checks": "28/35",
+          "strict": false,
+          "goal": false,
+          "process": true,
+          "protection": true,
+          "artifact": "results/dlr-full/case_019_a1/case_019__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v20",
+          "freeze": "8992a5aa",
+          "failed": {
+            "G": [
+              "activity1:reliance.validity_and_scope.ARCHIVE",
+              "activity1:authority.current_versions.ARCHIVED_ACCESS",
+              "activity1:authority.current_versions.GUARANTEE",
+              "activity1:authority.current_versions.PLATFORM",
+              "activity1:process.single_completion.terminal_goal",
+              "activity2:shared.single_completed_outcome.terminal_goal",
+              "closure.single_completed.terminal_goal"
+            ],
+            "P": [],
+            "F": []
+          }
+        },
+        {
+          "label": "v21a2",
+          "checks": "34/35",
+          "strict": false,
+          "goal": true,
+          "process": false,
+          "protection": true,
+          "artifact": "results/dlr-full/case_019_a2/case_019__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v21",
+          "freeze": "73e7889c",
+          "failed": {
+            "G": [],
+            "P": [
+              "link.quote_version_refresh"
+            ],
+            "F": []
+          }
         }
       ],
       "invalid_attempts": [
@@ -1284,15 +1465,17 @@
           "artifact": "results/dlr-full/case_019_v17/case_019__trial0/result.json"
         }
       ],
-      "note": "019 archived best 34/35 (v14/v15), only seller.B stalled at minute 1 vs payout due 0; step-0 L3 wording did not change it and v17 became invalid (too_many_errors), so stopped per invalid-exclusion rule. All other checks including CURRENT and authority rebinds pass on v13-v15."
+      "note": "019 archived best 34/35 (v14/v15), only seller.B stalled at minute 1 vs payout due 0; step-0 L3 wording did not change it and v17 became invalid (too_many_errors), so stopped per invalid-exclusion rule. All other checks including CURRENT and authority rebinds pass on v13-v15. [2026-11-03 A/B] best -> v21a2 34/35 (v21 joint fix).",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v21",
+      "best_freeze": "73e7889c"
     },
     "case_018": {
-      "strict": false,
-      "goal": false,
+      "strict": true,
+      "goal": true,
       "process": true,
       "protection": true,
-      "best_checks": "29/30",
-      "best_artifact": "results/dlr-full/case_018_v14/case_018__trial0/result.json",
+      "best_checks": "30/30",
+      "best_artifact": "results/dlr-full/case_018_a1/case_018__trial0/result.json",
       "valid_attempts": [
         {
           "label": "v12",
@@ -1367,10 +1550,28 @@
             ],
             "F": []
           }
+        },
+        {
+          "label": "v20a1",
+          "checks": "30/30",
+          "strict": true,
+          "goal": true,
+          "process": true,
+          "protection": true,
+          "artifact": "results/dlr-full/case_018_a1/case_018__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v20",
+          "freeze": "8992a5aa",
+          "failed": {
+            "G": [],
+            "P": [],
+            "F": []
+          }
         }
       ],
       "invalid_attempts": [],
-      "note": "018 archived best 29/30 after five valid attempts (v12/v14). Remaining gap is execution ordering within minute 0 (retainer paid before the operating adjustment) and the missing negative SALES recovery; both are stated in L3 but the agent only partly follows. v14 was all-G with only the one premature execute_request P failure. No strict."
+      "note": "018 archived best 29/30 after five valid attempts (v12/v14). Remaining gap is execution ordering within minute 0 (retainer paid before the operating adjustment) and the missing negative SALES recovery; both are stated in L3 but the agent only partly follows. v14 was all-G with only the one premature execute_request P failure. No strict. [2026-11-03 A/B] best -> v20a1 30/30 strict (v20 A/B, AGENTS layer only).",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v20",
+      "best_freeze": "8992a5aa"
     },
     "case_023": {
       "strict": true,
@@ -1413,8 +1614,8 @@
       "goal": false,
       "process": true,
       "protection": true,
-      "best_checks": "26/30",
-      "best_artifact": "results/dlr-full/case_021_v15/case_021__trial0/result.json",
+      "best_checks": "29/30",
+      "best_artifact": "results/dlr-full/case_021_a2/case_021__trial0/result.json",
       "valid_attempts": [
         {
           "label": "v15",
@@ -1469,6 +1670,24 @@
             ],
             "F": []
           }
+        },
+        {
+          "label": "v21a2",
+          "checks": "29/30",
+          "strict": false,
+          "goal": false,
+          "process": true,
+          "protection": true,
+          "artifact": "results/dlr-full/case_021_a2/case_021__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v21",
+          "freeze": "73e7889c",
+          "failed": {
+            "G": [
+              "activity2:capture.FIRST"
+            ],
+            "P": [],
+            "F": []
+          }
         }
       ],
       "invalid_attempts": [
@@ -1479,7 +1698,9 @@
           "artifact": "results/dlr-full/case_021_v19/case_021__trial0/result.json"
         }
       ],
-      "note": "021 archived best 26/30 (v15). Employee timing and capture.FIRST were each fixed in some runs, but the courier bill and the unused authorization release stayed unfixed across v15/v17/v18 (agent keeps misreading the courier amount as a line gap), and later runs regressed via escalation. Stopped after the v19 wording attempt."
+      "note": "021 archived best 26/30 (v15). Employee timing and capture.FIRST were each fixed in some runs, but the courier bill and the unused authorization release stayed unfixed across v15/v17/v18 (agent keeps misreading the courier amount as a line gap), and later runs regressed via escalation. Stopped after the v19 wording attempt. [2026-11-03 A/B] best -> v21a2 29/30 (v21 joint fix).",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v21",
+      "best_freeze": "73e7889c"
     },
     "case_024": {
       "strict": true,
@@ -1523,7 +1744,7 @@
       "process": true,
       "protection": true,
       "best_checks": "28/29",
-      "best_artifact": "results/dlr-full/case_025_v18/case_025__trial0/result.json",
+      "best_artifact": "results/dlr-full/case_025_a2/case_025__trial0/result.json",
       "valid_attempts": [
         {
           "label": "v18",
@@ -1550,18 +1771,38 @@
             "P": [],
             "F": []
           }
+        },
+        {
+          "label": "v21a2",
+          "checks": "28/29",
+          "strict": false,
+          "goal": false,
+          "process": true,
+          "protection": true,
+          "artifact": "results/dlr-full/case_025_a2/case_025__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v21",
+          "freeze": "73e7889c",
+          "failed": {
+            "G": [
+              "activity1:billing.minimum_total_cost"
+            ],
+            "P": [],
+            "F": []
+          }
         }
       ],
       "invalid_attempts": [],
-      "note": "025 both valid runs 28/29, only billing.minimum_total_cost; v18 chose BULK+EXPORT (31000) and v19 PAYG+EXPORT (35000) vs static optimum BULK+PRO 30000 with the voucher capped by fixed fee. L3 method stated but the agent does not execute the two-period enumeration; archived best 28/29."
+      "note": "025 both valid runs 28/29, only billing.minimum_total_cost; v18 chose BULK+EXPORT (31000) and v19 PAYG+EXPORT (35000) vs static optimum BULK+PRO 30000 with the voucher capped by fixed fee. L3 method stated but the agent does not execute the two-period enumeration; archived best 28/29. [2026-11-03 A/B] best -> v21a2 28/29 (v21 joint fix).",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v21",
+      "best_freeze": "73e7889c"
     },
     "case_026": {
-      "strict": false,
-      "goal": false,
+      "strict": true,
+      "goal": true,
       "process": true,
       "protection": true,
-      "best_checks": "30/31",
-      "best_artifact": "results/dlr-full/case_026_v19/case_026__trial0/result.json",
+      "best_checks": "31/31",
+      "best_artifact": "results/dlr-full/case_026_a2/case_026__trial0/result.json",
       "valid_attempts": [
         {
           "label": "v19",
@@ -1588,18 +1829,36 @@
             "P": [],
             "F": []
           }
+        },
+        {
+          "label": "v21a2",
+          "checks": "31/31",
+          "strict": true,
+          "goal": true,
+          "process": true,
+          "protection": true,
+          "artifact": "results/dlr-full/case_026_a2/case_026__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v21",
+          "freeze": "73e7889c",
+          "failed": {
+            "G": [],
+            "P": [],
+            "F": []
+          }
         }
       ],
       "invalid_attempts": [],
-      "note": "026 best 30/31 on v19/v20, only seller.B (payout due 0 paid after a wait); marketplace due-0 L3 added in v20 but the agent still prioritised other bank events. All other checks pass; stopped as the remaining gap is a repeated timing habit, not a missing rule."
+      "note": "026 best 30/31 on v19/v20, only seller.B (payout due 0 paid after a wait); marketplace due-0 L3 added in v20 but the agent still prioritised other bank events. All other checks pass; stopped as the remaining gap is a repeated timing habit, not a missing rule. [2026-11-03 A/B] best -> v21a2 31/31 strict (v21 joint fix).",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v21",
+      "best_freeze": "73e7889c"
     },
     "case_027": {
       "strict": false,
       "goal": false,
       "process": true,
       "protection": true,
-      "best_checks": "27/34",
-      "best_artifact": "results/dlr-full/case_027_v20b/case_027__trial0/result.json",
+      "best_checks": "31/34",
+      "best_artifact": "results/dlr-full/case_027_a2/case_027__trial0/result.json",
       "valid_attempts": [
         {
           "label": "v20b",
@@ -1620,6 +1879,26 @@
             ],
             "F": []
           }
+        },
+        {
+          "label": "v21a2",
+          "checks": "31/34",
+          "strict": false,
+          "goal": false,
+          "process": true,
+          "protection": true,
+          "artifact": "results/dlr-full/case_027_a2/case_027__trial0/result.json",
+          "store": "TSM Core Service/.store/lance/bizagentbench-v21",
+          "freeze": "73e7889c",
+          "failed": {
+            "G": [
+              "activity1:capture.FIRST",
+              "activity2:payroll.exact_distribution.N1",
+              "activity2:payroll.exact_distribution.L2"
+            ],
+            "P": [],
+            "F": []
+          }
         }
       ],
       "invalid_attempts": [
@@ -1630,7 +1909,9 @@
           "artifact": "results/dlr-full/case_027_v20/case_027__trial0/result.json"
         }
       ],
-      "note": "027 first valid baseline 27/34 (v20b). Remaining: courier exact/timely, unused authorization release, four payroll exact distributions (L1/N1/L2/N2), and the P deadline-priority link. No optimization applied yet; needs a targeted L3 cycle next session."
+      "note": "027 first valid baseline 27/34 (v20b). Remaining: courier exact/timely, unused authorization release, four payroll exact distributions (L1/N1/L2/N2), and the P deadline-priority link. No optimization applied yet; needs a targeted L3 cycle next session. [2026-11-03 A/B] best -> v21a2 31/34 (v21 joint fix).",
+      "best_store": "TSM Core Service/.store/lance/bizagentbench-v21",
+      "best_freeze": "73e7889c"
     },
     "case_012": {
       "strict": true,
