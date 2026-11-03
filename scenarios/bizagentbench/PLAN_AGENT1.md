@@ -36,3 +36,28 @@
 - 与各题历史 best 对照：strict 是否翻盘、checks、failed_by_category、得分率。
 - 同题若变差 → 记回归；不混写；必要时回滚 AGENTS 层。
 - 每批跑完报数；无 strict 的继续下一批；全程不推送。
+
+## 第 1 批结果（2026-11-03，017 / 018 / 019）
+
+| 题 | 历史 best | a1 | checks | strict |
+|---|---|---|---|---|
+| 017 | 31/32（v11） | 29/32 | 90.6% | ❌→❌ 回归 −2 |
+| 018 | 29/30（v14） | 30/30 | 100% | ❌→✅ 翻盘 |
+| 019 | 34/35（v14） | 28/35 | 80.0% | ❌→❌ 回归 −6 |
+
+## 行为偏转诊断（失败题）
+
+- **017（算错，不是流程错）**：L3 未命中——题面被用户模拟器改写（“Hello. I need help…”），节标题是原题（“Please handle…”），`match=similar`；而 SOP 索引当时用「标题+正文」编码，长节被正文稀释：正确节在 50 节里排第 41、score 0.567（低于 0.7 阈值），top-2 里根本没有它。Agent 只能从 L1/L2 自解，把 Alder 的 accepted return 20,000 当成“净份额”反推 gross 25,000，于是 reverse 20,000（应为 16,000 = 48,000 − 32,000）且 refund 20,000（应为 15,000 = 20,000 − 已 SETTLED 5,000）。v11 同一题算对。
+- **019（被 exact L3 带偏，过度字面）**：a1 的 L3 **exact 命中**（v14 因 straight/curly apostrophe 差异只拿到 similar）。SOP 4 说“用 authority 列出的 source names”，a1 照字面用 `{"EXPORT": 2}`，被 `SOURCE_ACCEPTANCE_OR_VERSION_UNAVAILABLE` 拒绝；它连续重复同一形式、转去怀疑“窗口未开”，最后 ESCALATED。v14 在 similar 路径上做了一次形式实验，改用 record id `{"D34-CERT-EXPORT": 2}` 即成功，随后两条 authority 全部重绑完成。
+- **018**：无偏转；30/30，历史 P 类 `shared.unapproved_execution_attempt` 转干净，符合 AGENTS 执行纪律方向。
+
+## 联合修复（2026-11-03）
+
+1. `TSM Core Service/src/build/buildSop.ts`：SOP 向量改为**只用标题**（正文只进 `text` 展示）。实测 017 正确节从 rank 41 / 0.567 变为 rank 1 / 0.969。
+2. `TSM Core Service/src/queries/searchSop.ts`：`norm()` 归一弯/直撇号与引号，修 019 v14 那类 exact 漏配。
+3. `scenarios/bizagentbench/sources/sop.md`：
+   - §017 类第 5 条补“buyer 总额 = accepted return，先扣已 settled/submitted，不得按佣金率反推 gross”；
+   - §019 类第 4 条补“`versions` 用 reliance 的 **record id** 作键（`D34-CERT-EXPORT`），短名 `EXPORT` 会被 `SOURCE_ACCEPTANCE_OR_VERSION_UNAVAILABLE` 拒；重绑被拒先试键形，再怀疑窗口”。
+4. `scenarios/bizagentbench/AGENTS.md`：保持高位（L1 及以上），只补 TSM 用法——① Role 增加“先检索三层、再走业务工具，不得用记忆/通用计划/别题套路替代 TSM 返回”；② similar 候选若复述本题请求 → 作为 playbook hypothesis（可用、须核数），不再一律丢弃。题级算术与键形陷阱全部留在 L3（sop.md），不进 AGENTS。
+
+**待办**：以 v20 为底 copy → `bizagentbench-v21`，`tsm build sop --store …-v21`，出 `freeze.v21.json`，复跑 017/019 对表。

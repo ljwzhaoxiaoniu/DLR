@@ -61,7 +61,8 @@ interface CurSection {
 }
 
 /**
- * sop.md → 节列表（标题 = 题面原文；text = 标题 + 正文，供 embedding 与展示）
+ * sop.md → 节列表（标题 = 题面原文；text = 标题 + 正文，供展示；embedding 只用标题——
+ * 题面→节的检索靠标题，正文会把标题向量稀释，实测长节从 0.97 掉到 0.57、排到 40 名外）
  *
  * 可选系统标记（同一份源，按系统生成不同的索引行；不复制正文）：
  *   `> **Systems**: boutique, trainticket`  节级：本节对哪些系统生效（shared = 两系统共用一节）
@@ -167,7 +168,8 @@ if (isMain) {
   const BATCH = 64;
   const vectors: number[][] = [];
   const t0 = Date.now();
-  for (let i = 0; i < rows.length; i += BATCH) vectors.push(...(await encoder.encode(rows.slice(i, i + BATCH).map((r) => r.text))));
+  // vector 只用标题：按题检索的匹配面就是题面（正文进 `text` 供展示，不进向量）
+  for (let i = 0; i < rows.length; i += BATCH) vectors.push(...(await encoder.encode(rows.slice(i, i + BATCH).map((r) => r.title))));
   console.log(`[sop] 编码完成 (${Date.now() - t0}ms, ${vectors[0]?.length ?? 0} 维)`);
 
   fs.mkdirSync(STORE, { recursive: true });
