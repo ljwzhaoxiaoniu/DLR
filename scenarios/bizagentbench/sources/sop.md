@@ -230,6 +230,8 @@ This class covers finishing import payments and physical delivery while an accep
 7. Close only after the actual supplier receipts and cargo deliveries are recorded and the deadlines are met.
 
 > **Wrong turn (observed)**: booking each delivery on the fastest or priority route without pricing the whole plan against the agreement's total delivery-fee cap and the fee source's minimum uncommitted cash — the combined route fees exceeded the cap and the fee-source wallet was left below its floor. Price every delivery against both limits before booking.
+>
+> **Wrong turn (observed)**: choosing the cheaper standard FX route whose value date falls after the supplier's local deadline, and lodging the originals only in the delivery minute — the EUR delivery missed its deadline and the cargo missed the agreed depot date. Compare each route's actual value date against the supplier deadline, and lodge the originals early enough to deliver by the agreed date.
 
 ### When asked: "Some of our supplier direct debits seem to have gone through twice. Please sort that out and finish moving the utility payments off our old mandate. Also, i returned part of a purchase that I am paying in installments. Some installments have already been paid. Please fix the remaining bills and refund whatever I have overpaid. These are part of the same business spending plan."
 
@@ -251,6 +253,8 @@ This class covers duplicated direct debits, retiring an old mandate, and correct
 8. Check the scheduled events for the installment reconciliation deadline and finish the correction before it: the return, refund, new retained-bill payment and plan close must all be recorded before that event. A correction executed after the deadline is late; the independent reconstruction does not accept it, even if the records look complete afterwards.
 
 > **Wrong turn (observed)**: treating the new retained-purchase bill as already covered by the plan balance and paying it after another action that advances the clock — it is an independent bill due at its own minute; pay it with its record id before any waiting.
+>
+> **Wrong turn (observed)**: returning the full duplicate bank debit before the pending merchant credit posts — the invoice's true excess is its debits less the invoice amount and the actual posted credit; wait for the credit event, then return only the resulting excess, or the later credit over-refunds the invoice.
 
 ### When asked: "Could you finish settling the equipment shipments in escrow? The inspection paperwork has changed, and some money was already released. Also, a customer returned part of a combined order after we paid the sellers. Please refund the returned items and finish the sellers’ remaining payouts. These are part of the same business spending plan."
 
@@ -597,6 +601,8 @@ This class covers completing a partially shipped card order and paying this run 
 > **Wrong turn (observed)**: letting the payroll run consume the early minute while a card line due at minute 1 remains uncaptured — a capture booked in the due minute clears too late; book it early enough for the clearing event to post by the due minute.
 >
 > **Wrong turn (observed)**: subtracting the business-expense repayment from the employee's net pay when distributing a payroll obligation — the repayment is paid to the employee on top of net pay, outside the attachment base; attachments reduce net pay, the expense repayment is added back.
+>
+> **Wrong turn (observed)**: paying an attachment order's full remaining principal in the first period — the payroll terms' per-period support/ordinary caps limit each period's attachment total; apply the cap to each period and carry the remaining principal forward.
 
 ### When asked: "Our card sales do not add up to the deposits in the bank. Please close the two settlement periods and release the merchant payouts that are actually due. I also need help with a related matter: please get this run and the next payroll paid, including the court deductions. There is a review of Nina's order and I am not sure whether it changes what we owe now."
 
