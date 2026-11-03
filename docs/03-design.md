@@ -263,6 +263,12 @@ pas_relations:
 
 **Recall converges only at the LE face** ("converge first, then truncate") — which fixes two design disciplines: LE descriptions must be rich (rule 8), and example names must be written onto the LE's visible face (rule 11).
 
+**Vector recall is approximate, not an authoritative lookup**: once a scenario is complex (multiple databases / systems / same-name ambiguity), both the L1 LE recall and the L2 entry recall can misalign the **target entry** with the **retrieved entry** — returning a neighboring database, a neighboring system, or a look-alike. Therefore:
+
+- Treat every L1/L2 hit as a **candidate**, not a fact; verify it against this case's actual records (the L1 surface/anchor, the L2 term mapping).
+- **When L3 has an exact section, L3 is the only fixed priority**; its case-level convention arbitrates the candidates. Without an exact section, L1 and L2 are **dual-path parallel ReAct**, cross-validated, and the case evidence decides — no preset L1/L2 rank.
+- Misalignment is a design premise, not an anomaly: modeling can raise the signal quality of descriptions (rules 8/11); at runtime only the agent can cross-confirm — this is why the agent operating layer must ship with the three levels (see [02-concept.md](02-concept.md) "The agent operating layer").
+
 ### 5.3 The tool surface (7 in the `dlr` shape; 3 in `dlr-state`)
 
 `dlr_semantic_query` (LE recall) → `get_pe_mapping` (the second hop: table name / **view columns** / ARCS / `database_url`) / `get_le_attrs`; `dlr_search_consensus` (L2); `dlr_search_sop` (**L3**: the SOP index retrieved per question — only the one section that restates this question); `execute_sql` (data fetch: **executed in a subprocess with a 20 s hard timeout** — on timeout it aborts and the agent rewrites, so a pathological SQL cannot pin the single-threaded service); `get_full_data_info` (**drill-down**: physical columns outside the view; after using it the answer must record the modeling gap).
