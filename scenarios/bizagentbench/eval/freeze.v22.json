@@ -1,0 +1,28 @@
+{
+  "freeze_id": "c8ba813a",
+  "git_commit": "c8ba813a76e46b3b66fb13d05a56f8444b87cb7c",
+  "frozen_at": "2026-11-03T18:56:00+0800",
+  "files": {
+    "sources/configs/DLR/operations_desk.yaml": "49b9476f6763f6af56125bf529dffdfbbc3d4066736583c1e240a703cbf2a43c",
+    "sources/configs/DLR/typed_services.yaml": "fd37115f96b9560c26bb69815dc17fb085d8c6d904ccfbea3021b0cf01d5cebd",
+    "sources/configs/DLR/psp.yaml": "d8cdb8e15fa74abf6a2953cf1f51647d37f77d1b18bb8fb4f7958520ddf5c43b",
+    "sources/consensus/shared.jsonl": "f57fabc4ba1c5625ba883c2c5533bf3e64e550a5e89867aad7a21b84f4e69f87",
+    "sources/consensus/operations_desk.jsonl": "540b9ba65ef0d7d4e4a084f34b7581f875e4327a4953ff714df3cbe5aed421db",
+    "sources/consensus/typed_services.jsonl": "7776f291a534e7da66c135abfb5590dbe2b6aa7fe3e78dc57f397efba80d07c2",
+    "sources/consensus/psp.jsonl": "42462883e33de3d1223c3db21957e365950bb84ea09b39205b087dc4637c8c54",
+    "sources/sop.md": "4e588888e5a319d57403c415535ce67c6e473332d77b97cc32899e8cfd23e7b0"
+  },
+  "model": {
+    "name": "BAAI/bge-base-en-v1.5",
+    "path": "C:/Users/user/.cache/huggingface/hub/models--BAAI--bge-base-en-v1.5/snapshots/a5beb1e3e68b9ab74eb54cfd186867f64f240e1a",
+    "onnx_sha256": "9bc579acdba21c253c62a9bf866891355a63ffa3442b52c8a37d75b2ccb91848"
+  },
+  "store": {
+    "path": "TSM Core Service/.store/lance/bizagentbench-v22",
+    "entities": 687,
+    "consensus": 187,
+    "sop": 50
+  },
+  "derivation": "v22 = copy of v21 + three method-level Wrong-turn notes (019/025/021) + self-consistency fixes in the same sections: 019 executes the upstream certificate instruction first and then the minute-0 payout in the same minute; 021 orders card and employee work by each item's own due minute; 025 requires enumerating every eligible two-period plan pair and voucher assignment. SOP rebuilt with title-only vectors; entities/consensus unchanged.",
+  "note": "A/B store for the three single-point failures in v21 a2: 019 P link.quote_version_refresh, 021 G capture.FIRST, 025 G billing.minimum_total_cost. No instance values, IDs, amounts or answer leakage."
+}
