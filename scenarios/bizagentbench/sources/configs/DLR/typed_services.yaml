@@ -11955,7 +11955,7 @@ logical_entities:
     confirmed dispatched goods may be charged; released or cleared amounts cannot be captured twice; captures clear at the next card
     clearing event. Contract: Partial shipment card authorizations. Actions: capture / release / pay_bill. Instruction data: capture
     {authorization_id, line_id, amount_minor}; release {authorization_id, amount_minor}; new_authorization {amount_minor}; cash_payment
-    {line_id, amount_minor}; pay_bill {bill_id, amount_minor}.'
+    {line_id, amount_minor}; pay_bill {record_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
@@ -14354,7 +14354,7 @@ logical_entities:
   description: 'Electronic cheque servicing: request a stop on a cheque, pay the underlying bill, and issue a replacement payment under
     the cheque terms. A stop request and a replacement are separate instructions; an already cleared cheque cannot be stopped. Contract:
     Electronic cheques, endorsement and replacement payments. Actions: request_stop / pay_bill / replacement_payment. Instruction data:
-    request_stop {cheque_id}; replacement_payment {invoice_id, payee, amount_minor}; pay_bill {bill_id, amount_minor}.'
+    request_stop {cheque_id}; replacement_payment {invoice_id, payee, amount_minor}; pay_bill {record_id, amount_minor}.'
   lifecycle:
     states:
     - OPEN
