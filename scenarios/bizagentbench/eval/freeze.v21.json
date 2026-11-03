@@ -10,7 +10,7 @@
     "sources/consensus/operations_desk.jsonl": "540b9ba65ef0d7d4e4a084f34b7581f875e4327a4953ff714df3cbe5aed421db",
     "sources/consensus/typed_services.jsonl": "7776f291a534e7da66c135abfb5590dbe2b6aa7fe3e78dc57f397efba80d07c2",
     "sources/consensus/psp.jsonl": "42462883e33de3d1223c3db21957e365950bb84ea09b39205b087dc4637c8c54",
-    "sources/sop.md": "e616a72d911b17fefe3f17501f75bcaf6791bc9bcbb72041980a3ad8b3d3b44b"
+    "sources/sop.md": "ac1ff3590213e1b3bd0ad66fb3d98d4167cfb2a910f040ae49ed0939852f2289"
   },
   "model": {
     "name": "BAAI/bge-base-en-v1.5",
@@ -24,5 +24,5 @@
     "sop": 50
   },
   "derivation": "v21 = copy of v20 + rebuild sop with title-only vectors (question → section matching; long bodies no longer dilute the title: the 017 section went from rank 41 / 0.567 to rank 1 / 0.969), plus the 017 buyer-remaining refund clause and the 019 rebind record-id key fix in sop.md. Entities/consensus unchanged.",
-  "note": "A/B re-run store for PLAN_AGENT1 after the joint fix (AGENTS high-level TSM usage + L3 traps + SOP title-only index + exact-match quote normalization)."
+  "note": "A/B re-run store for PLAN_AGENT1 after the joint fix (AGENTS high-level TSM usage + L3 traps + SOP title-only index + exact-match quote normalization). Post-build wording scrub: the rebind clause now names the record-id key without an instance id; SOP text rebuilt in place (vectors unchanged, title-only)."
 }
