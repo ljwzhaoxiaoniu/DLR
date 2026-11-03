@@ -61,3 +61,25 @@
 4. `scenarios/bizagentbench/AGENTS.md`：保持高位（L1 及以上），只补 TSM 用法——① Role 增加“先检索三层、再走业务工具，不得用记忆/通用计划/别题套路替代 TSM 返回”；② similar 候选若复述本题请求 → 作为 playbook hypothesis（可用、须核数），不再一律丢弃。题级算术与键形陷阱全部留在 L3（sop.md），不进 AGENTS。
 
 **待办**：以 v20 为底 copy → `bizagentbench-v21`，`tsm build sop --store …-v21`，出 `freeze.v21.json`，复跑 017/019 对表。
+
+## v21 复跑（2026-11-03 12:38–13:50，a2）
+
+store v21（687/187/50 · bge-base-en 768 维 · SOP 标题编码）· freeze `73e7889c`（`eval/freeze.v21.json`）· bridge 28799。
+
+| 题 | a2 | 历史 best | 结论 |
+|---|---|---|---|
+| 017 | **32/32 ✅** | 31/32 | strict 翻盘 |
+| 019 | 34/35 | 34/35 | 回到 best（a1 28/35）；仅 P `link.quote_version_refresh` |
+| 025 | 28/29 | 28/29 | 持平；仅 `billing.minimum_total_cost` |
+| 026 | **31/31 ✅** | 30/31 | strict 翻盘 |
+| 027 | 31/34 | 27/34 | +4；`capture.FIRST`、payroll N1/L2 |
+| 021 | 29/30 | 26/30 | +3；仅 `capture.FIRST` |
+| 011 | 36/42 | 33/42 | +3；joint capital/fee、participant A/B、merchant G1 |
+| 013 | 41/47 | 41/47 | 持平；retained indemnity EW/PW、recoveries A-D |
+| 015 | **42/42 ✅** | 41/42 | strict 翻盘 |
+| 010 | 37/39 | 35/39 | +2；仅 P joint floors/reserve |
+| 014 | 37/41 | 38/41 | −1（单轮方差）；joint capital/company capital、invoice due、cheque stop |
+
+**13:50 停止**：007（手动补位）被杀、008/009（队列启动后）被杀，均未 evaluate，不计入结果。018 在 v20 已 strict，本轮未复跑。
+
+小结：11 题完成 · strict 3/11（017/026/015，均翻盘）· 持平 3（019/025/013）· 提升 4（027/021/011/010）· 回退 1（014，单轮）。
