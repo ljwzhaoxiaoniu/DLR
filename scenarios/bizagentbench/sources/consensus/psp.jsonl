@@ -243,5 +243,20 @@
     "kid": 178,
     "knowledge": "Partitioning quarantined principal requires the completed owner decision, the completed direction review and active trustee custody; the return, escrow and claim amounts are nonnegative and must sum to principal, and once a partition or whole disposition executes no second disposition is possible. Review and activation fees come from operating cash, never quarantined principal.",
     "system": "psp"
+  },
+  {
+    "kid": 189,
+    "knowledge": "Trustee custody activation: the review event publishes the activation offers; activation attempted before the completed review event is rejected as not enabled. Order the review early enough that activation completes before the custody deadline, and fund both the review and the activation from operating cash.",
+    "system": "psp"
+  },
+  {
+    "kid": 190,
+    "knowledge": "Collection capacity booking: the booking fee is charged on the reserved capacity (ceil(capacity / fee_unit) × booking_fee), not on the amount later collected; unused capacity is still charged, and the total must fit the case maximum fee budget — compare the standard and reserved services against the due minute before booking.",
+    "system": "psp"
+  },
+  {
+    "kid": 191,
+    "knowledge": "Causal projection and statements: every invoice projected status and source receipt come from its highest bank_sequence, even when its status did not change; the final delivered supplier statement must carry that receipt and sequence for each payable.",
+    "system": "psp"
   }
 ]
