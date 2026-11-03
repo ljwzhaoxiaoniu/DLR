@@ -4,6 +4,16 @@
 > 机器可读记录：[eval/ledger.json](eval/ledger.json) ｜ 跑档：`results/dlr-full/`（本地留档，gitignored）
 > 最终 best-practice store：`TSM Core Service/.store/lance/bizagentbench-v20`（freeze `8992a5aa`，entities 687 / consensus 187 / sop 50）
 
+**指标口径**（与上游 `README.md` 一致）：
+
+| 指标 | 含义 |
+|---|---|
+| G · Goal | 请求的业务结果与允许的终止条件（目标类 check） |
+| P · Process | 业务操作的执行要求（审批、顺序、时限、单次完成等） |
+| F · Protection | 受保护对象、账本完整性、禁止性副作用（不重复付款、不越权等） |
+| Strict | G ∧ P ∧ F 全过（本题表一“strict”列） |
+| IF · Intermediate failure | `not (P ∧ F)`：过程或保护要求失败的比例（与 G 是否达成无关） |
+
 ## 一、最终结果（001–031）
 
 | 题 | 最佳 | strict | store / freeze | 最佳轮失败项 | 备注 |
