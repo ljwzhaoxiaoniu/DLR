@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # BizAgentBench · run one case with the DLR tool surface
 #   eval/run_dlr_pilot.sh <output-dir> <case-number>
-# Env overrides: BIZAGENTBENCH_DIR · TSM_SERVICE_DIR · DEEPSEEK_ENV_FILE · BIZ_PYTHON · BIZ_DLR_PORT
+# Env overrides: BIZAGENTBENCH_DIR · TSM_SERVICE_DIR · DEEPSEEK_ENV_FILE · BIZ_PYTHON · BIZ_DLR_PORT · BIZ_AGENTS_MD
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="${BIZAGENTBENCH_DIR:-D:/Code_Proj/Dataset/BizAgentBench-main}"

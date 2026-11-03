@@ -35,6 +35,13 @@ _POLICY_NOTE = (
     "with search_records and get_record."
 )
 
+# Agent operating layer (workflow + execution discipline). Opt-in for A/B:
+# set BIZ_AGENTS_MD to the scenario's AGENTS.md; unset = baseline behaviour.
+_AGENTS_MD = os.environ.get("BIZ_AGENTS_MD", "")
+if _AGENTS_MD and os.path.isfile(_AGENTS_MD):
+    with open(_AGENTS_MD, encoding="utf-8") as _f:
+        _POLICY_NOTE += "\n\n" + _f.read().strip()
+
 
 def _augment(env):
     callbacks = env.tools._callbacks
