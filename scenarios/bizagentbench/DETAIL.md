@@ -42,6 +42,7 @@
 - 032–050（PSP 扩展）尚未跑。
 - 判分：上游确定性 G/P/F；strict = G/P/F 全过；**strict 一次即 pass**。无效轮（bug/端口/`too_many_errors`）不混入最佳。
 - 每题完整尝试链（含 store/freeze/artifact/failed）见 `eval/ledger.json`；过程记录见 `PROGRESS.md`。
+- **得分率（checks 通过率，strict 之外的连续指标）**：已覆盖 28 题 case-average **95.9%**（pooled 96.1%）；冻结 desk 006–027 为 **94.8%**（pooled 94.6%）。≥90% 的题 23/28，≥95% 的题 21/28；最低为 011 78.6%、027 79.4%、021 86.7%、013 87.2%、010 89.7%。**strict 只差最后一两个 check，不代表建模收益小**；论文未报裸模型得分率，暂无法直接算“90 vs 60”的差值。
 
 ## 二、最终 best-practice store
 
