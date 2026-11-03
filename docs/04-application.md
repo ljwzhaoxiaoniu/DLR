@@ -47,6 +47,7 @@ The three landed scenarios (`birdminidev` SQL, `cloudopsbench` RCA, `bizagentben
 | 1 | **Role and non-coding identity** — say what the agent is; forbid claiming to be a coding/CLI agent | The harness may expose other personas; drifting into "general assistant" loses the domain frame |
 | 2 | **Tool-surface honesty** — use only mounted tools; never fabricate a tool name or parameter; never claim an unmounted capability | Fabricated tools are silent failures and break the evidence chain |
 | 3 | **Knowledge precedence** — `L3 exact > L2 > L1 > model priors`; retrieve L3 at the start of every case and re-read before closing; define `match=exact` (title restates this case) | Without a binding, L3 is just another piece of context |
+| 3b | **Three-level disambiguation** — state what each level decides and does **not** decide (L1 structure, not order; L2 schema, not instance; L3 case arbitration, not general knowledge); resolve only by the declared order; on a persistent conflict, state it, follow the higher level, record the gap | Otherwise the agent tries to reconcile layers with common sense and perceives ever more conflicts |
 | 4 | **Evidence discipline** — every claim comes from an actual tool result; a proposal, approval or plan is not a result; never guess IDs, amounts or statuses | The verifier scores states and receipts, not narration |
 | 5 | **Scope and one-case contract** — stay inside the case's database / namespace / customer; enumerate and close **every** sub-problem | Cross-case leakage and dropped sub-problems are common long-horizon failures |
 | 6 | **Deterministic submission** — one fixed final form (Final Answer + Evidence SQL / JSON diagnosis / record_case_outcome) and a single verified closure | Scorer extraction and closure checks depend on a stable shape |
@@ -67,7 +68,7 @@ The three landed scenarios (`birdminidev` SQL, `cloudopsbench` RCA, `bizagentben
 
 ```markdown
 # Role                      # invariant 1 — who the agent is, not a coding agent
-## Authority and priority   # invariant 3 — L3 exact > L2 > L1 > priors; retrieve at start, re-read before close
+## Authority and priority   # invariants 3/3b — L3 exact > L2 > L1 > priors; per-level scope; retrieve at start, re-read before close
 ## Tool surface            # invariant 2 — only mounted tools; exact names; no fabrication
 ## Workflow (numbered)     # adaptive — read-only pipeline / diagnostic chain / mutating transaction loop
 ## Discipline              # invariant 4/5 + adaptive ordering & safety rules

@@ -10,7 +10,7 @@
 | store | `TSM Core Service/.store/lance/bizagentbench-v20` |
 | freeze | `8992a5aa`（`eval/freeze.v20.json`） |
 | bridge | 28799（`start_bridge.sh`，v20） |
-| agent layer | `scenarios/bizagentbench/AGENTS.md`（sha256 `5854752a…`，git blob） |
+| agent layer | `scenarios/bizagentbench/AGENTS.md`（git blob `a58762aa…`；含角色/判序/三层消歧/纪律） |
 | 注入 | `export BIZ_AGENTS_MD="D:/Code_Proj/DLR Proj/scenarios/bizagentbench/AGENTS.md"` |
 | 输出 | `results/dlr-full/case_XXX_a1` |
 | 并发 | 3 题/批，`--workers 1`/题 |
