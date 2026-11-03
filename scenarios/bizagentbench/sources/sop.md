@@ -253,8 +253,6 @@ This class covers duplicated direct debits, retiring an old mandate, and correct
 8. Check the scheduled events for the installment reconciliation deadline and finish the correction before it: the return, refund, new retained-bill payment and plan close must all be recorded before that event. A correction executed after the deadline is late; the independent reconstruction does not accept it, even if the records look complete afterwards.
 
 > **Wrong turn (observed)**: treating the new retained-purchase bill as already covered by the plan balance and paying it after another action that advances the clock — it is an independent bill due at its own minute; pay it with its record id before any waiting.
->
-> **Wrong turn (observed)**: returning the full duplicate bank debit before the pending merchant credit posts — the invoice's true excess is its debits less the invoice amount and the actual posted credit; wait for the credit event, then return only the resulting excess, or the later credit over-refunds the invoice.
 
 ### When asked: "Could you finish settling the equipment shipments in escrow? The inspection paperwork has changed, and some money was already released. Also, a customer returned part of a combined order after we paid the sellers. Please refund the returned items and finish the sellers’ remaining payouts. These are part of the same business spending plan."
 
