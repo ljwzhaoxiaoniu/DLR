@@ -192,12 +192,21 @@ The three levels are not three side-by-side descriptions but a **chain of layere
 
 > **The duality**: at runtime, precedence arbitrates (§7: `disputes > sop > consensus > literal`) — arbitration after construction; at development time, ceilings drive the ladder — extension during construction. One faces questions, the other faces failures.
 
+### The agent operating layer — the other half of knowledge supply (elevated 2026-11-03)
+
+The three levels solve **knowledge supply**: what exists (L1), how to read it (L2), how this class of problem is played (L3). Knowledge supply alone does not make the agent use it. That requires a **runtime operating layer**: the scenario's `AGENTS.md` plus its runtime configuration (persona, tool surface, result pruning, disabled tools). It is a first-class deliverable of every scenario package, not an optional extra.
+
+- **It binds precedence**: L3 exact > L2 > L1 > the model's own priors; retrieve L3 at the start of every case and re-read it before closing. Without this layer an L3 section is just one more piece of context — correct knowledge can still lose to the model's own plan.
+- **It binds execution discipline**: clock and ordering, per-request approval, bills vs. lines, signed adjustments, release of unused holds, single verified closure.
+- **Measured evidence (the RCA scenario)**: its `AGENTS.md` (symptom-first walk, re-query L1 after the anchor, closing triad, submission contract) plus its runtime patch lifted EOC/ECR from 0.25/0 to 1.0; the same L3 content without those settings did not.
+
 ## 7. How to use them when answering (for the agent)
 
 1. First decide "what this question lacks": **lacks structure** → L1; **lacks a convention/term** → L2; **lacks question-level judgment** → L3.
 2. Issue the three levels **in parallel**; cross-check before writing SQL; L1 recall can misfire, and L2/L3 correct it.
 3. **Precedence** (on conflict): `disputes > SkillPath(SOP) > KnowledgePath(consensus) > the source field's literal`; an L3 section that strictly matches this question is the highest authority.
 4. Conclusions must be traceable (tool returns / SQL results) and cite their source.
+5. **This precedence is a runtime contract**: it must be written into the scenario's `AGENTS.md`. Retrieval alone does not establish authority — without the operating layer the agent treats L3 as optional background.
 
 > The concrete protocol lives in `DSH-based Agent Service/AGENTS.md` (the execution entry) and the `skills/paradigm` cognition skill; this document does not repeat it.
 

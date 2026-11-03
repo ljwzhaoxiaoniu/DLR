@@ -14,11 +14,14 @@ scenarios/<scenario>/
 │   ├── configs/DLR/            # L1 modeling sources (dlr: one yaml per database; dlr-state: one yaml per system)
 │   ├── consensus/*.jsonl       # L2 domain-consensus sources (organized by namespace / slot class)
 │   └── sop.md                  # L3 convention source (human-written; `tsm build sop` compiles the per-question retrieval index)
+├── AGENTS.md                   # agent operating layer (precedence / workflow / discipline / tool surface / submission contract)
 ├── eval/                       # exam paper / evaluation adapter: authored questions.jsonl or external-benchmark adapters (convert / grade / stats)
 ├── fixtures/                   # reference truths (optional; birdminidev uses them as regression snapshots)
 ├── results/<round>/            # batch archives (questions.csv + raw/ or traces/)
 └── DETAIL.md · DETAIL/         # evaluation ledger + per-case detail (rebuilt by stats)
 ```
+
+**Every scenario package ships an agent operating layer**: `AGENTS.md` (precedence / workflow / execution discipline / tool surface / submission contract) plus runtime configuration (persona, model, result pruning, disabled tools). It supplies no knowledge; it makes the L1–L3 knowledge actually get executed. Without it, L3 is only optional context. Principle: [02-concept.md](02-concept.md) "The agent operating layer — the other half of knowledge supply".
 
 **Two landed scenarios (peer-level)**:
 
@@ -29,6 +32,7 @@ scenarios/<scenario>/
 | L2 | 11 files · 91 entries | 1 file · 15 entries (clustered by slot class) |
 | L3 | 180 sections (**per question**) | 5 sections (**per symptom wording**, covering 754 cases; each section is a decision tree) |
 | Tool surface | 7 | 3 (no Neo4j graph) |
+| Agent settings | `AGENTS.md` (161 lines; SQL workflow + Final Answer / Evidence SQL) | `AGENTS.md` (78 lines; symptom-first walk / chain order / closing triad / JSON contract) + `dsh.patch.yml` runtime config |
 | Evaluation content | Authored paper: `eval/questions.jsonl`, 500 questions | External benchmark: 754 cases + upstream scorer adapter |
 | Result | **500/500** (✅ 426 + 🔁 74) | **coverage 754/754 · JRA 753/754 (99.87%)** |
 

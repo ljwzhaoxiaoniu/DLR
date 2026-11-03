@@ -14,11 +14,14 @@ scenarios/<场景>/
 │   ├── configs/DLR/            # L1 建模源（dlr：一库一份 yaml；dlr-state：一系统一份 yaml）
 │   ├── consensus/*.jsonl       # L2 领域共识源（按命名空间 / 槽类组织）
 │   └── sop.md                  # L3 口径源（人写；`tsm build sop` 编译成按题检索索引）
+├── AGENTS.md                   # agent 运行态设定（优先级/工作流/纪律/工具面/提交契约）
 ├── eval/                       # 考卷 / 评测适配：自建题库（questions.jsonl）或外部基准适配（convert / grade / stats）
 ├── fixtures/                   # 对照真值（可选；birdminidev 用作回归快照）
 ├── results/<轮次>/             # 跑批留档（questions.csv + raw/ 或 traces/）
 └── DETAIL.md · DETAIL/         # 评测总账 + 逐题明细（stats 重建）
 ```
+
+**每个场景包必须带 agent 运行态设定**：`AGENTS.md`（判定优先级 / 工作流 / 执行纪律 / 工具面 / 提交契约）+ 运行配置（人格、模型、结果剪裁、禁用项）。它不提供知识，而是让 L1–L3 的知识真正被执行；缺了它，L3 只是可选上下文。原则见 [02-concept.zh.md](02-concept.zh.md)「Agent 运行态设定——知识供给的另一半」。
 
 **两个已落地场景（并重）**：
 
@@ -29,6 +32,7 @@ scenarios/<场景>/
 | L2 | 11 文件 · 91 条 | 1 文件 · 15 条（按槽类聚类） |
 | L3 | 180 节（**按题**分节） | 5 节（**按症状措辞**分节，覆盖 754 例；节内是决策树） |
 | 工具面 | 7 个 | 3 个（不装 Neo4j 图） |
+| Agent 设定 | `AGENTS.md`（161 行；SQL 工作流 + Final Answer / Evidence SQL） | `AGENTS.md`（78 行；症状先行 / 链序 / 收口三件套 / JSON 契约）+ `dsh.patch.yml` 运行配置 |
 | 评测内容 | 自建考卷：`eval/questions.jsonl` 500 题 | 外部基准：754 例 + 上游 scorer 适配 |
 | 结果 | **500/500**（✅ 426 + 🔁 74） | **覆盖 754/754 · JRA 753/754（99.87%）** |
 
