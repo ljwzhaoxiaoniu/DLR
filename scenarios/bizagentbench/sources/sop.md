@@ -438,6 +438,8 @@ This class covers keeping partner files and continuing authorities usable after 
 6. Quote-version link: every downstream request actually executed must have been prepared after the first upstream execution; a changed quote needs a fresh request and approval.
 7. Verify actual acceptance, rebinding and refunds; close with a single COMPLETED outcome once every requested result has actually been achieved and recorded.
 
+> **Wrong turn (observed)**: preparing and executing the minute-0 marketplace payout before the first certificate instruction — the link requires every executed downstream request to be prepared after the first upstream execution; execute the first certificate request first, then prepare the payout in the same minute (an old draft cannot be refreshed by later approval).
+
 ### When asked: "Several charges appeared on our corporate cards after declines, and the related refunds seem to be scattered between the cards. Please sort out any genuinely unauthorized charges and pay what the company actually owes. I also need help with a related matter: the checkout asked me to verify a payment, then the shop changed the order total. I also have another purchase to finish before I leave."
 
 > **System**: operations_desk
@@ -473,6 +475,8 @@ This class covers travel claims rejected as entertainment and a partially shippe
 5. Card order: capture only confirmed dispatched lines; the original authorization remains capturable until expiry, new approvals are capped, and released or cleared amounts cannot be captured again. Capture a line only up to its final amount, and do not add a separate cash payment on a line the authorization already covers. A separate courier or service bill is its own payable — pay that bill directly for its exact amount by its own due minute, never as a line cash payment, and never infer a line's uncovered gap from the courier bill's amount; a courier bill due at minute 0 must be paid at minute 0 before any capture. After capturing, release the authorization's entire remaining balance so no hold remains.
 6. Shared-capacity link: the first upstream instruction must execute before the first downstream instruction.
 7. Verify actual reimbursements, recoveries and captures, then close.
+
+> **Wrong turn (observed)**: letting the other activity's settlements consume the early minute while a line due at minute 1 remains uncaptured — a capture booked in the due minute clears too late; book it early enough for the clearing event to post by the due minute.
 
 ### When asked: "Several staff logins show approvals for our supplier payments, but the payments still need finishing. Could you check them and get the suppliers paid? I also need help with a related matter: our contractor says one of our electronic cheques went to the wrong place. There is another cheque due soon as well. Please make sure the right people are paid without paying either bill twice."
 
@@ -544,6 +548,8 @@ This class covers choosing the cheapest suitable consolidated billing plan, clos
 5. Keep the service the customer still needs running; the next-period renewal is a separate obligation.
 6. Posted-settlement link: the first downstream instruction is executed after at least one qualifying upstream bank event has posted.
 7. Verify actual billing, payments and the retained service, then close.
+
+> **Wrong turn (observed)**: choosing a plan pair by headline rate or by whether it covers the forecast without enumerating all two-period pairs and voucher assignments — the cheapest pair can be the higher-fee plan that absorbs more of the voucher.
 
 ### When asked: "The sales connection stopped halfway through again. Can you sort out our international store and help me withdraw the sales money and finish paying the packaging supplier? I also need help with a related matter: a customer returned part of a combined order after we paid the sellers. Please refund the returned items and finish the sellers’ remaining payouts."
 
