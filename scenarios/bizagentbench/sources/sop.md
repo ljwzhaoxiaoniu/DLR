@@ -253,8 +253,6 @@ This class covers duplicated direct debits, retiring an old mandate, and correct
 8. Check the scheduled events for the installment reconciliation deadline and finish the correction before it: the return, refund, new retained-bill payment and plan close must all be recorded before that event. A correction executed after the deadline is late; the independent reconstruction does not accept it, even if the records look complete afterwards.
 
 > **Wrong turn (observed)**: treating the new retained-purchase bill as already covered by the plan balance and paying it after another action that advances the clock — it is an independent bill due at its own minute; pay it with its record id before any waiting.
->
-> **Wrong turn (observed)**: manually paying an invoice that an accepted or queued collection is already designated to settle — the collection settles it; a manual payment duplicates the obligation, drains the operating cash below its continuous floor, and breaks the cash and ledger reconstruction.
 
 ### When asked: "Could you finish settling the equipment shipments in escrow? The inspection paperwork has changed, and some money was already released. Also, a customer returned part of a combined order after we paid the sellers. Please refund the returned items and finish the sellers’ remaining payouts. These are part of the same business spending plan."
 
@@ -293,8 +291,6 @@ This class covers concluding forward currency deliveries and a partially shipped
 6. Fund every supplier payment from actual available cash plus released margin; a treasury instruction that exhausts funds can block a later obligation even when it is bank-valid.
 7. Verify actual receipts, FX credits and deadlines, and close after both business tracks are settled. Pay every supplier and courier obligation with its exact amount by its original due minute; a proposal or approval is not a payment, and a late payment is late even when the amount is right.
 
-> **Wrong turn (observed)**: spending a wallet down to its available balance at a payment or delivery minute while the continuous operating floor still applies — the floor must hold at every minute, not only at close; reserve it before the outflow.
-
 ### When asked: "Our machinery is ready, but the two depots still cannot collect it. Please release every lot to the right depot before its pickup deadline and keep the total release charges as low as possible. Also, i am organizing two group orders. One person has pulled out and another payment still says pending. Please help the groups complete their purchases and return the money that should go back. These are part of the same business spending plan."
 
 > **System**: operations_desk
@@ -310,11 +306,7 @@ This class covers releasing cargo lots to depots at the lowest total charge and 
 3. Choose windows and dispatch minutes against the storage formula: for dispatch minute m, d = max(0, m - free_through); the first positive interval costs handling_units × first_window_rate_minor and each further interval handling_units × later_window_rate_minor, plus the lot's window loading fees once. Dispatch consumes the lot's full handling units and cannot be repeated.
 4. Group purchases: qualification is assessed when the merchant commitment is accepted; committing debits the deposit immediately and it counts toward the merchant price. A withdrawing participant gets its entire actual contribution back; a successful group pays the merchant, a failed one refunds participants.
 5. Treat a pending participant payment as not received until the bank records it. Do not commit a group on an unconfirmed contribution.
-6. Fund the charges and releases from actual cash and close after every lot is dispatched to its depot and every group is completed or refunded. Each group is separate: its own participants, contributions, merchant commitment and qualification test. A withdrawing participant gets that participant's actual contribution back from that group only; a failed group refunds its participants; a successful group pays its merchant. Count a participant's payment only when confirmed; do not mix contributions across groups or reuse a payment for another group.
-
-> **Wrong turn (observed)**: waiting for a participant-withdrawal event before committing an otherwise qualified group — once the withdrawal posts, the group loses that participant and can no longer qualify; commit while the recorded participants still meet the minimum, then process the withdrawal, refund the withdrawn participant in full, and refund the remaining contributors only their rebate share.
->
-> **Wrong turn (observed)**: paying a premium first-delivery route fee that exceeds the agreement's total delivery-fee cap, and stopping before each service has received its exact registered capital — price the delivery plan against the fee cap and deliver the exact capital per service from permitted sources.
+6. Fund the charges and releases from actual cash and close after every lot is dispatched to its depot and every group is completed or refunded. Each group is separate: its own participants, contributions, merchant commitment and qualification test. A withdrawing participant gets that participant's actual contribution back from that group only; a failed group refunds its participants; a successful group pays its merchant. Count a participant's payment only when confirmed; do not mix contributions across groups or reuse a payment for another group. For a successful group, `rebate = remaining_contributions − group_price`; each remaining contributor receives `rebate × contribution // remaining_fund` (floor), with the residual units assigned by largest fractional remainder (ties by reference); the group's cash must end at zero.
 
 ### When asked: "Please renew our port, customs and warehouse guarantees and pay the equipment supplier. We need those services to keep running. Also, the checkout asked me to verify a payment, then the shop changed the order total. I also have another purchase to finish before I leave. These are part of the same business spending plan."
 
@@ -708,8 +700,6 @@ This class covers a buyer recalling a remittance after returning only part of an
 5. Use the buyer collection calendar for the remaining value: book capacity before its milestone, and collect only the remaining amount in the correct tranche.
 6. Verify actual receipts and credits, then close.
 
-> **Wrong turn (observed)**: booking the faster reserved collection service for the full capacity when its per-unit fee exceeds the case's maximum fee budget — unused capacity is still charged, and the standard service still meets the due minute; compute the fee over the entire reserved capacity against the fee cap before booking.
-
 ### When asked: "Our bank receipts arrived out of order and one transfer may have been returned. Please reconcile what is still owed and recover the related supplier allowances."
 
 > **System**: psp
@@ -797,6 +787,8 @@ This class covers distributing shared proceeds under a beneficiary agreement and
 6. Check each beneficiary's receipt deadline against channel timing: a fixed-arrival channel promises arrival_minute, an immediate channel pays submission plus delay.
 7. Verify actual disbursements and close.
 
+> **Check before closing**: total = floor(source × rate_num / rate_den); each gross = floor(total × weight / Σweights), residual units by descending fractional remainder then residual_rank; withholding applies only to the liable beneficiary at the published bps, net = gross − tax; the withheld and certificate must name that beneficiary, certificate tax = withheld, Σnet + tax = total, and the pool must end at zero.
+
 ### When asked: "Two tax payments are due during an agent handover, and I do not know which earlier instructions the bank accepted. Please complete the handover without paying tax twice."
 
 > **System**: psp
@@ -813,6 +805,8 @@ This class covers two tax payments due during an agent handover when earlier acc
 4. Fund the new payments: agency capacity shares a total limit and closes before the census; an instruction above the direct recipient's per-instruction maximum is declined before cash posting. pay_tax_obligation pays the entire remaining obligation after actual predecessor receipts are allocated.
 5. End the retiring mandate only after accepted instructions settle and future submission is blocked; keep jurisdictions separate.
 6. Publish the handover clearance only when every obligation is discharged exactly once, then close.
+
+> **Check before closing**: per jurisdiction, predecessor receipts actually received by the deadline plus successor payments actually received by the deadline must equal the original liability; a submitted-but-not-received payment does not count, and every successor payment must end in received status.
 
 ### When asked: "We need to claim the duty refunds that belong to us and clear an old entry restriction. One component entry also has new correction evidence."
 
@@ -880,6 +874,8 @@ This class covers compromised integration credentials, unrecognized transfers an
 4. Preserve the genuine supplier payment: an independent replacement uses an active uncompromised credential and reserves the full original supplier principal; the selected service sets its fee and actual delivery delay. Receipt of principal, not a submission or cancellation, closes the obligation.
 5. Avoid paying both the original accepted instruction and the replacement. Verify actual receipts, then close after the incident scope is contained and legitimate business is settled.
 
+> **Check before closing**: the old standing right is cancelled, no independent standing payment debit occurs, the old callback is revoked, and the supplier callback is delivered with exactly the actual delivery receipt ids, the original recipient purpose and the payment id.
+
 ### When asked: "We have to replace the card used for subscriptions. Keep our essential services running and stop the subscription we no longer need. Keep the two service purchase orders and their consent limits intact. An old capture for the cancelled subscription must also be resolved, and the necessary consents must use the replacement card. There may also be an old-card capture against the Cloud Archive invoice; please avoid paying that invoice twice."
 
 > **System**: psp
@@ -913,6 +909,8 @@ This class covers a courier who collected buyer cash but remitted short, with a 
 4. Include the buyer return and replenishment invoice in the same collection proceeds: a return above the public net-offset minimum is offset in the remittance, a smaller refund uses direct payment; replenishment is paid from the same proceeds where allowed.
 5. Do not authorize a fee not in the agreement. Verify the actual remittance and close.
 
+> **Check before closing**: the commission offset equals the sum of commissions on delivered parcels; the allocated amount equals the sum of collected-minus-commission per parcel; and no carrier extra fee may be posted.
+
 ### When asked: "Please close the shop orders and pay only the sales tax our business is responsible for. There was a return and a delivery-address change. Keep any prepaid tax credit belonging to our business and use it only for the matching tax jurisdiction. The close must show both current tax payments and the remaining credit position. An earlier Harbor buyer tax overcollection also needs refunding from the available cash."
 
 > **System**: psp
@@ -929,6 +927,8 @@ This class covers closing shop orders and paying only the sales tax the business
 4. Refund the prior-period buyer overcollection separately; its notice certifies a credit for that jurisdiction. Allocate the credit CURRENT against the current remittance or CARRY_FORWARD as an unused future right; neither changes platform tax.
 5. The close must show both current payments and the remaining credit position. Verify actual remittances and close.
 
+> **Check before closing**: the credit schedule is published with the full prepaid credit preserved as an unused right (not reduced), the credit used equals the credit actually applied, and the credit stays with the matching jurisdiction.
+
 ### When asked: "The opening and closing balances agree, but the statement export seems to have missing lines. Please get a reliable day-end close. Our finance team also needs a consolidated close across the two accounts. Transfers between our own accounts must not inflate sales, and we still need the original detailed bank days. Once reconciled, please use the available cash for the owner distribution and supplier invoice within their deadlines."
 
 > **System**: psp
@@ -944,6 +944,8 @@ This class covers a statement export with missing lines despite agreeing endpoin
 3. Consolidate without inflating sales: exclude transfers between the customer's own accounts using the interaccount matches. Keep the original bank days.
 4. Use available cash correctly: public hold_by_account amounts are unavailable to treasury payments even though they remain in book balance. Fund the owner distribution at its published fraction and the supplier invoice at its early-settlement discount or full face within their deadlines.
 5. Verify the bank days, consolidation and actual payments, then finalize the day-end. Close after the statement is complete and both obligations settle.
+
+> **Check before closing**: eliminate the intercompany transfer at the exact bank debit/credit amount, classify it as an internal transfer, keep external income only from the independent external item, and do not change the bank amount.
 
 ### When asked: "Please repair the supplier payment accounting without another transfer. The returned parts invoice and our advance for the next delivery also need to reconcile."
 
@@ -978,6 +980,8 @@ This class covers keeping a critical payment, agreeing a workable change for ano
 5. If a residual assignment is used, assign only the uncollected undisputed remainder and take no factoring recourse; the factor advance follows the offer.
 6. Verify actual collections and plan obligations, keep both supplier commitments, then close.
 
+> **Check before closing**: keep the disputed claim alive (preserved, no factoring recourse, not closed); commit only the undisputed portion as the collectible receivable, allocate it to the original debt reference, and keep the disputed portion separate.
+
 ### When asked: "Please pay both the component supplier and Harbor Packaging in full at their validated accounts. Harbor Packaging accepts installments, but must receive all USD 60 by minute 3. The original component deadline remains in force. Our all-in allowance for both invoices is USD 14.00, including inquiries, every route ticket and correspondent fees. Do not overpay either invoice. Both are enrolled members of the offered economical service; I have not received its formal certificate or the final correspondent charge. Splitting a payment is acceptable if nobody receives less than the invoice principal."
 
 > **System**: psp
@@ -993,6 +997,8 @@ This class covers paying two suppliers in full within an all-in allowance that i
 3. Route choice: an economical route requires a formal ELIGIBLE receipt; conservative and premium are guaranteed routes without inquiry. Buy the required certificate before committing to the economical route.
 4. Pay both invoices in full to validated accounts; split a payment only if no beneficiary receives less than its invoice principal. Meet the packaging installment deadline and keep the component deadline.
 5. Do not overpay either invoice; reconcile certificate and quota consumption. Verify actual deliveries and close within the allowance.
+
+> **Check before closing**: price the complete plan against the all-in allowance — inquiries, every route ticket and correspondent fees count and must not exceed the cap; the beneficiary receives the full principal at the validated account, and delivery is confirmed within the quote validity.
 
 ### When asked: "The wallet keeps topping up and sweeping the money back. Please fix the loop and let the business payment complete with the automatic services still useful. The merchant has a live purchase and a cancelled duplicate order. Keep the live purchase reserved, settle it before releasing its money for sweeping, and reconcile its final capture. The next staff payroll must also be paid from this operating wallet after the purchase clears."
 
@@ -1010,3 +1016,5 @@ This class covers a wallet that keeps topping up and sweeping back, a live merch
 4. Protect the live purchase: keep it reserved, settle it before releasing its money for sweeping, and reconcile the final capture. The cancelled duplicate order must not hold value.
 5. Pay the next payroll from the same wallet after the purchase clears; fund it by the automation or an explicit manual transfer with its quoted fee, and settle the actual amount.
 6. Verify the capture, sweep/topup behavior and payroll, then close.
+
+> **Check before closing**: cancel only the genuine duplicate order and keep the live purchase reserved; capture exactly the live purchase amount against the required order reference; the cancelled duplicate holds no value; the payroll is settled from the same wallet after the purchase clears.
