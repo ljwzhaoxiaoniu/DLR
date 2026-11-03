@@ -1,0 +1,28 @@
+{
+  "freeze_id": "66b2b33d",
+  "git_commit": "66b2b33d",
+  "frozen_at": "2026-11-03T23:05:00+0800",
+  "files": {
+    "sources/configs/DLR/operations_desk.yaml": "49b9476f6763f6af56125bf529dffdfbbc3d4066736583c1e240a703cbf2a43c",
+    "sources/configs/DLR/typed_services.yaml": "78c0eebb1a15a08a6cbcc4b4faac94d992c1ea52627c0ac8ecac0ca6486ab791",
+    "sources/configs/DLR/psp.yaml": "d8cdb8e15fa74abf6a2953cf1f51647d37f77d1b18bb8fb4f7958520ddf5c43b",
+    "sources/consensus/shared.jsonl": "f57fabc4ba1c5625ba883c2c5533bf3e64e550a5e89867aad7a21b84f4e69f87",
+    "sources/consensus/operations_desk.jsonl": "540b9ba65ef0d7d4e4a084f34b7581f875e4327a4953ff714df3cbe5aed421db",
+    "sources/consensus/typed_services.jsonl": "7776f291a534e7da66c135abfb5590dbe2b6aa7fe3e78dc57f397efba80d07c2",
+    "sources/consensus/psp.jsonl": "a4e750b46647a64595ede3c0e7c5dc31a27ea64a42a7552f22a27118ff6fea1f",
+    "sources/sop.md": "5294801ac00620be7e7497837d2faf640d6dc259fc73cf948ef6fa61eb4bfa3b"
+  },
+  "model": {
+    "name": "BAAI/bge-base-en-v1.5",
+    "path": "C:/Users/user/.cache/huggingface/hub/models--BAAI--bge-base-en-v1.5/snapshots/a5beb1e3e68b9ab74eb54cfd186867f64f240e1a",
+    "onnx_sha256": "9bc579acdba21c253c62a9bf866891355a63ffa3442b52c8a37d75b2ccb91848"
+  },
+  "store": {
+    "path": "TSM Core Service/.store/lance/bizagentbench-v30",
+    "entities": 687,
+    "consensus": 190,
+    "sop": 50
+  },
+  "derivation": "v30 = v29 + rebuild of the L1 entities after correcting the split-capture and cheque-stop pay_bill instruction data from {bill_id, amount_minor} to {record_id, amount_minor}, matching the lifecycle engine's local-action schema. Consensus (190) and SOP (50) unchanged.",
+  "note": "Store for the final validation batch 010/032/033. The L1 correction is a schema fix, not an answer hint. No instance values, IDs, amounts or answer leakage."
+}
