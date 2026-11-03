@@ -1,0 +1,28 @@
+{
+  "freeze_id": "347b7944",
+  "git_commit": "347b7944",
+  "frozen_at": "2026-11-04T00:10:00+0800",
+  "files": {
+    "sources/configs/DLR/operations_desk.yaml": "49b9476f6763f6af56125bf529dffdfbbc3d4066736583c1e240a703cbf2a43c",
+    "sources/configs/DLR/typed_services.yaml": "78c0eebb1a15a08a6cbcc4b4faac94d992c1ea52627c0ac8ecac0ca6486ab791",
+    "sources/configs/DLR/psp.yaml": "d8cdb8e15fa74abf6a2953cf1f51647d37f77d1b18bb8fb4f7958520ddf5c43b",
+    "sources/consensus/shared.jsonl": "f57fabc4ba1c5625ba883c2c5533bf3e64e550a5e89867aad7a21b84f4e69f87",
+    "sources/consensus/operations_desk.jsonl": "540b9ba65ef0d7d4e4a084f34b7581f875e4327a4953ff714df3cbe5aed421db",
+    "sources/consensus/typed_services.jsonl": "7776f291a534e7da66c135abfb5590dbe2b6aa7fe3e78dc57f397efba80d07c2",
+    "sources/consensus/psp.jsonl": "a4e750b46647a64595ede3c0e7c5dc31a27ea64a42a7552f22a27118ff6fea1f",
+    "sources/sop.md": "a4bceab90700c4b4323e444be32185ed8be4de4a8917749035c629330f1b5c65"
+  },
+  "model": {
+    "name": "BAAI/bge-base-en-v1.5",
+    "path": "C:/Users/user/.cache/huggingface/hub/models--BAAI--bge-base-en-v1.5/snapshots/a5beb1e3e68b9ab74eb54cfd186867f64f240e1a",
+    "onnx_sha256": "9bc579acdba21c253c62a9bf866891355a63ffa3442b52c8a37d75b2ccb91848"
+  },
+  "store": {
+    "path": "TSM Core Service/.store/lance/bizagentbench-v31",
+    "entities": 687,
+    "consensus": 190,
+    "sop": 50
+  },
+  "derivation": "v31 = v30 + round-2 L3 pass: rolled back the 008 I4 negative, the 010 floor negative, the 011 group/joint negatives and the 032 booking negative (all net regressions); added the 011 rebate formula (floor + largest remainder) and positive check-before-closing rules for the nine first-run single/double-point failures 037/038/042/044/045/046/048/049/050. Entities/consensus unchanged.",
+  "note": "Round-2 store for the nine non-strict first-run cases. Positive rules are derived from the verifier semantics; no instance values, IDs, amounts or answer leakage."
+}
