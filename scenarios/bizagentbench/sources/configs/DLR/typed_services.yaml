@@ -13205,8 +13205,8 @@ logical_entities:
         to the same object.
       public: true
     - name: commission_bp
-      description: 'Commission rate in basis points: 100 bp = 1%, 10,000 bp = 100%. The product rule specifies the amount to which the
-        rate applies.'
+      description: 'Commission rate in basis points (`commission_bp`; playbooks call it `commission_rate`): 100 bp = 1%, 10,000 bp = 100%.
+        The product rule specifies the amount to which the rate applies.'
       public: false
     - name: customer_access
       description: Record visibility flag used by the environment; it does not confer transaction authority.

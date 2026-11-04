@@ -152,9 +152,9 @@ logical_entities:
     anchor:
       param: incoming_id
       role: primary
-    guard: Submit the existing two-party dispute direction. The bank publishes the disputed amount and named escrow trustee; it neither
-      credits operating cash nor pays a substitute claimant. Portal approval of the exact terms and execute_request are required; the
-      bank checks local legality, not the commercial objective.
+    guard: Submit the existing two-party dispute direction. The bank publishes the disputed amount (`disputed_minor`) and named escrow
+      trustee (`authorized_trustee_id`); it neither credits operating cash nor pays a substitute claimant. Portal approval of the exact
+      terms and execute_request are required; the bank checks local legality, not the commercial objective.
     source: PX-A-D31
   - name: a_activate_dispute_custody
     kind: write
@@ -179,9 +179,10 @@ logical_entities:
     anchor:
       param: incoming_id
       role: primary
-    guard: Dispose the whole segregated principal into original-route return, trustee escrow and operating claim amounts. Every amount
-      is nonnegative and their sum must equal principal. Thes… Portal approval of the exact terms and execute_request are required;
-      the bank checks local legality, not the commercial objective.
+    guard: Dispose the whole segregated principal into original-route return (`return_minor`), trustee escrow (`escrow_minor`) and
+      operating claim (`claim_minor`) amounts to the named trustee (`trustee_id`). Every amount is nonnegative and their sum must
+      equal principal. Thes… Portal approval of the exact terms and execute_request are required; the bank checks local legality,
+      not the commercial objective.
     source: PX-A-R-CUSTODY-ONBOARDING
   - name: a_pay_business_invoice
     kind: write
