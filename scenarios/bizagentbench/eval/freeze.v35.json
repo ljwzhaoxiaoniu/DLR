@@ -28,6 +28,6 @@
     "consensus": 191,
     "sop": 50
   },
-  "derivation": "The L1/L2 state is identical to v34 (same hashes, unchanged since commit 4eafa301). The v35 store copies v34 and rebuilds only the SOP table from the stitched per-question sections (003/004/005/006/010/013/014/049 carry failure-driven rules). L3 does not participate in the freeze.",
+  "derivation": "The L1/L2 state is identical to v34 (same hashes, unchanged since commit 4eafa301). The v35 store copies v34 and rebuilds only the SOP table from the stitched per-question sections (003/004/005/006/010/013/014/032/048/049 carry failure-driven rules). L3 does not participate in the freeze.",
   "note": "Per-case best results remain anchored to the section text used in their own run. No instance values, gold, verifier changes or answer leakage."
 }

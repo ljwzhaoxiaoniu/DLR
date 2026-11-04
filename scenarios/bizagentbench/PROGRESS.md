@@ -401,3 +401,23 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 - 题集 4 题，各 1 轮；3 并发：[010,013,014] → [049]
 - 产物 `results/dlr-full/window_v35/case_XXX`；每批跑完报 checks/strict/失败项；不中途改 SOP、不自动重跑
 - 全部结束：停桥，按表对历史 best 更新本节与 `eval/ledger.json`
+
+## 十七、底座 / 优化空间盘点与下一轮复跑记录（2026-11-04）
+
+**不共底座盘点**（freeze = L1/L2，见 `freeze-scope-l1l2`）：
+
+- **无冻结底座（预跑/ad-hoc）**：001–005（v1_pre）、010/011/015/017/018/021/025/026（a1/a2/a3）、031（prerun_r2）。
+  - strict：001–005、015、017、018、021、025、026 → strict 即收关，不跑。
+  - 非 strict：010（14:07 批）、011（无手段；窗口 36/42 已与 best 持平）、031（仅预跑 strict；冻结态 best 5 G；custody 链无新手段）→ 不跑。
+- **有冻结但旧 L1/L2 签名**：其余题。v34 的 L1 变更（`pay_bill` 描述、QuarantineDispute/commission 映射）不触及这些题的失败路径；不做全量重跑，避免反复横跳。
+
+**仍有优化空间（本轮补两题）**：
+
+- **032**（18/19，唯一失败 `a.32.reasoning_collection_budget`）：预订单服务按容量计费——RESERVED 5 单位 × 20 = 100，超 cap 50；标准服务 0 费、delay 3 仍满足 minute 12/16 日历 → 已补「按实际容量计价；零费标准服务够用就用」。
+- **048**（19/21，`c48_linked_rights` + `process.048.disputed_claim_preserved`）：执行了放弃/关闭债权的处置（claim_preserved false，后续 open 不能恢复）→ 已补负向「不得放弃/关闭争议债权，也不得取 factoring recourse」。
+
+**下一轮复跑记录**：
+
+- 14:07：010/013/014/049 各 1 轮（v35 / 28799）
+- 19:07：032/048 各 1 轮（v35 / 28799，已补节并重建 sop）
+- 规则：strict 即收关；不 strict 归档 best；不中途改 SOP；不自动重跑。产物 `results/dlr-full/window_v35/case_XXX`。
