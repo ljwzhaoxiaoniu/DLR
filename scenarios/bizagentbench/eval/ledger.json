@@ -2280,14 +2280,12 @@
         "failed": []
       },
       "10": {
-        "best_checks": "37/39",
-        "strict": false,
-        "store": "case_010_a2",
-        "freeze": "",
-        "failed": [
-          "joint.continuous_operating_floors",
-          "activity1:cash.reserve_and_no_foreign_surplus.continuous_reserve"
-        ]
+        "best_checks": "39/39",
+        "strict": true,
+        "store": "case_010_v35",
+        "freeze": "4eafa301",
+        "failed": [],
+        "caveat": "v35 早价补外币；strict 收关"
       },
       "11": {
         "best_checks": "36/42",
@@ -2310,24 +2308,22 @@
         "failed": []
       },
       "13": {
-        "best_checks": "45/47",
-        "strict": false,
-        "store": "case_013_v29",
-        "freeze": "118b0fdf",
-        "failed": [
-          "activity1:loss.actual_recoveries.C",
-          "activity1:loss.actual_recoveries.D"
-        ]
+        "best_checks": "47/47",
+        "strict": true,
+        "store": "case_013_v35",
+        "freeze": "4eafa301",
+        "failed": [],
+        "caveat": "v35 零回收登记；strict 收关"
       },
       "14": {
-        "best_checks": "39/41",
+        "best_checks": "40/41",
         "strict": false,
-        "store": "case_014_v29",
-        "freeze": "118b0fdf",
+        "store": "case_014_v35",
+        "freeze": "4eafa301",
         "failed": [
-          "joint.fee_and_reserve",
-          "activity1:invoices.final_individual_discharge"
-        ]
+          "activity1:charges.customer_total_limit"
+        ],
+        "caveat": "v35 零分钟义务已过；仅剩 total limit，归档"
       },
       "15": {
         "best_checks": "42/42",
@@ -2772,6 +2768,39 @@
           "c49_linked_match",
           "c49_reasoning_net",
           "shared.single_final_outcome.terminal_goal"
+        ]
+      }
+    }
+  },
+  "window_v35_2026_11_04": {
+    "note": "v35 revalidation batch 1 (14:07): 010/013 strict, 014 improved to 40/41. 049/032/048 scheduled for 19:07.",
+    "store_base": "TSM Core Service/.store/lance/bizagentbench-v35",
+    "freeze_base": "4eafa301",
+    "cases": {
+      "10": {
+        "checks": "39/39",
+        "goal": true,
+        "process": true,
+        "protection": true,
+        "strict": true,
+        "failed": []
+      },
+      "13": {
+        "checks": "47/47",
+        "goal": true,
+        "process": true,
+        "protection": true,
+        "strict": true,
+        "failed": []
+      },
+      "14": {
+        "checks": "40/41",
+        "goal": false,
+        "process": true,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "activity1:charges.customer_total_limit"
         ]
       }
     }

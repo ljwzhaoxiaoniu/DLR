@@ -2,7 +2,7 @@
 
 > 更新：2026-11-04 凌晨 ｜ 只记录每题**最佳有效成绩**（strict 优先，否则最高 checks）；无效/排除轮单列。
 > 机器可读记录：[eval/ledger.json](eval/ledger.json) ｜ 跑档：`results/dlr-full/`（本地留档，gitignored）
-> **最终 best-practice store**：`TSM Core Service/.store/lance/bizagentbench-v35`（**freeze 只固定 L1/L2：`4eafa301`**；L3 按题拼接、不进 freeze；entities 687 / consensus 191 / sop 50）——v34 全量 + 10 个失败驱动 L3 节优化（003/004/005/006/010/013/014/032/048/049；尚未复跑验证）。
+> **最终 best-practice store**：`TSM Core Service/.store/lance/bizagentbench-v35`（**freeze 只固定 L1/L2：`4eafa301`**；L3 按题拼接、不进 freeze；entities 687 / consensus 191 / sop 50）——v34 全量 + 10 个失败驱动 L3 节优化（003/004/005/006/010/013/014/032/048/049）。已复验：010/013 strict、014 40/41；003–006/032/048/049 待复验（032/048/049 晚场）。
 > **评价口径**：目标 = 三层建模的最佳实践 + 最佳有效成绩；**可复现 = 同一 L1/L2 freeze 下可重建并跑出同档，不要求逐轮复现**；方差如实记录（best + range），结果真实有效即可。
 
 **指标口径**（与上游 `README.md` 一致）：
@@ -28,11 +28,11 @@
 | 7 | **39/39** | ✅ | case_007_v25 / `021c7717` | — |  |
 | 8 | **43/44** | ❌ | case_008_v9 / `faaa7cc1` | joint.fee_and_reserve | 16 轮；方差主导，未归一 |
 | 9 | **42/42** | ✅ | case_009_v24 / `530cf148` | — |  |
-| 10 | **37/39** | ❌ | case_010_a2 | joint.continuous_operating_floors, activity1:cash.reserve_and_no_foreign_surplus.continuous_reserve |  |
+| 10 | **39/39** | ✅ | v35 / `4eafa301` | — | v35 早价补外币；strict 收关 |
 | 11 | **36/42** | ❌ | case_011_a2 | joint.exact_capital, joint.fee_and_reserve, joint.continuous_operating_floors, activity2:participant.A, activity2:participant.B |  |
 | 12 | **38/38** | ✅ | case_012_v3 / `6f3a3102` | — |  |
-| 13 | **45/47** | ❌ | case_013_v29 / `118b0fdf` | activity1:loss.actual_recoveries.C, activity1:loss.actual_recoveries.D |  |
-| 14 | **39/41** | ❌ | case_014_v29 / `118b0fdf` | joint.fee_and_reserve, activity1:invoices.final_individual_discharge |  |
+| 13 | **47/47** | ✅ | v35 / `4eafa301` | — | v35 零回收登记；strict 收关 |
+| 14 | **40/41** | ❌ | v35 / `4eafa301` | activity1:charges.customer_total_limit | 零分钟义务已过；新失败 1 点，归档 |
 | 15 | **42/42** | ✅ | case_015_a2 | — |  |
 | 16 | **40/40** | ✅ | case_016_v9 / `faaa7cc1` | — |  |
 | 17 | **32/32** | ✅ | case_017_a2 | — |  |
@@ -126,7 +126,7 @@ BIZ_DLR_PORT=28799 bash eval/run_dlr_pilot.sh results/dlr-full/<out-dir> <题号
 
 1. **v34 验证窗口（2026-11-04 12:05–13:45）**：14 题；001/002 strict，其余未满；逐题失败点记于 `eval/ledger.json` 的 `window_v34_2026_11_04`。
 2. **v35 已优化十节**（003/004/005/006/010/013/014/032/048/049）：每条对应实测失败根因（003 后版调度通知、004 用途匹配、005 全组件登记、006 底仓先行出资、010 早价补外币、013 零回收亦登记、014 零分钟义务当刻支付、032 收单服务费上限、048 争议债权保留、049 经济额度分配）；**均尚未复跑**——本轮按「直接优化、不强制重跑」口径。
-3. **14:07 批（一次性，已在跑）**：010/013/014 各 1 轮；003–006 已有实测 strict，窗口差距判为纯 agent 方差，不再复跑；strict 即收关，不 strict 归档 best（计划与差距表见 PROGRESS §十六）。
+3. **14:07 批（已完成）**：010 **39/39 strict**、013 **47/47 strict**、014 **40/41**（仅 `charges.customer_total_limit`，归档）；003–006 已有实测 strict，不再复跑。
 4. **晚场批（19:07，一次性）**：049 + 032/048 各 1 轮——049 = 经济额度分配；032 = 18/19 单点（收单服务费超上限）、048 = 19/21 双点（债权被放弃/关闭），均已补规则。
 5. **不共底座但不跑**：011（窗口 36/42 已与 best 持平、无手段）、031（仅预跑 strict、冻结态 5 G、无手段）；其余题 best 虽在旧 L1/L2 签名上，v34 的 L1 变更不触及它们的失败路径，不为此全量重跑（避免反复横跳）。
 6. **未追**：008/050（已归档）。
