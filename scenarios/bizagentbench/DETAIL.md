@@ -2,7 +2,7 @@
 
 > 更新：2026-11-04 凌晨 ｜ 只记录每题**最佳有效成绩**（strict 优先，否则最高 checks）；无效/排除轮单列。
 > 机器可读记录：[eval/ledger.json](eval/ledger.json) ｜ 跑档：`results/dlr-full/`（本地留档，gitignored）
-> 当前 best-practice store：`TSM Core Service/.store/lance/bizagentbench-v32`（freeze `02b80d7f`，entities 687 / consensus 191 / sop 50）；v33 = v32 + 013 scrub（待建），v34 = 每题最佳节拼接（待建）
+> **最终 best-practice store**：`TSM Core Service/.store/lance/bizagentbench-v34`（freeze `4eafa301`，entities 687 / consensus 191 / sop 50）——含 L1 字段映射、013 scrub、每题最佳节拼接。
 
 **指标口径**（与上游 `README.md` 一致）：
 
@@ -73,19 +73,19 @@
 
 | 项 | 值 |
 |---|---|
-| store | `TSM Core Service/.store/lance/bizagentbench-v32` |
-| freeze | `02b80d7f`（`eval/freeze.v32.json`） |
+| store | `TSM Core Service/.store/lance/bizagentbench-v34` |
+| freeze | `4eafa301`（`eval/freeze.v34.json`） |
 | 规模 | entities 687 · consensus 191 · sop 50 |
 | Embedding | BAAI/bge-base-en-v1.5（768 维，HF 缓存 ONNX 快照）；模型与 store 同源 |
-| 覆盖 | 035–050 首跑 + 两轮优化；L1 `pay_bill` 修复（v30）；L2 189–192；v31/v32 的回滚与字段级口径 |
-| 说明 | v33 = v32 + 013 `(EW/PW)` scrub（commit `a07d1925`，待建）；v34 = 每题最佳节拼接（008/011/013/048/049/050 取历史最佳版本），作为最终单一 best-practice store |
+| 覆盖 | L1 字段映射（031 托管/分账、commission_rate↔commission_bp）；013 scrub；008/011/048/049 取历史最佳节；035–050 首跑+两轮；L2 189–192 |
+| 说明 | 最终单一 best-practice store；per-case best 与本节文本一一对应。001–006/031 为早期/预跑结果，不在当前底座，待各 1 轮补验 |
 
 ## 三、复现
 
 ```bash
-# 起桥（v32 / 28799）
+# 起桥（v34 / 28799）
 cd "D:/Code_Proj/DLR Proj/scenarios/bizagentbench"
-TSM_STORE_DIR="D:/Code_Proj/DLR Proj/TSM Core Service/.store/lance/bizagentbench-v32" \
+TSM_STORE_DIR="D:/Code_Proj/DLR Proj/TSM Core Service/.store/lance/bizagentbench-v34" \
 BIZ_DLR_PORT=28799 bash eval/start_bridge.sh
 
 # 跑单题
@@ -126,4 +126,4 @@ BIZ_DLR_PORT=28799 bash eval/run_dlr_pilot.sh results/dlr-full/<out-dir> <题号
 3. **有希望 strict 的稳定单/双点**：013（C/D）、014（joint fee + discharge）、032（collection budget）、048（claim preserved）、049（fees）——各 1 条精确口径 + 1 轮。
 4. **中等**：010（floors）、011（joint/group）、031（custody 链）。
 5. **方差/多点，暂不追**：008（16 轮、失败模式漂移）、050（多点结构）。
-6. **v34 拼接**：008/011/013/048/049/050 取历史最佳节，合并为最终单一 store。
+6. **v34 已完成**：L1 字段映射、013 scrub、008/011/048/049 历史最佳节拼接（050 保持），已 freeze `4eafa301`。
