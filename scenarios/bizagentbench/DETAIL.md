@@ -2,7 +2,7 @@
 
 > 更新：2026-11-04 凌晨 ｜ 只记录每题**最佳有效成绩**（strict 优先，否则最高 checks）；无效/排除轮单列。
 > 机器可读记录：[eval/ledger.json](eval/ledger.json) ｜ 跑档：`results/dlr-full/`（本地留档，gitignored）
-> **最终 best-practice store**：`TSM Core Service/.store/lance/bizagentbench-v35`（freeze `92d551b9+l3opt8`，entities 687 / consensus 191 / sop 50）——v34 全量 + 8 个失败驱动 L3 节优化（003/004/005/006/010/013/014/049；尚未复跑验证）。
+> **最终 best-practice store**：`TSM Core Service/.store/lance/bizagentbench-v35`（**freeze 只固定 L1/L2：`4eafa301`**；L3 按题拼接、不进 freeze；entities 687 / consensus 191 / sop 50）——v34 全量 + 8 个失败驱动 L3 节优化（003/004/005/006/010/013/014/049；尚未复跑验证）。
 
 **指标口径**（与上游 `README.md` 一致）：
 
@@ -74,7 +74,8 @@
 | 项 | 值 |
 |---|---|
 | store | `TSM Core Service/.store/lance/bizagentbench-v35` |
-| freeze | `92d551b9+l3opt8`（`eval/freeze.v35.json`） |
+| freeze（L1/L2） | `l1l2-4eafa301`（`eval/freeze.v35.json` 只登记 L1/L2；与 v34 同哈希） |
+| L3 | `sources/sop.md` 按题拼接，**不进 freeze**；每题锚定其运行时的节文本 |
 | 规模 | entities 687 · consensus 191 · sop 50 |
 | Embedding | BAAI/bge-base-en-v1.5（768 维，HF 缓存 ONNX 快照）；模型与 store 同源 |
 | 覆盖 | v34（L1 字段映射、013 scrub、历史最佳节拼接）+ v35 八节失败驱动优化：003 调度通知后版、004 用途匹配、005 争端登记全组件、006 连续底仓先行出资、010 早价补外币、013 零回收亦登记、014 零分钟义务当刻支付、049 经济额度分配与到账回执 |

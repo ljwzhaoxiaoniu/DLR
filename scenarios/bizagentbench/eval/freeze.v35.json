@@ -1,6 +1,7 @@
 {
-  "freeze_id": "92d551b9+l3opt8",
-  "git_commit": "92d551b9",
+  "freeze_id": "l1l2-4eafa301",
+  "scope": "L1 + L2 only (data-source DLR + domain consensus). L3 SOP sections are per-question, stitched from per-case best text, and are NOT part of the freeze; they may change without a new freeze.",
+  "git_commit": "4eafa301",
   "frozen_at": "2026-11-04T13:45:00+0800",
   "files": {
     "sources/configs/DLR/operations_desk.yaml": "49b9476f6763f6af56125bf529dffdfbbc3d4066736583c1e240a703cbf2a43c",
@@ -9,8 +10,12 @@
     "sources/consensus/shared.jsonl": "f57fabc4ba1c5625ba883c2c5533bf3e64e550a5e89867aad7a21b84f4e69f87",
     "sources/consensus/operations_desk.jsonl": "540b9ba65ef0d7d4e4a084f34b7581f875e4327a4953ff714df3cbe5aed421db",
     "sources/consensus/typed_services.jsonl": "7776f291a534e7da66c135abfb5590dbe2b6aa7fe3e78dc57f397efba80d07c2",
-    "sources/consensus/psp.jsonl": "0865f317ed94f43d1da0660451b75aad67340109b4a1d2f931caa8f8195d526c",
-    "sources/sop.md": "da8b1e0649fe005863c6603a02c207728842ad5df531888c8e463eb01661f7b7"
+    "sources/consensus/psp.jsonl": "0865f317ed94f43d1da0660451b75aad67340109b4a1d2f931caa8f8195d526c"
+  },
+  "l3": {
+    "source": "sources/sop.md",
+    "sha256": "da8b1e0649fe005863c6603a02c207728842ad5df531888c8e463eb01661f7b7",
+    "policy": "per-question stitching; informational only, not frozen. Cases anchor to the section text used in their own run."
   },
   "model": {
     "name": "BAAI/bge-base-en-v1.5",
@@ -23,6 +28,6 @@
     "consensus": 191,
     "sop": 50
   },
-  "derivation": "v35 = v34 store copied unchanged (entities 687 / consensus 191), with only the L3 SOP table rebuilt from the optimized sop.md. Eight per-question sections received failure-driven rules: 003 (dispatch-notice later revision must be traced), 004 (allocation lot must permit the instruction purpose), 005 (register every component not covered by a SETTLED entry at filing), 006 (check the continuous floor before disbursing; deliver capital first when opening cash equals the floor), 010 (secure the low-end FX shortfall at the early rate before confirmation), 013 (record recovery for every insured loss, including zero), 014 (minute-zero invoices/obligations paid at minute zero), 049 (shared economical quota allocation across both invoices; reconcile delivery receipt).",
-  "note": "Optimizations authored from the v34 validation window; they are NOT yet re-run. Per-case best results remain anchored to earlier stores (see DETAIL.md / ledger.json). No instance values, gold, verifier changes or answer leakage."
+  "derivation": "The L1/L2 state is identical to v34 (same hashes, unchanged since commit 4eafa301). The v35 store copies v34 and rebuilds only the SOP table from the stitched per-question sections (003/004/005/006/010/013/014/049 carry failure-driven rules). L3 does not participate in the freeze.",
+  "note": "Per-case best results remain anchored to the section text used in their own run. No instance values, gold, verifier changes or answer leakage."
 }

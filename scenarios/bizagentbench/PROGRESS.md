@@ -370,7 +370,7 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 7. 014 Check：执行前列出所有 minute 0 到期的发票与外部义务，当刻足额支付。
 8. 049 §3 + Check：经济额度跨两张发票共享，先决定谁用额度（大额走保证路线、截止紧的留经济路线）；到账后核对交付回执。
 
-**v35 store**：`TSM Core Service/.store/lance/bizagentbench-v35`（复制 v34 后仅重建 sop 表；entities 687 / consensus 191 / sop 50），freeze `92d551b9+l3opt8`（`eval/freeze.v35.json`）。**八节尚未复跑**（本轮口径：直接优化、不强制重跑）；表一最佳成绩仍锚定此前各节文本。未追：011（同失败集稳定、无新手段）、031/032/048（多点/方差）、008/050（已归档）。
+**v35 store**：`TSM Core Service/.store/lance/bizagentbench-v35`（复制 v34 后仅重建 sop 表；entities 687 / consensus 191 / sop 50）。**freeze 只固定 L1/L2：`l1l2-4eafa301`**（与 v34 同哈希，见 `eval/freeze.v35.json`）；**L3 按题拼接、不进 freeze**。**八节尚未复跑**（本轮口径：直接优化、不强制重跑）；表一最佳成绩仍锚定此前各节文本。未追：011（同失败集稳定、无新手段）、031/032/048（多点/方差）、008/050（已归档）。
 
 ## 十六、v34 窗口 vs 历史汇聚最佳：差距与定时复验
 
