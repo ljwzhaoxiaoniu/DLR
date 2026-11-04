@@ -128,6 +128,10 @@ completing a company account application that requires ownership analysis and ev
 > payer dispatch notice states that a later revision was dispatched — the later revision is authoritative,
 > and an allocation bound to the older advice fails the reconciliation.
 
+> **Check before closing**: for every allocation map, compare it line by line with the advice revision
+> actually used — each express designation must equal the mapping exactly, and the remaining gross goes
+> only to other eligible invoices; never raise a fixed line to balance the invoice totals.
+
 ### When asked: "Some money in our account isn't available, and payroll and other bills are coming due. I also submitted a batch of supplier payments earlier, but I can't tell which went through. Could you check and get the outstanding payments handled?"
 
 > **Type**: problem class

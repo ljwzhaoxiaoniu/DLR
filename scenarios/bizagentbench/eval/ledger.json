@@ -2230,23 +2230,23 @@
         "store": "v1_pre",
         "freeze": "",
         "failed": [],
-        "caveat": "early_pre_run_not_on_current_base"
+        "caveat": "v35 复跑 49/50（reconciliation:intent：REM-7 固定行 A 被抬到 90000）；已补收口规则，待再验；best 仍 v1 预跑 50/50"
       },
       "4": {
         "best_checks": "58/58",
         "strict": true,
-        "store": "v1_pre",
-        "freeze": "",
+        "store": "case_004_v35",
+        "freeze": "4eafa301",
         "failed": [],
-        "caveat": "early_pre_run_not_on_current_base"
+        "caveat": "v35 用途匹配；strict 收关"
       },
       "5": {
         "best_checks": "46/46",
         "strict": true,
-        "store": "v1_pre",
-        "freeze": "",
+        "store": "case_005_v35",
+        "freeze": "4eafa301",
         "failed": [],
-        "caveat": "early_pre_run_not_on_current_base"
+        "caveat": "v35 全组件登记；strict 收关"
       },
       "6": {
         "best_checks": "39/39",
@@ -2868,6 +2868,39 @@
           "joint.fee_and_reserve",
           "activity1:invoices.final_individual_discharge"
         ]
+      }
+    }
+  },
+  "window_v35_c345_2026_11_04": {
+    "note": "v35 batch 003/004/005: 004 and 005 strict; 003 49/50 (intent: fixed line overridden; check-before-closing added, pending rerun).",
+    "store_base": "TSM Core Service/.store/lance/bizagentbench-v35",
+    "freeze_base": "4eafa301",
+    "cases": {
+      "3": {
+        "checks": "49/50",
+        "goal": false,
+        "process": true,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "reconciliation:intent"
+        ]
+      },
+      "4": {
+        "checks": "58/58",
+        "goal": true,
+        "process": true,
+        "protection": true,
+        "strict": true,
+        "failed": []
+      },
+      "5": {
+        "checks": "46/46",
+        "goal": true,
+        "process": true,
+        "protection": true,
+        "strict": true,
+        "failed": []
       }
     }
   }
