@@ -727,7 +727,7 @@ This class covers a buyer recalling a remittance after returning only part of an
 2. The bank recall controls ownership of the original remittance but does not cancel the sale invoice. Receipt of a returned-goods document starts neither settlement nor credit; the review must complete and publish the authorized credit.
 3. The collectible sale amount is invoice face less issued commercial credit, original principal retained, and replacement principal already received or requested. Apply credits only after authorization; a credit note is irrevocable.
 4. If a replacement remittance is needed, request it, apply only the actual receipt, and refund only an actual overpayment. A requested replacement is not money.
-5. Use the buyer collection calendar for the remaining value: book capacity before its milestone, and collect only the remaining amount in the correct tranche.
+5. Use the buyer collection calendar for the remaining value: book capacity before its milestone, and collect only the remaining amount in the correct tranche. Price the booking fee from the capacity actually needed (ceil(capacity / fee unit) × fee per unit) against the calendar's fee cap; a faster reserved service can exceed the cap at the required capacity — prefer the zero-fee standard service whenever its book-until and delay still deliver inside the receipt milestones.
 6. Verify actual receipts and credits, then close.
 
 ### When asked: "Our bank receipts arrived out of order and one transfer may have been returned. Please reconcile what is still owed and recover the related supplier allowances."
@@ -1009,6 +1009,8 @@ This class covers keeping a critical payment, agreeing a workable change for ano
 4. Collect only the acknowledged available tranche for the payments; do not treat a disputed or unconfirmed amount as collectible.
 5. If a residual assignment is used, assign only the uncollected undisputed remainder and take no factoring recourse; the factor advance follows the offer.
 6. Verify actual collections and plan obligations, keep both supplier commitments, then close.
+
+> **Wrong turn (observed)**: executing a disputed-claim disposition that waives or closes the claim (claim preserved false) — a waived claim cannot be restored by a later open instruction, and factoring recourse is likewise prohibited; the disposition must keep the claim preserved and open.
 
 ### When asked: "Please pay both the component supplier and Harbor Packaging in full at their validated accounts. Harbor Packaging accepts installments, but must receive all USD 60 by minute 3. The original component deadline remains in force. Our all-in allowance for both invoices is USD 14.00, including inquiries, every route ticket and correspondent fees. Do not overpay either invoice. Both are enrolled members of the offered economical service; I have not received its formal certificate or the final correspondent charge. Splitting a payment is acceptable if nobody receives less than the invoice principal."
 
