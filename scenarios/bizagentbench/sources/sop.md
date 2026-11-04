@@ -95,10 +95,13 @@ completing a company account application that requires ownership analysis and ev
    ownership edges, evidence bundles and submissions; the fee accounts, reserve facilities and scheduled
    events.
 2. Reconcile each remittance: gross equals net cash plus the external fee, and a merchant-borne fee is an
-   expense, not unpaid principal. Obtain the dispatched advice after its trace delay, read the READY
-   revision, and apply its express designations; an omitted invoice has no fixed clause, not an automatic
-   zero. Build one allocation map per remittance that stays within gross, uses only eligible invoices and
-   matches the advice. Across remittances, the allocated totals must equal each invoice.
+   expense, not unpaid principal. Check every received payer dispatch notice: when it reports a later
+   revision than the currently READY advice, the older advice does not represent the dispatched revision —
+   trace that remittance, wait out its trace delay, read the returned advice, and allocate against that
+   revision. Otherwise trace to confirm the current advice. Apply the express designations of the advice
+   revision actually used; an omitted invoice has no fixed clause, not an automatic zero. Build one
+   allocation map per remittance that stays within gross, uses only eligible invoices and matches the
+   advice. Across remittances, the allocated totals must equal each invoice.
 3. Resolve ownership: sum the products of ownership fractions along every path from each natural person to
    the applicant. Required persons are those at or above the application threshold plus every listed direct
    controller. Evidence must show the applicant's current registry and each required person's current
@@ -120,6 +123,10 @@ completing a company account application that requires ownership analysis and ev
    version; a replacement submission does not silently inherit earlier evidence. Close the portfolio only
    after the allocation map is consistent, and record the case only after the application is approved and
    the portfolio is closed.
+
+> **Wrong turn (observed)**: allocating every remittance from its currently READY advice revision while a
+> payer dispatch notice states that a later revision was dispatched — the later revision is authoritative,
+> and an allocation bound to the older advice fails the reconciliation.
 
 ### When asked: "Some money in our account isn't available, and payroll and other bills are coming due. I also submitted a batch of supplier payments earlier, but I can't tell which went through. Could you check and get the outstanding payments handled?"
 
@@ -153,6 +160,14 @@ payments with determining which earlier batch submissions actually paid.
    wait for the assessment before booking.
 7. Close only when every purpose instruction is paid, every batch item is settled or properly void, and no
    attempt remains pending without a terminal receipt.
+
+> **Wrong turn (observed)**: paying a purpose instruction from a released lot that has enough balance but
+> whose permitted-purpose list excludes the instruction purpose — release makes a lot available, it does
+> not widen its purpose; every allocation lot must permit the instruction's purpose.
+>
+> **Check before closing**: for each purpose payment, list every allocation lot and confirm its permitted
+> purposes contain the instruction purpose, the total equals the instruction amount, and every related
+> release event is COMPLETED before the payment minute.
 
 ### When asked: "Our group companies have supplier bills coming due. We also have a purchase where some goods never arrived and the money hasn't been sorted out. Can you help handle both?"
 
@@ -190,6 +205,11 @@ treasury authority with recovering the uncompensated loss on a purchase where go
 7. Close when every obligation is paid under a valid effective mandate and every component loss is covered
    by settled compensation.
 
+> **Wrong turn (observed)**: filing the dispute with only the components that have no merchant refund
+> scheduled — a scheduled merchant refund is not settled and can be published FAILED after the filing
+> deadline, and a component omitted from the registration cannot be added later; register every component
+> whose loss is not already covered by a SETTLED compensation entry at filing time.
+
 ### When asked: "Can you release the securities we have promised to our counterparties and take care of the equipment bill? We also have a receivable arriving into custody. Also, my equipment order is shipping in two parts. One card payment is still pending, and I need to finish paying for the items that are actually shipping. These are part of the same business spending plan."
 
 > **System**: operations_desk
@@ -206,7 +226,7 @@ This class covers a two-service spending plan: securities that already carry del
 4. Deliver the assets that already carry delivery instructions before other work. Their due minutes are early, every wait advances the clock, and a release after the due minute is late even when the coverage check passes. Keep retained collateral (the guarantee certificate and any asset the customer wishes to retain) pledged. If a release is rejected because the loan would fall short of required collateral, restore coverage with free **eligible** assets first — matching currency, accepted class, custody status and eligibility dates — then retry the release; do not pledge retained security, a currency/class mismatch, or a pending-custody asset. After each release, verify continuing haircut-adjusted coverage and per-issuer caps for the loan.
 5. Repay the minimum principal necessary. Repay only when coverage cannot be restored with eligible free assets; then choose the smallest set of loans that restores coverage. The first repayment of each loan charges its servicing fee and later repayments of the same loan do not repeat it, so prefer fewer loans and respect the customer's fee ceiling. Pay the supplier bill in full by its recorded due minute, after the service wallet actually holds the required settled capital.
 6. Complete the card order from actual goods: capture only confirmed dispatched lines, release the unused authorization before it expires, pay the courier bill by its recorded due minute (it can precede the captures, so read the bill's deadline and sequence it first), and keep the card wallet above its floor. A capture submitted in the same minute has not cleared; released or cleared amounts cannot be captured again.
-7. Let scheduled debits post and keep every continuous cash floor intact after each booking. Do not close before a scheduled debit has posted and the floor still holds.
+7. Let scheduled debits post and keep every continuous cash floor intact after each booking. Before any disbursement from a service wallet, check the wallet's cash after the payment against its continuous floor; when the initial operating cash already equals the floor, deliver the remaining registered capital first, then pay. Do not close before a scheduled debit has posted and the floor still holds.
 8. Reserve the final step for closure: after every delivery, payment and scheduled event is final, call record_case_outcome exactly once with the achieved terminal state. A case left open fails the terminal goal; do not escalate or close early while a corrected request remains available.
 
 Instruction data: propose_dated_collateral repay {record_id, amount_minor}; pledge {record_id, loan_id}; release {record_id}; pay_bill {record_id, amount_minor}. propose_payment_split_capture capture {authorization_id, line_id, amount_minor}; release {authorization_id, amount_minor}; new_authorization {amount_minor}; cash_payment {line_id, amount_minor}; pay_bill {bill_id, amount_minor}.
@@ -284,10 +304,14 @@ This class covers concluding forward currency deliveries and a partially shipped
 1. Object set: forward contracts (flexible purchase and funded cross), their notional, lot size, cutoffs, margin and closure charges; spot quotes; supplier invoices; the card authorization, fulfillment lines and captures.
 2. Run each forward through its cutoff: exercise or nominate in the recorded lot size, debit the source currency immediately, and release margin proportionally to original notional using cumulative releases. The unused remainder can be closed; closing it releases its margin and charges the recorded closeout fee. Already exercised or nominated currency cannot be closed or refunded.
 3. A confirmed-but-unpaid delivery reports its actual foreign amount and can be retried by settle_confirmed; do not treat the confirmation as a new receipt. Pending receipt metadata does not promise full delivery.
-4. Spot exchange: a BUY rounds the source debit upward, a SELL rounds the target credit downward; a positive available amount is exchangeable, but the bank does not decide whether the exchange meets the customer's plan. Keep any required free cash reserve.
+4. Spot exchange: a BUY rounds the source debit upward, a SELL rounds the target credit downward; a positive available amount is exchangeable, but the bank does not decide whether the exchange meets the customer's plan. Keep any required free cash reserve. Price the delivery's low end, not its confirmation: while the confirmed foreign amount is still unknown, check whether its low end leaves enough foreign currency for every due invoice. If buying the shortfall at the late spot rate would push the USD wallet below its reserve, buy the shortfall at the early rate while that window is open — waiting for confirmation leaves only the late rate and makes the reserve breach unavoidable. Sell any excess foreign currency at the bid so no foreign balance remains.
 5. Complete the card order from dispatched goods only; the original authorization remains capturable until expiry, new approvals are capped, and released or cleared amounts cannot be captured again.
 6. Fund every supplier payment from actual available cash plus released margin; a treasury instruction that exhausts funds can block a later obligation even when it is bank-valid.
 7. Verify actual receipts, FX credits and deadlines, and close after both business tracks are settled. Pay every supplier and courier obligation with its exact amount by its original due minute; a proposal or approval is not a payment, and a late payment is late even when the amount is right.
+
+> **Wrong turn (observed)**: waiting for the in-flight delivery to confirm before buying the currency
+> shortfall — by then only the late rate remains, and the extra cost breaches the operating reserve; the
+> shortfall must be secured at the early rate while that window is open.
 
 ### When asked: "Our machinery is ready, but the two depots still cannot collect it. Please release every lot to the right depot before its pickup deadline and keep the total release charges as low as possible. Also, i am organizing two group orders. One person has pulled out and another payment still says pending. Please help the groups complete their purchases and return the money that should go back. These are part of the same business spending plan."
 
@@ -342,6 +366,10 @@ This class covers insurance recoveries with possible later supplier compensation
 
 > **Wrong turn (observed)**: paying indemnity per loss without reconciling each loss's actual external recovery — each loss needs its realized supplier compensation plus realized salvage declared as the external recovery; only settled compensation counts, and the policy's net payout must reach the maximum allowed by the per-loss limits and the shared aggregate.
 
+> **Check before closing**: count insured losses against recovery records — every loss needs its own
+> recovery record, including a loss whose actual external recovery is zero (declare zero explicitly). A
+> loss with no recovery record stays unreconciled even when its policy payout is complete.
+
 ### When asked: "Could you finish our intercompany settlement and the brokerage payment? There is a group clearing draft in the portal, and some staff approvals are already on it. Also, our contractor says one of our electronic cheques went to the wrong place. There is another cheque due soon as well. Please make sure the right people are paid without paying either bill twice. These are part of the same business spending plan."
 
 > **System**: operations_desk
@@ -364,6 +392,10 @@ This class covers completing an intercompany clearing draft with existing staff 
 > **Wrong turn (observed)**: requesting a stop on the cheque that is due soon instead of the misdirected one — the stop must target the cheque the customer reported; the other cheque proceeds normally, and a stop request is not a completed stop.
 >
 > **Wrong turn (observed)**: delivering the group total without the exact capital for each company — each company's designated capital must be recorded separately; a group-level total does not replace a company's original capital.
+
+> **Check before closing**: before executing anything, list every agreed invoice and every external
+> obligation whose due minute is zero; each must be paid in full at minute zero from its designated payer.
+> A later clearing cycle or credit cannot retroactively satisfy an obligation that matured at minute zero.
 
 ### When asked: "Several customers are still chasing refunds while the card disputes are going on. Please finish the refunds we owe and protect the parts of the sales we are entitled to keep. Also, a customer returned part of a combined order after we paid the sellers. Please refund the returned items and finish the sellers’ remaining payouts. These are part of the same business spending plan."
 
@@ -990,11 +1022,11 @@ This class covers paying two suppliers in full within an all-in allowance that i
 
 1. Establish the object set: the route offers and their fees/eligibility, route inquiries and receipts, the beneficiary delivery terms, the supplier portfolios/installments and the shared route certificate/quota.
 2. Price the complete plan, not one payment: the all-in allowance covers inquiries, every route ticket, correspondent fees and installments. An inquiry is charged even when duplicate; one certificate can cover both enrolled beneficiaries.
-3. Route choice: an economical route requires a formal ELIGIBLE receipt; conservative and premium are guaranteed routes without inquiry. Buy the required certificate before committing to the economical route.
+3. Route choice: an economical route requires a formal ELIGIBLE receipt; conservative and premium are guaranteed routes without inquiry. Buy the required certificate before committing to the economical route. The economical quota is shared across both invoices: the committed economical principal, every economical installment and the external shared portion all consume it. Decide which invoice uses the quota before committing — keep the economical quota for the deadline-constrained or split invoice and put a large invoice on a guaranteed route; once the large invoice consumes the quota, the other cannot be completed within the fee cap.
 4. Pay both invoices in full to validated accounts; split a payment only if no beneficiary receives less than its invoice principal. Meet the packaging installment deadline and keep the component deadline.
 5. Do not overpay either invoice; reconcile certificate and quota consumption. Verify actual deliveries and close within the allowance.
 
-> **Check before closing**: price the complete plan against the all-in allowance — inquiries, every route ticket and correspondent fees count and must not exceed the cap; the beneficiary receives the full principal at the validated account, and delivery is confirmed within the quote validity.
+> **Check before closing**: price the complete plan against the all-in allowance — inquiries, every route ticket and correspondent fees count and must not exceed the cap; the beneficiary receives the full principal at the validated account, and the delivery receipt is reconciled (delivery confirmed and the received principal recorded) within the quote validity.
 
 ### When asked: "The wallet keeps topping up and sweeping the money back. Please fix the loop and let the business payment complete with the automatic services still useful. The merchant has a live purchase and a cancelled duplicate order. Keep the live purchase reserved, settle it before releasing its money for sweeping, and reconcile its final capture. The next staff payroll must also be paid from this operating wallet after the purchase clears."
 
