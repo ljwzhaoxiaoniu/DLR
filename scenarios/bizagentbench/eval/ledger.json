@@ -2227,10 +2227,10 @@
       "3": {
         "best_checks": "50/50",
         "strict": true,
-        "store": "v1_pre",
-        "freeze": "",
+        "store": "case_003_v35r2",
+        "freeze": "4eafa301",
         "failed": [],
-        "caveat": "v35 复跑 49/50（reconciliation:intent：REM-7 固定行 A 被抬到 90000）；已补收口规则，待再验；best 仍 v1 预跑 50/50"
+        "caveat": "v35 通知追发 + 收口（固定行逐字对）；strict 收关"
       },
       "4": {
         "best_checks": "58/58",
@@ -2896,6 +2896,21 @@
       },
       "5": {
         "checks": "46/46",
+        "goal": true,
+        "process": true,
+        "protection": true,
+        "strict": true,
+        "failed": []
+      }
+    }
+  },
+  "window_v35_c3r2_2026_11_04": {
+    "note": "v35 case-003 rerun with check-before-closing: 50/50 strict.",
+    "store_base": "TSM Core Service/.store/lance/bizagentbench-v35",
+    "freeze_base": "4eafa301",
+    "cases": {
+      "3": {
+        "checks": "50/50",
         "goal": true,
         "process": true,
         "protection": true,
