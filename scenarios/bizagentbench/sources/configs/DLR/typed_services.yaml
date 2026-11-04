@@ -13047,7 +13047,8 @@ logical_entities:
   description: 'Marketplace split refunds: allocate a buyer refund between the buyer and the seller according to the recorded seller
     allocation, pay sellers their settled share and reverse a seller credit when the refund reallocates it; the marketplace terms decide
     what the buyer receives. Contract: Marketplace transfer reversals and buyer returns. Actions: pay_seller / refund_buyer / reverse_seller.
-    Instruction data: reverse_seller {seller_id, amount_minor}; pay_seller {seller_id, amount_minor}; refund_buyer {amount_minor}.'
+    Instruction data: reverse_seller {seller_id, amount_minor}; pay_seller {seller_id, amount_minor}; refund_buyer {amount_minor}.
+    Commission rate is recorded as `commission_bp` (basis points; playbooks call it `commission_rate`).'
   lifecycle:
     states:
     - OPEN

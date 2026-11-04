@@ -110,7 +110,9 @@ logical_entities:
     or an authorized owner claim disposes it; ordinary supplier invoices compete for the same operating cash. A return along the original
     route cannot be cancelled after initiation. Source articles: Unknown-funds ownership and original-route return; Segregated incoming
     dispute escrow; Dispute trustee onboarding and activation timing; Operating payments and segregated dispute balances; Accidental-transfer
-    refunds and ordinary supply cash.'
+    refunds and ordinary supply cash. Action mapping: a_submit_quarantine_escrow_direction publishes the disputed amount (`disputed_minor`)
+    and authorized trustee (`authorized_trustee_id`); a_partition_quarantined_funds takes {incoming_id, return_minor, escrow_minor,
+    claim_minor, trustee_id}.'
   lifecycle:
     states:
     - OPEN
