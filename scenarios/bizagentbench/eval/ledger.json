@@ -2202,5 +2202,399 @@
         "case_017": "results/dlr-full/case_017_v3/case_017__trial0/result.json"
       }
     }
+  },
+  "sweep_2026_11_04": {
+    "note": "Best valid run per case across v1-v32; per-question SOP isolation. 001-006 and 031 are not on the current v32 base (see caveat).",
+    "store_base": "TSM Core Service/.store/lance/bizagentbench-v32",
+    "freeze_base": "02b80d7f",
+    "cases": {
+      "1": {
+        "best_checks": "37/37",
+        "strict": true,
+        "store": "v1_pre",
+        "freeze": "",
+        "failed": [],
+        "caveat": "early_pre_run_not_on_current_base"
+      },
+      "2": {
+        "best_checks": "85/85",
+        "strict": true,
+        "store": "v1_pre",
+        "freeze": "",
+        "failed": [],
+        "caveat": "early_pre_run_not_on_current_base"
+      },
+      "3": {
+        "best_checks": "50/50",
+        "strict": true,
+        "store": "v1_pre",
+        "freeze": "",
+        "failed": [],
+        "caveat": "early_pre_run_not_on_current_base"
+      },
+      "4": {
+        "best_checks": "58/58",
+        "strict": true,
+        "store": "v1_pre",
+        "freeze": "",
+        "failed": [],
+        "caveat": "early_pre_run_not_on_current_base"
+      },
+      "5": {
+        "best_checks": "46/46",
+        "strict": true,
+        "store": "v1_pre",
+        "freeze": "",
+        "failed": [],
+        "caveat": "early_pre_run_not_on_current_base"
+      },
+      "6": {
+        "best_checks": "39/39",
+        "strict": true,
+        "store": "case_006_frozen2",
+        "freeze": "ff3663ec",
+        "failed": [],
+        "caveat": "v1_store_not_current_base"
+      },
+      "7": {
+        "best_checks": "39/39",
+        "strict": true,
+        "store": "case_007_v25",
+        "freeze": "021c7717",
+        "failed": []
+      },
+      "8": {
+        "best_checks": "43/44",
+        "strict": false,
+        "store": "case_008_v9",
+        "freeze": "faaa7cc1",
+        "failed": [
+          "joint.fee_and_reserve"
+        ]
+      },
+      "9": {
+        "best_checks": "42/42",
+        "strict": true,
+        "store": "case_009_v24",
+        "freeze": "530cf148",
+        "failed": []
+      },
+      "10": {
+        "best_checks": "37/39",
+        "strict": false,
+        "store": "case_010_a2",
+        "freeze": "",
+        "failed": [
+          "joint.continuous_operating_floors",
+          "activity1:cash.reserve_and_no_foreign_surplus.continuous_reserve"
+        ]
+      },
+      "11": {
+        "best_checks": "36/42",
+        "strict": false,
+        "store": "case_011_a2",
+        "freeze": "",
+        "failed": [
+          "joint.exact_capital",
+          "joint.fee_and_reserve",
+          "joint.continuous_operating_floors",
+          "activity2:participant.A",
+          "activity2:participant.B"
+        ]
+      },
+      "12": {
+        "best_checks": "38/38",
+        "strict": true,
+        "store": "case_012_v3",
+        "freeze": "6f3a3102",
+        "failed": []
+      },
+      "13": {
+        "best_checks": "45/47",
+        "strict": false,
+        "store": "case_013_v29",
+        "freeze": "118b0fdf",
+        "failed": [
+          "activity1:loss.actual_recoveries.C",
+          "activity1:loss.actual_recoveries.D"
+        ]
+      },
+      "14": {
+        "best_checks": "39/41",
+        "strict": false,
+        "store": "case_014_v29",
+        "freeze": "118b0fdf",
+        "failed": [
+          "joint.fee_and_reserve",
+          "activity1:invoices.final_individual_discharge"
+        ]
+      },
+      "15": {
+        "best_checks": "42/42",
+        "strict": true,
+        "store": "case_015_a2",
+        "freeze": "",
+        "failed": []
+      },
+      "16": {
+        "best_checks": "40/40",
+        "strict": true,
+        "store": "case_016_v9",
+        "freeze": "faaa7cc1",
+        "failed": []
+      },
+      "17": {
+        "best_checks": "32/32",
+        "strict": true,
+        "store": "case_017_a2",
+        "freeze": "",
+        "failed": []
+      },
+      "18": {
+        "best_checks": "30/30",
+        "strict": true,
+        "store": "case_018_a1",
+        "freeze": "",
+        "failed": []
+      },
+      "19": {
+        "best_checks": "35/35",
+        "strict": true,
+        "store": "case_019_v23",
+        "freeze": "985c683d",
+        "failed": []
+      },
+      "20": {
+        "best_checks": "29/29",
+        "strict": true,
+        "store": "case_020_v17",
+        "freeze": "b91c7bcc",
+        "failed": []
+      },
+      "21": {
+        "best_checks": "30/30",
+        "strict": true,
+        "store": "case_021_a3",
+        "freeze": "",
+        "failed": []
+      },
+      "22": {
+        "best_checks": "30/30",
+        "strict": true,
+        "store": "case_022_v15",
+        "freeze": "082bfe9f",
+        "failed": []
+      },
+      "23": {
+        "best_checks": "32/32",
+        "strict": true,
+        "store": "case_023_v17",
+        "freeze": "b91c7bcc",
+        "failed": []
+      },
+      "24": {
+        "best_checks": "33/33",
+        "strict": true,
+        "store": "case_024_v18",
+        "freeze": "bcca13d2",
+        "failed": []
+      },
+      "25": {
+        "best_checks": "29/29",
+        "strict": true,
+        "store": "case_025_a3",
+        "freeze": "",
+        "failed": []
+      },
+      "26": {
+        "best_checks": "31/31",
+        "strict": true,
+        "store": "case_026_a2",
+        "freeze": "",
+        "failed": []
+      },
+      "27": {
+        "best_checks": "34/34",
+        "strict": true,
+        "store": "case_027_v25",
+        "freeze": "021c7717",
+        "failed": []
+      },
+      "28": {
+        "best_checks": "35/35",
+        "strict": true,
+        "store": "case_028_v26",
+        "freeze": "5d4976b0",
+        "failed": []
+      },
+      "29": {
+        "best_checks": "37/37",
+        "strict": true,
+        "store": "case_029_v26",
+        "freeze": "5d4976b0",
+        "failed": []
+      },
+      "30": {
+        "best_checks": "29/29",
+        "strict": true,
+        "store": "case_030_v26",
+        "freeze": "5d4976b0",
+        "failed": []
+      },
+      "31": {
+        "best_checks": "18/18",
+        "strict": true,
+        "store": "prerun_r2",
+        "freeze": "0b8e2cd7",
+        "failed": [],
+        "caveat": "early_pre_run_not_on_current_base"
+      },
+      "32": {
+        "best_checks": "18/19",
+        "strict": false,
+        "store": "case_032_v26",
+        "freeze": "5d4976b0",
+        "failed": [
+          "a.32.reasoning_collection_budget"
+        ]
+      },
+      "33": {
+        "best_checks": "18/18",
+        "strict": true,
+        "store": "case_033_v30",
+        "freeze": "66b2b33d",
+        "failed": []
+      },
+      "34": {
+        "best_checks": "16/16",
+        "strict": true,
+        "store": "case_034_v26",
+        "freeze": "5d4976b0",
+        "failed": []
+      },
+      "35": {
+        "best_checks": "17/17",
+        "strict": true,
+        "store": "case_035_v30",
+        "freeze": "66b2b33d",
+        "failed": []
+      },
+      "36": {
+        "best_checks": "16/16",
+        "strict": true,
+        "store": "case_036_v30",
+        "freeze": "66b2b33d",
+        "failed": []
+      },
+      "37": {
+        "best_checks": "18/18",
+        "strict": true,
+        "store": "case_037_v32",
+        "freeze": "02b80d7f",
+        "failed": []
+      },
+      "38": {
+        "best_checks": "19/19",
+        "strict": true,
+        "store": "case_038_v32",
+        "freeze": "02b80d7f",
+        "failed": []
+      },
+      "39": {
+        "best_checks": "17/17",
+        "strict": true,
+        "store": "case_039_v30",
+        "freeze": "66b2b33d",
+        "failed": []
+      },
+      "40": {
+        "best_checks": "16/16",
+        "strict": true,
+        "store": "case_040_v30",
+        "freeze": "66b2b33d",
+        "failed": []
+      },
+      "41": {
+        "best_checks": "19/19",
+        "strict": true,
+        "store": "case_041_v30",
+        "freeze": "66b2b33d",
+        "failed": []
+      },
+      "42": {
+        "best_checks": "17/17",
+        "strict": true,
+        "store": "case_042_v31",
+        "freeze": "347b7944",
+        "failed": []
+      },
+      "43": {
+        "best_checks": "17/17",
+        "strict": true,
+        "store": "case_043_v30",
+        "freeze": "66b2b33d",
+        "failed": []
+      },
+      "44": {
+        "best_checks": "21/21",
+        "strict": true,
+        "store": "case_044_v31",
+        "freeze": "347b7944",
+        "failed": []
+      },
+      "45": {
+        "best_checks": "20/20",
+        "strict": true,
+        "store": "case_045_v32",
+        "freeze": "02b80d7f",
+        "failed": []
+      },
+      "46": {
+        "best_checks": "23/23",
+        "strict": true,
+        "store": "case_046_v32",
+        "freeze": "02b80d7f",
+        "failed": []
+      },
+      "47": {
+        "best_checks": "21/21",
+        "strict": true,
+        "store": "case_047_v30",
+        "freeze": "66b2b33d",
+        "failed": []
+      },
+      "48": {
+        "best_checks": "19/21",
+        "strict": false,
+        "store": "case_048_v30",
+        "freeze": "66b2b33d",
+        "failed": [
+          "c48_linked_rights",
+          "process.048.disputed_claim_preserved"
+        ]
+      },
+      "49": {
+        "best_checks": "23/24",
+        "strict": false,
+        "store": "case_049_v31",
+        "freeze": "347b7944",
+        "failed": [
+          "c49_reasoning_fees"
+        ]
+      },
+      "50": {
+        "best_checks": "16/21",
+        "strict": false,
+        "store": "case_050_v32",
+        "freeze": "02b80d7f",
+        "failed": [
+          "c50_goal",
+          "c50_linked_accounting",
+          "c50_linked_match",
+          "c50_reasoning_payroll",
+          "shared.single_final_outcome.terminal_goal"
+        ]
+      }
+    }
   }
 }
