@@ -58,7 +58,7 @@ The three landed scenarios (`birdminidev` SQL, `cloudopsbench` RCA, `bizagentben
 | Slot | `birdminidev` (read-only SQL) | `cloudopsbench` (read-only diagnosis) | `bizagentbench` (mutating business) |
 |---|---|---|---|
 | Persona / domain | semantic business assistant (NL2SQL) | K8s fault-diagnosis assistant | business operations agent (payments/desk) |
-| Tool surface | 7 MCP tools + `skill(paradigm)`; no shell/fs | 3 semantic tools + `cloudops-tools`; no shell/fs | tau2 record/action tools + `dlr_l1/l2/l3` |
+| Tool surface | 7 MCP tools + `skill(paradigm)`; no shell/fs | 3 semantic tools + `cloudops-tools`; no shell/fs | tau2 record/action tools + `state_model_query` / `dlr_search_consensus` / `dlr_search_sop` |
 | Workflow | parallel 3-level recall → cross-check/anchor → map → SQL → Final Answer | parallel recall → **symptom-first** chain → re-query L1 after anchor → breakpoint → closing triad → JSON | open case fully → **clock before wait** → one-request-one-approval → execute+verify → bills vs lines → signed adjustments → single verified closure |
 | Ordering / safety | two-hop mapping; SQL read-only; no schema probing | chain order (EOC); anchor pruning; namespace scope; events face before closing | due-0 first; approval before execute; no double payment; release unused holds |
 | Submission | Final Answer + Evidence SQL + Modeling gap | JSON contract (`top_3_predictions`, rank-1 rule) | `record_case_outcome` with per-sub-problem receipts |

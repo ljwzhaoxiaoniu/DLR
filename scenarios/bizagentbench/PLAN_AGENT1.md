@@ -1,5 +1,7 @@
 # PLAN · Agent Operating Layer A/B（2026-11-03 12:05）
 
+> **状态（2026-11-04）**：历史计划（v20 底座）。当前结果与最终 store 见 [README.md](README.md) §3 / [DETAIL.md](DETAIL.md)；工作记录见 [PROGRESS.md](PROGRESS.md)。
+
 > 目的：验证 `AGENTS.md` 运行态设定（L3 判序 + 执行纪律）对**所有未 strict 题**的影响。
 > 定位：这是**探索可复现最佳实践**的手段（best-practice store/freeze + AGENTS + L3 + 跑法），**不做严格消融、不对齐论文**；A/B 结果只用于选型，不承担因果归因。
 > 底线：**不作弊**——L1/L2/L3 不写实例答案或实例值、不改 dataset verifier/gold、不筛无效轮；所有增益必须能由源 + freeze 复现。

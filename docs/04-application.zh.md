@@ -58,7 +58,7 @@ scenarios/<场景>/
 | 槽位 | `birdminidev`（只读 SQL） | `cloudopsbench`（只读诊断） | `bizagentbench`（改世界业务） |
 |---|---|---|---|
 | 人格 / 领域 | 语义业务助手（NL2SQL） | K8s 故障诊断助手 | 业务操作 agent（payments/desk） |
-| 工具面 | 7 个 MCP + `skill(paradigm)`；无 shell/fs | 3 个语义工具 + `cloudops-tools`；无 shell/fs | tau2 记录/动作工具 + `dlr_l1/l2/l3` |
+| 工具面 | 7 个 MCP + `skill(paradigm)`；无 shell/fs | 3 个语义工具 + `cloudops-tools`；无 shell/fs | tau2 记录/动作工具 + `state_model_query` / `dlr_search_consensus` / `dlr_search_sop` |
 | 工作流 | 三级并行召回 → 交叉验证/锚定 → 映射 → SQL → Final Answer | 并行召回 → **症状先行**走链 → 锚后回查 L1 → 断点 → 收口三件套 → JSON | 开局完整读案 → **时钟先行** → 逐请求批准 → 执行后复核 → 账单 vs 行 → 带符号调整 → 核验后单次收口 |
 | 顺序 / 安全 | 两跳映射；SQL 只读；不摸 schema | 链序（EOC）；锚剪枝；namespace 作用域；收口前读 events 面 | due-0 先做；先批后执行；不重复付款；释放未用额度 |
 | 提交 | Final Answer + Evidence SQL + Modeling gap | JSON 契约（`top_3_predictions`、rank-1 条款） | `record_case_outcome` + 逐子问题回执 |
