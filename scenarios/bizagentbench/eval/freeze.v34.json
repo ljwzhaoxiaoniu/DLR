@@ -1,0 +1,28 @@
+{
+  "freeze_id": "4eafa301",
+  "git_commit": "4eafa301",
+  "frozen_at": "2026-11-04T02:30:00+0800",
+  "files": {
+    "sources/configs/DLR/operations_desk.yaml": "49b9476f6763f6af56125bf529dffdfbbc3d4066736583c1e240a703cbf2a43c",
+    "sources/configs/DLR/typed_services.yaml": "bea5079e3434b7af347daa26c0d3dcefb92915a54938b4bea23bf964e783a0b0",
+    "sources/configs/DLR/psp.yaml": "a6e7ad7f64a7ad6a212f84d2f221962e2ae3458b89ae02e140c0d81443f3aea6",
+    "sources/consensus/shared.jsonl": "f57fabc4ba1c5625ba883c2c5533bf3e64e550a5e89867aad7a21b84f4e69f87",
+    "sources/consensus/operations_desk.jsonl": "540b9ba65ef0d7d4e4a084f34b7581f875e4327a4953ff714df3cbe5aed421db",
+    "sources/consensus/typed_services.jsonl": "7776f291a534e7da66c135abfb5590dbe2b6aa7fe3e78dc57f397efba80d07c2",
+    "sources/consensus/psp.jsonl": "0865f317ed94f43d1da0660451b75aad67340109b4a1d2f931caa8f8195d526c",
+    "sources/sop.md": "3e945cfb81d9893aac4e3e4802ee7353bb34c964ec5213ee56d317ffe9a476bc"
+  },
+  "model": {
+    "name": "BAAI/bge-base-en-v1.5",
+    "path": "C:/Users/user/.cache/huggingface/hub/models--BAAI--bge-base-en-v1.5/snapshots/a5beb1e3e68b9ab74eb54cfd186867f64f240e1a",
+    "onnx_sha256": "9bc579acdba21c253c62a9bf866891355a63ffa3442b52c8a37d75b2ccb91848"
+  },
+  "store": {
+    "path": "TSM Core Service/.store/lance/bizagentbench-v34",
+    "entities": 687,
+    "consensus": 191,
+    "sop": 50
+  },
+  "derivation": "v34 = the final single best-practice store. L1: the QuarantineDispute logical-entity description now maps the escrow/partition business fields (disputed_minor, authorized_trustee_id, return_minor, escrow_minor, claim_minor, trustee_id) to their actions; the MarketplaceSplitRefund description maps the commission rate to commission_bp (playbooks call it commission_rate). L3: 013 uses the scrubbed text (no EW/PW), and the per-case best sections are stitched back (008 from v9, 011 from v21, 048 from v28, 049 from v31; 050 stays current). L2 unchanged at 191. Entities rebuilt; SOP rebuilt.",
+  "note": "Per-case best results are anchored to this store's per-question section text. 001-006 and 031 remain early/pre-run results (not on this base); they need one validation run each. No instance values, gold, verifier changes or answer leakage."
+}
