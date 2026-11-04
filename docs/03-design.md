@@ -120,6 +120,38 @@ The two shapes share every term and discipline: LE/PE both sides, ARCS/PAS, the 
 
 Modeling record and the four reachability probes: [scenarios/cloudopsbench/modeling-plan.md](../scenarios/cloudopsbench/modeling-plan.md) §2.5.
 
+#### 1.7.2 The action face: capabilities on LEs (action-bearing sources)
+
+A data source is not always a set of tables to read: business systems expose **actions** (pay / pledge / release / claim / settle) over the same objects. The `dlr` shape models those actions as **capabilities mounted on the LE** — not as extra LEs, and not as a third mapping type. Record sources and action sources share one model; a record-only source simply carries no capability block.
+
+A capability is an **action contract**, written in business language:
+
+| Field | Meaning |
+|---|---|
+| `name` | the business action name (the dataset's own vocabulary, e.g. `propose_dated_collateral`) |
+| `kind` | `read` (inquiry) or `write` (state-changing) |
+| `anchor.param` | the key the caller passes — an **LE public-face name** (`case_id`, `record_id`, `portfolio_id`); never a physical column or an ad-hoc internal id |
+| `guard` | what the action changes and its preconditions, in business terms: the allowed sub-actions, what is checked (actual records / eligibility / coverage / cash / timing), the explicit warning that **local legality does not prove the business objective**, and the approval/execution requirement |
+| `source` | the dataset document that constrains the action (the document is the constraint layer; the capability cites it, the agent reads it) |
+
+```yaml
+capabilities:
+- name: propose_dated_collateral
+  kind: write
+  anchor: {param: case_id, role: primary}
+  guard: 'actions: repay / pledge / release / pay_bill; checks actual records for eligibility, coverage, cash and timing; local legality does not prove the commercial objective; portal approval and execute_request required'
+  source: DIVERSE-dated_collateral
+```
+
+Discipline:
+
+- **Model the business action, not the HTTP endpoint**: the endpoint's wire details stay in the dataset document; L1 carries the business contract (what it does, what key it takes, what it checks, what approval it needs).
+- **L1 is the translation layer**: business users know the fields and the checks; what they do not know is which interface returns a field or which table stores it — that mapping is exactly what L1 carries (business names on the public face, IT identifiers only in the physical mapping).
+- **Structured / API / document sources form a spectrum, not a hard line**: a table, an endpoint and a document may carry the same business fact; model each as an LE surface and attach the actions to the LE. Do not assume a semantic gap between the business user and the model — in finance the domain user is often the best reader.
+- **No orphan capabilities**: every capability anchors on an LE public key; every write capability's guard states its effect and its approval requirement.
+
+As-built: `scenarios/bizagentbench/` models 601 dataset capabilities this way (`sources/configs/DLR/typed_services.yaml` + `psp.yaml`).
+
 ## 2. The yaml, field by field
 
 File location: `scenarios/<scenario>/sources/configs/DLR/{db}.yaml` (one per database; within a paradigm, databases merge into the same store).
@@ -159,6 +191,17 @@ pas_relations:
   S: 1 set contains N cards
 ```
 
+Action-bearing sources add a **capability block on the LE** (§1.7.2); record-only sources omit it:
+
+```yaml
+capabilities:
+- name: propose_dated_collateral        # the business action (dataset vocabulary)
+  kind: write                           # read | write
+  anchor: {param: case_id, role: primary}   # the caller's key — an LE public-face name
+  guard: 'actions: repay / pledge / release / pay_bill; checks actual records for eligibility, coverage, cash and timing; local legality does not prove the commercial objective; portal approval and execute_request required'
+  source: DIVERSE-dated_collateral     # the document constraining this action
+```
+
 ### Field traps
 
 | Field | Rule | The pit actually stepped in |
@@ -171,6 +214,9 @@ pas_relations:
 | `description` (file head, top-level) | write the **business semantics** (what domain this database is, which business objects it has) — **not modeling meta-notes** ("N PEs into M LEs" belongs in the scenario README) | case notes live in `scenarios/<name>/README.md` |
 | `description` (LE) | must be **rich** (key field names + business semantics + example names), **in English** | a 3-word description gets drowned by other databases in vector space → the wrong database is routed to |
 | `description` (PE attribute) | public columns = **business semantics**; non-public columns = the dataset's original description text | — |
+| `capabilities[].anchor.param` | must be an **LE public-face name** (`case_id` / `record_id` / `portfolio_id`) | binding an action to a physical column or an internal ad-hoc id leaves the agent with no lawful entry point |
+| `capabilities[].guard` | states the **effect + preconditions + approval** in business terms; include “local legality does not prove the objective” where true | a guard that only says “writes the record” invites unapproved or wrong-objective execution |
+| `capabilities[].source` | a **real dataset document id**; the document is the constraint layer | a fabricated or missing source turns the action into folklore |
 
 > **The writing discipline (parallel to "never above your level")**: L1 writes **business semantics only** — not question-level conventions (§4), and not **modeling meta-notes** (this document is the spec; "how this database was abstracted" belongs in the scenario README: `scenarios/<name>/README.md`).
 
@@ -313,6 +359,9 @@ npx tsx src/verify/precheck.ts                # tool surface is up
 [ ] Are LE descriptions rich enough? (≥ key field names + business semantics; 3-5 words is not enough) English? Example names exhaustive?
 [ ] Is every column a db.table.col and unquoted?
 [ ] Are ids globally unique? (the 2.0 loader has no collision interception; same names merge silently)
+[ ] Does every action-bearing LE carry its capabilities (name / kind / anchor / guard / source)?
+[ ] Is each capability's anchor an LE public-face key, and does each write guard state effect + preconditions + approval?
+[ ] Does every capability cite a real dataset document?
 ```
 
 ## 8. Common errors and their consequences (a severity view; rule definitions in §3.2)

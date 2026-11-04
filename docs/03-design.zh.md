@@ -120,6 +120,38 @@ R: { kind: unwind, pattern: '{side}_player_{slot}', side: [home, away], slot: ['
 
 建模记录与四条可达性实测：[scenarios/cloudopsbench/modeling-plan.zh.md](../scenarios/cloudopsbench/modeling-plan.zh.md) §2.5。
 
+#### 1.7.2 动作面：LE 上的能力（有动作的数据源）
+
+数据源不总是“读表”：业务系统在同一批对象上还暴露**动作**（pay / pledge / release / claim / settle）。`dlr` 形态把动作建模为**挂在 LE 上的能力（capabilities）**——不是额外的 LE，也不是第三种 mapping type。记录源与动作源共用一套模型；纯记录源不带 capability 块。
+
+能力是一份**动作契约**，用业务语言写：
+
+| 字段 | 含义 |
+|---|---|
+| `name` | 业务动作名（数据集自己的词汇，如 `propose_dated_collateral`） |
+| `kind` | `read`（查询）或 `write`（改状态） |
+| `anchor.param` | 调用方传入的键——**LE public 面的名字**（`case_id` / `record_id` / `portfolio_id`），绝不是物理列或内部临时 id |
+| `guard` | 动作改什么、前置条件是什么：允许的子动作、检查哪些实际记录（资格/覆盖/现金/时点）、明确写“本地合法 ≠ 业务目标达成”，以及审批/执行要求 |
+| `source` | 约束该动作的数据集文档（文档是约束层；能力引用它，agent 去读它） |
+
+```yaml
+capabilities:
+- name: propose_dated_collateral
+  kind: write
+  anchor: {param: case_id, role: primary}
+  guard: 'actions: repay / pledge / release / pay_bill; checks actual records for eligibility, coverage, cash and timing; local legality does not prove the commercial objective; portal approval and execute_request required'
+  source: DIVERSE-dated_collateral
+```
+
+纪律：
+
+- **建业务动作，不建 HTTP endpoint**：接口的线上细节留在数据集文档里；L1 只承载业务契约（做什么、用什么键、查什么、要什么审批）。
+- **L1 是翻译层**：业务用户知道字段和检查方式，不知道哪个接口返回、在哪张表——这正是 L1 承载的映射（public 面写业务名，IT 标识只出现在 physical 映射里）。
+- **结构化 / API / 文档是谱系不是硬分界**：同一业务事实可能同时落在表、接口与文档上；各自建模为 LE 的面，把动作挂到 LE。不要假设业务用户与模型之间存在语义 gap——金融领域里业务用户往往是最好的读者。
+- **没有孤儿能力**：每个能力锚在 LE 的 public 键上；每个 write 能力的 guard 写清效果与审批要求。
+
+as-built：`scenarios/bizagentbench/` 用这个方式建模了数据集 601 条能力（`typed_services.yaml` + `psp.yaml`）。
+
 ## 2. yaml 逐字段规范
 
 文件位置：`scenarios/<场景>/sources/configs/DLR/{db}.yaml`（一库一份；范式内各库合并进同一套存储）。
@@ -159,6 +191,17 @@ pas_relations:
   S: 1 set contains N cards
 ```
 
+有动作的数据源在 LE 上再加一块 **capability**（§1.7.2）；纯记录源不写：
+
+```yaml
+capabilities:
+- name: propose_dated_collateral        # 业务动作（数据集词汇）
+  kind: write                           # read | write
+  anchor: {param: case_id, role: primary}   # 调用方传入的键——LE public 面名字
+  guard: 'actions: repay / pledge / release / pay_bill; checks actual records for eligibility, coverage, cash and timing; local legality does not prove the commercial objective; portal approval and execute_request required'
+  source: DIVERSE-dated_collateral     # 约束该动作的数据集文档
+```
+
 ### 字段陷阱
 
 | 字段 | 规则 | 踩过的坑 |
@@ -171,6 +214,9 @@ pas_relations:
 | `description`（文件头，top-level） | 写**业务语义**（这个库是什么领域、有哪些业务对象）——**不写建模元说明**（"N PE 归 M LE"这类归场景 README） | 案例说明见 `scenarios/<名>/README.md` |
 | `description`（LE） | 必须**丰富**（关键字段名 + 业务语义 + 例名），**英文** | 3 词描述在向量空间会被其他库压过 → 走错库 |
 | `description`（PE 属性） | public 列 = **业务语义**；非 public 列 = 数据集描述原文 | — |
+| `capabilities[].anchor.param` | 必须是 **LE public 面名字**（`case_id` / `record_id` / `portfolio_id`） | 绑到物理列或内部临时 id → agent 没有合法入口 |
+| `capabilities[].guard` | 用业务语言写**效果 + 前置条件 + 审批**；适用处写“本地合法 ≠ 目标达成” | 只写“写记录”的 guard 会纵容未审批/错目标执行 |
+| `capabilities[].source` | **真实数据集文档 id**；文档是约束层 | 编造或缺失 source 会让动作变成传说 |
 
 > **写入纪律（与"不越级"并列）**：L1 只写**业务语义**——不写题面口径（§4），也不写**建模元说明**（本文是规范；"这个库怎么抽象的"归场景 README：`scenarios/<名>/README.md`）。
 
@@ -313,6 +359,9 @@ npx tsx src/verify/precheck.ts                # 工具面可用
 [ ] LE description 够丰富吗？（≥ 关键字段名 + 业务语义；3-5 词不够）英文？例名列全？
 [ ] 所有 column 都是 db.table.col 且不带引号吗？
 [ ] id 全局唯一吗？（2.0 载入器无冲突拦截，重名会静默合并）
+[ ] 每个有动作的 LE 都带了能力（name / kind / anchor / guard / source）吗？
+[ ] 每个能力的 anchor 是 LE public 键吗？每个 write 的 guard 写了效果 + 前置 + 审批吗？
+[ ] 每个能力都引用了真实数据集文档吗？
 ```
 
 ## 8. 常见错误与后果（严重度视图；规则定义见 §3.2）
