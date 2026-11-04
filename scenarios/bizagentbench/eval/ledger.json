@@ -2448,11 +2448,12 @@
       "32": {
         "best_checks": "18/19",
         "strict": false,
-        "store": "case_032_v26",
-        "freeze": "5d4976b0",
+        "store": "case_032_v35",
+        "freeze": "4eafa301",
         "failed": [
-          "a.32.reasoning_collection_budget"
-        ]
+          "a.32.reasoning_receipt_calendar"
+        ],
+        "caveat": "v26 同分 18/19（collection_budget）；v35 复跑 18/19（receipt_calendar），再跑 r2=12/19 方差；归档"
       },
       "33": {
         "best_checks": "18/18",
@@ -2570,13 +2571,12 @@
         ]
       },
       "49": {
-        "best_checks": "23/24",
-        "strict": false,
-        "store": "case_049_v31",
-        "freeze": "347b7944",
-        "failed": [
-          "c49_reasoning_fees"
-        ]
+        "best_checks": "24/24",
+        "strict": true,
+        "store": "case_049_v35r2",
+        "freeze": "4eafa301",
+        "failed": [],
+        "caveat": "v35 通知绑定（第二笔分期批准晚于首笔 commit）；strict 收关"
       },
       "50": {
         "best_checks": "16/21",
@@ -2801,6 +2801,72 @@
         "strict": false,
         "failed": [
           "activity1:charges.customer_total_limit"
+        ]
+      }
+    }
+  },
+  "window_v35_evening_2026_11_04": {
+    "note": "v35 evening batch (18:05): 049 strict; 032 18/19 then 12/19 variance; 048 16/21 (best 19/21); 014 retry 39/41 (best 40/41).",
+    "store_base": "TSM Core Service/.store/lance/bizagentbench-v35",
+    "freeze_base": "4eafa301",
+    "cases": {
+      "32": {
+        "checks": "18/19",
+        "goal": false,
+        "process": true,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "a.32.reasoning_receipt_calendar"
+        ]
+      },
+      "48": {
+        "checks": "16/21",
+        "goal": false,
+        "process": false,
+        "protection": false,
+        "strict": false,
+        "failed": [
+          "c48_linked_rights",
+          "c48_linked_match",
+          "c48_reasoning_receipt",
+          "shared.single_final_outcome.terminal_goal",
+          "process.048.disputed_claim_preserved"
+        ]
+      },
+      "49_r2": {
+        "checks": "24/24",
+        "goal": true,
+        "process": true,
+        "protection": true,
+        "strict": true,
+        "failed": []
+      },
+      "32_r2": {
+        "checks": "12/19",
+        "goal": false,
+        "process": true,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "a.32.final_bank_disposition",
+          "a.32.single_principal_owner",
+          "a.32.contract_claim_evidence",
+          "a.32.replacement_cash",
+          "a.32.commercial_application",
+          "a.32.reasoning_receipt_calendar",
+          "shared.single_final_outcome.terminal_goal"
+        ]
+      },
+      "14_r2": {
+        "checks": "39/41",
+        "goal": false,
+        "process": true,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "joint.fee_and_reserve",
+          "activity1:invoices.final_individual_discharge"
         ]
       }
     }
