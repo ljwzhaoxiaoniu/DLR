@@ -2,7 +2,7 @@
 
 > 更新：2026-11-04 凌晨 ｜ 只记录每题**最佳有效成绩**（strict 优先，否则最高 checks）；无效/排除轮单列。
 > 机器可读记录：[eval/ledger.json](eval/ledger.json) ｜ 跑档：`results/dlr-full/`（本地留档，gitignored）
-> **最终 best-practice store**：`TSM Core Service/.store/lance/bizagentbench-v34`（freeze `4eafa301`，entities 687 / consensus 191 / sop 50）——含 L1 字段映射、013 scrub、每题最佳节拼接。
+> **最终 best-practice store**：`TSM Core Service/.store/lance/bizagentbench-v35`（freeze `92d551b9+l3opt8`，entities 687 / consensus 191 / sop 50）——v34 全量 + 8 个失败驱动 L3 节优化（003/004/005/006/010/013/014/049；尚未复跑验证）。
 
 **指标口径**（与上游 `README.md` 一致）：
 
@@ -73,19 +73,19 @@
 
 | 项 | 值 |
 |---|---|
-| store | `TSM Core Service/.store/lance/bizagentbench-v34` |
-| freeze | `4eafa301`（`eval/freeze.v34.json`） |
+| store | `TSM Core Service/.store/lance/bizagentbench-v35` |
+| freeze | `92d551b9+l3opt8`（`eval/freeze.v35.json`） |
 | 规模 | entities 687 · consensus 191 · sop 50 |
 | Embedding | BAAI/bge-base-en-v1.5（768 维，HF 缓存 ONNX 快照）；模型与 store 同源 |
-| 覆盖 | L1 字段映射（031 托管/分账、commission_rate↔commission_bp）；013 scrub；008/011/048/049 取历史最佳节；035–050 首跑+两轮；L2 189–192 |
-| 说明 | 最终单一 best-practice store；per-case best 与本节文本一一对应。001–006/031 为早期/预跑结果，不在当前底座，待各 1 轮补验 |
+| 覆盖 | v34（L1 字段映射、013 scrub、历史最佳节拼接）+ v35 八节失败驱动优化：003 调度通知后版、004 用途匹配、005 争端登记全组件、006 连续底仓先行出资、010 早价补外币、013 零回收亦登记、014 零分钟义务当刻支付、049 经济额度分配与到账回执 |
+| 说明 | 最终单一 best-practice store；表一最佳成绩锚定于此前的各节文本（v35 八节尚未复跑）。001–006/031 为早期/预跑结果，不在当前底座 |
 
 ## 三、复现
 
 ```bash
-# 起桥（v34 / 28799）
+# 起桥（v35 / 28799）
 cd "D:/Code_Proj/DLR Proj/scenarios/bizagentbench"
-TSM_STORE_DIR="D:/Code_Proj/DLR Proj/TSM Core Service/.store/lance/bizagentbench-v34" \
+TSM_STORE_DIR="D:/Code_Proj/DLR Proj/TSM Core Service/.store/lance/bizagentbench-v35" \
 BIZ_DLR_PORT=28799 bash eval/start_bridge.sh
 
 # 跑单题
@@ -121,9 +121,8 @@ BIZ_DLR_PORT=28799 bash eval/run_dlr_pilot.sh results/dlr-full/<out-dir> <题号
 
 ## 六、剩余工作
 
-1. **001–006 / 031 在当前底座复跑**（7 题）——补「当前底座 strict」口径；001–005 只有早期预跑，031 冻结态 best 为 v29 5 G。
-2. **013 在 scrub 后复跑**（1 题，含在 v33/v34 验证里）。
-3. **有希望 strict 的稳定单/双点**：013（C/D）、014（joint fee + discharge）、032（collection budget）、048（claim preserved）、049（fees）——各 1 条精确口径 + 1 轮。
-4. **中等**：010（floors）、011（joint/group）、031（custody 链）。
-5. **方差/多点，暂不追**：008（16 轮、失败模式漂移）、050（多点结构）。
-6. **v34 已完成**：L1 字段映射、013 scrub、008/011/048/049 历史最佳节拼接（050 保持），已 freeze `4eafa301`。
+1. **v34 验证窗口（2026-11-04 12:05–13:45）**：14 题；001/002 strict，其余未满；逐题失败点记于 `eval/ledger.json` 的 `window_v34_2026_11_04`。
+2. **v35 已优化八节**（003/004/005/006/010/013/014/049）：每条对应实测失败根因（003 后版调度通知、004 用途匹配、005 全组件登记、006 底仓先行出资、010 早价补外币、013 零回收亦登记、014 零分钟义务当刻支付、049 经济额度分配）；**尚未复跑**——本轮按「直接优化、不强制重跑」口径。
+3. **验证建议（待确认）**：上述八题各 1 轮验证 v35 节效果；strict 即收关，不 strict 归档 best。
+4. **未追**：011（同失败集稳定、无新手段）、031/032/048（多点/方差）、008/050（已归档）。
+5. **底座口径**：001/002 已在窗口 strict；003–006 与 010/013/014/049 的最佳成绩仍锚定此前各节文本（v35 节待验证）。

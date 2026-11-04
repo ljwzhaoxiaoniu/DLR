@@ -1,6 +1,6 @@
 {
   "scenario": "bizagentbench",
-  "updated": "2026-11-03",
+  "updated": "2026-11-04",
   "dataset": {
     "name": "BizAgentBench",
     "local_copy": "D:/Code_Proj/Dataset/BizAgentBench-main",
@@ -2592,6 +2592,185 @@
           "c50_linked_accounting",
           "c50_linked_match",
           "c50_reasoning_payroll",
+          "shared.single_final_outcome.terminal_goal"
+        ]
+      }
+    }
+  },
+  "window_v34_2026_11_04": {
+    "note": "v34 validation window (12:05-13:45, 2026-11-04). Scores are validation runs, not bests; bests remain in final_results/sweep. All non-strict failures were diagnosed the same day; eight sections optimized into v35 (see freeze.v35.json).",
+    "store_base": "TSM Core Service/.store/lance/bizagentbench-v34",
+    "freeze_base": "4eafa301",
+    "cases": {
+      "1": {
+        "checks": "37/37",
+        "goal": true,
+        "process": true,
+        "protection": true,
+        "strict": true,
+        "failed": []
+      },
+      "2": {
+        "checks": "85/85",
+        "goal": true,
+        "process": true,
+        "protection": true,
+        "strict": true,
+        "failed": []
+      },
+      "3": {
+        "checks": "45/46",
+        "goal": false,
+        "process": true,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "reconciliation:intent"
+        ]
+      },
+      "4": {
+        "checks": "55/56",
+        "goal": true,
+        "process": false,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "restrictions:lot_eligibility"
+        ]
+      },
+      "5": {
+        "checks": "47/50",
+        "goal": false,
+        "process": true,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "treasury:closure.terminal_goal",
+          "disputes:closure.terminal_goal",
+          "disputes:component_loss"
+        ]
+      },
+      "6": {
+        "checks": "37/39",
+        "goal": false,
+        "process": false,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "joint.continuous_operating_floors",
+          "activity1:allocation.minimum_principal_and_fee"
+        ]
+      },
+      "10": {
+        "checks": "34/39",
+        "goal": false,
+        "process": true,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "activity1:payments.exact_and_on_time",
+          "activity1:cash.reserve_and_no_foreign_surplus.final_foreign_surplus",
+          "activity1:process.single_completion.terminal_goal",
+          "activity2:shared.single_completed_outcome.terminal_goal",
+          "joint.single_completed_outcome.terminal_goal"
+        ]
+      },
+      "11": {
+        "checks": "36/42",
+        "goal": false,
+        "process": false,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "joint.exact_capital",
+          "joint.fee_and_reserve",
+          "joint.continuous_operating_floors",
+          "activity2:participant.A",
+          "activity2:participant.B",
+          "activity2:group.merchant_G1"
+        ]
+      },
+      "13": {
+        "checks": "45/47",
+        "goal": false,
+        "process": true,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "activity1:loss.actual_recoveries.C",
+          "activity1:loss.actual_recoveries.D"
+        ]
+      },
+      "14": {
+        "checks": "39/41",
+        "goal": false,
+        "process": true,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "activity1:invoices.original_due_amounts",
+          "activity1:external.correct_source_recipient_and_deadline"
+        ]
+      },
+      "31": {
+        "checks": "12/18",
+        "goal": false,
+        "process": true,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "a.31.bank_results_final",
+          "a.31.diversity_rights",
+          "a.31.diversity_ledger",
+          "a.31.diversity_evidence",
+          "a.31.reasoning_custody_deadlines",
+          "shared.single_final_outcome.terminal_goal"
+        ]
+      },
+      "32": {
+        "checks": "12/19",
+        "goal": false,
+        "process": true,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "a.32.final_bank_disposition",
+          "a.32.single_principal_owner",
+          "a.32.contract_claim_evidence",
+          "a.32.replacement_cash",
+          "a.32.commercial_application",
+          "a.32.reasoning_receipt_calendar",
+          "shared.single_final_outcome.terminal_goal"
+        ]
+      },
+      "48": {
+        "checks": "11/21",
+        "goal": false,
+        "process": false,
+        "protection": false,
+        "strict": false,
+        "failed": [
+          "c48_goal",
+          "c48_principal",
+          "c48_deadlines",
+          "c48_linked_rights",
+          "c48_linked_match",
+          "c48_reasoning_rights",
+          "c48_reasoning_receipt",
+          "shared.single_final_outcome.terminal_goal",
+          "shared.unapproved_execution_attempt",
+          "process.048.disputed_claim_preserved"
+        ]
+      },
+      "49": {
+        "checks": "21/24",
+        "goal": false,
+        "process": true,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "c49_linked_match",
+          "c49_reasoning_net",
           "shared.single_final_outcome.terminal_goal"
         ]
       }

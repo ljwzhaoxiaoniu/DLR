@@ -1,0 +1,28 @@
+{
+  "freeze_id": "92d551b9+l3opt8",
+  "git_commit": "92d551b9",
+  "frozen_at": "2026-11-04T13:45:00+0800",
+  "files": {
+    "sources/configs/DLR/operations_desk.yaml": "49b9476f6763f6af56125bf529dffdfbbc3d4066736583c1e240a703cbf2a43c",
+    "sources/configs/DLR/typed_services.yaml": "bea5079e3434b7af347daa26c0d3dcefb92915a54938b4bea23bf964e783a0b0",
+    "sources/configs/DLR/psp.yaml": "a6e7ad7f64a7ad6a212f84d2f221962e2ae3458b89ae02e140c0d81443f3aea6",
+    "sources/consensus/shared.jsonl": "f57fabc4ba1c5625ba883c2c5533bf3e64e550a5e89867aad7a21b84f4e69f87",
+    "sources/consensus/operations_desk.jsonl": "540b9ba65ef0d7d4e4a084f34b7581f875e4327a4953ff714df3cbe5aed421db",
+    "sources/consensus/typed_services.jsonl": "7776f291a534e7da66c135abfb5590dbe2b6aa7fe3e78dc57f397efba80d07c2",
+    "sources/consensus/psp.jsonl": "0865f317ed94f43d1da0660451b75aad67340109b4a1d2f931caa8f8195d526c",
+    "sources/sop.md": "da8b1e0649fe005863c6603a02c207728842ad5df531888c8e463eb01661f7b7"
+  },
+  "model": {
+    "name": "BAAI/bge-base-en-v1.5",
+    "path": "C:/Users/user/.cache/huggingface/hub/models--BAAI--bge-base-en-v1.5/snapshots/a5beb1e3e68b9ab74eb54cfd186867f64f240e1a",
+    "onnx_sha256": "9bc579acdba21c253c62a9bf866891355a63ffa3442b52c8a37d75b2ccb91848"
+  },
+  "store": {
+    "path": "TSM Core Service/.store/lance/bizagentbench-v35",
+    "entities": 687,
+    "consensus": 191,
+    "sop": 50
+  },
+  "derivation": "v35 = v34 store copied unchanged (entities 687 / consensus 191), with only the L3 SOP table rebuilt from the optimized sop.md. Eight per-question sections received failure-driven rules: 003 (dispatch-notice later revision must be traced), 004 (allocation lot must permit the instruction purpose), 005 (register every component not covered by a SETTLED entry at filing), 006 (check the continuous floor before disbursing; deliver capital first when opening cash equals the floor), 010 (secure the low-end FX shortfall at the early rate before confirmation), 013 (record recovery for every insured loss, including zero), 014 (minute-zero invoices/obligations paid at minute zero), 049 (shared economical quota allocation across both invoices; reconcile delivery receipt).",
+  "note": "Optimizations authored from the v34 validation window; they are NOT yet re-run. Per-case best results remain anchored to earlier stores (see DETAIL.md / ledger.json). No instance values, gold, verifier changes or answer leakage."
+}

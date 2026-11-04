@@ -343,3 +343,31 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 3. 根因是「人写不清楚 workflow」——agent 无法替代人做未定义的路径裁决。
 4. 面向未来：语义化 trace（对象/动作/参数/guard/回执）可让 agent 归纳 canonical path，实现**自演进**；当前只能归档。
 5. **顶配模型判断（未跑对照）**：会降低路径选择方差、减少 P/F 失误，但不会替人定义不存在的 canonical path；论文 Opus 5 strict 64.0 也说明难题仍会失败。008 不做顶配对照跑。
+
+## 十五、2026-11-04 下午 · v34 验证窗口与 v35 八节优化
+
+**v34 窗口（12:05–13:45）**：14 题；001/002 strict，其余未满。分数与失败项已记入 `eval/ledger.json`（`window_v34_2026_11_04`）。窗口内不改动、不中途修复。
+
+| 题 | 窗口 | 失败项 | 根因（实测） |
+|---|---|---|---|
+| 003 | 45/46 | reconciliation:intent | 付款方调度通知写明后版（revision 2），仍按当前 READY 第 1 版分配；未对 REM-6/7 追发 |
+| 004 | 55/56 | restrictions:lot_eligibility | 4 笔用途付款从用途集不含该用途的已释放 lot 出资（LOGISTICS/INSURANCE/CUSTOMS/PAYROLL） |
+| 005 | 47/50 | disputes:component_loss + 两处 terminal | LINE-3 未登记进争议（指望商户退款），该退款 minute 35 FAILED，补登记被拒（COMPONENT_NOT_REGISTERED）后升级 |
+| 006 | 37/39 | joint.continuous_operating_floors + allocation.minimum_principal_and_fee | 供应商账单在出资前先付，钱包现金 10000→0 低于连续底仓 10000 |
+| 010 | 34/39 | payments.exact_and_on_time + final_foreign_surplus + 三处 terminal | 在途交割落在区间低端，缺口 €100 只能按晚价 1.3 购汇（$130），付完 $650 后余 $30 < $40 底仓 → 升级 |
+| 013 | 45/47 | loss.actual_recoveries.C/D | C/D 外部回收为零，未做 record_recovery（只登记了有回收的 A/B） |
+| 014 | 39/41 | invoices.original_due_amounts + external.correct_source_recipient_and_deadline | AB_EARLY/BC_EARLY 与 BROKER 均 minute 0 到期，实际 minute 1 才付；后续清算不能追溯 |
+| 049 | 21/24 | c49_linked_match + c49_reasoning_net + terminal | 经济额度被大额发票（组件商）先占，Harbor 仅付 4000+1000=5000/6000；且未做交付回执（reconcile_delivery）→ 升级 |
+
+**v35 优化**（八节，全部为业务语言、无实例值/答案泄露；见 commit `92d551b9`）：
+
+1. 003 §2 + Wrong turn：逐份核对 payer dispatch notice；后版必须追发、等 trace delay、按返回的该版分配。
+2. 004 §7 + Wrong turn + Check：每笔用途付款逐 lot 校验用途集，release 不放宽用途。
+3. 005 §7 + Wrong turn：立案时按「未由 SETTLED 补偿覆盖」登记全部组件，不依赖计划中的商户退款。
+4. 006 §7：任何出账前先算付后现金是否仍高于连续底仓；开账现金等于底仓时先出资再付。
+5. 010 §4 + Wrong turn：按交割区间低端定价；晚价购汇会击穿底仓时，趁早价窗口补足，余量按 bid 卖出。
+6. 013 Check：每个 insured loss 都要有 recovery record，零回收也要显式登记零。
+7. 014 Check：执行前列出所有 minute 0 到期的发票与外部义务，当刻足额支付。
+8. 049 §3 + Check：经济额度跨两张发票共享，先决定谁用额度（大额走保证路线、截止紧的留经济路线）；到账后核对交付回执。
+
+**v35 store**：`TSM Core Service/.store/lance/bizagentbench-v35`（复制 v34 后仅重建 sop 表；entities 687 / consensus 191 / sop 50），freeze `92d551b9+l3opt8`（`eval/freeze.v35.json`）。**八节尚未复跑**（本轮口径：直接优化、不强制重跑）；表一最佳成绩仍锚定此前各节文本。未追：011（同失败集稳定、无新手段）、031/032/048（多点/方差）、008/050（已归档）。
