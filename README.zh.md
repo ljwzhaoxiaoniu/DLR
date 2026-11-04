@@ -62,6 +62,12 @@
 
 *Strict = G∧P∧F（业务结果、过程、保护全过），全 50 题。基线：基准报告（arXiv:2610.20424）每题 3 轮均值、裸模型；我方：DeepSeek-V4.1-Flash + TSM+DLR——每题最佳有效轮（assisted：DLR 工具替代数据集知识工具；模拟器、记录/动作工具与 verifier 不变）。44/50 strict（88%），G/P/F 44/48/49，IF 4%。agent 行为方差大（轮次间 5–8 个 check），所以这是最佳有效轮，不是稳定率。*
 
+![BizAgentBench —— 五维全字段：公开裸模型 vs 我方](assets/charts/bizagentbench-five-field.svg)
+
+![BizAgentBench —— 我方 vs 各维最强基线](assets/charts/bizagentbench-five-vs-best.svg)
+
+*按列读全字段：G 与 Strict 我方大幅领先；P 与 IF 与最强基线持平；F 上最强基线仍高 2 点（100 vs 98）。基线是裸模型，我方是 assisted + 逐题最佳——这是量级参照，不是同模型消融。*
+
 | 运行 | 结果 | 备注 |
 |---|---|---|
 | 全 50 题 | **strict 44/50（88%）**——G 44 · P 48 · F 49 · IF 4% | 每题最佳有效轮 · L3 经 `dlr_search_sop` 交付 |

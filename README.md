@@ -62,6 +62,12 @@ Three external benchmarks, all run end-to-end under this architecture (every cas
 
 *Strict = G∧P∧F (the business result, the process and the protection all pass) on all 50 cases. Baselines: the benchmark report (arXiv:2610.20424), 3-round means of bare models; ours: DeepSeek-V4.1-Flash + TSM+DLR — best valid run per case (assisted: DLR tools replace the dataset's knowledge tools; the simulator, record/action tools and verifier are unchanged). 44/50 strict (88%), G/P/F 44/48/49, IF 4%. Agent behavior variance is large (5–8 checks across runs), so the number is a best valid run, not a stable rate.*
 
+![BizAgentBench — five dimensions, published baselines vs ours](assets/charts/bizagentbench-five-field.svg)
+
+![BizAgentBench — ours vs the strongest published baseline per metric](assets/charts/bizagentbench-five-vs-best.svg)
+
+*The full field reads by column: on G and Strict ours is far ahead; P and IF are ties with the strongest baseline; on F the best baseline keeps a 2-point edge (100 vs 98). Baselines are bare models; ours is assisted and per-case best — a magnitude reference, not a same-model ablation.*
+
 | Run | Result | Notes |
 |---|---|---|
 | All 50 cases | **strict 44/50 (88%)** — G 44 · P 48 · F 49 · IF 4% | best valid run per case · L3 delivered by `dlr_search_sop` |
