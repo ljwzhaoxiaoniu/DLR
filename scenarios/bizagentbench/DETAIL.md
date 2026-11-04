@@ -3,6 +3,7 @@
 > 更新：2026-11-04 凌晨 ｜ 只记录每题**最佳有效成绩**（strict 优先，否则最高 checks）；无效/排除轮单列。
 > 机器可读记录：[eval/ledger.json](eval/ledger.json) ｜ 跑档：`results/dlr-full/`（本地留档，gitignored）
 > **最终 best-practice store**：`TSM Core Service/.store/lance/bizagentbench-v35`（**freeze 只固定 L1/L2：`4eafa301`**；L3 按题拼接、不进 freeze；entities 687 / consensus 191 / sop 50）——v34 全量 + 8 个失败驱动 L3 节优化（003/004/005/006/010/013/014/049；尚未复跑验证）。
+> **评价口径**：目标 = 三层建模的最佳实践 + 最佳有效成绩；**可复现 = 同一 L1/L2 freeze 下可重建并跑出同档，不要求逐轮复现**；方差如实记录（best + range），结果真实有效即可。
 
 **指标口径**（与上游 `README.md` 一致）：
 
