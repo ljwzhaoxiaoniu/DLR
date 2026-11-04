@@ -1,8 +1,8 @@
 # BizAgentBench · 最终结果（按题号）
 
-> 更新：2026-11-03 13:50 ｜ 只记录每题**最佳有效成绩**（strict 优先，否则最高 checks）；无效/排除轮单列。
+> 更新：2026-11-04 凌晨 ｜ 只记录每题**最佳有效成绩**（strict 优先，否则最高 checks）；无效/排除轮单列。
 > 机器可读记录：[eval/ledger.json](eval/ledger.json) ｜ 跑档：`results/dlr-full/`（本地留档，gitignored）
-> 最终 best-practice store：`TSM Core Service/.store/lance/bizagentbench-v21`（freeze `73e7889c`，entities 687 / consensus 187 / sop 50）
+> 当前 best-practice store：`TSM Core Service/.store/lance/bizagentbench-v32`（freeze `02b80d7f`，entities 687 / consensus 191 / sop 50）；v33 = v32 + 013 scrub（待建），v34 = 每题最佳节拼接（待建）
 
 **指标口径**（与上游 `README.md` 一致）：
 
@@ -14,63 +14,78 @@
 | Strict | G ∧ P ∧ F 全过（本题表一“strict”列） |
 | IF · Intermediate failure | `not (P ∧ F)`：过程或保护要求失败的比例（与 G 是否达成无关） |
 
-## 一、最终结果（001–031）
+## 一、最终结果（001–050）
 
 | 题 | 最佳 | strict | store / freeze | 最佳轮失败项 | 备注 |
 |---|---|---|---|---|---|
-| 001 | **37/37** | ✅ | v1 预跑（非冻结） | — | assisted 预跑；冻结态复跑待做 |
-| 002 | **85/85** | ✅ | v1 预跑（非冻结） | — | 同上 |
-| 003 | **50/50** | ✅ | v1 预跑（非冻结） | — | 同上 |
-| 004 | **58/58** | ✅ | v1 预跑（非冻结） | — | 同上 |
-| 005 | **46/46** | ✅ | v1 预跑（非冻结） | — | 同上 |
-| 006 | **39/39** | ✅ | v1 / `ff3663ec` | — | 3 有效轮 33/39、**39/39**、36/39（strict 1/3） |
-| 007 | **37/39** | ❌ | v1 / `ff3663ec` | cargo A、calendar EUR | best-3 37/36/30，均值 34.33；首跑 25 excluded |
-| 008 | **43/44** | ❌ | v3 / `6f3a3102`（v9 同分 / `faaa7cc1`） | `activity2:NEW.actual_exact_timely` | v10 42/44、v7 41/44、v3c 38、v3d 37、v5 36、v2 34、clean 33；v2b/v3-first/v4 排除 |
-| 009 | **41/42** | ❌ | v3 / `6f3a3102` | `activity2:seller.B` | v6 40/42；v9 24/42 `too_many_errors` 排除 |
-| 010 | **37/39** | ❌ | v21a2 / `73e7889c` | P: joint floors、continuous reserve | +2（best 35/39） |
-| 011 | **36/42** | ❌ | v21a2 / `73e7889c` | G: joint capital/fee、participant A/B、merchant G1；P: joint floors | +3（best 33/42） |
-| 012 | **38/38** | ✅ | v3 / `6f3a3102` | — | 首跑 strict |
-| 013 | **41/47** | ❌ | v21a2 / `73e7889c` | G: retained indemnity EW/PW、recoveries A-D | 同分（v10/v11 同分） |
-| 014 | **38/41** | ❌ | v3 / `6f3a3102` | G: invoice original due、external source/recipient/deadline、SERVICE exact/timely | v21a2 37/41（−1，单轮）；v10/v11 35/41 |
-| 015 | **42/42** | ✅ | v21a2 / `73e7889c` | — | **strict 翻盘**（best 41/42） |
-| 016 | **40/40** | ✅ | v9 / `faaa7cc1` | — | v5 39/40；v3 29/40 buggy 排除 |
-| 017 | **32/32** | ✅ | v21a2 / `73e7889c` | — | **strict 翻盘**（best 31/32）；a1 29/32 |
-| 018 | **30/30** | ✅ | v20a1 / `8992a5aa` | — | **strict 翻盘**（AGENTS-only，best 29/30） |
-| 019 | **34/35** | ❌ | v21a2 / `73e7889c` | P: `link.quote_version_refresh` | 回到 best（a1 28/35）；v14 同分 |
-| 020 | **29/29** | ✅ | v17 / `b91c7bcc` | — | v15 首跑 24/29 |
-| 021 | **29/30** | ❌ | v21a2 / `73e7889c` | G: `capture.FIRST` | +3（best 26/30） |
-| 022 | **30/30** | ✅ | v15 / `082bfe9f` | — | 首跑 strict |
-| 023 | **32/32** | ✅ | v17 / `b91c7bcc` | — | v15 31/32（仅 courier） |
-| 024 | **33/33** | ✅ | v18 / `bcca13d2` | — | v17 32/33（费用 8000 > 7500） |
-| 025 | **28/29** | ❌ | v21a2 / `73e7889c` | G: `billing.minimum_total_cost` | 同分（v18/v19 同分） |
-| 026 | **31/31** | ✅ | v21a2 / `73e7889c` | — | **strict 翻盘**（best 30/31） |
-| 027 | **31/34** | ❌ | v21a2 / `73e7889c` | G: `capture.FIRST`、payroll N1/L2 | +4（best 27/34） |
-| 028–030 | — | — | — | — | 未跑 |
-| 031 | **18/18** | ✅ | 预跑（`0b8e2cd7`，非冻结） | — | PSP；冻结态复核待做 |
-
-- store 全路径：`TSM Core Service/.store/lance/bizagentbench-<v>`；001–005/031 为冻结前预跑，仅作预跑记录。
-- 032–050（PSP 扩展）尚未跑。
-- 判分：上游确定性 G/P/F；strict = G/P/F 全过；**strict 一次即 pass**。无效轮（bug/端口/`too_many_errors`）不混入最佳。
-- 每题完整尝试链（含 store/freeze/artifact/failed）见 `eval/ledger.json`；过程记录见 `PROGRESS.md`。
-- **得分率（checks 通过率，strict 之外的连续指标）**：已覆盖 28 题 case-average **97.6%**（pooled 97.5%）；冻结 desk 006–027 为 **96.9%**（pooled 96.6%）。≥90% 的题 26/28，≥95% 的题 22/28；最低为 011 85.7%、013 87.2%、027 91.2%、014 92.7%、007 94.9%。**strict 只差最后一两个 check，不代表建模收益小**；论文未报裸模型得分率，暂无法直接算“90 vs 60”的差值。
+| 1 | **37/37** | ✅ | v1 预跑（非冻结） | — |  |
+| 2 | **85/85** | ✅ | v1 预跑（非冻结） | — |  |
+| 3 | **50/50** | ✅ | v1 预跑（非冻结） | — |  |
+| 4 | **58/58** | ✅ | v1 预跑（非冻结） | — |  |
+| 5 | **46/46** | ✅ | v1 预跑（非冻结） | — |  |
+| 6 | **39/39** | ✅ | v1 / `ff3663ec` | — |  |
+| 7 | **39/39** | ✅ | case_007_v25 / `021c7717` | — |  |
+| 8 | **43/44** | ❌ | case_008_v9 / `faaa7cc1` | joint.fee_and_reserve | 16 轮；方差主导，未归一 |
+| 9 | **42/42** | ✅ | case_009_v24 / `530cf148` | — |  |
+| 10 | **37/39** | ❌ | case_010_a2 | joint.continuous_operating_floors, activity1:cash.reserve_and_no_foreign_surplus.continuous_reserve |  |
+| 11 | **36/42** | ❌ | case_011_a2 | joint.exact_capital, joint.fee_and_reserve, joint.continuous_operating_floors, activity2:participant.A, activity2:participant.B |  |
+| 12 | **38/38** | ✅ | case_012_v3 / `6f3a3102` | — |  |
+| 13 | **45/47** | ❌ | case_013_v29 / `118b0fdf` | activity1:loss.actual_recoveries.C, activity1:loss.actual_recoveries.D |  |
+| 14 | **39/41** | ❌ | case_014_v29 / `118b0fdf` | joint.fee_and_reserve, activity1:invoices.final_individual_discharge |  |
+| 15 | **42/42** | ✅ | case_015_a2 | — |  |
+| 16 | **40/40** | ✅ | case_016_v9 / `faaa7cc1` | — |  |
+| 17 | **32/32** | ✅ | case_017_a2 | — |  |
+| 18 | **30/30** | ✅ | case_018_a1 | — |  |
+| 19 | **35/35** | ✅ | case_019_v23 / `985c683d` | — |  |
+| 20 | **29/29** | ✅ | case_020_v17 / `b91c7bcc` | — |  |
+| 21 | **30/30** | ✅ | case_021_a3 | — |  |
+| 22 | **30/30** | ✅ | case_022_v15 / `082bfe9f` | — |  |
+| 23 | **32/32** | ✅ | case_023_v17 / `b91c7bcc` | — |  |
+| 24 | **33/33** | ✅ | case_024_v18 / `bcca13d2` | — |  |
+| 25 | **29/29** | ✅ | case_025_a3 | — |  |
+| 26 | **31/31** | ✅ | case_026_a2 | — |  |
+| 27 | **34/34** | ✅ | case_027_v25 / `021c7717` | — |  |
+| 28 | **35/35** | ✅ | case_028_v26 / `5d4976b0` | — |  |
+| 29 | **37/37** | ✅ | case_029_v26 / `5d4976b0` | — |  |
+| 30 | **29/29** | ✅ | case_030_v26 / `5d4976b0` | — |  |
+| 31 | **18/18** | ✅ | 预跑 r2（非冻结） / `0b8e2cd7` | — | 冻结态 best = v29 5 G；预跑 strict 仅历史 |
+| 32 | **18/19** | ❌ | case_032_v26 / `5d4976b0` | a.32.reasoning_collection_budget |  |
+| 33 | **18/18** | ✅ | case_033_v30 / `66b2b33d` | — |  |
+| 34 | **16/16** | ✅ | case_034_v26 / `5d4976b0` | — |  |
+| 35 | **17/17** | ✅ | case_035_v30 / `66b2b33d` | — | 首跑/优化轮 |
+| 36 | **16/16** | ✅ | case_036_v30 / `66b2b33d` | — | 首跑/优化轮 |
+| 37 | **18/18** | ✅ | case_037_v32 / `02b80d7f` | — | 首跑/优化轮 |
+| 38 | **19/19** | ✅ | case_038_v32 / `02b80d7f` | — | 首跑/优化轮 |
+| 39 | **17/17** | ✅ | case_039_v30 / `66b2b33d` | — | 首跑/优化轮 |
+| 40 | **16/16** | ✅ | case_040_v30 / `66b2b33d` | — | 首跑/优化轮 |
+| 41 | **19/19** | ✅ | case_041_v30 / `66b2b33d` | — | 首跑/优化轮 |
+| 42 | **17/17** | ✅ | case_042_v31 / `347b7944` | — | 首跑/优化轮 |
+| 43 | **17/17** | ✅ | case_043_v30 / `66b2b33d` | — | 首跑/优化轮 |
+| 44 | **21/21** | ✅ | case_044_v31 / `347b7944` | — | 首跑/优化轮 |
+| 45 | **20/20** | ✅ | case_045_v32 / `02b80d7f` | — | 首跑/优化轮 |
+| 46 | **23/23** | ✅ | case_046_v32 / `02b80d7f` | — | 首跑/优化轮 |
+| 47 | **21/21** | ✅ | case_047_v30 / `66b2b33d` | — | 首跑/优化轮 |
+| 48 | **19/21** | ❌ | case_048_v30 / `66b2b33d` | c48_linked_rights, process.048.disputed_claim_preserved | 首跑/优化轮 |
+| 49 | **23/24** | ❌ | case_049_v31 / `347b7944` | c49_reasoning_fees | 首跑/优化轮 |
+| 50 | **16/21** | ❌ | case_050_v32 / `02b80d7f` | c50_goal, c50_linked_accounting, c50_linked_match, c50_reasoning_payroll, shared.single_final_outcome.terminal_goal | 首跑/优化轮 |
 
 ## 二、最终 best-practice store
 
 | 项 | 值 |
 |---|---|
-| store | `TSM Core Service/.store/lance/bizagentbench-v21` |
-| freeze | `73e7889c`（`eval/freeze.v21.json`；commit `73e7889c40175c4d8e42d03843a6f8161cee5375`） |
-| 规模 | entities 687 · consensus 187 · sop 50 |
+| store | `TSM Core Service/.store/lance/bizagentbench-v32` |
+| freeze | `02b80d7f`（`eval/freeze.v32.json`） |
+| 规模 | entities 687 · consensus 191 · sop 50 |
 | Embedding | BAAI/bge-base-en-v1.5（768 维，HF 缓存 ONNX 快照）；模型与 store 同源 |
-| 覆盖 | 已并入 017–027 的全部已验证 L3 修复；v21 新增 SOP 标题编码（题面→节不再被正文稀释）与 017/019 陷阱修正；L1/L2 未变 |
-| 说明 | v21 = v20 + SOP 标题向量重建 + 017 buyer 余额/019 rebind record-id 两处 L3 修复；per-case best 仍保留旧 store 的探索证据，最终以 v21 上的复跑为准 |
+| 覆盖 | 035–050 首跑 + 两轮优化；L1 `pay_bill` 修复（v30）；L2 189–192；v31/v32 的回滚与字段级口径 |
+| 说明 | v33 = v32 + 013 `(EW/PW)` scrub（commit `a07d1925`，待建）；v34 = 每题最佳节拼接（008/011/013/048/049/050 取历史最佳版本），作为最终单一 best-practice store |
 
 ## 三、复现
 
 ```bash
-# 起桥（v21 / 28799）
+# 起桥（v32 / 28799）
 cd "D:/Code_Proj/DLR Proj/scenarios/bizagentbench"
-TSM_STORE_DIR="D:/Code_Proj/DLR Proj/TSM Core Service/.store/lance/bizagentbench-v21" \
+TSM_STORE_DIR="D:/Code_Proj/DLR Proj/TSM Core Service/.store/lance/bizagentbench-v32" \
 BIZ_DLR_PORT=28799 bash eval/start_bridge.sh
 
 # 跑单题
@@ -106,7 +121,9 @@ BIZ_DLR_PORT=28799 bash eval/run_dlr_pilot.sh results/dlr-full/<out-dir> <题号
 
 ## 六、剩余工作
 
-1. 007 / 008 / 009 补跑（2026-11-03 13:50 截止，未 evaluate）。
-2. 028–030（desk）与 032–050（PSP）首跑。
-3. 001–005 / 031 在冻结 store 上复核。
-4. 014 复核 v21a2 的 −1（单轮方差）；其余残余单点按需优化。
+1. **001–006 / 031 在当前底座复跑**（7 题）——补「当前底座 strict」口径；001–005 只有早期预跑，031 冻结态 best 为 v29 5 G。
+2. **013 在 scrub 后复跑**（1 题，含在 v33/v34 验证里）。
+3. **有希望 strict 的稳定单/双点**：013（C/D）、014（joint fee + discharge）、032（collection budget）、048（claim preserved）、049（fees）——各 1 条精确口径 + 1 轮。
+4. **中等**：010（floors）、011（joint/group）、031（custody 链）。
+5. **方差/多点，暂不追**：008（16 轮、失败模式漂移）、050（多点结构）。
+6. **v34 拼接**：008/011/013/048/049/050 取历史最佳节，合并为最终单一 store。
