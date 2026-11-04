@@ -130,6 +130,7 @@ scenarios/bizagentbench/
 ├── results/dlr-full/            # run archives (local, gitignored)
 ├── DETAIL.md                    # per-case ledger (best valid run + remaining checks)
 ├── PROGRESS.md                  # work log / measured lessons
+├── modeling-plan.md (.zh.md)    # as-built modeling record (bilingual pair)
 └── package.json                 # npm packaging (tsm-scenario-bizagentbench)
 ```
 

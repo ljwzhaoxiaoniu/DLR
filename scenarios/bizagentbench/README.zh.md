@@ -130,6 +130,7 @@ scenarios/bizagentbench/
 ├── results/dlr-full/            # 跑档（本地，gitignored）
 ├── DETAIL.md                    # 逐题台账（最佳有效轮 + 剩余检查）
 ├── PROGRESS.md                  # 工作记录 / 实测教训
+├── modeling-plan.md (.zh.md)    # as-built 建模记录（双语一对）
 └── package.json                 # npm 打包（tsm-scenario-bizagentbench）
 ```
 
