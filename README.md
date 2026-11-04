@@ -2,13 +2,13 @@
 
 English | [中文](README.zh.md)
 
-[![BIRD mini-dev · 500/500](https://img.shields.io/badge/BIRD_mini--dev-500%2F500_correct-brightgreen)](#benchmarks) [![Cloud-OpsBench · JRA 753/754](https://img.shields.io/badge/Cloud--OpsBench-JRA_753%2F754_(99.87%25)-brightgreen)](#benchmarks) [![npm](https://img.shields.io/npm/v/dsh-tsm-agent)](https://www.npmjs.com/package/dsh-tsm-agent)
+[![BIRD mini-dev · 500/500](https://img.shields.io/badge/BIRD_mini--dev-500%2F500_correct-brightgreen)](#benchmarks) [![Cloud-OpsBench · JRA 753/754](https://img.shields.io/badge/Cloud--OpsBench-JRA_753%2F754_(99.87%25)-brightgreen)](#benchmarks) [![BizAgentBench · strict 44/50](https://img.shields.io/badge/BizAgentBench-strict_44%2F50_(88%25)-brightgreen)](#benchmarks) [![npm](https://img.shields.io/npm/v/dsh-tsm-agent)](https://www.npmjs.com/package/dsh-tsm-agent)
 
 **DLR (Decoupled Logic Representation)** is an original **data-source-level** semantic modeling paradigm: a two-layer model (**LE** logical entities / **PE** physical views) plus two mechanisms (**ARCS** projection anchoring, **PAS** semantic routing). It decouples the logical concept layer from the physical data layer so an LLM agent can land natural-language questions on relational databases reliably. See [docs/03-design.md](docs/03-design.md).
 
 The project runs DLR inside the **Three-Level Semantic Modeling (TSM)** framework — **L1 `dlr`** (data-source level) / **L2 `consensus`** (domain-consensus level) / **L3 `sop`** (business-logic level). The admission criteria for a piece of knowledge are the governance line. See [docs/02-concept.md](docs/02-concept.md).
 
-A checkout ships **five npm packages** — the semantic service, the dsh bundle, the exam system, and two ready-to-run scenario packages — on top of a pluggable scenario layer:
+A checkout ships **five npm packages** — the semantic service, the dsh bundle, the exam system, and two ready-to-run scenario packages — plus an **in-repo BizAgentBench scenario package** (not yet on npm), on top of a pluggable scenario layer:
 
 | Part · npm | What it is |
 |---|---|
@@ -17,12 +17,13 @@ A checkout ships **five npm packages** — the semantic service, the dsh bundle,
 | `DSH-based Agent Service/dsh-tsm-eval/` · [`dsh-tsm-eval`](https://www.npmjs.com/package/dsh-tsm-eval) | The **exam system**: runs a scenario's exam paper through dsh headless, scores it with `tsm grade`, and emits a replayable report (result + process + session-log forensics) |
 | `scenarios/birdminidev/` · [`tsm-scenario-birdmini`](https://www.npmjs.com/package/tsm-scenario-birdmini) | Scenario package — BIRD mini-dev (11 databases / 500 questions): three-level sources + exam paper + graded results. **500/500 judged correct** (426 matching gold exactly + 74 dataset-defect rulings carried by L3 clauses) |
 | `scenarios/cloudopsbench/` · [`tsm-scenario-cloudopsbench`](https://www.npmjs.com/package/tsm-scenario-cloudopsbench) | Scenario package — Cloud-OpsBench (Kubernetes RCA, 754 cases): three-level sources + the upstream-scorer adapter + graded results. **JRA 753/754 (99.87%)** across all 754 cases |
+| `scenarios/bizagentbench/` · in-repo (npm not yet published) | Scenario package — BizAgentBench (payment operations, 50 long-horizon cases): three-level sources + the DLR retrieval bridge + graded results. **strict 44/50 (88%)** |
 | *Bring your own* | The scenario layer is **pluggable** — point `TSM_SCENARIO` at any package carrying its own three-level sources (and optionally an exam paper). See [docs/04-application.md](docs/04-application.md) for the scenario-switch checklist |
 
 <a id="benchmarks"></a>
 ## Benchmarks
 
-Two external benchmarks, both run end-to-end under this architecture (every case auditable in the ledgers):
+Three external benchmarks, all run end-to-end under this architecture (every case auditable in the ledgers):
 
 **BIRD mini-dev — NL2SQL · 11 databases · 500 questions** · scenario [`birdminidev`](scenarios/birdminidev/)
 
@@ -55,7 +56,18 @@ Two external benchmarks, both run end-to-end under this architecture (every case
 | All 754 cases (100%) | **JRA 753/754 (99.87%)** ✅ · evidence chains fully closed: 740/754 (98.1%) · all six metrics full: 722/754 (95.8%) | process means MC 0.996 / EOC 0.980 · invalid actions 0.8% |
 | Reference — model baselines (the benchmark's own scorer) | best published bare model per metric: CA 0.829 · FA 0.754 · JRA 0.725 · MC 0.708 · EOC 0.659 · ECR 0.382, weighted over all 754 (best JRA: DeepSeek-V4-Flash; best ECR: Qwen3-14B) | scored by the upstream scorer as-is; no manual rulings |
 
-Ledgers, question by question with evidence: [birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md)
+**BizAgentBench — payment operations · 50 long-horizon cases** · scenario [`bizagentbench`](scenarios/bizagentbench/)
+
+![BizAgentBench — strict rate vs published bare models](assets/charts/bizagentbench.svg)
+
+*Strict = G∧P∧F (the business result, the process and the protection all pass) on all 50 cases. Baselines: the benchmark report (arXiv:2610.20424), 3-round means of bare models; ours: DeepSeek-V4.1-Flash + TSM+DLR — best valid run per case (assisted: DLR tools replace the dataset's knowledge tools; the simulator, record/action tools and verifier are unchanged). 44/50 strict (88%), G/P/F 44/48/49, IF 4%. Agent behavior variance is large (5–8 checks across runs), so the number is a best valid run, not a stable rate.*
+
+| Run | Result | Notes |
+|---|---|---|
+| All 50 cases | **strict 44/50 (88%)** — G 44 · P 48 · F 49 · IF 4% | best valid run per case · L3 delivered by `dlr_search_sop` |
+| Reference — published baselines (3-round means, bare models) | best strict 64.0 (Claude Opus 5) · same base model DeepSeek-V4.1-Flash 43.3 | the report's own scorer; no manual rulings |
+
+Ledgers, question by question with evidence: [birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md) · [bizagentbench](scenarios/bizagentbench/DETAIL.md)
 
 ## Table of Contents
 
@@ -163,7 +175,7 @@ A **scenario** is one complete TSM: content lives in `scenarios/<name>/` and is 
 
 Also in the package: `eval/questions.jsonl` (the exam paper — one line per question: `{question, expected, source}`; answer keys come from the L3 clause for the 74 defect-ruled questions, gold otherwise), `results/<run>/` (graded runs), `fixtures/` (truth sets for the verify suite), `DETAIL.md` + `DETAIL/<db>.md` (ledger).
 
-Scenarios in the box — **`birdminidev`**: BIRD mini-dev, 11 databases / 500 questions, all run and judged — **500/500** (✅ 426 + 🔁 74 dataset-defect rulings; zero errors); token median ≈ 55.9k per question (mean 73.3k), ~6 steps / 10 tool calls. **`cloudopsbench`**: Cloud-OpsBench — 754 Kubernetes RCA cases — **JRA 753/754 (99.87%)**. Ledgers: [birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md).
+Scenarios in the box — **`birdminidev`**: BIRD mini-dev, 11 databases / 500 questions, all run and judged — **500/500** (✅ 426 + 🔁 74 dataset-defect rulings; zero errors); token median ≈ 55.9k per question (mean 73.3k), ~6 steps / 10 tool calls. **`cloudopsbench`**: Cloud-OpsBench — 754 Kubernetes RCA cases — **JRA 753/754 (99.87%)**. **`bizagentbench`**: BizAgentBench — 50 payment-operations cases — **strict 44/50 (88%)**. Ledgers: [birdminidev](scenarios/birdminidev/DETAIL.md) · [cloudopsbench](scenarios/cloudopsbench/DETAIL.md) · [bizagentbench](scenarios/bizagentbench/DETAIL.md).
 
 Switching scenarios: point the service at another package (`TSM_SCENARIO=<path>`), rebuild, and follow the checklist in [docs/04-application.md](docs/04-application.md).
 
@@ -175,7 +187,7 @@ Switching scenarios: point the service at another package (`TSM_SCENARIO=<path>`
 ```
 DLR Proj/                          # branch 2.0
 ├── docs/                          # narrative 01–04 + operations (run / eval / roadmap) + README index
-├── scenarios/birdminidev/         # ★ scenario package: sources/{configs,consensus,sop.md} + eval/ + fixtures/ + results/
+├── scenarios/                     # scenario packages: birdminidev · cloudopsbench · bizagentbench (sources/ + eval/ + results/)
 ├── TSM Core Service/              # semantic service (TS): LanceDB + Neo4j + MCP server
 ├── DSH-based Agent Service/       # dsh integration: bundle (dsh-tsm-agent) / exam system (dsh-tsm-eval) / launchers / agent rules
 ├── archive/                       # history (v2/v3, old docs and share pages) — read-only
