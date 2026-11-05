@@ -71,7 +71,7 @@ The evaluation bridge exposes **3 semantic tools** — `state_model_query` (L1 s
 | 050 | 16/21 | multiple goal/linked checks |
 
 - **Final best-practice store**: `TSM Core Service/.store/lance/bizagentbench-v35` (entities 687 / consensus 191 / sop 50). **The freeze pins L1/L2 only** (`l1l2-4eafa301`, unchanged since v34); L3 is per-question stitched and does not participate in the freeze;
-- Per-case archives: [DETAIL.md](DETAIL.md) · `eval/ledger.json` · `results/dlr-full/` (local).
+- Per-case archives: [DETAIL.md](DETAIL.md) · `eval/ledger.json` · `results/dlr-full/` (local); aggregate view: [overview.html](overview.html).
 
 ## 4. Workflow (how this benchmark is run)
 
@@ -153,6 +153,7 @@ scenarios/bizagentbench/
 ├── eval/                        # bridge (dlr_server.mjs) · run_dlr_pilot.sh · freeze.v*.json · ledger.json
 ├── results/dlr-full/            # run archives (local, gitignored)
 ├── DETAIL.md                    # per-case ledger (best valid run + remaining checks)
+├── overview.html                # aggregate view (three tiers + results)
 ├── PROGRESS.md                  # work log / measured lessons
 ├── modeling-plan.md (.zh.md)    # as-built modeling record (bilingual pair)
 └── package.json                 # npm packaging (tsm-scenario-bizagentbench)

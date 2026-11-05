@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSM × BizAgentBench · 总视图</title>
+<style>
+  :root {
+    --surface: #fcfcfb; --page: #f9f9f7; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --border: rgba(11,11,11,0.08); --dlr: #2a78d6; --good: #0ca30c;
+    font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 17px; line-height: 1.6; color: var(--ink); background: var(--page);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      --surface: #1a1a19; --page: #0d0d0d; --ink: #fff; --ink-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --border: rgba(255,255,255,0.08); --dlr: #3987e5; --good: #2fbf2f;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { max-width: 1080px; margin: 0 auto; padding: 56px 28px 80px; }
+  .hero { font-size: clamp(30px, 4.5vw, 48px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; }
+  .hero em { font-style: normal; color: var(--dlr); }
+  .deck { color: var(--ink-2); margin-top: 14px; max-width: 760px; }
+  .section-title { font-size: clamp(22px, 3vw, 32px); font-weight: 750; letter-spacing: -0.015em; margin: 56px 0 20px; }
+  .section-title em { font-style: normal; color: var(--dlr); }
+  .muted { color: var(--muted); font-size: 14px; }
+  .ok { color: var(--good); }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 30px; }
+  .stat { flex: 1 1 180px; min-width: 160px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 22px 24px; }
+  .stat__value { font-size: clamp(28px, 3.6vw, 42px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; color: var(--dlr); }
+  .stat--good .stat__value { color: var(--good); }
+  .stat__label { font-size: 14px; color: var(--ink-2); margin-top: 6px; }
+  .stat__note { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  .fam { display: grid; grid-template-columns: 210px 1fr 150px; gap: 14px; align-items: center; padding: 7px 0; }
+  .fam__name { font-size: 14.5px; font-weight: 600; text-align: right; }
+  .fam__num { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .bar { height: 10px; border-radius: 999px; background: var(--grid); overflow: hidden; }
+  .bar__fill { height: 100%; background: var(--dlr); border-radius: 999px; min-width: 2px; }
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 14px; }
+  th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th { font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+  tr:last-child td { border-bottom: none; }
+  code { font-size: 13px; color: var(--dlr); }
+  .note { border-left: 3px solid var(--dlr); padding: 12px 18px; background: var(--surface); border-radius: 0 10px 10px 0; font-size: 14.5px; color: var(--ink-2); margin-top: 26px; }
+  a { color: var(--dlr); }
+  a:hover { text-decoration-thickness: 2px; }
+  .tier { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin: 14px 0; }
+  .tier__tag { display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em; color: var(--dlr); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; margin-right: 10px; vertical-align: 1px; }
+  .tier__title { font-weight: 700; font-size: 15.5px; }
+  .tier p, .tier li { font-size: 14.5px; color: var(--ink-2); margin-top: 8px; }
+  .tier ul { padding-left: 20px; }
+  .tier pre { white-space: pre-wrap; word-break: break-word; background: var(--page); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 12.8px; line-height: 1.6; margin-top: 10px; font-family: ui-monospace, "Cascadia Code", Consolas, monospace; color: var(--ink); }
+  .tier pre code { color: inherit; font-size: inherit; }
+</style>
+</head>
+<body>
+<h1 class="hero">TSM × BizAgentBench · <em>总视图</em></h1>
+<p class="deck">三级语义建模（L1 DLR 对象/能力 · L2 领域共识 · L3 题级打法）驱动的支付运营长程题——50 道会改状态的业务任务，客户模拟器 + 确定性 G/P/F 判分。结果为每题最佳有效轮（best valid run）口径；本页是静态总视图，数据源见页脚。</p>
+<div class="stat-row">
+  <div class="stat"><div class="stat__value">50/50</div><div class="stat__label">跑题覆盖度</div><div class="stat__note">Operations Desk 30 · PSP 20</div></div>
+  <div class="stat stat--good"><div class="stat__value">44/50</div><div class="stat__label">strict = G ∧ P ∧ F</div><div class="stat__note">88%</div></div>
+  <div class="stat"><div class="stat__value">44 / 48 / 49</div><div class="stat__label">G / P / F 通过</div><div class="stat__note">最佳轮</div></div>
+  <div class="stat"><div class="stat__value">4%</div><div class="stat__label">IF = 1 − P ∧ F</div><div class="stat__note">2/50</div></div>
+</div>
+<p class="muted" style="margin-top:12px; line-height:1.75;"><b>判分</b>：verifier 读最终世界 + 审计轨迹；提案/批准不是付款，只有真实落地的效果才算。<b>G</b> 目标结果与允许的终止状态 · <b>P</b> 执行要求（审批、顺序、时限、单次完成）· <b>F</b> 受保护对象、账本完整性、禁止性副作用。strict 要求三者同时成立；IF 表示业务结果可能对、过程/保护不干净的比例。无 LLM judge、无人工翻盘。</p>
+
+<h2 class="section-title">TSM 建模实例化 · <em>一道题看三级语义</em></h2>
+<p class="deck">以 <code>case_003</code>（九月收款对账 + 公司账户）为例：L3 定打法 → L2 定读法 → L1 给对象 / 记录面 / 关系 → agent 经基准记录与动作工具实查、改状态。</p>
+<div class="tier"><span class="tier__tag">L3 · SOP</span><span class="tier__title">业务逻辑级 · 题面措辞逐字命中一节 → 定打法</span>
+<ul>
+<li>付款方的 <b>dispatch notice</b> 若写明后来追发的 revision，以后版为准；按旧版 advice 做出的分配会在对账时失败。</li>
+<li>express 行金额逐字对；剩余 gross 只分配给其他合规发票，不得抬高固定行去凑总额。</li>
+<li>关账前逐行核对 allocation map 与所用 advice revision——不一致就不关。</li>
+</ul></div>
+<div class="tier"><span class="tier__tag">L2 · CONSENSUS</span><span class="tier__title">领域共识 · 读法与口径 → 定怎么读</span>
+<ul>
+<li>「A READY remittance advice is authoritative for the revision it describes. Each express designation fixes an amount for the invoice identified by buyer, purchase order and period; an omitted invoice has no fixed clause, not an automatic zero allocation.」</li>
+<li>「propose_remittance_advice obtains the advice dispatched by the payer after the remittance trace delay; it does not change cash. If no revision is pending, the trace confirms the current advice. Read the returned advice record rather than assuming its lines.」</li>
+</ul></div>
+<div class="tier"><span class="tier__tag">L1 · DLR</span><span class="tier__title">数据源级 · LE ◀ PE ◀ ARCS / PAS → 对象 / 记录面 / 关系</span>
+<pre>构图：LE（业务对象） ◀─1:N── PE（记录面） ◀─ARCS（A 锚 · S 读法）── 物理集合
+       PAS = 对象关系（A 关系键 · S 读法）
+       A = 取数 WHERE 键（剪枝）；模型只到 schema 级，实例值运行时实查
+
+LE Remittance（汇款）           PE remittances          A: scope
+   PAS Advised by      → RemittanceAdvice   A: remittance_id
+   PAS Allocated as    → InvoiceAllocation  A: remittance_id
+LE RemittanceAdvice（付款方来函） PE remittance_advice   A: scope
+   revision / allocation_lines / status
+LE InvoiceAllocation（分配图）   PE invoice_allocations  A: scope
+   advice_id / allocations / status
+
+read: search_records("remittances", filters={scope}) / get_record(id)
+      search_records("remittance_advice", filters={scope})
+      search_records("invoice_allocations", filters={scope})</pre>
+<p>只存 schema 级（LE / PE / 锚 / 关系 / 读法）；实例数据一律经基准工具实查——模型是导航，不是数据。</p></div>
+<div class="note">这条链 = 三级协作：L3 先定“后版 notice 为准、固定行逐字对、关账前核对”；L2 给 advice 的权威口径与 trace 读法；L1 给出 Remittance → Advice → Allocation 的对象/锚/关系；agent 实查记录后改状态，verifier 从最终世界与审计轨迹判 G/P/F。<a href="DETAIL.md">逐题台账</a> · <a href="eval/ledger.json">机器可读 ledger</a></div>
+
+<h2 class="section-title">三层规模 · <em>schema 级</em></h2>
+<table>
+<tr><th>层</th><th>规模</th><th>拆分</th></tr>
+<tr><td><b>L1 · dlr</b></td><td>106 LE · 147 PAS · 687 向量行</td><td>Operations Desk 84 / 127 / 513 · PSP 22 / 20 / 174</td></tr>
+<tr><td><b>L2 · consensus</b></td><td>191 条</td><td>shared 10 · operations_desk 44 · typed_services 84 · psp 53</td></tr>
+<tr><td><b>L3 · sop</b></td><td>50 节</td><td>Operations Desk 30 · PSP 20；按题向量检索交付</td></tr>
+</table>
+<p class="muted" style="margin-top:10px;">L1 只写 schema 级事实（零实例值 / 零记录 id / 零余额）；L2 写跨对象、非 workflow 的口径与读法；L3 写题级流程/岔路/收口，按题检索，只有命中该节的那道题付成本。</p>
+
+<h2 class="section-title">跑题覆盖度 · <em>两个系统</em></h2>
+<div class="fam">
+  <div class="fam__name">Operations Desk</div>
+  <div class="bar"><div class="bar__fill" style="width:100%"></div></div>
+  <div class="fam__num">30/30 · strict 27</div>
+</div>
+<div class="fam">
+  <div class="fam__name">PSP</div>
+  <div class="bar"><div class="bar__fill" style="width:100%"></div></div>
+  <div class="fam__num">20/20 · strict 17</div>
+</div>
+<p class="muted" style="margin-top:10px;">系统内 strict：Operations Desk 27/30（90%）· PSP 17/20（85%）。</p>
+
+<h2 class="section-title">结果与成本 · <em>best-run 口径</em></h2>
+<table>
+<tr><th>指标</th><th>值</th><th>备注</th></tr>
+<tr><td>覆盖</td><td>50/50</td><td>001–030 Operations Desk · 031–050 PSP</td></tr>
+<tr><td>strict</td><td>44/50（88%）</td><td>G ∧ P ∧ F</td></tr>
+<tr><td>G / P / F</td><td>44 / 48 / 49</td><td>最佳轮通过数</td></tr>
+<tr><td>IF</td><td>4%（2/50）</td><td>1 − P ∧ F</td></tr>
+<tr><td>tokens 均值 / 中位</td><td>10.25M / 8.35M</td><td>cache 命中计入 prompt</td></tr>
+<tr><td>steps 均值 / 中位</td><td>256 / 241</td><td>调度步</td></tr>
+<tr><td>工具调用</td><td>208 / 题</td><td>总计 10,387</td></tr>
+<tr><td>工具错误</td><td>178 次（1.71%）</td><td>44/50 轮至少 1 次</td></tr>
+<tr><td>单题平均耗时</td><td>12.7 分钟</td><td>best-run 画像，不是全量统一复跑</td></tr>
+</table>
+<p class="muted" style="margin-top:10px;">成本行按每题最佳有效轮汇总（跨 v1–v35 的不同 store）；作量级参考，不与论文横向比。</p>
+
+<h2 class="section-title">未 strict 的 6 题 · <em>真难题与方差</em></h2>
+<table>
+<tr><th>题</th><th>best</th><th>剩余失败</th><th>判读</th></tr>
+<tr><td>008</td><td>43/44</td><td><code>joint.fee_and_reserve</code></td><td>16 轮漂移，空间/方差为主，归档</td></tr>
+<tr><td>011</td><td>36/42</td><td>joint 层 + group 层</td><td>复合题；v37 定向规则已修好 joint 层（<code>exact_capital</code> + <code>fee_and_reserve</code>），group 层仍是真难题</td></tr>
+<tr><td>014</td><td>40/41</td><td><code>customer_total_limit</code></td><td>边际 cap + 方差，归档</td></tr>
+<tr><td>032</td><td>18/19</td><td><code>reasoning_receipt_calendar</code></td><td>文档/凭证顺序 + 时点，方差为主</td></tr>
+<tr><td>048</td><td>19/21</td><td>linked rights + disputed claim</td><td>tranche 映射 + 时点，优良上限</td></tr>
+<tr><td>050</td><td>16/21</td><td>5 个 goal</td><td>reserved ≠ captured + 结算优先级 + 联动腿，结构真难题</td></tr>
+</table>
+<p class="muted" style="margin-top:10px;">判读口径：先看失败核心是否稳定（同一组检查反复挂），再看根因是 WT 不收敛 / 空间不收敛 / 约束不可行；失败集轮换归方差，不互相移植规则。详见 <a href="DETAIL.md">DETAIL §七</a>。</p>
+
+<h2 class="section-title">怎么跑 · <em>assisted 口径</em></h2>
+<p class="deck">数据集的 agent 配置原样保留，DLR 层是<b>追加</b>：系统提示 = harness 原 policy + 检索说明（<code>dlr_l1</code> / <code>dlr_l2</code> / <code>dlr_l3</code>）+ 可选 <code>AGENTS.md</code>；工具面 = 记录/动作工具 + 三个语义工具，移除 <code>search_knowledge</code> / <code>read_document</code>。客户模拟器、记录/动作工具与 verifier 不变；辅助语义 MCP 只供知识侧，不执行业务动作，也不参与判分。</p>
+<div class="note">入口：<a href="README.md">README</a> · <a href="README.zh.md">中文 README</a> · <a href="DETAIL.md">DETAIL</a> · <a href="modeling-plan.md">modeling-plan</a> · <a href="sources/configs/DLR">L1 源</a> · <a href="sources/consensus">L2 源</a> · <a href="sources/sop.md">L3 源</a> · <a href="eval/ledger.json">eval/ledger.json</a></div>
+<p class="muted" style="margin-top:16px;">数据源：<code>eval/ledger.json</code> + <code>DETAIL.md</code>（2026-11-05）。数字随台账更新；本页为静态总视图。</p>
+</body>
+</html>

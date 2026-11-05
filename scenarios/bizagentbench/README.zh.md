@@ -71,7 +71,7 @@
 | 050 | 16/21 | 多个 goal/linked 检查 |
 
 - **最终 best-practice store**：`TSM Core Service/.store/lance/bizagentbench-v35`（entities 687 / consensus 191 / sop 50）。**freeze 只固定 L1/L2**（`l1l2-4eafa301`，自 v34 未变）；L3 按题拼接，不进 freeze；
-- 逐题档案：[DETAIL.md](DETAIL.md) · `eval/ledger.json` · `results/dlr-full/`（本地留档）。
+- 逐题档案：[DETAIL.md](DETAIL.md) · `eval/ledger.json` · `results/dlr-full/`（本地留档）；总视图：[overview.html](overview.html)。
 
 ## 4. 工作流（怎么跑）
 
@@ -153,6 +153,7 @@ scenarios/bizagentbench/
 ├── eval/                        # 桥（dlr_server.mjs）· run_dlr_pilot.sh · freeze.v*.json · ledger.json
 ├── results/dlr-full/            # 跑档（本地，gitignored）
 ├── DETAIL.md                    # 逐题台账（最佳有效轮 + 剩余检查）
+├── overview.html                # 总视图（三层建模 + 成绩）
 ├── PROGRESS.md                  # 工作记录 / 实测教训
 ├── modeling-plan.md (.zh.md)    # as-built 建模记录（双语一对）
 └── package.json                 # npm 打包（tsm-scenario-bizagentbench）
