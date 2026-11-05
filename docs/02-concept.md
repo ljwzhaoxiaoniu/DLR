@@ -78,11 +78,13 @@ L3 settles **this kind of question**: playbooks, exceptions, traps and closure d
 
 The **shape** of an L3 section follows the workload (see §5's seesaw): NL2SQL keeps L3 thin and exception-bearing; agentic diagnosis makes each section a decision tree; long-horizon business operations make each section an operational playbook. The three scenarios are the measured evidence:
 
-| Scenario | Source form (L1) | L3 shape | Result |
+| Scenario | Source form (L1) | L3 contract | Result |
 |---|---|---|---|
-| `birdminidev` | records | settlement clauses per question (500 sections) | 500/500 judged correct |
-| `cloudopsbench` | state snapshots | symptom-family decision trees (5 sections) | JRA 753/754 |
-| `bizagentbench` | records + actions + documents | operational playbooks per question (50 sections) | strict 44/50 |
+| `birdminidev` | records | **per-question settlement clauses** (500 sections) | 500/500 judged correct |
+| `cloudopsbench` | state snapshots | **class-level decision trees** (5 sections) | JRA 753/754 |
+| `bizagentbench` | records + actions + documents | **per-question playbooks with Wrong turn + closure checks** (50 sections) | strict 44/50 |
+
+Three different **section contracts**, not three prose styles: a single-query task gets a settlement clause; a diagnosis task gets a decision tree; a long-horizon operation gets a playbook.
 
 > Note on naming: L2 is deliberately not called "knowledge" — it is not a traditional knowledge base/KG, but **a class of scenario-required, *non-workflow* knowledge built on the L1 schema**.
 

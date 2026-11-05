@@ -425,13 +425,15 @@ npx tsx src/verify/precheck.ts                # 工具面可用
 5. **复跑该题**——每次改节后复跑暴露问题的那道题；strict 即收关；不 strict 在三次上限归档 best。
 6. **守住边界**——节属于它那道题；按题隔离意味着改 A 不重跑 B。
 
-- **形态跟 workload 走**：
+- **形态跟 workload 走**——三个场景不是三种文风，而是**三种节契约**：
 
-| 场景 | SOP 形态 | 粒度 | 设计重点 |
-|---|---|---|---|
-| `birdminidev` | 题级结算条款 | 500 节 | 缺陷裁定、`Expected`、settled 语气；L3 是 NL2SQL 的异常承载层 |
-| `cloudopsbench` | 症状族决策树 | 5 节 | 孪生类判别线、证据链顺序、提交口径；L1 薄 / L3 厚 |
-| `bizagentbench` | 题级操作 playbook | 50 节 | 步骤 + 负向 few-shot + 收口不变量；L1 / L2 / L3 都实 |
+| 场景 | 节边界 | 正文结构 | 节必须产出什么 | 负向 / 收口 |
+|---|---|---|---|---|
+| `birdminidev` | 每题一节（500） | 结算条款：答案规则、口径、缺陷裁定、`Expected` | 答案值 | 不用 `Wrong turn`；`Expected` + settled 语气 |
+| `cloudopsbench` | 每个症状族一节（5） | 决策树：先锁族 → 机制分支 → 链序 → 收口三件套 | 诊断 + **闭合的证据链** | 链序条款；提交 / 收口契约 |
+| `bizagentbench` | 每题一节（50） | 操作 playbook：有序步骤 + 口径 | 完成的多步**业务操作** | `Wrong turn`（实测岔路）+ `Check before closing`（收口不变量） |
+
+设计按 workload 选契约：**单查询**任务用结算条款（L3 是异常承载层）；**诊断**任务用决策树（一族一节覆盖多案）；**长程操作**用 playbook（节是 runbook；封岔路 + 钉收口这两条技术让它收敛）。
 
 ## 相关
 

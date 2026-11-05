@@ -425,13 +425,15 @@ Rules: (a) if you cannot name the LE it applies to, it is not per-LE; (b) if it 
 5. **Re-run the case** — after every edit, re-run the question that exposed the problem; strict = stop; not strict → archive the best at the three-attempt cap.
 6. **Keep the boundary** — a section belongs to its question; per-question isolation means editing A never re-runs B.
 
-- **Shape follows the workload**:
+- **Shape follows the workload** — the three scenarios are not three prose styles but **three different section contracts**:
 
-| Scenario | SOP shape | Granularity | Design emphasis |
-|---|---|---|---|
-| `birdminidev` | settlement clauses per question | 500 sections | defect rulings, `Expected`, the "settled" tone; L3 as the exception-bearing layer of NL2SQL |
-| `cloudopsbench` | symptom-family decision trees | 5 sections | twin-class discrimination lines, evidence-chain order, submission clauses; thin L1 / thick L3 |
-| `bizagentbench` | operational playbooks per question | 50 sections | steps + negative few-shot + closure invariants; L1, L2 and L3 all substantial |
+| Scenario | Section boundary | Body structure | What the section must produce | Negatives / closure |
+|---|---|---|---|---|
+| `birdminidev` | one per question (500) | settlement clause: the answer rule, calibers, defect ruling, `Expected` | the answer value | no `Wrong turn`; `Expected` + the "settled" tone |
+| `cloudopsbench` | one per symptom family (5) | decision tree: lock the family → mechanism branches → chain order → closing triad | a diagnosis plus a **closed evidence chain** | chain-order clauses; the closing/submission contract |
+| `bizagentbench` | one per question (50) | operational playbook: ordered steps + calibers | a completed multi-step **business operation** | `Wrong turn` (the observed wrong fork) + `Check before closing` (closure invariants) |
+
+The design chooses the contract by the workload: a **single-query** task gets a settlement clause (the L3 is the exception-bearing layer); a **diagnosis** task gets a decision tree (one family section covering many cases); a **long-horizon operation** gets a playbook (the section is a runbook, and the two closure techniques — sealing the wrong fork and pinning the closure invariants — are what make it converge).
 
 ## Related
 
