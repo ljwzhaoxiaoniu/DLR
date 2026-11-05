@@ -15,7 +15,7 @@ English | [中文](README.zh.md)
 | **The benchmark** | upstream BizAgentBench `bizagentbench-payment-v1`, checkout outside the repo (`BIZAGENTBENCH_DIR`) | **50 cases**: 1–30 Operations Desk, 31–50 PSP; a customer simulator drives each case through a long tool chain |
 | **Knowledge** | the dataset's own knowledge base | **789 documents** (621 searchable) describing business rules, source documents and service interfaces |
 | **World** | the dataset's tau2-style world | 404 collections / 3,121 records; 601 capabilities (record reads + business actions) |
-| **Scoring** | upstream deterministic verifier | **G / P / F** (goal / process / protection), **strict = G∧P∧F**, **IF = 1 − P∧F**; no LLM judge, no manual-overturn caliber |
+| **Scoring** | upstream deterministic verifier | **G / P / F** (goal / process / protection), **strict = G∧P∧F**, **IF = 1 − P∧F** (intermediate failure — process or protection fails even when the business result is right); no LLM judge, no manual-overturn caliber |
 
 ### Scoring mechanics to know before writing sections or re-running
 
@@ -129,6 +129,13 @@ tools = harness record+action tools + dlr_l1 / dlr_l2 / dlr_l3
 | G / P / F (best-run pass) | 44 / 48 / 49 |
 | IF (best-run) | 4% (2/50) |
 | coverage | 50/50 |
+| tokens mean / median | 10,248,895 / 8,350,210 |
+| steps mean / median | 256 / 241 |
+| tool calls mean | 208 (10,387 total) |
+| tool errors | 178 (1.71%); 44/50 runs had ≥1 error |
+| duration mean | 12.7 min |
+
+Caliber: the cost rows aggregate each case's **best valid run** (across stores v1–v35); tokens = harness-reported prompt + completion (cache reads included in prompt). This is a best-run profile, not a uniform full-set rerun — read it as an order-of-magnitude reference.
 
 **Variance is real**: under the same model and near-identical knowledge, single runs drift by 5–8 checks (048 19/21 ↔ 11/21 with P/F flipping; 032 18/19 ↔ 12/19; 014 39/41 vs 40/41 with disjoint failure sets; 008 drifted across 16 rounds). The v35 revalidation with the added playbook rules produced strict results on 003, 004, 005, 010, 013 and 049. Read the headline as "best valid run", and use the ledger for the per-case range.
 
