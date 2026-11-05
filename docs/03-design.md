@@ -1,25 +1,34 @@
 # Design: DLR — the original foundation, in detail
 
-> **Position**: ③ of the four narrative docs. ① [Background and thesis](01-background.md) argues for "semantic modeling grounded in structured data sources"; ② [Concepts](02-concept.md) gives the TSM three-level frame; **this document is DLR — the detailed design of the original foundation at the data-source level (L1)**: the LE / PE two layers plus the two mechanisms, ARCS and PAS.
-> **Audience**: whoever (or whatever agent) takes over DLR modeling. After reading it you should be able to write a compliant DLR yaml for a new database on your own — and know where mistakes cluster.
+> **Position**: ③ of the four narrative docs. ① [Background and thesis](01-background.md) argues for "semantic modeling grounded in data sources"; ② [Concepts](02-concept.md) gives the TSM three-level frame; **this document is the design of the three-level carriers at the data-source level**: the L1 design (LE / PE, ARCS / PAS, and its source shapes) plus the L2 and L3 carrier shapes (§9).
+> **Audience**: whoever (or whatever agent) takes over modeling. After reading it you should be able to write a compliant L1 yaml for a new source on your own — and know where mistakes cluster.
 > 中文版：[03-design.zh.md](03-design.zh.md) ｜ Index: [README.md](README.md)
 
-## 0. One sentence, two design points
+## 0. One design for data sources
 
-> **DLR = project physical tables into business views (PE), organize the views into business entities (LE), and express semantic routing between LEs with PAS.**
+> **DLR = anchor the source on pointable business objects (LE); the source form decides which surface the LE exposes; read by an anchor, route by PAS.**
 
-The physical world's fragmentation (wide tables split into sub-objects, objects stitched from several tables, junction tables) is **transparent to the agent** — what it sees is a **business-entity tree**, not a table list.
+The source may be relational tables, a state-space snapshot, or a system that exposes business actions. The design is the same in every case — the LE is the semantic anchor, and what changes is the **surface** the object exposes:
+
+| Source form | Surface | What the surface carries | Shape |
+|---|---|---|---|
+| Records | **PE** — a view / projection of physical tables | anchor A (join / filter key), row space R (row-for-row or `unwind`), selected columns C, semantics S | `dlr` |
+| State spaces | **observation surface** | anchor = the object's name; a reading template (e.g. `GetResources(pods, label_selector=app=<service>)`); the first full scan only finds the anchor | `dlr-state` |
+| Actions / APIs | **capability contract** on the LE | anchor (the caller's business key), guard (effect + preconditions + approval), source (the constraining document) | `dlr` + capability block (§1.7.2) |
+
+The record form is the classic projection; one highlight inside it is that an LE can be realized by a **set of rows** (a multi-slot FK expanded with `unwind`), not only by a column subset — the mapping is a set definition, not a wide-table trim. The state form applies the same anchor-and-read idea to non-relational snapshots (§1.7.1). The action form attaches what the source can *do*, with documents as the constraint layer (§1.7.2).
 
 ```
 physical table ──(ARCS projection)──▶ PE ──(LE 1:N container)──▶ LE ──(PAS)──▶ another LE
+state surface  ──(reading template)──▶ LE          capability ──(anchor/guard)──▶ LE
 ```
 
 Direct answers to two points from ① Background:
 
-- **Concept decoupled from implementation (LE ↔ PE) → data-maturity independence**: the same LE can be implemented by an Excel sheet, a 3NF system table, a dimensional-modeling platform table, or a real-time wide table. An enterprise **does not need to upgrade its platform first**; an upgrade **touches only the PEs** — LE / L2 / L3 change zero characters.
+- **Concept decoupled from implementation (LE ↔ surface) → data-maturity independence**: the same LE can be implemented by an Excel sheet, a 3NF system table, a dimensional-modeling platform table, a state snapshot or an API — an enterprise **does not need to upgrade its platform first**; an upgrade **touches only the surfaces**, while LE / L2 / L3 change zero characters.
 - **Correction right (boundary narrowed, 2026-09-24)**: the description layer may flag a schema's historical distortions ("this table is *named* X but *is* Y — read it as Z") — it **never touches the schema**, but it **adds no semantic enrichment** (fairness, see [04-application.md](04-application.md) §2): descriptions revert to **the dataset's own material**; the dataset's own defects are **not fixed in L1** but carried by L3 and tagged by type. Correction is limited to the minimum wording **required to remove ambiguity** (e.g., two tables each have a `Date` with different encodings — that must be stated apart).
 
-**DLR (our original implementation of L1) is itself a two-stage disambiguation chain**: physical tables are ambiguous (fragmented / wide / same-named columns / multi-slot FKs) → PE disambiguates with a **view** (R row space, C column selection, A anchor, S semantics); when the PE is still ambiguous (which business object it belongs to, which public face is addressable) → LE disambiguates with **pointable objects + public faces + PAS**. The continuation above the data-source level (L2 `consensus`, L3 `sop` question-level ruling, SOP's internal layering) **does not belong to DLR**; see [02-concept.md](02-concept.md) §6 "layered disambiguation"; this document expands only L1.
+**The L1 design is itself a two-stage disambiguation chain**: the source is ambiguous (fragmented / wide / same-named columns / multi-slot FKs; or an observation face whose reading is unclear; or an action whose key and effect are unclear) → the **surface** disambiguates (R row space, C column selection, A anchor, S semantics; a reading template; an anchor+guard) → when the surface is still ambiguous (which business object it belongs to, which public face is addressable) → **LE** disambiguates with pointable objects + public faces + PAS. The layers above L1 (L2 `consensus`, L3 `sop`) are the other two carriers — their design shapes are in §9 and their concept in [02-concept.md](02-concept.md).
 
 ## 1. The design model: three layers, two mechanisms, one flag
 
@@ -376,6 +385,33 @@ npx tsx src/verify/precheck.ts                # tool surface is up
 | over-splitting LEs | the agent burns steps navigating PAS ("a variant of ER") | 🟠 |
 | example names only in private descriptions | they never enter the LE vector → zero hits for that word | 🟠 |
 | `cardinality` written as `N:1` | violates the LE viewpoint; row-count reasoning goes wrong | 🟡 |
+
+## 9. L2 and L3 carriers
+
+The two upper levels have their own carriers; their concept is in [02-concept.md](02-concept.md) §1.3–1.4, their design shape is here.
+
+### 9.1 L2 — domain consensus (`sources/consensus/*.jsonl`)
+
+As-built: one JSON array per scope file; each entry is `{kid, knowledge, system?}`.
+
+- `knowledge` — one prose convention, schema-level, in business language. It **names the L1 object or surface it applies to** (by business name, never by a physical name) and states the reading. No instance values, no table/column names, no workflow.
+- `system` (when present) — the system scope for multi-system scenarios; files split by scope (`shared` / `operations_desk` / `typed_services` / `psp`) so retrieval can be scoped.
+- Delivery: `dlr_search_consensus(question)` → the top-k prose entries; the agent uses them as **reading rules**, not answers.
+- Admission: on demand — only a convention some question actually needs. A mapping that is really a fact about the source (value domain / granularity / sample window) sinks into L1; a convention that only holds inside one question's flow goes to L3.
+
+### 9.2 L3 — SOP (`sources/sop.md`)
+
+- `sop.md` is parsed into sections by `## <system>` and `### When asked: "<question>"`; the section **title is the question wording verbatim** (the retrieval trigger); the body is the class playbook.
+- `tsm build` embeds the section titles into the SOP index; `dlr_search_sop(question)` returns the matched section (one section, not the whole file).
+- **Section anatomy (2.0)**: steps (the class method) → calibers (the conventions it must obey) → `> **Wrong turn (observed)**` (the observed plausible-but-wrong fork) → `> **Check before closing**` (closure invariants in business terms) → `> **Expected**` (where the scenario has a fixed answer). No instance values, record IDs or verifier check names.
+- **Admission**: ① dataset defect ② wrong without the section ③ >15W without the section; the case is re-run after every edit. Sections are per question — transplanting one to another question requires a measured failure there.
+- **Shape follows the workload**:
+
+| Scenario | SOP shape | Granularity | Design emphasis |
+|---|---|---|---|
+| `birdminidev` | settlement clauses per question | 500 sections | defect rulings, `Expected`, the "settled" tone; L3 as the exception-bearing layer of NL2SQL |
+| `cloudopsbench` | symptom-family decision trees | 5 sections | twin-class discrimination lines, evidence-chain order, submission clauses; thin L1 / thick L3 |
+| `bizagentbench` | operational playbooks per question | 50 sections | steps + negative few-shot + closure invariants; L1, L2 and L3 all substantial |
 
 ## Related
 

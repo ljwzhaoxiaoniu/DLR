@@ -21,21 +21,34 @@ Read the opening paper [01-background.md](01-background.md) first. It lays the p
 
 **One-line positioning**: in the digitization era, layered ownership produced **documents and report norms** — static, needing a human translator, rewritten on every platform upgrade. In the intelligence era the same layering becomes a **runtime asset** — consumed by agents directly, with a precedence order, versionable and regressable. The same act of "fixing the order down" turns from *written for people to read* into *executed by machines*.
 
-## 1. What the three levels are
+## 1. The frame: three levels
 
-| Level | Key | Carrier (2.0) | Answers | How it is obtained | Maintained by | Change rhythm |
-|---|---|---|---|---|---|---|
-| **Data-source level** L1 | `dlr` | scenario package `sources/configs/DLR/*.yaml` → graph + vectors | What this domain **has**: business concepts, where they land, how they connect | `dlr_semantic_query` → `get_pe_mapping` / `get_le_attrs` (dlr-state: `state_model_query`) | **the data side** | with the schema / data sources |
-| **Domain-consensus level** L2 | `consensus` | scenario package `sources/consensus/*.jsonl` → vectors | How a question's wording **is computed / filtered**: term→value, conventions, background | `dlr_search_consensus` | **domain business staff** | with the business's conventions |
-| **Business-logic level** L3 | `sop` | scenario package `sources/sop.md` → vector index (compiled by `tsm build`, retrieved per question) | How this *kind of question* **is settled**: playbooks, exceptions, traps | `dlr_search_sop(question)` | **business staff** | with the process / playbook |
+TSM sorts "what it takes to answer a question" by **who maintains it and when it changes**. That is the whole frame — the levels are not three document types but three ownership lines (details in §3):
 
-The three levels are **anchored in parallel** (not a serial pipeline): once a question arrives, all three are fetched at once and cross-checked before SQL construction begins.
+| Level | Key | Answers | Maintained by | Change rhythm |
+|---|---|---|---|---|
+| **Data-source level** L1 | `dlr` | What this domain **has and how to navigate it**: the business objects, the surfaces the source offers, how they connect | **the data side** | with the schema / data sources |
+| **Domain-consensus level** L2 | `consensus` | How a question's wording **is computed / filtered**: term→value, conventions, background | **domain business staff** | with the business's conventions |
+| **Business-logic level** L3 | `sop` | How this *kind of question* **is settled**: playbooks, exceptions, traps | **business staff** | with the process / playbook |
 
-> Note on naming: L2 is deliberately not called "knowledge" — it is not a traditional knowledge base/KG, but **a class of scenario-required, *non-workflow* knowledge built on the L1 schema**.
+The three levels are **anchored in parallel** (not a serial pipeline): once a question arrives, all three are fetched at once and cross-checked before the answer is constructed. The concrete carriers and tools are design matters — see [03-design.md](03-design.md).
 
-> **Do not conflate a level with its implementation (important)**: L1 is the **data-source level**; **DLR is one implementation of L1 (our original one)**, not an umbrella name for the three levels. L2 is **domain consensus** (`consensus`); L3 is **SOP** (`sop`). TSM is the three-level frame; DLR stands only on L1. L1 may have other implementations as long as they meet the same level's duties and contract.
+### 1.1 L1 = the data-source level
 
-**System scope (equally important)**: the three levels cover **schema-level semantics** — structure, value domains, granularity, terminology, playbooks. **Data-source instance-level knowledge** ("what some specific row or batch of data is": who customer 38508 is, which product sold most this month, whether these negative values are all refunds…) **is outside this system's semantic scope**:
+L1 is the **structuring of data-source-level knowledge**: it organizes what a source carries so an agent can navigate it. The source is not necessarily a relational table — it may offer:
+
+- **records** (tables / views of business objects),
+- **state** (snapshots of objects and their observable surfaces),
+- **actions** (business operations / APIs, together with the documents that constrain them).
+
+The concept is one in all three cases: organize the source around **pointable business objects** and let the agent reach them by an anchor. What changes per source is **which surface the object exposes** — records, observations or actions — not the level itself. The mechanics (the `dlr` and `dlr-state` mapping shapes, record projection, observation readings, capability contracts) are design matters and are expanded in [03-design.md](03-design.md).
+
+- **Scope**: schema-level only — instance values are out (§1.2);
+- **Ownership**: the data side; it changes with the source, not with the questions.
+
+### 1.2 System scope: schema-level in, instance-level out
+
+The three levels cover **schema-level semantics** — structure, value domains, granularity, terminology, playbooks. **Data-source instance-level knowledge** ("what some specific row or batch of data is": who customer 38508 is, which product sold most this month, whether these negative values are all refunds…) **is outside this system's semantic scope**:
 
 | In the system (written into the three levels) | Out of the system (attached externally) |
 |---|---|
@@ -43,9 +56,35 @@ The three levels are **anchored in parallel** (not a serial pipeline): once a qu
 | Question-wording ↔ term convention mapping (L2) | Facts knowable only within one particular query |
 | Playbooks / exceptions / traps (L3) | — |
 
-> **The discriminating line (added 2026-10-10)**: structures that are **the same in every snapshot** (service rosters, call topologies, node rosters, fixed anchor keys) are **source structure → L1**; what differs snapshot by snapshot (instance names, IPs, states, messages) is out of the system. One sentence: **"same in every copy" = source structure; "different in every copy" = instance.**
+> **The discriminating line (added 2026-10-10)**: structures that are **the same in every snapshot** (service rosters, call topologies, node rosters, fixed anchor keys, the actions a source exposes) are **source structure → L1**; what differs snapshot by snapshot (instance names, IPs, states, messages, an actual request or receipt) is out of the system. One sentence: **"same in every copy" = source structure; "different in every copy" = instance.**
 
-Instance-level knowledge takes two routes: **① compute on demand** (the agent pulls it from the data with `execute_sql`); **② external attachment** (the enterprise's own systems provide it via **MCP tools**, and the **SOP references** "where this figure comes from"). This keeps the system **horizontal and reusable** (it does not rot as the data changes), while the freshness of instance facts is delegated to MCP.
+Instance-level knowledge takes two routes: **① compute on demand** (the agent pulls it from the source with its own tools); **② external attachment** (the enterprise's own systems provide it via **MCP tools**, and the **SOP references** "where this figure comes from"). This keeps the system **horizontal and reusable** (it does not rot as the data changes), while the freshness of instance facts is delegated to MCP.
+
+### 1.3 L2 = the domain-consensus level
+
+L2 holds what the L1 structure cannot answer objectively: how a question's wording maps onto the model's terms, how an amount is computed under this scenario's convention, what background the same wording needs. **It is built on the L1 objects**: every entry is anchored on an L1 entity or surface, and retrieval is "question + L1 context", not a generic document search.
+
+The division is strict in both directions:
+
+- **L2 never restates the source structure** — no table/column names, no copies of L1 descriptions; a fact about the source itself (value domain, granularity, sample window) belongs to L1;
+- **L1 never swallows question-level conventions** — the moment an L1 description says "when a question writes X…", it has floated above its level;
+- **L2 is non-workflow**: it never sequences steps or sets cutoffs; a convention that only holds inside one question's flow belongs to L3.
+
+### 1.4 L3 = the business-logic level
+
+L3 settles **this kind of question**: playbooks, exceptions, traps and closure discipline. It references the business names of L1/L2, never the physical names; it is delivered per question, so a section costs only on the question that hits it. Admission is on demand — ① dataset defect ② wrong without the section ③ >15W without the section — and the case is re-run after every edit.
+
+The **shape** of an L3 section follows the workload (see §5's seesaw): NL2SQL keeps L3 thin and exception-bearing; agentic diagnosis makes each section a decision tree; long-horizon business operations make each section an operational playbook. The three scenarios are the measured evidence:
+
+| Scenario | Source form (L1) | L3 shape | Result |
+|---|---|---|---|
+| `birdminidev` | records | settlement clauses per question (500 sections) | 500/500 judged correct |
+| `cloudopsbench` | state snapshots | symptom-family decision trees (5 sections) | JRA 753/754 |
+| `bizagentbench` | records + actions + documents | operational playbooks per question (50 sections) | strict 44/50 |
+
+> Note on naming: L2 is deliberately not called "knowledge" — it is not a traditional knowledge base/KG, but **a class of scenario-required, *non-workflow* knowledge built on the L1 schema**.
+
+> **Do not conflate a level with its implementation (important)**: L1 is the **data-source level**; **DLR is one implementation of L1 (our original one)**, not an umbrella name for the three levels. `dlr` and `dlr-state` are two mapping shapes of the same L1 duty — effective navigation of a source. L2 is **domain consensus** (`consensus`); L3 is **SOP** (`sop`). TSM is the three-level frame; DLR stands on L1.
 
 ## 2. Admission criteria (= the governance line)
 
