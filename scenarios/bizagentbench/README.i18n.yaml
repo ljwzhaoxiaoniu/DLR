@@ -5,7 +5,7 @@
 #
 # 规则：每篇文档一对 X.md（英文主）+ X.zh.md（中文对照）。新增一篇 → 在此登记两条哈希。
 
-README.md: 3553a0d5c543d60cd1c300a6556259672ddf5a7b
-README.zh.md: 3d7acda437174e04f124a9bcf999c1fc17bc93a4
-modeling-plan.md: 7a137077ca7ad1e5e426ebfce4541ff761732195
-modeling-plan.zh.md: adc42a6bc95166acbc80682498e4b265835e217a
+README.md: 55cc04075e459425fc0ae70ae3429c59070733f3
+README.zh.md: 1c7b9d4936601dccad4bf0ecd6aa7aefc91e1033
+modeling-plan.md: a1c6124a4839077c0875c4a587a10e3597626efb
+modeling-plan.zh.md: 4aea62d65f44b835ba8504f9ac97fd9fdc254b2f

@@ -52,6 +52,8 @@ L2 holds **non-workflow knowledge** (terms, calibers, background). Workflow and 
 
 The evaluation bridge exposes **3 semantic tools**: `state_model_query` (L1 slice: object, lifecycle, capabilities, public collections), `dlr_search_consensus` (L2), `dlr_search_sop` (L3). The dataset's record/action tools, customer simulator and verifier are unchanged; the DLR tools replace `search_knowledge` / `read_document` (**assisted** track).
 
+The agent is assembled by **appending**, not replacing: `eval/run_dlr.py` wraps the upstream environment, removes the two knowledge-tool callbacks, registers the three DLR tools, and appends the retrieval note — plus the whole `AGENTS.md` when `BIZ_AGENTS_MD` is set — to `env.policy`. The harness policy, the customer simulator, the record/action tools and the verifier stay untouched; the auxiliary MCP serves only the knowledge side and never scores.
+
 ## 5. Evaluation integration & freeze
 
 - Per-case runs archive `summary.json` (G/P/F + checks), trajectory and final world under `results/dlr-full/`.

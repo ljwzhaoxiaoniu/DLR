@@ -102,6 +102,23 @@ BIZ_DLR_PORT=28799 bash eval/run_dlr_pilot.sh results/<round>/case_003 3        
 
 `run_dlr_pilot.sh` 先自动预检桥（`/health`），用 DLR 工具面跑一题；上游 verifier 把 G/P/F 结果写进批次目录（`summary.json`）。`BIZ_AGENTS_MD` 指定 agent 运行态设定（`AGENTS.md`），不设则走 harness 基线行为。
 
+### Agent 装配（assisted 口径）
+
+数据集自己的 agent 配置原样保留，DLR 层是**追加**，不是替换：
+
+```
+系统提示 = harness 原 policy
+         + 检索说明（dlr_l1/l2/l3；无自由文本知识检索、无文档阅读器）
+         + [可选] AGENTS.md 运行态层（角色 / 判序 / 工具纪律）
+
+工具面   = harness 记录+动作工具 + dlr_l1 / dlr_l2 / dlr_l3
+         − search_knowledge / read_document
+```
+
+- `eval/run_dlr.py` 包住上游环境：摘掉两个知识工具回调，注册三个 DLR 工具，把检索说明（设了 `BIZ_AGENTS_MD` 时再追加整份 `AGENTS.md`）**追加**到 `env.policy`；
+- 客户模拟器、记录/动作工具与 verifier 都不动；辅助语义 MCP（TSM 桥）只供知识侧——不执行业务动作，也不参与判分；
+- A/B 开关是 `BIZ_AGENTS_MD`：不设 = 原 policy + DLR 工具；设了 = 再叠运行态层。所有报出的成绩都带 AGENTS.md 层。
+
 ## 5. 实测
 
 > 与 §3 同源（每题最佳有效轮）。

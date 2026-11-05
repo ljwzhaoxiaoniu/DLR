@@ -102,6 +102,23 @@ BIZ_DLR_PORT=28799 bash eval/run_dlr_pilot.sh results/<round>/case_003 3        
 
 `run_dlr_pilot.sh` auto-prechecks the bridge (`/health`), runs one case with the DLR tool surface, and the upstream verifier writes the G/P/F result into the run directory (`summary.json`). `BIZ_AGENTS_MD` selects the agent operating layer (`AGENTS.md`); without it the harness runs its baseline behaviour.
 
+### Agent assembly (assisted track)
+
+The benchmark's own agent configuration is kept intact; the DLR layer is **appended**, never substituted:
+
+```
+system prompt = harness policy
+              + retrieval note (dlr_l1/l2/l3; no free-text knowledge search, no document reader)
+              + [optional] AGENTS.md operating layer (role / ordering / tool discipline)
+
+tools = harness record+action tools + dlr_l1 / dlr_l2 / dlr_l3
+      − search_knowledge / read_document
+```
+
+- `eval/run_dlr.py` wraps the upstream environment: it removes the two knowledge-tool callbacks, registers the three DLR tools, and appends the note — plus the whole `AGENTS.md` text when `BIZ_AGENTS_MD` is set — to `env.policy`;
+- the customer simulator, record/action tools and verifier are untouched; the auxiliary semantic MCP (the TSM bridge) serves only the knowledge side — it never executes business actions and never participates in scoring;
+- the A/B toggle is `BIZ_AGENTS_MD`: unset = harness policy + DLR tools; set = plus the operating layer. All reported results use the AGENTS.md layer.
+
 ## 5. Measured results
 
 > Same source as §3 (best valid run per case).

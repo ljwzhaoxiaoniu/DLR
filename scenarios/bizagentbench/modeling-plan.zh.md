@@ -52,6 +52,8 @@ L2 只放**非 workflow 知识**（术语、口径、背景）；工作流与题
 
 评测桥暴露 **3 个语义工具**：`state_model_query`（L1 切片：对象、生命周期、能力、公开集合）、`dlr_search_consensus`（L2）、`dlr_search_sop`（L3）。数据集的记录/动作工具、客户模拟器与 verifier 不变；DLR 工具替代 `search_knowledge` / `read_document`（**assisted** 口径）。
 
+agent 的装配方式是**追加、不是替换**：`eval/run_dlr.py` 包住上游环境，摘掉两个知识工具回调、注册三个 DLR 工具，并把检索说明（设了 `BIZ_AGENTS_MD` 时再追加整份 `AGENTS.md`）追加到 `env.policy`。harness 原 policy、客户模拟器、记录/动作工具与 verifier 都不动；辅助 MCP 只供知识侧，不参与判分。
+
 ## 5. 评测接入与 freeze
 
 - 每题的运行档含 `summary.json`（G/P/F + checks）、轨迹与最终世界，落在 `results/dlr-full/`。
