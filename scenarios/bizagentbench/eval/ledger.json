@@ -1,6 +1,6 @@
 {
   "scenario": "bizagentbench",
-  "updated": "2026-11-04",
+  "updated": "2026-11-05",
   "dataset": {
     "name": "BizAgentBench",
     "local_copy": "D:/Code_Proj/Dataset/BizAgentBench-main",
@@ -2916,6 +2916,120 @@
         "protection": true,
         "strict": true,
         "failed": []
+      }
+    }
+  },
+  "window_v36_2026_11_05": {
+    "note": "v36 targeted WT/closure batch (2026-11-05 evening): 011/048/050/032 one round each; all below best; edits reverted except 011 joint-layer lesson.",
+    "store_base": "TSM Core Service/.store/lance/bizagentbench-v36",
+    "freeze_base": "4eafa301",
+    "cases": {
+      "011": {
+        "checks": "23/42",
+        "goal": false,
+        "process": true,
+        "protection": false,
+        "strict": false,
+        "failed": [
+          "joint.exact_capital",
+          "joint.fee_and_reserve",
+          "activity1:cargo.correct_title_destination_and_deadline",
+          "activity1:charges.minimum_complete_plan",
+          "activity1:events.all_windows_observed",
+          "activity1:process.single_completion.terminal_goal",
+          "activity2:participant.A",
+          "activity2:participant.B",
+          "activity2:participant.C",
+          "activity2:group.merchant_G1",
+          "activity2:group.segregated_G1",
+          "activity2:participant.D",
+          "activity2:participant.E",
+          "activity2:participant.F",
+          "activity2:group.merchant_G2",
+          "activity2:group.segregated_G2",
+          "activity2:shared.single_completed_outcome.terminal_goal",
+          "joint.single_completed_outcome.terminal_goal",
+          "activity1:titles.current_scope_preserved"
+        ]
+      },
+      "048": {
+        "checks": "13/21",
+        "goal": false,
+        "process": false,
+        "protection": false,
+        "strict": false,
+        "failed": [
+          "c48_goal",
+          "c48_principal",
+          "c48_deadlines",
+          "c48_linked_rights",
+          "c48_linked_match",
+          "c48_reasoning_receipt",
+          "shared.single_final_outcome.terminal_goal",
+          "process.048.disputed_claim_preserved"
+        ]
+      },
+      "050": {
+        "checks": "15/21",
+        "goal": false,
+        "process": true,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "c50_goal",
+          "c50_observation",
+          "c50_linked_accounting",
+          "c50_linked_match",
+          "c50_reasoning_payroll",
+          "shared.single_final_outcome.terminal_goal"
+        ]
+      },
+      "032": {
+        "checks": "11/19",
+        "goal": false,
+        "process": true,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "a.32.final_bank_disposition",
+          "a.32.single_principal_owner",
+          "a.32.contract_claim_evidence",
+          "a.32.commercial_credit",
+          "a.32.replacement_cash",
+          "a.32.commercial_application",
+          "a.32.reasoning_receipt_calendar",
+          "shared.single_final_outcome.terminal_goal"
+        ]
+      }
+    }
+  },
+  "window_v37_2026_11_05": {
+    "note": "v37 011 targeted route/assessment/window rules: 28/42; joint.exact_capital + joint.fee_and_reserve pass; failure shifts to group layer. Source reverted to v35 for best 36/42.",
+    "store_base": "TSM Core Service/.store/lance/bizagentbench-v37",
+    "freeze_base": "4eafa301",
+    "cases": {
+      "011": {
+        "checks": "28/42",
+        "goal": false,
+        "process": false,
+        "protection": true,
+        "strict": false,
+        "failed": [
+          "activity1:process.single_completion.terminal_goal",
+          "activity2:participant.A",
+          "activity2:participant.B",
+          "activity2:participant.C",
+          "activity2:group.merchant_G1",
+          "activity2:group.segregated_G1",
+          "activity2:participant.D",
+          "activity2:participant.E",
+          "activity2:participant.F",
+          "activity2:group.segregated_G2",
+          "activity2:shared.single_completed_outcome.terminal_goal",
+          "joint.single_completed_outcome.terminal_goal",
+          "joint.continuous_operating_floors",
+          "shared.unapproved_execution_attempt"
+        ]
       }
     }
   }

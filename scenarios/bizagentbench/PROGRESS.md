@@ -429,3 +429,13 @@ LE 面只保留锚定/状态键（避免长字段清单稀释召回）；完整�
 - **005 = 46/46 strict**：立案登记未被 SETTLED 覆盖的全部组件——规则生效，当前底座收关（不再跑）
 - **003 = 49/50 → 50/50 strict**：首轮追发生效（REM-6/7 拿到 revision 2 与正确固定行），但 REM-7 把固定行 A=30000 抬到 90000 去凑总额 → `reconciliation:intent` 挂；补收口「固定行逐字对、余量只给其他合规发票」后复跑 **50/50 strict**，收关
 - 001/002 的 v1_pre 成绩与 v34 窗口同分 strict，可改标到当前底座；011 窗口 36/42 与 a2 持平
+
+## 十九、2026-11-05 晚 · v36/v37 定向验证（负结果，收关）
+
+- **v36**（v35 + 011/048/050/032 四节定向改动）：2×2 各跑一轮，四轮都 exact 命中新节；全部低于 best——
+  - 011 23/42：minute 1 选 `0-standard`（fee 800 > cap 500）后才发现超限、直接升级；`1-standard` fee 100 未比价；窗口 0 被时钟推进关掉
+  - 048 13/21：按 WT 做了非追索转让，但把 `C48-REASONING`（融资/推理记录）当成应收 tranche；wait 到 minute 25 错过 minute 20
+  - 050 15/21：预留 $45 未 capture；saved settlement priority 仍是 SWEEP；联动腿继续挂
+  - 032 11/19：改走文档路径，卡 `CONTRACT_PROOF_REQUIRED` / `ORIGINAL_REMITTANCE_PROOF_REQUIRED`；钱未动即升级
+- **v37**（只保留 011 的评估/路线/窗口三条）：011 28/42；**`joint.exact_capital` + `joint.fee_and_reserve` 首次通过**——D34 4,000 + PAY49 100,000，费 300 ≤ 500，现金 400 = 底线；失败转到 group 层（G1 凑不够 3 人改走 RETAIL 60,000、退款只剩 9,200 流动性、一次未批准执行）。
+- **处置**：048/050/032 回退 v35；011 也回退 v35（best 36/42 口径）；v37 的 joint 层经验记入 DETAIL §2.7；best 仍 v35，freeze `l1l2-4eafa301` 不变；v36/v37 仅实验档。今晚 5 轮无一超过 best。
