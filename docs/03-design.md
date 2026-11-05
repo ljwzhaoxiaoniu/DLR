@@ -399,12 +399,32 @@ As-built: one JSON array per scope file; each entry is `{kid, knowledge, system?
 - Delivery: `dlr_search_consensus(question)` → the top-k prose entries; the agent uses them as **reading rules**, not answers.
 - Admission: on demand — only a convention some question actually needs. A mapping that is really a fact about the source (value domain / granularity / sample window) sinks into L1; a convention that only holds inside one question's flow goes to L3.
 
+**Scope: per-LE, or scenario-wide?** An entry is written once; its scope decides where it lives and how it is retrieved:
+
+| Scope | What it holds | Test |
+|---|---|---|
+| **Scenario-wide** (`shared`) | units / rounding, money and fee semantics, time and window rules, the request→approval→execute protocol, cross-system tool semantics | every object in the scenario is governed by it; it changes with the business's conventions, not with one object's model |
+| **System / domain family** (e.g. `operations_desk`, `psp`) | readings that hold across a family of objects in one system | it applies to many objects of that system but not to the others |
+| **Per-LE** | the object's own fields, lifecycle, eligibility, release/claim rules | it names one LE and stops holding outside it; it changes with that object's model |
+
+Rules: (a) if you cannot name the LE it applies to, it is not per-LE; (b) if it only makes sense inside one question's flow, it is L3, not L2; (c) a scenario-wide entry must never restate one object's structure; (d) when an entry grows object-specific clauses, split it — keep the general reading in the shared file and move the specific one to the LE scope.
+
 ### 9.2 L3 — SOP (`sources/sop.md`)
 
 - `sop.md` is parsed into sections by `## <system>` and `### When asked: "<question>"`; the section **title is the question wording verbatim** (the retrieval trigger); the body is the class playbook.
 - `tsm build` embeds the section titles into the SOP index; `dlr_search_sop(question)` returns the matched section (one section, not the whole file).
 - **Section anatomy (2.0)**: steps (the class method) → calibers (the conventions it must obey) → `> **Wrong turn (observed)**` (the observed plausible-but-wrong fork) → `> **Check before closing**` (closure invariants in business terms) → `> **Expected**` (where the scenario has a fixed answer). No instance values, record IDs or verifier check names.
 - **Admission**: ① dataset defect ② wrong without the section ③ >15W without the section; the case is re-run after every edit. Sections are per question — transplanting one to another question requires a measured failure there.
+
+**How to build a section** (the working loop):
+
+1. **Dissect first** — walk the trace to the first "observation ≠ expectation" and classify the failure: source/reading (L1/L2), missing question-level judgment (L3), or behavior/ordering (the agent operating layer). Do not write L3 for an L1/L2 defect.
+2. **Check admission** — take the bare baseline; write only under ①/②/③. No evidence → no section.
+3. **Fix the convention before the exception** — if the steps are wrong or contradict each other, fix the steps first; a `Wrong turn` only records a measured wrong fork and must not contradict a step.
+4. **Write the minimum** — steps in business language, the calibers it must obey, one observed `Wrong turn`, closure invariants, and `Expected` where the scenario has a fixed answer. No instance values, record IDs or verifier check names.
+5. **Re-run the case** — after every edit, re-run the question that exposed the problem; strict = stop; not strict → archive the best at the three-attempt cap.
+6. **Keep the boundary** — a section belongs to its question; per-question isolation means editing A never re-runs B.
+
 - **Shape follows the workload**:
 
 | Scenario | SOP shape | Granularity | Design emphasis |

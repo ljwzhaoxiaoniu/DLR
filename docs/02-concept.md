@@ -70,6 +70,8 @@ The division is strict in both directions:
 - **L1 never swallows question-level conventions** — the moment an L1 description says "when a question writes X…", it has floated above its level;
 - **L2 is non-workflow**: it never sequences steps or sets cutoffs; a convention that only holds inside one question's flow belongs to L3.
 
+Scope follows the same ownership question: a convention every object in the scenario obeys is **scenario-wide**; one that holds for a family belongs to that family; one that names a single LE stays with that LE. The design doc gives the test ([03-design.md](03-design.md) §9.1).
+
 ### 1.4 L3 = the business-logic level
 
 L3 settles **this kind of question**: playbooks, exceptions, traps and closure discipline. It references the business names of L1/L2, never the physical names; it is delivered per question, so a section costs only on the question that hits it. Admission is on demand — ① dataset defect ② wrong without the section ③ >15W without the section — and the case is re-run after every edit.
