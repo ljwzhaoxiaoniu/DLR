@@ -77,7 +77,7 @@
 
 ### 前置（包外三样）
 
-1. **数据集检出**——`BIZAGENTBENCH_DIR` 指向它（默认 `D:/Code_Proj/Dataset/BizAgentBench-main`）；
+1. **数据集检出**——`BIZAGENTBENCH_DIR` 指向你的 BizAgentBench 检出；
 2. **embedding 模型快照**——`TSM_MODEL_DIR`（默认本地 `bge-base-en-v1.5` HF 快照）；
 3. **DeepSeek key 文件**——`DEEPSEEK_ENV_FILE`（默认 `DSH-based Agent Service/dsh_dlr/.env`）。
 

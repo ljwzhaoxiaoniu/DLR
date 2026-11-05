@@ -205,8 +205,8 @@ v37 只保留 011 的“评估/路线/窗口”三条定向规则，重跑 011�
 
 ```bash
 # 起桥（v35 / 28799）
-cd "D:/Code_Proj/DLR Proj/scenarios/bizagentbench"
-TSM_STORE_DIR="D:/Code_Proj/DLR Proj/TSM Core Service/.store/lance/bizagentbench-v35" \
+cd "<repo>/scenarios/bizagentbench"
+TSM_STORE_DIR="<repo>/TSM Core Service/.store/lance/bizagentbench-v35" \
 BIZ_DLR_PORT=28799 bash eval/start_bridge.sh
 
 # 跑单题

@@ -77,7 +77,7 @@ The evaluation bridge exposes **3 semantic tools** — `state_model_query` (L1 s
 
 ### Prerequisites (outside this package)
 
-1. **The dataset checkout** — point `BIZAGENTBENCH_DIR` at it (default `D:/Code_Proj/Dataset/BizAgentBench-main`);
+1. **The dataset checkout** — point `BIZAGENTBENCH_DIR` at your BizAgentBench checkout;
 2. **An embedding model snapshot** — `TSM_MODEL_DIR` (default: the local `bge-base-en-v1.5` HF snapshot);
 3. **A DeepSeek key file** — `DEEPSEEK_ENV_FILE` (default `DSH-based Agent Service/dsh_dlr/.env`).
 
