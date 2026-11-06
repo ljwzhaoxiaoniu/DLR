@@ -150,7 +150,7 @@ evidence 的剩余 ────────────────────�
       kind: unwind
       pattern: '{side}_player_{slot}'
       side: [home, away]
-      slot: ['1'..'11']
+      slot: ['1','2','3','4','5','6','7','8','9','10','11']
       value_as: player_id
       key: [id, side, slot]
 ```

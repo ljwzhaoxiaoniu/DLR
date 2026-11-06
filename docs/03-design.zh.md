@@ -51,6 +51,8 @@
 | **ARCS** | PE ↔ **物理表** | 视图的**投影定义** | A 锚定 / **R 行空间**（行过滤，或多槽位展开的行化——见 §1.2.1）/ C 列选择 / S 语义补注 |
 | **PAS** | LE ↔ LE | **public 属性级**的业务关联 | P 谓词（方向+动词+基数）/ A 寻址坐标 / S 语义补注 |
 
+**ARCS 的名字取自投影的四个直观要素**：**A**nchor（锚定——连哪一行/哪个键）· **R**ow space（行空间——取哪些行）· **C**olumns（列选择——暴露哪些列）· **S**emantics（语义补注——业务上是什么意思）；四者合起来就是一个视图的完整定义。
+
 > ⚠️ **最常见的误解**：ARCS 连的是 **PE ↔ 物理表**（投影定义），**不是** PE ↔ LE。LE 与 PE 是 1:N **容器**关系（yaml 的嵌套结构），不是 ARCS。
 
 > **A 锚 = 取数时的 WHERE 键（剪枝作用，2026-10-10 明写）**：模型给出锚，agent 沿它取**该锚的少量行（薄切片）**而不是整表——上下文因此小、注意力因此集中。对 dlr 是 JOIN/过滤键；对 dlr-state 是对象名（`app=<服务>` 等，见 §1.7）——每个面随锚连**读法模板**一起给出，agent 拿来即用、不试错。唯一合法的"全量"是首轮扫描（找锚），其后一切按锚收窄。
@@ -60,7 +62,8 @@
 PE 是**视图，不物化**——所以视图的行空间可以在模型里定义，而不必先有物理视图。`R = unwind` 处理**多槽位 FK**（一表 N 列同指另一张表，PAS 单坐标表达不了）：
 
 ```yaml
-R: { kind: unwind, pattern: '{side}_player_{slot}', side: [home, away], slot: ['1'..'11'],
+R: { kind: unwind, pattern: '{side}_player_{slot}', side: [home, away],
+     slot: ['1','2','3','4','5','6','7','8','9','10','11'],
      value_as: player_id, key: [id, side, slot] }
 ```
 
@@ -199,6 +202,46 @@ pas_relations:
   A: SetID                              # 寻址坐标（落在两侧之一的 public 面名字上）
   S: 1 set contains N cards
 ```
+
+**行级 PE（`R = unwind`）的写法**——多槽位 FK（一表 N 列同指一张表）靠 `R` 定义行空间；`slot` 是**字面枚举**（没有 range 语法）：
+
+```yaml
+- logical_entity_id: LOGICAL.Appearance
+  biz_name: Appearance
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Appearance
+    physical_table_name: Match                 # 一张物理表可以兼作多个 PE 的底（一表多 PE）
+    physical_table_id: european_football_2.Match
+    A: {cardinality: '1:N', key: MatchID}      # 一个 match → N 条出场行（LE 视角）
+    R:
+      kind: unwind
+      pattern: '{side}_player_{slot}'          # 列名文法：{side}/{slot} 代入后必须是真实物理列
+      side: [home, away]
+      slot: ['1','2','3','4','5','6','7','8','9','10','11']
+      value_as: player_id                      # 槽位列的「值」→ 派生列，成为 PAS 的单坐标
+      key: [id, side, slot]                    # 派生行的身份（物理键 + 派生列名）
+    attributes:
+    - column: european_football_2.Match.id
+      biz_name: MatchID
+      public: true
+    - column: european_football_2.Match.player_id
+      biz_name: player_id
+      public: true
+      derived: true                            # 派生列：物理表里没有对应列
+    - column: european_football_2.Match.side
+      biz_name: side
+      public: true
+      derived: true
+    - column: european_football_2.Match.slot
+      biz_name: slot
+      public: true
+      derived: true
+```
+
+- 展开 = `pattern × side × slot` 与物理列求交（对不上即 `missing`，规格写错会显式报出）；空槽（NULL）不产生行；
+- `value_as` 把 N 列的值收成**一个派生列**——"22 列同指 Player"因此变成一条普通的单坐标 FK，PAS 文法不用扩；
+- 派生列标 `derived: true`（无物理列，`data_type = null`）；`R` 只定义行空间，**不改物理层、不物化**；
+- 首个用例与探针题见 [scenarios/birdminidev/README.zh.md](../scenarios/birdminidev/README.zh.md) §三「行级 PE」。
 
 有动作的数据源在 LE 上再加一块 **capability**（§1.7.2）；纯记录源不写：
 

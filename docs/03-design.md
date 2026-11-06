@@ -51,6 +51,8 @@ Direct answers to two points from ① Background:
 | **ARCS** | PE ↔ **physical table** | the view's **projection definition** | A anchor / **R row space** (row filtering, or multi-slot row expansion — see §1.2.1) / C column selection / S semantic annotation |
 | **PAS** | LE ↔ LE | a business association **at the public-attribute level** | P predicate (direction + verb + cardinality) / A addressing coordinate / S semantic annotation |
 
+**The name ARCS comes from the four intuitive parts of a projection**: **A**nchor (which row or key it attaches to) · **R**ow space (which rows it takes) · **C**olumns (which columns it exposes) · **S**emantics (what it means in business terms). Together they are the complete definition of a view.
+
 > ⚠ **The most common misconception**: ARCS connects **PE ↔ physical table** (a projection definition), **not** PE ↔ LE. LE-to-PE is a 1:N **container** relation (the yaml's nesting), not ARCS.
 
 > **The A anchor = the WHERE key at data-fetch time (its pruning role, written down 2026-10-10)**: the model hands over the anchor, and the agent fetches **the few rows carrying that anchor value (a thin slice)** instead of the whole table — the context stays small and attention focused. For `dlr` it is a JOIN/filter key; for `dlr-state` it is an object name (`app=<service>` etc., see §1.7) — every surface comes with its **reading template** alongside the anchor, ready to use without trial and error. The only legitimate "full scan" is the first round (finding the anchor); everything after narrows by anchor.
@@ -60,7 +62,8 @@ Direct answers to two points from ① Background:
 A PE is **a view, not materialized** — so the view's row space can be defined in the model without a physical view existing first. `R = unwind` handles **multi-slot FKs** (one table's N columns all pointing at another table — a single PAS coordinate cannot express that):
 
 ```yaml
-R: { kind: unwind, pattern: '{side}_player_{slot}', side: [home, away], slot: ['1'..'11'],
+R: { kind: unwind, pattern: '{side}_player_{slot}', side: [home, away],
+     slot: ['1','2','3','4','5','6','7','8','9','10','11'],
      value_as: player_id, key: [id, side, slot] }
 ```
 
@@ -199,6 +202,46 @@ pas_relations:
   A: SetID                              # the addressing coordinate (a public-face name on one of the two sides)
   S: 1 set contains N cards
 ```
+
+**The row-level PE (`R = unwind`) form** — a multi-slot FK (one table's N columns all pointing at one table) defines its row space in `R`; `slot` is a **literal enumeration** (there is no range syntax):
+
+```yaml
+- logical_entity_id: LOGICAL.Appearance
+  biz_name: Appearance
+  physical_entities:
+  - physical_entity_id: PHYSICAL.Appearance
+    physical_table_name: Match                 # one physical table can back several PEs (many PEs per table)
+    physical_table_id: european_football_2.Match
+    A: {cardinality: '1:N', key: MatchID}      # one match → N appearance rows (LE viewpoint)
+    R:
+      kind: unwind
+      pattern: '{side}_player_{slot}'          # a column-name grammar: {side}/{slot} must resolve to real physical columns
+      side: [home, away]
+      slot: ['1','2','3','4','5','6','7','8','9','10','11']
+      value_as: player_id                      # the slot column's value → a derived column, and a single PAS coordinate
+      key: [id, side, slot]                    # the derived row's identity (physical key + derived column names)
+    attributes:
+    - column: european_football_2.Match.id
+      biz_name: MatchID
+      public: true
+    - column: european_football_2.Match.player_id
+      biz_name: player_id
+      public: true
+      derived: true                            # derived: no such physical column
+    - column: european_football_2.Match.side
+      biz_name: side
+      public: true
+      derived: true
+    - column: european_football_2.Match.slot
+      biz_name: slot
+      public: true
+      derived: true
+```
+
+- Expansion = `pattern × side × slot` intersected with the physical columns (anything unmatched shows up in `missing`, so a wrong spec fails loudly); empty slots (NULL) produce no rows;
+- `value_as` collapses the N columns' **values** into one derived column — "22 columns pointing at Player" becomes an ordinary single-coordinate FK, and the PAS grammar stays unchanged;
+- Derived columns are tagged `derived: true` (no physical column, `data_type = null`); `R` defines the row space only — **no change to the physical layer, no materialization**;
+- First use case and probe question: see [scenarios/birdminidev/README.md](../scenarios/birdminidev/README.md) §3 "row-level PE".
 
 Action-bearing sources add a **capability block on the LE** (§1.7.2); record-only sources omit it:
 
